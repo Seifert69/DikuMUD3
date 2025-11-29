@@ -1,0 +1,124 @@
+Generate MCP entry for DIL keyword: next
+
+=== Yacc rule ===
+| DILSF_NXT /* .next */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UEZCP;
+    $$.typ = DilVarType_e::DILV_UEZCP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_NXT;
+}
+
+=== C implementation ===
+case DILF_NXT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_EDP:
+                    v->atyp = DILA_NORM;
+                    v->type = DILV_EDP;
+                    if (v1->val.ptr)
+                    {
+                        v->val.ptr = ((extra_descr_data *)v1->val.ptr)->next;
+                    }
+                    else
+                    {
+                        v->val.ptr = nullptr;
+                    }
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        v->val.ptr = unit->getNext();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_ZP;
+                        v->val.ptr = nullptr;
+
+                        zone_type *z = (zone_type *)v1->val.ptr;
+
+                        if (z)
+                        {
+                            auto it = g_zone_info.mmp.find(z->getName());
+                            if (it != g_zone_info.mmp.end())
+                            {
+                                it++;
+                                if (it != g_zone_info.mmp.end())
+                                {
+                                    v->val.ptr = it->second;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_CP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_CP;
+                        v->val.ptr = ((command_info *)v1->val.ptr)->next;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin jailmaintain(maintainer : string, inroom : string);
+var
+  newu : unitptr;
+  u : unitptr;
+  v : unitptr;
+code
+{
+   :loop:
+   wait(SFB_MSG, argument == "jailfood");
+
+   u := findsymbolic(maintainer);
+
+   if (findroom(inroom) == u.outside)
+   {
+      v := u.inside;
+
+      while (v)
+      {
+	 if ((v.objecttype == ITEM_FOOD) or (v.objecttype == ITEM_DRINKCON))
+	 {
+	    /* Give this one to the poor bastard in the cell */
+	    newu := load(v.nameidx + "@" + v.zoneidx );
+	    link(newu, self);
+	    act("The door is opened for a moment, and $2n is pushed in.",
+		A_SOMEONE, self.inside, newu, null, TO_ALL);
+	 }
+	 v := v.next;
+      }
+   }
+   goto loop;
+} dilend

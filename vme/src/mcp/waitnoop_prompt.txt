@@ -1,0 +1,142 @@
+Generate MCP entry for DIL keyword: waitnoop
+
+=== Yacc rule ===
+| DILSI_WAITNOOP ihold ahold
+{
+    $$.fst = $2;
+    $$.lst = $3 + 4;
+    wtmp = &tmpl.core[$2];
+    bwrite_ubit8(&wtmp, DILI_WAITNOOP);
+
+    wtmp = &tmpl.core[$3];
+    bwrite_ubit32(&wtmp, $2);
+}
+
+------
+
+| DILSI_WAITNOOP '(' coreexp ')' ihold ahold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'waitnoop' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $6 + 4;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_WAITNOOP);
+        wtmp = &tmpl.core[$6];
+        bwrite_ubit32(&wtmp, $3.fst);
+    }
+}
+
+=== C implementation ===
+void dilfi_waitnoop(dilprg *p)
+{
+    ubit32 coreptr = 0;
+    ubit8 *oldpc = nullptr;
+    coreptr = bread_ubit32(&(p->fp->pc));
+    oldpc = &(p->fp->tmpl->core[coreptr]);
+
+    if (p->waitcmd != WAITCMD_MAXINST)
+    {
+        p->sarg->fptr->setAllActivateOnEventFlags(SFB_NOOP);
+        p->waitcmd = WAITCMD_NOOP;
+        p->fp->pc = oldpc; /* rewind pc to just before wait command */
+    }
+    else
+    {
+        // Program was waiting
+        p->waitcmd--;
+    }
+}
+
+=== DIL example ===
+dilbegin unique fnpri(FN_PRI_MISSION) dilfollow();
+var
+   s : string;
+   c : string;
+code
+{
+   if (not self.master)
+      quit;
+
+   act("You now follow $3n.", A_ALWAYS, self, null, self.master, TO_CHAR);
+   heartbeat := 1;
+
+:start:
+   wait(SFB_DONE, TRUE);
+
+   if (not self.master)
+      quit;
+
+   if (self.master != activator)
+      goto start;
+
+   if (not visible(self, self.master))
+      goto start;
+
+   if (self.position < POSITION_STANDING)
+   {
+      if (self.position <= POSITION_SLEEPING)
+         goto start;
+      act("You're not in a position to follow $2n.", A_HIDEINV, self, self.master, null, TO_CHAR);
+      goto start;
+   }
+
+   if (self.outside == self.master.outside)
+   {
+      // If you and the master are in the same object, then don't follow (sail & ride)
+      if (self.outside.type != UNIT_ST_ROOM)
+         if (not (command("exit") or command("leave"))) // Ignore unless leaving / exiting the object
+            goto start;
+   }
+
+   if (command("north") or command("east") or command("south") or command("west") or command("up") or command("down"))
+   {
+      act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
+      c := cmdstr;
+      waitnoop; // The waitnoops causes loss of secure() on followers... 
+      exec(c, self);
+   }
+   else if (command("southeast") or command("northeast") or command("southwest") or command("northwest"))
+   {
+      act("You follow $3n $2t.", A_HIDEINV, self, cmdstr, self.master, TO_CHAR);
+      c := cmdstr;
+      waitnoop;
+      exec(c, self);
+   }
+   else if (command("leave"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("leave "+s, self);
+   }
+   else if (command("exit"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("exit "+s, self);
+   }
+   else if (command("enter"))
+   {
+      act("You follow $3n.", A_HIDEINV, self, null, self.master, TO_CHAR);
+      s := argument;
+      if (s == null)
+         s := "";
+      waitnoop;
+      exec("enter "+s, self);
+   }
+   // Swim?
+   // Ride?
+   // Drive?
+
+   goto start;
+} dilend

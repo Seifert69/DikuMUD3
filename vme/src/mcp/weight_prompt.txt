@@ -1,0 +1,91 @@
+Generate MCP entry for DIL keyword: weight
+
+=== Yacc rule ===
+| DILSF_WGT /* .weight */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    //$$.dsl = DSL_LFT;
+    $$.num = DILF_WGT;
+}
+
+=== C implementation ===
+case DILF_WGT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((unit_data *)v1->val.ptr)->getWeight();
+
+                        // v->atyp = DILA_NONE;
+                        // v->type = DILV_SINT2R;
+                        // v->ref = &UNIT_WEIGHT((class unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin getfrom_safe(prisoner : unitptr);
+var
+   vr : unitptr;
+   u : unitptr;
+   nextu : unitptr;
+   safe : unitptr;
+   i : integer;
+
+code
+{
+   safe := findsymbolic(prisoner, "safe@justice", FIND_UNIT_IN_ME);
+   if (safe == null)
+   {
+      log("no safe found");
+      return; // There was nothing stored
+   }
+
+   vr := findsymbolic("void@basis");
+
+   link(safe, vr); // Place in room OK to mess up weight
+
+   i := 0;
+   u := safe.inside;
+
+   while (u)
+   {
+      nextu := u.next;
+
+      link(u, prisoner);
+      i := i + 1;
+
+      u := nextu;
+   }
+
+   act("You get your posessions back.", A_SOMEONE, prisoner, null, null, TO_CHAR);
+
+   if (safe.inside == null)
+      destroy(safe);
+   else
+   {
+      // Shouldn't happen
+      link(safe, prisoner);
+      log("Safe not empty for " + prisoner.name);
+   }
+
+   return;
+} dilend

@@ -1,0 +1,534 @@
+Generate MCP entry for DIL keyword: meleedamage
+
+=== Yacc rule ===
+| DILSE_MELDAM '(' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    checkbool("argument 1 of MeleeAttack", $3.boolean);
+
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'MeleeAttack' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'MeleeAttack' not a unitptr");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'MeleeAttack' not an integer");
+    }
+    else if ($9.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 4 of 'MeleeAttack' not an integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        make_code(&($9));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_code(&($$), &($9));
+        add_ubit8(&($$), DILE_MELDAM);
+    }
+
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+    FREEEXP($9);
+}
+
+=== C implementation ===
+void dilfe_meldam(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_UP:
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                        else
+                        {
+                            switch (dil_getval(v3))
+                            {
+                                case DILV_INT:
+                                    switch (dil_getval(v4))
+                                    {
+                                        case DILV_INT:
+                                            v->val.num = one_hit((unit_data *)v1->val.ptr,
+                                                                 (unit_data *)v2->val.ptr,
+                                                                 v3->val.num,
+                                                                 v4->val.num,
+                                                                 TRUE,
+                                                                 FALSE);
+                                            dil_test_secure(p);
+                                            break;
+                                        case DILV_FAIL:
+                                        case DILV_NULL:
+                                            v->type = DILV_FAIL;
+                                            break;
+                                        default:
+                                            v->type = DILV_ERR;
+                                            break;
+                                    }
+
+                                    break;
+                                case DILV_FAIL:
+                                case DILV_NULL:
+                                    v->type = DILV_FAIL;
+                                    break;
+                                default:
+                                    v->type = DILV_ERR;
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case DILV_FAIL:
+                    case DILV_NULL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+}
+
+=== DIL example ===
+dilbegin throw (arg : string); /* The throw skill */
+
+external
+   integer skillroll@skills(aa : integer, ad : integer, sa : integer,
+                             sd : integer);
+
+var
+wp_info:intlist;
+wielded:unitptr;
+   held         : unitptr;  /* And what about that other handy... */
+   thing        : unitptr;  /* Well I guess this is our missile. */
+   targ         : unitptr;  /* Hewo wabbit. */
+
+   cost_of      : integer;  /* Endurance cost. */
+   bonus        : integer;  /* For meleedamage. */
+   sharpness    : integer;  /* Approximate sharpness of non-weapons. */
+   miss         : integer;
+   mdam         : integer;  /* Damage the missile takes from the fight */
+   hm           : integer;  /* For skillroll */
+   dead_jim     : integer;  /* did we kill it? huh huh? */
+
+   tstr         : string;   /* Temporary string for processing argument. */
+   tstr2        : string;   /* For corpses */
+   thing_name   : string;   /* In case we ever forget what we're throing. */
+skilla   : integer;
+skillb   : integer;
+skillc   : integer;
+skilld   : integer;
+
+code
+{
+   heartbeat := 2;
+   miss := 0; /* We hit until we're told differently. */
+   bonus := -20;
+
+   if (self.position < POSITION_STANDING)
+   {
+      act("You need to be standing to do that.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   thing := findunit(self, arg, FIND_UNIT_IN_ME, null);
+
+   if ((thing == null) or not visible(self, thing))
+   {
+      act("You can't find that in your inventory or your equipment!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (thing.type==UNIT_ST_NPC)
+   {
+   act ("$1e would not like that.",
+   A_ALWAYS,self,null,null,TO_CHAR);
+   quit;
+   }
+
+if (thing.type!=UNIT_ST_OBJ)
+   {
+      act("You can't find that in your inventory or your equipment!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   thing_name := thing.name;
+
+   if (thing.objecttype != ITEM_WEAPON)
+   {
+      act("Why bother throwing that?! Throw a weapon instead!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+
+
+   if ((thing.value[0] == WPN_BOW) or (thing.value[0] == WPN_CROSSBOW) or
+       (thing.value[0] == WPN_SLING))
+       {
+       act ("You would do better using those correctly than throwing them like a nut case.",
+       A_ALWAYS,self,null,null,TO_CHAR);
+       quit;
+       }
+
+
+wp_info:=weapon_info(thing.value[0]);
+   wielded := equipment(self, WEAR_WIELD);
+   held    := equipment(self, WEAR_HOLD);
+
+if (wp_info.[0]>1)
+{
+if ((wielded!=self) and
+(held!=self))
+       if ((wielded!=null) or (held!=null))
+       {
+                           act ("You need both hands free to throw that.",
+                           A_ALWAYS,self,null,null,TO_CHAR);
+                           quit;
+       }
+}
+else
+{
+if ((wielded!=self) and
+(held!=self))
+if ((wielded!=null) and (held!=null))
+{
+act ("You need at least one free hand to throw that.",
+A_ALWAYS,self,null,null,TO_CHAR);
+}
+}
+
+   tstr := getword(arg);
+
+   if (tstr == "at")
+      tstr := arg;
+
+   else if (tstr == "")
+   {
+      act("What do you want to throw that at?",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   else
+      tstr := tstr + " " + arg;
+
+   targ := findunit(self, tstr, FIND_UNIT_SURRO, null);
+
+   if ((targ == null) or (not(visible(self, targ))))
+   {
+      act("You don't see that person here!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (not(targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+   {
+      act("Yeah, take your frustration out on that poor inanimate " +
+          "object! Hit it, yeah!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
+   {
+      if (not(isset (self.pcflags, PC_PK_RELAXED)))
+      {
+         act("You are not allowed to do that unless you sign " +
+             "the book of blood.",
+             A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+
+      if (not(isset (targ.pcflags, PC_PK_RELAXED)))
+      {
+         act("You are not allowed to do that unless $2e signs " +
+             "the book of blood.",
+             A_ALWAYS, self, targ, null, TO_CHAR);
+         quit;
+      }
+   }
+
+   wielded := equipment(self, WEAR_WIELD);
+   held    := equipment(self, WEAR_HOLD);
+
+/* This doesn't seem to work, but later in the dil something takes care
+of the case in which you're wielding a weapon.. */
+
+   if ((wielded != null) and (held != null) and ((thing != wielded) and
+                                                 (thing != held)))
+   {
+      act("Your hands are full! How do you expect to throw something " +
+          "if you don't have a free hand (or aren't throwing what's in " +
+          "your hand) ?!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   cost_of := (rnd(20,30) * thing.weight) / 25;
+
+   if (self.endurance < cost_of)
+   {
+      act("You simply don't have the energy to throw that!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   /* DISABLED..Since we can only use meleedamage with Weapons, it's time to
+      distinguish item types so we know which way to go. */
+
+/*
+   if (thing.objecttype == ITEM_WEAPON) goto is_weapon;
+   else goto is_other;
+*/
+
+
+:is_weapon:
+
+/* In a previous version, all targets were assumed having skills,
+which caused the mobs to be easier to throw things at.. */
+
+skilla := (self.abilities[ABIL_DEX] + self.abilities[ABIL_STR]/2);
+skillb := (targ.abilities[ABIL_DEX] + targ.abilities[ABIL_STR]/2);
+
+if(self.type == UNIT_ST_PC)
+        skillc := self.skills[SKI_THROW];
+else
+            skillc := rnd(40,124);
+	 /*   skillc := self.abilities[ABIL_DEX];
+    */
+if(targ.type == UNIT_ST_PC)
+        skilld := targ.skills[SKI_THROW];
+else
+               skilld := rnd(40,124);
+	  /*  skilld := targ.abilities[ABIL_DEX];*/
+
+hm := skillroll(skilla,skillb,skillc,skilld);
+
+
+
+/*
+   if (targ.type == UNIT_ST_PC)
+      hm := skillroll@skills((self.abilities[ABIL_DEX] +
+                               self.abilities[ABIL_STR]) /2,
+                               (targ.abilities[ABIL_DEX]*2)/3,
+                               self.skills[SKI_THROW],
+                               targ.skills[SKI_THROW] - 25);
+
+   else
+      hm := skillroll@skills((self.abilities[ABIL_DEX] +
+                               self.abilities[ABIL_STR]) /2,
+                               (targ.abilities[ABIL_DEX]*2)/3,
+                               self.skills[SKI_THROW],
+                               targ.abilities[ABIL_DEX] - 25);
+*/
+   if (hm < 0) goto miss;
+
+   bonus := bonus + (self.weapons[thing.value[0]] /10);
+
+   tstr := "";
+   tstr2 := "";
+   tstr := targ.name;
+   if (targ.type == UNIT_ST_NPC) tstr2 := targ.title;
+
+   dead_jim := targ.hp;
+
+   if ((thing == held) and (wielded != null))
+   {
+      unequip(wielded);
+      unequip(thing);
+      addequip(thing, WEAR_WIELD);
+      act("You throw your " + thing.name + " at $3n!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at you!",
+          A_SOMEONE, self, null, targ, TO_VICT);
+      act("$1n throw $1s " + thing.name + " at $3n!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+      bonus := meleedamage(self, targ, bonus, 0);
+      unequip(thing);
+      addequip(wielded, WEAR_WIELD);
+   goto dispose_thing;
+   }
+
+   else if (thing == wielded)
+   {
+      act("You throw your " + thing.name + " at $3n!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at you!",
+          A_SOMEONE, self, null, targ, TO_VICT);
+      act("$1n throw $1s " + thing.name + " at $3n!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+      bonus := meleedamage(self, targ, bonus, 0);
+      unequip(thing);
+      goto dispose_thing;
+   }
+
+   else if ((wielded != null) and (thing != wielded))
+   {
+      unequip(wielded);
+      addequip(thing, WEAR_WIELD);
+      act("You throw your " + thing.name + " at $3n!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at you!",
+          A_SOMEONE, self, null, targ, TO_VICT);
+      act("$1n throw $1s " + thing.name + " at $3n!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+      bonus := meleedamage(self, targ, bonus, 0);
+      unequip(thing);
+      addequip(wielded, WEAR_WIELD);
+      goto dispose_thing;
+   }
+
+   else
+   {
+      addequip(thing, WEAR_WIELD);
+      act("You throw your " + thing.name + " at $3n!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at you!",
+          A_SOMEONE, self, null, targ, TO_VICT);
+      act("$1n throw $1s " + thing.name + " at $3n!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+      bonus := meleedamage(self, targ, bonus, 0);
+      unequip(thing);
+      goto dispose_thing;
+   }
+
+:miss:
+bonus := 0;
+   miss := 1;
+   if (targ.position > POSITION_SLEEPING)
+   {
+      act("You throw your " + thing.name + " at $3n!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at you!",
+          A_ALWAYS, self, null, targ, TO_VICT);
+      act("$1n throws $1s " + thing.name + " at $3n!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+
+      act("$3n dodges your throw!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("You skillfully dodge out of the path of $1n's " + thing.name +
+          "!",
+          A_ALWAYS, self, null, targ, TO_VICT);
+      act("$1n misses as $3n skillfully dodges out of the way of $1s " +
+          thing.name + ".",
+          A_ALWAYS, self, null, targ, TO_NOTVICT);
+
+      goto dispose_thing;
+   }
+   else
+   {
+      act("You throw your " + thing.name + " at $3n but miss $3m completely!",
+          A_ALWAYS, self, null, targ, TO_CHAR);
+      act("$1n throws $1s " + thing.name + " at $3n but misses completely!",
+          A_SOMEONE, self, null, targ, TO_NOTVICT);
+      goto dispose_thing;
+   }
+
+
+:dispose_thing:
+dead_jim := dead_jim - bonus;
+
+   if (bonus == -1)
+   {
+      link(thing, self.outside);
+      quit;
+   }
+   else
+   {
+      mdam := rnd(0, 40 - (thing.value[1] + thing.value[2]));
+      thing.hp := thing.hp - mdam;
+      position_update(thing);
+
+/*      if ((bonus > 30) and (dead_jim > -10)) link(thing, targ)
+      else if ((bonus > 30) and (dead_jim == -10)) link(thing, self.outside);
+      else if ((bonus >30) and (dead_jim < -10))
+      {
+         pause;
+         thing := findunit(self, thing_name, FIND_UNIT_IN_ME, null);
+         if (tstr2 == "")
+         {
+            tstr := "corpse of " + tstr;
+            targ := findunit(self, tstr, FIND_UNIT_SURRO, null);
+            if (targ == null) link(thing, self.outside);
+            else link(thing, targ);
+         }
+         else if (tstr2 != "")
+         {
+            targ := findunit(self, "corpse", FIND_UNIT_SURRO, null);
+            if (targ == null) link(thing, self.outside);
+            else if (tstr2 in targ.outside_descr) link(thing, targ);
+            else link(thing, self.outside);
+         }
+         else link(thing, self.outside);
+
+      } */
+      if ((bonus > 30) and (dead_jim >= -10))
+        link (thing, targ);
+
+      else if ((bonus > 30) and (dead_jim < -10))
+        {
+        targ := findunit(self, "corpse", FIND_UNIT_SURRO, null);
+
+        if ((tstr2 != "") and (tstr2 in targ.outside_descr))
+            link(thing, targ);
+        else if ((tstr2 == "") and (tstr in targ.outside_descr))
+            link (thing, targ);
+
+        else link(thing, self.outside);
+        }
+
+      else
+        link(thing, self.outside);
+   }
+
+   quit;
+} dilend

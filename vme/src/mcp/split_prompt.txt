@@ -1,0 +1,236 @@
+Generate MCP entry for DIL keyword: split
+
+=== Yacc rule ===
+| DILSE_SPLIT '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'split' not string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'split' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SLP;
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_SPLIT);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_split(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Get first word of a string */
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    int slen = 0;
+    char *buf = nullptr;
+    char *c = nullptr;
+    char *spbuf = nullptr;
+
+    v->type = DILV_FAIL;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_SP:
+            switch (dil_getval(v2))
+            {
+                case DILV_SP:
+                    if ((v1->val.ptr) && (v2->val.ptr))
+                    {
+                        cNamelist *words = new cNamelist;
+                        v->atyp = DILA_EXP;
+                        v->type = DILV_SLP;
+
+                        buf = (char *)malloc(strlen((char *)v1->val.ptr) + 1);
+                        spbuf = (char *)malloc(strlen((char *)v1->val.ptr) + 1);
+
+                        strcpy(buf, (char *)v1->val.ptr);
+
+                        while ((c = str_str(buf, (char *)v2->val.ptr)))
+                        {
+                            slen = strlen(buf);
+                            strncpy(spbuf, buf, slen - strlen(c) + 1);
+                            spbuf[slen - strlen(c)] = 0;
+                            words->AppendNameTrim(spbuf);
+                            spbuf[0] = 0;
+                            strcpy(spbuf, c + strlen((char *)v2->val.ptr));
+                            strcpy(buf, spbuf);
+                            spbuf[0] = 0;
+                        }
+
+                        if (buf)
+                        {
+                            words->AppendNameTrim(buf);
+                        }
+
+                        v->val.ptr = words;
+                        break;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    if (buf)
+    {
+        FREE(buf);
+        buf = nullptr;
+    }
+    if (spbuf)
+    {
+        FREE(spbuf);
+        spbuf = nullptr;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin deengrave();
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+var
+    pc     : unitptr;
+ 	ting   : unitptr;
+ 	pris   : integer;
+ 	i      : integer;
+ 	text   : string;
+ 	olddescr   : extraptr;
+	cash   : string;
+	engrv   : string;
+        engrvstr   :  stringlist;
+        newtitle   :  stringlist;
+        newdescr   :  stringlist;
+code
+{
+    heartbeat := PULSE_SEC*4;
+
+:start:
+    wait(SFB_DONE,command("give")and(self == target));
+    if(not visible(self,medium))goto start;
+    if(not visible(self,activator))
+    {
+        exec("sigh",self);
+        exec("say How can I deal with someone I can't see?", self );
+        exec("drop"+medium.name,self);
+        goto start;
+    }
+    pc := activator;
+    ting := medium;
+    secure(pc,nopc);
+    secure(ting,ingenting);
+    dilcopy("busy@function(Please wait; I am working right now.)",self);
+
+    if((ting.type != UNIT_ST_OBJ)or(ting.objecttype == ITEM_LIGHT)
+        or(ting.objecttype == ITEM_SCROLL)or(ting.objecttype == ITEM_FOOD)
+        or(ting.objecttype == ITEM_BOOK)or(ting.objecttype == ITEM_SPELL)
+        or(MAT_CLOTH_STR in ting.extra)or(MAT_FIRE_STR in ting.extra)or
+        ((ting.objecttype == ITEM_ARMOR)and(ting.value[0]==0)))
+    {
+        exec("say Sorry, it is beyond my ability to remove the engraving from this.",self);
+:giveback:
+        unsecure(ting);
+        link(ting, pc);
+        act("$3n gives $2n to $1n.",A_SOMEONE,pc,ting,self,TO_REST);
+        act("$3n gives $2n to you.",A_SOMEONE,pc,ting,self,TO_CHAR);
+        i:=dildestroy("busy@function",self);
+        unsecure (pc);
+        goto start;
+    }
+
+    if(not("engraving" in ting.extra))
+    {
+        exec("say Hmm... this item doesn't have an engraving, "+pc.name+
+        ".",self);
+        goto giveback;
+    }
+
+    pause;
+    if (IsInGuild@guilds(pc, GUILD_UDG_THIEF)){ // thieves guild discount
+    	exec("wink " + pc.name,self);
+    	pris := (5*SILVER_MULT)+((ting.rent)*3);
+    }else{
+    	pris := (5*PLATINUM_MULT)+((ting.rent)*3);
+    }
+    cash := moneystring(pris,TRUE);
+    exec("say Removing this engraving will cost you "+cash+".",self);
+    pause;
+    if(not transfermoney(pc,self,pris))
+    {
+        exec("say ...which you don't have apparently.",self);
+        exec("say Come back when you are richer, "+pc.name+".",self);
+        goto giveback;
+    }
+    engrvstr := split(ting.extra.["engraving"].descr, "It says ");
+    newtitle := split(ting.title, " (engraved: " + engrvstr.[1] + ")");
+
+    if (length(newtitle) == 2){
+	    ting.title := newtitle.[0] + newtitle.[1];
+    }
+    else{
+    	    ting.title := newtitle.[0];
+    }
+    subextra(ting.extra, "engraving");
+    olddescr := "" in ting.extra;
+    engrv := "<br/>" + engrvstr.[1] + " is engraved on it.";
+    newdescr := split(olddescr.descr, engrv);
+    if (length(newdescr) == 2){
+	    olddescr.descr := newdescr.[0] + newdescr.[1];
+    }
+    else{
+    	    olddescr.descr := newdescr.[0];
+    }
+
+    exec("say There, hope you like it, " + pc.name + "!", self);
+    destroy(self.inside);
+    goto giveback;
+
+
+:nopc:
+    exec("shrug ",self);
+    exec("drop "+ting.name,self);
+    i:=dildestroy("busy@function",self);
+    unsecure(pc);
+    unsecure(ting);
+    goto start;
+
+:ingenting:
+    exec("say Huh? Where did that ting go?",self);
+    I:=dildestroy("busy@function",self);
+    unsecure(ting);
+    unsecure(pc);
+    goto start;
+
+} dilend

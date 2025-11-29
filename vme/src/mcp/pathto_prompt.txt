@@ -1,0 +1,137 @@
+Generate MCP entry for DIL keyword: pathto
+
+=== Yacc rule ===
+| DILSE_PATH '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'pathto' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'pathto' not a unitptr");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_PATH);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_path(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr)
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_UP:
+                        if (!v2->val.ptr)
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                        else
+                        {
+                            unit_data *u1 = nullptr;
+                            unit_data *u2 = nullptr;
+                            u1 = unit_room((unit_data *)v1->val.ptr);
+                            u2 = unit_room((unit_data *)v2->val.ptr);
+
+                            v->val.num = move_to(u1, u2);
+                        }
+                        break;
+                    case DILV_FAIL:
+                    case DILV_NULL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin do_wpath(arg: string);
+var
+   dir : integer;
+   u : unitptr;
+   uin : unitptr;
+   sl : stringlist;
+
+code
+{
+   if (arg == "")
+   {
+      sendtext("Please specify an object you'd like a path to.<br/>", self);
+      return;
+   }
+
+   log("1");
+   u := findunit(self, arg, FIND_UNIT_WORLD, null, UNIT_ST_PC|UNIT_ST_NPC|UNIT_ST_OBJ|UNIT_ST_ROOM);
+
+   log("2");
+   if (not u)
+   {
+      u := findsymbolic(arg);
+
+      if (not u)
+      {
+         sendtext("Can't locate a unit named " + arg + "<br/>", self);
+         return;
+      }
+   }
+
+   uin := u;
+   while (uin.type != UNIT_ST_ROOM)
+      uin := uin.outside;
+
+   dir := pathto(self, u);
+
+   log("3b");
+   sl := DIR_SL_LONG;
+
+   log("4");
+   sendtext("Ola<br/>", self);
+   sendtext("Found "+u.nameidx+"@"+u.zoneidx+" which is located in <a cmd='goto #'>" + uin.nameidx + "@" + uin.zoneidx + "</a><br/>", self);
+   sendtext("Direction: " + sl.[dir] + "("+itoa(dir)+")<br/>", self);
+   log("5");
+   quit;
+} dilend

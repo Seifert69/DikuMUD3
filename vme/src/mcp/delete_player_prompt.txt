@@ -1,0 +1,96 @@
+Generate MCP entry for DIL keyword: delete_player
+
+=== Yacc rule ===
+| DILSI_DELPC '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'delete_player' not an string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_DELPC);
+    }
+}
+
+=== C implementation ===
+void dilfi_delpc(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+    descriptor_data *d = nullptr;
+    unit_data *tmp = nullptr;
+
+    if (dil_type_check("delete_player", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (delete_player).", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else
+        {
+            if (v1->val.ptr)
+            {
+                if ((d = find_descriptor(((char *)v1->val.ptr), nullptr)))
+                {
+                    extract_unit(d->getCharacter());
+                    descriptor_close(d);
+                }
+                else
+                {
+                    for (tmp = g_unit_list; tmp; tmp = tmp->getGlobalNext())
+                    {
+                        if (tmp->isPC() && !str_ccmp(tmp->getNames().Name(), ((char *)v1->val.ptr)))
+                        {
+                            extract_unit(tmp);
+                        }
+                    }
+                }
+
+                delete_player((char *)v1->val.ptr);
+            }
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin god_delete(pname:string);
+external
+ integer submember (s:string,pname:string);
+	var
+		i:integer;
+		err:integer;
+		buf:string;
+		ln:integer;
+
+		clist:stringlist;
+code
+{
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		delete_player(pname);
+		return;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		delete_player(pname);
+		return;
+	}
+	i:=0;
+	while (i<ln)
+	{
+		err:=submember(clist.[i],pname);
+		i:=i+1;
+	}
+	delete_player(pname);
+	return;
+} dilend

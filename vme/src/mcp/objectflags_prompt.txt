@@ -1,0 +1,659 @@
+Generate MCP entry for DIL keyword: objectflags
+
+=== Yacc rule ===
+| DILSF_EFL /* .objectflags */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_EFL;
+}
+
+=== C implementation ===
+case DILF_EFL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *object = reinterpret_cast<obj_data *>(v1->val.ptr);
+                    if (object && object->isObj())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = object->getObjectFlagsPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin integer wear(ch : unitptr, obj : unitptr,
+                      keyword : integer, arg : string, err : integer,
+                      cmd_str : string);
+external
+	unit_msg(ch : unitptr, obj : unitptr, ex_str : string,
+                  act_self : string, act_other : string);
+	integer hands_used(ch : unitptr);
+	string obj_wear_size(ch : unitptr, obj : unitptr, keyword : integer);
+	integer two_handed(i : integer);
+	string wear_rating(wpn:integer);
+var
+errstr : string;
+c : string;
+hands : integer;
+two : integer;
+rating : string;
+code
+{
+errstr := "";
+if ((obj.type != UNIT_ST_OBJ) or
+   (obj.equip))
+	return(FALSE);
+
+if (keyword == WEAR_UNUSED)
+{
+ if (equipment(ch,WEAR_UNUSED))
+  sendtext("DOUBLE ERROR! UNUSED ALREADY USED! REPORT!<br/>",ch);
+ else
+  sendtext("UNUSED EQUIPMENT ERROR! Please report!<br/>", ch);
+
+ return(FALSE);
+}
+else if ((keyword == WEAR_FINGER_L) or
+        (keyword == WEAR_FINGER_R))
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_FINGER))
+  errstr := "You can't wear that on your finger.";
+ else if (not (equipment(ch,WEAR_FINGER_L)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+    act("$3n is $2t to fit on your finger.",
+    	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+   }
+
+   unit_msg(ch,obj,"$wear",
+            "You put $2n on your left hand's ringfinger.",
+            "$1n puts $2n on $1s left hand's ringfinger.");
+
+   addequip(obj,WEAR_FINGER_L);
+ }
+ else if (not (equipment(ch,WEAR_FINGER_R)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+    act("$3n is $2t to fit on your finger.",
+    	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+   }
+
+   unit_msg(ch,obj,"$wear",
+            "You put $2n on your right hand's ringfinger.",
+            "$1n puts $2n on $1s right hand's ringfinger.");
+
+   addequip(obj,WEAR_FINGER_R);
+ }
+ else
+   errstr := "You're already using two rings.";
+}
+else if ((keyword == WEAR_NECK_1) or
+   (keyword == WEAR_NECK_2))
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_NECK))
+   errstr := "You can't wear that around your neck.";
+ else if (not (equipment(ch,WEAR_NECK_1)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+    act("$3n is $2t to fit around your neck.",
+    	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your neck.",
+		    "$1n wears $2n around $1s neck.");
+
+    addequip(obj,WEAR_NECK_1);
+ }
+ else if (not (equipment(ch,WEAR_NECK_2)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+    act("$3n is $2t to fit around your neck.",
+    	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your neck.",
+		    "$1n wears $2n around $1s neck.");
+
+    addequip(obj,WEAR_NECK_2);
+ }
+ else
+   errstr := "You can't wear any more around your neck.";
+}
+else if (keyword == WEAR_BODY)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_BODY))
+   errstr := "You can't wear that on your body.";
+ else if (not (equipment(ch,WEAR_BODY)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+   act("$3n is $2t to fit your body.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+   return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You put $2n on your body.",
+		    "$1n puts $2n on $1s body.");
+
+   addequip(obj,WEAR_BODY);
+ }
+ else
+   errstr := "You already wear something on your body.";
+}
+else if (keyword == WEAR_HEAD)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_HEAD))
+   errstr := "You can't wear that on your head.";
+ else if (not (equipment(ch,WEAR_HEAD)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+   act("$3n is $2t to fit your head.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+   return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You wear $2n on your head.",
+		    "$1n wears $2n on $1s head.");
+
+   addequip(obj,WEAR_HEAD);
+ }
+ else
+   errstr := "You already wear something on your head.";
+}
+else if (keyword == WEAR_LEGS)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_LEGS))
+   errstr := "You can't wear that on your legs.";
+ else if (not (equipment(ch,WEAR_LEGS)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+   act("$3n are $2t to fit your legs.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+   return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You put $2n on your legs.",
+		    "$1n puts $2n on $1s legs.");
+
+   addequip(obj,WEAR_LEGS);
+ }
+ else
+   errstr := "You already wear something on your legs.";
+}
+else if (keyword == WEAR_FEET)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_FEET))
+   errstr := "You can't wear that on your feet.";
+ else if (not (equipment(ch,WEAR_FEET)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+   if (c != "")
+   {
+   act("$3n are $2t to fit your feet.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+   return(FALSE);
+   }
+
+   unit_msg(ch, obj, "$wear",
+		    "You put $2n on your feet.",
+		    "$1n puts $2n on $1s feet.");
+
+   addequip(obj,WEAR_FEET);
+ }
+ else
+   errstr := "You already wear something on your feet.";
+}
+else if (keyword == WEAR_HANDS)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_HANDS))
+   errstr := "You can't wear that on your hands.";
+ else if (not (equipment(ch,WEAR_HANDS)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n are $2t to fit your hands.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You start using $2n.",
+		    "$1n starts using $2n.");
+    addequip(obj,WEAR_HANDS);
+ }
+ else
+    errstr := "You already wear something on your hands.";
+}
+else if (keyword == WEAR_ARMS)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_ARMS))
+   errstr := "You can't wear that on your arms.";
+ else if (not (equipment(ch,WEAR_ARMS)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n are $2t to fit your arms.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n on your arms.",
+		    "$1n wears $2n on $1s arms.");
+    addequip(obj,WEAR_ARMS);
+ }
+ else
+    errstr := "You already wear something on your arms.";
+}
+else if (keyword == WEAR_ABOUT)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_ABOUT))
+   errstr := "You can't wear that about your body.";
+ else if (not (equipment(ch,WEAR_ABOUT)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit about your body.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+    unit_msg(ch, obj, "$wear",
+		    "You wrap $2n about your body.",
+		    "$1n wraps $2n about $1s body.");
+    addequip(obj,WEAR_ABOUT);
+ }
+ else
+    errstr := "You already wear something about your body.";
+}
+else if (keyword == WEAR_WAIST)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_WAIST))
+    errstr := "You can't wear that about your waist.";
+ else if (not (equipment(ch,WEAR_WAIST)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit around your waist.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+    unit_msg(ch, obj, "$wear",
+		    "You strap $2n about your waist.",
+		    "$1n straps $2n about $1s waist.");
+    addequip(obj,WEAR_WAIST);
+ }
+ else
+    errstr := "You already wear something about your waist.";
+}
+else if ((keyword == WEAR_WRIST_L) or
+        (keyword == WEAR_WRIST_R))
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_WRIST))
+    errstr := "You can't wear that around your wrist.";
+ else if (not (equipment(ch,WEAR_WRIST_L)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit around your wrist.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your left wrist.",
+		    "$1n wears $2n around $1s left wrist.");
+    addequip(obj,WEAR_WRIST_L);
+ }
+ else if (not (equipment(ch,WEAR_WRIST_R)))
+ {
+   c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit around your wrist.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your right wrist.",
+		    "$1n wears $2n around $1s right wrist.");
+    addequip(obj,WEAR_WRIST_R);
+ }
+ else
+    errstr := "You already wear something around both your wrists.";
+}
+else if (keyword == WEAR_WIELD)
+{
+ hands := hands_used(ch);
+ if (obj)
+ two := two_handed(obj.value[0]); 
+ else
+ two := FALSE;
+
+ if (not (obj.manipulate & MANIPULATE_WIELD))
+    errstr := "You can't wield that.";
+ else if (hands >= 2)
+    errstr := "You have no free hands.";
+ else if ((two == TRUE) and (hands > 0))
+    errstr := "You need two free hands to wield this weapon.";
+ else if (not (equipment(ch,WEAR_WIELD)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to be wielded by you.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    if (two == TRUE)
+     unit_msg(ch, obj, "$wear",
+		      "You wield $2n two-handedly.",
+		      "$1n wields $2n two-handedly.");
+    else
+     unit_msg(ch, obj, "$wear",
+		      "You wield $2n.",
+		      "$1n wields $2n.");
+
+    addequip(obj,WEAR_WIELD);
+
+    if ((ch.type == UNIT_ST_PC) and (obj.objecttype == ITEM_WEAPON))
+    {
+    rating := wear_rating(ch.weapons[obj.value[0]]);
+    act("$2t at fighting with $3n.",
+    	A_ALWAYS, ch, rating, obj, TO_CHAR);
+    }
+ }
+ else
+    errstr := "You are already wielding something.";
+}
+else if (keyword == WEAR_HOLD)
+{
+ hands := hands_used(ch);
+
+
+ if (obj.objecttype == ITEM_WEAPON)
+    two := two_handed(obj.value[0]);
+ else
+    two := FALSE;
+
+ if (not (obj.manipulate & (MANIPULATE_HOLD|MANIPULATE_WIELD)))
+    errstr := "You can't hold this.";
+ else if (hands >= 2)
+    errstr := "Your hands are full.";
+ else if (not (equipment(ch,WEAR_HOLD)))
+ {
+
+    if ((two == TRUE) and (hands > 0))
+    {
+     errstr := "It requires two free hands to use!";
+     goto err;
+    }
+
+    if (obj.objecttype == ITEM_WEAPON)
+    {
+
+      if (isset(obj.objectflags,OBJ_NO_DUAL))
+      {
+       errstr := "This weapon is too large to be used as a second "+
+		 "weapon.";
+       goto err;
+      }
+
+      c := obj_wear_size(ch,obj,keyword);
+
+      if (c != "")
+      {
+      act("$3n is $2t to be wielded by you.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+      return(FALSE);
+      }
+    }
+
+   unit_msg(ch, obj, "$wear",
+		    "You start holding $2n.",
+		    "$1n starts holding $2n.");
+
+   addequip(obj,WEAR_HOLD);
+ }
+ else
+   errstr := "You are already holding something.";
+}
+else if (keyword == WEAR_SHIELD)
+{
+ hands := hands_used(ch);
+
+ if (not (obj.manipulate & MANIPULATE_WEAR_SHIELD))
+    errstr := "You can't use that as a shield.";
+ else if (obj.objecttype != ITEM_SHIELD)
+    errstr := "That is not a shield.";
+ else if (hands >= 2)
+    errstr := "Your hands are full.";
+ else if (not (equipment(ch,WEAR_SHIELD)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n are $2t to fit your arms.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You strap $2n to your arm.",
+		    "$1n straps $2n on $1s arm.");
+    addequip(obj,WEAR_SHIELD);
+ }
+ else
+    errstr := "You are already using a shield.";
+}
+else if (keyword == WEAR_CHEST)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_CHEST))
+    errstr := "You can't wear that across your chest.";
+ else if (not (equipment(ch,WEAR_CHEST)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit your chest.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You strap $2n across your chest.",
+		    "$1n straps $2n across $1s chest.");
+    addequip(obj,WEAR_CHEST);
+ }
+ else
+    errstr := "You already wear something across your chest.";
+}
+else if (keyword == WEAR_BACK)
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_BACK))
+    errstr := "You can't wear that on your back.";
+ else if (not (equipment(ch,WEAR_BACK)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit on your back.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You strap $2n on your back.",
+		    "$1n straps $2n around $1s back.");
+    addequip(obj,WEAR_BACK);
+ }
+ else
+    errstr := "You already wear something on your back.";
+}
+else if ((keyword == WEAR_EAR_L) or
+        (keyword == WEAR_EAR_R))
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_EAR))
+    errstr := "You can't wear that on your ear.";
+ else if (not (equipment(ch,WEAR_EAR_L)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit your ear.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n on your left ear.",
+		    "$1n wears $2n on $1s left ear.");
+    addequip(obj,WEAR_EAR_L);
+ }
+ else if (not (equipment(ch,WEAR_EAR_R)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit your ear.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n on your right ear.",
+		    "$1n wears $2n on $1s right ear.");
+    addequip(obj,WEAR_EAR_R);
+ }
+ else
+    errstr := "You can't wear anything else on your ear.";
+}
+else if ((keyword == WEAR_ANKLE_L) or
+        (keyword == WEAR_ANKLE_R))
+{
+ if (not (obj.manipulate & MANIPULATE_WEAR_ANKLE))
+    errstr := "You can't wear that on your ankle.";
+ else if (not (equipment(ch,WEAR_ANKLE_L)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit your ankle.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your left ankle.",
+		    "$1n wears $2n around $1s left ankle.");
+    addequip(obj,WEAR_ANKLE_L);
+ }
+ else if (not (equipment(ch,WEAR_ANKLE_R)))
+ {
+    c := obj_wear_size(ch,obj,keyword);
+
+    if (c != "")
+    {
+    act("$3n is $2t to fit your ankle.",
+	A_ALWAYS, ch, c, obj, TO_CHAR);
+    return(FALSE);
+    }
+
+    unit_msg(ch, obj, "$wear",
+		    "You wear $2n around your right ankle.",
+		    "$1n wears $2n around $1s right ankle.");
+    addequip(obj,WEAR_ANKLE_R);
+ }
+ else
+    errstr := "You can't wear anything else on your ankles.";
+}
+else if (keyword == -1)
+    errstr := "Wear $2n where?";
+else if (keyword == -2)
+    errstr := "You can not wear $2n.";
+else
+{
+    errstr := "Unknown weartype for $2n. Please report.";
+    log("Unknown type ("+itoa(keyword)+") called in wear.");
+}
+
+if (errstr == "")
+{
+ send_done(cmd_str,ch,obj,null,0,arg,null, CMD_AUTO_NONE);
+ return(TRUE);
+}
+
+:err:
+if (err)
+{
+ act(errstr, A_ALWAYS, ch, obj, null, TO_CHAR);
+ return(FALSE);
+}
+else return(FALSE);
+
+} dilend

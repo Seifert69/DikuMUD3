@@ -1,0 +1,136 @@
+Generate MCP entry for DIL keyword: movement
+
+=== Yacc rule ===
+| DILSF_MOV /* .movement */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_MOV;
+}
+
+=== C implementation ===
+case DILF_MOV:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && room->isRoom())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = room->getLandscapeTerrainPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin jack_fight();
+var
+        vict : unitptr;
+        fght : integer;
+code
+{
+   :init:
+   heartbeat := PULSE_SEC * 7;
+   wait(SFB_COM,(self.position == POSITION_FIGHTING));
+   vict := self.fighting;
+   secure(vict,damnleft);
+
+   :start:
+fght := rnd(0,100);
+pause;
+
+if (fght < 10)
+{
+act("$1n chokes you with $1s strings!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n chokes $3n with $1s strings!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(1,2);
+position_update(vict);
+goto start;
+}
+if (fght < 20)
+{
+act("A quick slap from $1n's movement bar knocks you silly!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("A quick slap from $1n's movement bar knocks $3n silly!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,2);
+position_update(vict);
+goto start;
+}
+if (fght < 30)
+{
+act("$1n tries to charge you and trips over $1s's strings!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n tries to charge $3n but trips over $1s's own strings!",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,0);
+position_update(vict);
+goto start;
+}
+if (fght < 40)
+{
+act("$1n slices you with his razor!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n slices $3n with his razor",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(3,5);
+position_update(vict);
+goto start;
+}
+if (fght < 50)
+{
+act("$1n's jaw drops open and $1s takes a bite out of you!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n's jaw opens and he bites $3n !",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,1);
+position_update(vict);
+goto start;
+}
+if (fght < 60)
+{
+act("$1n gets all tangled up in $1s's own ropes!",
+A_ALWAYS,self,null,vict,TO_ALL);
+act("$1n gets totally tangled in $1s's own ropes!",
+A_ALWAYS,self,null,vict,TO_ALL);
+self.abilities[ABIL_DEX] := (self.abilities[ABIL_STR])-rnd(1,2);
+position_update(self);
+goto start;
+}
+if (fght < 70)
+{
+act("$1n kicks you with his wooden sabat!",
+A_ALWAYS,self,null,vict,TO_VICT);
+act("$1n kicks $3n with his wooden sabat! ",
+A_ALWAYS,self,null,vict,TO_NOTVICT);
+vict.hp := vict.hp - rnd(0,5);
+position_update(vict);
+goto start;
+}
+else goto start;
+
+        :damnleft:
+exec("emote cackles maniacally.", self);
+unsecure(vict);
+goto init;
+} dilend

@@ -1,0 +1,161 @@
+Generate MCP entry for DIL keyword: zone
+
+=== Yacc rule ===
+| DILSF_ZON /* .zone */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_ZON;
+}
+
+=== C implementation ===
+case DILF_ZON:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        v->val.ptr = unit_zone((unit_data *)v1->val.ptr)->getNamePtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin unitptr make_corpse(sCorpseLoad : string);
+external
+   unitptr findcrproom(u:unitptr);
+   die@justice(crp : unitptr);
+var
+   rltime:integer;
+   corpseroom:unitptr;
+   crp:unitptr;
+   item:unitptr;
+   temp:unitptr;
+   exd : extraptr;
+
+code
+{
+   heartbeat := PULSE_SEC;
+   
+   if (self.symname == "familiar2@g_q")
+   {
+     /* The while statement is to prevent people from destroying eq with a familiar*/
+
+	while(self.inside != null)
+		link(self.inside, self.outside);
+	
+		act("The familiar's magic unwinds and it fades from this plane of existance.",
+			A_ALWAYS,self,null,null,TO_ALL);
+      crp := null;
+      return (crp);
+   }
+
+   crp := load(sCorpseLoad); // e.g. "corpse@death", "statue?"
+
+   // Fix corpse's description
+   //
+
+   // corpse.name.[0] = "corpse of $1n"
+   // corpse.title = "$1n's corpse"
+   // corpse.descr = "$1n's corpse is lying here."
+   crp.names.[0] := sact(crp.names.[0], A_RAW, self, crp, null, TO_CHAR);
+   crp.title := sact(crp.title, A_RAW, self, crp, null, TO_CHAR);
+   crp.outside_descr := sact(crp.outside_descr, A_RAW, self, crp, null, TO_CHAR);
+   exd := "$rot" in crp.extra;
+   if (exd)
+   {
+      exd.names.[1] := sact(exd.names.[1], A_RAW, self, crp, null, TO_CHAR);
+      exd.names.[2] := sact(exd.names.[2], A_RAW, self, crp, null, TO_CHAR);
+      exd.names.[3] := sact(exd.names.[3], A_RAW, self, crp, null, TO_CHAR);      
+   }
+
+   // Copy important values to corpse
+   //
+   set_weight_base(crp, self.baseweight);
+   set_weight(crp, self.baseweight);
+   crp.height:=self.height;
+  
+   if (self.type==UNIT_ST_NPC)
+   {
+      crp.value[2]:=0;
+      crp.value[3]:=self.level;
+   }
+   else
+   {
+      crp.value[2]:=1;
+      crp.value[3]:=self.vlevel;
+   }
+   crp.value[4] := self.race;
+   
+   addextra(crp.extra, {"$living_sym"}, self.symname);
+   if (isset(self.pcflags, PC_PK_RELAXED))
+      addextra(crp.extra, {"$BOB"}, "");
+
+   // Transfer victim's items to corpse
+   //
+   //   
+   item := self.inside;
+   while (item != null)
+   {
+      temp := item.next;
+      unequip(item);
+
+      // Items on players that are from the treasure zone or minv < 51 stay inside the player
+      if ((self.type != UNIT_ST_PC) or ((item.zoneidx != "treasure") and (item.minv < 51)))
+      {
+         link(item, crp);
+      }
+      else
+      {
+         item.minv := 200;  // Stays inside the PC
+      }
+      item := temp;
+   } 
+
+
+   // Process justice when dead
+   //
+   die@justice(crp);
+
+
+   // Set up corpse decay and saving of items
+   //
+   rltime := realtime;
+   corpseroom := findcrproom(self);
+   addextra(crp.extra, {CORPSE_TIME}, itoa(rltime));
+
+   if (self.type==UNIT_ST_PC)
+   {
+      if ("Soul Anchor Request Complete" in self.quests)
+      {
+         addextra(crp.extra, {CORPSE_HOMETOWN}, self.hometown);
+      }
+      addextra(crp.extra, {CORPSE_EXTRA}, corpseroom.symname);
+
+      addextra(crp.extra, {CORPSE_FILE}, "corpse_"+self.name+"."+itoa(rltime));
+      store(crp, "corpse_"+self.name+"."+itoa(rltime), TRUE);
+      dilcopy("partial_get@death", crp);
+   }
+
+   dilcopy("remove_corpse@death", crp);
+
+   link(crp, corpseroom);
+
+   return (crp);
+} dilend

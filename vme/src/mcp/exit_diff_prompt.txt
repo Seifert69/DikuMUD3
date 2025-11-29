@@ -1,0 +1,199 @@
+Generate MCP entry for DIL keyword: exit_diff
+
+=== Yacc rule ===
+| DILSF_EXITDIFF idx /* .exit_difficulty */
+{
+    INITEXP($$);
+    copy_code(&($$), &($2));
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_EXITDIFF;
+    FREEEXP($2);
+}
+
+=== C implementation ===
+case DILF_EXITDIFF:
+            v2 = p->stack.pop(); /* evaluate index */
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    v->type = DILV_UINT1R;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            if (v->type == DILV_UINT1R)
+            {
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
+                    ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
+                {
+                    v->atyp = DILA_NONE;
+                    v->ref = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getSkillDifficultyPtr();
+                }
+                else
+                {
+                    v->type = DILV_FAIL;
+                }
+            }
+            break;
+
+=== DIL example ===
+dilbegin climb_dil(arg : string);
+external
+   checkstand();
+   integer checkexit(arg : string, bMessage:integer);
+   string  dirstring@function(int123 : integer);
+   integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
+   integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
+   string exitname@function(room:unitptr, dir:integer);
+   fall_dil(damage:integer);
+   look_blank@baselook(l1 : unitptr, str12 : string);
+
+var
+   fall_to:string;
+   res:integer;
+   args:stringlist;
+   first_arg:string;
+   last_arg:string;
+   len_arg:integer;
+   in_vehicle:integer;
+   dir         :  integer;
+   send_dir         :string; 
+   dir_name:string;
+   room:unitptr;
+   room_going:unitptr;
+   i:integer;
+   skilla:integer;
+   skillb:integer;
+   hm : integer; 
+   difficulty:integer;
+   damage:integer;
+   amount:integer;
+   percent:integer;
+   exd : extraptr;
+   dmg : integer;
+   exit_name : string;
+   
+code
+{
+   heartbeat := PULSE_SEC * 5;
+   checkstand();
+
+   if (self.endurance < 10)
+   {
+      act("You are too exhausted.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "")
+   {
+      act("Climb what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   room := self.outside;
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("You can't climb while inside $2n.", A_SOMEONE, self, room, null, TO_CHAR);
+      return;      
+   }
+
+   dir := checkexit(arg, 1);
+   dir_name := dirstring@function(dir);
+   exit_name := exitname@function(room, dir);
+
+   if (isset(room.exit_info[dir], EX_CLOSED))
+   {
+      act("The $2t seems to be closed.", A_SOMEONE, self, exit_name, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(room.exit_info[dir], EX_CLIMB))
+   {
+      act("Doesn't seem like you have to climb the $2t, perhaps just try to move normally?", A_SOMEONE, self, exit_name, null, TO_CHAR);
+      return;
+   }
+
+   /*
+   * test for success and fail including endurance loss
+   *	including drunk code
+   */	
+
+   room_going := room.exit_to[dir];
+   difficulty := room.exit_diff[dir];
+
+   if (self.drunk > 0)
+   {
+      difficulty := difficulty + 5 * self.drunk;
+      act("Climbing under influence isn't easy.", A_SOMEONE, self, null, null, TO_CHAR);
+   }
+
+   hm := skillchecksa@skills(SKI_CLIMB, ABIL_DEX, difficulty);
+   dmg := 5; /* Default: 5 hits per 10 fail */
+
+   exd := room.extra.["$climb_"+dir_name];
+   if (exd != null)
+   {
+      if (exd.vals != null)
+      {
+         dmg := exd.vals.[0];
+      }
+   }
+
+   self.endurance := self.endurance-6;
+
+   if (hm <= 0)
+   {
+      dmg := dmg * (-hm / 10);
+
+      act("You begin climbing the $2t but slip and fall.",	A_ALWAYS, self, exit_name, null, TO_CHAR);
+      act("$1n begins climbing the $2t but slips and falls.", A_HIDEINV, self, exit_name, null, TO_ROOM);
+      dilcopy("fall_dil@basemove("+itoa(dmg)+")", self);
+      quit;
+   }
+
+   /* Issue the command() stuff so that all movers send the command "north" etc to the mud.
+   //                        sendtext("after endurance test<br/>",self);
+   *   This is necessary for dils like the guard dil.
+   */
+
+   res := send_pre(dirstring@function(dir), self, null, null, 0, arg, null);
+   if (res != SFR_SHARE)
+      quit;
+
+   res := send_pre("climb", self, null, null, 0, arg, null);
+   if (res != SFR_SHARE)
+      quit;
+
+   link(self, room_going);
+
+   act("$1n climbs in on the $2t.", A_HIDEINV, self, arg , null, TO_ROOM);
+
+   look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+
+   send_done("climb", self, null, null, 0, "", null, CMD_AUTO_NONE);
+   send_done(dirstring@function(dir), self, null, null, 0, "", null, CMD_AUTO_NONE);
+   quit;
+} dilend

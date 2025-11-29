@@ -1,0 +1,130 @@
+Generate MCP entry for DIL keyword: islight
+
+=== Yacc rule ===
+| DILSE_ISLT '(' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'islight' not a unitptr");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_ISLT);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_islt(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_UP:
+            if (!v1->val.ptr)
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                if (((unit_data *)v1->val.ptr)->isLight())
+                {
+                    v->val.num = 1;
+                }
+                else
+                {
+                    v->val.num = 0;
+                }
+            }
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin direc_dil(arg : string);
+external
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   integer issetclimb@function(direction:integer);
+   string  dirstring@function(i2 : integer);
+
+var
+   room    :  unitptr;
+   buff    :  string;
+   dir     :  integer;
+   test    :  integer;
+   temp    :  string;
+
+code{
+   if (not islight(self.outside))
+   {
+      act("It is pitch black.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   room := self.outside;
+
+   if ((room.type != UNIT_ST_ROOM) and (isset(room.flags, UNIT_FL_TRANS)))
+      room := room.outside;
+
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("<div class='exit'>Obvious exits:<br/>None.<br/></div>", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   buff := "";
+   dir := NORTH;
+
+   while (dir <= MAX_EXIT)
+   {
+      if (room.exit_to[dir])
+      {
+         test := is_hidden(self, dir, room);
+
+         if (test)
+         {
+            dir := dir + 1;
+            continue;
+         }
+
+        temp := dirstring@function(dir);
+
+        buff := buff + "<div class='exit'><a cmd='#'>" + temp + "</a> - ";
+        if (isset(room.exit_info[dir], EX_CLOSED))
+            buff := buff + "Closed " + room.exit_names[dir].[0] + "<br/>";
+        else
+            buff := buff + room.exit_to[dir].title + "<br/>";
+       }
+      dir := dir + 1;
+   }
+
+   if (buff == "")
+      buff := "<div class='exit'>Obvious exits:<br/>None.</div>";
+   else
+      buff := "<div class='exit'>Obvious exits:<br/>" + buff + "</div>";
+
+   sendtext(textformat(buff), self);
+   return;
+} dilend

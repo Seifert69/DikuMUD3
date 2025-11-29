@@ -1,0 +1,146 @@
+Generate MCP entry for DIL keyword: creators
+
+=== Yacc rule ===
+| DILSF_CREATORS /* .creators */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_SLP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_CREATORS;
+}
+
+=== C implementation ===
+case DILF_CREATORS:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SLPR;
+                        v->ref = &(((zone_type *)v1->val.ptr)->getCreators());
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin do_help(s:string);
+external
+   stringlist readindex(s:string,letter:string);
+   string gettopic(s:stringlist);
+   string selecttopic(s:stringlist,t:string);
+   string spinsearch (s:stringlist,t:string);
+
+var
+	txt:string;
+	i:integer;
+	ln:integer;
+	buf:string;
+	rm:unitptr;
+	zptr:zoneptr;
+	err:integer;
+	fileindex:stringlist;
+	ind:stringlist;
+	ref:stringlist;
+	temp:stringlist;
+	tlist:stringlist;
+    pay : string;
+
+code
+{
+   if (s=="")
+      s:="help";
+
+	if (s==left("topics", length(s)))
+	{
+		fileindex := readindex("help.index", "all");
+		sendtext ("This is the full help topic list.  "+
+		"To find out how to get a partial listing do 'help help'<br/>",self);
+		buf:=gettopic(fileindex);
+		pagestring(buf,self);
+		quit;
+	}
+
+	if (s==left("area",length(s)))
+	{
+      zptr:=zhead();
+
+      rm:=self.outside;
+      while (rm.type!=UNIT_ST_ROOM)
+         rm:=rm.outside;
+
+      while (zptr.name!=rm.zoneidx)
+         while (left(zptr.name,length(rm.zoneidx)) != rm.zoneidx)
+            zptr:=zptr.next;
+
+      /*log("checking pay"); */
+      if (not(zptr.payonly))
+         pay := "This area is not restricted.";
+
+      if (zptr.payonly)
+         pay := "This area is restricted to people with donation status.";
+
+      if (length(zptr.help)>1)
+      {
+         tlist := split(zptr.title,"@");
+         sendtext ("You are in the area known as: "+tlist.[0]+".<br/>",self);
+         sendtext (pay+".<br/>",self);
+         pagestring (zptr.help,self);
+         quit;
+      }
+      else
+      {
+         sendtext ("There is no help on this area written by the creators. You're on your own<br/>",self);
+         quit;
+      }
+	}
+
+
+	if  ("topic"==left(s,5))
+	{
+      ind:=getwords(s);
+      fileindex:=readindex("help.index",ind.[1].[0]);
+      buf:=selecttopic(fileindex,ind.[1]);
+      pagestring(buf,self);
+      quit;
+	}
+
+
+   fileindex:=readindex("help.index",s.[0]);
+   txt := spinsearch(fileindex,s);
+
+   if (txt=="")
+	{
+      sendtext("There is no help available on the subject '"+s+"'<br/>",self);
+      quit;
+	}
+
+   //sendtext(txt, self);
+   
+   err := loadstr(txt, buf);
+   if (err < 1)
+	{
+      sendtext("There is no help available on the subject '"+s+"'<br/>",self);
+      quit;
+	}
+
+   pagestring(buf, self);
+
+   temp := split(txt, ".");
+   txt := toupper(temp.[0].[0]) + right(temp.[0], length(temp.[0])-1);
+   sendtext("<a href='https://wiki.dikumud.net/wiki/Help/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
+   quit;
+} dilend

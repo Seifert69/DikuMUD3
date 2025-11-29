@@ -1,0 +1,412 @@
+Generate MCP entry for DIL keyword: replace
+
+=== Yacc rule ===
+| DILSE_REPLACE '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'replace' not a string.");
+    }
+    if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'replace' not a string.");
+    }
+    if ($7.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 3 of 'replace' not a string.");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_REPLACE);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+}
+
+=== C implementation ===
+void dilfe_replace(dilprg *p)
+{
+    dilval *v = new dilval;
+    // char *buf;
+    // int olen, nlen, buflen, i;
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_SP;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+        case DILV_SP:
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+                case DILV_SP:
+
+                    switch (dil_getval(v3))
+                    {
+                        case DILV_FAIL:
+                        case DILV_NULL:
+                            v->type = DILV_FAIL;
+                            break;
+                        default:
+                            v->type = DILV_ERR;
+                            break;
+                        case DILV_SP:
+                            if (v->type == DILV_SP)
+                            {
+                                std::string sch((char *)v1->val.ptr);
+                                std::string rpl((char *)v2->val.ptr);
+                                std::string mystr((char *)v3->val.ptr);
+
+                                str_substitute(sch, rpl, mystr);
+
+                                v->atyp = DILA_EXP;
+                                v->val.ptr = str_dup(mystr.c_str());
+                                /*
+                                MS2020 This could crash if replacing multiple instances of string (buffer OOB)
+                                olen = strlen((char *)v1->val.ptr);
+                                nlen = strlen((char *)v2->val.ptr);
+                                buflen = strlen((char *)v3->val.ptr);
+
+                                i = (nlen - olen);
+                                if (i < 0)
+                                    buflen = buflen + olen + 10;
+                                else
+                                    buflen =
+                                        buflen + (((nlen - olen) / (olen)) * olen) + olen + 20;
+                                CREATE(buf, char, buflen);
+                                strcpy(buf, (char *)v3->val.ptr);
+                                str_substitute((char *)v1->val.ptr, (char *)v2->val.ptr, buf);
+
+                                FREE(buf);*/
+                            }
+                            else
+                            {
+                                v->type = DILV_FAIL;
+                            }
+
+                            break;
+                    }
+
+                    break;
+            }
+
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin aware  piset(arg:string);
+external
+ stringlist make_names(s:string);
+var
+ i:integer;
+  ln:integer;
+  temp:string;
+  tmp:string;
+  u:unitptr;
+  j:integer;
+jln:integer;
+  action:string;
+  slist:stringlist;
+code
+{
+
+if (arg=="")
+ {
+ sendtext ("piset what?<br/>",self);
+ quit;
+ }
+
+u:=findunit(self,arg,FIND_UNIT_INVEN,null);
+if (u==null)
+ {
+ sendtext("No such object found.<br/>",self);
+ quit;
+ }
+
+if (u.type!=UNIT_ST_OBJ)
+ {
+ sendtext("No such object found.<br/>",self);
+ quit;
+ }
+
+if (u.zoneidx!="treasure")
+ {
+ sendtext(u.title+" is not a Power Item.<br/>",self);
+ quit;
+ }
+
+if ("$no_rename" in u.extra)
+{
+sendtext(u.title+" is a unique item that can not be renamed.<br/>",self);
+quit;
+}
+
+secure(u,lostu);
+action:=getword (arg);
+if (action==left("title",length(action)))
+ goto do_title;
+else if (action==left("shortdescr",length(action)))
+ goto do_shortdescr;
+else if (action==left("descr",length(action)))
+ goto do_descr;
+else
+ {
+ sendtext ("Incorrect argument to piset please see <help piset><br/>",self);
+ quit;
+ }
+:arg_title:
+arg:=argument;
+goto do_title;
+:arg_title2:
+arg:=excmdstr+" "+argument;
+:do_title:
+if (u.extra.["$pititle"].descr=="true")
+ {
+ sendtext ("You have already set this objects title.<br/>",self);
+ quit;
+ }
+
+
+temp:=self.prompt;
+self.prompt:="Is "+arg+" the title you want? ([Q]uit, [Y]es, or (N)o";
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+wait (SFB_CMD,self==activator);
+self.prompt:=temp;
+if (excmdstr==left("quit",length(excmdstr)))
+ {
+ block;
+ sendtext ("Command Canceled.<br/>",self);
+ i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+ quit;
+ }
+else if (excmdstr==left("yes",length(excmdstr)))
+ {
+ block;
+ goto cont_title;
+ }
+
+block;
+temp:=self.prompt;
+self.prompt:="Enter a new title:  ";
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+wait (SFB_CMD,self==activator);
+block;
+self.prompt:=temp;
+goto arg_title2;
+
+:cont_title:
+
+slist:=make_names(arg);
+ln:=length(slist);
+i:=0;
+while (i<ln)
+ {
+ if (slist.[i] in u.names)
+  {
+  i:=i+1;
+  continue;
+  }
+ j:=0;
+jln:=length(u.names);
+while (j<jln)
+{
+ if (length(slist.[i])>length(u.names.[j]))
+ break;
+  j:=j+1;
+}
+ insert (u.names,j,slist.[i]);
+ i:=i+1;
+ }
+u.title:=arg;
+addextra (u.extra,{"$pititle"},"true");
+sendtext("Title set.<br/>",self);
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+quit;
+:arg_shortdescr:
+arg:=argument;
+goto do_shortdescr;
+:arg_shortdescr2:
+arg:=excmdstr+" "+argument;
+:do_shortdescr:
+if (u.extra.["$pishortdescr"].descr=="true")
+ {
+ sendtext ("You have already set this objects short description.<br/>",self);
+ quit;
+ }
+
+
+temp:=self.prompt;
+self.prompt:="Is "+arg+" the short description you want? ([Q]uit, [Y]es, or (N)o";
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+wait (SFB_CMD,self==activator);
+self.prompt:=temp;
+if (excmdstr==left("quit",length(excmdstr)))
+ {
+ block;
+ sendtext ("Command Canceled.<br/>",self);
+ i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+ quit;
+ }
+else if (excmdstr==left("yes",length(excmdstr)))
+ {
+ block;
+ goto cont_shortdescr;
+ }
+
+block;
+temp:=self.prompt;
+self.prompt:="Enter a new short description:  ";
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+wait (SFB_CMD,self==activator);
+block;
+self.prompt:=temp;
+goto arg_shortdescr2;
+
+
+:cont_shortdescr:
+
+slist:=make_names(arg);
+ln:=length(slist);
+i:=0;
+while (i<ln)
+ {
+ if (slist.[i] in u.names)
+  {
+  i:=i+1;
+  continue;
+  }
+ j:=0;
+jln:=length(u.names);
+while (j<jln)
+{
+ if (length(slist.[i])>length(u.names.[j]))
+ break;
+  j:=j+1;
+}
+
+ insert (u.names,j,slist.[i]);
+ i:=i+1;
+ }
+u.outside_descr:=arg;
+addextra (u.extra,{"$pishortdescr"},"true");
+sendtext("Short description set.<br/>",self);
+self.prompt:=temp;
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+quit;
+
+:do_descr:
+if (u.extra.["$pidescr"].descr=="true")
+ {
+ sendtext ("You have already set this objects description.<br/>",self);
+ i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+ quit;
+ }
+
+sendtext ("Enter item descr.  type '@' to end descr<br/>",self);
+   beginedit(self);
+   wait(SFB_EDIT, self == activator);
+   temp := argument;
+   if (length(getwords(temp)) < 1)
+   {
+      sendtext("Insufficient description.  Exiting.<br/>", self);
+      i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+      quit;
+   }
+/*temp:=replace ("&h","",temp);*/
+temp:=textformat(temp);
+tmp:=self.prompt;
+sendtext (textformat(temp),self);
+      i:=dildestroy("send_prompt@update",self);
+self.prompt:="Is this the description you want? ([Q]uit, [Y]es, or (N)o ";
+dilcopy ("send_prompt@update",self);
+
+wait (SFB_CMD,self==activator);
+self.prompt:=tmp;
+if (excmdstr==left("quit",length(excmdstr)))
+ {
+block;
+ sendtext ("Command Canceled.<br/>",self);
+ i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+ quit;
+ }
+else if (excmdstr==left("yes",length(excmdstr)))
+{
+block;
+ goto cont_descr;
+ }
+
+block;
+tmp:=self.prompt;
+sendtext("Enter a new description:  <br/>",self);
+goto do_descr;
+
+:cont_descr:
+addextra (u.extra,null,textformat (temp));
+addextra (u.extra,{"$pidescr"},"true");
+ sendtext("Description set.<br/>",self);
+ i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+quit;
+
+:lostu:
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+quit;
+} dilend

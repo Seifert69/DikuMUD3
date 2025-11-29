@@ -1,0 +1,49 @@
+Generate MCP entry for DIL keyword: ghead
+
+=== Yacc rule ===
+| DILSE_GHEAD '(' ')'
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_UP;
+    add_ubit8(&($$), DILE_GHEAD);
+}
+
+=== C implementation ===
+void dilfe_ghead(dilprg *p)
+{
+    dilval *v = new dilval;
+    v->atyp = DILA_NORM;
+    v->type = DILV_UP;
+    v->val.ptr = g_unit_list;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin look_signature();
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+  :start:
+  wait (SFB_CMD,(
+  (command ("look")) and
+  (("signature"==argument ) or ("signatures" == argument))
+  ));
+  block;
+  pc:=ghead();
+sendtext ("The following book signers are on line.<br/><br/>",activator);
+
+     while (pc.type==UNIT_ST_PC)
+      {
+      if (((isset (pc.pcflags,PC_PK_RELAXED)) or
+			(dilfind ("no_kill@function",pc))) and
+      (pc.level<200) and
+      (visible (activator,pc)))
+     sendtext(pc.name+" "+pc.title+"<br/>",activator);
+      pc:=pc.gnext;
+      }
+
+goto start;
+} dilend

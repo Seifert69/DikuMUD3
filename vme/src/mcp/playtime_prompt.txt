@@ -1,0 +1,96 @@
+Generate MCP entry for DIL keyword: playtime
+
+=== Yacc rule ===
+| DILSF_PTI /* .playtime */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_PTI;
+}
+
+=== C implementation ===
+case DILF_PTI:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *player = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (player && player->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = player->getPCTimeInformation().getTotalTimePlayedInSeconds();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin string playingstring();
+var
+   tf:integer;
+   tmp_played:integer;
+   hours_played : integer;
+   days_played  : integer;
+   years_played  : integer;
+   time_str:string;
+
+code
+{
+   tmp_played:=0;
+   tmp_played:= self.playtime / 3600;
+   hours_played:= tmp_played % 24;
+   days_played:=((tmp_played/24)%365);
+   years_played:=((tmp_played/24)/365);
+
+   tf:=FALSE;
+   time_str:="You have been playing for";
+
+   if (years_played >0)
+   {
+      time_str:=time_str+" "+ itoa(years_played)+" years";
+      tf:=TRUE;
+   }
+
+   if ((days_played>0) and (tf==TRUE))
+   {
+      time_str:=time_str+", "+itoa(days_played)+" days";
+   }
+   else if (days_played>0)
+   {
+      time_str:=time_str+" "+itoa(days_played)+" days";
+      tf:=TRUE;
+   }
+
+   if ((hours_played>0) and (tf==TRUE))
+   {
+      time_str:=time_str+", "+itoa(hours_played)+" hours";
+   }
+   else if (hours_played>0)
+   {
+      time_str:=time_str+", and "+itoa(hours_played)+" hours";
+      tf:=TRUE;
+   }
+
+   if (tf!=TRUE)
+      time_str:=time_str+" less than an hour.<br/>";
+   else
+      time_str:=time_str+".<br/>";
+
+   return(time_str);
+} dilend

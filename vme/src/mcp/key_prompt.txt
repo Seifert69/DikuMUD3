@@ -1,0 +1,117 @@
+Generate MCP entry for DIL keyword: key
+
+=== Yacc rule ===
+| DILSF_KEY /* .key */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_KEY;
+}
+
+=== C implementation ===
+case DILF_KEY:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SPR;
+                        v->ref = unit->getKeyPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin quasimodo();
+external
+   integer walk_room@function (s:string,i:integer);
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
+
+var
+tf:integer;
+  u:unitptr;
+  i:integer;
+
+code
+{
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   /* Quasi shall react only on ticks (variable time)  */
+   wait(SFB_TICK | SFB_RANTIME, TRUE);
+
+   :start:
+   heartbeat := WAIT_SEC*15;
+   DailyRoutine@quests({
+      "wake",
+      "::walkto::cth_sw_tower@midgaard",
+      "sigh", "sit", "yawn", "sleep"}, "");
+
+   heartbeat := WAIT_SEC*SECS_PER_MUD_HOUR/2;
+   while ((mudhour != 4) and (mudhour != 16))
+   {
+      exec("snore", self);
+      pause;
+   }
+   heartbeat := WAIT_SEC*15;
+
+   DailyRoutine@quests({
+      "wake",
+      "::walkto::cth_altar@midgaard",
+      "sulk"}, "");
+
+   u := findunit(self, "bronze key", FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
+   if (u #= null)
+   {
+      DailyRoutine@quests({
+         "cry",
+         "say swomeone stwole our kwey!"}, "");
+      goto start;
+   }
+
+   DailyRoutine@quests({
+      "unlock east door",
+      "open east door",
+      "east",
+      "close west door",
+      "lock west door",
+      "::walkto::cth_n_tower@midgaard",
+      "bounce"}, "");
+
+   heartbeat := WAIT_SEC*SECS_PER_MUD_HOUR/2;
+   while ((mudhour != 6) and (mudhour != 18))
+     pause;
+   heartbeat := WAIT_SEC*15;
+
+   DailyRoutine@quests({
+      "giggle",
+      "emote tries to ring the bells.",
+      "clap",
+      "::walkto::cth_n_stairs1@midgaard",
+      "sulk",
+      "unlock west door",
+      "open west door",
+      "west",
+      "close east door",
+      "lock east door",
+      "sniff"}, "");
+
+   goto start;
+} dilend

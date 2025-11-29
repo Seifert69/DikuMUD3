@@ -1,0 +1,221 @@
+Generate MCP entry for DIL keyword: store
+
+=== Yacc rule ===
+| DILSI_STORA '(' coreexp ',' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'store' not an unitptr");
+    }
+    if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'store' not an string");
+    }
+    if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'store' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $9 + 1;
+        wtmp = &tmpl.core[$9];
+        bwrite_ubit8(&wtmp, DILI_STORA);
+    }
+}
+
+=== C implementation ===
+void dilfi_stora(dilprg *p)
+{
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("storeall", p, 3, v1, FAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_SP, v3, FAIL_NULL, 1, DILV_INT))
+    {
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (storeall).", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else
+        {
+            if ((v1->val.ptr) && (v2->val.ptr))
+            {
+                if (!store_name_test((char *)v2->val.ptr))
+                {
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to store illegal file name (storeall).", p->frame->tmpl->prgname);
+                }
+                else
+                {
+                    std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                    filename += "/units/";
+                    if (!std::filesystem::exists(filename))
+                    {
+                        std::filesystem::create_directories(filename);
+                    }
+                    filename += (char *)v2->val.ptr;
+
+                    if (v3->val.num >= 1)
+                    {
+                        if (((unit_data *)v1->val.ptr)->isRoom() || ((unit_data *)v1->val.ptr)->isPC())
+                        {
+                            szonelog(p->frame->tmpl->zone,
+                                     "DIL '%s' attempt to save a container that is either a room or pc",
+                                     p->frame->tmpl->prgname);
+                        }
+                        else
+                        {
+                            store_all_unit((unit_data *)v1->val.ptr, filename.c_str(), TRUE);
+                        }
+                    }
+                    else
+                    {
+                        store_all_unit((unit_data *)v1->val.ptr, filename.c_str(), FALSE);
+                    }
+                }
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin aware email_list();
+
+var
+   mail_expd  : extraptr;
+   mail_list  : stringlist;
+   new_list   : stringlist;
+   my_name    : string;
+   my_email   : string;
+   temp_str   : string;
+   temp_str2  : string;
+   public     : integer;
+
+   pc         : unitptr;
+
+code
+{
+:init:
+   heartbeat := PULSE_SEC*2;
+   interrupt(SFB_MSG, (activator == self.outside), new_entry);
+
+:start:
+   wait(SFB_CMD, (command("public") or command("show")) and
+                  (activator.type == UNIT_ST_PC));
+
+   pc := activator;
+   secure(pc, lost_pc);
+
+   if (command("public")) goto public_set;
+   if (command("show")) goto show_info;
+   goto lost_pc;
+
+:public_set:
+   block;
+   temp_str2 := "$" + pc.name;
+   mail_expd := temp_str2 in self.extra;
+   if (mail_expd == null)
+   {
+      act("You do not have an entry on the email list. Please set an " +
+          "email using the mail command at Kurt.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   mail_list := mail_expd.names;
+   my_name := mail_list.[1];
+   my_email := mail_list.[2];
+   public := atoi(mail_list.[3]);
+   if (public == 0)
+   {
+      substring(mail_list, itoa(0));
+      public := 1;
+      act("Your email address is now available to anyone who wants to " +
+          "see it.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   else
+   {
+      substring(mail_list, itoa(1));
+      public := 0;
+      act("Your email address is no longer visible to others.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+
+   addstring(mail_list, itoa(public));
+   subextra(self.extra, pc.name);
+   addextra(self.extra, mail_list, "");
+   store(self,"udgaard.mail_list_obj",TRUE);
+   goto lost_pc;
+
+:show_info:
+   block;
+   temp_str2 := "$" + argument;
+   mail_expd := temp_str2 in self.extra;
+   if (mail_expd == null)
+   {
+      act("That person does not have a listing.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   mail_list := mail_expd.names;
+   my_name := mail_list.[1];
+   my_email := mail_list.[2];
+   public := atoi(mail_list.[3]);
+   if ((public == 0) and (pc.level < 240))
+   {
+      act(my_name + " has chosen not to have a publicly available email. " +
+          "Sorry.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   else
+   {
+      act("" + my_name + "'s email address is " + my_email + ".",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   goto lost_pc;
+
+:new_entry:
+   temp_str := argument;
+   temp_str2 := temp_str;
+   log("Got new entry - " + temp_str);
+   my_name := getword(temp_str);
+   my_email := temp_str;
+   mail_expd :=( "$" + my_name) in self.extra;
+   if (mail_expd == null)
+   {
+      public := 0;
+      addstring(new_list, "$" + my_name);
+      addstring(new_list, my_name);
+      addstring(new_list, my_email);
+      addstring(new_list, itoa(public));
+      addextra(self.extra, new_list, "");
+   }
+   else
+   {
+      mail_list := mail_expd.names;
+      my_name := mail_list.[1];
+      my_email := mail_list.[2];
+      public := atoi(mail_list.[3]);
+
+      substring(mail_list, itoa(public));
+      substring(mail_list, my_email);
+      my_email := getword(temp_str2);
+      my_email := temp_str2;
+      addstring(mail_list, my_email);
+      addstring(mail_list, itoa(public));
+      subextra(self.extra, "$" + my_name);
+      addextra(self.extra, mail_list, "");
+   }
+
+   store(self,"udgaard.mail_list_obj",TRUE);
+   log ("Stored after new entry.");
+   goto lost_pc;
+
+:lost_pc:
+   unsecure(pc);
+   goto start;
+} dilend

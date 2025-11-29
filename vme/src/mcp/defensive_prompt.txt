@@ -1,0 +1,1405 @@
+Generate MCP entry for DIL keyword: defensive
+
+=== Yacc rule ===
+| DILSF_DEFEN /* .defensive */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_DEFEN;
+}
+
+=== C implementation ===
+case DILF_DEFEN:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT2R;
+                        v->ref = character->getDefensiveBonusPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin aware do_set(base_arg: string);
+
+external integer search_block(str: string, lst: stringlist);
+         integer get_bit(arg: string, struct: string);
+         integer get_type(arg: string, struct: string);
+         stringlist get_mwords(arg: string);
+
+         string unit_fi_data(field: integer, subf: integer);
+
+         show_fields();
+
+var arg   : string;
+    targ  : unitptr;
+    tgt   : string;
+    ext   : extraptr;
+
+    field : integer;
+    lvl   : integer;
+    ut    : integer;
+    at    : integer;
+
+    valarg: integer;
+    typarg: integer;
+    strarg: string;
+    untarg: unitptr;
+
+    s     : string;
+    st    : string;
+    l     : integer;
+    sl    : stringlist;
+
+code
+{
+    if (self.type != UNIT_ST_PC) 
+        quit;
+
+    if (base_arg == "")
+    {
+        sendtext("Syntax: set &lt;name&gt; &lt;field&gt; &lt;arguments&gt;.<br/>", self);
+        quit;
+    }
+
+    /* Find target */
+    tgt:= base_arg;
+    arg:= getword (base_arg);
+
+    if (arg == "room")
+        targ := self.outside;
+    else if (arg == "self")
+        targ := self;
+    else
+    {
+        base_arg := arg + " " + base_arg;
+        targ := findunit (self, base_arg, FIND_UNIT_HERE, null);
+
+        if (targ == null)
+        {
+            sendtext("No such thing around.<br/>", self);
+            quit;
+        }
+        else if ((targ.type == UNIT_ST_OBJ) and (targ.objecttype == ITEM_MONEY))
+        {
+            sendtext("You can't modify money yet, sorry.<br/>", self);
+            quit;
+        }
+    }
+
+    /* Find field to change */
+    :find_field:
+
+    arg:= getword (base_arg);
+
+    field:= search_block(arg, UNIT_FIELD_NAMES);
+
+    if ((field == -1) or (arg == ""))
+    {
+        sendtext("Invalid field.<br/>", self);
+        show_fields();
+        quit;
+    }
+
+    /* check if level of users is ok */
+    s:= unit_fi_data(field, FI_MIN_PC);
+    lvl:= atoi(s);
+
+    if ((targ.type == UNIT_ST_PC) and (targ != self) and
+        (self.level < lvl))
+        {
+        sendtext("Authority to set field for OTHER PLAYERS denied!<br/>", self);
+        return;
+        }
+
+
+    s:= unit_fi_data(field, FI_MIN_SLF);
+    lvl:= atoi(s);
+        
+    if ((targ.type == UNIT_ST_PC) and (targ == self) and
+    (self.level < lvl))
+    {
+    sendtext("Authority to set field for yourself denied!<br/>", self);
+    return;
+    }
+
+
+    s:= unit_fi_data(field, FI_MIN_OTH);
+    lvl:= atoi(s);
+
+    if ((targ.type != UNIT_ST_PC) and (targ != self) and
+        (self.level < lvl))
+    {
+    sendtext("Authority to set field denied!<br/>", self);
+    return;
+    }
+
+    /* see if field is valid for unit */
+    s:= unit_fi_data(field, FI_UTYPE);
+    ut:= atoi(s);
+
+    if (((ut == UT_RM )  and (targ.type != UNIT_ST_ROOM)) or
+        ((ut == UT_OBJ)  and (targ.type !=  UNIT_ST_OBJ)) or
+        ((ut == UT_NPC)  and (targ.type !=  UNIT_ST_NPC)) or
+        ((ut == UT_PC )  and (targ.type !=   UNIT_ST_PC)) or
+        ((ut == UT_CH )  and not(targ.type & UNIT_ST_PC|UNIT_ST_NPC)))
+        {
+        sendtext("Field invalid for type of unit.<br/>", self);
+        quit;
+        }
+
+    s:= unit_fi_data(field, FI_ATYPE);
+    at:= atoi(s);
+
+    if (at == AT_STR)
+        if (base_arg == "")
+            {
+            sendtext ("Argument expected.<br/>", self);
+            quit;
+            }
+
+/* if (at == AT_DES) */
+    /* currently void */
+
+if (at == AT_VAL)
+    {
+    sendtext("Arg:<value><br/>", self);
+    arg := getword(base_arg);
+
+    if (arg == "")
+        {
+        sendtext("Numeric argument expected.<br/>", self);
+        quit;
+        }
+
+    valarg := atoi(arg);
+    sendtext("Value is "+itoa(valarg)+"<br/>", self);
+    }
+
+if (at == AT_BIT)
+    {
+    sendtext("Arg:<bitlist><br/>", self);
+    arg := getword(base_arg);
+
+    s := unit_fi_data(field, FI_STRUCT);
+    valarg := get_bit(arg, s);
+
+    if (valarg == -1) 
+        {
+        sendtext("Invalid or missing bit for field<br/><br/>",self);
+        quit;
+        }
+
+    sendtext ("Bit found is "+itoa(valarg)+"<br/>", self);
+    }
+
+if (at == AT_TYP)
+    {
+    sendtext("Arg:<type><br/>", self);
+    arg := getword(base_arg);
+    
+    s := unit_fi_data(field, FI_STRUCT);
+    typarg := get_type(arg, s);
+
+    if (typarg == -1) 
+        {
+        sendtext("Invalid or missing bit for field<br/><br/>",self);
+        quit;
+        }
+
+    /* Find a way to put type in a word, later on */
+    sendtext ("Type found is "+itoa(typarg)+"<br/>", self);
+    }
+ 
+if (at == AT_UNT)
+    {
+    sendtext("Arg:<unitpath><br/>",self);
+    strarg := getword(base_arg);
+    
+    untarg := load(strarg);
+
+    if (untarg == null)
+        {
+        sendtext("Invalid or missing unit path for field.<br/>", self);
+        quit;
+        }
+    sendtext("Unit pointer is ["+untarg.nameidx+"@"+untarg.zoneidx+"]<br/>", self);
+
+    destroy (untarg);
+    }
+
+if (at == AT_KEYDES)
+    {
+    sendtext ("Arg:&lt;string&gt; (description)<br/>", self);
+    if (base_arg == "")
+        {
+        sendtext ("Missing string argument.<br/>", self);
+        quit;
+        }
+    /* DES part currently void */
+    }
+
+if (at == AT_TYPVAL)
+    {
+    sendtext("Arg:<type> <value><br/>", self);
+    arg := getword(base_arg);
+
+    s := unit_fi_data(field, FI_STRUCT);
+    typarg := get_type(arg, s);
+
+    if (typarg == -1) 
+        {
+        sendtext("Invalid or missing bit for field<br/><br/>",self);
+        quit;
+        }
+
+    sendtext("Type found is "+itoa(typarg)+"<br/>", self);
+
+    arg := getword(base_arg);
+    if (arg == "")
+        {
+        sendtext("Numeric argument expected.<br/>", self);
+        quit;
+        }
+
+    valarg := atoi(arg);
+    sendtext("Value is "+itoa(valarg)+"<br/>", self);
+    }
+
+if (at == AT_DIRBIT)
+    {
+    sendtext("Arg:<direction> <bitlist><br/>", self);
+    arg := getword(base_arg);
+
+    typarg := get_type(arg, "dirs");
+    
+    if ((typarg == -1) or (arg == ""))
+        {
+        sendtext("Invalid direction.<br/>", self);
+        quit;
+        }
+
+    sl := DIR_STRUCT;
+    sendtext ("Direction found is "+sl.[typarg]+" ["+itoa(typarg)+
+        "]<br/>", self);
+
+    arg := getword(base_arg);
+
+    s := unit_fi_data(field, FI_STRUCT);
+    valarg := get_bit(arg, s);
+
+    if (valarg == -1)
+        {
+        sendtext("Invalid or missing bit for field.<br/>", self);
+        quit;
+        }
+
+    sendtext ("Bit found is "+itoa(valarg)+"<br/>", self);
+    }
+
+if (at == AT_DIRSTR)
+    {
+    sendtext("Arg:&lt;direction&gt; &lt;string&gt;<br/>", self);
+
+    arg := getword(base_arg);
+    typarg := get_type(arg, "dirs");
+    
+    if ((typarg == -1) or (arg == ""))
+        {
+        sendtext("Invalid direction.<br/>", self);
+        quit;
+        }
+
+    sl := DIR_STRUCT;
+    sendtext ("Direction found is "+sl.[typarg]+" ["+itoa(typarg)+
+        "]<br/>", self);
+
+    if (base_arg == "")
+        {
+        sendtext("Missing string argument.<br/>", self);    
+        quit;
+        }
+
+     }
+
+if (at == AT_DIRUNT)
+    {
+    sendtext("Arg:&lt;direction&gt; &lt;unitpath&gt;<br/>", self);
+
+    arg := getword(base_arg);
+    typarg := get_type(arg, "dirs");
+    
+    if ((typarg == -1) or (arg == ""))
+        {
+        sendtext("Invalid or missing direction.<br/>", self);
+        quit;
+        }
+
+    sl := DIR_STRUCT;
+    sendtext ("Direction found is "+sl.[typarg]+" ["+itoa(typarg)+
+        "]<br/>", self);
+    
+    arg := getword(base_arg);
+
+    untarg := load(arg);
+    if (untarg == null)
+        {
+        sendtext("Invalid or missing unit path for field.<br/>", self);
+        quit;
+        }
+
+    sendtext("Unit pointer is ["+untarg.nameidx+"@"+untarg.zoneidx+"]<br/>", self);
+
+    destroy (untarg);
+    }        
+
+if (at == AT_DIRDES)
+    {
+    sendtext("Arg:&lt;direction&gt; (description)<br/>", self);
+    
+    arg := getword(base_arg);
+    typarg := get_type(arg, "dirs");
+    
+    if ((typarg == -1) or (arg == ""))
+        {
+        sendtext("Invalid or missing direction.<br/>", self);
+        quit;
+        }
+
+    sl := DIR_STRUCT;
+    sendtext ("Direction found is "+sl.[typarg]+" ["+itoa(typarg)+
+        "]<br/>", self);
+    
+    /* DES part currently void */
+    }
+
+if ((at < 1) and (at > 13))
+    {
+    sendtext("Forbidden argument type for field, please contact "+
+        "implementators.<br/>", self);
+    quit;
+    }
+
+
+/* The actual data will now be set */
+/* field is the set field being changed */
+
+if (field == 0)         /* add-name */
+    {
+    if ((targ.type == UNIT_ST_PC) and (self.level < 255))
+        {
+        sendtext("Not allowed to modify PC's.<br/>", self);
+        quit;
+        }
+
+    addstring(targ.names, base_arg);
+    sendtext("The extra name was added.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 1)         /* del-name */
+    {
+    if (length(targ.names) < 2)
+        {
+        sendtext("Must have a minimum of one name.<br/>", self);
+        quit;
+        }
+    
+    substring(targ.names, base_arg);
+    sendtext("Name may have been deleted.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 2)         /* title */
+    {
+    targ.title := base_arg;
+    sendtext("Title modified.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 3)         /* outside description */
+    {
+    sendtext("Modifying long outside description.<br/>", self);
+
+    secure (targ, lost);
+
+    beginedit(self);
+    wait (SFB_EDIT, (self == activator));
+    strarg := textformat(argument);
+
+    targ.outside_descr := strarg;
+    unsecure (targ);
+
+    goto end_set;
+    }
+        
+if (field == 4)         /* add-extra */
+    {
+    /* Should now accept extra names with more than one word */
+    sl := get_mwords(base_arg);
+
+    if (sl.[0] == "")
+        {
+        sendtext ("No extra names given.<br/>", self);
+        quit;
+        }
+
+    sendtext("Searching for "+sl.[0]+".<br/>", self);
+
+    ext := sl.[0] in targ.extra;
+
+    if (not ext)
+        {
+        sendtext("New field.<br/>", self);
+        addextra (targ.extra, sl, "");
+        }
+
+    /* Add the rest of the names if they do not exist */
+    else
+        {
+        l := 0;
+        while (l < length(sl))
+            {
+            if (not (sl.[l] in ext))
+                addstring (ext.names, sl.[l]);
+            l := l + 1;
+            }
+
+        sendtext("Modifying existing description.<br/>", self);
+        }
+
+    secure (targ, lost);
+
+    beginedit(self);
+    wait(SFB_EDIT, (self == activator));
+    strarg := textformat(argument);
+
+    ext := sl.[0] in targ.extra;
+    ext.descr := strarg;
+
+    unsecure (targ);
+    goto end_set;
+    }
+
+if (field == 5)         /* del-extra */
+    {
+    if (base_arg == "")
+        {
+        sendtext("You must supply a field name.<br/>", self);
+        quit;
+        }
+
+    if (not (base_arg in targ.extra))
+        {
+        sendtext("No field with that keyword.<br/>", self);
+        quit;
+        }
+
+    subextra (targ.extra, base_arg);
+    sendtext("Field deleted.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 6)         /* manipulate */
+    {
+    targ.manipulate := valarg;
+    goto end_set;
+    }
+
+if (field == 7)         /* unit-flags */
+    {
+    targ.flags := valarg;
+    goto end_set;
+    }
+
+if (field == 8)         /* weight */
+    {
+    set_weight_base(targ, valarg);
+    goto end_set;
+    }
+
+if (field == 9)         /* capacity */
+    {
+    targ.capacity := valarg;
+    goto end_set;
+    }
+    
+if (field == 10)        /* max_hp */
+    {
+    targ.max_hp := valarg;
+    goto end_set;
+    }
+
+if (field == 11)        /* hp */
+    {
+    targ.hp := valarg;
+    goto end_set;
+    }
+
+if (field == 12)        /* key */
+    {
+//targ.key :=base_arg;
+// untarg; 
+sendtext (targ.key,self);
+    sendtext("Key needed modified to "+base_arg+".<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 13)        /* alignment */
+    {
+    if ((valarg >= -1000) and (valarg <= 1000))
+        targ.alignment := valarg;
+    else
+        sendtext("Value must be in -1000..+1000!<br/>", self);
+    goto end_set;
+    }
+
+if (field == 14)        /* open-flags */
+    {
+    targ.openflags := valarg;
+    goto end_set;
+    }
+
+if (field == 15)        /* tgh OBSOLETE */
+    {
+/*  targ.tgh := valarg; */
+    goto end_set;
+    }
+    
+if (field == 16)        /* lights */
+    {
+    /* Light and illum disabled for now for problems caused by them */
+/*    targ.light := valarg; */
+    setbright(targ, valarg);
+/*    targ.illum := valarg; */
+
+    sendtext("WARNING: This value is absolute and will cause 'darkness' "+
+        "bugs if not used properly! Only use this to fix darkness"+
+        " - use bright for changing the illumination!<br/>", self);
+    goto end_set;
+    }
+
+if (field == 17)        /* bright */
+    {
+    if ((valarg < -6) or (valarg > 6))
+        {
+        sendtext("Value expected -6..+6<br/>", self);
+        quit;
+        }
+
+    setbright (targ, valarg);
+    goto end_set;
+    }
+
+if (field == 18)        /* room-flags */
+    {
+    targ.roomflags := valarg;
+    goto end_set;
+    }
+
+if (field == 19)        /* movement */
+    {
+    targ.movement := typarg;
+    goto end_set;
+    }
+
+if (field == 20)        /* cc-info */
+    {
+    /* Trash */
+    if (valarg == -1)
+        {
+        sendtext("Erasing CC information.<br/>", self);
+        /* Ask Whistler about how this is handled:
+        PC_ACCOUNT(unt).last4  = -1;
+        */
+/*        targ.crack := 0; */
+        }
+
+    else
+        {
+        if ((valarg >= 0) and (valarg <= 9999))
+            {
+            sendtext("Setting CC information.<br/>", self);
+/*            PC_ACCOUNT(unt).last4  = valarg; */
+/*            targ.crack := 0; */
+            }
+        else
+            sendtext("Illegal value, expected -1 or 0..9999.<br/>", self);
+        }
+    goto end_set;
+    }
+
+if (field == 21)        /* add-dir-name */
+    {
+    if (targ.exit_to[typarg] == null)
+        {
+        sendtext("No such exit.<br/>", self);
+        quit;
+        }
+
+    addstring (targ.exit_names[typarg], base_arg);
+    sendtext("Name added to the exit's names.<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 22)        /* del-dir-name */
+    {
+    if (targ.exit_to[typarg] == null)
+        {
+        sendtext("No such exit.<br/>", self);
+        quit;
+        }
+
+    substring (targ.exit_names[typarg], base_arg);
+    sendtext("Name might have been removed.<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 23)        /* dir-flags */
+    {
+    if (targ.exit_to[typarg] == null)
+        {
+        sendtext("No such exit.<br/>", self);
+        quit;
+        }
+
+    targ.exit_info[typarg] := valarg;
+    goto end_set;
+    }
+
+if (field == 24)        /* dir-key */
+    {
+    if (targ.exit_to[typarg] == null)
+        {
+        sendtext("No such exit.<br/>", self);
+        quit;
+        }
+
+/*    targ.exit_key[typarg] := untarg; */
+    sendtext("Function currently unavailable.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 25)        /* value0 */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    targ.value[0] := valarg;
+    goto end_set;
+    }
+
+if (field == 26)        /* value1 */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    targ.value[1] := valarg;
+    goto end_set;
+    }
+
+if (field == 27)        /* value2 */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    targ.value[2] := valarg;
+    goto end_set;
+    }
+
+if (field == 28)        /* value3 */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    targ.value[3] := valarg;
+    goto end_set;
+    }
+
+if (field == 29)        /* value4 */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    targ.value[4] := valarg;
+    goto end_set;
+    }
+
+if (field == 30)        /* obj-flags */
+    {
+    targ.objectflags := valarg;
+    goto end_set;
+    }
+
+if (field == 31)        /* cost */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+/*  Might add pieces conversion later */
+    targ.cost := valarg;
+    goto end_set;
+    }
+
+if (field == 32)        /* rent */
+    {
+    targ.rent := valarg;
+    goto end_set;
+    }
+
+if (field == 33)        /* type */
+    {
+    if (targ.objecttype == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed on this type of object.<br/>", self);
+        quit;
+        }
+
+    if (typarg == ITEM_MONEY)
+        {
+        sendtext("Operation not allowed to that kind of object.<br/>", self);
+        quit;
+        }
+
+    targ.objecttype := typarg;
+    goto end_set;
+    }
+
+if (field == 34)        /* equip */
+    {
+    /* This is not how the old set worked, but I cannot change the value
+       of equip directly in dil */
+    addequip(targ, typarg);
+    goto end_set;
+    }
+
+/* Guild-name and pwd not really tested */
+if (field == 35)        /* guild-name */
+    {
+    /* I'm not sure what that should do, null a guild name? */
+    if (base_arg == "none")
+        {
+        if (targ.guild != null)
+            targ.guild := null;
+        sendtext("Changed.<br/>", self);
+        goto end_set;
+        }
+
+    targ.guild := base_arg;
+    sendtext("Changed.<br/>", self);
+    goto end_set;
+    }
+        
+if (field == 36)        /* pwd */
+    {
+    if (self.level < targ.level)
+        {
+        log("WARNING: "+self.name+" attemped to set "+targ.name+
+            "'s password.");
+        sendtext("You can not change a password of a higher level "+
+            "immortal.<br/>", self);
+        }
+
+    else
+        {
+        log("PASSWORD: "+self.name+" changed "+targ.name+"'s password.");
+/*      strncpy(PC_PWD(unt), crypt(strarg, UNIT_NAME(unt)), 10);   */
+
+        set_password(targ, base_arg);
+        sendtext("Password changed.<br/>", self);
+        }
+
+    goto end_set;
+    }
+
+if (field == 37)        /* pc-flags */
+    {
+    targ.pcflags := valarg;
+    goto end_set;
+    }
+
+if (field == 38)        /* crimes */
+    {
+    targ.crimes := valarg;
+    goto end_set;
+    }
+
+if (field == 39)        /* drunk */
+    {
+    targ.drunk := valarg;
+    goto end_set;
+    }
+
+if (field == 40)        /* full */
+    {
+    targ.full := valarg;
+    goto end_set;
+    }
+
+if (field == 41)        /* thirsty */
+    {
+    targ.thirst := valarg;
+    goto end_set;
+    }
+
+if (field == 42)        /* default-pos */
+    {
+    targ.defaultpos := valarg;
+    goto end_set;
+    }
+
+if (field == 43)        /* npc-flags */
+    {
+    targ.npcflags := valarg;
+    goto end_set;
+    }
+
+if (field == 44)        /* hometown */
+    {
+    targ.hometown := base_arg;
+    goto end_set;
+    }
+
+if (field == 45)        /* exp */
+    {
+    /* Add a max exp, maybe */
+    targ.exp := valarg;
+    goto end_set;
+    }
+
+if (field == 46)        /* char-flags */
+    {
+    targ.charflags := valarg;
+    goto end_set;
+    }
+
+if (field == 47)        /* mana */
+    {
+    targ.mana := valarg;
+    goto end_set;
+    }
+
+if (field == 48)        /* endurance */
+    {
+    targ.endurance := valarg;
+    goto end_set;
+    }
+
+if (field == 49)        /* attack-type */
+    {
+    targ.attack_type := typarg;
+    goto end_set;
+    }
+
+if (field == 50)        /* natural-armor*/
+    {
+	    targ.natural_armour := typarg;
+    goto end_set;
+    }
+
+if (field == 51)        /* height/size */
+    {
+    targ.height := valarg;
+    goto end_set;
+    }
+
+if (field == 52)        /* race */
+    {
+    targ.race := valarg;
+    goto end_set;
+    }
+
+if (field == 53)        /* sex */
+    {
+    targ.sex := typarg;
+    goto end_set;
+    }
+
+if (field == 54)        /* level */
+    {
+    if ((valarg >= 0) and (valarg <= 199)) sendtext("Field disabled.<br/>", self);
+/*        targ.level := valarg; */
+
+    else
+        sendtext("Shame on you: Value must be in 0..199!<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 55)        /* position */
+    {
+    targ.position := typarg;
+    goto end_set;
+    }
+
+if (field == 56)        /* ability */
+    {
+    if ((valarg >= 0) and (valarg <= 250))
+        targ.abilities[typarg] := valarg;
+
+    else
+        sendtext("Shame on you: Value must be in 0%..250%!<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 57)        /* skill-points */
+    {
+    targ.skill_points := valarg;
+    goto end_set;
+    }
+
+if (field == 58)        /* ability-points */
+    {
+    targ.ability_points := valarg;
+    goto end_set;
+    }
+
+if (field == 59)        /* remove-affect */
+    {
+    if (isaff(targ, valarg))
+        {
+        subaff(targ, valarg);
+        sendtext("Affect attempted removed.<br/>", self);
+        }
+
+    else
+        sendtext("No such affect.<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 60)        /* add-quest */
+    {
+    if (not ("|" in base_arg))
+        {
+        /* If no | char in argument, assume it is the old add-quest */
+        sl := null;
+        addstring (sl, base_arg);
+
+        addextra(targ.quests, sl, "");
+
+        sendtext("New quest.<br/>", self);
+        }
+
+    else
+        {
+        /* Should now accept extra names with more than one word */
+        sl := get_mwords(base_arg);
+    
+        if (sl.[0] == "")
+            {
+            sendtext ("No quest names given.<br/>", self);
+            quit;
+            }
+    
+        sendtext("Searching for "+sl.[0]+".<br/>", self);
+    
+        ext := sl.[0] in targ.quests;
+    
+        if (not ext)
+            {
+            sendtext("New quest.<br/>", self);
+            addextra (targ.quests, sl, "");
+            }
+    
+        /* Add the rest of the names if they do not exist */
+        else
+            {
+            l := 0;
+            while (l < length(sl))
+                {
+                if (not (sl.[l] in ext))
+                    addstring (ext.names, sl.[l]);
+                l := l + 1;
+                }
+    
+            sendtext("Modifying existing description.<br/>", self);
+            }
+    
+        secure (targ, lost);
+    
+        beginedit(self);
+        wait(SFB_EDIT, (self == activator));
+        strarg := textformat(argument);
+    
+        ext := sl.[0] in targ.quests;
+        ext.descr := strarg;
+    
+        unsecure (targ);
+        }
+    goto end_set;
+    }
+
+if (field == 61)        /*del-quest */
+    {
+    sendtext("Attempting to remove such a quest.<br/>", self);
+
+    subextra(targ.quests, base_arg);
+    goto end_set;
+    }
+
+if (field == 62)        /* speed */
+    {
+    /* Need higher level access */
+    if ((valarg >= SPEED_MIN) and (valarg <= SPEED_MAX))
+          sendtext("Field disabled.<br/>", self);
+/*        targ.speed := valarg; */
+
+    else
+        sendtext("Speed must be in ["+itoa(SPEED_MIN)+".."+
+            itoa(SPEED_MAX)+"]!<br/>", self);
+    goto end_set;
+    }
+
+if (field == 63)        /* add-info */
+    {
+    /* I assume this is the same as add-extra and copy so */
+    /* Should now accept extra names with more than one word */
+    sl := get_mwords(base_arg);
+
+    if (sl.[0] == "")
+        {
+        sendtext ("No info names given.<br/>", self);
+        quit;
+        }
+
+    sendtext("Searching for "+sl.[0]+".<br/>", self);
+
+    ext := sl.[0] in targ.info;
+
+    if (not ext)
+        {
+        sendtext("New field.<br/>", self);
+        addextra (targ.info, sl, "");
+        }
+
+    /* Add the rest of the names if they do not exist */
+    else
+        {
+        l := 0;
+        while (l < length(sl))
+            {
+            if (not (sl.[l] in ext))
+                addstring (ext.names, sl.[l]);
+            l := l + 1;
+            }
+
+        sendtext("Modifying existing description.<br/>", self);
+        }
+
+    secure (targ, lost);
+
+    beginedit(self);
+    wait(SFB_EDIT, (self == activator));
+    strarg := textformat(argument);
+
+    ext := sl.[0] in targ.info;
+    ext.descr := strarg;
+
+    unsecure (targ);
+    goto end_set;
+    }
+
+if (field == 64)        /* del-info */
+    {
+    sendtext ("Attempting to remove such an info.<br/>", self);
+
+    subextra (targ.info, base_arg);
+    goto end_set;
+    }
+
+if (field == 65)       /* access */
+    {
+    /* Disabled */
+/*    targ.access := valarg; */
+    sendtext ("Field disabled.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 66)        /* promptstr */
+    {
+    targ.prompt := base_arg;
+    goto end_set;
+    }
+
+if (field == 67)        /* age */
+    {
+    /* Actually sets birth */
+    /* The 10..1000 restriction was removed */
+    log ("SET: "+self.name+" set "+targ.name+"'s age from "+
+        itoa(targ.birth/(SECS_PER_MUD_YEAR))+" to "+itoa(valarg));
+
+    targ.birth := realtime - (valarg*SECS_PER_MUD_YEAR);
+    sendtext("Age set.<br/>", self);
+
+    goto end_set;
+    }
+
+if (field == 68)        /* lifespan */
+    {
+    /* The 10.1000 restriction was removed */
+    log ("SET: "+self.name+" set "+targ.name+"'s age from "+
+        itoa(targ.lifespan)+" to "+itoa(valarg));
+
+    targ.lifespan := valarg;
+    goto end_set;
+    }
+
+/* New fields */
+if (field == 69)        /* inside-descr */
+    {
+    sendtext("Modifying long inside description.<br/>", self);
+
+    secure (targ, lost);
+
+    beginedit(self);
+    wait (SFB_EDIT, (self == activator));
+    strarg := textformat(argument);
+
+    targ.inside_descr := strarg;
+    unsecure (targ);
+
+    goto end_set;
+    }
+
+if (field == 70)        /* attack-bonus */
+    {
+/*    targ.offensive := valarg; */
+    sendtext("Field disabled.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 71)        /* defense-bonus */
+    {
+/*    targ.defensive := valarg; */
+    sendtext("Field disabled.<br/>", self);
+    goto end_set;
+    }
+
+if (field == 72)        /* magic-resistance */
+    {
+    targ.spells[SPL_NONE] := valarg;
+    goto end_set;
+    }
+
+if (field == 73)        /* textformat */
+    {
+    sendtext("Formatting data...<br/>", self);
+
+    base_arg := textformat(base_arg);
+    goto find_field;
+    }
+
+if (field == 74)        /* ins-name */
+    {
+    if ((targ.type == UNIT_ST_PC) and (self.level < 255))
+        {
+        sendtext ("Not allowed to modify PC's.<br/>", self);
+        return;
+        }
+    
+    strarg := getword(base_arg);
+    
+    if ((atoi(strarg) == 0) and (strarg != "0")) // Let's forget about "00"
+        {
+        sendtext ("Illegal insert position, appending at end.<br/>", self);
+        valarg := length(targ.names);
+        }
+    
+    else
+        valarg := atoi(strarg);
+    
+    if (valarg > length(targ.names))
+        {
+        sendtext ("Out of range index, appending at the end.<br/>", self);
+        valarg := length(targ.names) - 1;
+        }
+    
+    if (valarg < 0)
+        {
+        sendtext ("Index below 0, appending as first.<br/>", self);
+        valarg := 0;
+        }
+    
+    // The following is an hack because insert(sl, 0, str) doesn't work
+    if (valarg == 0)
+        {
+        insert (targ.names, 1, base_arg);
+        strarg := targ.names.[0];
+        targ.names.[0] := targ.names.[1];
+        targ.names.[1] := strarg;
+        }
+    
+    else
+        insert (targ.names, valarg, base_arg);
+    
+    sendtext ("The extra name was inserted at position "+
+        itoa(valarg)+".<br/>",self);
+    goto end_set;
+    }
+
+if (field == 75)        /* rem-name */
+    {
+    if (length(targ.names) <= 1)
+        {
+        sendtext("Must have a minimum of one name.<br/>", self);
+        quit;
+        }
+
+    if (valarg > length(targ.names))
+        {
+        sendtext ("Out of range index, removing last name.<br/>", self);
+        valarg := length(targ.names) - 1;
+        }
+    
+    if (valarg < 0)
+        {
+        sendtext ("Index below 0, removing first name.<br/>", self);
+        valarg := 0;
+        }
+    
+    remove (targ.names, valarg);
+    
+    sendtext("Name may have been removed at position "+
+        itoa(valarg)+".<br/>", self);
+    goto end_set;
+    }
+
+if (field == 76)        /* look-descr */
+    {
+    sendtext("Modifying long description.<br/>", self);
+
+    secure (targ, lost);
+
+    beginedit(self);
+    wait (SFB_EDIT, (self == activator));
+    strarg := textformat(argument);
+    sl := null;
+    
+    subextra (targ.extra, "");
+    addextra (targ.extra, sl, strarg);
+    
+    unsecure (targ);
+
+    goto end_set;
+    }
+
+sendtext ("Oops. Bad field!<br/>", self);
+
+:lost:
+sendtext ("Target lost.<br/>", self);
+quit;
+
+:end_set:
+sl:= UNIT_FIELD_NAMES;
+s:= sl.[field];
+
+if (targ.type == UNIT_ST_PC)
+    tgt := targ.name;
+if ((targ.type == UNIT_ST_NPC) or (targ.type == UNIT_ST_OBJ))
+    tgt := targ.title;
+if (targ.type == UNIT_ST_ROOM)
+    tgt := targ.nameidx+"@"+targ.zoneidx;
+
+if ((at == AT_VAL) or (at == AT_BIT))
+    log (self.name+" sets "+tgt+"'s "+s+" to "+itoa(valarg)+".");
+    
+if (at == AT_TYP)
+    {
+    st := unit_fi_data(field, FI_STRUCT);
+
+    if (st == "sect_mv")
+        sl := SECT_MV_STRUCT;
+    if (st == "obj_typ")
+        sl := OBJ_TYP_STRUCT;
+    if (st == "obj_pos")
+        sl := OBJ_POS_STRUCT;
+    if (st == "att_typ")
+        sl := ATT_TYP_STRUCT;
+    if (st == "ch_pos")
+        sl := CH_POS_STRUCT;
+    if (st == "abil")
+        sl := ABIL_STRUCT;
+
+    st := sl.[typarg];
+
+    log (self.name+" sets "+tgt+"'s "+s+" to "+st+".");
+    }
+
+if (at == AT_STR)
+    log (self.name+" sets "+tgt+"'s "+s+" to "+strarg+".");
+
+if ((at == AT_DES) or (at == AT_UNT) or (at == AT_KEYDES))
+    log (self.name+" sets "+tgt+"'s field: "+s+".");
+
+/* Since there is currently only one AT_TYPVAL we assume it is abil */
+if (at == AT_TYPVAL)
+    {
+    sl := ABIL_STRUCT;
+
+    st := sl.[typarg];
+
+    log (self.name+" sets "+tgt+"'s "+s+"["+st+"] to "+itoa(valarg)+".");
+    }
+
+if ((at == AT_DIRBIT) or (at == AT_DIRSTR) or 
+    (at == AT_DIRUNT) or (at == AT_DIRDES))
+    {
+    sl := DIR_STRUCT;
+
+    st := sl.[typarg];
+
+    log (self.name+" sets "+tgt+"'s dir, "+st+"'s field: "+s+".");
+    }
+
+
+/* There is no field of type AT_TYPDES currently available */
+if (at == AT_TYPDES)
+    log (self.name+" sets "+tgt+"'s "+s+".");
+
+quit;
+
+} dilend

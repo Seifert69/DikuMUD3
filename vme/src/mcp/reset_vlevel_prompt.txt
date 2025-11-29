@@ -1,0 +1,864 @@
+Generate MCP entry for DIL keyword: reset_vlevel
+
+=== Yacc rule ===
+| DILSI_RSVLV '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'reset_vlevel' not a unit");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_RSVLV);
+    }
+}
+
+=== C implementation ===
+void dilfi_rsvlv(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("reset_vlevel", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset vlevel w/o access.", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else
+        {
+            auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+            if (pc->isPC())
+            {
+                if (!IS_IMMORTAL(pc))
+                {
+                    pc->setVirtualPlayerLevel(1);
+                }
+            }
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin recall aware nanny_rebirth ();
+external guild_choose ();
+   upd_all_comp@competition(u:unitptr);
+   upd_rebirth@competition(u:unitptr);
+   pcinitabils@basis();
+
+var
+   pc          : unitptr;
+   weapon      : unitptr;
+   nxt         : unitptr;
+   tempu       : unitptr;
+   link_u      : unitptr;
+   t_u         : unitptr;
+   temp_u      : unitptr;
+   i           : integer;
+   j           : integer;
+   l           : integer;
+   picks       : integer;
+   my_pcflags  : integer;
+   s           : string;
+   new_guild   : string;
+   figh_choice : integer;
+   heal_choice : integer;
+   conj_choice : integer;
+   thie_choice : integer;
+   pala_choice : integer;
+   sorc_choice : integer;
+   assa_choice : integer;
+   necr_choice : integer;
+   rang_choice : integer;
+   drui_choice : integer;
+   dk_choice : integer;
+   expd       : extraptr;   /* REBIRTH_DATA in self */
+   expd2      : extraptr;
+   broad      : string;
+   slist      : stringlist;
+
+code
+{
+   heartbeat := PULSE_SEC * 2;
+   pause;
+
+
+   /* Unequip all */
+   weapon:=self.inside;
+   while (weapon!=null){
+      if (weapon.equip!=0){
+         unequip(weapon);
+      }
+      weapon:=weapon.next;
+	}
+
+   /* Remove affects */
+
+   /* This is almost a copy/paste from basis dispel_magic */
+   :loop:
+   if (isaff(self, ID_BLESS))
+     subaff(self, ID_BLESS);
+   else if (isaff(self, ID_UNHOLY_BLESSING))
+     subaff(self, ID_UNHOLY_BLESSING);
+   else if (isaff(self, ID_NBLESS))
+     subaff(self, ID_NBLESS);
+   else if (isaff(self, ID_RAGE))
+     subaff(self, ID_RAGE);
+   else if (isaff(self, ID_BERSERK))
+     subaff(self, ID_BERSERK);
+   else if (isaff(self, ID_DETECT_ALIGN))
+     subaff(self, ID_DETECT_ALIGN);
+   else if (isaff(self, ID_DETECT_INVISIBLE))
+     subaff(self, ID_DETECT_INVISIBLE);
+   else if (isaff(self, ID_DETECT_MAGIC))
+     subaff(self, ID_DETECT_MAGIC);
+   else if (isaff(self, ID_DETECT_POISON))
+     subaff(self, ID_DETECT_POISON);
+   else if (isaff(self, ID_DETECT_UNDEAD))
+     subaff(self, ID_DETECT_UNDEAD);
+   else if (isaff(self, ID_DETECT_CURSE))
+     subaff(self, ID_DETECT_CURSE);
+   else if (isaff(self, ID_DETECT_LIFE))
+     subaff(self, ID_DETECT_LIFE);
+   else if (isaff(self, ID_ENCHANT_WEAPON))
+     subaff(self, ID_ENCHANT_WEAPON);
+   else if (isaff(self, ID_ENCHANT_ARMOUR))
+     subaff(self, ID_ENCHANT_ARMOUR);
+   else if (isaff(self, ID_ABSORBTION))
+     subaff(self, ID_ABSORBTION);
+   else if (isaff(self, ID_INVISIBILITY))
+     subaff(self, ID_INVISIBILITY);
+   else if (isaff(self, ID_HOLD))
+     subaff(self, ID_HOLD);
+   else if (isaff(self, ID_CHARM))
+     subaff(self, ID_CHARM);
+   else if (isaff(self, ID_MAGIC_LIGHT))
+     subaff(self, ID_MAGIC_LIGHT);
+   else if (isaff(self, ID_MAGIC_DARK))
+     subaff(self, ID_MAGIC_DARK);
+   else if (isaff(self, ID_SPL_RAISE_MAG))
+     subaff(self, ID_SPL_RAISE_MAG);
+   else if (isaff(self, ID_SPL_RAISE_DIV))
+     subaff(self, ID_SPL_RAISE_DIV);
+   else if (isaff(self, ID_SPL_RAISE_STR))
+     subaff(self, ID_SPL_RAISE_STR);
+   else if (isaff(self, ID_SPL_RAISE_DEX))
+     subaff(self, ID_SPL_RAISE_DEX);
+   else if (isaff(self, ID_SPL_RAISE_CON))
+     subaff(self, ID_SPL_RAISE_CON);
+   else if (isaff(self, ID_SPL_RAISE_CHA))
+     subaff(self, ID_SPL_RAISE_CHA);
+   else if (isaff(self, ID_SPL_RAISE_BRA))
+     subaff(self, ID_SPL_RAISE_BRA);
+   else if (isaff(self, ID_SPL_RAISE_HPP))
+     subaff(self, ID_SPL_RAISE_HPP);
+   else if (isaff(self, ID_SPL_RAISE_DIVINE))
+     subaff(self, ID_SPL_RAISE_DIVINE);
+   else if (isaff(self, ID_SPL_RAISE_SUMMONING))
+     subaff(self, ID_SPL_RAISE_SUMMONING);
+   else if (isaff(self, ID_SPL_RAISE_MIND))
+     subaff(self, ID_SPL_RAISE_MIND);
+   else if (isaff(self, ID_SPL_RAISE_HEAT))
+     subaff(self, ID_SPL_RAISE_HEAT);
+   else if (isaff(self, ID_SPL_RAISE_COLD))
+     subaff(self, ID_SPL_RAISE_COLD);
+   else if (isaff(self, ID_SPL_RAISE_CELL))
+     subaff(self, ID_SPL_RAISE_CELL);
+   else if (isaff(self, ID_SPL_RAISE_INTERNAL))
+     subaff(self, ID_SPL_RAISE_INTERNAL);
+   else if (isaff(self, ID_SPL_RAISE_EXTERNAL))
+     subaff(self, ID_SPL_RAISE_EXTERNAL);
+   else if (isaff(self, ID_RAISE_MAG))
+     subaff(self, ID_RAISE_MAG);
+   else if (isaff(self, ID_RAISE_DIV))
+     subaff(self, ID_RAISE_DIV);
+   else if (isaff(self, ID_RAISE_STR))
+     subaff(self, ID_RAISE_STR);
+   else if (isaff(self, ID_RAISE_DEX))
+     subaff(self, ID_RAISE_DEX);
+   else if (isaff(self, ID_RAISE_CON))
+     subaff(self, ID_RAISE_CON);
+   else if (isaff(self, ID_RAISE_CHA))
+     subaff(self, ID_RAISE_CHA);
+   else if (isaff(self, ID_RAISE_BRA))
+     subaff(self, ID_RAISE_BRA);
+   else if (isaff(self, ID_RAISE_HPP))
+     subaff(self, ID_RAISE_HPP);
+   else if (isaff(self, ID_RAISE_DIVINE))
+     subaff(self, ID_RAISE_DIVINE);
+   else if (isaff(self, ID_RAISE_SUMMONING))
+     subaff(self, ID_RAISE_SUMMONING);
+   else if (isaff(self, ID_RAISE_MIND))
+     subaff(self, ID_RAISE_MIND);
+   else if (isaff(self, ID_RAISE_HEAT))
+     subaff(self, ID_RAISE_HEAT);
+   else if (isaff(self, ID_RAISE_COLD))
+     subaff(self, ID_RAISE_COLD);
+   else if (isaff(self, ID_RAISE_CELL))
+     subaff(self, ID_RAISE_CELL);
+   else if (isaff(self, ID_RAISE_INTERNAL))
+     subaff(self, ID_RAISE_INTERNAL);
+   else if (isaff(self, ID_RAISE_EXTERNAL))
+     subaff(self, ID_RAISE_EXTERNAL);
+   else if (isaff(self, ID_MIRE))
+     subaff(self, ID_MIRE);
+   else if (isaff(self, ID_CONDEMN))
+     subaff(self, ID_CONDEMN);
+   else if (isaff(self, ID_FOCUS))
+     subaff(self, ID_FOCUS);
+   else if (isaff(self, ID_POISON))
+     subaff(self, ID_POISON);
+   else if (isaff(self, ID_SPEED))
+     subaff(self, ID_SPEED);
+   else
+	goto end_aff;
+
+
+   goto loop;
+   :end_aff:
+
+   i := 0;
+
+/* First reduce skills by 75% */
+
+   while (i < LAST_SKILL)
+   {
+      self.skills[i] := self.skills[i] / 8;
+      self.skills[i] := self.skills[i] * 2;
+      i := i + 1;
+   }
+
+   i := 0;
+
+/* Now spells */
+
+   while (i < LAST_SPELL)   /* was 220 */
+   {
+      self.spells[i] := self.spells[i] / 4;
+      i := i + 1;
+   }
+
+   i := 0;
+
+/* Now weapons */
+
+   while (i < LAST_WEAPON)  /* was 60 */
+   {
+      self.weapons[i] := self.weapons[i] / 4;
+      i := i + 1;
+   }
+
+   expd2 := "$path" in self.quests;
+   if (expd2 != null)
+   {
+      self.guild := expd2.names.[1];
+      subextra(self.quests, "$path");
+   }
+   expd2 := null;
+
+   expd2 := "$dead_g" in self.quests;
+   if (expd2 != null)
+   {
+      self.guild := expd2.names.[1];
+   }
+
+   if (self.guild == GUILD_UDG_FIGHTER)
+      l := 2;
+   else if (self.guild == GUILD_UDG_THIEF)
+      l := 3;
+   else if (self.guild == GUILD_UDG_CLERIC)
+      l := 4;
+   else if (self.guild == GUILD_UDG_MAGE)
+      l := 5;
+   else if (self.guild == GUILD_PALADIN)
+      l := 6;
+   else if (self.guild == GUILD_SORCERER)
+      l := 7;
+   else if (self.guild == GUILD_ASSASSIN)
+      l := 8;
+   else if (self.guild == GUILD_NECROMANCER)
+      l := 9;
+   else if (self.guild == GUILD_NYM_RANGER)
+      l := 10;
+   else if (self.guild == GUILD_NYM_DRUID)
+      l := 11;
+   else if (self.guild == GUILD_KNIGHT)
+      l := 12;
+
+
+
+/* Remove me from guilds */
+
+:remove_guilds:
+
+   if ("$guild" in self.quests)
+   {
+      subextra(self.quests, "$guild");
+      goto remove_guilds;
+   }
+
+   self.guild := "Rebirthing";
+
+   if (dilfind("no_kill@basis", self))
+   {
+      i := dildestroy("no_kill@basis", self);
+      set(self.pcflags, PC_PK_RELAXED);
+   }
+
+   if ((isset(self.pcflags, PC_PK_RELAXED)) and (not("$Rebirth_Bob" in
+         self.quests)))
+   {
+      addextra(self.quests,{"$Re-Bob"},"");
+      unset(self.pcflags, PC_PK_RELAXED);
+   }
+
+   /* Here we remove the inform pc flag from the person's pcflags - this stops
+      spam, etc - the settings are retained and replaced at the end
+      of the procecure. */
+
+   my_pcflags := self.pcflags;
+   if (isset(my_pcflags, PC_INFORM))
+      unset(self.pcflags, PC_INFORM);
+
+/* We worry about abilities later */
+addextra(self.extra,{"$rebirth_prompt"},self.prompt);
+i:=dildestroy("send_prompt@update",self);
+dilcopy ("rebirth_prompt@update",self);
+
+   self.prompt := ">";
+
+   act("In a state of semi-consciousness, an ethereal voice " +
+       "calls to you through the void...\n",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   heartbeat := PULSE_SEC*4;
+   wait(SFB_CMD | SFB_TICK, TRUE);
+   block;
+   heartbeat := PULSE_SEC;
+   act("Life ends, and is born anew. You must now choose the beginning " +
+       "of your new life, " + self.name + ". <div class=cpw>Remember your " +
+       "choices will affect " +
+       "later choices, e.g. your alignment affects what guilds you " +
+       "can join.</div>\n",
+       A_ALWAYS, self, null, null, TO_CHAR);
+
+:get_gender:
+   self.prompt := "Please select 1 or 2:";
+   sendtext("\nPlease choose your new gender:\n" +
+            "  <div class=cpw>1</div>) Male\n" +
+            "  <div class=cpw>2</div>) Female\n", self);
+
+   wait(SFB_CMD, (activator == self));
+   block;
+   if (not(command("1")) and not (command("2")))
+   {
+      act("That is not a valid gender!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_gender;
+   }
+
+   if (command("1"))
+   {
+      self.sex := SEX_MALE;
+      act("You are now male.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_race;
+   }
+
+   else
+   {
+      self.sex := SEX_FEMALE;
+      act("You are now female.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_race;
+   }
+
+:get_race:
+
+   self.prompt := "Please select 1 - 11:";
+   sendtext("\nPlease choose your race:\n"+
+            "  <div class=cpw>1</div>) Human</div>            <div class=cpw> 7</div>) Half-Ogre \n"+
+            "  <div class=cpw>2</div>) Elf</div>              <div class=cpw> 8</div>) Half-Elf\n"+
+            "  <div class=cpw>3</div>) Dwarf</div>            <div class=cpw> 9</div>) Brownie\n"+
+            "  <div class=cpw>4</div>) Halfing</div>          <div class=cpw>10</div>) Groll\n"+
+            "  <div class=cpw>5</div>) Gnome</div>            <div class=cpw>11</div>) Dark-Elf (Evil)\n"+
+            "  <div class=cpw>6</div>) Half-Orc\n", self);
+
+   wait(SFB_CMD, (activator == self));
+   block;
+
+   if (atoi(cmdstr) == 1)
+   {
+      self.race := 0;
+      act("You are now a human.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 2)
+   {
+      self.race := 1;
+      act("You are now an elf.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 3)
+   {
+      self.race := 2;
+      act("You are now a dwarf.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 4)
+   {
+      self.race := 3;
+      act("You are now a halfling.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 5)
+   {
+      self.race := 4;
+      act("You are now a gnome.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 6)
+   {
+      self.race := 5;
+      act("You are now a half-orc.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 7)
+   {
+      self.race := 6;
+      act("You are now a half-ogre.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 8)
+   {
+      self.race := 7;
+      act("You are now a half-elf.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 9)
+   {
+      self.race := 8;
+      act("You are now a brownie.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 10)
+   {
+      self.race := 9;
+      act("You are now a groll.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else if (atoi(cmdstr) == 11)
+   {
+      self.race := 10;
+      act("You are now a dark-elf.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_alignment;
+   }
+
+   else
+   {
+      act("That is not a valid race!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto get_race;
+   }
+
+:get_alignment:
+
+/* As of July 17th, This has been put in guild_choose with guilds. */
+
+   guild_choose();
+
+:finish_off:
+/*   self.guild := new_guild;
+
+   new_guild := "$" + new_guild;
+
+   data_list := null;
+   addstring(data_list, new_guild);
+   addstring(data_list, "0");
+   addstring(data_list, "$guild");
+
+   addextra(self.quests, data_list, itoa(realtime));
+*/
+
+   reset_level(self);  /* Reset my level to 1 */
+   reset_race(self);   /* Reset my race attributes - age, costs, etc */
+   reset_vlevel(self);
+
+   pcinitabils@basis();
+
+   if (self.race==RACE_HUMAN)
+   {
+      self.birth := realtime - (rnd(16, 19) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_DWARF)
+   {
+      self.birth := realtime - (rnd(60,85) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_ELF)
+   {
+      self.birth := realtime - (rnd(190,215) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_HALFLING)
+   {
+      self.birth := realtime - (rnd(39, 48) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_GNOME)
+   {
+      self.birth := realtime - (rnd(104, 137) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_HALF_OGRE)
+   {
+      self.birth := realtime - (rnd(20, 30) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_HALF_ORC)
+   {
+      self.birth := realtime - (rnd(19, 25) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_BROWNIE)
+   {
+      self.birth := realtime - (rnd(34, 48) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_HALF_ELF)
+   {
+      self.birth := realtime - (rnd(25, 40) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_GROLL)
+   {
+      self.birth := realtime - (rnd(9, 12) * SECS_PER_MUD_YEAR);
+   }
+   else if (self.race==RACE_DARK_ELF)
+   {
+      self.birth := realtime - (rnd(196, 226) * SECS_PER_MUD_YEAR);
+   }
+
+   /* Update morph data, etc */
+
+      expd := PC_REBIRTHS in self.extra;
+
+      if (expd == null)
+          {
+          slist := {PC_REBIRTHS};
+          addstring (slist, "0");
+          addextra (self.extra, slist, "Total Rebirths");
+          expd := PC_REBIRTHS in self.extra;
+          }
+
+      i := 0;
+
+      expd.names.[1] := itoa(atoi(expd.names.[1]) + 1);
+
+      if (l == 2)
+      {
+       expd := F_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {F_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Fighter Rebirths");
+         expd := F_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 3)
+      {
+       expd := T_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {T_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Thief Rebirths");
+         expd := T_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 4)
+      {
+       expd := H_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {H_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Healer Rebirths");
+         expd := H_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 5)
+      {
+       expd := C_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {C_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Conjurer Rebirths");
+         expd := C_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 6)
+      {
+       expd := P_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {P_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Paladin Rebirths");
+         expd := P_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 7)
+      {
+       expd := S_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {S_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Sorcerer Rebirths");
+         expd := S_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 8)
+      {
+       expd := A_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {A_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Assassin Rebirths");
+         expd := A_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 9)
+      {
+       expd := N_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {N_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Necromancer Rebirths");
+         expd := N_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 10)
+      {
+       expd := R_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {R_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Ranger Rebirths");
+         expd := R_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+      if (l == 11)
+      {
+       expd := D_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {D_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Druid Rebirths");
+         expd := D_REBIRTHS in self.extra;
+        }
+       goto setit;
+      }
+	   expd := DK_REBIRTHS in self.extra;
+       if(expd == null)
+        {
+         slist := {DK_REBIRTHS};
+         addstring(slist, "0 0");
+         addextra(self.extra, slist, "Knight Rebirths");
+         expd := DK_REBIRTHS in self.extra;
+        }
+       goto setit;
+
+:setit:
+         slist := getwords(expd.names.[1]);
+         slist.[0] := itoa(atoi(slist.[0]) + 5);
+         slist.[1] := itoa(atoi(slist.[1]) + 1);
+         expd.names.[1] := slist.[0] +" "+ slist.[1];
+
+         expd := SAC_POINTS in self.extra;
+         expd.names.[1] := "0";
+
+   expd2 := "$rebirth_prompt" in self.extra;
+   self.prompt := expd2.descr;
+   subextra(self.extra, "$rebirth_prompt");
+i:=dildestroy("rebirth_prompt@update",self);
+dilcopy ("send_prompt@update",self);
+
+
+   act("&h",
+       A_ALWAYS, self, null, null, TO_CHAR);
+
+   act("\n\nThe gods have seen fit to let you keep your equipment from " +
+       "your previous life in the hope that it will help you in this " +
+       "new one.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   wait(SFB_CMD | SFB_TICK, TRUE);
+   block;
+   act("A great portal opens and you find yourself somewhere else!",
+       A_ALWAYS, self, null, null, TO_CHAR);
+
+   if (self.guild == GUILD_ASSASSIN)
+      link(self, findroom("entrance@assassin"));
+   else if (self.guild == GUILD_SORCERER)
+      link(self, findroom("ent_guild@sorcerer"));
+   else if (self.guild == GUILD_NYM_RANGER)
+      link(self, findroom("for_gath1@ranger"));
+   else if (self.guild == GUILD_UDG_FIGHTER)
+      link(self, findroom("entrance@fightersguild"));
+   else if (self.guild == GUILD_UDG_THIEF)
+      link(self, findroom("entrance@thievesguild"));
+   else if (self.guild == GUILD_UDG_CLERIC)
+      link(self, findroom("entrance@clericguild"));
+   else if (self.guild == GUILD_UDG_MAGE)
+      link(self, findroom("entrance@mageguild"));
+   else if (self.guild == GUILD_PALADIN)
+      link(self, findroom("mon_yard@paladin_guild"));
+   else if (self.guild == GUILD_NECROMANCER)
+      link(self, findroom("church_ruin@necro_guild"));
+   else if (self.guild == GUILD_KNIGHT)
+      link(self, findroom("room_5@knight"));
+   else if (self.guild == GUILD_NYM_DRUID)
+      link(self, findroom("henge@druid"));
+
+   if (self.outside.nameidx == "waiting_room")
+      link(self, findroom("temple@udgaard"));
+
+upd_rebirth@competition(self);
+   i := 0 - self.exp;
+   experience(i, self);
+   
+   experience(11250, self);
+                                 upd_all_comp@competition(self);
+
+   subextra (self.quests, "$dead_g");
+self.max_hp:=3*self.abilities[ABIL_HP]+20;
+   self.skill_points := 80;
+   self.ability_points := 40;
+
+:end:
+   sendto("rebirth_done", self);
+
+   /* cycle through wearable equipment and resize */
+   set_weight(self, self.baseweight);
+
+   tempu := self.inside;
+   while(tempu)
+   {
+      if ((tempu.names.[0]=="storage container") and (tempu.minv>200))
+      {
+         set_weight_base(tempu, 0);
+         set_weight(tempu, 0);
+      }
+
+      if (tempu.weight<0)
+      {
+         if (tempu.minv>=200)
+            set_weight(tempu, 0);
+         else
+            set_weight(tempu, tempu.baseweight);
+	   }
+      set_weight(self, self.weight+tempu.weight);
+
+
+     if((tempu.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
+                             MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+                             MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+                             MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+                             MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+                             MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+                             MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+                             MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+                             MANIPULATE_WEAR_ANKLE)) == 0) goto nowayinhell;
+     tempu.height := self.height;
+:nowayinhell:
+     tempu := tempu.next;
+    }
+
+:go_on:
+
+   if (isset(my_pcflags, PC_INFORM))
+      set(self.pcflags, PC_INFORM);
+   if ("$Re-Bob" in self.quests)
+   {
+      dilcopy("rebob@rebirth", self);
+      act("<div class=cpr>Please note that shortly after you reach level 50 you " +
+          "will automatically be put back into the book of blood.\n",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   self.minv := 0; /* Make them visible to mortals again */
+   act("$1n steps out of a portal and into the room.",
+       A_SOMEONE, self, null, null, TO_REST);
+   exec("look", self);
+   if (not(dilfind("morph_charge@rebirth", self)))
+      dilcopy("morph_charge@rebirth", self);
+   destroy(tempu);
+
+   self.hp := self.max_hp;
+   self.endurance := self.max_endurance;
+   self.mana := self.max_mana;
+
+   set(self.charflags, CHAR_PROTECTED);
+   self.crimes := 0;
+
+   position_update(self);
+
+  broad := "<div class=cpr>The grounds tremors and lightning streaks across the " +
+  "heavens as the gods mark " + self.name + "'s rebirth.</div>";
+
+  broad := textformat(broad);
+
+  pc := self;
+
+  while (pc.gprevious.type==UNIT_ST_PC)
+     pc := pc.gprevious;
+
+     while (pc.type==UNIT_ST_PC)
+      {
+     act(broad, A_ALWAYS, pc, null, null, TO_CHAR);
+      pc:=pc.gnext;
+      }
+
+   tempu := load("guild_medallion@guild_paths");
+    tempu.height := self.height;
+   link(tempu, self);
+   tempu := load("torch@midgaard");
+   link(tempu,self);
+   exec("wear medallion", self);
+   exec("hold torch", self);
+   exec("light torch", self);
+   act("Don't forget to use your medallion to get around!",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   quit;
+} dilend

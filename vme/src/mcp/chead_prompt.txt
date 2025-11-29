@@ -1,0 +1,171 @@
+Generate MCP entry for DIL keyword: chead
+
+=== Yacc rule ===
+| DILSE_CHEAD '(' ')'
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_CP;
+    add_ubit8(&($$), DILE_CHEAD);
+}
+
+=== C implementation ===
+void dilfe_chead(dilprg *p)
+{
+    dilval *v = new dilval;
+    v->atyp = DILA_NORM;
+    v->type = DILV_CP;
+    v->val.ptr = g_cmdlist;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin do_wiz(arg : string);
+var
+ch : unitptr;
+wizlvl : integer;
+wizcmd : cmdptr;
+tmp : string;
+cnt : integer;
+emote : integer;
+lft : string;
+code
+{
+
+   if (arg == "")
+   {
+    sendtext("Gods don't like being bothered like that!<br/>",self);
+    quit;
+   }
+
+   wizcmd := chead();
+
+   while ((wizcmd) and (wizcmd.name != "wiz"))
+    wizcmd := wizcmd.next;
+
+   if (isset(self.flags,UNIT_FL_BURIED))
+   {
+    sendtext("You can not talk while buried.<br/>", self);
+    quit;
+   }
+
+   if ((left(arg,1) == "@") and (length(arg) > 1))
+   {
+   tmp := getword(arg);
+   emote := TRUE;
+   }
+
+   else if (arg == "-")
+   {
+    if (isset(self.pcflags,PC_NOWIZ))
+     sendtext("But you're ALREADY offline!<br/>", self);
+    else
+    {
+     sendtext("You won't hear the wizline from now on.<br/>", self);
+     set(self.pcflags,PC_NOWIZ);
+    }
+   quit;
+   }
+
+   else if (arg == "+")
+   {
+    if (not isset(self.pcflags,PC_NOWIZ))
+     sendtext("But you're ALREADY online!<br/>", self);
+    else
+    {
+     sendtext("You can now hear the wizline again.<br/>", self);
+     unset(self.pcflags, PC_NOWIZ);
+    }
+   quit;
+   }
+
+
+   else if (arg == "?")
+   {
+    ch := ghead();
+    cnt := 0;
+
+    while (ch.type == UNIT_ST_PC)
+    {
+     if ((ch.level >= IMMORTAL_LEVEL) and (visible(self,ch)))
+     {
+      if (cnt == 0)
+      {
+       if (ch.minv > 0)
+        tmp := "*<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
+       else
+        tmp := "<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
+
+                  if (isset(ch.pcflags,PC_NOWIZ))
+                   tmp := tmp+"-<div class='wiz'>";
+                 }
+      else
+      {
+       if (ch.minv > 0)
+        tmp := tmp+", *<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
+       else
+        tmp := tmp+"<div class='wiz'>, "+ch.name+"("+itoa(ch.level)+")";
+
+                  if (isset(ch.pcflags, PC_NOWIZ))
+                   tmp := tmp+"-<div class='wiz'>";
+                 }
+      cnt := cnt + 1;
+      }
+
+     ch := ch.gnext;
+    }
+
+    sendtext(tmp, self);
+    quit;
+   }
+
+   if (isset(self.pcflags,PC_NOWIZ))
+   {
+    sendtext("You're offline!!!<br/>", self);
+    quit;
+   }
+
+   if ((left(arg,1) == "#") and (length(arg) > 1))
+   {
+   tmp := getword(arg);
+   wizlvl := atoi(right(tmp, length(tmp) - 1));
+
+   if (wizlvl > self.level)
+   {
+    sendtext("You cannot limit the channel to a higher level than your own.<br/>", self);
+    quit;
+   }
+
+   lft := ":"+itoa(wizlvl)+":";
+
+
+   }
+   else
+   {
+
+   wizlvl := self.minv;
+   if (wizlvl > 200) lft := ":"+itoa(wizlvl)+":";
+   else lft := "::";
+
+
+   }
+
+   ch := ghead();
+
+   while (ch.type == UNIT_ST_PC)
+   {
+
+    if ((ch.level >= wizcmd.level) and (ch.level >= wizlvl) and
+           (not isset(ch.pcflags,PC_NOWIZ)))
+        {
+        if (emote)
+           sendtext("<div class='wiz'>"+lft+" "+self.name+" "+arg+"<br/>", ch);
+        else
+           sendtext("<div class='wiz'>"+lft+" "+self.name+" :: "+arg+"<br/>", ch);
+    }
+    ch := ch.gnext;
+   }
+
+   send_done("wiz", self, null, null, 0, arg, null, CMD_AUTO_NONE);
+ quit;
+} dilend

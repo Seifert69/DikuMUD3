@@ -1,0 +1,135 @@
+Generate MCP entry for DIL keyword: natural_armour
+
+=== Yacc rule ===
+| DILSF_NARM /* .natural_armour */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_NARM;
+}
+
+=== C implementation ===
+case DILF_NARM:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = character->getNaturalArmorPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin aware recall pc_arena ();
+var
+ speed_int:integer;
+ exp_int:integer;
+ charflags_int:integer;
+ mana_int:integer;
+ endurance_int:integer;
+ attacktype_int:integer;
+ armourtype_int:integer;
+ race_int:integer;
+ sex_int:integer;
+ level_int:integer;
+ vlevel_int:integer;
+ position_int:integer;
+ pcflags_int:integer;
+ crimes_int:integer;
+ full_int:integer;
+ thirst_int:integer;
+ drunk_int:integer;
+ hit_int:integer;
+code
+{
+
+ speed_int:=0;
+ exp_int:=0;
+ charflags_int:=0;
+ mana_int:=0;
+ endurance_int:=0;
+ attacktype_int:=0;
+ armourtype_int:=0;
+ race_int:=0;
+ sex_int:=0;
+ level_int:=0;
+ vlevel_int:=0;
+ position_int:=0;
+ pcflags_int:=0;
+ crimes_int:=0;
+ full_int:=0;
+ thirst_int:=0;
+ drunk_int:=0;
+ hit_int:=0;
+
+ speed_int:=self.speed;
+  exp_int:=self.exp;
+ charflags_int:=self.charflags;
+ mana_int:=self.mana;
+  endurance_int:=self.endurance;
+   attacktype_int:=self.attack_type;
+ armourtype_int:=self.natural_armour;
+ race_int:=self.race;
+ sex_int:=self.sex;
+ level_int:=self.level;
+ vlevel_int:=self.vlevel;
+ position_int:=self.position;
+ pcflags_int:=self.pcflags;
+ crimes_int:=self.crimes;
+ full_int:=self.full;
+ thirst_int:=self.thirst;
+ drunk_int:=self.drunk;
+hit_int:=self.hp;
+
+set (self.pcflags,PC_PK_RELAXED);
+
+interrupt (SFB_MSG, ((argument=="destroy arena") and
+(self==activator)),exit_arena);
+wait (SFB_MSG, (argument =="never come") and
+(activator==self));
+
+
+:exit_arena:
+/*self.speed:=speed_int;*/
+self.exp:=  exp_int;
+self.charflags:= charflags_int;
+self.mana:= mana_int;
+self.endurance:=  endurance_int;
+self.attack_type:=   attacktype_int;
+self.natural_armour:= armourtype_int;
+self.race:= race_int;
+self.sex:= sex_int;
+self.level:= level_int;
+/*self.vlevel:= vlevel_int;*/
+self.position:= position_int;
+self.pcflags:=pcflags_int;
+self.crimes:= crimes_int;
+self.full:= full_int;
+self.thirst:= thirst_int;
+self.drunk:= drunk_int;
+self.hp:=hit_int;
+subextra(self.extra,"$PK_TIMER");
+position_update(self);
+quit;
+} dilend

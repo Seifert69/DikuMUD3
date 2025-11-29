@@ -1,0 +1,303 @@
+Generate MCP entry for DIL keyword: foreach
+
+=== Yacc rule ===
+| DILSI_FOE '(' coreexp ',' ihold pushbrk pushcnt defcnt corevar ihold ahold ')'
+{
+    in_foreach++;
+    if (in_foreach > 1)
+    {
+        dilfatal("'foreach' may not be nested!");
+    }
+}
+
+=== C implementation ===
+void dilfi_foe(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+    int i = 0;
+
+    if (dil_type_check("foreach - build", p, 1, v1, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        /* build environment into secures with NULL labels */
+
+        dil_getval(v1);
+
+        if (v1->val.num)
+        {
+            // Clear any pre-existing for-each secured items
+            for (i = 0; i < p->fp->securecount; i++)
+            {
+                if (p->fp->secure[i].lab == nullptr)
+                {
+                    dil_sub_secure(p->fp, p->fp->secure[i].sup, TRUE);
+                    i--; // Shit
+                }
+            }
+
+            if (p->sarg->owner->getUnitIn())
+            {
+                scan4_unit(p->sarg->owner, v1->val.num);
+            }
+            else
+            {
+                scan4_unit_room(p->sarg->owner, v1->val.num);
+            }
+
+            // Add all the items found to the for-each
+            for (i = 0; i < g_unit_vector.top; i++)
+            {
+                dil_add_secure(p, UVI(i), nullptr);
+            }
+
+            // Add the owner unit if it is the right type
+            if (IS_SET(p->sarg->owner->getUnitType(), v1->val.num))
+            {
+                dil_add_secure(p, p->sarg->owner, nullptr);
+            }
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_MISSION) janitors(rate: integer);
+var
+   trash : unitptr;
+   s : string;
+   sl : stringlist;
+   msgs : stringlist;
+   songs : stringlist;
+   sing1 : stringlist;
+   move : stringlist;
+   msg : integer;
+   msg2 : integer;
+   obj : unitptr;
+   intg : integer;
+   inits: integer; // Boolean (added by S)
+
+code
+{
+   if (inits == FALSE)
+   {
+      obj := load ("tbag@midgaard");
+      link (obj, self);
+      obj := null;
+      inits := TRUE;
+   }
+
+   heartbeat := PULSE_SEC*rate;
+   msgs := {"Ewww, a corpse.",
+      "Geez, people just leave these things lying around these days.",
+      "I wonder who killed that poor sucker.",
+      "I always knew that guy was a pansy.",
+      "He had it coming to him anyhow."};
+   songs:={"sing1"};
+   sing1:={"I can see a bare-bottomed mandril,",
+      "Slyly eyeing his upper nostril,",
+      "If he jumps inside there too,",
+      "I really won't know what to do,",
+      "I'll be a proud possessor of a kind of nasal zoo,",
+      "A nasal zoo.",
+      "I've got a ferret sticking up my nose,",
+      "And what is worse it constantly explodes,",
+      "Ferrets don't explode you say,",
+      "But it happened nine times yesterday,",
+      "And I should know 'cause each time,",
+      "I was standing in the way.",
+      "I've got a ferret sticking up my nose,",
+      "I've got a ferret sticking up my nose,",
+      "How it got there I can't tell,",
+      "But now it's there it hurts like hell,",
+      "And what is more it radically affects my sense of smell."};
+
+   move := {"fear","cringe","cringe"};
+
+:start:
+:collect:
+   pause;
+   foreach (UNIT_ST_OBJ, trash)
+   {
+      if (not findsymbolic(self, "tbag@midgaard", FIND_UNIT_IN_ME)) 
+         goto s_break;
+
+      if (self.outside.flags & UNIT_FL_NO_BURY) continue;
+      if (trash.flags & UNIT_FL_BURIED) continue;
+      if (not isset (trash.manipulate, MANIPULATE_TAKE)) continue;
+      if (not visible(self,trash)) continue;
+      if (can_carry (self, trash, 1) > 0) continue; // Can't carry
+      if ("treasure" == trash.zoneidx) continue;
+      if ((trash.objecttype == ITEM_CONTAINER) or( trash.objecttype == ITEM_BOAT))
+         continue;
+      if ((trash.nameidx + trash.zoneidx == "corpsebasis") and (trash.value[2] == 0))
+      {
+         if (isset (self.outside.flags, UNIT_FL_NO_BURY)) continue;
+         secure(trash, collect);
+         pause;
+         unsecure(trash);
+         if (trash.inside != null)
+         {
+            msg := rnd(0, (length(msgs)-1));
+            exec("say "+msgs.[msg], self);
+            exec("get all from corpse", self);
+            exec("bury "+trash.name, self);
+            exec("put all in bag", self);
+            continue;
+         }
+
+         if ((trash.nameidx + trash.zoneidx == "corpsebasis") and (trash.value[2] == 0) and (trash.inside == null)) 
+            goto npc;
+         else
+         {
+            :npc:
+            msg := rnd(0, (length(msgs)-1));
+            exec("say "+msgs.[msg], self);
+            exec("bury "+trash.name, self);
+            continue;
+         }
+      }
+      if ((trash.nameidx + trash.zoneidx == "corpsebasis") and (trash.value[2] == 0) and (trash.inside == null))
+      {
+         secure(trash, collect);
+         pause;
+         unsecure(trash);
+         msg := rnd(0, (length(msgs)-1));
+         exec("say "+msgs.[msg], self);
+         exec("bury "+trash.name, self);
+         continue;
+      }
+      if ((trash.nameidx + trash.zoneidx == "corpsebasis") and (trash.value[2] == 1) and (trash.inside != null))
+      {
+         if ("$owner notified" in trash.extra) 
+            continue;
+         else
+         {
+            sl := getwords(trash.name);
+            s := sl.[2];
+            pause;pause;
+            exec ("tell "+s+" Your corpse is at "     +self.outside.title +", please pick it up.", self);
+            addextra(trash.extra, {"$owner notified"}, "");
+            continue;
+         }
+      }
+
+      if ((trash.nameidx + trash.zoneidx == "corpsebasis") and (trash.value[2] == 1) and (trash.inside == null))
+      {
+         secure(trash, collect);
+         pause;
+         unsecure(trash);
+         exec("bury "+trash.name, self);
+         continue;
+      }
+      if ((trash.nameidx+"@"+trash.zoneidx == "slime@basis"))
+      {
+         secure(trash, collect);
+         pause;
+         exec("say Ewww, slime!", self);
+         msg2 := rnd(0, (length(move)-1));
+         exec(move.[msg2], self);
+         pause;
+         exec("emote utters the words, 'fadiz univisa!'..", self);
+         act("$2n de-materializes before your very eyes.", A_ALWAYS, self, trash, null, TO_ALL);
+         unsecure(trash);
+         destroy(trash);
+         continue;
+      }
+      if ((trash.nameidx+"@"+trash.zoneidx == "head@death"))
+      {
+         secure(trash, collect);
+         pause;
+         exec("say looks like someone lost their head.", self);
+         exec("chuckle", self);
+         pause;
+         exec("emote utters the words, 'fadiz univisa!'..", self);
+         act("$2n de-materializes before your very eyes.", A_ALWAYS, self, trash, null, TO_ALL);
+         unsecure(trash);
+         destroy(trash);
+         continue;
+      }
+
+      if ((trash.objecttype == ITEM_FOOD) or (trash.objecttype == ITEM_DRINKCON))
+      {
+         secure(trash, collect);
+         pause;
+         exec("get "+trash.name, self);
+         if (trash.value[3] > 0)
+         {
+            exec("say This "+trash.name+" is unfit for consumption!", self);
+            act("$1n heaves the $2n into the distance.", A_ALWAYS, self, trash, null, TO_ALL);
+            unsecure(trash);
+            destroy(trash);
+            goto no_food;
+         }
+
+         unsecure(trash);
+         dilcopy("rotaway@midgaard()",trash);
+         act("$1n donates $2n to a worthy cause.", A_ALWAYS, self, trash, null, TO_ALL);
+         link(trash, findroom("jandump@midgaard"));
+
+         :no_food:
+         pause;
+         continue;
+      }
+      else
+      {
+         secure(trash, collect);
+         exec("get "+trash.name, self);
+         if ("bag" in trash.names)
+         {
+            //   dilcopy("rotaway@midgaard()",trash);
+            // log("should be dilcopying 2");
+            unsecure(trash);
+            exec("put "+ trash.name +" in 2.bag",self);
+            pause;
+            continue;
+         }
+         else
+         {
+            // dilcopy("rotaway@midgaard()",trash);
+            // log("should be dilcopying 3");
+            unsecure(trash);
+            exec("put "+ trash.name +" in bag",self);
+            pause;
+            continue;
+         }
+      }
+      pause;pause;
+   } // Foreach
+
+   goto start;
+
+:s_break:
+   addextra (self.extra, {"$block wander"}, "");
+   exec("say Where did my trash bag get to?", self);
+   pause;
+   exec("boggle self", self);
+   pause;pause;pause;pause;
+   exec("say Well, good time for a break I guess.", self);
+   pause;
+   exec("rest", self);
+   pause;pause;pause;pause;pause;
+   exec("emote clears his throat in preparation for a song.", self);
+   pause;
+
+   intg := 0;
+   while (intg < length(sing1))
+   {
+      exec("emote sings, '"+sing1.[intg]+"'", self);pause;
+      intg := intg+1;
+   }
+
+   pause;pause;pause;pause;pause;pause;
+   exec("say I'd better get back to work before I get in trouble.", self);
+   pause;pause;
+   exec("stand", self);
+   pause;pause;
+   link(load("tbag@midgaard"),self);
+   exec("emote gets a trash bag from his back pocket.", self);
+   pause;
+   exec("say Rule number one: always carry a spare.", self);
+   exec("snicker", self);
+   pause;pause;pause;pause;
+   subextra (self.extra,"$block wander");
+   goto start;
+} dilend

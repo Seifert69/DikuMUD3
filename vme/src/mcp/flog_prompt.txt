@@ -1,0 +1,136 @@
+Generate MCP entry for DIL keyword: flog
+
+=== Yacc rule ===
+| DILSE_FLOG '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'flog' not string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'flog' not string");
+    }
+    else if ($7.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 3 of 'flog' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_FLOG);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+}
+
+=== C implementation ===
+void dilfe_flog(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    char *sstr = nullptr;
+    char filename[255];
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_SP:
+            switch (dil_getval(v2))
+            {
+                case DILV_SP:
+                    switch (dil_getval(v3))
+                    {
+                        case DILV_SP:
+                            if (p->frame[0].tmpl->zone->getAccessLevel() > 1)
+                            {
+                                szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to access logs w/o access.", p->frame->tmpl->prgname);
+                                p->waitcmd = WAITCMD_QUIT;
+                            }
+                            else
+                            {
+                                strcpy(filename, g_cServerConfig.getLogDir().c_str());
+                                strcat(filename, (char *)v1->val.ptr);
+                                sstr = str_dup((char *)v2->val.ptr);
+                                v->val.num = save_string(filename, &sstr, (char *)v3->val.ptr);
+                                FREE(sstr);
+                            }
+                            break;
+                        case DILV_FAIL:
+                        case DILV_NULL:
+                            v->type = DILV_FAIL;
+                            break;
+                        default:
+                            v->type = DILV_ERR;
+                            break;
+                    }
+
+                    break;
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin aware cmd_bugs(st : string);
+var
+   t : string;
+   z : unitptr;
+   i : integer;
+code
+{
+   if (self.type!=UNIT_ST_PC)
+      return;
+   sendtext("Enter your bug reports. You have approximately 4000 "+
+            "characters to work with. Note that if you input only a "+
+            "single word or nothing at all, it will abort.<br/>", self);
+   beginedit(self);
+   wait(SFB_EDIT, self == activator);
+   t := argument;
+   if (length(getwords(t)) < 2)
+   {
+      sendtext("Insufficient report. Exiting.<br/>", self);
+      quit;
+   }
+   z := self.outside;
+   while (z.type != UNIT_ST_ROOM)
+      z := z.outside;
+   t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
+   t := textformat(t);
+   i := flog("bugs", t, "a");
+   sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " bug report: " + t); // Send to dispatcher.py via pipeDispatcher
+
+   quit;
+} dilend

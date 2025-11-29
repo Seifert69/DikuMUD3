@@ -1,0 +1,166 @@
+Generate MCP entry for DIL keyword: help
+
+=== Yacc rule ===
+| DILSF_HELP /*.help*/
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_HELP;
+}
+
+=== C implementation ===
+case DILF_HELP:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SPR;
+                        v->ref = ((zone_type *)v1->val.ptr)->getHelpPtrPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin li1();
+var
+  pcname   : string;
+  item     : unitptr;
+  pc       : unitptr;
+  i        : integer;
+  exdp     : extraptr;
+
+code
+{
+
+  :init:
+  heartbeat := PULSE_SEC*5;
+  on_activation((self.position <= POSITION_SLEEPING) or
+	       (self.position == POSITION_FIGHTING), skip);
+
+  :start:
+  wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not
+      command("give")) and ((SCRIBE_ONGOING in
+		 activator.quests)));
+  if(LIB_COMPLETE in activator.quests)
+   goto waitawhile;
+
+  pc := activator;
+  secure(pc, lostpc);
+
+  if(not(LIB_ONGOING in pc.quests))
+    {
+     pause;
+     exec("say You look like one who is on a quest.", self);
+     pause;
+     exec("say I have a pair of spectacles that I could " +
+	  "give you in return for some things I need.", self);
+     pause;
+     exec("say would you like to help me?", self);
+     pause;
+     exec("say Please nod or shake.", self);
+
+     i := 0;
+     while (i < 5)
+     {
+	wait(SFB_CMD, activator #= pc);
+
+	if(command("nod"))
+	{
+	  goto quest_accepted;
+	}
+	else if(command("say"))
+	{
+	  pause;
+	  exec("say Nod if you want to continue, shake " +
+	       "if not.", self);
+	}
+	else if(command("shake"))
+	goto no_quest;
+	i := I + 1;
+     }
+
+  :no_quest:
+  pause;
+  exec("say Fine, good luck in your travels.", self);
+  unsecure(pc);
+  goto waitawhile;
+
+  :quest_accepted:
+  pause;
+  exec("say I am looking for something to write with.",
+	   self);
+  pause;
+  exec("say A book containing unlimited knowledge.", self);
+  pause;
+  exec("say I also search for a little information "+
+       "relating to a group of people named the "+
+	  "Sanctuarians.", self);
+  pause;
+  exec("say Bring me these things and I can give you the "+
+	  "glasses I have.", self);
+  pause;
+  exec("say I also know what you seek, and can tell you that there are "+
+       "between six and eight scrolls containing the language of "+
+       "the ancients", self);
+
+  addextra(pc.quests, {LIB_ONGOING}, "");
+  unsecure(pc);
+  goto start;
+  }
+  else
+  {
+    exdp := LIB_ONGOING in pc.quests;
+    if (("quill" in exdp.names)and
+	("book of knowledge" in exdp.names)and
+	   ("vellum scrap" in exdp.names))
+    {
+      pause;
+      subextra(pc.quests, LIB_ONGOING);
+      addextra(pc.quests, {LIB_COMPLETE}, "");
+      exec("say Thank you " +pc.name+ ".", self);
+      item := load("obj_15@pit");
+      link(item, pc);
+      pause;
+	 exec("say You have helped me greatly.", self);
+	 pause;
+	 exec("say here are the glasses.", self);
+	 pause;
+	 act("The librarian gives you a pair of glasses.",
+		A_SOMEONE, pc, null, null, TO_CHAR);
+
+	 act("The librarian give a pain of glasses to $1n.",
+		A_SOMEONE, self.outside, null, null, TO_ROOM);
+    }
+  }
+
+      unsecure(pc);
+      goto start;
+
+	:waitawhile:
+	heartbeat := PULSE_SEC*60;
+	pause;
+	goto init;
+
+	:lostpc:
+	exec("say I guess the quest wasn't so important.",
+	self);
+	pause;
+	exec("sigh", self);
+	goto start;
+} dilend

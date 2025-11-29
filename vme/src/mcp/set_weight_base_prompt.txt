@@ -1,0 +1,106 @@
+Generate MCP entry for DIL keyword: set_weight_base
+
+=== Yacc rule ===
+| DILSI_SET_W_BASE '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of set_weight_base", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'setweight' not an unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'setweight' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SET_W_BASE);
+    }
+}
+
+=== C implementation ===
+void dilfi_set_weight_base(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("set_weight_base", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit)
+        {
+            int dif = v2->val.num - unit->getBaseWeight();
+
+            /* set new baseweight */
+            unit->setBaseWeight(v2->val.num);
+
+            /* update weight */
+            weight_change_unit(unit, dif);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin putin_safe(prisoner : unitptr);
+var
+   vr : unitptr;
+   u : unitptr;
+   nextu : unitptr;
+   safe : unitptr;
+   i : integer;
+
+code
+{
+   vr := findsymbolic("void@basis");
+   safe := load("safe@justice");
+   link(safe, vr); // Place it in a room OK to mess up weight
+
+   i := 0;
+   u := prisoner.inside;
+
+   while (u)
+   {
+      nextu := u.next;
+
+      if (u.minv < 1)
+      {
+         link(u, safe);
+         i := i + 1;
+      }
+
+      u := nextu;
+   }
+
+   if (i < 1)
+   {
+      destroy(safe);
+   }
+   else
+   {
+      set_weight_base(safe, 0);
+      set_weight(safe, 0);
+      link(safe, prisoner);
+
+      if (safe == null)
+      {
+         act("$1n takes all $3n's possessions.",
+            A_SOMEONE, self, null, prisoner, TO_NOTVICT);
+         act("$1n takes all your possessions.",
+            A_SOMEONE, self, null, prisoner, TO_VICT);
+      }
+      else
+      {
+         act("$1n puts all $3n's possessions in the safe.",
+            A_SOMEONE, self, safe, prisoner, TO_NOTVICT);
+         act("$1n puts all your possessions in the safe.",
+            A_SOMEONE, self, safe, prisoner, TO_VICT);
+      }
+   }
+
+   return;
+} dilend

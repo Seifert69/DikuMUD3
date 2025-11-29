@@ -1,0 +1,110 @@
+Generate MCP entry for DIL keyword: vlevel
+
+=== Yacc rule ===
+| DILSF_VLVL /* .vlevel */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_VLVL;
+}
+
+=== C implementation ===
+case DILF_VLVL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                        {
+                            v->type = DILV_INT;
+                            v->val.num = pc->getVirtualPlayerLevel();
+                        }
+                        else
+                        {
+                            v->type = DILV_UINT2R;
+                            v->ref = pc->getVirtualPlayerLevelPtr();
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin clan_aggro(home:string);
+var
+ u : unitptr;
+code
+{
+	heartbeat := PULSE_SEC*10;
+
+	:start:
+	foreach(UNIT_ST_PC,u)
+	{
+		if ((u == self) or (u.level > 200)) continue;
+		if ((u.vlevel < 20) and (u.hometown != home))
+		{
+			act("$1n magically transfers $3n out of harms way....",
+			  A_ALWAYS, self, null, u, TO_NOTVICT);
+			act("$1n magically transfers you out of harms way....",
+			  A_SOMEONE, self, null, u, TO_VICT);
+			link(u, findroom("temple@udgaard"));
+			u.hp:= 5;
+			position_update(u);
+
+			heartbeat := PULSE_SEC *4;
+			goto start;
+		}
+		else
+		{
+			heartbeat := PULSE_SEC *15;
+			if (self.position <= POSITION_SLEEPING) goto sleep;
+			if ((u.type == UNIT_ST_PC) and (u.hometown != home))
+			if (self.position != POSITION_FIGHTING)
+			{
+				act(" $3n, you are not a member of this clan! Leave NOW!",
+				A_SOMEONE,self,null,u,TO_NOTVICT);
+				act("$1n attacks $3n!",A_SOMEONE,self,null,u,TO_NOTVICT);
+				act("The $1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
+				set_fighting(self,u);
+			}
+			if (u.hp < 10)
+			{
+				act("$1n drives his spear through you killing you instantly.",
+				A_ALWAYS,self,null,u,TO_VICT);
+				act("$1n drives his spear through $3n killing $3s instantly.",
+				A_ALWAYS,self,null,u,TO_NOTVICT);
+				u.hp := -10;
+				position_update(u);
+			}
+		}
+	}
+	pause;
+	goto start;
+
+	:sleep:
+	heartbeat:= 20;
+	pause;
+	self.position:= POSITION_STANDING;
+	exec("yawn", self);
+	heartbeat:= 3;
+	goto start;
+} dilend

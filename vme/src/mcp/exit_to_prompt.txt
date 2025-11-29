@@ -1,0 +1,80 @@
+Generate MCP entry for DIL keyword: exit_to
+
+=== Yacc rule ===
+| DILSF_TOR idx /* .exit_to */
+{
+    INITEXP($$);
+    copy_code(&($$), &($2));
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_TOR;
+    FREEEXP($2);
+}
+
+=== C implementation ===
+case DILF_TOR:
+            v2 = p->stack.pop();
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    v->type = DILV_UP;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            if (v->type == DILV_UP)
+            {
+                auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+
+                if (room && room->isRoom() && is_in(v2->val.num, 0, MAX_EXIT))
+                {
+                    if (ROOM_EXIT(room, v2->val.num))
+                    {
+                        v->atyp = DILA_NORM;
+                        v->val.ptr = ROOM_EXIT(room, v2->val.num)->getToRoom();
+                    }
+                    else // There is no exit, the result is the null pointer
+                    {
+                        v->type = DILV_NULL;
+                        v->val.ptr = nullptr;
+                    }
+                }
+                else
+                {
+                    v->type = DILV_FAIL;
+                }
+            }
+            break;
+
+=== DIL example ===
+dilbegin clan_move(i:integer);
+code
+{
+	act("<div class='clan'>$1n vanishes.</div>",A_HIDEINV,self, null, null, TO_ROOM);
+	act("<div class='clan'>You are teleported.</div>", A_SOMEONE,self, null, null, TO_CHAR);
+	link(self, self.outside.exit_to[i]);
+	act("<div class='clan'>$1n appears from thin air.</div>",A_HIDEINV, self, null, null, TO_ROOM);
+	exec("look", self);
+	quit;
+} dilend

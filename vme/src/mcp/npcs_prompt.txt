@@ -1,0 +1,79 @@
+Generate MCP entry for DIL keyword: npcs
+
+=== Yacc rule ===
+| DILSF_NPCS /* .npcs */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_NPCS;
+}
+
+=== C implementation ===
+case DILF_NPCS:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        auto *z = (zone_type *)v1->val.ptr;
+
+                        v->val.ptr = z->findFirstNPC();
+                        if (v->val.ptr == nullptr)
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin disarm_pc(); /*added by darg to trip pc by npcs for fun */
+var
+    targ     : unitptr;
+    s        : string;
+    i        : integer;
+code
+{
+  :start:
+    wait(SFB_COM,self.position==POSITION_FIGHTING);
+    heartbeat := PULSE_VIOLENCE;
+    if (self.fighting.type != UNIT_ST_PC)
+        goto start;
+
+    i := rnd(1, 200);
+    if (i <= self.abilities[ABIL_DEX])
+        goto start;
+  
+    targ := self.fighting;
+   
+    secure(targ,losttarg);
+    {
+        block;
+        if (targ==null)goto losttarg;
+            exec("disarm "+targ.name,self);
+        unsecure(targ);
+
+        goto start;
+    }
+     goto start;
+
+    :losttarg:
+    unsecure(targ);
+    goto start;
+} dilend

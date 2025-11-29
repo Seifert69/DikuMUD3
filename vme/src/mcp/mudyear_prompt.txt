@@ -1,0 +1,98 @@
+Generate MCP entry for DIL keyword: mudyear
+
+=== Yacc rule ===
+| DILSE_TYE
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_INT;
+    add_ubit8(&($$), DILE_TYE);
+}
+
+=== C implementation ===
+void dilfe_tye(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* MudYear */
+
+    v->type = DILV_INT;
+    v->atyp = DILA_NONE;
+    v->val.num = mud_date().getYear();
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin do_time(arg : string);
+
+var
+
+   buffer   :  string;
+   temp     :  string;
+   i        :  integer;
+   j        :  integer;
+   ampm     :  string;
+   day      :  string;
+   dday     :  integer;
+   month    :  string;
+   mlist    :  stringlist;
+   dlist    :  stringlist;
+   st       :  string;
+
+code
+{
+   /*
+   sendtext("DEBUG<br/> mudday : " + itoa(mudday) + "<br/> mudhour " + itoa(mudhour)
+   + "<br/> mudmonth " + itoa(mudmonth) + "<br/>", self);
+   */
+   mlist := {"Month of Winter", "Month of the Winter Wolf",
+   "Month of the Frost Giant", "Month of the Spring","Month of Futility",
+   "Month of the Sun", "Month of the Heat","Month of the Long Shadows",
+   "Month of the Ancient Darkness"};
+
+   dlist := {"the Day of the Bull", "the Day of the Deception",
+            "the Day of Thunder", "the Day of Freedom",
+            "the Day of the Great Gods", "the Day of the Sun",
+            "the Day of the Moon"};
+
+   i := mudhour;
+   /* MS2020 ... bizarre! i:=i+1; 0 o'clock is 0 oclock and 1 is 1.*/
+   if (i<13)
+   {
+      ampm := "AM";
+      if (i==12)
+         ampm := "O-clock, High noon!";
+      else if (i==0)
+      {
+         ampm := "O-clock, Midnight!";
+         i := 12;
+      }
+   }
+   else
+   {
+      i:=i-12;
+      ampm := "PM";
+   }
+
+   j := mudday;
+   day := dlist.[j % 7];
+   month := mlist.[mudmonth];
+
+   dday := mudday + 1;
+
+   if (dday == 1)
+      st := "st";
+   else if (dday == 2)
+      st := "nd";
+   else if (dday == 3)
+      st := "rd";
+   else
+      st := "th";
+
+   buffer := "It is " + itoa(i) + " " + ampm + ", on " + day + ",<br/>";
+   buffer := buffer + "   the " + itoa(dday) + st + " Day of the " + month +
+   ", Year " + itoa(mudyear) + ".<br/>";
+
+   sendtext(buffer, self);
+
+   quit;
+} dilend

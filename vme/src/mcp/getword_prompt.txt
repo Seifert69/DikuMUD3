@@ -1,0 +1,97 @@
+Generate MCP entry for DIL keyword: getword
+
+=== Yacc rule ===
+| DILSE_GETW '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'getword' not string variable");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_GETW);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_getw(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Get first word of a string */
+    dilval *v1 = p->stack.pop();
+    char *c = nullptr;
+    char buf1[MAX_STRING_LENGTH];
+
+    switch (dil_getval(v1))
+    {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+        case DILV_SP:
+            if (v1->val.ptr)
+            {
+                v->atyp = DILA_EXP;
+                v->type = DILV_SP;
+                c = str_next_word_copy((char *)v1->val.ptr, buf1);
+                c = (char *)skip_spaces(c);
+                v->val.ptr = str_dup(buf1);
+
+                if (v1->atyp == DILA_NORM && v1->type == DILV_SPR)
+                {
+                    memmove(*(char **)v1->ref, c, strlen(c) + 1);
+                }
+                else if (p->sarg->arg == (const char *)v1->val.ptr)
+                {
+                    p->sarg->arg = c; /* Update argument as in findunit :) */
+                }
+            }
+            else
+            {
+                v->type = DILV_FAIL; /* NULL string */
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin no_command();
+var
+  pc:unitptr;
+  splno:integer;
+  s:string;
+code
+{
+   on_activation((self.position <= POSITION_SLEEPING) or
+   (self.position==POSITION_MORTALLYW) or
+   (self.position== POSITION_STUNNED) or
+   (self.position==POSITION_INCAP),skip);
+
+:start:
+heartbeat:= 3;
+wait(SFB_PRE, (command("cast") and (target == self)));
+   s := getword(argument);
+   splno := atoi(s);
+
+   if (not(splno == SPL_COMMAND)) goto start;
+
+pc:=activator;
+secure (pc,start);
+power:=-1;
+block;
+exec("say You will pay for that "+pc.name ,self);
+exec ("hunt "+pc.name,self);
+goto start;
+} dilend

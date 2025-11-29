@@ -1,0 +1,47 @@
+Generate MCP entry for DIL keyword: access
+
+=== Yacc rule ===
+| DILSF_ACCESS
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_ACCESS;
+}
+
+=== C implementation ===
+case DILF_ACCESS:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((zone_type *)v1->val.ptr)->getAccessLevel();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin string admin_res (u:unitptr,v:unitptr);
+code
+{
+if (u.level<200)
+	return ("You do not have access to this board.");
+
+return ("");
+} dilend

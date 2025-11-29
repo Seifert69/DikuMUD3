@@ -1,0 +1,125 @@
+Generate MCP entry for DIL keyword: max_hp
+
+=== Yacc rule ===
+| DILSF_MHP /* .max_hp */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_MHP;
+}
+
+=== C implementation ===
+case DILF_MHP:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        v->atyp = DILA_NONE;
+
+                        if (unit->isPC())
+                        {
+                            if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                            {
+                                v->type = DILV_INT;
+                                v->val.num = unit->getMaximumHitpoints();
+                            }
+                            else
+                            {
+                                v->type = DILV_SINT4R;
+                                v->ref = unit->getMaximumHitpointsPtr();
+                            }
+                        }
+                        else
+                        {
+                            v->type = DILV_SINT4R;
+                            v->ref = unit->getMaximumHitpointsPtr();
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin clone_attr(original : unitptr, tgt : unitptr);
+var
+   i : integer;
+code
+{
+
+   /* - - - Abilities - - - */
+
+   i := 0;
+
+   while (i < ABIL_TREE_MAX)
+   {
+      tgt.abilities[i] := original.abilities[i];
+      i := i + 1;
+   }
+
+   /* tgt.level   := original.level; */
+   /* tgt.max_hp := original.max_hp; */
+   tgt.hp     := original.hp;
+
+   /* - - - Spells - - - */
+
+   i := 0;
+
+   if (tgt.type == UNIT_ST_PC)
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.spells[i] := (3 * original.spells[i]) / 2;
+         i := i + 1;
+      }
+   }
+   else
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.spells[i] := original.spells[i];
+         i := i + 1;
+      }
+   }
+
+
+
+   /* - - - Weapons - - - */
+
+   i := 0;
+
+   if (tgt.type == UNIT_ST_PC)
+   {
+      while (i < WPN_GROUP_MAX)
+      {
+         tgt.weapons[i] := (3 * original.weapons[i]) / 2;
+         i := i + 1;
+      }
+   }
+   else
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.weapons[i] := original.weapons[i];
+         i := i + 1;
+      }
+   }
+
+   quit;
+} dilend

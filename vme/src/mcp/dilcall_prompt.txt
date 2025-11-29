@@ -1,0 +1,856 @@
+Generate MCP entry for DIL keyword: dilcall
+
+=== Yacc rule ===
+| DILSE_CALL '(' dilexp ')' '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    // I should really get the second parameter set as variable, but
+    // I don't have the time right now.
+    //
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'dilcall' not a string");
+    }
+    else if ($6.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'dilcall' not a unitptr");
+    }
+    else if ($8.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'dilcall' not an integer");
+    }
+    else if ($10.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 4 of 'dilcall' not a string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($6));
+        make_code(&($8));
+        make_code(&($10));
+        add_code(&($$), &($3));
+        add_code(&($$), &($6));
+        add_code(&($$), &($8));
+        add_code(&($$), &($10));
+        add_ubit8(&($$), DILE_CALL);
+    }
+    FREEEXP($3);
+    FREEEXP($6);
+    FREEEXP($8);
+    FREEEXP($10);
+}
+
+=== C implementation ===
+void dilfe_call(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Detection of DIL programs (TRUE/FALSE) */
+
+    dilval *v4 = p->stack.pop(); // string
+    dilval *v3 = p->stack.pop(); // integer
+    dilval *v2 = p->stack.pop(); // unitptr
+    dilval *v1 = p->stack.pop(); // The DIL to call
+
+    v->type = DILV_ERR; /* wrong type */
+
+    switch (dil_getval(v4))
+    {
+        case DILV_SP:
+            switch (dil_getval(v3))
+            {
+                case DILV_INT:
+                    switch (dil_getval(v2))
+                    {
+                        case DILV_UP:
+                            switch (dil_getval(v1))
+                            {
+                                case DILV_SP:
+                                    if (v1->val.ptr)
+                                    {
+                                        v->type = DILV_INT;
+                                        v->atyp = DILA_NONE;
+                                        v->val.num = -1;
+
+                                        diltemplate *tmpl = nullptr;
+                                        tmpl = find_dil_template((char *)v1->val.ptr);
+
+                                        if (tmpl)
+                                        {
+                                            //
+                                            // Push frame
+                                            //
+                                            p->stack.push(v2);
+                                            p->stack.push(v3);
+                                            p->stack.push(v4);
+
+                                            delete v1;
+                                            // Don't delete v2-v4 they now live on the stack.
+
+                                            dil_push_frame(p, tmpl);
+                                            return;
+                                        }
+                                        else
+                                        {
+                                            szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                                                     "DIL %s, Unable to find template %s",
+                                                     p->sarg->owner->getFileIndexSymName(),
+                                                     (char *)v1->val.ptr);
+                                        }
+                                    }
+                                    break;
+                                case DILV_NULL:
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
+                                    break;
+                                default:
+                                    v->type = DILV_ERR; /* wrong type */
+                                    break;
+                            }
+                            break;
+                        case DILV_NULL:
+                        case DILV_FAIL:
+                            v->type = DILV_FAIL;
+                            break;
+                        default:
+                            v->type = DILV_ERR; /* wrong type */
+                            break;
+                    }
+            }
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+}
+
+=== DIL example ===
+dilbegin constants();
+var
+    r8il        : intlist global roll8@randomt;
+    ilBladeMat  : intlist global ilBladeMat@randomt;
+    ilHiltMat   : intlist global ilHiltMat@randomt;
+
+    ilJewelryMat : intlist global ilJewelryMat@randomt;
+    ilGems        : intlist    global ilGems@randomt;
+
+    slMatNames  : stringlist global slMatNames@randomt;
+    ilMatValues : intlist    global ilMatValues@randomt;
+
+    ilHeadMat    : intlist global ilHeadMat@randomt;
+    ilHandleMat  : intlist global ilHandleMat@randomt;
+
+    ilStaffMat   : intlist global ilStaffMat@randomt;
+    ilWhipMat    : intlist global ilWhipMat@randomt;
+
+    slWeapons    : stringlist global slWeapons@randomt;
+    ilWeapons    : intlist global ilWeapons@randomt;
+    ilMartial    : intlist global ilMartial@randomt;
+    ilSkills     : intlist global ilSkills@randomt;
+    ilSpells     : intlist global ilSpells@randomt;
+
+    i : integer;
+
+code
+{
+    if (length(r8il) > 0)
+    {
+        log("HEYA : Setting global constants called twice.");
+        return;
+    }
+
+    log("Setting global constants for the randomt zone.");
+
+    // Tables for 2d8 used for bonus adjustment
+    // The two leftmost values can't be used (1d8+1d8=[2..16])
+    r8il := {-7,-7,-3,-2,-2,-1,-1,-1,-1,-1,-1,0,0,0,0,1,1};
+
+    // Weapon materials for forging "blades": swords, mattock heads, mace heads, bardiches, 
+
+    // Blade1: main material for sword blade & guard
+    ilBladeMat   := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    // Blade2: main material for the hilt
+    ilHiltMat    := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    ilJewelryMat  := {MAT_TIN, MAT_TIN, MAT_TIN, MAT_TIN, MAT_COPPER, MAT_BRONZE, MAT_BRASS,
+                       MAT_IRON,
+                       MAT_DARK_IRON, MAT_SILVER, MAT_GOLD, MAT_PLATINUM, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    ilGems         := {MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_GRANITE, MAT_MARBLE, MAT_OBSIDIAN, 
+                       MAT_ONYX, 
+                       MAT_MOONSTONE, MAT_PEARL, MAT_AMBER, MAT_EMERALD, MAT_SAPPHIRE, MAT_RUBY, MAT_DIAMOND};
+
+
+    // Weapon materials for forging "heads": axes, hammers, spears, javelins, arrows
+    ilHeadMat  := {MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_COPPER, MAT_BRONZE, 
+                   MAT_IRON,
+                   MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    // Weapon materials for forging "heads": axes, hammers, spears, javelins, arrows
+    ilHandleMat  := {MAT_PINE, MAT_PINE, MAT_PINE, MAT_BIRCH, MAT_ASH, MAT_COPPER, MAT_BRONZE, 
+                     MAT_IRON,
+                     MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    // Weapon materials for staves 
+    ilStaffMat := {MAT_PINE, MAT_BIRCH, MAT_WALNUT, MAT_MAPLE, MAT_OAK, MAT_WILLOW, MAT_HICKORY, 
+                   MAT_TEAK,
+                   MAT_MAHOGANY, MAT_IPE, MAT_BLACK_OAK, MAT_BLACK_STEEL, MAT_DARK_WOOD, MAT_MALLORN, MAT_ENTE_WOOD};
+
+    // Weapon materials for staves 
+    ilWhipMat := {MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, MAT_LEATHER, 
+                   MAT_LEATHER,
+                   MAT_SHARK_HIDE, MAT_ELEPHANT_HIDE, MAT_CHIMERA_HIDE, MAT_GRIFFON_HIDE, MAT_BASILISK_HIDE, MAT_DRAKE_HIDE, MAT_DRAGON_HIDE};
+
+/*
+    // Weapon materials for forging "clubs": clubs (nails/reinforcement), quarterstaff (tip)
+    // Difference to blades is that it can be all wood
+    ilClubMat  := {MAT_NONE, MAT_NONE,
+                        MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_BRONZE, 
+                        MAT_IRON,
+                        MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};
+
+    // Weapon materials for forging "clubs": clubs (nails/reinforcement), quarterstaff (tip)
+    // Difference to blades is that it can be all wood
+    ilClubMat  := {MAT_NONE, MAT_NONE,
+                        MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_NONE, MAT_BRONZE, 
+                        MAT_IRON,
+                        MAT_DARK_IRON, MAT_STEEL, MAT_HIGH_STEEL, MAT_BLACK_STEEL, MAT_ADAMANTIUM, MAT_ITHILNAUR, MAT_MITHRIL};*/
+
+
+
+    // weapon id, cost ip, weight, main function, main kind, sec function, sec kind, names
+    // Note that the main kind, e.g. "blade" is also used to dilcall the DIL func: "mat"+kind+"Idx" which resolves the main materials
+    // e.g. matBladeIndex is used to get the main material of swords.
+    // Most common first, most rare last
+    slWeapons := {
+        "0", "","","","","","","",
+        "1", "","","","","","","",
+        "2", "","","","","","","",
+        "3", "","","","","","","",
+        "4", "","","","","","","",
+        "5", "","","","","","","",
+        "6", "","","","","","","",
+        QUOTE(WPN_BATTLE_AXE),    "160", "16",  "setWpnSharp@randomt", "head",  "setWpnHilt@randomt",  "handle", "battle axe//axe", // 7
+        QUOTE(WPN_HAND_AXE),       "60",  "6",  "setWpnSharp@randomt", "head",  "setWpnHilt@randomt",  "handle", "hand axe//axe", 
+        QUOTE(WPN_WAR_MATTOCK),    "90", "10",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war mattock//mattock",
+        QUOTE(WPN_WAR_HAMMER),     "55", "25",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war hammer//hammer",  // Thor's hammer
+        QUOTE(WPN_GREAT_SWORD),   "200", "16",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "great sword//sword", 
+        QUOTE(WPN_SCIMITAR),      "100",  "7",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "scimitar", 
+        "13", "","","","","","","",
+        QUOTE(WPN_FALCHION),       "90",  "9",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "falchion", 
+        "15", "","","","","","","",
+        QUOTE(WPN_BROAD_SWORD),   "100",  "8",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "broad sword//sword", 
+        QUOTE(WPN_LONG_SWORD),    "100",  "8",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "long sword//sword", 
+        QUOTE(WPN_RAPIER),         "60",  "4",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "rapier", 
+        QUOTE(WPN_SHORT_SWORD),    "70",  "6",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "short sword//sword",
+        QUOTE(WPN_DAGGER),         "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "dagger",
+        QUOTE(WPN_BATTLE_MACE),    "80", "12",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "battle mace//mace", 
+        QUOTE(WPN_MACE),           "60",  "6",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "mace", 
+        QUOTE(WPN_BATTLE_CLUB),    "30", "12",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "grip", "battle club//club",
+        QUOTE(WPN_CLUB),           "10",  "6",  "setWpnClub@randomt",  "base",  "setWpnHilt@randomt",  "handle", "club",
+        QUOTE(WPN_MORNING_STAR),   "10", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "morning star",  
+        QUOTE(WPN_FLAIL),          "20", "14",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "handle", "flail",    
+        QUOTE(WPN_QUARTERSTAFF),    "4",  "4",  "setWpnStaff@randomt", "staff", "setWpnTips@randomt",  "tips",   "quarterstaff//staff",
+        QUOTE(WPN_SPEAR),          "10",  "4",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "spear",
+        QUOTE(WPN_HALBERD),        "20", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "halberd",
+        QUOTE(WPN_BARDICHE),       "20", "10",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "bardiche",
+        QUOTE(WPN_SICKLE),          "2",  "5",  "setWpnSharp@randomt", "blade", "setWpnShaft@randomt", "handle", "sickle",
+        QUOTE(WPN_SCYTHE),         "20", "10",  "setWpnSharp@randomt", "blade", "setWpnShaft@randomt", "shaft",  "scythe",
+        QUOTE(WPN_TRIDENT),        "10", " 8",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "trident",
+        "34", "","","","","","","",
+        "35", "","","","","","","",
+        "36", "","","","","","","",
+        "37", "","","","","","","",
+        "38", "","","","","","","",
+        "39", "","","","","","","",
+        QUOTE(WPN_WHIP),          "120",  "9",  "setWpnWhip@randomt",  "whip",  "setWpnShaft@randomt", "handle", "whip",
+        "41", "","","","","","","",
+        "42", "","","","","","","",
+        "43", "","","","","","","",
+        "44", "","","","","","","",
+        "45", "","","","","","","",
+        "46", "","","","","","","",
+        "47", "","","","","","","",
+        "48", "","","","","","","",
+        QUOTE(WPN_LANCE),      "240",  "40",  "setWpnLance@randomt", "pole", "setWpnHilt@randomt",  "hilt",   "lance",  // 49 XXX TODO
+        "50", "","","","","","","",
+        "51", "","","","","","","",
+        "52", "","","","","","","",
+        QUOTE(WPN_CLAYMORE),      "120",  "9",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "claymore",  // 53
+        QUOTE(WPN_WAR_MAUL),       "60",  "9",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "war maul//maul",  // 54
+        "55", "","","","","","","",
+        "56", "","","","","","","",
+        "57", "","","","","","","",
+        "58", "","","","","","","",
+        "59", "","","","","","","",
+        "60", "","","","","","","",
+        "61", "","","","","","","",
+        "62", "","","","","","","",
+        "63", "","","","","","","",
+        "64", "","","","","","","",
+        "65", "","","","","","","",
+        "66", "","","","","","","",
+        "67", "","","","","","","",
+        "68", "","","","","","","",
+        "69", "","","","","","","",
+        "70", "","","","","","","",
+        "71", "","","","","","","",
+        "72", "","","","","","","",
+        QUOTE(WPN_MAIN_GAUCHE),    "50",  "2",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "main gauche", // 73
+        "74", "","","","","","","",
+        "75", "","","","","","","",
+        QUOTE(WPN_ADZE),           "70",  "7",  "setWpnHead@randomt",  "head",  "setWpnHilt@randomt",  "handle", "adze",  // 76
+        "77", "","","","","","","",
+        "78", "","","","","","","",
+        "79", "","","","","","","",
+        "80", "","","","","","","",
+        "81", "","","","","","","",
+        "82", "","","","","","","",
+        "83", "","","","","","","",
+        "84", "","","","","","","",
+        QUOTE(WPN_JAVELIN),        "10",  "6",  "setWpnHead@randomt",  "head",  "setWpnShaft@randomt", "shaft",  "javelin", // 85
+        "86", "","","","","","","",
+        "87", "","","","","","","",
+        "88", "","","","","","","",
+        "89", "","","","","","","",
+        "90", "","","","","","","",
+        "91", "","","","","","","",
+        "92", "","","","","","","",
+        "93", "","","","","","","",
+        "94", "","","","","","","",
+        "95", "","","","","","","",
+        "96", "","","","","","","",
+        QUOTE(WPN_STILETTO),       "40",  "1",  "setWpnSharp@randomt", "blade", "setWpnHilt@randomt",  "hilt",   "stiletto", // 97
+        "98", "","","","","","",""
+        // ADD WPN_KNUCKLES <-- but it's kind of odd though, it's a separate skill
+    };
+
+    i := length(slWeapons)/8-1;
+
+    while (i >= 0)
+    {
+        if (atoi(slWeapons.[i*8]) != i)
+        {
+            log("RANDOM WEAPONS TABLE ERROR at index " + itoa(i) + " mismatch : "+ slWeapons.[i*8]);
+        }
+        i := i - 1;
+    }
+
+    // Most common to least common weapon available for randomness, groups not included
+    ilWeapons := {
+        WPN_DAGGER,
+        WPN_CLUB,
+        WPN_SHORT_SWORD,
+        WPN_HAND_AXE,
+        WPN_ADZE,
+        WPN_BATTLE_CLUB,
+        WPN_MACE,
+        WPN_LONG_SWORD,
+        WPN_BROAD_SWORD,
+        WPN_QUARTERSTAFF,
+        WPN_SICKLE,
+        WPN_SPEAR,
+        WPN_JAVELIN,
+        WPN_TRIDENT,
+        WPN_SCIMITAR,
+        WPN_RAPIER,
+        WPN_STILETTO,
+        WPN_MAIN_GAUCHE,
+        WPN_FALCHION,
+        WPN_MORNING_STAR,
+        WPN_HALBERD,
+        WPN_BARDICHE,
+        WPN_WAR_MAUL,
+        WPN_BATTLE_MACE,
+        WPN_SCYTHE,
+        WPN_GREAT_SWORD,
+        WPN_BATTLE_AXE,
+        WPN_WAR_MATTOCK,
+        WPN_FLAIL,
+        WPN_LANCE,
+        WPN_CLAYMORE,
+        WPN_WHIP,
+        WPN_WAR_HAMMER // Thor's hammer
+    };
+
+
+    // Most common to least common martial arts weapon available for randomness, groups not included
+    ilMartial := {
+        WPN_FIST,
+        WPN_ELBOW,
+        WPN_KNEE,
+        WPN_KICK,
+        WPN_CLAW
+    };
+
+    // ADD A NEW SKILL BOOST TO UNARMED COMBAT (ilWeapons doesn't have e.g. WPN_FIST)
+
+    ilSkills := {        
+        SKI_APPRAISAL,
+        SKI_DIAGNOSTICS,
+        SKI_FLEE,
+        SKI_SWIMMING,
+        SKI_ARM_LEATHER,
+        SKI_CONSIDER,
+        SKI_TRACK,
+        SKI_COOK,
+        SKI_HUNT,
+        SKI_PLANT,
+        SKI_HERBS,
+        SKI_FORAGE,
+        SKI_BUTCHER,
+        SKI_SKIN,
+        SKI_ARM_HLEATHER,
+        SKI_CLIMB,
+        SKI_SHELTER,
+        SKI_RESIZE_CLOTHES,
+        SKI_CUFF,
+        SKI_WEATHER_WATCH,
+        SKI_KICK,
+        SKI_SEARCH,
+        SKI_VENTRILOQUATE,
+        SKI_RESIZE_LEATHER,
+        SKI_EVALUATE,
+        SKI_LAY_TRAP,
+        SKI_ARM_CHAIN,
+        SKI_TRIP,
+        SKI_PEEK,
+        SKI_LEADERSHIP,
+        SKI_SHIELD,
+        SKI_BASH,
+        SKI_FIRST_AID,
+        SKI_SNEAK,
+        SKI_RESCUE,
+        SKI_ARM_PLATE,
+        SKI_RESIZE_METAL,
+        SKI_HIDE,
+        SKI_DUAL_WIELD,
+        SKI_SCROLL_USE,
+        SKI_DISARM,
+        SKI_SOOTHE,
+        SKI_AMBUSH,
+        SKI_FASHION,
+        SKI_SHOOT,
+        SKI_DOWSE,
+        SKI_THROW,
+        SKI_SCAN,
+        SKI_SLIP,
+        SKI_PALM,
+        SKI_STALK,
+        SKI_KNEE,
+        SKI_ELBOW,
+        SKI_HIT,
+        // SKI_PUNCH, - not a skill
+        SKI_GLANCE,
+        SKI_FRENZY,			
+        SKI_BERSERK,		
+        SKI_RAGE,
+        SKI_TAUNT,
+        SKI_CHARGE,
+        SKI_LEAP,
+        SKI_DEFEND,
+        SKI_WHIRL,
+        SKI_CLEAVE,
+        SKI_REND,
+        SKI_SLAM,
+        SKI_WAND_USE,
+        SKI_TURN_UNDEAD,
+        SKI_PICK_LOCK,
+        SKI_BACKSTAB,
+        SKI_STEAL,
+        SKI_FILCH,
+        SKI_PICK_POCKETS,
+        SKI_CURARE
+    };
+
+
+    ilSpells := {
+        SPL_LIGHT_1,
+        SPL_IDENTIFY_1,
+        SPL_DARKNESS_1,
+        SPL_CURE_WOUNDS_1,
+        SPL_LOCATE_OBJECT,
+        SPL_CURE_BLIND,
+        SPL_REMOVE_CURSE,
+        SPL_REPEL_UNDEAD_1,
+        SPL_LAVA_1,
+        SPL_CAUSE_WOUNDS_1,
+        SPL_COLOURSPRAY_1,/*MIND*/
+        SPL_FIREBALL_1,/*HEAT*/
+        SPL_FROSTBALL_1,/*COLD*/
+        SPL_LIGHTNING_1,/*CELL*/
+        SPL_STINKING_CLOUD_1,/*INTERNAL*/
+        SPL_DISEASE_1,
+        SPL_ACIDBALL_1,/*EXTERNAL*/
+        SPL_DISPEL_EVIL,
+
+        SPL_BLESS,/*DIVINE*/
+        SPL_CURSE,
+        SPL_CURE_WOUNDS_2,
+        SPL_CAUSE_WOUNDS_2,
+        SPL_UNHOLY_WORD_2,
+        SPL_LAVA_2,
+        SPL_HOLY_WORD_2,
+        SPL_REPEL_UNDEAD_2,
+        SPL_FIREBALL_2,
+        SPL_FROSTBALL_2,
+        SPL_LIGHTNING_2,
+        SPL_STINKING_CLOUD_2,
+        SPL_DISEASE_2,
+        SPL_ACIDBALL_2,
+        SPL_IDENTIFY_2,
+        SPL_LIGHT_2,
+        SPL_DARKNESS_2,
+        SPL_COLOURSPRAY_2,
+
+        SPL_BLIND,
+        SPL_LOCATE_CHAR,
+        SPL_RAISE_MAG,/*PROTECTION*/
+        SPL_RAISE_DIV,
+        SPL_RAISE_STR,
+        SPL_RAISE_DEX,
+        SPL_RAISE_CON,
+        SPL_RAISE_CHA,
+        SPL_RAISE_BRA,
+        SPL_SUN_RAY,
+        SPL_DIVINE_RESIST,
+        SPL_RAISE_SUMMONING,
+        SPL_AWAKEN,
+        SPL_MIND_SHIELD,
+        SPL_HEAT_RESI,
+        SPL_COLD_RESI,
+        SPL_ELECTRICITY_RESI,
+        SPL_POISON_RESI,
+        SPL_ACID_RESI,
+        SPL_PRO_EVIL,
+        SPL_SANCTUARY,
+        SPL_DISPEL_MAGIC,
+        SPL_SUSTAIN,
+        SPL_LOCK,
+        SPL_UNLOCK,
+        SPL_DROWSE,
+        SPL_SLOW,
+        SPL_DUST_DEVIL,
+        SPL_DET_ALIGN,
+        SPL_DET_INVISIBLE,
+        SPL_DET_MAGIC,
+        SPL_DET_POISON,
+        SPL_DET_UNDEAD,
+        SPL_DET_CURSE,
+        SPL_SENSE_LIFE,
+        SPL_RANDOM_TELEPORT,
+        SPL_CLEAR_SKIES,
+        SPL_STORM_CALL,
+        SPL_WORD_OF_RECALL,
+        SPL_CONTROL_TELEPORT,
+        SPL_MINOR_GATE,
+        SPL_GATE,
+        SPL_CREATE_FOOD,
+        SPL_CREATE_WATER,
+        SPL_STUN,
+        SPL_HOLD,
+        SPL_ANIMATE_DEAD,
+        SPL_LEATHER_SKIN,
+        SPL_BARK_SKIN,
+        SPL_CONTROL_UNDEAD,
+        SPL_BONE_SKIN,
+        SPL_STONE_SKIN,
+        SPL_AID,
+        SPL_INVISIBILITY,
+        SPL_WIZARD_EYE,
+        SPL_FEAR,
+        SPL_CONFUSION,
+        SPL_SLEEP,
+        SPL_XRAY_VISION,
+        SPL_CALM,
+        SPL_SUMMER_RAIN,
+        SPL_COMMAND,
+        SPL_LEAVING,
+        SPL_POISON,
+        SPL_REMOVE_POISON,
+        SPL_ENERGY_DRAIN,
+        SPL_REM_DISEASE,
+        SPL_LEAF_SHIELD,
+        SPL_FIND_PATH,/*Divine*/
+        SPL_DISPEL_GOOD,
+        SPL_PRO_GOOD,
+        SPL_TRANSPORT,
+        // MONSTER SPELL SPL_FIRE_BREATH,
+        // MONSTER SPELL SPL_FROST_BREATH,
+        // MONSTER SPELL SPL_LIGHTNING_BREATH,
+        // MONSTER SPELL SPL_ACID_BREATH,
+        // MONSTER SPELL SPL_GAS_BREATH,
+        // MONSTER SPELL SPL_LIGHT_BREATH,
+        SPL_HOLD_MONSTER,
+        SPL_HOLD_UNDEAD,
+        SPL_TOTAL_RECALL,
+        SPL_UNDEAD_DOOR,
+        SPL_LIFE_PROTECTION,
+        SPL_ENERGY_BOLT,
+        SPL_CLENCHED_FIST,
+        SPL_METEOR_SHOWER,
+        SPL_SUN_BEAM,
+        SPL_SOLAR_FLARE,
+        SPL_SUMMON_DEVIL,
+        SPL_SUMMON_DEMON,
+        SPL_SUMMON_FIRE,
+        SPL_SUMMON_WATER,
+        SPL_SUMMON_AIR,
+        SPL_SUMMON_EARTH,
+        SPL_CHARGE_WAND,
+        SPL_CHARGE_STAFF,
+        SPL_MENDING,
+        SPL_REPAIR,
+        SPL_RECONSTRUCT,
+        SPL_SENDING,
+        SPL_REFIT,
+        SPL_FIND_WANTED,
+        SPL_LOCATE_WANTED,
+        SPL_STORM_GATE,
+        SPL_SUN_GLOBE,
+        SPL_MAGIC_CANDLE,
+        SPL_SONIC_BREATH,
+        SPL_SHARD_BREATH,
+        SPL_CONE_SHARD,
+        SPL_SACRED,
+        SPL_CAUSE_INSTABILITY,
+        SPL_CAUSE_FLIGHT,
+        SPL_SLOW_ROT,
+        SPL_HAMMER_HAND,
+        SPL_CAUSE_PANIC,
+        SPL_BANISH,
+        SPL_HOLD_FLIGHT,
+        SPL_BLINDING_FLASH,
+        SPL_BLIZZARD,
+        SPL_SUMMON_ANIMAL,
+        SPL_HEAL_ANIMAL,
+        SPL_HOLD_ANIMAL,
+        SPL_CHARM_ANIMAL,
+        SPL_LOCATE_ANIMAL,
+        SPL_ENTANGLE,
+        SPL_REFRESH,
+        SPL_TIGER_CLAW,
+        SPL_EAGLE_CRY,
+        SPL_GROUP_TELEPORT,
+        SPL_RAISE_HPP,
+        // MONSTER SPELL SPL_SOUL_SHIFT,
+        SPL_AID_UNDEAD,
+        SPL_HOLY_WORD,
+        SPL_UNHOLY_WORD,
+        SPL_FINAL_REST,
+        SPL_RAISE_SKELETON,
+        SPL_RAISE_CHAMPION,
+        SPL_RAISE_HORDE,
+        SPL_PORTAL,
+        SPL_TRAVEL,
+        SPL_GLOW_FUNGUS,
+        SPL_SEN_INVISIBLE,
+        SPL_MANA_BOOST,
+        SPL_TSUNAMI,
+        SPL_QUICKSAND,
+        SPL_HEDGE_WALL,
+        SPL_POISON_IVY,
+        SPL_THORN_STRIKE,
+        SPL_WIND_SLASH,
+        SPL_PETRIFY,
+        SPL_MUD_PUDDLE,
+        SPL_EARTH_QUAKE,
+        SPL_BRAMBLES,
+        SPL_POLARITY,
+        SPL_MIRE,
+        SPL_NIGHT_GLOBE,
+        SPL_UBLESS,		
+        SPL_SUMMON_LIGHT,
+        SPL_ICE_THORN,
+        SPL_WIZARD_MARK,
+        SPL_FOCUS,
+        SPL_CONDEMN,
+        SPL_DISPLACE_MAGIC,
+        SPL_QUICKEN,
+
+        SPL_ACIDBALL_3,
+        SPL_STINKING_CLOUD_3,
+        SPL_HOLY_WORD_3,
+        SPL_UNHOLY_WORD_3,
+        SPL_CURE_WOUNDS_3,
+        SPL_CAUSE_WOUNDS_3,
+        SPL_COLOURSPRAY_3,
+        SPL_FIREBALL_3,
+        SPL_FROSTBALL_3,
+        SPL_LIGHTNING_3,
+        SPL_LAVA_3,
+
+        SPL_RAISE_DEAD,
+        SPL_RESURRECTION,
+        SPL_CALL_LIGHTNING,/*CellGroup*/
+        SPL_HASTE,
+
+        SPL_HOLY_WORD_4,
+        SPL_UNHOLY_WORD_4,
+        SPL_LAVA_4,
+        SPL_FIREBALL_4,/*HEAT*/
+        SPL_FROSTBALL_4,/*COLD*/
+        SPL_LIGHTNING_4,/*CELL*/
+        SPL_ACIDBALL_4,/*EXTERNAL*/
+        SPL_COLOURSPRAY_4,/*MIND*/
+        SPL_STINKING_CLOUD_4,/*INTERNAL*/
+        SPL_CAUSE_WOUNDS_4 /*DIVINE*/
+    };
+
+    // Auto-generated from EXCEL (Git)
+    slMatNames :=
+    {
+        "tin",
+        "lead",
+        "copper",
+        "bronze",
+        "brass",
+        "zinc",
+        "iron",
+        "dark iron",
+        "steel",
+        "silver",
+        "high steel",
+        "gold",
+        "black steel",
+        "adamantium",
+        "platinum",
+        "titanium",
+        "eog",
+        "ithilnaur",
+        "mithril",
+        "bamboo",
+        "pine, yellow",
+        "ash",
+        "birch",
+        "walnut",
+        "maple",
+        "oak",
+        "willow",
+        "hickory",
+        "mahogany",
+        "teak",
+        "ipe",
+        "black oak",
+        "dark wood",
+        "mallorn",
+        "ente wood",
+        "sandstone",
+        "flint",
+        "granite",
+        "malachite",
+        "amethyst",
+        "amber",
+        "marble",
+        "obsidian",
+        "moonstone",
+        "pearl",
+        "onyx",
+        "emerald",
+        "sapphire",
+        "ruby",
+        "diamond",
+        "slime",
+        "cloth",
+        "leather",
+        "hard leather",
+        "shark hide",
+        "elephant hide",
+        "chimera hide",
+        "griffon hide",
+        "basilisk hide",
+        "drake hide",
+        "wyvern hide",
+        "dragon hide",
+        "rubber",
+        "bone",
+        "ivory",
+        "dragon bone",
+        "dragon scale"
+    };
+
+    // Auto-generated from EXCEL (Git)
+    ilMatValues := {
+        MAT_TIN,1,93,10000,
+        MAT_LEAD,1,145,10000,
+        MAT_COPPER,1,114,60000,
+        MAT_BRONZE,1,112,70000,
+        MAT_BRASS,1,108,70000,
+        MAT_ZINC,1,91,10000,
+        MAT_IRON,1,100,100000,
+        MAT_DARK_IRON,1,101,120000,
+        MAT_STEEL,1,102,150000,
+        MAT_SILVER,1,132,60000,
+        MAT_HIGH_STEEL,1,96,170000,
+        MAT_GOLD,1,246,20000,
+        MAT_BLACK_STEEL,1,89,190000,
+        MAT_ADAMANTIUM,1,77,220000,
+        MAT_PLATINUM,1,273,60000,
+        MAT_TITANIUM,1,57,200000,
+        MAT_EOG,1,70,200000,
+        MAT_ITHILNAUR,1,61,290000,
+        MAT_MITHRIL,1,49,400000,
+        MAT_BAMBOO,2,5,4000,
+        MAT_PINE,2,5,5000,
+        MAT_ASH,2,8,7000,
+        MAT_BIRCH,2,8,7000,
+        MAT_WALNUT,2,7,10000,
+        MAT_MAPLE,2,9,10000,
+        MAT_OAK,2,10,10000,
+        MAT_WILLOW,2,6,10000,
+        MAT_HICKORY,2,10,10000,
+        MAT_MAHOGANY,2,10,10000,
+        MAT_TEAK,2,12,10000,
+        MAT_IPE,2,15,20000,
+        MAT_BLACK_OAK,2,11,60000,
+        MAT_DARK_WOOD,2,16,80000,
+        MAT_MALLORN,2,9,100000,
+        MAT_ENTE_WOOD,2,6,140000,
+        MAT_SANDSTONE,3,29,50000,
+        MAT_FLINT,3,33,70000,
+        MAT_GRANITE,3,35,100000,
+        MAT_MALACHITE,3,51,80000,
+        MAT_AMETHYST,3,23,80000,
+        MAT_AMBER,3,14,80000,
+        MAT_MARBLE,3,35,80000,
+        MAT_OBSIDIAN,3,30,80000,
+        MAT_MOONSTONE,3,23,80000,
+        MAT_PEARL,3,14,20000,
+        MAT_ONYX,3,23,80000,
+        MAT_EMERALD,3,36,80000,
+        MAT_SAPPHIRE,3,36,80000,
+        MAT_RUBY,3,36,80000,
+        MAT_DIAMOND,3,45,80000,
+        MAT_SLIME,4,13,80000,
+        MAT_CLOTH,4,6,20000,
+        MAT_LEATHER,4,11,40000,
+        MAT_HARD_LEATHER,4,12,60000,
+        MAT_SHARK_HIDE,4,11,80000,
+        MAT_ELEPHANT_HIDE,4,12,70000,
+        MAT_CHIMERA_HIDE,4,11,77500,
+        MAT_GRIFFON_HIDE,4,11,85000,
+        MAT_BASILISK_HIDE,4,10,90000,
+        MAT_DRAKE_HIDE,4,10,110000,
+        MAT_WYVERN_HIDE,4,10,120000,
+        MAT_DRAGON_HIDE,4,9,150000,
+        MAT_RUBBER,4,15,80000,
+        MAT_BONE,4,26,40000,
+        MAT_IVORY,4,25,70000,
+        MAT_DRAGON_BONE,4,15,280000,
+        MAT_DRAGON_SCALE,4,18,300000
+    };
+
+
+    quit;
+} dilend

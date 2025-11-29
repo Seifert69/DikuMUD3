@@ -1,0 +1,78 @@
+Generate MCP entry for DIL keyword: realtime
+
+=== Yacc rule ===
+| DILSE_RTI
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_INT;
+    add_ubit8(&($$), DILE_RTI);
+}
+
+=== C implementation ===
+void dilfe_rti(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* RealTime */
+
+    v->type = DILV_INT;
+    v->atyp = DILA_NONE;
+    v->val.num = time(nullptr);
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin limittime();
+var
+  spent      : integer;
+  playagain  : integer;
+
+code
+{
+   heartbeat := PULSE_SEC * 60 * 5;
+
+   :loop:
+
+   if (realtime > playagain)
+   {
+      spent := 0;
+      playagain := 0;
+      goto playing;
+   }
+
+   wait(SFB_CMD, self==activator);
+
+   if (command("quit") or command("tell") or command("flee"))
+     goto loop;
+
+   act("You have spent your time limit, come back at "+asctime(playagain),
+A_ALWAYS, self, null, null, TO_CHAR);
+   block;
+   goto loop;
+
+   :playing:
+
+   wait(SFB_TICK, TRUE);
+   spent := spent + 5;
+
+   if (spent < 190)
+      goto playing;
+
+   if (spent > 240)
+   {
+      playagain := realtime + SECS_PER_REAL_DAY - 240 * 60;
+      goto loop;
+   }
+   else if (spent > 230)
+   {
+      act("Your four hours are almost spent!", A_ALWAYS, self, null,
+null, TO_CHAR);
+   }
+   else if (spent > 210)
+   {
+      act("Time is passing...!", A_ALWAYS, self, null, null,
+TO_CHAR);
+   }
+
+   goto playing;
+} dilend

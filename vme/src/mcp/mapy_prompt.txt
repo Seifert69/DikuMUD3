@@ -1,0 +1,431 @@
+Generate MCP entry for DIL keyword: mapy
+
+=== Yacc rule ===
+| DILSF_MAPY /* .mapy */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_MAPY;
+}
+
+=== C implementation ===
+case DILF_MAPY:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    v->atyp = DILA_NORM;
+                    v->type = DILV_INT;
+                    auto *room = reinterpret_cast<room_data *>(v1->val.ptr);
+                    if (room && room->isRoom())
+                    {
+                        v->val.num = room->getMapYCoordinate();
+                    }
+                    else
+                    {
+                        v->val.num = -1;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin string room_content(looker : unitptr, room : unitptr, arg : string);
+external
+   string carried_by(l2 : unitptr, u:unitptr);
+   string get_pos (l3 : unitptr, u:unitptr);
+   string display_exits (l4 : unitptr, u:unitptr);
+   string exits_h(looker : unitptr);
+
+var
+   u             : unitptr;
+   temp_pos      : string;
+   pc            : stringlist;
+   npc           : stringlist;
+   obj           : stringlist;
+   n_npc         : stringlist;
+   n_obj         : stringlist;
+   i             : integer;
+   temp          : string;
+   temp_in       : integer;
+   buff          : string;
+   tpbuff        : string;
+   snpc:string;
+   spc:string;
+   sobj:string;
+   inpc:integer;
+   ipc:integer;
+   iobj:integer;
+
+   bObj  : integer;
+   bChar : integer;
+   bRoom : integer;
+code
+{
+   if (arg == ":chars:")
+   {
+      bObj := FALSE;
+      bChar := TRUE;
+      bRoom := FALSE;
+   }
+   else if (arg == ":objects:")
+   {
+      bObj := TRUE;
+      bChar := FALSE;
+      bRoom := FALSE;
+   }
+   else
+   {
+      bObj := TRUE;
+      bChar := TRUE;
+      bRoom := TRUE;
+   }
+
+   if (room.type != UNIT_ST_ROOM)
+   {
+      log("Non-room entered room_content dil in look");
+      quit;
+   }
+
+   temp := "";
+   tpbuff := "";
+   buff := "";
+
+   if (bRoom)
+   {
+      temp_pos := "";
+      if (room.mapx != -1)
+         temp_pos := " map='"+itoa(room.mapx) + "," + itoa(room.mapy)+"'";
+
+      if (looker.level >= IMMORTAL_LEVEL)
+         temp := " [" + room.nameidx + "@" + room.zoneidx + "]";
+
+      buff := "<h1 class='room_title' zone='"+room.zoneidx+"' exits='" + exits_h(looker) + "'"+ temp_pos + ">" +
+                        room.title + temp + "</h1><br/>";
+      temp_pos := "";
+
+
+      if (looker.type == UNIT_ST_PC)
+      {
+         if (not (isset(looker.pcflags, PC_BRIEF) and (arg == ":brief:")))
+            buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+      }
+      else
+         buff := buff + "<div class='room_descr'>" + room.inside_descr + "</div><br/>";
+
+      temp := "";
+      buff := buff + display_exits(looker, room);
+   }
+
+   u := room.inside;
+   while (u != null)
+   {
+      if ((u==looker) or (u == looker.outside) or (isset(u.flags,UNIT_FL_BURIED)))
+      {
+         u := u.next;
+         continue;
+      }
+
+      if ((u.type == UNIT_ST_PC) and (bChar))
+      {
+         /*if (u.outside!=looker.outside)
+           {u := u.next;
+            continue;
+         }*/
+
+		   if (visible(looker, u) and ((not (isset(u.charflags, CHAR_HIDE)))) or (looker.level>=IMMORTAL_LEVEL))
+         {
+            if (isset(u.flags, UNIT_FL_TRANS) and (not isset(u.openflags, EX_CLOSED))) // MS2020
+               tpbuff := carried_by(looker, u);
+
+            temp_pos := get_pos(looker, u);
+
+            if (length (tpbuff))
+            {
+               tpbuff := u.name + " carries:<br/>" + tpbuff;
+               if (u.level >= IMMORTAL_LEVEL)
+               {
+                  temp := "<div class='immort_title'>" + u.name + " " + u.title + temp_pos;
+
+                  if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                     temp := temp + " (wizinv)";
+
+                  if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                     temp := temp + " (hidden)";
+
+                  temp := temp + "</div><br/>";
+
+                  temp := temp + tpbuff;
+               }
+               else
+               {
+                  temp := "<div class='pc_title'>" + u.name + " " + u.title + temp_pos;
+
+                  if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                     temp := temp + " (wizinv)";
+
+                  if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                     temp := temp + " (hidden)";
+
+                  temp := temp + "</div><br/>" + tpbuff;
+               }
+
+               addstring(pc, temp);
+            }
+            else
+            {
+               if (u.level >= IMMORTAL_LEVEL)
+               {
+                  temp := "<div class='immort_title'>" + u.name + " " + u.title + temp_pos;
+                  if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                     temp := temp + " (wizinv)";
+
+                  if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                     temp := temp + " (hidden)";
+
+                  temp := temp + "</div><br/>";
+               }
+               else
+               {
+                  temp := "<div class='pc_title'>" + u.name + " " + u.title + temp_pos;
+                  if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                     temp := temp + " (wizinv)";
+
+                  if ((isset(u.charflags, CHAR_HIDE)) and (looker.level  >= IMMORTAL_LEVEL))
+                     temp := temp + " (hidden)";
+
+                  temp := temp + "</div><br/>";
+               }
+
+               addstring (pc, temp);
+            }
+         }
+         else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
+         {
+            temp := "You sense a hidden life form in the room.</div>";
+            temp_in:=textformat(temp) in npc;
+
+            if (temp_in > 0)
+            {
+               i := atoi(n_npc.[temp_in - 1]) + 1;
+               n_npc.[temp_in - 1] := itoa(i);
+            }
+            else
+            {
+               addstring(npc, textformat(temp));
+               addstring(n_npc, "1");
+            }
+         }
+      }
+      else if ((u.type == UNIT_ST_NPC) and (bChar))
+      {
+         /*   if (u.outside!=looker.outside)
+               {u := u.next;
+                  continue; }*/
+
+         if ((visible (looker, u)) and ((not (isset(u.charflags, CHAR_HIDE)))) or (looker.level>=IMMORTAL_LEVEL))
+         {
+            if (u.position != POSITION_STANDING)
+            {
+               temp_pos := get_pos(looker, u);
+               temp := u.title + temp_pos;
+            }
+            else
+               temp:=u.outside_descr;
+
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (hidden)";
+
+            if (isset(u.flags, UNIT_FL_TRANS) and (not isset(u.openflags, EX_CLOSED))) // MS2020
+               tpbuff := carried_by(looker, u);
+
+            if (length(tpbuff))
+            {
+               tpbuff := sact(" $2n carries:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+               temp := temp  + tpbuff;
+            }
+
+			   temp_in:=temp in npc;
+
+            if (temp_in > 0)
+            {
+               i := atoi(n_npc.[temp_in - 1]) + 1;
+               n_npc.[temp_in - 1] := itoa(i);
+            }
+            else
+            {
+               addstring(npc, temp);
+               addstring(n_npc, "1");
+            }
+         }
+         else if ((isaff(looker, ID_DETECT_LIFE)) and (isset(u.charflags,CHAR_HIDE)) and (u.level < IMMORTAL_LEVEL))
+         {
+            temp := "You sense a hidden life form in the room.<br/>";
+
+            temp_in:=temp in npc;
+
+            if (temp_in > 0)
+            {
+               i := atoi(n_npc.[temp_in - 1]) + 1;
+               n_npc.[temp_in - 1] := itoa(i);
+            }
+            else
+            {
+               addstring(npc, temp);
+               addstring(n_npc, "1");
+            }
+         }
+      }
+      else if ((u.type == UNIT_ST_OBJ) and (bObj))
+      {
+         if (u == looker.outside)
+         {
+            u := u.next;
+            continue;
+         }
+
+         /*  if (u.outside!=looker.outside)
+         {u := u.next;
+            continue;
+         }*/
+
+         if (visible(looker, u))
+         {
+            if (isset(u.flags, UNIT_FL_TRANS) and (not isset(u.openflags, EX_CLOSED))) // MS2020
+               tpbuff := carried_by(looker, u);
+
+            temp := u.outside_descr;
+
+            if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (wizinv)";
+
+            if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >= IMMORTAL_LEVEL))
+               temp := temp + " (hidden)";
+
+            if (length(tpbuff))
+            {
+               tpbuff := sact(" $2n carries:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+               temp := temp + tpbuff;
+            }  
+
+            temp_in:=temp in obj;
+
+            if (temp_in > 0)
+            {
+               i := atoi(n_obj.[temp_in - 1]) + 1;
+               n_obj.[temp_in - 1] := itoa(i);
+            }
+            else
+            {
+               addstring (obj, temp);
+               addstring( n_obj,"1");
+            }
+         }
+      }
+      else if ((u.type == UNIT_ST_ROOM) and (bRoom))
+      {
+         if (visible(looker, u))
+         {
+            if (isset(u.flags, UNIT_FL_TRANS) and (not isset(u.openflags, EX_CLOSED)))
+               tpbuff := carried_by(looker, u);
+
+            if (length(u.outside_descr) > 0)
+            {
+               temp := "<div class='room_descr'>" + u.outside_descr;
+               if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+                  temp := temp + " (wizinv)";
+               temp := temp + "</div>";
+            }
+
+            if (length(tpbuff))
+            {
+               tpbuff := sact(" $2e holds:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+               temp := temp + tpbuff;
+            }  
+
+            if (length(temp) > 0)
+               buff := buff + temp + "<br/>";
+         }
+      }
+      //Well this really shouldn't happen....
+      //else
+      //   log("unknown unit.type in room_content for look");
+
+      tpbuff := "";
+      temp := "";
+      u := u.next;
+   }
+
+   u := looker.outside;
+   if ((u.type == UNIT_ST_ROOM) and isset(u.flags, UNIT_FL_TRANS) and (not isset(u.openflags, EX_CLOSED)))
+   {
+      u := u.outside;
+
+      if (u)
+      {
+         tpbuff := carried_by(looker, u);
+
+         temp := sact("<div class='room_descr'>Outside $3n you see $2n.", A_SOMEONE, looker, u, looker.outside, TO_CHAR);
+         if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
+            temp := temp + " (wizinv)";
+         temp := temp + "</div>";
+
+         if (length(tpbuff))
+         {
+            tpbuff := sact(" $2e holds:<br/>" + tpbuff, A_SOMEONE, looker, u, null, TO_CHAR);
+            temp := temp + tpbuff;
+         }
+
+         if (length(temp) > 0)
+            buff := buff + temp + "<br/>";
+      }
+   }
+
+   iobj:= length(obj);
+   ipc := length(pc);
+   inpc:= length(npc);
+   snpc :="";
+   spc  :="";
+   sobj :="";
+   i:=0;
+
+   while ((i<iobj) or (i<inpc) or (i<ipc))
+	{
+      if (i<iobj)
+      {
+         if (atoi(n_obj.[i])>1)
+            sobj:=sobj+"<div class='obj_title'>"+"[x"+n_obj.[i]+"] "+obj.[i]+"</div><br/>";
+         else
+            sobj:=sobj+"<div class='obj_title'>"+obj.[i]+"</div><br/>";
+      }
+      if (i<inpc)
+      {
+         if (atoi(n_npc.[i])>1)
+            snpc:=snpc+"<div class='npc_title'>"+"[x"+n_npc.[i]+"] "+npc.[i]+"</div><br/>";
+         else
+            snpc:=snpc+"<div class='npc_title'>"+npc.[i]+"</div><br/>";
+      }
+
+      if (i<ipc)
+         spc:=spc+pc.[i]; // spc:=spc+pc.[i]+"<br/>";
+
+ 
+      i:=i+1;
+	}
+	buff:=buff+""+sobj+""+snpc+""+spc;
+   return(buff);
+} dilend

@@ -1,0 +1,454 @@
+Generate MCP entry for DIL keyword: asctime
+
+=== Yacc rule ===
+| DILSE_AST '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'asctime' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_AST);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_ast(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+    char *c = nullptr;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+
+        case DILV_INT:
+            c = ctime((time_t *)&v1->val.num);
+            assert(strlen(c) >= 1);
+
+            v->atyp = DILA_EXP;
+            v->type = DILV_SP;
+            c[strlen(c) - 1] = 0;
+            v->val.ptr = str_dup(c);
+            break;
+
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin info_changer(); /* Change your maiden name and email */
+
+var
+   mail_expd  : extraptr;
+   mail_list  : stringlist;
+   new_list   : stringlist;
+   my_name    : string;
+   my_email   : string;
+   temp_str   : string;
+   temp_str2  : string;
+   public     : integer;
+
+   expd       : extraptr;
+   pc         : unitptr;
+   mail_obj   : unitptr;
+   maiden_str : string;
+   email_str  : string;
+   creat      : string;
+
+code
+{
+:init:
+   heartbeat := PULSE_SEC*2;
+   mail_obj := self.inside;
+   if ((mail_obj == null) or (mail_obj.nameidx != "mail_list_obj"))
+   {
+      mail_obj:= restore(self.zoneidx+".mail_list_obj",null);
+      if (mail_obj == null)
+         mail_obj:=load("mail_list_obj@udgaard");
+   }
+
+:start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("see") or
+                  command("mail") or command("maiden") or command("public")
+                  or command("show") or command("update") or
+                  command("add") or command("remove")));
+
+   pc := activator;
+   secure(pc, lost_pc);
+
+   if (command("see")) goto show_file;
+   if (command("mail")) goto change_mail;
+   if (command("maiden")) goto change_maiden;
+   if (command("public")) goto public_set;
+   if (command("show")) goto show_info;
+   if (command("update")) goto new_entry;
+   if (command("add")) goto god_add;
+   if (command("remove")) goto god_remove;
+   goto lost_pc;
+
+:god_add:
+   block;
+   if (pc.level < 253)
+   {
+      act("Only Administrators can modify the list. Sorry.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+
+   temp_str := argument;
+
+   my_name := getword(temp_str);
+   my_email := getword(temp_str);
+   temp_str2 := getword(temp_str);
+
+   if ((my_name == "") or (my_email == "") or (temp_str2 == ""))
+   {
+      act("You must fill in 3 parameters: name email public, " +
+          "where email is the player's address and public is 1 " +
+          "or 0 (0 meaning private).",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   expd := ("$" + my_name) in self.inside.extra;
+   if (expd)
+   {
+      act(my_name + " already has an entry.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+
+   addstring(new_list, "$" + my_name);
+   addstring(new_list, my_name);
+   addstring(new_list, my_email);
+   addstring(new_list, temp_str2);
+
+   subextra(self.inside.extra, "$" + my_name);
+   addextra(self.inside.extra, new_list, "");
+
+   act(my_name + " added with email address " + my_email + ".",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+
+   new_list := null;
+
+   store(self.inside,"udgaard.mail_list_obj",TRUE);
+
+   goto lost_pc;
+
+:god_remove:
+   if (pc.level < 253) goto start;
+
+   if (cmdstr != "remove") goto start;
+
+   block;
+
+   temp_str := argument;
+
+   my_name := getword(temp_str);
+
+   if (my_name == "")
+   {
+      act("You must supply the name of a player.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   expd := ("$" + my_name) in self.inside.extra;
+   if (not(expd))
+   {
+      act(my_name + " does not have an entry.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+
+   temp_str2 := "$" + my_name;
+   subextra(self.inside.extra, temp_str2);
+
+   act(my_name + "'s entry has been removed.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+
+   store(self.inside,"udgaard.mail_list_obj",TRUE);
+
+   goto lost_pc;
+
+:new_entry:
+   block;
+   expd := "$email" in pc.info;
+   if ((not expd) or (expd.descr == "") or (not("@" in expd.descr)))
+   {
+      act("Kurt says 'You have not set an email address. Please do so " +
+          "with the mail command'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+      goto lost_pc;
+   }
+   email_str := expd.descr;
+
+   temp_str := pc.name + " " + email_str;
+   mail_obj := self.inside;
+   if (mail_obj == null)
+   {
+      act("There was an error in adding you to the email list.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      log("No List object found for email list in Kurt. Restarting.");
+      goto init;
+   }
+   temp_str2 := temp_str;
+   my_name := getword(temp_str);
+   my_email := temp_str;
+   mail_expd :=( "$" + my_name) in self.inside.extra;
+   if (mail_expd == null)
+   {
+      public := 0;
+      addstring(new_list, "$" + my_name);
+      addstring(new_list, my_name);
+      addstring(new_list, my_email);
+      addstring(new_list, itoa(public));
+      addextra(self.inside.extra, new_list, "");
+   }
+   else
+   {
+      mail_list := mail_expd.names;
+      my_name := mail_list.[1];
+      my_email := mail_list.[2];
+      public := atoi(mail_list.[3]);
+
+      substring(mail_list, itoa(public));
+      substring(mail_list, my_email);
+      my_email := getword(temp_str2);
+      my_email := temp_str2;
+      addstring(mail_list, my_email);
+      addstring(mail_list, itoa(public));
+      subextra(self.inside.extra, "$" + my_name);
+      addextra(self.inside.extra, mail_list, "");
+   }
+
+   act("Kurt says 'Your email address has been updated on the email " +
+       "listing to match your file information'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Kurt checks his files.",
+        A_HIDEINV, pc, null, null, TO_REST);
+
+   new_list := null;
+
+   store(self.inside,"udgaard.mail_list_obj",TRUE);
+
+   goto lost_pc;
+
+:show_info:
+   block;
+   mail_obj := self.inside;
+   if (mail_obj == null)
+   {
+      act("There was an error. Please try again.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      log("No List object found for email list in Kurt. Restarting.");
+      goto init;
+   }
+   temp_str2 := "$" + argument;
+   mail_expd := temp_str2 in self.inside.extra;
+   if (mail_expd == null)
+   {
+      act("Kurt says 'That person does not have a listing'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   mail_list := mail_expd.names;
+   my_name := mail_list.[1];
+   my_email := mail_list.[2];
+   public := atoi(mail_list.[3]);
+   if ((public == 0) and (pc.level < 240))
+   {
+      act("Kurt says '" + my_name + " has chosen not to have a " +
+          "publicly available email - Sorry'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+   }
+   else
+   {
+      act("Kurt says '" + my_name + "'s email address is " +
+          "" + my_email + "'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+   }
+   goto lost_pc;
+
+:public_set:
+   block;
+   mail_obj := self.inside;
+   if (mail_obj == null)
+   {
+      act("There was an error. Please try again.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      log("No List object found for email list in Kurt. Restarting.");
+      goto init;
+   }
+   temp_str2 := "$" + pc.name;
+   mail_expd := temp_str2 in self.inside.extra;
+   if (mail_expd == null)
+   {
+      act("Kurt says 'You do not have an entry on the email list. " +
+          "Please set an email using the mail command'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+      goto lost_pc;
+   }
+   mail_list := mail_expd.names;
+   my_name := mail_list.[1];
+   my_email := mail_list.[2];
+   public := atoi(mail_list.[3]);
+   if (public == 0)
+   {
+      substring(mail_list, itoa(0));
+      public := 1;
+      act("Kurt says 'Your email address is now available to anyone " +
+          "who wants to see it'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+   }
+   else
+   {
+      substring(mail_list, itoa(1));
+      public := 0;
+      act("Kurt says 'Your email address is no longer visible to others'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+   }
+
+   addstring(mail_list, itoa(public));
+   subextra(self.inside.extra, pc.name);
+   addextra(self.inside.extra, mail_list, "");
+   store(self.inside,"udgaard.mail_list_obj",TRUE);
+   goto lost_pc;
+
+:show_file:
+   block;
+   expd := "$maiden" in pc.info;
+   if ((not expd) or (expd.descr == ""))
+      maiden_str := "You have no Maiden name set for your character. It "
++
+                "would be a good idea to set one in case you lose your " +
+                "password - e.g. 'maiden Mommy'.";
+   else
+      maiden_str := "Your character's maiden name is set to " +
+                expd.descr + ".";
+
+   expd := "$email" in pc.info;
+   if ((not expd) or (expd.descr == ""))
+   {
+      email_str := "You do not have an email address set for your " +
+               "character. It would be a good idea to set one - " +
+               "e.g. 'email your@email.address' .";
+   }
+   else
+   {
+      email_str := "Your email address is set to " + expd.descr +
+".";   }
+/*
+   creat := asctime(pc.birth);
+   creat := "Your character was created " + creat + ".";
+*/
+   mail_expd := ("$" + pc.name) in self.inside.extra;
+   if (not(mail_expd))
+   {
+      email_str := email_str + "<br/>You do not have an entry on the " +
+                               "email list - please type " +
+                               "'update'.";
+   }
+   else
+   {
+   public := atoi(mail_expd.names.[3]);
+   if (public == 0)
+   {
+      email_str := email_str + "<br/>Your email address is private.";
+   }
+   else email_str := email_str + "<br/>Your email address is public.";
+   }
+
+   act(self.name + " says 'Here is your file information, " + pc.name +
+"'<br/>",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+   act("Your name is " + pc.name + " " + pc.title + ".<br/>You are " +
+       "currently level " + itoa(pc.level) +  ".<br/>" +
+       maiden_str + "<br/>" +
+       email_str + "<br/><br/>You can change your maiden " +
+       "name and email address. Don't forget to add your email to " +
+       "our player email list by typing update (if you " +
+       "haven't done so already, or have changed your address) - " +
+       "'look sign' for info.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+
+   email_str := "";
+
+   goto lost_pc;
+
+:change_maiden:
+   block;
+   maiden_str := argument;
+   if (maiden_str == "")
+   {
+      act(self.name + " says 'You can't have a blank Maiden Name, " +
+          pc.name + "'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   subextra(pc.info, "$maiden");
+   addextra(pc.info, {"$maiden"}, maiden_str);
+   act(self.name + " says 'Your maiden name has been changed'",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Kurt checks his files.",
+       A_HIDEINV, pc, null, null, TO_REST);
+   goto show_file;
+
+   goto lost_pc;
+
+:change_mail:
+   block;
+   email_str := argument;
+   if ((email_str == "") or (not("@" in email_str)))
+   {
+      act(self.name + " says 'That is not a valid email address, " +
+          pc.name + "'",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto lost_pc;
+   }
+   subextra(pc.info, "$email");
+   addextra(pc.info, {"$email"}, email_str);
+   act(self.name + " says 'Your email address has been changed. You " +
+       "may wish to put your address on the email list. If so, " +
+       "type update'<br/>",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Kurt checks his files.",
+          A_HIDEINV, pc, null, null, TO_REST);
+
+   goto show_file;
+
+   goto lost_pc;
+
+:lost_pc:
+   unsecure(pc);
+   goto start;
+} dilend

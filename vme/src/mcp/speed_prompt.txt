@@ -1,0 +1,136 @@
+Generate MCP entry for DIL keyword: speed
+
+=== Yacc rule ===
+| DILSF_SPD /* .speed */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UCP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_SPD;
+}
+
+=== C implementation ===
+case DILF_SPD:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_INT;
+                        v->val.num = CHAR_SPEED((unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_CP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_INT;
+                        v->val.num = (((command_info *)v1->val.ptr)->combat_speed);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin newProfQuest();
+external
+   Explainer@quests(pc : unitptr, sl : stringlist);
+   unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
+   extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
+   unitptr qstWaitDone@quests(qname : string, pc : unitptr,
+                             sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+   extraptr qstSetOngoing@quests(qname : string, pc : unitptr, qdescr : string);
+
+var
+   pc : unitptr;
+   exdp : extraptr;
+   s : string;
+code
+{
+   heartbeat := PULSE_SEC*4;
+
+:start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+
+   if (activator.level < 50)
+      goto start;
+
+	pc := qstWaitHero@quests(NICHOLAS_QUEST, activator,
+      {"::Father Nicholas looks at you.::",
+      "think",
+      "say $1N, I think you're finally ready. I can see you've learned a lot.",
+      "say Only once in a lifetime can one consider treading a new path.",
+      "say I did so myself. When I was a young man, I was a warrior and then only later did I become a man of the Gods.",
+      "whisper $1N If you want to consider treading a new path just <a cmd='#'>nod</a> your head, and I'll give you the details."
+      }, "", ""
+   );
+
+   if (pc == null)
+      goto start;
+
+   secure(pc, lostpc);
+
+   Explainer@quests(pc, 
+      {"say Well first let us see if you have learned enough.",
+       "say Ready for the first question?",
+       "say Here we go...",
+       "emote one eye seems to grow larger.",
+       "say $1n, what is your favorite color?"});
+
+:q1:
+   wait(SFB_CMD, activator == pc);
+   if (command("say") or command("tell") or command("whisper"))
+   {
+      pause;
+      Explainer@quests(pc, 
+         {"say But are you sure that is your final answer?",
+         "::$3n looks at you intensely.::$3n looks intensely at $1n."});
+   }
+   else
+      goto q1;
+
+:q2:
+   wait(SFB_CMD, activator == pc);
+   if (command("say") or command("tell") or command("whisper") or command("nod") or command("shake"))
+   {
+      pause;
+      exec("grunt", self);
+   }
+   else
+      goto q2;
+
+   s := pc.name;
+   Explainer@quests(pc, 
+      {"point $1N",
+      "::Suddenly you're lifted up in the air at great speed. You scream at the top of your lungs.::$1n screams as $1e is lifted up into the air at great speed and vanishes."});
+
+   unsecure(pc);
+   exdp := qstSetOngoing@quests(NICHOLAS_QUEST, pc, "Seek out a grocer in Xiyang City, buy a shrubbery and bring it back to father Nicholas in Udgaard.");
+   link(pc, findsymbolic("ship_hire@xiyang2"));
+   exec("tell "+s+" seek out a grocer in Xiyang City and bring me a small shrubbery with white leaves.", self);
+   heartbeat := PULSE_SEC;
+
+   // Make the shrubbery break if you teleport. You need to sail back.
+   goto start;
+
+:lostpc:
+   exec("sigh", self);
+   goto start;
+} dilend

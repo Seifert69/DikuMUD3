@@ -1,0 +1,215 @@
+Generate MCP entry for DIL keyword: attack_spell
+
+=== Yacc rule ===
+| DILSE_ATSP '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    checkbool("argument 1 of attack_spell", $3.boolean);
+
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'attack_spell' not a number");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'attack_spell' not a unitptr");
+    }
+    else if ($7.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 3 of 'attack_spell' not a unitptr");
+    }
+    else if ($9.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 4 of 'attack_spell' not a unitptr");
+    }
+    else if ($11.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 5 of 'attack_spell' not an integer");
+    }
+    else if (($13.typ != DilVarType_e::DILV_SP) && ($13.typ != DilVarType_e::DILV_NULL))
+    {
+        dilfatal("Arg 6 of 'attack_spell' not an string or null");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        make_code(&($9));
+        make_code(&($11));
+        make_code(&($13));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_code(&($$), &($9));
+        add_code(&($$), &($11));
+        add_code(&($$), &($13));
+        add_ubit8(&($$), DILE_ATSP);
+    }
+
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+    FREEEXP($9);
+    FREEEXP($11);
+    FREEEXP($13);
+}
+
+=== C implementation ===
+void dilfe_atsp(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v6 = p->stack.pop();
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_INT:
+            switch (dil_getval(v2))
+            {
+                case DILV_UP:
+                    if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    else
+                    {
+                        switch (dil_getval(v3))
+                        {
+                            case DILV_UP:
+                                if (!v3->val.ptr)
+                                {
+                                    v->type = DILV_FAIL;
+                                }
+                                else
+                                {
+                                    switch (dil_getval(v4))
+                                    {
+                                        case DILV_UP:
+                                            if (!v4->val.ptr)
+                                            {
+                                                v->type = DILV_FAIL;
+                                            }
+                                            else
+                                            {
+                                                switch (dil_getval(v5))
+                                                {
+                                                    case DILV_INT:
+
+                                                        switch (dil_getval(v6))
+                                                        {
+                                                            case DILV_SP:
+                                                                if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) &&
+                                                                    (g_spell_info[v1->val.num].spell_pointer ||
+                                                                     g_spell_info[v1->val.num].tmpl))
+                                                                {
+                                                                    spell_args sa;
+
+                                                                    set_spellargs(&sa,
+                                                                                  (unit_data *)v2->val.ptr,
+                                                                                  (unit_data *)v3->val.ptr,
+                                                                                  (unit_data *)v4->val.ptr,
+                                                                                  nullptr,
+                                                                                  0);
+                                                                    if (str_is_empty((char *)v6->val.ptr) ||
+                                                                        ((char *)v6->val.ptr == nullptr))
+                                                                    {
+                                                                        sa.pEffect = nullptr;
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        sa.pEffect = str_dup((char *)v6->val.ptr);
+                                                                    }
+
+                                                                    /* cast the spell */
+                                                                    v->val.num = spell_offensive(&sa, v1->val.num, v5->val.num);
+
+                                                                    if (sa.pEffect)
+                                                                        FREE(sa.pEffect);
+                                                                    dil_test_secure(p);
+                                                                }
+                                                                break;
+                                                            case DILV_FAIL:
+                                                                v->type = DILV_FAIL;
+                                                                break;
+                                                            case DILV_NULL:
+                                                            default:
+                                                                v->type = DILV_ERR;
+                                                                break;
+                                                        }
+
+                                                        break;
+                                                    case DILV_FAIL:
+                                                    case DILV_NULL:
+                                                        v->type = DILV_FAIL;
+                                                        break;
+                                                    default:
+                                                        v->type = DILV_ERR;
+                                                        break;
+                                                }
+                                            }
+                                            break;
+                                        case DILV_FAIL:
+                                        case DILV_NULL:
+                                            v->type = DILV_FAIL;
+                                            break;
+                                        default:
+                                            v->type = DILV_ERR;
+                                            break;
+                                    }
+                                }
+                                break;
+                            case DILV_FAIL:
+                            case DILV_NULL:
+                                v->type = DILV_FAIL;
+                                break;
+                            default:
+                                v->type = DILV_ERR;
+                                break;
+                        }
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+            }
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+    delete v6;
+}
+
+=== DIL example ===
+dilbegin spl_lava_1(medi : unitptr, tgt : unitptr, arg : string,
+                      hm : integer, effect : string);
+code
+{
+
+  hm := attack_spell(SPL_LAVA_1, self, medi, tgt, 0, effect);
+  quit;
+} dilend

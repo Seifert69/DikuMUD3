@@ -1,0 +1,102 @@
+Generate MCP entry for DIL keyword: type
+
+=== Yacc rule ===
+| DILSF_TYP /* .type */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UCP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_TYP;
+}
+
+=== C implementation ===
+case DILF_TYP:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((unit_data *)v1->val.ptr)->getUnitType();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_CP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = (((command_info *)v1->val.ptr)->type);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_MISSION) unique to_the_rescue(sroomto : string);
+external
+   unitptr unit_room@function(u : unitptr);
+   integer walk_room@function (s:string,i:integer);
+
+var 
+   roomorg : string;
+   roomto  : string;
+   tf      : integer;
+   descorg : string;
+
+code
+{
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      act("$1n looks up, down, left, right. Pauses. Seems confused about $1s surroundings.",
+            A_ALWAYS, self, null, null, TO_ALL);
+      quit;
+   }
+
+   roomorg := self.outside.symname;
+   descorg := self.outside_descr;
+   roomto  := sroomto;
+
+   :torescue:
+   priority;
+   self.outside_descr := sact("$1n is hurrying along.", A_ALWAYS, self, null, null, TO_CHAR);
+   tf:=walk_room@function(roomto, 5);
+   self.outside_descr := sact("$1n is on the lookout.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   // Stay a little
+   act("$1n alertly scans $1s surroundings.",A_ALWAYS, self, null, null, TO_ALL);
+   heartbeat := PULSE_SEC*4;
+   nopriority;
+
+   :nowwhat:
+   // Let the other DIL programs take control (no priority above)
+   pause;
+   pause;
+   pause;
+   if (self.position == POSITION_FIGHTING)
+      goto nowwhat;
+
+   :gohome:
+   self.outside_descr := sact("$1n is trodding along.", A_ALWAYS, self, null, null, TO_CHAR);
+   priority;
+   tf:=walk_room@function(roomorg, 8);
+   self.outside_descr := descorg;
+   nopriority;
+   return;
+} dilend

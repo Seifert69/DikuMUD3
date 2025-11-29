@@ -1,0 +1,478 @@
+Generate MCP entry for DIL keyword: spellinfo
+
+=== Yacc rule ===
+| DILSE_SPLI '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'spellinfo' not an integer");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT || $5.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 2 of 'spellinfo' not an integer variable");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT || $7.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 3 of 'spellinfo' not an integer variable");
+    }
+    else if ($9.typ != DilVarType_e::DILV_INT || $9.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 4 of 'spellinfo' not an integer variable");
+    }
+    else if ($11.typ != DilVarType_e::DILV_INT || $11.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 5 of 'spellinfo' not an integer variable");
+    }
+    else if ($13.typ != DilVarType_e::DILV_INT || $13.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 6 of 'spellinfo' not an integer variable");
+    }
+    else if ($15.typ != DilVarType_e::DILV_INT || $15.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 7 of 'spellinfo' not an integer variable");
+    }
+    else if ($17.typ != DilVarType_e::DILV_INT || $17.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 8 of 'spellinfo' not an integer variable");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        make_code(&($9));
+        make_code(&($11));
+        make_code(&($13));
+        make_code(&($15));
+        make_code(&($17));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_code(&($$), &($9));
+        add_code(&($$), &($11));
+        add_code(&($$), &($13));
+        add_code(&($$), &($15));
+        add_code(&($$), &($17));
+        add_ubit8(&($$), DILE_SPLI);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+    FREEEXP($9);
+    FREEEXP($11);
+    FREEEXP($13);
+    FREEEXP($15);
+    FREEEXP($17);
+}
+
+=== C implementation ===
+void dilfe_spli(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v8 = p->stack.pop();
+    dilval *v7 = p->stack.pop();
+    dilval *v6 = p->stack.pop();
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_SP;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_INT:
+            if (!is_in(v1->val.num, SPL_ALL, SPL_TREE_MAX - 1))
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (v2->type)
+                {
+                    case DILV_SINT4R:
+                    case DILV_UINT4R:
+                        switch (v3->type)
+                        {
+                            case DILV_SINT4R:
+                            case DILV_UINT4R:
+                                switch (v4->type)
+                                {
+                                    case DILV_SINT4R:
+                                    case DILV_UINT4R:
+                                        switch (v5->type)
+                                        {
+                                            case DILV_SINT4R:
+                                            case DILV_UINT4R:
+                                                switch (v6->type)
+                                                {
+                                                    case DILV_SINT4R:
+                                                    case DILV_UINT4R:
+                                                        switch (v7->type)
+                                                        {
+                                                            case DILV_SINT4R:
+                                                            case DILV_UINT4R:
+                                                                switch (v8->type)
+                                                                {
+                                                                    case DILV_SINT4R:
+                                                                    case DILV_UINT4R:
+                                                                        /* pName := spellinfo(SPL_LIGHTNING_3, nRealm, nSphere, nMana,
+                                                                         * bOffensive, nResistType, bvMedia, bvTargets); */
+
+                                                                        /* We're home free... */
+
+                                                                        *((ubit32 *)v2->ref) = g_spell_info[v1->val.num].realm;
+                                                                        *((ubit32 *)v3->ref) = g_SplColl.tree[v1->val.num].parent;
+                                                                        *((ubit32 *)v4->ref) = g_spell_info[v1->val.num].usesmana;
+                                                                        *((ubit32 *)v5->ref) = g_spell_info[v1->val.num].offensive;
+                                                                        *((ubit32 *)v6->ref) = g_spell_info[v1->val.num].cast_type;
+                                                                        *((ubit32 *)v7->ref) = g_spell_info[v1->val.num].media;
+                                                                        *((ubit32 *)v8->ref) = g_spell_info[v1->val.num].targets;
+
+                                                                        v->type = DILV_SP;
+                                                                        v->atyp = DILA_EXP;
+                                                                        v->val.ptr = str_dup(g_SplColl.text[v1->val.num] == nullptr
+                                                                                                 ? ""
+                                                                                                 : g_SplColl.text[v1->val.num]);
+                                                                        break;
+
+                                                                    default:
+                                                                        v->type = DILV_ERR;
+                                                                        break;
+                                                                }
+
+                                                                break;
+
+                                                            default:
+                                                                v->type = DILV_ERR;
+                                                                break;
+                                                        }
+
+                                                        break;
+
+                                                    default:
+                                                        v->type = DILV_ERR;
+                                                        break;
+                                                }
+
+                                                break;
+
+                                            default:
+                                                v->type = DILV_ERR;
+                                                break;
+                                        }
+
+                                        break;
+
+                                    default:
+                                        v->type = DILV_ERR;
+                                        break;
+                                }
+
+                                break;
+
+                            default:
+                                v->type = DILV_ERR;
+                                break;
+                        }
+
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+    delete v6;
+    delete v7;
+    delete v8;
+}
+
+=== DIL example ===
+dilbegin do_setskill(arg : string);
+
+external
+   integer skillindex(s1 : string);
+   integer weaponindex(s1 : string);
+
+var
+
+  item        :  unitptr;
+  cnt         :  integer;
+  stype       :  string;
+  sname       :  string;
+  sdef        :  integer;
+  samnt       :  integer;
+  schk        :  integer;
+  temp        :  string;
+  slist       :  stringlist;
+  scomp       :  stringlist;
+  buffer      :  string;
+  t1          :  integer;
+  t2          :  integer;
+  t3          :  integer;
+  t4          :  integer;
+  t5          :  integer;
+  t6          :  integer;
+  t7          :  integer;
+
+
+code{
+
+
+ if (arg == "")
+    {
+      sendtext("Syntax: setskill <name> (skill|spell|weapon) <field> <value>.<br/>", self);
+      sendtext("For skills with spaces, use underscore, e.g. armor_soft_leather<br/>", self);
+      quit;
+    }
+
+ temp := arg;
+ cnt := 1;
+
+:loop:
+
+ item := findunit(self, temp, FIND_UNIT_GLOBAL, null);
+
+ if ((item) and (not visible(self, item)))
+    {
+      cnt := cnt + 1;
+      temp := itoa(cnt) + "." + arg;
+      goto loop;
+    }
+
+ if (item == null)
+    {
+      sendtext("No such player or mobile to setskill on.<br/>", self);
+      quit;
+    }
+
+
+ if ((item.type != UNIT_ST_PC) and (item.type != UNIT_ST_NPC))
+    {
+      sendtext("Setskill can only be used on PC's or NPC's.<br/>", self);
+      quit;
+    }
+
+ stype := getword(temp);
+
+ if (stype == "skill")
+     goto set_skill;
+
+ if (stype == "spell")
+     goto set_spell;
+
+ if (stype == "weapon")
+     goto set_weapon;
+
+ sendtext("Your options are either 'skill', 'spell' or 'weapon'.<br/>", self);
+ quit;
+
+
+:set_skill:
+
+  if (item.type == UNIT_ST_NPC)
+     {
+       sendtext("Mobiles cannot have skills set in this manner.<br/>", self);
+       quit;
+     }
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+           {
+             sname := sname + " " + slist.[cnt];
+             cnt := cnt + 1;
+           }
+
+
+       sdef := skillindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid skill, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < SKI_TREE_MAX)
+          {
+            sname := skill_name(sdef);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.skills[sdef] := samnt;
+  sname := skill_name(sdef);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+
+:set_weapon:
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+           {
+             sname := sname + " " + slist.[cnt];
+             cnt := cnt + 1;
+           }
+
+
+       sdef := weaponindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid weapon, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < WPN_TREE_MAX)
+          {
+            sname := weapon_name(sdef);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  if ((item.type == UNIT_ST_NPC) and (sdef >= WPN_GROUP_MAX))
+     {
+       sendtext("Mobiles can only have weapon groups set.<br/>", self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.weapons[sdef] := samnt;
+  sname := weapon_name(sdef);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+:set_spell:
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+          {
+            sname := sname + " " + slist.[cnt];
+            cnt := cnt + 1;
+          }
+
+
+       sdef := spellindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid spell, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < SPL_TREE_MAX)
+          {
+            sname := spellinfo(sdef, t1, t2, t3, t4, t5, t6, t7);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  if ((item.type == UNIT_ST_NPC) and (sdef >= SPL_GROUP_MAX))
+     {
+       sendtext("Mobiles can only have spell groups set.<br/>", self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.spells[sdef] := samnt;
+  sname := spellinfo(sdef, t1, t2, t3, t4, t5, t6, t7);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+} dilend

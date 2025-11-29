@@ -1,0 +1,294 @@
+Generate MCP entry for DIL keyword: killedit
+
+=== Yacc rule ===
+| DILSI_KEDIT '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'killedit' not an unitptr");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_KEDIT);
+    }
+}
+
+=== C implementation ===
+void dilfi_kedit(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+    descriptor_data *d = nullptr;
+
+    if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        if (!((unit_data *)v1->val.ptr)->isPC())
+        {
+            dil_typeerr(p, "not a pc unit");
+        }
+        else
+        {
+            d = CHAR_DESCRIPTOR((unit_data *)v1->val.ptr);
+            if (d)
+            {
+                if (d->hasPostEditFunctionPtr())
+                {
+                    d->callPostEditFunctionPtr(d);
+                }
+                d->clearLocalString();
+                d->setEditReference(nullptr);
+                d->setPostEditFunctionPtr(nullptr);
+                d->setEditing(nullptr);
+                set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), descriptor_interpreter, TRUE);
+            }
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin aware do_reply(arg:string);
+var
+	err:integer;
+	msg_old:stringlist;
+	msg:string;
+	msg_time:string;
+	u:unitptr;
+	xn:extraptr;
+	i:integer;
+	ln:integer;
+	msg_num:integer;
+	temp:string;
+	act_str:string;
+	buff:string;
+	indexlist:stringlist;
+	brdname:string;
+
+code
+{
+   if (self.type!=UNIT_ST_PC)
+      quit;
+
+   u:=self.inside;
+   while (u != null)
+	{
+      if (u.type!=UNIT_ST_OBJ)
+      {
+         u:=u.next;
+         continue;
+      }
+      if (u.objecttype==ITEM_BOARD)
+         break;
+      u:=u.next;
+	}
+
+   if (u==null)
+	{
+      u:=self.outside.inside;
+      while (u!=null)
+		{
+         if (u.type!=UNIT_ST_OBJ)
+         {
+            u:=u.next;
+            continue;
+         }
+      	if (u.objecttype==ITEM_BOARD)
+		   	break;
+         u:=u.next;
+		}
+   }
+
+   if (u.objecttype!=ITEM_BOARD)
+	{
+      act ("You have nothing to write on.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+   }
+
+	if (u.extra.["$BOARD_P_RES"].descr!="")
+   {
+      act_str := (string) u.extra.["$BOARD_P_RES"].descr(self,u);
+      if (act_str!="")
+      {
+         act(act_str, A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+   }
+   else
+   {
+		if (self.level<10)
+      {
+      	act("You need to be level 10 to post to this board.", A_ALWAYS,self,null,null,TO_CHAR);
+   		quit;
+      }
+   }
+
+   if (arg == "")
+	{
+   	act("Reply to which post?", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+   }
+
+   msg_num:=atoi(arg);
+   xn:="$BOARD_MAX" in u.extra;
+   if ((msg_num<=0) or (msg_num>atoi(xn.descr)))
+   {
+	   brdname := xn.descr;
+	   if (brdname == null)
+	   	brdname := "999";
+      act ("You must Reply to a post between 1 - "+brdname+".",
+      A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+   }
+
+   brdname:=u.names.[length(u.names)-1];
+   err:=loadstr (brdname+".idx",temp);
+   if (err<0)
+	{
+      log ("02:  Error in boards on:  "+brdname);
+      act ("This board doesn't work report to an administrator.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   if (err==0)
+	{
+      act ("But the board is empty.", A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+   }
+
+   indexlist:=split(temp,"<br/>");
+   ln:=length(indexlist);
+   if (msg_num>ln)
+	{
+      act ("That message exists only within the boundaries of your mind.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   if (ln>=atoi (xn.descr))
+	{
+      act ("You can't reply to that the board is full.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   msg_time:=indexlist.[msg_num-1];
+   msg_time:=getword( msg_time);
+   /*msg_old:=split(msg_time,".");*/
+
+	err:=loadstr(brdname+"."+msg_time,buff);
+	if (err==0)
+   {
+      sendtext ("You can only reply to finished posts please wait and try again.<br/>",self);
+      quit;
+   }
+   msg:=indexlist.[msg_num-1];
+   buff:=getword(msg);
+   msg_old:=split(msg," (");
+   ln:=length(msg_old);
+   if (ln >2)
+	{
+      i:=0;
+      while (i<ln-1)
+      {
+         if (i==0)
+            msg:=msg_old.[i];
+         else
+            msg:=msg+" ("+msg_old.[i];
+         i:=i+1;
+      }
+   }
+   else
+	   msg:=msg_old.[0];
+
+   msg_time:=itoa(realtime);
+   msg:=msg_time+ ".re "+msg+" ("+self.name+")";
+   msg:="<br/>"+msg;
+   err:=savestr(brdname+".idx",msg,"a");
+   if (err<1)
+	{
+	log ("03:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+temp:=indexlist.[msg_num-1];
+msg:=getword(temp);
+act ("You begin to reply to '"+temp+"'",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n begins to write a message on the board.",
+A_ALWAYS,self,null,null,TO_REST);
+
+interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),clean_up);
+	interrupt(SFB_DEAD, activator == self, clean_up);
+interrupt (SFB_COM,activator==self,clean_up);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),clean_up);
+
+	beginedit (self);
+	wait(SFB_EDIT,self==activator) ;
+if (argument!="")
+	{
+temp:=argument;
+	err:=savestr(brdname+"."+msg_time+".re",temp,"w");
+	if (err<1)
+		{
+		log ("04:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+act ("Message:  "+itoa(length(indexlist)+1)+" posted.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	}
+else
+	{
+:clean_up:
+
+	err:=loadstr(brdname+".idx",buff);
+	if (err<1)
+		goto quitboard;
+	indexlist:=split(buff,"<br/>");
+	msg_num:=length(indexlist);
+	msg_num:=msg_num-1;
+
+temp:=indexlist.[msg_num];
+temp:=getword(temp);
+err:=delstr (brdname+".idx");
+err:=delstr (brdname+"."+temp);
+ln:=length(indexlist);
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if (msg_num==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=indexlist.[i];
+	else
+		buff:=buff+"<br/>"+indexlist.[i];
+	i:=i+1;
+	}
+
+      err:=savestr(brdname+".idx",buff,"w");
+      if (err<1)
+      {
+         log ("07:  Error in writing new idx file. in remove for "+self.symname);
+         goto quitboard;
+      }
+      act ("Blank posts are such a waste of space!  Removing.", A_ALWAYS, self,null,null,TO_CHAR);
+   }
+
+   act("$1n finishes posting to the board.", A_ALWAYS,self,null,null,TO_REST);
+
+   :quitboard:
+   send_done("reply",self,null,u,0,arg,null, CMD_AUTO_NONE);
+   killedit(self);
+   quit;
+} dilend

@@ -1,0 +1,101 @@
+Generate MCP entry for DIL keyword: sendtoall
+
+=== Yacc rule ===
+| DILSI_SNTA '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'sendtoall' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'sendtoall' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SNTA);
+    }
+}
+
+=== C implementation ===
+void dilfi_snta(dilprg *p)
+{
+    /* Send message to DIL programs in all units of type specified */
+    /* sendtoall (string, string) */
+
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("sendtoall", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (v1->val.ptr && v2->val.ptr)
+        {
+            file_index_type *fi = nullptr;
+
+            if ((fi = str_to_file_index((char *)v2->val.ptr)))
+            {
+                spec_arg sarg;
+
+                sarg.activator = p->sarg->owner;
+                sarg.medium = p->sarg->owner;
+                sarg.target = nullptr;
+                sarg.pInt = nullptr;
+                sarg.fptr = nullptr; /* Set by unit_function_scan */
+
+                sarg.fptr = nullptr;
+                sarg.cmd = &g_cmd_auto_msg;
+                sarg.arg = (char *)v1->val.ptr;
+                sarg.mflags = SFB_MSG;
+
+                if (!fi->Empty())
+                {
+                    std::forward_list<unit_data *>::iterator it;
+                    std::forward_list<unit_data *>::iterator next_it;
+                    for (it = fi->Begin(); it != fi->End(); it = next_it)
+                    {
+                        next_it = it;
+                        next_it++;
+                        unit_function_scan(*it, &sarg);
+                    }
+                }
+
+                /*for (u = g_unit_list; u; u = u->gnext)
+                {
+                    if (UNIT_FILE_INDEX(u) == fi)
+                        unit_function_scan(u, &sarg);
+                }*/
+                dil_test_secure(p);
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin aware recall arena_check ();
+code
+{
+   interrupt(SFB_MSG, ((argument=="destroy arena") and (self==activator)), dest);
+   heartbeat := PULSE_SEC*60;
+
+   :loop:
+   wait (SFB_TICK|SFB_COM,TRUE);
+   if ((self.zone!="arena") and (self.outside!=findroom("deathseq_room@basis")))
+   {
+      act ("Some how you left the Arena illegally you are being restored to your status before entering the arena.",
+         A_SOMEONE,self,null,null,TO_CHAR);
+      sendtoall("emptyout", "bag@arena");
+      sendto("destroy arena", self);
+      quit;
+   }
+   goto loop;
+
+   :dest:
+   quit;
+} dilend

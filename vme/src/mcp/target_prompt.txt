@@ -1,0 +1,177 @@
+Generate MCP entry for DIL keyword: target
+
+=== Yacc rule ===
+| DILSE_TARG
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_UP;
+    add_ubit8(&($$), DILE_TARG);
+}
+
+=== C implementation ===
+void dilfe_targ(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Target */
+
+    v->type = DILV_UP;
+    v->atyp = DILA_NORM;
+    v->val.ptr = p->sarg->target;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin item_charge(base_charge:integer);
+external
+  string accept_dil@function (pc:unitptr,s:string);
+
+var
+   tcost   : integer;
+   state   : integer;
+   magmod  : integer;
+   addmag  : integer;
+   die     : integer;
+   result  : integer;
+   percent : integer;
+   thing   : unitptr;
+   pc      : unitptr;
+   answer  : string;
+   mn      : string;
+
+code
+{
+
+:init:
+   heartbeat := PULSE_SEC*5;
+   self.spells[SPL_RECONSTRUCT] := 200;
+   self.abilities[ABIL_BRA] := 150;
+   self.abilities[ABIL_MAG] := 150;   
+   position_update(self);
+:start:
+   wait (SFB_DONE,( (command("give")) and (self==target) ));
+
+pc:=activator;
+thing:=medium;
+secure(pc,lost_pc);
+secure(thing,lost_pc);
+
+if( not visible( self, pc ) )
+   {
+      exec("say I only do business with people I can see.", self );
+      exec("drop " + (thing.name), self);
+      goto lost_pc;
+   }
+
+dilcopy ("busy@function(Please wait I am busy with other work right now.",
+self)
+;
+
+if (thing.type!=UNIT_ST_OBJ)
+   {
+      exec ("say How am I supposed to recharge that then "+pc.name+"?",self);
+      exec ("bonk " + pc.name,self);
+      goto give_back;
+   }
+
+if ((thing.objecttype!=ITEM_WAND) and (thing.objecttype!=ITEM_STAFF))
+   {
+      exec ("say How am I supposed to recharge that then "+pc.name+"?",self);
+      exec ("bonk " + pc.name,self);
+      goto give_back;
+   }
+
+/* If people don't wish their wands/staffs rechargable by shops, they declare
+   an extra, $norecharge, on the item. */
+
+if ("$norecharge" in thing.extra)
+   {
+      exec ("say I can't recharge this " + thing.title +
+            "," + pc.name +". It is beyond my ability.", self);
+      goto give_back;
+   }
+
+if ( thing.value[1] == thing.value[4] )
+   {
+      exec("say It is fully charged, what do you want " +
+           "to go charging it for?!?", self);
+      exec("bonk " + pc.name, self);
+      goto give_back;
+   }
+
+state:=thing.value[4]-thing.value[1];
+goto how_much;
+
+
+:broken_thing:
+   exec("say Oh my, it's broken. I can't fix that. I suggest " +
+        "you try to obtain another.", self);
+   goto give_back;
+
+:not_possible:
+   exec("say Oh dear, I'm afraid that it's past the point " +
+           "of no return. Repairing it would only make it " +
+           "worse " + pc.name + ".", self);
+   goto give_back;
+
+:how_much:
+   tcost := (base_charge*160); /* Base cost in 1 gold 2 sp. Modified by
+                                   how badly damaged the item is and its
+                                   Magical Modifier */
+   tcost := tcost * state;     /* Adjust for how bad the damage is */
+   magmod := thing.value[0]; /* Take spell power into account    */
+
+   if (magmod > 0)
+   {
+      addmag := magmod; /* 1 gp per mag point */
+      tcost := tcost * addmag;  /* Final cost         */
+   }
+
+   mn := moneystring(tcost, 0);
+   exec ("say It will cost you " + mn + " for me to " +
+         "recharge that for you.", self);
+   answer := accept_dil@function(pc, "Are you sure you want me to recharge it?");
+   pause;
+
+   if (answer=="no")
+   {
+      exec("say Very well. Come back to me when you want it recharged.",self);
+      goto give_back;
+   }
+
+   if (transfermoney(pc, self, tcost))
+   {
+      exec(", touches " + thing.name + " softly and begins to chant...", self);
+:repair_it:
+      if(thing.objecttype==ITEM_WAND)
+        result := cast_spell(SPL_CHARGE_WAND, self, self, thing, "");
+      else
+        result := cast_spell(SPL_CHARGE_STAFF, self, self, thing, "");
+      if (thing.value[1] < thing.value[4]) goto repair_it;
+      heartbeat:=PULSE_SEC*1;
+      pause;
+      exec("say There, hope you like it, " + pc.name + "!", self);
+      heartbeat:=PULSE_SEC*5;
+      goto give_back;
+   }
+   else goto no_money;
+
+:no_money:
+   exec ("say You can't afford my services right now. Please come back " +
+         "when you have enough money.",self);
+   goto give_back;
+
+:give_back:
+   act( self.name + " returns your " + thing.name + " to you.",
+       A_ALWAYS,pc,null,null,TO_CHAR);
+   act(self.name + " returns $1n's " + thing.name + " to $1m.",
+       A_SOMEONE,pc,null,null,TO_REST);
+   link(thing,pc);
+   goto lost_pc;
+
+:lost_pc:
+   die := dildestroy ("busy@function",self);
+   unsecure(pc);
+   unsecure(thing);
+   goto start;
+} dilend

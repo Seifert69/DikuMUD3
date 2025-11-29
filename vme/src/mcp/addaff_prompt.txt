@@ -1,0 +1,276 @@
+Generate MCP entry for DIL keyword: addaff
+
+=== Yacc rule ===
+| DILSI_ADA '(' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'addaff' not a unit");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'addaff' not an integer");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'addaff' not an integer");
+    }
+    else if ($9.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 4 of 'addaff' not an integer");
+    }
+    else if ($11.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 5 of 'addaff' not an integer");
+    }
+    else if ($13.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 6 of 'addaff' not an integer");
+    }
+    else if ($15.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 7 of 'addaff' not an integer");
+    }
+    else if ($17.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 8 of 'addaff' not an integer");
+    }
+    else if ($19.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 9 of 'addaff' not an integer");
+    }
+    else if ($21.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 10 of 'addaff' not an integer");
+    }
+    else if ($23.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 11 of 'addaff' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $25 + 1;
+        wtmp = &tmpl.core[$25];
+        bwrite_ubit8(&wtmp, DILI_ADA);
+    }
+}
+
+=== C implementation ===
+void dilfi_ada(dilprg *p)
+{
+    dilval *v11 = p->stack.pop();
+    dilval *v10 = p->stack.pop();
+    dilval *v9 = p->stack.pop();
+    dilval *v8 = p->stack.pop();
+    dilval *v7 = p->stack.pop();
+    dilval *v6 = p->stack.pop();
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("addaff",
+                       p,
+                       11,
+                       v1,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_UP,
+                       v2,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v3,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v4,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v5,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v6,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v7,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v8,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v9,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v10,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v11,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT))
+    {
+        if (v1->val.ptr)
+        {
+            if (((unit_data *)v1->val.ptr)->isChar() || ((unit_data *)v1->val.ptr)->isRoom())
+            {
+                if (is_in(v2->val.num, 1, ID_TOP_IDX) && is_in(v8->val.num, TIF_NONE, TIF_MAX) && is_in(v9->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v10->val.num, TIF_NONE, TIF_MAX) && is_in(v11->val.num, APF_NONE, APF_MAX))
+                {
+                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                    {
+                        szonelog(p->frame->tmpl->zone,
+                                 "DIL '%s' attempt to violate system access security (ada).",
+                                 p->frame->tmpl->prgname);
+                        p->waitcmd = WAITCMD_QUIT;
+                    }
+                    else
+                    {
+                        unit_affected_type af;
+
+                        af.setID(v2->val.num);
+                        af.setDuration(v3->val.num);
+                        af.setBeat(v4->val.num);
+
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
+
+                        af.setFirstFI(v8->val.num);
+                        af.setTickFI(v9->val.num);
+                        af.setLastFI(v10->val.num);
+                        af.setApplyFI(v11->val.num);
+                        create_affect((unit_data *)v1->val.ptr, &af);
+                    }
+                }
+                else
+                {
+                    szonelog(p->frame->tmpl->zone,
+                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname,
+                             v2->val.num,
+                             v8->val.num,
+                             v9->val.num,
+                             v10->val.num,
+                             v11->val.num);
+                }
+            }
+            else if (((unit_data *)v1->val.ptr)->isObj())
+            {
+                if ((is_in(-v2->val.num, 1, ID_TOP_IDX) || is_in(v2->val.num, 1, ID_TOP_IDX)) && is_in(v8->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v9->val.num, TIF_NONE, TIF_MAX) && is_in(v10->val.num, TIF_NONE, TIF_MAX) &&
+                    is_in(v11->val.num, APF_NONE, APF_MAX))
+                {
+                    if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                    {
+                        szonelog(p->frame->tmpl->zone,
+                                 "DIL '%s' attempt to violate system access security (ada).",
+                                 p->frame->tmpl->prgname);
+                        p->waitcmd = WAITCMD_QUIT;
+                    }
+                    else
+                    {
+                        // This is a transfer affect
+
+                        unit_affected_type af;
+
+                        af.setID(v2->val.num); // Negative for object transfers
+                        af.setDuration(v3->val.num);
+                        af.setBeat(v4->val.num);
+
+                        af.setDataAtIndex(0, v5->val.num);
+                        af.setDataAtIndex(1, v6->val.num);
+                        af.setDataAtIndex(2, v7->val.num);
+
+                        af.setFirstFI(v8->val.num);
+                        af.setTickFI(v9->val.num);
+                        af.setLastFI(v10->val.num);
+                        af.setApplyFI(v11->val.num);
+                        create_affect((unit_data *)v1->val.ptr, &af);
+                    }
+                }
+                else
+                {
+                    szonelog(p->frame->tmpl->zone,
+                             "DIL '%s' addaffect parameters OOB (ada) v2=%d, v8=%d, v9=%d, v10=%d, v11=%d.",
+                             p->frame->tmpl->prgname,
+                             v2->val.num,
+                             v8->val.num,
+                             v9->val.num,
+                             v10->val.num,
+                             v11->val.num);
+                }
+            }
+            else
+            {
+                szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect unit is neither char nor object (ada).", p->frame->tmpl->prgname);
+            }
+        }
+        else
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect, NULL unit pointer (ada).", p->frame->tmpl->prgname);
+        }
+    }
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+    delete v6;
+    delete v7;
+    delete v8;
+    delete v9;
+    delete v10;
+    delete v11;
+}
+
+=== DIL example ===
+dilbegin do_light(arg:string);
+var
+torch : unitptr;
+code
+{
+
+   torch := findunit(self, arg, FIND_UNIT_HERE,null,UNIT_ST_OBJ);
+
+   if (torch == null)
+   {
+      sendtext("No such thing.<br/>",self);
+      return;
+   }
+
+   if ((torch.type != UNIT_ST_OBJ) or (torch.objecttype != ITEM_LIGHT))
+   {
+      sendtext("You can't light that.<br/>",self);
+      return;
+   }
+
+   if (isaff(torch, ID_LIGHT_EXTINGUISH))
+   {
+      sendtext("How silly, it is already lit.<br/>",self);
+      return;
+   }
+
+   if (torch.value[0] <= 0) // Hours left
+   {
+      sendtext("It is used up, it wont ignite.<br/>",self);
+      return;
+   }
+
+  	addaff(torch, ID_LIGHT_EXTINGUISH, torch.value[0], SECS_PER_MUD_HOUR*WAIT_SEC,
+	          torch.value[1], 0, 0, TIF_NONE, TIF_TORCH_TICK, TIF_NONE, APF_LIGHT_DARK);
+   act("You light $2n.", A_SOMEONE, self, torch, null, TO_CHAR);
+   act("$1n lights $2n.", A_SOMEONE, self, torch, null, TO_ROOM);
+   quit;
+} dilend

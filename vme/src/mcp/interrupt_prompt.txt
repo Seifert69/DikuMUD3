@@ -1,0 +1,114 @@
+Generate MCP entry for DIL keyword: interrupt
+
+=== Yacc rule ===
+corefunc : DILSE_INTR '(' coreexp ',' ihold ahold ahold coreexp ',' labelskip ')' 
+    {
+        checkbool("argument 1 in 'interrupt'", $3.boolean);
+        if ($3.typ != DilVarType_e::DILV_INT)
+        {
+            dilfatal("Arg 1 of 'interrupt' not number");
+        }
+        else
+        {
+            $$.fst = $3.fst;
+            $$.lst = $10.lst;
+            /* Type is ok */
+            wtmp = &tmpl.core[$5];
+            bwrite_ubit8(&wtmp, DILE_INTR);
+            wtmp = &tmpl.core[$6];
+            bwrite_ubit32(&wtmp, $8.fst);
+            wtmp = &tmpl.core[$7];
+            bwrite_ubit32(&wtmp, $10.fst);
+            tmpl.intrcount++;
+            frm.intrcount++;
+        }
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+    }
+
+=== C implementation ===
+void dilfe_intr(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* add interrupt to current frame */
+    ubit16 intnum = 0;
+    ubit8 *beg = nullptr;
+    ubit8 *end = nullptr;
+    ubit32 endptr = 0;
+    ubit32 begptr = 0;
+
+    dilval *v1 = p->stack.pop();
+
+    begptr = bread_ubit32(&(p->fp->pc));
+    endptr = bread_ubit32(&(p->fp->pc));
+    beg = &(p->fp->tmpl->core[begptr]);
+    end = &(p->fp->tmpl->core[endptr]);
+
+    intnum = dil_intr_insert(p, beg, end, v1->val.num);
+
+    // skip past the expression and label
+    p->fp->pc = &(p->fp->tmpl->core[endptr + 4]);
+
+    v->val.num = intnum;
+    v->type = DILV_INT;
+    v->atyp = DILA_NONE;
+
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-2) aware unique cuffed2(depname : string);
+var
+   i      : integer;
+   u      : unitptr;
+code
+{
+   interrupt(SFB_COM, activator == self, broken);
+
+   :loop:
+   wait(SFB_CMD, TRUE);
+
+   :postloop:
+   if (activator == self.master)
+   {
+      if (activator.position < POSITION_STANDING)
+        goto loop;
+
+      /* Do this trickery to allow the cuffed person to follow! */
+
+      if (command("north") or command("east") or command("south") or
+          command("west") or command("up") or command("down"))
+      {
+         wait(SFB_CMD, TRUE);
+         if (activator == self)
+         {
+            if (command("north") or command("east") or
+               command("south") or command("west") or
+               command("up") or command("down"))
+            {
+               goto loop;
+            }
+         }
+         goto postloop;
+      }
+      goto loop;
+   }
+   else if (activator == self)
+   {
+      if (command("look") or command("say") or
+          command("ask") or command("tell"))
+        goto loop;
+      else
+      {
+         block;
+         act(depname + " prevents you from removing the hand cuffs.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+      }
+   }
+   goto loop;
+
+   :broken:
+   i := dildestroy("cuffed@midgaard", self);
+   quit;
+} dilend

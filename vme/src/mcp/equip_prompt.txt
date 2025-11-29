@@ -1,0 +1,66 @@
+Generate MCP entry for DIL keyword: equip
+
+=== Yacc rule ===
+| DILSF_EQP /* .equip */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_EQP;
+}
+
+=== C implementation ===
+void dilfi_eqp(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))
+        {
+            /* Then equip char */
+            equip_char(unit->getUnitIn(), unit, v2->val.num);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);
+var
+   cuffs  : unitptr;
+   deputy : unitptr;
+   i      : integer;
+code
+{
+   cuffs := equipment(self, WEAR_WRIST_R);
+   secure(cuffs, broken);
+
+   deputy := self.master;
+   secure(deputy, broken);
+
+   if ((deputy == null) or (cuffs == null))
+   {
+      log("Cuffed lost either deputy or cuffs");
+      goto broken;
+   }
+
+   heartbeat := PULSE_SEC * 1;
+
+   :loop:
+   if (cuffs.equip != WEAR_WRIST_R)
+     goto broken;
+   priority;
+   wait(SFB_TICK|SFB_CMD, activator == self);
+   goto loop;
+
+   :broken:
+   i := dildestroy("cuffed2@midgaard", self);
+   quit;
+} dilend

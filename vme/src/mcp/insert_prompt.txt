@@ -1,0 +1,206 @@
+Generate MCP entry for DIL keyword: insert
+
+=== Yacc rule ===
+| DILSI_INSLST '(' coreexp ',' coreexp ',' coreexp ')' ihold
+{
+    if (($3.typ != DilVarType_e::DILV_SLP
+        && $3.typ != DilVarType_e::DILV_ILP)
+        || $3.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 1 of 'insert' not a stringlist or intlist variable");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'insert' not an integer");
+    }
+    else if ($7.typ != DilVarType_e::DILV_SP && $7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'insert' not a string or integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $9 + 1;
+        wtmp = &tmpl.core[$9];
+        bwrite_ubit8(&wtmp, DILI_INSLST);
+    }
+}
+
+=== C implementation ===
+void dilfi_inslst(dilprg *p)
+{
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    switch (v1->type)
+    {
+        default:
+            /* ERROR not right lvalue */
+            dil_typeerr(p, "lvalue addstring");
+            break;
+        case DILV_FAIL:
+            break;
+        case DILV_SLPR:
+        case DILV_ILPR:
+            if (dil_type_check("insert", p, 2, v2, TYPEFAIL_NULL, 1, DILV_INT, v3, TYPEFAIL_NULL, 2, DILV_SP, DILV_INT))
+            {
+                if (v1->type == DILV_SLPR)
+                {
+                    if (dil_getval(v3) == DILV_INT)
+                    {
+                        ((cNamelist *)v1->ref)->InsertName(itoa(v3->val.num), (ubit32)v2->val.num);
+                    }
+                    else if (v3->val.ptr)
+                    {
+                        ((cNamelist *)v1->ref)->InsertName(((char *)v3->val.ptr), (ubit32)v2->val.num);
+                    }
+                }
+                else if (v1->type == DILV_ILPR)
+                {
+                    if (dil_getval(v3) == DILV_INT)
+                    {
+                        ((cintlist *)v1->ref)->Insert(v3->val.num, (sbit32)v2->val.num);
+                    }
+                    else
+                    {
+                        if (v3->val.ptr)
+                        {
+                            ((cintlist *)v1->ref)->Insert(atoi(skip_spaces((char *)v3->val.ptr)), (sbit32)v2->val.num);
+                        }
+                    }
+                }
+            }
+            break;
+    }
+
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin aware Gold_bucket ();
+var
+len :integer;
+ i,t:integer;
+ buf:string;
+ tmp:string;
+ args:stringlist;
+
+code
+{
+
+interrupt (SFB_CMD, command("accadd"),add_name);
+interrupt (SFB_CMD, command("accdel"),del_name);
+
+:start:
+wait (SFB_MSG, TRUE);
+
+if (argument !="lookin" )
+ goto start;
+
+
+ if (length(self.extra.["$dlist"].names)==1)
+  {
+  sendtext ("No donations this year yet we still need $2400 per year.<br/>",activator);
+ goto start;
+ }
+
+
+ len:=length (self.extra.["$dlist"].names);
+  buf:="As you look into the bucket you see the images of";
+ i:=1;
+ while (i<len)
+  {
+  if (i==1)
+  {
+  if (i+1==len)
+   buf:=buf+" "+self.extra.["$dlist"].names.[i]+".  ";
+   else
+      buf:=buf+" "+self.extra.["$dlist"].names.[i]+", ";
+      }
+      else
+      {
+        if (i+1==len)
+   buf:=buf+" and "+ self.extra.["$dlist"].names.[i]+".  ";
+   else
+     buf:=buf+" "+self.extra.["$dlist"].names.[i]+", ";
+      }
+   t:=t+self.extra.["$dlist"].vals.[i];
+   i:=i+1;
+  }
+if (t>2400)
+ t:=2400;
+  t:=(t*100)/2400;
+if (t==100)
+                                                                                     buf :=buf +"The images seem to fill the bucket, "+
+                                                                                     " with their grandeur and generosity.<br/>";
+else
+  buf:=buf+"The images only seem to fill the bucket %"+itoa(t)+" of the way up. "+
+  " There is still room for your image if you are worthy.<br/>";
+
+  buf:=textformat(buf);
+  sendtext(buf,activator);
+
+goto start;
+
+:add_name:
+if (activator.level<240)
+goto start;
+block;
+if (argument=="")
+ {
+ sendtext ("who do you want to add<br/>",activator);
+ goto start;
+ }
+ args:=getwords(argument);
+
+ if (length (args) <2)
+  {
+  sendtext ("Correct format is 'add &lt;amount&gt; &lt;person&gt;'<br/>",activator);
+  goto start;
+  }
+
+  if (atoi(args.[0])==0)
+  {
+  sendtext ("The first argument needs to be greater than 0<br/>",activator);
+  goto start;
+  }
+
+tmp:=getword(argument);
+insert(self.extra.["$dlist"].names,length(self.extra.["$dlist"].names),argument);
+insert(self.extra.["$dlist"].vals,length(self.extra.["$dlist"].vals),atoi(args.[0]));
+
+store (self,"bucket",TRUE);
+goto start;
+:del_name:
+
+if (activator.level<200)
+goto start;
+block;
+
+
+if (argument=="")
+ {
+ sendtext ("who do you want to delete<br/>",activator);
+ goto start;
+ }
+
+t:=argument in self.extra.["$dlist"].names;
+if (t>0)
+ {
+ remove (self.extra.["$dlist"].names,t-1);
+  remove (self.extra.["$dlist"].vals,t-1);
+   sendtext(argument +" removed from the list<br/>",activator);
+ }
+else
+{
+sendtext ("That person is not in the list.<br/>",activator);
+}
+
+store (self,"bucket",TRUE);
+goto start;
+} dilend

@@ -1,0 +1,103 @@
+Generate MCP entry for DIL keyword: stop_fighting
+
+=== Yacc rule ===
+| DILSI_STOPF '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'stop_fighting' not an unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP && $5.typ != DilVarType_e::DILV_NULL)
+    {
+        dilfatal("Arg 2 of 'stop_fighting' not an unitptr or null");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_STOPF);
+    }
+}
+
+=== C implementation ===
+void dilfi_stopf(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("stop_fighting", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 2, DILV_UP, DILV_NULL))
+    {
+        if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
+        {
+            if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
+            {
+                stop_fighting((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
+            }
+            else
+            {
+                stop_fighting((unit_data *)v1->val.ptr, nullptr);
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin raw_kill();
+external
+   unitptr make_corpse(sCorpseLoad : string);
+   remove_aff();
+   death_cry();
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris: string);
+   integer  valid_extra@justice(criminal : unitptr, extra_type : string, juris : string);
+var
+   exd : extraptr;
+   u : unitptr;
+code
+{
+   heartbeat:=3;
+
+   if (self.type==UNIT_ST_PC)
+   {
+      set(self.pcflags,PC_SPIRIT);
+      dilcopy("noaction@death",self);
+      // No such room any more... dilcopy ("death_bell@death("+self.name+")",findroom("moot_nowe@udgaard")); 
+
+      if ("$TOTAL_DEATHS" in self.extra)
+         self.extra.["$TOTAL_DEATHS"].vals.[0]:=self.extra.["$TOTAL_DEATHS"].vals.[0]+1;
+      else
+         addextra(self.extra,{"$TOTAL_DEATHS"},itoa(realtime),{1});
+   }
+
+   sendtext("You are dead. R.I.P.<br/>",self);
+   death_cry();
+
+   exd := self.extra.["$petrify"]; 
+   if (exd)
+   {
+      u := make_corpse("corpse_statue@death");
+      u.spells[SPL_PETRIFY] := atoi(exd.descr);
+      subextra(self.extra, "$petrify");
+   }
+   else
+      make_corpse("corpse@death");
+
+   //Remove extras just Justice DB
+     rem_db_entry@justice(self,"$reward","all");
+
+   stop_fighting(self, null);
+   self.position:=POSITION_DEAD;
+
+   if (self.type==UNIT_ST_NPC)
+      destroy(self);
+   else
+   {
+      remove_aff();
+      // self.weight:=self.baseweight;
+      link(self, findroom("deathseq_room@basis"));
+      dilcopy("death_seq@death", self);
+   }
+   return;
+} dilend

@@ -1,0 +1,180 @@
+Generate MCP entry for DIL keyword: alignment
+
+=== Yacc rule ===
+| DILSF_ALG /* .alignment */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_ALG;
+}
+
+=== C implementation ===
+case DILF_ALG:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        /* sbit16 capacity */
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT2R;
+                        v->ref = unit->getAlignmentPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin recall aware smoke_dil();
+var
+ u : unitptr;
+ i : integer;
+ txt : string;
+code
+{
+ :start:
+interrupt(SFB_CMD,command("smoke")and(activator==self.outside),smoking);
+wait(SFB_CMD,(self.value[1]==1)and(self.equip==WEAR_HOLD));
+ :smokeloop:
+if ((self.value[1]==1)and(not(command("remove"))))
+{
+i:=rnd(1,5);
+heartbeat:=PULSE_SEC*5;
+pause;
+if (i==1)
+{
+sendtext("You inhale deeply the tobacco smoke.<br/>",self.outside);
+act("$1n inhales deeply the tobacco smoke from $1s $2n with every sign "+
+"of enjoyment.",A_HIDEINV,self.outside,self,null,TO_REST);
+}
+if (i==2)
+{
+sendtext("You blow smoke rings in the air.<br/>",self.outside);
+act("$1n blows smoke rings in the air.",
+A_SOMEONE,self.outside,self,null,TO_REST);
+}
+if (i==3)
+{
+sendtext("Puffing energetically on your "+self.name+", you blow a cloud of "+
+"smoke in the air.<br/>", self.outside);
+act("Puffing energetically on $1s $2n, $1n blows a cloud of smoke.",
+A_HIDEINV,self.outside,self,null,TO_REST);
+}
+if (i==4)
+{
+sendtext("You take another puff on your "+self.name+".<br/>",self.outside);
+act("$1n takes another puff on $1s $2n.",
+A_HIDEINV,self.outside,self,null,TO_REST);
+}
+if (i==5)
+{
+sendtext("You enjoy the smoke of your "+self.name+".<br/>",self.outside);
+act("A cloud of tobacco smoke surrounds $1n.",
+A_HIDEINV,self.outside,self,null,TO_REST);
+}
+heartbeat:=PULSE_SEC*20;
+pause;
+goto smokeloop;
+}
+else goto start;
+
+ :smoking:
+/* -------------------- Smoke Social ---------------------- */
+block;
+if (self.value[1]==0)
+{
+sendtext("Light your "+self.name+" first, then smoke it!<br/>",self.outside);
+goto smokeloop;
+}
+
+txt:=argument;
+if ((txt==self.outside.name)or(txt==self.name)or
+((txt=="cigar")and("cigar" in self.name))or
+((txt=="pipe")and("pipe" in self.name)))
+txt:="";
+if (txt=="")
+  {
+ if (rnd(1,3)==1)
+ {
+ sendtext("You puff on your "+self.name+" and blow smoke into "+
+ "the air.<br/>",self.outside);
+ act("$1n puffs on $1s $2N and blows smoke into the air.",
+ A_SOMEONE,self.outside,self,null,TO_REST);
+ goto start;
+ }
+ if (rnd(1,2)==1)
+ {
+ sendtext("You inhale the aromatic smoke deeply.<br/>",self.outside);
+ act("$1n inhales deeply the smoke of $1s $2N.",
+ A_SOMEONE,self.outside,self,null,TO_REST);
+ goto start;
+ }
+ if (rnd(1,2)==1)
+ {
+ sendtext("You blow smoke circles in the air.<br/>",self.outside);
+ act("$1n blows smoke circles in the air.",
+ A_SOMEONE,self.outside,self,null,TO_REST);
+ goto start;
+ }
+ sendtext("You pulse on your "+self.name+".<br/>",self.outside);
+ act("$1n pulses on $1s $2n.",
+ A_SOMEONE,self.outside,self,null,TO_REST);
+ goto start;
+  }
+ if (txt!="")
+ {
+ u:=findunit(self.outside,txt,FIND_UNIT_SURRO,null);
+        if ((u.type==UNIT_ST_PC)and(rnd(1,2)==1))
+         {
+         sendtext("You blow a cloud of smoke in the face of "+u.name+".<br/>",
+         self.outside);
+         act("$1n blows a cloud of tobacco smoke in $3n's face.",
+         A_SOMEONE,self.outside,self,u,TO_NOTVICT);
+         act("$1n blows a cloud of tobacco smoke in your face.",
+         A_SOMEONE,self.outside,self,u,TO_VICT);
+         goto start;
+         }
+        if (u.type==UNIT_ST_PC)
+         {
+         sendtext("You blow a neat smoke ring right at "+u.name+"!<br/>",
+         self.outside);
+         act("$1n blows a neat smoke ring right at $3n.",
+         A_SOMEONE,self.outside,self,u,TO_NOTVICT);
+         act("$1n blows a ring of smoke right in your face.",
+         A_SOMEONE,self.outside,self,u,TO_VICT);
+         goto start;
+         }
+  if (u.type==UNIT_ST_NPC)
+  {
+         sendtext("You blow a cloud of smoke at "+u.title+".<br/>",
+         self.outside);
+         act("$1n blows a cloud of tobacco smoke at $3n.",
+         A_SOMEONE,self.outside,self,u,TO_NOTVICT);
+         act("$1n blows a cloud of tobacco smoke in your face.",
+         A_SOMEONE,self.outside,self,u,TO_VICT);
+   if (u.alignment<0)
+  {
+  exec("growl "+self.outside.name,u);
+  }
+  goto start;
+  }
+ sendtext("No-one here by this name.<br/>",self.outside);
+ }
+goto start;
+} dilend

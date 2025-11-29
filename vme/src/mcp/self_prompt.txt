@@ -1,0 +1,109 @@
+Generate MCP entry for DIL keyword: self
+
+=== Yacc rule ===
+| DILSE_SELF
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_UP;
+    add_ubit8(&($$), DILE_SELF);
+}
+
+=== C implementation ===
+void dilfe_self(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Self */
+
+    v->type = DILV_UP;
+    v->atyp = DILA_NORM;
+    v->val.ptr = p->sarg->owner;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin guardroutine(guardloc : string, dayguard : integer);
+external
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
+var
+   i  : integer;
+   sch : intlist;
+code
+{
+   on_activation((self.position == POSITION_FIGHTING), skip);
+
+   if (dayguard)
+      sch := {5, 18};  // Wake up at 5, go back at 6pm
+   else
+      sch := {17,6};   // Wake up at 17, go home at 6
+
+:start:
+   heartbeat := WAIT_SEC*5;
+   pause;
+   if (mudhour == sch.[0])
+   {
+      DailyRoutine@quests({
+         "wake", 
+         "::descr::A $1N is here heading to work.",
+         "yawn",
+         "say Time to get going guys!", 
+         "::walkto::$2t",
+         "::descr::A $1N is here guarding the gate."
+      }, guardloc);
+   }
+
+   if(mudhour == sch.[1])
+   {
+      i := rnd(1,3);
+      if (i == 1) goto bar1;
+      if (i == 2) goto bar2;
+      if (i == 3) goto bar3;
+      else goto start;
+
+:bar1:
+      pause;
+      DailyRoutine@quests({
+      "::walkto::grunting_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy beer", 
+      "drink beer",
+      "stretch", 
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "yawn",
+      "::descr::A $1N is here resting.",
+      "sleep"
+   }, "");
+   goto start;
+
+   :bar2:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::grub_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy firebreather", 
+      "drink firebreather",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+
+   goto start;
+
+
+   :bar3:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::park_cafe@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy coffee", 
+      "drink coffee",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+   goto start;
+  }
+} dilend

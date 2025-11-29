@@ -1,0 +1,66 @@
+Generate MCP entry for DIL keyword: fname
+
+=== Yacc rule ===
+| DILSF_FNAME /*.filename*/
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_FNAME;
+}
+
+=== C implementation ===
+case DILF_FNAME:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        v->val.ptr = ((zone_type *)v1->val.ptr)->getNamePtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin T015(tstno : integer);
+external
+    logtest(no : integer, ltype : integer, msg : string);
+
+var
+   z : zoneptr;
+code
+{
+    z := zhead();
+
+    if (length(z.fname) < 1)
+        goto failure;
+    
+    goto cleanup;
+
+:failure:
+    logtest(tstno, LOGT_ERROR, ".filename not present");
+    goto cleanup;
+   
+:cleanup:
+    // Naught
+
+:finished:
+    logtest(tstno, LOGT_INFO, "Done");
+    sendtoalldil("done", "labdirector@test");
+    return;
+} dilend

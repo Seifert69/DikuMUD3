@@ -1,0 +1,105 @@
+Generate MCP entry for DIL keyword: name
+
+=== Yacc rule ===
+| DILSF_NAM /* .name */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UEZCP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_NAM;
+}
+
+=== C implementation ===
+case DILF_NAM:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+
+                case DILV_EDP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        if (v1->val.ptr)
+                        {
+                            v->val.ptr = (void *)IF_STR(((extra_descr_data *)v1->val.ptr)->names.Name());
+                        }
+                        else
+                        {
+                            v->val.ptr = (void *)""; // MS2020 SPOOKY? IS THIS RIGHT?IF_STR returns ""
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        v->val.ptr = (void *)IF_STR(((unit_data *)v1->val.ptr)->getNames().Name());
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        v->val.ptr = (void *)((zone_type *)v1->val.ptr)->getName().c_str();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                case DILV_CP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SP;
+                        v->val.ptr = (void *)IF_STR(((command_info *)v1->val.ptr)->cmd_str);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ); /* Do this to activate the DILs */
+   return;
+} dilend

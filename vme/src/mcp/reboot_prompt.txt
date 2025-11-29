@@ -1,0 +1,110 @@
+Generate MCP entry for DIL keyword: reboot
+
+=== Yacc rule ===
+| DILSI_REBOOT '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'reboot' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_REBOOT);
+    }
+
+    /*$$.fst = $2;
+    $$.lst = $2 + 1;
+    wtmp = &tmpl.core[$2];
+    bwrite_ubit8(&wtmp, DILI_REBOOT);*/
+}
+
+=== C implementation ===
+void dilfi_reboot(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("reboot", p, 1, v1, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        dil_getval(v1);
+
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (reboot).", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else
+        {
+            g_mud_shutdown = g_mud_reboot = 1;
+            g_mud_exitcode = v1->val.num; // The exit() code
+        }
+    }
+
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin rebooting(s : string);
+external
+	send_to_world(s : string);
+var
+j : integer;
+u : unitptr;
+str : string;
+i : integer;
+code
+{
+i := atoi(s);
+if (i == 0) goto go_now;
+
+if (i > 1) str := "minutes";
+else str := "minute";
+
+
+/* Only tell the players it will reboot if it's under 20 */
+ if (i < 20)
+ send_to_world("The mud will reboot in "+itoa(i)+" "+str+".</br>");
+
+heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;
+
+while (i > 1)
+{
+ wait(SFB_TICK, TRUE);
+
+ if ((i == 10) or (i == 5))
+ send_to_world("The mud will reboot in "+itoa(i)+" minutes.<br/>");
+
+ i := i - 1;
+}
+
+
+j := SECS_PER_REAL_MIN;
+
+heartbeat := PULSE_SEC;
+
+while (j > 0)
+{
+
+ wait(SFB_TICK, TRUE);
+
+ if (j == 30)
+ send_to_world("The mud will reboot in 30 seconds.<br/>");
+
+ if (j == 10)
+ send_to_world("The mud will reboot in 10 seconds.<br/>");
+
+ j := j - 1;
+}
+
+:go_now:
+send_to_world("Rebooting...<br/>");
+u:=pc_head();
+while (u.type==UNIT_ST_PC)
+{
+u:=u.gnext;
+}
+reboot(0);
+quit;
+} dilend

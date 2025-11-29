@@ -1,0 +1,58 @@
+Generate MCP entry for DIL keyword: bright
+
+=== Yacc rule ===
+| DILSF_BGT /* .bright */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_BGT;
+}
+
+=== C implementation ===
+case DILF_BGT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((unit_data *)v1->val.ptr)->getLightOutput();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin statue_load(pc : unitptr, s : string, i : integer);
+var
+    u : unitptr;
+
+code
+{
+    if (findsymbolic(pc, s, FIND_UNIT_INVEN | FIND_UNIT_EQUIP) == null)
+    {
+        u := load(s);
+        i := dildestroy("randomizeItem@randomt", u);
+        u.cost := 0;
+        u.height := pc.height;
+        link(u, pc);
+        if (i)
+            dilcopy("blowaway@udgaard($1n explodes in a flash of bright yellow light!)", u);
+        
+    }
+    return;
+} dilend

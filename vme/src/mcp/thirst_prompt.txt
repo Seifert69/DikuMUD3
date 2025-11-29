@@ -1,0 +1,148 @@
+Generate MCP entry for DIL keyword: thirst
+
+=== Yacc rule ===
+| DILSF_THR /* .thirst */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_THR;
+}
+
+=== C implementation ===
+case DILF_THR:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT1R;
+                        v->ref = pc->getConditionAtIndexPtr(THIRST);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin recall unique fnpri(FN_PRI_DEATH) death_seq();
+var
+    room:unitptr;
+    i : integer;
+code
+{
+    priority; /* Disable any DILs below this */
+    heartbeat:=3;
+    self.hp  := self.max_hp;
+    heartbeat := PULSE_SEC * 3;
+    sendto("remove kill protection",self);
+    dilcopy("no_kill@function",self);
+
+    act("There is complete silence, you are floating in utter darkness.",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+
+    act("Through the darkness you see a white light in the distance.",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+
+    act("The light grows larger and more intense, it seems to resemble a "+
+        "warrior flying through the darkness.",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+
+    act("The warrior takes your soul, and at that very instant you can see the"+
+        " world around you. You are in the arms of a beautiful Valkyrie, she "+
+        "begins to fly towards the stars.",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+
+    act("The world is rapidly disappearing below you, as the Valkyrie rides "+
+        "towards the stars at an amazing speed.",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+
+    if (self.quests.["New Player Helper"] != null)
+    {
+        act("After a short ride she sets your spirit down inside thew Newbie Guide Respite room "+ // fixed room name from a mispelling and renamed the room - see basis.zon
+        "You slowly regain a more material form.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("$1n enters the castle of Valhalla.",
+            A_ALWAYS, self, null, null, TO_ROOM);
+        link(self, findroom("throne_room2@basis"));
+    }
+    else if (self.alignment>249)
+    {
+        act("After a short ride she sets your spirit down inside Valhalla. You "+
+            "slowly regain a more material form.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("$1n enters the castle of Valhalla.",
+            A_ALWAYS, self, null, null, TO_ROOM);
+        link(self, findroom("heaven_entry@basis"));
+    }
+    else if (self.alignment<-249)
+    {
+        act("After a short ride she throws you down into the pits of hell.  You "+
+          "slowly regain a more material form instantly feeling the heat.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+        act("$1n enters the pits of hell.",
+          A_ALWAYS, self, null, null, TO_ROOM);
+        link(self, findroom("hell_entry@basis"));
+    }
+    else
+    {
+        act("After a short ride she lets your spirit drift into the astral planes."+
+        "You slowly regain your senses.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("$1n floats into the astral planes.",
+            A_ALWAYS, self, null, null, TO_ROOM);
+        link(self, findroom("entry1@basis"));
+    }
+
+    i:=dildestroy("noaction@death",self);
+    self.hp:=self.max_hp;
+    self.endurance:=self.max_endurance;
+    self.mana:=self.max_mana;
+    self.full:=24;
+    self.thirst:=24;
+
+    self.position := POSITION_RESTING;
+
+    if (self.level<=5)
+      heartbeat:=PULSE_SEC*45;
+    else if (self.level<25)
+      heartbeat:=PULSE_SEC*120;
+    else
+      heartbeat:=PULSE_SEC*180;
+
+    pause;
+    act("You feel strange.", A_ALWAYS,self,null,null,TO_CHAR);
+    act("$1n shimmers and vanishes.", A_ALWAYS,self,null,null,TO_REST);
+
+    unset(self.pcflags,PC_SPIRIT);
+    unset(self.charflags,CHAR_KILL_SELF);
+    room:=findroom(self.hometown);
+    if (room!=null)
+      link (self,findroom(self.hometown));
+    else
+      link (self,findroom("temple@udgaard"));
+    dilcopy ("piunwizinv@death()",self);
+    exec("look",self);
+    return;
+} dilend

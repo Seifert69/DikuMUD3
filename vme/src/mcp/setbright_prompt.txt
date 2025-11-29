@@ -1,0 +1,74 @@
+Generate MCP entry for DIL keyword: setbright
+
+=== Yacc rule ===
+| DILSI_SBT '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of setbright", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'setbright' not an unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'setbright' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SBT);
+    }
+}
+
+=== C implementation ===
+void dilfi_sbt(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    int dif = 0;
+
+    if (dil_type_check("setbright", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
+        if (v1->val.ptr)
+        {
+            dif = v2->val.num - ((unit_data *)v1->val.ptr)->getLightOutput();
+
+            modify_bright((unit_data *)v1->val.ptr, dif);
+        }
+    }
+
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin integer enc_light(u : unitptr, bonuslvl : integer, data : string);
+external
+    integer successroll(il : intlist, rollskew : integer);
+    identify(u :unitptr, norm : string, improved: string);
+var
+    i : integer;
+code
+{
+    if (bonuslvl > 7)
+    {
+        bonuslvl := 7;
+        log("enc_light bonuslvlifier too large ");
+    }
+    if (bonuslvl < -7)
+    {
+        bonuslvl := -7;
+        log("enc_light bonuslvlifier too small ");
+    }
+
+    i := successroll({50, 80, 95}, bonuslvl*5);
+
+    if (i == 0)
+        return(1);
+
+    setbright(u, i); // 0..3
+    identify(u, "Emits a magical light.", "Emits a magical light +" + itoa(i) +".");
+
+    return (1);
+} dilend

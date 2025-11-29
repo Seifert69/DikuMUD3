@@ -1,0 +1,183 @@
+Generate MCP entry for DIL keyword: purse
+
+=== Yacc rule ===
+| DILSE_PURS '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'purse' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'purse' not a string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_PURS);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_purs(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr)
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_SP:
+                        if ((!v2->val.ptr) || (!*((char *)v2->val.ptr)))
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                        else
+                        {
+                            int i = 0;
+
+                            v->val.num = 0;
+
+                            for (i = 0; i <= MAX_MONEY; i++)
+                            {
+                                if (strcmp((char *)v2->val.ptr, g_money_types[i].abbrev) == 0)
+                                {
+                                    break;
+                                }
+                            }
+
+                            if (i <= MAX_MONEY)
+                            {
+                                /* Note down money-objects in from, and their values */
+                                for (unit_data *tmp = ((unit_data *)v1->val.ptr)->getUnitContains(); tmp; tmp = tmp->getNext())
+                                {
+                                    if (IS_MONEY(tmp) && MONEY_TYPE(tmp) == i)
+                                    {
+                                        v->val.num = MONEY_AMOUNT(tmp);
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case DILV_FAIL:
+                    case DILV_NULL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin prg4();
+var
+	pc : unitptr;
+   gift: unitptr;
+    i  : integer;
+    il : intlist;
+	buf : string;
+	sl  : stringlist;
+   gift1 : string;
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("bag" in argument)or
+	("box" in argument)or("treat" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+	  block;
+	  if (self.outside != activator)
+{
+      act("You must pick me up before opening me. DOH!",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+goto start;
+}		  
+  unset(self.openflags, EX_CLOSED);
+    	  goto trap;
+    }
+:lost:
+act("<div class='cpr'>A possible 500000 gold disappears forever!</div><div class='default'></div>",
+A_SOMEONE, self, null, pc, TO_ALL);
+destroy(self);
+
+:trap:
+      act("The bag rustles as you open it.",
+          A_ALWAYS, pc, null, null, TO_ALL);
+       act("There is money inside - check your purse!",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+on rnd(0,4) goto load_1, load_2, load_3, load_4, load_5;
+:load_1:
+gift := load("pcoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_2:
+     gift := load("icoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_3:
+     gift := load("gcoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_4:
+     gift := load("scoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_5:
+     gift := load("ccoins@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	  
+	  
+
+} dilend

@@ -1,0 +1,175 @@
+Generate MCP entry for DIL keyword: strcmp
+
+=== Yacc rule ===
+| DILSE_STRCMP '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'strcmp' not string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'strcmp' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_STRCMP);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_strcmp(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* String equal operator */
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v2))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_SP:
+            v->type = DILV_INT;
+            break;
+        case DILV_NULL:
+            v->type = DILV_NULL; /* null pointer */
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            if (v->type != DILV_ERR)
+            {
+                v->type = DILV_FAIL;
+            }
+            break;
+        case DILV_SP:
+            break;
+        case DILV_NULL:
+            if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
+                v->type = DILV_NULL; /* null pointer */
+            }
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    switch (v->type)
+    {
+        case DILV_INT:
+            v->atyp = DILA_NONE;
+            v->val.num = strcmp((char *)v1->val.ptr, (char *)v2->val.ptr);
+            break;
+        case DILV_NULL:
+            v->atyp = DILA_NONE;
+            v->type = DILV_INT;
+            v->val.num = FALSE;
+            break;
+        default:
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin aware do_password(arg:string);
+var
+   prmt:string;
+   firstpwd:string;
+   i:integer;
+   tlist:stringlist;
+
+code
+{
+   if (excmdstr != "password")
+   {
+      sendtext ("You must type 'password', no less to be able to set your password!<br/>",self);
+      quit;
+   }
+
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   arg:="";
+   prmt:=self.prompt;
+   self.prompt:="Enter new password:  ";
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
+
+   wait(SFB_CMD, self==activator);
+   block;
+   tlist := getwords (excmdstr_case);
+
+   if (length(tlist) > 1)
+   {
+      sendtext ("Password must be only one word.  Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy("send_prompt@update",self);
+      quit;
+   }
+
+   if (length(excmdstr_case) < 5)
+   {
+      sendtext ("Password to short. Password must be 5 characters or longer.  Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy("send_prompt@update",self);
+      quit;
+   }
+
+   if (length(excmdstr_case) > 16)
+   {
+      sendtext ("Password to long. Try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy ("send_prompt@update",self);
+      quit;
+   }
+
+	firstpwd:=excmdstr_case;
+	self.prompt:="Enter password again:  ";
+
+   wait (SFB_CMD,self==activator);
+   block;
+
+   if (strcmp(excmdstr_case,firstpwd)!=0)
+   {
+      sendtext ("Passwords do not match try again.<br/>",self);
+      self.prompt:=prmt;
+      i:=dildestroy("send_prompt@update",self);
+      dilcopy ("send_prompt@update",self);
+      quit;
+   }
+
+   set_password(self,excmdstr_case);
+   sendtext ("Password Changed.<br/>",self);
+   self.prompt:=prmt;
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
+   quit;
+} dilend

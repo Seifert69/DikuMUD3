@@ -1,0 +1,301 @@
+Generate MCP entry for DIL keyword: paycheck
+
+=== Yacc rule ===
+| DILSE_PCK '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'paycheck' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'paycheck' not a unitptr");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_PCK);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_pck(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    // Don't evaluate in case accounting is off. Evaluating might fail
+    // and lead to undesired results.
+    if (g_cServerConfig.isAccounting() == false)
+    {
+        v->val.num = 1;
+    }
+    else
+    {
+        switch (dil_getval(v1))
+        {
+            case DILV_FAIL:
+            case DILV_NULL:
+                v->type = DILV_FAIL;
+                break;
+            case DILV_UP:
+                if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+                {
+                    v->type = DILV_FAIL;
+                }
+                else
+                {
+                    switch (dil_getval(v2))
+                    {
+                        case DILV_FAIL:
+                        case DILV_NULL:
+                            v->type = DILV_FAIL;
+                            break;
+                        case DILV_UP:
+                            if (!v2->val.ptr)
+                            {
+                                v->type = DILV_FAIL;
+                            }
+                            else
+                            {
+                                v->val.num = pay_point_charlie((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr);
+                            }
+                            break;
+                        default:
+                            v->type = DILV_ERR;
+                            break;
+                    }
+                }
+
+                break;
+            default:
+                v->type = DILV_ERR;
+                break;
+        }
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin self_walk(mover : unitptr, direc : integer, arg : string, follows : integer);
+external
+   look_blank@baselook(l1 : unitptr, str12 : string);
+   move_follower(u3 : unitptr, d3 : integer, u4 : unitptr, arg34 : string);
+   unitptr unit_room@function(unit1 : unitptr);
+   integer is_hidden(unit2 : unitptr, int1 : integer, room2 : unitptr);
+   integer movementloss(int2 : integer);
+   show_lv_walk(unit5 : unitptr, int5 : integer, room5 : unitptr);
+   show_ar_walk(unit6 : unitptr, int6 : integer, room6 : unitptr);
+   string  dirstring@function(int123 : integer);
+   integer issetclimb@function(d:integer);
+
+var
+   room_in               :  unitptr;
+   room_going            :  unitptr;
+   pc_fol                :  unitptr;
+   old_pc                :  unitptr;
+   mu                    :  unitptr;
+   exit_hidden           :  integer;
+   exit_descr            :  extraptr;
+   dirlist               :  stringlist;
+   opplist               :  stringlist;
+   test                  :  integer;
+   end_need              :  integer;
+   text                  :  string;
+   res                   :  integer;
+
+code
+{
+   room_in :=unit_room@function(mover);
+
+   /* Issue the command() stuff so that all movers send the command "north" etc to the mud.
+      This is necessary for dils like the guard dil. */
+
+   text := dirstring@function(direc);
+
+   if (follows)
+      res := send_pre(text, mover, null, null, 0, arg, null);
+   else
+      res := SFR_SHARE;
+
+   room_going := unit_room@function(mover);    /* This will be redefined, just want to use it to save creating another var*/
+
+   if ((res != SFR_SHARE) or (room_in != room_going))
+      return;
+
+   if (not room_in.exit_to[direc])
+   {
+      act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   test := is_hidden(mover, direc, room_in);
+   if ((isset(room_in.exit_info[direc], EX_CLOSED)) and (test))
+   {
+      act("Alas, you cannot go that way...", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   if (isset(room_in.exit_info[direc], EX_CLOSED))
+   {
+      act("The $2t seems to be closed.", A_SOMEONE, mover, room_in.exit_names[direc].[0], null, TO_CHAR);
+      return;
+   }
+
+   if (issetclimb@function(direc))
+   {
+      act("Alas, you must climb to go that way.", A_SOMEONE, mover, null, null, TO_CHAR);
+      return;
+   }
+
+   room_going := room_in.exit_to[direc];
+
+   if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
+      return;
+
+  /* Swimming Code : We are finally going to allow players to use that 100% swimming skill.
+     every movement will cost 50 points of endurance (unless the IS_FISH_NAME extra is found, then it is 1)
+     and also there will be a skill check to determine if there is drowning damage. If
+ 	  it can use water or land it will use the is-amphib extra Darg added */
+
+   if ((room_going.movement == SECT_WATER_SAIL) or (room_in.movement == SECT_WATER_SAIL))
+   {
+      if ((not mover.extra.[SWIM_ON_NAME]) and ((not mover.extra.[IS_FISH_NAME]) or (not mover.extra.[IS_AMPHIB_NAME])))
+      {
+         act("You might want to swim or get a boat.", A_ALWAYS, mover, null, null, TO_CHAR);
+         return;
+      }
+      
+    if ((mover.type == UNIT_ST_NPC) and (mover.race >=RACE_ARTHROPODA_MIN) and (mover.race <=RACE_ARTHROPODA_MAX))
+	   goto insect;
+
+    if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_FISH_NAME]))
+	   goto fish;
+
+	if ((mover.type == UNIT_ST_NPC) and (mover.extra.[IS_AMPHIB_NAME]))
+	   goto amphib;
+
+
+    if (mover.type == UNIT_ST_PC)
+       test := openroll(5,100) + mover.skills[SKI_SWIMMING] + mover.abilities[ABIL_CON] - 100;
+
+    else
+       test := openroll(5,100) + mover.abilities[ABIL_CON] + mover.abilities[ABIL_DEX] - 100;
+
+    if (test < 0)
+       {act ("As you try to swim, you flounder and take in water!", A_ALWAYS, mover, null, null, TO_CHAR);
+        act ("$1n tries to swim, but flounders and takes in water!", A_ALWAYS, mover, null, null, TO_REST);
+        mover.hp := mover.hp - rnd(10,50);
+        position_update(mover);
+        return;
+       }
+   }
+else if (mover.extra.[IS_FISH_NAME])   /* If the mover is a fish, then we dont want them walking on land */
+     return;
+
+
+end_need := movementloss(room_in.movement);
+test := movementloss(room_going.movement);
+
+end_need := (end_need + test) / 2;
+
+if ((mover.extra.[IS_FISH_NAME]) and (end_need > 1))
+   end_need := 1;
+
+if ((mover.endurance - end_need < 0) and (not follows))
+   {act("You are too exhausted to move.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+else if (mover.endurance - end_need < 0)
+   {act("You are too exhausted to follow.", A_SOMEONE, mover, null, null, TO_CHAR);
+    return;
+   }
+/* MS2020 MOVED THIS TO ENTANGLED_2 darg added to block movement while entangled 
+ if ((mover.type == UNIT_ST_PC)and (dilfind ("entangled@spells", mover)) and (follows))
+   {
+   act("The vines prevent you from moving you best inform your group!", A_ALWAYS, mover, null, null, TO_CHAR);
+  return;
+       } */
+
+
+:amphib:
+    if ((mover.race >=RACE_ARTHROPODA_MIN)
+	and (mover.race <=RACE_ARTHROPODA_MAX))
+{
+ if (mover.endurance <= 10)
+ { mover.endurance := mover.max_endurance;
+   position_update(mover);
+ }
+  mover.endurance := mover.endurance - rnd(1,5);
+  position_update(mover);
+}
+
+:insect:
+if (mover.extra.[IS_AMPHIB_NAME])
+{
+ if (mover.endurance <= 10)
+ { mover.endurance := mover.max_endurance;
+   position_update(mover);
+ }
+  mover.endurance := mover.endurance - rnd(1,5);
+  position_update(mover);
+}
+
+:fish:
+/* OK, the person can move, so we now do the movement and check for followers. */
+
+dirlist := {"north","east","south","west","up","down",
+            "northeast", "northwest","southeast","southwest"};
+
+
+
+if (follows)
+  act("You follow $2n.", A_ALWAYS, mover, mover.master, null, TO_CHAR);
+
+show_lv_walk(mover, direc, room_in);    /* Show the leaving acts */
+
+if (mover.level < IMMORTAL_LEVEL)                      /* If not an immortal */
+      mover.endurance := mover.endurance - end_need;   /* drain endurance and do the move */
+
+link(mover, room_going);
+
+show_ar_walk(mover, direc, room_going);   /* show arrival acts */
+
+look_blank@baselook(mover, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
+                                  /* to check the player for PC_BRIEF flag */
+
+if (room_going == room_in)             /* This is here to keep infinite loops from happening when rooms */
+   return;                             /* link back on themselves */
+
+
+send_done (dirlist.[direc], mover, null, null, 0, "", null, CMD_AUTO_NONE);
+
+/* Using the new getfollower and followercount, we have replaced the cumbersome
+   code with a sleek coding that should be much faster.
+*/
+
+text := dirstring@function(direc);
+
+if (mover.followercount > 0)                    /* If mover has followers, then check the room for them*/
+    move_follower(mover, direc, room_in, arg);
+
+return;
+
+} dilend

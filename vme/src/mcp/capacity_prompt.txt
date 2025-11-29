@@ -1,0 +1,410 @@
+Generate MCP entry for DIL keyword: capacity
+
+=== Yacc rule ===
+| DILSF_CAP /* .capacity */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_CAP;
+}
+
+=== C implementation ===
+case DILF_CAP:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        /* sbit16 capacity */
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT2R;
+                        v->ref = unit->getCapacityPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin auction();
+var
+        pc         : unitptr;
+        item       : unitptr;
+        bitem      : unitptr;
+        items      : unitptr;
+        bidmult    : integer;
+        firstbid   : integer;
+        bidstr     : string;
+        seller     : unitptr;
+        bidder     : unitptr;
+        raise      : integer;
+        t          : integer;
+        cont       : unitptr;
+        price      : integer;
+        l          : integer;
+        alist      : stringlist;
+        owner      : string;
+		bname:string;
+		sname:string;
+		temp2:string;
+		temp:string;
+code
+{
+heartbeat:= PULSE_SEC * 10;
+  on_activation((self.position <= POSITION_SLEEPING) or
+               (self.position == POSITION_FIGHTING), skip);
+
+:start:
+
+
+  wait(SFB_CMD, (command("auction") or command("bid") or command("list"))
+and (activator.type == UNIT_ST_PC));
+  block;
+  pc := activator;
+  secure(pc,lost);
+
+if(command("auction"))
+{
+  cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+   if(cont == null)
+    {
+     exec("say I can't take your item right now.", self);
+     goto lost;
+    }
+if(("platinum" in argument) or ("gold" in argument) or
+   ("silver" in argument) or ("copper" in argument) or
+   ("iron" in argument))
+     {
+      exec("say What do I look like, a bank?  Items ONLY.", self);
+      goto lost;
+     }
+temp:=argument;
+item:= findunit(pc, temp, FIND_UNIT_INVEN, null);
+temp:=argument;
+    if(item == null)
+      {
+        exec("say You don't have anything like that, "+pc.name+".", self);
+        goto lost;
+      }
+    if(item.type != UNIT_ST_OBJ)
+      {
+        exec("say I only auction items, pal.", self);
+        goto lost;
+      }
+exec("say You're sure you want to auction off "+item.title+",
+"+pc.name+"?", self);
+wait(SFB_DONE, (command("nod") or command("shake")) and (pc ==
+activator));
+pc:= activator;
+  if(command("shake"))
+     {
+      exec("say Fine.  Make up your mind already.", self);
+      goto lost;
+     }
+  if(command("nod"))
+   {
+cont:= findunit(self, "auccont", FIND_UNIT_SURRO, null);
+temp2:=temp;
+item:= findunit(pc,temp, FIND_UNIT_INVEN, null);
+temp:=temp2;
+   if((cont.weight + item.weight) > cont.capacity)
+    {
+     exec("say Sorry, I'm out of free space in here.", self);
+     exec("shrug", self);
+     goto lost;
+    }
+      link(item, cont);
+      addstring(item.names, pc.name);
+    act("$1n tags the item and puts it on one of the shelves.", A_ALWAYS,
+self, null, pc, TO_VICT);
+    act("$1n tags the item and puts it on one of the shelves.", A_ALWAYS,
+self, null, pc, TO_NOTVICT);
+goto lost;
+   }
+}
+if(command("bid"))
+{
+temp:=argument;
+bidder:= pc;
+bname:=bidder.name;
+:begin:
+cont:= findunit(self, "auccont", FIND_UNIT_SURRO, null);
+   if(cont == null)
+    {
+     exec("say I can't take your request right now.", self);
+     goto lost;
+    }
+cont:= findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto foundit;
+        }
+      bitem := (bitem.next);
+     }
+      exec("say I don't have anything like that up for auction.", self);
+      goto lost;
+:foundit:
+alist:=bitem.names;
+if (bname==alist.[length(alist)-1])
+{
+exec ("say you can't bid on something your selling "+bname+", please have patience I will sell it if I can.",self);
+goto lost;
+}
+exec("say You wish to bid on "+bitem.title+", "+bname+"?", self);
+   wait(SFB_DONE, (command("nod") or command("shake")) and (bname
+== activator.name));
+    bidder := activator;
+
+if(command("shake"))
+{
+  exec("say Fine then.  Come back when you know what you want to buy.",
+self);
+  goto lost;
+}
+if(command("nod"))
+{
+cont:= findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto findowner;
+        }
+      bitem := (bitem.next);
+     }
+:findowner:
+      l := 0;
+      alist := bitem.names;
+      while(alist.[l] != "")
+       {
+        l := l + 1;
+       }
+      owner := alist.[l - 1];
+
+  seller := findunit(self, owner, FIND_UNIT_SURRO, null);
+   if(seller == null)
+    {
+     exec("say The one who gave me this item isn't here.  Can't do "+
+          "an auction without that person.", self);
+     goto lost;
+    }
+sname:=seller.name;
+     cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto booty;
+        }
+      bitem := (bitem.next);
+     }
+
+:booty:
+exec("say "+sname+", how much do you wanna auction this for?  "+
+     "Say something like '10 silver' or '100 gold'.", self);
+  wait(SFB_DONE, command("say") and (sname == activator.name));
+    price := atoi(argument);
+if(price <= 0)
+ {
+  exec("say Look, I don't just give this stuff away.  I need a "+
+       "price to start with.", self);
+  pause;
+  goto booty;
+ }
+if("platinum" in argument)
+ {
+  bidmult := 40960;
+  goto cont;
+ }
+if("gold" in argument)
+ {
+  bidmult := 5120;
+  goto cont;
+ }
+if("silver" in argument)
+ {
+  bidmult := 640;
+  goto cont;
+ }
+if("copper" in argument)
+ {
+  bidmult := 80;
+  goto cont;
+ }
+if("iron" in argument)
+ {
+  bidmult := 10;
+  goto cont;
+ }
+exec("say Um, "+itoa(price)+" what?  Oranges?  Mumak furs?", self);
+exec("sigh", self);
+goto booty;
+
+:cont:
+firstbid:= price;
+bidstr:= moneystring((price*bidmult), 1);
+exec("emote steps up to the podium.", self);
+     cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto bootsy;
+        }
+      bitem := (bitem.next);
+     }
+:bootsy:
+exec("say Folks, up for bidding now is this fine example of "+bitem.title+
+     ".  The bidding will start at "+bidstr+".   Just NOD, folks,"+
+     " if you want to match the bid.", self);
+exec("say "+sname+", you can SHAKE at any time to accept the most "+
+     "recent bid.", self);
+
+:bidding:
+  wait(SFB_DONE, (command("nod") or command("shake")) and
+(activator.type == UNIT_ST_PC));
+  pc := activator;
+if(command("nod"))
+ {
+  if(activator.name == sname)
+   {
+    goto bidding;
+   }
+  bidder := pc;
+  bname := bidder.name;
+  goto match;
+ }
+if(command("shake"))
+ {
+  if(activator.name != sname)
+   {
+    goto bidding;
+   }
+  seller := pc;
+  goto sold;
+ }
+goto bidding;
+
+:match:
+exec("say I hear "+bidstr+" from "+bname+".", self);
+raise:= 5;
+price:= (price + raise);
+bidstr:= moneystring((price*bidmult), 1);
+exec("say Do I hear "+bidstr+"?  NOD to match, folks.", self);
+goto bidding;
+
+:sold:
+ {
+     cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto butsy;
+        }
+      bitem := (bitem.next);
+     }
+:butsy:
+if(price == firstbid)
+ {
+  exec("say Sorry, "+sname+", but it looks like nobody wants "+
+       "to buy "+bitem.title+".", self);
+  goto lost;
+ }
+price:= (price - raise);
+bidstr:= moneystring((price*bidmult), 1);
+temp2:=bname;
+bidder:= findunit(self, temp2, FIND_UNIT_SURRO, null);
+  if(bidder == null)
+   {
+    exec("say Look at that, "+bname+" left.  What a jerk!", self);
+    goto lost;
+   }
+   temp2:=sname;
+seller:= findunit(self, temp2, FIND_UNIT_SURRO, null);
+  if(seller == null)
+   {
+    exec("say Look at that, "+sname+" left.  What a jerk!", self);
+    goto lost;
+   }
+
+  t := transfermoney(bidder, seller, (price*bidmult));
+   if(t == FALSE)
+    {
+     exec("say Hey, "+bidder.name+", you don't have enough money!  Get "+
+          "out of my sight!", self);
+     goto lost;
+    }
+  exec("say Sold to "+bidder.name+" for "+bidstr+"!", self);
+
+     cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+     bitem := cont.inside;
+     while(bitem)
+     {
+       if(temp in bitem.names)
+        {
+         goto botsy;
+        }
+      bitem := (bitem.next);
+     }
+:botsy:
+link(bitem, bidder);
+act("Roland exchanges the money and the item.", A_ALWAYS, self, null, null,
+TO_ALL);
+goto lost;
+}
+}
+}
+
+if(command("list"))
+ {
+  cont := findunit(self, "auccont", FIND_UNIT_SURRO, null);
+   if(cont == null)
+    {
+     exec("say I can't take your request right now.", self);
+     goto lost;
+    }
+act("Items up for auction:", A_ALWAYS, self, null, pc, TO_VICT);
+   items := cont.inside;
+    if(items == null)
+     {
+      act("Nothing.", A_ALWAYS, self, null, pc, TO_VICT);
+      goto lost;
+     }
+    while(items)
+     {
+	 alist:=items.names;
+	 log ("Fucking length:  ");
+	 log (itoa(length(alist)));
+      owner := alist.[length(alist)-1];
+      act(""+items.title+" ("+owner+")", A_ALWAYS, self, null, pc,
+TO_VICT);
+      items := items.next;
+     }
+ }
+:lost:
+unsecure(pc);
+goto start;
+} dilend

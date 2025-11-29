@@ -1,0 +1,132 @@
+Generate MCP entry for DIL keyword: isaff
+
+=== Yacc rule ===
+| DILSE_ISA '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'isaff' not a unit");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'isaff' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_ISA);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_isa(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Test if unit is affected by affect */
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (v1->val.ptr)
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_INT:
+                        v->atyp = DILA_NONE;
+                        v->val.num = (affected_by_spell((unit_data *)v1->val.ptr, v2->val.num) != nullptr);
+                        break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR; /* wrong type */
+                        break;
+                }
+            }
+            else
+            {
+                v->type = DILV_FAIL;
+            }
+            break;
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin fido();
+var
+  i : unitptr;
+
+code
+{
+   on_activation(self.position <= POSITION_SLEEPING, skip);
+
+   heartbeat := PULSE_SEC*15;
+
+   :loop:
+   pause;
+
+   foreach (UNIT_ST_PC | UNIT_ST_NPC | UNIT_ST_OBJ, i)
+   {
+      if (i != self)
+      {
+         if (i.type == UNIT_ST_OBJ)
+         {
+            if ((i.objecttype == ITEM_CONTAINER) and isaff(i, ID_CORPSE))
+            {
+               act("$1n savagely devour $2n.",
+               A_SOMEONE, self, i, null, TO_ROOM);
+
+               while (i.inside)
+               link(i.inside, i.outside);
+
+               destroy(i);
+               goto loop;
+            }
+         }
+         else if (rnd(0,1000) == 0)  /* Make it RARE */
+         {
+            on rnd(1,3) goto c1, c2, c3;
+
+            :c1:
+            exec("fart", self);
+            goto loop;
+
+            :c2:
+            exec("drool", self);
+            goto loop;
+
+            :c3:
+            act("$1n wets on $3n.",
+            A_SOMEONE, self, null, i, TO_NOTVICT);
+            act("$1n wets on you! Eeewww!",
+            A_SOMEONE, self, null, i, TO_VICT);
+            goto loop;
+         }
+      }
+   }
+} dilend

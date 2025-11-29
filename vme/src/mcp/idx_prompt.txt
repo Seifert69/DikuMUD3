@@ -1,0 +1,246 @@
+Generate MCP entry for DIL keyword: idx
+
+=== Yacc rule ===
+| DILSF_IDX /* .idx */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_SID;
+}
+
+=== C implementation ===
+case DILF_IDX:
+            v2 = p->stack.pop();
+
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
+                case DILV_SP:
+                case DILV_SLP:
+                    if (v1->val.ptr)
+                    {
+                        v->type = DILV_SP;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* NULL list */
+                    }
+                    break;
+                case DILV_ILP:
+                    if (v1->val.ptr)
+                    {
+                        v->type = DILV_INT;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* NULL list */
+                    }
+                    break;
+                case DILV_EDP:
+                    if (v1->val.ptr)
+                    {
+                        v->type = DILV_EDP;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                case DILV_SP:
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+            }
+
+            if (v->type == DILV_INT)
+            {
+                if (((sbit32)v2->val.num < ((cintlist *)v1->val.ptr)->Length()) && (v2->val.num >= 0))
+                {
+                    v->atyp = DILA_NONE; // Dont dealloc!
+                    v->type = DILV_SINT4R;
+                    v->ref = (((cintlist *)v1->val.ptr)->ValuePtr(v2->val.num));
+                }
+                else
+                {
+                    v->type = DILV_FAIL; /* illegal index */
+                }
+            }
+            else if (v->type == DILV_EDP)
+            {
+                v->atyp = DILA_NORM;
+                v->type = DILV_EDP;
+                if (v1->val.ptr)
+                {
+                    v->val.ptr = ((extra_descr_data *)v1->val.ptr)->find_raw(skip_spaces((char *)v2->val.ptr));
+                }
+                else
+                {
+                    v->val.ptr = nullptr;
+                }
+            }
+            else if (v->type == DILV_SP)
+            {
+                if (dil_getval(v1) == DILV_SP)
+                {
+                    if ((v2->val.num >= 0) && (v2->val.num < (int)strlen((char *)v1->val.ptr)))
+                    {
+                        v->atyp = DILA_EXP;
+                        v->type = DILV_SP;
+                        v->val.ptr = (char *)malloc(2);
+                        ((char *)v->val.ptr)[0] = ((char *)v1->val.ptr)[v2->val.num];
+                        ((char *)v->val.ptr)[1] = 0;
+                    }
+                    else
+                    {
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                                 "DIL %s %s@%s, index of stringlist out of bounds: %d\n",
+                                 p->sarg->owner->getFileIndexSymName(),
+                                 p->fp->tmpl->prgname,
+                                 p->fp->tmpl->zone->getName(),
+                                 v2->val.num);
+
+                        v->type = DILV_FAIL;
+                    }
+                }
+                else
+                {
+                    v->atyp = DILA_EXP;
+
+                    if (((ubit32)v2->val.num < ((cNamelist *)v1->val.ptr)->Length()) && (v2->val.num >= 0))
+                    {
+                        v->atyp = DILA_NONE; // Dont dealloc!
+                        v->type = DILV_HASHSTR;
+                        v->ref = ((cNamelist *)v1->val.ptr)->InstanceName(v2->val.num);
+                    }
+                    else
+                    {
+                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                                 "DIL %s %s@%s, index of stringlist out of bounds: %d\n",
+                                 p->sarg->owner->getFileIndexSymName(),
+                                 p->fp->tmpl->prgname,
+                                 p->fp->tmpl->zone->getName(),
+                                 v2->val.num);
+                        v->type = DILV_FAIL; /* illegal index */
+                    }
+                }
+            }
+            else
+            {
+                v->type = DILV_FAIL; /* illegal index */
+            }
+            break;
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
+external
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type : integer);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris : string);
+   getfrom_safe(prisoner : unitptr);
+   set_char_flags@justice(char : unitptr, setting : string);
+var
+   sname : string;
+   jd : unitptr;
+   id : string;
+   juris : string; 
+   k : string;
+   gold : integer;
+   g : string;
+code
+{
+   heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
+   juris := self.outside.zoneidx;
+   sname := self.outside.symname; // Get the jail symname
+
+   jd := findsymbolic("database@justice");
+   id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+   k := "$reward "+ juris;
+     
+   // Change player arrest descr to reflect that the char is in jail.
+   //
+   jd := findsymbolic("database@justice");
+   
+   if( "$reward" in self.extra)
+   {
+      jd.extra.[id].names.[4] := "-1";
+      self.extra.[k].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+   }
+
+ 
+  :loop:
+   pause;
+   if (sname != self.outside.symname)
+   {
+      // Player has escaped from jail
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "65";
+      self.extra.[k].names.[4] := "65";
+      gold := atoi(jd.extra.[id].names.[2]); 
+      g := moneystring(gold,1); 
+      jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
+      set_char_flags@justice(self, "wanted");
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
+      quit;
+   }
+
+   if("$reward" in self.extra)
+   {
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
+   }
+
+   if ((du % 4) == 0)
+     send("jailfood");
+
+   if (du == 24)
+   {
+      act("At last! The very last day of your term!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du == 12)
+   {
+      act("Only half a day left 'till your freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du <= 1)
+     goto release;
+   else
+   {
+      act("You make another mark on the wall. Only "+itoa(du)+" hours till freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   
+   du := du - 1;
+   goto loop;
+
+
+   /* Get thrown out of jail */
+   :release:
+   act("Your term is over! You are thrown out of the jail and sent home.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   getfrom_safe(self);
+   link(self, findroom("accuse_room@" + juris));
+   rem_db_entry@justice(self, "$reward", juris);
+   set_char_flags@justice(self, "arrest");
+   quit;
+} dilend

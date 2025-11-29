@@ -1,0 +1,66 @@
+Generate MCP entry for DIL keyword: addequip
+
+=== Yacc rule ===
+| DILSI_EQP '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 1 of addequip", $3.boolean);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'addequip' not a unit");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'addequip' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_EQP);
+    }
+}
+
+=== C implementation ===
+void dilfi_eqp(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))
+        {
+            /* Then equip char */
+            equip_char(unit->getUnitIn(), unit, v2->val.num);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ); /* Do this to activate the DILs */
+   return;
+} dilend

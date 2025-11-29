@@ -1,0 +1,108 @@
+Generate MCP entry for DIL keyword: clone
+
+=== Yacc rule ===
+| DILSE_CLONE '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'clone' not unit pointer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_UP;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_CLONE);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_clone(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Load a unit from database */
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_UP:
+            if (v1->val.ptr)
+            {
+                v->val.ptr = ((unit_data *)v1->val.ptr)->copy();
+                if (v->val.ptr)
+                {
+                    unit_to_unit((unit_data *)v->val.ptr, p->sarg->owner);
+                    dil_loadtime_activate((unit_data *)v->val.ptr);
+                    v->atyp = DILA_NORM;
+                    v->type = DILV_UP;
+                }
+                else
+                {
+                    v->type = DILV_NULL; /* Unit not found */
+                }
+            }
+            else
+            {
+                v->type = DILV_FAIL; /* NULL string */
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin not_used(arg : string);
+code
+{
+   // The functions in comments here have not been used in any DIL program.
+   // I suppose they're considered obsolete until someone needs them
+   // and they get tested.
+   //
+   // buf := getcolor("&br"); -- NOT USED ANYWHERE
+   // buf := addcolor(); --NOT USED ANYWHERE
+   // buf := delcolor(); --NOT USED ANYWHERE
+   // buf := changecolor(); --NOT USED ANYWHERE
+   // buf := getcmd(); --NOT USED ANYWHERE
+   // buf := clone(); --NOT USED ANYWHERE
+   // buf := global_head(); --NOT USED ANYWHERE
+   // buf := obj_head(); --NOT USED ANYWHERE
+   // buf := npc_head(); --NOT USED ANYWHERE
+   // buf := room_head(); --NOT USED ANYWHERE
+   // buf := zone_head(); --NOT USED ANYWHERE
+   // buf := command_head(); --NOT USED ANYWHERE
+   // buf := strncmp(); --NOT USED ANYWHERE
+   // buf := check_password(); --NOT USED ANYWHERE
+   // buf := acc_total(); --NOT USED ANYWHERE
+   // buf := loglevel(); --NOT USED ANYWHERE
+   // buf := spell_levels(); --NOT USED ANYWHERE
+   // buf := spell_costs(); --NOT USED ANYWHERE
+   // buf := hasfunc(); --NOT USED ANYWHERE
+   // buf := ability_levels(); --NOT USED ANYWHERE
+   // buf := ability_costs(); --NOT USED ANYWHERE
+   // buf := weapon_levels(); --NOT USED ANYWHERE
+   // buf := weapon_costs(); --NOT USED ANYWHERE
+   // buf := skill_levels(); --NOT USED ANYWHERE
+   // buf := skill_costs(); --NOT USED ANYWHERE
+   // buf := lastroom(); --NOT USED ANYWHERE
+   // buf := unit.objs(); --NOT USED ANYWHERE
+   // buf := unit.roomcount(); --NOT USED ANYWHERE
+   // buf := unit.objcount(); --NOT USED ANYWHERE
+   // buf := unit.npccount(); --NOT USED ANYWHERE
+   // buf := unit.resetmode(); --NOT USED ANYWHERE
+   // buf := unit.loadlevel(); --NOT USED ANYWHERE
+
+   quit;
+} dilend

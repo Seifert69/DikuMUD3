@@ -1,0 +1,159 @@
+Generate MCP entry for DIL keyword: acc_modify
+
+=== Yacc rule ===
+| DILSI_AMOD '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'acc_modify' not an unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'acc_modify' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_AMOD);
+    }
+}
+
+=== C implementation ===
+void dilfi_amod(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("acc_modify", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
+        if (g_cServerConfig.isAccounting() && v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC())
+        {
+            if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+            {
+                szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (amod).", p->frame->tmpl->prgname);
+                p->waitcmd = WAITCMD_QUIT;
+            }
+            else
+            {
+                if (v2->val.num > 0)
+                {
+                    account_insert(p->owner, (unit_data *)v1->val.ptr, v2->val.num);
+                }
+                else if (v2->val.num < 0)
+                {
+                    account_withdraw(p->owner, (unit_data *)v1->val.ptr, -v2->val.num);
+                }
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin restore_youth();
+   external
+      integer Rejuvenate(pc : unitptr, years : integer);
+
+   var
+      payer : unitptr;
+      drinker : unitptr;
+      s : string;
+      u : unitptr;
+      i : integer;
+      j : integer;
+      k : integer;
+      price : integer;
+      years : integer;
+      prevage : integer;
+      
+  code
+  {
+      interrupt(SFB_CMD, (command("drink") and (argument in self.names) and (activator.type == UNIT_ST_PC)), drink);
+      heartbeat := 60 * PULSE_SEC;
+      j := 0;
+      
+      :start:
+      wait(SFB_TICK, TRUE);
+      j := j + 1;
+      if (j == 3)
+      {
+         subextra(self.extra, "$interactions_1");
+         addextra(self.extra, {"$interactions_1"}, "");
+      }
+      else if (j == 4)
+      {
+         subextra(self.extra, "$interactions_2");
+         addextra(self.extra, {"$interactions_2"}, "");        
+      }
+      if (j == 6)
+         j := 0;
+      goto start;
+      
+      
+      :drink:
+      block;
+      if (activator.level >= IMMORTAL_LEVEL)
+      {
+          sendtext("No need. You've already got everlasting life!<br/>", activator);
+          goto start;
+      }
+      
+      price := atoi(self.extra.["$price_per_drink"].descr);
+      years := atoi(self.extra.["$years_to_restore"].descr);
+      
+      if ( (not(price)) or (not(years)) )
+      {
+        log("Missing extra on eternal spring. Make sure $price_per_drink and $years_to_restore extra exist on spring@youth.");
+        act("You attempt to drink from the fountain and find that you just can't quite reach. Ask an immortal for help.", A_SOMEONE, activator, self, null, TO_CHAR);
+        goto start;
+      }
+      /* if ( ((price) * 100) > activator.acc_balance)
+      {
+          act("Your will to drink from the $2N is strong but you realize you can't afford it.", A_SOMEONE, activator, self, null, TO_CHAR);
+          goto start;
+      }*/
+
+      if (not ((activator.name in self.extra.["$interactions_1"].names) or (activator.name in self.extra.["$interactions_2"].names)))
+      {
+          addstring(self.extra.["$interactions_1"].names, activator.name);
+          addstring(self.extra.["$interactions_2"].names, activator.name);        
+          sendtext("<div class='cpr'>Drinking from the spring will make you younger by " +  itoa(years) + " mud years. If you are sure you want to continue, drink again.</div><br/>", activator);
+          goto start;
+      }
+
+      prevage := activator.birth;
+      i := Rejuvenate(activator, years);
+
+      if (i == 0)
+      {    
+          act("You try to drink from the spring but find that it simply dissapears before it hits your lips.", A_SOMEONE, activator,  self, null, TO_CHAR);
+          goto start;
+      }
+
+      drinker := activator;
+      substring(self.extra.["$interactions_1"].names, drinker.name);
+      substring(self.extra.["$interactions_2"].names, drinker.name);
+      act("You scoop a handful of water to your lips and sip, feeling renewed!", A_ALWAYS, drinker, self, null, TO_CHAR);
+      act("$1n scoops a handful of water to $1s lips and instantly looks " + itoa(years) + " younger.", A_SOMEONE, drinker, self, null, TO_REST);
+
+      log (self.name + ": " + drinker.name + " changed age to " +  itoa((realtime - drinker.birth) / (SECS_PER_MUD_YEAR)));
+      
+      s := asctime(realtime);
+      s := s + 
+      " Drinker:" + 
+      drinker.name + 
+      " age from " + 
+      itoa((realtime - prevage) / (SECS_PER_MUD_YEAR)) + 
+      " to " + 
+      itoa((realtime-drinker.birth) / (SECS_PER_MUD_YEAR)) + 
+      " price: " + 
+      itoa(price) + 
+      " lifespan: " + 
+      itoa(drinker.lifespan) + "<br/>";
+      k := savestr("youth.log", s, "a");
+      acc_modify(payer, -((price) * 100));
+      goto start;    
+  } dilend

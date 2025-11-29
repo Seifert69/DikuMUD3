@@ -1,0 +1,93 @@
+Generate MCP entry for DIL keyword: prompt
+
+=== Yacc rule ===
+| DILSF_PROMPT /* .prompt */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_PROMPT;
+}
+
+=== C implementation ===
+case DILF_PROMPT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SPR;
+                        v->ref = pc->getPromptStringPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin do_prompt(arg : string);
+external
+	string do_color@function(arg : string);
+var
+
+   prom     :  string;
+   i:integer;
+
+code
+{
+   if (self.type != UNIT_ST_PC)
+   {
+      sendtext("This command is for PC's only.<br/>", self);
+      quit;
+   }
+
+   if ("$noprompt" in self.extra)
+   {
+      sendtext("You have lost the ability to set your prompt.<br/>",self);
+      quit;
+   }
+
+   if (arg == "")
+   {
+      prom := "Usage: prompt <prompt string><br/>" + 
+              "Prompt string special identifiers, see help for more details<br/>";
+      sendtext(prom, self);
+      quit;
+    }
+    
+   if (arg == "show")
+   {
+      sendtext("Your current prompt is :<br/><br/> " +self.prompt+"<br/>", self);
+      /*log(self.name+" shows their prompt as : " +self.prompt+ " <br/>");*/
+      quit;
+   }
+
+   if (arg=="default")
+      self.prompt:= "%mana%m/%endurance%e/%hp%h> ";
+   else if (arg=="blank")
+      self.prompt:= "";
+   else 
+   {
+	  arg := do_color@function(arg);
+      self.prompt := arg;
+   }
+   i:=dildestroy("send_prompt@update",self);
+   dilcopy("send_prompt@update",self);
+   quit;
+} dilend

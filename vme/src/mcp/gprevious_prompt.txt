@@ -1,0 +1,82 @@
+Generate MCP entry for DIL keyword: gprevious
+
+=== Yacc rule ===
+| DILSF_GPR /* .gprevious */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_GPR;
+}
+
+=== C implementation ===
+case DILF_GPR:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        v->val.ptr = unit->getGlobalPrevious();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin color_bc();
+
+var
+  pc     :unitptr;
+  newarg :string;
+code
+{
+	heartbeat := PULSE_SEC;
+	
+:start:
+	wait(SFB_CMD,((command("cb")) and (activator.level>=242) and (activator==self.outside)));
+	block;
+	pc:=activator;
+	if (("\\" in argument) and (activator.level<253))
+	{
+		act("You may not use newline characters!",A_ALWAYS,pc,null,null,TO_CHAR);
+		log(pc.name + " attempted to use newline characters in a "
+			+"broadcast below level 253!");
+		goto start;
+	}
+	if ("\\" in argument)
+	{
+		act("You may not change the background color, sorry.",A_ALWAYS,pc,null,null,TO_CHAR);
+		goto start;
+	}
+	newarg := argument;
+	newarg := replace("&lt;","<",newarg);
+	newarg := replace("&gt;",">",newarg);
+
+	while (pc.gprevious.type==UNIT_ST_PC)
+		pc := pc.gprevious;
+
+	while (pc.type==UNIT_ST_PC)
+	{
+		sendtext(newarg,pc);
+		pc:=pc.gnext;
+	}
+	goto start;
+} dilend

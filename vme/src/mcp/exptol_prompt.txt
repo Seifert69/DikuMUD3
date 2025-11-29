@@ -1,0 +1,68 @@
+Generate MCP entry for DIL keyword: exptol
+
+=== Yacc rule ===
+| DILSF_EXPTOL /* .exptol */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_EXPTOL;
+}
+
+=== C implementation ===
+case DILF_EXPTOL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = required_xp(PC_VIRTUAL_LEVEL((unit_data *)v1->val.ptr) + 1) - CHAR_EXP((unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin gain_exp(u:unitptr, gain:integer);
+var
+	j:integer;
+code
+{
+   heartbeat:=3;
+   if (u.type!=UNIT_ST_PC)
+      return;
+
+   if (gain > 0)
+   {
+      if (gain >= self.exptol)
+         sendtext("You can now raise a level by using the 'level' command!<br/>",self);
+
+   	experience (gain,self);
+	}
+   else  /* gain <= 0 */
+	{
+      // Dont lose XP until you're level 3
+      if (self.level >= 3)
+      {
+         // Ignore any loss leaing to less than 1650 XP
+         if ((self.exp+gain) > 1650)
+            experience(gain,self);
+      }
+   }
+   return;
+} dilend

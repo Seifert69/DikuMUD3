@@ -1,0 +1,170 @@
+Generate MCP entry for DIL keyword: weapons
+
+=== Yacc rule ===
+| DILSF_WPN idx /* .weapons */
+{
+    INITEXP($$);
+    copy_code(&($$), &($2));
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_WPN;
+    FREEEXP($2);
+}
+
+=== C implementation ===
+case DILF_WPN:
+            v2 = p->stack.pop(); /* evaluate index */
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    v->type = DILV_INT;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                    break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            if (v->type == DILV_INT)
+            {
+                if (v1->val.ptr)
+                {
+                    switch (((unit_data *)v1->val.ptr)->getUnitType())
+                    {
+                        case UNIT_ST_NPC:
+                        {
+                            auto *npc = reinterpret_cast<npc_data *>(v1->val.ptr);
+                            if (is_in(v2->val.num, 0, WPN_GROUP_MAX - 1))
+                            {
+                                v->atyp = DILA_NONE;
+                                v->type = DILV_SINT2R;
+                                v->ref = npc->getWeaponSkillAtIndexPtr(v2->val.num);
+                            }
+                            else
+                            {
+                                v->type = DILV_FAIL;
+                            }
+                        }
+                        break;
+                        case UNIT_ST_PC:
+                            if (is_in(v2->val.num, 0, WPN_TREE_MAX - 1))
+                            {
+                                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                                if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
+                                {
+                                    v->atyp = DILA_NONE;
+                                    v->type = DILV_SINT2R;
+                                    v->ref = pc->getWeaponSkillAtIndexPtr(v2->val.num);
+                                }
+                                else
+                                {
+                                    v->atyp = DILA_NONE;
+                                    v->type = DILV_INT;
+                                    v->val.num = pc->getWeaponSkillAtIndex(v2->val.num);
+                                }
+                            }
+                            else
+                            {
+                                v->type = DILV_FAIL;
+                            }
+                            break;
+
+                        default:
+                            v->type = DILV_ERR; /* illegal type */
+                            break;
+                    }
+                }
+                else
+                {
+                    v->type = DILV_FAIL; /* illegal type */
+                }
+            }
+            break;
+
+=== DIL example ===
+dilbegin clone_attr(original : unitptr, tgt : unitptr);
+var
+   i : integer;
+code
+{
+
+   /* - - - Abilities - - - */
+
+   i := 0;
+
+   while (i < ABIL_TREE_MAX)
+   {
+      tgt.abilities[i] := original.abilities[i];
+      i := i + 1;
+   }
+
+   /* tgt.level   := original.level; */
+   /* tgt.max_hp := original.max_hp; */
+   tgt.hp     := original.hp;
+
+   /* - - - Spells - - - */
+
+   i := 0;
+
+   if (tgt.type == UNIT_ST_PC)
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.spells[i] := (3 * original.spells[i]) / 2;
+         i := i + 1;
+      }
+   }
+   else
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.spells[i] := original.spells[i];
+         i := i + 1;
+      }
+   }
+
+
+
+   /* - - - Weapons - - - */
+
+   i := 0;
+
+   if (tgt.type == UNIT_ST_PC)
+   {
+      while (i < WPN_GROUP_MAX)
+      {
+         tgt.weapons[i] := (3 * original.weapons[i]) / 2;
+         i := i + 1;
+      }
+   }
+   else
+   {
+      while (i < SPL_GROUP_MAX)
+      {
+         tgt.weapons[i] := original.weapons[i];
+         i := i + 1;
+      }
+   }
+
+   quit;
+} dilend

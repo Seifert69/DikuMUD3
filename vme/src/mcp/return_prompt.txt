@@ -1,0 +1,216 @@
+Generate MCP entry for DIL keyword: return
+
+=== Yacc rule ===
+| DILSI_RTS ihold
+{
+    if (!dilistemplate)
+    {
+        dilfatal("return only allowed in templates");
+    }
+    if (tmpl.rtnt != DilVarType_e::DILV_ERR)
+    {
+        dilfatal("no return expression expected");
+    }
+
+    /* WAS: bwrite_ubit8(&wcore,DILI_RTS); */ /* the instruction */
+
+    wtmp = &tmpl.core[$2];
+    bwrite_ubit8(&wtmp, DILI_RTS); /* the instruction */
+
+    $$.fst = $2;
+    $$.lst = $2 + 1;
+}
+
+------
+
+| DILSI_RTS '(' coreexp ')' ihold
+{
+    if (!dilistemplate)
+    {
+        dilfatal("return only allowed in templates");
+    }
+    if (tmpl.rtnt != $3.typ)
+    {
+        dilfatal("return expression not of correct type");
+    }
+    wtmp = &tmpl.core[$5];
+    bwrite_ubit8(&wtmp, DILI_RTF); /* the instruction */
+    $$.fst = $3.fst;
+    $$.lst = $5 + 1;
+}
+
+=== C implementation ===
+void dilfi_rtf(dilprg *p)
+{
+    p->waitcmd--;
+
+    if (p->fp == p->frame)
+    {
+        /* just stop execution, never discard last frame! */
+        p->waitcmd = WAITCMD_QUIT;
+        return;
+    }
+
+    // When rtnt == DILV_ERR then it's returning from a procedure, otherwise a function
+    if (p->fp->tmpl->rtnt == DILV_ERR)
+    {
+        if (p->stack.length() != p->fp->stacklen)
+        {
+            slog(LOG_ALL,
+                 0,
+                 "DIL %s@%s on %s: DILV_ERR Unexpected stack length after procedure call.",
+                 p->fp->tmpl->prgname,
+                 p->fp->tmpl->zone->getName(),
+                 p->sarg->owner->getFileIndexSymName());
+            p->waitcmd = WAITCMD_QUIT;
+            return;
+        }
+    }
+    else
+    {
+        // The 'return' statement has placed a variable on the stack, so
+        // let's get it and make it a copy on the stack
+        if (p->stack.length() != p->fp->stacklen + 1)  // +1 for the return statement variable
+        {
+            slog(LOG_ALL,
+                 0,
+                 "DIL %s@%s on %s: Unexpected stack length after function call.",
+                 p->fp->tmpl->prgname,
+                 p->fp->tmpl->zone->getName(),
+                 p->sarg->owner->getFileIndexSymName());
+            p->waitcmd = WAITCMD_QUIT;
+            return;
+        }
+
+        dilval *v1 = p->stack.pop();
+
+        ubit8 typ = dil_getval(v1);
+        if (typ != p->fp->tmpl->rtnt)
+        {
+            slog(LOG_ALL, 0, "DIL: Error return types do not match.");
+            p->waitcmd = WAITCMD_QUIT;
+            delete v1;
+            return;
+        }
+
+        dilval *v = new dilval;
+
+        switch (typ)
+        {
+            case DILV_UP:
+                v->type = DILV_UP;
+                v->atyp = DILA_NORM;
+                v->val.ptr = (unit_data *)v1->val.ptr;
+                break;
+
+            case DILV_SP:
+                v->type = DILV_SP;
+                v->atyp = DILA_EXP;
+                v->val.ptr = str_dup((char *)v1->val.ptr);
+                break;
+
+            case DILV_SLP:
+                v->type = DILV_SLP;
+                v->atyp = DILA_EXP;
+                v->val.ptr = ((cNamelist *)v1->val.ptr)->Duplicate();
+                break;
+
+            case DILV_ILP:
+                v->type = DILV_ILP;
+                v->atyp = DILA_EXP;
+                v->val.ptr = ((cintlist *)v1->val.ptr)->Duplicate();
+                break;
+
+            case DILV_EDP:
+                v->type = DILV_EDP;
+                v->atyp = DILA_NORM;
+                v->val.ptr = (extra_descr_data *)v1->val.ptr;
+                break;
+
+            case DILV_ZP:
+                v->type = DILV_ZP;
+                v->atyp = DILA_NORM;
+                v->val.ptr = (zone_type *)v1->val.ptr;
+                break;
+
+            case DILV_CP:
+                v->type = DILV_CP;
+                v->atyp = DILA_NORM;
+                v->val.ptr = (command_info *)v1->val.ptr;
+                break;
+
+            case DILV_INT:
+                v->type = DILV_INT;
+                v->atyp = DILA_NONE;
+                v->val.num = v1->val.num;
+                break;
+
+            default:
+                v->type = DILV_ERR;
+                dil_typeerr(p, "function call evaltuated to failed result.");
+                break;
+        }
+        delete v1;
+
+        // Push the copied return value so that it can be assigned
+        p->stack.push(v);
+    }
+
+    bool doSecureTest = p->fp->wasSecureTested;
+
+    // Pop and free the current frame, change fp to the new frame
+    int i = p->fp - p->frame - 1;
+    dilframe *cfrm = p->fp;
+    p->fp = &p->frame[i];
+    dil_free_frame(cfrm);
+
+    // Now we've arrived at the new frame (the old frame returning from was removed)
+    // Let's see if we need to do a trickle secure() test and possibly change execution point
+    //
+    if (doSecureTest)
+    {
+        if (dil_test_secure(p) == true)
+        {
+            // We changed the point of execution. This could be in the middle of an assignment.
+            // If it was in an assignment for example, then the stack will be wrong with two
+            // stack entries. If for example a function call without assignment, stack will be
+            // wrong with 1 stack entry. This will fix the stack according to the secure 
+            // changing point of execution
+            //
+            while (p->stack.length() != p->fp->stacklen)
+            {
+                if (p->stack.length() <= 0)
+                {
+                    slog(LOG_ALL, 0, "TERRIBLE STACK ERROR DIL %s", p->fp->tmpl->prgname);
+                    p->waitcmd = WAITCMD_QUIT;
+                    return;
+                }
+
+                delete(p->stack.pop());
+            }
+        }
+    }
+}
+
+=== DIL example ===
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ); /* Do this to activate the DILs */
+   return;
+} dilend

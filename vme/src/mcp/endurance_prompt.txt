@@ -1,0 +1,77 @@
+Generate MCP entry for DIL keyword: endurance
+
+=== Yacc rule ===
+| DILSF_END /* .endurance */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_END;
+}
+
+=== C implementation ===
+case DILF_END:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT2R;
+                        v->ref = character->getEndurancePtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin nokill();
+var
+ pc      : unitptr;
+ room    : unitptr;
+ i       : integer;
+
+code
+{
+ heartbeat := 3 * PULSE_SEC;
+ :start:
+ wait(SFB_COM,  self.position == POSITION_FIGHTING);
+ pc := self.fighting;
+ if (pc.level > 200) goto start;
+ secure(pc,gone);
+ if (command("flee"))
+  block;
+
+self.hp:= self.max_hp;
+act("$1n grabs a large oak staff from behind $1m.", A_ALWAYS, self, null,
+pc, TO_VICT);
+act("$1n grabs a large oak staff from behind $1m.", A_ALWAYS, self, null,
+pc, TO_NOTVICT);
+act("With a surprisingly swift move he swings, connecting with your head and
+knocking you unconscious!", A_ALWAYS, self, null, pc, TO_VICT);
+act("With a surprisingly swift move he swings, smashing $3n in the head
+knocking $3m unconscious!", A_SOMEONE, self, null, pc, TO_NOTVICT);
+
+pc.hp:= 0;
+pc.endurance:= 0;
+position_update(pc);
+:gone:
+unsecure(pc);
+goto start;
+} dilend

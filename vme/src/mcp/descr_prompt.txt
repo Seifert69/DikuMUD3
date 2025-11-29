@@ -1,0 +1,133 @@
+Generate MCP entry for DIL keyword: descr
+
+=== Yacc rule ===
+| DILSF_DES /* .descr (extras only) */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_EDP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_DES;
+}
+
+=== C implementation ===
+case DILF_DES:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+
+                case DILV_EDP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE; // Dont dealloc!
+                        v->type = DILV_HASHSTR;
+                        if (v1->val.ptr)
+                        {
+                            v->ref = &(((extra_descr_data *)v1->val.ptr)->descr);
+                        }
+                        else
+                        {
+                            v->ref = nullptr;
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin guardroutine(guardloc : string, dayguard : integer);
+external
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
+var
+   i  : integer;
+   sch : intlist;
+code
+{
+   on_activation((self.position == POSITION_FIGHTING), skip);
+
+   if (dayguard)
+      sch := {5, 18};  // Wake up at 5, go back at 6pm
+   else
+      sch := {17,6};   // Wake up at 17, go home at 6
+
+:start:
+   heartbeat := WAIT_SEC*5;
+   pause;
+   if (mudhour == sch.[0])
+   {
+      DailyRoutine@quests({
+         "wake", 
+         "::descr::A $1N is here heading to work.",
+         "yawn",
+         "say Time to get going guys!", 
+         "::walkto::$2t",
+         "::descr::A $1N is here guarding the gate."
+      }, guardloc);
+   }
+
+   if(mudhour == sch.[1])
+   {
+      i := rnd(1,3);
+      if (i == 1) goto bar1;
+      if (i == 2) goto bar2;
+      if (i == 3) goto bar3;
+      else goto start;
+
+:bar1:
+      pause;
+      DailyRoutine@quests({
+      "::walkto::grunting_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy beer", 
+      "drink beer",
+      "stretch", 
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "yawn",
+      "::descr::A $1N is here resting.",
+      "sleep"
+   }, "");
+   goto start;
+
+   :bar2:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::grub_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy firebreather", 
+      "drink firebreather",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+
+   goto start;
+
+
+   :bar3:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::park_cafe@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy coffee", 
+      "drink coffee",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+   goto start;
+  }
+} dilend

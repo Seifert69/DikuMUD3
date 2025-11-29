@@ -1,0 +1,153 @@
+Generate MCP entry for DIL keyword: left
+
+=== Yacc rule ===
+| DILSE_LEFT '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'left' not a string.");
+    }
+    if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'left' not an integer.");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_LEFT);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_left(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    int strl = 0;
+    int x = 0;
+
+    v->type = DILV_SP;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+        case DILV_SP:
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+                case DILV_INT:
+
+                    if (str_is_empty((char *)v1->val.ptr))
+                    {
+                        v->val.ptr = nullptr;
+                        break;
+                    }
+                    if ((int)strlen((char *)v1->val.ptr) < v2->val.num)
+                    {
+                        strl = strlen((char *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        strl = v2->val.num;
+                    }
+
+                    if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                    {
+                        v->val.ptr = nullptr;
+                    }
+                    else
+                    {
+                        v->atyp = DILA_EXP;
+                        v->val.ptr = (char *)malloc(strl + 1);
+                        for (x = 0; x < strl; x++)
+                        {
+                            ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[x];
+                        }
+                        ((char *)v->val.ptr)[strl] = 0;
+                    }
+
+                    break;
+            }
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_MISSION) unique to_the_rescue(sroomto : string);
+external
+   unitptr unit_room@function(u : unitptr);
+   integer walk_room@function (s:string,i:integer);
+
+var 
+   roomorg : string;
+   roomto  : string;
+   tf      : integer;
+   descorg : string;
+
+code
+{
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      act("$1n looks up, down, left, right. Pauses. Seems confused about $1s surroundings.",
+            A_ALWAYS, self, null, null, TO_ALL);
+      quit;
+   }
+
+   roomorg := self.outside.symname;
+   descorg := self.outside_descr;
+   roomto  := sroomto;
+
+   :torescue:
+   priority;
+   self.outside_descr := sact("$1n is hurrying along.", A_ALWAYS, self, null, null, TO_CHAR);
+   tf:=walk_room@function(roomto, 5);
+   self.outside_descr := sact("$1n is on the lookout.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   // Stay a little
+   act("$1n alertly scans $1s surroundings.",A_ALWAYS, self, null, null, TO_ALL);
+   heartbeat := PULSE_SEC*4;
+   nopriority;
+
+   :nowwhat:
+   // Let the other DIL programs take control (no priority above)
+   pause;
+   pause;
+   pause;
+   if (self.position == POSITION_FIGHTING)
+      goto nowwhat;
+
+   :gohome:
+   self.outside_descr := sact("$1n is trodding along.", A_ALWAYS, self, null, null, TO_CHAR);
+   priority;
+   tf:=walk_room@function(roomorg, 8);
+   self.outside_descr := descorg;
+   nopriority;
+   return;
+} dilend

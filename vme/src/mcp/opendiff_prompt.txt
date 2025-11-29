@@ -1,0 +1,219 @@
+Generate MCP entry for DIL keyword: opendiff
+
+=== Yacc rule ===
+| DILSF_OPENDIFF /* .opendiff */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_OPENDIFF;
+}
+
+=== C implementation ===
+case DILF_OPENDIFF:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        /* ubit8 openflags */
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = unit->getOpenDifficultyPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin picklock(arg : string);
+external
+   integer is_hidden@basemove(u1 : unitptr, int1 : integer, u2 :unitptr);
+   string  dirstring@function(i2 : integer);
+   integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
+   checkstand@basemove();
+   integer checkdoor@basemove(arg : string);
+
+var
+   item       :  unitptr;
+   pc         :  unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   oppdir     :  intlist;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+   hm         :  integer;
+   aa         :  integer;
+   ab         :  integer;
+   ba         :  integer;
+   bb         :  integer;
+
+code
+{
+   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PICK_LOCK] <= 0))
+   {
+      act("Perhaps you should practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   checkstand@basemove();
+
+   if (arg == "")
+   {
+      act("Pick what?", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.endurance < 1)
+   {
+      act("You're too exhausted to pick locks right now.", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   /* next we see if the player has anything in his inventory or around him that he can lock */
+
+   arg1 := arg;       /* saves the string in case we need it later */
+
+   item := findunit(self, arg1, FIND_UNIT_HERE, null);
+
+   /* If there is no item or we cant see it, check the doors in the room */
+   if (item == null)
+      goto check_doors;
+
+   if (not visible(self, item))
+      goto check_doors;
+
+   if (isset(item.flags, UNIT_FL_BURIED))
+      goto check_doors;
+
+   /* If it cant be opened, it cant be locked. let the player know */
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   /* Check to make sure the object has a 'key' associated with it. */
+   if (item.key == "")
+   {
+      act("Odd, you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+   }
+
+   /* See if it is opened */
+   if (not isset(item.openflags, EX_CLOSED))
+   {
+      act("It isn't even closed.....", A_ALWAYS, self, item, null, TO_CHAR);
+      quit;
+   }
+
+   /* Check if it is locked */
+   if (not isset(item.openflags, EX_LOCKED))
+   {
+      act("Oh... it wasn't locked, after all.", A_ALWAYS, self, item, null, TO_CHAR);
+      quit;
+   }
+
+   if (self.level < IMMORTAL_LEVEL)
+   {
+      if (isset(item.openflags, EX_PICKPROOF))
+         hm := -1;
+      else
+         hm := skillchecksa(SKI_PICK_LOCK, ABIL_DEX, item.opendiff);
+   }
+   else
+      hm := 1;    /* imms always pick */
+
+   if (hm < 0)
+   {
+      act("You fail to pick the $2N.", A_ALWAYS, self, item, null, TO_CHAR);
+      act("$1n fails to pick the $2N.", A_SOMEONE, self, item, null, TO_REST);
+      self.endurance := self.endurance + hm;
+      quit;
+   }
+
+   act("You successfully pick the $2N - *click*", A_ALWAYS, self, item, null,TO_CHAR);
+   act("$1n picks the $2n - *click*", A_ALWAYS, self, item, null, TO_REST);
+   unset(item.openflags, EX_LOCKED);
+   quit;
+
+
+:check_doors:
+   dir := checkdoor@basemove(arg);
+
+   item := self.outside;
+   if (item.type != UNIT_ST_ROOM)
+      item:=item.outside;
+      
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("Perhaps you should close it first....", A_ALWAYS, self, null, null,TO_CHAR);
+      quit;
+   }
+
+   if (item.exit_key[dir] == "")
+   {
+      act("Odd - you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (not isset(item.exit_info[dir], EX_LOCKED))
+   {
+      act("Oh... it wasn't locked, after all.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (isset(item.exit_info[dir], EX_PICKPROOF))
+   {
+      act("This door seems to be pick proof.",
+      A_ALWAYS, self, null, null, TO_CHAR);
+         act("$1n Tries to pick the door but finds it impossible.",
+      A_SOMEONE, self, null, null, TO_REST);
+      quit;
+   }
+
+   if (self.level < IMMORTAL_LEVEL)
+   {
+      hm := skillchecksa(SKI_PICK_LOCK, ABIL_DEX, item.exit_diff[dir]);
+   }
+   else
+      hm := 100;    /* imms always pick */
+
+   if (hm < 0)
+   {
+      act("You fail to pick the $2t.", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+      act("$1n fails to pick the $2t.", A_SOMEONE, self, item.exit_names[dir].[0], null, TO_REST);
+      self.endurance := self.endurance + hm;
+      quit;
+   }
+
+   act("You successfully pick the $2t - *click*", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n picks the $2t - *click*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
+   unset(item.exit_info[dir], EX_LOCKED);
+   unset(item.exit_to[dir].exit_info[oppdir.[dir]], EX_LOCKED);
+
+   pc := item.exit_to[dir].inside;
+
+   if (pc != null)
+      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[oppdir.[dir]].[0], null, TO_ALL);
+   quit;
+} dilend

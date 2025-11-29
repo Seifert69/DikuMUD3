@@ -1,0 +1,262 @@
+Generate MCP entry for DIL keyword: ability_points
+
+=== Yacc rule ===
+| DILSF_APT /* .ability_points */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_APT;
+}
+
+=== C implementation ===
+case DILF_APT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT4R;
+                        v->ref = pc->getAbilityPointsPtr();
+                        /*	    v->val.num = &PC_ABILITY_POINTS((class unit_data *) v1->val.ptr);*/
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin do_score(arg:string);
+external
+   string titlestring();
+   string agestring(rce : integer);
+   string playingstring();
+
+var
+   u : unitptr;
+   leader : unitptr;
+   slave : unitptr;
+   alig : string;
+   pos : string;
+   deaths:string;
+   want : string;
+   start: string;
+   sav : string;
+   bob : string;
+   stat : string;
+   stat1 : string;
+   stat2 : string;
+   slvl : string;
+   i : integer;
+code
+{
+   if (arg != "")
+   {
+      if (arg == "hp")
+      {
+         sendtext(itoa(self.hp) + "<br/>", self);
+         quit;
+      }
+      else if (arg == "ep")
+      {
+         sendtext(itoa(self.endurance) + "<br/>", self);
+         quit;
+      }
+      else if (arg == "mp")
+      {
+         sendtext(itoa(self.mana) + "<br/>", self);
+         quit;
+      }
+   }
+
+   /*if (self.type!=UNIT_ST_PC) quit;*/
+
+   if (self.position == POSITION_FIGHTING)
+   {
+      sendtext("Not while fighting!<br/>", self);
+      quit;
+   }
+
+   /*whats my align */
+   if (self.alignment > 350)
+      alig := "(Good)";
+   else if (self.alignment < -350)
+      alig := "(Evil)";
+   else
+      alig := "(Neutral)";
+   /*whats my position */
+
+   if (self.position == POSITION_DEAD)
+      pos := "<div class='score'>Sorry old chap, it seems like you're Dead!</div>";
+   else if (self.position == POSITION_MORTALLYW)
+      pos := "<div class='score'>You are mortally wounded, you should seek help!</div>";
+   else if (self.position == POSITION_INCAP)
+      pos := "<div class='score'>You are incapacitated, slowly fading away.</div>";
+   else if (self.position == POSITION_STUNNED)
+      pos := "<div class='score'>You are stunned and unable to move.</div>";
+   else if (self.position == POSITION_SLEEPING)
+      pos := "<div class='score'>You are sleeping.</div>";
+   else if (self.position == POSITION_RESTING)
+      pos := "<div class='score'>You are resting.</div>";
+   else if (self.position == POSITION_SITTING)
+      pos := "<div class='score'>You are sitting.</div>";
+   else
+      pos := "<div class='score'>You are standing.</div>";
+
+   if ("$TOTAL_DEATHS" in self.extra)
+      deaths:="You have died a total of "+itoa(self.extra.["$TOTAL_DEATHS"].vals.[0])+" times <br/>";
+   else 
+      deaths:="";
+   
+   if (isset(self.charflags, CHAR_PROTECTED))
+      want := "<div class='score'>You are a protected citizen.</div>";
+   else if (isset(self.charflags, CHAR_LEGAL_TARGET))
+      want := "<div class='score'>You are a protected citizen, but people may kill you now!</div>";
+   else if (isset(self.charflags, CHAR_OUTLAW))
+      want := "<div class='score'>You are wanted dead or alive by the law.</div>";
+   else if ("$reward" in self.extra )
+      want := "<div class='score'>There is a reward on your head.</div>";
+   else
+      want :="";
+
+   /* am i BoB */
+   if (isset(self.pcflags,PC_PK_RELAXED))
+      bob := "<div class='score'>You have signed the Book of Blood.</div>";
+   else
+      bob :="";
+
+   /* am i drunk hungry thirsty? */
+   if (self.drunk > 10 )
+      stat :="<div class='score'>You are drunk!</div>";
+   else
+      stat := "";
+
+
+   if (self.thirst < 4 )
+      stat1 :="<div class='score'>You are thirsty.</div>";
+   else
+      stat1 := "";
+
+   if (self.full < 4 )
+      stat2 :="<div class='score'>You are hungry!</div>.";
+   else
+      stat2 := "";
+
+   start := "";
+   if (self.level <= START_LEVEL)
+      start := "<br/><div class='score'>Also try the '<a cmd='#'>status</a>' command.</div>";
+    
+   if (not isplayer(self.name))
+	{
+      sendtext ("<div class='score'>You remain a GUEST until you 'save' yourself</div><br/>",self);
+      quit;
+	}
+
+
+   slvl := "";
+   if (self.exptol <= 0)
+   {
+      slvl := "<b>You can now advance a <a cmd='#'>level</a> - congratulations!</b><br/>";
+   }
+
+   if ((self.ability_points >= 10) or (self.skill_points >= 10))
+   {
+      // Override level now message
+      slvl := "<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>";
+   }
+
+   if (arg=="")
+   {
+      act(titlestring()
+         +"<div class='score'>" + agestring(self.race)
+         +"You have "+itoa(self.exp)+" experience points and you need "
+         +itoa(self.exptol) + " to the next level.</div><br/>"+
+         slvl
+         +"<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
+         +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
+         +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
+         +"<div class='score'>"+bob+""+playingstring()+deaths+""+want+" "+pos+""+stat+""+stat1+""+stat2+"</div>"+start
+         ,A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   else if (arg==left("group",length(arg)))
+   {
+   if (isset(self.charflags,CHAR_GROUP))
+   {
+   if ((self.master==null) or (self.master==self))
+   {
+   :not_leader:
+      if (self.followercount<=0)
+      {
+   act("<div class='score'>What group!!</div>",A_ALWAYS,self,null,self,TO_CHAR);
+   quit;
+   }
+   act("<div class='score'>"+self.name+" "+itoa(self.hp)+"/"+itoa(self.max_hp)+
+      " Hitpoints, "+itoa(self.endurance)+"/"+itoa(self.max_endurance)+
+      " Endurance, "+itoa(self.mana)+"/"+itoa(self.max_mana)+" Mana"+
+      " to the group.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+   i:=0;
+   while (i<self.followercount)
+   {
+   u:=getfollower(self,i);
+   if (isset(u.charflags,CHAR_GROUP))
+      act("<div class='score'>"+u.name+" "+itoa(u.hp)+"/"+itoa(u.max_hp)+
+      " Hitpoints, "+itoa(u.endurance)+"/"+itoa(u.max_endurance)+
+      " Endurance, "+itoa(u.mana)+"/"+itoa(u.max_mana)+" Mana"+
+      " to the group.</div>",A_ALWAYS,self,null,u,TO_CHAR);
+      i:=i+1;
+      }
+
+   }
+         else
+         {
+         if (isset(self.master.charflags,CHAR_GROUP))
+         {
+         leader:=self.master;
+         secure (leader,lead_end);
+   act ("<div class='score'>"+leader.name+" "+itoa(leader.hp)+"/"+itoa(leader.max_hp)+
+      " Hitpoints, "+itoa(leader.endurance)+"/"+itoa(leader.max_endurance)+
+      " Endurance, "+itoa(leader.mana)+"/"+itoa(leader.max_mana)+" Mana"+
+      " to the group.</div>",A_ALWAYS,self,null,leader,TO_CHAR);
+   while (i<leader.followercount)
+   {
+   u:=getfollower(leader,i);
+      if (isset(u.charflags,CHAR_GROUP))
+      act("<div class='score'>"+u.name+" "+itoa(u.hp)+"/"+itoa(u.max_hp)+
+      " Hitpoints, "+itoa(u.endurance)+"/"+itoa(u.max_endurance)+
+      " Endurance, "+itoa(u.mana)+"/"+itoa(u.max_mana)+" Mana"+
+      " to the group.</div>",A_ALWAYS,self,null,u,TO_CHAR);
+      i:=i+1;
+      }
+
+         }
+         else
+         goto not_leader;
+         }
+
+   }
+   else
+   sendtext ("You are not in a group silly.<br/>",self);
+   }
+   else
+      sendtext("Use 'score', 'score group', 'score mp', 'score ep', or 'score hp'.<br/>",self);
+
+   :lead_end:
+   unsecure(leader);
+   quit;
+} dilend

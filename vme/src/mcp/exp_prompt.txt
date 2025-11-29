@@ -1,0 +1,72 @@
+Generate MCP entry for DIL keyword: exp
+
+=== Yacc rule ===
+| DILSF_EXP /* .exp */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_EXP;
+}
+
+=== C implementation ===
+void dilfi_exp(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    sbit32 value = 0;
+
+    p->waitcmd--;
+
+    if (dil_type_check("exp", p, 2, v1, TYPEFAIL_NULL, 1, DILV_INT, v2, FAIL_NULL, 1, DILV_UP))
+    {
+        if (dil_getval(v1) == DILV_INT)
+        {
+            value = v1->val.num;
+        }
+
+        if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isPC())
+        {
+            slog(LOG_ALL,
+                 0,
+                 "%s gained %d experience from unit %s.",
+                 ((unit_data *)v2->val.ptr)->getNames().Name(),
+                 value,
+                 p->sarg->owner->getFileIndexSymName());
+            gain_exp((unit_data *)v2->val.ptr, value);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin gain_exp(u:unitptr, gain:integer);
+var
+	j:integer;
+code
+{
+   heartbeat:=3;
+   if (u.type!=UNIT_ST_PC)
+      return;
+
+   if (gain > 0)
+   {
+      if (gain >= self.exptol)
+         sendtext("You can now raise a level by using the 'level' command!<br/>",self);
+
+   	experience (gain,self);
+	}
+   else  /* gain <= 0 */
+	{
+      // Dont lose XP until you're level 3
+      if (self.level >= 3)
+      {
+         // Ignore any loss leaing to less than 1650 XP
+         if ((self.exp+gain) > 1650)
+            experience(gain,self);
+      }
+   }
+   return;
+} dilend

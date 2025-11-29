@@ -1,0 +1,78 @@
+Generate MCP entry for DIL keyword: fighting
+
+=== Yacc rule ===
+| DILSF_FGT /* .fighting */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_FGT;
+}
+
+=== C implementation ===
+case DILF_FGT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UP;
+                        v->val.ptr = CHAR_FIGHTING((unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin intercept_kill(uid : integer);
+external
+  collect@udgaard();
+
+var
+   tmpid : integer;
+   i     : integer;
+
+code
+{
+   heartbeat := PULSE_SEC * 3;
+
+   :loop:
+   wait(SFB_DEAD, activator == self.fighting);
+   tmpid := activator.idx;
+
+   if (tmpid == uid)
+   {
+      i := dildestroy("hunt@udgaard", self);
+      i := dildestroy("checkaround@udgaard", self);
+      i := dildestroy("inter_target@udgaard", self);
+   }
+  pause;
+  exec("decap corpse", self);
+  exec ("follow al",self);
+  pause;
+  exec("cackle",self);
+  exec("take all from corpse", self);
+  pause;
+  exec("shout Valhalla is a much safer place! I bagged another outlaw!", self);
+
+   if (tmpid == uid)
+   {
+      collect@udgaard();
+      quit;
+   }
+
+   goto loop;
+} dilend

@@ -1,0 +1,199 @@
+Generate MCP entry for DIL keyword: followercount
+
+=== Yacc rule ===
+| DILSF_FOLCT /* .followercount */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_FOLCT;
+}
+
+=== C implementation ===
+case DILF_FOLCT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_INT;
+                        v->val.num = follower_count((unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin do_group (arg : string);
+
+var
+
+   mast    :  unitptr;
+   buffer  :  string;
+   fol     :  unitptr;
+   cnt     :  integer;
+   temp    :  string;
+
+code{
+
+ if (arg == "")
+    {
+      if (not isset(self.charflags, CHAR_GROUP))
+         {
+           sendtext("You are not a member of a group.<br/>", self);
+           quit;
+         }
+
+      if (self.master)
+          mast := self.master;
+      else
+          mast := self;
+
+      cnt := 0;
+
+      buffer := "Your group consists of:<br/>";
+
+      if ((isset(mast.charflags, CHAR_GROUP)) and (mast.master == null))
+         {
+
+           if (not visible(self, mast))
+              {
+                if (fol.sex == SEX_NEUTRAL)
+                     temp := "Something (Head of Group)<br/>";
+                else
+                     temp := "Someone (Head of Group)<br/>";
+              }
+           else if (mast.type == UNIT_ST_PC)
+                temp := mast.name + " (Head of Group)<br/>";
+           else if (mast.type == UNIT_ST_NPC)
+                temp := mast.title + " (Head of Group)<br/>";
+
+           buffer := buffer + "     " + temp;
+         }
+
+
+
+      while (cnt < mast.followercount)
+         {
+           fol := getfollower(mast, cnt);
+
+           if (isset(fol.charflags, CHAR_GROUP))
+              {
+                 if (visible(self, fol))
+                    {
+                      if (fol.type == UNIT_ST_PC)
+                           buffer := buffer + "     " + fol.name + "<br/>";
+                      else
+                           buffer := buffer + "     " + fol.title + "<br/>";
+                    }
+                 else
+                    {
+                      if (fol.sex == SEX_NEUTRAL)
+                           buffer := buffer + "     Something<br/>";
+                      else
+                           buffer := buffer + "     Someone<br/>";
+                    }
+              }
+
+           cnt := cnt + 1;
+         }
+
+
+      sendtext(buffer, self);
+
+      quit;
+    }
+
+
+ /* This is a little messy, but only way I can think to do it to avoid
+   people from grouping invisible players or worse, wizi gods, and telling
+   that wizis are there by not being able to 'group whistler' but being
+   able to group '2.whistler'.
+   Let me know if there is a better way.
+ */
+
+ temp := arg;
+ cnt := 1;
+
+:loop:
+ mast := findunit(self, temp, FIND_UNIT_SURRO, null);
+
+ if (mast == null)
+    {
+      if (arg == "self")
+           mast := self;
+      else
+          {
+            sendtext("There is no one named " + arg + " here.<br/>", self);
+            quit;
+          }
+    }
+
+ if (((mast != self) and (not visible(self, mast))) or (mast.type == UNIT_ST_OBJ))
+    {
+      cnt := cnt + 1;
+      temp := itoa(cnt) + "." + arg;
+      goto loop;
+    }
+
+
+ if (self.master != null)
+    {
+      sendtext("You cannot enroll group members without being the head of the group.<br/>", self);
+      quit;
+    }
+
+ if ((mast != self) and (mast.master != self))
+    {
+      sendtext(mast.name + " must follow you to enter your group.", self);
+      quit;
+    }
+
+
+ if (not isset(mast.charflags, CHAR_GROUP))
+    {
+      set(mast.charflags, CHAR_GROUP);
+
+      if (mast != self)
+         {
+           act("You are now a member of $2n's group.", A_ALWAYS, mast, self, null, TO_CHAR);
+           act("$1n is now a member of your group.", A_ALWAYS, mast, null, self, TO_VICT);
+         }
+      else
+           act("You are now a member of the group.", A_ALWAYS, self, null, null, TO_CHAR);
+
+
+      act("$1n is now a member of $3n's group.", A_ALWAYS, mast, null, self, TO_NOTVICT);
+    }
+ else
+    {
+      unset(mast.charflags, CHAR_GROUP);
+
+      if (mast != self)
+         {
+           act("You are no longer a member of $2n's group.", A_ALWAYS, mast, self, null, TO_CHAR);
+           act("$1n is no longer a member of your group.", A_ALWAYS, mast, null, self, TO_VICT);
+         }
+      else
+           act("You are no longer a member of the group.", A_ALWAYS, self, null, null, TO_CHAR);
+
+      act("$1n is no longer a member of $3n's group.", A_ALWAYS, mast, null, self, TO_NOTVICT);
+
+    }
+
+ quit;
+
+} dilend

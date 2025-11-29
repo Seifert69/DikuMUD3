@@ -1,0 +1,114 @@
+Generate MCP entry for DIL keyword: sendtoalldil
+
+=== Yacc rule ===
+| DILSI_SNTADIL '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'sendtoalldil' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'sendtoalldil' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SNTADIL);
+    }
+}
+
+=== C implementation ===
+void dilfi_sntadil(dilprg *p)
+{
+    /* Send message to DIL programs in all units of type specified */
+    /* sendtoall (string<message>, string<template> ) */
+
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("sendtoalldil", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (v1->val.ptr && !str_is_empty((char *)v2->val.ptr))
+        {
+            diltemplate *tmpl = nullptr;
+
+            tmpl = find_dil_template((const char *)v2->val.ptr);
+
+            if (tmpl)
+            {
+                dilprg *tp = nullptr;
+                if (tmpl->nextdude)
+                {
+                    slog(LOG_ALL, 0, "INVESTIGATE: DIL sendtoall() we appear to have a nested sendtoall() with nextdude.");
+                }
+
+                for (tp = tmpl->prg_list; tp; tp = tmpl->nextdude)
+                {
+                    tmpl->nextdude = tp->next;
+
+                    if (tp->fp && tp->fp->tmpl == tmpl && tp != p)
+                    {
+                        unit_fptr *fptr = nullptr;
+
+                        /* If it is destructed, then it cant be found because data
+                           will be null */
+
+                        for (fptr = tp->owner->getFunctionPointer(); fptr; fptr = fptr->getNext())
+                        {
+                            if (fptr->getFunctionPointerIndex() == SFUN_DIL_INTERNAL && fptr->getData() &&
+                                ((dilprg *)fptr->getData())->fp && ((dilprg *)fptr->getData())->fp->tmpl == tmpl)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (!fptr)
+                        {
+                            continue;
+                        }
+
+                        spec_arg sarg;
+
+                        sarg.owner = tp->owner;
+                        sarg.activator = p->owner;
+                        sarg.medium = p->owner;
+                        sarg.target = tp->owner;
+                        sarg.pInt = nullptr;
+                        sarg.fptr = fptr;
+
+                        sarg.cmd = &g_cmd_auto_msg;
+                        sarg.arg = (char *)v1->val.ptr;
+                        sarg.mflags = SFB_MSG;
+
+                        function_activate(tp->owner, &sarg);
+                    }
+                } /* for */
+                tmpl->nextdude = nullptr;
+                dil_test_secure(p);
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin gcrps(arg:string);
+code
+{
+    heartbeat:=3;
+    if (self.level < 200)
+    {
+        act("Arglebargle, glop-glyf!?!", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    act("The following corpses were found:", A_ALWAYS,self,null,null,TO_CHAR);
+    sendtoalldil("reportgod","report_corpse@death");
+    quit;
+} dilend

@@ -1,0 +1,329 @@
+Generate MCP entry for DIL keyword: weapon_name
+
+=== Yacc rule ===
+| DILSE_WPNTXT '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'weapon_name' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_WPNTXT);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_wpntxt(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* weapon_name uses wpn_text values to return skill names for a skill */
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_INT:
+            v->type = DILV_SP;
+            v->atyp = DILA_EXP;
+            if ((v1->val.num < WPN_TREE_MAX) && (v1->val.num >= 0))
+            {
+                if (g_WpnColl.text[v1->val.num])
+                {
+                    v->val.ptr = str_dup(g_WpnColl.text[v1->val.num]);
+                }
+                else
+                {
+                    v->val.ptr = str_dup("");
+                }
+            }
+            else
+            {
+                v->val.ptr = nullptr; // OOB
+                v->type = DILV_NULL;
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin do_setskill(arg : string);
+
+external
+   integer skillindex(s1 : string);
+   integer weaponindex(s1 : string);
+
+var
+
+  item        :  unitptr;
+  cnt         :  integer;
+  stype       :  string;
+  sname       :  string;
+  sdef        :  integer;
+  samnt       :  integer;
+  schk        :  integer;
+  temp        :  string;
+  slist       :  stringlist;
+  scomp       :  stringlist;
+  buffer      :  string;
+  t1          :  integer;
+  t2          :  integer;
+  t3          :  integer;
+  t4          :  integer;
+  t5          :  integer;
+  t6          :  integer;
+  t7          :  integer;
+
+
+code{
+
+
+ if (arg == "")
+    {
+      sendtext("Syntax: setskill <name> (skill|spell|weapon) <field> <value>.<br/>", self);
+      sendtext("For skills with spaces, use underscore, e.g. armor_soft_leather<br/>", self);
+      quit;
+    }
+
+ temp := arg;
+ cnt := 1;
+
+:loop:
+
+ item := findunit(self, temp, FIND_UNIT_GLOBAL, null);
+
+ if ((item) and (not visible(self, item)))
+    {
+      cnt := cnt + 1;
+      temp := itoa(cnt) + "." + arg;
+      goto loop;
+    }
+
+ if (item == null)
+    {
+      sendtext("No such player or mobile to setskill on.<br/>", self);
+      quit;
+    }
+
+
+ if ((item.type != UNIT_ST_PC) and (item.type != UNIT_ST_NPC))
+    {
+      sendtext("Setskill can only be used on PC's or NPC's.<br/>", self);
+      quit;
+    }
+
+ stype := getword(temp);
+
+ if (stype == "skill")
+     goto set_skill;
+
+ if (stype == "spell")
+     goto set_spell;
+
+ if (stype == "weapon")
+     goto set_weapon;
+
+ sendtext("Your options are either 'skill', 'spell' or 'weapon'.<br/>", self);
+ quit;
+
+
+:set_skill:
+
+  if (item.type == UNIT_ST_NPC)
+     {
+       sendtext("Mobiles cannot have skills set in this manner.<br/>", self);
+       quit;
+     }
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+           {
+             sname := sname + " " + slist.[cnt];
+             cnt := cnt + 1;
+           }
+
+
+       sdef := skillindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid skill, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < SKI_TREE_MAX)
+          {
+            sname := skill_name(sdef);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.skills[sdef] := samnt;
+  sname := skill_name(sdef);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+
+:set_weapon:
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+           {
+             sname := sname + " " + slist.[cnt];
+             cnt := cnt + 1;
+           }
+
+
+       sdef := weaponindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid weapon, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < WPN_TREE_MAX)
+          {
+            sname := weapon_name(sdef);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  if ((item.type == UNIT_ST_NPC) and (sdef >= WPN_GROUP_MAX))
+     {
+       sendtext("Mobiles can only have weapon groups set.<br/>", self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.weapons[sdef] := samnt;
+  sname := weapon_name(sdef);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+:set_spell:
+
+  sname := getword(temp);
+
+  if (sname == "")
+       sdef := -1;
+  else
+     {
+       slist := split(sname, "_");
+
+       sname := slist.[0];
+
+       cnt := 1;
+
+       while (cnt < length(slist))
+          {
+            sname := sname + " " + slist.[cnt];
+            cnt := cnt + 1;
+          }
+
+
+       sdef := spellindex(sname);
+     }
+
+  if (sdef == -1)
+     {
+       buffer := "Invalid spell, please choose from the following:<br/>";
+
+       sdef := 0;
+       while (sdef < SPL_TREE_MAX)
+          {
+            sname := spellinfo(sdef, t1, t2, t3, t4, t5, t6, t7);
+
+            if (sname == "")
+                break;
+
+            buffer := buffer + sname + "<br/>";
+
+            sdef := sdef + 1;
+          }
+
+       sendtext(buffer, self);
+       quit;
+     }
+
+  if ((item.type == UNIT_ST_NPC) and (sdef >= SPL_GROUP_MAX))
+     {
+       sendtext("Mobiles can only have spell groups set.<br/>", self);
+       quit;
+     }
+
+  temp := getword(temp);
+  samnt := atoi(temp);
+  item.spells[sdef] := samnt;
+  sname := spellinfo(sdef, t1, t2, t3, t4, t5, t6, t7);
+
+  act("$2n's skill in " + sname + " is set to $3t.", A_ALWAYS, self, item, itoa(samnt), TO_CHAR);
+
+  quit;
+
+
+} dilend

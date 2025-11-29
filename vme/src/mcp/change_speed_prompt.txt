@@ -1,0 +1,86 @@
+Generate MCP entry for DIL keyword: change_speed
+
+=== Yacc rule ===
+| DILSI_CHAS '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of change_speed", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'change_speed' not an unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'change_speed' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_CHAS);
+    }
+}
+
+=== C implementation ===
+void dilfi_chas(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("change_speed", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, FAIL_NULL, 1, DILV_INT))
+    {
+        auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+        if (character && character->isChar() && CHAR_COMBAT(character))
+        {
+            CHAR_COMBAT(character)->changeSpeed(v2->val.num, character->getSpeedPercentage());
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin quaff_dil(arg : string);
+var
+potion: unitptr;
+n: integer;
+
+code
+{
+
+ if (arg == "")
+ {
+ act("What do you want to quaff?",A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+ potion := findunit(self,arg,FIND_UNIT_IN_ME,null);
+
+ if (potion == null)
+ {
+ act("You do not have that item.",A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+ if (potion.objecttype != ITEM_POTION)
+ {
+ act("You can only quaff potions.",A_ALWAYS, self, null, null, TO_CHAR);
+ quit;
+ }
+
+ potion.spells[SPL_ALL] := potion.value[0];
+
+ if (self.position == POSITION_FIGHTING) change_speed(self,PULSE_VIOLENCE*2);
+
+ act("You quaff $2t which dissolves.", A_ALWAYS, self, potion.title, null,
+TO_CHAR);
+ act("$1N quaffs $2t.",
+      A_SOMEONE, self,potion.title, null, TO_REST);
+ n := cast_spell(potion.value[1],self,potion,self,"");
+ n := cast_spell(potion.value[2],self,potion,self,"");
+ n := cast_spell(potion.value[3],self,potion,self,"");
+ send_done("quaff",self,potion,potion,0,"",null, CMD_AUTO_NONE);
+ destroy(potion);
+ quit;
+
+} dilend

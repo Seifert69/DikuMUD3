@@ -1,0 +1,70 @@
+Generate MCP entry for DIL keyword: zonereset
+
+=== Yacc rule ===
+| DILSI_ZONERESET '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_ZP)
+    {
+        dilfatal("Arg 1 of 'resetzone' not a zone pointer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_ZONERESET);
+    }
+}
+
+=== C implementation ===
+void dilfi_zonereset(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("zonereset", p, 1, v1, TYPEFAIL_NULL, 1, DILV_ZP))
+    {
+        dil_getval(v1);
+        if (v1->val.ptr == NULL)
+        {
+           szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call zonereset() with a null pointer.", p->frame->tmpl->prgname);
+        }
+        else
+        {
+           szonelog(p->frame->tmpl->zone, "DIL '%s' programatically resetting zone %s.", p->frame->tmpl->prgname, ((zone_type *) v1->val.ptr)->getName());
+           zone_reset((zone_type *) v1->val.ptr);
+        }
+    }
+
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin cmd_reset(arg : string);
+var
+   z : zoneptr;
+   u : unitptr;
+code
+{
+   if (arg == "")
+   {
+      u := self.outside;
+      while (u.type != UNIT_ST_ROOM)
+          u := u.outside;
+      z := findzone(u.zone);
+   }
+   else
+   {
+      z := findzone(arg);
+   }
+
+   if (z == null)
+   {
+       sendtext("Could not find a zone named "+ arg + "<br/>", self);
+       quit;
+   }
+
+   sendtext("Resetting zone "+ z.name + "<br/>", self);
+   zonereset(z);
+
+   quit;
+} dilend

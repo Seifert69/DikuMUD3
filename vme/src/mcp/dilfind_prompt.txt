@@ -1,0 +1,110 @@
+Generate MCP entry for DIL keyword: dilfind
+
+=== Yacc rule ===
+| DILSE_DLF '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'dilfind' not string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'dilfind' not unitptr");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_DLF);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_dlf(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Detection of DIL programs (TRUE/FALSE) */
+
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+    switch (dil_getval(v2))
+    {
+        case DILV_UP:
+            switch (dil_getval(v1))
+            {
+                case DILV_SP:
+                    if (v1->val.ptr && v2->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        if (dil_find((char *)v1->val.ptr, (unit_data *)v2->val.ptr))
+                        {
+                            v->val.num = TRUE;
+                        }
+                        else
+                        {
+                            v->val.num = FALSE;
+                        }
+                    }
+                    break;
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin look_signature();
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+  :start:
+  wait (SFB_CMD,(
+  (command ("look")) and
+  (("signature"==argument ) or ("signatures" == argument))
+  ));
+  block;
+  pc:=ghead();
+sendtext ("The following book signers are on line.<br/><br/>",activator);
+
+     while (pc.type==UNIT_ST_PC)
+      {
+      if (((isset (pc.pcflags,PC_PK_RELAXED)) or
+			(dilfind ("no_kill@function",pc))) and
+      (pc.level<200) and
+      (visible (activator,pc)))
+     sendtext(pc.name+" "+pc.title+"<br/>",activator);
+      pc:=pc.gnext;
+      }
+
+goto start;
+} dilend

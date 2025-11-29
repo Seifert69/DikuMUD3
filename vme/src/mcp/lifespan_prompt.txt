@@ -1,0 +1,63 @@
+Generate MCP entry for DIL keyword: lifespan
+
+=== Yacc rule ===
+| DILSF_LSA /* .lifespan */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_LSA;
+}
+
+=== C implementation ===
+case DILF_LSA:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+
+                        if (p->frame[0].tmpl->zone->getAccessLevel() != 0)
+                        {
+                            v->type = DILV_INT;
+                            v->val.num = pc->getLifespan();
+                        }
+                        else
+                        {
+                            v->type = DILV_UINT2R;
+                            v->ref = pc->getLifespanPtr();
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin integer hit_l_num(pc:unitptr,point:integer);
+code
+{
+    if (pc.type==UNIT_ST_PC)
+    {
+        if (((realtime-pc.birth)/SECS_PER_MUD_YEAR)>pc.lifespan)
+            return (-1);
+        return (3*point+20);
+    }
+    else
+        return (3*point+10);
+} dilend

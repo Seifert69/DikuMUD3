@@ -1,0 +1,112 @@
+Generate MCP entry for DIL keyword: exec
+
+=== Yacc rule ===
+| DILSI_EXE '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'exec' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'exec' not a unit");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_EXE);
+    }
+}
+
+=== C implementation ===
+void dilfi_exec(dilprg *p)
+{
+    static int nested = 0; // Used to count nests of exec() from DIL, need for secure hack
+
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("exec", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        if (v1->val.ptr && v2->val.ptr && ((unit_data *)v2->val.ptr)->isChar())
+        {
+            char cmd[MAX_INPUT_LENGTH + 1];
+
+            strncpy(cmd, (char *)v1->val.ptr, MAX_INPUT_LENGTH);
+            cmd[MAX_INPUT_LENGTH] = 0;
+
+            if (strlen((char *)v1->val.ptr) > MAX_INPUT_LENGTH)
+            {
+                slog(LOG_ALL, 0, "DIL %s issued command which was too long: %s", p->sarg->owner->getFileIndexSymName(), cmd);
+            }
+
+            bool bOkToExecute = true;
+
+            if (IS_IMMORTAL((unit_data *)v2->val.ptr))
+            {
+                char buf[MAX_INPUT_LENGTH];
+                command_info *cmd_ptr = nullptr;
+
+                str_next_word(cmd, buf);
+
+                if ((cmd_ptr = (command_info *)search_trie(buf, g_intr_trie)))
+                {
+                    if (cmd_ptr->minimum_level >= IMMORTAL_LEVEL)
+                    {
+                        bOkToExecute = false;
+                        slog(LOG_EXTENSIVE,
+                             0,
+                             "DIL %s on %s tried "
+                             "to make %s do: %s",
+                             p->fp->tmpl->prgname,
+                             STR(p->sarg->owner->getNames().Name()),
+                             ((unit_data *)v2->val.ptr)->getNames().Name(),
+                             cmd);
+                    }
+                }
+            }
+
+            if (bOkToExecute)
+            {
+                nested++;
+
+                command_interpreter((unit_data *)v2->val.ptr, cmd);
+                if (p && p->frame)
+                {
+                    dil_test_secure_unit_destroyed(p, (unit_data *)v2->val.ptr);
+                }
+
+                nested--;
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ); /* Do this to activate the DILs */
+   return;
+} dilend

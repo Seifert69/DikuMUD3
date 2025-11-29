@@ -1,0 +1,70 @@
+Generate MCP entry for DIL keyword: gnext
+
+=== Yacc rule ===
+| DILSF_GNX /* .gnext */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_GNX;
+}
+
+=== C implementation ===
+case DILF_GNX:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        v->val.ptr = unit->getGlobalNext();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin look_signature();
+var
+  pc:unitptr;
+  code
+  {
+  heartbeat:=PULSE_SEC*3;
+  :start:
+  wait (SFB_CMD,(
+  (command ("look")) and
+  (("signature"==argument ) or ("signatures" == argument))
+  ));
+  block;
+  pc:=ghead();
+sendtext ("The following book signers are on line.<br/><br/>",activator);
+
+     while (pc.type==UNIT_ST_PC)
+      {
+      if (((isset (pc.pcflags,PC_PK_RELAXED)) or
+			(dilfind ("no_kill@function",pc))) and
+      (pc.level<200) and
+      (visible (activator,pc)))
+     sendtext(pc.name+" "+pc.title+"<br/>",activator);
+      pc:=pc.gnext;
+      }
+
+goto start;
+} dilend

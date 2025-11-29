@@ -1,0 +1,108 @@
+Generate MCP entry for DIL keyword: switched
+
+=== Yacc rule ===
+| DILSF_SWT /* .switched */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_SWT;
+}
+
+=== C implementation ===
+case DILF_SWT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        unit_data *switched = nullptr;
+                        unit_data *vict = nullptr;
+                        vict = ((unit_data *)v1->val.ptr);
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
+                        {
+                            descriptor_data *d = nullptr;
+                            for (d = g_descriptor_list; d; d = d->getNext())
+                            {
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
+                                {
+                                    switched = d->getCharacter();
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (vict->isNPC() && CHAR_DESCRIPTOR(vict))
+                            {
+                                if (CHAR_DESCRIPTOR(vict)->cgetOriginalCharacter())
+                                {
+                                    switched = CHAR_DESCRIPTOR(vict)->getCharacter();
+                                }
+                            }
+                        }
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        v->val.ptr = switched;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin heal_animal(medi : unitptr, tgt : unitptr, arg : string,
+                       hm : integer, effect : string);
+var
+   heal_ran : integer;
+
+code
+{
+   if ((not(race_lower_animal(tgt.race)))) // there are cases where an PC can be a 'lower animal' - Removing NPC check
+   {
+      act("Your spell will only heal animals.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (hm <= 0)
+   {
+      act("You fail.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if (tgt.hp == tgt.max_hp)
+   {
+      act("It is in excellent health - your spell does nothing more " +
+          "it.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   heal_ran := rnd(self.spells[SPL_HEAL_ANIMAL]/2,
+                  self.spells[SPL_HEAL_ANIMAL]/2 + 30);
+
+   if ( (tgt.hp + heal_ran) > (tgt.max_hp) )
+      tgt.hp := (tgt.max_hp);
+   else tgt.hp := (tgt.hp + heal_ran);
+   act("The gods smile on you and $3N looks better.",
+       A_ALWAYS, self, null, tgt, TO_CHAR);
+   act("The gods smile on $1n and $3N looks better.",
+       A_ALWAYS, self, null, tgt, TO_NOTVICT);
+   act("The gods smile on $1n and you feel better.", /*switched gods*/
+       A_ALWAYS, self, null, tgt, TO_VICT);
+
+   quit;
+} dilend

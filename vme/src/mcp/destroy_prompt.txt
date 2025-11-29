@@ -1,0 +1,69 @@
+Generate MCP entry for DIL keyword: destroy
+
+=== Yacc rule ===
+| DILSI_DST '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'destruct' not a unit");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_DST);
+    }
+}
+
+=== C implementation ===
+void dilfi_dst(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("purge", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isRoom())
+        {
+            if (v1->val.ptr == p->sarg->owner)
+            {
+                extract_unit((unit_data *)v1->val.ptr);
+                p->waitcmd = WAITCMD_DESTROYED;
+            }
+            else
+            {
+                extract_unit((unit_data *)v1->val.ptr);
+                dil_test_secure_unit_destroyed(p, (unit_data *)v1->val.ptr);
+            }
+            if (((unit_data *)v1->val.ptr)->isPC())
+            {
+                if (CHAR_DESCRIPTOR((unit_data *)v1->val.ptr))
+                {
+                    descriptor_close(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr));
+                }
+            }
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin rotaway();
+code
+{
+   heartbeat := PULSE_SEC * 9600;
+
+   :loop:
+   pause;
+
+   if (self.outside.type == UNIT_ST_ROOM)
+   {
+      if (not isset(self.flags, UNIT_FL_BURIED))
+        act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
+      destroy(self);
+   }
+
+   goto loop;
+} dilend

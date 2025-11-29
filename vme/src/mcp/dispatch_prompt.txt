@@ -1,0 +1,65 @@
+Generate MCP entry for DIL keyword: dispatch
+
+=== Yacc rule ===
+| DILSI_DISPATCH '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'dispatch' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_DISPATCH);
+    }
+}
+
+=== C implementation ===
+void dilfi_dispatch(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("dispatch", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (v1->val.ptr)
+        {
+            pipeMUD_write((const char *)v1->val.ptr);
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin aware cmd_bugs(st : string);
+var
+   t : string;
+   z : unitptr;
+   i : integer;
+code
+{
+   if (self.type!=UNIT_ST_PC)
+      return;
+   sendtext("Enter your bug reports. You have approximately 4000 "+
+            "characters to work with. Note that if you input only a "+
+            "single word or nothing at all, it will abort.<br/>", self);
+   beginedit(self);
+   wait(SFB_EDIT, self == activator);
+   t := argument;
+   if (length(getwords(t)) < 2)
+   {
+      sendtext("Insufficient report. Exiting.<br/>", self);
+      quit;
+   }
+   z := self.outside;
+   while (z.type != UNIT_ST_ROOM)
+      z := z.outside;
+   t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
+   t := textformat(t);
+   i := flog("bugs", t, "a");
+   sendtext("Thank you. They will be corrected.<br/>", self);
+   dispatch("discord msg #bugs @" + self.name + " bug report: " + t); // Send to dispatcher.py via pipeDispatcher
+
+   quit;
+} dilend

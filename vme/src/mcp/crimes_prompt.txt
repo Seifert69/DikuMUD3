@@ -1,0 +1,88 @@
+Generate MCP entry for DIL keyword: crimes
+
+=== Yacc rule ===
+| DILSF_CRM /* .crimes */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_CRM;
+}
+
+=== C implementation ===
+case DILF_CRM:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                    if (pc && pc->isPC())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT2R;
+                        v->ref = pc->getNumberOfCrimesCommittedPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin deputy_join();
+var
+  u : unitptr;
+
+code
+{
+   :loop:
+   unsecure(u);
+   wait(SFB_CMD, command("join"));
+
+   if (activator.type != UNIT_ST_PC)
+     goto loop;
+
+   u := activator;
+   secure(u, loop);
+
+   block;
+
+   if (POLICE_ACADEMY in u.quests)
+   {
+      exec("say You're already a deputy, "+u.name+", now stop bothering me "+
+	   "and go catch some criminals.", self);
+      goto loop;
+   }
+
+   if ((POLICE_BANNED in u.quests) or (u.crimes > 0) or
+       isset(u.charflags, CHAR_OUTLAW))
+   {
+      exec("say You have a criminal record, we can not accept you as a "+
+	   "deputy "+u.name+".",self);
+      goto loop;
+   }
+
+   exec("say We are glad to honour you as a deputy, "+u.name+".", self);
+   pause;
+   exec("say Clearly we need a stronger law these days as the amount of "+
+	"violence seems to increase every day.", self);
+   pause;
+   exec("say A word of warning is needed, if you break any laws, your "+
+	"jurisdiction will immediately be revoked, and all knowledge "+
+	"taught to you will forever be gone.", self);
+   pause;
+   exec("handshake "+u.name, self);
+   addextra(u.quests, {POLICE_ACADEMY}, "");
+} dilend

@@ -1,0 +1,179 @@
+Generate MCP entry for DIL keyword: skills
+
+=== Yacc rule ===
+| DILSF_SKL idx /* .skills */
+{
+    INITEXP($$);
+    copy_code(&($$), &($2));
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_SKL;
+    FREEEXP($2);
+}
+
+=== C implementation ===
+case DILF_SKL:
+            v2 = p->stack.pop(); /* evaluate index */
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    v->type = DILV_INT;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            if (v->type == DILV_INT)
+            {
+                auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
+                if (pc && pc->isPC() && is_in(v2->val.num, 0, SKI_TREE_MAX - 1))
+                {
+                    if (p->frame[0].tmpl->zone->getAccessLevel() == 0)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT2R;
+                        v->ref = pc->getSkillAtIndexPtr(v2->val.num);
+                    }
+                    else
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = pc->getSkillAtIndex(v2->val.num);
+                    }
+                }
+                else
+                {
+                    v->type = DILV_FAIL;
+                }
+            }
+            break;
+
+=== DIL example ===
+dilbegin cuffs();
+external
+   integer skillresist@function(aa : integer, ad : integer,
+                             sa : integer, sd : integer);
+   cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+
+var
+   deputy : unitptr;
+   targ   : unitptr;
+   skilla : integer;
+   skilld : integer;
+   hm     : integer;
+   depname: string;
+code
+{
+   :loop:
+   unsecure(deputy);
+   wait(SFB_CMD, command("cuff"));
+
+   if (activator != self.outside)
+     goto loop;
+
+   deputy := activator;
+   secure(deputy, loop);
+
+   block;
+
+   if ((deputy.type == UNIT_ST_PC) and (deputy.skills[SKI_CUFF] <= 0))
+   {
+      act("You must practice first.",
+	  A_ALWAYS, deputy, null, null, TO_CHAR);
+      goto loop;
+   }
+
+   if (argument == "")
+   {
+      act("Cuff who?",
+	  A_SOMEONE, deputy, null, null, TO_CHAR);
+      goto loop;
+   }
+
+   targ := findunit(deputy, argument, FIND_UNIT_SURRO, null);
+
+   if (targ == null)
+   {
+      act("That person is not here!",
+          A_SOMEONE, deputy, null, null, TO_CHAR);
+      goto loop;
+   }
+
+   if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+   {
+      act("You can't cuff that, silly!", A_SOMEONE, deputy, null, null,
+	  TO_CHAR);
+      goto loop;
+   }
+
+   if (targ == deputy)
+   {
+      act("Cuffing yourself seems like a bad idea.",
+          A_HIDEINV, deputy, null, null, TO_CHAR);
+      goto loop;
+   }
+
+   if (not isset(targ.charflags, CHAR_OUTLAW))
+   {
+      act("$3n is not wanted.",
+	  A_HIDEINV, deputy, null, targ, TO_CHAR);
+      goto loop;
+   }
+
+
+   if (deputy.type == UNIT_ST_PC)
+     skilla := deputy.skills[SKI_CUFF];
+   else
+     skilla := deputy.abilities[ABIL_DEX];
+
+   if (targ.type == UNIT_ST_PC)
+     skilld := targ.skills[SKI_CUFF];
+   else
+     skilld := targ.abilities[ABIL_DEX];
+
+   secure(targ, loop);
+
+   hm := skillresist@function(deputy.abilities[ABIL_DEX],
+		     targ.abilities[ABIL_DEX],
+		     skilla, skilld);
+   if (hm < 0)
+   {
+      act("Your attempt at cuffing $3n fails miserably.",
+	  A_SOMEONE, deputy, null, targ, TO_CHAR);
+      act("$1n attempts to cuff you but fails miserably.",
+	  A_SOMEONE, deputy, null, targ, TO_VICT);
+      act("$1n attempts to cuff $3n but fails miserably.",
+	  A_SOMEONE, deputy, self, targ, TO_NOTVICT);
+      link(self, targ);
+      goto loop;
+   }
+
+   cuff_target(activator, targ, self);
+   /* targ is secured, when broken we reset to loop */
+
+   :cuffed:
+   wait(SFB_CMD, self.equip != WEAR_WRIST_R);
+   // Cuffs are no longer on the wrist, start over
+   goto loop;
+} dilend

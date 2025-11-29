@@ -1,0 +1,168 @@
+Generate MCP entry for DIL keyword: zhead
+
+=== Yacc rule ===
+| DILSE_ZHEAD '(' ')'
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_ZP;
+    add_ubit8(&($$), DILE_ZHEAD);
+}
+
+=== C implementation ===
+void dilfe_zhead(dilprg *p)
+{
+    dilval *v = new dilval;
+    v->atyp = DILA_NORM;
+    v->type = DILV_ZP;
+    v->val.ptr = g_zone_info.mmp.begin()->second;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin aware boot_area();
+var
+i:integer;
+ cnt:integer;
+ zones:zoneptr;
+ tlist:stringlist;
+ temp:string;
+ ln:integer;
+ iMax:integer;
+ inc:integer;
+ iVal:string;
+ j:integer;
+ donlist:stringlist;
+ zonlist:stringlist;
+  nodonlist:stringlist;
+  conlist:stringlist;
+
+code
+{
+
+heartbeat:=4;
+:start:
+zonlist:={"$zonlist"};
+donlist:={"$donlist"};
+nodonlist:={"$nodonlist"};
+conlist:={"$conlist"};
+    zones := zhead();
+    cnt:=0;
+ while (zones)
+ {
+
+		tlist := split(zones.title,"@");
+
+if (length(tlist)==2)
+         {
+                 temp:=tlist.[1]+"@"+tlist.[0];
+          if (zones.payonly)
+{
+if (not((zones.title+"@*") in zonlist))
+{
+addstring(zonlist,(zones.title+"@*"));
+addstring(conlist,(temp+"@*"));
+}
+}
+else
+{
+if (not((zones.title+"@n") in zonlist))
+{
+addstring(zonlist,(zones.title+"@n"));
+addstring(conlist,(temp+"@n"));
+}
+}
+
+}
+
+zones:=zones.next;
+}
+
+pause;
+
+iMax:=length(zonlist);
+inc:=1;
+
+while (inc < iMax)
+ inc := inc *3+1;
+
+inc:=inc/3;
+while (inc > 0)
+ {
+
+ i:=inc;
+ while (i < iMax)
+  {
+  iVal := zonlist.[i];
+  j:=i;
+  while (j > (inc-1))
+   {
+   if (iVal < zonlist.[j - inc])
+    {
+    zonlist.[j] := zonlist.[j - inc];
+    }
+   else
+    break;
+   j:=j-inc;
+   }
+  zonlist.[j] := iVal;
+  i:=i+1;
+  }
+ inc := inc /3;
+ }
+
+pause;
+
+iMax:=length(conlist);
+inc:=1;
+
+while (inc < iMax)
+ inc := inc *3+1;
+
+inc:=inc/3;
+while (inc > 0)
+ {
+
+ i:=inc;
+ while (i < iMax)
+  {
+  iVal := conlist.[i];
+  j:=i;
+  while (j > (inc-1))
+   {
+   if (iVal < conlist.[j - inc])
+    {
+    conlist.[j] := conlist.[j - inc];
+    }
+   else
+    break;
+   j:=j-inc;
+   }
+  conlist.[j] := iVal;
+  i:=i+1;
+  }
+ inc := inc /3;
+ }
+
+            pause;
+
+            i:=1;
+            ln:=length(zonlist);
+            while (i<ln)
+             {
+             tlist:=split(zonlist.[i],"@");
+              if (tlist.[2]=="n")
+                             addstring(nodonlist,tlist.[0]+"@"+tlist.[1]);
+              else
+                             addstring(donlist,tlist.[0]+"@"+tlist.[1]);
+
+                             i:=i+1;
+                             }
+
+addextra(self.extra,zonlist,"all");
+addextra(self.extra,donlist,"all");
+addextra(self.extra,conlist,"all");
+addextra(self.extra,nodonlist,"all");
+                                                                      addextra(self.extra,donlist,"all");
+quit;
+} dilend

@@ -1,0 +1,81 @@
+Generate MCP entry for DIL keyword: sex
+
+=== Yacc rule ===
+| DILSF_SEX /* .sex */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_SEX;
+}
+
+=== C implementation ===
+case DILF_SEX:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_SINT1R;
+                        v->ref = character->getSexPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin ask_keeper3();
+var
+s: string;
+code
+{
+on_activation(self.position==POSITION_FIGHTING,skip);
+
+        :start:
+wait(SFB_DONE,command("ask")and(target==self)and(argument));
+if ((activator.sex==SEX_MALE)or(activator.sex==SEX_NEUTRAL)) s:="sir";
+if (activator.sex==SEX_FEMALE) s:="madam";
+if ("pipe" in argument)
+{
+exec("smile",self);
+exec("say Aaah, my pipes are of the best quality, guaranteeing hours of "+
+"smoking pleasure, "+s+".",self);
+goto start;
+}
+if(("pouch"in argument)or("tobacco" in argument))
+{
+exec("emote nods slightly.",self);
+exec("say Only the finest of the gnomish tobacco sorts are used for my "+
+"blends, "+s+".",self);
+goto start;
+}
+if ("cigar" in argument)
+{
+exec("say Manufactured of the best tobacco leaves available, I have "+
+"cigars in every price category.",self);
+exec("whisper "+activator.name+" ...although I might suggest the fine "+
+"cigars myself, "+s+".",self);
+exec("say The enjoyment is unsurpassed.",self);
+exec("emote smiles slightly.",self);
+goto start;
+}
+exec("say Uhm, are you sure, you saw it in my store, "+s+"?",self);
+goto start;
+} dilend

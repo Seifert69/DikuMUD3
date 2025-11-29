@@ -1,0 +1,75 @@
+Generate MCP entry for DIL keyword: sendto
+
+=== Yacc rule ===
+| DILSI_SNT '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'sendto' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'sendto' not a unit");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SNT);
+    }
+}
+
+=== C implementation ===
+void dilfi_snt(dilprg *p)
+{
+    /* sendto (string, uptr) */
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("sendto", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, FAIL_NULL, 1, DILV_UP))
+    {
+        if (v1->val.ptr && v2->val.ptr)
+        {
+            spec_arg sarg;
+
+            sarg.activator = p->sarg->owner;
+            sarg.medium = nullptr;
+            sarg.target = nullptr;
+            sarg.pInt = nullptr;
+            sarg.fptr = nullptr; /* Set by unit_function_scan */
+            sarg.cmd = &g_cmd_auto_msg;
+            sarg.arg = (char *)v1->val.ptr;
+            sarg.mflags = SFB_MSG | SFB_AWARE;
+
+            unit_function_scan((unit_data *)v2->val.ptr, &sarg);
+
+            dil_test_secure(p);
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin aware unique still_newbie();
+code
+{
+interrupt (SFB_CMD, ((command ("level")) and
+(activator==self)),lvl_check);
+:start:
+wait (SFB_DONE, command ("say") and
+  (activator==self) and
+(("help me" in argument) and
+("newbie guide" in argument)));
+if ((self.outside.nameidx+"@"+self.outside.zoneidx)=="nightmare@hobgob")
+goto start;
+subextra(activator.quests, NO_NEWBIE);
+sendto("stillnewbie", findroom("newbie_hangout@newbie"));
+goto start;
+:lvl_check:
+if (activator.level>5) quit;
+goto start;
+} dilend

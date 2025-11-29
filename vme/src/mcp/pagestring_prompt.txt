@@ -1,0 +1,307 @@
+Generate MCP entry for DIL keyword: pagestring
+
+=== Yacc rule ===
+| DILSI_PGSTR '(' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'pagestring' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'pagestring' not a unitptr");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_PGSTR);
+    }
+}
+
+=== C implementation ===
+void dilfi_pgstr(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
+        {
+            dil_typeerr(p, "not a pc/npc unit");
+        }
+        else if (v1->val.ptr && v2->val.ptr)
+        {
+            page_string(CHAR_DESCRIPTOR((unit_data *)v2->val.ptr), (char *)v1->val.ptr);
+        }
+    }
+    delete v2;
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin cinfo (arg:string);
+var
+	ln:integer;
+	count:integer;
+	buf:string;
+	pc:unitptr;
+    mlist:stringlist;
+	line:stringlist;
+	list:stringlist;
+	pos:stringlist;
+	ps:string;
+	i:integer;
+	err:integer;
+	rlist:stringlist;
+code
+{
+	if (self.extra.[CLAN_SYMBOLIC]==null)
+	{
+		act ("<div class='clan'>You are not a member of a clan.</div>",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
+	pc:=ghead();
+	while (pc.type==UNIT_ST_PC)
+	{
+		if ((pc.extra.[CLAN_NAME].descr==self.extra.[CLAN_NAME].descr) and
+		(visible(self,pc)))
+		addstring(list,pc.name);
+		pc:=pc.gnext;
+	}
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr,buf);
+	if (err<1)
+	{
+		log ("01:  Error in cinfo");
+		quit;
+	}
+	mlist:=split(buf,"\n");
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	if (err<1)
+		err:=loadstr ("default.rank",buf);
+		if (err<1)
+		{
+			buf:="\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank
+			blank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank\nblank";
+		}
+	rlist:=split(buf,"\n");
+	if (arg=="")
+		goto cinfo_who;
+	else if (arg==left("master",length(arg)))
+		goto cinfo_mast;
+	else if (arg==left("lord",length(arg)))
+		goto cinfo_lord;
+	else if (arg==left("treasurer",length(arg)))
+		goto cinfo_treas
+	else if (arg==left("quartermaster",length(arg)))
+		goto cinfo_quar;
+		
+:cinfo_who:
+
+	buf:="<div class='clan'>Clan members (* denotes on line):<br/><br/></div>";
+	i:=0;
+	ln:=length(mlist);
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split(line.[2],"/");
+		ps:="";
+		if (pos.[0]=="$master")
+			ps:="*Master* ";
+		else if (pos.[0]=="$lord")
+			ps:="&lt;Lord&gt; ";
+		if (pos.[1]=="$treasure")
+			ps:=ps+"[Treasurer] ";
+		if (pos.[2]=="$quartermaster")
+			ps:=ps+"[Quartermaster] ";
+		if (line.[0] in list)
+		{
+			if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+				buf:=buf+"* "+line.[0]+" "+ps+"<br/>";
+			else
+				buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps+"<br/>";
+		}
+		else
+		{
+			if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+				buf:=buf+"  "+line.[0]+" "+ps+"<br/>";
+			else
+				buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+" "+ps +"<br/>";
+		}
+		i:=i+1;
+	}
+	goto cinfo_list;
+
+:cinfo_mast:
+	
+	if (self.extra.[CLAN_RANK].names.[1]=="$master")
+	{
+		sendtext (textformat("You are the master daaa!<br/>"),self);
+		quit;
+	}
+	buf:="<div class='clan'>The "+self.extra.[CLAN_NAME].descr+" clan master is (* denotes on line):</div>";
+	i:=0;
+	ln:=length(mlist);
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split (line.[2],"/");
+		if (pos.[0]=="$master")
+		{
+			if (line.[0] in list)
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			else
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+		}
+		i:=i+1;
+	}
+	goto cinfo_list;
+
+:cinfo_lord:
+	
+	ln:=length(mlist);
+	i:=0;
+	buf:="<div class='clan'>Clan lords (* denotes on line):<br/><br/></div>";
+	count:=0;
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split (line.[2],"/");
+		if (pos.[0]=="$lord")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			else
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			i:=i+1;
+		}
+		i:=i+1;
+	}
+	if (count<=0)
+		buf:="This clan has no lords yet see the master.<br/>";
+	goto cinfo_list;
+	
+:cinfo_treas:
+	
+	ln:=length(mlist);
+
+	i:=0;
+	buf:="<div class='clan'>Clan treasurers (* denotes on line):<br/><br/></div>";
+	count:=0;
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split (line.[2],"/");
+		if (pos.[1]=="$treasure")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			else
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+		}
+		i:=i+1;
+	}
+
+	if (count<=0)
+		buf:="This clan has no treasurers yet see the master.<br/>";
+	goto cinfo_list;
+
+:cinfo_quar:
+	
+	ln:=length(mlist);
+	i:=0;
+	buf:="<div class='clan'>Clan Quartermasters (* denotes on line):<br/><br/></div>";
+	count:=count+1;
+	while (i<ln)
+	{
+		line:=split(mlist.[i],":");
+		if (length(line)<3)
+		{
+			i:=i+1;
+			continue;
+		}
+		pos:=split (line.[2],"/");
+		if (pos.[2]=="$quartermaster")
+		{
+			count:=count+1;
+			if (line.[0] in list)
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"* "+line.[0]+"<br/>";
+				else
+					buf:=buf+"* "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+			else
+			{
+				if ((line.[1]=="0") or (rlist.[atoi(line.[1])]=="blank"))
+					buf:=buf+"  "+line.[0]+"<br/>";
+				else
+					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
+			}
+		}
+		i:=i+1;
+	}
+	if (count<=0)
+		buf:="This clan has no quartermaster yet see the master.<br/>";
+	goto cinfo_list;
+
+:cinfo_list:
+	
+	pagestring(textformat(buf+"<div class='default'></div>")+"<br/>",self);
+	quit;
+} dilend

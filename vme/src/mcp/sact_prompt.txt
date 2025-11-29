@@ -1,0 +1,209 @@
+Generate MCP entry for DIL keyword: sact
+
+=== Yacc rule ===
+| DILSE_SACT '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$)
+    checkbool("argument 2 of act", $5.boolean);
+    checkbool("argument 6 of act", $13.boolean);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'act' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'act' not an integer");
+    }
+    else if ($7.typ != DilVarType_e::DILV_NULL
+             && $7.typ != DilVarType_e::DILV_SP
+             && $7.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 3 of 'act' not a unit or string");
+    }
+    else if ($9.typ != DilVarType_e::DILV_NULL
+             && $9.typ != DilVarType_e::DILV_SP
+             && $9.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 4 of 'act' not a unit or string");
+    }
+    else if ($11.typ != DilVarType_e::DILV_NULL
+             && $11.typ != DilVarType_e::DILV_SP
+             && $11.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 5 of 'act' not a unit or string");
+    }
+    else if ($13.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 6 of 'act' not an integer");
+    }
+    else
+    {
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        make_code(&($9));
+        make_code(&($11));
+        make_code(&($13));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_code(&($$), &($9));
+        add_code(&($$), &($11));
+        add_code(&($$), &($13));
+        add_ubit8(&($$), DILE_SACT);
+    }
+}
+
+=== C implementation ===
+void dilfe_sact(dilprg *p)
+{
+    dilval *v = new dilval; // Return variable
+    v->type = DILV_FAIL;    // NULL string
+
+    /* sact() function call */
+    dilval *v6 = p->stack.pop();
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    /* 6 arguments */
+
+    p->waitcmd--;
+
+    if (dil_type_check("sact",
+                       p,
+                       6,
+                       v1,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_SP,
+                       v2,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v3,
+                       TYPEFAIL_NULL,
+                       3,
+                       DILV_UP,
+                       DILV_SP,
+                       DILV_NULL,
+                       v4,
+                       TYPEFAIL_NULL,
+                       3,
+                       DILV_UP,
+                       DILV_SP,
+                       DILV_NULL,
+                       v5,
+                       TYPEFAIL_NULL,
+                       3,
+                       DILV_UP,
+                       DILV_SP,
+                       DILV_NULL,
+                       v6,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT))
+    {
+        switch (v6->val.num)
+        {
+            case TO_CHAR:
+            case TO_ROOM:
+            case TO_ALL:
+            case TO_REST:
+                /* these require 1st argument */
+                if (v3->val.ptr)
+                {
+                    char dest[MAX_STRING_LENGTH];
+                    sact(dest, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
+                    v->val.ptr = str_dup(dest);
+                    v->atyp = DILA_EXP;
+                    v->type = DILV_SP;
+                }
+                break;
+
+            case TO_VICT:
+            case TO_NOTVICT:
+                if (v5->val.ptr)
+                {
+                    char dest[MAX_STRING_LENGTH];
+                    sact(dest, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
+                    v->val.ptr = str_dup(dest);
+                    v->atyp = DILA_EXP;
+                    v->type = DILV_SP;
+                }
+        } // switch
+    }     // if
+    else
+    {
+        v->type = DILV_ERR; /* wrong type */
+    }
+
+    p->stack.push(v);
+
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+    delete v6;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_MISSION) unique to_the_rescue(sroomto : string);
+external
+   unitptr unit_room@function(u : unitptr);
+   integer walk_room@function (s:string,i:integer);
+
+var 
+   roomorg : string;
+   roomto  : string;
+   tf      : integer;
+   descorg : string;
+
+code
+{
+   if (self.outside.type != UNIT_ST_ROOM)
+   {
+      act("$1n looks up, down, left, right. Pauses. Seems confused about $1s surroundings.",
+            A_ALWAYS, self, null, null, TO_ALL);
+      quit;
+   }
+
+   roomorg := self.outside.symname;
+   descorg := self.outside_descr;
+   roomto  := sroomto;
+
+   :torescue:
+   priority;
+   self.outside_descr := sact("$1n is hurrying along.", A_ALWAYS, self, null, null, TO_CHAR);
+   tf:=walk_room@function(roomto, 5);
+   self.outside_descr := sact("$1n is on the lookout.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   // Stay a little
+   act("$1n alertly scans $1s surroundings.",A_ALWAYS, self, null, null, TO_ALL);
+   heartbeat := PULSE_SEC*4;
+   nopriority;
+
+   :nowwhat:
+   // Let the other DIL programs take control (no priority above)
+   pause;
+   pause;
+   pause;
+   if (self.position == POSITION_FIGHTING)
+      goto nowwhat;
+
+   :gohome:
+   self.outside_descr := sact("$1n is trodding along.", A_ALWAYS, self, null, null, TO_CHAR);
+   priority;
+   tf:=walk_room@function(roomorg, 8);
+   self.outside_descr := descorg;
+   nopriority;
+   return;
+} dilend

@@ -1,0 +1,84 @@
+Generate MCP entry for DIL keyword: resettime
+
+=== Yacc rule ===
+| DILSF_RSTTM
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_RSTTM;
+}
+
+=== C implementation ===
+case DILF_RSTTM:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT2R;
+                        v->ref = ((zone_type *)v1->val.ptr)->getZoneResetTimePtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin secret_wipe(dir : integer);
+external
+   string  dirstring@spells(i1 : integer);
+
+var
+   ext   :  extraptr;
+   zon   :  zoneptr;
+   door  :  string;
+
+code
+{
+   zon := zhead();
+
+   while(zon.name != self.zone)
+      zon := zon.next;
+
+   if (zon.name != self.zone)
+   {
+      log("SECRET DOOR ERROR: " + self.nameidx + "@" + self.zoneidx + " somehow isnt in a zone.");
+      return;
+   }
+
+   /* Set the ticker to the zone's reset time */
+   heartbeat :=  zon.resettime * 60 * PULSE_SEC;
+
+   :start:
+   wait(SFB_TICK, TRUE);
+
+   door := SECRET_DOOR+itoa(dir); 
+   ext :=  door in self.extra;
+
+   /* If no SECRET_DOOR extras at all, there is an error */
+   if (ext == null)
+   {
+      log("SECRET DOOR ERROR: " + self.nameidx + "@" + self.zoneidx + " has secret_wipe() but no secret doors.");
+      return;
+   }
+
+
+   /* Clear the extra of all pc's that have found the secret door  */
+   while(length(ext.names) > 1)
+      substring(ext.names, ext.names.[1]);
+
+   goto start;
+} dilend

@@ -1,0 +1,114 @@
+Generate MCP entry for DIL keyword: unset
+
+=== Yacc rule ===
+| DILSI_UST '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of unset", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_INT || $3.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 1 of 'unset' not an integer variable");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'unset' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_UST);
+    }
+}
+
+=== C implementation ===
+void dilfi_uset(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("unset", p, 1, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        switch (v1->type)
+        {
+            case DILV_FAIL:
+                break;
+            case DILV_SINT1R:
+                REMOVE_BIT(*((sbit8 *)v1->ref), v2->val.num);
+                break;
+            case DILV_SINT2R:
+                REMOVE_BIT(*((sbit16 *)v1->ref), v2->val.num);
+                break;
+            case DILV_SINT4R:
+                REMOVE_BIT(*((sbit32 *)v1->ref), v2->val.num);
+                break;
+            case DILV_UINT1R:
+                REMOVE_BIT(*((ubit8 *)v1->ref), v2->val.num);
+                break;
+            case DILV_UINT2R:
+                REMOVE_BIT(*((ubit16 *)v1->ref), v2->val.num);
+                break;
+            case DILV_UINT4R:
+                REMOVE_BIT(*((ubit32 *)v1->ref), v2->val.num);
+                break;
+
+            default:
+                /* not an lvalue! */
+                dil_typeerr(p, "lvalue unset");
+                break;
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
+external
+    guard_arrest(office : string, prisoner : unitptr);
+    cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+    integer check_outlaw@justice(char : unitptr, juris : string);
+    string get_juris@justice();
+var
+    u : unitptr;
+    outlaw_status : integer;
+    juris : string;
+code
+{
+    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+:loop:
+    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+    if (activator == self)
+        goto loop;
+    juris := get_juris@justice();
+    outlaw_status := check_outlaw@justice(activator, juris);
+    if (outlaw_status == 0)
+        goto loop; 
+
+    u := equipment(activator,  WEAR_WRIST_R);
+
+    if (u)
+        if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
+            goto loop;
+
+    if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
+    {
+        u := load("cuffs@midgaard");
+
+        cuff_target(self, activator, u);
+
+        guard_arrest@midgaard(office, activator);
+    }
+    else
+    {
+        unset(activator.charflags, CHAR_SELF_DEFENCE);
+        // If we have several chars with the same name, this causes havoc
+        //     exec("kill "+activator.name, self);
+        set_fighting(self, activator);
+    }
+
+    goto loop;
+} dilend

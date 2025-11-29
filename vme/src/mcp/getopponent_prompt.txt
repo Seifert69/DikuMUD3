@@ -1,0 +1,134 @@
+Generate MCP entry for DIL keyword: getopponent
+
+=== Yacc rule ===
+| DILSE_GOPP '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'getopponent' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'getopponent' not a integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_UP;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_GOPP);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_gopp(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_INT:
+
+                        if (v2->val.num >= 0)
+                        {
+                            if (CHAR_COMBAT((unit_data *)v1->val.ptr))
+                            {
+                                v->val.ptr = CHAR_COMBAT((unit_data *)v1->val.ptr)->Opponent((int)v2->val.num);
+                                if (v->val.ptr)
+                                {
+                                    v->atyp = DILA_NORM;
+                                    v->type = DILV_UP;
+                                }
+                                else
+                                {
+                                    v->val.ptr = nullptr;
+                                    v->atyp = DILA_NORM;
+                                    v->type = DILV_NULL;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            v->val.ptr = nullptr;
+                            v->atyp = DILA_NORM;
+                            v->type = DILV_NULL;
+                        }
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin string get_pos (looker : unitptr, u:unitptr);
+
+var
+
+     p    :  stringlist;
+     i    :  integer;
+     pc   :  unitptr;
+
+code{
+
+i := u.position;
+p := {" is lying here, dead ... creepy.",
+      " is lying here, mortally wounded.",
+      " is lying here, incapacitated.",
+      " is lying here, stunned.",
+      " is sleeping here.",
+      " is resting here.",
+      " is sitting here.",
+      " is here, fighting ",
+      " is standing here."};
+
+if (i != 7)
+    return (p.[i]);
+
+
+if ((u.fighting == null) and (u.opponentcount == 0))
+    return (p.[i] + "someone who has already left.");
+
+pc := getopponent(u, 0);
+
+if (u.fighting == null)
+    return (p.[i] + pc.name + " at a distance.");
+
+if (u.fighting == looker)
+    return (p.[i] + "YOU!");
+
+return (p.[i] + u.fighting.name);
+
+} dilend

@@ -1,0 +1,151 @@
+Generate MCP entry for DIL keyword: atoi
+
+=== Yacc rule ===
+| DILSE_ATOI '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'atoi' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_ATOI);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_atoi(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Conversion of strings to integers */
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+        case DILV_SP:
+            if (v1->val.ptr)
+            {
+                v->atyp = DILA_NONE;
+                v->type = DILV_INT;
+                v->val.num = atoi((char *)v1->val.ptr);
+            }
+            else
+            {
+                v->type = DILV_FAIL; /* failed */
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* Wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
+external
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type : integer);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris : string);
+   getfrom_safe(prisoner : unitptr);
+   set_char_flags@justice(char : unitptr, setting : string);
+var
+   sname : string;
+   jd : unitptr;
+   id : string;
+   juris : string; 
+   k : string;
+   gold : integer;
+   g : string;
+code
+{
+   heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
+   juris := self.outside.zoneidx;
+   sname := self.outside.symname; // Get the jail symname
+
+   jd := findsymbolic("database@justice");
+   id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+   k := "$reward "+ juris;
+     
+   // Change player arrest descr to reflect that the char is in jail.
+   //
+   jd := findsymbolic("database@justice");
+   
+   if( "$reward" in self.extra)
+   {
+      jd.extra.[id].names.[4] := "-1";
+      self.extra.[k].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+   }
+
+ 
+  :loop:
+   pause;
+   if (sname != self.outside.symname)
+   {
+      // Player has escaped from jail
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "65";
+      self.extra.[k].names.[4] := "65";
+      gold := atoi(jd.extra.[id].names.[2]); 
+      g := moneystring(gold,1); 
+      jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
+      set_char_flags@justice(self, "wanted");
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
+      quit;
+   }
+
+   if("$reward" in self.extra)
+   {
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
+   }
+
+   if ((du % 4) == 0)
+     send("jailfood");
+
+   if (du == 24)
+   {
+      act("At last! The very last day of your term!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du == 12)
+   {
+      act("Only half a day left 'till your freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du <= 1)
+     goto release;
+   else
+   {
+      act("You make another mark on the wall. Only "+itoa(du)+" hours till freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   
+   du := du - 1;
+   goto loop;
+
+
+   /* Get thrown out of jail */
+   :release:
+   act("Your term is over! You are thrown out of the jail and sent home.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   getfrom_safe(self);
+   link(self, findroom("accuse_room@" + juris));
+   rem_db_entry@justice(self, "$reward", juris);
+   set_char_flags@justice(self, "arrest");
+   quit;
+} dilend

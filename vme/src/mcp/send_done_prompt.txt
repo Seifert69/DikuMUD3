@@ -1,0 +1,396 @@
+Generate MCP entry for DIL keyword: send_done
+
+=== Yacc rule ===
+| DILSI_SNDDONE '(' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ',' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'send_done' not a string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_NULL && $5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'send_done' not an unit pointer");
+    }
+    else if ($7.typ != DilVarType_e::DILV_NULL && $7.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 3 of 'send_done' not an unit pointer");
+    }
+    else if ($9.typ != DilVarType_e::DILV_NULL && $9.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 4 of 'send_done' not an unit pointer");
+    }
+    else if ($11.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 5 of 'send_done' not an integer");
+    }
+    else if ($13.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 6 of 'send_done' not a string");
+    }
+    else if ($15.typ != DilVarType_e::DILV_NULL && $15.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 7 of 'send_done' not an unit pointer");
+    }
+    else if ($17.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 8 of 'send_done' not an integer (CMD_AUTO_ or 0)");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $19 + 1;
+        wtmp = &tmpl.core[$19];
+        bwrite_ubit8(&wtmp, DILI_SNDDONE);
+    }
+}
+
+=== C implementation ===
+void dilfi_send_done(dilprg *p)
+{
+    command_info *cmd_ptr = nullptr;
+    dilval *v8 = p->stack.pop();
+    dilval *v7 = p->stack.pop();
+    dilval *v6 = p->stack.pop();
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("send_done",
+                       p,
+                       8,
+                       v1,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_SP,
+                       v2,
+                       TYPEFAIL_NULL,
+                       2,
+                       DILV_UP,
+                       DILV_NULL,
+                       v3,
+                       TYPEFAIL_NULL,
+                       2,
+                       DILV_UP,
+                       DILV_NULL,
+                       v4,
+                       TYPEFAIL_NULL,
+                       2,
+                       DILV_UP,
+                       DILV_NULL,
+                       v5,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT,
+                       v6,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_SP,
+                       v7,
+                       TYPEFAIL_NULL,
+                       2,
+                       DILV_UP,
+                       DILV_NULL,
+                       v8,
+                       TYPEFAIL_NULL,
+                       1,
+                       DILV_INT))
+    {
+        if (v8->val.num != CMD_AUTO_NONE)
+        {
+            switch (v8->val.num)
+            {
+                case CMD_AUTO_ENTER:
+                    send_done((unit_data *)v2->val.ptr,
+                              (unit_data *)v3->val.ptr,
+                              (unit_data *)v4->val.ptr,
+                              v5->val.num,
+                              &g_cmd_auto_enter,
+                              (const char *)v6->val.ptr,
+                              (unit_data *)v7->val.ptr);
+                    break;
+
+                default:
+                    slog(LOG_ALL,
+                         0,
+                         "DIL %s@%s on %s: Unknown CMD_AUTO_ value %d.",
+                         p->fp->tmpl->prgname,
+                         p->fp->tmpl->zone->getName(),
+                         p->sarg->owner->getFileIndexSymName(),
+                         v8->val.num);
+                    break;
+            }
+        }
+        else if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
+        {
+            send_done((unit_data *)v2->val.ptr,
+                      (unit_data *)v3->val.ptr,
+                      (unit_data *)v4->val.ptr,
+                      v5->val.num,
+                      cmd_ptr,
+                      (const char *)v6->val.ptr,
+                      (unit_data *)v7->val.ptr);
+        }
+        else
+        {
+            szonelog(p->frame->tmpl->zone,
+                     "send_done: DIL '%s' attempted to send a non-existent command '%s'.",
+                     p->frame->tmpl->prgname,
+                     (char *)v1->val.ptr);
+        }
+    }
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+    delete v6;
+    delete v7;
+    delete v8;
+}
+
+=== DIL example ===
+dilbegin aware do_reply(arg:string);
+var
+	err:integer;
+	msg_old:stringlist;
+	msg:string;
+	msg_time:string;
+	u:unitptr;
+	xn:extraptr;
+	i:integer;
+	ln:integer;
+	msg_num:integer;
+	temp:string;
+	act_str:string;
+	buff:string;
+	indexlist:stringlist;
+	brdname:string;
+
+code
+{
+   if (self.type!=UNIT_ST_PC)
+      quit;
+
+   u:=self.inside;
+   while (u != null)
+	{
+      if (u.type!=UNIT_ST_OBJ)
+      {
+         u:=u.next;
+         continue;
+      }
+      if (u.objecttype==ITEM_BOARD)
+         break;
+      u:=u.next;
+	}
+
+   if (u==null)
+	{
+      u:=self.outside.inside;
+      while (u!=null)
+		{
+         if (u.type!=UNIT_ST_OBJ)
+         {
+            u:=u.next;
+            continue;
+         }
+      	if (u.objecttype==ITEM_BOARD)
+		   	break;
+         u:=u.next;
+		}
+   }
+
+   if (u.objecttype!=ITEM_BOARD)
+	{
+      act ("You have nothing to write on.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+   }
+
+	if (u.extra.["$BOARD_P_RES"].descr!="")
+   {
+      act_str := (string) u.extra.["$BOARD_P_RES"].descr(self,u);
+      if (act_str!="")
+      {
+         act(act_str, A_ALWAYS, self, null, null, TO_CHAR);
+         quit;
+      }
+   }
+   else
+   {
+		if (self.level<10)
+      {
+      	act("You need to be level 10 to post to this board.", A_ALWAYS,self,null,null,TO_CHAR);
+   		quit;
+      }
+   }
+
+   if (arg == "")
+	{
+   	act("Reply to which post?", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+   }
+
+   msg_num:=atoi(arg);
+   xn:="$BOARD_MAX" in u.extra;
+   if ((msg_num<=0) or (msg_num>atoi(xn.descr)))
+   {
+	   brdname := xn.descr;
+	   if (brdname == null)
+	   	brdname := "999";
+      act ("You must Reply to a post between 1 - "+brdname+".",
+      A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+   }
+
+   brdname:=u.names.[length(u.names)-1];
+   err:=loadstr (brdname+".idx",temp);
+   if (err<0)
+	{
+      log ("02:  Error in boards on:  "+brdname);
+      act ("This board doesn't work report to an administrator.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   if (err==0)
+	{
+      act ("But the board is empty.", A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+   }
+
+   indexlist:=split(temp,"<br/>");
+   ln:=length(indexlist);
+   if (msg_num>ln)
+	{
+      act ("That message exists only within the boundaries of your mind.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   if (ln>=atoi (xn.descr))
+	{
+      act ("You can't reply to that the board is full.",
+         A_ALWAYS,self,null,null,TO_CHAR);
+      goto quitboard;
+	}
+
+   msg_time:=indexlist.[msg_num-1];
+   msg_time:=getword( msg_time);
+   /*msg_old:=split(msg_time,".");*/
+
+	err:=loadstr(brdname+"."+msg_time,buff);
+	if (err==0)
+   {
+      sendtext ("You can only reply to finished posts please wait and try again.<br/>",self);
+      quit;
+   }
+   msg:=indexlist.[msg_num-1];
+   buff:=getword(msg);
+   msg_old:=split(msg," (");
+   ln:=length(msg_old);
+   if (ln >2)
+	{
+      i:=0;
+      while (i<ln-1)
+      {
+         if (i==0)
+            msg:=msg_old.[i];
+         else
+            msg:=msg+" ("+msg_old.[i];
+         i:=i+1;
+      }
+   }
+   else
+	   msg:=msg_old.[0];
+
+   msg_time:=itoa(realtime);
+   msg:=msg_time+ ".re "+msg+" ("+self.name+")";
+   msg:="<br/>"+msg;
+   err:=savestr(brdname+".idx",msg,"a");
+   if (err<1)
+	{
+	log ("03:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+temp:=indexlist.[msg_num-1];
+msg:=getword(temp);
+act ("You begin to reply to '"+temp+"'",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n begins to write a message on the board.",
+A_ALWAYS,self,null,null,TO_REST);
+
+interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),clean_up);
+	interrupt(SFB_DEAD, activator == self, clean_up);
+interrupt (SFB_COM,activator==self,clean_up);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),clean_up);
+
+	beginedit (self);
+	wait(SFB_EDIT,self==activator) ;
+if (argument!="")
+	{
+temp:=argument;
+	err:=savestr(brdname+"."+msg_time+".re",temp,"w");
+	if (err<1)
+		{
+		log ("04:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+act ("Message:  "+itoa(length(indexlist)+1)+" posted.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	}
+else
+	{
+:clean_up:
+
+	err:=loadstr(brdname+".idx",buff);
+	if (err<1)
+		goto quitboard;
+	indexlist:=split(buff,"<br/>");
+	msg_num:=length(indexlist);
+	msg_num:=msg_num-1;
+
+temp:=indexlist.[msg_num];
+temp:=getword(temp);
+err:=delstr (brdname+".idx");
+err:=delstr (brdname+"."+temp);
+ln:=length(indexlist);
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if (msg_num==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=indexlist.[i];
+	else
+		buff:=buff+"<br/>"+indexlist.[i];
+	i:=i+1;
+	}
+
+      err:=savestr(brdname+".idx",buff,"w");
+      if (err<1)
+      {
+         log ("07:  Error in writing new idx file. in remove for "+self.symname);
+         goto quitboard;
+      }
+      act ("Blank posts are such a waste of space!  Removing.", A_ALWAYS, self,null,null,TO_CHAR);
+   }
+
+   act("$1n finishes posting to the board.", A_ALWAYS,self,null,null,TO_REST);
+
+   :quitboard:
+   send_done("reply",self,null,u,0,arg,null, CMD_AUTO_NONE);
+   killedit(self);
+   quit;
+} dilend

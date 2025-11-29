@@ -1,0 +1,204 @@
+Generate MCP entry for DIL keyword: toupper
+
+=== Yacc rule ===
+| DILSE_TOUPPER '(' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'toupper' not a string.");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_TOUPPER);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_toupper(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+    char *s1 = nullptr;
+
+    v->type = DILV_SP;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+        case DILV_SP:
+
+            if (str_is_empty((char *)v1->val.ptr))
+            {
+                v->val.ptr = nullptr;
+            }
+            else
+            {
+                v->atyp = DILA_EXP;
+                s1 = str_dup((char *)v1->val.ptr);
+                str_upper(s1);
+                v->val.ptr = s1;
+            }
+
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin do_graffiti(cc : string, cs : string);
+var
+  exdp 		: extraptr;
+  pc 		: unitptr;
+  roomdesc	: string;
+  startroom : string;
+  sarg		: string;
+  arg		: string;
+
+code
+{
+:init:
+
+	heartbeat := PULSE_SEC*4;
+
+:start:
+
+	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti"));
+	
+	pc:=activator;
+	secure(pc, lostpc);
+	arg := argument;
+	sarg := getword(arg);
+	if(self.equip==WEAR_HOLD)
+	{
+		//if(left(self.outside.outside.zoneidx, 5)=="clan_")
+		//Graffiti can currently be used anywhere, not just clanhome.
+		if(1==1)
+		{
+			block;
+			if("$empty" in self.extra)
+				goto empty;
+			else
+			{		
+				startroom := self.outside.outside.inside_descr;
+				
+				if(self.outside.position < POSITION_STANDING)
+					goto badstance;
+					
+				act("You dip a brush in your <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n dips a brush in their <div class='"+cc+"'>"+cs+"</div> graffiti paint.", A_ALWAYS,pc,self,pc,TO_REST);
+
+				wait(SFB_TICK, command(CMD_AUTO_TICK));
+
+				
+				if(startroom != self.outside.outside.inside_descr)
+					goto moved;
+				if(self.outside.position == POSITION_FIGHTING)
+					goto fight;
+				if(not(self.equip==WEAR_HOLD))
+					goto rem;
+					
+				act("You begin making your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n begins leaving their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+
+				wait(SFB_TICK, command(CMD_AUTO_TICK));	
+
+				
+				if(startroom != self.outside.outside.inside_descr)
+					goto moved;
+				if(self.outside.position == POSITION_FIGHTING)
+					goto fight;
+				if(not(self.equip==WEAR_HOLD))
+					goto rem;
+					
+				act("You complete leaving your <div class='"+cc+"'>"+cs+"</div> graffiti mark.", A_ALWAYS,pc,self,pc,TO_CHAR);
+				act("$1n leaves their mark in <div class='"+cc+"'>"+cs+"</div>.", A_ALWAYS,pc,self,pc,TO_REST);
+				roomdesc := self.outside.outside.inside_descr;
+				
+				if(not("$secretgraffitiextra" in self.outside.outside.extra))
+				{
+					addextra(self.outside.outside.extra, {"$secretgraffitiextra"}, roomdesc);	
+					log(self.outside.name+" used graffiti in "+self.outside.outside.nameidx+"@"+self.outside.outside.zoneidx+
+					". Room description was written to extra: $secretgraffitiextra");
+				}
+				if(arg == "self")
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+self.outside.name+"'s name is painted here in "+cs+" graffiti!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+				}
+				else if (arg == "")
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+toupper(left(cs,1))+right(cs,length(cs)-1)+" graffiti is painted all over!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+				}
+				else
+				{
+					roomdesc := self.outside.outside.inside_descr+" <div class='"+cc+"'>"+toupper(left(cs,1))+right(cs,length(cs)-1)+" graffiti is painted all over!</div>";
+					self.outside.outside.inside_descr := roomdesc;
+					addstring(self.outside.outside.names, arg);
+					addextra(self.outside.outside.extra, {"graffiti"}, "This graffiti has been used to add the name '"+arg+"' to the room.");
+					addextra(self.outside.outside.extra, {"$secretgraffitiextra2"}, arg);
+				}
+			}
+			addextra(self.extra, {"$empty"}, "");	
+			goto start;
+		}
+		else
+			goto wrongzone;
+	}
+	{
+		block;			
+
+		if("$empty" in self.extra)
+			goto empty;
+		else
+			act("You must hold that before you can use it.", A_ALWAYS,pc,self,pc,TO_CHAR);
+	}
+	
+:lostpc:
+	unsecure(pc);
+	goto start;
+	
+:empty:
+	act("Your <div class='"+cc+"'>"+cs+"</div> graffiti paint seems to be empty.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;
+	
+:moved:	
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, leaving the can empty.",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:badstance:
+	act("You cannot use your <div class='"+cc+"'>"+cs+"</div> graffiti in this position!",A_ALWAYS,pc,self,null,TO_CHAR);	
+	goto start;
+	
+:fight:
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, focusing on the combat at hand!",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:rem:
+	act("You abandon your <div class='"+cc+"'>"+cs+"</div> graffiti, having removed the paint.",A_ALWAYS,pc,self,null,TO_CHAR);	
+	addextra(self.extra, {"$empty"}, "");	
+	goto start;
+	
+:wrongzone:
+	block;
+	act("You cannot use your <div class='"+cc+"'>"+cs+"</div> graffiti paint here.",A_ALWAYS,pc,self,null,TO_CHAR);
+	goto start;	
+} dilend

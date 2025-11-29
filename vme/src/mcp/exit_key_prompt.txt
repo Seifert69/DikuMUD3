@@ -1,0 +1,257 @@
+Generate MCP entry for DIL keyword: exit_key
+
+=== Yacc rule ===
+| DILSF_EXITKEY idx /* .exit_info */
+{
+    INITEXP($$);
+    copy_code(&($$), &($2));
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_EXITKEY;
+    FREEEXP($2);
+}
+
+=== C implementation ===
+case DILF_EXITKEY:
+            v2 = p->stack.pop(); /* evaluate index */
+
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    v->type = DILV_SPR;
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                    if (v->type != DILV_ERR)
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                case DILV_INT:
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+
+            if (v->type == DILV_SPR)
+            {
+                if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isRoom() && is_in(v2->val.num, 0, MAX_EXIT) &&
+                    ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num))
+                {
+                    v->atyp = DILA_NORM;
+                    v->ref = ROOM_EXIT((unit_data *)v1->val.ptr, v2->val.num)->getKeyPtr();
+                }
+                else
+                {
+                    v->type = DILV_FAIL;
+                }
+            }
+
+            break;
+
+=== DIL example ===
+dilbegin lock_dil(arg : string);
+external
+   integer is_hidden(u1 : unitptr, int1 : integer, u2 : unitptr);
+   string  dirstring@function(i2 : integer);
+   integer checkdoor(arg : string);
+
+var
+   mykey:unitptr;
+   item       :  unitptr;
+   pc         :  unitptr;
+   arg1       :  string;
+   arg2       :  string;
+   arg3       :  stringlist;
+   dir        :  integer;
+   test       :  integer;
+   count      :  integer;
+   counter    :  integer;
+   rm:unitptr;
+   i:integer;
+   ct:integer;
+code
+{
+   if (self.position < POSITION_RESTING)
+   {
+      act("All you can do right now, is think about the stars!", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (arg == "")
+   {
+      act("Lock what?", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* next we see if the player has anything in his inventory or around him that he can lock */
+
+   arg1 := arg;       /* saves the string in case we need it later */
+
+   item :=findunit(self, arg1, FIND_UNIT_HERE, null);
+
+      /* If there is no item or we cant see it, check the doors in the room */
+   if (item == null)
+      goto check_doors;
+
+   if (not visible(self, item))
+      goto check_doors;
+
+   if (isset(item.flags, UNIT_FL_BURIED))
+      goto check_doors;
+
+      /* If it cant be opened, it cant be locked. let the player know */
+   if (not isset(item.openflags, EX_OPEN_CLOSE))
+   {
+      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+      /* Check to make sure the object has a 'key' associated with it. */
+   if (item.key == "")
+   {
+      act("Odd, you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+      /* See if it is opened */
+   if (not isset(item.openflags, EX_CLOSED))
+   {
+      act("Maybe you should close it first...", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   /* Check if it is locked */
+   if (isset(item.openflags, EX_LOCKED))
+   {
+      act("It is already locked!", A_ALWAYS, self, item, null, TO_CHAR);
+      return;
+   }
+
+   pc := findsymbolic(self, item.key , FIND_UNIT_IN_ME);
+
+   if ((pc == null) and (self.level < IMMORTAL_LEVEL))    /* Imms dont need keys. */
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You lock $2n - *cluck*", A_ALWAYS, self, item, null, TO_CHAR);
+   act("$1n locks $2n - *cluck*", A_ALWAYS, self, item, null, TO_REST);
+
+   set(item.openflags, EX_LOCKED);
+
+   send_done ("lock", self, null,item, 0, "", item, CMD_AUTO_NONE);
+
+   return;
+
+   :check_doors:
+
+   /* first we are going to check if the player dictated what direction
+      they want to lock */
+
+   arg2 := arg;            /* save arg for later use */
+   arg1 := getword(arg2);  /* Check arg2 for directions */
+   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
+
+   if (length(arg3) > 1)
+   {
+      count := atoi(arg3.[0]);
+      if (count > 0)
+         arg1 := arg3.[1];
+   }
+
+
+   item := self.outside;
+
+   /* Find the room the player is in.  If the player is in something that is
+      transparent, we take that objects outside as our item */
+   if ((item.type != UNIT_ST_ROOM) and (isset(item.flags, UNIT_FL_TRANS)))
+      item := item.outside;
+
+
+   /* If not a room, no doors */
+   if (item.type != UNIT_ST_ROOM)
+   {
+      act("You see no $2t here.", A_ALWAYS, self, arg, null, TO_CHAR);
+      return;
+   }
+
+   dir := checkdoor(arg);
+
+   /*  That direction has no such door */
+   if (dir == -1)
+   {
+      act("You see no such exit in that direction.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   if (not isset(item.exit_info[dir], EX_CLOSED))
+   {
+      act("Perhaps you should close it first....", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* UNCOMMENT WHEN THIS COMES IN */
+   if (item.exit_key[dir] == "")
+   {
+      act("Odd - you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+
+   if (isset(item.exit_info[dir], EX_LOCKED))
+   {
+      act("It is already locked.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   /* UNCOMMENT THIS WHEN THIS COMES IN */
+   mykey := findsymbolic(self, item.exit_key[dir] , FIND_UNIT_IN_ME);
+
+   if ((mykey == null) and (self.level < IMMORTAL_LEVEL))    // Imms dont need keys.
+   {
+      act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+      return;
+   }
+
+   act("You lock the $2t - *cluck*", A_ALWAYS, self, item.exit_names[dir].[0], null, TO_CHAR);
+   act("$1n locks the $2t - *cluck*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
+
+   pc := item.exit_to[dir].inside;
+   rm:= item.exit_to[dir];
+
+   i:=0;
+   ct:=FALSE;
+   while (i <= MAX_EXIT)
+   {
+      if (rm.exit_to[i]==item)
+      {
+         ct:=TRUE;
+         break;
+      }
+      i:=i+1;
+   }
+
+   if ((pc != null) and (ct==TRUE))
+      act("A soft *cluck* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[i].[0], null, TO_ALL);
+      
+   set(item.exit_info[dir], EX_LOCKED);
+   if (ct==TRUE)
+      set(item.exit_to[dir].exit_info[i], EX_LOCKED);
+
+   send_done ("lock", self, mykey, null, 0, "", mykey, CMD_AUTO_NONE);
+   return;
+} dilend

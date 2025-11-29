@@ -1,0 +1,130 @@
+Generate MCP entry for DIL keyword: addstring
+
+=== Yacc rule ===
+| DILSI_ADL '(' coreexp ',' coreexp ')' ihold
+{
+    if (($3.typ != DilVarType_e::DILV_SLP) || ($3.dsl != DSL_LFT))
+    {
+        dilfatal("Arg 1 of 'addlist' not a stringlist variable");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'addlist' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_ADL);
+    }
+}
+
+=== C implementation ===
+void dilfi_adl(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    switch (v1->type)
+    {
+        case DILV_SLPR:
+            if (dil_type_check("addstring", p, 1, v2, FAIL_NULL, 1, DILV_SP))
+            {
+                if (v2->val.ptr)
+                {
+                    if (isblank(*(char *)v2->val.ptr))
+                        slog(LOG_ALL, 0, "DIL %s addstring [%s] has whitespace", p->fp->tmpl->prgname, (char *)v2->val.ptr);
+
+                    ((cNamelist *)v1->ref)->AppendNameTrim((char *)v2->val.ptr);
+                }
+            }
+            break;
+
+        case DILV_FAIL:
+            break;
+        default:
+            /* ERROR not right lvalue */
+            dil_typeerr(p, "lvalue addstring");
+            break;
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin li2();
+var
+  pc     : unitptr;
+  item   : unitptr;
+  exdp   : extraptr;
+
+  code
+  {
+    heartbeat := PULSE_SEC*5;
+    on_activation((self.position <= POSITION_SLEEPING) or
+	       (self.position == POSITION_FIGHTING), skip);
+
+    :start:
+    wait(SFB_CMD, command("give") and
+	(activator.type == UNIT_ST_PC));
+
+    :give:
+    if (not(LIB_ONGOING in activator.quests))
+	goto start;
+
+    pc := activator;
+    item := self.inside;
+    secure(pc, labsecure);
+    secure(item, labsecure);
+
+    wait(SFB_CMD | SFB_TICK, TRUE);
+    if(not(item #= self.inside))
+    {
+      unsecure(item);
+      exdp := LIB_ONGOING in pc.quests;
+
+     if("quill" in self.inside.name)
+     {
+		addstring(exdp.names, "quill");
+		exec("say This will help me write.", self);
+		destroy(self.inside);
+     }
+     else if("book of knowledge" in self.inside.name)
+     {
+		addstring(exdp.names, "book of knowledge");
+		exec("say Ahh, the Book of Knowledge.", self);
+		destroy(self.inside);
+     }
+     else if("vellum scrap" in self.inside.name)
+     {
+		addstring(exdp.names, "vellum scrap");
+		exec("say The tales I search for...", self);
+		destroy(self.inside);
+     }
+     else
+     {
+		exec("say This is not what I am looking " +
+		     "for " +pc.name + ".", self);
+		pause;
+		exec("say Please have it back.", self);
+		link(self.inside, pc);
+     }
+    }
+    unsecure(pc);
+
+    if((command("give")) and
+       (activator.type == UNIT_ST_PC))
+    {
+      goto give;
+    }
+      else
+	goto start;
+
+    :labsecure:
+    exec("sigh", self);
+    goto start;
+
+} dilend

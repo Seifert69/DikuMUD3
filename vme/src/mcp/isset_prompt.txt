@@ -1,0 +1,88 @@
+Generate MCP entry for DIL keyword: isset
+
+=== Yacc rule ===
+| DILSE_ISS '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'isset' not integer");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'isset' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_ISS);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_iss(dilprg *p)
+{
+    // Test if bist are set
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    dilval *v = new dilval;
+    switch (dil_getval(v2))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_INT:
+            switch (dil_getval(v1))
+            {
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
+                case DILV_INT:
+                    v->type = DILV_INT;
+                    v->atyp = DILA_NONE;
+                    v->val.num = IS_SET(v1->val.num, v2->val.num);
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    delete v1;
+    delete v2;
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin rotaway();
+code
+{
+   heartbeat := PULSE_SEC * 9600;
+
+   :loop:
+   pause;
+
+   if (self.outside.type == UNIT_ST_ROOM)
+   {
+      if (not isset(self.flags, UNIT_FL_BURIED))
+        act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
+      destroy(self);
+   }
+
+   goto loop;
+} dilend

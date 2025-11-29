@@ -1,0 +1,97 @@
+Generate MCP entry for DIL keyword: attack_type
+
+=== Yacc rule ===
+| DILSF_ATY /* .attack_type */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_ATY;
+}
+
+=== C implementation ===
+case DILF_ATY:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = character->getAttackTypePtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin attack_switch(arg : string);
+var
+    lst : stringlist;
+    wpn : intlist;
+    i : integer;
+    fnd : integer;
+    str : string;
+code
+{
+    if (arg == "")
+    {
+        sendtext("Your current attack type is "+
+        weapon_name(self.attack_type)+".<br/>", self);
+        quit;
+    }
+
+    lst := {"fist","kick","knee","elbow"};
+
+    wpn := {WPN_FIST,WPN_KICK,WPN_KNEE,WPN_ELBOW};
+
+    i := 0;
+    fnd := FALSE;
+    while (i < length(lst))
+    {
+        if (left(lst.[i], length(arg)) == arg)
+        {
+            fnd := TRUE;
+            break;
+        }
+
+        i := i + 1;
+    }
+
+    if (fnd != TRUE)
+    {
+        str := lst.[0];
+        i := 1;
+        while (i < length(lst))
+        {
+            str := str+", "+lst.[i];
+            i := i + 1;
+        }
+
+        sendtext("That option is not available (choose "+str+"</div>).<br/>",self);
+    }
+    else
+    {
+        self.attack_type := wpn.[i];
+        sendtext("Attack type set to "+lst.[i]+".<br/>",self);
+        send_done("attackswitch", self, null, null, 0, arg, null, CMD_AUTO_NONE);
+    }
+
+    quit;
+} dilend

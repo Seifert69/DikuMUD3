@@ -1,0 +1,485 @@
+Generate MCP entry for DIL keyword: mid
+
+=== Yacc rule ===
+| DILSE_MID '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'mid' not a string.");
+    }
+    if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'mid' not an integer.");
+    }
+    if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'mid' not an integer.");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_SP;
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_MID);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_mid(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    int strl = 0;
+    int l = 0;
+    int r = 0;
+    int x = 0;
+
+    v->type = DILV_SP;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+        case DILV_SP:
+            switch (dil_getval(v2))
+            {
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+                case DILV_INT:
+
+                    switch (dil_getval(v3))
+                    {
+                        case DILV_FAIL:
+                        case DILV_NULL:
+                            v->type = DILV_FAIL;
+                            break;
+                        default:
+                            v->type = DILV_ERR;
+                            break;
+                        case DILV_INT:
+                            if ((v2->val.num >= 0) && ((int)strlen((char *)v1->val.ptr) < v2->val.num))
+                            {
+                                v1->val.ptr = nullptr;
+                                break;
+                            }
+                            else
+                            {
+                                l = v2->val.num;
+                            }
+
+                            if ((v2->val.num >= 0) && ((int)strlen((char *)v1->val.ptr) < v3->val.num))
+                            {
+                                r = strlen((char *)v1->val.ptr);
+                            }
+                            else
+                            {
+                                r = v3->val.num;
+                            }
+
+                            if (r < l)
+                            {
+                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                                         "DIL %s, Illegal: mid(1,2,3) 3 > 2 \n",
+                                         p->sarg->owner->getFileIndexSymName());
+                                v->type = DILV_FAIL;
+                                break;
+                            }
+
+                            strl = (r - l) + 1;
+
+                            if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                            {
+                                v->val.ptr = nullptr;
+                            }
+                            else
+                            {
+                                v->atyp = DILA_EXP;
+                                v->val.ptr = malloc(strl + 1);
+                                for (x = 0; l <= r; l++, x++)
+                                {
+                                    ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[l - 1];
+                                }
+                                ((char *)v->val.ptr)[strl] = 0;
+                            }
+
+                            break;
+                    }
+                    break;
+            }
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin hall23_give();
+var
+ 	pcname 	: string;
+	pc   	: unitptr;
+	item 	: unitptr;
+	pin  	: extraptr;
+
+code
+{
+heartbeat := PULSE_SEC*3;
+:start:
+wait(SFB_DONE, command("give") and (activator.type == UNIT_ST_PC));
+
+if (target == self)
+{
+   pc := activator;
+   item := medium;
+   secure(pc, start);
+   pin := HALL23_ONGO in pc.quests;
+
+/* Pc doesn't have quest active but tries to give items anyway - no go 
+   return to start and wait then give quest */
+
+ if (not(HALL23_ONGO in pc.quests))
+ {
+  exec("emote narrows his eyes", self);
+  exec("say "+pc.name+ ",are you trying to trick me? " +
+       "I don't take things from strangers." , self);
+  exec("drop "+item.name, self);	   
+  unsecure(pc);
+  goto start;
+ } 
+
+/*heart loaded on Jack in cenedal DONE*/
+
+  if ((item == findsymbolic(self, "heart@hallows23", FIND_UNIT_INVEN))
+  and (not ("h" in pin.names)))
+  {
+    addstring(pin.names, "h");
+    exec("say Thank you, "+pc.name+". ", self);
+    exec("emote sings 'You gotta have heart!", self);
+	pause;
+	exec("emote puts the heart in the coffin. A loud thump comes from it " +
+	      "as the Baron closes the lid.", self);
+    destroy(item);
+    goto hcheck;
+   }
+   if ((item == findsymbolic(self, "heart@hallows23", FIND_UNIT_INVEN))
+   		and ("h" in pin.names))
+  		{
+   			exec("say You gave me a heart already, "+pc.name+". "+
+			     "Who did this belong to? I know your heart"+
+				 " is in the right place, thanks for the snack.", self);
+   			exec("emote pops the heart in his mouth and chews.", self);
+   			destroy(item);
+   			goto hcheck;
+		}	
+/* head in fountain in moot_cen DONE*/
+  if ((item == findsymbolic(self, "head@hallows23", FIND_UNIT_INVEN))
+  and (not ("hd" in pin.names)))
+  {
+   addstring(pin.names, "hd");
+   exec("say Thank you, "+pc.name+". " +
+	      "Now he can get ahead!", self);
+    exec("emote puts the head in the large coffin.", self);
+   destroy(item);
+   goto hcheck;
+  }
+    if ((item == findsymbolic(self, "head@hallows23", FIND_UNIT_INVEN))
+   		and ("hd" in pin.names))
+  		{
+   			exec("say You gave me a head already, "+pc.name+". "+
+			     "But two heads are better than one!" , self);
+   			exec("emote puts the head in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        }
+/*brain in zombie in mid sewers*/  
+  if ((item == findsymbolic(self, "brain@hallows23", FIND_UNIT_INVEN))
+  and (not ("b" in pin.names)))
+  {
+  addstring(pin.names, "b");
+  exec("say Thank you, "+pc.name+". " +
+	      " I feared he had lost his mind for good.", self);
+  exec("emote puts the brain in the large coffin. Slurping sounds come from it.", self);
+  exec("say Don't eat that you will need it later.", self);
+   destroy(item);
+   goto hcheck;  
+ }
+ if ((item == findsymbolic(self, "brain@hallows23", FIND_UNIT_INVEN))
+   		and ("b" in pin.names))
+  		{
+   			exec("say You gave me some brains already, "+pc.name+". "+
+			     "But my friend Sarah Bellum can use these!" , self);
+   			exec("emote slides the brains into his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        }
+/* arm1 in armor ghost in armorer in galgachus DONE*/
+if ((item == findsymbolic(self, "arm1@hallows23", FIND_UNIT_INVEN))
+  and (not ("a1" in pin.names)))
+  {
+    addstring(pin.names, "a1");
+    exec("say Thank you, "+pc.name+". " +
+	      "He's mostly armless.", self);
+    exec("emote puts the arm in the large coffin. ", self);
+    destroy(item);
+    goto hcheck;
+   } 
+   if ((item == findsymbolic(self, "arm1@hallows23", FIND_UNIT_INVEN))
+   		and ("a1" in pin.names))
+  		{
+   			exec("say You gave me his left arm already, "+pc.name+". "+
+			     "I can sell this to an arms dealer!" , self);
+   			exec("emote puts the arm in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+        } 
+/*arm2 in headless ghost in hob gob*/
+if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
+  and (not ("a2" in pin.names)))
+  {
+    addstring(pin.names, "a2");
+    exec("say Thank you, "+pc.name+". " +
+	      "Now he is armed and dangerous!", self);
+    exec("giggle", self);
+    exec("emote puts the arm in the large coffin. ", self);
+    destroy(item);
+    goto hcheck;
+   }
+if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
+   		and ("a2" in pin.names))
+  		{
+   			exec("say You gave me his right arm already, "+pc.name+". "+
+			     "If I put this on him then he would be ALL RIGHT " , self);
+   			exec("emote puts the arm in his bag chuckling.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   
+/*hand in ghost in halfzon*/
+if ((item == findsymbolic(self, "hand@hallows23", FIND_UNIT_INVEN))
+  and (not ("hn" in pin.names)))
+  {
+    addstring(pin.names, "hn");
+    exec("say Thank you, "+pc.name+". " +
+	      "I have to hand it to you, you're working hard for this.", self);
+    exec("emote puts the hand in the large coffin. ", self);;
+    destroy(item);
+    goto hcheck;
+  }
+ if ((item == findsymbolic(self, "hand@hallows23", FIND_UNIT_INVEN))
+   		and ("hn" in pin.names))
+  		{
+   			exec("say You gave me a hand already, "+pc.name+". " +
+			" I'll give you one now!", self);
+			exec("applaud " +pc.name, self);
+   			exec("emote puts the hand in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   
+/*foot in spider in haon_dor DONE */	
+if ((item == findsymbolic(self, "foot@hallows23", FIND_UNIT_INVEN))
+  and (not ("f" in pin.names)))
+  {
+    addstring(pin.names, "f");
+    exec("say Thank you, "+pc.name+". " +
+	      "That was quite a feat!", self);
+    exec("emote puts the foot in the large coffin", self);
+	exec("say Now keep that out of your mouth!", self);
+    destroy(item);
+    goto hcheck;
+  }	
+ if ((item == findsymbolic(self, "foot@hallows23", FIND_UNIT_INVEN))
+   		and ("f" in pin.names))
+  		{
+   			exec("say You gave me a foot already, "+pc.name+"." +
+			" Now I can say I have two left feet.", self);
+   			exec("emote puts the foot in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+/*eye on bat in torsbay DONE*/
+if ((item == findsymbolic(self, "eyeball@hallows23", FIND_UNIT_INVEN))
+  and (not ("i" in pin.names)))
+  {
+    addstring(pin.names, "i");
+    exec("say Thank you, "+pc.name+". " +
+	      "I love the squishy filling.", self);
+    exec("emote starts to put it in his mouth, sighs and places it in the coffin.", self);
+    destroy(item);
+    goto hcheck;	       
+   }
+   if ((item == findsymbolic(self, "eyeball@hallows23", FIND_UNIT_INVEN))
+   		and ("i" in pin.names))
+  		{
+   			exec("say You gave me an eyeball already, "+pc.name+". ", self);
+   			exec("emote starts to put the eye in his bag, then stops.", self);
+            exec("say We need to keep an eye out for trouble.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+   
+/*liver on warg in arcisle DONE */
+if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
+  and (not ("l" in pin.names)))
+  {
+    addstring(pin.names, "l");
+      exec("say Thank you, "+pc.name+". " +
+	      "Have any onions? Just kidding!", self);
+    exec("emote puts the liver in the large coffin", self);
+    destroy(item);
+    goto hcheck;
+  }	
+  if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
+   		and ("l" in pin.names))
+  		{
+   			exec("say You gave me a liver already, "+pc.name+". " +
+			"I will hold on to this in case he starts drinking again", self);
+   			exec("emote drops the liver in his bag. You hear a PLOP!.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	     	
+/*leg  on nightmare in urland DONE */
+if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
+  and (not ("lg" in pin.names)))
+  {
+    addstring(pin.names, "lg");
+    exec("say Thank you, "+pc.name+". "+
+	      "He was on his last leg.", self);
+    exec("emote puts the leg in the large coffin", self);
+    destroy(item);
+    goto hcheck;
+  }
+	if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
+   		and ("lg" in pin.names))
+  		{
+   			exec("say You gave me a left leg already, "+pc.name+". " +
+			"Great now all I need is an arm then I can afford anything!", self);
+   			exec("emote drops the leg in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+	
+/*intestines in a tree DONE*/	
+if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
+  and (not ("g" in pin.names)))
+  {
+    addstring(pin.names, "g");
+    exec("say Thank you, "+pc.name+", you sure have guts.", self);
+    exec("emote places the intestines in the coffin.", self);
+    destroy(item);
+    goto hcheck;	     		     	
+   }
+   if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
+   		and ("g" in pin.names))
+  		{
+   			exec("say You gave me some guts already, "+pc.name+"." +
+			"You must be brave to have so many to share!.", self);
+   			exec("emote winds the intestines up and puts them in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}   	
+/*spleen (in jackolantern) DONE*/	
+if ((item == findsymbolic(self, "spleen@hallows23", FIND_UNIT_INVEN))
+  and (not ("s" in pin.names)))
+  {
+    addstring(pin.names, "s");
+    exec("say Thank you, "+pc.name+".", self);
+    exec("emote places the spleen in the coffin.", self);
+    destroy(item);
+    goto hcheck;
+  }	
+   if ((item == findsymbolic(self, "spleen@hallows23", FIND_UNIT_INVEN))
+   		and ("s" in pin.names))
+  		{
+   			exec("say You gave me a spleen already, "+pc.name+". "+
+			     "This seems to be a matter for internal investigation!", self);
+   			exec("emote puts the spleen in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}	
+/*tongue (on cat in vasklor) DONE*/	
+if ((item == findsymbolic(self, "tong@hallows23", FIND_UNIT_INVEN))
+  and (not ("t" in pin.names)))
+  {
+    addstring(pin.names, "t");
+    exec("say Thank you, "+pc.name+".", self);
+    exec("emote places the tongue in the coffin.", self);
+    exec("say You'll lick this yet!", self);
+    destroy(item);
+    goto hcheck;	    		     		     
+   }
+    if ((item == findsymbolic(self, "tong@hallows23", FIND_UNIT_INVEN))
+   		and ("t" in pin.names))
+  		{
+   			exec("say You gave me a tongue already, "+pc.name+". "+
+			     "I'll save this for the cat.", self);
+   			exec("emote drops the tongue in his bag.", self);
+   			destroy(item);
+   			goto hcheck;
+		}		
+/* pc gave him wrong item */
+
+exec("say I don't think that part will fit.", self);
+exec("emote looks at you suspiciously. ", self );
+exec("drop "+item.name, self);
+goto hcheck;
+
+/* ok he has it all, now for the reward one level and
+a belt of candy wrappers. +2 dex  
++ 2 consider   */
+
+:hcheck:
+
+pin := HALL23_ONGO in activator.quests;
+
+if (("h" in pin.names) and ("t" in pin.names) and 
+("s" in pin.names) and ("g" in pin.names) and 
+("lg" in pin.names) and ("l" in pin.names) and
+("i" in pin.names) and ("f" in pin.names) and
+("hn" in pin.names) and ("a1" in pin.names) and
+("a2" in pin.names) and ("hd" in pin.names) and
+("b" in pin.names))
+{
+subextra(pc.quests, HALL23_ONGO);
+addextra(pc.quests, {HALL23_COM}, "");
+item := load("canbelt@hallows23");
+dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
+item.height := pc.height;
+link(item,pc);
+experience(16500, pc);
+exec("Shout It's ALLIVE! Thanks to "+pc.name+ "!",self);
+log("belt given to " +pc.name+" they found it all!");
+exec("say Thank you. That was an enjoyable experience.", self);
+exec("emote doffs his hat and bows elegantly to you.", self);
+pause;
+exec("say You can let this present go to waist!", self);
+exec("emote pulls out a brightly colored belt and hands it to" +pc.name+",", self);
+pause;
+exec("emote smiles as a wolf howls in the distance", self);
+exec("say You can keep the bag too. Happy Halloween, " + pc.name +"!", self);
+goto start;
+}
+goto start;
+}
+} dilend

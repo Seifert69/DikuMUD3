@@ -1,0 +1,156 @@
+Generate MCP entry for DIL keyword: baseweight
+
+=== Yacc rule ===
+| DILSF_BWT /* .baseweight */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    //$$.dsl = DSL_LFT;
+    $$.num = DILF_BWT;
+}
+
+=== C implementation ===
+case DILF_BWT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((unit_data *)v1->val.ptr)->getBaseWeight();
+
+                        // v->atyp = DILA_NONE;
+                        // v->type = DILV_SINT2R;
+                        // v->ref = &UNIT_BASE_WEIGHT((class unit_data *)v1->val.ptr);
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin unitptr decapCorpse(corpse : unitptr);
+external
+    integer hasRaceHead(crace : integer);
+var
+    item      : unitptr;
+    reward_exp : extraptr;
+    nextdude   : extraptr;
+    temp_lst  : stringlist;
+    mobdescr  : string;
+    mobname   : string;
+    temp_str  : string;
+    test_expt : extraptr;
+    headless:string;
+    living_sym : string;
+    chk : integer;
+
+code
+{
+    item := null;
+
+    if (corpse.type != UNIT_ST_OBJ)
+    {
+        log("Corpse to decap not an object");
+        return (item);
+    }
+
+    if ((corpse.symname != "corpse@death"))
+    {
+        log("Corpse to decap not a corpse");
+        return (item);
+    }
+
+    if ("headless" in corpse.outside_descr)
+    {
+        log("Corpse already headless");
+        return (item);
+    }
+    
+    if ("$headless" in corpse.extra)
+    {
+        log("Corpse already headless");
+        return (item);
+    }
+    
+    if (not hasRaceHead(corpse.value[4]))
+    {
+        log("Corpse race has no head");
+        return (item);
+    }
+
+    living_sym := corpse.extra.["$living_sym"].descr;
+    addextra(corpse.extra,{"$headless"},"has been decaped");
+    item := load("head@death");
+    addextra(item.extra,{"$head_time"}, itoa(realtime));
+    addextra(item.extra,{"$living_sym"}, living_sym);
+    dilcopy("rot_head@death", item);
+
+    // If corpse has a reward on it copy it to the head.
+    //
+    reward_exp := "$reward" in corpse.extra;
+    while (reward_exp)
+    {
+        nextdude := "$reward" in reward_exp.next;
+        addextra(item.extra, reward_exp.names,reward_exp.descr);
+        subextra(corpse.extra, "$reward");
+        reward_exp := nextdude;
+    }
+
+    item.minv := 200;
+    link(item, corpse.outside);
+
+    chk := (corpse.value[4]);
+    if ((chk > RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) 
+    {
+        set_weight_base(item, corpse.baseweight/70);
+    }
+    else
+        set_weight_base(item, corpse.baseweight/30);
+
+    if (item.baseweight > 100)
+    {
+        set_weight_base(item, 100);
+    }
+
+    if (item.baseweight < 1)
+    {
+        set_weight_base(item, 1);
+    }
+
+    set_weight_base(item, item.baseweight);
+    item.minv := 0;
+    mobdescr :=corpse.outside_descr;
+    temp_str := getword(mobdescr);
+    mobname  := mobdescr;
+    temp_str := getword(mobname);
+    temp_str := getword(mobname);
+    if (temp_str != "of")
+	temp_str := getword(mobname);
+
+    item.outside_descr := "The decapitated head of " + mobname ;
+    item.title := "The decapitated head of " + left(mobname, length(mobname)-15);
+    addstring(item.names, "head_of_" + left(mobname, length(mobname)-15));
+    addextra(item.extra, {""}, "The head has been severed from the body");
+    headless:=left(corpse.title,length(corpse.title)-6);
+    corpse.title:=headless+"headless corpse";
+    corpse.outside_descr:="The headless "+ mobdescr;
+    addextra(corpse.extra, {""}, "The head has been severed from the body");
+    item.value[2] := corpse.value[2];
+    item.value[3] := corpse.value[3];
+
+    return (item);
+} dilend

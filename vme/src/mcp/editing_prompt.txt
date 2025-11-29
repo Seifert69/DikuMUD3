@@ -1,0 +1,368 @@
+Generate MCP entry for DIL keyword: editing
+
+=== Yacc rule ===
+| DILSF_EDT /* .editing */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_EDT;
+}
+
+=== C implementation ===
+case DILF_EDT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        int editing = FALSE;
+                        unit_data *vict = nullptr;
+                        vict = ((unit_data *)v1->val.ptr);
+                        if (vict->isPC() && CHAR_DESCRIPTOR(vict) == nullptr)
+                        {
+                            descriptor_data *d = nullptr;
+                            for (d = g_descriptor_list; d; d = d->getNext())
+                            {
+                                if (descriptor_is_playing(d) && d->cgetOriginalCharacter() == vict)
+                                {
+                                    if (d->cgetEditing())
+                                    {
+                                        editing = TRUE;
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (vict->isPC() && CHAR_DESCRIPTOR(vict))
+                            {
+                                if (CHAR_DESCRIPTOR(vict)->cgetEditing())
+                                {
+                                    editing = TRUE;
+                                }
+                            }
+                        }
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = editing;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin aware do_write (arg:string);
+var
+	ln:integer;
+	msg_time:integer;
+	err:integer;
+	msg:string;
+	templist:stringlist;
+	i:integer;
+	msg_num:integer;
+	x:extraptr;
+	xm:extraptr;
+	u:unitptr;
+	act_str:string;
+	temp:string;
+	buff:string;
+	brdname:string;
+	maxnum:integer;
+
+code
+{
+
+if (self.type!=UNIT_ST_PC)
+quit;
+temp:=arg;
+	u:=findunit (self,temp,FIND_UNIT_SURRO|FIND_UNIT_INVEN,null);
+	temp:="";
+
+	if ((u.type==UNIT_ST_PC) or
+	(u.type==UNIT_ST_NPC))
+	u:=null;
+
+
+if (u==null)
+	{
+	u:=self.inside;
+	while (u!=null)
+		{
+		if (u.type!=UNIT_ST_OBJ)
+			{
+			u:=u.next;
+			continue;
+			}
+		if (u.objecttype==ITEM_BOARD)
+			break;
+		u:=u.next;
+		}
+		}
+
+	if (u==null)
+		{
+		u:=self.outside.inside;
+		while (u!=null)
+			{
+			if (u.type!=UNIT_ST_OBJ)
+				{
+				u:=u.next;
+				continue;
+				}
+		if (u.objecttype==ITEM_BOARD)
+				break;
+			u:=u.next;
+			}
+		}
+
+	if (u==null)
+		{
+		if (self.outside.nameidx!="postoffice")
+			{
+			:no_paper:
+			act ("You have nothing to write on.",
+				A_ALWAYS,self,null,null,TO_CHAR);
+			quit;
+			}
+		else
+			{
+			u:=load ("letter@basis");
+			if (u==null)
+				goto no_paper;
+			act ("You have nothing to write on, so you grab a piece of paper from the Post Office.",
+				A_ALWAYS,self,null,null,TO_CHAR);
+			goto item_note;
+			}
+		}
+	else if (u.objecttype!=ITEM_NOTE)
+             goto item_board;
+
+
+:item_note:
+
+if (u.type!=UNIT_ST_OBJ)
+	goto no_paper;
+
+
+if (u.objecttype!=ITEM_NOTE)
+	goto no_paper;
+
+
+if (u.extra==null)
+	{
+	act ("You begin to jot down a note on $2n",
+		A_ALWAYS,self,u,null,TO_CHAR);
+act ("$1n begins to jot down a note.",
+A_ALWAYS,self,null,null,TO_REST);
+
+		secure (u,lostpaper);
+		interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),lostpaper);
+		         	interrupt(SFB_DEAD, activator == self, lostpaper);
+interrupt (SFB_COM,activator==self,lostpaper);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),lostpaper);
+
+	beginedit (self);
+	wait(SFB_EDIT,self==activator);
+temp:=argument;
+	addextra (u.extra,null,temp);
+	act ("Done editing",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		unsecure(u);
+		:lostpaper:
+		unsecure (u);
+	quit;
+	}
+else
+	{
+	act ("The $3n already has something written on it.",
+		A_ALWAYS,self,null,u,TO_CHAR);
+	quit;
+	}
+
+
+:item_board:
+
+if (u.objecttype!=ITEM_BOARD)
+	goto no_paper;
+
+if (dilfind("board@competition",u))
+{
+sendtext("Only Administrators can write to competition boards silly.<br/>",self);
+quit;
+}
+
+if (u.extra.["$BOARD_P_RES"].descr!="")
+		{
+		act_str:=(string)u.extra.["$BOARD_P_RES"].descr(self,u);
+		if (act_str!="")
+		{
+	act(act_str,
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+else
+{
+		if (self.level<10)
+				{
+	act("You need to be level 10 to post to this board.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+		}
+
+
+if (arg=="")
+	{
+	act("You must write a headline first.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+		}
+if (length (arg)>50)
+	{
+	act ("Headline to long truncating.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	arg:=left(arg,50);
+	}
+
+msg_time:=realtime;
+msg:=itoa(msg_time)+" "+arg+" ("+self.name+")";
+brdname:=u.names.[length(u.names)-1];
+xm:="$BOARD_MAX" in u.extra;
+maxnum:=atoi(xm.descr);
+
+err:=loadstr (brdname+".idx",temp);
+if (err==0)
+	{
+	err:=savestr(brdname+".idx",msg,"w");
+	if (err<1)
+		{
+		:lostboard:
+		log ("01:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+		}
+		msg_num:=1;
+	goto new_msg;
+	}
+if (err<0)
+	{
+	log ("02:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+templist:=split(temp,"<br/>");
+msg_num:=length(templist)+1;
+if (msg_num>maxnum)
+	{
+	act ("The board is full.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+temp:="<br/>"+msg;
+err:=savestr(brdname+".idx",temp,"a");
+if (err<1)
+	{
+	log ("03:  Error in boards on:  "+brdname);
+	act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+		goto quitboard;
+	}
+
+:new_msg:
+
+interrupt (SFB_MSG,((activator==self) and (argument=="linkdead")),clean_up);
+	interrupt(SFB_DEAD, activator == self, clean_up);
+interrupt (SFB_COM,activator==self,clean_up);
+interrupt (SFB_DONE, ((command("eat")) and
+(medium==self)),clean_up);
+
+act ("You begin to write a message on the board",
+A_ALWAYS,self,null,null,TO_CHAR);
+act ("$1n begins to write a message on the board.",
+A_ALWAYS,self,null,null,TO_REST);
+	beginedit (self);
+	wait(SFB_EDIT,self==activator) ;
+if (argument!="")
+	{
+temp:=argument;
+	err:=savestr(brdname+"."+itoa(msg_time),temp,"w");
+	if (err<1)
+		{
+		log ("04:  Error in boards on:  "+brdname);
+		act ("This board doesn't work report to an administrator.",
+		A_ALWAYS,self,null,null,TO_CHAR);
+	goto quitboard;
+	}
+act ("Message:  "+itoa(msg_num)+" posted.",
+	A_ALWAYS,self,null,null,TO_CHAR);
+	}
+else
+	{
+	:clean_up:
+
+
+
+
+	err:=loadstr(brdname+".idx",buff);
+	if (err<1)
+		goto quitboard;
+	templist:=split(buff,"<br/>");
+
+temp:=templist.[msg_num-1];
+temp:=getword(temp);
+err:=delstr (brdname+".idx");
+err:=delstr (brdname+"."+temp);
+ln:=length(templist);
+i:=0;
+buff:="";
+while (i<ln)
+	{
+	if ((msg_num-1)==i)
+		{
+		i:=i+1;
+		continue;
+		}
+	if (length(buff)==0)
+		buff:=templist.[i];
+	else
+		buff:=buff+"<br/>"+templist.[i];
+	i:=i+1;
+	}
+
+err:=savestr(brdname+".idx",buff,"w");
+if (err<1)
+{
+	log ("07:  Error in writing new idx file. in remove for "+brdname);
+goto quitboard;
+}
+	act ("Blank posts are such a waste of space!  Removing.",
+		A_ALWAYS, self,null,null,TO_CHAR);
+}
+	act ("$1n finishes posting to the board.",
+	A_ALWAYS,self,null,null,TO_REST);
+
+:quitboard:
+ send_done("write",self,null,u,0,arg,null, CMD_AUTO_NONE);
+killedit(self);
+		 quit;
+} dilend

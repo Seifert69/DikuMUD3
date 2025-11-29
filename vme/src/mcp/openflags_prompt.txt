@@ -1,0 +1,134 @@
+Generate MCP entry for DIL keyword: openflags
+
+=== Yacc rule ===
+| DILSF_OFL /* .openflags */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_OFL;
+}
+
+=== C implementation ===
+case DILF_OFL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        /* ubit8 openflags */
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT1R;
+                        v->ref = unit->getOpenFlagsPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin prg3();
+var
+	pc : unitptr;
+   gift: unitptr;
+    i  : integer;
+    il : intlist;
+	buf : string;
+	sl  : stringlist;
+   gift1 : string;
+code
+{
+	heartbeat := 3;
+
+	:start:
+
+	wait(SFB_CMD, (command("open")) and (("bag" in argument)or
+	("box" in argument)or("treat" in argument)) );
+	pc := activator;
+	secure(pc, lost);
+	{
+	  block;
+	  if (self.outside != activator)
+{
+      act("You must pick me up before opening me.",
+          A_ALWAYS, activator, null, null, TO_CHAR);
+goto start;
+}		  
+  unset(self.openflags, EX_CLOSED);
+    	  goto trap;
+    }
+:lost:
+act("<div class='cpr'>A possible rare item disappears forever!</div><div class='default'></div>",
+A_SOMEONE, self, null, pc, TO_ALL);
+destroy(self);
+
+:trap:
+      act("The bag rustles.",
+          A_ALWAYS, pc, null, null, TO_ALL);
+       act("There is something inside - check your inventory!",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+on rnd(0,7) goto load_1, load_2, load_3, load_4, load_5, load_6,load_7,load_8;
+/*loads*/
+:load_1:
+gift := load("juice@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_2:
+     gift := load("pcookie@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_3:
+     gift := load("pcorn@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_4:
+     gift := load("mghost@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_5:
+     gift := load("capple@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_6:
+     gift := load("cider@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	
+:load_7:
+     gift := load("lbat@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;
+:load_8:
+     gift := load("dry_cran@hallows23");
+link(gift,pc);
+destroy(self);
+      pause;
+      quit;	  	    	  	  	    	    	     
+} dilend

@@ -1,0 +1,349 @@
+Generate MCP entry for DIL keyword: follower
+
+=== Yacc rule ===
+| DILSF_FOL /* .follower */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_FOL;
+}
+
+=== C implementation ===
+case DILF_FOL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        if (CHAR_FOLLOWERS(character))
+                        {
+                            v->atyp = DILA_NORM;
+                            v->type = DILV_UPR;
+                            v->ref = character->getFollowers()->getFollowerPtr();
+                        }
+                        else
+                        {
+                            v->atyp = DILA_NORM;
+                            v->type = DILV_NULL;
+                            v->val.ptr = nullptr;
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin do_split(arg: string);
+
+external string coinstring@function(coins: integer, typ: string, ext:
+integer);
+         integer transfercoins@function (a: unitptr, t: unitptr,
+                                         coins: integer, typ: string);
+var mast : unitptr;
+    sel  : integer;
+
+    in_gr: integer;
+    kids : integer;
+    coins: integer;
+    spval: integer;
+    ctype: string;
+    done : integer;
+
+    u    : unitptr;
+    ms   : string;
+    s    : string;
+    tmp  : string;
+    i    : integer;
+    l    : integer;
+
+//    beta_list: stringlist;
+
+code
+{
+
+// Not used til something gets wrong
+/* beta_list := {"Stormtamer", "Whistler", "Tooth", "Ginger", "Jashiree",
+"Aelf",
+    "Tiggy", "Gothmog"};
+
+if (not (self.name in beta_list)) // Hardcoded list for beta testing
+    {
+    sendtext("Sorry, this command is under evaluation.<br/>", self);
+    return;
+    }
+*/
+arg:= getword(arg);
+sel:= arg in {"iron", "copper", "silver", "gold", "platinum", "all"};
+
+if (sel <= 0)
+    sel := arg in {"ip", "cp", "sp", "gp", "pp"};
+
+if (sel <= 0) /* still not found */
+    {
+    act ("You can only split iron, copper, silver, gold, or platinum pieces"+
+        "(or all of them).", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+    }
+
+sel:= sel - 1;
+kids:= 1; /* We expect at least one splitter, self */
+
+if (self.master)
+    {
+    if (self.master.master)
+        {
+        mast := self;
+        in_gr := FALSE;
+        }
+
+    else if (not isset (self.charflags, CHAR_GROUP) or
+        not isset(self.master.charflags, CHAR_GROUP))
+        {
+        mast := self;
+        in_gr := FALSE;
+        }
+
+    else
+        {
+        mast := self.master;
+        in_gr := TRUE;
+
+        foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+            {
+            if (u == self) continue;
+            if ((u.master != mast) and (u != mast)) continue;
+            if (not isset(u.charflags, CHAR_GROUP)) continue;
+
+            kids := kids + 1; /* To know how many groupies there are in room
+*/
+            }
+
+        }
+    }
+
+else
+    {
+    mast := self;
+
+    if (not self.follower)
+        in_gr := FALSE;
+
+    else if (not isset(self.charflags, CHAR_GROUP))
+        in_gr := FALSE;
+
+    else foreach (SPLIT_CHARS, u)
+        {
+        if (u == self) continue;
+        if (not visible(self, u)) continue;
+
+        if (u.master != mast) continue;
+        if (not isset(u.charflags, CHAR_GROUP)) continue;
+
+        in_gr := TRUE;
+        kids := kids + 1;
+        }
+    }
+
+if (not in_gr)
+    {
+    act("You become rather picky with your loot.",A_ALWAYS, self, null,
+null, TO_CHAR);
+    act("$1n peers around, greedily playing with $1s money.",A_HIDEINV,
+self, null, null, TO_REST);
+    return;
+    }
+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" called the split"+
+        "command ("+itoa(sel)+")", "a");
+
+if (sel == 5)
+    goto split_all;
+
+if (sel == 0)
+    ctype := IRON_PIECE;
+if (sel == 1)
+    ctype := COPPER_PIECE;
+if (sel == 2)
+    ctype := SILVER_PIECE;
+if (sel == 3)
+    ctype := GOLD_PIECE;
+if (sel == 4)
+    ctype := PLATINUM_PIECE;
+
+coins:= purse(self, ctype);
+
+if (coins < kids) /* There are less coins of that type than group members */
+    {
+    act("Splitting "+itoa(coins)+" coins evenly between "+itoa(kids)+
+        " people might be quite a puzzle...",A_ALWAYS, self, null, null,
+TO_CHAR);
+    return;
+    }
+
+spval:= coins / kids;
+
+ms:= coinstring@function (coins, ctype, TRUE);
+
+tmp:= ms;
+s:= getword(tmp);
+s:= tmp; /* To get the "platinum pieces" or such, without the amount */
+
+ms:= coinstring@function (spval, ctype, TRUE);
+
+act ("You start splitting your "+s+" between your group members.",
+    A_ALWAYS, self, null, null, TO_CHAR);
+act ("$1n starts splitting $1s "+s+".",A_HIDEINV, self, null, null,
+TO_REST);
+
+foreach (SPLIT_CHARS, u)
+    {
+
+    if (u == self)
+        {
+        act("You keep "+ms+" for yourself.",A_ALWAYS, self, null, null,
+TO_CHAR);
+        continue;
+        }
+
+    if (not visible(self, u)) continue;
+
+    if ( ((u.master != mast) and (u != mast)) or
+        not isset(u.charflags, CHAR_GROUP))
+        continue; /* Not a grouped */
+
+    act ("You give $3n "+ms+".", A_HIDEINV, self, null, u, TO_CHAR);
+    act ("$1n gives $3n "+ms+".", A_HIDEINV, self, null, u, TO_NOTVICT);
+    act ("$1n gives you "+ms+".", A_HIDEINV, self, null, u, TO_VICT);
+
+    i := flog ("split.log", asctime(realtime)+": "+self.name+" split "+
+        itoa(coins)+" "+ctype+" to "+ms+" (to "+u.name+")", "a");
+
+    i := transfercoins@function (self, u, spval, ctype);
+
+    if (i == FALSE)
+        act("You realize something is wrong with $1n's money.",
+            A_HIDEINV, self, null, u, TO_VICT);
+    }
+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the"+
+    "split command.", "a");
+return;
+
+:split_all:
+
+act ("You start splitting your money between your group members.",
+    A_ALWAYS, self, null, null, TO_CHAR);
+act ("$1n starts splitting $1s money.",
+    A_HIDEINV, self, null, null, TO_REST);
+
+
+l:= MAX_MONEY;
+ms:= "";
+
+while (l >= 0)
+    {
+    if (l == 0)
+        ctype := IRON_PIECE;
+    if (l == 1)
+        ctype := COPPER_PIECE;
+    if (l == 2)
+        ctype := SILVER_PIECE;
+    if (l == 3)
+        ctype := GOLD_PIECE;
+    if (l == 4)
+        ctype := PLATINUM_PIECE;
+
+    coins := purse(self, ctype);
+
+    if (coins < kids)
+        {
+        l := l - 1;
+        continue;
+        }
+
+    spval := coins / kids;
+    s := coinstring@function (spval, ctype, TRUE);
+
+    if (ms == "")
+        ms := s;
+
+    else
+        ms := ms + ", " + s;
+
+    foreach (SPLIT_CHARS, u)
+        {
+
+        if (u == self)
+            continue;
+
+        if (not visible(self, u)) continue;
+
+        if ( ((u.master != mast) and (u != mast)) or
+        not isset(u.charflags, CHAR_GROUP))
+        continue; /* Not a grouped */
+
+        i := transfercoins@function (self, u, spval, ctype);
+
+        if (i == FALSE)
+act("You realize something is wrong with $1n's money.",A_HIDEINV, self,
+null, u, TO_VICT);
+
+        i := flog ("split.log", asctime(realtime)+": "+self.name+" split "+
+            itoa(coins)+" "+ctype+" to "+s+" (to "+u.name+")", "a");
+
+        }
+
+    done := TRUE;
+    l := l - 1;
+    }
+
+foreach (SPLIT_CHARS, u)
+    {
+    if (u == self)
+        {
+        act("You keep "+ms+" for yourself.",A_ALWAYS, self, null, null,
+TO_CHAR);
+        continue;
+        }
+
+    if (not visible(self, u)) continue;
+
+    if ( ((u.master != mast) and (u != mast)) or
+        not isset(u.charflags, CHAR_GROUP))
+        continue; /* Not a grouped */
+
+    act ("You give $3n "+ms+".", A_HIDEINV, self, null, u, TO_CHAR);
+    act ("$1n gives $3n "+ms+".", A_HIDEINV, self, null, u, TO_NOTVICT);
+    act ("$1n gives you "+ms+".", A_HIDEINV, self, null, u, TO_VICT);
+    }
+
+if (not done)
+    {
+    act("You realize you do not have enough money to split it between all "+
+        "your party members.", A_ALWAYS, self, null, null, TO_CHAR);
+    act("$1n seems to realize $1s purse is empty.",
+        A_HIDEINV, self, null, null, TO_REST);
+    }
+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the"+
+        "split command.", "a");
+return;
+
+} dilend

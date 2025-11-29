@@ -1,0 +1,183 @@
+Generate MCP entry for DIL keyword: findrndunit
+
+=== Yacc rule ===
+| DILSE_FNDRU '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'findrndunit' not an unitptr.");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'findrndunit' not an integer.");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'findrndunit' not an integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_UP;
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_FNDRU);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+}
+
+=== C implementation ===
+void dilfe_fndru(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Find a unit */
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_UP:
+            if (v1->val.ptr)
+            {
+                v->type = DILV_UP;
+            }
+            else
+            {
+                v->type = DILV_NULL; /* not applicable UP */
+            }
+            break;
+        case DILV_NULL:
+            v->type = DILV_NULL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    switch (dil_getval(v2))
+    {
+        case DILV_FAIL:
+            if (v->type != DILV_ERR)
+            {
+                v->type = DILV_FAIL;
+            }
+            break;
+        case DILV_INT:
+            break;
+
+        case DILV_NULL:
+            if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
+                v->type = DILV_NULL; /* not applicable */
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v3))
+    {
+        case DILV_FAIL:
+            if (v->type != DILV_ERR)
+            {
+                v->type = DILV_FAIL;
+            }
+            break;
+        case DILV_INT:
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    if (v->type == DILV_UP)
+    {
+        v->atyp = DILA_NORM;
+        v->val.ptr = random_unit((unit_data *)v1->val.ptr, v2->val.num, v3->val.num);
+
+        if (!v->val.ptr)
+        {
+            v->type = DILV_NULL;
+        }
+    }
+    else
+    {
+        v->type = DILV_FAIL;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin gift_func(count:integer,i:integer);
+external
+  string gift_name (i:integer);
+var
+ item: unitptr;
+  namer:string;
+  place:unitptr;
+  gift:unitptr;
+code
+{
+  namer:=gift_name(count);
+  gift:=load (namer+"@"+"hallows23");
+
+if ((gift.nameidx == "tot_bag2") and (gift.loadcount > 250))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag3") and (gift.loadcount > 175))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag4") and (gift.loadcount > 150))
+{
+destroy(gift);
+return;
+}
+
+
+  log("loaded"+namer+"@"+"hallows23");
+
+
+  :loop:
+  if (i==0)
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+  else
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+
+  if ((place==null) or
+  (place==self)) goto loop;
+
+item:=place;
+
+while (item.type!=UNIT_ST_ROOM)
+ {
+ if (item.type==UNIT_ST_PC)
+   goto loop;
+  item:=item.outside;
+  }
+
+  link (gift,place);
+  return ;
+  } dilend

@@ -1,0 +1,80 @@
+Generate MCP entry for DIL keyword: shell
+
+=== Yacc rule ===
+| DILSE_SHELL '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'shell' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_SHELL);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_shell(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* Get the ID number of a player. */
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_NULL:
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+        case DILV_SP:
+            if (v1->val.ptr)
+            {
+                v->type = DILV_INT;
+                v->atyp = DILA_NONE;
+                if (p->frame[0].tmpl->zone->getAccessLevel() != 0) // 0 is the highest access
+                {
+                    szonelog(p->frame->tmpl->zone, "DIL '%s' attempt run shell() w/o access.", p->frame->tmpl->prgname);
+                    p->waitcmd = WAITCMD_QUIT;
+                }
+                else
+                {
+                    pthread_t mythread = 0;
+                    v->val.num = pthread_create(&mythread, nullptr, threadcallout, v1->val.ptr);
+                    if (v->val.num)
+                    {
+                        slog(LOG_ALL, 0, "DIL shell pthread create error code %d.", v->val.num);
+                    }
+                    // threadcallout((char *) v1->val.ptr);
+                }
+            }
+            break;
+        default:
+            v->type = DILV_ERR; /* Wrong type */
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin shelltest();
+var 
+  i : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("bow"));
+
+   i := shell("test.sh olle golle");
+   log("shell = " + itoa(i));
+   goto loop;
+} dilend

@@ -1,0 +1,157 @@
+Generate MCP entry for DIL keyword: openroll
+
+=== Yacc rule ===
+| DILSE_OPRO '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'openroll' not an integer");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'openroll' not an integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+
+        make_code(&($3));
+        make_code(&($5));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_OPRO);
+    }
+
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_opro(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_INT:
+            switch (dil_getval(v2))
+            {
+                case DILV_INT:
+                    if ((v1->val.num > 0) && (v2->val.num > 0) && (v2->val.num < v1->val.num / 2 - 1))
+                    {
+                        v->val.num = open_ended_roll(v1->val.num, v2->val.num);
+                    }
+                    else
+                    {
+                        v->val.num = 0;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR;
+                    break;
+            }
+
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin healing_balm();
+var
+ u : unitptr;
+ pc : unitptr;
+ txt : string;
+code
+{
+        :start:
+wait(SFB_CMD,(command("aid")or command("quaff"))and
+(self.equip==WEAR_HOLD)
+and(activator==self.outside)and(activator.position>POSITION_SLEEPING));
+block;
+pc:=activator;
+txt:=argument;
+
+if (command("quaff"))
+{
+sendtext("No idea in quaffing the balm, it's for external use only.<br/>",pc);
+goto start;
+}
+
+if ((pc.position==POSITION_SITTING)or(pc.position==POSITION_RESTING))
+{
+sendtext("Nah... you're too relaxed to think about that right now...<br/>",pc);
+goto start;
+}
+
+if (txt=="")
+{
+sendtext("Aid who?<br/>",pc);
+goto start;
+}
+
+u:=findunit(self.outside,txt,FIND_UNIT_SURRO,null);
+
+if ((u.type==UNIT_ST_PC)or(u.type==UNIT_ST_NPC))
+{
+if (u==pc)
+  {
+  sendtext("What point would there be in applying the balm to yourself?<br/>"+
+  "You are not dying at the moment!<br/>",pc);
+  goto start;
+  }
+if ((u.hp>0)and(u.position>POSITION_INCAP))
+  {
+  sendtext("But "+u.name+" is not dying at the moment!<br/>",pc);
+  goto start;
+  }
+if ((u.type==UNIT_ST_NPC)and(u.race>999))
+ {
+ sendtext("You don't recognize the anatomy of this creature, you can't "+
+ "apply the balm!<br/>",pc);
+ goto start;
+ }
+
+ sendtext("You carefully apply the healing balm to "+u.name+"'s bleeding "+
+ "wounds...<br/>",pc);
+ act("$1n carefully applies some $2N to $3n's bleeding wounds...",
+ A_SOMEONE,pc,self,u,TO_NOTVICT);
+ if (openroll(60,5)<pc.skills[SKI_FIRST_AID])
+ {
+ u.hp:=1;
+ u.position:=POSITION_RESTING;
+ position_update(u);
+ act("The wounds on $3n's body close up, and a sigh comes from $3s chest.",
+ A_SOMEONE,pc,self,u,TO_NOTVICT);
+ act("The wounds on $3n's body close up, and a sigh comes from $3s chest.",
+ A_SOMEONE,pc,self,u,TO_CHAR);
+ sendtext("You awake from the coma, feeling weak yet still alive!<br/>",u);
+ destroy(self);
+ }
+ else
+ {
+ sendtext("Oh no! You must have made some error in your treatment!<br/>",pc);
+ act("There is no apparent effect to be seen.",A_SOMEONE,pc,self,u,TO_ALL);
+ destroy(self);
+ }
+goto start;
+}
+sendtext("No-one here by this name.<br/>",self.outside);
+goto start;
+} dilend

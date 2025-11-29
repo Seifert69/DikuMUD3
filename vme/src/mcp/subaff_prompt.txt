@@ -1,0 +1,85 @@
+Generate MCP entry for DIL keyword: subaff
+
+=== Yacc rule ===
+| DILSI_SUA '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of subaff", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'subaff' not a unit");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'subaff' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SUA);
+    }
+}
+
+=== C implementation ===
+void dilfi_sua(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+    unit_affected_type *af = nullptr;
+
+    p->waitcmd--;
+
+    if (dil_type_check("subaff", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        if (v1->val.ptr)
+        {
+            af = affected_by_spell((unit_data *)v1->val.ptr, v2->val.num);
+            if (af)
+            {
+                destroy_affect(af);
+            }
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin remove_aff();
+var
+   i:integer;
+code
+{
+   heartbeat:=3;
+   i:=0;
+   while (i<100)
+   {
+      if (isaff(self,i))
+      {
+         subaff(self,i);
+         continue;
+      }
+      i:=i+1;
+   }
+
+   while (dilfind("panic@spells",self))
+      i:=dildestroy("panic@spells",self);
+
+   while (dilfind("spl_poison@spells",self))
+      i:=dildestroy("spl_poison@spells",self);
+
+   while (dilfind("hammer@spells",self))
+      i:=dildestroy("hammer@spells",self);
+
+   while (dilfind("no_flee@spells",self))
+      i:=dildestroy("no_flee@spells",self);
+
+   while (dilfind("spl_madness@spells",self))
+      i:=dildestroy("spl_madness@spells",self);
+
+   while (dilfind("spl_sleep@spells",self))
+      i:=dildestroy("spl_sleep@spells",self);
+
+   return;
+} dilend

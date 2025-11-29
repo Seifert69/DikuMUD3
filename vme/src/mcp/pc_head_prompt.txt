@@ -1,0 +1,101 @@
+Generate MCP entry for DIL keyword: pc_head
+
+=== Yacc rule ===
+| DILSE_PHEAD '(' ')'
+{
+    INITEXP($$);
+    $$.dsl = DSL_DYN;
+    $$.typ = DilVarType_e::DILV_UP;
+    add_ubit8(&($$), DILE_PHEAD);
+}
+
+=== C implementation ===
+void dilfe_phead(dilprg *p)
+{
+    dilval *v = new dilval;
+    if (g_unit_list->isPC())
+    {
+        v->atyp = DILA_NORM;
+        v->type = DILV_UP;
+        v->val.ptr = g_unit_list;
+    }
+    else
+    {
+        v->type = DILV_NULL;
+    }
+    p->stack.push(v);
+}
+
+=== DIL example ===
+dilbegin force(arg:string);
+var
+ u:unitptr;
+ all_arg:string;
+code
+{
+
+if (self.type!=UNIT_ST_PC)
+	quit;
+
+ u:=findunit(self,arg,FIND_UNIT_GLOBAL,null,UNIT_ST_PC);
+if (u==null)
+ u:=findunit(self,arg,FIND_UNIT_HERE,null,UNIT_ST_NPC);
+if (u==null)
+ u:=findunit(self,arg,FIND_UNIT_ZONE,null,UNIT_ST_NPC);
+if (u==null)
+ u:=findunit(self,arg,FIND_UNIT_WORLD,null,UNIT_ST_NPC);
+
+if (u==null)
+ {
+all_arg:=getword(arg);
+if (all_arg=="all")
+  goto force_all;
+  sendtext("Who would you like to force to do what?<br/>",self);
+  quit;
+  }
+
+  :force_one:
+if (self.level < u.level)
+{
+if (visible(self,u))
+act("You can't force $3n to do that.",
+A_ALWAYS,self,null,u,TO_CHAR);
+else
+sendtext("Who would you like to force to do what?<br/>",self);
+quit;
+}
+
+  act ("Forcing $3n to '$2t'",
+  A_ALWAYS,self,arg,u,TO_CHAR);
+act("$1n has forced you to '$2t'",
+A_SOMEONE,self,arg,u,TO_VICT);
+
+exec (arg,u);
+sendtext("Done<br/>",self);
+quit;
+
+:force_all:
+u:=pc_head();
+while (u.type==UNIT_ST_PC)
+{
+if (u==self)
+ {
+ u:=u.gnext;
+ continue;
+ }
+if (self.level > u.level)
+{
+act("$1n has forced you to '$2t'",
+A_SOMEONE,self,arg,u,TO_VICT);
+
+ 	exec (arg,u);
+}
+ else if (visible(self,u))
+ act("You can't force $3n to do that.",
+ A_ALWAYS,self,null,u,TO_CHAR);
+
+ u:=u.gnext;
+ }
+sendtext("Done<br/>",self);
+ quit;
+ } dilend

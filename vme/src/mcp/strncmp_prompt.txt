@@ -1,0 +1,162 @@
+Generate MCP entry for DIL keyword: strncmp
+
+=== Yacc rule ===
+| DILSE_STRNCMP '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'strncmp' not string");
+    }
+    else if ($5.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 2 of 'strncmp' not string");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'strncmp' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_STRNCMP);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+}
+
+=== C implementation ===
+void dilfe_strncmp(dilprg *p)
+{
+    dilval *v = new dilval;
+    /* String equal operator */
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v3))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_INT:
+            v->type = DILV_INT;
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v2))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_SP:
+            v->type = DILV_INT;
+            break;
+        case DILV_NULL:
+            v->type = DILV_NULL; /* null pointer */
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            if (v->type != DILV_ERR)
+            {
+                v->type = DILV_FAIL;
+            }
+            break;
+        case DILV_SP:
+            break;
+        case DILV_NULL:
+            if ((v->type != DILV_ERR) && (v->type != DILV_FAIL))
+            {
+                v->type = DILV_NULL; /* null pointer */
+            }
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    switch (v->type)
+    {
+        case DILV_INT:
+            v->atyp = DILA_NONE;
+            v->val.num = strncmp((char *)v1->val.ptr, (char *)v2->val.ptr, (int)v3->val.num);
+            break;
+        case DILV_NULL:
+            v->atyp = DILA_NONE;
+            v->type = DILV_INT;
+            v->val.num = FALSE;
+            break;
+        default:
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin not_used(arg : string);
+code
+{
+   // The functions in comments here have not been used in any DIL program.
+   // I suppose they're considered obsolete until someone needs them
+   // and they get tested.
+   //
+   // buf := getcolor("&br"); -- NOT USED ANYWHERE
+   // buf := addcolor(); --NOT USED ANYWHERE
+   // buf := delcolor(); --NOT USED ANYWHERE
+   // buf := changecolor(); --NOT USED ANYWHERE
+   // buf := getcmd(); --NOT USED ANYWHERE
+   // buf := clone(); --NOT USED ANYWHERE
+   // buf := global_head(); --NOT USED ANYWHERE
+   // buf := obj_head(); --NOT USED ANYWHERE
+   // buf := npc_head(); --NOT USED ANYWHERE
+   // buf := room_head(); --NOT USED ANYWHERE
+   // buf := zone_head(); --NOT USED ANYWHERE
+   // buf := command_head(); --NOT USED ANYWHERE
+   // buf := strncmp(); --NOT USED ANYWHERE
+   // buf := check_password(); --NOT USED ANYWHERE
+   // buf := acc_total(); --NOT USED ANYWHERE
+   // buf := loglevel(); --NOT USED ANYWHERE
+   // buf := spell_levels(); --NOT USED ANYWHERE
+   // buf := spell_costs(); --NOT USED ANYWHERE
+   // buf := hasfunc(); --NOT USED ANYWHERE
+   // buf := ability_levels(); --NOT USED ANYWHERE
+   // buf := ability_costs(); --NOT USED ANYWHERE
+   // buf := weapon_levels(); --NOT USED ANYWHERE
+   // buf := weapon_costs(); --NOT USED ANYWHERE
+   // buf := skill_levels(); --NOT USED ANYWHERE
+   // buf := skill_costs(); --NOT USED ANYWHERE
+   // buf := lastroom(); --NOT USED ANYWHERE
+   // buf := unit.objs(); --NOT USED ANYWHERE
+   // buf := unit.roomcount(); --NOT USED ANYWHERE
+   // buf := unit.objcount(); --NOT USED ANYWHERE
+   // buf := unit.npccount(); --NOT USED ANYWHERE
+   // buf := unit.resetmode(); --NOT USED ANYWHERE
+   // buf := unit.loadlevel(); --NOT USED ANYWHERE
+
+   quit;
+} dilend

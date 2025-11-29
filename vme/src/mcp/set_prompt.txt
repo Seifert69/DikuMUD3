@@ -1,0 +1,169 @@
+Generate MCP entry for DIL keyword: set
+
+=== Yacc rule ===
+| DILSI_SET '(' coreexp ',' coreexp ')' ihold
+{
+    checkbool("argument 2 of set", $5.boolean);
+    if ($3.typ != DilVarType_e::DILV_INT || $3.dsl != DSL_LFT)
+    {
+        dilfatal("Arg 1 of 'set' not an integer variable");
+    }
+    else if ($5.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 2 of 'set' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $7 + 1;
+        wtmp = &tmpl.core[$7];
+        bwrite_ubit8(&wtmp, DILI_SET);
+    }
+}
+
+=== C implementation ===
+void dilfi_set(dilprg *p)
+{
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("set", p, 1, v2, TYPEFAIL_NULL, 1, DILV_INT))
+    {
+        switch (v1->type)
+        {
+            case DILV_SINT1R:
+                *((sbit8 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_SINT2R:
+                *((sbit16 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_SINT4R:
+                *((sbit32 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_UINT1R:
+                *((ubit8 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_UINT2R:
+                *((ubit16 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_UINT4R:
+                *((ubit32 *)v1->ref) |= v2->val.num;
+                break;
+            case DILV_FAIL:
+                break;
+            default:
+                /* not an lvalue! */
+                dil_typeerr(p, "lvalue set");
+                break;
+        }
+    }
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin bob();
+var
+	pc	:	unitptr;
+	i	:	integer;
+code
+{
+   heartbeat := PULSE_SEC * 3;
+   :start:
+   wait(SFB_CMD, (command("write") or command("sign")));
+   block;
+
+   if (activator.type != UNIT_ST_PC)
+     goto start;
+
+   if (activator.level < 50)
+   {
+      act("The Book of Blood quakes violently in its resting " +
+	  "spot, a voice intones 'Thou must be of an experience " +
+	  "level of 50 or higher to register in the death book'." ,
+	  A_ALWAYS, activator, null, null, TO_CHAR);
+      act("The Book of Blood refuses to let "+activator.name+" sign.",
+	 A_ALWAYS, activator, null, null, TO_REST);
+      goto start;
+   }
+
+   if (not ("book" in argument))
+   {
+      act("If you want to sign $2n, then type 'sign book'.",
+	  A_ALWAYS, activator, self, null, TO_CHAR);
+      goto start;
+   }
+
+   if (isset(activator.pcflags, PC_PK_RELAXED))
+   {
+      act("You are already signed up in $2n, the treacherous " +
+	  "ways of death are already familiar to you!",
+          A_ALWAYS, activator, self, null, TO_CHAR);
+   }
+   else
+   {
+      pc := activator;
+      secure(pc, start);
+
+      act("The Book of Blood seems to shudder into life!",
+	  A_ALWAYS, pc, self, null, TO_CHAR);
+      pause;
+      act("A morbid voice intones 'Thou truly wishes to sign the " +
+	  "death book? Let the warnings of the dead ring out in your " +
+       	  "mind!", A_ALWAYS, pc, self, null, TO_CHAR);
+		pause;
+      act("The voices of the dead whisper 'If you really choose to sign, " +
+	  "be it known that your death may be sought by ANYONE else " +
+	  "who has signed. You will be free to murder other signers " +
+	  "as you wish.", A_ALWAYS, pc, self, null, TO_CHAR);
+      pause;
+      act ("Understand though if you sign there is no turning back.  "+
+      "Once a book signer always a book signer.  Also don't complain to "+
+      "The gods about another book signer that kills you cause thats what
+signing "+
+      "this book means.  You are giving your permission to be killed.",
+        A_ALWAYS, pc, self, null, TO_CHAR);
+        pause;
+
+      act("The voices of the dead whisper 'If you still wish to sign, " +
+	  "do so now, repeat the procedure to complete your entrance " +
+        "into the league of death!'",
+        A_ALWAYS, pc, self, null, TO_CHAR);
+      i := 0;
+      while (i < 2)
+      {
+         wait(SFB_CMD, activator == pc);
+         if ((command("write") or command("sign")) and ("book" in argument))
+         {
+	         block;
+            goto book_signed;
+         }
+         else
+         {
+ 	  block;
+	    act("You have to 'write book' to complete the procedure " +
+	        "and live out your days as a fugitive from " +
+	        "death!", A_ALWAYS, activator, self, null, TO_CHAR);
+ 	 }
+         i := i+1;
+      }
+      act("An eerie voice exclaims 'A wise decision not to sign!",
+	  A_ALWAYS, activator, self, null, TO_CHAR);
+      unsecure(pc);
+      goto start;
+      :book_signed:
+      set(activator.pcflags, PC_PK_RELAXED);
+      act("You sign $2n, your wrist flares with pain and you " +
+	  "notice you have a new scar, an insignia of your allegiance " +
+	  "with death!",
+          A_ALWAYS, activator, self, null, TO_CHAR);
+      act("$1n signs $2n, a scar wells up to signify the allegiance " +
+	  "with death.",
+          A_ALWAYS, activator, self, null, TO_ROOM);
+      unsecure(pc);
+   }
+
+   goto start;
+} dilend

@@ -1,0 +1,131 @@
+Generate MCP entry for DIL keyword: send
+
+=== Yacc rule ===
+| DILSI_SND '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'send' not a string");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_SND);
+    }
+}
+
+=== C implementation ===
+void dilfi_snd(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    p->waitcmd--;
+
+    if (dil_type_check("send", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))
+    {
+        if (v1->val.ptr)
+        {
+            send_message(p->sarg->owner, (char *)v1->val.ptr);
+            dil_test_secure(p);
+        }
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) jailstay(du : integer);
+external
+   integer add_reward@justice(criminal_symname : string, criminal_idx : integer, crime_type : integer);
+   rem_db_entry@justice(criminal : unitptr, extra_type : string, juris : string);
+   getfrom_safe(prisoner : unitptr);
+   set_char_flags@justice(char : unitptr, setting : string);
+var
+   sname : string;
+   jd : unitptr;
+   id : string;
+   juris : string; 
+   k : string;
+   gold : integer;
+   g : string;
+code
+{
+   heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
+   juris := self.outside.zoneidx;
+   sname := self.outside.symname; // Get the jail symname
+
+   jd := findsymbolic("database@justice");
+   id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+   k := "$reward "+ juris;
+     
+   // Change player arrest descr to reflect that the char is in jail.
+   //
+   jd := findsymbolic("database@justice");
+   
+   if( "$reward" in self.extra)
+   {
+      jd.extra.[id].names.[4] := "-1";
+      self.extra.[k].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail.";
+   }
+
+ 
+  :loop:
+   pause;
+   if (sname != self.outside.symname)
+   {
+      // Player has escaped from jail
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "65";
+      self.extra.[k].names.[4] := "65";
+      gold := atoi(jd.extra.[id].names.[2]); 
+      g := moneystring(gold,1); 
+      jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
+      set_char_flags@justice(self, "wanted");
+      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
+      quit;
+   }
+
+   if("$reward" in self.extra)
+   {
+      jd := findsymbolic("database@justice");
+      jd.extra.[id].names.[4] := "-1";
+      jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
+   }
+
+   if ((du % 4) == 0)
+     send("jailfood");
+
+   if (du == 24)
+   {
+      act("At last! The very last day of your term!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du == 12)
+   {
+      act("Only half a day left 'till your freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else if (du <= 1)
+     goto release;
+   else
+   {
+      act("You make another mark on the wall. Only "+itoa(du)+" hours till freedom!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   
+   du := du - 1;
+   goto loop;
+
+
+   /* Get thrown out of jail */
+   :release:
+   act("Your term is over! You are thrown out of the jail and sent home.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   getfrom_safe(self);
+   link(self, findroom("accuse_room@" + juris));
+   rem_db_entry@justice(self, "$reward", juris);
+   set_char_flags@justice(self, "arrest");
+   quit;
+} dilend

@@ -1,0 +1,130 @@
+Generate MCP entry for DIL keyword: opponent
+
+=== Yacc rule ===
+| DILSE_OPPO '(' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    $$.boolean = 1;
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'opponent' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'opponent' not a unitptr");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_ubit8(&($$), DILE_OPPO);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+}
+
+=== C implementation ===
+void dilfe_oppo(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_UP:
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                        else
+                        {
+                            v->val.num = (CHAR_COMBAT((unit_data *)v1->val.ptr)
+                                              ? CHAR_COMBAT((unit_data *)v1->val.ptr)->FindOpponent((unit_data *)v2->val.ptr) != nullptr
+                                              : FALSE);
+                        }
+                        break;
+                    case DILV_FAIL:
+                    case DILV_NULL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+}
+
+=== DIL example ===
+dilbegin provoked_attack(victim : unitptr, ch : unitptr);
+code
+{
+   if (not (victim.type & (UNIT_ST_NPC|UNIT_ST_PC)))
+     return; /* FALSE */
+
+   if (not (ch.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+     return; /* FALSE */
+
+   if (victim.level >= 200)
+     return; /* FALSE */
+
+   if (ch.level >= 200)
+     return; /* FALSE */
+
+   if (not isset(ch.charflags, CHAR_SELF_DEFENCE))
+   {
+      if ((ch.fighting == null) and
+	  (not isset(victim.charflags, CHAR_LEGAL_TARGET)))
+        set(victim.charflags, CHAR_SELF_DEFENCE);
+   }
+
+   /* Test for LEGAL_TARGET bit */
+   if (isset(victim.charflags, CHAR_PROTECTED))
+   {
+       if ((not isset(victim.charflags, CHAR_LEGAL_TARGET)) and
+           (not isset(ch.charflags, CHAR_SELF_DEFENCE)))
+         set(ch.charflags, CHAR_LEGAL_TARGET);
+   }
+
+   if (victim.position <= POSITION_SLEEPING)
+     return; /* FALSE */
+
+   if (isset(victim.charflags, CHAR_PEACEFUL))
+     return; /* FALSE */
+
+   if (opponent(victim, ch))
+     return; /* TRUE */
+
+   set_fighting(victim, ch);
+
+   return; /* TRUE */
+} dilend

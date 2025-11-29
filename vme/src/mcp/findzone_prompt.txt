@@ -1,0 +1,92 @@
+Generate MCP entry for DIL keyword: findzone
+
+=== Yacc rule ===
+| DILSE_FNDZ '(' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'findzone' not string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_ZP;
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_FNDZ);
+    }
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_fndz(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
+        case DILV_SP:
+            v->atyp = DILA_NORM;
+            v->type = DILV_ZP;
+            if (v1->val.ptr)
+            {
+                v->val.ptr = find_zone((const char *)v1->val.ptr);
+                if (v->val.ptr == nullptr)
+                {
+                    v->type = DILV_NULL; /* not found */
+                }
+            }
+            else
+            {
+                v->type = DILV_NULL; /* not found */
+            }
+
+            break;
+        case DILV_NULL:
+            v->type = DILV_NULL; /* not found */
+            break;
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin cmd_reset(arg : string);
+var
+   z : zoneptr;
+   u : unitptr;
+code
+{
+   if (arg == "")
+   {
+      u := self.outside;
+      while (u.type != UNIT_ST_ROOM)
+          u := u.outside;
+      z := findzone(u.zone);
+   }
+   else
+   {
+      z := findzone(arg);
+   }
+
+   if (z == null)
+   {
+       sendtext("Could not find a zone named "+ arg + "<br/>", self);
+       quit;
+   }
+
+   sendtext("Resetting zone "+ z.name + "<br/>", self);
+   zonereset(z);
+
+   quit;
+} dilend

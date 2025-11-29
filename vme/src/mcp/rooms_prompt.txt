@@ -1,0 +1,72 @@
+Generate MCP entry for DIL keyword: rooms
+
+=== Yacc rule ===
+| DILSF_ROOMS /* .rooms */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_UP;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_ROOMS;
+}
+
+=== C implementation ===
+case DILF_ROOMS:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_UP;
+                        auto *z = (zone_type *)v1->val.ptr;
+
+                        v->val.ptr = z->findFirstRoom();
+                        if (v->val.ptr == nullptr)
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin all_block();
+var
+  word:string;
+  args:stringlist;
+code
+{
+   :start:
+   wait(SFB_CMD, ((command("get")) or (command ("bury"))));
+   word:=getword (argument);
+
+   if (word== "all")
+   {
+      block;
+      act("This command's 'all' argument has been restricted for Donations rooms.",
+ A_ALWAYS, activator, null, null, TO_CHAR);
+   }
+   args:=split(word,".");
+   if (length(args)>1)
+   if (args.[0]=="all")
+   {
+         block;
+      act("This command's 'all' argument has been restricted for Donations rooms.",
+ A_ALWAYS, activator, null, null, TO_CHAR);
+
+   }
+         goto start;
+} dilend

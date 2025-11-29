@@ -1,0 +1,242 @@
+Generate MCP entry for DIL keyword: getinteger
+
+=== Yacc rule ===
+| DILSE_GINT '(' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'getinteger' not integer");
+    }
+    else if (($5.typ != DilVarType_e::DILV_UP) && ($5.typ != DilVarType_e::DILV_NULL))
+    {
+        dilfatal("Arg 2 of 'getinteger' not unitptr");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'getinteger' not integer");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Function is not _yet_ static */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_ubit8(&($$), DILE_GINT);
+    }
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+}
+
+=== C implementation ===
+void dilfe_gint(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v3 = p->stack.pop(); // INT
+    dilval *v2 = p->stack.pop(); // UNIT
+    dilval *v1 = p->stack.pop(); // INT
+
+    unit_data *p_u = nullptr;
+    int p_i = 0;
+    int idx = 0;
+
+    v->type = DILV_INT;
+    v->val.num = 0;
+
+    switch (dil_getval(v3))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+
+        case DILV_INT:
+            p_i = v3->val.num;
+            break;
+
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v2))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+
+        case DILV_UP:
+        case DILV_NULL:
+            p_u = (unit_data *)v2->val.ptr;
+            break;
+
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    switch (dil_getval(v1))
+    {
+        case DILV_FAIL:
+            v->type = DILV_FAIL; /* failed */
+            break;
+
+        case DILV_INT:
+            idx = v1->val.num;
+            break;
+
+        default:
+            v->type = DILV_ERR; /* wrong type */
+            break;
+    }
+
+    if (v->type == DILV_INT)
+    {
+        time_t t;
+        tm *timeInfo;
+        switch (idx)
+        {
+            case DIL_GINT_MANAREG:
+                if ((p_u != nullptr) && p_u->isChar())
+                {
+                    v->val.num = mana_gain(p_u);
+                }
+                break;
+
+            case DIL_GINT_HITREG:
+                if ((p_u != nullptr) && p_u->isChar())
+                {
+                    v->val.num = hit_gain(p_u);
+                }
+                break;
+
+            case DIL_GINT_MOVEREG:
+                if ((p_u != nullptr) && p_u->isChar())
+                {
+                    v->val.num = move_gain(p_u);
+                }
+                break;
+
+            case DIL_GINT_EFFDEX:
+                if ((p_u != nullptr) && p_u->isChar())
+                {
+                    v->val.num = effective_dex(p_u);
+                }
+                break;
+
+            case DIL_GINT_REQXP:
+                v->val.num = required_xp(p_i);
+                break;
+
+            case DIL_GINT_LEVELXP:
+                v->val.num = level_xp(p_i);
+                break;
+
+            case DIL_GINT_DESCRIPTOR:
+                if ((p_u != nullptr) && p_u->isPC())
+                {
+                    v->val.num = (CHAR_DESCRIPTOR(p_u) != nullptr);
+                }
+                else
+                {
+                    v->val.num = 1;
+                }
+                break;
+
+            case DIL_GINT_CRIMENO:
+                v->val.num = new_crime_serial_no();
+                break;
+
+            case DIL_GINT_BONUS_A:
+                v->val.num = bonus_map_a(p_i);
+                break;
+
+            case DIL_GINT_BONUS_B:
+                v->val.num = bonus_map_b(p_i);
+                break;
+
+            case DIL_GINT_REALYEAR:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = 1900 + timeInfo->tm_year;
+                break;
+
+            case DIL_GINT_REALMONTH:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = timeInfo->tm_mon + 1;
+                break;
+
+            case DIL_GINT_REALDAY:
+                t = time(0);
+                timeInfo = gmtime(&t);
+                v->val.num = timeInfo->tm_mday;
+                break;
+
+            default:
+                v->type = DILV_FAIL; /* failed */
+                slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s.", idx, p->sarg->owner->getFileIndexSymName());
+                break;
+        }
+    }
+
+    p->stack.push(v);
+
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
+=== DIL example ===
+dilbegin integer lose_exp(u:unitptr);
+external
+	integer max@function(a:integer,b:integer);
+	integer min@function(a:integer,b:integer);
+
+var
+	loss:integer;
+	l0:integer; // XP required to your current level
+	l1:integer; // XP required to your current level+1
+
+code
+{
+   heartbeat:=3;
+   if (u.type != UNIT_ST_PC)
+      return(0);
+
+   /* Up to level 3 is sacred experience                          */
+   if (u.vlevel <= 3)
+      return(0);
+
+   /* This first line takes care of any xp earned above required level. */
+   l0 := getinteger(DIL_GINT_REQXP, null, u.vlevel);
+   l1 := getinteger(DIL_GINT_REQXP, null, u.vlevel+1);
+   // log("l1 = " + itoa(l1) + "   l0 = " + itoa(l0) + "   l1-l0 = " + itoa(l1-l0));
+
+   // Lose half the XP earned above your current level (you should level up)
+   loss := max@function(0, (u.exp-l0)/2);
+   // log("loss 1 = " + itoa(loss));
+
+   /* This line makes sure, that you lose at most half a level...       */
+   loss := min@function(loss, (l1-l0)/2);
+   // log("loss 2 = " + itoa(loss));
+
+   /* This line takes care of the case where you have less or almost    */
+   /* equal XP to your required. You thus lose at least 1/5th your      */
+   /* level.                                                            */
+   loss := max@function(loss, (l1-l0)/5);
+   // log("loss 3 = " + itoa(loss));
+
+   if (loss < 0)
+      loss:=0;
+
+   // log("loss result = " + itoa(loss));
+
+   return(loss);
+} dilend

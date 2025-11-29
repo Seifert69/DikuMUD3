@@ -1,0 +1,206 @@
+Generate MCP entry for DIL keyword: meleeattack
+
+=== Yacc rule ===
+| DILSE_MEL '(' dilexp ',' dilexp ',' dilexp ',' dilexp ',' dilexp ')'
+{
+    INITEXP($$);
+    checkbool("argument 1 of MeleeAttack", $3.boolean);
+
+    if ($3.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 1 of 'MeleeAttack' not a unitptr");
+    }
+    else if ($5.typ != DilVarType_e::DILV_UP)
+    {
+        dilfatal("Arg 2 of 'MeleeAttack' not a unitptr");
+    }
+    else if ($7.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 3 of 'MeleeAttack' not an integer");
+    }
+    else if ($9.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 4 of 'MeleeAttack' not an integer");
+    }
+    else if ($11.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 5 of 'MeleeAttack' not an integer"); // added 'primary' variable to check if we should use offhand or not
+    }
+
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+
+        make_code(&($3));
+        make_code(&($5));
+        make_code(&($7));
+        make_code(&($9));
+        make_code(&($11));
+
+        add_code(&($$), &($3));
+        add_code(&($$), &($5));
+        add_code(&($$), &($7));
+        add_code(&($$), &($9));
+        add_code(&($$), &($11));
+        add_ubit8(&($$), DILE_MEL);
+    }
+
+    FREEEXP($3);
+    FREEEXP($5);
+    FREEEXP($7);
+    FREEEXP($9);
+    FREEEXP($11);
+}
+
+=== C implementation ===
+void dilfe_mel(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v5 = p->stack.pop();
+    dilval *v4 = p->stack.pop();
+    dilval *v3 = p->stack.pop();
+    dilval *v2 = p->stack.pop();
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_UP:
+            if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
+            {
+                v->type = DILV_FAIL;
+            }
+            else
+            {
+                switch (dil_getval(v2))
+                {
+                    case DILV_UP:
+                        if (!v2->val.ptr || !((unit_data *)v2->val.ptr)->isChar())
+                        {
+                            v->type = DILV_FAIL;
+                        }
+                        else
+                        {
+                            switch (dil_getval(v3))
+                            {
+                                case DILV_INT:
+                                    switch (dil_getval(v4))
+                                    {
+                                        case DILV_INT:
+						switch (dil_getval(v5)) // added new option to deal with primary vs secondary weapon
+						{
+							case DILV_INT:
+								v->val.num = one_hit((unit_data *)v1->val.ptr,
+                                                                (unit_data *)v2->val.ptr,
+                                                                v3->val.num,
+                                                                v4->val.num,
+                                                                v5->val.num,
+                                                                TRUE);
+								dil_test_secure(p);
+								break;
+							default:
+								v->type = DILV_ERR;
+								break;
+						}
+                                            break;
+                                        default:
+                                            v->type = DILV_ERR;
+                                            break;
+                                    }
+
+                                    break;
+                                default:
+                                    v->type = DILV_ERR;
+                                    break;
+                            }
+                        }
+
+                        break;
+                    case DILV_FAIL:
+                    case DILV_NULL:
+                        v->type = DILV_FAIL;
+                        break;
+                    default:
+                        v->type = DILV_ERR;
+                        break;
+                }
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+    delete v2;
+    delete v3;
+    delete v4;
+    delete v5;
+}
+
+=== DIL example ===
+dilbegin spider();
+var
+   u : unitptr;
+   i : integer;
+
+code
+{
+   heartbeat := PULSE_SEC*5;
+   on_activation((self.position <= POSITION_SLEEPING) or
+		 (self.position == POSITION_FIGHTING), skip);
+
+   :loop:
+   wait(SFB_MSG, argument == "webaction");
+
+   if (self.outside.nameidx != "on_web")
+     goto loop;
+
+   act("$1n jumps down through the web to prey on a victim.",
+       A_HIDEINV, self, null, null, TO_ROOM);
+
+   link(self, findroom("under_web@haon_dor"));
+   /* Now find the victim */
+   foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+   {
+      if ((u.nameidx != "spider") and
+          (u.nameidx != "queen_spider"))
+      {
+	 act("$1n drops down on $3n from the web above!",
+	     A_SOMEONE, self, null, u, TO_NOTVICT);
+	 act("$1n drops down on you from the web above!",
+	     A_SOMEONE, self , null, u, TO_VICT);
+
+	 i := cast_spell(SPL_POISON, self, self, u, "");
+	 i := cast_spell(SPL_POISON, self, self, u, "");
+	 i := meleeattack(self, u, +75, WPN_BITE,TRUE);
+	 goto done;
+      }
+   }
+
+   :done:
+	while (self.position == POSITION_FIGHTING) pause;
+   pause;
+
+   /* This could be a fun extension: If the spider survives, let it look
+      for a corpse (foreach) and put web all around it. It then moves the
+      "encased" corpse into the den of the queen (and the corpse "rot"
+      is removed too (subaff)). */
+
+   if (self.position < POSITION_STANDING)
+   {
+      exec("stand", self);
+      pause;
+   }
+
+   exec ("u", self);
+
+   goto loop;
+} dilend

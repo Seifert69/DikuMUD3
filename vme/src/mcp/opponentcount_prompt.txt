@@ -1,0 +1,87 @@
+Generate MCP entry for DIL keyword: opponentcount
+
+=== Yacc rule ===
+| DILSF_OPPCT /* .opponentcount */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_OPPCT;
+}
+
+=== C implementation ===
+case DILF_OPPCT:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL:
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if ((v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar()))
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_INT;
+                        if (CHAR_COMBAT((unit_data *)v1->val.ptr))
+                        {
+                            v->val.num = CHAR_COMBAT((unit_data *)v1->val.ptr)->NoOpponents();
+                        }
+                        else
+                        {
+                            v->val.num = 0;
+                        }
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin string get_pos (looker : unitptr, u:unitptr);
+
+var
+
+     p    :  stringlist;
+     i    :  integer;
+     pc   :  unitptr;
+
+code{
+
+i := u.position;
+p := {" is lying here, dead ... creepy.",
+      " is lying here, mortally wounded.",
+      " is lying here, incapacitated.",
+      " is lying here, stunned.",
+      " is sleeping here.",
+      " is resting here.",
+      " is sitting here.",
+      " is here, fighting ",
+      " is standing here."};
+
+if (i != 7)
+    return (p.[i]);
+
+
+if ((u.fighting == null) and (u.opponentcount == 0))
+    return (p.[i] + "someone who has already left.");
+
+pc := getopponent(u, 0);
+
+if (u.fighting == null)
+    return (p.[i] + pc.name + " at a distance.");
+
+if (u.fighting == looker)
+    return (p.[i] + "YOU!");
+
+return (p.[i] + u.fighting.name);
+
+} dilend

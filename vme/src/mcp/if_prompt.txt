@@ -1,0 +1,147 @@
+Generate MCP entry for DIL keyword: if
+
+=== Yacc rule ===
+dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS dilcomposed
+    {
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
+        wtmp = &tmpl.core[$6];
+        bwrite_ubit32(&wtmp, $11.fst); /* address of else */
+        wtmp = &tmpl.core[$8];
+        bwrite_ubit8(&wtmp, DILI_GOTO); /* skip else */
+        wtmp = &tmpl.core[$9];
+        bwrite_ubit32(&wtmp, $11.lst); /* end of else */
+        $$.fst = $3.fst;
+        $$.lst = $11.lst;
+    }
+
+------
+
+| DILSI_IF '(' coreexp ')' ihold ahold dilinst optsemicolons ihold ahold DILSI_ELS dilcomposed
+{
+    wtmp = &tmpl.core[$5];
+    bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
+    wtmp = &tmpl.core[$6];
+    bwrite_ubit32(&wtmp, $12.fst); /* address of else */
+    wtmp = &tmpl.core[$9];
+    bwrite_ubit8(&wtmp, DILI_GOTO); /* skip else */
+    wtmp = &tmpl.core[$10];
+    bwrite_ubit32(&wtmp, $12.lst); /* end of else */
+    $$.fst = $3.fst;
+    $$.lst = $12.lst;
+}
+
+------
+
+| DILSI_IF '(' coreexp ')' ihold ahold dilcomposed
+{
+    wtmp = &tmpl.core[$5];
+    bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
+    wtmp = &tmpl.core[$6];
+    bwrite_ubit32(&wtmp, $7.lst); /* address of else */
+    $$.fst = $3.fst;
+    $$.lst = $7.lst;
+}
+
+=== C implementation ===
+void dilfi_if(dilprg *p)
+{
+    ubit32 coreptr = 0;
+    dilval *v1 = p->stack.pop();
+
+    coreptr = bread_ubit32(&(p->fp->pc)); /* else branch */
+
+    p->waitcmd--;
+    if (!dil_getbool(v1, p))
+    {                                              /* might be pointer, but ok! */
+        p->fp->pc = &(p->fp->tmpl->core[coreptr]); /* choose else branch */
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin guardroutine(guardloc : string, dayguard : integer);
+external
+   DailyRoutine@quests(sl : stringlist, arg2 : string);
+var
+   i  : integer;
+   sch : intlist;
+code
+{
+   on_activation((self.position == POSITION_FIGHTING), skip);
+
+   if (dayguard)
+      sch := {5, 18};  // Wake up at 5, go back at 6pm
+   else
+      sch := {17,6};   // Wake up at 17, go home at 6
+
+:start:
+   heartbeat := WAIT_SEC*5;
+   pause;
+   if (mudhour == sch.[0])
+   {
+      DailyRoutine@quests({
+         "wake", 
+         "::descr::A $1N is here heading to work.",
+         "yawn",
+         "say Time to get going guys!", 
+         "::walkto::$2t",
+         "::descr::A $1N is here guarding the gate."
+      }, guardloc);
+   }
+
+   if(mudhour == sch.[1])
+   {
+      i := rnd(1,3);
+      if (i == 1) goto bar1;
+      if (i == 2) goto bar2;
+      if (i == 3) goto bar3;
+      else goto start;
+
+:bar1:
+      pause;
+      DailyRoutine@quests({
+      "::walkto::grunting_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy beer", 
+      "drink beer",
+      "stretch", 
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "yawn",
+      "::descr::A $1N is here resting.",
+      "sleep"
+   }, "");
+   goto start;
+
+   :bar2:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::grub_inn@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy firebreather", 
+      "drink firebreather",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+
+   goto start;
+
+
+   :bar3:
+   pause;
+   DailyRoutine@quests({
+      "::walkto::park_cafe@midgaard",
+      "::descr::A $1N is here on $1s evening break.",
+      "buy coffee", 
+      "drink coffee",
+      "::descr::A $1N is here heading home.",
+      "::walkto::guard_dorm@midgaard",
+      "::descr::A $1N is here resting.",
+      "yawn",
+      "sleep"}, "");
+   goto start;
+  }
+} dilend

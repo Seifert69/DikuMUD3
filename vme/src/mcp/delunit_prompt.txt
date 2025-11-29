@@ -1,0 +1,209 @@
+Generate MCP entry for DIL keyword: delunit
+
+=== Yacc rule ===
+| DILSE_DELUNIT '(' dilexp ')'
+{
+    INITEXP($$);
+
+    if ($3.typ != DilVarType_e::DILV_SP)
+    {
+        dilfatal("Arg 1 of 'delunit' not a string");
+    }
+    else
+    {
+        /* Type is ok */
+        /* Make nodes dynamic */
+        $$.dsl = DSL_DYN;
+        $$.typ = DilVarType_e::DILV_INT;
+
+        make_code(&($3));
+        add_code(&($$), &($3));
+        add_ubit8(&($$), DILE_DELUNIT);
+    }
+
+    FREEEXP($3);
+}
+
+=== C implementation ===
+void dilfe_delunit(dilprg *p)
+{
+    dilval *v = new dilval;
+    dilval *v1 = p->stack.pop();
+
+    v->type = DILV_INT;
+
+    switch (dil_getval(v1))
+    {
+        case DILV_SP:
+            if (p->frame[0].tmpl->zone->getAccessLevel() > 10)
+            {
+                szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (delunit).", p->frame->tmpl->prgname);
+                p->waitcmd = WAITCMD_QUIT;
+            }
+            else if (!store_name_test((char *)v1->val.ptr))
+            {
+                szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to delunit an illegal file name.", p->frame->tmpl->prgname);
+                v->val.num = FALSE;
+            }
+            else
+            {
+                std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
+                filename += "/units/";
+                filename += (char *)v1->val.ptr;
+                v->val.num = remove(filename.c_str()) ? TRUE : FALSE;
+            }
+
+            break;
+        case DILV_FAIL:
+        case DILV_NULL:
+            v->type = DILV_FAIL;
+            break;
+        default:
+            v->type = DILV_ERR;
+            break;
+    }
+
+    p->stack.push(v);
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin cdelete(arg:string);
+external
+ integer submember (s:string,pname:string);
+	var
+		pc:unitptr;
+		i:integer;
+		err:integer;
+		buf:string;
+		ln:integer;
+		cname:string;
+		line:stringlist;
+		clist:stringlist;
+		found:string;
+		strfile:stringlist;
+
+code
+{
+	err:=loadstr ("clanlist.data",buf);
+	if (err<1)
+	{
+		log ("01:  Error in clanlist.data");
+		quit;
+	}
+
+	clist:=split(buf,"\n");
+	ln:=length (clist);
+	ln:=ln-1;
+	if (ln<1)
+	{
+		log ("02:  Error in clanlist.data");
+		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		quit;
+	}
+
+	i:=0;
+	buf:="";
+	found:="nope";
+	while (i<ln)
+	{
+		if (arg==clist.[i])
+		{
+			found:="yes";
+
+			cname:=clist.[i+2];
+			i:=i+5;
+			continue;
+		}
+		buf:=buf+clist.[i]+"\n"+clist.[i+1]+"\n"+clist.[i+2]+"\n"+clist.[i+3]+"\n"+clist.[i+4]+"\n";
+		i:=i+5;
+	}
+
+	if (found=="yes")
+	{
+		i:=delstr("clanlist.data");
+		i:=savestr("clanlist.data",buf,"w");
+	}
+	else
+	{
+		sendtext ("No such clan found<br/>",self);
+		quit;
+	}
+
+	buf:="";
+	err:=loadstr(arg,buf);
+	if (err<1)
+	{
+		log ("01:  Error in"+arg);
+		quit;
+	}
+	clist:=null;
+	clist:=split(buf,"\n");
+	ln:=length(clist);
+	ln:=ln-1;
+	i:=0;
+	while (i<ln)
+	{
+		line:=split(clist.[i],":");
+		if (length(line)<2)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		if (length(line.[0])<1)
+		{
+			i:=i+1;
+			continue;
+		}
+
+		pc:=ghead();
+		while (pc.type==UNIT_ST_PC)
+		{		
+			if (pc.name==line.[0])
+			break;
+			pc:=pc.gnext;
+		}
+		log ("Deleting:  ");
+		log (line.[0]);
+		if ((pc==null) or (pc.type!=UNIT_ST_PC))
+		goto pc_null;
+
+		log(" online<br/>");
+		err:=submember(arg,line.[0]);
+		pc.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";
+		subextra (pc.extra,CLAN_NAME);
+		subextra (pc.extra,CLAN_RANK);
+		subextra (pc.extra,CLAN_SYMBOLIC);
+
+		pc.hometown := "temple@udgaard";
+		act ("<div class='clan'>$3n has been removed from the clan.</div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
+		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+		A_ALWAYS,pc,null,null,TO_CHAR);
+		i:=i+1;
+		continue;
+
+		:pc_null:
+		log (" off line<br/>");
+		err:=submember(arg,line.[0]);
+		if (err==-1)
+		{
+			act ("<div class='clan'>No such person found.</div>",
+			A_ALWAYS,self,null,null,TO_CHAR);
+		}
+		else
+		{
+			act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
+			,A_ALWAYS,self,null,pc,TO_CHAR);
+			err:=savestr("clan.delete",line.[0]+"\n","a");
+		}
+		i:=i+1;
+	}
+	err:=delstr(arg+".rank");
+	err:=delstr(arg+".money");
+	err:=delstr(arg);
+	err:=delunit(arg+".dc");
+	sendtext("The "+arg+" clan has been deleted.<br/>",self);
+	quit;
+} dilend

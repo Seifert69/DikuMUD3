@@ -1,0 +1,90 @@
+Generate MCP entry for DIL keyword: charflags
+
+=== Yacc rule ===
+| DILSF_AFF /* .affected */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_AFF;
+}
+
+=== C implementation ===
+case DILF_AFF:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
+                    if (character && character->isChar())
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT4R;
+                        v->ref = character->getCharacterFlagsPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                }
+                break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin fnpri(FN_PRI_RESCUE-1) arrest_check(office : string);
+external
+    guard_arrest(office : string, prisoner : unitptr);
+    cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+    integer check_outlaw@justice(char : unitptr, juris : string);
+    string get_juris@justice();
+var
+    u : unitptr;
+    outlaw_status : integer;
+    juris : string;
+code
+{
+    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+:loop:
+    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+    if (activator == self)
+        goto loop;
+    juris := get_juris@justice();
+    outlaw_status := check_outlaw@justice(activator, juris);
+    if (outlaw_status == 0)
+        goto loop; 
+
+    u := equipment(activator,  WEAR_WRIST_R);
+
+    if (u)
+        if ((u.nameidx == "cuffs") and (u.zoneidx == "midgaard"))
+            goto loop;
+
+    if (outlaw_status == 1)  //if (activator.charflags & CHAR_PROTECTED)
+    {
+        u := load("cuffs@midgaard");
+
+        cuff_target(self, activator, u);
+
+        guard_arrest@midgaard(office, activator);
+    }
+    else
+    {
+        unset(activator.charflags, CHAR_SELF_DEFENCE);
+        // If we have several chars with the same name, this causes havoc
+        //     exec("kill "+activator.name, self);
+        set_fighting(self, activator);
+    }
+
+    goto loop;
+} dilend

@@ -1,0 +1,74 @@
+Generate MCP entry for DIL keyword: notes
+
+=== Yacc rule ===
+| DILSF_NOTES /*.notes*/
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_ZP;
+    $$.typ = DilVarType_e::DILV_SP;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_NOTES;
+}
+
+=== C implementation ===
+case DILF_NOTES:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_SPR;
+                        v->ref = ((zone_type *)v1->val.ptr)->getNotesPtrPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL;
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin patrol(locations : stringlist);
+external
+    integer walk_room@function (s:string,i:integer);
+var
+    tf : integer;
+    i : integer;
+code
+{
+    heartbeat := PULSE_SEC*10;
+    pause;
+
+    i := 0;
+    while (i < length(locations))
+    {
+        tf := walk_room@function(locations.[i], PULSE_SEC * 8);
+        pause;
+        if (tf == TRUE)
+        {
+            exec("emote Speaks with the Guards.", self);
+        }
+        i:=i+1;
+    }
+
+    pause;
+    heartbeat := PULSE_SEC*10;
+
+    if (tf==TRUE)
+    {
+        pause;
+        exec("emote jots some notes on a piece of paper.", self);
+        pause;
+        exec("emote dispatches a runner to the captain.", self);
+    }
+    return;
+} dilend

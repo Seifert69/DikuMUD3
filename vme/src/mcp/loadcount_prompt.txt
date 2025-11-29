@@ -1,0 +1,95 @@
+Generate MCP entry for DIL keyword: loadcount
+
+=== Yacc rule ===
+| DILSF_LCN
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_DYN;
+    $$.num = DILF_LCN;
+}
+
+=== C implementation ===
+case DILF_LCN:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NORM;
+                        v->type = DILV_INT;
+                        v->val.num =
+                            ((unit_data *)v1->val.ptr)->getFileIndex() ? ((unit_data *)v1->val.ptr)->getFileIndex()->getNumInMem() : 1;
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin gift_func(count:integer,i:integer);
+external
+  string gift_name (i:integer);
+var
+ item: unitptr;
+  namer:string;
+  place:unitptr;
+  gift:unitptr;
+code
+{
+  namer:=gift_name(count);
+  gift:=load (namer+"@"+"hallows23");
+
+if ((gift.nameidx == "tot_bag2") and (gift.loadcount > 250))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag3") and (gift.loadcount > 175))
+{
+destroy(gift);
+return;
+}
+else if ((gift.nameidx == "tot_bag4") and (gift.loadcount > 150))
+{
+destroy(gift);
+return;
+}
+
+
+  log("loaded"+namer+"@"+"hallows23");
+
+
+  :loop:
+  if (i==0)
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_NPC);
+  else
+  place:=findrndunit (self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
+
+  if ((place==null) or
+  (place==self)) goto loop;
+
+item:=place;
+
+while (item.type!=UNIT_ST_ROOM)
+ {
+ if (item.type==UNIT_ST_PC)
+   goto loop;
+  item:=item.outside;
+  }
+
+  link (gift,place);
+  return ;
+  } dilend

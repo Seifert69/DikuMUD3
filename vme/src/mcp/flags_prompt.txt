@@ -1,0 +1,60 @@
+Generate MCP entry for DIL keyword: flags
+
+=== Yacc rule ===
+| DILSF_FL /* .flags */
+{
+    INITEXP($$);
+    $$.rtyp = DilVarType_e::DILV_UP;
+    $$.typ = DilVarType_e::DILV_INT;
+    $$.dsl = DSL_LFT;
+    $$.num = DILF_FL;
+}
+
+=== C implementation ===
+case DILF_FL:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_UP:
+                {
+                    auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
+                    if (unit)
+                    {
+                        /* ubit16 flags; */
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_UINT2R;
+                        v->ref = unit->getUnitFlagsPtr();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                }
+                break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+=== DIL example ===
+dilbegin rotaway();
+code
+{
+   heartbeat := PULSE_SEC * 9600;
+
+   :loop:
+   pause;
+
+   if (self.outside.type == UNIT_ST_ROOM)
+   {
+      if (not isset(self.flags, UNIT_FL_BURIED))
+        act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
+      destroy(self);
+   }
+
+   goto loop;
+} dilend

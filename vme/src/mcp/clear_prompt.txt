@@ -1,0 +1,64 @@
+Generate MCP entry for DIL keyword: clear
+
+=== Yacc rule ===
+| DILSI_CLI '(' coreexp ')' ihold
+{
+    if ($3.typ != DilVarType_e::DILV_INT)
+    {
+        dilfatal("Arg 1 of 'clear' not an integer");
+    }
+    else
+    {
+        $$.fst = $3.fst;
+        $$.lst = $5 + 1;
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_CLI);
+    }
+}
+
+=== C implementation ===
+void dilfi_cli(dilprg *p)
+{
+    dilval *v1 = p->stack.pop();
+
+    if (dil_type_check("clear", p, 1, v1, FAIL_NULL, 1, DILV_INT))
+    {
+        dil_intr_remove(p, v1->val.num);
+    }
+    delete v1;
+}
+
+=== DIL example ===
+dilbegin recall aware ns_berries();
+var
+   intridx : integer;
+
+code
+{
+   intridx := interrupt(SFB_CMD, command("puke"), the_end);
+
+   heartbeat := PULSE_SEC * 15;
+
+   act("The nightshade berries has a bitter taste.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("Your stomach starts to rumble...",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("A warm feeling spreads through your body.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   act("You feel psychotic!",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   :the_end:
+   clear(intridx);
+   pause;
+   act("You feel a little better.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   quit;
+} dilend
