@@ -1,0 +1,148 @@
+= defaultpos =
+
+== Syntax ==
+ unit.defaultpos : integer (read-only)
+
+== Description ==
+The defaultpos field is a read-only property of character units that returns the default position the character will assume when not otherwise specified. This field determines the character's default stance or posture when no explicit position is set.
+
+The default position is used when characters are created, loaded, or when their position needs to be reset to a baseline state.
+
+== Usage Notes ==
+* Only available on character units (UNIT_ST_PC and UNIT_ST_NPC)
+* Returns an integer representing the default position constant
+* The field is read-only and cannot be modified directly through DIL
+* Used by character creation, loading, and position management systems
+* Position constants are typically defined in the game's header files (POSITION_* constants)
+
+== Examples ==
+=== Basic position display ===
+ dilbegin show_default_position();
+ var
+    target : unitptr;
+ code
+ {
+    target := activator;
+    
+    if (target.type == UNIT_ST_PC or target.type == UNIT_ST_NPC)
+    {
+        act("Default position: " + itoa(target.defaultpos), 
+                A_ALWAYS, target, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no default position.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Position comparison ===
+ dilbegin check_position();
+ var
+    character : unitptr;
+    current_pos : integer;
+ code
+ {
+    character := activator;
+    current_pos := character.position;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        act("Current position: " + itoa(current_pos), A_ALWAYS, character, null, null, TO_CHAR);
+        act("Default position: " + itoa(character.defaultpos), 
+                A_ALWAYS, character, null, null, TO_CHAR);
+        
+        if (current_pos == character.defaultpos)
+            act("You are in your default position.", A_ALWAYS, character, null, null, TO_CHAR);
+        else
+            act("You are not in your default position.", A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no position information.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Character creation ===
+ dilbegin create_character();
+ var
+    new_char : unitptr;
+ code
+ {
+    // Create a new character with default standing position
+    new_char := load("human_template@midgaard");
+    
+    if (new_char)
+    {
+        act("New character created with default position: " + 
+                itoa(new_char.defaultpos), A_ALWAYS, self, null, null, TO_CHAR);
+        
+        // Set character to default position
+        new_char.position := new_char.defaultpos;
+    }
+    
+    quit;
+ } dilend
+
+=== Position reset ===
+ dilbegin reset_to_default();
+ var
+    character : unitptr;
+ code
+ {
+    character := activator;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        act("Resetting to default position: " + itoa(character.defaultpos), 
+                A_ALWAYS, character, null, null, TO_CHAR);
+        
+        // Reset character to default position
+        character.position := character.defaultpos;
+        
+        act("You are now in position " + itoa(character.position), 
+                A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no position information.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Position validation ===
+ dilbegin validate_position();
+ var
+    character : unitptr;
+    valid_position : integer;
+ code
+ {
+    character := activator;
+    valid_position := character.defaultpos;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        // Check if default position is valid
+        if ((valid_position >= POSITION_STANDING) and 
+            (valid_position <= POSITION_STUNNED))
+        {
+            act("Default position " + itoa(valid_position) + " is valid.", 
+                    A_ALWAYS, character, null, null, TO_CHAR);
+        }
+        else
+        {
+            act("Warning: Default position " + itoa(valid_position) + 
+                    " may be invalid.", A_ALWAYS, character, null, null, TO_CHAR);
+        }
+    }
+    else
+        act("This unit has no position information.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+== Implementation Details ==
+The defaultpos field is implemented as a reference to the character's default position value (getDefaultPositionPtr()). This returns an integer representing the position constant that the character will assume by default. The field is read-only to prevent unauthorized modification of default position settings through DIL code. The value is typically set during character creation or loaded from character data files.
+
+== See Also ==
+* [[position]] - Current position of a character
+* [[position_update]] - Update character position
+* [[unit_st_pc and unit_st_npc]] - Character unit types and fields

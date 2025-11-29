@@ -1,0 +1,76 @@
+= exit_names =
+
+'''exit_names[]''' is used to access the name list for room exits. This field is available only on room units (UNIT_ST_ROOM) and provides read/write access to the list of names that players can use to reference the exit.
+
+== Syntax ==
+  name_list := room_unit.exit_names[direction];
+  room_unit.exit_names[direction] := new_name_list;
+
+== Parameters ==
+; direction
+: An integer specifying the exit direction. Must be one of the directional constants (NORTH, EAST, SOUTH, WEST, UP, DOWN) as defined in values.h and/or vme.h.
+
+== Return Value ==
+Returns a stringlist containing all the names that can be used to reference this exit. The first name in the list ([0]) is typically the primary name displayed to players.
+
+== Description ==
+The '''exit_names''' field provides access to the list of names associated with a room exit. These names are what players type to use the exit (e.g., "door", "gate", "north", "open grate"). The field returns a reference to the actual name list, allowing both reading and writing.
+
+Each exit can have multiple names, allowing for:
+* Multiple ways to reference the same exit
+* Descriptive names that change based on exit state
+* Complex exits like "open grate" vs "closed grate"
+
+== Examples ==
+=== Getting the primary exit name ===
+ primary_name := room.exit_names[NORTH].[0];
+ act("You see $2t to the north.", A_ALWAYS, self, primary_name, null, TO_CHAR);
+
+=== Checking all exit names ===
+ names := room.exit_names[EAST];
+ i := 0;
+ while (i < length(names))
+ {
+    act("Exit name: $2t", A_ALWAYS, self, names.[i], null, TO_CHAR);
+    i := i + 1;
+ }
+
+=== Using exit names in messages ===
+ if (isset(room.exit_info[SOUTH], EX_CLOSED))
+ {
+    act("The $2t is closed.", A_ALWAYS, self, room.exit_names[SOUTH].[0], null, TO_CHAR);
+ }
+ else
+ {
+    act("The $2t stands open.", A_ALWAYS, self, room.exit_names[SOUTH].[0], null, TO_CHAR);
+ }
+
+=== Modifying exit names ===
+ new_names := {"secret door", "hidden passage", "wall"};
+ room.exit_names[WEST] := new_names;
+
+=== Dynamic exit names based on state ===
+ if (isset(room.exit_info[UP], EX_CLOSED))
+ {
+    room.exit_names[UP] := {"closed hatch", "trapdoor"};
+ }
+ else
+ {
+    room.exit_names[UP] := {"open hatch", "opening"};
+ }
+
+== Notes ==
+* The exit must exist for the specified direction, otherwise the operation will fail
+* The direction parameter must be valid (0 to MAX_EXIT-1)
+* This field is only available on room units (UNIT_ST_ROOM)
+* The first name ([0]) is typically used for display purposes
+* Players can use any name in the list to reference the exit
+* Modifying exit names affects how players interact with the exit immediately
+* Empty name lists may cause the exit to be unusable
+
+== See Also ==
+* [[exit_info]] - Get/set exit flags (closed, locked, etc.)
+* [[exit_to]] - Get the destination room of an exit
+* [[exit_key]] - Get the key required for an exit
+* [[stringlist]] - Working with string lists
+* [[act]] - Display messages to players

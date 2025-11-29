@@ -1,0 +1,53 @@
+= charflags =
+
+== Syntax ==
+ unit.charflags : integer (read/write)
+
+== Description ==
+The charflags field is a bitfield that contains various character flags specifying spell affects, character states, and other attributes for player characters (PCs) and non-player characters (NPCs). This field is accessible as a property of unit objects of type UNIT_ST_PC or UNIT_ST_NPC.
+
+The charflags field uses bit constants defined as CHAR_* in the game's header files (values.h and/or vme.h). Each bit represents a specific character state, effect, or attribute.
+
+== Usage Notes ==
+* This field is read/write - you can both read and modify character flags
+* Only available on character units (PCs and NPCs)
+* Use bit manipulation functions like set(), unset(), and isset() to work with individual flags
+* Common flags include CHAR_OUTLAW, CHAR_PROTECTED, and CHAR_SELF_DEFENCE among others
+
+== Examples ==
+=== Checking if a character is an outlaw ===
+ if (activator.charflags & CHAR_OUTLAW)
+     act("$1n is an outlaw!", A_ALWAYS, activator, null, null, TO_ROOM);
+
+=== Using isset() to check flags ===
+ if (isset(activator.charflags, CHAR_PROTECTED))
+     send("This character is protected.", activator);
+
+=== Setting a character flag ===
+ set(self.charflags, CHAR_SELF_DEFENCE);
+
+=== Unsetting a character flag ===
+ unset(activator.charflags, CHAR_OUTLAW);
+
+=== Waiting for a character with specific flags ===
+ wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+
+== Common Character Flags ==
+Based on the DIL example, some commonly used character flags include:
+* CHAR_OUTLAW - Character is marked as an outlaw
+* CHAR_PROTECTED - Character has protection status
+* CHAR_SELF_DEFENCE - Character is in self-defence mode
+
+== Bit Manipulation Functions ==
+* [[set]] - Set specific bits in an integer
+* [[unset]] - Clear specific bits in an integer
+* [[isset]] - Check if specific bits are set in an integer
+
+== See Also ==
+* [[unit_st_pc and unit_st_npc]] - Other character unit fields
+* [[set]] - Set bits in integer variables
+* [[unset]] - Clear bits in integer variables
+* [[isset]] - Test bits in integer variables
+
+== Implementation Details ==
+The charflags field provides direct access to the character's internal flag structure. Modifications to this field immediately affect the character's behavior and state in the game world. The field is implemented as a reference to the character's internal flag data, allowing both read and write operations.

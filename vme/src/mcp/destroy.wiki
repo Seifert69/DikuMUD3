@@ -1,0 +1,57 @@
+= destroy =
+
+'''destroy''' is a DIL function that permanently removes a unit from the game world.
+
+== Syntax ==
+ destroy ( u : unitptr );
+
+== Parameters ==
+; u
+: Unit to remove from game
+
+== Description ==
+The destroy function permanently removes a unit from the game world. The behavior depends on the type of unit being destroyed:
+
+=== For Player Characters (PCs) ===
+* The player is saved and ejected from the game
+* The player's descriptor is closed
+* The player is removed from the game completely
+
+=== For NPCs and Objects ===
+* The unit is immediately destroyed and removed from the game
+* All references to the unit are cleaned up
+* The unit is permanently removed from memory
+
+=== For Rooms ===
+* Rooms cannot be destroyed using this function
+* The function will have no effect on room units
+
+== Usage Notes ==
+* This function is different from the old destroy function - it completely removes players from the game instead of leaving them in the menu
+* The destruction is permanent and cannot be undone
+* If the unit being destroyed is the owner of the current DIL program, the program will terminate with WAITCMD_DESTROYED
+* The function handles security checks for unit destruction
+
+== Example ==
+ dilbegin rotaway();
+ code
+ {
+    heartbeat := PULSE_SEC * 9600;
+
+    :loop:
+    pause;
+
+    if (self.outside.type == UNIT_ST_ROOM)
+    {
+       if (not isset(self.flags, UNIT_FL_BURIED))
+         act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
+       destroy(self);
+    }
+
+    goto loop;
+ } dilend
+
+== See Also ==
+* [[remove]] - Remove units from rooms
+* [[delete]] - Delete units
+* [[extract_unit]] - Extract units (internal function)

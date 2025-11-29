@@ -1,0 +1,63 @@
+= dilcall =
+
+'''dilcall''' is a DIL function that dynamically calls another DIL template by name.
+
+== Syntax ==
+ integer := dilcall( template_name : string, unit : unitptr, priority : integer, argument : string );
+
+== Parameters ==
+; template_name
+: The name of the DIL template to call
+; unit
+: The unit that will be the "self" context in the called DIL
+; priority
+: Priority level for the called DIL program
+; argument
+: String argument to pass to the called DIL program
+
+== Return Value ==
+Returns an integer:
+* -1 if the template was found and the call was initiated
+* Error value if the template was not found or parameters were invalid
+
+== Description ==
+The dilcall function allows dynamic invocation of DIL templates by name at runtime. This enables flexible program flow and modular DIL design.
+
+When called successfully:
+* The specified DIL template is located and instantiated
+* A new execution frame is pushed onto the current DIL program's stack
+* The called template executes with the provided unit as its "self" context
+* The current DIL program pauses until the called template completes
+
+== Usage Notes ==
+* The template name must be a valid DIL template that exists in the zone
+* If the template is not found, an error is logged and the function returns an error value
+* The function is commonly used for:
+** Dynamic quest system routing
+** Modular weapon/armor generation systems
+** Event-driven programming
+** Plugin-style architecture
+
+== Example ==
+ dilbegin constants();
+ var
+     slWeapons : stringlist global slWeapons@randomt;
+     i : integer;
+ code
+ {
+     // weapon id, cost, weight, main function, main kind, sec function, sec kind, names
+     // Note that main kind, e.g. "blade" is also used to dilcall DIL func: "mat"+kind+"Idx" 
+     // e.g. matBladeIndex is used to get main material of swords.
+     slWeapons := {
+         QUOTE(WPN_BATTLE_AXE), "160", "16", "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "battle axe//axe",
+         QUOTE(WPN_LONG_SWORD), "100", "8", "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "long sword//sword"
+     };
+     
+     // Example of dynamic function call
+     i := dilcall("setWpnSharp@randomt", self, 0, "iron");
+ } dilend
+
+== See Also ==
+* [[dilcopy]] - Create a copy of a DIL template
+* [[exec]] - Execute commands
+* [[return]] - Return from DIL functions

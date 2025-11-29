@@ -1,0 +1,58 @@
+= editing =
+
+'''editing''' is a field accessor that checks if a player character is currently in text editing mode.
+
+== Syntax ==
+ integer := unitptr.editing
+
+== Return Value ==
+Returns an integer:
+* TRUE (1) if the player is currently editing text
+* FALSE (0) if the player is not editing text
+
+== Description ==
+The editing field indicates whether a player character is currently in text editing mode. This typically occurs when players are writing messages, notes, board posts, or other text content using the game's built-in editor.
+
+The editing mode is activated by:
+* Using the '''beginedit''' function
+* Writing on message boards
+* Creating notes or letters
+* Other text input scenarios
+
+== Usage Notes ==
+* This field is read-only for most DIL programs
+* The value is automatically managed by the game system
+* The field is commonly used to:
+** Prevent multiple simultaneous editing sessions
+** Handle interruptions during editing
+** Manage board and note systems
+** Control text input flows
+
+== Example ==
+ dilbegin aware do_write (arg:string);
+ var
+    u:unitptr;
+ code
+ {
+    if (self.type!=UNIT_ST_PC)
+       quit;
+
+    // Check if player is already editing
+    if (self.editing)
+    {
+       act("You are already editing something.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Start editing session
+    beginedit(self);
+    wait(SFB_EDIT, self==activator);
+    
+    // Player is now done editing
+    act("Done editing", A_ALWAYS, self, null, null, TO_CHAR);
+ } dilend
+
+== See Also ==
+* [[beginedit]] - Put a player into editing mode
+* [[killedit]] - Stop editing before completion
+* [[unit_st_pc]] - Player character fields

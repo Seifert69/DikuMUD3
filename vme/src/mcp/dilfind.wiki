@@ -1,0 +1,70 @@
+= dilfind =
+
+'''dilfind''' is a DIL function that checks if a DIL program with a specific template name is attached to a unit.
+
+== Syntax ==
+ integer := dilfind( s : string, u : unitptr );
+
+== Parameters ==
+; s
+: Name of DIL template to find
+; u
+: Unit to search for DIL program on
+
+== Return Value ==
+Returns an integer:
+* TRUE (1) if a DIL program with the specified template name is found on the unit
+* FALSE (0) if no matching DIL program is found
+* Error value if parameters were invalid
+
+== Description ==
+The dilfind function searches for DIL programs attached to a specified unit and checks if any of them match the given template name. This allows for conditional logic based on whether specific DIL programs are currently active on a unit.
+
+The function:
+* Searches all DIL programs attached to the target unit
+* Matches programs by template name (exact string match)
+* Returns TRUE if at least one matching program is found
+* Returns FALSE if no matching programs are found
+
+== Usage Notes ==
+* Only checks for existence of programs, doesn't provide access to them
+* Template name matching is case-sensitive
+* The function is commonly used for:
+** Checking if temporary effects are active
+** Preventing duplicate program attachments
+** Verifying quest states
+** Managing conditional behaviors
+
+== Example ==
+ dilbegin look_signature();
+ var
+   pc:unitptr;
+ code
+ {
+   heartbeat:=PULSE_SEC*3;
+ :start:
+   wait (SFB_CMD,(
+   (command ("look")) and
+   (("signature"==argument ) or ("signatures" == argument))
+   ));
+   block;
+   pc:=ghead();
+   sendtext ("The following book signers are on line.<br/><br/>",activator);
+
+      while (pc.type==UNIT_ST_PC)
+       {
+       if (((isset (pc.pcflags,PC_PK_RELAXED)) or
+		(dilfind ("no_kill@function",pc))) and
+       (pc.level<200) and
+       (visible (activator,pc)))
+      sendtext(pc.name+" "+pc.title+"<br/>",activator);
+       pc:=pc.gnext;
+       }
+
+ goto start;
+ } dilend
+
+== See Also ==
+* [[dilcopy]] - Attach DIL programs to units
+* [[dildestroy]] - Remove DIL programs from units
+* [[dilcall]] - Call DIL templates dynamically

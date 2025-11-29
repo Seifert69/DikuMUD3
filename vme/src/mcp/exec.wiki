@@ -1,0 +1,61 @@
+= exec =
+
+== Syntax ==
+ exec ( command_string : string , target_unit : unitptr )
+
+== Parameters ==
+ command_string : Command and arguments to perform.
+ target_unit : Unit to perform command.
+
+== Description ==
+The exec function forces a unit (PC or NPC) to execute a command as if they had typed it at the command prompt. The command is processed through the normal command interpreter, giving the same results and feedback as if the player had entered it manually.
+
+== Return Value ==
+None
+
+== Security Considerations ==
+The exec function includes security restrictions to prevent abuse:
+* Commands longer than MAX_INPUT_LENGTH are truncated and logged
+* Immortal-level commands (minimum_level >= IMMORTAL_LEVEL) cannot be executed on immortal characters
+* The function tracks nested exec() calls for security purposes
+* If the target unit is secured using secure(), the exec() call will test for secure violations
+
+== Examples ==
+=== Basic Usage ===
+ exec("get key", target);  // Forces target to try to get a key
+ exec("north", player);    // Forces player to move north
+ exec("say hello", npc);   // Forces NPC to say "hello"
+
+=== Complex Example ===
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname: string;
+
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ); /* Do this to activate the DILs */
+    return;
+ } dilend
+
+== Notes ==
+* It is not directly possible to detect whether the command was successful or failed
+* The target unit receives normal feedback messages for the command
+* If the command fails (e.g., trying to get a non-existent item), the target is notified normally
+* The function can be used to trigger other DIL programs by executing commands that activate them
+
+== See Also ==
+* secure - For securing units against destruction/movement
+* command - For checking what command was entered
+* send - For sending messages to units

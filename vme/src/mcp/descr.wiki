@@ -1,0 +1,59 @@
+= descr =
+
+'''descr''' is a field accessor that retrieves the description text from an extra description pointer.
+
+== Syntax ==
+ string := extraptr.descr
+
+== Return Value ==
+Returns a string containing the description text of the extra description.
+
+== Description ==
+The descr field is used to access the description text stored in an extra description structure. Extra descriptions are used throughout the game to provide additional descriptive text for objects, rooms, and characters that can be accessed through commands like "look at", "examine", or "read".
+
+== Usage Notes ==
+* This field is read-write - you can both read and modify the description text
+* The field is accessed through an extraptr variable
+* Extra descriptions are commonly used for:
+** Object descriptions (when looking at specific parts of an object)
+** Room details (when examining specific features)
+** Character descriptions (body parts, clothing details)
+** Quest information and story text
+
+== Example ==
+ dilbegin guardroutine(guardloc : string, dayguard : integer);
+ external
+    DailyRoutine@quests(sl : stringlist, arg2 : string);
+ var
+    i  : integer;
+    sch : intlist;
+ code
+ {
+    on_activation((self.position == POSITION_FIGHTING), skip);
+
+    if (dayguard)
+       sch := {5, 18};  // Wake up at 5, go back at 6pm
+    else
+       sch := {17,6};   // Wake up at 17, go home at 6
+
+ :start:
+    heartbeat := WAIT_SEC*5;
+    pause;
+    if (mudhour == sch.[0])
+    {
+       DailyRoutine@quests({
+          "wake", 
+          "::descr::A $1N is here heading to work.",
+          "yawn",
+          "say Time to get going guys!", 
+          "::walkto::$2t",
+          "::descr::A $1N is here guarding the gate."
+       }, guardloc);
+    }
+ } dilend
+
+== See Also ==
+* [[extraptr]] - Extra description pointer type
+* [[addextra]] - Add extra descriptions
+* [[subextra]] - Remove extra descriptions
+* [[in]] - Search extra descriptions

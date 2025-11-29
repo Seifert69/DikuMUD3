@@ -1,0 +1,166 @@
+= defensive =
+
+== Syntax ==
+ unit.defensive : integer (read-only)
+
+== Description ==
+The defensive field is a read-only property of character units that returns the character's defensive bonus value. This field represents the character's defensive capabilities and is used in combat calculations to determine defensive effectiveness.
+
+The defensive bonus affects how well a character can defend against attacks and is typically calculated based on various factors including armor, skills, spells, and other defensive modifiers.
+
+== Usage Notes ==
+* Only available on character units (UNIT_ST_PC and UNIT_ST_NPC)
+* Returns an integer representing the defensive bonus
+* The field is read-only and cannot be modified directly through DIL
+* Used by combat systems, damage calculations, and defensive mechanics
+* Higher values generally indicate better defensive capabilities
+
+== Examples ==
+=== Basic defensive display ===
+ dilbegin show_defensive();
+ var
+    character : unitptr;
+ code
+ {
+    character := activator;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        act("Defensive bonus: " + itoa(character.defensive), 
+                A_ALWAYS, character, null, null, TO_CHAR);
+        
+        if (character.defensive >= 100)
+            act("Excellent defensive capabilities!", A_ALWAYS, character, null, null, TO_CHAR);
+        else if (character.defensive >= 50)
+            act("Good defensive capabilities.", A_ALWAYS, character, null, null, TO_CHAR);
+        else if (character.defensive >= 0)
+            act("Basic defensive capabilities.", A_ALWAYS, character, null, null, TO_CHAR);
+        else
+            act("No defensive capabilities.", A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no defensive information.", A_ALWAYS, character, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Defensive comparison ===
+ dilbegin compare_defense();
+ var
+    char1, char2 : unitptr;
+ code
+ {
+    char1 := activator;
+    char2 := medium;  // Assuming medium is another character
+    
+    if ((char1.type == UNIT_ST_PC or char1.type == UNIT_ST_NPC) and
+        (char2.type == UNIT_ST_PC or char2.type == UNIT_ST_NPC))
+    {
+        if (char1.defensive > char2.defensive)
+            act(char1.name + " is more defensive than " + char2.name + ".", 
+                    A_ALWAYS, char1, null, null, TO_CHAR);
+        else if (char1.defensive < char2.defensive)
+            act(char1.name + " is less defensive than " + char2.name + ".", 
+                    A_ALWAYS, char1, null, null, TO_CHAR);
+        else
+            act(char1.name + " and " + char2.name + " have equal defensive capabilities.", 
+                    A_ALWAYS, char1, null, null, TO_CHAR);
+    }
+    else
+        act("One or both units lack defensive information.", A_ALWAYS, char1, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Combat modifier check ===
+ dilbegin combat_check();
+ var
+    character : unitptr;
+ code
+ {
+    character := activator;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        if (character.defensive >= 75)
+            act("Your high defensive bonus provides significant protection in combat.", 
+                A_ALWAYS, character, null, null, TO_CHAR);
+        else if (character.defensive >= 25)
+            act("Your defensive bonus provides moderate protection in combat.", 
+                    A_ALWAYS, character, null, null, TO_CHAR);
+        else if (character.defensive >= 0)
+            act("Your defensive bonus provides basic protection in combat.", 
+                    A_ALWAYS, character, null, null, TO_CHAR);
+        else
+            act("You have no defensive bonus.", A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no defensive information.", A_ALWAYS, character, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Defensive enhancement ===
+ dilbegin enhance_defense();
+ var
+    character : unitptr;
+    enhancement : integer;
+ code
+ {
+    character := activator;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        enhancement := character.defensive + 10;
+        
+        if (enhancement <= 100)
+        {
+            character.defensive := enhancement;
+            act("Your defensive bonus has been enhanced to " + itoa(enhancement) + "!", 
+                        A_ALWAYS, character, null, null, TO_CHAR);
+        }
+        else
+            act("Cannot enhance defensive bonus beyond 100.", A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no defensive information.", A_ALWAYS, character, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Defensive tier analysis ===
+ dilbegin analyze_defense();
+ var
+    character : unitptr;
+    tier : string;
+ code
+ {
+    character := activator;
+    
+    if (character.type == UNIT_ST_PC or character.type == UNIT_ST_NPC)
+    {
+        if (character.defensive >= 80)
+            tier := "Elite";
+        else if (character.defensive >= 60)
+            tier := "Expert";
+        else if (character.defensive >= 40)
+            tier := "Advanced";
+        else if (character.defensive >= 20)
+            tier := "Skilled";
+        else if (character.defensive >= 0)
+            tier := "Novice";
+        else
+            tier := "None";
+        
+        act("Defensive Tier: " + tier, A_ALWAYS, character, null, null, TO_CHAR);
+        act("Defensive Value: " + itoa(character.defensive), 
+                A_ALWAYS, character, null, null, TO_CHAR);
+    }
+    else
+        act("This unit has no defensive information.", A_ALWAYS, character, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+== Implementation Details ==
+The defensive field is implemented as a reference to the character's defensive bonus value (getDefensiveBonusPtr()). This returns an integer representing the character's defensive capabilities in combat. The field is read-only to prevent unauthorized modification of defensive values through DIL code. The value is typically calculated based on the character's equipment, skills, level, and other defensive factors, and is used by combat systems to determine damage mitigation and defensive effectiveness.

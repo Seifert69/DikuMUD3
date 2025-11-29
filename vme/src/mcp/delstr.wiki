@@ -1,0 +1,55 @@
+= delstr =
+
+'''delstr''' is a DIL function that deletes string files from the game's file system.
+
+== Syntax ==
+ integer delstr( filename : string ) ;
+
+== Parameters ==
+; filename
+: The name of the string file to be deleted
+
+== Return Value ==
+Returns an integer:
+* TRUE (1) if the file was successfully deleted
+* FALSE (0) if the file was not deleted
+
+== Description ==
+The delstr function is used to delete files that are managed by the string file system (used with '''loadstr''' and '''savestr''' functions). The function operates with the following security restrictions:
+
+* Only deletes files within the zone's designated string file directory
+* Requires zone access level 10 or lower
+* Validates filenames to prevent directory traversal attacks
+* Files are located in the zone's "strings/" subdirectory
+
+== Security Considerations ==
+* Zones with access level greater than 10 cannot use this function
+* Filenames are validated for security - attempts to use illegal filenames will be logged and return FALSE
+* The function only operates within the zone's designated string file directory
+
+== Usage Notes ==
+* This function is typically used for managing temporary files, board messages, or other string-based data storage
+* The file deletion is permanent and cannot be undone
+* Use the return value to verify whether the deletion was successful
+
+== Example ==
+ dilbegin news_del(arg : string);
+ var
+         ret:integer;/*to hold the return value if deleted or not*/
+ code
+ {
+ ret:= delstr("news.txt");
+ if (!ret)
+         {
+         log ("File not deleted.");
+         quit;
+         }
+
+ sendtext ("News file deleted\n",self);
+ quit;/*dil delete routine done
+ }
+ dilend
+
+== See Also ==
+* [[loadstr]] - Load string files
+* [[savestr]] - Save string files

@@ -1,0 +1,64 @@
+= exit_info =
+
+'''exit_info[]''' is used to access the flag bits for room exits. This field is available only on room units (UNIT_ST_ROOM) and provides read/write access to the exit's condition flags.
+
+== Syntax ==
+  integer_value := room_unit.exit_info[direction];
+  room_unit.exit_info[direction] := new_value;
+
+== Parameters ==
+; direction
+: An integer specifying the exit direction. Must be one of the directional constants (NORTH, EAST, SOUTH, WEST, UP, DOWN) as defined in values.h and/or vme.h.
+
+== Return Value ==
+Returns an integer containing the flag bits for the specified exit. The flags can be tested and modified using standard bit operations.
+
+== Description ==
+The '''exit_info''' field provides access to the condition flags that control how an exit behaves. These flags determine whether an exit is closed, locked, hidden, etc. The field returns a reference to the actual exit flags, allowing both reading and writing.
+
+Common exit flags (EX_*) include:
+; EX_CLOSED
+: The exit is closed and cannot be passed
+; EX_LOCKED
+: The exit is locked and requires a key
+; EX_HIDDEN
+: The exit is hidden from players
+; EX_PICKPROOF
+: The exit cannot be picked
+; EX_NOPASS
+: The exit cannot be passed even when open
+; EX_NOFLEE
+: Players cannot flee through this exit
+; EX_CLIMB
+: The exit requires climbing
+; EX_WIZARD
+: Only wizards can use this exit
+
+== Examples ==
+=== Checking if an exit is closed ===
+ if (isset(room.exit_info[NORTH], EX_CLOSED))
+ {
+    act("The door to the north is closed.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+=== Opening an exit ===
+ unset(room.exit_info[EAST], EX_CLOSED);
+ unset(room.exit_info[EAST], EX_LOCKED);
+ act("The eastern door swings open.", A_ALWAYS, self, null, null, TO_ALL);
+
+=== Locking an exit ===
+ set(room.exit_info[SOUTH], EX_CLOSED);
+ set(room.exit_info[SOUTH], EX_LOCKED);
+
+== Notes ==
+* The exit must exist for the specified direction, otherwise the operation will fail
+* The direction parameter must be valid (0 to MAX_EXIT-1)
+* This field is only available on room units (UNIT_ST_ROOM)
+* Modifying exit flags affects the actual game world immediately
+
+== See Also ==
+* [[exit_names]] - Get the names of exits
+* [[exit_to]] - Get the destination room of an exit
+* [[isset]] - Test if a flag bit is set
+* [[set]] - Set a flag bit
+* [[unset]] - Clear a flag bit

@@ -1,0 +1,78 @@
+= excmdstr_case =
+
+'''excmdstr_case''' is a DIL variable that contains the player's command input with original case preserved.
+
+== Syntax ==
+ string := excmdstr_case
+
+== Description ==
+The excmdstr_case variable provides access to the exact text that a player typed as a command, preserving the original letter case. This is different from '''excmdstr''' which converts the input to lowercase.
+
+The variable contains:
+* The command word exactly as typed by the player
+* Original capitalization and letter case
+* Any arguments following the command
+* The complete command line as entered
+
+== Usage Notes ==
+* This variable is read-only
+* It's automatically set by the game system when players enter commands
+* The variable is commonly used for:
+** Password validation systems
+** Case-sensitive command processing
+** Text input validation
+** Command logging and analysis
+
+== Example ==
+ dilbegin aware do_password(arg:string);
+ var
+    prmt:string;
+    firstpwd:string;
+    i:integer;
+    tlist:stringlist;
+ code
+ {
+    if (self.type != UNIT_ST_PC)
+       quit;
+    
+    // Get the command with original case
+    tlist := getwords(excmdstr_case);
+    
+    if (length(tlist) > 1)
+    {
+       sendtext("Password must be only one word. Try again.<br/>",self);
+       quit;
+    }
+    
+    if (length(excmdstr_case) < 5)
+    {
+       sendtext("Password too short. Password must be 5 characters or longer. Try again.<br/>",self);
+       quit;
+    }
+    
+    if (length(excmdstr_case) > 16)
+    {
+       sendtext("Password too long. Try again.<br/>",self);
+       quit;
+    }
+    
+    firstpwd:=excmdstr_case;
+    self.prompt:="Enter password again:  ";
+    
+    wait(SFB_CMD, self==activator);
+    block;
+    
+    if (strcmp(excmdstr_case, firstpwd) != 0)
+    {
+       sendtext("Passwords do not match try again.<br/>",self);
+       quit;
+    }
+    
+    set_password(self, excmdstr_case);
+    sendtext("Password Changed.<br/>",self);
+ } dilend
+
+== See Also ==
+* [[excmdstr]] - Command input (lowercase)
+* [[argument]] - Command arguments
+* [[set_password]] - Set player password

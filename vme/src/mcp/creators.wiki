@@ -1,0 +1,156 @@
+= creators =
+
+== Syntax ==
+ zone.creators : stringlist (read-only)
+
+== Description ==
+The creators field is a read-only property of zone units that returns a stringlist containing the names of creators who contributed to that zone. This provides information about the authors or builders responsible for the zone's content and design.
+
+The creators list typically contains the names of the original zone creators, contributors, or maintainers who worked on developing the zone's areas, rooms, mobiles, and objects.
+
+== Usage Notes ==
+* Only available on zone units (UNIT_ST_ROOM with zone properties)
+* Returns a stringlist containing creator names
+* The field is read-only and cannot be modified through DIL
+* Useful for help systems, zone information displays, and credit attribution
+* Often used in help commands to show who created specific areas
+
+== Examples ==
+=== Basic creator display ===
+ dilbegin show_creators();
+ var
+    zone : unitptr;
+    creator_list : stringlist;
+    i : integer;
+ code
+ {
+    zone := self.outside;
+    
+    if (zone and zone.creators)
+    {
+        act("Zone creators:", A_ALWAYS, self, null, null, TO_CHAR);
+        
+        for (i := 0; i < length(zone.creators); i := i + 1)
+        {
+            act("  " + zone.creators.[i], A_ALWAYS, self, null, null, TO_CHAR);
+        }
+    }
+    else
+        act("No creator information available for this zone.", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Zone information command ===
+ dilbegin zone_info();
+ var
+    current_zone : unitptr;
+    creator_count : integer;
+ code
+ {
+    current_zone := self.outside;
+    
+    while (current_zone.type != UNIT_ST_ROOM)
+        current_zone := current_zone.outside;
+    
+    if (current_zone)
+    {
+        act("Zone: " + current_zone.zoneidx, A_ALWAYS, self, null, null, TO_CHAR);
+        act("Name: " + current_zone.title, A_ALWAYS, self, null, null, TO_CHAR);
+        
+        if (current_zone.creators)
+        {
+            creator_count := length(current_zone.creators);
+            act("Creators (" + itoa(creator_count) + "):", 
+                    A_ALWAYS, self, null, null, TO_CHAR);
+            
+            // Display each creator
+            pagestring(current_zone.creators, self);
+        }
+        else
+            act("No creator information available.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+=== Help system integration ===
+ dilbegin help_creators();
+ var
+    zone : unitptr;
+    help_text : string;
+ code
+ {
+    zone := self.outside;
+    
+    while (zone.type != UNIT_ST_ROOM)
+        zone := zone.outside;
+    
+    if (zone and zone.creators)
+    {
+        help_text := "This area was created by: ";
+        
+        // Format creator list nicely
+        if (length(zone.creators) == 1)
+            help_text := help_text + zone.creators.[0];
+        else
+        {
+            help_text := help_text + zone.creators.[0];
+            
+            for (i := 1; i < length(zone.creators); i := i + 1)
+            {
+                if (i == length(zone.creators) - 1)
+                    help_text := help_text + " and " + zone.creators.[i];
+                else
+                    help_text := help_text + ", " + zone.creators.[i];
+            }
+        }
+        
+        sendtext(help_text, self);
+    }
+    else
+        sendtext("No creator information available for this area.", self);
+    
+    quit;
+ } dilend
+
+=== Multi-zone creator search ===
+ dilbegin find_zone_creators(zone_name : string);
+ var
+    zone_ptr : zoneptr;
+    found_creators : stringlist;
+ code
+ {
+    zone_ptr := zhead();
+    
+    while (zone_ptr)
+    {
+        if (zone_ptr.name == zone_name)
+        {
+            found_creators := zone_ptr.creators;
+            break;
+        }
+        zone_ptr := zone_ptr.next;
+    }
+    
+    if (found_creators)
+    {
+        act("Creators of zone '" + zone_name + "':", A_ALWAYS, self, null, null, TO_CHAR);
+        pagestring(found_creators, self);
+    }
+    else
+        act("Zone '" + zone_name + "' not found or has no creator information.", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+== Implementation Details ==
+The creators field is implemented as a reference to the zone's creator list (getCreators()). This returns a stringlist containing the names of all individuals credited with creating or contributing to the zone. The field is read-only to prevent unauthorized modification of creator attribution. The information is typically stored in the zone data and loaded when the zone is initialized.
+
+== See Also ==
+* [[zone]] - Zone pointer and navigation
+* [[zhead]] - Get first zone in list
+* [[stringlist]] - String list type and operations
+* [[pagestring]] - Display string lists to players

@@ -1,0 +1,59 @@
+= dilcopy =
+
+'''dilcopy''' is a DIL function that attaches a DIL program to a unit using a specified template.
+
+== Syntax ==
+ dilcopy( s : string, u : unitptr );
+
+== Parameters ==
+; s
+: Name of the DIL template to attach to the unit
+; u
+: Unit to attach the DIL program to
+
+== Description ==
+The dilcopy function creates and attaches a new DIL program instance to a specified unit. The new program uses the template specified by the string parameter and begins execution immediately.
+
+The template name can include:
+* Just the template name (e.g., "master_servant@spells")
+* Template name with arguments in parentheses (e.g., "spl_sleep@spells(7)")
+* Template name with string arguments (e.g., "sendmsg@spells(teleport)")
+
+== Usage Notes ==
+* The attached DIL program runs independently of the calling program
+* The new program's "self" context is set to the target unit
+* Arguments passed in the template string are parsed and available to the new program
+* Multiple DIL programs can be attached to the same unit
+* The function is commonly used for:
+** Temporary spell effects
+** NPC behavior modifications
+** Quest triggers
+** Equipment special abilities
+
+== Example ==
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname: string;
+
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ); /* Do this to activate the DILs */
+    return;
+ } dilend
+
+== See Also ==
+* [[dilcall]] - Call DIL templates dynamically
+* [[dildestroy]] - Destroy DIL programs
+* [[dilfind]] - Find DIL programs on units

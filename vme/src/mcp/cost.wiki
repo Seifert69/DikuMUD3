@@ -1,0 +1,133 @@
+= cost =
+
+== Syntax ==
+ unit.cost : integer (read-only)
+
+== Description ==
+The cost field is a read-only property of object units that returns the price of the item in gold pieces. This field provides access to the monetary value that would be charged to players when purchasing the item from shops.
+
+The cost is calculated based on various factors including the item's base value, magical properties, condition, and other modifiers that affect its market price.
+
+== Usage Notes ==
+* Only available on object units (UNIT_ST_OBJ)
+* Returns the cost in gold pieces as an integer
+* The cost is read-only and cannot be modified directly
+* Used by shop systems, trading mechanics, and economic calculations
+* The cost may be affected by item condition, magical bonuses, and other factors
+
+== Examples ==
+=== Basic cost display ===
+ dilbegin show_item_cost();
+ var
+    item : unitptr;
+ code
+ {
+    item := findunit(self, "sword", FIND_UNIT_IN_ME, null);
+    
+    if (item)
+        act("The " + item.title + " costs " + itoa(item.cost) + " gold pieces.", 
+            A_ALWAYS, self, null, null, TO_CHAR);
+    else
+        act("You don't have that item.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Shop pricing ===
+ dilbegin shopkeeper();
+ var
+    customer_item, shop_item : unitptr;
+    total_cost : integer;
+ code
+ {
+    customer_item := medium;  // Item customer wants to sell/buy
+    
+    if (customer_item)
+    {
+        act("The " + customer_item.title + " is worth " + 
+            itoa(customer_item.cost) + " gold pieces.", 
+            A_ALWAYS, self, null, null, TO_CHAR);
+        
+        // Offer 70% of value
+        total_cost := (customer_item.cost * 70) / 100;
+        act("I can offer you " + itoa(total_cost) + " gold for it.", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+=== Cost comparison ===
+ dilbegin compare_items();
+ var
+    item1, item2 : unitptr;
+ code
+ {
+    item1 := findunit(self, "sword", FIND_UNIT_IN_ME, null);
+    item2 := findunit(self, "dagger", FIND_UNIT_IN_ME, null);
+    
+    if (item1 and item2)
+    {
+        if (item1.cost > item2.cost)
+            act("The " + item1.title + " is more expensive than the " + item2.title + ".", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+        else if (item1.cost < item2.cost)
+            act("The " + item2.title + " is more expensive than the " + item1.title + ".", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+        else
+            act("Both items have the same value.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+=== Affordability check ===
+ dilbegin can_afford(item_cost : integer);
+ var
+    player_money : integer;
+ code
+ {
+    player_money := self.money;  // Assuming money is in gold pieces
+    
+    if (player_money >= item_cost)
+        act("You can afford that item.", A_ALWAYS, self, null, null, TO_CHAR);
+    else
+        act("You need " + itoa(item_cost - player_money) + 
+            " more gold pieces to afford that.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Value calculation ===
+ dilbegin calculate_value();
+ var
+    item : unitptr;
+    value_per_weight : integer;
+ code
+ {
+    item := findunit(self, "armor", FIND_UNIT_IN_ME, null);
+    
+    if (item)
+    {
+        if (item.weight > 0)
+            value_per_weight := item.cost / item.weight;
+        else
+            value_per_weight := 0;
+        
+        act("Item: " + item.title, A_ALWAYS, self, null, null, TO_CHAR);
+        act("Cost: " + itoa(item.cost) + " gold", A_ALWAYS, self, null, null, TO_CHAR);
+        act("Weight: " + itoa(item.weight) + " lbs", A_ALWAYS, self, null, null, TO_CHAR);
+        act("Value per pound: " + itoa(value_per_weight) + " gold", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+== Implementation Details ==
+The cost field is implemented as a reference to the object's price pointer (getPriceInGPPtr()). This returns the calculated cost based on the item's intrinsic value, magical properties, condition, and other pricing factors. The cost is stored as an integer representing gold pieces and is read-only to prevent direct modification of item values through DIL code.
+
+== See Also ==
+* [[value]] - Get the base value of an item
+* [[moneystring]] - Format money amounts for display
+* [[transfermoney]] - Transfer money between units

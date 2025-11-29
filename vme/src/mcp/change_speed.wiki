@@ -1,0 +1,41 @@
+= change_speed =
+
+== Syntax ==
+ change_speed( u : unitptr, i : integer )
+
+== Parameters ==
+; u : unitptr
+: The unit on which you wish to alter the current combat speed
+; i : integer
+: The amount to add to the speed
+
+== Description ==
+The change_speed function modifies the combat speed of a character. This is not the same as the character's base speed field, but rather the calculated speed used during combat rounds. This function is primarily used to temporarily delay or accelerate a character's next combat action.
+
+The function only has an effect if the target unit is currently engaged in combat. If the unit is not fighting, the function will have no effect.
+
+== Usage Notes ==
+* This function only works on units that are currently in combat
+* The speed modification is temporary and affects the timing of combat actions
+* Commonly used for spells like 'stun' that effectively put a character out of combat for one or more rounds
+* If you need to initiate combat, use set_fighting() instead
+
+== Examples ==
+=== Basic stun effect ===
+ change_speed(target, 12);
+
+This would delay the target's next combat action by 12 pulses (approximately one combat round).
+
+=== Potion quaffing delay ===
+In combat, quaffing a potion typically takes extra time:
+ if (self.position == POSITION_FIGHTING) 
+     change_speed(self, PULSE_VIOLENCE*2);
+
+This adds a delay of 2 combat rounds when quaffing a potion while fighting.
+
+== See Also ==
+* [[set_fighting]] - To initiate combat between units
+* [[stop_fighting]] - To cancel combat
+
+== Implementation Details ==
+The function internally calls the character's combat system to modify the speed percentage. The modification is applied to the character's combat timer, affecting when their next action will occur in the combat sequence.

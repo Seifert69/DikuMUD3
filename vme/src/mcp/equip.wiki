@@ -1,0 +1,80 @@
+= equip =
+
+'''equip''' is a function that retrieves the unit currently equipped in a specific equipment position.
+
+== Syntax ==
+ unitptr := equipment( u : unitptr, i : integer );
+
+== Parameters ==
+; u
+: The character to search for equipment
+; i
+: The equipment position to check (any of the WEAR_* constants)
+
+== Return Value ==
+Returns a unitptr to the item equipped in the specified position, or null if no item is equipped there.
+
+== Description ==
+The equip function searches a character's equipment slots and returns the item currently equipped in the specified position. This allows DIL programs to examine, manipulate, or check specific equipped items.
+
+Common equipment positions include:
+* WEAR_WRIST_R, WEAR_WRIST_L - Wrist slots
+* WEAR_FINGER_R, WEAR_FINGER_L - Finger slots  
+* WEAR_NECK - Neck slot
+* WEAR_BODY - Body slot
+* WEAR_HEAD - Head slot
+* WEAR_FEET - Feet slot
+* WEAR_HANDS - Hand slot
+* WEAR_ARMS - Arm slot
+* WEAR_ABOUT - About body (cloaks)
+* WEAR_WAIST - Waist slot
+* WEAR_SHIELD - Shield slot
+* WEAR_BACK - Back slot
+
+== Usage Notes ==
+* Returns null if no item is equipped in the specified position
+* The function only works on character units (PCs and NPCs)
+* Equipment positions are defined by WEAR_* constants in values.h
+* The function is commonly used for:
+** Equipment checking and validation
+** Item manipulation and replacement
+** Combat calculations based on gear
+** Special effect processing
+
+== Example ==
+ dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);
+ var
+    cuffs  : unitptr;
+    deputy : unitptr;
+ code
+ {
+    cuffs := equipment(self, WEAR_WRIST_R);
+    secure(cuffs, broken);
+    
+    deputy := self.master;
+    secure(deputy, broken);
+    
+    if ((deputy == null) or (cuffs == null))
+    {
+       log("Cuffed lost either deputy or cuffs");
+       goto broken;
+    }
+    
+    heartbeat := PULSE_SEC * 1;
+    
+ :loop:
+    if (cuffs.equip != WEAR_WRIST_R)
+       goto broken;
+    priority;
+    wait(SFB_TICK|SFB_CMD, activator == self);
+    goto loop;
+    
+ :broken:
+    i := dildestroy("cuffed2@midgaard", self);
+    quit;
+ } dilend
+
+== See Also ==
+* [[addequip]] - Equip items to characters
+* [[unequip]] - Remove items from characters
+* [[equipment]] - Equipment field (different function)

@@ -1,0 +1,139 @@
+= command_head =
+
+== Syntax ==
+ command_head() : cmdptr
+
+== Return Value ==
+Returns a cmdptr pointing to the first command in the global command list.
+
+== Description ==
+The command_head function returns a pointer to the first command in the global command registry. This provides access to the complete command system, allowing DIL programs to iterate through all available commands, examine their properties, and perform command-related operations.
+
+The returned cmdptr can be used to traverse the entire command list using the next field, or to access specific command information.
+
+== Usage Notes ==
+* The returned cmdptr points to the first command in the global command list
+* Use the next field to iterate through subsequent commands
+* The command list contains all registered commands in the system
+* Each command has properties like name, level, type, loglevel, and position requirements
+* This function is identical to chead() - both return the same result
+
+== Examples ==
+=== Listing all commands ===
+ dilbegin list_all_commands();
+ var
+    cmd : cmdptr;
+    info : string;
+ code
+ {
+    cmd := command_head();
+    
+    while (cmd)
+    {
+        info := cmd.name + " (level " + itoa(cmd.level) + ")";
+        act("Command: $2t", A_ALWAYS, self, info, null, TO_CHAR);
+        cmd := cmd.next;
+    }
+    quit;
+ } dilend
+
+=== Command analysis ===
+ dilbegin analyze_commands();
+ var
+    cmd : cmdptr;
+    total, socials, skills : integer;
+ code
+ {
+    total := 0;
+    socials := 0;
+    skills := 0;
+    
+    cmd := command_head();
+    
+    while (cmd)
+    {
+        total := total + 1;
+        
+        if (cmd.type == 1)  // Assuming type 1 = social
+            socials := socials + 1;
+        else if (cmd.type == 2)  // Assuming type 2 = skill
+            skills := skills + 1;
+        
+        cmd := cmd.next;
+    }
+    
+    act("Total commands: " + itoa(total), A_ALWAYS, self, null, null, TO_CHAR);
+    act("Social commands: " + itoa(socials), A_ALWAYS, self, null, null, TO_CHAR);
+    act("Skill commands: " + itoa(skills), A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Command lookup ===
+ dilbegin find_command_info(cmd_name : string);
+ var
+    cmd : cmdptr;
+ code
+ {
+    cmd := command_head();
+    
+    while ((cmd) and (cmd.name != cmd_name))
+        cmd := cmd.next;
+    
+    if (cmd)
+    {
+        act("Command: " + cmd.name, A_ALWAYS, self, null, null, TO_CHAR);
+        act("Level: " + itoa(cmd.level), A_ALWAYS, self, null, null, TO_CHAR);
+        act("Type: " + itoa(cmd.type), A_ALWAYS, self, null, null, TO_CHAR);
+        act("Position: " + itoa(cmd.position), A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else
+        act("Command '" + cmd_name + "' not found.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Command filtering ===
+ dilbegin list_commands_by_level(min_level : integer);
+ var
+    cmd : cmdptr;
+    count : integer;
+ code
+ {
+    count := 0;
+    cmd := command_head();
+    
+    while (cmd)
+    {
+        if (cmd.level <= min_level)
+        {
+            act(cmd.name + " (level " + itoa(cmd.level) + ")", 
+                A_ALWAYS, self, null, null, TO_CHAR);
+            count := count + 1;
+        }
+        cmd := cmd.next;
+    }
+    
+    act("Found " + itoa(count) + " commands you can use.", 
+            A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+== cmdptr Fields ==
+The cmdptr returned by command_head() has the following accessible fields:
+* '''name''' : string - Command name
+* '''type''' : integer - Command type (social, skill, or regular command)
+* '''level''' : integer - Minimum level required to use the command
+* '''loglevel''' : integer - Level of character that can see the log (0 for no logs)
+* '''position''' : integer - Minimum position required to use the command
+* '''next''' : cmdptr - Pointer to the next command in the list
+* '''previous''' : cmdptr - Pointer to the previous command in the list
+
+== See Also ==
+* [[cmdptr]] - Command pointer type and field documentation
+* [[chead]] - Alternative function to get first command
+* [[getcommand]] - Get a specific command by name
+
+== Implementation Details ==
+The command_head function returns a pointer to the global command list (g_cmdlist). This list contains all registered commands in the system, sorted by their internal order. The function provides direct access to the command registry, allowing DIL programs to examine command properties, implement custom help systems, or perform command-related administrative tasks. This function is functionally identical to chead().

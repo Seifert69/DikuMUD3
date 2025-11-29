@@ -1,0 +1,79 @@
+= dildestroy =
+
+'''dildestroy''' is a DIL function that removes DIL programs from units based on template name.
+
+== Syntax ==
+ integer := dildestroy( s : string, u : unitptr );
+
+== Parameters ==
+; s
+: Name of DIL template to delete from unit
+; u
+: Unit to remove DIL program from
+
+== Return Value ==
+Returns an integer:
+* Number of programs destroyed (typically 1 if found, 0 if not found)
+* Error value if parameters were invalid
+
+== Description ==
+The dildestroy function searches for and removes DIL programs attached to a specified unit that match the given template name. This allows for precise removal of specific DIL instances without affecting other programs running on the same unit.
+
+The function:
+* Searches all DIL programs attached to the target unit
+* Matches programs by template name (exact string match)
+* Removes all matching programs from the unit
+* Returns count of programs successfully destroyed
+
+== Usage Notes ==
+* Only removes programs matching the exact template name specified
+* Multiple instances of the same template can be destroyed with one call
+* The function is commonly used for:
+** Cleaning up temporary effect programs
+** Removing quest triggers when completed
+** Stopping recurring behaviors
+** Managing state-based DIL attachments
+
+== Example ==
+ dilbegin item_charge(base_charge:integer);
+ external
+   string accept_dil@function (pc:unitptr,s:string);
+
+ var
+    thing   : unitptr;
+    pc      : unitptr;
+    answer  : string;
+
+ code
+ {
+ :start:
+    wait (SFB_DONE,( (command("give")) and (self==target) ));
+
+    pc:=activator;
+    thing:=medium;
+    secure(pc,lost_pc);
+    secure(thing,lost_pc);
+
+    dilcopy ("busy@function(Please wait I am busy with other work right now.", self);
+
+    // ... processing logic ...
+
+ :give_back:
+    act( self.name + " returns your " + thing.name + " to you.",
+        A_ALWAYS,pc,null,null,TO_CHAR);
+    act(self.name + " returns $1n's " + thing.name + " to $1m.",
+        A_SOMEONE,pc,null,null,TO_REST);
+    link(thing,pc);
+
+ :lost_pc:
+    // Remove the busy message DIL program
+    die := dildestroy ("busy@function",self);
+    unsecure(pc);
+    unsecure(thing);
+    goto start;
+ } dilend
+
+== See Also ==
+* [[dilcopy]] - Attach DIL programs to units
+* [[dilfind]] - Find DIL programs on units
+* [[dilcall]] - Call DIL templates dynamically

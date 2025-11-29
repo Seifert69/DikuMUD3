@@ -1,0 +1,93 @@
+= chead =
+
+== Syntax ==
+ chead() : cmdptr
+
+== Return Value ==
+Returns a cmdptr pointing to the first command in the global command list.
+
+== Description ==
+The chead function returns a pointer to the first command in the global command list. This function provides access to the complete command registry of the MUD, allowing DIL programs to iterate through all available commands, examine their properties, and perform command-related operations.
+
+The returned cmdptr can be used to traverse the entire command list using the next field, or to search for specific commands by name.
+
+== Usage Notes ==
+* The returned cmdptr points to the first command in the global command list
+* Use the next field to iterate through subsequent commands
+* The command list includes all available commands in the system
+* Each command has properties like name, level, type, loglevel, and position requirements
+
+== Examples ==
+=== Iterating through all commands ===
+ dilbegin list_commands();
+ var
+    cmd : cmdptr;
+    info : string;
+ code
+ {
+    cmd := chead();
+    
+    while (cmd)
+    {
+        info := cmd.name + " (level " + itoa(cmd.level) + ")";
+        act("Command: $2t", A_ALWAYS, self, info, null, TO_CHAR);
+        cmd := cmd.next;
+    }
+    quit;
+ } dilend
+
+=== Finding a specific command ===
+ dilbegin find_wiz_command();
+ var
+    cmd : cmdptr;
+ code
+ {
+    cmd := chead();
+    
+    while ((cmd) and (cmd.name != "wiz"))
+        cmd := cmd.next;
+    
+    if (cmd)
+        act("Found wiz command, level: $2d", A_ALWAYS, self, cmd.level, null, TO_CHAR);
+    else
+        act("Wiz command not found.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Command information display ===
+ dilbegin command_info();
+ var
+    cmd : cmdptr;
+    details : string;
+ code
+ {
+    cmd := chead();
+    
+    while (cmd)
+    {
+        details := cmd.name + " " + itoa(cmd.level) + " " + itoa(cmd.type) + 
+                  " " + itoa(cmd.loglevel) + " " + itoa(cmd.position);
+        act("CMD: $2t", A_ALWAYS, self, details, null, TO_CHAR);
+        cmd := cmd.next;
+    }
+    quit;
+ } dilend
+
+== cmdptr Fields ==
+The cmdptr returned by chead() has the following accessible fields:
+* '''name''' : string - Command name
+* '''type''' : integer - Command type (social, skill, or regular command)
+* '''level''' : integer - Minimum level required to use the command
+* '''loglevel''' : integer - Level of character that can see the log (0 for no logs)
+* '''position''' : integer - Minimum position required to use the command
+* '''next''' : cmdptr - Pointer to the next command in the list
+* '''previous''' : cmdptr - Pointer to the previous command in the list
+
+== See Also ==
+* [[cmdptr]] - Command pointer type and field documentation
+* [[getcommand]] - Get a specific command by name
+* [[ghead]] - Get the first unit in the global unit list
+
+== Implementation Details ==
+The chead function returns a pointer to the global command list (g_cmdlist). This list contains all registered commands in the system, sorted by their internal order. The function provides direct access to the command registry, allowing DIL programs to examine command properties, implement custom command help systems, or perform command-related administrative tasks.

@@ -1,0 +1,141 @@
+= clone =
+
+== Syntax ==
+ clone( u : unitptr ) : unitptr
+
+== Parameters ==
+; u : unitptr
+: The unit to clone/copy
+
+== Return Value ==
+Returns a unitptr pointing to the cloned copy of the original unit, or null if cloning failed.
+
+== Description ==
+The clone function creates an exact copy of an existing unit and places it in the same location as the unit that initiated the cloning process. The cloned unit is a complete duplicate with all properties, attributes, and DIL programs of the original unit.
+
+The cloning process involves:
+* Creating a complete copy of the original unit
+* Placing the cloned unit in the same location as the cloning unit's owner
+* Activating any DIL programs attached to the cloned unit
+
+== Usage Notes ==
+* The cloned unit is automatically placed inside the unit that performed the clone operation
+* All DIL programs on the cloned unit are activated after cloning
+* The cloned unit is a complete duplicate with all original properties
+* This function is useful for creating copies of items, NPCs, or other units
+* The original unit remains unchanged
+
+== Examples ==
+=== Basic item cloning ===
+ dilbegin clone_item();
+ var
+    original_item, cloned_item : unitptr;
+ code
+ {
+    original_item := findunit(self, "sword", FIND_UNIT_IN_ME, null);
+    
+    if (original_item)
+    {
+        cloned_item := clone(original_item);
+        
+        if (cloned_item)
+            act("You successfully clone $2t.", A_ALWAYS, self, cloned_item.title, null, TO_CHAR);
+        else
+            act("Failed to clone the item.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    else
+        act("You don't have that item.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== NPC cloning ===
+ dilbegin create_guard();
+ var
+    template_guard, new_guard : unitptr;
+ code
+ {
+    template_guard := findunit(self, "guard_template", FIND_UNIT_WORLD, null);
+    
+    if (template_guard)
+    {
+        new_guard := clone(template_guard);
+        
+        if (new_guard)
+        {
+            link(new_guard, self);  // Move guard to current room
+            act("$1n appears suddenly!", A_ALWAYS, new_guard, null, null, TO_ROOM);
+        }
+    }
+    
+    quit;
+ } dilend
+
+=== Mass cloning ===
+ dilbegin clone_multiple();
+ var
+    source_item, cloned_copy : unitptr;
+    i : integer;
+ code
+ {
+    source_item := findunit(self, "potion", FIND_UNIT_IN_ME, null);
+    
+    if (source_item)
+    {
+        for (i := 0; i < 5; i := i + 1)
+        {
+            cloned_copy := clone(source_item);
+            
+            if (not cloned_copy)
+            {
+                act("Cloning failed after " + itoa(i) + " copies.", A_ALWAYS, self, null, null, TO_CHAR);
+                break;
+            }
+        }
+        
+        act("You create multiple copies of the potion.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+=== Conditional cloning ===
+ dilbegin smart_clone();
+ var
+    target_unit, cloned_unit : unitptr;
+ code
+ {
+    target_unit := findunit(self, "magic_orb", FIND_UNIT_WORLD, null);
+    
+    if (target_unit)
+    {
+        if (target_unit.type == UNIT_ST_OBJ)
+        {
+            cloned_unit := clone(target_unit);
+            
+            if (cloned_unit)
+            {
+                act("The magic orb duplicates itself!", A_ALWAYS, cloned_unit, null, null, TO_ROOM);
+                set(cloned_unit.extra, EXTRA_NOSAVE);  // Make temporary
+            }
+        }
+        else
+            act("Only objects can be cloned here.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+== Error Conditions ==
+The function will return null if:
+* The source unit pointer is null or invalid
+* The cloning process fails due to system limitations
+* Memory allocation fails for the new unit
+
+== See Also ==
+* [[load]] - Load a unit from database by name
+* [[destroy]] - Remove a unit from the game
+* [[link]] - Move a unit to a different location
+
+== Implementation Details ==
+The clone function uses the unit's copy() method to create an exact duplicate of the source unit. The cloned unit is then automatically placed inside the unit that owns the DIL program (p->sarg->owner) using unit_to_unit(). After placement, dil_loadtime_activate() is called to activate any DIL programs attached to the cloned unit. The entire process ensures that the cloned unit is fully functional and integrated into the game world immediately upon creation.

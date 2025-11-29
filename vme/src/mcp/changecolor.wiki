@@ -1,0 +1,56 @@
+= changecolor =
+
+== Syntax ==
+ changecolor( ch : unitptr, ks : string, cstr : string ) : integer
+
+== Parameters ==
+; ch : unitptr
+: Character you are changing the color on (must be a player character)
+; ks : string
+: Key string for the color (maximum 20 characters, alphanumeric and underscore only)
+; cstr : string
+: Color string to assign to the key
+
+== Return Value ==
+Returns 1 (TRUE) if the color was successfully changed, 0 (FALSE) if the color key was not found.
+
+== Description ==
+The changecolor function modifies an existing color entry in a player's personal color list. This function only works on player characters and will fail if used on NPCs or other unit types.
+
+The function first checks if the specified color key exists in the player's color list. If the key exists, it updates the color value with the new color string provided. If the key does not exist, the function returns FALSE without making any changes.
+
+== Usage Notes ==
+* Only works on player characters (PCs) - will fail and log an error if used on NPCs
+* The key string must be 20 characters or less
+* The key string can only contain alphanumeric characters and underscores
+* The function only modifies existing color entries - it does not create new ones
+* Use addcolor() to create new color entries
+* Use delcolor() to remove color entries
+* Use getcolor() to retrieve current color values
+
+== Examples ==
+=== Basic color change ===
+ changecolor(pc, "clan_who", "&c+w&bn");
+
+This changes the existing "clan_who" color key to display as bright white with a newline.
+
+=== Conditional color update ===
+ if (changecolor(self, "my_color", "&r+R"))
+     act("Your personal color has been updated.", A_ALWAYS, self, null, null, TO_CHAR);
+ else
+     act("Color key 'my_color' not found.", A_ALWAYS, self, null, null, TO_CHAR);
+
+== Error Conditions ==
+The function will fail and return FALSE if:
+* The target unit is not a player character
+* The key string is longer than 20 characters
+* The key string contains invalid characters (not alphanumeric or underscore)
+* The specified color key does not exist in the player's color list
+
+== See Also ==
+* [[addcolor]] - Add new color entries to a player's color list
+* [[delcolor]] - Remove color entries from a player's color list
+* [[getcolor]] - Retrieve color values from a player's color list
+
+== Implementation Details ==
+The function validates all parameters before making changes. It uses the player's color management system to locate and modify the specified color key. The color string is processed through str_escape_format() to ensure proper formatting before being stored.

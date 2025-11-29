@@ -1,0 +1,56 @@
+= delunit =
+
+'''delunit''' is a DIL function that deletes unit files from the game's file system.
+
+== Syntax ==
+ integer delunit( filename : string ) ;
+
+== Parameters ==
+; filename
+: The name of the unit file to be deleted
+
+== Return Value ==
+Returns an integer:
+* TRUE (1) if the file was successfully deleted
+* FALSE (0) if the file was not deleted
+
+== Description ==
+The delunit function is used to delete unit files that are managed by the unit file system (used with '''store''' and '''restore''' functions). The function operates with the following security restrictions:
+
+* Only deletes files within the zone's designated unit file directory
+* Requires zone access level 10 or lower
+* Validates filenames to prevent directory traversal attacks
+* Files are located in the zone's "units/" subdirectory
+
+== Security Considerations ==
+* Zones with access level greater than 10 cannot use this function
+* Filenames are validated for security - attempts to use illegal filenames will be logged and return FALSE
+* The function only operates within the zone's designated unit file directory
+
+== Usage Notes ==
+* This function is typically used for managing temporary unit storage, clan data, or other serialized unit data
+* The file deletion is permanent and cannot be undone
+* Use the return value to verify whether the deletion was successful
+* Unit files typically have extensions like ".dc" (DIL compiled) or other custom extensions
+
+== Example ==
+ dilbegin chest_del(arg : string);
+ var
+         ret:integer;/*to hold the return value if deleted or not*/
+ code
+ {
+ ret:= delunit("chest.file");
+ if (!ret)
+         {
+         log ("File not deleted.");
+         quit;
+         }
+
+ sendtext("Chest file deleted\n",self);
+ quit;/*dil delete routine done
+ }
+ dilend
+
+== See Also ==
+* [[store]] - Store units to unit files
+* [[restore]] - Restore units from unit files

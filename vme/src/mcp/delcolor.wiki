@@ -1,0 +1,170 @@
+= delcolor =
+
+== Syntax ==
+ delcolor( unit : unitptr, color_name : string ) : integer
+
+== Parameters ==
+; unit : unitptr
+: The player character from which to delete the color
+; color_name : string
+: The name of the color to delete
+
+== Return Value ==
+Returns 1 (TRUE) if the color was successfully deleted, 0 (FALSE) if the color was not found or deletion failed.
+
+== Description ==
+The delcolor function removes a color from a player character's personal color list. This function allows players to manage their custom color settings by removing colors they no longer want to use.
+
+The function searches for the specified color name in the player's color list and removes it if found. Only works on player characters (PCs).
+
+== Usage Notes ==
+* Only works on player characters (UNIT_ST_PC)
+* The color name must be 20 characters or less and contain only alphanumeric characters and underscores
+* Color names are case-sensitive
+* Returns TRUE if color was found and deleted, FALSE if not found
+* Used to clean up unwanted or obsolete color entries
+
+== Examples ==
+=== Basic color deletion ===
+ dilbegin remove_color();
+ var
+    success : integer;
+ code
+ {
+    success := delcolor(self, "old_red");
+    
+    if (success)
+        act("Color 'old_red' has been removed from your list.", A_ALWAYS, self, null, null, TO_CHAR);
+    else
+        act("Color 'old_red' was not found in your color list.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Conditional color removal ===
+ dilbegin cleanup_colors();
+ var
+    colors_to_remove : stringlist;
+    i : integer;
+    removed_count : integer;
+ code
+ {
+    colors_to_remove := {"old_red", "bright_blue", "dark_green"};
+    removed_count := 0;
+    
+    for (i := 0; i < length(colors_to_remove); i := i + 1)
+    {
+        if (delcolor(self, colors_to_remove.[i]))
+        {
+            act("Removed color: " + colors_to_remove.[i], A_ALWAYS, self, null, null, TO_CHAR);
+            removed_count := removed_count + 1;
+        }
+    }
+    
+    act("Removed " + itoa(removed_count) + " colors from your list.", A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ } dilend
+
+=== Color validation before deletion ===
+ dilbegin safe_remove_color();
+ var
+    color_name : string;
+ code
+ {
+    color_name := "invalid_color!@#$";
+    
+    // Check if color name is valid
+    if (length(color_name) > 20)
+        act("Color name too long (max 20 characters).", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    
+    // Check for invalid characters
+    if (not is_valid_color_name(color_name))
+        act("Color name contains invalid characters.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    
+    // Attempt deletion
+    if (delcolor(self, color_name))
+        act("Successfully removed invalid test color.", A_ALWAYS, self, null, null, TO_CHAR);
+    else
+        act("Failed to remove test color.", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+=== Color management system ===
+ dilbegin color_manager();
+ var
+    command : string;
+    color_name : string;
+    color_code : string;
+ code
+ {
+    while (true)
+    {
+        wait(SFB_CMD, command("removecolor") or command("addcolor") or command("listcolors"));
+        
+        if (command("removecolor"))
+        {
+            block;
+            act("Remove which color?", A_ALWAYS, self, null, null, TO_CHAR);
+            command := getword(excmdstr);
+            
+            if (command != "")
+            {
+                color_name := getword(excmdstr);
+                color_code := getword(excmdstr);
+                
+                if ((color_name != "") and (color_code != ""))
+                {
+                    if (delcolor(self, color_name))
+                        act("Color '" + color_name + "' removed.", A_ALWAYS, self, null, null, TO_CHAR);
+                    else
+                        act("Color '" + color_name + "' not found.", A_ALWAYS, self, null, null, TO_CHAR);
+                }
+                else
+                    act("Invalid format. Use: color_name@color_code", A_ALWAYS, self, null, null, TO_CHAR);
+            }
+        }
+        else if (command("addcolor"))
+        {
+            block;
+            act("Add which color? (format: color_name@color_code)", A_ALWAYS, self, null, null, TO_CHAR);
+            command := getword(excmdstr);
+            
+            if (command != "")
+            {
+                color_name := getword(excmdstr);
+                color_code := getword(excmdstr);
+                
+                if ((color_name != "") and (color_code != ""))
+                {
+                    if (addcolor(self, color_name, color_code))
+                        act("Color '" + color_name + "' added successfully.", A_ALWAYS, self, null, null, TO_CHAR);
+                    else
+                        act("Failed to add color '" + color_name + "'.", A_ALWAYS, self, null, null, TO_CHAR);
+                }
+                else
+                    act("Invalid format. Use: color_name@color_code", A_ALWAYS, self, null, null, TO_CHAR);
+            }
+        }
+        else if (command("listcolors"))
+        {
+            act("Your available colors:", A_ALWAYS, self, null, null, TO_CHAR);
+            // Implementation would list all available colors
+        }
+        else if (command("quit"))
+        {
+            act("Color management ended.", A_ALWAYS, self, null, null, TO_CHAR);
+            quit;
+        }
+    }
+} dilend
+
+== Implementation Details ==
+The delcolor function validates the color name parameter and then calls the player's color management system to remove the specified color. The function performs security checks to ensure only valid color names are used and that the operation is performed on player characters only. The color name validation includes length checks (20 characters max) and character validation (alphanumeric and underscores only).
+
+== See Also ==
+* [[addcolor]] - Add a color to a player's color list
+* [[getcolor]] - Get a color from a player's color list
+* [[changecolor]] - Change an existing color in a player's color list
