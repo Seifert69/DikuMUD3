@@ -1,0 +1,216 @@
+= ability_levels =
+
+The '''ability_levels''' field is a read-only array field available on player character units that provides access to the training level requirements for abilities.
+
+== Syntax ==
+ player.ability_levels[ability_index]
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| player.ability_levels[ability_index] || integer || The training level requirement for specified ability
+|}
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ability_index || integer || Ability index (ABIL_* constant)
+|}
+
+== Return Value ==
+Returns an integer representing the training level requirement:
+* '''integer''' - The training level requirement value for the specified ability
+* '''fail''' - If player unit is invalid, not a PC, or ability index is out of range
+
+== Ability Constants ==
+The ability_index parameter accepts any of the ABIL_* constants defined in values.h or vme.h:
+
+{| class="wikitable"
+! Constant !! Description
+|-
+| ABIL_STR || Strength training level requirement
+|-
+| ABIL_DEX || Dexterity training level requirement
+|-
+| ABIL_CON || Constitution training level requirement
+|-
+| ABIL_CHA || Charisma training level requirement
+|-
+| ABIL_BRA || Brains/Intelligence training level requirement
+|-
+| ABIL_MAG || Magic training level requirement
+|-
+| ABIL_DIV || Divine training level requirement
+|-
+| ABIL_HP || Hit Points training level requirement
+|-
+| ABIL_STRUCT || Structure training level requirement
+|}
+
+== Examples ==
+=== Basic Level Check ===
+ dilbegin check_ability_level(player : unitptr, ability : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (ability >= 0 and ability < ABIL_TREE_MAX) {
+       send("Training level requirement: " + itoa(player.ability_levels[ability]));
+    } else {
+       send("Invalid ability index.");
+    }
+    quit;
+ } dilend
+
+=== Level Requirements Analysis ===
+ dilbegin analyze_level_requirements(player : unitptr);
+ var
+    i : integer;
+    total_levels : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    total_levels := 0;
+    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
+       send("Ability " + itoa(i) + " level requirement: " + itoa(player.ability_levels[i]));
+       total_levels := total_levels + player.ability_levels[i];
+    }
+    send("Total level requirements for all abilities: " + itoa(total_levels));
+    quit;
+ } dilend
+
+=== Training Eligibility Check ===
+ dilbegin can_train_ability(player : unitptr, ability : integer);
+ var
+    required_level : integer;
+    current_level : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (ability < 0 or ability >= ABIL_TREE_MAX) {
+       send("Invalid ability index.");
+       quit;
+    }
+    
+    required_level := player.ability_levels[ability];
+    current_level := player.level;
+    
+    if (current_level >= required_level) {
+       send("You meet the level requirement for this training.");
+    } else {
+       send("You need to be level " + itoa(required_level) + " to train this ability.");
+       send("Current level: " + itoa(current_level));
+    }
+    quit;
+ } dilend
+
+=== Level Comparison ===
+ dilbegin compare_level_requirements(player1 : unitptr, player2 : unitptr);
+ var
+    i : integer;
+ code
+ {
+    if (player1.type != UNIT_ST_PC or player2.type != UNIT_ST_PC) {
+       send("Both units must be players.");
+       quit;
+    }
+    
+    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
+       if (player1.ability_levels[i] != player2.ability_levels[i]) {
+          send("Ability " + itoa(i) + " level requirements differ:");
+          send("  Player 1: " + itoa(player1.ability_levels[i]));
+          send("  Player 2: " + itoa(player2.ability_levels[i]));
+       }
+    }
+    quit;
+ } dilend
+
+=== Training System Integration ===
+ dilbegin training_master_check(player : unitptr, ability : integer);
+ var
+    required_level : integer;
+    player_level : integer;
+    ability_cost : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (ability < 0 or ability >= ABIL_TREE_MAX) {
+       send("Invalid ability index.");
+       quit;
+    }
+    
+    required_level := player.ability_levels[ability];
+    player_level := player.level;
+    ability_cost := player.ability_costs[ability];
+    
+    send("Training Requirements:");
+    send("  Level: " + itoa(required_level) + " (You are: " + itoa(player_level) + ")");
+    send("  Cost: " + itoa(ability_cost) + " gold coins");
+    
+    if (player_level >= required_level) {
+       if (player.money[0] >= ability_cost) {
+          send("You meet all requirements for this training.");
+       } else {
+          send("You meet the level requirement but lack the gold.");
+       }
+    } else {
+       send("You don't meet the level requirement.");
+    }
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs comprehensive validation:
+* '''Player validation'' - Ensures unit is a valid PC (not NPC)
+* '''Index validation'' - Checks that ability index is between 0 and ABIL_TREE_MAX - 1
+* '''Type validation'' - Returns fail if accessed on non-PC units
+
+Note: The C implementation shows that this field:
+* Only works on player characters (PCs), not NPCs
+* Uses getAbilityLevelAtIndex() function to retrieve level requirements
+* Has commented-out code that suggests it was originally designed to return references for certain access levels
+* Uses is_in() to validate ability index range
+* Different behavior based on zone access level (reference vs integer return)
+
+== Usage Notes ==
+* This field is read-only for reading ability training level requirements
+* Only available on player character units (UNIT_ST_PC type)
+* Level requirements are typically used to determine when players can train certain abilities
+* The field is commonly used in training systems, guild masters, and eligibility validation
+* Ability level requirements work in conjunction with character's current level for training validation
+* Ability constants are defined in values.h and vme.h header files
+* This field appears to be obsolete or rarely used based on code comments
+* Often used together with ability_costs field for complete training validation
+
+== Related Fields ==
+* [[abilities]] - Array of current ability score values
+* [[ability_costs]] - Array of ability training costs
+* [[level]] - Character's current level
+* [[money]] - Character money array for cost validation
+
+== Related Functions ==
+* [[reset_race]] - Function to reset character race and related attributes
+* [[getAbilityLevelAtIndex]] - Internal function for level requirement calculations
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[ABIL_*]] - Ability constants
+* [[ability_costs]] - Ability training costs field

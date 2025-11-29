@@ -1,0 +1,318 @@
+= addaff =
+
+The '''addaff''' function is a built-in DIL (DikuMUD Interactive Language) function that adds a new affect to a character unit.
+
+== Syntax ==
+ addaff(unitptr character, integer affect_id, integer duration, integer beat, integer data0, integer data1, integer data2, integer tif_first, integer tif_last, integer apf, integer tif_tick)
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| character || unitptr || The character to receive the affect
+|-
+| affect_id || integer || The ID of the affect to add (see ID_* constants)
+|-
+| duration || integer || Duration in pulses (4 = 1 second)
+|-
+| beat || integer || How often the affect triggers (4 = 1 second)
+|-
+| data0 || integer || First data value for the affect
+|-
+| data1 || integer || Second data value for the affect
+|-
+| data2 || integer || Third data value for the affect
+|-
+| tif_first || integer || First tick modifier (TIF_XXX flags)
+|-
+| tif_last || integer || Last tick modifier (TIF_XXX flags)
+|-
+| apf || integer || Apply flags (APF_XXX flags)
+|-
+| tif_tick || integer || Tick interval modifier (TIF_XXX flags)
+|}
+
+== Return Value ==
+This function does not return a value (void).
+
+== Affect ID Constants ==
+The affect_id parameter accepts any of the following constants defined in values.h or vme.h:
+
+{| class="wikitable"
+! Constant !! Description
+|-
+| ID_BLIND || Blindness affect
+|-
+| ID_INVISIBLE || Invisibility affect
+|-
+| ID_SNEAK || Sneaking affect
+|-
+| ID_SANCTUARY || Sanctuary affect
+|-
+| ID_CURSE || Curse affect
+|-
+| ID_POISON || Poison affect
+|-
+| ID_PLAGUE || Plague affect
+|-
+| ID_SLEEP || Sleep affect
+|-
+| ID_CHARM || Charm affect
+|-
+| ID_FLYING || Flying affect
+|-
+| ID_WATER_BREATH || Water breathing affect
+|-
+| ID_SPELL || Spell affect
+|-
+| ID_SKILL || Skill affect
+|-
+| ID_WEAPON || Weapon skill affect
+|-
+| ID_ARMOR || Armor skill affect
+|-
+| ID_DAMAGE || Damage bonus affect
+|-
+| ID_SPEED || Speed bonus affect
+|-
+| ID_MANIPULATE || Manual dexterity affect
+|-
+| ID_HITROLL || Hit roll bonus affect
+|-
+| ID_SAVING_THROW || Saving throw bonus affect
+|-
+| ID_SAVING_SPELL || Saving spell bonus affect
+|-
+| ID_RESIST_COLD || Cold resistance affect
+|-
+| ID_RESIST_FIRE || Fire resistance affect
+|-
+| ID_RESIST_ENERGY || Energy resistance affect
+|-
+| ID_RESIST_ACID || Acid resistance affect
+|-
+| ID_RESIST_ELECTRIC || Electric resistance affect
+|-
+| ID_RESIST_MAGIC || Magic resistance affect
+|-
+| ID_RESIST_DISEASE || Disease resistance affect
+|-
+| ID_GOOD || Good alignment affect
+|-
+| ID_EVIL || Evil alignment affect
+|-
+| ID_SUN || Sun vulnerability affect
+|-
+| ID_PROTECTION || Protection affect
+|-
+| ID_PARALYSIS || Paralysis affect
+|-
+| ID_FEAR || Fear affect
+|-
+| ID_WEAKEN || Weakness affect
+|-
+| ID_REGENERATION || Regeneration affect
+|-
+| ID_ABSORPTION || Absorption affect
+|-
+| ID_SPELL_DAMAGE || Spell damage affect
+|-
+| ID_WEAPON_DAMAGE || Weapon damage affect
+|-
+| ID_SKILL_DAMAGE || Skill damage affect
+|-
+| ID_NON_DETECTION || Non-detection affect
+|-
+| ID_NON_MAGIC || Non-magic affect
+|}
+
+== Apply Flags ==
+The apf parameter accepts any combination of the following flags:
+
+{| class="wikitable"
+! Flag !! Description
+|-
+| APF_NONE || No special apply behavior
+|-
+| APF_FIRST || Affect applies first (before other affects)
+|-
+| APF_LAST || Affect applies last (after other affects)
+|-
+| APF_TICK || Affect triggers on tick intervals
+|-
+| APF_FIRST_TICK || Affect triggers on first tick in interval
+|-
+| APF_LAST_TICK || Affect triggers on last tick in interval
+|-
+| APF_CUMULATIVE || Affect stacks with same type (cumulative)
+|-
+| APF_DURATION || Affect has duration and will expire
+|-
+| APF_BITE || Affect is bite-type (for vampires)
+|-
+| APF_WEAPON || Affect is weapon-type
+|-
+| APF_MAGIC || Affect is magical
+|-
+| APF_INVISIBLE || Affect is invisible
+|-
+| APF_NO_SAVE || Affect doesn't save with character
+|-
+| APF_TO_A || Affect transfers to attacker on hit
+|-
+| APF_STOP || Affect stops combat actions
+|-
+| APF_DEAD || Affect causes death when expires
+|-
+| APF_SLOW || Affect slows character
+|-
+| APF_HASTE || Affect causes haste
+|}
+
+== Tick Flags ==
+The tif_first and tif_last parameters modify when the affect triggers:
+
+{| class="wikitable"
+! Flag !! Description
+|-
+| TIF_NONE || No special timing
+|-
+| TIF_FIRST || Trigger on first tick of interval
+|-
+| TIF_LAST || Trigger on last tick of interval
+|-
+| TIF_EVERY || Trigger on every tick
+|-
+| TIF_ODD || Trigger on odd-numbered ticks
+|-
+| TIF_EVEN || Trigger on even-numbered ticks
+|}
+
+== Examples ==
+=== Basic Blindness Affect ===
+ dilbegin blind_target(victim : unitptr);
+ code
+ {
+    addaff(victim, ID_BLIND, 10, 0, 0, 0, APF_DURATION | APF_FIRST, TIF_EVERY);
+    send("You have been blinded!");
+    quit;
+ } dilend
+
+=== Temporary Invisibility ===
+ dilbegin invisibility_spell(caster : unitptr, target : unitptr);
+ code
+ {
+    addaff(target, ID_INVISIBLE, 5, 0, 0, 0, APF_DURATION | APF_FIRST);
+    send("You fade from view.");
+    quit;
+ } dilend
+
+=== Permanent Sanctuary ===
+ dilbegin sanctuary_bless(player : unitptr);
+ code
+ {
+    addaff(player, ID_SANCTUARY, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
+    send("You feel protected by divine power.");
+    quit;
+ } dilend
+
+=== Poison Damage Over Time ===
+ dilbegin poison_damage(victim : unitptr);
+ code
+ {
+    addaff(victim, ID_POISON, 1, 0, 0, 0, APF_DURATION | APF_TICK | TIF_EVERY);
+    send("You feel poison coursing through your veins!");
+    quit;
+ } dilend
+
+=== Regeneration Buff ===
+ dilbegin regeneration_aura(player : unitptr);
+ code
+ {
+    addaff(player, ID_REGENERATION, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
+    send("You feel a warm regenerative aura.");
+    quit;
+ } dilend
+
+=== Complex Combat Buff ===
+ dilbegin combat_enhancement(player : unitptr);
+ code
+ {
+    addaff(player, ID_WEAPON_DAMAGE, 5, 0, 0, 0, APF_DURATION | APF_FIRST);
+    addaff(player, ID_SKILL_DAMAGE, 3, 0, 0, 0, APF_DURATION | APF_FIRST);
+    addaff(player, ID_ARMOR, 2, 0, 0, 0, APF_DURATION | APF_FIRST);
+    send("You feel enhanced for combat!");
+    quit;
+ } dilend
+
+=== Stacking Affects ===
+ dilbegin stacking_bonuses(player : unitptr);
+ code
+ {
+    addaff(player, ID_DAMAGE, 2, 0, 0, 0, APF_CUMULATIVE | APF_FIRST);
+    addaff(player, ID_DAMAGE, 3, 0, 0, 0, APF_CUMULATIVE | APF_FIRST);
+    send("You have multiple damage bonuses!");
+    quit;
+ } dilend
+
+=== Timed Spell Effect ===
+ dilbegin timed_spell_effect(caster : unitptr, target : unitptr);
+ code
+ {
+    addaff(target, ID_SPELL, 10, 0, 0, 0, APF_DURATION | APF_FIRST | TIF_EVERY);
+    send("You are magically enhanced!");
+    quit;
+ } dilend
+
+=== Conditional Affect ===
+ dilbegin conditional_affect(player : unitptr, condition : integer);
+ code
+ {
+    if (condition > 0) {
+       addaff(player, ID_GOOD, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
+    } else {
+       addaff(player, ID_EVIL, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
+    }
+    send("Your alignment has been affected.");
+    quit;
+ } dilend
+
+== Error Handling ==
+The function performs comprehensive validation:
+* '''Character validation'' - Ensures character is a valid unit
+* '''Type validation'' - Ensures all parameters are integer types
+* '''ID validation'' - Checks that affect_id is within valid range
+* '''Flag validation'' - Validates apply and tick flag combinations
+* '''Security check'' - Logs attempts to add affects to non-characters
+
+Note: The C implementation shows that this function:
+* Uses create_affect() to add the affect to the character
+* Performs extensive parameter validation and type checking
+* Logs security violations for audit purposes
+* Supports complex affect combinations with multiple data values
+* Handles both character and object targets appropriately
+
+== Usage Notes ==
+* This function is commonly used for:
+** Combat systems - Adding blindness, poison, damage bonuses
+** Magic systems - Adding spell effects, magical enhancements
+** Temporary effects - Invisibility, sanctuary, haste
+** Permanent effects - Alignment changes, regeneration
+** Conditional effects - Effects that depend on character state
+* Stacking mechanics - Multiple affects of the same type
+* The function works on both players and NPCs
+* Duration is measured in game pulses (typically 4 pulses = 1 second)
+* Use appropriate apply flags to control affect order and behavior
+* The function is more powerful than individual affect spells due to direct data manipulation
+
+== Related Functions ==
+* [[isaff]] - Check if a character has a specific affect
+* [[getaffects]] - Get all affects on a character
+* [[subaff]] - Remove a specific affect from a character
+* [[create_affect]] - Internal function used by addaff
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[ID_*]] - Affect ID constants
+* [[APF_*]] - Apply flag constants
+* [[TIF_*]] - Tick flag constants

@@ -1,0 +1,173 @@
+= activator =
+
+The '''activator''' field is a read-only unit pointer field available in DIL programs that provides access to the unit which activated the current DIL program.
+
+== Syntax ==
+ activator
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| activator || unitptr || The unit that activated the current DIL program
+|}
+
+== Return Value ==
+Returns a unit pointer:
+* '''unitptr''' - The unit that activated the DIL program
+* '''null''' - If no unit activated the program
+
+== Field Properties ==
+{| class="wikitable"
+! Property !! Type !! Description
+|-
+| Read/Write || Read-only (RO)
+|-
+| Unit Type || Available in all DIL programs
+|-
+| Context || Only meaningful when program is activated by a command or event
+|}
+
+== Examples ==
+=== Basic Activator Check ===
+ dilbegin check_activator();
+ code
+ {
+    if (activator != null) {
+       send("Program activated by: " + activator.name);
+    } else {
+       send("No activator for this program.");
+    }
+    quit;
+ } dilend
+
+=== Command Processing ===
+ dilbegin process_command(player : unitptr);
+ code
+ {
+    if (activator == player) {
+       send("You activated this command yourself.");
+    } else if (activator != null) {
+       send("This command was activated by: " + activator.name);
+    } else {
+       send("No activator information available.");
+    }
+    quit;
+ } dilend
+
+=== Item Interaction ===
+ dilbegin item_interaction(item : unitptr);
+ code
+ {
+    if (activator == item) {
+       send("You are the activator of this item interaction.");
+       act("$1n glows with inner power.", A_ALWAYS, item, null, null, TO_CHAR);
+    } else {
+       send("You are not the activator of this item.");
+    }
+    quit;
+ } dilend
+
+=== Security Check ===
+ dilbegin security_check();
+ code
+ {
+    if (activator != null) {
+       if (activator.level >= IMMORTAL_LEVEL) {
+          send("Program activated by an immortal.");
+       } else {
+          send("Program activated by: " + activator.name + " (Level " + itoa(activator.level) + ")");
+       }
+    } else {
+       send("No activator information available.");
+    }
+    quit;
+ } dilend
+
+=== Multi-Program Coordination ===
+ dilbegin coordinator_example();
+ var
+    last_activator : unitptr;
+ code
+ {
+    if (activator != null) {
+       last_activator := activator;
+       send("Current activator: " + activator.name);
+    } else {
+       send("No activator set.");
+    }
+    
+    wait(SFB_CMD, command("check"));
+    
+    if (activator != null and activator != last_activator) {
+       send("Activator changed from: " + last_activator.name + " to: " + activator.name);
+       last_activator := activator;
+    }
+    quit;
+ } dilend
+
+=== Spell Casting Detection ===
+ dilbegin spell_detection();
+ code
+ {
+    if (activator != null) {
+       if (activator.type == UNIT_ST_PC) {
+          send("A player cast a spell that activated this program.");
+       } else if (activator.type == UNIT_ST_NPC) {
+          send("An NPC cast a spell that activated this program.");
+       } else {
+          send("Unknown unit type activated this program.");
+       }
+    } else {
+       send("No activator information available.");
+    }
+    quit;
+ } dilend
+
+=== Trap Activation ===
+ dilbegin trap_trigger(trap : unitptr, victim : unitptr);
+ code
+ {
+    if (activator == trap) {
+       act("$1n is triggered by your presence!", A_ALWAYS, trap, null, victim, TO_VICT);
+       send("You have activated the trap.");
+    } else {
+       send("You did not activate this trap.");
+    }
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs validation:
+* '''Automatic validation'' - The field is automatically set by the DIL runtime
+* '''Type validation'' - Always returns a unit pointer (may be null)
+* '''Context validation'' - Only meaningful when accessed within an activated DIL program
+
+Note: The field is set by the DIL runtime system when:
+* A command is executed by a player/NPC
+* A spell is cast that affects a DIL program
+* A wait condition is triggered
+* An interrupt occurs
+* Any other event activates the DIL program
+
+== Usage Notes ==
+* This field is read-only and automatically managed by the DIL system
+* Only meaningful when accessed within DIL code that was activated by an event
+* The field is commonly used for:
+** Command processing - Identifying who executed a command
+** Security systems - Checking if an immortal activated a program
+** Interactive objects - Determining who touched or used an item
+** Trap systems - Identifying who triggered a trap
+** Spell systems - Detecting magical effects on DIL programs
+* The field is null when the DIL program is first created or not yet activated
+* Use with wait() and SFB_CMD to create responsive programs that react to different activators
+
+== Related Fields ==
+* [[self]] - The current unit executing the DIL program
+* [[command]] - The command that was executed
+* [[argument]] - Arguments provided with the command
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[SFB_CMD]] - Command activation wait flag
+* [[wait]] - Function for waiting on specific conditions

@@ -1,0 +1,208 @@
+= acc_modify =
+
+The '''acc_modify''' function is a built-in DIL (DikuMUD Interactive Language) function that modifies a player's account balance by adding or subtracting funds.
+
+== Syntax ==
+ acc_modify(unitptr player, integer amount)
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| player || unitptr || The player whose account balance will be modified
+|-
+| amount || integer || The amount to modify (in 1/100ths, positive adds, negative subtracts)
+|}
+
+== Return Value ==
+This function does not return a value (void).
+
+== Functionality ==
+The acc_modify function performs the following operations:
+* '''Add funds''' - When amount is positive, adds to player's account balance
+* '''Subtract funds''' - When amount is negative, subtracts from player's account balance
+* '''Account validation'' - Only works when game server is in accounting mode
+* '''Access control'' - Requires appropriate zone access level to use
+* '''Transaction logging'' - All transactions are logged in encrypted account log file
+
+== Examples ==
+=== Basic Credit ===
+ dilbegin credit_player(player : unitptr, amount : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (amount > 0) {
+       acc_modify(player, amount);
+       send("Account credited: $" + itoa(amount / 100) + "." + itoa(amount % 100));
+    } else {
+       send("Amount must be positive for credit.");
+    }
+    quit;
+ } dilend
+
+=== Basic Debit ===
+ dilbegin debit_player(player : unitptr, amount : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (amount < 0) {
+       acc_modify(player, amount);
+       send("Account debited: $" + itoa((-amount) / 100) + "." + itoa((-amount) % 100)));
+    } else {
+       send("Amount must be negative for debit.");
+    }
+    quit;
+ } dilend
+
+=== Purchase Processing ===
+ dilbegin process_purchase(player : unitptr, cost : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (cost > 0) {
+       acc_modify(player, -cost);
+       send("Purchase processed: $" + itoa(cost / 100) + "." + itoa(cost % 100) + " charged to account.");
+    } else {
+       send("Invalid cost amount.");
+    }
+    quit;
+ } dilend
+
+=== Payment System ===
+ dilbegin fountain_payment(player : unitptr, price : integer);
+ var
+    cost_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    cost_cents := price * 100;
+    
+    if (player.acc_balance >= cost_cents) {
+       acc_modify(player, -cost_cents);
+       send("Payment processed: $" + itoa(price) + " deducted from account.");
+       send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + "." + itoa((player.acc_balance - cost_cents) % 100)));
+    } else {
+       send("Insufficient funds for this purchase.");
+       send("Cost: $" + itoa(price));
+       send("Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100)));
+    }
+    quit;
+ } dilend
+
+=== Account Transfer ===
+ dilbegin transfer_funds(source : unitptr, target : unitptr, amount : integer);
+ code
+ {
+    if (source.type != UNIT_ST_PC or target.type != UNIT_ST_PC) {
+       send("Both units must be players.");
+       quit;
+    }
+    
+    if (amount > 0) {
+       acc_modify(source, -amount);
+       acc_modify(target, amount);
+       send("Transfer completed: $" + itoa(amount / 100) + "." + itoa(amount % 100)));
+       send("Transferred from " + source.name + " to " + target.name);
+    } else {
+       send("Amount must be positive for transfer.");
+    }
+    quit;
+ } dilend
+
+=== Refund Processing ===
+ dilbegin process_refund(player : unitptr, refund_amount : integer);
+ var
+    refund_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    refund_cents := refund_amount * 100;
+    
+    acc_modify(player, refund_cents);
+    send("Refund processed: $" + itoa(refund_amount / 100) + "." + itoa(refund_amount % 100)));
+    send("Added to account balance.");
+    quit;
+ } dilend
+
+=== Complex Transaction Example ===
+ dilbegin complex_transaction(player : unitptr);
+ var
+    transaction_amount : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    transaction_amount := 5000; /* $50.00 */
+    
+    acc_modify(player, transaction_amount);
+    send("Account credited with bonus funds.");
+    send("New balance: $" + itoa((player.acc_balance + transaction_amount) / 100) + "." + itoa((player.acc_balance + transaction_amount) % 100)));
+    
+    quit;
+ } dilend
+
+== Error Handling ==
+The function performs comprehensive validation:
+* '''Player validation'' - Ensures unit is a valid PC (not NPC)
+* '''Type validation'' - Ensures amount parameter is integer type
+* '''Accounting mode validation'' - Only works when game server is in accounting mode
+* '''Access level validation'' - Requires appropriate zone access (root level typically required)
+* '''Transaction validation'' - Logs all transactions for audit purposes
+
+Note: The C implementation shows that this function:
+* Only works on player characters (PCs), not NPCs
+* Uses account_insert() for positive amounts (credits)
+* Uses account_withdraw() for negative amounts (debits)
+* Requires root access level to prevent unauthorized account modifications
+* All transactions are logged in a specially encrypted account log file
+* Uses getPCAccountData() to access underlying account data
+
+== Usage Notes ==
+* This function only works on player character units (UNIT_ST_PC type)
+* The amount parameter is in 1/100ths (100 = 1.00 currency units)
+* Positive amounts add funds to the player's account balance
+* Negative amounts subtract funds from the player's account balance
+* Requires appropriate zone access permissions (typically root level)
+* Game server must be configured in accounting mode for this function to work
+* All transactions are automatically logged for security and audit purposes
+* Use with caution - improper use may result in deletion of god or zone access
+* Always validate parameters and access levels before using this function
+* Consider using acc_balance field to check available funds before transactions
+
+== Related Functions ==
+* [[acc_balance]] - Field to read player's account balance
+* [[acc_total]] - Field to read player's total credit
+* [[transfermoney]] - Function to transfer physical money between units
+
+== Related Fields ==
+* [[acc_balance]] - Current account balance
+* [[acc_total]] - Total credit available
+* [[money]] - Physical currency carried by the player
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[accounting]] - Server accounting mode configuration

@@ -1,0 +1,81 @@
+= argument =
+
+== Description ==
+Returns the argument string of the command that triggered the DIL program. This variable contains the text that follows the command name when a player types a command.
+
+== Syntax ==
+ argument
+
+== Return Value ==
+: string
+: The argument string provided by the player after the command name. Returns an empty string if no argument was provided.
+
+== Examples ==
+ dilbegin example_command();
+ var
+  txt : string;
+ code
+ {
+  :start:
+  wait(SFB_CMD, command("hello"));
+  txt := argument;
+  if (txt == "")
+  {
+    sendtext("Hello there!<br/>", activator);
+  }
+  else
+  {
+    sendtext("Hello " + txt + "!<br/>", activator);
+  }
+ } dilend
+
+ dilbegin give_item();
+ var
+  target_name : string;
+  target : unitptr;
+ code
+ {
+  :start:
+  wait(SFB_CMD, command("give") and (self == target));
+  target_name := argument;
+  target := findunit(self.outside, target_name, FIND_UNIT_SURRO, null);
+  if (target.type == UNIT_ST_PC)
+  {
+    sendtext("You give the item to " + target.name + ".<br/>", activator);
+  }
+  else
+  {
+    sendtext("No one here by that name.<br/>", activator);
+  }
+ } dilend
+
+ dilbegin engrave();
+ var
+  text : string;
+  maxlength : integer;
+ code
+ {
+  :brieftext:
+  wait(SFB_DONE, command("say"));
+  text := argument;
+  maxlength := 20;
+  if (length(text) > maxlength)
+  {
+    exec("say That text is too long!", self);
+    goto brieftext;
+  }
+  exec("say Engraving: '" + text + "'", self);
+ } dilend
+
+== Notes ==
+* The argument variable is only meaningful when used within DIL programs triggered by commands (SFB_CMD)
+* It contains everything after the command name, including spaces
+* If no argument is provided, argument returns an empty string
+* Commonly used to parse player input for commands like "say", "tell", "give", etc.
+* The argument can be processed using string functions like getwords(), split(), etc.
+
+== See Also ==
+* command - For checking which command was used
+* SFB_CMD - For command-based DIL triggers
+* getwords - For parsing arguments into words
+* split - For splitting arguments by delimiter

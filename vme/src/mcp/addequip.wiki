@@ -1,0 +1,47 @@
+# addequip
+
+## Description
+Adds equipment to a unit's inventory or equipment slots. This function is used to equip items on characters (players or NPCs) and manage their equipment loadout.
+
+## Syntax
+```
+addequip(unit, equipment)
+```
+
+## Parameters
+- **unit** - The unit to equip the item on (player or NPC)
+- **equipment** - The equipment object to be added
+
+## Return Value
+Returns the updated unit with the new equipment. If the operation fails, returns the original unit unchanged.
+
+## Examples
+```dil
+// Equip a sword on a player
+addequip(self, sword);
+
+// Equip armor on an NPC
+addequip(guard, chainmail);
+
+// Equip multiple items
+addequip(warrior, helmet);
+addequip(warrior, shield);
+addequip(warrior, boots);
+
+// Use in mobile initialization
+addequip(self, load_object("sword@blacksmith"));
+addequip(self, load_object("leather_armor@blacksmith"));
+```
+
+## Notes
+- The equipment must be a valid equipment object
+- The function automatically determines the appropriate equipment slot
+- Handles equipment slot validation and assignment
+- Commonly used in mobile initialization and equipment shops
+- Will fail if the equipment slot is already occupied
+- Equipment bonuses and effects are applied automatically
+
+## See Also
+- [equipment](equipment.wiki) - Access equipment data
+- [equip](equip.wiki) - Manual equipment commands
+- [fits](fits.wiki) - Check if equipment fits unit

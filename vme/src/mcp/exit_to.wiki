@@ -1,0 +1,134 @@
+= exit_to =
+
+The '''exit_to''' field is a read-only array field available on room units that provides access to the destination rooms for each direction exit.
+
+== Syntax ==
+ room.exit_to[direction]
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| room.exit_to[direction] || unitptr || The destination room for the specified direction
+|}
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| direction || integer || Direction index (NORTH, EAST, SOUTH, WEST, UP, DOWN)
+|}
+
+== Return Value ==
+Returns a unit pointer to the destination room:
+* '''unitptr''' - The destination room unit if an exit exists in that direction
+* '''null''' - If no exit exists in that direction
+* '''fail''' - If the room unit is invalid or the direction index is out of range
+
+== Direction Constants ==
+The direction parameter accepts any of the following constants defined in values.h or vme.h:
+
+{| class="wikitable"
+! Constant !! Value !! Description
+|-
+| NORTH || 0 || North direction
+|-
+| EAST || 1 || East direction
+|-
+| SOUTH || 2 || South direction
+|-
+| WEST || 3 || West direction
+|-
+| UP || 4 || Up direction
+|-
+| DOWN || 5 || Down direction
+|}
+
+== Examples ==
+=== Basic Exit Check ===
+ dilbegin check_exits(room : unitptr);
+ code
+ {
+    if (room.exit_to[NORTH] != null) {
+       send("There is an exit to the north.");
+    }
+    if (room.exit_to[SOUTH] == null) {
+       send("There is no exit to the south.");
+    }
+    quit;
+ } dilend
+
+=== Clan Teleport Example ===
+ dilbegin clan_move(i:integer);
+ code
+ {
+    act("<div class='clan'>$1n vanishes.</div>",A_HIDEINV,self, null, null, TO_ROOM);
+    act("<div class='clan'>You are teleported.</div>", A_SOMEONE,self, null, null, TO_CHAR);
+    link(self, self.outside.exit_to[i]);
+    act("<div class='clan'>$1n appears from thin air.</div>",A_HIDEINV, self, null, null, TO_ROOM);
+    exec("look", self);
+    quit;
+ } dilend
+
+=== Exit Validation ===
+ dilbegin validate_exit(room : unitptr, direction : integer);
+ code
+ {
+    if (direction < 0 or direction > 5) {
+       send("Invalid direction.");
+       quit;
+    }
+    
+    if (room.exit_to[direction] != null) {
+       send("Exit leads to: " + room.exit_to[direction].title);
+    } else {
+       send("No exit in that direction.");
+    }
+    quit;
+ } dilend
+
+=== Room Light Check ===
+ dilbegin check_room_light(room : unitptr);
+ var
+    dir : integer;
+    buff : string;
+ code
+ {
+    buff := "Exits: ";
+    for (dir := 0; dir < 6; dir := dir + 1) {
+       if (room.exit_to[dir]) {
+          buff := buff + room.exit_to[dir].title + "<br/>";
+       }
+    }
+    send(buff);
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs comprehensive validation:
+* '''Room validation'' - Ensures the unit is a valid room type
+* '''Direction validation'' - Checks that the direction index is between 0 and MAX_EXIT
+* '''Exit existence'' - Returns null if no exit exists in the specified direction
+* '''Type validation'' - Returns fail if accessed on non-room units
+
+Note: The C implementation shows that the function uses is_in() to validate the direction range and ROOM_EXIT() macro to access the exit data structure.
+
+== Usage Notes ==
+* This field is read-only - you cannot change exit destinations through DIL
+* Only available on room units (UNIT_ST_ROOM type)
+* Always check for null return values before using the destination room
+* The field is commonly used for navigation, teleportation, and room validation
+* Use with exit_names[] and exit_info[] for complete exit management
+* Direction constants are defined in values.h and vme.h header files
+
+== Related Fields ==
+* [[exit_names]] - Array of exit name strings for each direction
+* [[exit_info]] - Array of exit flag bits for each direction
+* [[roomflags]] - Room property flags
+* [[movement]] - Room movement type
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[link]] - Function to move units between rooms
+* [[findroom]] - Function to find rooms by name
+* [[UNIT_ST_ROOM]] - Room unit type constant

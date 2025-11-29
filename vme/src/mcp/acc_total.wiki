@@ -1,0 +1,202 @@
+= acc_total =
+
+The '''acc_total''' field is a read-only integer field available on player character units that provides access to the player's total credit amount when the game is in accounting mode.
+
+== Syntax ==
+ player.acc_total
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| player.acc_total || integer || The player's total credit amount
+|}
+
+== Return Value ==
+Returns an integer representing the total credit:
+* '''integer''' - The current total credit amount
+* '''fail''' - If player unit is invalid, not a PC, or game not in accounting mode
+
+== Field Properties ==
+{| class="wikitable"
+! Property !! Type !! Description
+|-
+| Read/Write || Read-only (RO)
+|-
+| Unit Type || Only available on UNIT_ST_PC (player characters)
+|-
+| Accounting Mode || Only returns valid data when game is in accounting mode
+|-
+| Credit System || Represents total credit available to the player
+|}
+
+== Examples ==
+=== Basic Total Credit Check ===
+ dilbegin check_total_credit(player : unitptr);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    send("Your total credit: $" + itoa(player.acc_total));
+    quit;
+ } dilend
+
+=== Credit Analysis ===
+ dilbegin analyze_credit_status(player : unitptr);
+ var
+    balance_dollars : integer;
+    balance_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    balance_dollars := player.acc_balance / 100;
+    balance_cents := player.acc_balance % 100;
+    
+    send("=== ACCOUNT ANALYSIS ===");
+    send("Total Credit: $" + itoa(player.acc_total));
+    send("Current Balance: $" + itoa(balance_dollars) + "." + itoa(balance_cents)));
+    send("Available Credit: $" + itoa((player.acc_total - player.acc_balance) / 100) + "." + itoa((player.acc_total - player.acc_balance) % 100)));
+    quit;
+ } dilend
+
+=== Credit Limit Check ===
+ dilbegin check_credit_limit(player : unitptr, required_credit : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (player.acc_total >= required_credit) {
+       send("You have sufficient credit for this transaction.");
+       send("Required: $" + itoa(required_credit));
+       send("Available: $" + itoa(player.acc_total));
+    } else {
+       send("Insufficient credit for this transaction.");
+       send("Required: $" + itoa(required_credit));
+       send("Available: $" + itoa(player.acc_total));
+       send("Short: $" + itoa(required_credit - player.acc_total));
+    }
+    quit;
+ } dilend
+
+=== Credit Status Display ===
+ dilbegin show_credit_status(player : unitptr);
+ var
+    used_credit : integer;
+    available_credit : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    used_credit := player.acc_total - player.acc_balance;
+    available_credit := player.acc_balance;
+    
+    send("=== CREDIT STATUS ===");
+    send("Total Credit: $" + itoa(player.acc_total));
+    send("Used Credit: $" + itoa(used_credit));
+    send("Available Balance: $" + itoa(available_credit / 100) + "." + itoa(available_credit % 100)));
+    send("Available Credit: $" + itoa((player.acc_total - used_credit) / 100) + "." + itoa((player.acc_total - used_credit) % 100)));
+    quit;
+ } dilend
+
+=== Credit Comparison ===
+ dilbegin compare_credit(player1 : unitptr, player2 : unitptr);
+ code
+ {
+    if (player1.type != UNIT_ST_PC or player2.type != UNIT_ST_PC) {
+       send("Both units must be players.");
+       quit;
+    }
+    
+    send("Credit Comparison:");
+    send(player1.name + " total credit: $" + itoa(player1.acc_total));
+    send(player2.name + " total credit: $" + itoa(player2.acc_total));
+    
+    if (player1.acc_total > player2.acc_total) {
+       send(player1.name + " has more credit available.");
+    } else if (player1.acc_total < player2.acc_total) {
+       send(player2.name + " has more credit available.");
+    } else {
+       send("Both players have equal credit.");
+    }
+    quit;
+ } dilend
+
+=== Credit Management System ===
+ dilbegin credit_management(player : unitptr);
+ var
+    menu_choice : string;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    send("=== CREDIT MANAGEMENT ===");
+    send("1. Check Credit Status");
+    send("2. View Balance");
+    send("3. Exit");
+    
+    pause;
+    
+    if (menu_choice == "1") {
+       send("Total Credit Available: $" + itoa(player.acc_total));
+       send("Current Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100));
+    } else if (menu_choice == "2") {
+       send("Current Account Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100)));
+    } else {
+       send("Exiting credit management.");
+    }
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs validation:
+* '''Player validation'' - Ensures unit is a valid PC (not NPC)
+* '''Accounting mode validation'' - Only returns meaningful data when game is in accounting mode
+* '''Type validation'' - Returns fail if accessed on non-PC units
+
+Note: The C implementation shows that this field:
+* Only works on player characters (PCs), not NPCs
+* Uses getPCAccountData().getTotalCredit() to retrieve the actual total credit
+* Returns 0 if not in accounting mode or if account data is unavailable
+* The total credit represents the maximum credit the player can access
+* Works in conjunction with acc_balance for complete account information
+
+== Usage Notes ==
+* This field is read-only for reading total credit amount
+* Only available on player character units (UNIT_ST_PC type)
+* Only returns valid data when the game server is configured in accounting mode
+* The field represents the total credit limit or amount available to the player
+* The field is commonly used in credit management systems, purchase validation, and financial transactions
+* Use with acc_balance field to understand current vs. available credit
+* Use with acc_modify() function for modifying account balances
+* Accounting mode must be enabled in server configuration for this field to work properly
+* The total credit typically includes both used and available credit amounts
+
+== Related Fields ==
+* [[acc_balance]] - Current account balance
+* [[acc_modify]] - Function to modify account balance
+* [[money]] - Physical currency carried by the player
+
+== Related Functions ==
+* [[getPCAccountData]] - Internal function for account data access
+* [[account_insert]] - Internal function for account transactions
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[accounting]] - Server accounting mode configuration

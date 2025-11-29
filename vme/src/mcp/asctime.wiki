@@ -1,0 +1,63 @@
+= asctime =
+
+== Description ==
+Converts a Unix timestamp (seconds since epoch) into a human-readable ASCII date and time string.
+
+== Syntax ==
+ asctime(timestamp)
+
+== Parameters ==
+; timestamp : integer
+: The Unix timestamp to convert, representing seconds since January 1, 1970 (epoch).
+
+== Return Value ==
+: string
+: A formatted date and time string in the format "Mon Nov 18 18:49:08 1996"
+
+== Examples ==
+ dilbegin time_example();
+ var
+  current_time : integer;
+  time_string : string;
+ code
+ {
+  :start:
+  current_time := realtime;
+  time_string := asctime(current_time);
+  sendtext("Current time: " + time_string + "<br/>", activator);
+ } dilend
+
+ dilbegin birth_info();
+ var
+  pc : unitptr;
+  birth_time : string;
+ code
+ {
+  :start:
+  wait(SFB_CMD, command("birth") and (activator.type == UNIT_ST_PC));
+  pc := activator;
+  birth_time := asctime(pc.birth);
+  sendtext("Your character was created " + birth_time + ".<br/>", pc);
+ } dilend
+
+ dilbegin log_timestamp();
+ var
+  log_entry : string;
+ code
+ {
+  :start:
+  log_entry := "System check at " + asctime(realtime);
+  log(log_entry);
+ } dilend
+
+== Notes ==
+* The function uses the standard C library ctime() function internally
+* The returned string format is always: "Day Month Date HH:MM:SS Year"
+* Commonly used with realtime() to get current time
+* Useful for logging, displaying creation times, or timestamping events
+* The input parameter must be an integer representing Unix timestamp
+
+== See Also ==
+* realtime - For getting the current Unix timestamp
+* log - For logging timestamped messages
+* mud - For game-specific time functions

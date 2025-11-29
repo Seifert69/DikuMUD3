@@ -1,0 +1,207 @@
+= act =
+
+The '''act''' function is a built-in DIL (DikuMUD Interactive Language) function that sends formatted messages to characters in a room or specific targets.
+
+== Syntax ==
+ act(string message, integer visibility, unitptr char, unitptr medium, unitptr victim, integer to_whom)
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| message || string || The message to be sent (with formatters)
+|-
+| visibility || integer || Visibility flag for message delivery
+|-
+| char || unitptr || The character performing the action (for $1, $2, etc.)
+|-
+| medium || unitptr || The medium/object being used (for $m)
+|-
+| victim || unitptr || The target of the action (for $3, $4, etc.)
+|-
+| to_whom || integer || Who receives the message (target audience)
+|}
+
+== Return Value ==
+This function does not return a value (void).
+
+== Visibility Flags ==
+{| class="wikitable"
+! Flag !! Value !! Description
+|-
+| A_SOMEONE || Send to character only
+|-
+| A_HIDEINV || Hide action from others in room
+|-
+| A_ALWAYS || Send to everyone regardless of visibility
+|-
+| A_SOMEONE || Send to character and room (excluding character)
+|-
+| A_NOTVICT || Send to everyone except victim
+|-
+| TO_CHAR || Send to character only
+|-
+| TO_VICT || Send to victim only
+|-
+| TO_ROOM || Send to room (excluding character)
+|-
+| TO_REST || Send to everyone except those fighting or resting
+|-
+| TO_ALL || Send to everyone in room
+|}
+
+== Message Formatters ==
+The message string can contain special formatters that are replaced at runtime:
+
+{| class="wikitable"
+! Formatter !! Description !! Example
+|-
+| $1 || Replaced with character's name
+|-
+| $2 || Replaced with medium's name
+|-
+| $3 || Replaced with victim's name
+|-
+| $4 || Replaced with victim's title
+|-
+| $5 || Replaced with victim's name (gender-aware: he/she/it)
+|-
+| $6 || Replaced with victim's name (gender-aware: him/her/it)
+|-
+| $n || Replaced with victim's name (gender-aware: his/her/its)
+|-
+| $a || Replaced with victim's name (gender-aware: he/she/it)
+|-
+| $m || Replaced with victim's name (gender-aware: him/her/it)
+|-
+| $e || Replaced with victim's name (gender-aware: him/her/it)
+|-
+| $s || Replaced with victim's name (gender-aware: him/her/it)
+|-
+| $t || Replaced with victim's name (gender-aware: him/her/it)
+|}
+
+== Examples ==
+=== Basic Action Message ===
+ dilbegin simple_action(actor : unitptr, target : unitptr);
+ code
+ {
+    act("$1n picks up $2n.", A_SOMEONE, actor, null, target, TO_CHAR);
+    act("$1n picks up $2n.", A_NOTVICT, actor, null, target, TO_ROOM);
+    quit;
+ } dilend
+
+=== Combat Message ===
+ dilbegin combat_message(attacker : unitptr, defender : unitptr);
+ code
+ {
+    act("$1n attacks $3n with deadly force!", A_ALWAYS, attacker, null, defender, TO_VICT);
+    act("$1n attacks $3n with deadly force!", A_NOTVICT, attacker, null, defender, TO_ROOM);
+    quit;
+ } dilend
+
+=== Hidden Action ===
+ dilbegin hidden_action(actor : unitptr);
+ code
+ {
+    act("$1n vanishes into thin air.", A_HIDEINV, actor, null, null, TO_ROOM);
+    quit;
+ } dilend
+
+=== Room-Wide Message ===
+ dilbegin announce_to_room(message : string);
+ code
+ {
+    act(message, A_ALWAYS, self, null, null, TO_ROOM);
+    quit;
+ } dilend
+
+=== Complex Multi-Target Message ===
+ dilbegin complex_message(actor : unitptr, victim : unitptr, weapon : unitptr);
+ code
+ {
+    act("$1n attacks $3n with $2n, dealing a deadly blow!", A_ALWAYS, actor, weapon, victim, TO_NOTVICT);
+    act("$3n screams in agony!", A_SOMEONE, actor, null, victim, TO_VICT);
+    quit;
+ } dilend
+
+=== Message with Formatters ===
+ dilbegin formatted_message(actor : unitptr, victim : unitptr);
+ code
+ {
+    act("$1n smiles at $3n.", A_SOMEONE, actor, null, victim, TO_CHAR);
+    act("$1n smiles at $3n.", A_NOTVICT, actor, null, victim, TO_ROOM);
+    quit;
+ } dilend
+
+=== Gender-Aware Messages ===
+ dilbegin gender_aware_message(actor : unitptr, victim : unitptr);
+ code
+ {
+    act("$1n pats $5n on the head.", A_SOMEONE, actor, null, victim, TO_CHAR);
+    act("$1n pats $5m on the head.", A_SOMEONE, actor, null, victim, TO_ROOM);
+    quit;
+ } dilend
+
+=== Conditional Messaging ===
+ dilbegin conditional_message(actor : unitptr, target : unitptr);
+ var
+    message : string;
+ code
+ {
+    if (target != null) {
+       message := "$1n gives $2n to $3n.";
+       act(message, A_SOMEONE, actor, null, target, TO_CHAR);
+       act(message, A_NOTVICT, actor, null, target, TO_ROOM);
+    } else {
+       message := "$1n looks around.";
+       act(message, A_SOMEONE, actor, null, null, TO_ROOM);
+    }
+    quit;
+ } dilend
+
+=== Arrest Example ===
+ dilbegin arrest_example(deputy : unitptr, criminal : unitptr, cuffs : unitptr);
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, criminal, TO_CHAR);
+    act("$1n surprises you and puts $2n around your wrists.", A_SOMEONE, deputy, cuffs, criminal, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, criminal, TO_NOTVICT);
+    quit;
+ } dilend
+
+== Error Handling ==
+The function performs validation:
+* '''Message validation'' - Ensures message parameter is a string
+* '''Type validation'' - Ensures visibility, char, medium, victim are appropriate types
+* '''Unit validation'' - Ensures char, medium, and victim are valid unit pointers
+* '''Target validation'' - Ensures victim is valid when using TO_VICT flag
+
+Note: The C implementation shows that this function:
+* Supports multiple parameter combinations (from 2 to 6 parameters)
+* Uses formatters for dynamic message content
+* Handles gender-aware name substitution
+* Performs complex visibility calculations based on flags
+* Returns DILV_SP (string) for the generated message
+
+== Usage Notes ==
+* This function is the primary method for sending messages to players
+* The message parameter supports formatters for dynamic content
+* Visibility flags control who sees the message
+* The function is commonly used for combat, social interactions, and environmental descriptions
+* Gender-aware formatters ($5, $6, etc.) automatically adapt to victim's gender
+* The function is more efficient than multiple send() calls for complex messages
+* Use appropriate visibility flags to control message flow and prevent spam
+* The char parameter is required for most visibility modes except TO_ROOM and TO_ALL
+
+== Related Functions ==
+* [[send]] - Send message to specific character
+* [[sendtext]] - Send text to character without formatting
+* [[sendto]] - Send message to specific unit
+* [[sendtoall]] - Send message to all units in local environment
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[visibility]] - Unit visibility field
+* [[position]] - Character position field
+* [[A_*]] - Action visibility constants

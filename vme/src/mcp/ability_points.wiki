@@ -1,0 +1,217 @@
+= ability_points =
+
+The '''ability_points''' field is a read-write integer field available on player character units that represents the number of unused ability points the player has available for training.
+
+== Syntax ==
+ player.ability_points
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| player.ability_points || integer || The number of unused ability points available
+|}
+
+== Return Value ==
+Returns an integer representing available ability points:
+* '''integer''' - The current number of unused ability points
+* '''fail''' - If player unit is invalid or not a PC
+
+== Field Properties ==
+{| class="wikitable"
+! Property !! Type !! Description
+|-
+| Read/Write || Read-write (RW)
+|-
+| Unit Type || Only available on UNIT_ST_PC (player characters)
+|-
+| Default Value || Typically starts at 0 or a set amount
+|}
+
+== Examples ==
+=== Basic Points Check ===
+ dilbegin check_ability_points(player : unitptr);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    send("You have " + itoa(player.ability_points) + " unused ability points.");
+    quit;
+ } dilend
+
+=== Points Award ===
+ dilbegin award_ability_points(player : unitptr, amount : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (amount > 0) {
+       player.ability_points := player.ability_points + amount;
+       send("You gain " + itoa(amount) + " ability points!");
+    } else {
+       send("Invalid amount.");
+    }
+    quit;
+ } dilend
+
+=== Points Spend ===
+ dilbegin spend_ability_points(player : unitptr, amount : integer);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (amount < 0) {
+       send("Invalid amount.");
+       quit;
+    }
+    
+    if (player.ability_points >= amount) {
+       player.ability_points := player.ability_points - amount;
+       send("You spend " + itoa(amount) + " ability points.");
+       send("Remaining: " + itoa(player.ability_points));
+    } else {
+       send("You don't have enough ability points.");
+       send("You have: " + itoa(player.ability_points) + " available.");
+    }
+    quit;
+ } dilend
+
+=== Training Validation ===
+ dilbegin can_train_abilities(player : unitptr);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    if (player.ability_points >= 10) {
+       send("You have enough ability points for advanced training.");
+    } else if (player.ability_points >= 5) {
+       send("You have some ability points available for training.");
+    } else if (player.ability_points > 0) {
+       send("You have a few ability points available.");
+    } else {
+       send("You have no ability points available.");
+    }
+    quit;
+ } dilend
+
+=== Score Command Integration ===
+ dilbegin do_score(arg : string);
+ external
+    string titlestring();
+    string agestring(rce : integer);
+    string playingstring();
+ var
+    i : integer;
+ code
+ {
+    if (arg != "") {
+       if (arg == "hp") {
+          sendtext(itoa(self.hp) + "<br/>", self);
+          quit;
+       } else if (arg == "ep") {
+          sendtext(itoa(self.endurance) + "<br/>", self);
+          quit;
+       } else if (arg == "mp") {
+          sendtext(itoa(self.mana) + "<br/>", self);
+          quit;
+       }
+    }
+    
+    if (self.position == POSITION_FIGHTING) {
+       sendtext("Not while fighting!<br/>", self);
+       quit;
+    }
+    
+    if ((self.ability_points >= 10) or (self.skill_points >= 10)) {
+       sendtext("<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>", self);
+    }
+    
+    sendtext("<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
+          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
+          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
+          +"<div class='score'>You have "+itoa(self.ability_points)+" ability points available.</div>", self);
+    quit;
+ } dilend
+
+=== Points Reset ===
+ dilbegin reset_ability_points(player : unitptr);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    player.ability_points := 0;
+    send("Your ability points have been reset to 0.");
+    quit;
+ } dilend
+
+=== Points for Level Up ===
+ dilbegin level_up_bonus(player : unitptr);
+ var
+    bonus_points : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    bonus_points := player.level / 5; /* 1 point per 5 levels */
+    player.ability_points := player.ability_points + bonus_points;
+    
+    send("You gain " + itoa(bonus_points) + " ability points for reaching level " + itoa(player.level) + "!");
+    send("Total ability points: " + itoa(player.ability_points));
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs validation:
+* '''Player validation'' - Ensures unit is a valid PC (not NPC)
+* '''Type validation'' - Returns fail if accessed on non-PC units
+* '''Range validation'' - No explicit range validation, but practical limits apply
+
+Note: The C implementation shows that this field:
+* Only works on player characters (PCs), not NPCs
+* Returns a reference (DILV_SINT4R) to the actual ability points value
+* Uses getAbilityPointsPtr() function to access the underlying data
+* Is a read-write field, allowing both reading and modification
+
+== Usage Notes ==
+* This field is read-write for both reading and modifying ability points
+* Only available on player character units (UNIT_ST_PC type)
+* Ability points are typically awarded for leveling up, completing quests, or special events
+* The field is commonly used in training systems, character advancement, and point management
+* Often used together with skill_points field for total practice point management
+* Ability points are spent to improve base abilities through training or practice
+* The field persists across saves and character logins
+* Typical values range from 0 to potentially high numbers depending on character progression
+
+== Related Fields ==
+* [[skill_points]] - Number of unused skill points available
+* [[abilities]] - Array of current ability score values
+* [[level]] - Character's current level
+* [[experience]] - Character's experience points
+
+== Related Functions ==
+* [[reset_race]] - Function that may reset ability points
+* [[reset_level]] - Function that may reset ability points
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[practice]] - Command for spending ability/skill points
+* [[abilities]] - Ability scores array field

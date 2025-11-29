@@ -1,0 +1,204 @@
+= acc_balance =
+
+The '''acc_balance''' field is a read-only integer field available on player character units that provides access to the player's account balance when the game is in accounting mode.
+
+== Syntax ==
+ player.acc_balance
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| player.acc_balance || integer || The player's account balance in 1/100ths of currency units
+|}
+
+== Return Value ==
+Returns an integer representing the account balance:
+* '''integer''' - The current account balance (in 1/100ths, so 100 = 1.00 currency units)
+* '''fail''' - If player unit is invalid, not a PC, or game not in accounting mode
+
+== Field Properties ==
+{| class="wikitable"
+! Property !! Type !! Description
+|-
+| Read/Write || Read-only (RO)
+|-
+| Unit Type || Only available on UNIT_ST_PC (player characters)
+|-
+| Accounting Mode || Only returns valid data when game is in accounting mode
+|-
+| Value Scale || Returns balance in 1/100ths (100 = 1.00 currency units)
+|}
+
+== Examples ==
+=== Basic Balance Check ===
+ dilbegin check_balance(player : unitptr);
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    send("Your account balance: " + itoa(player.acc_balance / 100) + "." + 
+          itoa(player.acc_balance % 100));
+    quit;
+ } dilend
+
+=== Purchase Validation ===
+ dilbegin can_afford(player : unitptr, cost : integer);
+ var
+    balance_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    balance_cents := player.acc_balance;
+    
+    if (balance_cents >= cost) {
+       send("You can afford this purchase.");
+       send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100)));
+       send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100)));
+    } else {
+       send("You cannot afford this purchase.");
+       send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100)));
+       send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100)));
+       send("Needed: " + itoa((cost - balance_cents) / 100) + "." + itoa((cost - balance_cents) % 100)));
+    }
+    quit;
+ } dilend
+
+=== Balance Display ===
+ dilbegin show_account_balance(player : unitptr);
+ var
+    balance_dollars : integer;
+    balance_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    balance_dollars := player.acc_balance / 100;
+    balance_cents := player.acc_balance % 100;
+    
+    send("=== ACCOUNT BALANCE ===");
+    send("Current Balance: $" + itoa(balance_dollars) + "." + 
+          itoa(balance_cents));
+    send("Balance in cents: " + itoa(player.acc_balance));
+    quit;
+ } dilend
+
+=== Transaction Processing ===
+ dilbegin process_transaction(player : unitptr, amount : integer);
+ var
+    new_balance : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    new_balance := player.acc_balance + amount;
+    
+    send("Transaction processed:");
+    send("  Previous balance: $" + itoa(player.acc_balance / 100) + "." + 
+          itoa(player.acc_balance % 100));
+    send("  Transaction amount: $" + itoa(amount / 100) + "." + 
+          itoa(amount % 100));
+    send("  New balance: $" + itoa(new_balance / 100) + "." + 
+          itoa(new_balance % 100)));
+    
+    quit;
+ } dilend
+
+=== Fountain Payment System ===
+ dilbegin fountain_payment(player : unitptr, price : integer);
+ var
+    cost_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    cost_cents := price * 100;
+    
+    if (player.acc_balance >= cost_cents) {
+       send("You pay $" + itoa(price) + " for the drink.");
+       acc_modify(player, -cost_cents);
+       send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + 
+             "." + itoa((player.acc_balance - cost_cents) % 100));
+    } else {
+       send("You don't have enough money for this drink.");
+       send("Cost: $" + itoa(price));
+       send("Your balance: $" + itoa(player.acc_balance / 100) + "." + 
+             itoa(player.acc_balance % 100)));
+    }
+    quit;
+ } dilend
+
+=== Account Information Display ===
+ dilbegin account_info(player : unitptr);
+ var
+    balance_dollars : integer;
+    balance_cents : integer;
+ code
+ {
+    if (player.type != UNIT_ST_PC) {
+       send("This function only works on players.");
+       quit;
+    }
+    
+    balance_dollars := player.acc_balance / 100;
+    balance_cents := player.acc_balance % 100;
+    
+    send("Account Information for " + player.name);
+    send("================================");
+    send("Current Balance: $" + itoa(balance_dollars) + "." + itoa(balance_cents));
+    send("Balance (in cents): " + itoa(player.acc_balance));
+    send("================================");
+    quit;
+ } dilend
+
+== Error Handling ==
+The field performs validation:
+* '''Player validation'' - Ensures unit is a valid PC (not NPC)
+* '''Accounting mode validation'' - Only returns meaningful data when game is in accounting mode
+* '''Type validation'' - Returns fail if accessed on non-PC units
+
+Note: The C implementation shows that this field:
+* Only works on player characters (PCs), not NPCs
+* Uses getPCAccountData().getAccountBalance() to retrieve the actual balance
+* Returns 0 if not in accounting mode or if account data is unavailable
+* The balance is stored in 1/100ths of currency units for precise financial tracking
+
+== Usage Notes ==
+* This field is read-only for reading account balance
+* Only available on player character units (UNIT_ST_PC type)
+* Only returns valid data when the game server is configured in accounting mode
+* The balance value is in 1/100ths (100 = 1.00 currency units) for precision
+* The field is commonly used in payment systems, purchase validation, and financial transactions
+* Use with acc_modify() function for modifying account balances
+* The field works in conjunction with acc_total field for complete account information
+* Accounting mode must be enabled in server configuration for this field to work properly
+
+== Related Fields ==
+* [[acc_total]] - Total credit available to the player
+* [[acc_modify]] - Function to modify account balance
+* [[money]] - Physical currency carried by the player
+
+== Related Functions ==
+* [[acc_modify]] - Function to modify player account balance
+* [[getPCAccountData]] - Internal function for account data access
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[accounting]] - Server accounting mode configuration

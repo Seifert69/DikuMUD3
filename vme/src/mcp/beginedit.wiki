@@ -1,0 +1,60 @@
+= beginedit =
+
+== Description ==
+Puts a player character into editing mode. This function enables the player to use text editing commands and sets up the editing state.
+
+== Syntax ==
+ beginedit(unit)
+
+== Parameters ==
+; unit : unitptr
+: The player character to put into editing mode
+
+== Return Value ==
+When the player finishes editing, an SFB_EDIT message is sent to continue the DIL program.
+
+== Examples ==
+ dilbegin edit_description();
+ var
+  formatted_text : string;
+ code
+ {
+  :start:
+  beginedit(self);
+  wait(SFB_EDIT, self == activator);
+  formatted_text := textformat(argument);
+  addextra(self.extra, "general", formatted_text);
+  sendtext("Description updated.<br/>", self);
+ } dilend
+
+ dilbegin board_edit();
+ var
+  board : unitptr;
+  message : string;
+ code
+ {
+  :start:
+  board := findunit(self.outside, "board", FIND_UNIT_SURRO, null);
+  if (board.type == UNIT_ST_OBJ and board.objecttype == ITEM_BOARD)
+  {
+    beginedit(self);
+    wait(SFB_EDIT, self == activator);
+    message := argument;
+    // Add message to board logic here
+    sendtext("Message posted to board.<br/>", self);
+  }
+ } dilend
+
+== Notes ==
+* Only works on player characters (PC units)
+* Player must have a descriptor to enter editing mode
+* While in editing mode, the player's 'editing' flag is set to true
+* When editing is complete, an SFB_EDIT trigger is sent
+* Use killedit() to force exit from editing mode if needed
+* Commonly used for board editing, description editing, and text input
+* The player can use standard editor commands while in edit mode
+
+== See Also ==
+* killedit - For forcing exit from edit mode
+* textformat - For formatting text input
+* SFB_EDIT - For the editing trigger flag

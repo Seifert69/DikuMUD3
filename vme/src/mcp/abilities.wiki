@@ -1,0 +1,189 @@
+= abilities =
+
+The '''abilities''' field is a read-only array field available on character units (PCs and NPCs) that provides access to the character's ability scores.
+
+== Syntax ==
+ character.abilities[ability_index]
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| character.abilities[ability_index] || integer || The ability score for specified ability
+|}
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ability_index || integer || Ability index (ABIL_* constant)
+|}
+
+== Return Value ==
+Returns an integer representing the ability score:
+* '''integer''' - The ability score value
+* '''fail''' - If character unit is invalid or ability index is out of range
+
+== Ability Constants ==
+The ability_index parameter accepts any of the following constants defined in values.h or vme.h:
+
+{| class="wikitable"
+! Constant !! Description
+|-
+| ABIL_STR || Strength - Physical power and damage
+|-
+| ABIL_DEX || Dexterity - Agility and coordination
+|-
+| ABIL_CON || Constitution - Health and stamina
+|-
+| ABIL_CHA || Charisma - Social interaction and leadership
+|-
+| ABIL_BRA || Brains - Intelligence and reasoning
+|-
+| ABIL_MAG || Magic - Magical aptitude and power
+|-
+| ABIL_DIV || Divine - Divine connection and faith
+|-
+| ABIL_HP || Hit Points - Health and vitality
+|}
+
+== Examples ==
+=== Basic Ability Check ===
+ dilbegin check_strength(character : unitptr);
+ code
+ {
+    if (character.abilities[ABIL_STR] > 15) {
+       send("You are very strong!");
+    } else {
+       send("You could use more strength training.");
+    }
+    quit;
+ } dilend
+
+=== Skill Check Example ===
+ dilbegin skill_check(character : unitptr, difficulty : integer);
+ var
+    dex_check : integer;
+ code
+ {
+    dex_check := character.abilities[ABIL_DEX];
+    if (openroll(5, 100) + dex_check > difficulty) {
+       send("You succeed at the dexterity check!");
+    } else {
+       send("You fail the dexterity check.");
+    }
+    quit;
+ } dilend
+
+=== NPC Ability Setup ===
+ dilbegin create_guard();
+ code
+ {
+    self.abilities[ABIL_STR] := 150;
+    self.abilities[ABIL_DEX] := 120;
+    self.abilities[ABIL_CON] := 140;
+    self.abilities[ABIL_BRA] := 100;
+    position_update(self);
+    quit;
+ } dilend
+
+=== Combat Skill Calculation ===
+ dilbegin combat_skill(attacker : unitptr, defender : unitptr);
+ var
+    attack_skill, defense_skill : integer;
+ code
+ {
+    attack_skill := (attacker.abilities[ABIL_DEX] + attacker.abilities[ABIL_STR]) / 2;
+    defense_skill := (defender.abilities[ABIL_DEX] * 2) / 3;    
+    if (openroll(5, 100) + attack_skill > openroll(5, 100) + defense_skill) {
+       send("Attack hits!");
+    } else {
+       send("Attack misses!");
+    }
+    quit;
+ } dilend
+
+=== Item Recharge Example ===
+ dilbegin item_charge(base_charge : integer);
+ external
+   string accept_dil@function (pc:unitptr,s:string);
+ var
+    tcost : integer;
+    thing : unitptr;
+    pc : unitptr;
+    answer : string;
+    mn : string;
+ code
+ {
+    heartbeat := PULSE_SEC*5;
+    self.spells[SPL_RECONSTRUCT] := 200;
+    self.abilities[ABIL_BRA] := 150;
+    self.abilities[ABIL_MAG] := 150;   
+    position_update(self);
+ :start:
+    wait (SFB_DONE, (command("give") and (self==target)));
+    pc := activator;
+    thing := medium;
+    secure(pc, lost_pc);
+    secure(thing, lost_pc);
+    
+    if (not visible(self, pc)) {
+       exec("say I only do business with people I can see.", self);
+       exec("drop " + (thing.name), self);
+       goto lost_pc;
+    }
+    tcost := base_charge * 160;
+    mn := moneystring(tcost, 0);
+    exec("say It will cost you " + mn + " for me to recharge that for you.", self);
+    answer := accept_dil@function(pc, "Are you sure you want me to recharge it?");
+    pause;
+    if (answer == "no") {
+       exec("say Very well. Come back to me when you want it recharged.", self);
+       goto give_back;
+    }
+    if (transfermoney(pc, self, tcost)) {
+       exec(", touches " + thing.name + " softly and begins to chant...", self);
+       exec("say There, hope you like it, " + pc.name + "!", self);
+    } else {
+       exec("say You can't afford my services right now.", self);
+    }
+ :give_back:
+    act(self.name + " returns your " + thing.name + " to you.", A_ALWAYS, pc, null, null, TO_CHAR);
+    link(thing, pc);
+ :lost_pc:
+    unsecure(pc);
+    unsecure(thing);
+    goto start;
+ } dilend
+
+== Error Handling ==
+The field performs comprehensive validation:
+* '''Character validation'' - Ensures the unit is a valid character type
+* '''Index validation'' - Checks that ability index is between 0 and ABIL_TREE_MAX - 1
+* '''Type validation'' - Returns fail if accessed on non-character units
+
+Note: The C implementation shows different behavior for PCs vs NPCs:
+* For PCs: Returns integer value or reference depending on zone access level
+* For NPCs: Returns unsigned integer reference
+* Uses is_in() to validate ability index range
+
+== Usage Notes ==
+* This field is read-only for reading ability scores
+* Only available on character units (UNIT_ST_PC and UNIT_ST_NPC types)
+* Ability scores are typically in range 0-255, with higher values being better
+* The field is commonly used for skill checks, combat calculations, and character validation
+* Use with position_update() after modifying abilities on NPCs
+* Ability constants are defined in values.h and vme.h header files
+
+== Related Fields ==
+* [[weapons]] - Array of weapon skill values
+* [[charflags]] - Character flags and affects
+* [[level]] - Character level
+* [[exp]] - Character experience points
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[position_update]] - Function to update character after ability changes
+* [[openroll]] - Function for dice rolls and skill checks
+* [[UNIT_ST_PC]] - Player character unit type
+* [[UNIT_ST_NPC]] - Non-player character unit type

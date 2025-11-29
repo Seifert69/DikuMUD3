@@ -1,0 +1,41 @@
+# addextra
+
+## Description
+Adds a new string to a unit's extra description list. This function is used to add custom descriptions, keywords, and other string data to units (players, NPCs, objects, rooms).
+
+## Syntax
+```
+addextra(unit, index, string)
+```
+
+## Parameters
+- **unit** - The unit to add the extra description to (player, NPC, object, or room)
+- **index** - The index position in the extra description list (0-based)
+- **string** - The string content to add to the extra description
+
+## Return Value
+Returns the updated extra description list. If the operation fails, returns the original list unchanged.
+
+## Examples
+```dil
+// Add a custom description to a player
+addextra(self, 0, "A tall warrior with battle scars.");
+
+// Add keywords to an object
+addextra(sword, 1, "sword blade sharp weapon");
+
+// Add room description
+addextra(room, 0, "A dark, damp cave with echoes dripping water.");
+```
+
+## Notes
+- The index determines the position in the extra description list
+- Use 0 for the main description, higher numbers for additional descriptions
+- This function is commonly used for dynamic content creation
+- The function handles memory allocation automatically
+- Existing extra descriptions at the specified index will be replaced
+
+## See Also
+- [delstr](delstr.wiki) - Delete strings from extra descriptions
+- [extra](extra.wiki) - Access extra description data
+- [addstring](addstring.wiki) - Add strings to string lists

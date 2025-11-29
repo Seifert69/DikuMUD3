@@ -1,0 +1,157 @@
+= equipment =
+
+The '''equipment''' function is a built-in DIL (DikuMUD Interactive Language) function that retrieves the unit (object) currently equipped in a specific wear position on a character.
+
+== Syntax ==
+ unitptr equipment(unitptr character, integer wear_position)
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| character || unitptr || The character (PC or NPC) to search for equipped items
+|-
+| wear_position || integer || The equipment position to check (WEAR_* constant)
+|}
+
+== Return Value ==
+Returns a unit pointer to the equipped item:
+* '''unitptr''' - The item equipped in the specified position
+* '''null''' - If no item is equipped in that position
+* '''fail''' - If the character parameter is invalid or not a character unit
+
+== WEAR_* Constants ==
+The wear_position parameter accepts any of the following constants defined in values.h or vme.h:
+
+{| class="wikitable"
+! Constant !! Description
+|-
+| WEAR_FINGER_L || Left finger
+|-
+| WEAR_FINGER_R || Right finger
+|-
+| WEAR_NECK_1 || First neck slot
+|-
+| WEAR_NECK_2 || Second neck slot
+|-
+| WEAR_BODY || Body/armor slot
+|-
+| WEAR_HEAD || Head slot
+|-
+| WEAR_LEGS || Legs slot
+|-
+| WEAR_FEET || Feet slot
+|-
+| WEAR_HANDS || Hands slot
+|-
+| WEAR_ARMS || Arms slot
+|-
+| WEAR_ABOUT || About body (cloaks)
+|-
+| WEAR_WAIST || Waist slot
+|-
+| WEAR_WRIST_L || Left wrist
+|-
+| WEAR_WRIST_R || Right wrist
+|-
+| WEAR_WIELD || Weapon wield slot
+|-
+| WEAR_HOLD || Held item slot
+|-
+| WEAR_SHIELD || Shield slot
+|-
+| WEAR_CHEST || Chest slot
+|-
+| WEAR_BACK || Back slot
+|-
+| WEAR_EAR_L || Left ear
+|-
+| WEAR_EAR_R || Right ear
+|-
+| WEAR_ANKLE_L || Left ankle
+|-
+| WEAR_ANKLE_R || Right ankle
+|}
+
+== Examples ==
+=== Basic Equipment Check ===
+ dilbegin check_weapon(player : unitptr);
+ var
+    weapon : unitptr;
+ code
+ {
+    weapon := equipment(player, WEAR_WIELD);
+    if (weapon != null) {
+       send("You are wielding " + weapon.name + ".", player);
+    } else {
+       send("You are not wielding anything.", player);
+    }
+    return;
+ } dilend
+
+=== Equipment Removal ===
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname : string;
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ); /* Do this to activate the DILs */
+    return;
+ } dilend
+
+=== Multiple Equipment Check ===
+ dilbegin check_armor(character : unitptr);
+ var
+    armor, helmet, boots : unitptr;
+ code
+ {
+    armor := equipment(character, WEAR_BODY);
+    helmet := equipment(character, WEAR_HEAD);
+    boots := equipment(character, WEAR_FEET);
+    
+    if ((armor != null) and (helmet != null) and (boots != null)) {
+       send("You are fully equipped with armor.", character);
+    } else {
+       send("You are missing some armor pieces.", character);
+    }
+    return;
+ } dilend
+
+== Error Handling ==
+The function performs comprehensive error checking:
+* '''Type validation'' - Ensures first parameter is unitptr, second is integer
+* '''Unit validation'' - Checks that the character unit is valid and is actually a character
+* '''Null handling'' - Returns null if no item is equipped in the position
+* '''Fail handling'' - Returns fail if parameters are invalid
+
+Note: The C implementation shows that the function validates the character unit using the isChar() method to ensure it's a valid character before proceeding with the equipment lookup.
+
+== Related Functions ==
+* [[addequip]] - Equips an item in a specific position
+* [[unequip]] - Removes an equipped item
+* [[fits]] - Checks if an item can be equipped in a position
+
+== Usage Notes ==
+* The function only works on character units (PCs and NPCs), not on rooms or objects
+* Always check for null return values before using the returned unit pointer
+* The function is read-only - it does not modify equipment state
+* Use with addequip() and unequip() for complete equipment management
+* WEAR_* constants are defined in values.h and vme.h header files
+* The function is commonly used in equipment management, combat checks, and item validation
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[WEAR_* constants]] - Equipment position constants
+* [[manipulate]] - Object manipulation flags for equipment validation

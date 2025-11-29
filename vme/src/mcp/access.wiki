@@ -1,0 +1,213 @@
+= access =
+
+The '''access''' function is a built-in DIL (DikuMUD Interactive Language) function that checks if a player has a specific access level for a given zone.
+
+== Syntax ==
+ access(unitptr zone)
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| zone || zoneptr || The zone to check access level for
+|}
+
+== Return Value ==
+Returns an integer representing the access level:
+* '''integer''' - The access level of the zone (0 = no access, higher numbers = more access)
+* '''fail''' - If zone parameter is invalid or null
+
+== Functionality ==
+The access function performs the following operations:
+* '''Zone validation'' - Ensures the zone parameter is valid
+* '''Access level retrieval'' - Gets the access level set for the zone
+* '''Player comparison'' - Compares player's level against zone's access requirements
+* '''Boolean result'' - Returns TRUE if player has sufficient access, FALSE otherwise
+
+== Access Levels ==
+Access levels are typically defined as follows:
+{| class="wikitable"
+! Level !! Description !! Typical Use
+|-
+| 0 || No access || Basic player access
+|-
+| 1 || Limited access || Restricted areas
+|-
+| 2 || Builder access || Zone building tools
+|-
+| 3 || Administrator access || Full system access
+|-
+| 4+ || Root/Immortal access || Complete control
+|}
+
+== Examples ==
+=== Basic Access Check ===
+ dilbegin check_zone_access(player : unitptr, zone_name : string);
+ var
+    target_zone : zoneptr;
+    access_level : integer;
+ code
+ {
+    target_zone := findsymbolic(zone_name);
+    if (target_zone == null) {
+       send("Zone '" + zone_name + "' not found.");
+       quit;
+    }
+    
+    access_level := access(target_zone);
+    
+    if (access(player, target_zone)) {
+       send("You have access to zone '" + zone_name + "'.");
+    } else {
+       send("You do not have access to zone '" + zone_name + "'.");
+    }
+    quit;
+ } dilend
+
+=== Administrative Access Check ===
+ dilbegin admin_area_check(player : unitptr);
+ var
+    admin_zone : zoneptr;
+ code
+ {
+    admin_zone := findsymbolic("admin_zone");
+    if (admin_zone == null) {
+       send("Admin zone not found.");
+       quit;
+    }
+    
+    if (access(player, admin_zone)) {
+       send("You have administrative access.");
+    } else {
+       send("You lack administrative access.");
+    }
+    quit;
+ } dilend
+
+=== Zone Entry Validation ===
+ dilbegin zone_entry_control(player : unitptr, target_zone : string);
+ var
+    zone : zoneptr;
+    player_level : integer;
+    required_level : integer;
+ code
+ {
+    zone := findsymbolic(target_zone);
+    if (zone == null) {
+       send("Target zone not found.");
+       quit;
+    }
+    
+    player_level := player.level;
+    required_level := zone.access;
+    
+    if (player_level >= required_level) {
+       send("You may enter this zone.");
+    } else {
+       send("You need level " + itoa(required_level) + " to enter this zone.");
+    }
+    quit;
+ } dilend
+
+=== Multi-Zone Access Check ===
+ dilbegin check_all_zones(player : unitptr);
+ var
+    current_zone : zoneptr;
+    zone_name : string;
+    access_granted : integer;
+ code
+ {
+    current_zone := player.outside.zoneidx;
+    zone_name := current_zone.name;
+    
+    if (access(player, current_zone)) {
+       access_granted := 1;
+    } else {
+       access_granted := 0;
+    }
+    
+    send("Zone: " + zone_name);
+    if (access_granted) {
+       send("Status: ACCESS GRANTED");
+    } else {
+       send("Status: ACCESS DENIED");
+    }
+    quit;
+ } dilend
+
+=== Security Level Check ===
+ dilbegin security_check(player : unitptr);
+ var
+    i : integer;
+    zone : zoneptr;
+    access_level : integer;
+ code
+ {
+    zone := zhead();
+    
+    send("=== SECURITY AUDIT ===");
+    for (i := 0; i < 10; i := i + 1) {
+       if (zone != null) {
+          access_level := access(player, zone);
+          send("Zone " + zone.name + " - Access Level: " + itoa(access_level));
+          zone := zone.next;
+       } else {
+          send("Zone list exhausted.");
+          break;
+       }
+    }
+    quit;
+ } dilend
+
+=== Access-Based Command Control ===
+ dilbegin access_command_gate(player : unitptr, command_name : string);
+ var
+    cmd_zone : zoneptr;
+ code
+ {
+    cmd_zone := findsymbolic("command_zone");
+    if (cmd_zone == null) {
+       send("Command zone not found.");
+       quit;
+    }
+    
+    if (access(player, cmd_zone)) {
+       exec(command_name, player);
+    } else {
+       send("You lack access to use command '" + command_name + "'.");
+    }
+    quit;
+ } dilend
+
+== Error Handling ==
+The function performs validation:
+* '''Zone validation'' - Ensures zone parameter is valid and not null
+* '''Type validation'' - Returns fail if zone is not a valid zoneptr
+* '''Access level retrieval'' - Safely gets the zone's access level
+
+Note: The C implementation shows that this function:
+* Uses getAccessLevel() method to retrieve the zone's access level
+* Compares the player's level against the zone's access requirement
+* Returns TRUE (1) if player level >= zone access level, FALSE (0) otherwise
+* The function is commonly used for zone security and access control
+
+== Usage Notes ==
+* This function is used for zone-based access control
+* Access levels are typically defined in zone configuration files
+* The function only checks access - it does not grant or modify access
+* Use with zoneptr functions to navigate through zones
+* Commonly used in zone entry points, command restrictions, and area security
+* The function works with player units (PCs), not NPCs or other unit types
+* Access levels are cumulative - higher levels include all lower level permissions
+* Zone access is separate from character level or other security measures
+
+== Related Functions ==
+* [[findsymbolic]] - Function to find zones by name
+* [[zhead]] - Function to get the first zone in the list
+* [[zoneptr]] - Zone pointer type and related fields
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[zoneptr]] - Zone pointer type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[access]] - Zone access level field

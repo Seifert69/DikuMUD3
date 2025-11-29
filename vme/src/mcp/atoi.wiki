@@ -1,0 +1,68 @@
+= atoi =
+
+== Description ==
+Converts a string containing a numeric value into an integer. This function parses the beginning of a string to extract and return the integer value it contains.
+
+== Syntax ==
+ atoi(string)
+
+== Parameters ==
+; string : string
+: The string to convert to an integer. The string should contain numeric characters.
+
+== Return Value ==
+: integer
+: The integer value extracted from the string. If the string does not begin with a valid number, returns 0.
+
+== Examples ==
+ dilbegin number_conversion();
+ var
+  text : string;
+  number : integer;
+ code
+ {
+  :start:
+  text := "42";
+  number := atoi(text);
+  sendtext("The number is: " + itoa(number) + "<br/>", activator);
+ } dilend
+
+ dilbegin reward_system();
+ var
+  reward_str : string;
+  reward_amount : integer;
+ code
+ {
+  :start:
+  reward_str := "1000";
+  reward_amount := atoi(reward_str);
+  if (reward_amount > 500)
+  {
+    sendtext("That's a high reward!<br/>", activator);
+  }
+ } dilend
+
+ dilbegin jail_time();
+ var
+  time_str : string;
+  hours : integer;
+ code
+ {
+  :start:
+  time_str := "24";
+  hours := atoi(time_str);
+  sendtext("Jail time: " + itoa(hours) + " hours remaining.<br/>", self);
+ } dilend
+
+== Notes ==
+* The function stops parsing when it encounters a non-numeric character
+* If the string begins with non-numeric characters, the function returns 0
+* Leading whitespace is ignored
+* The function handles both positive and negative numbers
+* Commonly used to convert user input or stored string values to integers
+* This is the inverse of the itoa() function
+
+== See Also ==
+* itoa - For converting integers to strings
+* getwords - For parsing strings into components
+* strcmp - For string comparison

@@ -1,0 +1,74 @@
+= attack_type =
+
+== Description ==
+Returns or sets the non-weapon attack type of a character unit. This property determines what type of unarmed combat the character uses.
+
+== Syntax ==
+ attack_type(unit)
+
+== Parameters ==
+; unit : unitptr
+: The character unit whose attack type is being accessed or modified
+
+== Return Value ==
+: integer
+: The current attack type of the character
+
+== Examples ==
+ dilbegin check_attack_type();
+ var
+  current_attack : integer;
+ code
+ {
+  :start:
+  current_attack := attack_type(self);
+  sendtext("Your current attack type is " + weapon_name(current_attack) + ".<br/>", self);
+ } dilend
+
+ dilbegin set_attack_type(new_type : string);
+ var
+  attack_list : stringlist;
+  type_list : intlist;
+  i : integer;
+  found : integer;
+ code
+ {
+  :start:
+  attack_list := {"fist", "kick", "knee", "elbow"};
+  type_list := {WPN_FIST, WPN_KICK, WPN_KNEE, WPN_ELBOW};
+  
+  i := 0;
+  found := FALSE;
+  while (i < length(attack_list))
+  {
+    if (left(attack_list.[i], length(new_type)) == new_type)
+    {
+      found := TRUE;
+      break;
+    }
+    i := i + 1;
+  }
+  
+  if (found == TRUE)
+  {
+    self.attack_type := type_list.[i];
+    sendtext("Attack type set to " + attack_list.[i] + ".<br/>", self);
+  }
+  else
+  {
+    sendtext("Invalid attack type. Available: fist, kick, knee, elbow.<br/>", self);
+  }
+ } dilend
+
+== Notes ==
+* This is a read-write property that can be modified
+* Attack types correspond to weapon type constants (WPN_FIST, WPN_KICK, etc.)
+* Only applies to character units (PCs and NPCs)
+* Used for unarmed combat when no weapon is equipped
+* The attack_type affects combat animations and damage calculations
+* Common attack types include: fist, kick, knee, elbow
+
+== See Also ==
+* weapon_name - For getting the name of an attack type
+* weapon_info - For detailed weapon/attack type information
+* position - For character combat position

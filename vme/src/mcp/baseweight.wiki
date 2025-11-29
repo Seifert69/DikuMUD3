@@ -1,0 +1,65 @@
+= baseweight =
+
+== Description ==
+Returns the base weight of a unit. This represents the empty weight of the unit without any contents or additional weight.
+
+== Syntax ==
+ baseweight(unit)
+
+== Parameters ==
+; unit : unitptr
+: The unit whose base weight is being retrieved
+
+== Return Value ==
+: integer
+: The base weight of the unit in grams
+
+== Examples ==
+ dilbegin check_weight();
+ var
+  base_wt : integer;
+  current_wt : integer;
+ code
+ {
+  :start:
+  base_wt := baseweight(self);
+  current_wt := weight(self);
+  sendtext("Base weight: " + itoa(base_wt) + "g<br/>", self);
+  sendtext("Current weight: " + itoa(current_wt) + "g<br/>", self);
+ } dilend
+
+ dilbegin decapitation_example();
+ var
+  corpse : unitptr;
+  head : unitptr;
+ code
+ {
+  :start:
+  corpse := medium;
+  if (corpse.type == UNIT_ST_OBJ)
+  {
+    head := load("head@death");
+    set_weight_base(head, baseweight(corpse) / 70);
+    if (head.baseweight > 100)
+    {
+      set_weight_base(head, 100);
+    }
+    if (head.baseweight < 1)
+    {
+      set_weight_base(head, 1);
+    }
+  }
+ } dilend
+
+== Notes ==
+* This is a read-only property that returns the empty weight of a unit
+* Base weight is different from current weight (which includes contents)
+* Used in calculations for item creation, weight limits, and encumbrance
+* Base weight is typically used with set_weight_base() function
+* Weight values are in grams
+* Commonly used in corpse processing, item creation, and equipment systems
+
+== See Also ==
+* weight - For getting the current weight including contents
+* set_weight_base - For setting the base weight of a unit
+* capacity - For checking weight capacity of containers
