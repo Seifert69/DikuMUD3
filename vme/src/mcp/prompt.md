@@ -24,7 +24,10 @@ When creating or editing DikuMUD3 .wiki documentation files, follow this standar
  constant: '''[constant]'''
  variable: '''[variable]'''
  
-If a parameter or return type is a certain unitptr type use 'unit', 'pc', 'npc', 'char', 'room' or 'obj' to indicate the kind, (for example function: '''addequip'''(char : unitptr, i : integer); )
+If a parameter or return type is a certain unitptr type use:
+  'unit', 'pc', 'npc', 'char', 'room' or 'obj' to indicate the kind
+  For example: 
+  function: '''addequip'''(char : unitptr, i : integer); 
 
 Add a very brief introductory sentence about the <command>.
 
