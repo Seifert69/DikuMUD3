@@ -1,0 +1,94 @@
+= loadlevel =
+
+ field: integer loadlevel (zoneptr : zoneptr);
+
+== Description ==
+The '''loadlevel''' field returns the load level of a zone. This represents the minimum character level required to load items from that zone. This field is read-only and provides access to zone-level loading restrictions.
+
+== Syntax ==
+ zoneptr.loadlevel
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| loadlevel || integer || Read-only || Minimum character level required to load items from zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone pointer)
+
+== Return Value ==
+Returns '''integer''':
+* '''integer''' - Minimum character level required to load items from the zone
+* '''fail''' - when zoneptr is null or not applicable
+
+== Examples ==
+ dilbegin check_zone_load();
+ var
+   z: zoneptr;
+   player_level: integer;
+ code
+ {
+   z := findzone("midgaard");
+   if (z == null)
+   {
+     log("Zone not found");
+     quit;
+   }
+   
+   player_level := self.level;
+   if (player_level < z.loadlevel)
+   {
+     sendtext("You are not high enough level to load items from this zone.&n", self);
+     quit;
+   }
+   
+   sendtext("Zone load level: " + z.loadlevel + "&n", self);
+ } dilend
+
+ dilbegin zone_info(zonename: string);
+ var
+   z: zoneptr;
+   info: string;
+ code
+ {
+   z := findzone(zonename);
+   if (z == null)
+   {
+     sendtext("Zone '" + zonename + "' not found.&n", self);
+     quit;
+   }
+   
+   info := "Zone Information for " + z.name + "&n";
+   info := info + "Load Level: " + z.loadlevel + "&n";
+   info := info + "Reset Time: " + z.resettime + "&n";
+   info := info + "Access Level: " + z.access + "&n";
+   
+   pagestring(info, self);
+ } dilend
+
+== Usage Notes ==
+* The loadlevel is a zone-wide setting that affects all items within the zone
+* This field is used to enforce level restrictions on item loading
+* Players must meet or exceed the loadlevel to load items from the zone
+* The loadlevel is typically set in the zone configuration file
+* This field is read-only; to modify load levels, you must edit the zone files
+
+== Error Handling ==
+* Returns '''fail''' if the zoneptr is null
+* Returns '''fail''' if the zone is not applicable
+
+== Related Functions/Fields ==
+* [[access]] - Zone access level
+* [[resettime]] - Zone reset time
+* [[resetmode]] - Zone reset mode
+* [[payonly]] - Zone pay-only status
+* [[findzone()]] - Find a zone by name
+* [[zhead()]] - Get first zone in global list
+
+== See Also ==
+* [[zoneptr]] - Zone pointer type documentation
+* [[load()]] - Load a unit into the game
+* [[findzone()]] - Find zone by name

@@ -1,0 +1,96 @@
+= mana =
+
+== Syntax ==
+ field: '''.mana'''
+
+== Description ==
+The '''.mana''' field is accessed on character units (PC or NPC) and returns or sets the current mana points of the character. Mana is typically used for casting spells and using magical abilities.
+
+This field is read/write, allowing you to both retrieve the current mana value and modify it directly.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .mana || integer || Read/Write || Current mana points of the character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+ dilbegin mana_restore(char : unitptr);
+ var
+   current_mana : integer;
+   max_mana : integer;
+
+ code
+ {
+   // Check if the unit is a character
+   if (char.type = UNIT_ST_PC or char.type = UNIT_ST_NPC)
+   {
+     current_mana := char.mana;
+     max_mana := char.max_mana;
+     
+     act("$1n has $2d/$3d mana points.", A_ALWAYS, char, current_mana, max_mana, TO_ROOM);
+     
+     // Restore mana to full
+     char.mana := max_mana;
+     
+     act("$1n's mana has been fully restored.", A_ALWAYS, char, null, null, TO_CHAR);
+   }
+   else
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin mana_drain(victim : unitptr, amount : integer);
+ code
+ {
+   if (victim.type = UNIT_ST_PC or victim.type = UNIT_ST_NPC)
+   {
+     if (victim.mana >= amount)
+     {
+       victim.mana := victim.mana - amount;
+       act("You drain $2d mana from $1n.", A_ALWAYS, self, amount, victim, TO_CHAR);
+       act("$1n drains $2d mana from you!", A_ALWAYS, self, amount, victim, TO_VICT);
+       act("$1n drains mana from $3n.", A_ALWAYS, self, null, victim, TO_NOTVICT);
+     }
+     else
+     {
+       victim.mana := 0;
+       act("You completely drain $1n's mana.", A_ALWAYS, self, null, victim, TO_CHAR);
+       act("$1n completely drains your mana!", A_ALWAYS, self, null, victim, TO_VICT);
+     }
+   }
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.mana''' field can be both read and modified
+* Mana values should typically be kept within reasonable bounds (0 to max_mana)
+* Setting mana above '''max_mana''' is possible but may have unintended effects
+* This field is commonly used in spell casting systems, death sequences, and mana restoration mechanics
+* When modifying mana, consider the impact on game balance and player experience
+
+== Error Handling ==
+* If accessed on a non-character unit type, the operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* Setting negative values may result in unexpected behavior
+
+== Related Functions/Fields ==
+* [[max_mana]] - Gets the maximum mana of a character
+* [[endurance]] - Gets/sets the current endurance points
+* [[hp]] - Gets/sets the current hit points
+* [[experience]] - Sets experience points
+* [[cast_spell]] - Function that typically consumes mana
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

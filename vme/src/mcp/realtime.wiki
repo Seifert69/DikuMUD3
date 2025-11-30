@@ -1,0 +1,94 @@
+= realtime =
+variable: '''realtime''' : integer (Read-only)
+
+Returns the current real-world time as the number of seconds since January 1, 1970 00:00:00 UTC.
+
+== Description ==
+The '''realtime''' variable provides access to the current system time in Unix timestamp format. This represents the number of seconds that have elapsed since the Unix epoch (1970-01-01 00:00:00 UTC). For C programmers, this is equivalent to calling time(NULL).
+
+This variable is particularly useful for implementing time-based restrictions, tracking elapsed time, or scheduling events based on real-world time rather than game time.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| realtime || integer (Read-only) || Current Unix timestamp in seconds since epoch
+|}
+
+== Availability ==
+This field is available globally in all DIL programs and does not require a specific unit type.
+
+== Examples ==
+=== Basic Time Display ===
+dilbegin show_current_time();
+code
+{
+   act("Current time: " + asctime(realtime), A_ALWAYS, self, null, null, TO_CHAR);
+} dilend
+
+=== Time-Based Access Control ===
+dilbegin time_limited_area();
+var
+   last_reset : integer;
+
+code
+{
+   last_reset := realtime;
+   
+   :main_loop:
+   wait(SFB_TICK, TRUE);
+   
+   // Reset area every 24 hours
+   if (realtime > last_reset + 86400)  // 86400 seconds = 24 hours
+   {
+      act("The area has been reset!", A_ALWAYS, self, null, null, TO_ALL);
+      last_reset := realtime;
+   }
+   
+   goto main_loop;
+} dilend
+
+=== Player Time Limit Enforcement ===
+dilbegin enforce_playtime_limit();
+var
+   session_start : integer;
+   max_playtime  : integer;
+
+code
+{
+   session_start := realtime;
+   max_playtime := 14400;  // 4 hours in seconds
+   
+   :monitor:
+   wait(SFB_TICK, TRUE);
+   
+   if (realtime - session_start > max_playtime)
+   {
+      act("You have reached your time limit for today.", A_ALWAYS, self, null, null, TO_CHAR);
+      block;
+   }
+   
+   goto monitor;
+} dilend
+
+== Usage Notes ==
+* The value returned by '''realtime''' is a 32-bit integer representing seconds since the Unix epoch
+* This value is independent of game time or MUD uptime
+* The timestamp is in UTC, not local server time
+* Useful for coordinating with external systems or implementing real-world time constraints
+* Can be used with the [[asctime]] function to convert to human-readable format
+
+== Error Handling ==
+The '''realtime''' variable does not generate errors under normal circumstances. However:
+* On systems with incorrect system time, the returned value may be invalid
+* The value may wrap around on systems with 32-bit time_t after January 19, 2038 (Year 2038 problem)
+
+== Related Functions/Fields ==
+* [[asctime]] - Converts Unix timestamp to human-readable string format
+* [[heartbeat]] - Controls DIL program execution timing
+* [[wait]] - Pauses DIL execution for specified conditions
+
+== See Also ==
+* Unix timestamp documentation
+* Time-based DIL programming patterns
+* System time functions

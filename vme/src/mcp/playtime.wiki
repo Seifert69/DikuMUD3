@@ -1,0 +1,144 @@
+= playtime =
+
+ field: integer '''.playtime'''
+ type: '''integer'''
+ access: '''Read-only'''
+
+== Syntax ==
+ unit.playtime
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the total time played in seconds
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Description ==
+The '''playtime''' field contains the total amount of time a player character has been connected to the game, measured in seconds. This value accumulates over the player's entire gaming session history and is persistent across logins.
+
+The time is calculated by the underlying C++ function getTotalTimePlayedInSeconds() and represents the cumulative time the player has been actively playing the game.
+
+== Examples ==
+ dilbegin show_playtime();
+ var
+    total_seconds : integer;
+    hours : integer;
+    minutes : integer;
+    seconds : integer;
+ code
+ {
+    // Get total playtime in seconds
+    total_seconds := self.playtime;
+    
+    // Convert to hours, minutes, seconds
+    hours := total_seconds / 3600;
+    minutes := (total_seconds % 3600) / 60;
+    seconds := total_seconds % 60;
+    
+    sendtext("You have played for " + itoa(hours) + " hours, " + 
+             itoa(minutes) + " minutes, and " + itoa(seconds) + " seconds.<br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin check_veteran_status(player : unitptr);
+ var
+    total_hours : integer;
+ code
+ {
+    // Check if player has played for more than 100 hours
+    total_hours := player.playtime / 3600;
+    
+    if (total_hours > 100)
+    {
+       sendtext("You are a veteran player with " + itoa(total_hours) + " hours of playtime!<br/>", player);
+    }
+    else
+    {
+       sendtext("You have " + itoa(total_hours) + " hours of playtime. Keep playing!<br/>", player);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin playingstring();
+ var
+    tmp_played : integer;
+    hours_played : integer;
+    days_played : integer;
+    years_played : integer;
+    time_str : string;
+    tf : integer;
+ code
+ {
+    tmp_played := self.playtime / 3600;
+    hours_played := tmp_played % 24;
+    days_played := ((tmp_played/24)%365);
+    years_played := ((tmp_played/24)/365);
+    
+    tf := FALSE;
+    time_str := "You have been playing for";
+    
+    if (years_played > 0)
+    {
+       time_str := time_str + " " + itoa(years_played) + " years";
+       tf := TRUE;
+    }
+    
+    if ((days_played > 0) and (tf == TRUE))
+    {
+       time_str := time_str + ", " + itoa(days_played) + " days";
+    }
+    else if (days_played > 0)
+    {
+       time_str := time_str + " " + itoa(days_played) + " days";
+       tf := TRUE;
+    }
+    
+    if ((hours_played > 0) and (tf == TRUE))
+    {
+       time_str := time_str + ", " + itoa(hours_played) + " hours";
+    }
+    else if (hours_played > 0)
+    {
+       time_str := time_str + ", and " + itoa(hours_played) + " hours";
+       tf := TRUE;
+    }
+    
+    if (tf != TRUE)
+       time_str := time_str + " less than an hour.<br/>";
+    else
+       time_str := time_str + ".<br/>";
+    
+    sendtext(time_str, self);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The playtime field is read-only and cannot be modified by DIL code
+* The value is measured in seconds since the player's creation
+* Time accumulates across all gaming sessions and is persistent
+* To convert to hours, divide by 3600 (60 * 60)
+* To convert to days, divide by 86400 (24 * 60 * 60)
+* The field is only available on player characters (UNIT_ST_PC)
+* The value includes all time the player has been connected to the game
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access playtime on a non-player character unit
+* The unit is null or invalid
+
+== Related Functions/Fields ==
+* [[birth]] - The time when the PC was created (timestamp)
+* [[editing]] - Whether the PC is currently in edit mode
+* [[hometown]] - The player's hometown setting
+
+== See Also ==
+* [[itoa]] - Convert integer to string for display
+* [[sendtext]] - Send text to a player
+* [[act]] - Send formatted messages to units

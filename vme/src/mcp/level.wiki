@@ -1,0 +1,81 @@
+= level =
+
+'''level''' is a field that returns level information for characters and commands.
+
+== Syntax ==
+ // For character units (PC/NPC)
+ integer unit.level
+
+ // For command pointers  
+ integer cmdptr.level
+
+== Return Value ==
+; integer
+: Returns the level value:
+* For PC/NPC units: the character's level
+* For command pointers: minimum level required to use the command
+Returns '''fail''' if the unit is not a character or command pointer.
+
+== Character Usage ==
+When accessed on a player character (PC) or non-player character (NPC), returns the character's current level:
+
+ // Check player level
+ if (activator.level > 20) {
+    exec("say You are experienced enough to enter.", self);
+ }
+
+ // Level-based restrictions
+ if (pc.level < 253) {
+    sendtext("You must be at least level 253 to use this command.", pc);
+    quit;
+ }
+
+ // Compare levels between characters
+ if (self.level < target.level) {
+    exec("say $2n is too powerful for me to fight.", self, target);
+ }
+
+== Command Usage ==
+When accessed on a command pointer, returns the minimum level required to use that command:
+
+ // Get command and check level requirement
+ cmd := getcommand("kick");
+ if (self.level < cmd.level) {
+    sendtext("You must be level " + itoa(cmd.level) + " to use kick.", self);
+ }
+
+ // List all commands with their level requirements
+ cmd := chead();
+ while (cmd) {
+    sendtext(cmd.name + " (requires level " + itoa(cmd.level) + ")", self);
+    cmd := cmd.next;
+ }
+
+== Access Control ==
+The level field is commonly used for access control and content gating:
+
+ // Immortal level checks (typically 200+)
+ if (self.level >= IMMORTAL_LEVEL) {
+    // Allow immortal-only actions
+    exec("wizi", self);
+ }
+
+ // Level-based area restrictions
+ if (activator.level < 10) {
+    act("$1n says 'This area is too dangerous for beginners.'", 
+        A_ALWAYS, self, null, activator, TO_VICT);
+ }
+
+== Notes ==
+* For characters, this field is read-only
+* The level system typically ranges from 1 to 253 for players, with 200+ being immortal levels
+* NPCs also have levels that determine their difficulty
+* Command level requirements prevent low-level characters from using powerful commands
+* The field returns fail if accessed on invalid unit types
+
+== See Also ==
+* [[vlevel]] - Virtual level field
+* [[experience]] - Experience points field
+* [[cmdptr]] - Command pointer type
+* [[getcommand]] - Get a specific command pointer
+* [[chead]] - Get first command in list

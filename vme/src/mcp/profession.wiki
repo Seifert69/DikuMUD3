@@ -1,0 +1,183 @@
+= profession =
+
+ field: integer '''.profession'''
+ type: '''integer'''
+ access: '''Read-only'''
+
+== Syntax ==
+ unit.profession
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the profession of the player character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Description ==
+The '''profession''' field contains the profession identifier for a player character. This field determines the character's class or career path and is commonly used to provide profession-specific equipment, abilities, or access to certain areas.
+
+Common profession constants include:
+* '''PROFESSION_CONJURER''' - Magic user specializing in conjuration spells
+* '''PROFESSION_PRIEST''' - Religious character with healing and divine powers
+* '''PROFESSION_FIGHTER''' - Combat specialist focused on melee weapons
+* '''PROFESSION_THIEF''' - Stealthy character skilled in disarming and backstabbing
+* '''PROFESSION_ASSASSIN''' - Specialized killer with advanced stealth techniques
+* '''PROFESSION_RANGER''' - Wilderness expert with nature and tracking skills
+* '''PROFESSION_SORCERER''' - Magic user specializing in offensive spells
+* '''PROFESSION_PALADIN''' - Holy warrior with divine combat abilities
+* '''PROFESSION_NECROMANCER''' - Dark magic user specializing in death and undead
+* '''PROFESSION_DRUID''' - Nature-based magic user with shapeshifting abilities
+* '''PROFESSION_KNIGHT''' - Armored warrior with chivalric combat skills
+* '''PROFESSION_BARBARIAN''' - Fierce warrior from tribal backgrounds
+
+== Examples ==
+ dilbegin profession_equipment();
+ var
+    prof : integer;
+ code
+ {
+    prof := self.profession;
+    
+    if (prof == PROFESSION_FIGHTER)
+    {
+       sendtext("You are a mighty fighter! Here's your sword and shield.<br/>", self);
+    }
+    else if (prof == PROFESSION_MAGE)
+    {
+       sendtext("You are a wise mage! Here's your spellbook and staff.<br/>", self);
+    }
+    else if (prof == PROFESSION_CLERIC)
+    {
+       sendtext("You are a devout cleric! Here's your holy symbol and mace.<br/>", self);
+    }
+    else
+    {
+       sendtext("Your profession is: " + itoa(prof) + "<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin profession_greeting();
+ var
+    player_prof : integer;
+ code
+ {
+    player_prof := activator.profession;
+    
+    if (player_prof == PROFESSION_THIEF)
+    {
+       act("Welcome back, shadow walker! The shadows await your skills.", 
+          A_ALWAYS, self, null, activator, TO_CHAR);
+    }
+    else if (player_prof == PROFESSION_PALADIN)
+    {
+       act("Greetings, noble warrior! May justice guide your blade.", 
+          A_ALWAYS, self, null, activator, TO_CHAR);
+    }
+    else if (player_prof == PROFESSION_RANGER)
+    {
+       act("Hail, guardian of the wild! Nature calls to you.", 
+          A_ALWAYS, self, null, activator, TO_CHAR);
+    }
+    else if (player_prof == PROFESSION_DRUID)
+    {
+       act("Blessings, child of nature! The forest sings your name.", 
+          A_ALWAYS, self, null, activator, TO_CHAR);
+    }
+    else
+    {
+       act("Welcome, adventurer! May your path be true.", 
+          A_ALWAYS, self, null, activator, TO_CHAR);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin profession_restriction();
+ var
+    target_prof : integer;
+ code
+ {
+    target_prof := target.profession;
+    
+    // Check if target can enter restricted area
+    if (target_prof == PROFESSION_NECROMANCER)
+    {
+       act("The holy grounds reject your dark presence, necromancer!", 
+          A_ALWAYS, self, null, target, TO_VICT);
+       act("$1n blocks $3n from entering the sacred area.", 
+          A_ALWAYS, self, null, target, TO_ROOM);
+    }
+    else if (target_prof == PROFESSION_ASSASSIN)
+    {
+       act("The guards recognize you as an assassin and deny entry!", 
+          A_ALWAYS, self, null, target, TO_VICT);
+       act("$1n prevents $3n from entering the city.", 
+          A_ALWAYS, self, null, target, TO_ROOM);
+    }
+    else
+    {
+       act("Welcome, traveler! The city gates open for you.", 
+          A_ALWAYS, self, null, target, TO_VICT);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin profession_bonus();
+ var
+    prof : integer;
+ code
+ {
+    prof := self.profession;
+    
+    // Give profession-specific bonuses
+    if (prof == PROFESSION_FIGHTER)
+    {
+       self.abilities[ABIL_STR] := self.abilities[ABIL_STR] + 5;
+       sendtext("Your fighting spirit enhances your strength!<br/>", self);
+    }
+    else if (prof == PROFESSION_MAGE)
+    {
+       self.abilities[ABIL_MAG] := self.abilities[ABIL_MAG] + 5;
+       sendtext("Your magical focus enhances your power!<br/>", self);
+    }
+    else if (prof == PROFESSION_CLERIC)
+    {
+       self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV] + 5;
+       sendtext("Your faith enhances your divine power!<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The profession field is read-only and cannot be modified by DIL code
+* Profession is typically set during character creation or through special commands
+* The field is only available on player characters (UNIT_ST_PC)
+* Profession constants are defined in values.h and/or vme.h with PROFESSION_ prefix
+* This field is commonly used for profession-specific equipment distribution and area restrictions
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access profession on a non-player character unit
+* The unit is null or invalid
+* The zone has insufficient access level to read profession information
+
+== Related Functions/Fields ==
+* [[level]] - Field representing character's level
+* [[abilities]] - Array of character's ability scores
+* [[skills]] - Array of character's skill levels
+* [[equipment]] - Function to manage character equipment
+
+== See Also ==
+* [[PROFESSION_* constants]] - Profession identifier constants
+* [[race]] - Field for character's racial type
+* [[sex]] - Field for character's gender
+* [[guild]] - Field for character's guild affiliation

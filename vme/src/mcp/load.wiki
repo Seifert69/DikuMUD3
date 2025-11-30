@@ -1,0 +1,62 @@
+= load =
+
+== Description ==
+
+The '''load''' function creates a new unit from the database using its symbolic name. The loaded unit is automatically placed inside the unit that executed the load command.
+
+== Syntax ==
+
+ unitptr load ( s : string )
+
+; s : string
+: Symbolic name of the unit to load (format: "name@zone")
+
+== Return Value ==
+
+Returns a unit pointer to the loaded unit, or null if the unit does not exist or cannot be loaded.
+
+== Behavior ==
+
+The load function performs the following operations:
+
+* Looks up the unit in the database using the symbolic name
+* Creates a new instance of the unit (except for rooms, which cannot be loaded)
+* If the unit is money, properly initializes the money amount
+* Automatically places the loaded unit inside the loading unit's inventory
+* Activates any load-time DIL programs on the loaded unit
+
+== Example Usage ==
+
+ dilbegin example_load();
+ var
+    obj : unitptr;
+ 
+ code
+ {
+    obj := load("tbag@midgaard");
+    if (obj != null)
+    {
+       link(obj, self);
+       exec("say I loaded a trash bag!", self);
+    }
+    else
+    {
+       exec("say Failed to load the bag.", self);
+    }
+ } dilend
+
+== Notes ==
+
+* Rooms cannot be loaded and will generate an error in the system log
+* If the symbolic name does not exist, an error is logged and null is returned
+* The loaded unit is automatically placed in the loader's inventory
+* Use the [[link]] procedure to move the loaded unit to a different location
+* Money units are properly initialized with their correct amount
+* Symbolic names follow the format "name@zone" (e.g., "garlic@midgaard")
+
+== See Also ==
+
+* [[link]]
+* [[findsymbolic]]
+* [[destroy]]
+* [[unitptr.symname]]

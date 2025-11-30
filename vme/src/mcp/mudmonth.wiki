@@ -1,0 +1,169 @@
+= mudmonth =
+
+== Syntax ==
+ variable: '''mudmonth''' (Read-only)
+
+== Description ==
+The '''mudmonth''' variable returns the current month number in the MUD's internal time system. This built-in variable allows DIL programs to track and respond to seasonal changes, monthly events, and time-based conditional logic within the game world.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current month number (0-based)
+|}
+
+== Examples ==
+ dilbegin seasonal_event();
+ var
+    current_month : integer;
+    month_name : string;
+    month_names : stringlist;
+ code
+ {
+    month_names := {"Month of Winter", "Month of the Winter Wolf",
+                   "Month of the Frost Giant", "Month of the Spring",
+                   "Month of Futility", "Month of the Sun", 
+                   "Month of the Heat", "Month of the Long Shadows",
+                   "Month of the Ancient Darkness"};
+    
+    current_month := mudmonth;
+    month_name := month_names.[current_month];
+    
+    exec("say Welcome to " + month_name + "!", self);
+    
+    // Seasonal behavior
+    if (current_month <= 2)  // Winter months (0-2)
+    {
+       exec("say It's cold outside, bundle up!", self);
+    }
+    else if (current_month <= 5)  // Spring months (3-5)
+    {
+       exec("say The flowers are blooming!", self);
+    }
+    else if (current_month <= 7)  // Summer months (6-7)
+    {
+       exec("say It's a beautiful summer day!", self);
+    }
+    else  // Fall months (8-8)
+    {
+       exec("say The leaves are changing colors!", self);
+    }
+ } dilend
+
+ dilbegin time_display();
+ var
+    buffer : string;
+    month_names : stringlist;
+    day_names : stringlist;
+    month_idx : integer;
+    day_idx : integer;
+    hour_12 : integer;
+    ampm : string;
+ code
+ {
+    month_names := {"Month of Winter", "Month of the Winter Wolf",
+                   "Month of the Frost Giant", "Month of the Spring",
+                   "Month of Futility", "Month of the Sun", 
+                   "Month of the Heat", "Month of the Long Shadows",
+                   "Month of the Ancient Darkness"};
+    
+    day_names := {"the Day of the Bull", "the Day of the Deception",
+                  "the Day of Thunder", "the Day of Freedom",
+                  "the Day of the Great Gods", "the Day of the Sun",
+                  "the Day of the Moon"};
+    
+    month_idx := mudmonth;
+    day_idx := mudday % 7;
+    hour_12 := mudhour;
+    
+    if (hour_12 == 0)
+    {
+       hour_12 := 12;
+       ampm := "O-clock, Midnight!";
+    }
+    else if (hour_12 == 12)
+    {
+       ampm := "O-clock, High noon!";
+    }
+    else if (hour_12 < 12)
+    {
+       ampm := "AM";
+    }
+    else
+    {
+       hour_12 := hour_12 - 12;
+       ampm := "PM";
+    }
+    
+    buffer := "It is " + itoa(hour_12) + " " + ampm + ", on " + day_names.[day_idx] + ",<br/>";
+    buffer := buffer + "the " + itoa(mudday + 1) + "th Day of the " + month_names.[month_idx] +
+              ", Year " + itoa(mudyear) + ".<br/>";
+    
+    sendtext(buffer, self);
+ } dilend
+
+ dilbegin monthly_festival();
+ var
+    current_month : integer;
+ code
+ {
+    :check_month:
+    current_month := mudmonth;
+    
+    // Different festival each month
+    if (current_month == 0)  // Month of Winter
+    {
+       exec("say The Winter Festival begins!", self);
+       exec("emote lights torches and prepares hot cider.", self);
+    }
+    else if (current_month == 3)  // Month of the Spring
+    {
+       exec("say The Spring Celebration starts!", self);
+       exec("emote decorates with flowers and ribbons.", self);
+    }
+    else if (current_month == 6)  // Month of the Heat
+    {
+       exec("say The Summer Solstice Festival!", self);
+       exec("emote prepares for the longest day of the year.", self);
+    }
+    else if (current_month == 8)  // Month of the Ancient Darkness
+    {
+       exec("say The Harvest Festival begins!", self);
+       exec("emote gathers crops for the coming winter.", self);
+    }
+    
+    // Wait until next month
+    while (mudmonth == current_month)
+    {
+       pause;
+    }
+    goto check_month;
+ } dilend
+
+== Usage Notes ==
+* The '''mudmonth''' variable is read-only and cannot be modified
+* Month numbers are 0-based (0 = first month, 8 = last month in the example)
+* The MUD typically has 9 months (0-8) as shown in the example
+* Used in conjunction with '''mudday''', '''mudhour''', and '''mudyear''' for complete time tracking
+* Common month themes from the example:
+** 0-2: Winter months
+** 3-5: Spring months  
+** 6-7: Summer months
+** 8: Fall month
+
+== Error Handling ==
+* The variable is always available and does not generate runtime errors
+* Returns valid integer values (0-8) in all contexts
+
+== Related Functions/Fields ==
+* [[mudday]] - Current day in the MUD
+* [[mudhour]] - Current hour in the MUD
+* [[mudyear]] - Current year in the MUD
+* [[realtime]] - Real-world system time
+* [[asctime]] - Convert real time to formatted string
+
+== See Also ==
+* Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
+* Time-based functions: [[heartbeat]], [[wait]], [[pause]]
+* String functions: [[itoa]] - Convert integer to string for display

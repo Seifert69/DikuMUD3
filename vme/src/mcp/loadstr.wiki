@@ -1,0 +1,91 @@
+= loadstr =
+
+== Syntax ==
+ function: integer '''loadstr'''(filename : string, buff : string);
+
+== Description ==
+The '''loadstr''' function is used to load string content from disk files into a DIL string variable. This function is essential for creating persistent data storage systems such as message boards, news systems, mail systems, and NPC memory systems. The function reads files from the zone's DIL file directory under a "strings" subdirectory.
+
+'''loadstr''' includes security restrictions and requires appropriate access levels (greater than 10) to execute. The function validates filenames to prevent illegal file access attempts.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| filename || string || The name of the file to load from the strings subdirectory
+|-
+| buff || string || A string variable that will receive the loaded file content (passed by reference)
+|}
+
+== Return Value ==
+Returns integer:
+* '''FILE_LOADED''' (non-zero) - when the file was successfully loaded
+* '''FILE_NOT_FOUND''' (0) - when the specified file does not exist
+* '''FILE_OUT_OF_MEMORY''' - when insufficient memory to load the file
+* '''FILE_TO_LARGE''' - when the file exceeds size limits
+* '''fail''' - when parameters are invalid or access is denied
+
+== Security Notes ==
+* Requires zone access level greater than 10
+* Filenames are validated using '''store_name_test''' to prevent illegal access
+* Files are restricted to the zone's DIL file directory under "strings" subdirectory
+* Security violations are logged and may terminate the DIL program
+
+== Performance Considerations ==
+Disk access is always slow. To maintain server performance:
+* Keep file sizes to a minimum
+* Avoid frequent '''loadstr''' operations in time-critical code
+* Consider caching frequently accessed data in memory
+
+== Examples ==
+Basic file loading:
+ dilbegin load_example();
+ var
+  result:integer;
+  content:string;
+ code
+ {
+  result := loadstr("news.txt", content);
+  if (result > 0)
+  {
+   sendtext(content + "[&n]", self);
+  }
+  else
+  {
+   log("Failed to load news.txt, result: " + itoa(result));
+  }
+  quit;
+ }
+ dilend
+
+Message board system (from board reply DIL):
+ err := loadstr(brdname + ".idx", temp);
+ if (err < 0)
+ {
+  log("Error in boards on: " + brdname);
+  act("This board doesn't work report to an administrator.", A_ALWAYS, self, null, null, TO_CHAR);
+  goto quitboard;
+ }
+
+== Usage Notes ==
+* The second parameter (buff) is modified by reference to contain the loaded content
+* Empty files will result in buff being set to null
+* The function automatically handles memory allocation and cleanup
+* Use with '''savestr''' for complete persistent storage solutions
+
+== Error Handling ==
+* Invalid parameters result in '''fail''' return value
+* Security violations terminate the DIL program with WAITCMD_QUIT
+* File system errors are logged to the zone log
+* Memory allocation failures return appropriate error codes
+
+== Related Functions/Fields ==
+* [[savestr]] - Save string content to files
+* [[delstr]] - Delete string files
+* [[split]] - Split loaded strings into arrays (useful for line-by-line processing)
+
+== See Also ==
+* [[FILE_LOADED]] - Success constant
+* [[FILE_NOT_FOUND]] - File not found constant  
+* [[FILE_OUT_OF_MEMORY]] - Memory error constant
+* [[FILE_TO_LARGE]] - File size error constant

@@ -1,0 +1,169 @@
+= meleedamage =
+
+== Syntax ==
+ function: integer '''meleedamage'''(ch : unitptr, vict : unitptr, b : integer, wt : integer);
+
+== Description ==
+The '''meleedamage''' function performs a melee damage calculation from one character against another. This function is specifically designed for missile and thrown weapon damage calculations, taking into account weapon types, bonuses, and special circumstances.
+
+The function handles the complete damage resolution including hit determination and damage amount calculation.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ch || unitptr || The character performing the attack
+| vict || unitptr || The victim being attacked
+| b || integer || Any penalty or bonus added to the attack
+| wt || integer || The weapon type of the attack (WPN_* constants). If valid, bypasses equipped weapon
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - Amount of damage dealt to the victim
+* '''-1''' - When the attack fails
+
+== Examples ==
+ dilbegin simple_throw_damage();
+ var
+    weapon : unitptr;
+    target : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Get a weapon from inventory
+    weapon := equipment(self, WEAR_WIELD);
+    
+    if (weapon = null)
+    {
+       act("You need to wield a weapon first.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Find a target to throw at
+    target := self.fighting;
+    
+    if (target = null)
+    {
+       act("You aren't fighting anyone.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Calculate throwing damage
+    damage := meleedamage(self, target, 0, weapon.value[0]);
+    
+    if (damage > 0)
+       act("Your throw hits $1n for $2d damage!", A_ALWAYS, self, target, damage, TO_CHAR);
+    else
+       act("Your throw at $1n misses.", A_ALWAYS, self, target, null, TO_CHAR);
+
+    quit;
+ }
+ dilend
+
+ dilbegin weapon_bonus_check();
+ var
+    attacker : unitptr;
+    victim : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Test damage with different bonuses
+    attacker := self;
+    victim := self.fighting;
+    
+    if (victim = null)
+    {
+       act("You need a target first.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Test with no bonus
+    damage := meleedamage(attacker, victim, 0, 0);
+    act("No bonus damage: $2d", A_ALWAYS, self, damage, null, TO_CHAR);
+    
+    // Test with positive bonus
+    damage := meleedamage(attacker, victim, 10, 0);
+    act("With +10 bonus: $2d", A_ALWAYS, self, damage, null, TO_CHAR);
+    
+    // Test with negative bonus (penalty)
+    damage := meleedamage(attacker, victim, -15, 0);
+    act("With -15 penalty: $2d", A_ALWAYS, self, damage, null, TO_CHAR);
+
+    quit;
+ }
+ dilend
+
+ dilbegin rock_throw();
+ var
+    rock : unitptr;
+    target : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Create a rock to throw
+    rock := load("rock@midgaard");
+    
+    if (rock = null)
+    {
+       act("No rocks available.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Find target
+    target := self.fighting;
+    
+    if (target = null)
+    {
+       act("You need a target.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Throw rock (using unarmed damage type)
+    damage := meleedamage(self, target, 0, 0);
+    
+    if (damage > 0)
+    {
+       act("You hit $1n with a rock for $2d damage!", A_ALWAYS, self, target, damage, TO_CHAR);
+       act("$1n hits you with a rock for $2d damage!", A_ALWAYS, self, target, damage, TO_VICT);
+    }
+    else
+    {
+       act("Your rock throw at $1n misses.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+
+    // Clean up
+    destroy(rock);
+    quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''wt''' parameter allows bypassing the equipped weapon when a specific attack type is desired
+* When '''wt''' is a valid weapon type (WPN_*), that weapon type is used regardless of equipped weapon
+* The '''b''' parameter can be positive (bonus) or negative (penalty) to modify the attack roll
+* This function is specifically designed for missile and thrown weapon damage calculations
+* The function automatically handles combat resolution, including hit/miss determination
+* Unlike [[meleeattack]], this function focuses on weapon damage rather than character combat
+* The function respects standard combat mechanics like position checks and visibility requirements
+
+== Error Handling ==
+* Returns '''-1''' if any parameter is invalid or if the attack cannot be performed
+* Returns '''-1''' if the attacker or victim is not a valid character unit
+* The function will fail if the attacker is in a position that doesn't allow combat
+* Always ensure both attacker and victim are valid character units before calling
+
+== Related Functions/Fields ==
+* [[meleeattack]] - For direct character melee attacks
+* [[one_hit]] - The underlying combat resolution function
+* [[equipment]] - To check equipped weapon type
+* [[weapon]] - Field to check equipped weapon
+* [[cast_spell]] - For magical attacks instead of melee
+
+== See Also ==
+* WPN_* constants in values.h for weapon type definitions
+* Combat and damage system documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

@@ -1,0 +1,148 @@
+= quit =
+
+ procedure: '''quit'''();
+
+== Syntax ==
+ quit();
+
+== Description ==
+The '''quit''' procedure immediately terminates the current DIL program execution. This is a fundamental control flow command that stops all further processing in the current DIL program and returns control to the calling context or terminates the program entirely.
+
+The quit procedure is commonly used for:
+* Ending program execution when conditions are met
+* Exiting from error conditions or invalid states
+* Terminating loops and wait states
+* Providing clean exit points in complex DIL logic
+
+== Return Value ==
+This procedure does not return a value.
+
+== Examples ==
+ dilbegin simple_command();
+ var
+    input : string;
+ code
+ {
+    sendtext("Type 'exit' to quit, or anything to continue: ", self);
+    
+    wait(SFB_CMD, TRUE);
+    input := argument;
+    
+    if (input == "exit")
+    {
+       sendtext("Goodbye!<br/>", self);
+       quit;
+    }
+    else
+    {
+       sendtext("Continuing...<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin error_handling();
+ var
+    error_count : integer;
+ code
+ {
+    error_count := 0;
+    
+    :error_loop:
+    error_count := error_count + 1;
+    
+    if (error_count > 3)
+    {
+       sendtext("Too many errors. Quitting...<br/>", self);
+       quit;
+    }
+    
+    sendtext("Error occurred. Try again.<br/>", self);
+    goto error_loop;
+ } dilend
+
+ dilbegin menu_system();
+ var
+    choice : string;
+ code
+ {
+    sendtext("Main Menu:<br/>", self);
+    sendtext("1. Start quest<br/>", self);
+    sendtext("2. View stats<br/>", self);
+    sendtext("3. Exit<br/>", self);
+    
+    wait(SFB_CMD, TRUE);
+    choice := argument;
+    
+    if (choice == "1")
+    {
+       sendtext("Starting quest...<br/>", self);
+       // Quest logic would go here
+    }
+    else if (choice == "2")
+    {
+       sendtext("Displaying stats...<br/>", self);
+       // Stats display logic would go here
+    }
+    else if (choice == "3")
+    {
+       sendtext("Exiting...<br/>", self);
+       quit;
+    }
+    else
+    {
+       sendtext("Invalid choice.<br/>", self);
+       goto menu_system;
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin cleanup_resources();
+ var
+    temp_obj : unitptr;
+ code
+ {
+    // Clean up temporary objects
+    temp_obj := self.inside;
+    
+    while (temp_obj != null)
+    {
+       if (temp_obj.type == UNIT_ST_OBJ and temp_obj.names.[0] == "temp")
+       {
+          destroy(temp_obj);
+          sendtext("Cleaned up temporary object.<br/>", self);
+       }
+       
+       temp_obj := temp_obj.next;
+    }
+    
+    sendtext("Cleanup complete.<br/>", self);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The '''quit''' procedure immediately terminates the current DIL program
+* Any code after '''quit''' will not be executed
+* The procedure is often used as the final statement in DIL programs
+* When called from within procedures or functions, it terminates the entire call chain
+* The procedure is useful for preventing infinite loops and providing clean program exits
+* No parameters are required for this procedure
+
+== Error Handling ==
+The procedure does not generate errors under normal conditions:
+* Always terminates execution successfully
+* Cannot be used incorrectly (no parameters to validate)
+* The only "error" condition is when the program cannot be terminated (which shouldn't occur)
+
+== Related Functions/Fields ==
+* [[return]] - Function to return values from procedures
+* [[wait]] - Function that can be interrupted by quit
+* [[pause]] - Function that can be terminated by quit
+* [[exec]] - Function that can be terminated by quit
+
+== See Also ==
+* [[SFB_CMD]] - Wait flag that quit can interrupt
+* [[dilbegin]] - Program start that quit can end
+* [[dilend]] - Program end that quit can replace
+* [[on_activation]] - Function that may be interrupted by quit

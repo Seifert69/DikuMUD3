@@ -1,0 +1,90 @@
+= isset =
+
+; isset : integer ( i : integer , bit : integer )
+: Tests whether specific bits are set in an integer value.
+
+== Description ==
+
+The '''isset''' function performs a bitwise AND operation to check if one or more bits are set in an integer value. This is commonly used to test flag fields on units, such as character flags, unit flags, manipulation flags, and exit flags. The function returns TRUE if any of the specified bits are set in the target integer.
+
+== Parameters ==
+
+; i : integer
+: The integer value to examine, typically a flag field from a unit.
+
+; bit : integer
+: The bit mask to test for. Can be a single bit or multiple bits combined with bitwise OR.
+
+== Return Value ==
+
+; integer
+: Returns TRUE (1) if any of the bits specified in 'bit' are set in 'i', or FALSE (0) if none are set.
+
+== Examples ==
+
+=== Basic Flag Check ===
+ if (isset(self.flags, UNIT_FL_BURIED))
+    act("A "+self.name+" rots away.", A_SOMEONE, self, null, null, TO_ROOM);
+ 
+This checks if the unit has the BURIED flag set before displaying a rot message.
+
+=== Manipulation Flag Check ===
+ if (isset(self.manipulate, MANIPULATE_TAKE))
+    sendtext("This item can be taken.", self);
+ 
+This checks if the item can be taken by players.
+
+=== Character Status Checks ===
+ if (isset(self.charflags, CHAR_PROTECTED))
+    sendtext("You are a protected citizen.", self);
+ else if (isset(self.charflags, CHAR_OUTLAW))
+    sendtext("You are wanted dead or alive by the law.", self);
+ 
+This checks various character status flags.
+
+=== Exit State Check ===
+ if (isset(room.exit_info[dir], EX_CLOSED))
+    sendtext("The exit is closed.", self);
+ 
+This checks if a specific exit is closed.
+
+=== Multiple Bit Check ===
+ if (isset(self.pcflags, PC_PK_RELAXED | PC_INFORM))
+    // Both PK_RELAXED and INFORM bits are checked
+ 
+This shows how to check for multiple bits at once.
+
+== Common Flag Types ==
+
+; self.flags : UNIT_FL_* flags
+: General unit properties (BURIED, TRANS, NO_BURY, etc.)
+
+; self.charflags : CHAR_* flags  
+: Character-specific flags (PROTECTED, OUTLAW, HIDE, GROUP, etc.)
+
+; self.pcflags : PC_* flags
+: Player-specific flags (PK_RELAXED, BRIEF, INFORM, etc.)
+
+; self.manipulate : MANIPULATE_* flags
+: How unit can be handled (TAKE, HOLD, WEAR, etc.)
+
+; self.openflags : EX_* flags
+: Open/lock properties (OPEN_CLOSE, LOCKED, PICK_PROOF, etc.)
+
+; room.exit_info[dir] : EX_* flags
+: Exit-specific properties (CLOSED, LOCKED, CLIMB, etc.)
+
+== Usage Notes ==
+
+* Uses the IS_SET() macro internally for the bitwise test
+* Returns TRUE if ANY of the specified bits are set (logical OR behavior)
+* Multiple bits can be tested using bitwise OR operator (|)
+* This is the standard way to test flag fields in DIL programming
+* Flag constants are defined in values.h and/or vme.h
+
+== See Also ==
+
+; visible : Checks if a unit is visible to another unit
+; manipulate : Field showing how unit can be handled
+; flags : Field showing general unit properties
+; charflags : Field showing character-specific properties

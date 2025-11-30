@@ -1,0 +1,119 @@
+= reboot =
+function: '''reboot'''(exit_code : integer);
+
+Initiates a complete MUD server reboot with the specified exit code.
+
+== Description ==
+The '''reboot''' function immediately terminates and restarts the MUD server process. This is a system-level operation that requires root privileges on the zone. When called, the function sets global flags to trigger a server reboot and terminates the current DIL program execution.
+
+The exit_code parameter is passed to the system's exit() function and can be used to indicate the reason for the reboot to external monitoring systems or scripts.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| exit_code || integer || The exit code to return to the operating system (typically 0 for successful reboot)
+|}
+
+== Examples ==
+=== Simple Immediate Reboot ===
+dilbegin cmd_reboot(arg : string);
+code
+{
+   act("Rebooting the MUD now...", A_ALWAYS, self, null, null, TO_CHAR);
+   reboot(0);
+} dilend
+
+=== Scheduled Reboot with Countdown ===
+dilbegin scheduled_reboot(minutes : string);
+external
+   send_to_world(message : string);
+var
+   i : integer;
+   j : integer;
+   str : string;
+
+code
+{
+   i := atoi(minutes);
+   if (i == 0) goto reboot_now;
+   
+   if (i > 1) str := "minutes";
+   else str := "minute";
+   
+   // Only announce if less than 20 minutes
+   if (i < 20)
+      send_to_world("The MUD will reboot in " + itoa(i) + " " + str + ".<br/>");
+   
+   heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;
+   
+   while (i > 1)
+   {
+      wait(SFB_TICK, TRUE);
+      
+      if ((i == 10) or (i == 5))
+         send_to_world("The MUD will reboot in " + itoa(i) + " minutes.<br/>");
+      
+      i := i - 1;
+   }
+   
+   j := SECS_PER_REAL_MIN;
+   heartbeat := PULSE_SEC;
+   
+   while (j > 0)
+   {
+      wait(SFB_TICK, TRUE);
+      
+      if (j == 30)
+         send_to_world("The MUD will reboot in 30 seconds.<br/>");
+      
+      if (j == 10)
+         send_to_world("The MUD will reboot in 10 seconds.<br/>");
+      
+      j := j - 1;
+   }
+   
+   :reboot_now:
+   send_to_world("Rebooting...<br/>");
+   reboot(0);
+} dilend
+
+=== Emergency Reboot ===
+dilbegin emergency_reboot();
+code
+{
+   // Log the emergency reboot
+   act("EMERGENCY REBOOT INITIATED!", A_ALWAYS, self, null, null, TO_ALL);
+   
+   // Use exit code 1 to indicate emergency
+   reboot(1);
+} dilend
+
+== Usage Notes ==
+* The zone containing the DIL program must have root privileges in the zonelist
+* Any code after the '''reboot''' function call will not be executed
+* The function immediately terminates the current DIL program
+* All players will be disconnected during the reboot process
+* The server will restart automatically after reboot
+* Use [[quit]] to terminate only the current DIL program without rebooting the server
+
+== Error Handling ==
+The '''reboot''' function includes security checks and error handling:
+
+* If the zone does not have root privileges, the function will:
+  ** Log a security violation to the zone log
+  ** Terminate the DIL program with WAITCMD_QUIT
+  ** Not execute the reboot
+
+* If the exit_code parameter is not an integer, a type error will be generated
+
+== Related Functions/Fields ==
+* [[quit]] - Terminates the current DIL program without rebooting the server
+* [[heartbeat]] - Controls DIL program execution timing for countdown sequences
+* [[wait]] - Pauses DIL execution for specified conditions
+* [[realtime]] - Provides current system time for scheduling
+
+== See Also ==
+* Zone privilege management
+* System administration functions
+* Server maintenance procedures

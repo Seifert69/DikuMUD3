@@ -1,0 +1,112 @@
+= mid =
+
+== Syntax ==
+ function: string '''mid'''(o : string, s : integer, e : integer);
+
+== Description ==
+The '''mid''' function extracts a substring from a string, returning the portion of the string defined by the start and end positions. This function is commonly used for parsing strings and extracting specific portions of text.
+
+The function performs bounds checking to ensure the start and end positions are valid within the string length.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| o || string || The original string to be parsed
+| s || integer || The starting position (1-based index) in the string
+| e || integer || The ending position (1-based index) in the string
+|}
+
+== Return Value ==
+Returns string:
+* '''string''' - The substring from position 's' to position 'e'
+* '''null''' - When parameters are invalid or out of bounds
+
+== Examples ==
+ dilbegin parse_weapon_name();
+ var
+    full_name : string;
+    weapon_type : string;
+
+ code
+ {
+    full_name := "longsword +2 of fire";
+    
+    // Extract weapon type (first word)
+    weapon_type := mid(full_name, 1, 9);
+    act("Weapon type: $2t", A_ALWAYS, self, weapon_type, null, TO_CHAR);
+    
+    // Extract enchantment (after "+")
+    weapon_type := mid(full_name, 12, 14);
+    act("Enchantment: $2t", A_ALWAYS, self, weapon_type, null, TO_CHAR);
+    
+    // Extract material (after "of ")
+    weapon_type := mid(full_name, 16, 18);
+    act("Material: $2t", A_ALWAYS, self, weapon_type, null, TO_CHAR);
+    
+    quit;
+ }
+ dilend
+
+ dilbegin parse_filename();
+ var
+    filename : string;
+    name : string;
+    extension : string;
+
+ code
+ {
+    filename := "player_data_backup_2023_12_25.txt";
+    
+    // Extract name (before first underscore)
+    name := mid(filename, 1, 15);
+    act("Filename: $2t", A_ALWAYS, self, name, null, TO_CHAR);
+    
+    // Extract extension (after last underscore)
+    extension := mid(filename, 17, 3);
+    act("Extension: $2t", A_ALWAYS, self, extension, null, TO_CHAR);
+    
+    quit;
+ }
+ dilend
+
+ dilbegin extract_middle();
+ var
+    sentence : string;
+    middle : string;
+
+ code
+ {
+    sentence := "The quick brown fox jumps over the lazy dog";
+    
+    // Extract middle portion (characters 11-20)
+    middle := mid(sentence, 11, 20);
+    act("Middle: $2t", A_ALWAYS, self, middle, null, TO_CHAR);
+    
+    quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''mid''' function uses 1-based indexing for positions (first character is position 1)
+* If the start position is less than 1 or greater than the string length, the function returns null
+* If the end position is less than the start position or greater than the string length, the function returns null
+* The function returns the substring from start position 's' up to but not including position 'e'
+* This function is commonly used for parsing file names, extracting words, and string manipulation
+* The function performs memory allocation for the returned string
+
+== Error Handling ==
+* Returns '''null''' if any parameter is invalid or if positions are out of bounds
+* Returns '''null''' if start or end positions are invalid (negative or beyond string length)
+* The function will fail if the original string is null
+* Always validate positions before calling the function to avoid errors
+
+== Related Functions/Fields ==
+* [[left]] - Extracts characters from the left side of a string
+* [[right]] - Extracts characters from the right side of a string
+* [[substring]] - Alternative function for string extraction
+* [[strlen]] - Gets the length of a string for bounds checking
+
+== See Also ==
+* String manipulation and parsing functions documentation
+* DIL string operations documentation

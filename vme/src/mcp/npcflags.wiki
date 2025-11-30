@@ -1,0 +1,135 @@
+= npcflags =
+
+== Syntax ==
+ function: '''npcflags'''(npc : unitptr, flags : integer);
+
+== Description ==
+The '''npcflags''' function modifies the NPC flags field, setting various behavioral and property flags for non-player characters. This function allows DIL programs to control NPC behavior, combat properties, special abilities, and administrative settings through bit manipulation.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| npc || unitptr || The NPC character to modify
+|-
+| flags || integer || The flag value to set (bitwise OR of existing flags)
+
+== Return Value ==
+Returns '''integer''':
+* '''0''' - Successfully set the NPC flags
+* '''non-zero''' - Error code if modification failed
+
+== Examples ==
+ dilbegin set_guard_behavior(npc : unitptr, behavior_type : integer);
+ var
+    current_flags : integer;
+ code
+ {
+    if (npc.type != UNIT_ST_NPC)
+    {
+       exec("say Target must be an NPC!", self);
+       return;
+    }
+    
+    current_flags := npc.npcflags;
+    
+    // Set different behavior flags based on type
+    if (behavior_type == 1)  // Aggressive behavior
+    {
+       npcflags(npc, current_flags | NPC_AGGRESSIVE);
+       exec("say NPC set to aggressive mode.", self);
+    }
+    else if (behavior_type == 2)  // Passive behavior
+    {
+       npcflags(npc, current_flags & ~NPC_AGGRESSIVE);  // Clear aggressive bit
+       exec("say NPC set to passive mode.", self);
+    }
+    else if (behavior_type == 3)  // Guard behavior
+    {
+       npcflags(npc, current_flags | NPC_GUARD);
+       exec("say NPC set to guard mode.", self);
+    }
+    
+    exec("say Previous flags: " + itoa(current_flags), self);
+    exec("say New flags: " + itoa(npc.npcflags), self);
+ } dilend
+
+ dilbegin toggle_shopkeeper(npc : unitptr);
+ var
+    shop_open : integer;
+ code
+ {
+    if (npc.type != UNIT_ST_NPC)
+    {
+       exec("say Target must be an NPC!", self);
+       return;
+    }
+    
+    // Toggle shopkeeper behavior
+    shop_open := npc.npcflags;
+    
+    if (shop_open & NPC_SHOPKEEPER)
+    {
+       // Remove shopkeeper flag
+       npcflags(npc, shop_open & ~NPC_SHOPKEEPER);
+       exec("say Shopkeeper mode disabled.", self);
+    }
+    else
+    {
+       // Add shopkeeper flag
+       npcflags(npc, shop_open | NPC_SHOPKEEPER);
+       exec("say Shopkeeper mode enabled.", self);
+    }
+    
+    exec("say Shopkeeper flag: " + ((npc.npcflags & NPC_SHOPKEEPER) != 0 ? "ON" : "OFF"), self);
+ } dilend
+
+ dilbegin complex_npc_setup();
+ var
+    new_npc : unitptr;
+ code
+ {
+    // Create a new NPC with multiple flag settings
+    new_npc := load("guard_template@midgaard");
+    
+    if (new_npc != null)
+    {
+       // Set multiple flags at once using bitwise OR
+       npcflags(new_npc, NPC_AGGRESSIVE | NPC_GUARD | NPC_SENTINEL | NPC_STAY_ZONE);
+       
+       exec("say New NPC created with combined flags.", self);
+       exec("say Aggressive: " + ((new_npc.npcflags & NPC_AGGRESSIVE) != 0 ? "YES" : "NO"), self);
+       exec("say Guard: " + ((new_npc.npcflags & NPC_GUARD) != 0 ? "YES" : "NO"), self);
+       exec("say Sentinel: " + ((new_npc.npcflags & NPC_SENTINEL) != 0 ? "YES" : "NO"), self);
+       exec("say Stay in zone: " + ((new_npc.npcflags & NPC_STAY_ZONE) != 0 ? "YES" : "NO"), self);
+    }
+ } dilend
+
+== Usage Notes ==
+* The '''npcflags''' function modifies the NPC '''npcflags''' field using bitwise operations
+* Common flag constants include:
+** '''NPC_AGGRESSIVE''' - NPC will attack enemies on sight
+** '''NPC_GUARD''' - NPC will guard and protect area
+** '''NPC_SENTINEL''' - NPC will stay in designated area
+** '''NPC_STAY_ZONE''' - NPC will not leave its zone
+* Flags are combined using bitwise OR (|) operator
+* Use [[isaff]] function to check if specific flags are set
+* The function provides direct field modification equivalent to: `npc.npcflags := npc.npcflags | flags`
+
+== Error Handling ==
+* Returns '''0''' on successful flag modification
+* Returns '''non-zero''' error code if:
+** NPC pointer is null or invalid
+** Flags parameter is invalid
+* NPC is not of type UNIT_ST_NPC
+
+== Related Functions/Fields ==
+* [[npcflags]] - NPC flags field (this function)
+* [[isaff]] - Check if specific NPC flags are set
+* [[unit_st_npc.hlp]] - NPC-specific fields and constants
+* Bitwise operations: Use | (OR) operator to combine flags
+
+== See Also ==
+* NPC behavior constants: '''NPC_AGGRESSIVE''', '''NPC_GUARD''', '''NPC_SENTINEL''', '''NPC_STAY_ZONE'''
+* Bit manipulation: [[and]], [[or]], [[not]] operators
+* Unit type constants: '''UNIT_ST_NPC'''

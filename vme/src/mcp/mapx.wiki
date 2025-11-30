@@ -1,0 +1,131 @@
+= mapx =
+
+== Syntax ==
+ field: '''.mapx'''
+
+== Description ==
+The '''.mapx''' field is accessed on room units and returns the X coordinate of the room on a map grid. This field is used to position rooms within a coordinate system, typically for mapping, visualization, or spatial calculations.
+
+If a room has not been assigned map coordinates, this field returns -1.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .mapx || integer || Read-only || X coordinate of the room on the map grid (-1 if not set)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin show_room_coordinates(room : unitptr);
+ code
+ {
+   // Check if the unit is a room
+   if (room.type != UNIT_ST_ROOM)
+   {
+     act("Target is not a room.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Get coordinates
+   if (room.mapx != -1 and room.mapy != -1)
+     act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR);
+   else
+     act("This room has no map coordinates assigned.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin find_adjacent_rooms(center_room : unitptr);
+ var
+   room : unitptr;
+   x, y : integer;
+   adjacent : stringlist;
+
+ code
+ {
+   if (center_room.type != UNIT_ST_ROOM or center_room.mapx = -1)
+   {
+     act("Invalid center room or no coordinates.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   x := center_room.mapx;
+   y := center_room.mapy;
+
+   // Search for rooms with adjacent coordinates
+   foreach (UNIT_ST_ROOM, room)
+   {
+     if (room.mapx = -1 or room.mapy = -1)
+       continue;
+
+     // Check if room is adjacent (within 1 coordinate)
+     if ((room.mapx >= x - 1) and (room.mapx <= x + 1) and
+         (room.mapy >= y - 1) and (room.mapy <= y + 1) and
+         (room != center_room))
+     {
+       addstring(adjacent, room.title + " (" + itoa(room.mapx) + "," + itoa(room.mapy) + ")");
+     }
+   }
+
+   if (length(adjacent) > 0)
+   {
+     act("Adjacent rooms found:", A_ALWAYS, self, null, null, TO_CHAR);
+     foreach (adjacent as line)
+       act("  $2t", A_ALWAYS, self, line, null, TO_CHAR);
+   }
+   else
+     act("No adjacent rooms found.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin generate_map_html(room : unitptr);
+ var
+   html : string;
+
+ code
+ {
+   if (room.type != UNIT_ST_ROOM)
+   {
+     quit;
+   }
+
+   // Generate HTML with map coordinates if available
+   if (room.mapx != -1)
+     html := "<div class='room' x='" + itoa(room.mapx) + "' y='" + itoa(room.mapy) + "'>" + room.title + "</div>";
+   else
+     html := "<div class='room'>" + room.title + "</div>";
+
+   sendtext(html, self);
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.mapx''' field is read-only and cannot be modified through DIL
+* This field works in conjunction with [[mapy]] to provide complete 2D coordinates
+* A value of -1 indicates that the room has not been assigned map coordinates
+* Map coordinates are typically set in the zone files or through administrative commands
+* This field is commonly used for mapping systems, spatial calculations, and room visualization
+* Coordinates are typically used for grid-based mapping where each room has an X,Y position
+
+== Error Handling ==
+* If accessed on a non-room unit type, the operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* The field itself never fails - it always returns an integer (coordinates or -1)
+
+== Related Functions/Fields ==
+* [[mapy]] - Gets the Y coordinate of a room
+* [[unit_st_room]] - Room-specific fields documentation
+* [[findroom]] - Finds a room by name
+* [[zoneidx]] - Gets the zone name of a room
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_room]] - Room-specific fields and properties

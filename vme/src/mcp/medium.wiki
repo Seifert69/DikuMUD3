@@ -1,0 +1,129 @@
+= medium =
+
+== Syntax ==
+ variable: '''medium'''
+
+== Description ==
+The '''medium''' variable is a built-in unit pointer that refers to the unit which was used as the medium during an operation. This variable is automatically set by the game engine when certain commands or actions are performed.
+
+For example, when using the 'get' command to take an item from a container, the container (such as a bag) becomes the medium. In spell casting or recharge operations, the item being affected becomes the medium.
+
+== Return Value ==
+Returns unitptr:
+* '''unitptr''' - The unit that served as the medium for the operation
+* '''null''' - When no medium was involved in the operation
+
+== Examples ==
+ dilbegin recharge_service();
+ external
+   string accept_dil@function (pc:unitptr,s:string);
+
+ var
+    item : unitptr;
+    cost : integer;
+    answer : string;
+
+ code
+ {
+    // Wait for someone to give an item for recharging
+    wait (SFB_DONE, (command("give")) and (self == activator));
+
+    // Get the item being recharged (the medium)
+    item := medium;
+    
+    if (item = null)
+    {
+       exec("say I need an item to recharge.", self);
+       quit;
+    }
+
+    // Check if it's a rechargeable item
+    if (item.type != UNIT_ST_OBJ)
+    {
+       exec("say I can only recharge objects.", self);
+       quit;
+    }
+
+    // Recharge logic here...
+    exec("say I will recharge your " + item.title + ".", self);
+    quit;
+ }
+ dilend
+
+ dilbegin container_check();
+ var
+    container : unitptr;
+    item : unitptr;
+
+ code
+ {
+    // When someone tries to get an item, check the container
+    container := medium;
+    
+    if (container = null)
+    {
+       // No container involved
+       quit;
+    }
+
+    if (container.type != UNIT_ST_OBJ)
+    {
+       act("$1n is not a container.", A_ALWAYS, container, null, null, TO_CHAR);
+       quit;
+    }
+
+    act("You search through $1n.", A_ALWAYS, activator, container, null, TO_CHAR);
+    quit;
+ }
+ dilend
+
+ dilbegin spell_medium_check();
+ var
+    spell_target : unitptr;
+    casting_medium : unitptr;
+
+ code
+ {
+    // In spell casting, medium might be the focus item
+    spell_target := target;
+    casting_medium := medium;
+
+    if (casting_medium != null)
+    {
+       act("You cast the spell through $1n.", A_ALWAYS, self, casting_medium, null, TO_CHAR);
+       act("$1n channels magical energy through $2n.", A_ALWAYS, self, casting_medium, spell_target, TO_ROOM);
+    }
+    else
+    {
+       act("You cast the spell directly.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+
+    quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''medium''' variable is automatically set by the game engine
+* It is read-only and cannot be modified by DIL code
+* This variable is context-dependent and only meaningful within specific operations
+* Common contexts where medium is set include:
+** 'get' commands - the container being accessed
+** 'put' commands - the container being used
+** Spell casting - the item or focus being used
+** Recharge operations - the item being recharged
+* The variable is typically null outside of these specific operation contexts
+* Use [[activator]] to identify who initiated the operation
+
+== Error Handling ==
+* The '''medium''' variable itself never fails - it always returns a unitptr (which may be null)
+* Always check for null before using the medium to avoid errors
+* The variable is only meaningful in the appropriate operation context
+
+== Related Functions/Fields ==
+* [[activator]] - The unit that activated the DIL program
+* [[target]] - The target of an operation
+* [[self]] - The unit executing the DIL program
+
+== See Also ==
+* DIL message documentation for more information on operation contexts
+* [[unitptr]] - Unit pointer type documentation

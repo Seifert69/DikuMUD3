@@ -1,0 +1,120 @@
+= master =
+
+== Syntax ==
+ field: '''.master'''
+
+== Description ==
+The '''.master''' field is accessed on character units (PC or NPC) and returns a unitptr to the character that this character is currently following. If the character is not following anyone, this field returns null.
+
+This field represents the "master" in a master/follower relationship, where the current character is the follower and the returned unitptr is the master they are following.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .master || unitptr || Read-only || The character this unit is following (null if not following anyone)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+ dilbegin check_following(char : unitptr);
+ code
+ {
+   // Check if the unit is a character
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Check who the character is following
+   if (char.master = null)
+     act("$1n is not following anyone.", A_ALWAYS, char, null, null, TO_ROOM);
+   else
+     act("$1n is following $2n.", A_ALWAYS, char, char.master, null, TO_ROOM);
+
+   quit;
+ }
+ dilend
+
+ dilbegin stop_following();
+ code
+ {
+   // Check if self is following someone
+   if (self.master != null)
+   {
+     act("You stop following $1n.", A_ALWAYS, self, self.master, null, TO_CHAR);
+     act("$2n stops following you.", A_ALWAYS, self.master, self, null, TO_CHAR);
+     act("$2n stops following $1n.", A_ALWAYS, self.master, self, null, TO_NOTVICT);
+     
+     // Use the follow function to break the following relationship
+     follow(self, self);
+   }
+   else
+     act("You are not following anyone.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin group_leader();
+ var
+   leader : unitptr;
+   group_members : stringlist;
+
+ code
+ {
+   // Find the group leader (someone not following anyone)
+   leader := self;
+   
+   while (leader.master != null and leader.master != leader)
+     leader := leader.master;
+
+   if (leader = self)
+     act("You are the group leader.", A_ALWAYS, self, null, null, TO_CHAR);
+   else
+     act("$1n is the group leader.", A_ALWAYS, self, leader, null, TO_CHAR);
+
+   // Count group members
+   foreach (UNIT_ST_PC, leader)
+   {
+     if (leader.master = self or leader = self)
+       addstring(group_members, leader.name);
+   }
+
+   if (length(group_members) > 1)
+   {
+     act("Group members:", A_ALWAYS, self, null, null, TO_CHAR);
+     foreach (group_members as member)
+       act("  $2t", A_ALWAYS, self, member, null, TO_CHAR);
+   }
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.master''' field is read-only and cannot be modified directly
+* To change who a character follows, use the [[follow]] function
+* A character following themselves indicates they are not following anyone
+* This field is commonly used in group management, pet control, and NPC behavior systems
+* The master/follower relationship forms chains - a character can be both a master and a follower simultaneously
+* When a character stops following, their master field typically becomes null or points to themselves
+
+== Error Handling ==
+* If accessed on a non-character unit type, the operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* The field itself never fails - it always returns a unitptr (which may be null)
+
+== Related Functions/Fields ==
+* [[follow]] - Makes a character follow another character
+* [[follower]] - Gets the first follower of a character
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields and properties

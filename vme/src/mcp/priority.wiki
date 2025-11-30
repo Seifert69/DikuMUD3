@@ -1,0 +1,149 @@
+= priority =
+
+ procedure: '''priority'''();
+
+== Syntax ==
+ priority();
+
+== Description ==
+The '''priority''' procedure sets the current DIL program to have priority over other DIL programs. When priority is set, no other DIL programs with lower priority will be executed until the '''nopriority''' procedure is called or the program terminates.
+
+This procedure is used to ensure that critical DIL routines can execute without interference from other programs that might be attached to the same unit or in the same environment. It's commonly used in rescue missions, time-sensitive actions, or when a character needs to maintain control over their actions.
+
+== Return Value ==
+This procedure does not return a value.
+
+== Examples ==
+ dilbegin rescue_mission(target_room : string);
+ external
+    unit_room@function(u : unitptr);
+    walk_room@function(s : string, i : integer);
+ var
+    current_room : unitptr;
+ code
+ {
+    current_room := unit_room@function(self);
+    
+    if (current_room.symname != target_room)
+    {
+       // Set priority to ensure uninterrupted rescue
+       priority;
+       self.outside_descr := "I must rescue someone in " + target_room + "!";
+       
+       // Walk to target location
+       walk_room@function(target_room, 8);
+       
+       // Arrived at target, allow other DILs to take over
+       nopriority;
+       self.outside_descr := "I'm ready to begin the rescue!";
+    }
+    else
+    {
+       sendtext("You're already at the rescue location.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin urgent_message();
+ var
+    message : string;
+ code
+ {
+    message := "This is an urgent announcement that must not be interrupted!";
+    
+    // Set priority to ensure message delivery
+    priority;
+    
+    // Send the message to all players
+    send_to_all(message);
+    
+    // Brief pause to ensure message is seen
+    pause;
+    
+    // Release priority for other programs
+    nopriority;
+    
+    quit;
+ } dilend
+
+ dilbegin combat_mode();
+ var
+    combat_active : integer;
+ code
+ {
+    combat_active := (self.position == POSITION_FIGHTING);
+    
+    if (combat_active)
+    {
+       // Set priority during combat to prevent interference
+       priority;
+       
+       // Combat-specific actions here
+       self.outside_descr := "You focus entirely on the battle!";
+       
+       // Wait until combat ends
+       while (self.position == POSITION_FIGHTING)
+       {
+          wait(SFB_TICK, TRUE);
+       }
+       
+       // Release priority when combat ends
+       nopriority;
+       self.outside_descr := "You relax your combat stance.";
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin time_sensitive_action();
+ var
+    countdown : integer;
+ code
+ {
+    countdown := 10;
+    
+    // Set priority for countdown sequence
+    priority;
+    
+    while (countdown > 0)
+    {
+       act("$1n counts down: " + itoa(countdown) + "...", A_ALWAYS, self, null, null, TO_ROOM);
+       sendtext("Countdown: " + itoa(countdown) + "<br/>", self);
+       
+       countdown := countdown - 1;
+       heartbeat := PULSE_SEC * 2;
+       pause;
+    }
+    
+    // Time's up, release priority
+    nopriority;
+    act("$1n's countdown is complete!", A_ALWAYS, self, null, null, TO_ROOM);
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* Use '''priority''' to prevent other DIL programs from interrupting critical actions
+* The priority remains in effect until '''nopriority''' is called or the program ends
+* Only one DIL program can have priority at a time per unit/environment
+* Common usage patterns include: priority → critical actions → nopriority
+* The procedure is essential for rescue missions, timed events, and combat sequences
+* Multiple programs can use priority in sequence, but only one is active at a time
+
+== Error Handling ==
+The procedure will fail when:
+* Called from a DIL program that doesn't have proper execution context
+* The system cannot set priority due to internal state conflicts
+
+== Related Functions/Fields ==
+* [[nopriority]] - Procedure to cancel priority and allow other DIL programs to execute
+* [[SFB_PRIORITY]] - Event flag that enables priority-based execution control
+* [[pause]] - Often used with priority to maintain control during sequences
+* [[wait]] - Used with priority to control execution flow
+
+== See Also ==
+* [[secure]] - Function for protecting units during critical operations
+* [[position]] - Field that may affect DIL program execution
+* [[outside_descr]] - Field commonly modified during priority sequences
+* [[send_to_all]] - Function for sending messages to all players

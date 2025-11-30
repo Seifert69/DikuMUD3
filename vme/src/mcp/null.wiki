@@ -1,0 +1,82 @@
+= null =
+
+== Syntax ==
+Constant: '''null'''
+
+== Description ==
+The '''null''' keyword represents a null pointer value in DIL. It is used to indicate that a pointer variable does not point to any valid object or unit. This is particularly useful when working with unitptr, extraptr, cmdptr, and other pointer types.
+
+The '''null''' value is equivalent to a nullptr in C/C++ and can be used in comparisons to check if a pointer is valid or to explicitly set a pointer to no value.
+
+== Usage Notes ==
+* '''null''' can be used with any pointer type (unitptr, extraptr, cmdptr, etc.)
+* Many functions return '''null''' to indicate failure or that no object was found
+* '''null''' is commonly used as a parameter in functions like '''act()''' where a medium argument is optional
+* When comparing pointers, use `== null` or `!= null` to check for null values
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin check_pointer();
+ var
+    my_unit : unitptr;
+ 
+ code
+ {
+    my_unit := findunit(self, "sword", FIND_UNIT_INVEN, null);
+    if (my_unit == null)
+       act("You don't have a sword.", A_ALWAYS, self, null, null, TO_CHAR);
+    else
+       act("You found your sword!", A_ALWAYS, self, null, null, TO_CHAR);
+ } dilend
+
+=== Function Parameters ===
+ dilbegin use_null_in_act();
+ var
+    target : unitptr;
+ 
+ code
+ {
+    // Using null as the medium parameter in act()
+    act("You look around.", A_SOMEONE, self, null, null, TO_CHAR);
+    
+    target := findunit(self, "guard", FIND_UNIT_SURRO, null);
+    if (target != null)
+       act("You see $1n here.", A_SOMEONE, self, target, null, TO_CHAR);
+ } dilend
+
+=== Setting Pointers to Null ===
+ dilbegin reset_pointers();
+ var
+    saved_unit : unitptr;
+ 
+ code
+ {
+    saved_unit := self;  // Save current unit
+    // ... do some work ...
+    saved_unit := null;  // Reset to null when done
+ } dilend
+
+== Error Handling ==
+When working with functions that return pointers, always check for '''null''' before using the returned value to avoid runtime errors:
+
+ if (returned_pointer != null)
+ {
+    // Safe to use the pointer
+ }
+ else
+ {
+    // Handle the null case
+ }
+
+== Related Functions/Fields ==
+* [[findunit]] - Returns null if unit not found
+* [[findroom]] - Returns null if room not found
+* [[restore]] - Returns null if restore fails
+* [[load]] - Returns null if load fails
+* [[act]] - Often uses null as optional medium parameter
+
+== See Also ==
+* [[unitptr]]
+* [[extraptr]]
+* [[cmdptr]]
+* [[if]] - Can test for null values in conditions

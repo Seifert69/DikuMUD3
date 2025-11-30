@@ -1,0 +1,120 @@
+= max_hp =
+
+== Syntax ==
+ field: '''.max_hp'''
+
+== Description ==
+The '''.max_hp''' field is accessed on character units (PC/NPC) and objects, returning the maximum hitpoints of the unit. This represents the highest possible health value the unit can have.
+
+For player characters, this field is read-only. For mobiles (NPCs) and objects, this field is read/write, allowing modification of their maximum health.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .max_hp || integer || Read-only (PC) / Read-write (NPC & Obj) || Maximum hitpoints of the unit
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character) - Read-only access
+* UNIT_ST_NPC (Non-Player Character) - Read-write access
+* UNIT_ST_OBJ (Object) - Read-write access
+
+== Examples ==
+ dilbegin show_health_status(char : unitptr);
+ code
+ {
+   // Check if the unit is a character
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Display health information
+   act("$1n's health: $2d/$3d", A_ALWAYS, char, char.hp, char.max_hp, TO_ROOM);
+   
+   // Calculate health percentage
+   if (char.max_hp > 0)
+   {
+     var percentage : integer;
+     percentage := (char.hp * 100) / char.max_hp;
+     act("Health at $2d% capacity.", A_ALWAYS, char, percentage, null, TO_CHAR);
+   }
+
+   quit;
+ }
+ dilend
+
+ dilbegin heal_to_full(char : unitptr);
+ code
+ {
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Restore health to maximum
+   char.hp := char.max_hp;
+   act("$1n's health has been fully restored.", A_ALWAYS, char, null, null, TO_ROOM);
+   act("Your health has been fully restored.", A_ALWAYS, char, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin create_tough_npc(template : unitptr);
+ var
+   new_npc : unitptr;
+
+ code
+ {
+   // Create a new NPC based on template
+   new_npc := clone(template);
+   
+   if (new_npc = null)
+   {
+     act("Failed to create new NPC.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Make the NPC tougher by increasing max HP (only works for NPCs)
+   if (new_npc.type = UNIT_ST_NPC)
+   {
+     new_npc.max_hp := new_npc.max_hp * 2;  // Double the max HP
+     new_npc.hp := new_npc.max_hp;           // Set current HP to new max
+     
+     act("$1n looks much tougher than $2n!", A_ALWAYS, new_npc, template, null, TO_ROOM);
+   }
+   else
+     act("Can only modify max_hp for NPCs, not players.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.max_hp''' field has different access permissions based on unit type
+* For players (PCs), this field is read-only to maintain game balance
+* For NPCs and objects, this field is read-write, allowing dynamic modification
+* This field is commonly used in conjunction with [[hp]] to calculate health percentages
+* Maximum hitpoints are typically determined by character level, race, class, and equipment
+* The value is used as an upper bound when restoring health after death, healing, or rest
+* Objects use this field to determine durability and breakage thresholds
+
+== Error Handling ==
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* If attempting to write to a player's max_hp, the operation may be restricted or fail
+* The field itself never fails when reading - it always returns an integer value
+
+== Related Functions/Fields ==
+* [[hp]] - Gets/sets the current hitpoints
+* [[max_mana]] - Gets the maximum mana points
+* [[max_endurance]] - Gets the maximum endurance points
+* [[experience]] - Sets experience points (which can affect max_hp for NPCs)
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

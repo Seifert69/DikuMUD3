@@ -1,0 +1,76 @@
+= key =
+
+; key : string (RO)
+: The key identifier that will open this unit.
+
+== Description ==
+
+The '''key''' field is a read-only string property that contains the key identifier required to open or unlock a unit. This is typically used on doors, containers, and other lockable objects. The key value is usually in the format "key_name@zone" and corresponds to a key object that players can possess.
+
+== Field Access ==
+
+; unit.key : string (Read-Only)
+: Returns the key identifier string for this unit.
+
+== Examples ==
+
+=== Basic Key Check ===
+ if (item.key == "")
+ {
+    act("Odd, you can't seem to find a keyhole.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+ }
+ 
+This checks if an item has a key defined before attempting lock/unlock operations.
+
+=== Key Validation ===
+ pc := findsymbolic(self, item.key, FIND_UNIT_IN_ME);
+ 
+ if ((pc == null) and (self.level < IMMORTAL_LEVEL))
+ {
+    act("You don't seem to have the proper key.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+ }
+ 
+This searches the player's inventory for the required key object.
+
+=== Display Key Information ===
+ sendtext("Key required: " + item.key, self);
+ 
+This displays what key is needed for an object.
+
+=== Key Format Examples ===
+ "bronze_key@midgaard"
+ "big_key@blackzon"
+ "door_key@myzone"
+ 
+Typical key identifier formats.
+
+== Usage Notes ==
+
+* The key field is read-only and cannot be modified directly
+* Key identifiers are typically in "name@zone" format
+* The key string corresponds to the symbolic name of a key object
+* Players must possess the matching key object to open locked items
+* Immortals (level >= IMMORTAL_LEVEL) can often bypass key requirements
+* Empty string ("") indicates no key is required or the unit is not lockable
+
+== Common Use Cases ==
+
+* Checking if doors or containers can be locked/unlocked
+* Validating that players have the correct key
+* Displaying key requirements to players
+* Implementing lock/unlock commands
+* Creating puzzles with specific key requirements
+
+== Related Fields ==
+
+; openflags : Contains lock/unlock state information
+; findsymbolic : Used to locate key objects in inventory
+
+== See Also ==
+
+; findsymbolic : Finds units by symbolic name
+; isset : Tests flag bits like EX_LOCKED
+; openflags : Field containing open/lock state
+; EX_LOCKED : Flag indicating locked state

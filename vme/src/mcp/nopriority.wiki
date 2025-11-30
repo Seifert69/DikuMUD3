@@ -1,0 +1,108 @@
+= nopriority =
+
+== Syntax ==
+ function: '''nopriority'''();
+
+== Description ==
+The '''nopriority''' function cancels any active priority procedures for the current DIL program. This function is used to reset the priority system, allowing other DIL programs to handle activation interrupts without being blocked by higher-priority routines that were previously set.
+
+== Return Value ==
+Returns '''integer''':
+* '''0''' - Successfully canceled priority procedures
+* '''non-zero''' - Error code if cancellation failed
+
+== Examples ==
+ dilbegin reset_priority_system();
+ var
+    result : integer;
+ code
+ {
+    // Set up a high priority routine
+    priority(SFB_MSG, argument == "admin_reset");
+    
+    // Later, cancel it to allow normal operation
+    result := nopriority();
+    
+    if (result == 0)
+    {
+       exec("say Priority system reset successfully.", self);
+    }
+    else
+    {
+       exec("say Failed to reset priority system.", self);
+    }
+ } dilend
+
+ dilbegin temporary_override();
+ var
+    old_priority : integer;
+ code
+ {
+    // Set a temporary high priority for emergency handling
+    priority(SFB_MSG, argument == "emergency_stop");
+    
+    // Do some emergency processing
+    exec("say Emergency protocol activated!", self);
+    pause;
+    
+    // Cancel the emergency priority to restore normal operation
+    old_priority := nopriority();
+    
+    if (old_priority == 0)
+    {
+       exec("say Emergency protocol deactivated.", self);
+    }
+    else
+    {
+       exec("say Failed to deactivate emergency.", self);
+    }
+ } dilend
+
+ dilbegin priority_manager();
+ var
+    current_priority : integer;
+ code
+ {
+    :check_priority:
+    pause;
+    
+    // Check current priority state (this would be set by other systems)
+    current_priority := interrupt(SFB_PRIORITY, argument == "get_status");
+    
+    if (current_priority == -1)
+    {
+       exec("say No priority procedures are currently active.", self);
+    }
+    else
+    {
+       exec("say Priority procedures are active with level: " + itoa(current_priority), self);
+    }
+    
+    goto check_priority;
+ } dilend
+
+== Usage Notes ==
+* The '''nopriority''' function cancels all priority procedures set by [[priority]] function
+* Used to reset interrupt handling to default state
+* Common in systems that need to temporarily override priority behavior:
+** Emergency stop routines
+** Administrative override functions
+** System reset procedures
+* Priority levels determine which DIL program gets control during activation
+* Higher priority numbers take precedence over lower ones
+
+== Error Handling ==
+* Returns '''0''' on successful cancellation
+* Returns '''non-zero''' error code if cancellation fails
+* The function itself does not validate parameters - errors come from the underlying priority system
+
+== Related Functions/Fields ==
+* [[priority]] - Set priority for activation interrupts
+* [[interrupt]] - Set up interrupt handling for specific message classes
+* [[clear]] - Clear specific interrupt handlers
+* [[on_activation]] - Handle activation-time interrupts
+
+== See Also ==
+* Interrupt flags: '''SFB_PRIORITY''', '''SFB_MSG''', '''SFB_DEAD'''
+* Priority levels and activation order in DIL interrupt system
+* DIL program activation and interrupt handling mechanisms

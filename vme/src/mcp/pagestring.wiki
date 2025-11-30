@@ -1,0 +1,226 @@
+= pagestring =
+
+== Syntax ==
+'''pagestring'''(text : string, target : unitptr)
+
+== Description ==
+The '''pagestring'''() function displays a formatted text string to a player character, typically used for showing multi-page information that doesn't scroll off the screen. This function formats the text for proper display and waits for the player to press enter before continuing.
+
+Based on the C implementation, this function calls the `CHAR_DESCRIPTOR()` method to send formatted text to a character's descriptor.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| text || string || The text string to be displayed to the player
+|-
+| target || unitptr || The player character to receive the paged text
+|}
+
+== Return Value ==
+Returns nothing:
+* '''void''' - No return value
+
+== Usage Notes ==
+The function displays text to the specified player character and waits for user input before continuing.
+Text is formatted to fit within the player's screen width.
+This is commonly used for displaying help files, clan information, skill lists, and other multi-page content.
+The function automatically handles pagination and formatting for optimal display.
+
+== Examples ==
+=== Basic Page Display ===
+ dilbegin show_help();
+ var
+    help_text : string;
+ 
+ code
+ {
+    help_text := "Welcome to the MUD!&n&n";
+    help_text := help_text + "Commands available:&n&n";
+    help_text := help_text + "  look     - Look around you&n&n";
+    help_text := help_text + "  say      - Say something&n&n";
+    help_text := help_text + "  quit     - Exit the game&n&n&n";
+    help_text := help_text + "&nPress ENTER to continue...";
+    
+    pagestring(help_text, self);
+ } dilend
+
+=== Clan Information Display ===
+ dilbegin show_clan_info();
+ var
+    clan_name : string;
+    clan_members : stringlist;
+    member : unitptr;
+    count : integer;
+    page_text : string;
+ 
+ code
+ {
+    clan_name := self.extra.[CLAN_NAME].descr;
+    clan_members := self.extra.[CLAN_MEMBERS].descr;
+    
+    page_text := "Clan: " + clan_name + "&n&n";
+    page_text := page_text + "Members:&n&n";
+    
+    count := 0;
+    foreach (UNIT_ST_PC, member)
+    {
+       if (member.extra.[CLAN_NAME].descr == clan_name)
+       {
+          count := count + 1;
+          page_text := page_text + "  " + member.name + "&n&n";
+       }
+    }
+    
+    page_text := page_text + "&nTotal members: " + itoa(count) + "&n&n";
+    page_text := page_text + "Press ENTER to continue...";
+    
+    pagestring(page_text, self);
+ } dilend
+
+=== Skill List Display ===
+ dilbegin show_skills();
+ var
+    skill_text : string;
+    i : integer;
+ 
+ code
+ {
+    skill_text := "Your Skills:&n&n";
+    
+    i := 0;
+    while (i < 10)
+    {
+       skill_text := skill_text + "  " + self.skills.[i] + " (Level " + itoa(self.abilities.[ABIL_SKILL]) + ")&n&n";
+       i := i + 1;
+    }
+    
+    skill_text := skill_text + "&nPress ENTER to continue...";
+    
+    pagestring(skill_text, self);
+ } dilend
+
+=== Equipment Display ===
+ dilbegin show_equipment();
+ var
+    equip_text : string;
+    slot : integer;
+ 
+ code
+ {
+    equip_text := "Your Equipment:&n&n";
+    
+    for (slot := 0; slot < 20; slot := slot + 1)
+    {
+       if (equipment(self, slot) != null)
+       {
+          equip_text := equip_text + "  Slot " + itoa(slot) + ": " + equipment(self, slot).title + "&n&n";
+       }
+    }
+    
+    equip_text := equip_text + "&nPress ENTER to continue...";
+    
+    pagestring(equip_text, self);
+ } dilend
+
+=== Score Display ===
+ dilbegin show_score();
+ var
+    score_text : string;
+ 
+ code
+ {
+    score_text := "Score for " + self.name + "&n&n";
+    score_text := score_text + "Level: " + itoa(self.level) + "&n&n";
+    score_text := score_text + "Experience: " + itoa(self.exp) + "&n&n";
+    score_text := score_text + "Gold: " + itoa(self.money) + "&n&n";
+    score_text := score_text + "Hit Points: " + itoa(self.hp) + "/" + itoa(self.max_hp) + "&n&n";
+    score_text := score_text + "Mana: " + itoa(self.mana) + "/" + itoa(self.max_mana) + "&n&n";
+    score_text := score_text + "Endurance: " + itoa(self.endurance) + "/" + itoa(self.max_endurance) + "&n&n";
+    score_text := score_text + "&nPress ENTER to continue...";
+    
+    pagestring(score_text, self);
+ } dilend
+
+=== Multi-Page Document ===
+ dilbegin show_document();
+ var
+    page_num : integer;
+    total_pages : integer;
+    page_text : string;
+ 
+ code
+ {
+    total_pages := 5;
+    
+    for (page_num := 1; page_num <= total_pages; page_num := page_num + 1)
+    {
+       page_text := "=== PAGE " + itoa(page_num) + " of " + itoa(total_pages) + " ===&n&n";
+       page_text := page_text + "This is page " + itoa(page_num) + " of the documentation.&n&n";
+       page_text := page_text + "Press ENTER to continue to next page...&n&n";
+       
+       pagestring(page_text, self);
+       pause; // Wait for player to press enter
+    }
+    
+    page_text := "=== End of Document ===&n&n";
+    page_text := page_text + "Thank you for reading!&n&n";
+    
+    pagestring(page_text, self);
+ } dilend
+
+=== Interactive Menu ===
+ dilbegin interactive_menu();
+ var
+    choice : integer;
+    menu_text : string;
+ 
+ code
+ {
+    :menu_start:
+    menu_text := "Main Menu:&n&n";
+    menu_text := menu_text + "1. Help&n&n";
+    menu_text := menu_text + "2. Skills&n&n";
+    menu_text := menu_text + "3. Equipment&n&n";
+    menu_text := menu_text + "4. Score&n&n";
+    menu_text := menu_text + "5. Quit&n&n";
+    menu_text := menu_text + "Enter your choice (1-5): ";
+    
+    pagestring(menu_text, self);
+    
+    // Wait for player input (simplified for example)
+    pause;
+    
+    // In a real implementation, you would parse the player's input
+    // and branch accordingly
+ } dilend
+
+== Error Handling ==
+Always validate that target is a valid player character:
+
+ if (target == null)
+ {
+    act("Invalid target for pagestring.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+ }
+ 
+ if (target.type != UNIT_ST_PC)
+ {
+    act("Target must be a player character.", A_ALWAYS, self, target, null, TO_CHAR);
+    return;
+ }
+
+== Related Functions/Fields ==
+* [[sendtext]] - Send text to a player
+* [[act]] - Display messages to players
+* [[extra]] - Access to extra descriptions
+* [[skills]] - Character skills array
+* [[abilities]] - Character abilities array
+* [[equipment]] - Get equipment in specific slot
+
+== See Also ==
+* [[sendtext]] - Text output function
+* [[act]] - Action display function
+* [[extra]] - Extra description system
+* [[skills]] - Character skills documentation
+* [[abilities]] - Character abilities documentation

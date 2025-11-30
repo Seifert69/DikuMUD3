@@ -1,0 +1,98 @@
+= manipulate =
+
+== Syntax ==
+ field: '''.manipulate'''
+
+== Description ==
+The '''.manipulate''' field is accessed on any unit and returns or sets bit flags that specify how the unit can be handled. These flags determine what actions can be performed on the unit, such as taking, dropping, or manipulating it in various ways.
+
+This field is read/write, allowing you to both retrieve the current manipulation flags and modify them directly.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .manipulate || integer || Read/Write || Bit flags specifying how the unit can be handled
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin check_manipulate(item : unitptr);
+ code
+ {
+   // Check if an item can be taken
+   if (isset(item.manipulate, MANIPULATE_TAKE))
+     act("You can take the $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+   else
+     act("You cannot take the $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+   // Check if an item can be dropped
+   if (isset(item.manipulate, MANIPULATE_DROP))
+     act("You can drop the $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+   else
+     act("You cannot drop the $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin set_untakeable(item : unitptr);
+ code
+ {
+   // Make an item untakeable
+   unset(item.manipulate, MANIPULATE_TAKE);
+   act("The $2n suddenly becomes impossible to take.", A_ALWAYS, self, item, null, TO_ALL);
+   
+   quit;
+ }
+ dilend
+
+ dilbegin janitor_cleanup();
+ var
+    trash : unitptr;
+
+ code
+ {
+   foreach (UNIT_ST_OBJ, trash)
+   {
+      // Only process objects that can be taken
+      if (not isset(trash.manipulate, MANIPULATE_TAKE))
+         continue;
+      
+      // Additional cleanup logic here
+      act("$1n picks up the $2n.", A_ALWAYS, self, trash, null, TO_ROOM);
+      exec("get " + trash.name, self);
+   }
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.manipulate''' field uses bit flags that can be checked with [[isset]] and modified with [[set]]/[[unset]]
+* Common manipulation flags include MANIPULATE_TAKE, MANIPULATE_DROP, and others defined in values.h/vme.h
+* This field is essential for controlling object behavior and accessibility
+* Setting inappropriate flags may cause unexpected behavior in the game
+* The field is commonly used in conjunction with [[can_carry]] and other movement-related functions
+
+== Error Handling ==
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* Setting invalid flag combinations may result in undefined behavior
+* Some flags may be overridden by the game engine based on unit type or state
+
+== Related Functions/Fields ==
+* [[isset]] - Checks if specific bits are set in an integer
+* [[set]] - Sets specific bits in an integer
+* [[unset]] - Clears specific bits in an integer
+* [[can_carry]] - Checks if a unit can carry another unit
+* [[flags]] - General unit flags field
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* MANIPULATE_* flags in values.h and/or vme.h for complete flag definitions

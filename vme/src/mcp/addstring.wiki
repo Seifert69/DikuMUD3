@@ -1,46 +1,42 @@
-# addstring
+= addstring =
 
-## Description
+== Description ==
 Adds a new string to a string list. This function is used to build and manage dynamic string lists for various purposes like command arguments, message queues, or data collections.
 
-## Syntax
-```
-addstring(stringlist, string)
-```
+== Syntax ==
+ addstring(stringlist, string)
 
-## Parameters
+== Parameters ==
 - **stringlist** - The string list to add the string to (can be null to create a new list)
 - **string** - The string content to add to the list
 
-## Return Value
+== Return Value ==
 Returns the updated string list. If the operation fails, returns the original list unchanged.
 
-## Examples
-```dil
-// Create a new string list
-mylist := addstring(null, "first item");
+== Examples ==
+ // Create a new string list
+ mylist := addstring(null, "first item");
 
-// Add more items to the list
-mylist := addstring(mylist, "second item");
-mylist := addstring(mylist, "third item");
+ // Add more items to the list
+ mylist := addstring(mylist, "second item");
+ mylist := addstring(mylist, "third item");
 
-// Use with command arguments
-args := addstring(null, argument);
-args := addstring(args, extra_argument);
+ // Use with command arguments
+ args := addstring(null, argument);
+ args := addstring(args, extra_argument);
 
-// Build message queue
-messages := addstring(messages, "Welcome to the game!");
-messages := addstring(messages, "Type 'help' for commands.");
-```
+ // Build message queue
+ messages := addstring(messages, "Welcome to the game!");
+ messages := addstring(messages, "Type 'help' for commands.");
 
-## Notes
+== Notes ==
 - If stringlist is null, a new string list is created
 - Strings are added to the end of the list
 - The function handles memory allocation automatically
 - Commonly used for dynamic data structures
 - Used extensively in command parsing and message handling
 
-## See Also
+== See Also ==
 - [delstr](delstr.wiki) - Delete strings from string lists
 - [getwords](getwords.wiki) - Extract words from strings
 - [addextra](addextra.wiki) - Add strings to unit extra descriptions

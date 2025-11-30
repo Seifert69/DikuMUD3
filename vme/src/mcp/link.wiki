@@ -1,0 +1,62 @@
+= link =
+
+== Description ==
+
+The '''link''' procedure moves a unit into another unit's hierarchy. This function automatically unequips items if they are currently equipped before moving them.
+
+== Syntax ==
+
+ link ( u : unitptr, t : unitptr )
+
+; u : unitptr
+: Unit to link (the unit being moved)
+
+; t : unitptr
+: Unit to link into (the destination unit)
+
+== Behavior ==
+
+The link procedure performs the following operations:
+
+* If the source unit is an equipped object, it will be unequipped automatically
+* Removes the source unit from its current location using unit_from_unit()
+* Places the source unit into the destination unit using unit_to_unit()
+* Prevents recursive linking (a unit cannot be linked into itself or its own contents)
+* Prevents linking rooms into rooms
+
+== Example Usage ==
+
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname: string;
+
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ);
+    return;
+ } dilend
+
+== Notes ==
+
+* This procedure is commonly used for moving objects between inventories, rooms, or containers
+* The automatic unequipping ensures items are properly removed before being moved
+* Recursive linking is prevented to avoid infinite loops in the unit hierarchy
+* Room-to-room linking is not allowed
+
+== See Also ==
+
+* [[unequip]]
+* [[addequip]]
+* [[equipment]]

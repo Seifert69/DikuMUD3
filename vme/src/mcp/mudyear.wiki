@@ -1,0 +1,195 @@
+= mudyear =
+
+== Syntax ==
+ variable: '''mudyear''' (Read-only)
+
+== Description ==
+The '''mudyear''' variable returns the current year number in the MUD's internal time system. This built-in variable allows DIL programs to track and respond to long-term time progression, enabling year-based events, age calculations, and historical tracking within the game world.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current year number
+|}
+
+== Examples ==
+ dilbegin new_year_celebration();
+ var
+    current_year : integer;
+    last_year : integer;
+ code
+ {
+    :init:
+    last_year := mudyear;
+    
+    :check_year:
+    current_year := mudyear;
+    
+    // Check if a new year has started
+    if (current_year != last_year)
+    {
+       exec("say Happy New Year! Welcome to year " + itoa(current_year) + "!", self);
+       exec("emote celebrates the arrival of the new year with fireworks!", self);
+       last_year := current_year;
+    }
+    
+    pause;
+    goto check_year;
+ } dilend
+
+ dilbegin age_calculator(pc : unitptr);
+ var
+    age_in_years : integer;
+    birth_year : integer;
+ code
+ {
+    // Calculate character's age in mud years
+    age_in_years := (realtime - pc.birth) / SECS_PER_MUD_YEAR;
+    birth_year := mudyear - age_in_years;
+    
+    exec("say You were born in year " + itoa(birth_year) + "!", self);
+    exec("say You are " + itoa(age_in_years) + " years old.", self);
+    
+    // Age-based messages
+    if (age_in_years < 18)
+    {
+       exec("say You are still quite young!", self);
+    }
+    else if (age_in_years < 50)
+    {
+       exec("say You are in the prime of your life!", self);
+    }
+    else if (age_in_years < 100)
+    {
+       exec("say You are getting on in years!", self);
+    }
+    else
+    {
+       exec("say You are truly ancient!", self);
+    }
+ } dilend
+
+ dilbegin historical_event();
+ var
+    current_year : integer;
+    event_year : integer;
+    years_since : integer;
+ code
+ {
+    current_year := mudyear;
+    event_year := 850;  // Year of some historical event
+    years_since := current_year - event_year;
+    
+    if (years_since == 0)
+    {
+       exec("say The Great Battle is happening this very year!", self);
+    }
+    else if (years_since == 1)
+    {
+       exec("say It has been one year since the Great Battle.", self);
+    }
+    else
+    {
+       exec("say It has been " + itoa(years_since) + " years since the Great Battle.", self);
+    }
+    
+    // Century-based events
+    if ((current_year % 100) == 0)
+    {
+       exec("say This is a century year! A time of great celebration!", self);
+    }
+ } dilend
+
+ dilbegin complete_time_display();
+ var
+    buffer : string;
+    month_names : stringlist;
+    day_names : stringlist;
+    month_idx : integer;
+    day_idx : integer;
+    hour_12 : integer;
+    ampm : string;
+    day_num : integer;
+    suffix : string;
+ code
+ {
+    month_names := {"Month of Winter", "Month of the Winter Wolf",
+                   "Month of the Frost Giant", "Month of the Spring",
+                   "Month of Futility", "Month of the Sun", 
+                   "Month of the Heat", "Month of the Long Shadows",
+                   "Month of the Ancient Darkness"};
+    
+    day_names := {"the Day of the Bull", "the Day of the Deception",
+                  "the Day of Thunder", "the Day of Freedom",
+                  "the Day of the Great Gods", "the Day of the Sun",
+                  "the Day of the Moon"};
+    
+    month_idx := mudmonth;
+    day_idx := mudday % 7;
+    hour_12 := mudhour;
+    day_num := mudday + 1;
+    
+    // Format hour with AM/PM
+    if (hour_12 == 0)
+    {
+       hour_12 := 12;
+       ampm := "O-clock, Midnight!";
+    }
+    else if (hour_12 == 12)
+    {
+       ampm := "O-clock, High noon!";
+    }
+    else if (hour_12 < 12)
+    {
+       ampm := "AM";
+    }
+    else
+    {
+       hour_12 := hour_12 - 12;
+       ampm := "PM";
+    }
+    
+    // Day suffix
+    if (day_num == 1)
+       suffix := "st";
+    else if (day_num == 2)
+       suffix := "nd";
+    else if (day_num == 3)
+       suffix := "rd";
+    else
+       suffix := "th";
+    
+    buffer := "It is " + itoa(hour_12) + " " + ampm + ", on " + day_names.[day_idx] + ",<br/>";
+    buffer := buffer + "the " + itoa(day_num) + suffix + " Day of the " + month_names.[month_idx] +
+              ", Year " + itoa(mudyear) + ".<br/>";
+    
+    sendtext(buffer, self);
+ } dilend
+
+== Usage Notes ==
+* The '''mudyear''' variable is read-only and cannot be modified
+* Used in conjunction with '''mudday''', '''mudhour''', and '''mudmonth''' for complete time tracking
+* Common uses include:
+** Age calculations using '''SECS_PER_MUD_YEAR''' constant
+** Historical event tracking
+** Century-based celebrations
+** Long-term quest progression
+** Character generation (setting birth years)
+
+== Error Handling ==
+* The variable is always available and does not generate runtime errors
+* Returns valid integer values in all contexts
+
+== Related Functions/Fields ==
+* [[mudday]] - Current day in the MUD
+* [[mudhour]] - Current hour in the MUD
+* [[mudmonth]] - Current month in the MUD
+* [[realtime]] - Real-world system time
+* [[asctime]] - Convert real time to formatted string
+
+== See Also ==
+* Time constants: '''SECS_PER_MUD_YEAR''', '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
+* Time-based functions: [[heartbeat]], [[wait]], [[pause]]
+* Character fields: '''birth''' - Character's birth timestamp
+* String functions: [[itoa]] - Convert integer to string for display

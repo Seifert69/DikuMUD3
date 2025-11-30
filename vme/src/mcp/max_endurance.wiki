@@ -1,0 +1,109 @@
+= max_endurance =
+
+== Syntax ==
+ field: '''.max_endurance'''
+
+== Description ==
+The '''.max_endurance''' field is accessed on character units (PC or NPC) and returns the maximum endurance points of the character. This represents the highest possible endurance value the character can have, which is used as the upper bound for current endurance calculations.
+
+Endurance is typically used for physical activities, movement, and combat stamina.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .max_endurance || integer || Read-only || Maximum endurance points of the character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+ dilbegin show_endurance_status(char : unitptr);
+ code
+ {
+   // Check if the unit is a character
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Display endurance information
+   act("$1n's endurance: $2d/$3d", A_ALWAYS, char, char.endurance, char.max_endurance, TO_ROOM);
+   
+   // Calculate endurance percentage
+   if (char.max_endurance > 0)
+   {
+     var percentage : integer;
+     percentage := (char.endurance * 100) / char.max_endurance;
+     act("Endurance at $2d% capacity.", A_ALWAYS, char, percentage, null, TO_CHAR);
+   }
+
+   quit;
+ }
+ dilend
+
+ dilbegin restore_endurance(char : unitptr);
+ code
+ {
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Restore endurance to maximum
+   char.endurance := char.max_endurance;
+   act("$1n's endurance has been fully restored.", A_ALWAYS, char, null, null, TO_ROOM);
+   act("Your endurance has been fully restored.", A_ALWAYS, char, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin endurance_check(threshold : integer);
+ code
+ {
+   // Check if self has sufficient endurance
+   if (self.endurance < threshold)
+   {
+     act("You don't have enough endurance for that action.", A_ALWAYS, self, null, null, TO_CHAR);
+     act("You need at least $2d endurance.", A_ALWAYS, self, threshold, null, TO_CHAR);
+     quit;
+   }
+
+   // Calculate remaining endurance
+   var remaining : integer;
+   remaining := self.max_endurance - self.endurance;
+   act("You have $2d endurance points remaining.", A_ALWAYS, self, remaining, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.max_endurance''' field is read-only and cannot be modified directly
+* This field represents the theoretical maximum endurance a character can have
+* Maximum endurance is typically determined by character level, race, and other attributes
+* This field is commonly used in conjunction with [[endurance]] to calculate percentages and ratios
+* The value is used as the upper bound when restoring endurance after death, rest, or magical effects
+* Endurance systems are often used for movement costs, combat fatigue, and special abilities
+
+== Error Handling ==
+* If accessed on a non-character unit type, the operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* The field itself never fails - it always returns an integer value
+
+== Related Functions/Fields ==
+* [[endurance]] - Gets/sets the current endurance points
+* [[max_hp]] - Gets the maximum hit points
+* [[max_mana]] - Gets the maximum mana points
+* [[hp]] - Gets/sets the current hit points
+* [[mana]] - Gets/sets the current mana points
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

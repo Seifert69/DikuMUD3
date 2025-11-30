@@ -1,0 +1,71 @@
+= itoa =
+
+; itoa : string ( i : integer )
+: Converts an integer to its string representation.
+
+== Description ==
+
+The '''itoa''' function converts an integer value to a string containing the decimal representation of that number. This is commonly used for displaying numerical values in messages, constructing strings with numbers, or converting numbers for string operations.
+
+== Parameters ==
+
+; i : integer
+: The integer value to convert to string.
+
+== Return Value ==
+
+; string
+: Returns a string containing the decimal representation of the input integer.
+
+== Examples ==
+
+=== Basic Conversion ===
+ s := itoa(42);
+ // s now contains "42"
+ 
+Simple conversion of a number to string.
+
+=== Message Construction ===
+ act("You have "+itoa(self.hp)+" hit points remaining.", 
+     A_ALWAYS, self, null, null, TO_CHAR);
+ 
+Displays current hit points in a message to the player.
+
+=== String Concatenation ===
+ id := "$reward "+ self.symname + " " + itoa(self.idx) + " "+ juris;
+ 
+Constructs a database key using unit index converted to string.
+
+=== Time Display ===
+ act("Only "+itoa(du)+" hours till freedom!", 
+     A_ALWAYS, self, null, null, TO_CHAR);
+ 
+Shows remaining time in jail with converted number.
+
+=== Database Operations ===
+ jd.extra.[id].descr := self.name+" is currently serving time in jail. "+itoa(du)+" hours remaining";
+ 
+Updates database description with numeric information.
+
+== Usage Notes ==
+
+* Converts integers to decimal string representation
+* Commonly used with '''sendtext()''' and '''act()''' for displaying numbers
+* Complementary to '''atoi()''' which converts strings to integers
+* Essential for constructing messages that include numerical values
+* Used frequently in score displays, time displays, and status messages
+
+== Common Use Cases ==
+
+* Displaying player statistics (HP, mana, experience)
+* Showing time remaining or elapsed time
+* Constructing database keys with numeric components
+* Creating debug or log messages with values
+* Building command outputs with numerical data
+
+== See Also ==
+
+; atoi : Converts a string to an integer
+; sendtext : Sends text to a player
+; act : Sends formatted messages to units
+; moneystring : Converts money amounts to formatted strings

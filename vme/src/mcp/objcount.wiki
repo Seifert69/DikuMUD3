@@ -1,0 +1,121 @@
+= objcount =
+
+== Syntax ==
+integer '''objcount'''(zone : zoneptr);
+
+== Description ==
+The '''objcount'''() function returns the number of objects defined in a specific zone. This field provides access to the count of objects that belong to the specified zone.
+
+Based on the C implementation, this function operates on a zone pointer and calls the `getNumOfObjects()` method to retrieve the object count for that zone.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| zone || zoneptr || Pointer to the zone to query for object count
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - Number of objects defined in the specified zone
+* '''fail''' - If the zone pointer is null or invalid
+
+== Field Access ==
+This is actually a field access on a zoneptr, not a standalone function. The proper syntax is:
+ zone.objcount
+
+== Availability ==
+This field is available on zoneptr type.
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin zone_object_info();
+ var
+    current_zone : zoneptr;
+    obj_num : integer;
+ 
+ code
+ {
+    current_zone := zhead();
+    
+    while (current_zone != null)
+    {
+       obj_num := current_zone.objcount;
+       act("Zone $1t has $2d objects", A_ALWAYS, self, obj_num, current_zone, TO_CHAR);
+       current_zone := current_zone.next;
+    }
+ } dilend
+
+=== Zone Analysis ===
+ dilbegin analyze_zone(zone_name : string);
+ var
+    target_zone : zoneptr;
+    obj_count : integer;
+ 
+ code
+ {
+    target_zone := findzone(zone_name);
+    
+    if (target_zone == null)
+    {
+       act("Zone '$1t' not found.", A_ALWAYS, self, zone_name, null, TO_CHAR);
+       return;
+    }
+    
+    obj_count := target_zone.objcount;
+    act("Zone '$1t' contains $2d objects", A_ALWAYS, self, obj_count, target_zone, TO_CHAR);
+ } dilend
+
+=== Comprehensive Zone Report ===
+ dilbegin zone_report();
+ var
+    z : zoneptr;
+    total_objs : integer;
+ 
+ code
+ {
+    total_objs := 0;
+    z := zhead();
+    
+    act("=== Zone Object Report ===", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    while (z != null)
+    {
+       act("Zone: $1t - Objects: $2d", A_ALWAYS, self, z.objcount, z, TO_CHAR);
+       total_objs := total_objs + z.objcount;
+       z := z.next;
+    }
+    
+    act("Total objects across all zones: $1d", A_ALWAYS, self, total_objs, null, TO_CHAR);
+ } dilend
+
+== Usage Notes ==
+* This field is currently marked as obsolete and not used in any DIL programs
+* The count includes all objects defined in the zone's file, regardless of whether they are currently loaded
+* Use with [[findzone]] to get a zone pointer by name
+* Combine with [[roomcount]] and [[npccount]] for complete zone statistics
+
+== Error Handling ==
+Always check the zone pointer for null before accessing objcount:
+
+ if (zone_ptr != null)
+ {
+    count := zone_ptr.objcount;
+ }
+ else
+ {
+    act("Invalid zone pointer.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+== Related Functions/Fields ==
+* [[roomcount]] - Number of rooms in a zone
+* [[npccount]] - Number of NPCs in a zone
+* [[findzone]] - Find a zone by name
+* [[zhead]] - Get first zone in global list
+* [[zoneptr]] - Zone pointer type
+
+== See Also ==
+* [[zoneptr]]
+* [[objs]] - Pointer to base objects of zone
+* [[resetmode]] - Zone reset mode
+* [[loadlevel]] - Zone load level

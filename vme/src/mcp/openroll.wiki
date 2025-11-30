@@ -1,0 +1,196 @@
+= openroll =
+
+== Syntax ==
+integer '''openroll'''(dice : integer, end : integer)
+
+== Description ==
+The '''openroll'''() function generates an open-ended dice roll with a specified margin. This function produces random integers that follow a bell curve distribution, where results near the center are more likely than extreme values.
+
+Based on the C implementation, this function performs an open-ended roll where values can continue indefinitely in both directions, but with decreasing probability for extreme results.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| dice || integer || The size of the dice being rolled (determines the range)
+|-
+| end || integer || The margin for the open-ended roll (controls probability distribution)
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - A random integer following open-ended dice distribution
+* '''fail''' - If parameters are invalid
+
+== Usage Notes ==
+The function generates values in approximately +/- 2^31 range in worst case scenarios.
+The '''dice''' parameter determines the base range and probability distribution.
+The '''end''' parameter sets the margin where results can continue open-ended.
+Results near the center are more probable than extreme values.
+This is useful for skill checks, damage rolls, and other randomization needs.
+
+== Examples ==
+=== Basic Open Roll ===
+ dilbegin basic_openroll();
+ var
+    result : integer;
+ 
+ code
+ {
+    // Roll 1-100 with open-ended continuation
+    result := openroll(100, 5);
+    
+    act("Open roll result: $1d", A_ALWAYS, self, result, null, TO_CHAR);
+    
+    if (result > 100)
+       act("Exceptional success! ($1d)", A_ALWAYS, self, result, null, TO_CHAR);
+    else if (result < 1)
+       act("Critical failure! ($1d)", A_ALWAYS, self, result, null, TO_CHAR);
+    else
+       act("Normal result: $1d", A_ALWAYS, self, result, null, TO_CHAR);
+ } dilend
+
+=== Skill Check Simulation ===
+ dilbegin skill_check(difficulty : integer);
+ var
+    roll : integer;
+    success : integer;
+ 
+ code
+ {
+    // Roll against difficulty with open-ended dice
+    roll := openroll(50, 10);
+    
+    if (roll >= difficulty)
+    {
+       success := roll - difficulty + 50; // Success margin
+       act("Skill check: $1d vs $2d = SUCCESS by $3d", 
+          A_ALWAYS, self, roll, difficulty, success, TO_CHAR);
+    }
+    else
+    {
+       success := roll - difficulty - 50; // Failure margin
+       act("Skill check: $1d vs $2d = FAILURE by $3d", 
+          A_ALWAYS, self, roll, difficulty, success, TO_CHAR);
+    }
+ } dilend
+
+=== Damage Variation ===
+ dilbegin variable_damage(base_damage : integer);
+ var
+    damage : integer;
+    multiplier : real;
+ 
+ code
+ {
+    // Use openroll for damage variation
+    damage := openroll(base_damage, 0);
+    
+    // Calculate damage multiplier based on roll quality
+    if (damage > base_damage + 20)
+       multiplier := 1.5; // Critical hit
+    else if (damage < base_damage - 20)
+       multiplier := 0.5; // Glancing blow
+    else
+       multiplier := 1.0; // Normal hit
+    
+    damage := damage * multiplier;
+    
+    act("Base: $1d, Roll: $2d, Final: $3d (x$4t)", 
+       A_ALWAYS, self, base_damage, damage, damage, multiplier, TO_CHAR);
+ } dilend
+
+=== Quality Determination ===
+ dilbegin item_quality();
+ var
+    quality_roll : integer;
+    quality : string;
+ 
+ code
+ {
+    // Use openroll to determine item quality
+    quality_roll := openroll(20, 0);
+    
+    if (quality_roll >= 30)
+       quality := "Exceptional";
+    else if (quality_roll >= 20)
+       quality := "Superior";
+    else if (quality_roll >= 10)
+       quality := "Good";
+    else if (quality_roll >= 0)
+       quality := "Average";
+    else
+       quality := "Poor";
+    
+    act("Item quality roll: $1d ($2t)", 
+       A_ALWAYS, self, quality_roll, quality, TO_CHAR);
+ } dilend
+
+=== Healing Amount ===
+ dilbegin healing_amount();
+ var
+    heal_roll : integer;
+    heal_amount : integer;
+ 
+ code
+ {
+    // Use openroll for variable healing
+    heal_roll := openroll(10, 5);
+    
+    if (heal_roll > 10)
+       heal_amount := 10 + (heal_roll - 10) / 2; // Diminishing returns
+    else
+       heal_amount := heal_roll;
+    
+    act("Healing roll: $1d, Amount healed: $2d", 
+       A_ALWAYS, self, heal_roll, heal_amount, TO_CHAR);
+ } dilend
+
+=== Random Event Selection ===
+ dilbegin random_event();
+ var
+    event_roll : integer;
+    event : string;
+ 
+ code
+ {
+    // Use openroll for weighted random events
+    event_roll := openroll(100, 0);
+    
+    if (event_roll >= 50)
+       event := "Rare treasure discovered!";
+    else if (event_roll >= 20)
+       event := "Minor treasure found";
+    else if (event_roll >= 5)
+       event := "Some coins discovered";
+    else
+       event := "Nothing of interest";
+    
+    act("Event roll: $1d - $2t", 
+       A_ALWAYS, self, event_roll, event, TO_CHAR);
+ } dilend
+
+== Error Handling ==
+Always validate parameters are positive integers:
+
+ if ((dice > 0) and (end >= 0))
+ {
+    result := openroll(dice, end);
+ }
+ else
+ {
+    act("Invalid parameters for openroll.", A_ALWAYS, self, null, null, TO_CHAR);
+    return;
+ }
+
+== Related Functions/Fields ==
+* [[rnd]] - Basic random number generation
+* [[dice]] - Traditional dice rolling
+* [[random]] - Random number generation
+* [[skillchecksa]] - Skill checking system
+
+== See Also ==
+* [[dice]] - Standard dice rolling
+* [[rnd]] - Random number generation
+* [[skillchecksa]] - Skill resolution system
+* [[random]] - General randomization

@@ -1,0 +1,197 @@
+= names =
+
+== Syntax ==
+ field: '''.names''' (Read/Write)
+
+== Description ==
+The '''names''' field returns a stringlist containing all names that match a unit. This field provides access to the complete list of names and keywords that can be used to identify or reference a unit, allowing for multiple aliases and alternative names.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || stringlist || Returns list of all names for the unit
+|-
+| Write || stringlist || Can modify the names list (add/remove names)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+* extraptr (Extra description pointer)
+
+== Examples ==
+ dilbegin identify_item(item : unitptr);
+ var
+    all_names : stringlist;
+    name_count : integer;
+    i : integer;
+ code
+ {
+    if (item.type != UNIT_ST_OBJ)
+    {
+       exec("say That's not an object!", self);
+       return;
+    }
+    
+    all_names := item.names;
+    name_count := length(all_names);
+    
+    exec("say This item has " + itoa(name_count) + " names:", self);
+    
+    // Loop through all names
+    i := 0;
+    while (i < name_count)
+    {
+       exec("say Name " + itoa(i) + ": " + all_names.[i], self);
+       i := i + 1;
+    }
+ } dilend
+
+ dilbegin check_weapon_names(weapon : unitptr);
+ var
+    weapon_names : stringlist;
+ code
+ {
+    weapon_names := weapon.names;
+    
+    // Check if it has specific weapon names
+    if ("sword" in weapon_names)
+    {
+       exec("say This is a sword-type weapon.", self);
+    }
+    else if ("axe" in weapon_names)
+    {
+       exec("say This is an axe-type weapon.", self);
+    }
+    else if ("mace" in weapon_names)
+    {
+       exec("say This is a mace-type weapon.", self);
+    }
+    else
+    {
+       exec("say Unknown weapon type.", self);
+    }
+ } dilend
+
+ dilbegin modify_npc_names(npc : unitptr);
+ var
+    current_names : stringlist;
+ code
+ {
+    current_names := npc.names;
+    
+    // Add a new alias to the NPC
+    addstring(current_names, "guard");
+    addstring(current_names, "warrior");
+    
+    exec("say NPC now has additional names.", self);
+    
+    // Show all names
+    exec("say All names: " + current_names.[0], self);
+    exec("say All names: " + current_names.[1], self);
+    exec("say All names: " + current_names.[2], self);
+ } dilend
+
+ dilbegin extra_description_check(extra : extraptr);
+ var
+    extra_names : stringlist;
+    name_count : integer;
+    i : integer;
+ code
+ {
+    extra_names := extra.names;
+    name_count := length(extra_names);
+    
+    exec("say This extra has " + itoa(name_count) + " names:", self);
+    
+    // Display all names for the extra description
+    i := 0;
+    while (i < name_count)
+    {
+       exec("say Keyword " + itoa(i) + ": " + extra_names.[i], self);
+       i := i + 1;
+    }
+ } dilend
+
+ dilbegin name_search_test(target : unitptr);
+ var
+    all_names : stringlist;
+    search_name : string;
+ code
+ {
+    all_names := target.names;
+    search_name := "special_item";
+    
+    // Check if the target has a specific name
+    if (search_name in all_names)
+    {
+       exec("say Found the special item!", self);
+       exec("say It's also known as: " + target.name, self);
+    }
+    else
+    {
+       exec("say This is not the special item.", self);
+       exec("say Its names are: " + all_names.[0], self);
+    }
+ } dilend
+
+ dilbegin room_exit_check(room : unitptr);
+ var
+    exit_names : stringlist;
+    i : integer;
+ code
+ {
+    if (room.type != UNIT_ST_ROOM)
+    {
+       exec("say That's not a room!", self);
+       return;
+    }
+    
+    exit_names := room.exit_names;
+    
+    // Check all exit directions for names
+    i := 0;
+    while (i < length(exit_names))
+    {
+       exec("say Exit " + itoa(i) + " names: " + exit_names.[i], self);
+       i := i + 1;
+    }
+ } dilend
+
+== Usage Notes ==
+* The '''names''' field provides read/write access to the complete name list
+* The first name in the list (index 0) is typically the primary name used by [[name]] field
+* Names can be accessed by index using array notation: `unit.names.[index]`
+* Common uses include:
+** Multiple aliases for NPCs and objects
+** Keyword matching for extra descriptions
+** Exit names for rooms
+** Weapon type identification
+* Use [[addstring]] and [[remove]] functions to modify the names list
+* Use [[length]] function to get the number of names
+* Use the '''in''' operator to check if a specific name exists in the list
+
+== Error Handling ==
+* Returns '''fail''' if unit pointer is null or invalid
+* Returns '''error''' if accessed on an unsupported unit type
+* Index out of bounds when accessing names.[index] will cause runtime errors
+* Always validate the unit type before accessing the names field
+
+== Related Functions/Fields ==
+* [[name]] - Primary name field (first name in names list)
+* [[addstring]] - Add a name to the names list
+* [[remove]] - Remove a name from the names list
+* [[insert]] - Insert a name at specific position
+* [[length]] - Get number of names in the list
+* [[substring]] - Extract part of a name string
+* [[in]] - Check if name exists in the names list
+
+== See Also ==
+* Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
+* String functions: [[split]], [[getwords]], [[substring]]
+* Array access: Use bracket notation for stringlist elements
+* Extra description functions: [[addextra]], [[subextra]]

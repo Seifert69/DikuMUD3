@@ -1,0 +1,147 @@
+= notes =
+
+== Syntax ==
+ field: '''.notes''' (Read/Write)
+
+== Description ==
+The '''notes''' field stores and retrieves zone-specific notes or documentation as a string. This field provides a way to attach descriptive text, instructions, or other information to zones, allowing zone builders and administrators to store important details about specific areas or zone configurations.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || string || Returns the current notes text for the zone
+|-
+| Write || string || Sets the notes text for the zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone pointer)
+
+== Examples ==
+ dilbegin zone_info_display(zone : zoneptr);
+ var
+    current_notes : string;
+    zone_name : string;
+ code
+ {
+    if (zone.type != UNIT_ST_ROOM)
+    {
+       exec("say That's not a zone!", self);
+       return;
+    }
+    
+    zone_name := zone.name;
+    current_notes := zone.notes;
+    
+    exec("say Zone: " + zone_name, self);
+    exec("say Notes: " + current_notes, self);
+ } dilend
+
+ dilbegin set_zone_notes();
+ var
+    target_zone : zoneptr;
+    new_notes : string;
+ code
+ {
+    target_zone := findroom("admin_zone@midgaard");
+    
+    if (target_zone != null)
+    {
+       // Set comprehensive zone notes
+       new_notes := "This zone is for administrative use only." + "\n" +
+                   "Access restricted to authorized personnel." + "\n" +
+                   "Contact zone administrator for modifications.";
+       
+       target_zone.notes := new_notes;
+       exec("say Zone notes updated.", self);
+    }
+    else
+    {
+       exec("say Could not find admin zone.", self);
+    }
+ } dilend
+
+ dilbegin zone_note_reader();
+ var
+    current_zone : zoneptr;
+    note_text : string;
+    note_parts : stringlist;
+    i : integer;
+ code
+ {
+    current_zone := findroom("example_zone@midgaard");
+    
+    if (current_zone != null)
+    {
+       note_text := current_zone.notes;
+       
+       // Split notes into lines for processing
+       note_parts := split(note_text, "\n");
+       
+       exec("say Zone Notes:", self);
+       i := 0;
+       while (i < length(note_parts))
+       {
+          exec("say Line " + itoa(i) + ": " + note_parts.[i], self);
+          i := i + 1;
+       }
+    }
+    else
+    {
+       exec("say No zone found.", self);
+    }
+ } dilend
+
+ dilbegin create_zone_with_notes();
+ var
+    new_zone : zoneptr;
+    initial_notes : string;
+ code
+ {
+    // Create a new zone with initial notes
+    new_zone := findroom("new_zone@midgaard");
+    
+    if (new_zone != null)
+    {
+       initial_notes := "Created: " + mudyear + "/" + mudmonth + "/" + mudday + "\n" +
+                       "Purpose: Player starting area" + "\n" +
+                       "Status: Under development";
+       
+       new_zone.notes := initial_notes;
+       exec("say New zone created with notes.", self);
+    }
+ } dilend
+
+== Usage Notes ==
+* The '''notes''' field provides read/write access to zone notes
+* Used for storing zone documentation, policies, or descriptive text
+* Notes can contain multiple lines separated by newline characters
+* Common uses include:
+** Zone descriptions and instructions
+** Administrative information
+** Development status tracking
+** Zone-specific rules or policies
+* Notes are stored as plain text strings
+* Use [[split]] function to process multi-line notes
+
+== Error Handling ==
+* Returns '''fail''' if zone pointer is null or invalid
+* Returns '''error''' if accessed on an unsupported unit type
+* Setting very long notes may cause memory issues
+* Always validate zone pointer before accessing the notes field
+
+== Related Functions/Fields ==
+* [[name]] - Zone name field
+* [[zoneidx]] - Zone identifier field
+* [[findroom]] - Locate specific zones
+* [[split]] - Process multi-line strings
+* [[pagestring]] - Display text to players
+* String functions: [[length]], [[substring]]
+
+== See Also ==
+* Zone management functions and commands
+* Zone pointer fields: '''name''', '''zoneidx''', '''resetmode''', '''resettime'''
+* Zone constants and reset modes from values.h
+* Administrative zone building tools

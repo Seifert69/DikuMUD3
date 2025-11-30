@@ -1,0 +1,115 @@
+= minv =
+
+== Syntax ==
+field: '''.minv'''
+
+== Description ==
+The '''.minv''' field represents the 'wizard invisibility' level of a unit. This field controls the visibility of units to players based on their wizard level. A unit with a higher minv value will only be visible to players with an equal or higher wizard level.
+
+This is commonly used for:
+* Making items invisible to regular players but visible to wizards
+* Hiding administrative objects from normal gameplay
+* Creating wizard-only content or tools
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Current wizard invisibility level
+|-
+| Write || integer || Set new wizard invisibility level
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin check_wizinv(item : unitptr);
+ var
+    wizlevel : integer;
+ code
+ {
+    wizlevel := self.level;  // Get player's wizard level
+    
+    if (item.minv > wizlevel)
+    {
+       sendtext("You can't see this item - it's too wizardly for you!&n", self);
+    }
+    else
+    {
+       sendtext("You can see the item: " + item.name + "&n", self);
+    }
+ } dilend
+
+=== Setting Wizard Invisibility ===
+ dilbegin make_wizinv(obj : unitptr, level : integer);
+ code
+ {
+    obj.minv := level;
+    sendtext("Object " + obj.name + " is now wizinvisible at level " + itoa(level) + "&n", self);
+ } dilend
+
+=== Death Protection Example ===
+ dilbegin protect_items_on_death();
+ var
+    u : unitptr;
+    nextu : unitptr;
+ code
+ {
+    // Make all equipped items wizinvisible to protect them from corpse transfer
+    u := self.inside;
+    while (u)
+    {
+       nextu := u.next;
+       if (u.minv < 1)
+       {
+          u.minv := 1;  // Make visible only to level 1+ wizards
+       }
+       u := nextu;
+    }
+ } dilend
+
+=== Wizard Menu Example ===
+ dilbegin wiz_menu();
+ var
+    wizlvl : integer;
+ code
+ {
+    sendtext("Current WizInv level: " + itoa(self.minv) + "&n", self);
+    sendtext("Enter new WizInv Level (0-" + itoa(self.level) + "): ", self);
+    wait(SFB_CMD, TRUE);
+    
+    wizlvl := atoi(cmdstr);
+    if (wizlvl > self.level)
+      wizlvl := self.level;
+    
+    self.minv := wizlvl;
+    sendtext("WizInv level set to " + itoa(wizlvl) + "&n", self);
+ } dilend
+
+== Usage Notes ==
+* The minv value ranges from 0 (visible to everyone) to the maximum wizard level
+* Players can only see units with minv ≤ their current wizard level
+* Regular players (level 0) can only see units with minv = 0
+* This field is read-write and can be modified at runtime
+* Commonly used in death routines to protect items from being transferred to corpses
+
+== Error Handling ==
+* Setting minv to a negative value may cause undefined behavior
+* Setting minv higher than the maximum wizard level will make the item invisible to all players
+* The field will return 0 for units that don't have wizard invisibility set
+
+== Related Functions/Fields ==
+* [[level]] - Player's wizard level
+* [[findunit]] - Finding units (respects wizard invisibility)
+* [[findsymbolic]] - Finding units by symbolic name (respects wizard invisibility)
+
+== See Also ==
+* [[unitptr]] - General unit pointer documentation
+* [[wizard]] - Wizard-related commands and functions
+* [[invisibility]] - Regular invisibility mechanics

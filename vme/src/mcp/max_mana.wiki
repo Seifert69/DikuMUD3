@@ -1,0 +1,109 @@
+= max_mana =
+
+== Syntax ==
+ field: '''.max_mana'''
+
+== Description ==
+The '''.max_mana''' field is accessed on character units (PC or NPC) and returns the maximum mana points of the character. This represents the highest possible mana value the character can have, which is used as the upper bound for current mana calculations.
+
+Mana is typically used for casting spells, using magical abilities, and powering special effects.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .max_mana || integer || Read-only || Maximum mana points of character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+ dilbegin show_mana_status(char : unitptr);
+ code
+ {
+   // Check if the unit is a character
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Display mana information
+   act("$1n's mana: $2d/$3d", A_ALWAYS, char, char.mana, char.max_mana, TO_ROOM);
+   
+   // Calculate mana percentage
+   if (char.max_mana > 0)
+   {
+     var percentage : integer;
+     percentage := (char.mana * 100) / char.max_mana;
+     act("Mana at $2d% capacity.", A_ALWAYS, char, percentage, null, TO_CHAR);
+   }
+
+   quit;
+ }
+ dilend
+
+ dilbegin restore_mana(char : unitptr);
+ code
+ {
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     act("Target is not a character.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Restore mana to maximum
+   char.mana := char.max_mana;
+   act("$1n's mana has been fully restored.", A_ALWAYS, char, null, null, TO_ROOM);
+   act("Your mana has been fully restored.", A_ALWAYS, char, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin mana_check(cost : integer);
+ code
+ {
+   // Check if self has sufficient mana
+   if (self.mana < cost)
+   {
+     act("You don't have enough mana for that spell.", A_ALWAYS, self, null, null, TO_CHAR);
+     act("You need at least $2d mana.", A_ALWAYS, self, cost, null, TO_CHAR);
+     quit;
+   }
+
+   // Calculate remaining mana
+   var remaining : integer;
+   remaining := self.max_mana - self.mana;
+   act("You have $2d mana points remaining.", A_ALWAYS, self, remaining, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.max_mana''' field is read-only and cannot be modified directly
+* This field represents the theoretical maximum mana a character can have
+* Maximum mana is typically determined by character level, class, race, intelligence, and other attributes
+* This field is commonly used in conjunction with [[mana]] to calculate percentages and ratios
+* The value is used as the upper bound when restoring mana after death, rest, or magical effects
+* Mana systems are often used for spell casting costs, magical item usage, and special abilities
+
+== Error Handling ==
+* If accessed on a non-character unit type, the operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* The field itself never fails - it always returns an integer value
+
+== Related Functions/Fields ==
+* [[mana]] - Gets/sets the current mana points
+* [[max_hp]] - Gets the maximum hit points
+* [[max_endurance]] - Gets the maximum endurance points
+* [[cast_spell]] - Function that typically consumes mana
+* [[experience]] - Sets experience points (which can affect max_mana indirectly)
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

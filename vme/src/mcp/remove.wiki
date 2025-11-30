@@ -1,0 +1,141 @@
+= remove =
+function: '''remove'''(sl : stringlist or intlist, i : integer);
+
+The '''remove''' function removes an element from a stringlist or intlist at the specified index position.
+
+== Description ==
+The '''remove''' procedure removes an element from either a stringlist or intlist at the specified index position. Unlike simply setting an element to null, this function actually removes the element and shifts all subsequent elements down by one position, maintaining a compact list without gaps.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| sl || stringlist or intlist || The stringlist or intlist to remove the element from
+|-
+| i || integer || The index position of the element to remove (0-based)
+|}
+
+== Examples ==
+=== Basic Stringlist Removal ===
+dilbegin remove_names();
+var
+   names : stringlist;
+   i : integer;
+code
+{
+   // Initialize a stringlist with names
+   names := {"Alice", "Bob", "Charlie", "David", "Eve"};
+   
+   // Remove the element at index 2 ("Charlie")
+   remove(names, 2);
+   
+   // names now contains: {"Alice", "Bob", "David", "Eve"}
+   
+   // Loop through and display remaining names
+   i := 0;
+   while (i < length(names))
+   {
+      act("Name " + (i+1) + ": " + names.[i], A_ALWAYS, self, null, null, TO_CHAR);
+      i := i + 1;
+   }
+} dilend
+
+=== Intlist Removal Example ===
+dilbegin manage_scores();
+var
+   scores : intlist;
+   i : integer;
+code
+{
+   // Initialize scores
+   scores := {100, 85, 92, 78, 95, 88};
+   
+   // Remove the score at index 3 (78)
+   remove(scores, 3);
+   
+   // scores now contains: {100, 85, 92, 95, 88}
+   
+   // Calculate average
+   i := 0;
+   while (i < length(scores))
+   {
+      // Process each score
+      i := i + 1;
+   }
+} dilend
+
+=== Removing Invalid Items ===
+dilbegin clean_list();
+var
+   items : stringlist;
+   i : integer;
+code
+{
+   // Initialize with some empty/invalid entries
+   items := {"sword", "", "shield", "armor", ""};
+   
+   // Remove empty entries (iterate backwards to avoid index shifting issues)
+   i := length(items) - 1;
+   while (i >= 0)
+   {
+      if (items.[i] == "")
+      {
+         remove(items, i);
+      }
+      i := i - 1;
+   }
+   
+   // items now contains: {"sword", "shield", "armor"}
+} dilend
+
+=== Dynamic List Management ===
+dilbegin manage_queue();
+var
+   queue : stringlist;
+   player : string;
+code
+{
+   queue := {};
+   
+   // Add some players to queue
+   addstring(queue, "Player1");
+   addstring(queue, "Player2");
+   addstring(queue, "Player3");
+   
+   // Process first player in queue (remove from front)
+   if (length(queue) > 0)
+   {
+      player := queue.[0];
+      remove(queue, 0);
+      act("Processing " + player + " from queue.", A_ALWAYS, self, null, null, TO_CHAR);
+   }
+} dilend
+
+== Usage Notes ==
+* The index parameter is 0-based (first element is at index 0)
+* When an element is removed, all subsequent elements shift down by one position
+* The length of the list decreases by 1 after removal
+* If the index is out of bounds, the function will fail silently
+* The function works with both stringlist and intlist types
+* Unlike setting an element to null, this actually removes the element and compacts the list
+
+== Error Handling ==
+The function will fail silently if:
+* The first parameter is not a stringlist or intlist variable
+* The second parameter is not an integer
+* The index is negative or greater than or equal to the list length
+* The list parameter is not a variable (cannot be a function return value)
+
+== Related Functions/Fields ==
+* [[insert]] - Inserts an element at a specified position
+* [[addstring]] - Adds a string to the end of a stringlist
+* [[substring]] - Removes a specific string from a stringlist
+* [[length]] - Returns the number of elements in a list
+* [[stringlist]] - String list type documentation
+* [[intlist]] - Integer list type documentation
+
+== See Also ==
+* [[stringlist]]
+* [[intlist]]
+* [[insert]]
+* [[addstring]]

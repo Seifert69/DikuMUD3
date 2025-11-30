@@ -1,0 +1,72 @@
+= movement =
+
+== Syntax ==
+ field: '''.movement''' (Read/Write)
+
+== Description ==
+The '''movement''' field specifies the terrain type or sector of a room, which determines movement costs, swimming requirements, and other environmental effects. This field is used to control how characters and NPCs move through different types of terrain.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current terrain type as a SECT_* constant
+|-
+| Write || integer || Sets the terrain type using SECT_* constants
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_ROOM (Room)
+
+== Usage Notes ==
+The movement field uses SECT_* constants defined in values.h and/or vme.h. Common terrain types include:
+* '''SECT_WATER_SAIL''' - Water terrain requiring swimming or boats
+* '''SECT_INSIDE''' - Indoor areas
+* '''SECT_CITY''' - City streets
+* '''SECT_FIELD''' - Open fields
+* '''SECT_FOREST''' - Forested areas
+* '''SECT_MOUNTAIN''' - Mountainous terrain
+* '''SECT_DESERT''' - Desert areas
+
+The terrain type affects:
+* Movement endurance costs via the [[movementloss]] function
+* Swimming requirements and drowning checks
+* Special movement behaviors for different races
+
+== Examples ==
+ dilbegin terrain_check();
+ var
+    current_room : unitptr;
+    terrain_type : integer;
+ code
+ {
+    current_room := unit_room@function(self);
+    terrain_type := current_room.movement;
+    
+    if (terrain_type == SECT_WATER_SAIL)
+    {
+       exec("say This area requires swimming or a boat!", self);
+    }
+    else if (terrain_type == SECT_INSIDE)
+    {
+       exec("say We are indoors.", self);
+    }
+    
+    // Change terrain to forest
+    current_room.movement := SECT_FOREST;
+ } dilend
+
+== Error Handling ==
+* Accessing .movement on non-room units will result in a DIL runtime error
+* Setting invalid terrain values may cause undefined behavior
+* The field requires a valid room unit pointer
+
+== Related Functions/Fields ==
+* [[movementloss]] - Calculates movement cost for terrain types
+* [[unit_room@function]] - Gets the room a unit is in
+* [[roomflags]] - Additional room properties
+
+== See Also ==
+* Room exit fields: '''exit_to[]''', '''exit_info[]''', '''exit_names[]'''
+* Environmental constants: SECT_*, EX_*, ROOM_FL_*

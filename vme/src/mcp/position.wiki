@@ -1,0 +1,169 @@
+= position =
+
+ field: integer '''.position'''
+ type: '''integer'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ unit.position
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current position of the character
+|-
+| Write || integer || Sets the position of the character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* cmdptr (Command pointer)
+
+== Description ==
+The '''position''' field contains the current physical position of a character or the minimum position required to use a command. For characters, this represents their current state such as standing, sitting, fighting, or sleeping. For commands, it specifies the minimum position a character must be in to use that command.
+
+Common position constants include:
+* '''POSITION_STANDING''' - Character is standing
+* '''POSITION_SITTING''' - Character is sitting
+* '''POSITION_RESTING''' - Character is resting
+* '''POSITION_SLEEPING''' - Character is sleeping
+* '''POSITION_FIGHTING''' - Character is fighting
+* '''POSITION_STUNNED''' - Character is stunned
+
+== Examples ==
+ dilbegin check_character_position();
+ var
+    current_pos : integer;
+ code
+ {
+    current_pos := self.position;
+    
+    if (current_pos == POSITION_FIGHTING)
+    {
+       sendtext("You are currently fighting!<br/>", self);
+    }
+    else if (current_pos == POSITION_SLEEPING)
+    {
+       sendtext("You are sleeping and cannot do that.<br/>", self);
+    }
+    else if (current_pos == POSITION_STANDING)
+    {
+       sendtext("You are standing ready for action.<br/>", self);
+    }
+    else
+    {
+       sendtext("Your current position is: " + itoa(current_pos) + "<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin guard_routine();
+ var
+    guard_pos : integer;
+ code
+ {
+    guard_pos := self.position;
+    
+    // Check if guard is awake and able to respond
+    if (guard_pos <= POSITION_SLEEPING)
+    {
+       sendtext("The guard is asleep and doesn't respond.<br/>", activator);
+       quit;
+    }
+    
+    // Check if guard is busy fighting
+    if (guard_pos == POSITION_FIGHTING)
+    {
+       sendtext("The guard is busy fighting!<br/>", activator);
+       quit;
+    }
+    
+    // Guard is awake and available
+    act("The guard says 'Hello there, how can I help you?'", A_ALWAYS, self, null, null, TO_ROOM);
+    
+    quit;
+ } dilend
+
+ dilbegin force_character_stand();
+ var
+    target : unitptr;
+ code
+ {
+    target := activator;
+    
+    if (target.position == POSITION_SLEEPING)
+    {
+       // Wake up the character
+       target.position := POSITION_STANDING;
+       act("$1n wakes up and stands up.", A_ALWAYS, target, null, null, TO_ROOM);
+       sendtext("You wake up and stand up.<br/>", target);
+    }
+    else if (target.position == POSITION_SITTING)
+    {
+       // Make the character stand
+       target.position := POSITION_STANDING;
+       act("$1n stands up.", A_ALWAYS, target, null, null, TO_ROOM);
+       sendtext("You stand up.<br/>", target);
+    }
+    else
+    {
+       sendtext("You are already standing.<br/>", target);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin check_command_requirements();
+ var
+    cmd : cmdptr;
+ code
+ {
+    cmd := getcommand("kick");
+    
+    if (cmd != null)
+    {
+       sendtext("Command: " + cmd.name + "<br/>", self);
+       sendtext("Minimum position required: " + itoa(cmd.position) + "<br/>", self);
+       sendtext("Your current position: " + itoa(self.position) + "<br/>", self);
+       
+       if (self.position < cmd.position)
+       {
+          sendtext("You are not in the right position to use this command.<br/>", self);
+       }
+       else
+       {
+          sendtext("You can use this command in your current position.<br/>", self);
+       }
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* For characters, the position field represents their current physical state
+* For commands, the position field specifies the minimum position required to use the command
+* Use [[position_update]] after modifying HP to ensure proper position updates
+* Common position checks include comparing against POSITION_SLEEPING, POSITION_FIGHTING, etc.
+* Position constants are defined in values.h and/or vme.h with POSITION_ prefix
+* The field is read/write for characters, allowing manual position changes
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access position on a non-character unit (except cmdptr)
+* The unit is null or invalid
+* Attempting to set an invalid position value
+
+== Related Functions/Fields ==
+* [[position_update]] - Updates character position based on current HP
+* [[on_activation]] - Can be used to check position conditions
+* [[cmdptr]] - Command pointer type that also has position field
+
+== See Also ==
+* [[fighting]] - Field to check if character is in combat
+* [[sleep]] - Command to put character to sleep
+* [[wake]] - Command to wake up character
+* [[stand]] - Command to make character stand

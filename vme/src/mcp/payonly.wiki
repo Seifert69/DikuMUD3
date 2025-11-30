@@ -1,0 +1,171 @@
+= payonly =
+
+; payonly : integer (reference)
+: The pay status of a zone. This field determines whether the zone requires payment to access.
+
+== Description ==
+
+The '''payonly''' field is a property of a zoneptr that indicates the payment status of a zone. It returns an integer value that specifies whether the zone is pay-only (requiring payment) or free to access.
+
+== Usage ==
+
+This field is accessed through a zoneptr variable and returns a reference to an integer value.
+
+== Example ==
+
+The following example demonstrates how to use the payonly field to check zone payment status:
+
+ dilbegin aware boot_area();
+ var
+  i:integer;
+  cnt:integer;
+  zones:zoneptr;
+  tlist:stringlist;
+  temp:string;
+  ln:integer;
+  iMax:integer;
+  inc:integer;
+  iVal:string;
+  j:integer;
+  donlist:stringlist;
+  zonlist:stringlist;
+  nodonlist:stringlist;
+  conlist:stringlist;
+
+ code
+ {
+  heartbeat:=4;
+ :start:
+  zonlist:={"$zonlist"};
+  donlist:={"$donlist"};
+  nodonlist:={"$nodonlist"};
+  conlist:={"$conlist"};
+  zones := zhead();
+  cnt:=0;
+  while (zones)
+  {
+   tlist := split(zones.title,"@");
+   
+   if (length(tlist)==2)
+   {
+    temp:=tlist.[1]+"@"+tlist.[0];
+    if (zones.payonly)
+    {
+     if (not((zones.title+"@*") in zonlist))
+     {
+      addstring(zonlist,(zones.title+"@*"));
+      addstring(conlist,(temp+"@*"));
+     }
+    }
+    else
+    {
+     if (not((zones.title+"@n") in zonlist))
+     {
+      addstring(zonlist,(zones.title+"@n"));
+      addstring(conlist,(temp+"@n"));
+     }
+    }
+   }
+   
+   zones:=zones.next;
+  }
+  
+  pause;
+  
+  iMax:=length(zonlist);
+  inc:=1;
+  
+  while (inc < iMax)
+   inc := inc *3+1;
+  
+  inc:=inc/3;
+  while (inc > 0)
+  {
+   i:=inc;
+   while (i < iMax)
+   {
+    iVal := zonlist.[i];
+    j:=i;
+    while (j > (inc-1))
+    {
+     if (iVal < zonlist.[j - inc])
+     {
+      zonlist.[j] := zonlist.[j - inc];
+     }
+     else
+      break;
+     j:=j-inc;
+    }
+    zonlist.[j] := iVal;
+    i:=i+1;
+   }
+   inc := inc /3;
+  }
+  
+  pause;
+  
+  iMax:=length(conlist);
+  inc:=1;
+  
+  while (inc < iMax)
+   inc := inc *3+1;
+  
+  inc:=inc/3;
+  while (inc > 0)
+  {
+   i:=inc;
+   while (i < iMax)
+   {
+    iVal := conlist.[i];
+    j:=i;
+    while (j > (inc-1))
+    {
+     if (iVal < conlist.[j - inc])
+     {
+      conlist.[j] := conlist.[j - inc];
+     }
+     else
+      break;
+     j:=j-inc;
+    }
+    conlist.[j] := iVal;
+    i:=i+1;
+   }
+   inc := inc /3;
+  }
+  
+  pause;
+  
+  i:=1;
+  ln:=length(zonlist);
+  while (i<ln)
+  {
+   tlist:=split(zonlist.[i],"@");
+   if (tlist.[2]=="n")
+    addstring(nodonlist,tlist.[0]+"@"+tlist.[1]);
+   else
+    addstring(donlist,tlist.[0]+"@"+tlist.[1]);
+   
+   i:=i+1;
+  }
+  
+  addextra(self.extra,zonlist,"all");
+  addextra(self.extra,donlist,"all");
+  addextra(self.extra,conlist,"all");
+  addextra(self.extra,nodonlist,"all");
+  addextra(self.extra,donlist,"all");
+  quit;
+ } dilend
+
+== Return Value ==
+
+Returns an integer reference indicating the payment status:
+* Non-zero value: Zone is pay-only (requires payment)
+* Zero value: Zone is free to access
+
+== See Also ==
+
+* [[zoneptr]] - Zone pointer type
+* [[zhead]] - Get first zone in global list
+* [[access]] - Zone access level
+* [[loadlevel]] - Zone load level

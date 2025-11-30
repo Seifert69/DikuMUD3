@@ -1,0 +1,80 @@
+= mudday =
+
+== Syntax ==
+ variable: '''mudday''' (Read-only)
+
+== Description ==
+The '''mudday''' variable returns the current day number in the MUD's internal time system. This built-in variable allows DIL programs to track and respond to the passage of time within the game world, enabling time-based events, scheduling, and conditional logic.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current day number (0-based)
+|}
+
+== Examples ==
+ dilbegin daily_reset();
+ var
+    current_day : integer;
+    last_reset : integer;
+ code
+ {
+    :init:
+    last_reset := mudday;
+    
+    :check_reset:
+    current_day := mudday;
+    
+    // Check if a new day has started
+    if (current_day != last_reset)
+    {
+       exec("say A new day begins!", self);
+       last_reset := current_day;
+    }
+    
+    pause;
+    goto check_reset;
+ } dilend
+
+ dilbegin time_based_event();
+ var
+    day_hour : integer;
+ code
+ {
+    // Calculate total hours since epoch
+    day_hour := mudhour + mudday * MUD_DAY;
+    
+    // Check if it's morning (hours 6-11)
+    if ((mudhour >= 6) and (mudhour < 12))
+    {
+       exec("say Good morning! The sun is rising.", self);
+    }
+    // Check if it's evening (hours 18-21)
+    else if ((mudhour >= 18) and (mudhour < 22))
+    {
+       exec("say Good evening! The day is ending.", self);
+    }
+ } dilend
+
+== Usage Notes ==
+* The '''mudday''' variable is read-only and cannot be modified
+* Day numbers typically start from 0 and increment each MUD day
+* Used in conjunction with '''mudhour''' for complete time tracking
+* The '''MUD_DAY''' constant represents the number of hours in one MUD day
+* Time calculations often use the formula: `total_hours = mudhour + mudday * MUD_DAY`
+
+== Error Handling ==
+* The variable is always available and does not generate runtime errors
+* Returns valid integer values in all contexts
+
+== Related Functions/Fields ==
+* [[mudhour]] - Current hour in the MUD (0-23)
+* [[mudmonth]] - Current month in the MUD
+* [[mudyear]] - Current year in the MUD
+* [[realtime]] - Real-world system time
+* [[asctime]] - Convert real time to formatted string
+
+== See Also ==
+* Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
+* Time-based functions: [[heartbeat]], [[wait]], [[pause]]

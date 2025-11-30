@@ -1,0 +1,127 @@
+= name =
+
+== Syntax ==
+ field: '''.name''' (Read-only)
+
+== Description ==
+The '''name''' field returns the primary name or identifier of various unit types. This field provides access to the name/identifier of units, extra descriptions, commands, and zones, allowing DIL programs to identify and reference different entities by their names.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || string || Returns the primary name/identifier of the unit
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+* cmdptr (Command pointer)
+* extraptr (Extra description pointer)
+* zoneptr (Zone pointer)
+
+== Examples ==
+ dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+ var
+    depname : string;
+ code
+ {
+    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+    follow(targ, deputy);
+    depname := deputy.name;
+    link(cuffs, targ);
+    unequip(equipment(targ, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    dilcopy("cuffed@midgaard("+depname+")", targ);
+    dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+    exec("sigh", targ);
+    return;
+ } dilend
+
+ dilbegin identify_item(item : unitptr);
+ var
+    item_name : string;
+ code
+ {
+    if (item.type != UNIT_ST_OBJ)
+    {
+       exec("say That's not an object!", self);
+       return;
+    }
+    
+    item_name := item.name;
+    exec("say This is called: " + item_name, self);
+    
+    // Check if it has special names
+    if (length(item.names) > 1)
+    {
+       exec("say It's also known as: " + item.names.[1], self);
+    }
+ } dilend
+
+ dilbegin command_info(cmd : cmdptr);
+ var
+    cmd_name : string;
+ code
+ {
+    cmd_name := cmd.name;
+    exec("say This command is: " + cmd_name, self);
+ } dilend
+
+ dilbegin zone_details(zone : zoneptr);
+ var
+    zone_name : string;
+ code
+ {
+    zone_name := zone.name;
+    exec("say Current zone: " + zone_name, self);
+ } dilend
+
+ dilbegin extra_description_check(extra : extraptr);
+ var
+    extra_name : string;
+ code
+ {
+    extra_name := extra.name;
+    exec("say This extra is called: " + extra_name, self);
+    
+    // Check for additional names
+    if (length(extra.names) > 1)
+    {
+       exec("say Also known as: " + extra.names.[1], self);
+    }
+ } dilend
+
+== Usage Notes ==
+* The '''name''' field is read-only and cannot be modified
+* Returns different types of names depending on the unit type:
+** For units (PC/NPC/Obj/Room): Returns the primary name from the names list
+** For extra descriptions: Returns the primary name from the extra's names list
+** For commands: Returns the command string
+** For zones: Returns the zone name
+* For units with multiple names, use the '''names''' field to access all names
+* The primary name is typically the first name in the names list
+
+== Error Handling ==
+* Returns '''fail''' if the unit pointer is null or invalid
+* Returns '''error''' if accessed on an unsupported type
+* Always check if the unit is valid before accessing the name field
+
+== Related Functions/Fields ==
+* [[names]] - Stringlist of all names for a unit
+* [[title]] - Title field for characters
+* [[symname]] - Symbolic name of a unit
+* [[nameidx]] - Name index of a unit
+* [[zoneidx]] - Zone index of a unit
+
+== See Also ==
+* Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
+* String functions: [[length]], [[addstring]], [[substring]]
+* Identification functions: [[isplayer]], [[findunit]], [[findsymbolic]]

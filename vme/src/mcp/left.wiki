@@ -1,0 +1,73 @@
+= left =
+
+'''left''' is a DIL function that extracts the leftmost characters from a string.
+
+== Syntax ==
+ string left(string input, integer length)
+
+== Parameters ==
+; input : string
+: The original string to be parsed
+; length : integer
+: The number of characters to extract from the left side of the string
+
+== Return Value ==
+; string
+: Returns the left portion of the input string with the specified length. Returns '''null''' if:
+* The input string is empty
+* The length parameter is 0
+* Either parameter is invalid
+
+== Description ==
+The '''left''' function extracts a specified number of characters from the beginning (left side) of a string. If the requested length is longer than the input string, the entire string is returned.
+
+This function is commonly used for:
+* String prefix matching
+* Extracting substrings from the beginning of text
+* Command parsing and abbreviation handling
+* Text processing where only the beginning of a string is needed
+
+== Examples ==
+ // Basic usage
+ result := left("shorten me", 5);        // Returns "short"
+
+ // When length exceeds string length
+ result := left("hi", 10);               // Returns "hi"
+
+ // Empty string handling
+ result := left("", 5);                  // Returns null
+
+ // Zero length
+ result := left("hello", 0);             // Returns null
+
+ // Prefix matching for commands
+ if (command == left("help", length(command))) {
+    // Handle help command or abbreviations
+ }
+
+== Advanced Usage ==
+The function is particularly useful for command abbreviation systems:
+
+ // Check if input matches any command prefix
+ commands := {"look", "get", "drop", "inventory"};
+ i := 0;
+ while (i < length(commands)) {
+    if (input == left(commands.[i], length(input))) {
+        // Found matching command
+        exec(commands.[i] + " " + rest, self);
+        break;
+    }
+    i := i + 1;
+ }
+
+== Notes ==
+* The function allocates new memory for the returned string
+* If the input string is shorter than the requested length, the entire string is returned
+* Empty strings or zero length requests return null
+* This is the counterpart to the [[right]] function
+
+== See Also ==
+* [[right]] - Extract characters from the right side of a string
+* [[mid]] - Extract characters from the middle of a string
+* [[length]] - Get the length of a string
+* [[getwords]] - Split string into words

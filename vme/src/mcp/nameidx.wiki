@@ -1,0 +1,148 @@
+= nameidx =
+
+== Syntax ==
+ field: '''.nameidx''' (Read-only)
+
+== Description ==
+The '''nameidx''' field returns the unique database name identifier of a unit within its zone. This field provides the name portion of a unit's full "name@zone" identifier, allowing DIL programs to reference specific units by their unique database names.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || string || Returns the unique database name of the unit
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin identify_corpse(corpse : unitptr);
+ var
+    corpse_id : string;
+ code
+ {
+    if (corpse.type != UNIT_ST_OBJ)
+    {
+       exec("say That's not an object!", self);
+       return;
+    }
+    
+    corpse_id := corpse.nameidx;
+    exec("say This corpse has ID: " + corpse_id, self);
+    
+    // Check if it's a specific type of corpse
+    if (corpse_id == "corpsebasis")
+    {
+       exec("say This is a basic corpse.", self);
+    }
+    else if (corpse_id == "slime@basis")
+    {
+       exec("say This is a slime-based corpse.", self);
+    }
+ } dilend
+
+ dilbegin check_special_items(item : unitptr);
+ var
+    item_id : string;
+ code
+ {
+    item_id := item.nameidx;
+    
+    // Check for specific quest items by their nameidx
+    if (item_id == "tot_bag2")
+    {
+       exec("say This is a treasure bag type 2!", self);
+    }
+    else if (item_id == "tot_bag3")
+    {
+       exec("say This is a treasure bag type 3!", self);
+    }
+    else
+    {
+       exec("say This item has ID: " + item_id, self);
+    }
+ } dilend
+
+ dilbegin zone_reference(unit : unitptr);
+ var
+    zone_name : string;
+    unit_ref : string;
+ code
+ {
+    zone_name := unit.zoneidx;
+    unit_ref := unit.nameidx + "@" + zone_name;
+    
+    exec("say Unit reference: " + unit_ref, self);
+    exec("say Zone: " + zone_name, self);
+    exec("say Name: " + unit.nameidx, self);
+ } dilend
+
+ dilbegin load_specific_unit();
+ var
+    target_unit : unitptr;
+    unit_id : string;
+ code
+ {
+    // Example of loading a unit by its nameidx@zoneidx
+    unit_id := "cuffs@midgaard";
+    target_unit := load(unit_id);
+    
+    if (target_unit != null)
+    {
+       exec("say Loaded unit: " + target_unit.name, self);
+       exec("say Its ID is: " + target_unit.nameidx, self);
+       exec("say In zone: " + target_unit.zoneidx, self);
+    }
+    else
+    {
+       exec("say Could not find unit: " + unit_id, self);
+    }
+ } dilend
+
+ dilbegin debug_unit_info(unit : unitptr);
+ var
+    debug_info : string;
+ code
+ {
+    debug_info := "Unit Info:<br/>";
+    debug_info := "Name: " + unit.name + "<br/>";
+    debug_info := "NameIdx: " + unit.nameidx + "<br/>";
+    debug_info := "Zone: " + unit.zoneidx + "<br/>";
+    debug_info := "Full Ref: " + unit.nameidx + "@" + unit.zoneidx + "<br/>";
+    
+    sendtext(debug_info, self);
+ } dilend
+
+== Usage Notes ==
+* The '''nameidx''' field is read-only and cannot be modified
+* Returns the unique database name portion of a unit's identifier
+* The full unit identifier is composed of: nameidx@zoneidx
+* Used for database operations and unit referencing
+* Common for identifying specific instances of units within zones
+* Essential for [[load]] function and database operations
+* Different from [[name]] field which returns the display name
+* The nameidx is typically the filename or database identifier without zone prefix
+
+== Error Handling ==
+* Returns '''fail''' if unit pointer is null or invalid
+* Returns '''error''' if accessed on an unsupported unit type
+* Always validate unit before accessing nameidx field
+
+== Related Functions/Fields ==
+* [[name]] - Primary display name of the unit
+* [[zoneidx]] - Zone identifier portion of unit reference
+* [[symname]] - Symbolic name of the unit
+* [[load]] - Load unit by nameidx@zoneidx reference
+* [[findunit]] - Find unit by name search
+* [[findsymbolic]] - Find unit by symbolic name
+
+== See Also ==
+* Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
+* String functions: [[substring]], [[length]]
+* Database functions: [[store]], [[restore]], [[delunit]]
+* Reference format: nameidx@zoneidx (standard unit identification)

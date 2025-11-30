@@ -1,0 +1,119 @@
+= log =
+
+== Syntax ==
+ procedure: '''log'''(s : string);
+
+== Description ==
+The '''log''' procedure writes a text string to the zone's log file for debugging and error tracking purposes. This is an essential tool for DIL developers to monitor program execution, track errors, and debug complex DIL programs. The logged output is written to the zone's log file using the server's logging system.
+
+The '''log''' procedure is particularly useful for tracking program flow, debugging variable values, and recording error conditions that occur during DIL execution. Unlike normal game messages, log entries are permanently recorded and can be reviewed by administrators and developers.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The text message to be written to the zone log file
+|}
+
+== Return Value ==
+This procedure does not return a value.
+
+== Usage Notes ==
+* Log entries are written to the zone's log file (typically found in the server's log directory)
+* The procedure is primarily intended for debugging and development purposes
+* Log entries include timestamps and zone information automatically
+* Use meaningful log messages to facilitate debugging
+* Avoid excessive logging in production code as it can impact server performance
+
+== Examples ==
+Basic error logging:
+ dilbegin load_example();
+ var
+  result:integer;
+  content:string;
+ code
+ {
+  result := loadstr("news.txt", content);
+  if (result < 0)
+  {
+   log("Failed to load news.txt, result: " + itoa(result));
+   quit;
+  }
+  
+  log("Successfully loaded news.txt");
+  sendtext(content + "[&n]", self);
+  quit;
+ }
+ dilend
+
+Debugging program flow:
+ dilbegin debug_example(target : unitptr);
+ var
+  i:integer;
+ code
+ {
+  log("Starting debug_example for target: " + target.name);
+  
+  if (target == null)
+  {
+   log("Error: target is null");
+   quit;
+  }
+  
+  log("Target type: " + itoa(target.type));
+  log("Target zone: " + target.zoneidx);
+  
+  i := 0;
+  while (i < 5)
+  {
+   log("Processing iteration: " + itoa(i));
+   pause;
+   i := i + 1;
+  }
+  
+  log("Completed debug_example");
+  quit;
+ }
+ dilend
+
+Error tracking in file operations:
+ dilbegin save_data(data : string);
+ var
+  result:integer;
+ code
+ {
+  log("Attempting to save data, length: " + itoa(length(data)));
+  
+  result := savestr("datafile.txt", data, "w");
+  if (result < 1)
+  {
+   log("Error: Failed to save datafile.txt, result: " + itoa(result));
+   quit;
+  }
+  
+  log("Successfully saved datafile.txt");
+  quit;
+ }
+ dilend
+
+== Error Handling ==
+* The procedure handles null string pointers gracefully
+* No return value is generated, so errors cannot be detected programmatically
+* If logging fails (due to file system issues), the error is typically logged at the server level
+* Always validate string parameters before logging to avoid null pointer issues
+
+== Performance Considerations ==
+* Excessive logging can impact server performance
+* Log file I/O operations are relatively expensive
+* Consider using conditional logging or log levels for production code
+* Large log messages should be avoided for performance reasons
+
+== Related Functions/Fields ==
+* [[flog]] - Log to specific files with more control over output destination
+* [[logcrime]] - Log criminal activities for justice system tracking
+* [[szonelog]] - Low-level zone logging function (internal use)
+
+== See Also ==
+* [[DIL Debugging]] - General debugging techniques for DIL programs
+* [[Zone Administration]] - Zone log file management
+* [[Server Logging]] - Server-wide logging system overview

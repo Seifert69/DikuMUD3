@@ -1,0 +1,169 @@
+= purse =
+
+ function: integer '''purse'''(u : unitptr, coinage : integer);
+
+== Syntax ==
+ integer purse(u : unitptr, coinage : integer);
+
+== Description ==
+The '''purse''' function counts the number of money units of a specific type that a character is carrying. It searches through all money objects contained within the character's inventory and returns the total count of the specified coin type.
+
+The function is commonly used to check if a character has sufficient funds for purchases, to display wealth information, or to implement money splitting among group members.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The character whose money should be counted
+|-
+| coinage || integer || The type of money to count (e.g., GOLD_PIECE, PLATINUM_PIECE)
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - Total number of money units of the specified type found in character's inventory
+* '''0''' - When no money of that type is found
+
+== Examples ==
+ dilbegin check_wealth();
+ var
+    gold_pieces : integer;
+    silver_pieces : integer;
+    copper_pieces : integer;
+ code
+ {
+    gold_pieces := purse(self, GOLD_PIECE);
+    silver_pieces := purse(self, SILVER_PIECE);
+    copper_pieces := purse(self, COPPER_PIECE);
+    
+    sendtext("You are carrying:<br/>", self);
+    sendtext(itoa(gold_pieces) + " gold pieces<br/>", self);
+    sendtext(itoa(silver_pieces) + " silver pieces<br/>", self);
+    sendtext(itoa(copper_pieces) + " copper pieces<br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin can_afford(item_cost : integer);
+ var
+    player_money : integer;
+ code
+ {
+    // Check if player can afford an item costing 100 gold pieces
+    player_money := purse(activator, GOLD_PIECE);
+    
+    if (player_money >= item_cost)
+    {
+       sendtext("You can afford this item!<br/>", activator);
+       act("$1n purchases an item.", A_ALWAYS, activator, null, null, TO_ROOM);
+    }
+    else
+    {
+       sendtext("You don't have enough gold. You need " + itoa(item_cost) + 
+                " but only have " + itoa(player_money) + ".<br/>", activator);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin split_money(group_size : integer);
+ var
+    total_coins : integer;
+    coins_per_person : integer;
+    i : integer;
+    target : unitptr;
+ code
+ {
+    // Count total platinum pieces in the group
+    total_coins := purse(self, PLATINUM_PIECE);
+    
+    if (total_coins < group_size)
+    {
+       sendtext("Not enough coins to split among " + itoa(group_size) + " people.<br/>", self);
+       quit;
+    }
+    
+    coins_per_person := total_coins / group_size;
+    
+    // Distribute coins to group members
+    target := self.follower;
+    i := 1;
+    
+    while (target != null and i <= group_size)
+    {
+       // Give coins to each person
+       if (target.type == UNIT_ST_PC)
+       {
+          sendtext("You receive " + itoa(coins_per_person) + " platinum pieces.<br/>", target);
+       act("$1n gives money to $3n.", A_ALWAYS, self, null, target, TO_VICT);
+       }
+       
+       target := target.follower;
+       i := i + 1;
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin money_checker();
+ var
+    has_gold : integer;
+    has_silver : integer;
+    has_copper : integer;
+ code
+ {
+    has_gold := (purse(self, GOLD_PIECE) > 0);
+    has_silver := (purse(self, SILVER_PIECE) > 0);
+    has_copper := (purse(self, COPPER_PIECE) > 0);
+    
+    if (has_gold and has_silver and has_copper)
+    {
+       sendtext("You have a variety of coins!<br/>", self);
+    }
+    else if (has_gold)
+    {
+       sendtext("You have gold pieces.<br/>", self);
+    }
+    else if (has_silver)
+    {
+       sendtext("You have silver pieces.<br/>", self);
+    }
+    else if (has_copper)
+    {
+       sendtext("You have copper pieces.<br/>", self);
+    }
+    else
+    {
+       sendtext("You don't have any money.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The function only counts money objects, not money stored in other forms
+* Money objects must be in the character's direct inventory (not in containers)
+* Common coin type constants include GOLD_PIECE, SILVER_PIECE, COPPER_PIECE, PLATINUM_PIECE
+* The function returns 0 if no money of that type is found
+* Money objects are typically created by the game's economic system
+* The function is useful for wealth checking and transaction validation
+
+== Error Handling ==
+The function will return '''fail''' when:
+* The first parameter is not a valid unitptr
+* The second parameter is not a valid integer
+* The unit is null or invalid
+* The coinage parameter is not a recognized money type
+
+== Related Functions/Fields ==
+* [[money]] - Field for direct money access on units
+* [[transfermoney]] - Function to transfer money between characters
+* [[load]] - Function to create money objects
+* [[destroy]] - Function to remove money objects
+
+== See Also ==
+* [[GOLD_PIECE]] - Constant for gold piece type
+* [[SILVER_PIECE]] - Constant for silver piece type
+* [[COPPER_PIECE]] - Constant for copper piece type
+* [[PLATINUM_PIECE]] - Constant for platinum piece type
+* [[equipment]] - Function to manage character equipment slots

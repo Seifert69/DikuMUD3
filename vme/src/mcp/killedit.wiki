@@ -1,0 +1,78 @@
+= killedit =
+
+; killedit : procedure ( u : unitptr )
+: Terminates editing mode for a player character.
+
+== Description ==
+
+The '''killedit''' procedure forcefully terminates the editing mode for a player character. This is used when a player needs to stop editing before they are finished, such as when they are killed, transferred to another location, or when the editing session needs to be interrupted for any reason. This prevents the player from being stuck in editing mode.
+
+== Parameters ==
+
+; u : unitptr
+: The player character to remove from editing mode. Must be a PC unit.
+
+== Usage Notes ==
+
+* Only works on player characters (PC units), not NPCs or objects
+* Used to interrupt editing sessions that would otherwise continue indefinitely
+* Essential for cleanup when players are killed or moved while editing
+* Complements the '''beginedit()''' function which starts editing mode
+* Automatically clears editing state and restores normal command processing
+
+== Examples ==
+
+=== Basic Cleanup ===
+ interrupt (SFB_DEAD, self == activator, int_quit);
+ 
+ :int_quit:
+ killedit(self);
+ quit;
+ 
+This kills editing when the player dies during an editing session.
+
+=== Board Reply Cleanup ===
+ interrupt (SFB_MSG, ((activator == self) and (argument == "linkdead")), clean_up);
+ interrupt (SFB_DEAD, activator == self, clean_up);
+ interrupt (SFB_COM, activator == self, clean_up);
+ 
+ :clean_up:
+ killedit(self);
+ quit;
+ 
+This example from a board reply system kills editing on various interrupt conditions.
+
+=== Transfer Cleanup ===
+ if (self.outside != original_room)
+ {
+    killedit(self);
+    act("You were transferred while editing!", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ 
+This handles cases where a player is moved while editing.
+
+== Common Use Cases ==
+
+* Player death during editing sessions
+* Player transfer to another location while editing
+* Forced termination of problematic editing sessions
+* Cleanup in error conditions
+* Timeout scenarios where editing needs to end
+
+== Related Functions ==
+
+; beginedit : Starts editing mode for a player
+; SFB_EDIT : Message sent when player finishes editing
+; wait : Used to wait for SFB_EDIT messages
+
+== Error Handling ==
+
+* Function will fail if the unit is not a player character
+* Always validate unit type before calling killedit
+* Use proper error checking to ensure the unit is valid
+
+== See Also ==
+
+; beginedit : Starts editing mode
+; textformat : Formats text from editing input
+; SFB_EDIT : Editing completion message flag

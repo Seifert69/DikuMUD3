@@ -1,0 +1,132 @@
+= pcflags =
+
+ field: integer '''.pcflags'''
+ type: '''integer'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ unit.pcflags
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current PC flags value
+|-
+| Write || integer || Sets the PC flags to the specified value
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Description ==
+The '''pcflags''' field contains various player option flags that control player behavior and permissions. These flags are bit-based constants that can be checked, set, or cleared using the '''isset''', '''set''', and '''clear''' functions.
+
+Common PC flags include:
+* '''PC_PK_RELAXED''' - Player has signed the "book of blood" and can participate in player killing
+* '''PC_INFORM''' - Player receives information about other players entering the game
+
+== Examples ==
+ dilbegin check_pk_status(player : unitptr);
+ var
+    is_pk_enabled : integer;
+ code
+ {
+    // Check if player has PK enabled
+    is_pk_enabled := isset(player.pcflags, PC_PK_RELAXED);
+    
+    if (is_pk_enabled)
+    {
+       sendtext("You are signed up for player killing.<br/>", player);
+    }
+    else
+    {
+       sendtext("You are not signed up for player killing.<br/>", player);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin toggle_inform_mode();
+ var
+    current_flags : integer;
+ code
+ {
+    // Only allow players to use this on themselves
+    if (activator != self)
+    {
+       sendtext("You can only change your own inform status.<br/>", self);
+       quit;
+    }
+    
+    current_flags := self.pcflags;
+    
+    if (isset(current_flags, PC_INFORM))
+    {
+       // Turn off inform mode
+       clear(self.pcflags, PC_INFORM);
+       sendtext("Inform mode disabled.<br/>", self);
+    }
+    else
+    {
+       // Turn on inform mode
+       set(self.pcflags, PC_INFORM);
+       sendtext("Inform mode enabled.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin sign_death_book();
+ var
+    current_flags : integer;
+ code
+ {
+    // Check if player is high enough level
+    if (self.level < 50)
+    {
+       sendtext("You must be level 50 or higher to sign the death book.<br/>", self);
+       quit;
+    }
+    
+    current_flags := self.pcflags;
+    
+    if (isset(current_flags, PC_PK_RELAXED))
+    {
+       sendtext("You are already signed up for player killing.<br/>", self);
+    }
+    else
+    {
+       // Sign the player up for PK
+       set(self.pcflags, PC_PK_RELAXED);
+       sendtext("You have signed the book of blood! You can now participate in player killing.<br/>", self);
+       act("$1n has signed the book of blood!", A_ALWAYS, self, null, null, TO_ROOM);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The pcflags field is only available on player characters (UNIT_ST_PC)
+* Flags are bit-based, so multiple flags can be set simultaneously
+* Use '''isset()''' to check if a flag is set
+* Use '''set()''' to set a flag
+* Use '''clear()''' to clear a flag
+* The field is read/write, allowing modification of player flags
+* Common flag constants are defined in values.h and/or vme.h with PC_ prefix
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access pcflags on a non-player character unit
+* The unit is null or invalid
+
+== Related Functions/Fields ==
+* [[isset]] - Check if a flag bit is set
+* [[set]] - Set a flag bit
+* [[clear]] - Clear a flag bit
+* [[npcflags]] - Similar field for NPC flags
+
+== See Also ==
+* [[meleedamage]] - Function that checks PC_PK_RELAXED for combat
+* [[gamestate]] - Function that checks PC_INFORM for player notifications

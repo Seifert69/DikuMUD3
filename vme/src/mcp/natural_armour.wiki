@@ -1,0 +1,138 @@
+= natural_armour =
+
+== Syntax ==
+ field: '''.natural_armour''' (Read/Write)
+
+== Description ==
+The '''natural_armour''' field specifies the natural armor class of an NPC character when not wearing any equipment. This field determines the base armor protection that an NPC has inherently, without relying on worn items. It represents the NPC's innate defensive capabilities.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current natural armor value
+|-
+| Write || integer || Sets the natural armor value
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+ dilbegin set_npc_armor(npc : unitptr, armor_type : integer);
+ var
+    current_armor : integer;
+ code
+ {
+    if (npc.type != UNIT_ST_NPC)
+    {
+       exec("say That's not an NPC!", self);
+       return;
+    }
+    
+    current_armor := npc.natural_armour;
+    exec("say Current natural armor: " + itoa(current_armor), self);
+    
+    // Set new natural armor value
+    npc.natural_armour := armor_type;
+    exec("say Natural armor changed to: " + itoa(armor_type), self);
+ } dilend
+
+ dilbegin create_guard();
+ var
+    new_guard : unitptr;
+ code
+ {
+    // Create a new guard NPC
+    new_guard := load("guard_template@midgaard");
+    
+    if (new_guard != null)
+    {
+       // Set guard's natural armor to a reasonable value
+       new_guard.natural_armour := 50;  // Medium armor class
+       
+       exec("say New guard created with natural armor: " + itoa(new_guard.natural_armour), self);
+    }
+    else
+    {
+       exec("say Failed to create guard.", self);
+    }
+ } dilend
+
+ dilbegin armor_comparison(npc1 : unitptr, npc2 : unitptr);
+ var
+    armor1 : integer;
+    armor2 : integer;
+ code
+ {
+    if ((npc1.type != UNIT_ST_NPC) or (npc2.type != UNIT_ST_NPC))
+    {
+       exec("say Both units must be NPCs!", self);
+       return;
+    }
+    
+    armor1 := npc1.natural_armour;
+    armor2 := npc2.natural_armour;
+    
+    exec("say NPC 1 natural armor: " + itoa(armor1), self);
+    exec("say NPC 2 natural armor: " + itoa(armor2), self);
+    
+    if (armor1 > armor2)
+    {
+       exec("say NPC 1 has better natural armor.", self);
+    }
+    else if (armor2 > armor1)
+    {
+       exec("say NPC 2 has better natural armor.", self);
+    }
+    else
+    {
+       exec("say Both NPCs have equal natural armor.", self);
+    }
+ } dilend
+
+ dilbegin reset_npc_armor(npc : unitptr);
+ var
+    original_armor : integer;
+ code
+ {
+    if (npc.type != UNIT_ST_NPC)
+    {
+       exec("say That's not an NPC!", self);
+       return;
+    }
+    
+    // Store original value and reset to default
+    original_armor := npc.natural_armour;
+    npc.natural_armour := 0;  // No natural armor
+    
+    exec("say NPC armor reset from " + itoa(original_armor) + " to 0", self);
+ } dilend
+
+== Usage Notes ==
+* The '''natural_armour''' field is read/write accessible on NPCs
+* Represents the base armor class when the NPC is not equipped with any armor
+* Works in conjunction with worn armor items to provide total protection
+* Typical values might range from 0 (no natural armor) to 100+ (very high natural armor)
+* Used during NPC creation and modification to set innate defensive capabilities
+* Only applies to NPC characters, not PCs or objects
+
+== Error Handling ==
+* Returns '''fail''' if unit pointer is null or not an NPC
+* Returns '''error''' if accessed on an unsupported unit type
+* Setting invalid values may cause undefined behavior in combat calculations
+* Always validate unit type before accessing natural_armour field
+
+== Related Functions/Fields ==
+* [[armor]] - Worn armor equipment
+* [[defensive]] - Defensive combat values
+* [[offensive]] - Offensive combat values
+* [[npcflags]] - NPC-specific flags and settings
+* [[defaultpos]] - Default position of NPCs
+
+== See Also ==
+* Unit type constants: '''UNIT_ST_NPC''', '''UNIT_ST_PC'''
+* Combat-related fields: '''attack_type''', '''natural_armour'''
+* NPC creation functions: [[reset_race]], [[reset_level]]
+* Equipment functions: [[addequip]], [[unequip]]

@@ -1,0 +1,73 @@
+= isplayer =
+
+; isplayer : integer ( pcname : string )
+: Tests whether a player with the specified name exists in the game database.
+
+== Description ==
+
+The '''isplayer''' function checks if a player with the given name exists in the game's player database. This is useful for validating player names before performing operations like deletion, or for checking if a character has been properly saved. The function works regardless of whether the player is currently online or offline.
+
+== Parameters ==
+
+; pcname : string
+: The name of the player to check for existence in the database.
+
+== Return Value ==
+
+; integer
+: Returns TRUE (1) if a player with the specified name exists in the database, or FALSE (0) if not.
+
+== Examples ==
+
+=== Basic Player Validation ===
+ if (not isplayer(arg))
+ {
+    sendtext(arg + " is not a character.&n", self);
+    quit;
+ }
+ 
+This validates that the provided argument corresponds to an existing player character.
+
+=== Guest Account Check ===
+ if (not isplayer(self.name))
+ {
+    sendtext("<div class='score'>You remain a GUEST until you 'save' yourself</div><br/>", self);
+    quit;
+ }
+ 
+This example from a score command checks if the current character has been saved yet (guest accounts don't exist in the database until saved).
+
+=== Admin Delete Validation ===
+ if (self.level > 200)
+ {
+    if (not isplayer(arg))
+    {
+       sendtext(arg + " is not a character.&n", self);
+       quit;
+    }
+    delete_player(arg);
+    sendtext(arg + " has been deleted.&n", self);
+ }
+ 
+This shows how an administrator can validate a player exists before deleting them.
+
+== Usage Notes ==
+
+* The function checks the player database, not just online players
+* Guest accounts (unsaved characters) will return FALSE since they don't exist in the database yet
+* This is commonly used with '''delete_player()''' to validate before deletion
+* Player names are case-sensitive for the lookup
+* The function uses '''find_player_id()''' internally to locate the player
+
+== Common Use Cases ==
+
+* Validating player names before administrative operations
+* Checking if a character has been saved (distinguishing guests from real characters)
+* Preventing operations on non-existent players
+* Admin tools for player management
+
+== See Also ==
+
+; delete_player : Deletes a player from the database
+; findunit : Finds a unit by name (online units only)
+; findsymbolic : Finds a unit by symbolic name

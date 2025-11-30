@@ -1,0 +1,121 @@
+= pc_head =
+
+ function: unitptr '''pc_head'''();
+
+== Syntax ==
+ unitptr pc_head();
+
+== Description ==
+The '''pc_head''' function returns the first player character in the global player list. This function provides access to the head of the linked list of all player characters currently connected to the game, allowing iteration through all players using the gnext field.
+
+The function is commonly used for operations that need to process all connected players, such as global announcements, mass updates, or player statistics collection.
+
+== Parameters ==
+This function takes no parameters.
+
+== Return Value ==
+Returns unitptr:
+* '''unitptr''' - The first player character in the global player list
+* '''null''' - When there are no player characters connected or the list is empty
+
+== Examples ==
+ dilbegin announce_to_all(message : string);
+ var
+    current_pc : unitptr;
+ code
+ {
+    // Get the first player in the list
+    current_pc := pc_head();
+    
+    // Iterate through all connected players
+    while (current_pc != null)
+    {
+       // Send message to current player
+       sendtext(message + "<br/>", current_pc);
+       
+       // Move to next player in the list
+       current_pc := current_pc.gnext;
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin count_online_players();
+ var
+    current_pc : unitptr;
+    player_count : integer;
+ code
+ {
+    player_count := 0;
+    current_pc := pc_head();
+    
+    // Count all connected players
+    while (current_pc != null)
+    {
+       if (current_pc.type == UNIT_ST_PC)
+       {
+          player_count := player_count + 1;
+       }
+       
+       current_pc := current_pc.gnext;
+    }
+    
+    sendtext("There are " + itoa(player_count) + " players online.<br/>", self);
+    quit;
+ } dilend
+
+ dilbegin force_all_players(command : string);
+ var
+    current_pc : unitptr;
+ code
+ {
+    // Only allow immortals to use this
+    if (self.level < IMMORTAL_LEVEL)
+    {
+       sendtext("You don't have permission to use this command.<br/>", self);
+       quit;
+    }
+    
+    current_pc := pc_head();
+    
+    // Force all lower level players to execute command
+    while (current_pc != null)
+    {
+       if (current_pc.type == UNIT_ST_PC and current_pc != self)
+       {
+          if (self.level > current_pc.level)
+          {
+             exec(command, current_pc);
+             act("You have forced $3n to '" + command + "'", A_ALWAYS, self, null, current_pc, TO_CHAR);
+          }
+       }
+       
+       current_pc := current_pc.gnext;
+    }
+    
+    sendtext("Done.<br/>", self);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The returned unit is the head of a global linked list of all player characters
+* Use the gnext field to iterate through the list: current_pc := current_pc.gnext
+* The list includes all connected player characters, regardless of their location
+* Always check for null when iterating, as the list may be empty
+* The function returns null when no players are connected to the game
+
+== Error Handling ==
+The function is generally safe and does not generate errors:
+* Returns null when no players are connected
+* The underlying C implementation checks if g_unit_list is a PC before returning it
+
+== Related Functions/Fields ==
+* [[npc_head]] - Get the first NPC in the global NPC list
+* [[obj_head]] - Get the first object in the global object list
+* [[room_head]] - Get the first room in the global room list
+* [[gnext]] - Field to navigate to the next unit in the global list
+
+== See Also ==
+* [[findunit]] - Find a specific unit in the game world
+* [[act]] - Send messages to units
+* [[exec]] - Execute a command for a specific unit

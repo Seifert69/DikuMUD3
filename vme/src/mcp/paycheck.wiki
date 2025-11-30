@@ -1,0 +1,104 @@
+= paycheck =
+
+ function: integer '''paycheck'''(u1 : unitptr, u2 : unitptr);
+
+== Syntax ==
+ integer paycheck(u1 : unitptr, u2 : unitptr);
+
+== Description ==
+The '''paycheck''' function checks whether a player has pay access to a specific location. It determines if the player u2 is allowed to access the zone where unit u1 is located, based on the game's accounting and pay-access system.
+
+The function is commonly used to verify if a player can enter certain areas that require payment or special access permissions. When accounting mode is disabled, the function always returns true (allowing access).
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u1 || unitptr || The unit to check access against (typically the target location/room)
+|-
+| u2 || unitptr || The player to check access for (must be a character unit)
+|}
+
+== Return Value ==
+Returns integer:
+* '''1 (TRUE)''' - The player has access to the location
+* '''0 (FALSE)''' - The player does not have access to the location
+* '''fail''' - When either parameter is null or invalid
+
+== Examples ==
+ dilbegin check_zone_access();
+ var
+    target_room : unitptr;
+    can_enter : integer;
+ code
+ {
+    // Find a specific room to check access for
+    target_room := findroom("shop@midgaard");
+    
+    if (target_room != null)
+    {
+       // Check if current player can access this room
+       can_enter := paycheck(target_room, self);
+       
+       if (can_enter)
+       {
+          sendtext("You can enter this location.<br/>", self);
+       }
+       else
+       {
+          sendtext("You need to pay to access this location.<br/>", self);
+       }
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin movement_paycheck(mover : unitptr, direction : integer);
+ var
+    target_room : unitptr;
+    current_room : unitptr;
+ code
+ {
+    current_room := unit_room(mover);
+    
+    if (current_room.exit_to[direction] != null)
+    {
+       target_room := current_room.exit_to[direction];
+       
+       // Check pay access before allowing movement
+       if (not paycheck(target_room, mover))
+       {
+          sendtext("You must pay to enter this area.<br/>", mover);
+          return;
+       }
+       
+       // Proceed with movement if access is granted
+       move(mover, direction);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* When accounting mode is disabled (g_cServerConfig.isAccounting() == false), the function always returns 1 (TRUE)
+* The first parameter (u1) should be the unit representing the location you want to check access for
+* The second parameter (u2) should be the player character you're checking access for
+* Non-player characters used as u2 will always return TRUE
+* The function checks the zone's pay-access requirements, not individual room requirements
+
+== Error Handling ==
+The function will return '''fail''' when:
+* Either parameter is null
+* The first parameter is not a valid unit
+* The second parameter is not a character unit (isChar() returns false)
+
+== Related Functions/Fields ==
+* [[findroom]] - Find a specific room by name
+* [[unit_room]] - Get the room containing a unit
+* [[acc_balance]] - Get player's account balance (when accounting is enabled)
+* [[acc_total]] - Get player's total credit (when accounting is enabled)
+
+== See Also ==
+* [[move]] - Move a unit in a specific direction
+* [[act]] - Send messages to units
+* [[isAccounting]] - Check if accounting mode is enabled

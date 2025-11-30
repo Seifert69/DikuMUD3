@@ -1,0 +1,206 @@
+= race =
+
+ field: integer '''.race'''
+ type: '''integer'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ unit.race
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current race of the character
+|-
+| Write || integer || Sets the race of the character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Description ==
+The '''race''' field contains the racial identifier for a character. This field determines the character's race, which affects various game mechanics including abilities, equipment restrictions, social interactions, and combat modifiers.
+
+Common race constants include:
+* '''RACE_HUMAN''' - Human race
+* '''RACE_DWARF''' - Dwarf race
+* '''RACE_ELF''' - Elf race
+* '''RACE_HALFLING''' - Halfling race
+* '''RACE_GNOME''' - Gnome race
+* '''RACE_HALF_OGRE''' - Half-ogre race
+* '''RACE_HALF_ORC''' - Half-orc race
+* '''RACE_BROWNIE''' - Brownie race
+* '''RACE_HALF_ELF''' - Half-elf race
+* '''RACE_GROLL''' - Troll race
+* '''RACE_DARK_ELF''' - Dark elf race
+* '''RACE_HALF_ORC''' - Half-orc race
+* '''RACE_HALF_DROW''' - Dark elf (drow) race
+
+== Examples ==
+ dilbegin check_race();
+ var
+    character_race : integer;
+ code
+ {
+    character_race := self.race;
+    
+    if (character_race == RACE_HUMAN)
+    {
+       sendtext("You are human.<br/>", self);
+    }
+    else if (character_race == RACE_ELF)
+    {
+       sendtext("You are an elf.<br/>", self);
+    }
+    else if (character_race == RACE_DWARF)
+    {
+       sendtext("You are a dwarf.<br/>", self);
+    }
+    else if (character_race == RACE_HALFLING)
+    {
+       sendtext("You are a halfling.<br/>", self);
+    }
+    else
+    {
+       sendtext("Your race is: " + itoa(character_race) + "<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin race_restriction();
+ var
+    target_race : integer;
+ code
+ {
+    target_race := target.race;
+    
+    // Check if target can enter certain areas based on race
+    if (target_race == RACE_DARK_ELF)
+    {
+       act("The guards block the dark elf from entering the sacred grove.", 
+          A_ALWAYS, self, null, target, TO_VICT);
+       act("$1n prevents $3n from entering the sacred grove.", 
+          A_ALWAYS, self, null, target, TO_ROOM);
+    }
+    else if (target_race == RACE_ORC)
+    {
+       act("The villagers eye the orc warily.<br/>", 
+          A_ALWAYS, self, null, target, TO_ROOM);
+    }
+    else
+    {
+       act("Welcome, traveler! The gates open for you.<br/>", 
+          A_ALWAYS, self, null, target, TO_VICT);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin race_change_menu();
+ var
+    choice : string;
+ code
+ {
+    sendtext("Race Change Menu:<br/>", self);
+    sendtext("1. Human<br/>", self);
+    sendtext("2. Elf<br/>", self);
+    sendtext("3. Dwarf<br/>", self);
+    sendtext("4. Halfling<br/>", self);
+    sendtext("5. Gnome<br/>", self);
+    sendtext("Enter your choice (1-5): ", self);
+    
+    wait(SFB_CMD, TRUE);
+    choice := argument;
+    
+    if (choice == "1")
+    {
+       self.race := RACE_HUMAN;
+       sendtext("You are now human!<br/>", self);
+    }
+    else if (choice == "2")
+    {
+       self.race := RACE_ELF;
+       sendtext("You are now an elf!<br/>", self);
+    }
+    else if (choice == "3")
+    {
+       self.race := RACE_DWARF;
+       sendtext("You are now a dwarf!<br/>", self);
+    }
+    else if (choice == "4")
+    {
+       self.race := RACE_HALFLING;
+       sendtext("You are now a halfling!<br/>", self);
+    }
+    else if (choice == "5")
+    {
+       self.race := RACE_GNOME;
+       sendtext("You are now a gnome!<br/>", self);
+    }
+    else
+    {
+       sendtext("Invalid choice.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin race_abilities();
+ var
+    character_race : integer;
+ code
+ {
+    character_race := self.race;
+    
+    // Give race-specific bonuses
+    if (character_race == RACE_ELF)
+    {
+       self.abilities[ABIL_DEX] := self.abilities[ABIL_DEX] + 5;
+       self.abilities[ABIL_CHA] := self.abilities[ABIL_CHA] + 3;
+       sendtext("Elven grace enhances your dexterity and charisma!<br/>", self);
+    }
+    else if (character_race == RACE_DWARF)
+    {
+       self.abilities[ABIL_STR] := self.abilities[ABIL_STR] + 5;
+       self.abilities[ABIL_CON] := self.abilities[ABIL_CON] + 3;
+       sendtext("Dwarven constitution enhances your strength and health!<br/>", self);
+    }
+    else if (character_race == RACE_HUMAN)
+    {
+       self.abilities[ABIL_BRA] := self.abilities[ABIL_BRA] + 2;
+       self.abilities[ABIL_DIV] := self.abilities[ABIL_DIV] + 2;
+       sendtext("Human versatility improves your intelligence and wisdom!<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The race field is available on both player characters and NPCs
+* Race constants are defined in values.h and/or vme.h with RACE_ prefix
+* Race affects various game mechanics including abilities, equipment restrictions, and social interactions
+* Some races may have sub-races or variations (half-elves, dark elves, etc.)
+* Race changes may require special commands or admin privileges
+* The field is persistent and saved with the character
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access race on a non-character unit (UNIT_ST_OBJ or UNIT_ST_ROOM)
+* The unit is null or invalid
+* The race value is not a valid race constant
+
+== Related Functions/Fields ==
+* [[reset_race]] - Function to reset a character's race
+* [[abilities]] - Array of character abilities affected by race
+* [[equipment]] - Function that may have race-based restrictions
+* [[profession]] - Field that may interact with race requirements
+
+== See Also ==
+* [[RACE_* constants]] - Race identifier constants
+* [[sex]] - Field for character's gender
+* [[level]] - Field for character's experience level
+* [[guild]] - Field for character's guild affiliation

@@ -1,0 +1,148 @@
+= mapy =
+
+== Syntax ==
+ field: '''.mapy'''
+
+== Description ==
+The '''.mapy''' field is accessed on room units and returns the Y coordinate of the room on a map grid. This field is used to position rooms within a coordinate system, typically for mapping, visualization, or spatial calculations.
+
+If a room has not been assigned map coordinates, this field returns -1.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .mapy || integer || Read-only || Y coordinate of the room on the map grid (-1 if not set)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin show_room_coordinates(room : unitptr);
+ code
+ {
+   // Check if the unit is a room
+   if (room.type != UNIT_ST_ROOM)
+   {
+     act("Target is not a room.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Get coordinates
+   if (room.mapx != -1 and room.mapy != -1)
+     act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR);
+   else
+     act("This room has no map coordinates assigned.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+ dilbegin calculate_distance(room1 : unitptr, room2 : unitptr);
+ var
+   x1, y1, x2, y2 : integer;
+   distance : integer;
+
+ code
+ {
+   if (room1.type != UNIT_ST_ROOM or room2.type != UNIT_ST_ROOM)
+   {
+     act("Both targets must be rooms.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   // Check if both rooms have coordinates
+   if (room1.mapx = -1 or room1.mapy = -1 or room2.mapx = -1 or room2.mapy = -1)
+   {
+     act("One or both rooms lack map coordinates.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   x1 := room1.mapx;
+   y1 := room1.mapy;
+   x2 := room2.mapx;
+   y2 := room2.mapy;
+
+   // Calculate Manhattan distance
+   distance := (x2 - x1) + (y2 - y1);
+   if (distance < 0)
+     distance := -distance;
+
+   act("Distance between rooms: $2d", A_ALWAYS, self, distance, null, TO_CHAR);
+   quit;
+ }
+ dilend
+
+ dilbegin generate_map_legend();
+ var
+   room : unitptr;
+   min_x, max_x, min_y, max_y : integer;
+   first_room : integer;
+
+ code
+ {
+   min_x := 999999;
+   max_x := -999999;
+   min_y := 999999;
+   max_y := -999999;
+   first_room := TRUE;
+
+   // Find coordinate bounds
+   foreach (UNIT_ST_ROOM, room)
+   {
+     if (room.mapx = -1 or room.mapy = -1)
+       continue;
+
+     if (first_room)
+     {
+       min_x := room.mapx;
+       max_x := room.mapx;
+       min_y := room.mapy;
+       max_y := room.mapy;
+       first_room := FALSE;
+     }
+     else
+     {
+       if (room.mapx < min_x) min_x := room.mapx;
+       if (room.mapx > max_x) max_x := room.mapx;
+       if (room.mapy < min_y) min_y := room.mapy;
+       if (room.mapy > max_y) max_y := room.mapy;
+     }
+   }
+
+   if (first_room)
+   {
+     act("No rooms with map coordinates found.", A_ALWAYS, self, null, null, TO_CHAR);
+     quit;
+   }
+
+   act("Map bounds: X($2d-$3d), Y($4d-$5d)", A_ALWAYS, self, min_x, max_x, min_y, max_y, TO_CHAR);
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.mapy''' field is read-only and cannot be modified through DIL
+* This field works in conjunction with [[mapx]] to provide complete 2D coordinates
+* A value of -1 indicates that the room has not been assigned map coordinates
+* Map coordinates are typically set in the zone files or through administrative commands
+* This field is commonly used for mapping systems, spatial calculations, and room visualization
+* Coordinates are typically used for grid-based mapping where each room has an X,Y position
+* The Y coordinate usually represents the vertical position on the map grid
+
+== Error Handling ==
+* If accessed on a non-room unit type, operation will return '''fail'''
+* If accessed on a null '''unitptr''', the operation will return '''fail'''
+* The field itself never fails - it always returns an integer (coordinates or -1)
+
+== Related Functions/Fields ==
+* [[mapx]] - Gets the X coordinate of a room
+* [[unit_st_room]] - Room-specific fields documentation
+* [[findroom]] - Finds a room by name
+* [[zoneidx]] - Gets the zone name of a room
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[unit_st_room]] - Room-specific fields and properties

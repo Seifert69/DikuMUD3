@@ -1,0 +1,68 @@
+= loadcount =
+
+ field: integer '''.loadcount'''
+
+== Description ==
+The '''loadcount''' field returns the number of units currently loaded in the game that share the same definition (zoneidx, nameidx) as the specified unit. This field is read-only and provides a way to track how many instances of a particular object, NPC, or room template are currently active in the game world.
+
+== Syntax ==
+ unitptr.loadcount
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| loadcount || integer || Read-only || Number of loaded units with same definition
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Return Value ==
+Returns '''integer''':
+* '''integer''' - Number of units currently loaded with the same zoneidx and nameidx
+* '''1''' - Default value when unit has no file index (typically for unique units)
+
+== Examples ==
+ dilbegin check_load_counts();
+ var
+   bag: unitptr;
+   guard: unitptr;
+ code
+ {
+   bag := load("tot_bag2@hallows23");
+   if (bag.loadcount > 250)
+   {
+     destroy(bag);
+     log("Too many bag2 instances loaded: " + bag.loadcount);
+   }
+   
+   guard := load("cityguard@midgaard");
+   log("City guards loaded: " + guard.loadcount);
+ } dilend
+
+== Usage Notes ==
+* The loadcount is based on the unit's definition (zoneidx and nameidx combination)
+* Units with the same symbolic name but from different zones will have separate load counts
+* The count includes the current unit if it's loaded
+* This field is useful for population control and preventing excessive loading of certain unit types
+* For unique units without a file index, the function returns 1
+
+== Error Handling ==
+* Returns '''fail''' if the unitptr is null
+* Returns '''fail''' if the unit is not applicable
+
+== Related Functions/Fields ==
+* [[nameidx]] - The unique database name in the zone
+* [[zoneidx]] - The unique database zone name
+* [[symname]] - The concatenated nameidx@zoneidx
+* [[idx]] - The constant ID for the unit
+
+== See Also ==
+* [[load()]] - Load a unit into the game
+* [[destroy()]] - Remove a unit from the game
+* [[findsymbolic()]] - Find units by symbolic name and index

@@ -1,0 +1,42 @@
+= lifespan =
+
+The '''lifespan''' field is used to get or set the maximum lifespan of a player character in the game.
+
+== Usage ==
+: pc.lifespan : integer (RW)
+
+== Description ==
+The lifespan field represents the maximum age a player character can reach before dying of old age. This value is measured in the game's internal time units and is compared against the character's current age to determine if they have exceeded their maximum lifespan.
+
+== Access Control ==
+* Read access: Available to all DIL code
+* Write access: Only available with root access level (zone access level != 0)
+
+== Return Value ==
+Returns an integer representing the character's maximum lifespan in game time units.
+
+== Example Usage ==
+The following example demonstrates how to check if a character has exceeded their lifespan:
+
+ dilbegin integer hit_l_num(pc:unitptr,point:integer);
+ code
+ {
+     if (pc.type==UNIT_ST_PC)
+     {
+         if (((realtime-pc.birth)/SECS_PER_MUD_YEAR)>pc.lifespan)
+             return (-1);
+         return (3*point+20);
+     }
+     else
+         return (3*point+10);
+ } dilend
+
+== Related Fields ==
+* '''birth''' - The time when the PC was created (realtime value)
+* '''realtime''' - Current time in seconds since 1970-01-01 00:00
+
+== Notes ==
+* This field only applies to player characters (UNIT_ST_PC)
+* Attempting to access this field on non-player units will result in DILV_FAIL
+* The lifespan comparison is typically done by calculating the character's age in years and comparing it to the lifespan value
+* SECS_PER_MUD_YEAR is a constant that converts real-time seconds to game years

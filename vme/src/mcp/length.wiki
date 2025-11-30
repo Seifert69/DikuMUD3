@@ -1,0 +1,87 @@
+= length =
+
+'''length''' is a DIL function that returns the size of strings, stringlists, or intlists.
+
+== Syntax ==
+ integer length(string input)
+ integer length(stringlist input)
+ integer length(intlist input)
+
+== Parameters ==
+; input : string, stringlist, or intlist
+: The variable to measure the length of
+
+== Return Value ==
+; integer
+: Returns the length of the input:
+* For strings: number of characters
+* For stringlists: number of strings in the list
+* For intlists: number of integers in the list
+Returns '''0''' if the input is null or empty. Returns '''fail''' if the input type is invalid.
+
+== Description ==
+The '''length''' function is a versatile function that can measure the size of three different data types. It's commonly used for:
+* Looping through lists
+* String validation and processing
+* Array bounds checking
+* Conditional logic based on data size
+
+== String Usage ==
+When used with a string, returns the number of characters:
+
+ // String length examples
+ len := length("hello");        // Returns 5
+ len := length("");             // Returns 0
+ len := length("a longer string"); // Returns 15
+
+== Stringlist Usage ==
+When used with a stringlist, returns the number of elements:
+
+ // Stringlist length examples
+ words := {"hello", "world", "test"};
+ count := length(words);        // Returns 3
+
+ empty_list := {};
+ count := length(empty_list);   // Returns 0
+
+== Intlist Usage ==
+When used with an intlist, returns the number of elements:
+
+ // Intlist length examples
+ numbers := {1, 2, 3, 4, 5};
+ count := length(numbers);      // Returns 5
+
+ // Common pattern for iterating through lists
+ i := 0;
+ while (i < length(myintlist)) {
+    // Process myintlist.[i]
+    i := i + 1;
+ }
+
+== Common Patterns ==
+The function is frequently used in loops and conditional statements:
+
+ // Random selection from a list
+ messages := {"Hello", "Goodbye", "Maybe later"};
+ index := rnd(0, length(messages) - 1);
+ exec("say " + messages.[index], self);
+
+ // Processing all elements in a list
+ i := 0;
+ while (i < length(song_lines)) {
+    exec("emote sings, '" + song_lines.[i] + "'", self);
+    pause;
+    i := i + 1;
+ }
+
+== Notes ==
+* The function handles null inputs gracefully by returning 0
+* For strings, this counts characters (not bytes)
+* For lists, this returns the number of elements, not the highest index
+* Invalid input types will cause the function to return fail
+
+== See Also ==
+* [[stringlist]] - For working with string arrays
+* [[intlist]] - For working with integer arrays
+* [[getwords]] - Split strings into stringlists
+* [[rnd]] - Generate random numbers (often used with length for selection)

@@ -1,0 +1,215 @@
+= outside_descr =
+
+== Syntax ==
+string '''outside_descr''' (unit : unitptr)
+
+== Description ==
+The '''outside_descr''' field provides access to the description of a unit as seen from the outside. This field contains the text that players see when looking at a unit from an external perspective.
+
+Based on the C implementation, this field returns a reference to the unit's outside description string, allowing both reading and writing of the description.
+
+== Field Access ==
+This is a field access on unitptrs:
+ unit.outside_descr
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Usage Notes ==
+The outside_descr field is read-write (RW) and can be modified directly.
+This field contains the description text seen when looking at unit from outside.
+For rooms, this is typically the description seen when entering or looking from adjacent rooms.
+For objects, this is the description seen when examining the object from outside.
+For characters, this is the description seen by others when looking at the character.
+
+== Examples ==
+=== Reading Outside Description ===
+ dilbegin examine_outside(target : unitptr);
+ var
+    description : string;
+ 
+ code
+ {
+    if (target == null)
+    {
+       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
+       return;
+    }
+    
+    description := target.outside_descr;
+    
+    if (description == "")
+       act("$1n has no outside description.", A_ALWAYS, self, target, null, TO_CHAR);
+    else
+       act("$1n's outside description:", A_ALWAYS, self, target, null, TO_CHAR);
+       act(description, A_ALWAYS, self, target, null, TO_CHAR);
+ } dilend
+
+=== Setting Outside Description ===
+ dilbegin set_outside_description(target : unitptr, new_desc : string);
+ var
+    old_desc : string;
+ 
+ code
+ {
+    if (target == null)
+    {
+       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
+       return;
+    }
+    
+    old_desc := target.outside_descr;
+    target.outside_descr := new_desc;
+    
+    act("$1n's outside description changed.", A_ALWAYS, self, target, null, TO_CHAR);
+    act("Old: $1t", A_ALWAYS, self, old_desc, target, TO_CHAR);
+    act("New: $1t", A_ALWAYS, self, new_desc, target, TO_CHAR);
+ } dilend
+
+=== Dynamic Description Based on State ===
+ dilbegin dynamic_description();
+ var
+    state_desc : string;
+ 
+ code
+ {
+    if (self.position == POSITION_FIGHTING)
+       state_desc := "stands ready for battle, weapons at the ready";
+    else if (self.position == POSITION_SLEEPING)
+       state_desc := "lies sleeping here, looking peaceful";
+    else if (self.position == POSITION_STANDING)
+       state_desc := "stands here, observing the surroundings";
+    else
+       state_desc := "is here, in an unusual position";
+    
+    self.outside_descr := state_desc;
+    act("Your appearance changes: $1t", A_ALWAYS, self, state_desc, null, TO_CHAR);
+ } dilend
+
+=== Room Description Management ===
+ dilbegin room_description_manager();
+ var
+    room : unitptr;
+    time_desc : string;
+ 
+ code
+ {
+    if (self.outside.type != UNIT_ST_ROOM)
+    {
+       act("You must be in a room to use this.", A_ALWAYS, self, null, null, TO_CHAR);
+       return;
+    }
+    
+    room := self.outside;
+    time_desc := "";
+    
+    // Add time-based descriptions
+    if (mudhour >= 6) and (mudhour < 12)
+       time_desc := "The morning sun shines brightly on this place.";
+    else if (mudhour >= 12) and (mudhour < 18)
+       time_desc := "The afternoon light illuminates the area.";
+    else if (mudhour >= 18) or (mudhour < 6)
+       time_desc := "The evening shadows grow long across the landscape.";
+    
+    room.outside_descr := room.outside_descr + " " + time_desc;
+    
+    act("Room description updated.", A_ALWAYS, self, null, null, TO_CHAR);
+ } dilend
+
+=== Object Description Enhancement ===
+ dilbegin enhance_object_description(obj : unitptr);
+ var
+    base_desc : string;
+    enhanced_desc : string;
+ 
+ code
+ {
+    if ((obj == null) or (obj.type != UNIT_ST_OBJ))
+    {
+       act("Invalid object specified.", A_ALWAYS, self, null, null, TO_CHAR);
+       return;
+    }
+    
+    base_desc := obj.outside_descr;
+    
+    // Add magical aura description if object is magical
+    if (isset(obj.flags, UNIT_FL_MAGIC))
+       enhanced_desc := base_desc + " A faint magical aura surrounds this object.";
+    else
+       enhanced_desc := base_desc;
+    
+    obj.outside_descr := enhanced_desc;
+    act("$1n's description has been enhanced.", A_ALWAYS, self, obj, null, TO_CHAR);
+ } dilend
+
+=== Character Appearance ===
+ dilbegin character_appearance();
+ var
+    appearance : string;
+ 
+ code
+ {
+    appearance := self.outside_descr;
+    
+    if (appearance == "")
+       appearance := "A nondescript person stands here.";
+    
+    self.outside_descr := appearance;
+    act("Your appearance is now: $1t", A_ALWAYS, self, appearance, null, TO_CHAR);
+ } dilend
+
+=== Descriptive Analysis ===
+ dilbegin analyze_descriptions();
+ var
+    unit : unitptr;
+    desc_length : integer;
+ 
+ code
+ {
+    act("=== Description Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    foreach (UNIT_ST_OBJ, unit)
+    {
+       desc_length := length(unit.outside_descr);
+       
+       if (desc_length == 0)
+          act("$1n: No description", A_ALWAYS, self, unit, null, TO_CHAR);
+       else if (desc_length < 20)
+          act("$1n: Short ($1d chars)", A_ALWAYS, self, desc_length, unit, TO_CHAR);
+       else if (desc_length < 50)
+          act("$1n: Medium ($1d chars)", A_ALWAYS, self, desc_length, unit, TO_CHAR);
+       else
+          act("$1n: Long ($1d chars)", A_ALWAYS, self, desc_length, unit, TO_CHAR);
+    }
+ } dilend
+
+== Error Handling ==
+Always verify that unit pointer is valid before accessing outside_descr:
+
+ if (unit != null)
+ {
+    description := unit.outside_descr;
+ }
+ else
+ {
+    act("Invalid unit pointer.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+== Related Functions/Fields ==
+* [[inside_descr]] - Description seen from inside
+* [[title]] - Unit title field
+* [[names]] - Unit names list
+* [[extra]] - Extra descriptions
+* [[description]] - General description field
+
+== See Also ==
+* [[unitptr]] - General unit pointer documentation
+* [[inside_descr]] - Internal description field
+* [[title]] - Unit title field
+* [[extra]] - Extra description system
+* [[sact]] - String action construction
+* [[act]] - Action function for displaying descriptions

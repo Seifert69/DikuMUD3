@@ -1,0 +1,153 @@
+= meleeattack =
+
+== Syntax ==
+ function: integer '''meleeattack'''(ch : unitptr, vict : unitptr, bonus : integer, wtype : integer, primary : integer);
+
+== Description ==
+The '''meleeattack''' function performs a melee attack from one character against another. The attacker uses their currently wielded weapon or bare hands to strike the victim, with optional bonuses and weapon type specifications.
+
+This function handles the complete combat resolution including weapon checks, damage calculations, and hit determination.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ch || unitptr || The character performing the attack
+| vict || unitptr || The victim being attacked
+| bonus || integer || Any penalty or bonus added to the attack roll
+| wtype || integer || The weapon type of the attack (WPN_* constants). If valid, bypasses equipped weapon
+| primary || integer || Determines whether to use primary weapon (TRUE) or off-hand attack (FALSE)
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - Amount of damage dealt to the victim
+* '''-1''' - When the attack fails
+
+== Examples ==
+ dilbegin simple_attack();
+ var
+    victim : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Find a random victim in the room
+    foreach (UNIT_ST_PC, victim)
+    {
+       if (victim != self and visible(self, victim))
+          break;
+    }
+
+    if (victim = null)
+    {
+       act("There is no one here to attack.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Perform a basic melee attack
+    damage := meleeattack(self, victim, 0, 0, TRUE);
+    
+    if (damage > 0)
+       act("You hit $1n for $2d damage!", A_ALWAYS, self, victim, damage, TO_CHAR);
+    else
+       act("You miss $1n.", A_ALWAYS, self, victim, null, TO_CHAR);
+
+    quit;
+ }
+ dilend
+
+ dilbegin special_kick();
+ var
+    target : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Find a target to kick
+    target := self.fighting;
+    
+    if (target = null)
+    {
+       act("You aren't fighting anyone.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Perform a kick attack (bypasses weapon)
+    damage := meleeattack(self, target, 0, WPN_CIRCLE_KICK, TRUE);
+    
+    if (damage > 0)
+    {
+       act("You kick $1n for $2d damage!", A_ALWAYS, self, target, damage, TO_CHAR);
+       act("$1n kicks you for $2d damage!", A_ALWAYS, self, target, damage, TO_VICT);
+       act("$1n kicks $3n for $2d damage!", A_ALWAYS, self, target, damage, TO_NOTVICT);
+    }
+    else
+    {
+       act("Your kick at $1n misses.", A_ALWAYS, self, target, null, TO_CHAR);
+       act("$1n's kick at you misses.", A_ALWAYS, self, target, null, TO_VICT);
+    }
+
+    quit;
+ }
+ dilend
+
+ dilbegin spider_bite();
+ var
+    prey : unitptr;
+    damage : integer;
+
+ code
+ {
+    // Spider special attack - always uses bite regardless of weapon
+    prey := self.fighting;
+    
+    if (prey = null)
+    {
+       act("You aren't fighting anyone.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+
+    // Perform bite attack with bonus
+    damage := meleeattack(self, prey, 75, WPN_BITE, TRUE);
+    
+    if (damage > 0)
+    {
+       act("You bite $1n for $2d damage!", A_ALWAYS, self, prey, damage, TO_CHAR);
+       act("$1n bites you for $2d damage!", A_ALWAYS, self, prey, damage, TO_VICT);
+    }
+    else
+    {
+       act("Your bite at $1n misses.", A_ALWAYS, self, prey, null, TO_CHAR);
+    }
+
+    quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''wtype''' parameter allows bypassing the equipped weapon when a specific attack type is desired
+* When '''wtype''' is a valid weapon type (WPN_*), that weapon type is used regardless of equipped weapon
+* The '''primary''' parameter determines whether to use the wielded primary weapon (TRUE) or allow off-hand attacks (FALSE)
+* The '''bonus''' parameter can be positive (bonus) or negative (penalty) to modify the attack roll
+* This function automatically handles combat resolution, including hit/miss determination
+* The function respects standard combat mechanics like position checks and visibility requirements
+* For special attacks like kicks or bites, set appropriate '''wtype''' even if no weapon is equipped
+
+== Error Handling ==
+* Returns '''-1''' if any parameter is invalid or if the attack cannot be performed
+* Returns '''-1''' if the attacker or victim is not a valid character unit
+* The function will fail if the attacker is in a position that doesn't allow combat
+* Always ensure both attacker and victim are valid character units before calling
+
+== Related Functions/Fields ==
+* [[cast_spell]] - For magical attacks instead of melee
+* [[one_hit]] - The underlying combat resolution function
+* [[fighting]] - Field to check current combat target
+* [[position]] - Field to check combat readiness
+* [[weapon]] - Field to check equipped weapon type
+
+== See Also ==
+* WPN_* constants in values.h for weapon type definitions
+* Combat and damage system documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation

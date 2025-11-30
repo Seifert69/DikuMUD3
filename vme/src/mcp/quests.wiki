@@ -1,0 +1,163 @@
+= quests =
+
+ field: extraptr '''.quests'''
+ type: '''extraptr'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ unit.quests
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || extraptr || Returns the quest extra description pointer
+|-
+| Write || extraptr || Sets the quest extra description pointer
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Description ==
+The '''quests''' field contains an extra description pointer that manages a player's quest information. This field provides access to a linked list of quest entries, where each entry contains quest names, descriptions, and completion status.
+
+The quests field is an extraptr that can be manipulated using extra description functions to add, remove, or search for specific quests.
+
+== Examples ==
+ dilbegin check_quest_status(quest_name : string);
+ var
+    quest_extra : extraptr;
+    found_quest : extraptr;
+ code
+ {
+    // Search for a specific quest
+    found_quest := quest_name in self.quests;
+    
+    if (found_quest != null)
+    {
+       sendtext("You have the quest: " + quest_name + "<br/>", self);
+       sendtext("Quest description: " + found_quest.descr + "<br/>", self);
+    }
+    else
+    {
+       sendtext("You don't have the quest: " + quest_name + "<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin add_new_quest(quest_name : string, quest_desc : string);
+ var
+    quest_list : stringlist;
+ code
+ {
+    // Add a new quest to the player's quest list
+    addextra(self.quests, quest_name, quest_desc);
+    
+    sendtext("Quest added: " + quest_name + "<br/>", self);
+    sendtext("Description: " + quest_desc + "<br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin remove_completed_quest(quest_name : string);
+ var
+    quest_extra : extraptr;
+ code
+ {
+    // Remove a specific quest from the player's quest list
+    subextra(self.quests, quest_name);
+    
+    sendtext("Quest removed: " + quest_name + "<br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin list_all_quests();
+ var
+    current_quest : extraptr;
+    quest_count : integer;
+    quest_names : stringlist;
+ code
+ {
+    quest_count := 0;
+    current_quest := self.quests;
+    
+    // Build a list of all quest names
+    while (current_quest != null)
+    {
+       quest_names := quest_names + current_quest.names;
+       quest_count := quest_count + 1;
+       current_quest := current_quest.next;
+    }
+    
+    sendtext("You have " + itoa(quest_count) + " quests:<br/>", self);
+    
+    // Display all quest names
+    while (quest_count > 0)
+    {
+       sendtext("- " + quest_names.[quest_count - 1] + "<br/>", self);
+       quest_count := quest_count - 1;
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin quest_progress_check();
+ var
+    total_quests : integer;
+    completed_quests : integer;
+    current_quest : extraptr;
+ code
+ {
+    total_quests := 0;
+    completed_quests := 0;
+    current_quest := self.quests;
+    
+    // Count total and completed quests
+    while (current_quest != null)
+    {
+       total_quests := total_quests + 1;
+       
+       // Check if quest is completed (example: checking vals array)
+       if (length(current_quest.vals) > 0)
+       {
+          completed_quests := completed_quests + 1;
+       }
+       
+       current_quest := current_quest.next;
+    }
+    
+    sendtext("Quest Progress: " + itoa(completed_quests) + "/" + itoa(total_quests) + " completed<br/>", self);
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The quests field is an extraptr that points to a linked list of quest entries
+* Each quest entry contains names, descriptions, and status information
+* Use '''addextra''' to add new quests to the list
+* Use '''subextra''' to remove specific quests from the list
+* Use the '''in''' operator to search for quests by name
+* Quest data is persistent and saved with the player character
+* The field is only available on player characters (UNIT_ST_PC)
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access quests on a non-player character unit
+* The unit is null or invalid
+* Memory allocation fails during quest manipulation
+
+== Related Functions/Fields ==
+* [[addextra]] - Function to add new quest entries
+* [[subextra]] - Function to remove quest entries
+* [[extraptr]] - Type for quest extra description pointers
+* [[in]] - Operator to search within extra description lists
+
+== See Also ==
+* [[extra]] - Field for accessing other extra descriptions
+* [[names]] - Field to access quest names
+* [[descr]] - Field to access quest descriptions
+* [[vals]] - Field to access quest values/status

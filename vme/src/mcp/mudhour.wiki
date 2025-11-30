@@ -1,0 +1,127 @@
+= mudhour =
+
+== Syntax ==
+ variable: '''mudhour''' (Read-only)
+
+== Description ==
+The '''mudhour''' variable returns the current hour number in the MUD's internal time system. This built-in variable allows DIL programs to track and respond to the time of day within the game world, enabling hour-based events, scheduling, and conditional logic.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current hour number (0-23)
+|}
+
+== Examples ==
+ dilbegin time_greeting();
+ var
+    current_hour : integer;
+ code
+ {
+    current_hour := mudhour;
+    
+    // Time-based greetings
+    if ((current_hour >= 5) and (current_hour < 12))
+    {
+       exec("say Good morning!", self);
+    }
+    else if ((current_hour >= 12) and (current_hour < 18))
+    {
+       exec("say Good afternoon!", self);
+    }
+    else if ((current_hour >= 18) and (current_hour < 22))
+    {
+       exec("say Good evening!", self);
+    }
+    else
+    {
+       exec("say Good night!", self);
+    }
+ } dilend
+
+ dilbegin shop_schedule();
+ var
+    hour : integer;
+ code
+ {
+    :check_time:
+    hour := mudhour;
+    
+    // Shop open from 8 AM to 8 PM
+    if ((hour >= 8) and (hour < 20))
+    {
+       if (self.position == POSITION_SLEEPING)
+       {
+          exec("wake", self);
+          exec("say The shop is now open!", self);
+       }
+    }
+    else
+    {
+       if (self.position != POSITION_SLEEPING)
+       {
+          exec("say The shop is now closed!", self);
+          exec("sleep", self);
+       }
+    }
+    
+    pause;
+    goto check_time;
+ } dilend
+
+ dilbegin guard_duty();
+ var
+    schedule : intlist;
+ code
+ {
+    // Guard schedule: wake at 6, patrol until 18, sleep at 22
+    schedule := {6, 18, 22};
+    
+    :main_loop:
+    pause;
+    
+    if (mudhour == schedule.[0])  // Wake up
+    {
+       exec("wake", self);
+       exec("say Time for my shift!", self);
+    }
+    else if (mudhour == schedule.[1])  // End patrol
+    {
+       exec("say My patrol is done.", self);
+    }
+    else if (mudhour == schedule.[2])  // Sleep
+    {
+       exec("say Time to rest.", self);
+       exec("sleep", self);
+    }
+    
+    goto main_loop;
+ } dilend
+
+== Usage Notes ==
+* The '''mudhour''' variable is read-only and cannot be modified
+* Hours range from 0 (midnight) to 23 (11 PM)
+* Used in conjunction with '''mudday''' for complete time tracking
+* Common time ranges:
+** 0-5: Night/early morning
+** 6-11: Morning
+** 12-17: Afternoon
+** 18-23: Evening/night
+* Time calculations often use the formula: `total_hours = mudhour + mudday * MUD_DAY`
+
+== Error Handling ==
+* The variable is always available and does not generate runtime errors
+* Returns valid integer values (0-23) in all contexts
+
+== Related Functions/Fields ==
+* [[mudday]] - Current day in the MUD
+* [[mudmonth]] - Current month in the MUD
+* [[mudyear]] - Current year in the MUD
+* [[realtime]] - Real-world system time
+* [[asctime]] - Convert real time to formatted string
+
+== See Also ==
+* Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
+* Time-based functions: [[heartbeat]], [[wait]], [[pause]]
+* Scheduling functions: [[DailyRoutine@quests]]

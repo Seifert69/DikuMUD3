@@ -1,0 +1,68 @@
+= loglevel =
+
+== Syntax ==
+ field: '''.loglevel'''
+
+== Description ==
+The '''.loglevel''' field is accessed on a '''cmdptr''' (command pointer) and returns an integer value representing the minimum character level that can see log entries for this command. A value of 0 indicates that no logging is performed for this command.
+
+This field is useful for understanding which commands have logging enabled and at what privilege level the logs are accessible.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| .loglevel || integer || Read-only || Minimum character level that can see command logs (0 = no logging)
+|}
+
+== Availability ==
+This field is available on the following unit type:
+* cmdptr (Command pointer)
+
+== Examples ==
+ dilbegin log_example(arg : string);
+ var
+   cmd : cmdptr;
+   log_level : integer;
+
+ code
+ {
+   // Get a specific command
+   cmd := getcommand("kick");
+   
+   if (cmd)
+   {
+     log_level := cmd.loglevel;
+     
+     if (log_level = 0)
+       act("Command '$2t' has no logging enabled.", A_ALWAYS, self, cmd.name, null, TO_CHAR);
+     else
+       act("Command '$2t' logs are visible to level $3d+ characters.", A_ALWAYS, self, cmd.name, log_level, TO_CHAR);
+   }
+   else
+     act("Command 'kick' not found.", A_ALWAYS, self, null, null, TO_CHAR);
+
+   quit;
+ }
+ dilend
+
+== Usage Notes ==
+* The '''.loglevel''' field is read-only and cannot be modified
+* A value of 0 means the command does not generate any log entries
+* Higher values indicate that only characters at or above that level can view the command's logs
+* This field is typically used by administrators and builders to understand command logging behavior
+
+== Error Handling ==
+* If accessed on a null '''cmdptr''', the operation will return '''fail'''
+* If accessed on an invalid pointer type, the operation will result in an error
+
+== Related Functions/Fields ==
+* [[chead]] - Gets the first command in the command list
+* [[getcommand]] - Gets a specific command by name
+* [[cmdptr.name]] - Gets the command name
+* [[cmdptr.level]] - Gets the minimum level to use the command
+* [[cmdptr.type]] - Gets the command type
+* [[cmdptr.position]] - Gets the minimum position to use the command
+
+== See Also ==
+* [[cmdptr]] - Command pointer type documentation

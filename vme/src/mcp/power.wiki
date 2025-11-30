@@ -1,0 +1,141 @@
+= power =
+
+ variable: '''power'''
+ type: '''integer'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ power
+
+== Description ==
+The '''power''' variable is a built-in integer variable that represents the power level of certain actions, particularly in spell casting and damage contexts. It is commonly used in permission messages and damage calculations to control the magnitude or effectiveness of an action.
+
+The power variable is context-dependent and its meaning changes based on the situation:
+* In spell casting contexts, it represents the spell's power or effectiveness
+* In damage contexts, it represents the amount of damage being dealt
+* In permission checks, it can be modified to allow or block certain actions
+
+The variable can be reassigned during DIL execution to modify the power of ongoing actions.
+
+== Examples ==
+ dilbegin spell_power_control();
+ var
+    spell_power : integer;
+ code
+ {
+    // Check current spell power
+    spell_power := power;
+    
+    if (spell_power > 100)
+    {
+       sendtext("This is a very powerful spell!<br/>", self);
+    }
+    else if (spell_power > 50)
+    {
+       sendtext("This is a moderately powerful spell.<br/>", self);
+    }
+    else
+    {
+       sendtext("This is a weak spell.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin damage_permission();
+ var
+    damage_amount : integer;
+ code
+ {
+    // Set power for damage request
+    damage_amount := 100;
+    power := damage_amount;
+    
+    // Check if target can handle this damage
+    if (activator.level < 10)
+    {
+       // Reduce power for low-level players
+       power := 50;
+       sendtext("Your damage is reduced to " + itoa(power) + " due to your level.<br/>", activator);
+    }
+    
+    sendtext("Damage power set to: " + itoa(power) + "<br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin spell_interception();
+ var
+    original_power : integer;
+ code
+ {
+    // Store original power
+    original_power := power;
+    
+    // Check if this is a harmful spell
+    if (command("cast") and (argument == "fireball"))
+    {
+       // Block the spell by setting power to -1
+       power := -1;
+       sendtext("Fireball spells are not allowed here!<br/>", activator);
+       block;
+    }
+    
+    // Restore original power for other spells
+    power := original_power;
+    
+    quit;
+ } dilend
+
+ dilbegin adaptive_damage();
+ var
+    base_damage : integer;
+    target_level : integer;
+ code
+ {
+    base_damage := 50;
+    target_level := target.level;
+    
+    // Adjust power based on target level
+    if (target_level > 20)
+    {
+       power := base_damage / 2; // Reduce damage for high-level targets
+    }
+    else if (target_level < 5)
+    {
+       power := base_damage / 2; // Reduce damage for low-level targets
+    }
+    else
+    {
+       power := base_damage; // Normal damage
+    }
+    
+    act("$1n adjusts attack power to " + itoa(power) + ".", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The power variable is only available in specific contexts like SFB_PRE events
+* It is automatically set by the system based on the action being performed
+* The variable can be modified to change the effectiveness of spells or damage
+* Setting power to -1 typically blocks or cancels the action
+* The variable is reset for each new action or event
+* Power values are context-dependent and may represent different things in different situations
+
+== Error Handling ==
+The variable access will fail when:
+* Attempting to access power outside of valid contexts (like SFB_PRE events)
+* The variable is not initialized for the current action type
+
+== Related Functions/Fields ==
+* [[send_pre]] - Function that uses power for message power level
+* [[send_done]] - Function that includes power in message parameters
+* [[SFB_PRE]] - Event flag that enables power variable access
+* [[command]] - Function to check current command being executed
+
+== See Also ==
+* [[argument]] - Variable containing command arguments
+* [[activator]] - Variable containing the unit that triggered the action
+* [[target]] - Variable containing the target of the action
+* [[medium]] - Variable containing the medium through which action occurs

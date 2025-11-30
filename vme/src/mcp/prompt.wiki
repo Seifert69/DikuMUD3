@@ -1,0 +1,166 @@
+= prompt =
+
+ field: string '''.prompt'''
+ type: '''string'''
+ access: '''Read/Write'''
+
+== Syntax ==
+ unit.prompt
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || string || Returns the current prompt string of the player
+|-
+| Write || string || Sets the prompt string for the player
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Description ==
+The '''prompt''' field contains the command prompt string that is displayed to a player when they are ready to input commands. This string can include special format codes that display real-time character information such as health, mana, endurance, and other stats.
+
+Common prompt format codes include:
+* '''%h''' - Current hitpoints
+* '''%H''' - Maximum hitpoints
+* '''%m''' - Current mana points
+* '''%M''' - Maximum mana points
+* '''%e''' - Current endurance points
+* '''%E''' - Maximum endurance points
+* '''%n''' - Player's name
+* '''%t''' - Player's title
+* '''%l''' - Player's level
+* '''%g''' - Player's gold amount
+* '''%s''' - Current movement points (if applicable)
+* '''%S''' - Maximum movement points (if applicable)
+* '''%%''' - Literal percent sign
+
+== Examples ==
+ dilbegin set_custom_prompt();
+ var
+    new_prompt : string;
+ code
+ {
+    // Set a custom prompt with health and mana
+    new_prompt := "[%n%h/%H%m/%M]> ";
+    self.prompt := new_prompt;
+    
+    sendtext("Your prompt has been set to: " + new_prompt + "<br/>", self);
+    sendtext("Example display: [" + self.name + "50/100100/200]> <br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin prompt_menu();
+ var
+    choice : string;
+ code
+ {
+    sendtext("Prompt Options:<br/>", self);
+    sendtext("1. Default prompt<br/>", self);
+    sendtext("2. Combat prompt<br/>", self);
+    sendtext("3. Simple prompt<br/>", self);
+    sendtext("4. Blank prompt<br/>", self);
+    sendtext("Enter your choice (1-4): ", self);
+    
+    wait(SFB_CMD, TRUE);
+    choice := argument;
+    
+    if (choice == "1")
+    {
+       self.prompt := "%n%h/%Hhp %m/%M mana> ";
+       sendtext("Default prompt set.<br/>", self);
+    }
+    else if (choice == "2")
+    {
+       self.prompt := "[COMBAT: %n%h/%Hhp] ";
+       sendtext("Combat prompt set.<br/>", self);
+    }
+    else if (choice == "3")
+    {
+       self.prompt := "%n> ";
+       sendtext("Simple prompt set.<br/>", self);
+    }
+    else if (choice == "4")
+    {
+       self.prompt := "";
+       sendtext("Blank prompt set.<br/>", self);
+    }
+    else
+    {
+       sendtext("Invalid choice.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin show_prompt_info();
+ var
+    current_prompt : string;
+ code
+ {
+    current_prompt := self.prompt;
+    
+    sendtext("Your current prompt is: " + current_prompt + "<br/>", self);
+    sendtext("This prompt will be displayed as: " + current_prompt + "<br/>", self);
+    
+    // Show what the prompt looks like with example values
+    sendtext("Example with your current stats:<br/>", self);
+    sendtext("[" + self.name + "50/100100/200]> <br/>", self);
+    
+    quit;
+ } dilend
+
+ dilbegin conditional_prompt();
+ var
+    is_fighting : integer;
+ code
+ {
+    is_fighting := (self.position == POSITION_FIGHTING);
+    
+    if (is_fighting)
+    {
+       // Show combat prompt when fighting
+       self.prompt := "[FIGHT: %n%h/%Hhp] ";
+       sendtext("Combat prompt activated.<br/>", self);
+    }
+    else
+    {
+       // Show normal prompt when not fighting
+       self.prompt := "%n%h/%H%m/%M> ";
+       sendtext("Normal prompt activated.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The prompt field is only available on player characters (UNIT_ST_PC)
+* Format codes are processed in real-time when the prompt is displayed
+* The percent sign (%) is used to escape literal percent characters
+* Empty string ("") results in no prompt being displayed
+* Prompt changes take effect immediately and persist across logins
+* The field can be modified by DIL code or player commands
+* Maximum prompt length may be limited by the game client
+
+== Error Handling ==
+The field access will return '''fail''' when:
+* Attempting to access prompt on a non-player character unit
+* The unit is null or invalid
+* The player has the "$noprompt" extra description flag set
+
+== Related Functions/Fields ==
+* [[sendtext]] - Function to send text to player's screen
+* [[exec]] - Function to execute commands for player
+* [[position]] - Field that may affect prompt display
+* [[extra]] - Field to access extra descriptions like "$noprompt"
+
+== See Also ==
+* [[%h]] - Health display format code
+* [[%m]] - Mana display format code
+* [[%e]] - Endurance display format code
+* [[%n]] - Name display format code
+* [[title]] - Field for player's title used in %t

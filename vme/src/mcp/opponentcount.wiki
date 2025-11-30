@@ -1,0 +1,226 @@
+= opponentcount =
+
+== Syntax ==
+integer '''opponentcount''' (char : unitptr)
+
+== Description ==
+The '''opponentcount''' field provides access to the number of opponents a character is currently fighting. This field indicates how many different units the character is engaged in combat with.
+
+Based on the C implementation, this field calls the `NoOpponents()` method to retrieve the current opponent count for the character.
+
+== Field Access ==
+This is a field access on character unitptrs:
+ char.opponentcount
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Usage Notes ==
+The opponentcount field is read-only (RO) and cannot be modified directly.
+This field represents the total number of opponents, not just the primary opponent.
+A value of 0 means the character is not currently fighting anyone.
+This field is useful for checking combat status and multi-opponent situations.
+
+== Examples ==
+=== Basic Combat Status Check ===
+ dilbegin check_combat_status(target : unitptr);
+ var
+    opponent_num : integer;
+ 
+ code
+ {
+    if ((target.type != UNIT_ST_PC) and (target.type != UNIT_ST_NPC))
+    {
+       act("$1n is not a character.", A_ALWAYS, self, target, null, TO_CHAR);
+       return;
+    }
+    
+    opponent_num := target.opponentcount;
+    
+    if (opponent_num == 0)
+       act("$1n is not fighting anyone.", A_ALWAYS, self, target, null, TO_CHAR);
+    else if (opponent_num == 1)
+       act("$1n is fighting one opponent.", A_ALWAYS, self, target, null, TO_CHAR);
+    else
+       act("$1n is fighting $1d opponents.", A_ALWAYS, self, opponent_num, target, TO_CHAR);
+ } dilend
+
+=== Combat Analysis ===
+ dilbegin combat_analysis();
+ var
+    unit : unitptr;
+    total_opponents : integer;
+    char_count : integer;
+ 
+ code
+ {
+    total_opponents := 0;
+    char_count := 0;
+    
+    act("=== Combat Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    foreach (UNIT_ST_PC, unit)
+    {
+       total_opponents := total_opponents + unit.opponentcount;
+       char_count := char_count + 1;
+       
+       if (unit.opponentcount > 0)
+          act("$1n: $2d opponents", A_ALWAYS, self, unit, unit.opponentcount, TO_CHAR);
+    }
+    
+    foreach (UNIT_ST_NPC, unit)
+    {
+       total_opponents := total_opponents + unit.opponentcount;
+       
+       if (unit.opponentcount > 0)
+          act("$1n: $2d opponents", A_ALWAYS, self, unit, unit.opponentcount, TO_CHAR);
+    }
+    
+    act("Total characters: $1d", A_ALWAYS, self, char_count, null, TO_CHAR);
+    act("Total opponents: $1d", A_ALWAYS, self, total_opponents, null, TO_CHAR);
+ } dilend
+
+=== Multi-Opponent Detection ===
+ dilbegin detect_gang_attack();
+ var
+    aggressor : unitptr;
+    victim : unitptr;
+ 
+ code
+ {
+    // Look for characters fighting multiple opponents
+    foreach (UNIT_ST_PC, aggressor)
+    {
+       if (aggressor.opponentcount > 1)
+       {
+          act("$1n is fighting multiple opponents!", A_ALWAYS, self, aggressor, null, TO_CHAR);
+          
+          // Find who they're fighting
+          foreach (UNIT_ST_PC, victim)
+          {
+             if (opponent(aggressor, victim))
+                act("  -> $1n", A_ALWAYS, self, victim, null, TO_CHAR);
+          }
+       }
+    }
+ } dilend
+
+=== Safety Check ===
+ dilbegin combat_safety_check();
+ var
+    unit : unitptr;
+    danger_level : integer;
+ 
+ code
+ {
+    act("=== Combat Safety Check ===", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    foreach (UNIT_ST_PC, unit)
+    {
+       danger_level := unit.opponentcount;
+       
+       if (danger_level >= 3)
+          act("$1n is in extreme danger ($2d opponents)!", 
+             A_ALWAYS, self, unit, danger_level, TO_CHAR);
+       else if (danger_level >= 2)
+          act("$1n is in heavy combat ($2d opponents).", 
+             A_ALWAYS, self, unit, danger_level, TO_CHAR);
+       else if (danger_level >= 1)
+          act("$1n is in combat ($1d opponent).", 
+             A_ALWAYS, self, unit, danger_level, TO_CHAR);
+    }
+ } dilend
+
+=== Combat Statistics ===
+ dilbegin combat_statistics();
+ var
+    unit : unitptr;
+    stats : intlist;
+    i : integer;
+ 
+ code
+ {
+    // Initialize statistics array
+    i := 0;
+    while (i < 10)
+    {
+       stats.[i] := 0;
+       i := i + 1;
+    }
+    
+    // Gather combat statistics
+    foreach (UNIT_ST_PC, unit)
+    {
+       i := unit.opponentcount;
+       if (i < 10)
+          stats.[i] := stats.[i] + 1;
+    }
+    
+    foreach (UNIT_ST_NPC, unit)
+    {
+       i := unit.opponentcount;
+       if (i < 10)
+          stats.[i] := stats.[i] + 1;
+    }
+    
+    // Display results
+    act("=== Combat Statistics ===", A_ALWAYS, self, null, null, TO_CHAR);
+    i := 0;
+    while (i < 10)
+    {
+       if (stats.[i] > 0)
+          act("$1d opponents: $2d characters", A_ALWAYS, self, i, stats.[i], TO_CHAR);
+       i := i + 1;
+    }
+ } dilend
+
+=== Combat Readiness ===
+ dilbegin combat_readiness_check();
+ var
+    readiness : string;
+    opponent_num : integer;
+ 
+ code
+ {
+    opponent_num := self.opponentcount;
+    
+    if (opponent_num == 0)
+       readiness := "Ready for combat";
+    else if (opponent_num == 1)
+       readiness := "Engaged in single combat";
+    else if (opponent_num <= 2)
+       readiness := "Handling multiple opponents";
+    else
+       readiness := "Overwhelmed by opponents";
+    
+    act("Combat readiness: $1t", A_ALWAYS, self, readiness, null, TO_CHAR);
+    act("Opponent count: $1d", A_ALWAYS, self, opponent_num, null, TO_CHAR);
+ } dilend
+
+== Error Handling ==
+Always verify that unit is a character before accessing opponentcount:
+
+ if ((unit.type == UNIT_ST_PC) or (unit.type == UNIT_ST_NPC))
+ {
+    count := unit.opponentcount;
+ }
+ else
+ {
+    act("Not a character unit.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+== Related Functions/Fields ==
+* [[opponent]] - Check if two characters are opponents
+* [[fighting]] - Get current primary opponent
+* [[set_fighting]] - Set combat between characters
+* [[position]] - Character position (affects combat status)
+* [[charflags]] - Character flags for combat states
+
+== See Also ==
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields
+* [[fighting]] - Primary opponent field
+* [[opponent]] - Opponent checking function
+* [[set_fighting]] - Combat setup function
+* [[position]] - Character positioning system

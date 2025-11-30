@@ -1,0 +1,77 @@
+= pathto =
+
+ function: integer '''pathto'''(from : unitptr, to : unitptr);
+
+== Syntax ==
+ integer pathto(from : unitptr, to : unitptr);
+
+== Description ==
+The '''pathto''' function calculates the direction needed to move from one unit to another. It determines the shortest path direction from the room containing the "from" unit to the room containing the "to" unit. The function returns a directional constant that can be used with movement commands.
+
+The function works by finding the rooms that contain both units and then calculating the optimal movement direction between them using the underlying move_to function.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| from || unitptr || The unit from which the path is calculated (source unit)
+|-
+| to || unitptr || The unit to which the path is calculated (target unit)
+|}
+
+== Return Value ==
+Returns integer:
+* '''integer''' - Direction constant (DIR_XXX values) indicating the direction to move
+* '''fail''' - When either parameter is null or invalid
+
+The returned value corresponds to direction constants defined in values.h and/or vme.h, such as DIR_NORTH, DIR_SOUTH, DIR_EAST, DIR_WEST, etc.
+
+== Examples ==
+ dilbegin find_path_to_target();
+ var
+    direction : integer;
+    target_room : unitptr;
+    current_room : unitptr;
+ code
+ {
+    // Find a specific room
+    target_room := findroom("inn@midgaard");
+    
+    if (target_room != null)
+    {
+       // Get direction from current location to target
+       direction := pathto(self, target_room);
+       
+       if (direction != -1)
+       {
+          sendtext("Direction to target: " + itoa(direction) + "<br/>", self);
+       }
+       else
+       {
+          sendtext("No path found to target.<br/>", self);
+       }
+    }
+    
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The function operates on the rooms containing the units, not the units themselves
+* Both units must be in valid rooms for the function to work properly
+* The returned direction is the first step in the shortest path to the target
+* Direction constants can be converted to readable names using stringlist constants like DIR_SL_LONG
+
+== Error Handling ==
+The function will return '''fail''' when:
+* Either the "from" or "to" parameter is null
+* Either unit is not contained in a valid room
+* The parameters are not of unitptr type
+
+== Related Functions/Fields ==
+* [[findroom]] - Find a specific room by name
+* [[findunit]] - Find a specific unit in the world
+* [[unit_room]] - Get the room containing a unit
+
+== See Also ==
+* [[move]] - Move a unit in a specific direction
+* [[goto]] - Teleport to a specific location

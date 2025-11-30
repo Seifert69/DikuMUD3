@@ -1,0 +1,57 @@
+= moneystring =
+
+== Syntax ==
+ string '''moneystring'''(amt : integer, verbose : integer);
+
+== Description ==
+Converts a monetary amount into a formatted string representation. The function can display the amount in either verbose format (full coin names like "gold pieces") or abbreviated format (coin type abbreviations like "gp").
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| amt || integer || The amount of money to convert (in base currency units)
+|-
+| verbose || integer || Flag for output format: 0 = abbreviated format (e.g., "gp"), non-zero = verbose format (e.g., "gold pieces")
+|}
+
+== Return Value ==
+Returns '''string''':
+* A formatted string containing the monetary representation
+* The string is formatted according to the verbose parameter
+* Uses the default currency system (DEF_CURRENCY)
+
+== Examples ==
+ dilbegin charge_example();
+ var
+    cost : integer;
+    price_str : string;
+ code
+ {
+    cost := 250;  // 2 gold, 5 silver
+    
+    // Abbreviated format
+    price_str := moneystring(cost, 0);
+    exec("say The price is " + price_str, self);
+    
+    // Verbose format  
+    price_str := moneystring(cost, 1);
+    exec("say That equals " + price_str, self);
+ } dilend
+
+== Usage Notes ==
+* The function uses the default currency system defined by DEF_CURRENCY
+* When verbose = 0, returns abbreviated coin types (e.g., "gp", "sp", "cp")
+* When verbose ≠ 0, returns full coin names (e.g., "gold pieces", "silver pieces")
+* The amount parameter is interpreted in the smallest currency unit (copper pieces equivalent)
+
+== Error Handling ==
+* If parameters are not integers, a DIL runtime error will occur
+* The function will fail if the amount parameter is not a valid integer
+
+== Related Functions/Fields ==
+* [[transfermoney]] - Transfers money between units
+* [[purse]] - Checks specific coin types in a unit's inventory
+
+== See Also ==
+* Currency constants: IRON_PIECE, COPPER_PIECE, SILVER_PIECE, GOLD_PIECE, PLATINUM_PIECE

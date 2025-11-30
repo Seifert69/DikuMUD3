@@ -1,0 +1,201 @@
+= logcrime =
+
+== Syntax ==
+procedure '''logcrime'''(criminal : unitptr, victim : unitptr, crime_type : integer);
+
+== Description ==
+Registers a crime committed against a victim by a criminal. The '''logcrime''' procedure automatically handles group members of the criminal and other related entities. This function is typically used in theft, assault, and other criminal activities within the MUD to maintain a record of offenses for potential punishment or tracking purposes.
+
+When logging crimes like theft, remember to make the criminal visible if they fail their attempts, as shown in the example usage.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| criminal || unitptr || The criminal (main suspect) who committed the crime
+|-
+| victim || unitptr || The victim who was affected by the crime  
+|-
+| crime_type || integer || The type of crime using CRIME_XXX constants from values.h and/or vme.h
+|}
+
+== Return Value ==
+This procedure does not return a value.
+
+== Usage Notes ==
+* Use CRIME_XXX constants from values.h and/or vme.h for the crime_type parameter
+* The function automatically registers group members of the criminal
+* For theft-related crimes, ensure the criminal is made visible if they fail their attempt
+* This is typically called after a criminal action has been detected or failed
+
+== Error Handling ==
+The procedure includes type checking to ensure:
+* criminal parameter is a valid unitptr
+* victim parameter is a valid unitptr  
+* crime_type parameter is an integer
+* Both criminal and victim units are character units (PC or NPC)
+
+== Examples ==
+dilbegin steal(arg : string);
+external
+    onefreehand();
+    bobcheck(victim : unitptr);
+    provoked_attack (victim : unitptr, ch : unitptr);
+    awareness_check(thief : unitptr, victim : unitptr, skill : integer, msg : string);
+    integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+
+var
+   skilla  :  integer;
+   skillb  :  integer;
+   skillc  :  integer;
+   skilld  :  integer;
+   hm      :  integer;
+   vict    :  unitptr;
+   targ    :  unitptr;
+   t       :  string;
+   temp    : string;
+   ti      : integer;
+
+code
+{
+   if ((self.type == UNIT_ST_PC) and (self.skills[SKI_STEAL] <= 0))
+   {
+      act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   onefreehand();
+
+   if (not (" from " in arg))
+   {
+      act("Steal what from who?", A_SOMEONE, self, null, null,  TO_CHAR);
+      quit;
+   }
+
+   /* needed for multi word names */
+   t := getword(arg);
+   temp := getword(arg);
+   while (temp != "from")
+   {
+      t := (t + " " + temp);
+      temp := getword(arg);
+   }
+
+   vict := findunit(self, arg, FIND_UNIT_SURRO, null);
+   if ((vict == null) or not visible(self, vict))
+   {
+      act("No such person to steal from.",  A_SOMEONE, self, null,  null, TO_CHAR);
+      quit;
+   }
+
+
+   if (vict == self)
+   {
+      act("But you already have it - no need to steal it from yourself.", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   if ((vict.type != UNIT_ST_PC) and (vict.type != UNIT_ST_NPC))
+   {
+      act("Why bother? Just get the darn thing!", A_SOMEONE, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   bobcheck(vict);
+
+   targ := findunit(vict, t, FIND_UNIT_IN_ME, null);
+
+   if ((targ == null) or not visible(self, targ))
+   {
+      act("You can't find that on $3n.", A_SOMEONE, self, targ, vict, TO_CHAR);
+      quit;
+   }
+
+   if (targ.objecttype == ITEM_MONEY)
+   {
+      act("That would take a different type of finesse, try pickpocket instead.", A_SOMEONE, self, null, vict, TO_CHAR);
+      quit;
+   }
+
+   if (targ.equip != 0)  /* 0 = not equipped, value not in values.h */
+   {
+      act("You can only steal non-equiped items!", A_SOMEONE, self, null, vict, TO_CHAR);
+      quit;
+   }
+
+   if (targ.zoneidx == "treasure")
+   {
+      act("A chill runs down your spine...someone or something is watching.",
+         A_ALWAYS, self, null, null, TO_CHAR);
+      act("You change your mind about stealing that.", A_ALWAYS, self,
+         null, null, TO_CHAR);
+      quit;
+   }
+
+   ti := can_carry(self,targ,1);
+
+   if (ti == 1)
+   {
+      act ("You can't carry another thing.", A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+   }
+
+    hm := skillbattle2(SKI_STEAL, ABIL_DEX, ABIL_BRA, vict, ABIL_BRA, ABIL_DEX);
+    if (isaff(self, ID_INVISIBILITY))
+        hm := hm + 50;
+
+   if (hm <= -25)
+   {
+      act("You are caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
+      if (isaff(self, ID_INVISIBILITY))
+      {
+         subaff(self, ID_INVISIBILITY);
+      }
+      act("You catch $1n trying to steal your $2n!", A_SOMEONE, self, targ,
+          vict, TO_VICT);
+      act("You see $1n trying to steal something from $3n...$3e doesn't " +
+          "seem amused!", A_SOMEONE, self, targ, vict, TO_NOTVICT);
+      provoked_attack(vict, self);
+      logcrime(self, vict, CRIME_STEALING);
+      quit;
+   }
+
+   if (hm <= 0)
+   {
+      act("You fail to steal $3n's $2n, but at least no one was watching!",
+        A_SOMEONE, self, targ, vict, TO_CHAR);
+      quit;
+   }
+
+   if (hm < 25)
+   {
+      act("You steal $2n from $3n just as $3e turns toward you..You have "+
+          "been caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
+      if (isaff(self, ID_INVISIBILITY))
+      {
+          subaff(self, ID_INVISIBILITY);
+      }
+      act("Arrgh!  $1n just stole your $2n!", A_SOMEONE, self, targ, vict, TO_VICT);
+      act("You see $1n steal something from $3n...$3e doesn't seem amused!",
+          A_SOMEONE, self, targ, vict, TO_NOTVICT);
+      link(targ, self);
+      provoked_attack(vict, self);
+      logcrime(self, vict, CRIME_STEALING);
+      send_done("steal",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
+      quit;
+   }
+
+   act("You stealthily steal $3n's $2n and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
+   link(targ, self);
+   awareness_check(self, vict, SKI_STEAL, "You notice $2n stealing something from $3n");
+   send_done("steal",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
+   quit;
+} dilend
+
+== Related Functions/Fields ==
+* [[provoked_attack]] - Often called after logging a crime
+* [[awareness_check]] - Used to detect criminal activities
+* [[act]] - For displaying crime-related messages
+
+== See Also ==
+* CRIME_XXX constants in values.h and/or vme.h

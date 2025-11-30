@@ -1,0 +1,142 @@
+= position_update =
+
+ procedure: '''position_update'''(u : unitptr);
+
+== Syntax ==
+ position_update(u : unitptr);
+
+== Description ==
+The '''position_update''' procedure updates a character's position based on their current hitpoints and other status conditions. This procedure is essential after manually modifying a character's HP field, as it ensures the character's position (standing, fighting, sleeping, dead, etc.) is properly updated to reflect their current state.
+
+The procedure checks the character's hitpoints and automatically adjusts their position accordingly. If the character's HP drops to zero or below, they may be killed or incapacitated. The underlying C function update_pos() handles the actual position calculation and updates.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The character (PC or NPC) to update position for
+|}
+
+== Return Value ==
+This procedure does not return a value.
+
+== Examples ==
+ dilbegin damage_character(target : unitptr, damage : integer);
+ var
+    old_hp : integer;
+ code
+ {
+    old_hp := target.hp;
+    target.hp := target.hp - damage;
+    
+    // Always call position_update after modifying HP
+    position_update(target);
+    
+    if (target.hp <= 0)
+    {
+       act("$2n has been killed!", A_ALWAYS, self, target, null, TO_ROOM);
+       sendtext("You have been killed!<br/>", target);
+    }
+    else
+    {
+       act("$1n damages $2n for " + itoa(damage) + " points!", A_ALWAYS, self, target, null, TO_ROOM);
+       sendtext("You damage " + target.name + " for " + itoa(damage) + " points!<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin heal_character();
+ var
+    heal_amount : integer;
+ code
+ {
+    heal_amount := 50;
+    self.hp := self.hp + heal_amount;
+    
+    // Update position after healing
+    position_update(self);
+    
+    if (self.position == POSITION_STANDING)
+    {
+       sendtext("You feel fully healed and ready for action!<br/>", self);
+    }
+    else if (self.position == POSITION_RESTING)
+    {
+       sendtext("You feel much better but still need rest.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin poison_effect();
+ var
+    poison_damage : integer;
+ code
+ {
+    poison_damage := 10;
+    
+    // Apply poison damage
+    self.hp := self.hp - poison_damage;
+    
+    // Update position to check if character dies from poison
+    position_update(self);
+    
+    if (self.hp <= 0)
+    {
+       act("$1n writhes in agony and dies from the poison!", A_ALWAYS, self, null, null, TO_ROOM);
+    }
+    else
+    {
+       act("$1n shivers from the effects of poison.", A_ALWAYS, self, null, null, TO_ROOM);
+       sendtext("You feel the poison coursing through your veins.<br/>", self);
+    }
+    
+    quit;
+ } dilend
+
+ dilbegin item_recharge_service();
+ external
+    accept_dil@function(pc : unitptr, s : string);
+ var
+    pc : unitptr;
+    item : unitptr;
+ code
+ {
+    // Initialize service
+    self.spells[SPL_RECONSTRUCT] := 200;
+    self.abilities[ABIL_BRA] := 150;
+    self.abilities[ABIL_MAG] := 150;
+    
+    // Update position after setting up abilities
+    position_update(self);
+    
+    // Service logic continues...
+    quit;
+ } dilend
+
+== Usage Notes ==
+* Always call '''position_update''' after manually modifying a character's HP field
+* The procedure automatically determines the appropriate position based on HP and other factors
+* If the character dies (HP <= 0), the procedure will handle death processing
+* The procedure may trigger secure() checks if the character is destroyed
+* Position constants like POSITION_DEAD, POSITION_STUNNED, POSITION_FIGHTING are used internally
+* This is essential for maintaining game consistency when modifying character health
+
+== Error Handling ==
+The procedure will fail when:
+* The parameter is not a valid unitptr
+* The unit is not a character (PC or NPC)
+* The unit is null or invalid
+
+== Related Functions/Fields ==
+* [[position]] - Field to read or set character position directly
+* [[hp]] - Field representing character's hitpoints
+* [[secure]] - Function that may be triggered if character dies during position_update
+* [[die]] - Function called if character position becomes POSITION_DEAD
+
+== See Also ==
+* [[meleedamage]] - Function that automatically calls position_update
+* [[cast_spell]] - Function that may affect character position
+* [[abilities]] - Field that may affect character capabilities
+* [[update_pos]] - Underlying C function that performs the position calculation

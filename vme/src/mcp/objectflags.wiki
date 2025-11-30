@@ -1,0 +1,142 @@
+= objectflags =
+
+== Syntax ==
+Field: integer '''.objectflags'''
+
+== Description ==
+The '''objectflags''' field provides access to the special property flags for objects. These flags specify various characteristics and behaviors that objects can have in the game.
+
+Based on the C implementation, this field returns a reference to the object's flags, allowing both reading and writing of the flag values. The flags are stored as bit positions that can be tested and modified using bitwise operations.
+
+== Field Access ==
+This is a field access on object unitptrs:
+ obj.objectflags
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_OBJ (Object)
+
+== Usage Notes ==
+The objectflags field is read-write (RW) and can be modified directly.
+Use the [[isset]] function to test for specific flag values.
+Use bitwise operations to set or clear flags.
+
+== Common Object Flags ==
+Based on the DIL example, some known object flags include:
+* '''OBJ_NO_DUAL''' - Weapon cannot be used as a second (dual-wielded) weapon
+
+== Examples ==
+=== Checking Object Flags ===
+ dilbegin check_weapon_properties(weapon : unitptr);
+ var
+    flags : integer;
+ 
+ code
+ {
+    if (weapon.type != UNIT_ST_OBJ)
+    {
+       act("$1n is not an object.", A_ALWAYS, self, weapon, null, TO_CHAR);
+       return;
+    }
+    
+    flags := weapon.objectflags;
+    
+    if (isset(flags, OBJ_NO_DUAL))
+       act("$1n is too large for dual-wielding.", A_ALWAYS, self, weapon, null, TO_CHAR);
+    else
+       act("$1n can be used for dual-wielding.", A_ALWAYS, self, weapon, null, TO_CHAR);
+ } dilend
+
+=== Setting Object Flags ===
+ dilbegin make_no_dual(weapon : unitptr);
+ var
+    flags : integer;
+ 
+ code
+ {
+    if (weapon.type != UNIT_ST_OBJ)
+    {
+       act("$1n is not an object.", A_ALWAYS, self, weapon, null, TO_CHAR);
+       return;
+    }
+    
+    // Set the NO_DUAL flag
+    weapon.objectflags := weapon.objectflags + OBJ_NO_DUAL;
+    act("$1n is now too large for dual-wielding.", A_ALWAYS, self, weapon, null, TO_CHAR);
+ } dilend
+
+=== Clearing Object Flags ===
+ dilbegin allow_dual(weapon : unitptr);
+ var
+    flags : integer;
+ 
+ code
+ {
+    if (weapon.type != UNIT_ST_OBJ)
+    {
+       act("$1n is not an object.", A_ALWAYS, self, weapon, null, TO_CHAR);
+       return;
+    }
+    
+    // Clear the NO_DUAL flag
+    if (isset(weapon.objectflags, OBJ_NO_DUAL))
+    {
+       weapon.objectflags := weapon.objectflags - OBJ_NO_DUAL;
+       act("$1n can now be used for dual-wielding.", A_ALWAYS, self, weapon, null, TO_CHAR);
+    }
+    else
+    {
+       act("$1n already allows dual-wielding.", A_ALWAYS, self, weapon, null, TO_CHAR);
+    }
+ } dilend
+
+=== Comprehensive Flag Check ===
+ dilbegin analyze_object(obj : unitptr);
+ var
+    flags : integer;
+    info : string;
+ 
+ code
+ {
+    if (obj.type != UNIT_ST_OBJ)
+    {
+       act("$1n is not an object.", A_ALWAYS, self, obj, null, TO_CHAR);
+       return;
+    }
+    
+    flags := obj.objectflags;
+    info := "Object flags for " + obj.name + ": ";
+    
+    if (isset(flags, OBJ_NO_DUAL))
+       info := info + "NO_DUAL ";
+    
+    if (info == "Object flags for " + obj.name + ": ")
+       info := info + "None";
+    
+    act(info, A_ALWAYS, self, null, null, TO_CHAR);
+ } dilend
+
+== Error Handling ==
+Always verify the unit is an object before accessing objectflags:
+
+ if (unit.type == UNIT_ST_OBJ)
+ {
+    flags := unit.objectflags;
+ }
+ else
+ {
+    act("Not an object.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+== Related Functions/Fields ==
+* [[isset]] - Test if specific flag bits are set
+* [[objecttype]] - Type of the object
+* [[value]] - Object values array
+* [[manipulate]] - Object manipulation flags
+* [[equip]] - Equipment position of object
+
+== See Also ==
+* [[unit_st_obj]] - Other object fields
+* [[manipulate]] - Object manipulation flags
+* [[isset]] - Bit testing function
+* [[value]] - Object-specific values
