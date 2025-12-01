@@ -3,22 +3,25 @@
 #include "slog.h"
 #include "textutil.h"
 
-#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/config/asio.hpp>
 #include <websocketpp/server.hpp>
 
-// typedef websocketpp::server<websocketpp::config::asio> wsserver;
+#include <map>
 
-using websocketpp::lib::bind;
+typedef websocketpp::server<websocketpp::config::asio_tls> server;
+
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
+using websocketpp::lib::bind;
+
+// pull out the type of messages sent by our config
+typedef websocketpp::config::asio::message_type::ptr message_ptr;
+typedef websocketpp::lib::shared_ptr<websocketpp::lib::asio::ssl::context> context_ptr;
 
 namespace mplex
 {
 
-// pull out the type of messages sent by our config
-typedef wsserver::message_ptr message_ptr;
-
-// std::map<std::owner_less<websocketpp::connection_hdl>, void *> g_cMapHandler;
+// Global map for connection handlers
 std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
 
 void remove_gmap(cConHook *con)
@@ -55,8 +58,36 @@ void on_close(websocketpp::connection_hdl hdl)
     }
 }
 
+std::string get_password() {
+    return "test";
+}
+
+context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
+    namespace asio = websocketpp::lib::asio;
+
+    slog(LOG_OFF, 0, "on_tls_init called with hdl: %p", hdl.lock().get());
+
+    context_ptr ctx = websocketpp::lib::make_shared<asio::ssl::context>(asio::ssl::context::sslv23);
+
+    try {
+        ctx->set_options(asio::ssl::context::default_workarounds |
+                         asio::ssl::context::no_sslv2 |
+                         asio::ssl::context::no_sslv3 |
+                         asio::ssl::context::single_dh_use);
+        ctx->set_password_callback(bind(&get_password));
+        ctx->use_certificate_chain_file("server.pem");
+        ctx->use_private_key_file("server.pem", asio::ssl::context::pem);
+        ctx->use_tmp_dh_file("dh.pem");
+        
+        slog(LOG_OFF, 0, "TLS context initialized successfully");
+    } catch (std::exception& e) {
+        slog(LOG_OFF, 0, "TLS init exception: %s", e.what());
+    }
+    return ctx;
+}
+
 // send message back to websocket client: 1 is message sent, 0 if failure
-int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *txt)
+int ws_send_message(wsserver_tls *s, websocketpp::connection_hdl hdl, const char *txt)
 {
     std::string mystr(txt);
 
@@ -65,7 +96,6 @@ int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *tx
     try
     {
         s->send(hdl, mystr.c_str(), mystr.length(), websocketpp::frame::opcode::text);
-        // s->send(hdl, txt, strlen(txt), websocketpp::frame::opcode::text);
         return 1;
     }
     catch (websocketpp::exception const &e)
@@ -76,7 +106,7 @@ int ws_send_message(wsserver *s, websocketpp::connection_hdl hdl, const char *tx
 }
 
 // Define a callback to handle incoming messages
-void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
+void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     cConHook *con = nullptr;
 
@@ -113,33 +143,17 @@ void on_message(wsserver *s, websocketpp::connection_hdl hdl, message_ptr msg)
     con = (cConHook *)g_cMapHandler[hdl];
     assert(con);
 
-    // Log here to see all commands received (plus passwords :()
-    // slog(LOG_OFF, 0, "on_message called with hdl %p and messsage %s.",
-    //        hdl.lock().get(), msg->get_payload().c_str());
-
-    // check for a special command to instruct the server to stop listening so
-    // it can be cleanly exited.
-
-    /*
-    if (msg->get_payload() == "stop-listening") {
-        s->stop_listening();
-        con->Close( TRUE );
-        return;
-    }*/
-
     con->m_pFptr(con, msg->get_payload().c_str());
 }
 
 void runechoserver()
 {
     // Create a server endpoint
-    wsserver echo_server;
+    server echo_server;
 
     try
     {
         // Set logging settings
-        // echo_server.set_access_channels(websocketpp::log::alevel::all);
-        // echo_server.clear_access_channels(websocketpp::log::alevel::frame_payload);
         echo_server.set_access_channels(websocketpp::log::alevel::none);
         echo_server.clear_access_channels(websocketpp::log::alevel::none);
 
@@ -147,11 +161,9 @@ void runechoserver()
         echo_server.init_asio();
 
         // Register our message handler
-        // Look in endpoint.hpp for various types of handlers you can bind, e.g. set_open_handler
-
-        // echo_server.set_open_handler(bind(&on_open, ::_1));
-        echo_server.set_close_handler(bind(&on_close, ::_1));
-        echo_server.set_message_handler(bind(&on_message, &echo_server, ::_1, ::_2));
+        echo_server.set_close_handler(bind(&on_close, _1));
+        echo_server.set_message_handler(bind(&on_message, &echo_server, _1, _2));
+        echo_server.set_tls_init_handler(bind(&on_tls_init, _1));
 
         // Listen on port
         echo_server.set_reuse_addr(true);
@@ -165,12 +177,12 @@ void runechoserver()
     }
     catch (websocketpp::exception const &e)
     {
-        slog(LOG_OFF, 0, "Exception: %s.", e.what());
+        slog(LOG_OFF, 0, "TLS Exception: %s.", e.what());
         exit(42);
     }
     catch (...)
     {
-        slog(LOG_OFF, 0, "Exception other");
+        slog(LOG_OFF, 0, "TLS Exception other");
         exit(42);
     }
 }

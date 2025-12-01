@@ -1434,7 +1434,7 @@ void cConHook::ShowChunk()
 typedef websocketpp::server<websocketpp::config::asio> wsserver;
 
 // Nice if it could be in the constructor
-void cConHook::SetWebsocket(wsserver *server, websocketpp::connection_hdl hdl)
+void cConHook::SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hdl)
 {
     m_pWebsServer = server;
     m_pWebsHdl = hdl;

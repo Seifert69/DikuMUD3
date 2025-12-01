@@ -69,17 +69,22 @@ int main(int argc, char *argv[])
     /* MS2020 Websockets test hack */
     mplex::translate_init();
 
-    slog(LOG_ALL, 0, "MPlex compiled with [%s]", get_compiled_hash_defines().c_str());
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", mplex::g_mplex_arg.nMotherPort);
+    slog(LOG_ALL, 0, "mplex compiled with [%s]", get_compiled_hash_defines().c_str());
 
     if (mplex::g_mplex_arg.bWebSockets)
     {
         /* MS2020 Websockets test hack */
+        slog(LOG_OFF, 0, "Creating WebSocket thread, TLS = %s", mplex::g_mplex_arg.g_bUseTLS ? "true" : "false");
         std::thread t1(mplex::runechoserver);
         t1.detach();
+        slog(LOG_OFF, 0, "WebSocket thread created and detached");
+        
+        // In WebSocket mode, we don't connect to MUD server - WebSocket server handles clients directly
+        slog(LOG_OFF, 0, "WebSocket mode: skipping MUD server connection");
     }
     else
     {
+        slog(LOG_OFF, 0, "Opening telnet mother connection on port %d.", mplex::g_mplex_arg.nMotherPort);
         fd = mplex::OpenMother(mplex::g_mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");
 

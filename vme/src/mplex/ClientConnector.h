@@ -14,14 +14,13 @@
 #include "queue.h"
 
 #include <cstring>
-#include <websocketpp/config/asio_no_tls.hpp>
+#include <websocketpp/config/asio.hpp>
 #include <websocketpp/server.hpp>
 
 namespace mplex
 {
 
-// typedef websocketpp::server<websocketpp::config::asio> wsserver;
-typedef websocketpp::server<websocketpp::config::asio> wsserver;
+typedef websocketpp::server<websocketpp::config::asio_tls> wsserver_tls;
 
 class cConHook : public cHook
 {
@@ -54,7 +53,7 @@ public:
     void MudDown(const char *cmd);
     void MenuSelect(const char *cmd);
     void SequenceCompare(ubit8 *pBuf, int *pnLen);
-    void SetWebsocket(wsserver *server, websocketpp::connection_hdl hdl);
+    void SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hdl);
     void StripHTML(char *dest, const char *src);
 
     void Input(int nFlags);
@@ -84,7 +83,7 @@ public:
     char m_aHost[50];
     void (*m_pFptr)(cConHook *, const char *cmd);
 
-    wsserver *m_pWebsServer;
+    wsserver_tls *m_pWebsServer;
     websocketpp::connection_hdl m_pWebsHdl;
 
     cConHook *m_pNext;
