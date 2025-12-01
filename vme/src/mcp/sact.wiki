@@ -1,0 +1,131 @@
+= sact =
+ function: string '''sact'''(message : string, visibility : integer, char : unitptr, medium : unitptr/string/integer, victim : unitptr/string/integer, to_whom : integer);
+
+The sact function formats a message string using the same syntax as act() but returns the formatted result as a string instead of sending it to players.
+
+== Description ==
+The sact function processes a message template with formatters and returns the formatted message as a string. It uses the same parameter structure and formatting rules as the [[act]] function, but instead of sending the message to players, it returns the processed text. This is useful when you need to capture formatted messages for later use, such as setting descriptions, logging, or building complex output strings.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| message || string || The message template with formatters (same format as act())
+|-
+| visibility || integer || Visibility behavior (A_SOMEONE, A_HIDEINV, A_ALWAYS)
+|-
+| char || unitptr || The primary character unit (referenced as $1 in formatters)
+|-
+| medium || unitptr/string/integer || Secondary unit/object (referenced as $2 in formatters)
+|-
+| victim || unitptr/string/integer || Target unit/object (referenced as $3 in formatters)
+|-
+| to_whom || integer || Target audience (TO_CHAR, TO_ROOM, TO_ALL, TO_REST, TO_VICT, TO_NOTVICT)
+|}
+
+== Examples ==
+=== Setting Room Descriptions ===
+ dilbegin set_travel_description();
+ var
+     desc : string;
+ code
+ {
+     // Create a dynamic description based on character state
+     desc := sact("$1n is hurrying along.", A_ALWAYS, self, null, null, TO_CHAR);
+     self.outside_descr := desc;
+ }
+ dilend
+
+=== Building Status Messages ===
+ dilbegin create_status_report(target : unitptr);
+ var
+     status : string;
+     output : string;
+ code
+ {
+     if (target == null)
+         quit;
+     
+     // Build individual status lines
+     status := sact("$1n is in perfect health.", A_SOMEONE, target, null, null, TO_CHAR);
+     output := "Health: " + status + "&n";
+     
+     status := sact("$1n is standing here.", A_SOMEONE, target, null, null, TO_CHAR);
+     output := output + "Position: " + status + "&n";
+     
+     pagestring(output, self);
+ }
+ dilend
+
+=== Combat Message Logging ===
+ dilbegin log_combat_action(victim : unitptr, weapon : unitptr);
+ var
+     log_msg : string;
+ code
+ {
+     // Create combat message for logging
+     log_msg := sact("$1n attacks $3n with $2n!", A_ALWAYS, self, weapon, victim, TO_CHAR);
+     
+     // Log the message (assuming log() function exists)
+     log("COMBAT: " + log_msg);
+     
+     // Also send to players
+     act("$1n attacks $3n with $2n!", A_ALWAYS, self, weapon, victim, TO_NOTVICT);
+     act("You attack $3n with $2n!", A_ALWAYS, self, weapon, victim, TO_CHAR);
+ }
+ dilend
+
+=== Dynamic Object Descriptions ===
+ dilbegin create_object_description(obj : unitptr);
+ var
+     desc : string;
+ code
+ {
+     if (obj.type != UNIT_ST_OBJ)
+         quit;
+     
+     // Create descriptive text based on object properties
+     desc := sact("$2n lies here, $3s condition appears excellent.", 
+                 A_SOMEONE, self.outside, obj, obj, TO_CHAR);
+     
+     // Set the room's extra description
+     addextra(self.outside.extra, {"object", "item"}, desc);
+ }
+ dilend
+
+== Usage Notes ==
+* Uses the same message formatters as the [[act]] function ($1n, $2n, $3n, etc.)
+* Visibility constants (A_SOMEONE, A_HIDEINV, A_ALWAYS) work the same as in act()
+* The to_whom parameter affects how visibility is processed but doesn't send messages
+* Returns an empty string if formatting fails or required parameters are invalid
+* Useful for creating dynamic descriptions, logging systems, or message queuing
+* Can be used to build complex strings by combining multiple sact() calls
+
+== Error Handling ==
+* Returns empty string if message parameter is null or empty
+* Returns empty string if char parameter is null and formatters reference $1
+* Type checking occurs at runtime - invalid parameter types cause function failure
+* Always validate return value before using in critical operations
+
+== Formatters ==
+The function supports all standard act() formatters:
+; $1n : Name of char argument (with visibility handling)
+; $2n : Name of medium argument
+; $3n : Name of victim argument
+; $1e, $2e, $3e : Pronouns (he/she/it)
+; $1m, $2m, $3m : Object pronouns (him/her/it)
+; $1s, $2s, $3s : Possessive pronouns (his/her/its)
+; $1a, $2a, $3a : 'a' or 'an' based on name
+; $1p, $2p, $3p : Position (standing, fighting, etc.)
+; $1t, $2t, $3t : Raw string values
+
+== Related Functions/Fields ==
+* [[act]] - Function that sends formatted messages to players
+* [[sendtext]] - Function for sending raw text to players
+* [[pagestring]] - Function for sending paginated output
+* [[outside_descr]] - Field commonly set with sact() results
+
+== See Also ==
+* [[act]] - Message sending function with same formatting
+* [[sendtext]] - Simple text output function
+* [[pagestring]] - Paginated text output function

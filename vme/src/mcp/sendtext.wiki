@@ -1,0 +1,184 @@
+= sendtext =
+ function: void '''sendtext'''(s : string, u : unitptr);
+
+The sendtext function sends a text message to a specific unit, commonly used for player communication and feedback.
+
+== Description ==
+The sendtext function sends a text message directly to a specified unit. This is the primary method for delivering text output to player characters in DIL programs. The function handles special formatting for player characters, including automatic line breaks and proper text display. For non-player units, it functions as a simple message delivery mechanism.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The text message to send to the unit
+|-
+| u || unitptr || The unit that will receive the text message
+|}
+
+== Examples ==
+=== Basic Message Sending ===
+ dilbegin greet_player(player_name : string);
+ var
+     target : unitptr;
+ code
+ {
+     target := findunit(self, player_name, FIND_UNIT_WORLD, null);
+     if (target == null)
+     {
+         sendtext("Player '" + player_name + "' not found.&n", self);
+         quit;
+     }
+     
+     if (target.type != UNIT_ST_PC)
+     {
+         sendtext(player_name + " is not a player character.&n", self);
+         quit;
+     }
+     
+     sendtext("Hello, " + player_name + "!&n", target);
+ }
+ dilend
+
+=== Status Messages ===
+ dilbegin show_status();
+ var
+     hp_percent : integer;
+ code
+ {
+     hp_percent := (self.hp * 100) / self.max_hp;
+     
+     sendtext("Health: " + itoa(hp_percent) + "%&n", self);
+     sendtext("Position: " + self.position + "&n", self);
+     sendtext("Location: " + self.outside.nameidx + "@" + self.outside.zoneidx + "&n", self);
+ }
+ dilend
+
+=== Error Messages ===
+ dilbegin validate_input(input : string);
+ var
+     valid : integer;
+ code
+ {
+     valid := TRUE;
+     
+     if (input == "")
+     {
+         sendtext("Error: Empty input.&n", self);
+         valid := FALSE;
+     }
+     
+     if (length(input) > 80)
+     {
+         sendtext("Error: Input too long (max 80 characters).&n", self);
+         valid := FALSE;
+     }
+     
+     if (valid)
+         sendtext("Input accepted: " + input + "&n", self);
+ }
+ dilend
+
+=== Information Display ===
+ dilbegin show_help(topic : string);
+ var
+     help_text : string;
+ code
+ {
+     // Simulate help text lookup
+     help_text := "Help for '" + topic + "': This is a demonstration of sendtext function.";
+     
+     sendtext(help_text + "&n", self);
+     sendtext("Use 'help <topic>' for more information.&n", self);
+ }
+ dilend
+
+=== Dynamic Messages ===
+ dilbegin dynamic_message();
+ var
+     time_str : string;
+     message : string;
+ code
+ {
+     time_str := itoa(realtime);
+     message := "Current time: " + time_str + " - System operational.";
+     
+     sendtext(message, self);
+     
+     // Send periodic updates
+     pause;
+     sendtext("Processing complete.", self);
+ }
+ dilend
+
+=== Multi-Unit Communication ===
+ dilbegin broadcast_to_room(message : string);
+ var
+     unit : unitptr;
+     count : integer;
+ code
+ {
+     count := 0;
+     
+     // Send to all units in the room
+     foreach (UNIT_ST_PC | UNIT_ST_NPC, unit)
+     {
+         if (unit.outside == self.outside)
+         {
+             sendtext(message, unit);
+             count := count + 1;
+         }
+     }
+     
+     sendtext("Message sent to " + itoa(count) + " units in the room.&n", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The function automatically handles text formatting for player characters
+* For non-player units, text is sent as a simple message
+* No automatic line break - you must manually add &n for new lines
+* Commonly used for player feedback, status updates, and error messages
+* More efficient than multiple [[act]] calls for simple text delivery
+* Text is sent immediately - no queuing or delay
+* The function is void - no return value to indicate success/failure
+
+== Player-Specific Behavior ==
+When sending to player characters (UNIT_ST_PC):
+* Automatic line break handling for proper display
+* Text appears in the player's message window/terminal
+* Supports color codes and formatting if the MUD client supports them
+* Handles special character sequences properly
+* No length restrictions on text content
+
+== Non-Player Behavior ==
+When sending to NPCs, objects, or rooms:
+* Text is sent as a simple message without special formatting
+* No automatic line break handling
+* Message may or may not be displayed depending on unit type
+* Useful for debugging and logging purposes
+
+== Error Handling ==
+* Function will fail if the target unit is null
+* No validation of text content - any string is accepted
+* No return value - function cannot indicate success or failure
+* Invalid unit pointers may cause runtime errors
+* Always validate target unit before calling sendtext
+
+== Performance Considerations ==
+* More efficient than [[act]] for simple text messages
+* Lower overhead than constructing complex message strings
+* Immediate delivery - no queuing or processing delays
+* Suitable for high-frequency message sending
+* Use [[sendtext]] for player communication, [[act]] for social actions
+
+== Related Functions/Fields ==
+* [[act]] - Function for sending formatted social messages
+* [[send_done]] - Function for sending completion notifications
+* [[send_pre]] - Function for sending preparation messages
+* [[pagestring]] - Function for sending paginated output
+* [[unitptr]] - Unit pointer type and operations
+
+== See Also ==
+* Player communication and message systems
+* Text output and display functions
+* Unit interaction and feedback patterns

@@ -1,0 +1,177 @@
+= sendtoalldil =
+ function: void '''sendtoalldil'''(m : string, s : string);
+
+The sendtoalldil function sends a message to all DIL programs matching a specific database name, with special handling for nested DIL programs.
+
+== Description ==
+The sendtoalldil function sends a message to all DIL programs in the entire MUD that have a specific database name matching the provided pattern. This function is commonly used for global announcements, system-wide notifications, or communicating with specific types of DIL programs (like all programs with a certain zone or function). The message is sent with the SFB_MSG message class, allowing receiving programs to filter and respond appropriately. The function includes special handling for nested DIL programs to prevent infinite recursion.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| m || string || The message to send to all matching DIL programs
+|-
+| s || string || The database name pattern to match against DIL programs
+|}
+
+== Examples ==
+=== Global System Announcement ===
+ dilbegin system_wide_alert(alert_message : string);
+ var
+     message : string;
+ code
+ {
+     message := "SYSTEM ALERT: " + alert_message;
+     
+     // Send to all system programs
+     sendtoalldil(message, "sys_*");
+     
+     act("System alert broadcasted.", A_ALWAYS, self, null, TO_CHAR);
+ }
+ dilend
+
+=== Zone-Specific Communication ===
+ dilbegin zone_notification(zone_name : string, notification : string);
+ var
+     message : string;
+ code
+ {
+     message := "ZONE " + zone_name.toUpperCase() + ": " + notification;
+     
+     // Send to all programs in specific zone
+     sendtoalldil(message, zone_name + "_*");
+     
+     act("Zone notification sent to " + zone_name + ".", A_ALWAYS, self, null, TO_CHAR);
+ }
+ dilend
+
+=== Function-Type Coordination ===
+ dilbegin notify_all_spellcasters(spell_name : string);
+ var
+     message : string;
+ code
+ {
+     message := "NEW SPELL: " + spell_name + " available for study.";
+     
+     // Send to all spell-related programs
+     sendtoalldil(message, "spell_*");
+     
+     act("All spellcasters notified.", A_ALWAYS, self, null, TO_CHAR);
+ }
+ dilend
+
+=== Administrative Communication ===
+ dilbegin admin_broadcast(admin_message : string);
+ var
+     message : string;
+ code
+ {
+     message := "ADMIN: " + admin_message;
+     
+     // Send to all administrative programs
+     sendtoalldil(message, "admin_*");
+     
+     act("Administrative message sent.", A_ALWAYS, self, null, TO_CHAR);
+ }
+ dilend
+
+=== Debug Communication ===
+ dilbegin debug_system_wide(debug_info : string);
+ var
+     message : string;
+ code
+ {
+     message := "DEBUG: " + debug_info;
+     
+     // Send to all debug programs
+     sendtoalldil(message, "debug_*");
+     
+     act("Debug information broadcasted.", A_ALWAYS, self, null, TO_CHAR);
+ }
+ dilend
+
+=== Pattern Matching with Wildcards ===
+ dilbegin notify_all_guards();
+ var
+     message : string;
+ code
+ {
+     message := "SECURITY ALERT: Suspicious activity detected.";
+     
+     // Send to all guard programs (using wildcard pattern)
+     sendtoalldil(message, "guard_*");
+     
+     // Also send to all security programs
+     sendtoalldil(message, "security_*");
+ }
+ dilend
+
+=== Complex Nested Program Handling ===
+ dilbegin complex_coordinator();
+ var
+     message : string;
+ code
+ {
+     message := "COORDINATION: System update complete.";
+     
+     // Send to all coordinator programs
+     sendtoalldil(message, "coordinator_*");
+     
+     // This demonstrates the special handling for nested programs
+     // The C implementation shows it prevents infinite recursion
+     // by checking for nested DIL programs before activation
+ }
+ dilend
+
+== Usage Notes ==
+* The function sends messages to all DIL programs matching a database name pattern
+* The database name pattern matching uses string comparison, not exact matching
+* Wildcards (*) can be used in the database name pattern
+* Messages are sent with SFB_MSG message class
+* Receiving programs must be waiting with interrupt(SFB_MSG, ...) to receive messages
+* Special handling prevents infinite recursion with nested DIL programs
+* Commonly used for global announcements and system-wide communication
+* The database name pattern can be a full name or partial match with wildcards
+
+== Message Reception ==
+DIL programs can receive sendtoalldil messages using:
+interrupt(SFB_MSG, condition, label)
+The condition typically checks if the message is relevant to the receiving program.
+
+== Database Name Pattern Matching ==
+The database name pattern matching follows these rules:
+* Exact match: "program_name" matches only programs with that exact name
+* Wildcard match: "prefix_*" matches all programs starting with "prefix_"
+* Multiple wildcards: "*_admin*" matches all admin programs
+* Case-sensitive matching applies to database names
+* The pattern is matched against each program's database name
+
+== Error Handling ==
+* Function will fail if either parameter is null or invalid
+* No validation of message content - any string is accepted
+* No return value - function is void and cannot indicate success or failure
+* Messages may not be received if no programs are waiting for SFB_MSG messages
+* Invalid database name patterns may cause unpredictable behavior
+* Special handling for nested programs prevents runtime errors
+
+== Common Use Cases ==
+* Global system announcements and shutdowns
+* Zone-specific communications and notifications
+* Function-type program coordination (wizards, guards, etc.)
+* Administrative messages and debug information
+* Cross-zone communication and system synchronization
+* Pattern matching with wildcards for flexible targeting
+
+== Related Functions/Fields ==
+* [[sendtoall]] - Function for sending messages to all units globally
+* [[sendto]] - Function for sending messages to specific units
+* [[interrupt]] - Function for receiving incoming messages
+* [[unitptr]] - Unit pointer type and database name operations
+* [[nameidx]] - Field for unit's database name
+
+== See Also ==
+* DIL program communication and coordination
+* Message passing and synchronization systems
+* Database name patterns and matching
+* Global and zone-specific messaging systems

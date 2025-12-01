@@ -1,0 +1,187 @@
+= reset_vlevel =
+function: '''reset_vlevel'''(u : unitptr);
+
+The '''reset_vlevel''' function resets a player character's virtual level to 1, typically used for character reroll or rebirth systems.
+
+== Description ==
+The '''reset_vlevel''' procedure sets a player character's virtual level to 1. This function is commonly used in character reroll or rebirth systems where players need to be reset to their starting virtual level state. The virtual level is separate from the regular level and may affect different game mechanics or calculations. The function only affects non-immortal player characters and requires appropriate zone access level to execute successfully.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The player character whose virtual level will be reset
+|}
+
+== Examples ==
+=== Basic Virtual Level Reset ===
+dilbegin reset_player_vlevel(pc : unitptr);
+code
+{
+   if (pc.type == UNIT_ST_PC and not IS_IMMORTAL(pc))
+   {
+      reset_vlevel(pc);
+      act("Your virtual level has been reset to 1.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+} dilend
+
+=== Character Rebirth System ===
+dilbegin character_rebirth();
+var
+   pc : unitptr;
+code
+{
+   pc := self;
+   
+   // Remove all equipment and affects
+   // (equipment and affect removal code here)
+   
+   // Reset character's level to 1
+   reset_level(pc);
+   
+   // Reset race-specific attributes
+   reset_race(pc);
+   
+   // Reset virtual level to 1
+   reset_vlevel(pc);
+   
+   // Reinitialize abilities
+   pcinitabils@basis();
+   
+   act("Your character has been reborn with virtual level 1!", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Reroll Command ===
+dilbegin reroll_command();
+var
+   pc : unitptr;
+code
+{
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+      sendtext("Only players can reroll.", self);
+      quit;
+   }
+   
+   if (IS_IMMORTAL(pc))
+   {
+      sendtext("Immortals cannot reroll.", self);
+      quit;
+   }
+   
+   // Confirm reroll
+   // (confirmation code here)
+   
+   // Reset character to starting state
+   reset_level(pc);
+   reset_race(pc);
+   reset_vlevel(pc);
+   
+   // Move to starting room
+   link(pc, findroom("temple@midgaard"));
+   
+   act("You have been rerolled! Welcome back as a new character.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Guild Change Reset ===
+dilbegin guild_change_reset(pc : unitptr);
+code
+{
+   // Store current guild information for later
+   // (guild storage code here)
+   
+   // Reset character to base state
+   reset_level(pc);
+   reset_race(pc);
+   reset_vlevel(pc);
+   
+   // Remove guild-specific affects and abilities
+   // (guild cleanup code here)
+   
+   // Allow player to choose new guild
+   // (guild selection code here)
+   
+   act("Your character has been reset for guild change.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Complete Character Reset with Virtual Level ===
+dilbegin full_character_reset(pc : unitptr);
+var
+   old_vlevel : integer;
+code
+{
+   if (pc.type != UNIT_ST_PC)
+   {
+      sendtext("Only players can be fully reset.", self);
+      quit;
+   }
+   
+   // Store current virtual level for reference
+   old_vlevel := pc.vlevel;
+   
+   // Reset all character aspects
+   reset_level(pc);      // Reset level to 1
+   reset_race(pc);      // Reset race attributes
+   reset_vlevel(pc);   // Reset virtual level to 1
+   
+   // Reinitialize all systems
+   pcinitabils@basis();
+   
+   // Reset experience to starting amount
+   experience(11250, pc);
+   
+   // Set starting ability points
+   pc.skill_points := 80;
+   pc.ability_points := 40;
+   
+   act("Your character has been completely reset!", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Virtual level was " + old_vlevel + ", now reset to 1.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Virtual Level Display ===
+dilbegin show_virtual_level(pc : unitptr);
+code
+{
+   if (pc.type == UNIT_ST_PC)
+   {
+      act("Current virtual level: " + itoa(pc.vlevel), A_ALWAYS, pc, null, null, TO_CHAR);
+      act("Current regular level: " + itoa(pc.level), A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   else
+   {
+      sendtext("This command only works on players.", self);
+   }
+} dilend
+
+== Usage Notes ==
+* The function only works on player characters (UNIT_ST_PC), not NPCs
+* Immortal characters are protected from virtual level reset
+* The function requires zone access level > 1 to execute
+* This is typically used in conjunction with [[reset_level]] and [[reset_race]]
+* The virtual level is separate from the regular level field (pc.level)
+* Virtual level may affect different game mechanics than regular level
+* The function sets virtual level to exactly 1
+* Experience is not automatically adjusted - use [[experience]] function separately if needed
+* Virtual level is often used for progression systems, training calculations, or special abilities
+
+== Error Handling ==
+The function will fail and log an error if:
+* The zone access level is insufficient (must be > 1)
+* The unit parameter is not a valid unit pointer
+* The unit is not a player character
+* The character is immortal (protected from virtual level reset)
+
+== Related Functions/Fields ==
+* [[reset_level]] - Resets a player's regular level to 1
+* [[reset_race]] - Resets a player's race-specific attributes
+* [[vlevel]] - Field containing character's virtual level
+* [[experience]] - Modifies character experience
+* [[IS_IMMORTAL]] - Checks if character is immortal
+* [[pcinitabils]] - Initializes player abilities
+
+== See Also ==
+* [[reset_level]]
+* [[reset_race]]
+* [[unit_st_pc and unit_st_npc]]

@@ -1,0 +1,75 @@
+= roomcount =
+field: integer '''.roomcount''' (Read-only)
+
+The '''roomcount''' field provides access to the number of rooms contained within a zone.
+
+== Description ==
+The '''roomcount''' field is accessed on a zoneptr and returns an integer value representing the total number of rooms defined within that zone. This field is read-only and provides a quick way to determine zone size without needing to manually traverse through all rooms. The count includes all rooms registered to the zone, regardless of their current state or accessibility.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| zone.roomcount || integer || Returns the number of rooms in the zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone Pointer)
+
+== Examples ==
+dilbegin zone_statistics();
+var
+    current_zone : zoneptr;
+    buffer : string;
+code
+{
+    current_zone := zhead();
+    buffer := "Zone Statistics:&n&n";
+    
+    while (current_zone != null)
+    {
+        buffer := buffer + "Zone: " + current_zone.name + "&n";
+        buffer := buffer + "  Rooms: " + itoa(current_zone.roomcount) + "&n";
+        buffer := buffer + "  Objects: " + itoa(current_zone.objcount) + "&n";
+        buffer := buffer + "  NPCs: " + itoa(current_zone.npccount) + "&n";
+        buffer := buffer + "  Reset time: " + itoa(current_zone.resettime) + " minutes&n";
+        buffer := buffer + "&n";
+        
+        current_zone := current_zone.next;
+    }
+    
+    pagestring(buffer, self);
+    quit;
+}
+dilend
+
+dilend
+
+dilend
+
+== Usage Notes ==
+* The '''roomcount''' field returns the total number of rooms defined in the zone's data files
+* This count is read-only and cannot be modified directly
+* The field is commonly used for zone statistics, administrative commands, and zone validation
+* For performance reasons, use this field instead of manually counting rooms with loops
+* The count includes all room types (normal, death rooms, etc.) within the zone
+* This field appears to be rarely used in modern DIL code but remains functional
+
+== Error Handling ==
+* Returns 0 if the zone contains no rooms
+* Returns DILV_FAIL if the zoneptr is null
+* Returns DILV_ERR if accessed on an inappropriate unit type
+* Always check that the zoneptr is valid before accessing this field
+
+== Related Functions/Fields ==
+* [[objcount]] - Field to get the number of objects in a zone
+* [[npccount]] - Field to get the number of NPCs in a zone
+* [[zhead]] - Function to get the first zone in the global zone list
+* [[zoneptr]] - Zone pointer type documentation
+* [[resettime]] - Field to get the reset time of a zone
+
+== See Also ==
+* [[zone]] - Zone unit type documentation
+* [[findroom]] - Function to find a specific room by name
+* [[room_head]] - Function to get the first room in the global room list

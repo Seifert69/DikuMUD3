@@ -1,0 +1,210 @@
+= send_pre =
+ function: integer '''send_pre'''(c : string, a : unitptr, m : unitptr, t : unitptr, p : integer, arg : string, o : unitptr);
+
+The send_pre function sends preparation messages to DIL programs that are waiting for specific commands to start, with optional blocking capabilities.
+
+== Description ==
+The send_pre function sends an SFB_PRE message to DIL programs in the surrounding area that are waiting for a specific command to be executed. This function is commonly used to coordinate between multiple DIL programs, allowing one program to notify others that it's about to execute a command. The function can either allow sharing (SFR_SHARE) or block the command (SFR_BLOCK) if another program is already handling it.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| c || string || Command string that is being prepared for execution
+|-
+| a || unitptr || Activator unit that is preparing the command
+|-
+| m || unitptr || Medium unit through which the command is being processed
+|-
+| t || unitptr || Target unit of the command preparation
+|-
+| p || integer || Power/parameter value for the message
+|-
+| arg || string || Argument string passed with the command
+|-
+| o || unitptr || Other unit to also receive the message
+|}
+
+== Return Values ==
+The function returns an integer indicating the result:
+* SFR_SHARE - Command can be shared/allowed to proceed
+* SFR_BLOCK - Command is blocked by another program
+
+== Examples ==
+=== Basic Command Preparation ===
+ dilbegin prepare_cast(spell_name : string, target : unitptr);
+ var
+     result : integer;
+ code
+ {
+     // Notify other programs that we're preparing to cast
+     result := send_pre("cast", self, null, target, 1, spell_name, null, 0);
+     
+     if (result == SFR_BLOCK)
+     {
+         sendtext("Another spellcaster is already preparing that spell.&n", self);
+         quit;
+     }
+     
+     // Cast preparation logic would go here
+     act("You begin preparing " + spell_name + " spell.", A_ALWAYS, self, target, null, TO_CHAR);
+     
+     // Notify completion of preparation
+     send_pre("cast", self, null, target, 0, spell_name, null, 0);
+ }
+ dilend
+
+=== Command Blocking System ===
+ dilbegin exclusive_command(command_name : string);
+ var
+     result : integer;
+ code
+ {
+     // Try to claim exclusive access to command
+     result := send_pre(command_name, self, null, null, 1, argument, null, 0);
+     
+     if (result == SFR_BLOCK)
+     {
+         sendtext("The " + command_name + " command is already in use.&n", self);
+         quit;
+     }
+     
+     // Command execution would go here
+     act("You gain exclusive access to " + command_name + " command.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+=== Multi-Program Coordination ===
+ dilbegin coordinated_action(action : string, target : unitptr);
+ var
+     coordinator : unitptr;
+     result : integer;
+ code
+ {
+     // Find coordinator program
+     coordinator := findunit(self, "coordinator", FIND_UNIT_SURRO, null);
+     if (coordinator == null)
+     {
+         // No coordinator found, proceed directly
+         result := send_pre(action, self, null, target, 2, action, target, 0);
+     }
+     else
+     {
+         // Check with coordinator first
+         result := send_pre(action, self, coordinator, target, 3, action, target, 0);
+     }
+     
+     if (result == SFR_BLOCK)
+     {
+         sendtext("Action blocked by coordinator program.&n", self);
+         quit;
+     }
+     
+     // Proceed with coordinated action
+     act("Coordinated action: " + action, A_ALWAYS, self, target, null, TO_CHAR);
+ }
+ dilend
+
+=== Resource Management ===
+ dilbegin use_resource(resource_type : string, amount : integer);
+ var
+     resource_manager : unitptr;
+     result : integer;
+ code
+ {
+     // Find resource manager program
+     resource_manager := findunit(self, "resource_mgr", FIND_UNIT_SURRO, null);
+     if (resource_manager == null)
+     {
+         sendtext("No resource manager found.&n", self);
+         quit;
+     }
+     
+     // Request resource allocation
+     result := send_pre("allocate", self, null, resource_manager, 1, resource_type, itoa(amount), 0);
+     
+     if (result == SFR_BLOCK)
+     {
+         sendtext("Resource allocation denied by manager.&n", self);
+         quit;
+     }
+     
+     // Resource usage logic would go here
+     act("You allocate " + itoa(amount) + " units of " + resource_type + ".", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+=== Complex Command Queue ===
+ dilbegin queue_command(command : string, priority : integer);
+ var
+     queue_manager : unitptr;
+     result : integer;
+ code
+ {
+     // Find command queue manager
+     queue_manager := findunit(self, "cmd_queue", FIND_UNIT_SURRO, null);
+     if (queue_manager == null)
+     {
+         // No queue manager, execute directly
+         exec(command, self);
+         quit;
+     }
+     
+     // Add to queue with priority
+     result := send_pre("enqueue", self, queue_manager, self, priority, command, argument, null, 0);
+     
+     if (result == SFR_BLOCK)
+     {
+         sendtext("Command queue is full or command blocked.&n", self);
+         quit;
+     }
+     
+     act("Command queued with priority " + itoa(priority) + ".", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+== Usage Notes ==
+* The function sends SFB_PRE messages to waiting DIL programs
+* Programs must be waiting with interrupt(SFB_PRE, ...) to receive these messages
+* The command string 'c' identifies the command being prepared
+* Parameter 'p' determines message priority and handling behavior
+* Return value indicates whether command can proceed (SFR_SHARE) or is blocked (SFR_BLOCK)
+* Commonly used for command coordination and resource management systems
+* The 'o' parameter allows sending messages to additional units beyond the primary participants
+
+== Message Reception ==
+DIL programs can receive send_pre messages using:
+ interrupt(SFB_PRE, condition, label)
+The condition typically checks if the message is relevant to the receiving program.
+
+== Return Value Meanings ==
+; SFR_SHARE : Command preparation successful and can proceed
+; SFR_BLOCK : Command is blocked by another program or system restriction
+
+== Error Handling ==
+* Function will fail if any required parameters are null or invalid
+* Invalid command strings may cause unpredictable behavior
+* Always check return value before proceeding with command execution
+* Parameter validation occurs at runtime - invalid types cause execution errors
+* No guarantee that receiving programs are properly waiting for SFB_PRE messages
+
+== Common Use Cases ==
+* Command coordination between multiple DIL programs
+* Resource allocation and management systems
+* Exclusive command enforcement
+* Priority-based command queuing
+* Multi-step operation preparation
+* Access control and permission checking
+
+== Related Functions/Fields ==
+* [[send_done]] - Function for sending completion messages
+* [[interrupt]] - Function to receive preparation messages
+* [[exec]] - Function for executing commands
+* [[send]] - Function for sending messages to units
+* [[wait]] - Function for waiting with interrupt conditions
+
+== See Also ==
+* DIL program coordination and synchronization
+* Command blocking and access control
+* Message passing between DIL programs
+* Interrupt handling and message reception

@@ -1,0 +1,126 @@
+= rent =
+field: integer '''.rent''' (Read/Write)
+
+The '''rent''' field represents the basic cost of renting an object per time period, primarily used for special objects in the game's rental system.
+
+== Description ==
+The '''rent''' field is an integer value that specifies the basic cost of renting an object. This field is primarily used on very special objects and represents the rental fee in the old gold value system. The rent cost is typically used by shopkeepers or rental NPCs to determine how much players must pay to temporarily use or store items.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current rental cost of the object
+|-
+| Write || integer || Sets the rental cost of the object
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_OBJ (Object)
+
+== Examples ==
+=== Setting Rent Cost ===
+dilbegin set_rent_cost(obj : unitptr, cost : integer);
+code
+{
+   if (obj.type == UNIT_ST_OBJ)
+   {
+      obj.rent := cost;
+      act("The rental cost for $2n has been set to " + cost + " gold per day.", 
+          A_ALWAYS, self, obj, null, TO_CHAR);
+   }
+} dilend
+
+=== Calculating Service Cost Based on Rent ===
+dilbegin calculate_service_charge(item : unitptr);
+var
+   base_charge : integer;
+   service_cost : integer;
+   cash_str : string;
+code
+{
+   // Calculate service cost as 3 times the rent value plus base fee
+   base_charge := 5 * SILVER_MULT;
+   service_cost := base_charge + ((item.rent) * 3);
+   
+   cash_str := moneystring(service_cost, TRUE);
+   exec("say The service will cost you " + cash_str + ".", self);
+} dilend
+
+=== Rent-Based Pricing System ===
+dilbegin rent_based_pricing();
+var
+   item : unitptr;
+   daily_rate : integer;
+   weekly_rate : integer;
+code
+{
+   item := medium;
+   
+   if (item.type == UNIT_ST_OBJ and item.rent > 0)
+   {
+      daily_rate := item.rent;
+      weekly_rate := daily_rate * 7; // 7 days for a week
+      
+      act("Daily rental rate for $2n: " + daily_rate + " gold", 
+          A_ALWAYS, self, item, null, TO_CHAR);
+      act("Weekly rental rate for $2n: " + weekly_rate + " gold", 
+          A_ALWAYS, self, item, null, TO_CHAR);
+   }
+   else
+   {
+      exec("say This item is not available for rent.", self);
+   }
+} dilend
+
+=== Guild Discount Calculation ===
+dilbegin guild_rental_discount(pc : unitptr, item : unitptr);
+var
+   base_cost : integer;
+   discounted_cost : integer;
+   cost_str : string;
+code
+{
+   base_cost := (5 * PLATINUM_MULT) + ((item.rent) * 3);
+   
+   // Apply guild discount if applicable
+   if (IsInGuild@guilds(pc, GUILD_UDG_THIEF))
+   {
+      discounted_cost := (5 * SILVER_MULT) + ((item.rent) * 3);
+      exec("wink " + pc.name, self);
+      cost_str := moneystring(discounted_cost, TRUE);
+      exec("say As a guild member, your rental cost is only " + cost_str + ".", self);
+   }
+   else
+   {
+      cost_str := moneystring(base_cost, TRUE);
+      exec("say The rental cost is " + cost_str + ".", self);
+   }
+} dilend
+
+== Usage Notes ==
+* The rent value is stored as an integer representing the old gold value system
+* This field is primarily used for special or premium items that can be rented
+* The rent cost is typically calculated per day or per rental period
+* Rent costs are often used in conjunction with base service fees
+* The field is read-write and can be modified by DIL programs
+* Rent values of 0 typically indicate the item is not available for rent
+* The actual rental cost calculation may include additional factors like guild discounts or service fees
+
+== Error Handling ==
+Accessing the '''rent''' field will fail if:
+* The unit is not an object type (UNIT_ST_OBJ)
+* The unit pointer is null or invalid
+* Attempting to set a negative rent value (may be allowed but not recommended)
+
+== Related Functions/Fields ==
+* [[cost]] - The basic purchase cost of an object
+* [[objecttype]] - The type of object, which may affect rental eligibility
+* [[value]] - Additional object values that may influence rental pricing
+* [[moneystring]] - Function to convert monetary values to readable strings
+
+== See Also ==
+* [[unit_st_obj]]
+* [[cost]]
+* [[transfermoney]]

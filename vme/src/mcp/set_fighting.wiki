@@ -1,0 +1,116 @@
+= set_fighting =
+function: void '''set_fighting'''(attacker : unitptr, target : unitptr);
+
+The '''set_fighting''' function is used to initiate or modify combat between two character units in the game world.
+
+== Description ==
+This function establishes a combat relationship between two characters. The first parameter (attacker) will engage in combat with the second parameter (target). If the attacker is already fighting, the target will be added to their opponent list. If the attacker is not currently fighting, a new combat engagement will be initiated.
+
+The function intelligently handles both new combat initiation and adding opponents to existing fights, making it versatile for various combat scenarios.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| attacker || unitptr || The character unit that will initiate or continue the attack
+|-
+| target || unitptr || The character unit that will be attacked
+|}
+
+Both parameters must be valid character units (PC or NPC). The function will fail if either parameter is not a character type.
+
+== Examples ==
+=== Basic Combat Initiation ===
+ dilbegin initiate_combat();
+ var
+    guard : unitptr;
+    intruder : unitptr;
+ code
+ {
+    guard := self;
+    intruder := findroom("guard_post@midgaard").contents;
+    
+    while (intruder != null)
+    {
+       if (intruder.type == UNIT_ST_PC and intruder.charflags & CHAR_OUTLAW)
+       {
+          set_fighting(guard, intruder);
+          sendtext("Guard attacks " + intruder.name + "!", guard);
+          break;
+       }
+       intruder := intruder.next;
+    }
+ } dilend
+
+=== Arrest Scenario ===
+ dilbegin arrest_procedure();
+ external
+    check_outlaw@justice(char : unitptr) : integer;
+ var
+    outlaw_status : integer;
+ code
+ {
+    on_activation((self.position <= POSITION_SLEEPING), skip);
+    
+ :loop:
+    wait(SFB_CMD, activator.charflags & CHAR_OUTLAW);
+    if (activator == self)
+       goto loop;
+    
+    outlaw_status := check_outlaw@justice(activator);
+    if (outlaw_status == 0)
+       goto loop;
+    
+    // Remove self-defense protection and engage
+    unset(activator.charflags, CHAR_SELF_DEFENCE);
+    set_fighting(self, activator);
+    
+    goto loop;
+ } dilend
+
+=== Multiple Opponents ===
+ dilbegin reinforcement_combat();
+ var
+    original_target : unitptr;
+    new_target : unitptr;
+ code
+ {
+    original_target := self.fighting;
+    if (original_target == null)
+       return;
+    
+    // Find another hostile character in the room
+    new_target := findunit(self, "goblin", UNIT_ST_NPC);
+    if (new_target != null and new_target != original_target)
+    {
+       set_fighting(self, new_target);
+       sendtext("You now fight multiple opponents!", self);
+    }
+ } dilend
+
+== Usage Notes ==
+* Both parameters must be character units (PC or NPC) - using objects or rooms will cause the function to fail
+* If the attacker is already fighting, the target is added to their opponent list
+* If the attacker is not fighting, a new combat engagement is started
+* The function does not check for line of sight or range - it assumes both units can engage
+* Combat positioning and facing are automatically handled by the game engine
+* The function will not work if either unit is dead or in an invalid state
+
+== Error Handling ==
+The function includes type checking to ensure both parameters are valid character units. If either parameter is not a unitptr pointing to a character, the function will fail silently without modifying the combat state.
+
+Common error scenarios:
+* Passing an object or room instead of a character
+* Using null or invalid unit pointers
+* Attempting to set a character to fight themselves
+
+== Related Functions/Fields ==
+* [[fighting]] - Field to read current combat opponent
+* [[stop_fighting()]] - Function to end combat between units
+* [[opponentcount]] - Field showing number of opponents
+* [[position]] - Field showing current position (affects combat ability)
+
+== See Also ==
+* [[SFB_COM]] - Combat message flag for wait() statements
+* [[CHAR_FIGHTING]] - Internal character fighting state
+* [[meleedamage()]] - Function for calculating melee damage

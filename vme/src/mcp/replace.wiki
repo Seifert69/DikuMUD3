@@ -1,0 +1,155 @@
+= replace =
+function: string '''replace'''(t : string, n : string, o : string);
+
+The '''replace''' function returns a new string with all occurrences of a target string replaced with a new string.
+
+== Description ==
+The '''replace''' function searches through the original string and replaces all occurrences of the target string with the replacement string. The function returns a new string with the replacements applied, leaving the original string unchanged. This is useful for text processing, template substitution, and string manipulation tasks.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| t || string || The target string to search for and replace
+|-
+| n || string || The replacement string to substitute for the target
+|-
+| o || string || The original string to search within
+|}
+
+== Examples ==
+=== Basic String Replacement ===
+dilbegin basic_replace();
+var
+   original : string;
+   result : string;
+code
+{
+   original := "The quick brown fox jumps over the lazy dog.";
+   result := replace("fox", "cat", original);
+   // result becomes: "The quick brown cat jumps over the lazy dog."
+   
+   act("Original: " + original, A_ALWAYS, self, null, null, TO_CHAR);
+   act("Result: " + result, A_ALWAYS, self, null, null, TO_CHAR);
+} dilend
+
+=== Template Variable Substitution ===
+dilbegin template_substitution(pc : unitptr);
+var
+   template : string;
+   result : string;
+code
+{
+   template := "%n% is a %t% of level %l%.";
+   
+   // Replace placeholders with actual values
+   result := replace("%n%", pc.name, template);
+   result := replace("%t%", pc.title, result);
+   result := replace("%l%", itoa(pc.vlevel), result);
+   
+   // Final result: "Jafar is a human of level 15."
+   act("Template result: " + result, A_ALWAYS, self, null, null, TO_CHAR);
+} dilend
+
+=== HTML Entity Conversion ===
+dilbegin convert_html_entities(text : string);
+var
+   converted : string;
+code
+{
+   converted := text;
+   
+   // Convert HTML entities back to characters
+   converted := replace("&lt;", "<", converted);
+   converted := replace("&gt;", ">", converted);
+   converted := replace("&amp;", "&", converted);
+   
+   return converted;
+} dilend
+
+=== Multiple Replacements ===
+dilbegin clean_text(input : string);
+var
+   cleaned : string;
+code
+{
+   cleaned := input;
+   
+   // Remove common unwanted characters
+   cleaned := replace("\r", "", cleaned);
+   cleaned := replace("\n", " ", cleaned);
+   cleaned := replace("  ", " ", cleaned);
+   
+   // Replace offensive words with asterisks
+   cleaned := replace("damn", "****", cleaned);
+   cleaned := replace("hell", "****", cleaned);
+   
+   return cleaned;
+} dilend
+
+=== Color Code Processing ===
+dilbegin process_color_codes(message : string);
+var
+   processed : string;
+code
+{
+   processed := message;
+   
+   // Replace color placeholders with actual color codes
+   processed := replace("%RED%", "\033[0;31m", processed);
+   processed := replace("%GREEN%", "\033[0;32m", processed);
+   processed := replace("%RESET%", "\033[0m", processed);
+   
+   sendtext(processed, self);
+} dilend
+
+=== Path Normalization ===
+dilbegin normalize_path(path : string);
+var
+   normalized : string;
+code
+{
+   normalized := path;
+   
+   // Convert backslashes to forward slashes
+   normalized := replace("\\", "/", normalized);
+   
+   // Remove duplicate slashes
+   normalized := replace("//", "/", normalized);
+   
+   // Remove trailing slash (except for root)
+   if (length(normalized) > 1 and right(normalized, 1) == "/")
+   {
+      normalized := left(normalized, length(normalized) - 1);
+   }
+   
+   return normalized;
+} dilend
+
+== Usage Notes ==
+* The function replaces ALL occurrences of the target string, not just the first one
+* The replacement is case-sensitive (exact string matching)
+* The original string is not modified; a new string is returned
+* Empty strings can be used for replacement (effectively removing the target)
+* If the target string is not found, the original string is returned unchanged
+* The function can be chained to perform multiple replacements
+* Be careful with overlapping replacements, as they may affect each other
+
+== Error Handling ==
+The function will fail if:
+* Any of the parameters are not string types
+* Any parameter is null or invalid
+* The function returns a fail value if any parameter validation fails
+
+== Related Functions/Fields ==
+* [[left]] - Extracts left portion of a string
+* [[right]] - Extracts right portion of a string
+* [[length]] - Returns length of a string
+* [[substring]] - Removes strings from stringlists
+* [[in]] - Operator to check if string contains another string
+
+== See Also ==
+* [[string]]
+* [[left]]
+* [[right]]
+* [[in]]

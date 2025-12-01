@@ -1,0 +1,168 @@
+= set_weight_base =
+function: void '''set_weight_base'''(unit : unitptr, weight : integer);
+
+The '''set_weight_base''' function is used to set the base weight of a unit and automatically adjusts the weight of all containing units to maintain consistency.
+
+== Description ==
+This function sets the base weight of a unit to the specified value in pounds (½ kg units). The base weight represents the empty weight of the unit without any contents. When the base weight is changed, the function automatically calculates the difference and updates the weight of all units that contain this unit to maintain weight consistency throughout the game world.
+
+The function is particularly useful for creating custom objects, modifying existing items, or implementing special weight-based mechanics.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose base weight will be set
+|-
+| weight || integer || The new base weight in pounds (½ kg units)
+|}
+
+The weight parameter should be a positive integer representing the desired base weight.
+
+== Examples ==
+=== Basic Object Creation ===
+ dilbegin create_custom_sword();
+ var
+    sword : unitptr;
+ code
+ {
+    sword := load("sword@blacksmith");
+    if (sword != null)
+    {
+       // Set a custom base weight for the sword
+       set_weight_base(sword, 15);  // 7.5 kg
+       sendtext("You create a heavy custom sword.<br/>", self);
+    }
+ } dilend
+
+=== Head Creation with Proportional Weight ===
+ dilbegin create_head(corpse : unitptr);
+ var
+    head : unitptr;
+    head_weight : integer;
+ code
+ {
+    if (corpse == null or corpse.type != UNIT_ST_OBJ)
+       quit;
+    
+    head := load("head@death");
+    if (head != null)
+    {
+       // Set head weight to 1/30 of corpse base weight
+       head_weight := corpse.baseweight / 30;
+       
+       // Ensure reasonable weight limits
+       if (head_weight > 100)
+          head_weight := 100;
+       if (head_weight < 1)
+          head_weight := 1;
+       
+       set_weight_base(head, head_weight);
+       link(head, corpse.outside);
+    }
+ } dilend
+
+=== Container Weight Management ===
+ dilbegin create_weightless_container();
+ var
+    container : unitptr;
+ code
+ {
+    container := load("bag@general");
+    if (container != null)
+    {
+       // Create a weightless container for special purposes
+       set_weight_base(container, 0);
+       set_weight(container, 0);
+       
+       sendtext("You create a weightless container.<br/>", self);
+    }
+ } dilend
+
+=== Race-Specific Weight Calculation ===
+ dilbegin set_race_weight(item : unitptr, race : integer);
+ var
+    weight_multiplier : integer;
+    base_weight : integer;
+ code
+ {
+    if (item == null)
+       quit;
+    
+    // Different races have different weight characteristics
+    if ((race >= RACE_ARTHROPODA_MIN) and (race <= RACE_ARTHROPODA_MAX))
+    {
+       // Arthropods are lighter
+       weight_multiplier := 70;
+    }
+    else
+    {
+       // Default weight calculation
+       weight_multiplier := 30;
+    }
+    
+    base_weight := item.baseweight / weight_multiplier;
+    
+    // Apply reasonable limits
+    if (base_weight > 100)
+       base_weight := 100;
+    if (base_weight < 1)
+       base_weight := 1;
+    
+    set_weight_base(item, base_weight);
+ } dilend
+
+=== Temporary Weight Modification ===
+ dilbegin temporary_weight_change();
+ var
+    obj : unitptr;
+    original_weight : integer;
+ code
+ {
+    obj := self;
+    original_weight := obj.baseweight;
+    
+    // Temporarily make object heavier
+    set_weight_base(obj, original_weight * 2);
+    
+    pause;
+    
+    // Restore original weight
+    set_weight_base(obj, original_weight);
+ } dilend
+
+== Usage Notes ==
+* Weight is measured in pounds where 1 unit = 0.5 kg
+* The function automatically updates the weight of all containing units
+* Base weight represents the empty weight of the unit
+* Current weight includes base weight plus contents
+* Setting weight to 0 creates weightless objects
+* The function maintains weight consistency throughout the game world
+* Useful for creating custom objects with specific weight characteristics
+* Commonly used in object creation and modification procedures
+
+== Error Handling ==
+The function includes validation checks:
+
+* **Unit validation**: The first parameter must be a valid unitptr
+* **Type validation**: The second parameter must be an integer
+* **Null pointer validation**: The unit pointer must not be null
+
+Common error scenarios:
+* Passing null or invalid unit pointers
+* Using non-integer weight values
+* Attempting to modify destroyed units
+* Setting negative weights (may cause undefined behavior)
+
+== Related Functions/Fields ==
+* [[set_weight()]] - Function to set current weight (not base weight)
+* [[baseweight]] - Field to read current base weight
+* [[weight]] - Field to read current total weight
+* [[capacity]] - Field for container capacity
+* [[can_carry()]] - Function to check if character can carry weight
+
+== See Also ==
+* [[weight_change_unit()]] - Internal weight management function
+* [[UNIT_FL_*]] - Unit flags that may affect weight
+* [[MANIPULATE_*]] - Manipulation flags for weight handling
+* [[Object creation]] - General object creation procedures

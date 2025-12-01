@@ -1,0 +1,91 @@
+= restore =
+function: unitptr '''restore'''(filename : string, u : unitptr);
+
+The '''restore''' function loads a copy of a unit or units that were previously saved with the [[store]] function from a file.
+
+== Description ==
+The '''restore''' function retrieves units that were previously saved to disk using the [[store]] function. The function can either restore units into a specified container unit or return a pointer to the restored unit if no container is provided. The restored units are placed in the zone's DIL file directory under a "units" subdirectory.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| filename || string || The name of the unit file to restore (without path extension)
+|-
+| u || unitptr || The unit to restore contents into, or null to return the restored unit
+|}
+
+== Examples ==
+dilbegin load_saved_chest();
+var
+    chest : unitptr;
+    result : unitptr;
+code
+{
+    // Try to restore a saved chest, fallback to loading a new one
+    result := restore("chest_save", null);
+    
+    if (result == null)
+    {
+        // No saved file found, load a fresh chest
+        chest := load("donation_chest@" + self.zoneidx);
+        if (chest != null)
+        {
+            link(chest, self);
+            sendtext("Loaded new donation chest.&n", self);
+        }
+    }
+    else
+    {
+        // Successfully restored saved chest
+        link(result, self);
+        sendtext("Restored saved donation chest.&n", self);
+    }
+    quit;
+}
+dilend
+
+dilbegin restore_room_contents();
+var
+    dummy : unitptr;
+code
+{
+    // Restore saved room contents into the current room
+    dummy := restore("room_contents." + self.zoneidx, self);
+    
+    if (dummy == null)
+    {
+        sendtext("No saved room contents found.&n", self);
+    }
+    else
+    {
+        sendtext("Room contents restored successfully.&n", self);
+    }
+    quit;
+}
+dilend
+
+== Usage Notes ==
+* The filename parameter should not include path or extension - the system automatically adds the proper path
+* If the 'u' parameter is null, the function returns a pointer to the restored unit
+* If the 'u' parameter is not null, the function restores contents into that unit and returns null
+* The function requires zone access level ≤ 10 to execute
+* Filenames are validated for security - illegal filenames will be rejected
+* The main database must contain a reference for the unit 'name@zone' to restore successfully
+* Use '''restore''' sparingly as disk access is slow and can impact server performance
+
+== Error Handling ==
+* Returns null if the file cannot be found or read
+* Returns DILV_FAIL if parameters are invalid
+* Returns DILV_ERR if parameter types are incorrect
+* Logs security violations if zone access level is insufficient
+* Logs attempts to restore files with illegal names
+
+== Related Functions/Fields ==
+* [[store]] - Function to save units to a file
+* [[delunit]] - Function to delete unit files
+* [[load]] - Function to load units from the main database
+
+== See Also ==
+* [[link]] - Function to link units into containers
+* [[sendtext]] - Function to send text to players

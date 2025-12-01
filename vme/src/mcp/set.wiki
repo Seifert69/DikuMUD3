@@ -1,0 +1,140 @@
+= set =
+function: void '''set'''(var : integer, bit : integer);
+
+The '''set''' function is used to set specific bits in an integer variable using bitwise OR operations.
+
+== Description ==
+This function performs a bitwise OR operation between the integer variable and the bit mask, effectively setting the specified bits in the variable. The first parameter must be a variable (lvalue) that can be modified, while the second parameter is the bit mask to set.
+
+The function supports various integer sizes including signed and unsigned 8-bit, 16-bit, and 32-bit integers. It's commonly used for manipulating flag fields and status bits in DIL programs.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| var || integer (variable) || The integer variable whose bits will be set (must be an lvalue)
+|-
+| bit || integer || The bit mask representing the bits to set
+|}
+
+The var parameter must be a modifiable integer variable, not a constant or expression result.
+
+== Examples ==
+=== Basic Flag Setting ===
+ dilbegin set_player_flags();
+ var
+    flags : integer;
+ code
+ {
+    flags := 0;
+    
+    // Set individual flags
+    set(flags, 0x01);  // Set bit 0
+    set(flags, 0x02);  // Set bit 1
+    set(flags, 0x04);  // Set bit 2
+    
+    // flags now equals 0x07 (bits 0, 1, and 2 are set)
+ } dilend
+
+=== Character Flag Manipulation ===
+ dilbegin toggle_wizard_mode();
+ var
+    pc : unitptr;
+ code
+ {
+    pc := activator;
+    
+    if (pc.type != UNIT_ST_PC)
+       quit;
+    
+    // Set the wizard mode flag
+    set(pc.pcflags, PC_WIZARD);
+    
+    sendtext("You are now in wizard mode!<br/>", pc);
+ } dilend
+
+=== Multiple Flag Operations ===
+ dilbegin configure_object();
+ var
+    obj : unitptr;
+ code
+ {
+    obj := self;
+    
+    // Set multiple object flags at once
+    set(obj.flags, UNIT_FL_MAGIC | UNIT_FL_GLOW | UNIT_FL_HUM);
+    
+    act("$1n begins to glow with magical energy.", A_SOMEONE, obj, null, null, TO_ROOM);
+ } dilend
+
+=== Combat Status Setting ===
+ dilbegin set_combat_status();
+ var
+    npc : unitptr;
+ code
+ {
+    npc := self;
+    
+    // Set NPC to be aggressive and sentinel
+    set(npc.charflags, CHAR_AGGRESSIVE);
+    set(npc.charflags, CHAR_SENTINEL);
+    
+    // Set combat preferences
+    set(npc.charflags, CHAR_WIMPY);
+ } dilend
+
+=== Bit Field Configuration ===
+ dilbegin configure_room_flags();
+ var
+    room : unitptr;
+ code
+ {
+    room := self;
+    
+    if (room.type != UNIT_ST_ROOM)
+       quit;
+    
+    // Set room properties
+    set(room.roomflags, ROOM_DARK);
+    set(room.roomflags, ROOM_DEATH);
+    set(room.roomflags, ROOM_NOMOB);
+    
+    sendtext("The room has been reconfigured.<br/>", activator);
+ } dilend
+
+== Usage Notes ==
+* The first parameter must be a variable (lvalue), not a constant or expression
+* The function uses bitwise OR operation: result = var | bit
+* Multiple bits can be set simultaneously using the bitwise OR operator in the bit parameter
+* The function supports all standard integer sizes (8, 16, and 32-bit, both signed and unsigned)
+* Commonly used with predefined flag constants (PC_*, CHAR_*, UNIT_*, ROOM_*, etc.)
+* Setting a bit that is already set has no effect
+* The operation is atomic and modifies the variable in place
+
+== Error Handling ==
+The function includes several validation checks:
+
+* **Variable validation**: The first parameter must be a modifiable integer variable (lvalue)
+* **Type validation**: Both parameters must be of integer type
+* **Reference validation**: The variable must be a valid reference that can be modified
+
+Common error scenarios:
+* Passing a constant or expression result as the first parameter
+* Using non-integer types
+* Attempting to modify read-only variables or fields
+* Passing null or invalid references
+
+== Related Functions/Fields ==
+* [[unset()]] - Function to clear specific bits in an integer variable
+* [[isset()]] - Function to test if specific bits are set in an integer
+* [[pcflags]] - Player character flags field
+* [[charflags]] - Character flags field
+* [[flags]] - General unit flags field
+* [[roomflags]] - Room flags field
+
+== See Also ==
+* [[UNIT_FL_*]] - Unit flag constants
+* [[PC_*]] - Player character flag constants
+* [[CHAR_*]] - Character flag constants
+* [[ROOM_*]] - Room flag constants
+* [[Bitwise operations]] - General information about bit manipulation

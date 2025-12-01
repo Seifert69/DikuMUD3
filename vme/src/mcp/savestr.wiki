@@ -1,0 +1,147 @@
+= savestr =
+ function: integer '''savestr'''(filename : string, buff : string, wa : string);
+
+The savestr function saves string data to a file on disk with options to write or append to existing files.
+
+== Description ==
+The savestr function writes string content to a file in the zone's strings directory. It supports both write mode ("w") to overwrite existing files and append mode ("a") to add content to existing files. The function includes security checks to prevent unauthorized file access and is commonly used for implementing persistent data storage systems like message boards, news files, and player data.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| filename || string || The name of the file to save (stored in zone's strings directory)
+|-
+| buff || string || The string content to be written to the file
+|-
+| wa || string || Write mode: "w" to overwrite file, "a" to append to file
+|}
+
+== Return Values ==
+The function returns an integer indicating the operation result:
+* Positive value (1 or higher) - File successfully saved
+* 0 or negative value - Operation failed (FILE_NOT_SAVED, FILE_NOT_CREATED, or FILE_ILEGAL_OPP)
+
+== Examples ==
+=== Simple File Write ===
+ dilbegin save_news_message(message : string);
+ var
+     result : integer;
+ code
+ {
+     result := savestr("news.txt", message, "w");
+     
+     if (result > 0)
+         sendtext("News message saved successfully.&n", self);
+     else
+         sendtext("Failed to save news message.&n", self);
+ }
+ dilend
+
+=== Message Board System ===
+ dilbegin post_to_board(subject : string, content : string);
+ var
+     board_name : string;
+     timestamp : string;
+     filename : string;
+     result : integer;
+ code
+ {
+     // Create timestamp for unique filename
+     timestamp := itoa(realtime);
+     filename := "board_" + timestamp;
+     
+     // Save the message content
+     result := savestr(filename, content, "w");
+     
+     if (result > 0)
+     {
+         // Update board index by appending
+         board_name := "main_board.idx";
+         result := savestr(board_name, subject + " " + timestamp + "&n", "a");
+         
+         if (result > 0)
+             act("Your message has been posted to the board.", A_ALWAYS, self, null, null, TO_CHAR);
+         else
+             act("Failed to update board index.", A_ALWAYS, self, null, null, TO_CHAR);
+     }
+     else
+     {
+         act("Failed to save your message.", A_ALWAYS, self, null, null, TO_CHAR);
+     }
+ }
+ dilend
+
+=== Logging System ===
+ dilbegin log_player_action(action : string);
+ var
+     log_entry : string;
+     timestamp : string;
+     result : integer;
+ code
+ {
+     timestamp := itoa(realtime);
+     log_entry := timestamp + " " + self.name + ": " + action;
+     
+     // Append to player's personal log file
+     result := savestr("player_" + self.name + ".log", log_entry, "a");
+     
+     // No error handling needed for logs - continue regardless of result
+ }
+ dilend
+
+=== Data Persistence ===
+ dilbegin save_npc_memory(target_name : string, memory_type : string, memory_data : string);
+ var
+     filename : string;
+     result : integer;
+ code
+ {
+     // Create unique filename for NPC memory
+     filename := "npc_" + target_name + "_" + memory_type + ".mem";
+     
+     result := savestr(filename, memory_data, "w");
+     
+     if (result > 0)
+         act("You have recorded information about " + target_name + ".", 
+              A_ALWAYS, self, null, null, TO_CHAR);
+     else
+         act("Failed to record the information.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+== Usage Notes ==
+* Files are saved in the zone's strings subdirectory (automatically created if needed)
+* Write mode "w" overwrites existing files completely
+* Append mode "a" adds content to the end of existing files
+* The wa parameter must be exactly "w" or "a" (lowercase)
+* Zone access level restrictions apply - zones with access level > 10 cannot use savestr
+* Empty filename or content parameters cause function failure
+* Disk operations are relatively slow - minimize file sizes and access frequency
+* Use with [[loadstr]] for complete persistent data storage solutions
+
+== Error Handling ==
+* Returns 0 or negative values for failed operations
+* Empty string parameters cause function to return failure code
+* Security violations (insufficient zone access) cause program termination
+* File system errors (disk full, permissions) return failure codes
+* Always check return value before assuming success
+* Invalid write mode parameter causes function failure
+
+== Security Considerations ==
+* Function requires zone access level 10 or lower
+* Files are restricted to zone's strings directory
+* No path traversal - filename is relative to strings directory
+* Zone-based isolation prevents cross-zone file access
+* Security violations are logged and terminate the DIL program
+
+== Related Functions/Fields ==
+* [[loadstr]] - Function to load strings saved with savestr
+* [[delstr]] - Function to delete files created with savestr
+* [[log]] - Function for server-side logging
+* [[realtime]] - Function for getting current timestamp
+
+== See Also ==
+* [[loadstr]] - Loading string data from files
+* [[delstr]] - Deleting string files
+* File I/O patterns for persistent data storage

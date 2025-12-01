@@ -1,0 +1,55 @@
+= resetmode =
+field: integer '''.resetmode''' (Read-only)
+
+The '''resetmode''' field provides access to the reset mode setting of a zone, which determines how and when the zone resets its contents.
+
+== Description ==
+The '''resetmode''' field is accessed on a zoneptr and returns an integer value representing the zone's reset mode. This value determines the reset behavior for the zone and is defined in values.h. The field is read-only, meaning it can only be queried but not modified directly through DIL.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| zone.resetmode || integer || Returns the reset mode of the zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone Pointer)
+
+== Examples ==
+dilbegin check_zone_reset(arg : string);
+var
+    z : zoneptr;
+    buf : string;
+code
+{
+    z := zhead();
+    while (z)
+    {
+        buf := "Zone: " + z.name + " Reset mode: " + itoa(z.resetmode) + "&n";
+        pagestring(buf, self);
+        z := z.next;
+    }
+    quit;
+}
+dilend
+
+== Usage Notes ==
+* The '''resetmode''' field returns an integer value that corresponds to reset mode constants defined in values.h
+* This field is read-only and cannot be modified directly
+* The actual reset behavior is controlled by the zone reset system based on this value
+* To trigger a zone reset, use the [[zonereset]] function instead
+
+== Error Handling ==
+* Accessing '''resetmode''' on a null zoneptr will result in a DILV_FAIL
+* The field will return DILV_ERR if accessed on an inappropriate unit type
+
+== Related Functions/Fields ==
+* [[zonereset]] - Function to manually trigger a zone reset
+* [[resettime]] - Field to get/set the reset time interval of a zone
+* [[loadlevel]] - Field to get/set the load level of a zone
+
+== See Also ==
+* [[zoneptr]] - Zone pointer type documentation
+* [[zhead]] - Function to get the first zone in the global zone list

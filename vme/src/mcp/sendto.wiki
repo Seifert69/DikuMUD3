@@ -1,0 +1,211 @@
+= sendto =
+ function: void '''sendto'''(s : string, u : unitptr);
+
+The sendto function sends a message to all DIL programs within a specific unit.
+
+== Description ==
+The sendto function sends a message to all DIL programs that are currently inside the specified unit. This is commonly used to communicate with DIL programs that are running within objects, NPCs, or rooms. The message is sent with the SFB_MSG message class, allowing receiving programs to respond appropriately.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The message to send to all programs within the unit
+|-
+| u || unitptr || The unit containing the DIL programs to receive the message
+|}
+
+== Examples ==
+=== Object Communication ===
+ dilbegin magic_sword_speak();
+ var
+ code
+ {
+     // Send message to all programs inside the magic sword
+     sendto("The sword glows with ancient power.", self);
+     
+     pause;
+     
+     sendto("The sword whispers: 'I am ready for battle!'", self);
+ }
+ dilend
+
+=== NPC Coordination ===
+ dilbegin guard_communication();
+ var
+     guard_post : unitptr;
+ code
+ {
+     // Find the guard post object
+     guard_post := findunit(self.outside, "guard_post", FIND_UNIT_SURRO, null);
+     if (guard_post == null)
+     {
+         sendtext("No guard post found.&n", self);
+         quit;
+     }
+     
+     // Send message to all programs inside the guard post
+     sendto("New orders: Patrol the north gate.", guard_post);
+     
+     pause;
+     
+     sendto("Report any suspicious activity immediately.", guard_post);
+ }
+ dilend
+
+=== Room Messages ===
+ dilbegin room_announcement();
+ var
+     message : string;
+ code
+ {
+     message := "The room begins to shake violently!";
+     
+     // Send to all programs inside the room
+     sendto(message, self.outside);
+     
+     pause;
+     
+     message := "The shaking subsides.";
+     sendto(message, self.outside);
+ }
+ dilend
+
+=== Container Communication ===
+ dilbegin chest_talk();
+ var
+     chest : unitptr;
+ code
+ {
+     chest := findunit(self, "chest", FIND_UNIT_SURRO, null);
+     if (chest == null)
+     {
+         sendtext("No chest found.&n", self);
+         quit;
+     }
+     
+     // Send message to programs inside the chest
+     sendto("The chest rumbles: 'Who dares to open me?'", chest);
+     
+     // Send different message based on whether someone is inside
+     if (chest.inside != null)
+         sendto("The chest speaks: 'Someone is already inside!'", chest);
+     else
+         sendto("The chest speaks: 'I am empty and waiting.'", chest);
+ }
+ dilend
+
+=== Complex State Updates ===
+ dilbegin update_machine_state();
+ var
+     controller : unitptr;
+     state : integer;
+ code
+ {
+     controller := findunit(self, "controller", FIND_UNIT_SURRO, null);
+     if (controller == null)
+     {
+         sendtext("No controller found.&n", self);
+         quit;
+     }
+     
+     // Send state updates to controller
+     state := 0;
+     
+     while (state < 3)
+     {
+         pause;
+         
+         switch (state)
+         {
+             case 0:
+                 sendto("Initializing system...", controller);
+                 break;
+             case 1:
+                 sendto("System ready.", controller);
+                 break;
+             case 2:
+                 sendto("System online.", controller);
+                 break;
+         }
+         
+         state := state + 1;
+     }
+     
+     sendto("System shutdown complete.", controller);
+ }
+ dilend
+
+=== Cross-Program Communication ===
+ dilbegin signal_other_programs();
+ var
+     target_unit : unitptr;
+     message : string;
+ code
+ {
+     target_unit := findunit(self, "target_device", FIND_UNIT_SURRO, null);
+     if (target_unit == null)
+     {
+         sendtext("Target device not found.&n", self);
+         quit;
+     }
+     
+     message := "Signal received from external program.";
+     
+     // Send to all programs inside the target unit
+     sendto(message, target_unit);
+     
+     // Also send to our own program for confirmation
+     sendto("Signal sent to " + target_unit.nameidx + "@" + target_unit.zoneidx, self);
+ }
+ dilend
+
+== Usage Notes ==
+* The function sends messages to all DIL programs within the target unit
+* Messages are sent with the SFB_MSG message class
+* Receiving programs must be waiting with interrupt(SFB_MSG, ...) to receive messages
+* The target unit must contain DIL programs for the messages to be received
+* Commonly used for object-NPC, object-room, and room-program communication
+* No automatic formatting like [[sendtext]] - messages are sent as-is
+* The function is void - no return value to indicate success or failure
+
+== Message Reception ==
+DIL programs can receive sendto messages using:
+interrupt(SFB_MSG, condition, label)
+The condition typically checks if the message is relevant to the receiving program.
+
+== Target Unit Requirements ==
+The target unit must:
+* Be a valid unitptr (not null)
+* Contain DIL programs that will receive the messages
+* Be in the same local environment as the sending program
+* Have programs that are waiting for SFB_MSG messages
+
+== Error Handling ==
+* Function will fail if the target unit is null
+* No validation of message content - any string is accepted
+* No return value - function cannot indicate success or failure
+* Invalid unit pointers may cause runtime errors
+* Messages may not be received if target unit has no waiting programs
+
+== Common Use Cases ==
+* Object-NPC communication (talking weapons, magic items)
+* Room-program coordination (traps, puzzles, environmental effects)
+* Container-program interaction (chests, doors, containers)
+* Cross-program signaling (external triggers, system coordination)
+* State machine communication (controllers, processors)
+* Multi-program synchronization (shared resources, coordinated actions)
+
+== Related Functions/Fields ==
+* [[sendtoall]] - Function for sending messages to all units globally
+* [[sendtoalldil]] - Function for sending to specific DIL programs
+* [[sendtext]] - Function for sending text to specific units
+* [[interrupt]] - Function for receiving incoming messages
+* [[unitptr]] - Unit pointer type and operations
+* [[inside]] - Field for accessing units within containers
+
+== See Also ==
+* DIL program communication and coordination
+* Message passing and synchronization
+* Unit interaction and container systems
+* Interrupt handling and message reception

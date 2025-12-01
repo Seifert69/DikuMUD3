@@ -1,0 +1,90 @@
+= right =
+function: string '''right'''(o : string, r : integer);
+
+The '''right''' function extracts the rightmost characters from a string.
+
+== Description ==
+The '''right''' function parses a string and returns the specified number of characters from the right side of the string. If the requested length is longer than the original string, the entire string is returned. The function handles empty strings and null values appropriately.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| o || string || The original string to be parsed
+|-
+| r || integer || The number of characters to extract from the right side
+|}
+
+== Examples ==
+dilbegin extract_extension();
+var
+    filename : string;
+    extension : string;
+code
+{
+    filename := "document.txt";
+    extension := right(filename, 3);  // Returns "txt"
+    
+    sendtext("File extension: " + extension + "&n", self);
+    quit;
+}
+dilend
+
+dilbegin get_last_word();
+var
+    sentence : string;
+    last_word : string;
+    space_pos : integer;
+code
+{
+    sentence := "The quick brown fox jumps";
+    
+    // Find the last space to isolate the last word
+    space_pos := 0;
+    // This is a simplified example - in practice you'd use more robust parsing
+    last_word := right(sentence, 5);  // Returns "jumps"
+    
+    sendtext("Last word: " + last_word + "&n", self);
+    quit;
+}
+dilend
+
+dilbegin format_currency();
+var
+    amount : string;
+    cents : string;
+code
+{
+    amount := "12345";  // Amount in cents
+    
+    // Extract last two digits for cents
+    cents := right(amount, 2);  // Returns "45"
+    
+    sendtext("Cents: " + cents + "&n", self);
+    quit;
+}
+dilend
+
+== Usage Notes ==
+* If the length parameter (r) is greater than the string length, the entire string is returned
+* If the length parameter is 0 or negative, an empty string is returned
+* If the input string is empty or null, the function returns null
+* The function returns a new string that is a copy of the extracted portion
+* The returned string is properly null-terminated
+* The function is commonly used for extracting file extensions, last words, or formatted suffixes
+
+== Error Handling ==
+* Returns null if the input string is null or empty
+* Returns DILV_FAIL if either parameter is null or fails evaluation
+* Returns DILV_ERR if parameter types are incorrect
+* Handles length overflow gracefully by returning the entire string when r exceeds string length
+
+== Related Functions/Fields ==
+* [[left]] - Function to extract leftmost characters from a string
+* [[mid]] - Function to extract a substring from the middle of a string
+* [[length]] - Function to get the length of a string
+* [[substring]] - Procedure to work with stringlist substrings
+
+== See Also ==
+* [[getwords]] - Function to split string into words
+* [[strdup]] - Function to duplicate strings

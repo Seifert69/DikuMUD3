@@ -1,0 +1,86 @@
+= resettime =
+field: integer '''.resettime''' (Read/Write)
+
+The '''resettime''' field provides access to the reset time interval of a zone, specified in minutes.
+
+== Description ==
+The '''resettime''' field is accessed on a zoneptr and returns an integer value representing the zone's reset time in minutes. This field determines how often the zone will automatically reset its contents. The field is read-write, allowing both querying and modification of the reset time interval.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| zone.resettime || integer || Gets or sets the reset time of the zone in minutes
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone Pointer)
+
+== Examples ==
+dilbegin zone_reset_info(arg : string);
+var
+    z : zoneptr;
+    buf : string;
+code
+{
+    z := zhead();
+    while (z)
+    {
+        buf := "Zone: " + z.name + " Reset time: " + itoa(z.resettime) + " minutes&n";
+        pagestring(buf, self);
+        z := z.next;
+    }
+    quit;
+}
+dilend
+
+dilbegin set_zone_reset_timer();
+var
+    zon : zoneptr;
+code
+{
+    // Find the current zone
+    zon := zhead();
+    while (zon.name != self.zone)
+        zon := zon.next;
+    
+    if (zon.name != self.zone)
+    {
+        log("ZONE ERROR: Could not find zone " + self.zone);
+        return;
+    }
+    
+    // Set heartbeat to zone's reset time in game ticks
+    // resettime is in minutes, convert to seconds, then to PULSE_SEC ticks
+    heartbeat := zon.resettime * 60 * PULSE_SEC;
+    
+    wait(SFB_TICK, TRUE);
+    // Zone reset logic here
+    quit;
+}
+dilend
+
+== Usage Notes ==
+* The '''resettime''' value is specified in minutes, not in game ticks
+* To convert resettime to game ticks for use with [[heartbeat]], multiply by 60 and then by [[PULSE_SEC]]
+* The field is read-write, allowing dynamic modification of zone reset intervals
+* Changes to resettime take effect immediately and affect the next reset cycle
+* A resettime of 0 typically means the zone will not reset automatically
+
+== Error Handling ==
+* Accessing '''resettime''' on a null zoneptr will result in a DILV_FAIL
+* The field will return DILV_ERR if accessed on an inappropriate unit type
+* Setting negative values may result in undefined behavior
+
+== Related Functions/Fields ==
+* [[resetmode]] - Field to get the reset mode of the zone
+* [[zonereset]] - Function to manually trigger a zone reset
+* [[loadlevel]] - Field to get/set the load level of a zone
+* [[heartbeat]] - Variable to control DIL program timing
+* [[PULSE_SEC]] - Constant for time conversion
+
+== See Also ==
+* [[zoneptr]] - Zone pointer type documentation
+* [[zhead]] - Function to get the first zone in the global zone list
+* [[SFB_TICK]] - Tick flag for wait() function

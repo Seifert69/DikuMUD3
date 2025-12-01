@@ -1,0 +1,88 @@
+= roomflags =
+ field: integer '''.roomflags''' (Read/Write)
+
+The .roomflags field contains bit flags that specify various properties and behaviors of a room unit.
+
+== Description ==
+The .roomflags field is an integer bitfield that controls various properties and behaviors of room units. Each bit in the field represents a specific room characteristic or restriction. The field uses the ROOM_FL_* constants defined in values.h and/or vme.h to set and check individual flags.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current room flags as a bitfield
+|-
+| Write || integer || Sets the room flags to the specified bitfield value
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+=== Checking Room Flags ===
+ dilbegin check_room_dark();
+ var
+     my_room : unitptr;
+ code
+ {
+     my_room := self.outside;
+     
+     if (isset(my_room.roomflags, ROOM_FL_DARK))
+         sendtext("This room is dark.&n", self);
+     else
+         sendtext("This room is well lit.&n", self);
+ }
+ dilend
+
+=== Setting Room Flags ===
+ dilbegin make_room_private();
+ var
+     my_room : unitptr;
+ code
+ {
+     my_room := self.outside;
+     
+     // Make the room private (no teleportation)
+     my_room.roomflags := my_room.roomflags | ROOM_FL_PRIVATE;
+     
+     sendtext("The room is now private.&n", self);
+ }
+ dilend
+
+=== Clearing Room Flags ===
+ dilbegin remove_no_magic();
+ var
+     my_room : unitptr;
+ code
+ {
+     my_room := self.outside;
+     
+     // Remove the no-magic restriction
+     my_room.roomflags := my_room.roomflags & ~ROOM_FL_NO_MAGIC;
+     
+     sendtext("Magic can now be used in this room.&n", self);
+ }
+ dilend
+
+== Usage Notes ==
+* Use the '''isset()''' function to check if specific flags are set
+* Use bitwise operators (|, &, ~) to modify individual flags
+* The field uses ROOM_FL_* constants from values.h and/or vme.h
+* Changes to room flags affect all characters in the room immediately
+* Some room flags may have game-wide implications (e.g., ROOM_FL_PRIVATE, ROOM_FL_NO_MAGIC)
+
+== Error Handling ==
+* Accessing .roomflags on non-room units will result in DILV_FAIL
+* Invalid flag values may cause unexpected room behavior
+* Always validate flag combinations before setting them
+
+== Related Functions/Fields ==
+* [[isset]] - Function to check if specific bits are set in an integer
+* [[movement]] - Field that controls the movement type of the room
+* [[exit_info]] - Field that controls exit properties and flags
+
+== See Also ==
+* [[unit_st_room]] - Complete documentation of room unit fields
+* [[exit_info]] - Exit flag management
+* [[movement]] - Room movement type configuration

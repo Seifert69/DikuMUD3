@@ -1,0 +1,156 @@
+= self =
+ variable: unitptr '''self'''
+
+The self variable is a unitptr that always refers to the unit currently executing the DIL program.
+
+== Description ==
+The self variable is a built-in unitptr that automatically points to the unit owning and running the current DIL program. It provides direct access to all properties and fields of the executing unit, whether it's a player character, NPC, object, or room. This is the primary way for DIL programs to reference and modify the unit that triggered their execution.
+
+== Examples ==
+=== Basic Self Reference ===
+ dilbegin check_self_info();
+ var
+     info : string;
+ code
+ {
+     info := "You are " + self.name + " (" + self.title + ")";
+     if (self.type == UNIT_ST_PC)
+         info := info + " - Player Character";
+     else if (self.type == UNIT_ST_NPC)
+         info := info + " - Non-Player Character";
+     else if (self.type == UNIT_ST_OBJ)
+         info := info + " - Object";
+     else if (self.type == UNIT_ST_ROOM)
+         info := info + " - Room";
+     
+     sendtext(info + "&n", self);
+ }
+ dilend
+
+=== Self in Combat ===
+ dilbegin combat_status();
+ var
+     status : string;
+ code
+ {
+     if (self.position == POSITION_FIGHTING)
+     {
+         if (self.fighting)
+             status := "You are fighting " + self.fighting.name;
+         else
+             status := "You are in combat but not fighting anyone";
+     }
+     else
+         status := "You are not in combat";
+     
+     act("$1n checks $1s combat status.", A_ALWAYS, self, null, TO_CHAR);
+     sendtext(status + "&n", self);
+ }
+ dilend
+
+=== Self Modification ===
+ dilbegin heal_self(amount : integer);
+ var
+     old_hp : integer;
+     new_hp : integer;
+ code
+ {
+     old_hp := self.hp;
+     new_hp := self.hp + amount;
+     
+     // Check bounds
+     if (new_hp > self.max_hp)
+         new_hp := self.max_hp;
+     if (new_hp < 0)
+         new_hp := 0;
+     
+     self.hp := new_hp;
+     
+     act("$1n feels better.", A_ALWAYS, self, null, TO_CHAR);
+     act("$1n looks healthier.", A_ALWAYS, self, null, TO_ROOM);
+     
+     sendtext("HP: " + itoa(old_hp) + " -> " + itoa(new_hp) + "&n", self);
+ }
+ dilend
+
+=== Self in Environmental Context ===
+ dilbegin environmental_check();
+ var
+     env_info : string;
+ code
+ {
+     env_info := "Location: " + self.outside.nameidx + "@" + self.outside.zoneidx;
+     
+     if (self.inside)
+         env_info := env_info + " (inside " + self.inside.name + ")";
+     else
+         env_info := env_info + " (not inside anything)";
+     
+     if (self.outside.inside == self)
+         env_info := env_info + " - You are the room itself";
+     
+     sendtext(env_info + "&n", self);
+ }
+ dilend
+
+=== Self Type Checking ===
+ dilbegin type_specific_action();
+ code
+ {
+     if (self.type == UNIT_ST_PC)
+     {
+         // Player-specific behavior
+         if (self.level < 5)
+             sendtext("You are too inexperienced for this action.&n", self);
+         else
+             sendtext("You perform the advanced action.&n", self);
+     }
+     else if (self.type == UNIT_ST_NPC)
+     {
+         // NPC-specific behavior
+         act("$1n nods knowingly.", A_ALWAYS, self, null, TO_ROOM);
+     }
+     else if (self.type == UNIT_ST_OBJ)
+     {
+         // Object-specific behavior
+         sendtext("Objects cannot perform actions themselves.&n", self);
+     }
+     else if (self.type == UNIT_ST_ROOM)
+     {
+         // Room-specific behavior
+         sendtext("Rooms cannot perform actions.&n", self);
+     }
+ }
+ dilend
+
+== Usage Notes ==
+* self is always available in any DIL program - no declaration needed
+* The type of unit self points to depends on what triggered the DIL program
+* self provides access to all standard unit fields (name, title, hp, position, etc.)
+* When used on objects, self refers to the object itself
+* When used on rooms, self refers to the room unit
+* self is equivalent to 'this' pointer in many programming languages
+* Changes to self's properties affect the actual unit in the game world
+
+== Common Self Properties ==
+Depending on the unit type, self provides access to different fields:
+; For PC/NPC: self.name, self.title, self.level, self.hp, self.position, self.fighting
+; For Objects: self.name, self.title, self.objecttype, self.value[], self.inside
+; For Rooms: self.nameidx, self.zoneidx, self.title, self.inside, self.outside
+
+== Error Handling ==
+* self is never null - it always points to a valid unit
+* Accessing fields that don't exist for the unit type will cause runtime errors
+* Always check self.type before accessing type-specific fields
+* Some operations may fail if self is in an invalid state (e.g., dead PC)
+
+== Related Functions/Fields ==
+* [[activator]] - Unit that triggered the current DIL activation
+* [[unitptr]] - General unit pointer type and operations
+* [[position]] - Field for unit's current position
+* [[type]] - Field for unit's type (UNIT_ST_* constants)
+
+== See Also ==
+* Unit type constants and their specific fields
+* DIL program activation and execution context
+* Unit field access and modification patterns

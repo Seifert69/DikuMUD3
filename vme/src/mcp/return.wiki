@@ -1,0 +1,85 @@
+= return =
+statement: '''return''' [expression];
+
+The '''return''' statement terminates execution of a function or procedure and optionally returns a value from a function.
+
+== Description ==
+The '''return''' statement is used to exit from a DIL function or procedure. For procedures (which have no return type), the statement is used as `return;` without any expression. For functions (which have a declared return type), the statement must include an expression of the matching type: `return(expression);`. The return statement can only be used within DIL templates (functions and procedures).
+
+== Usage ==
+There are two forms of the return statement:
+
+* For procedures: `return;`
+* For functions: `return(expression);`
+
+Where expression must evaluate to the same type as the function's declared return type.
+
+== Examples ==
+dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+var
+   depname: string;
+code
+{
+   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
+
+   follow(targ, deputy);
+   depname := deputy.name;
+   link(cuffs, targ);
+   unequip(equipment(targ, WEAR_WRIST_R));
+   addequip(cuffs, WEAR_WRIST_R);
+   dilcopy("cuffed@midgaard("+depname+")", targ);
+   dilcopy("cuffed2@midgaard("+depname+")", targ);
+
+   exec("sigh", targ);
+   return;  // Procedure return, no value
+} dilend
+
+dilbegin integer calculate_damage(attacker : unitptr, defender : unitptr);
+var
+   damage : integer;
+code
+{
+   damage := attacker.abilities.str - defender.abilities.str;
+   
+   if (damage < 1)
+      damage := 1;
+   
+   return(damage);  // Function return, returns integer value
+} dilend
+
+dilbegin string get_room_description(room : unitptr);
+code
+{
+   if (room == null)
+      return("Invalid room");  // Return with string literal
+   
+   return(room.title);  // Return with string variable
+} dilend
+
+== Usage Notes ==
+* The '''return''' statement can only be used inside DIL templates (functions and procedures)
+* For procedures, use `return;` without any expression
+* For functions, the expression type must exactly match the function's declared return type
+* When returning from a function, the return value is copied to the caller's context
+* The return statement immediately terminates execution of the current template
+* If used in the main program frame (not in a called function/procedure), it will quit the entire DIL program
+* Return values are properly copied based on their type (strings are duplicated, pointers are handled appropriately)
+
+== Error Handling ==
+* Compile-time error if return is used outside of a template
+* Compile-time error if a function return doesn't match the declared return type
+* Compile-time error if a procedure includes a return expression
+* Runtime error if stack corruption is detected during return
+* Runtime logging if return types don't match (should never happen with proper compilation)
+
+== Related Functions/Fields ==
+* [[quit]] - Statement to terminate the entire DIL program
+* [[dilcopy]] - Function to start new DIL programs
+* [[dilbegin]] - Keyword to start DIL template definitions
+
+== See Also ==
+* [[function]] - DIL function declarations
+* [[procedure]] - DIL procedure declarations
+* [[external]] - Keyword for external function declarations

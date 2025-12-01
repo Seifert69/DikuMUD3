@@ -1,0 +1,172 @@
+= sex =
+field: integer '''.sex''' (Read/Write)
+
+The '''sex''' field is used to get or set the gender of a character unit (PC or NPC).
+
+== Description ==
+This field provides access to the gender setting of character units. The field returns an integer value representing the character's sex, which can be read or modified as needed. The field is only available on character units (PC and NPC) and will fail when accessed on other unit types like objects or rooms.
+
+The field uses standard gender constants defined in the game system to represent different gender states.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current gender value of the character
+|-
+| Write || integer || Sets the gender of the character to specified value
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+=== Basic Gender Check ===
+ dilbegin gender_greeting();
+ var
+    greeting : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    // Set appropriate greeting based on gender
+    if (activator.sex == SEX_MALE)
+       greeting := "Greetings, good sir!";
+    else if (activator.sex == SEX_FEMALE)
+       greeting := "Greetings, good madam!";
+    else
+       greeting := "Greetings, good traveler!";
+    
+    act(greeting, A_SOMEONE, self, null, null, TO_CHAR);
+ } dilend
+
+=== Gender-Based Responses ===
+ dilbegin shopkeeper_response();
+ var
+    title : string;
+    customer : unitptr;
+ code
+ {
+    customer := activator;
+    if (customer.type != UNIT_ST_PC)
+       quit;
+    
+    // Use appropriate title based on customer gender
+    if (customer.sex == SEX_MALE or customer.sex == SEX_NEUTRAL)
+       title := "sir";
+    else if (customer.sex == SEX_FEMALE)
+       title := "madam";
+    else
+       title := "friend";
+    
+    exec("say Welcome to my shop, " + title + "!", self);
+ } dilend
+
+=== Gender Assignment ===
+ dilbegin create_custom_npc();
+ var
+    npc : unitptr;
+ code
+ {
+    npc := load("guard@city");
+    if (npc != null)
+    {
+       // Randomly assign gender
+       if (rnd(1, 2) == 1)
+          npc.sex := SEX_MALE;
+       else
+          npc.sex := SEX_FEMALE;
+       
+       // Set appropriate description based on gender
+       if (npc.sex == SEX_MALE)
+          npc.title := "A tall, muscular guard";
+       else
+          npc.title := "A tall, athletic guardess";
+       
+       link(npc, self.outside);
+    }
+ } dilend
+
+=== Gender Validation ===
+ dilbegin validate_character_gender(char : unitptr);
+ var
+    valid_gender : integer;
+ code
+ {
+    if (char == null or (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC))
+       quit;
+    
+    // Check if gender is valid
+    valid_gender := (char.sex == SEX_MALE or char.sex == SEX_FEMALE or char.sex == SEX_NEUTRAL);
+    
+    if (not valid_gender)
+    {
+       // Reset to neutral if invalid
+       char.sex := SEX_NEUTRAL;
+       sendtext("Character gender reset to neutral.<br/>", self);
+    }
+ } dilend
+
+=== Gender-Specific Behavior ===
+ dilbegin gender_specific_behavior();
+ var
+    target : unitptr;
+ code
+ {
+    target := activator;
+    if (target.type != UNIT_ST_PC)
+       quit;
+    
+    // Different behavior based on gender
+    if (target.sex == SEX_MALE)
+    {
+       act("$1n nods respectfully to the gentleman.", A_SOMEONE, self, target, null, TO_NOTVICT);
+    }
+    else if (target.sex == SEX_FEMALE)
+    {
+       act("$1n bows courteously to the lady.", A_SOMEONE, self, target, null, TO_NOTVICT);
+    }
+    else
+    {
+       act("$1n greets the traveler warmly.", A_SOMEONE, self, target, null, TO_NOTVICT);
+    }
+ } dilend
+
+== Usage Notes ==
+* The field only works on character units (PC and NPC)
+* Gender constants are typically defined as SEX_MALE, SEX_FEMALE, and SEX_NEUTRAL
+* The field is read-write and can be modified during gameplay
+* Gender affects how NPCs respond to characters and can influence social interactions
+* Some game mechanics may have gender-specific behaviors or restrictions
+* The field value is stored as an integer, not a string
+* Use appropriate gender constants rather than raw numeric values for clarity
+
+== Error Handling ==
+The field includes validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC and UNIT_ST_NPC units
+* **Null pointer validation**: Fails when accessed on null unit pointers
+* **Type validation**: Returns fail state when accessed on non-character units
+
+Common error scenarios:
+* Accessing the field on objects or rooms (will return fail)
+* Using invalid gender constants
+* Attempting to modify gender on read-only units
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[race]] - Field for character race
+* [[position]] - Field for character position
+* [[level]] - Field for character level
+* [[charflags]] - Field for character flags
+* [[act()]] - Function for gender-specific messaging
+
+== See Also ==
+* [[SEX_*]] - Gender constants (SEX_MALE, SEX_FEMALE, SEX_NEUTRAL)
+* [[Character creation]] - Information about creating characters
+* [[Social interactions]] - Gender-based interaction systems
+* [[UNIT_ST_PC]] - Player character unit type
+* [[UNIT_ST_NPC]] - Non-player character unit type

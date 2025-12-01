@@ -1,0 +1,180 @@
+= set_weight =
+function: void '''set_weight'''(unit : unitptr, weight : integer);
+
+The '''set_weight''' function is used to set the current total weight of a unit, including its contents.
+
+== Description ==
+This function sets the current total weight of a unit to the specified value in pounds (½ kg units). Unlike [[set_weight_base()]], this function modifies the total weight including contents, not just the empty weight of the unit.
+
+The function includes validation to ensure the weight is not set below the unit's base weight. If an attempt is made to set the weight below the base weight, a warning is logged to the zone but the operation still proceeds. The function automatically updates the weight of all containing units to maintain consistency.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose weight will be set
+|-
+| weight || integer || The new total weight in pounds (½ kg units)
+|}
+
+The weight parameter should be a positive integer representing the desired total weight including contents.
+
+== Examples ==
+=== Basic Weight Setting ===
+ dilbegin adjust_item_weight();
+ var
+    item : unitptr;
+ code
+ {
+    item := self;
+    
+    // Set item to be heavier (perhaps it's soaked with water)
+    set_weight(item, item.baseweight * 2);
+    
+    sendtext("The item becomes much heavier.<br/>", self);
+ } dilend
+
+=== Container Weight Management ===
+ dilbegin create_weightless_container();
+ var
+    container : unitptr;
+    contents : unitptr;
+ code
+ {
+    container := load("bag@general");
+    if (container != null)
+    {
+       // Set both base weight and current weight to zero
+       set_weight_base(container, 0);
+       set_weight(container, 0);
+       
+       sendtext("You create a weightless container.<br/>", self);
+    }
+ } dilend
+
+=== Prisoner Possession Management ===
+ dilbegin confiscate_items(prisoner : unitptr);
+ var
+    safe : unitptr;
+    item : unitptr;
+    next_item : unitptr;
+ code
+ {
+    // Create a container for confiscated items
+    safe := load("safe@justice");
+    if (safe == null)
+       quit;
+    
+    // Set safe to be weightless for easier handling
+    set_weight_base(safe, 0);
+    set_weight(safe, 0);
+    
+    // Move all visible items to safe
+    item := prisoner.inside;
+    while (item != null)
+    {
+       next_item := item.next;
+       
+       if (item.minv < 1)  // Visible item
+       {
+          link(item, safe);
+       }
+       
+       item := next_item;
+    }
+    
+    // Give safe to prisoner
+    link(safe, prisoner);
+    
+    act("$1n confiscates all your possessions and puts them in a safe.",
+       A_SOMEONE, self, null, prisoner, TO_VICT);
+ } dilend
+
+=== Temporary Weight Modification ===
+ dilbegin temporary_enchantment();
+ var
+    target : unitptr;
+    original_weight : integer;
+ code
+ {
+    target := activator;
+    if (target == null or target.type != UNIT_ST_PC)
+       quit;
+    
+    original_weight := target.weight;
+    
+    // Make target temporarily lighter (levitation effect)
+    set_weight(target, target.baseweight / 2);
+    
+    sendtext("You feel as light as a feather!<br/>", target);
+    
+    pause;
+    pause;
+    
+    // Restore original weight
+    set_weight(target, original_weight);
+    sendtext("You return to your normal weight.<br/>", target);
+ } dilend
+
+=== Weight Validation ===
+ dilbegin validate_weight(item : unitptr);
+ var
+    min_weight : integer;
+    max_weight : integer;
+ code
+ {
+    if (item == null)
+       quit;
+    
+    min_weight := item.baseweight;
+    max_weight := item.baseweight * 10;  // Allow up to 10x base weight
+    
+    if (item.weight < min_weight)
+    {
+       set_weight(item, min_weight);
+       sendtext("Item weight corrected to minimum.<br/>", self);
+    }
+    else if (item.weight > max_weight)
+    {
+       set_weight(item, max_weight);
+       sendtext("Item weight corrected to maximum.<br/>", self);
+    }
+ } dilend
+
+== Usage Notes ==
+* Weight is measured in pounds where 1 unit = 0.5 kg
+* The function sets total weight including contents, not just base weight
+* Setting weight below base weight logs a warning but still executes
+* The function automatically updates weight of all containing units
+* Use [[set_weight_base()]] to modify the empty weight of an object
+* Current weight can be read using the '''weight''' field
+* Base weight can be read using the '''baseweight''' field
+* Useful for implementing special effects like levitation, burden effects, or weight modifications
+
+== Error Handling ==
+The function includes validation checks:
+
+* **Unit validation**: The first parameter must be a valid unitptr
+* **Type validation**: The second parameter must be an integer
+* **Null pointer validation**: The unit pointer must not be null
+* **Weight validation**: Logs warning if weight is set below base weight
+
+Common error scenarios:
+* Passing null or invalid unit pointers
+* Using non-integer weight values
+* Attempting to modify destroyed units
+* Setting negative weights (may cause undefined behavior)
+* Setting weight below base weight (logs warning but proceeds)
+
+== Related Functions/Fields ==
+* [[set_weight_base()]] - Function to set base weight (empty weight)
+* [[weight]] - Field to read current total weight
+* [[baseweight]] - Field to read current base weight
+* [[capacity]] - Field for container capacity
+* [[can_carry()]] - Function to check if character can carry weight
+
+== See Also ==
+* [[weight_change_unit()]] - Internal weight management function
+* [[UNIT_FL_*]] - Unit flags that may affect weight
+* [[MANIPULATE_*]] - Manipulation flags for weight handling
+* [[Object creation]] - General object creation procedures

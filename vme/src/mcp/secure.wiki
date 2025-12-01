@@ -1,0 +1,187 @@
+= secure =
+ function: void '''secure'''(u : unitptr, label);
+
+The secure function monitors a unit and transfers execution to a specified label when the unit leaves the local environment or is destroyed.
+
+== Description ==
+The secure function sets up monitoring on a unitptr, causing the DIL program to jump to the specified label if the unit becomes unavailable in the local environment. This happens when the unit is destroyed, moves to a different location, or otherwise leaves the current execution context. The function is essential for writing robust DIL programs that need to handle cases where target units may disappear during processing.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to monitor for availability
+|-
+| label || label || The label to jump to when unit becomes unavailable
+|}
+
+== Examples ==
+=== Basic Unit Protection ===
+ dilbegin process_target(target : unitptr);
+ var
+     processing : integer;
+ code
+ {
+     if (target == null)
+         quit;
+     
+     secure(target, target_lost);
+     processing := TRUE;
+     
+     while (processing)
+     {
+         // Safe to work with target here
+         act("You process $2n.", A_ALWAYS, self, target, null, TO_CHAR);
+         pause;
+     }
+     
+     :target_lost:
+     act("Your target has disappeared!", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+=== Item Collection with Security ===
+ dilbegin collect_items();
+ var
+     item : unitptr;
+ code
+ {
+     foreach (UNIT_ST_OBJ, item)
+     {
+         // Only collect items we can see and carry
+         if (not visible(self, item))
+             continue;
+         if (can_carry(self, item, 1) <= 0)
+             continue;
+         
+         // Secure the item before processing
+         secure(item, item_gone);
+         
+         // Attempt to get the item
+         exec("get " + item.name, self);
+         pause;
+         
+         // If we reach here, item was successfully obtained
+         unsecure(item);
+         continue;
+         
+         :item_gone:
+         act("$2n vanishes before you can grab it!", 
+              A_ALWAYS, self, item, null, TO_CHAR);
+         unsecure(item);
+     }
+ }
+ dilend
+
+=== NPC Interaction Guard ===
+ dilbegin talk_to_npc(npc_name : string);
+ var
+     npc : unitptr;
+     speech : stringlist;
+ code
+ {
+     npc := findunit(self, npc_name, FIND_UNIT_SURRO, null);
+     if (npc == null)
+     {
+         sendtext("You don't see " + npc_name + " here.&n", self);
+         quit;
+     }
+     
+     if (npc.type != UNIT_ST_NPC)
+     {
+         sendtext(npc_name + " is not an NPC.&n", self);
+         quit;
+     }
+     
+     secure(npc, npc_left);
+     
+     speech := {"Hello there!", "Nice weather we're having.", "Can I help you?"};
+     
+     // Start conversation
+     act("You say hello to $2n.", A_ALWAYS, self, npc, null, TO_CHAR);
+     act("$1n says hello to you.", A_ALWAYS, self, npc, null, TO_VICT);
+     
+     pause;
+     
+     // Continue interaction would go here
+     act("You continue talking with $2n.", A_ALWAYS, self, npc, null, TO_CHAR);
+     
+     :npc_left:
+     act(npc.name + " has disappeared!", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+ dilend
+
+=== Complex Processing with Cleanup ===
+ dilbegin enchant_item(item_name : string);
+ var
+     item : unitptr;
+     spell_power : integer;
+ code
+ {
+     item := findunit(self, item_name, FIND_UNIT_IN_ME, null);
+     if (item == null)
+     {
+         sendtext("You don't have " + item_name + ".&n", self);
+         quit;
+     }
+     
+     secure(item, item_lost);
+     
+     // Simulate enchantment process
+     spell_power := self.abilities[ABIL_MAGIC];
+     
+     act("You begin enchanting $2n.", A_ALWAYS, self, item, null, TO_CHAR);
+     act("$1n begins enchanting $2n.", A_ALWAYS, self, item, null, TO_ROOM);
+     
+     pause; // Enchantment time
+     pause;
+     
+     // If we reach here, enchantment succeeded
+     act("You successfully enchant $2n!", A_ALWAYS, self, item, null, TO_CHAR);
+     act("$2n glows with magical energy!", A_ALWAYS, null, item, null, TO_ROOM);
+     
+     unsecure(item);
+     quit;
+     
+     :item_lost:
+     act("Your enchantment fails - $2n has vanished!", 
+          A_ALWAYS, self, item, null, TO_CHAR);
+     unsecure(item);
+ }
+ dilend
+
+== Usage Notes ==
+* The secure function sets up monitoring that triggers when unit leaves local environment
+* "Leaving local environment" includes: destruction, moving to another room, or becoming unavailable
+* Transparent rooms within the same room do NOT trigger secure (unit is still in local environment)
+* Multiple units can be secured simultaneously, each with their own labels
+* Use [[unsecure]] to remove monitoring when no longer needed
+* Security checks cascade through DIL sub-function frames
+* The label must be defined in the current DIL program scope
+
+== Trigger Conditions ==
+A secure() is automatically triggered under these circumstances:
+* When the secured unit is destroyed (via [[destroy]] function)
+* When the secured unit moves to a different room/location
+* When the secured unit otherwise becomes unavailable in local environment
+* When certain DIL functions are called that might affect the unit (exec, destroy, etc.)
+* At every step of a [[foreach]] loop
+* When returning from sub-functions that have active secure() monitoring
+
+== Error Handling ==
+* If the unit parameter is null, the function will fail with a runtime error
+* If the label doesn't exist, the program will fail when triggered
+* Always pair secure() with corresponding [[unsecure]]() calls
+* Multiple triggered secures will jump to the last event's label
+* Nested secure() calls in sub-functions propagate to parent frames
+
+== Related Functions/Fields ==
+* [[unsecure]] - Function to remove unit monitoring
+* [[destroy]] - Function that can trigger secure() monitoring
+* [[exec]] - Function that can trigger secure() monitoring
+* [[foreach]] - Loop structure that checks secure() at each iteration
+
+== See Also ==
+* [[unsecure]] - Removing unit security monitoring
+* Unit management and protection patterns
+* DIL program control flow structures

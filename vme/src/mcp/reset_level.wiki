@@ -1,0 +1,142 @@
+= reset_level =
+function: '''reset_level'''(u : unitptr);
+
+The '''reset_level''' function resets a player character's level to 1, typically used for character reroll or rebirth systems.
+
+== Description ==
+The '''reset_level''' procedure sets a player character's level to 1. This function is commonly used in character reroll or rebirth systems where players need to be reset to their starting state. The function only affects non-immortal player characters and requires appropriate zone access level to execute successfully.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The player character whose level will be reset
+|}
+
+== Examples ==
+=== Basic Level Reset ===
+dilbegin reset_player_level(pc : unitptr);
+code
+{
+   if (pc.type == UNIT_ST_PC and not IS_IMMORTAL(pc))
+   {
+      reset_level(pc);
+      act("Your level has been reset to 1.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+} dilend
+
+=== Character Rebirth System ===
+dilbegin character_rebirth();
+var
+   pc : unitptr;
+code
+{
+   pc := self;
+   
+   // Remove all equipment
+   // (equipment removal code here)
+   
+   // Remove all affects
+   // (affect removal code here)
+   
+   // Reset skills, spells, and abilities
+   // (skill/spell reset code here)
+   
+   // Reset the character's level to 1
+   reset_level(pc);
+   
+   // Reset race-specific attributes
+   reset_race(pc);
+   
+   // Reset virtual level
+   reset_vlevel(pc);
+   
+   // Reinitialize abilities
+   pcinitabils@basis();
+   
+   act("Your character has been reborn at level 1!", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Reroll Command ===
+dilbegin reroll_command();
+var
+   pc : unitptr;
+code
+{
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+      sendtext("Only players can reroll.", self);
+      quit;
+   }
+   
+   if (IS_IMMORTAL(pc))
+   {
+      sendtext("Immortals cannot reroll.", self);
+      quit;
+   }
+   
+   // Confirm reroll
+   // (confirmation code here)
+   
+   // Reset character to starting state
+   reset_level(pc);
+   reset_race(pc);
+   reset_vlevel(pc);
+   
+   // Move to starting room
+   link(pc, findroom("temple@midgaard"));
+   
+   act("You have been rerolled! Welcome back as a new character.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Guild Change Reset ===
+dilbegin guild_change_reset(pc : unitptr);
+code
+{
+   // Store current guild information for later
+   // (guild storage code here)
+   
+   // Reset character to base state
+   reset_level(pc);
+   reset_race(pc);
+   reset_vlevel(pc);
+   
+   // Remove guild-specific affects and abilities
+   // (guild cleanup code here)
+   
+   // Allow player to choose new guild
+   // (guild selection code here)
+   
+   act("Your character has been reset for guild change.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+== Usage Notes ==
+* The function only works on player characters (UNIT_ST_PC), not NPCs
+* Immortal characters are protected from level reset
+* The function requires zone access level > 1 to execute
+* This is typically used in conjunction with [[reset_race]] and [[reset_vlevel]]
+* The function sets the character's level to exactly 1
+* Experience is not automatically adjusted - use [[experience]] function separately if needed
+* Hit points, mana, and endurance may need to be recalculated after level reset
+* Skills and abilities are not affected by this function - reset them separately if needed
+
+== Error Handling ==
+The function will fail and log an error if:
+* The zone access level is insufficient (must be > 1)
+* The unit parameter is not a valid unit pointer
+* The unit is not a player character
+* The character is immortal (protected from level reset)
+
+== Related Functions/Fields ==
+* [[reset_vlevel]] - Resets a player's virtual level
+* [[reset_race]] - Resets a player's race-specific attributes
+* [[experience]] - Modifies character experience
+* [[IS_IMMORTAL]] - Checks if character is immortal
+* [[pcinitabils]] - Initializes player abilities
+
+== See Also ==
+* [[reset_vlevel]]
+* [[reset_race]]
+* [[unit_st_pc and unit_st_npc]]

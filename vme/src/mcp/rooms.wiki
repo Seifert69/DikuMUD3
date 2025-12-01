@@ -1,0 +1,161 @@
+= rooms =
+ field: unitptr '''.rooms''' (Read-only)
+
+The .rooms field provides access to the first room unit in a zone, allowing iteration through all rooms within that zone.
+
+== Description ==
+The .rooms field is a read-only field that returns a unitptr pointing to the first room in a zone. This field is used to access and iterate through all rooms contained within a specific zone. Once you have the first room, you can navigate through the zone's rooms using the unit's .next field to traverse the complete list of rooms in that zone.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || unitptr || Returns a pointer to the first room unit in the zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone pointer)
+
+== Examples ==
+=== Listing All Rooms in a Zone ===
+ dilbegin list_zone_rooms(zone_name : string);
+ var
+     z : zoneptr;
+     room : unitptr;
+     count : integer;
+     output : string;
+ code
+ {
+     // Find the specified zone
+     z := zhead();
+     while (z)
+     {
+         if (z.name == zone_name)
+             break;
+         z := z.next;
+     }
+     
+     if (z == null)
+     {
+         sendtext("Zone '" + zone_name + "' not found.&n", self);
+         quit;
+     }
+     
+     output := "Rooms in zone " + zone_name + ":&n";
+     count := 0;
+     
+     // Iterate through all rooms in the zone
+     room := z.rooms;
+     while (room)
+     {
+         output := output + "  " + room.nameidx + "@" + room.zoneidx + "&n";
+         count := count + 1;
+         room := room.next;
+     }
+     
+     output := output + "&nTotal rooms: " + itoa(count) + "&n";
+     pagestring(output, self);
+ }
+ dilend
+
+=== Counting Rooms in All Zones ===
+ dilbegin count_all_rooms();
+ var
+     z : zoneptr;
+     room : unitptr;
+     total_rooms : integer;
+     zone_rooms : integer;
+ code
+ {
+     total_rooms := 0;
+     z := zhead();
+     
+     sendtext("Room count by zone:&n", self);
+     sendtext("==================&n", self);
+     
+     while (z)
+     {
+         zone_rooms := 0;
+         room := z.rooms;
+         
+         while (room)
+         {
+             zone_rooms := zone_rooms + 1;
+             room := room.next;
+         }
+         
+         sendtext(z.name + ": " + itoa(zone_rooms) + " rooms&n", self);
+         total_rooms := total_rooms + zone_rooms;
+         z := z.next;
+     }
+     
+     sendtext("==================&n", self);
+     sendtext("Total rooms: " + itoa(total_rooms) + "&n", self);
+ }
+ dilend
+
+=== Finding a Specific Room in a Zone ===
+ dilbegin find_room_in_zone(zone_name : string, room_name : string);
+ var
+     z : zoneptr;
+     room : unitptr;
+ code
+ {
+     // Find the zone
+     z := zhead();
+     while (z)
+     {
+         if (z.name == zone_name)
+             break;
+         z := z.next;
+     }
+     
+     if (z == null)
+     {
+         sendtext("Zone not found.&n", self);
+         quit;
+     }
+     
+     // Search for the room
+     room := z.rooms;
+     while (room)
+     {
+         if (room.nameidx == room_name)
+         {
+             sendtext("Found room: " + room.nameidx + "@" + room.zoneidx + "&n", self);
+             sendtext("Title: " + room.title + "&n", self);
+             quit;
+         }
+         room := room.next;
+     }
+     
+     sendtext("Room '" + room_name + "' not found in zone '" + zone_name + "'.&n", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The .rooms field returns the first room in the zone's room list
+* Use the unit's .next field to iterate through subsequent rooms
+* The field returns null if the zone contains no rooms
+* All rooms returned will have type UNIT_ST_ROOM
+* The zone's room list is maintained internally by the MUD system
+* This field is read-only; you cannot modify the zone's room list directly
+
+== Error Handling ==
+* Accessing .rooms on a null zoneptr will result in DILV_FAIL
+* If the zone contains no rooms, the field returns null
+* Always check for null before using the returned room pointer
+* Invalid zoneptr types will result in DILV_ERR
+
+== Related Functions/Fields ==
+* [[zhead]] - Function to get the first zone in the global zone list
+* [[zoneptr]] - Zone pointer type and its available fields
+* [[unitptr]] - Unit pointer type and navigation methods (.next field)
+* [[roomcount]] - Field that returns the number of rooms in a zone
+
+== See Also ==
+* [[zoneptr]] - Complete documentation of zone pointer fields
+* [[zhead]] - Getting the first zone in the list
+* [[roomcount]] - Getting room count without iteration
+* [[unitptr]] - Unit pointer navigation and fields

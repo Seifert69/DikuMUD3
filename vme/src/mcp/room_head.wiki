@@ -1,0 +1,89 @@
+= room_head =
+function: room '''room_head'''();
+
+The '''room_head''' function returns a pointer to the first room in the global room list.
+
+== Description ==
+The '''room_head''' function retrieves the first room unit from the global list of all rooms in the game. This function provides access to the head of the room linked list, allowing traversal through all rooms in the game world using the '''next''' field. The function returns null if no rooms are available or if the global room head is not properly initialized.
+
+== Parameters ==
+This function takes no parameters.
+
+== Examples ==
+dilbegin list_all_rooms();
+var
+    current_room : room;
+    room_count : integer;
+    buffer : string;
+code
+{
+    current_room := room_head();
+    room_count := 0;
+    buffer := "List of all rooms:&n";
+    
+    while (current_room != null)
+    {
+        buffer := buffer + current_room.name + " (" + current_room.zoneidx + ")&n";
+        room_count := room_count + 1;
+        current_room := current_room.next;
+    }
+    
+    buffer := buffer + "&nTotal rooms: " + itoa(room_count) + "&n";
+    pagestring(buffer, self);
+    quit;
+}
+dilend
+
+dilbegin find_room_by_name(search_name : string);
+var
+    current_room : room;
+    found_room : room;
+code
+{
+    current_room := room_head();
+    found_room := null;
+    
+    while (current_room != null and found_room == null)
+    {
+        if (current_room.name == search_name)
+            found_room := current_room;
+        else
+            current_room := current_room.next;
+    }
+    
+    if (found_room != null)
+        sendtext("Found room: " + found_room.title + "&n", self);
+    else
+        sendtext("Room '" + search_name + "' not found.&n", self);
+    
+    quit;
+}
+dilend
+
+dilend
+
+== Usage Notes ==
+* The function returns the first room in the global room list, which may not be in any particular order
+* Use the '''next''' field to traverse through the complete list of rooms
+* This function is primarily used for administrative or system-level DIL programs that need to process all rooms
+* For finding specific rooms, consider using [[findroom]] which is more efficient for targeted searches
+* The returned pointer is of type room (UNIT_ST_ROOM)
+* This function appears to be rarely used in modern DIL code and may be considered obsolete
+
+== Error Handling ==
+* Returns null if the global room list is empty or not initialized
+* Returns null if the global room head pointer is not a valid room unit
+* No runtime errors occur for normal operation
+* Always check the return value before using it to avoid null pointer errors
+
+== Related Functions/Fields ==
+* [[ghead]] - Function to get the first unit in the global unit list
+* [[chead]] - Function to get the first command in the global command list
+* [[zhead]] - Function to get the first zone in the global zone list
+* [[findroom]] - Function to find a specific room by name
+* [[next]] - Field to get the next room in the list
+
+== See Also ==
+* [[room]] - Room unit type documentation
+* [[unitptr]] - Unit pointer type documentation
+* [[zoneptr]] - Zone pointer type documentation

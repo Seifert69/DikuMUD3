@@ -1,0 +1,175 @@
+= reset_race =
+function: '''reset_race'''(u : unitptr);
+
+The '''reset_race''' function resets a character's race-specific attributes including weight, height, age, lifespan, and training costs.
+
+== Description ==
+The '''reset_race''' procedure resets a character's race-related attributes to their default values for the current race. This includes adjusting weight, height, age, lifespan, and training costs to match the character's current race setting. This function is commonly used in character reroll or rebirth systems where players need to be reset to their starting state while maintaining their chosen race.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The player character whose race attributes will be reset
+|}
+
+== Examples ==
+=== Basic Race Reset ===
+dilbegin reset_character_race(pc : unitptr);
+code
+{
+   if (pc.type == UNIT_ST_PC)
+   {
+      reset_race(pc);
+      act("Your race attributes have been reset to default values.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+} dilend
+
+=== Character Rebirth System ===
+dilbegin character_rebirth();
+var
+   pc : unitptr;
+code
+{
+   pc := self;
+   
+   // Remove all equipment and affects
+   // (equipment and affect removal code here)
+   
+   // Reset character's level to 1
+   reset_level(pc);
+   
+   // Reset race-specific attributes
+   reset_race(pc);
+   
+   // Reset virtual level
+   reset_vlevel(pc);
+   
+   // Reinitialize abilities
+   pcinitabils@basis();
+   
+   act("Your character has been reborn with default race attributes!", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Race Change Implementation ===
+dilbegin change_race(pc : unitptr, new_race : integer);
+code
+{
+   if (pc.type == UNIT_ST_PC)
+   {
+      // Set new race
+      pc.race := new_race;
+      
+      // Reset all race-specific attributes for new race
+      reset_race(pc);
+      
+      // Adjust birth time based on new race
+      switch (new_race)
+      {
+         case RACE_HUMAN:
+            pc.birth := realtime - (rnd(16, 19) * SECS_PER_MUD_YEAR);
+            break;
+         case RACE_ELF:
+            pc.birth := realtime - (rnd(190, 215) * SECS_PER_MUD_YEAR);
+            break;
+         case RACE_DWARF:
+            pc.birth := realtime - (rnd(60, 85) * SECS_PER_MUD_YEAR);
+            break;
+         // Add other races as needed
+      }
+      
+      act("Your race has been changed and attributes reset!", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+} dilend
+
+=== Complete Character Reset ===
+dilbegin full_character_reset(pc : unitptr);
+code
+{
+   if (pc.type != UNIT_ST_PC)
+   {
+      sendtext("Only players can be fully reset.", self);
+      quit;
+   }
+   
+   // Store current race for later
+   // (race storage code here)
+   
+   // Reset all character aspects
+   reset_level(pc);      // Reset level to 1
+   reset_race(pc);      // Reset race attributes
+   reset_vlevel(pc);   // Reset virtual level
+   
+   // Reinitialize all systems
+   pcinitabils@basis();
+   
+   // Reset experience to starting amount
+   experience(11250, pc);
+   
+   // Set starting ability points
+   pc.skill_points := 80;
+   pc.ability_points := 40;
+   
+   act("Your character has been completely reset!", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+=== Reroll Command ===
+dilbegin reroll_command();
+var
+   pc : unitptr;
+code
+{
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+      sendtext("Only players can reroll.", self);
+      quit;
+   }
+   
+   // Confirm reroll
+   // (confirmation code here)
+   
+   // Reset character to starting state
+   reset_level(pc);
+   reset_race(pc);
+   reset_vlevel(pc);
+   
+   // Move to starting room
+   link(pc, findroom("temple@midgaard"));
+   
+   act("You have been rerolled! Welcome back as a new character.", A_ALWAYS, pc, null, null, TO_CHAR);
+} dilend
+
+== Usage Notes ==
+* The function only works on player characters (UNIT_ST_PC), not NPCs
+* The function requires zone access level > 1 to execute
+* This is typically used in conjunction with [[reset_level]] and [[reset_vlevel]]
+* The function adjusts the following attributes:
+** Weight based on race defaults
+** Height based on race defaults  
+** Age/lifespan based on race characteristics
+** Training costs specific to the race
+* The character's current race (pc.race) is preserved - only attributes are reset
+* Birth time may need to be adjusted separately based on race
+* Equipment weight and size considerations are automatically handled
+
+== Error Handling ==
+The function will fail and log an error if:
+* The zone access level is insufficient (must be > 1)
+* The unit parameter is not a valid unit pointer
+* The unit is not a player character
+* The character's race value is invalid
+
+== Related Functions/Fields ==
+* [[reset_level]] - Resets a player's level to 1
+* [[reset_vlevel]] - Resets a player's virtual level
+* [[race]] - Field containing character's race (RACE_* constants)
+* [[pcinitabils]] - Initializes player abilities
+* [[experience]] - Modifies character experience
+* [[SECS_PER_MUD_YEAR]] - Constant for time calculations
+
+== See Also ==
+* [[reset_level]]
+* [[reset_vlevel]]
+* [[unit_st_pc and unit_st_npc]]

@@ -1,0 +1,185 @@
+= setbright =
+function: void '''setbright'''(unit : unitptr, brightness : integer);
+
+The '''setbright''' function is used to set the light output brightness of a unit.
+
+== Description ==
+This function sets the amount of light that a unit emits into its environment. The brightness value determines how much the unit illuminates the surrounding area, allowing players to see in dark conditions. The function calculates the difference between the new brightness and current light output, then applies the change using the internal modify_bright() function.
+
+Units with brightness values greater than zero will light up rooms and enable players to see in otherwise dark environments.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose brightness will be set
+|-
+| brightness || integer || The new brightness value (light output level)
+|}
+
+The brightness parameter should be a positive integer representing the desired light output level.
+
+== Examples ==
+=== Basic Light Source Creation ===
+ dilbegin create_torch();
+ var
+    torch : unitptr;
+ code
+ {
+    torch := load("torch@general");
+    if (torch != null)
+    {
+       // Set torch to emit light
+       setbright(torch, 2);
+       sendtext("The torch bursts into flame!<br/>", self);
+    }
+ } dilend
+
+=== Magical Light Enhancement ===
+ dilbegin enhance_light(item : unitptr, bonus_level : integer);
+ var
+    current_bright : integer;
+    new_bright : integer;
+ code
+ {
+    if (item == null)
+       quit;
+    
+    current_bright := item.bright;
+    new_bright := current_bright + bonus_level;
+    
+    // Ensure reasonable brightness limits
+    if (new_bright > 10)
+       new_bright := 10;
+    if (new_bright < 0)
+       new_bright := 0;
+    
+    setbright(item, new_bright);
+    
+    if (new_bright > current_bright)
+       sendtext("The item glows more brightly.<br/>", self);
+    else
+       sendtext("The item dims slightly.<br/>", self);
+ } dilend
+
+=== Random Light Generation ===
+ dilbegin integer create_random_light(base_item : unitptr);
+ external
+    integer successroll(chances : intlist, modifier : integer);
+ var
+    brightness_roll : integer;
+    final_brightness : integer;
+ code
+ {
+    // Roll for random brightness enhancement
+    brightness_roll := successroll({50, 80, 95}, 25);
+    
+    if (brightness_roll == 0)
+       return(0);  // No enhancement
+    
+    // Calculate final brightness (0-3 range)
+    final_brightness := brightness_roll;
+    if (final_brightness > 3)
+       final_brightness := 3;
+    
+    setbright(base_item, final_brightness);
+    
+    // Add identification information
+    addextra(base_item.extra, {"$identify"}, "Emits a magical light.");
+    addextra(base_item.extra, {"$identify_improved"}, "Emits a magical light +" + itoa(final_brightness) + ".");
+    
+    return(1);
+ } dilend
+
+=== Temporary Light Boost ===
+ dilbegin temporary_illumination(target : unitptr, duration : integer);
+ var
+    original_bright : integer;
+    i : integer;
+ code
+ {
+    if (target == null)
+       quit;
+    
+    original_bright := target.bright;
+    
+    // Boost brightness temporarily
+    setbright(target, original_bright + 5);
+    sendtext("The item flares with brilliant light!<br/>", self);
+    
+    // Wait for duration
+    for (i := 0; i < duration; i := i + 1)
+    {
+       pause;
+    }
+    
+    // Restore original brightness
+    setbright(target, original_bright);
+    sendtext("The light returns to normal.<br/>", self);
+ } dilend
+
+=== Conditional Lighting ===
+ dilbegin adaptive_light(item : unitptr);
+ var
+    room_light : integer;
+    needed_bright : integer;
+ code
+ {
+    if (item == null or item.outside == null)
+       quit;
+    
+    // Check current room light level
+    room_light := item.outside.light;
+    
+    // Adjust brightness based on room conditions
+    if (room_light == 0)  // Dark room
+    {
+       needed_bright := 5;  // High brightness for darkness
+    }
+    else if (room_light < 3)  // Dim room
+    {
+       needed_bright := 2;  // Medium brightness
+    }
+    else
+    {
+       needed_bright := 0;  // No extra light needed
+    }
+    
+    setbright(item, needed_bright);
+ } dilend
+
+== Usage Notes ==
+* Brightness values are typically in the range 0-10, where 0 means no light output
+* The function modifies the unit's light output, not the light level inside the unit
+* Use the '''bright''' field to read current brightness of a unit
+* Use the '''light''' field to read light level inside a unit
+* Use the '''illum''' field to read light created by contents of a transparent unit
+* Units with brightness > 0 will illuminate their surroundings
+* The function automatically handles the difference calculation and applies the change
+* Useful for creating light sources, magical items, and environmental effects
+
+== Error Handling ==
+The function includes validation checks:
+
+* **Unit validation**: The first parameter must be a valid unitptr
+* **Type validation**: The second parameter must be an integer
+* **Null pointer validation**: The unit pointer must not be null
+
+Common error scenarios:
+* Passing null or invalid unit pointers
+* Using non-integer brightness values
+* Attempting to modify destroyed units
+* Setting extremely high brightness values (may cause performance issues)
+
+== Related Functions/Fields ==
+* [[bright]] - Field to read current brightness of a unit
+* [[light]] - Field to read light level inside a unit
+* [[illum]] - Field to read light created by unit contents
+* [[islight()]] - Function to check if a unit is a light source
+* [[modify_bright()]] - Internal brightness modification function
+
+== See Also ==
+* [[Light sources]] - General information about light-emitting objects
+* [[Room lighting]] - Information about room light levels
+* [[UNIT_FL_*]] - Unit flags that may affect light behavior
+* [[getNumberOfActiveLightSources()]] - Internal light counting function

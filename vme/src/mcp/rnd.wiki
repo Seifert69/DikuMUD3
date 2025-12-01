@@ -1,0 +1,114 @@
+= rnd =
+function: integer '''rnd'''(i1 : integer, i2 : integer);
+
+The '''rnd''' function generates a random integer within a specified range.
+
+== Description ==
+The '''rnd''' function returns a random integer between the two specified values (inclusive). The function generates a uniform random distribution across the entire range from i1 to i2, including both endpoints. This is commonly used for random selection, probability-based decisions, and adding variety to DIL program behavior.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| i1 || integer || The start of the range (inclusive)
+|-
+| i2 || integer || The end of the range (inclusive)
+|}
+
+== Examples ==
+dilbegin random_guard_behavior();
+var
+    choice : integer;
+code
+{
+    // Choose a random patrol route (1-4)
+    choice := rnd(1, 4);
+    
+    if (choice == 1)
+        exec("patrol north", self);
+    else if (choice == 2)
+        exec("patrol south", self);
+    else if (choice == 3)
+        exec("patrol east", self);
+    else
+        exec("patrol west", self);
+    
+    quit;
+}
+dilend
+
+dilbegin random_treasure();
+var
+    gold_amount : integer;
+    item_type : integer;
+code
+{
+    // Generate random gold amount between 10 and 100
+    gold_amount := rnd(10, 100);
+    
+    // Choose random item type (1-5)
+    item_type := rnd(1, 5);
+    
+    if (item_type == 1)
+        exec("create sword", self);
+    else if (item_type == 2)
+        exec("create shield", self);
+    else if (item_type == 3)
+        exec("create potion", self);
+    else if (item_type == 4)
+        exec("create armor", self);
+    else
+        exec("create ring", self);
+    
+    sendtext("You found " + itoa(gold_amount) + " gold coins!&n", self);
+    quit;
+}
+dilend
+
+dilbegin random_emote();
+var
+    emote_choice : integer;
+code
+{
+    // Random emote selection
+    emote_choice := rnd(1, 6);
+    
+    if (emote_choice == 1)
+        act("$1n smiles happily.", A_ALWAYS, self, null, null, TO_ALL);
+    else if (emote_choice == 2)
+        act("$1n looks around thoughtfully.", A_ALWAYS, self, null, null, TO_ALL);
+    else if (emote_choice == 3)
+        act("$1n stretches $1s arms.", A_ALWAYS, self, null, null, TO_ALL);
+    else if (emote_choice == 4)
+        act("$1n yawns loudly.", A_ALWAYS, self, null, null, TO_ALL);
+    else if (emote_choice == 5)
+        act("$1n taps $1s foot impatiently.", A_ALWAYS, self, null, null, TO_ALL);
+    else
+        act("$1n sighs deeply.", A_ALWAYS, self, null, null, TO_ALL);
+    
+    quit;
+}
+dilend
+
+== Usage Notes ==
+* The range is inclusive - both i1 and i2 are possible return values
+* If i1 > i2, the function still works and generates numbers in the range [i2, i1]
+* The function uses a uniform distribution, meaning all values in the range have equal probability
+* Commonly used for: random selection, probability checks, damage variation, treasure generation
+* For more complex random selection with weighted probabilities, consider using multiple rnd() calls with different ranges
+* The function is suitable for game mechanics where predictable randomness is needed
+
+== Error Handling ==
+* Returns DILV_FAIL if either parameter is null or fails evaluation
+* Returns DILV_ERR if either parameter is not an integer
+* No runtime errors occur for valid integer inputs, even if i1 > i2
+
+== Related Functions/Fields ==
+* [[openroll]] - Function for open-ended dice rolls with explosion mechanics
+* [[findrndunit]] - Function to find a random unit matching criteria
+* [[number]] - Core random number generation function (internal)
+
+== See Also ==
+* [[atoi]] - Function to convert strings to integers
+* [[itoa]] - Function to convert integers to strings
+* [[mudhour]] - Variable for current game hour (often used with rnd for time-based events)
