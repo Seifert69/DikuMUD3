@@ -1,0 +1,95 @@
+= title =
+ field: string '''.title''' (Read/Write)
+
+The '''title''' field accesses the title of a unit or zone, providing a descriptive name or label.
+
+== Description ==
+This field provides access to the title string of either a unit or a zone. For units, it represents the descriptive title that appears in various game contexts (such as room descriptions, character information, and object identification). For zones, it represents the zone's title used in zone management and listing functions. The field is both readable and writable, allowing DIL programs to retrieve current titles or modify them.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || string || Returns the current title of the unit or zone
+|-
+| Write || string || Sets the title of the unit or zone
+|}
+
+== Availability ==
+This field is available on the following types:
+* unitptr (All unit types: UNIT_ST_PC, UNIT_ST_NPC, UNIT_ST_OBJ, UNIT_ST_ROOM)
+* zoneptr (Zone pointer)
+
+== Examples ==
+dilbegin unique show_room_title();
+var
+    room : unitptr;
+code
+{
+    // Get the current room's title
+    room := self.outside;
+    sendto("You are in: " + room.title + "&n", self);
+} dilend
+
+dilbegin unique set_custom_title(new_title : string);
+var
+    pc : unitptr;
+code
+{
+    // Set a custom title for a player
+    pc := self;
+    pc.title := new_title;
+    sendto("Your title has been changed to: " + pc.title + "&n", pc);
+} dilend
+
+dilbegin unique zone_info();
+var
+    z : zoneptr;
+code
+{
+    // Display zone information
+    z := zhead();
+    while (z)
+    {
+        sendto("Zone: " + z.name + " - " + z.title + "&n", self);
+        z := z.next;
+    }
+} dilend
+
+dilbegin unique engrave_item(item : unitptr, engraving : string);
+var
+    current_title : string;
+    parts : stringlist;
+code
+{
+    // Add engraving to an item's title
+    current_title := item.title;
+    item.title := current_title + " (engraved: '" + engraving + "')";
+    act("$1n engraves something on $2n.", A_ALWAYS, self, item, null, TO_ROOM);
+} dilend
+
+== Usage Notes ==
+* The '''title''' field works on all unit types (PCs, NPCs, objects, and rooms) as well as zone pointers.
+* For player characters, the title often appears alongside their name in various game outputs.
+* For rooms, the title is typically what players see when they enter or look around.
+* For objects, the title appears in inventory lists and when examining items.
+* For zones, the title is used in zone listing commands and administrative functions.
+* When modifying titles, be mindful of length limitations and formatting conventions.
+* Titles can contain special formatting and color codes in some implementations.
+
+== Error Handling ==
+* Attempting to access the '''title''' field on a null or invalid pointer will result in a DILV_FAIL condition.
+* The field will return DILV_ERR if accessed on an inappropriate type that doesn't support titles.
+* When setting titles, extremely long strings may be truncated or rejected by the system.
+
+== Related Functions/Fields ==
+* [[name]] - The primary name field of units
+* [[names]] - The list of names that match a unit
+* [[outside_descr]] - The description of a unit from the outside
+* [[inside_descr]] - The description of a unit from the inside
+* [[zoneptr]] - Zone pointer type documentation
+
+== See Also ==
+* [[unitptr]] - Unit pointer type documentation
+* [[zoneptr]] - Zone pointer type documentation
+* [[sact]] - String activation function for formatting titles

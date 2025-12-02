@@ -1,0 +1,76 @@
+= thirst =
+ field: integer '''.thirst''' (Read/Write)
+
+The '''thirst''' field accesses the thirst condition of a player character, indicating how thirsty the character is.
+
+== Description ==
+This field provides access to the thirst level of a player character. It represents the character's current thirst status, which affects gameplay mechanics related to dehydration and thirst management. The field is both readable and writable, allowing DIL programs to check current thirst levels or modify them.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current thirst value of the player character
+|-
+| Write || integer || Sets the thirst value of the player character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+dilbegin unique thirst_check();
+var
+    pc : unitptr;
+    thirst_level : integer;
+code
+{
+    // Get the player character
+    pc := self;
+    
+    // Check current thirst level
+    thirst_level := pc.thirst;
+    
+    if (thirst_level < 5)
+    {
+        sendto("You are extremely thirsty!&n", pc);
+    }
+    else if (thirst_level < 10)
+    {
+        sendto("You are quite thirsty.&n", pc);
+    }
+    else
+    {
+        sendto("You feel reasonably hydrated.&n", pc);
+    }
+} dilend
+
+dilbegin unique quench_thirst();
+var
+    pc : unitptr;
+code
+{
+    // Fully quench thirst (value 24 appears to be maximum)
+    pc := self;
+    pc.thirst := 24;
+    sendto("You feel completely refreshed and hydrated!&n", pc);
+} dilend
+
+== Usage Notes ==
+* The thirst field only works on player characters (UNIT_ST_PC). Attempting to access it on NPCs, objects, or rooms will result in failure.
+* The typical range appears to be 0-24, where 24 represents a fully quenched state and lower values indicate increasing thirst.
+* This field is often used in conjunction with the '''full''' field to manage both hunger and thirst conditions.
+* Thirst levels typically decrease over time through natural game mechanics and may affect character performance when too low.
+
+== Error Handling ==
+* Attempting to access the '''thirst''' field on a non-player character unit will result in a DILV_FAIL condition.
+* The field will return DILV_ERR if accessed on an invalid unit pointer or inappropriate unit type.
+
+== Related Functions/Fields ==
+* [[full]] - The hunger condition field for player characters
+* [[drunk]] - The intoxication level field for player characters
+
+== See Also ==
+* [[unit_st_pc]] - Player character unit type documentation
+* [[pcflags]] - Player character flags and options

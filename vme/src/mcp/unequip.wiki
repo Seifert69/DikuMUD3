@@ -1,0 +1,116 @@
+= unequip =
+ procedure: '''unequip'''(u : unitptr);
+
+The '''unequip''' procedure removes an equipped item from a character.
+
+== Description ==
+This procedure removes an item from a character's equipment slots and returns it to their inventory. The unit parameter must be an object that is currently equipped by a character (PC or NPC). The procedure is commonly used for disarming, removing restraints, or changing equipment.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The equipped object to be unequipped
+|}
+
+== Examples ==
+dilbegin unique remove_weapon();
+var
+    weapon : unitptr;
+code
+{
+    // Get currently wielded weapon
+    weapon := equipment(self, WEAR_WIELD);
+    
+    if (weapon != null)
+    {
+        unequip(weapon);
+        act("You unequip $2n.", A_ALWAYS, self, weapon, null, TO_CHAR);
+        act("$1n unequips $2n.", A_ALWAYS, self, weapon, null, TO_ROOM);
+    }
+    else
+    {
+        sendto("You are not wielding anything.&n", self);
+    }
+} dilend
+
+dilbegin unique handcuff_target(deputy : unitptr, target : unitptr, cuffs : unitptr);
+var
+    deputy_name : string;
+code
+{
+    act("You cuff $3n.", A_SOMEONE, deputy, null, target, TO_CHAR);
+    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, target, TO_VICT);
+    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, target, TO_NOTVICT);
+
+    // Remove any existing wrist equipment and add cuffs
+    unequip(equipment(target, WEAR_WRIST_R));
+    addequip(cuffs, WEAR_WRIST_R);
+    
+    deputy_name := deputy.name;
+    dilcopy("cuffed@midgaard(" + deputy_name + ")", target);
+} dilend
+
+dilbegin unique strip_character(victim : unitptr);
+var
+    i : integer;
+    item : unitptr;
+code
+{
+    // Remove all equipment from victim
+    for (i := 0; i < 20; i := i + 1)
+    {
+        item := equipment(victim, i);
+        if (item != null)
+        {
+            unequip(item);
+            act("$2n falls from $1n's body.", A_ALWAYS, victim, item, null, TO_ROOM);
+        }
+    }
+} dilend
+
+dilbegin unique unequip_specific(item_name : string);
+var
+    item : unitptr;
+    i : integer;
+code
+{
+    // Search inventory for specific item and unequip if equipped
+    for (i := 0; i < 20; i := i + 1)
+    {
+        item := equipment(self, i);
+        if ((item != null) and (item.nameidx == item_name))
+        {
+            unequip(item);
+            sendto("You remove " + item.title + ".&n", self);
+            act("$1n removes $2n.", A_ALWAYS, self, item, null, TO_ROOM);
+            quit;
+        }
+    }
+    sendto("You are not wearing any " + item_name + ".&n", self);
+} dilend
+
+== Usage Notes ==
+* The unit parameter must be an object that is currently equipped by a character.
+* Only works on objects that are in valid equipment positions (defined by WEAR_* constants).
+* The unequipped item is returned to the character's inventory.
+* Commonly used with the [[equipment]]() function to find specific equipped items.
+* Often paired with [[addequip]]() for equipment management.
+* The procedure will fail silently if the item is not equipped or is not an object.
+* Equipment positions are defined by WEAR_* constants in values.h and/or vme.h.
+
+== Error Handling ==
+* If the unit parameter is not a unitptr, a DIL fatal error occurs: "Arg 1 of 'unequip' not a unit".
+* If the unit is null or not an object, the procedure fails silently.
+* If the object is not currently equipped, the procedure fails silently.
+* If the object is not in a valid equipment position, the procedure fails.
+
+== Related Functions/Fields ==
+* [[addequip]] - Equips an item to a character
+* [[equipment]] - Returns the unit equipped at a specific position
+* [[OBJ_EQP_POS]] - Internal check for equipment position validity
+
+== See Also ==
+* Equipment management functions
+* WEAR_* constants for equipment positions
+* Character inventory functions

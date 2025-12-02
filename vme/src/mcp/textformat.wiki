@@ -1,0 +1,197 @@
+= textformat =
+function: string '''textformat'''(s : string);
+
+The '''textformat''' function formats a string according to escape format codes, adapting the output to each individual player's settings.
+
+== Description ==
+This function processes a string and returns a formatted version that includes escape format codes. The function automatically adapts the output to each individual player's settings, making it useful for personalized messages, terminal interfaces, and dynamic content generation.
+
+The escape format system uses codes starting with '&' to provide special formatting:
+* &n - New line
+* &r - Carriage return
+* &g - Global message
+* &y - Player-specific message
+* &c - Color code
+* &b - Bold text
+
+The function is particularly useful for creating personalized messages, terminal interfaces, and content that adapts to each player's individual preferences and display settings.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The text string to be formatted
+|}
+
+== Return Value ==
+The function returns a string containing:
+* The formatted text with escape codes applied
+* The original string if no formatting is needed
+
+== Examples ==
+=== Basic Text Formatting ===
+ dilbegin basic_formatting();
+ var
+   message : string;
+   formatted_text : string;
+ code
+ {
+   message := "Hello &nWelcome to the game!";
+   formatted_text := textformat(message);
+   
+   sendtext("Original: " + message + "<br/>", self);
+   sendtext("Formatted: " + formatted_text + "<br/>", self);
+ }
+ dilend
+
+=== Player-Specific Messages ===
+ dilbegin player_messaging();
+ var
+   player_name : string;
+   health_percent : integer;
+   message : string;
+   formatted_text : string;
+ code
+ {
+   player_name := self.name;
+   
+   // Calculate health percentage
+   health_percent := (self.hp * 100) / self.max_hp;
+   
+   // Create health-based message
+   if (health_percent > 75)
+     message := "&yYour health is excellent!&nYou are at full health.";
+   else if (health_percent > 50)
+     message := "&yYour health is good.&nYou have some wounds.";
+   else if (health_percent > 25)
+     message := "&yYour health is poor.&nYou are heavily wounded.";
+   else
+     message := "&yYour health is critical.&nYou are near death!";
+   
+   formatted_text := textformat(message);
+   
+   sendtext("&gHello " + player_name + "!&n" + message + "&n&nPress 'h' for help...&n");
+   sendtext("Formatted: " + formatted_text + "<br/>", self);
+ }
+ dilend
+
+=== Color Integration ===
+ dilbegin color_system();
+ var
+   message : string;
+   formatted_text : string;
+ code
+ {
+   message := "&cYour name is &r" + self.name + "&c.&nWhat color would you like?";
+   
+   formatted_text := textformat(message);
+   
+   sendtext("Original: " + message + "<br/>", self);
+   sendtext("Formatted: " + formatted_text + "<br/>", self);
+ }
+ dilend
+
+=== Terminal Interface ===
+ dilbegin terminal_interface();
+ var
+   settings : string;
+   formatted_text : string;
+ code
+ {
+   // Create terminal-style interface
+   settings := "&gMain Menu&n&n1. Start Game&n&n2. Options&n&n3. Quit&n&n&nPress 'q' to exit";
+   
+   formatted_text := textformat(settings);
+   
+   sendtext("&gTerminal Interface&n&n" + formatted_text + "&n&nPress any key to continue...");
+   
+   // Wait for player input
+   pause;
+ }
+ dilend
+
+=== Dynamic Content Generation ===
+ dilbegin dynamic_content_generator();
+ var
+   player_name : string;
+   content : string;
+   formatted_content : string;
+ code
+ {
+   // Generate personalized content
+   content := "&yHello " + player_name + "!&nHere is your personalized content for today:&n&n";
+   
+   // Add dynamic elements based on player state
+   if (self.position == POSITION_FIGHTING)
+     content := content + "&nYou are currently in combat!";
+   else if (self.position == POSITION_SLEEPING)
+     content := content + "&nYou are currently resting.";
+   else
+     content := content + "&nYou are ready for adventure!";
+   
+   formatted_content := textformat(content);
+   
+   sendtext("&gDynamic Content&n&n" + formatted_content + "&n&n");
+ }
+ dilend
+
+=== Multiple Player Support ===
+ dilbegin multi_player_system();
+ var
+   players : stringlist;
+   i : integer;
+   message : string;
+   formatted_text : string;
+ code
+ {
+   // Get all players
+   players := unitdir("*@global");
+   
+   message := "&gBroadcasting to all players:&n&n";
+   
+   i := 0;
+   while (i < length(players))
+   {
+     message := "&y" + players.[i].name + "!&n";
+     formatted_text := textformat(message);
+     
+     sendtext(formatted_text, players.[i]);
+     i := i + 1;
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The function processes escape format codes starting with '&'
+* Common escape codes include:
+** &n - New line
+** &r - Carriage return
+** &g - Global message
+** &y - Player-specific message
+** &c - Color code
+** &b - Bold text
+* The function automatically adapts to each player's settings
+* Use for personalized messages, terminal interfaces, and dynamic content
+* The formatted output will contain escape codes that work with most MUD clients
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid string parameter returns empty string
+* Invalid escape format codes may cause unexpected behavior
+* No runtime errors are generated for valid string inputs
+
+Always ensure that the input string is valid and contains appropriate escape codes for the intended use case.
+
+== Related Functions/Fields ==
+* [[textformat]] - Format text with escape codes
+* [[sendtext]] - Send formatted text to players
+* [[note]] - Store player-specific notes
+* [[unitdir]] - Get list of all players globally
+* [[addextra]] - Store player-specific data
+
+== See Also ==
+* DIL Text Formatting Documentation
+* Escape Code Systems
+* Player Communication Systems
+* Terminal Interface Documentation
+* Dynamic Content Generation

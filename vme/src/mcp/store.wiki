@@ -1,0 +1,260 @@
+= store =
+function: '''store'''(u : unitptr, filename : string, container : integer);
+
+The '''store''' function saves a unit and its contents to a file for later restoration.
+
+== Description ==
+This function saves a copy of a unit to a file on disk, allowing it to be restored later using the [[restore]] function. The function can save either just the contents of a unit or the unit itself along with its contents, depending on the container parameter.
+
+When container is TRUE, the unit itself and all its contents are saved. When container is FALSE, only the contents of the unit are saved, not the unit itself. This makes the function versatile for different storage needs like saving player inventories, room contents, or storage containers.
+
+The function requires zone access level 10 or lower to execute successfully. Files are stored in the DIL file directory under a "units/" subdirectory.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to be stored (cannot be a room or PC)
+|-
+| filename || string || The name of the file to store the unit in
+|-
+| container || integer || TRUE to save unit and contents, FALSE to save only contents
+|}
+
+== Return Value ==
+The function does not return a value.
+
+== Examples ==
+=== Save Container Contents Only ===
+ dilbegin save_chest_contents();
+ var
+   chest : unitptr;
+ code
+ {
+   chest := self;
+   
+   if (chest.type != UNIT_ST_OBJ)
+   {
+     sendtext("This command only works on container objects.<br/>", self);
+     quit;
+   }
+   
+   // Save only the contents, not the chest itself
+   store(chest, "chest." + chest.zoneidx, FALSE);
+   
+   sendtext("Cest contents have been saved.<br/>", self);
+ }
+ dilend
+
+=== Save Container and Contents ===
+ dilbegin save_storage_chest();
+ var
+   chest : unitptr;
+ code
+ {
+   chest := self;
+   
+   if (chest.type != UNIT_ST_OBJ)
+   {
+     sendtext("This command only works on container objects.<br/>", self);
+     quit;
+   }
+   
+   // Save the chest and everything inside it
+   store(chest, "storage_chest." + chest.zoneidx, TRUE);
+   
+   sendtext("Storage chest and its contents have been saved.<br/>", self);
+ }
+ dilend
+
+=== Player Inventory Storage ===
+ dilbegin save_player_inventory();
+ var
+   pc : unitptr;
+   storage_box : unitptr;
+ code
+ {
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("This command only works on players.<br/>", self);
+     quit;
+   }
+   
+   // Create temporary storage box
+   storage_box := load("temp_storage_box@storage");
+   
+   if (storage_box == null)
+   {
+     sendtext("Storage system unavailable.<br/>", self);
+     quit;
+   }
+   
+   // Move all player items to storage box
+   while (pc.inside)
+   {
+     link(pc.inside, storage_box);
+   }
+   
+   // Save the storage box with player's inventory
+   store(storage_box, "player_backup." + pc.name, TRUE);
+   
+   sendtext("Your inventory has been safely stored.<br/>", pc);
+   
+   // Clean up
+   destroy(storage_box);
+ }
+ dilend
+
+=== Room Contents Backup ===
+ dilbegin backup_room();
+ var
+   room : unitptr;
+   filename : string;
+ code
+ {
+   room := self;
+   
+   if (room.type != UNIT_ST_ROOM)
+   {
+     sendtext("This command only works in rooms.<br/>", self);
+     quit;
+   }
+   
+   // Create backup filename based on room name
+   filename := "room_backup." + room.zoneidx;
+   
+   // Save all room contents
+   store(room, filename, FALSE);
+   
+   sendtext("Room contents have been backed up to " + filename + ".<br/>", self);
+ }
+ dilend
+
+=== Arena Combat Storage ===
+ dilbegin arena_storage();
+ var
+   pc : unitptr;
+   storage_file : string;
+ code
+ {
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Only players can use arena storage.<br/>", self);
+     quit;
+   }
+   
+   // Store player's current state before arena combat
+   storage_file := "arena_backup." + pc.name + "." + itoa(realtime);
+   
+   store(pc, storage_file, TRUE);
+   
+   sendtext("Your equipment and inventory have been stored for arena combat.<br/>", pc);
+   
+   // Clear player for arena combat
+   while (pc.inside)
+   {
+     destroy(pc.inside);
+   }
+ }
+ dilend
+
+=== Dynamic Storage System ===
+ dilbegin dynamic_storage(item_name : string);
+ var
+   item : unitptr;
+   filename : string;
+   timestamp : string;
+ code
+ {
+   item := findunit(self, item_name, FIND_UNIT_INVEN, null);
+   
+   if (item == null)
+   {
+     sendtext("Item '" + item_name + "' not found.<br/>", self);
+     quit;
+   }
+   
+   // Create unique filename with timestamp
+   timestamp := itoa(realtime);
+   filename := "stored_item." + item_name + "." + timestamp;
+   
+   // Store the item
+   store(item, filename, TRUE);
+   
+   sendtext("Item '" + item.title + "' stored as " + filename + ".<br/>", self);
+ }
+ dilend
+
+=== Mail System Storage ===
+ dilbegin save_mail_entry();
+ var
+   pc : unitptr;
+   mail_extra : extraptr;
+   mail_list : stringlist;
+   filename : string;
+ code
+ {
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Only players can use mail system.<br/>", self);
+     quit;
+   }
+   
+   // Get mail extra description
+   mail_extra := ("$" + pc.name) in self.extra;
+   
+   if (mail_extra == null)
+   {
+     sendtext("You have no mail entry to save.<br/>", pc);
+     quit;
+   }
+   
+   // Update mail list and save
+   mail_list := mail_extra.names;
+   
+   // Store the mail list object
+   filename := "udgaard.mail_list_obj";
+   store(self, filename, TRUE);
+   
+   sendtext("Mail entry has been saved.<br/>", pc);
+ }
+ dilend
+
+== Usage Notes ==
+* The function requires zone access level 10 or lower
+* Units of type UNIT_ST_ROOM and UNIT_ST_PC cannot be stored
+* Files are saved in the DIL file directory under "units/" subdirectory
+* Use TRUE for container parameter to save unit and its contents
+* Use FALSE for container parameter to save only contents
+* The filename should not include path or extension
+* Use [[restore]] function to load previously stored units
+* Disk access is slow - use sparingly to avoid server performance issues
+* Player inventories are automatically saved, so explicit storage is only needed for special cases
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Invalid unit types (rooms, PCs) cause security violation log
+* Null or invalid unit pointer causes no action
+* Invalid filename causes security violation log
+* Insufficient zone access level causes security violation log
+* No runtime errors are generated for valid parameters
+
+Always validate unit type and access level before calling the function.
+
+== Related Functions/Fields ==
+* [[restore]] - Load a previously stored unit
+* [[delunit]] - Delete a stored unit file
+* [[load]] - Load a unit from main database
+* [[findunit]] - Find a unit in the game world
+
+== See Also ==
+* DIL File System Documentation
+* Zone Access Level Documentation
+* Unit Storage and Retrieval Systems
+* DIL Security and Access Control

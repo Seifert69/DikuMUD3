@@ -1,0 +1,254 @@
+= strncmp =
+function: integer '''strncmp'''(s1 : string, s2 : string, l : integer);
+
+The '''strncmp''' function performs case-sensitive string comparison with a specified length limit.
+
+== Description ==
+This function compares up to a specified number of characters from two strings and returns an integer indicating their relationship. The comparison is case-sensitive and only compares the first 'l' characters of each string.
+
+The function follows standard C library strncmp behavior:
+* Returns -1 if first string (s1) is lexicographically less than second string (s2) in first 'l' characters
+* Returns 0 if both strings are identical in first 'l' characters
+* Returns 1 if first string (s1) is lexicographically greater than second string (s2) in first 'l' characters
+
+This function is useful when you need to compare only the beginning portions of strings, such as command prefixes, file extensions, or when you want to limit comparison to avoid unnecessary processing.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s1 || string || The first string to compare
+|-
+| s2 || string || The second string to compare
+|-
+| l || integer || The maximum number of characters to compare
+|}
+
+== Return Value ==
+The function returns an integer:
+* -1 if s1 < s2 (s1 comes before s2 alphabetically in first 'l' characters)
+* 0 if s1 == s2 (strings are identical in first 'l' characters)
+* 1 if s1 > s2 (s1 comes after s2 alphabetically in first 'l' characters)
+
+== Examples ==
+=== Command Prefix Comparison ===
+ dilbegin check_command_prefix(cmd : string);
+ var
+   result : integer;
+ code
+ {
+   // Check if command starts with "get"
+   result := strncmp(cmd, "get", 3);
+   
+   if (result == 0)
+     sendtext("Command starts with 'get'<br/>", self);
+   else
+     sendtext("Command does not start with 'get'<br/>", self);
+ }
+ dilend
+
+=== File Extension Check ===
+ dilbegin check_file_extension(filename : string);
+ var
+   result : integer;
+ code
+ {
+   // Check if file has .dil extension (only first 4 chars)
+   result := strncmp(filename, ".dil", 4);
+   
+   if (result == 0)
+     sendtext("File has .dil extension<br/>", self);
+   else
+     sendtext("File does not have .dil extension<br/>", self);
+ }
+ dilend
+
+=== Limited String Comparison ===
+ dilbegin limited_comparison();
+ var
+   result : integer;
+ code
+ {
+   // Compare only first 2 characters of each string
+   result := strncmp("hello", "help", 2);
+   
+   if (result == 0)
+     sendtext("First 2 characters match: 'he'<br/>", self);
+   else
+     sendtext("First 2 characters differ<br/>", self);
+   
+   // Compare with longer limit
+   result := strncmp("testing", "test", 3);
+   
+   if (result == 0)
+     sendtext("First 3 characters match: 'tes'<br/>", self);
+   else
+     sendtext("First 3 characters differ<br/>", self);
+ }
+ dilend
+
+=== Protocol Command Validation ===
+ dilbegin validate_protocol(command : string);
+ var
+   result : integer;
+ code
+ {
+   // Check for HTTP protocol commands
+   result := strncmp(command, "http", 4);
+   
+   if (result == 0)
+   {
+     sendtext("HTTP protocol command<br/>", self);
+     // Handle HTTP-specific logic
+   }
+   else
+   {
+     // Check for FTP protocol
+     result := strncmp(command, "ftp", 3);
+     
+     if (result == 0)
+     {
+       sendtext("FTP protocol command<br/>", self);
+       // Handle FTP-specific logic
+     }
+     else
+     {
+       sendtext("Unknown protocol command<br/>", self);
+     }
+   }
+ }
+ dilend
+
+=== String Array Processing ===
+ dilbegin process_string_array();
+ var
+   strings : stringlist;
+   i : integer;
+   result : integer;
+ code
+ {
+   strings := {"apple", "application", "apricot", "banana"};
+   
+   // Find strings starting with "ap"
+   i := 0;
+   while (i < length(strings))
+   {
+     result := strncmp(strings.[i], "ap", 2);
+     
+     if (result == 0)
+     {
+       sendtext("Found: " + strings.[i] + " (starts with 'ap')<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Safe String Comparison ===
+ dilbegin safe_compare(str1 : string, str2 : string);
+ var
+   len1, len2, compare_len : integer;
+   result : integer;
+ code
+ {
+   len1 := length(str1);
+   len2 := length(str2);
+   
+   // Use the shorter length for comparison
+   if (len1 < len2)
+     compare_len := len1;
+   else
+     compare_len := len2;
+   
+   // Ensure we don't compare beyond string boundaries
+   if (compare_len > 0)
+     result := strncmp(str1, str2, compare_len);
+   else
+     result := 0; // Both empty strings
+   
+   if (result == 0)
+     sendtext("Strings match in first " + itoa(compare_len) + " characters<br/>", self);
+   else
+     sendtext("Strings differ in first " + itoa(compare_len) + " characters<br/>", self);
+ }
+ dilend
+
+=== Version Number Comparison ===
+ dilbegin compare_version(version1 : string, version2 : string);
+ var
+   result : integer;
+ code
+ {
+   // Compare major version numbers (first 2 characters)
+   result := strncmp(version1, version2, 2);
+   
+   if (result == 0)
+     sendtext("Same major version: " + version1 + "<br/>", self);
+   else if (result < 0)
+     sendtext(version1 + " is older than " + version2 + "<br/>", self);
+   else
+     sendtext(version1 + " is newer than " + version2 + "<br/>", self);
+ }
+ dilend
+
+=== Partial Match Search ===
+ dilbegin find_partial_matches(search : string, target : string);
+ var
+   strings : stringlist;
+   i : integer;
+   result : integer;
+ code
+ {
+   strings := {"apple", "application", "apricot", "banana", "apartment"};
+   
+   sendtext("Searching for partial matches of '" + target + "':<br/>", self);
+   
+   i := 0;
+   while (i < length(strings))
+   {
+     // Check if string starts with target (first 3 chars)
+     result := strncmp(strings.[i], target, 3);
+     
+     if (result == 0)
+     {
+       sendtext("Match: " + strings.[i] + "<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The function performs case-sensitive comparison
+* Only the first 'l' characters are compared, regardless of total string length
+* Use standard equality operators (==, !=) for full string comparison when needed
+* The function is more efficient than [[strcmp]] when you only need to compare prefixes
+* Lexicographic comparison follows ASCII character values
+* Length parameter of 0 is valid and will always return 0 (equal)
+* The function is commonly used for command validation and prefix checking
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid string parameters may cause runtime errors
+* Negative length values may cause undefined behavior
+* No specific error return values - always returns -1, 0, or 1
+* Function does not generate runtime errors for valid string inputs
+
+Always ensure both parameters are valid strings and length is non-negative before calling the function.
+
+== Related Functions/Fields ==
+* [[strcmp]] - Compare complete strings
+* [[string]] data type and operations
+* [[getwords]] - Split string into words for comparison
+* [[length]] - Get string length for validation
+* [[left]] - Extract string prefix for comparison
+* String comparison operators (==, !=, <, >, <=, >=)
+
+== See Also ==
+* DIL String Operations Documentation
+* String comparison and sorting algorithms
+* Lexicographic ordering principles
+* ASCII character encoding reference
+* C library function documentation

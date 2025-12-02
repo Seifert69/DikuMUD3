@@ -1,0 +1,277 @@
+= subextra =
+function: '''subextra'''(e : extraptr, s : string);
+
+The '''subextra''' function removes the first extra description element with a matching name from a unit's extra description list.
+
+== Description ==
+This function searches through a unit's extra description list and removes the first element whose name matches the specified string. The function operates on the extra description list in order, removing only the first occurrence found with the matching name.
+
+The function is commonly used to remove specific extra descriptions from units, such as quest markers, temporary flags, or custom attributes. It's particularly useful for managing dynamic extra descriptions that are added during gameplay.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| e || extraptr || The extra description list to remove the element from
+|-
+| s || string || The name of the extra description element to remove
+|}
+
+== Return Value ==
+The function does not return a value.
+
+== Examples ==
+=== Remove Quest Marker ===
+ dilbegin remove_quest_marker(pc : unitptr);
+ var
+   quest_extra : extraptr;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Target must be a player character.<br/>", self);
+     quit;
+   }
+   
+   // Remove quest completion marker
+   subextra(pc.extra, "completed_quest");
+   
+   sendtext("Quest marker removed.<br/>", pc);
+ }
+ dilend
+
+=== Remove Temporary Flag ===
+ dilbegin clear_temp_flag(target : unitptr);
+ var
+   temp_extra : extraptr;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove temporary effect flag
+   subextra(target.extra, "temporary_effect");
+   
+   sendtext("Temporary flag cleared.<br/>", target);
+ }
+ dilend
+
+=== Dynamic Extra Management ===
+ dilbegin manage_dynamic_extras(item : unitptr, action : string);
+ var
+   extra_list : stringlist;
+   i : integer;
+ code
+ {
+   if (item.type != UNIT_ST_OBJ)
+   {
+     sendtext("This command only works on objects.<br/>", self);
+     quit;
+   }
+   
+   // Get all extra names
+   extra_list := item.extra.names;
+   
+   if (action == "clear")
+   {
+     // Remove all dynamic extras
+     i := 0;
+     while (i < length(extra_list))
+     {
+       subextra(item.extra, extra_list.[i]);
+       i := i + 1;
+     }
+     
+     sendtext("All dynamic extras cleared.<br/>", self);
+   }
+   else if (action == "remove")
+   {
+     // Remove specific extra
+     subextra(item.extra, action);
+     
+     sendtext("Removed extra: " + action + "<br/>", self);
+   }
+   else
+   {
+     sendtext("Usage: manage_dynamic_extras <clear|remove><br/>", self);
+   }
+ }
+ dilend
+
+=== Mail System Cleanup ===
+ dilbegin cleanup_mail_extras(pc : unitptr);
+ var
+   mail_extra : extraptr;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Target must be a player character.<br/>", self);
+     quit;
+   }
+   
+   // Find mail extra description
+   mail_extra := ("$" + pc.name) in pc.extra;
+   
+   if (mail_extra)
+   {
+     // Remove mail notification flag
+     subextra(mail_extra, "mail_notification");
+     
+     sendtext("Mail notification removed.<br/>", pc);
+   }
+   else
+   {
+     sendtext("No mail extra found.<br/>", pc);
+   }
+ }
+ dilend
+
+=== Status Effect Removal ===
+ dilbegin remove_status_effects(target : unitptr);
+ var
+   status_extra : extraptr;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Find status-related extra
+   status_extra := ("status_effects") in target.extra;
+   
+   if (status_extra)
+   {
+     // Remove all status effect markers
+     subextra(status_extra, "poisoned");
+     subextra(status_extra, "cursed");
+     subextra(status_extra, "blessed");
+     
+     sendtext("Status effects cleared.<br/>", target);
+   }
+   else
+   {
+     sendtext("No status effects found.<br/>", target);
+   }
+ }
+ dilend
+
+=== Conditional Extra Removal ===
+ dilbegin conditional_extra_removal(target : unitptr, extra_name : string);
+ var
+   target_extra : extraptr;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Check if extra exists
+   target_extra := extra_name in target.extra;
+   
+   if (target_extra)
+   {
+     subextra(target.extra, extra_name);
+     sendtext("Removed extra: " + extra_name + "<br/>", self);
+   }
+   else
+   {
+     sendtext("Extra '" + extra_name + "' not found.<br/>", self);
+   }
+ }
+ dilend
+
+=== Batch Extra Processing ===
+ dilbegin batch_remove_extras(target : unitptr);
+ var
+   extras_to_remove : stringlist;
+   i : integer;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Define extras to remove
+   extras_to_remove := {"temp_flag", "quest_marker", "status_effect"};
+   
+   i := 0;
+   while (i < length(extras_to_remove))
+   {
+     subextra(target.extra, extras_to_remove.[i]);
+     sendtext("Removed: " + extras_to_remove.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Safe Extra Removal ===
+ dilbegin safe_extra_removal(target : unitptr, extra_name : string);
+ var
+   all_extras : stringlist;
+   target_extra : extraptr;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Get all current extra names
+   all_extras := target.extra.names;
+   
+   // Check if extra exists before removing
+   target_extra := extra_name in target.extra;
+   
+   if (target_extra)
+   {
+     subextra(target.extra, extra_name);
+     sendtext("Safely removed: " + extra_name + "<br/>", self);
+   }
+   else
+   {
+     sendtext("Extra '" + extra_name + "' not found.<br/>", self);
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The function removes only the first matching extra found
+* Extra descriptions are accessed via the unitptr.extra field
+* The function operates on the extra description list in order
+* Use [[addextra]] to add new extra descriptions
+* Common extra names include quest markers, status flags, and temporary effects
+* The function is commonly used for cleanup operations and state management
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid extraptr parameter causes no action
+* Null or empty string parameter causes no action
+* Invalid unit type causes no action
+* No runtime errors are generated for valid parameters
+* If no matching extra is found, no action is taken
+
+Always validate that the target is a valid character and that the extra exists before calling the function.
+
+== Related Functions/Fields ==
+* [[addextra]] - Add an extra description to a unit
+* [[subextra]] - Remove an extra description (this function)
+* unitptr.extra - Field for accessing extra description list
+* extraptr.names - Field for getting list of extra names
+* [[in]] operator - Check if an extra exists in the list
+
+== See Also ==
+* DIL Extra Description System Documentation
+* Quest and Achievement Systems
+* Character Status and Effect Management
+* Dynamic Attribute Management

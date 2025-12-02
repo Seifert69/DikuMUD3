@@ -1,0 +1,132 @@
+= value =
+ field: integer '''.value'''[index] (Read/Write)
+ 
+The '''value''' field provides indexed access to an object's value array, which contains object-specific numeric data.
+
+== Description ==
+The '''value''' field is an array of 5 integers (indices 0-4) that stores object-specific data. The meaning and usage of each value index varies depending on the object's [[#uobj|objecttype]]. This field allows direct access to modify or read object properties such as weapon damage, armor protection, food nutrition, spell power, and other type-specific attributes.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| obj.value[index] || integer || Returns the integer value at the specified index (0-4)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_OBJ (Object)
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin check_weapon_damage();
+ var
+   weapon : unitptr;
+   damage : integer;
+ 
+ code
+ {
+   weapon := self.equipment[WEAR_WIELD];
+   if (weapon != null and weapon.objecttype == ITEM_WEAPON)
+   {
+     damage := weapon.value[1]; // Get weapon damage
+     sendtext("Weapon damage: " + itoa(damage) + "<br/>", activator);
+   }
+ } dilend
+
+=== Food and Drink ===
+ dilbegin check_food_quality();
+ var
+   food : unitptr;
+   quality : integer;
+ 
+ code
+ {
+   food := self.inside;
+   if (food != null and food.objecttype == ITEM_FOOD)
+   {
+     quality := food.value[0]; // Get food quality/nutrition
+     if (quality > 0)
+     {
+       sendtext("This food looks fresh and nutritious.<br/>", activator);
+     }
+     else
+     {
+       sendtext("This food appears to be spoiled.<br/>", activator);
+     }
+   }
+ } dilend
+
+=== Container Management ===
+ dilbegin check_container_status();
+ var
+   container : unitptr;
+ 
+ code
+ {
+   container := self;
+   if (container.objecttype == ITEM_CONTAINER)
+   {
+     if (container.value[0] == 1) // Check if container is closable
+     {
+       sendtext("This container can be opened and closed.<br/>", activator);
+     }
+     if (container.value[1] == 1) // Check if container is closed
+     {
+       sendtext("The container is currently closed.<br/>", activator);
+     }
+   }
+ } dilend
+
+=== Light Source ===
+ dilbegin check_light_duration();
+ var
+   light : unitptr;
+   hours_left : integer;
+ 
+ code
+ {
+   light := self.equipment[WEAR_HOLD];
+   if (light != null and light.objecttype == ITEM_LIGHT)
+   {
+     hours_left := light.value[0]; // Get remaining hours
+     if (hours_left > 0)
+     {
+       sendtext("The light will burn for " + itoa(hours_left) + " more hours.<br/>", activator);
+     }
+     else
+     {
+       sendtext("The light has burned out.<br/>", activator);
+     }
+   }
+ } dilend
+
+== Usage Notes ==
+* Valid indices are 0 through 4 (inclusive)
+* The meaning of each index depends on the object's [[#uobj|objecttype]]
+* Common uses include:
+** Weapons: value[0] = weapon type, value[1] = damage, value[2] = bonus damage
+** Armor: value[0] = armor type, value[1] = protection, value[2] = enchantment
+** Food/Drink: value[0] = quality/nutrition, value[1] = poison strength, value[2] = hunger/thirst satisfaction
+** Containers: value[0] = closable flag, value[1] = closed flag, value[2] = pick-proof flag
+** Lights: value[0] = hours remaining, value[1] = illumination level
+** Spell items: value[0] = spell power, value[1] = spell number, value[2] = charges
+* Always check the object's [[#uobj|objecttype]] before interpreting values
+* Values are saved with the object if it's a savable item
+
+== Error Handling ==
+* Accessing an index outside 0-4 will result in a runtime error
+* Accessing '''value''' on a non-object unit will result in a runtime error
+* The field automatically handles bounds checking based on the object's value array size
+* Invalid object types may return unexpected values or cause errors
+
+== Related Functions/Fields ==
+* [[#uobj|objecttype]] - Determines how value array indices are interpreted
+* [[#uobj|objectflags]] - Additional object properties and flags
+* [[#uobj|cost]] - Object's monetary value
+* [[#uobj|rent]] - Object's rental cost
+
+== See Also ==
+* [[#uobj|UNIT_ST_OBJ]] - Object unit type documentation
+* [[#getaffects|getaffects()]] - Get object affects and properties
+* [[#objectflags|objectflags]] - Object flag manipulation

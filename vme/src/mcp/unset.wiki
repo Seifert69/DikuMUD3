@@ -1,0 +1,133 @@
+= unset =
+ procedure: '''unset'''(var : integer, bit : integer);
+
+The '''unset''' procedure clears specific bits in an integer variable.
+
+== Description ==
+This procedure removes (clears) specific bits from an integer variable by setting them to 0. It supports various integer types including signed and unsigned integers of different sizes (8-bit, 16-bit, 32-bit). This is commonly used for clearing status flags, protection flags, and other bit-based properties in DIL programs.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| var || integer || The integer variable to modify
+|-
+| bit || integer || The bit position to clear (0-based)
+|}
+
+== Examples ==
+dilbegin unique clear_defence();
+var
+    defence_flags : integer;
+code
+{
+    // Clear self-defence flag
+    defence_flags := self.charflags;
+    unset(defence_flags, CHAR_SELF_DEFENCE);
+    self.charflags := defence_flags;
+    
+    sendto("Self-defence flag cleared.&n", self);
+} dilend
+
+dilbegin unique remove_protection();
+var
+    protection_flags : integer;
+code
+{
+    // Clear multiple protection flags
+    protection_flags := self.pcflags;
+    unset(protection_flags, PC_SPIRIT);
+    unset(protection_flags, PC_PK_RELAXED);
+    unset(protection_flags, PC_INFORM);
+    self.pcflags := protection_flags;
+    
+    sendto("Protection flags cleared.&n", self);
+} dilend
+
+dilbegin unique unlock_door(door : unitptr);
+var
+    door_flags : integer;
+code
+{
+    // Clear locked flag on door
+    door_flags := door.openflags;
+    unset(door_flags, EX_LOCKED);
+    door.openflags := door_flags;
+    
+    act("$1n unlocks $2n.", A_ALWAYS, self, door, null, TO_ROOM);
+    sendto("Door unlocked.&n", self);
+} dilend
+
+dilbegin unique clear_multiple_flags();
+var
+    status : integer;
+    i : integer;
+code
+{
+    // Clear multiple bits using a loop
+    status := CHAR_SELF_DEFENCE | CHAR_KILL_SELF | PC_SPIRIT;
+    
+    sendto("Before: " + itoa(status) + "&n", self);
+    
+    // Clear each flag individually
+    unset(status, CHAR_SELF_DEFENCE);
+    unset(status, CHAR_KILL_SELF);
+    unset(status, PC_SPIRIT);
+    
+    sendto("After: " + itoa(status) + "&n", self);
+} dilend
+
+dilbegin unique toggle_awareness(state : integer);
+var
+    awareness : integer;
+code
+{
+    // Clear or set awareness based on parameter
+    awareness := self.charflags;
+    
+    if (state == 0)
+    {
+        // Clear awareness flag
+        unset(awareness, CHAR_AWAKE);
+        sendto("You fall asleep.&n", self);
+    }
+    else
+    {
+        // Set awareness flag (using bitwise operations)
+        awareness := awareness | CHAR_AWAKE;
+        self.charflags := awareness;
+        sendto("You become more aware.&n", self);
+    }
+} dilend
+
+== Usage Notes ==
+* The procedure works on integer variables of various sizes:
+** sbit8 - 8-bit signed integer
+** sbit16 - 16-bit signed integer  
+** sbit32 - 32-bit signed integer
+** ubit8 - 8-bit unsigned integer
+** ubit16 - 16-bit unsigned integer
+** ubit32 - 32-bit unsigned integer
+* The bit parameter is 0-based (bit 0 clears the least significant bit).
+* Commonly used for clearing flag bits in character flags, door flags, and other status properties.
+* The procedure modifies the variable in-place; the original variable is updated.
+* Often used in conjunction with [[setbit]] or bitwise operations for flag management.
+* Bit positions are typically defined by constants in values.h and/or vme.h (e.g., CHAR_SELF_DEFENCE, PC_SPIRIT, EX_LOCKED).
+
+== Error Handling ==
+* If the first parameter is not an integer variable, a DIL fatal error occurs: "Arg 1 of 'unset' not an integer variable".
+* If the second parameter is not an integer, a DIL fatal error occurs: "Arg 2 of 'unset' not an integer".
+* If the first parameter is not an lvalue (assignable), a DIL type error occurs: "lvalue unset".
+* The procedure will fail if the bit position is out of range for the integer type.
+
+== Related Functions/Fields ==
+* [[setbit]] - Sets specific bits in an integer variable
+* [[is_set]] - Checks if specific bits are set in an integer variable
+* [[charflags]] - Character flags field (common target for unset operations)
+* [[pcflags]] - Player character flags field
+* [[openflags]] - Door/container open flags field
+
+== See Also ==
+* Bit manipulation functions
+* Flag management functions
+* Character status and property management

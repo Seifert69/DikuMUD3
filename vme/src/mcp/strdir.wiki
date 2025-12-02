@@ -1,0 +1,302 @@
+= strdir =
+function: stringlist '''strdir'''(match : string);
+
+The '''strdir''' function returns a list of filenames from the DIL strings directory that match a specified pattern.
+
+== Description ==
+This function searches the DIL strings directory for files that match a wildcard pattern and returns them as a stringlist. The function uses the same wildcard patterns as the Linux 'ls' command, making it useful for finding specific groups of files or all files in the directory.
+
+The match parameter supports standard wildcard patterns:
+* Asterisk (*) matches any sequence of characters
+* Question mark (?) matches any single character
+* Character sets ([abc]) match any character in the set
+* The function searches for files with .dil extension in the DIL strings directory
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| match || string || The wildcard pattern to match filenames against
+|}
+
+== Return Value ==
+The function returns a stringlist containing:
+* All matching filenames from the DIL strings directory
+* Empty stringlist if no files match the pattern
+* Files are returned without the .dil extension
+
+== Examples ==
+=== Find All DIL Files ===
+ dilbegin list_all_dil_files();
+ var
+   files : stringlist;
+   i : integer;
+ code
+ {
+   files := strdir("*");
+   
+   sendtext("All DIL files:<br/>", self);
+   
+   i := 0;
+   while (i < length(files))
+   {
+     sendtext(itoa(i + 1) + ": " + files.[i] + ".dil<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Find Specific Pattern ===
+ dilbegin find_spell_files();
+ var
+   files : stringlist;
+   i : integer;
+ code
+ {
+   // Find all files starting with "spell_"
+   files := strdir("spell_*");
+   
+   sendtext("Spell-related DIL files:<br/>", self);
+   
+   i := 0;
+   while (i < length(files))
+   {
+     sendtext(itoa(i + 1) + ": " + files.[i] + ".dil<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Find Files with Character Set ===
+ dilbegin find_command_files();
+ var
+   files : stringlist;
+   i : integer;
+ code
+ {
+   // Find files with names containing only lowercase letters
+   files := strdir("[a-z]*");
+   
+   sendtext("Command files (lowercase only):<br/>", self);
+   
+   i := 0;
+   while (i < length(files))
+   {
+     sendtext(itoa(i + 1) + ": " + files.[i] + ".dil<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Multiple Pattern Search ===
+ dilbegin search_patterns();
+ var
+   spell_files : stringlist;
+   combat_files : stringlist;
+   i : integer;
+ code
+ {
+   // Find spell files
+   spell_files := strdir("spell_*");
+   
+   // Find combat-related files
+   combat_files := strdir("*combat*");
+   
+   sendtext("Spell files:<br/>", self);
+   i := 0;
+   while (i < length(spell_files))
+   {
+     sendtext("  " + spell_files.[i] + ".dil<br/>", self);
+     i := i + 1;
+   }
+   
+   sendtext("Combat files:<br/>", self);
+   i := 0;
+   while (i < length(combat_files))
+   {
+     sendtext("  " + combat_files.[i] + ".dil<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== File System Operations ===
+ dilbegin file_operations();
+ var
+   all_files : stringlist;
+   temp_files : stringlist;
+   backup_files : stringlist;
+   i : integer;
+ code
+ {
+   // Get all files
+   all_files := strdir("*");
+   
+   // Filter for temporary files
+   temp_files := strdir("temp*");
+   
+   // Filter for backup files
+   backup_files := strdir("*backup*");
+   
+   sendtext("Total DIL files: " + itoa(length(all_files)) + "<br/>", self);
+   sendtext("Temporary files: " + itoa(length(temp_files)) + "<br/>", self);
+   sendtext("Backup files: " + itoa(length(backup_files)) + "<br/>", self);
+ }
+ dilend
+
+=== Dynamic File Loading ===
+ dilbegin dynamic_loader(pattern : string);
+ var
+   files : stringlist;
+   i : integer;
+   filename : string;
+   program : unitptr;
+ code
+ {
+   files := strdir(pattern);
+   
+   if (length(files) == 0)
+   {
+     sendtext("No files match pattern: " + pattern + "<br/>", self);
+     quit;
+   }
+   
+   sendtext("Files matching '" + pattern + "':<br/>", self);
+   
+   i := 0;
+   while (i < length(files))
+   {
+     filename := files.[i] + ".dil";
+     sendtext("Loading: " + filename + "<br/>", self);
+     
+     // Load the DIL program
+     program := load(filename);
+     
+     if (program)
+     {
+       sendtext("Successfully loaded: " + filename + "<br/>", self);
+       // Execute or process the loaded program
+       dilcopy(filename, self);
+     }
+     else
+     {
+       sendtext("Failed to load: " + filename + "<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Competition Board Example ===
+ dilbegin boot_competition();
+ var
+   rm : unitptr;
+   flist : stringlist;
+   i : integer;
+   ln : integer;
+   nl : stringlist;
+ code
+ {
+   heartbeat := 5 * 60 * PULSE_SEC;
+   rm := restore("comp_obj", null);
+   
+   if (rm == null)
+   {
+     rm := load("board_obj@competition");
+     if (rm == null)
+     {
+       log("Competition board_obj error.<br>");
+       goto xp_load;
+     }
+     link(rm, self);
+   }
+   
+   // Get all competition files
+   flist := strdir("*.comp");
+   i := 0;
+   ln := length(flist);
+   
+   while (i < ln)
+   {
+     if (flist.[i] == "")
+     {
+       i := i + 1;
+       continue;
+     }
+     
+     nl := split(flist.[i], ".");
+     if (length(nl) < 2)
+     {
+       i := i + 1;
+       continue;
+     }
+     
+     // Load the competition file
+     load_file(nl.[0]);
+     i := i + 1;
+   }
+   
+   pause;
+   addextra(self.extra, {"competition loaded"}, "Extra to fix quick reboot log on problem");
+ }
+ dilend
+
+=== Wildcard Pattern Examples ===
+ dilbegin demonstrate_wildcards();
+ var
+   files : stringlist;
+   i : integer;
+ code
+ {
+   sendtext("Wildcard pattern examples:<br/>", self);
+   
+   // Match any single character
+   files := strdir("?");
+   sendtext("? (single char): " + itoa(length(files)) + " files<br/>", self);
+   
+   // Match files ending with specific suffix
+   files := strdir("*_test");
+   sendtext("*_test: " + itoa(length(files)) + " files<br/>", self);
+   
+   // Match files with specific prefix and any extension
+   files := strdir("guild_*");
+   sendtext("guild_*: " + itoa(length(files)) + " files<br/>", self);
+   
+   // Match files containing specific characters
+   files := strdir("*[abc]*");
+   sendtext("*[abc]*: " + itoa(length(files)) + " files<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The function searches the DIL strings directory for .dil files
+* Wildcard patterns follow Linux/Unix shell conventions
+* Asterisk (*) matches any sequence of characters
+* Question mark (?) matches any single character
+* Character sets ([abc]) match any character in the brackets
+* Returned filenames do not include the .dil extension
+* The function returns an empty stringlist if no matches are found
+* Use [[load]] function to load the returned filenames as DIL programs
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid pattern parameter returns empty stringlist
+* File system access errors return empty stringlist
+* Invalid wildcard patterns may cause unexpected behavior
+* No runtime errors are generated for valid string patterns
+
+Always check if the returned stringlist has elements before attempting to access them.
+
+== Related Functions/Fields ==
+* [[load]] - Load a DIL program from filename
+* [[dilcopy]] - Copy and execute a DIL program
+* [[stringlist]] - Data type for handling filename lists
+* [[length]] - Get number of files in returned list
+* [[split]] - Split filenames for processing
+
+== See Also ==
+* DIL File System Documentation
+* Wildcard Pattern Matching Documentation
+* DIL String Directory Structure
+* File Loading and Management Functions

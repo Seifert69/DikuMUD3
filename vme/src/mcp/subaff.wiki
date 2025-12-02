@@ -1,0 +1,232 @@
+= subaff =
+function: '''subaff'''(u : unitptr, i : integer);
+
+The '''subaff''' function removes the first affect with a specified ID from a unit.
+
+== Description ==
+This function searches through a unit's affects and removes the first affect that matches the specified ID. The function operates on the affect list in order, removing only the first occurrence found with the matching ID.
+
+The function is commonly used to remove specific spell effects, status conditions, or temporary modifications from characters. It's particularly useful in spell removal systems, cure effects, and affect management routines.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to remove the affect from
+|-
+| i || integer || The affect ID to remove (see ID_* constants in values.h/vme.h)
+|}
+
+== Return Value ==
+The function does not return a value.
+
+== Examples ==
+=== Remove Blindness Effect ===
+ dilbegin cure_blindness(pc : unitptr);
+ var
+   i : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC and pc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove blindness affect
+   subaff(pc, ID_BLIND_CHAR);
+   
+   sendtext("Blindness effect removed.<br/>", pc);
+ }
+ dilend
+
+=== Remove Multiple Effects ===
+ dilbegin remove_spell_effects(pc : unitptr);
+ var
+   i : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC and pc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove various spell effects
+   subaff(pc, ID_SPL_POISON);
+   subaff(pc, ID_SPL_CURSE);
+   subaff(pc, ID_SPL_SLEEP);
+   
+   sendtext("Multiple spell effects removed.<br/>", pc);
+ }
+ dilend
+
+=== Conditional Affect Removal ===
+ dilbegin conditional_removal(pc : unitptr);
+ var
+   i : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC and pc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove affects based on conditions
+   i := 0;
+   while (i < 100)
+   {
+     if (isaff(pc, ID_SPL_POISON + i))
+     {
+       subaff(pc, ID_SPL_POISON + i);
+       sendtext("Removed poison effect " + itoa(i) + "<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Spell Effect Cleanup ===
+ dilbegin cleanup_spell_effects(target : unitptr);
+ var
+   spell_affects : stringlist;
+   i : integer;
+ code
+ {
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Get all spell affects
+   spell_affects := getaffects(target);
+   
+   // Remove specific spell affects
+   i := 0;
+   while (i < length(spell_affects))
+   {
+     // Check for poison effects
+     if (spell_affects.[i] == "Poison")
+     {
+       subaff(target, ID_SPL_POISON);
+       sendtext("Removed poison effect<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Affect Management System ===
+ dilbegin affect_manager();
+ var
+   pc : unitptr;
+   affect_list : stringlist;
+   i : integer;
+ code
+ {
+   pc := activator;
+   
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("This command only works on players.<br/>", self);
+     quit;
+   }
+   
+   // Get current affects
+   affect_list := getaffects(pc);
+   
+   sendtext("Current affects:<br/>", self);
+   
+   i := 0;
+   while (i < length(affect_list))
+   {
+     sendtext(itoa(i + 1) + ": " + affect_list.[i] + "<br/>", self);
+     i := i + 1;
+   }
+   
+   // Remove first affect found
+   if (length(affect_list) > 0)
+   {
+     subaff(pc, ID_BLIND_CHAR);
+     sendtext("Removed blindness effect.<br/>", self);
+   }
+ }
+ dilend
+
+=== Temporary Effect Removal ===
+ dilbegin temporary_effect_removal(pc : unitptr);
+ var
+   i : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC and pc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove temporary effects in sequence
+   for (i := 0; i < 10; i := i + 1)
+   {
+     subaff(pc, ID_SPL_BLESS + i);
+     pause;
+   sendtext("Removed temporary blessing " + itoa(i) + "<br/>", self);
+   }
+ }
+ dilend
+
+=== Status Effect Removal ===
+ dilbegin remove_status_effects(pc : unitptr);
+ var
+   i : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC and pc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   // Remove status-related affects
+   subaff(pc, ID_SPL_SILENCE);
+   subaff(pc, ID_SPL_FEEBLEMIND);
+   subaff(pc, ID_SPL_PARALYSIS);
+   
+   sendtext("Status effects removed.<br/>", pc);
+ }
+ dilend
+
+== Usage Notes ==
+* The function removes only the first matching affect found
+* Use [[isaff]]() to check if a specific affect is present
+* Use [[getaffects]]() to get a list of all current affects
+* Affect IDs are defined as ID_* constants in values.h/vme.h
+* The function operates on the affect list in order (first match first)
+* Common affect IDs include: ID_BLIND_CHAR, ID_SPL_POISON, ID_SPL_CURSE, etc.
+* The function is commonly used in cure spells, effect removal, and status management
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Invalid unit type (not PC/NPC) causes no action
+* Invalid affect ID causes no action
+* Null unit pointer causes no action
+* No runtime errors are generated for valid parameters
+
+Always validate that the target is a character and the affect ID is valid before calling the function.
+
+== Related Functions/Fields ==
+* [[isaff]] - Check if a unit has a specific affect
+* [[addaff]] - Add an affect to a unit
+* [[getaffects]] - Get a list of all affects on a unit
+* [[subextra]] - Remove extra descriptions from units
+* unitptr.affected field - Access to affect system
+
+== See Also ==
+* DIL Affect System Documentation
+* ID_* constants for affect identification
+* Spell and effect management systems
+* Character status and condition systems

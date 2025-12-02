@@ -1,0 +1,124 @@
+= spellindex =
+function: integer '''spellindex'''(s : string);
+
+The '''spellindex''' function converts a spell name or abbreviation to its corresponding spell index number.
+
+== Description ==
+This function searches for a spell name in the spell collection and returns its numerical index. It accepts either full spell names or abbreviated spell names as input. The function uses the spell collection database to match the provided string against known spells.
+
+If the spell is found, the function returns the spell index (SPL_XXX constant) which can be used with other spell-related functions like [[spellinfo]], [[cast_spell]], and [[attack_spell]]. If no matching spell is found, the function returns -1.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The abbreviated or full spell name to search for
+|}
+
+== Return Value ==
+The function returns an integer value:
+* Valid spell index (0 or greater) if the spell is found
+* -1 if no matching spell is found or if the input string is empty/null
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin test_spellindex();
+ var
+   spell_idx : integer;
+   spell_name : string;
+ code
+ {
+   // Find spell index using abbreviation
+   spell_idx := spellindex("cu li wo");  // "cure light wounds"
+   
+   if (spell_idx != -1)
+     exec("say Found cure light wounds at index " + itoa(spell_idx), self);
+   else
+     exec("say Spell not found", self);
+   
+   // Find spell index using full name
+   spell_idx := spellindex("fireball");
+   
+   if (spell_idx != -1)
+     exec("say Found fireball at index " + itoa(spell_idx), self);
+ }
+ dilend
+
+=== Spell Validation ===
+ dilbegin validate_spell(spell_name : string);
+ var
+   idx : integer;
+   real_name : string;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+ code
+ {
+   idx := spellindex(spell_name);
+   
+   if (idx == -1)
+   {
+     sendtext("Spell '" + spell_name + "' not found.<br/>", self);
+     quit;
+   }
+   
+   // Get detailed spell information
+   real_name := spellinfo(idx, realm, sphere, mana, offensive, resist, medium, target);
+   
+   sendtext("Spell: " + real_name + "<br/>", self);
+   sendtext("Index: " + itoa(idx) + "<br/>", self);
+   sendtext("Mana cost: " + itoa(mana) + "<br/>", self);
+   sendtext("Offensive: " + (offensive != 0 ? "Yes" : "No") + "<br/>", self);
+ }
+ dilend
+
+=== Dynamic Spell Assignment ===
+ dilbegin assign_spell(pc : unitptr, spell_input : string);
+ var
+   spell_idx : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Target must be a player character.<br/>", self);
+     quit;
+   }
+   
+   spell_idx := spellindex(spell_input);
+   
+   if (spell_idx == -1)
+   {
+     sendtext("Unknown spell: " + spell_input + "<br/>", self);
+     quit;
+   }
+   
+   // Assign spell at maximum proficiency
+   pc.spells[spell_idx] := 100;
+   
+   sendtext("Assigned spell at index " + itoa(spell_idx) + " to " + pc.name + "<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The function accepts both abbreviated spell names (using spaces or underscores) and full spell names
+* Spell matching is case-insensitive
+* Abbreviations can use spaces (e.g., "cu li wo") or underscores (e.g., "cu_li_wo")
+* The returned index corresponds to SPL_XXX constants defined in the game's spell system
+* This function is commonly used to validate user input before performing spell operations
+
+== Error Handling ==
+The function handles errors gracefully:
+* Empty or null strings return -1
+* Non-existent spell names return -1
+* No runtime errors are generated for invalid input
+
+Always check the return value against -1 before using the index with other functions.
+
+== Related Functions/Fields ==
+* [[spellinfo]] - Get detailed information about a spell using its index
+* [[cast_spell]] - Cast a spell using its index
+* [[attack_spell]] - Cast an offensive spell using its index
+* unitptr.spells[] - Array field for storing character spell proficiencies
+
+== See Also ==
+* [[skillindex]] - Similar function for skill indices
+* [[weaponindex]] - Similar function for weapon indices
+* DIL Spell System Documentation

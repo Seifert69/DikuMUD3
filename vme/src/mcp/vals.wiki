@@ -1,0 +1,93 @@
+= vals =
+ field: {integerlist} '''.vals''' (Read/Write)
+ 
+The '''vals''' field provides access to the integer list associated with an extra description structure.
+
+== Description ==
+The '''vals''' field is an integerlist that stores numeric values associated with an extra description. Each extra description can have parallel arrays of names (stringlist) and values (integerlist), allowing for structured data storage where each name corresponds to a numeric value.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| extra.vals || {integerlist} || Returns the integer list associated with the extra description
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* extraptr (Extra description pointer)
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin process_donations();
+ var
+   i : integer;
+   total : integer;
+   extra : extraptr;
+ 
+ code
+ {
+   extra := self.extra.["$dlist"];
+   total := 0;
+   i := 0;
+   while (i < length(extra.vals))
+   {
+     total := total + extra.vals.[i];
+     i := i + 1;
+   }
+   sendtext("Total donations: " + itoa(total) + "<br/>", activator);
+ } dilend
+
+=== Adding Values ===
+ dilbegin add_value(name : string, value : integer);
+ var
+   extra : extraptr;
+ 
+ code
+ {
+   extra := self.extra.["$stats"];
+   addstring(extra.names, name);
+   insert(extra.vals, length(extra.vals), value);
+ } dilend
+
+=== Parallel Access ===
+ dilbegin show_pairs();
+ var
+   i : integer;
+   extra : extraptr;
+   buf : string;
+ 
+ code
+ {
+   extra := self.extra.["$pairs"];
+   buf := "Name-Value Pairs:<br/>";
+   i := 0;
+   while (i < length(extra.names) and i < length(extra.vals))
+   {
+     buf := buf + extra.names.[i] + ": " + itoa(extra.vals.[i]) + "<br/>";
+     i := i + 1;
+   }
+   sendtext(buf, activator);
+ } dilend
+
+== Usage Notes ==
+* The '''vals''' field is parallel to the [[#eptr|names]] field - they should have corresponding indices
+* When accessing by index, ensure the index is within bounds using the [[#length|length()]] function
+* The integerlist is saved with the unit if the extra description is on a savable unit
+* If the extra description has no values, the field returns NULL
+
+== Error Handling ==
+* Accessing an out-of-bounds index will return NULL
+* Attempting to access '''vals''' on a NULL extraptr will result in a runtime error
+* The field automatically handles memory management for the integerlist
+
+== Related Functions/Fields ==
+* [[#eptr|extraptr.names]] - Corresponding stringlist for names
+* [[#length|length()]] - Get the number of elements in the vals list
+* [[#insert|insert()]] - Insert values into the integerlist
+* [[#remove|remove()]] - Remove values from the integerlist
+
+== See Also ==
+* [[#eptr|extraptr]] - Extra description pointer type
+* [[#intlist|intlist]] - Integer list type documentation
+* [[#strl|stringlist]] - String list type documentation

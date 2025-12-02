@@ -1,0 +1,202 @@
+= skill_points =
+field: integer '''.skill_points''' (Read-only)
+
+The '''skill_points''' field is used to get the number of unused skill points available to a player character.
+
+== Description ==
+This field provides access to the current amount of unused skill points that a player character has available for learning or improving skills. The field returns an integer representing the pool of skill points that can be spent on new abilities or skill advancements.
+
+The field is read-only and reflects the character's current available skill points, which are typically gained through experience accumulation or other game mechanics.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current number of unused skill points
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Skill Points Display ===
+ dilbegin show_skill_points();
+ var
+    available_points : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    available_points := activator.skill_points;
+    
+    sendtext("You have " + itoa(available_points) + " unused skill points.<br/>", activator);
+ } dilend
+
+=== Skill Points Check ===
+ dilbegin can_afford_training(cost : integer);
+ var
+    available_points : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    available_points := activator.skill_points;
+    
+    if (available_points >= cost)
+    {
+       sendtext("You have enough skill points for this training.<br/>", activator);
+       return(1);
+    }
+    else
+    {
+       sendtext("You need " + itoa(cost - available_points) + " more skill points.<br/>", activator);
+       return(0);
+    }
+ } dilend
+
+=== Skill Points Management ===
+ dilbegin skill_point_transaction();
+ var
+    current_points : integer;
+    spent_points : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    current_points := activator.skill_points;
+    
+    // Simulate spending 5 skill points
+    spent_points := 5;
+    
+    // Note: This is just a simulation - actual spending
+    // would use game mechanics or other functions
+    sendtext("You had " + itoa(current_points) + " skill points.<br/>", activator);
+    sendtext("You spent " + itoa(spent_points) + " skill points.<br/>", activator);
+    sendtext("You now have " + itoa(current_points - spent_points) + " skill points.<br/>", activator);
+ } dilend
+
+=== Character Status Display ===
+ dilbegin character_status();
+ var
+    skill_points : integer;
+    ability_points : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    skill_points := activator.skill_points;
+    ability_points := activator.ability_points;
+    
+    sendtext("Character Status:<br/>", activator);
+    sendtext("Skill Points: " + itoa(skill_points) + "<br/>", activator);
+    sendtext("Ability Points: " + itoa(ability_points) + "<br/>", activator);
+    
+    // Check if character has points to spend
+    if (skill_points > 0 or ability_points > 0)
+    {
+       sendtext("You can improve your abilities. Type 'practice' to train.<br/>", activator);
+    }
+    else
+    {
+       sendtext("You have no points to spend. Gain more experience to earn points.<br/>", activator);
+    }
+ } dilend
+
+=== Points Validation ===
+ dilbegin validate_skill_points();
+ var
+    skill_points : integer;
+    ability_points : integer;
+    total_points : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    skill_points := activator.skill_points;
+    ability_points := activator.ability_points;
+    total_points := skill_points + ability_points;
+    
+    sendtext("Skill Points: " + itoa(skill_points) + "<br/>", activator);
+    sendtext("Ability Points: " + itoa(ability_points) + "<br/>", activator);
+    sendtext("Total Points: " + itoa(total_points) + "<br/>", activator);
+    
+    if (total_points < 0)
+    {
+       sendtext("Warning: Negative point total detected.<br/>", activator);
+    }
+    else if (total_points > 100)
+    {
+       sendtext("Warning: Very high point total.<br/>", activator);
+    }
+ } dilend
+
+=== Level Up Check ===
+ dilbegin check_level_up();
+ var
+    skill_points : integer;
+    exp_needed : integer;
+    current_exp : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    skill_points := activator.skill_points;
+    current_exp := activator.exp;
+    exp_needed := activator.exptol;
+    
+    sendtext("Experience to next level: " + itoa(exp_needed - current_exp) + "<br/>", activator);
+    sendtext("Current skill points: " + itoa(skill_points) + "<br/>", activator);
+    
+    if (skill_points >= 10)
+    {
+       sendtext("You have enough points to train multiple skills!<br/>", activator);
+    }
+    else
+    {
+       sendtext("You need more skill points for advanced training.<br/>", activator);
+    }
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Skill points are typically earned through experience gain
+* Points are spent on learning new skills or improving existing ones
+* The field works with [[ability_points]] for total character development points
+* Skill points are separate from ability points in most game systems
+* The field is commonly used in character creation, training, and advancement systems
+* Point values are typically non-negative integers
+
+== Error Handling ==
+The field includes validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Null pointer validation**: Fails when accessed on null unit pointers
+* **Read-only access**: Cannot be modified directly
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Attempting to modify the field (it's read-only)
+* Accessing the field on destroyed units
+* Using the field for non-player characters
+
+== Related Functions/Fields ==
+* [[ability_points]] - Field to get unused ability points
+* [[skill_costs]] - Field to get the cost of skills
+* [[skill_levels]] - Field to get the current level of skills
+* [[exp]] - Field to get current experience points
+* [[exptol]] - Field to get experience needed for next level
+* [[practice]] - Command to train skills using points
+
+== See Also ==
+* [[Character advancement]] - Information about skill progression systems
+* [[Experience system]] - Experience point and skill point mechanics
+* [[Training systems]] - Skill training and improvement procedures
+* [[Character creation]] - Information about creating characters with skills

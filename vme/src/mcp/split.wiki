@@ -1,0 +1,232 @@
+= split =
+function: stringlist '''split'''(s : string, t : string);
+
+The '''split''' function divides a string into a list of substrings based on a specified delimiter.
+
+== Description ==
+This function takes a source string and a delimiter string, then returns a stringlist containing all substrings that were separated by the delimiter in the original string. The function searches for all occurrences of the delimiter and splits the string at each location.
+
+The resulting stringlist contains each segment as a separate string element. If the delimiter is not found in the source string, the function returns a stringlist containing the original string as its single element.
+
+A common use case is splitting text by line breaks using the '&x' character, which is particularly useful when processing files read with the [[loadstr]] function.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The source string to be split
+|-
+| t || string || The delimiter string used to separate the source string
+|}
+
+== Return Value ==
+The function returns a stringlist containing:
+* All substrings that were separated by the delimiter
+* The original string as a single element if delimiter is not found
+* Empty stringlist if either parameter is null or empty
+
+== Examples ==
+=== Basic Word Splitting ===
+ dilbegin basic_split();
+ var
+   text : string;
+   words : stringlist;
+   i : integer;
+ code
+ {
+   text := "hello world this is a test";
+   words := split(text, " ");
+   
+   sendtext("Split words:<br/>", self);
+   i := 0;
+   while (i < length(words))
+   {
+     sendtext(itoa(i) + ": '" + words.[i] + "'<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Line Splitting ===
+ dilbegin process_lines();
+ var
+   multiline_text : string;
+   lines : stringlist;
+   i : integer;
+ code
+ {
+   multiline_text := "First line&xSecond line&xThird line";
+   lines := split(multiline_text, "&x");
+   
+   sendtext("Processed lines:<br/>", self);
+   i := 0;
+   while (i < length(lines))
+   {
+     sendtext("Line " + itoa(i + 1) + ": " + lines.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Command Argument Parsing ===
+ dilbegin parse_command_args(command : string);
+ var
+   args : stringlist;
+   i : integer;
+ code
+ {
+   if (command == "")
+   {
+     sendtext("No command to parse.<br/>", self);
+     quit;
+   }
+   
+   args := split(command, " ");
+   
+   sendtext("Command arguments:<br/>", self);
+   i := 0;
+   while (i < length(args))
+   {
+     sendtext("Arg " + itoa(i) + ": '" + args.[i] + "'<br/>", self);
+     i := i + 1;
+   }
+   
+   if (length(args) > 0)
+     sendtext("First argument: " + args.[0] + "<br/>", self);
+ }
+ dilend
+
+=== Processing File Content ===
+ dilbegin process_file_content(filename : string);
+ var
+   file_content : string;
+   lines : stringlist;
+   i : integer;
+   line_parts : stringlist;
+ code
+ {
+   file_content := loadstr(filename);
+   
+   if (file_content == "")
+   {
+     sendtext("Could not load file: " + filename + "<br/>", self);
+     quit;
+   }
+   
+   lines := split(file_content, "&x");
+   
+   sendtext("Processing " + itoa(length(lines)) + " lines:<br/>", self);
+   
+   i := 0;
+   while (i < length(lines))
+   {
+     // Skip empty lines
+     if (lines.[i] != "")
+     {
+       // Process each line (example: split by commas)
+       line_parts := split(lines.[i], ",");
+       
+       sendtext("Line " + itoa(i + 1) + " has " + itoa(length(line_parts)) + " parts<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Complex Delimiter Processing ===
+ dilbegin complex_splitting();
+ var
+   data : string;
+   records : stringlist;
+   fields : stringlist;
+   i, j : integer;
+ code
+ {
+   // Example CSV-like data
+   data := "name,age,city&xJohn,25,NYC&xJane,30,LA&xBob,35,Chicago";
+   
+   // Split into records by line
+   records := split(data, "&x");
+   
+   sendtext("Data records:<br/>", self);
+   
+   i := 0;
+   while (i < length(records))
+   {
+     if (records.[i] != "")
+     {
+       // Split each record into fields
+       fields := split(records.[i], ",");
+       
+       sendtext("Record " + itoa(i + 1) + ": ", self);
+       
+       j := 0;
+       while (j < length(fields))
+       {
+         sendtext("[" + fields.[j] + "] ", self);
+         j := j + 1;
+       }
+       
+       sendtext("<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Removing Substrings ===
+ dilbegin remove_substring(text : string, to_remove : string);
+ var
+   parts : stringlist;
+   result : string;
+   i : integer;
+ code
+ {
+   // Split by the substring to remove and rejoin
+   parts := split(text, to_remove);
+   
+   result := "";
+   i := 0;
+   while (i < length(parts))
+   {
+     result := result + parts.[i];
+     i := i + 1;
+   }
+   
+   sendtext("Original: " + text + "<br/>", self);
+   sendtext("Result: " + result + "<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The delimiter can be any string, not just a single character
+* Empty strings between delimiters are included in the result
+* The function is case-sensitive for delimiter matching
+* Use '&x' to split by line breaks when working with file content
+* The resulting stringlist can be accessed using array notation: result.[index]
+* Use [[length]]() to get the number of elements in the resulting stringlist
+* Stringlist elements are indexed starting from 0
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or empty source string returns empty stringlist
+* Null or empty delimiter returns empty stringlist
+* No runtime errors are generated for valid string inputs
+* Always check the length of the returned stringlist before accessing elements
+
+== Related Functions/Fields ==
+* [[length]] - Get the number of elements in a stringlist
+* [[addstring]] - Add a string to a stringlist
+* [[substring]] - Remove a string from a stringlist
+* [[getwords]] - Split string into words (space-delimited)
+* [[loadstr]] - Load file content (often used with split and '&x')
+* [[insert]] - Insert element into stringlist at specific position
+* [[remove]] - Remove element from stringlist at specific position
+
+== See Also ==
+* Stringlist data type documentation
+* String manipulation functions
+* File processing functions
+* DIL string operations documentation

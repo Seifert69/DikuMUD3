@@ -1,0 +1,210 @@
+= spell_costs =
+field: integer '''.spell_costs'''[index] (Read-only)
+
+The '''spell_costs''' field is used to get the mana cost of a specific spell for a player character.
+
+== Description ==
+This field provides access to the mana cost required to cast a specific spell. The field takes an integer index parameter and returns the mana cost in experience points for that spell. The field is only available on player characters and requires appropriate zone access level to read.
+
+The field uses the game's internal spell cost system, which may be modified by racial bonuses, class bonuses, or other game mechanics.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the mana cost in experience points for the specified spell index
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Spell Cost Lookup ===
+ dilbegin check_spell_cost();
+ var
+    spell_index : integer;
+    mana_cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check cost of spell at index 10 (e.g., SPL_FIREBALL)
+    spell_index := 10;
+    mana_cost := activator.spell_costs[spell_index];
+    
+    sendtext("Spell cost: " + itoa(mana_cost) + " experience points.<br/>", activator);
+ } dilend
+
+=== Spell Affordability Check ===
+ dilbegin can_afford_spell(spell_idx : integer);
+ var
+    mana_cost : integer;
+    player_exp : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    mana_cost := activator.spell_costs[spell_idx];
+    player_exp := activator.exp;
+    
+    if (player_exp >= mana_cost)
+    {
+       sendtext("You can afford this spell.<br/>", activator);
+       return(1);
+    }
+    else
+    {
+       sendtext("You need " + itoa(mana_cost - player_exp) + " more experience points.<br/>", activator);
+       return(0);
+    }
+ } dilend
+
+=== Spell Cost Comparison ===
+ dilbegin compare_spell_costs();
+ var
+    spell1_cost : integer;
+    spell2_cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Compare costs of two different spells
+    spell1_cost := activator.spell_costs[SPL_FIREBALL];
+    spell2_cost := activator.spell_costs[SPL_HEAL];
+    
+    sendtext("Fireball cost: " + itoa(spell1_cost) + " XP<br/>", activator);
+    sendtext("Heal cost: " + itoa(spell2_cost) + " XP<br/>", activator);
+    
+    if (spell1_cost < spell2_cost)
+       sendtext("Fireball is cheaper to learn.<br/>", activator);
+    else if (spell2_cost < spell1_cost)
+       sendtext("Heal is cheaper to learn.<br/>", activator);
+    else
+       sendtext("Both spells cost the same.<br/>", activator);
+ } dilend
+
+=== Spell Cost Display ===
+ dilbegin show_all_spell_costs();
+ var
+    i : integer;
+    spell_name : string;
+    mana_cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Spell Costs:<br/>", activator);
+    
+    // Display costs for first 10 spells
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SPL_TREE_MAX)
+       {
+          mana_cost := activator.spell_costs[i];
+          spell_name := spell_name(i);
+          
+          if (spell_name != "")
+             sendtext(spell_name + ": " + itoa(mana_cost) + " XP<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Racial Bonus Calculation ===
+ dilbegin calculate_racial_spell_cost(base_spell : integer, race : integer);
+ external
+    integer get_racial_spell_bonus(race : integer, spell : integer);
+ var
+    racial_bonus : integer;
+    final_cost : integer;
+ code
+ {
+    // Get base cost (this would be from a table or calculation)
+    final_cost := base_spell;
+    
+    // Apply racial bonus (negative bonus reduces cost)
+    racial_bonus := get_racial_spell_bonus(race, base_spell);
+    final_cost := final_cost + racial_bonus;
+    
+    // Ensure cost doesn't go below 1
+    if (final_cost < 1)
+       final_cost := 1;
+    
+    return(final_cost);
+ } dilend
+
+=== Spell Cost Validation ===
+ dilbegin validate_spell_cost(spell_idx : integer);
+ var
+    mana_cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check if spell index is valid
+    if (spell_idx < 0 or spell_idx >= SPL_TREE_MAX)
+    {
+       sendtext("Invalid spell index: " + itoa(spell_idx) + "<br/>", activator);
+       return(-1);
+    }
+    
+    mana_cost := activator.spell_costs[spell_idx];
+    
+    if (mana_cost < 0)
+    {
+       sendtext("Warning: Negative spell cost detected.<br/>", activator);
+    }
+    else if (mana_cost > 1000)
+    {
+       sendtext("Warning: Extremely high spell cost.<br/>", activator);
+    }
+    else
+    {
+       sendtext("Spell " + itoa(spell_idx) + " costs " + itoa(mana_cost) + " XP.<br/>", activator);
+    }
+    
+    return(mana_cost);
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Requires zone access level 0 to read spell costs
+* Spell indices correspond to SPL_* constants defined in the game system
+* The field returns experience point costs, not spell levels or proficiency
+* Spell costs may be modified by racial bonuses, class bonuses, or other game mechanics
+* The field is commonly used with [[spell_name()]] to get spell names
+* Spell costs are typically used in character creation, training, and advancement systems
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Access level validation**: Requires zone access level 0
+* **Index validation**: Spell index must be within valid range (0 to SPL_TREE_MAX - 1)
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Using invalid spell indices
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[spell_name()]] - Function to get the name of a spell from its index
+* [[spell_levels]] - Field to get the current level of a spell
+* [[spells]] - Field array to access all spell values
+* [[exp]] - Field to get current experience points
+* [[skill_points]] - Field to get available skill points
+
+== See Also ==
+* [[SPL_*]] - Spell index constants
+* [[Character advancement]] - Information about spell progression systems
+* [[Experience system]] - Experience point and spell cost mechanics
+* [[Racial bonuses]] - Racial modifications to spell costs
+* [[Training systems]] - Spell training and advancement procedures

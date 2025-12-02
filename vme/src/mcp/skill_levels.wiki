@@ -1,0 +1,225 @@
+= skill_levels =
+field: integer '''.skill_levels'''[index] (Read-only)
+
+The '''skill_levels''' field is used to get the current level of a specific skill for a player character.
+
+== Description ==
+This field provides access to the current skill level for a specific skill index on a player character. The field takes an integer index parameter and returns the current level of that skill. The field is only available on player characters and requires appropriate zone access level to read.
+
+The field uses the game's internal skill system to track character progression in different abilities and skills.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current level of the specified skill index
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Skill Level Check ===
+ dilbegin check_skill_level();
+ var
+    skill_index : integer;
+    current_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check current level of sword skill (SKI_SWORD)
+    skill_index := 5;  // Assuming SKI_SWORD = 5
+    current_level := activator.skill_levels[skill_index];
+    
+    sendtext("Your sword skill level is: " + itoa(current_level) + "<br/>", activator);
+ } dilend
+
+=== Skill Progression Display ===
+ dilbegin show_skill_progress();
+ var
+    i : integer;
+    skill_name : string;
+    skill_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Your Skill Levels:<br/>", activator);
+    
+    // Display levels for first 10 skills
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SKI_TREE_MAX)
+       {
+          skill_level := activator.skill_levels[i];
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+             sendtext(skill_name + ": " + itoa(skill_level) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Skill Mastery Check ===
+ dilbegin check_skill_mastery();
+ var
+    weapon_level : integer;
+    shield_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    weapon_level := activator.skill_levels[SKI_SWORD];
+    shield_level := activator.skill_levels[SKI_SHIELD];
+    
+    if (weapon_level >= 10 and shield_level >= 10)
+    {
+       sendtext("You have mastered both weapon and shield skills.<br/>", activator);
+    }
+    else if (weapon_level >= 10)
+    {
+       sendtext("You have mastered weapon skills.<br/>", activator);
+    }
+    else if (shield_level >= 10)
+    {
+       sendtext("You have mastered shield skills.<br/>", activator);
+    }
+    else
+    {
+       sendtext("You still have much to learn.<br/>", activator);
+    }
+ } dilend
+
+=== Skill Requirement Validation ===
+ dilbegin validate_skill_requirements();
+ var
+    required_level : integer;
+    player_level : integer;
+    skill_index : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check if player meets skill requirements for advanced training
+    required_level := 15;
+    player_level := activator.level;
+    
+    // Check specific skill (e.g., advanced sword techniques)
+    skill_index := 5;  // SKI_SWORD
+    
+    if (activator.skill_levels[skill_index] >= required_level)
+    {
+       sendtext("You meet the requirements for advanced training.<br/>", activator);
+       return(1);
+    }
+    else
+    {
+       sendtext("You need to be at least level " + itoa(required_level) + " for this training.<br/>", activator);
+       return(0);
+    }
+ } dilend
+
+=== Skill Comparison ===
+ dilbegin compare_skills(target : unitptr);
+ var
+    i : integer;
+    my_level : integer;
+    target_level : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC or target.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Skill Comparison:<br/>", activator);
+    
+    // Compare levels for several key skills
+    for (i := 0; i < 5; i := i + 1)
+    {
+       if (i < SKI_TREE_MAX)
+       {
+          my_level := activator.skill_levels[i];
+          target_level := target.skill_levels[i];
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+          {
+             sendtext(skill_name + " - You: " + itoa(my_level) + ", Target: " + itoa(target_level) + "<br/>", activator);
+          }
+       }
+    }
+ } dilend
+
+=== Skill-Based Abilities ===
+ dilbegin skill_based_abilities();
+ var
+    magic_level : integer;
+    weapon_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    magic_level := activator.skill_levels[SKI_MAGIC];
+    weapon_level := activator.skill_levels[SKI_SWORD];
+    
+    // Unlock abilities based on skill levels
+    if (magic_level >= 5)
+    {
+       sendtext("You can cast advanced spells.<br/>", activator);
+    }
+    
+    if (weapon_level >= 7)
+    {
+       sendtext("You can use special weapon techniques.<br/>", activator);
+    }
+    
+    if (magic_level >= 5 and weapon_level >= 7)
+    {
+       sendtext("You can combine magic and weapon skills.<br/>", activator);
+    }
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Requires zone access level 0 to read skill levels
+* Skill indices correspond to SKI_* constants defined in the game system
+* The field returns current skill level, not skill cost or proficiency
+* Skill levels typically range from 0 to a maximum (often 100 or higher)
+* The field is commonly used with [[skill_name()]] to get skill names
+* Skill levels are used in character advancement and ability calculations
+* The field is often used in training, guild, and progression systems
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Access level validation**: Requires zone access level 0
+* **Index validation**: Skill index must be within valid range (0 to SKI_TREE_MAX - 1)
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Using invalid skill indices
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[skill_name()]] - Function to get the name of a skill from its index
+* [[skill_costs]] - Field to get the experience point cost of a skill
+* [[skills]] - Field array to access all skill values
+* [[skill_points]] - Field to get available skill points
+* [[exp]] - Field to get current experience points
+
+== See Also ==
+* [[SKI_*]] - Skill index constants
+* [[Character advancement]] - Information about skill progression systems
+* [[Training systems]] - Skill training and improvement procedures
+* [[Experience system]] - Experience point and skill level mechanics

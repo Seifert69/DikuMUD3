@@ -1,0 +1,177 @@
+= skill_costs =
+field: integer '''.skill_costs'''[index] (Read-only)
+
+The '''skill_costs''' field is used to get the skill cost in experience points for a specific skill index.
+
+== Description ==
+This field provides access to the experience point cost required to learn or improve a specific skill. The field takes an integer index parameter and returns the cost in experience points for that skill. The field is only available on player characters and requires appropriate zone access level to read.
+
+The field uses the game's internal skill cost system, which may be modified by racial bonuses or other game mechanics.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the experience point cost for the specified skill index
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Skill Cost Lookup ===
+ dilbegin check_skill_cost();
+ var
+    skill_index : integer;
+    cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check cost of skill at index 5 (e.g., SKI_SWORD)
+    skill_index := 5;
+    cost := activator.skill_costs[skill_index];
+    
+    sendtext("Skill cost: " + itoa(cost) + " experience points.<br/>", activator);
+ } dilend
+
+=== Skill Affordability Check ===
+ dilbegin can_afford_skill(skill_idx : integer);
+ var
+    skill_cost : integer;
+    player_exp : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    skill_cost := activator.skill_costs[skill_idx];
+    player_exp := activator.exp;
+    
+    if (player_exp >= skill_cost)
+    {
+       sendtext("You can afford this skill.<br/>", activator);
+       return(1);
+    }
+    else
+    {
+       sendtext("You need " + itoa(skill_cost - player_exp) + " more experience points.<br/>", activator);
+       return(0);
+    }
+ } dilend
+
+=== Skill Cost Comparison ===
+ dilbegin compare_skill_costs();
+ var
+    i : integer;
+    skill1_cost : integer;
+    skill2_cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Compare costs of two different skills
+    skill1_cost := activator.skill_costs[SKI_SWORD];
+    skill2_cost := activator.skill_costs[SKI_SHIELD];
+    
+    sendtext("Sword skill cost: " + itoa(skill1_cost) + " XP<br/>", activator);
+    sendtext("Shield skill cost: " + itoa(skill2_cost) + " XP<br/>", activator);
+    
+    if (skill1_cost < skill2_cost)
+       sendtext("Sword skill is cheaper to learn.<br/>", activator);
+    else if (skill2_cost < skill1_cost)
+       sendtext("Shield skill is cheaper to learn.<br/>", activator);
+    else
+       sendtext("Both skills cost the same.<br/>", activator);
+ } dilend
+
+=== Skill Cost Display ===
+ dilbegin show_all_skill_costs();
+ var
+    i : integer;
+    skill_name : string;
+    cost : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Skill Costs:<br/>", activator);
+    
+    // Display costs for first 10 skills
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SKI_TREE_MAX)
+       {
+          cost := activator.skill_costs[i];
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+             sendtext(skill_name + ": " + itoa(cost) + " XP<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Racial Bonus Calculation ===
+ dilbegin calculate_racial_skill_cost(base_skill : integer, race : integer);
+ external
+    integer get_racial_skill_bonus(race : integer, skill : integer);
+ var
+    racial_bonus : integer;
+    final_cost : integer;
+ code
+ {
+    // Get base cost (this would be from a table or calculation)
+    final_cost := base_skill;
+    
+    // Apply racial bonus (negative bonus reduces cost)
+    racial_bonus := get_racial_skill_bonus(race, base_skill);
+    final_cost := final_cost + racial_bonus;
+    
+    // Ensure cost doesn't go below 1
+    if (final_cost < 1)
+       final_cost := 1;
+    
+    return(final_cost);
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Requires zone access level 0 to read skill costs
+* Skill indices correspond to SKI_* constants defined in the game system
+* The field returns experience point costs, not skill levels or proficiency
+* Skill costs may be modified by racial bonuses, class bonuses, or other game mechanics
+* The field is commonly used with [[skill_name()]] to get skill names
+* Skill costs are typically used in character creation, training, and advancement systems
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Access level validation**: Requires zone access level 0
+* **Index validation**: Skill index must be within valid range (0 to SKI_TREE_MAX - 1)
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Using invalid skill indices
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[skill_name()]] - Function to get the name of a skill from its index
+* [[skill_levels]] - Field to get the current level of a skill
+* [[skills]] - Field array to access all skill values
+* [[exp]] - Field to get current experience points
+* [[skill_points]] - Field to get available skill points
+
+== See Also ==
+* [[SKI_*]] - Skill index constants
+* [[Character advancement]] - Information about skill progression
+* [[Experience system]] - Experience point and skill cost mechanics
+* [[Racial bonuses]] - Racial modifications to skill costs
+* [[Training systems]] - Skill training and advancement procedures

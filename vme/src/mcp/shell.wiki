@@ -1,0 +1,156 @@
+= shell =
+function: integer '''shell'''(command : string);
+
+The '''shell''' function is used to execute system commands by creating a separate thread to run the specified command.
+
+== Description ==
+This function executes a system command in a separate thread, allowing DIL programs to run external commands and scripts. The function creates a new thread to execute the specified command string and returns an integer indicating whether the thread was successfully created (0 for success, non-zero for thread creation error).
+
+The function requires appropriate zone access level - only zones with access level 0 (highest access) can use this function. Attempting to use it from restricted zones will result in a security violation and terminate the DIL program.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| command || string || The system command to execute with its parameters
+|}
+
+The command parameter should be a complete command string including any arguments or parameters.
+
+== Examples ==
+=== Basic System Command ===
+ dilbegin system_info();
+ var
+    result : integer;
+ code
+ {
+    // Execute a system command to get information
+    result := shell("uname -a");
+    
+    if (result == 0)
+       sendtext("System command executed successfully.<br/>", self);
+    else
+       sendtext("Failed to execute system command.<br/>", self);
+ } dilend
+
+=== File Operations ===
+ dilbegin backup_player_data();
+ var
+    player_name : string;
+    backup_cmd : string;
+    result : integer;
+ code
+ {
+    player_name := activator.name;
+    backup_cmd := "cp /mud/save/" + player_name + " /mud/backup/";
+    
+    result := shell(backup_cmd);
+    
+    if (result == 0)
+    {
+       sendtext("Your character data has been backed up.<br/>", activator);
+       log("Backup completed for " + player_name);
+    }
+    else
+    {
+       sendtext("Backup failed. Please contact administration.<br/>", activator);
+       log("Backup failed for " + player_name + " with error " + itoa(result));
+    }
+ } dilend
+
+=== Game Management ===
+ dilbegin restart_game_service();
+ var
+    restart_cmd : string;
+    result : integer;
+ code
+ {
+    restart_cmd := "/mud/bin/restart_service.sh";
+    
+    result := shell(restart_cmd);
+    
+    if (result == 0)
+    {
+       sendtext("Game service restart initiated.<br/>", self);
+       log("Service restart command executed by DIL");
+    }
+    else
+    {
+       sendtext("Failed to restart service.<br/>", self);
+       log("Service restart failed with error " + itoa(result));
+    }
+ } dilend
+
+=== Command Testing ===
+ dilbegin test_system_command();
+ var
+    test_cmd : string;
+    result : integer;
+ code
+ {
+    test_cmd := "test.sh olle golle";
+    
+    result := shell(test_cmd);
+    
+    log("Shell command '" + test_cmd + "' returned: " + itoa(result));
+    
+    // Note: We can't determine if the command itself succeeded,
+    // only if the thread was created successfully
+    if (result == 0)
+       sendtext("Test command thread created.<br/>", self);
+    else
+       sendtext("Failed to create thread for test command.<br/>", self);
+ } dilend
+
+=== Security Check ===
+ dilbegin security_test();
+ var
+    result : integer;
+ code
+ {
+    // This will fail if zone doesn't have access level 0
+    result := shell("whoami");
+    
+    if (result == 0)
+       sendtext("Security check passed.<br/>", self);
+    else
+       sendtext("Security check failed - insufficient privileges.<br/>", self);
+ } dilend
+
+== Usage Notes ==
+* The function executes commands in a separate thread, not blocking the DIL program
+* Only zones with access level 0 (highest access) can use this function
+* The function returns 0 if the thread was created successfully
+* A non-zero return value indicates thread creation failure, not command failure
+* The DIL program cannot determine if the actual command succeeded
+* Commands are executed with the same permissions as the MUD server process
+* Only commands in the allow/ directory can be executed for security reasons
+* Use this function sparingly as it can impact server performance and security
+
+== Error Handling ==
+The function includes several validation and security checks:
+
+* **Access level validation**: Only works in zones with access level 0
+* **Type validation**: The parameter must be a string
+* **Security violation**: Attempts from restricted zones terminate the DIL program
+* **Thread creation failure**: Returns non-zero if thread cannot be created
+* **Command validation**: Only allows commands in the allow/ directory
+
+Common error scenarios:
+* Attempting to use from zones with restricted access
+* Passing non-string command parameters
+* Trying to execute commands outside the allow/ directory
+* Server resource limitations preventing thread creation
+* Invalid command syntax or non-existent commands
+
+== Related Functions/Fields ==
+* [[exec()]] - Function to execute commands as a specific unit
+* [[command()]] - Function to check if a command was entered
+* [[cmdstr]] - Field containing the command string entered
+* [[excmdstr]] - Field containing the full command string with arguments
+
+== See Also ==
+* [[System commands]] - Information about available system commands
+* [[Zone access levels]] - Security and permission system
+* [[Thread management]] - Information about multi-threading in DIL
+* [[Security restrictions]] - Command execution security policies

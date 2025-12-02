@@ -1,0 +1,223 @@
+= spell_levels =
+field: integer '''.spell_levels'''[index] (Read-only)
+
+The '''spell_levels''' field is used to get the current level of a specific spell for a player character.
+
+== Description ==
+This field provides access to the current level of a specific spell for a player character. The field takes an integer index parameter and returns the current level of that spell. The field is only available on player characters and requires appropriate zone access level to read.
+
+The field uses the game's internal spell system to track character progression in magical abilities and spellcasting proficiency.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current level of the specified spell index
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Spell Level Check ===
+ dilbegin check_spell_level();
+ var
+    spell_index : integer;
+    current_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check current level of fireball spell (SPL_FIREBALL)
+    spell_index := 1;  // Assuming SPL_FIREBALL = 1
+    current_level := activator.spell_levels[spell_index];
+    
+    sendtext("Your fireball spell level is: " + itoa(current_level) + "<br/>", activator);
+ } dilend
+
+=== Spell Progression Display ===
+ dilbegin show_spell_progress();
+ var
+    i : integer;
+    spell_name : string;
+    spell_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Your Spell Levels:<br/>", activator);
+    
+    // Display levels for first 10 spells
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SPL_TREE_MAX)
+       {
+          spell_level := activator.spell_levels[i];
+          spell_name := spell_name(i);
+          
+          if (spell_name != "")
+             sendtext(spell_name + ": " + itoa(spell_level) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Spell Mastery Check ===
+ dilbegin check_spell_mastery();
+ var
+    fire_level : integer;
+    heal_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    fire_level := activator.spell_levels[SPL_FIREBALL];
+    heal_level := activator.spell_levels[SPL_HEAL];
+    
+    if (fire_level >= 10 and heal_level >= 10)
+    {
+       sendtext("You have mastered both offensive and defensive magic.<br/>", activator);
+    }
+    else if (fire_level >= 10)
+    {
+       sendtext("You have mastered offensive magic.<br/>", activator);
+    }
+    else if (heal_level >= 10)
+    {
+       sendtext("You have mastered defensive magic.<br/>", activator);
+    }
+    else
+    {
+       sendtext("You still have much to learn.<br/>", activator);
+    }
+ } dilend
+
+=== Spell Requirement Validation ===
+ dilbegin validate_spell_requirements();
+ var
+    required_level : integer;
+    player_level : integer;
+    spell_index : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check if player meets spell requirements for advanced training
+    required_level := 15;
+    player_level := activator.level;
+    
+    // Check specific spell (e.g., advanced fire techniques)
+    spell_index := 1;  // SPL_FIREBALL
+    
+    if (activator.spell_levels[spell_index] >= required_level)
+    {
+       sendtext("You meet the requirements for advanced spell training.<br/>", activator);
+       return(1);
+    }
+    else
+    {
+       sendtext("You need to be at least level " + itoa(required_level) + " for this training.<br/>", activator);
+       return(0);
+    }
+ } dilend
+
+=== Spell Comparison ===
+ dilbegin compare_spells(target : unitptr);
+ var
+    i : integer;
+    my_level : integer;
+    target_level : integer;
+    spell_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC or target.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Spell Level Comparison:<br/>", activator);
+    
+    // Compare levels for several key spells
+    for (i := 0; i < 5; i := i + 1)
+    {
+       my_level := activator.spell_levels[i];
+       target_level := target.spell_levels[i];
+       spell_name := spell_name(i);
+       
+       if (spell_name != "")
+       {
+          sendtext(spell_name + " - You: " + itoa(my_level) + ", Target: " + itoa(target_level) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Spell-Based Abilities ===
+ dilbegin spell_based_abilities();
+ var
+    fire_level : integer;
+    magic_level : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    fire_level := activator.spell_levels[SPL_FIREBALL];
+    magic_level := activator.spell_levels[SPL_MAGIC_MISSILE];
+    
+    // Unlock abilities based on spell levels
+    if (fire_level >= 5)
+    {
+       sendtext("You can cast advanced fire spells.<br/>", activator);
+    }
+    
+    if (magic_level >= 5)
+    {
+       sendtext("You can cast advanced magic spells.<br/>", activator);
+    }
+    
+    if (fire_level >= 5 and magic_level >= 5)
+    {
+       sendtext("You can combine fire and magic spells.<br/>", activator);
+    }
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Requires zone access level 0 to read spell levels
+* Spell indices correspond to SPL_* constants defined in the game system
+* The field returns current spell level, not spell cost or mana cost
+* Spell levels typically range from 0 to a maximum (often 100 or higher)
+* The field is commonly used with [[spell_name()]] to get spell names
+* Spell levels are used in character advancement and magical ability calculations
+* The field is often used in training, guild, and progression systems
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Access level validation**: Requires zone access level 0
+* **Index validation**: Spell index must be within valid range (0 to SPL_TREE_MAX - 1)
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Using invalid spell indices
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[spell_name()]] - Function to get the name of a spell from its index
+* [[spell_costs]] - Field to get the mana cost of a spell
+* [[spells]] - Field array to access all spell values
+* [[exp]] - Field to get current experience points
+* [[spell_points]] - Field to get available spell points
+
+== See Also ==
+* [[SPL_*]] - Spell index constants
+* [[Character advancement]] - Information about spell progression systems
+* [[Experience system]] - Experience point and spell level mechanics
+* [[Training systems]] - Spell training and advancement procedures
+* [[Magical abilities]] - Information about spell systems and magic

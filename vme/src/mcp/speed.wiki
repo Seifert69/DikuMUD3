@@ -1,0 +1,218 @@
+= speed =
+field: integer '''.speed''' (Read-only)
+
+The '''speed''' field is used to get or set the current combat speed of a character unit.
+
+== Description ==
+This field provides access to the current combat speed value of a character. The field returns an integer representing the character's speed in combat situations. The field is only available on character units (PC and NPC) and requires appropriate zone access level to read.
+
+The field uses the game's internal speed system to determine combat initiative and action timing.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current combat speed value of the character
+|-
+| Write || integer || Sets the combat speed value of the character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Examples ==
+=== Basic Speed Check ===
+ dilbegin check_speed();
+ var
+    current_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    current_speed := activator.speed;
+    
+    sendtext("Your current combat speed is: " + itoa(current_speed) + "<br/>", activator);
+ } dilend
+
+=== Speed Comparison ===
+ dilbegin compare_speeds(target : unitptr);
+ var
+    my_speed : integer;
+    target_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC or
+       target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+       quit;
+    
+    my_speed := activator.speed;
+    target_speed := target.speed;
+    
+    sendtext("Speed Comparison:<br/>", activator);
+    sendtext("Your speed: " + itoa(my_speed) + "<br/>", activator);
+    sendtext("Target speed: " + itoa(target_speed) + "<br/>", activator);
+    
+    if (my_speed > target_speed)
+       sendtext("You are faster than your target.<br/>", activator);
+    else if (my_speed < target_speed)
+       sendtext("Your target is faster than you.<br/>", activator);
+    else
+       sendtext("You have equal speed.<br/>", activator);
+ } dilend
+
+=== Speed Modification ===
+ dilbegin modify_character_speed();
+ var
+    original_speed : integer;
+    new_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    original_speed := activator.speed;
+    
+    // Increase speed by 25%
+    new_speed := original_speed + (original_speed / 4);
+    
+    // Ensure reasonable speed limits
+    if (new_speed > 100)
+       new_speed := 100;
+    
+    activator.speed := new_speed;
+    
+    sendtext("Your speed has been increased from " + itoa(original_speed) + " to " + itoa(new_speed) + "!<br/>", activator);
+ } dilend
+
+=== Temporary Speed Boost ===
+ dilbegin haste_spell();
+ var
+    original_speed : integer;
+    boosted_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    original_speed := activator.speed;
+    
+    // Double speed temporarily
+    boosted_speed := original_speed * 2;
+    
+    activator.speed := boosted_speed;
+    
+    sendtext("You feel incredibly fast!<br/>", activator);
+    
+    // Wait for effect duration
+    pause;
+    pause;
+    
+    // Restore original speed
+    activator.speed := original_speed;
+    
+    sendtext("You return to normal speed.<br/>", activator);
+ } dilend
+
+=== Speed-Based Combat ===
+ dilbegin speed_combat_check();
+ var
+    my_speed : integer;
+    opponent_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    my_speed := activator.speed;
+    
+    // Check if we can act before opponent
+    if (self.fighting != null)
+    {
+       opponent_speed := self.fighting.speed;
+       
+       if (my_speed > opponent_speed)
+       {
+          sendtext("You strike first with your superior speed!<br/>", self);
+       }
+       else if (my_speed < opponent_speed)
+       {
+          sendtext("Your opponent strikes first with superior speed!<br/>", self);
+       }
+       else
+       {
+          sendtext("You and your opponent strike simultaneously!<br/>", self);
+       }
+    }
+    else
+    {
+       sendtext("You are not currently in combat.<br/>", self);
+    }
+ } dilend
+
+=== Speed Validation ===
+ dilbegin validate_speed();
+ var
+    character_speed : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC and activator.type != UNIT_ST_NPC)
+       quit;
+    
+    character_speed := activator.speed;
+    
+    // Check if speed is within reasonable bounds
+    if (character_speed < 0)
+    {
+       sendtext("Warning: Invalid negative speed detected.<br/>", self);
+       activator.speed := 0;
+    }
+    else if (character_speed > 200)
+    {
+       sendtext("Warning: Speed exceeds maximum limit.<br/>", self);
+       activator.speed := 200;
+    }
+    else
+    {
+       sendtext("Speed is within acceptable range.<br/>", self);
+    }
+ } dilend
+
+== Usage Notes ==
+* The field is read-write and can be modified directly
+* Only available on character units (PC and NPC)
+* Requires zone access level 0 to read speed values
+* Speed values affect combat initiative and action order
+* Higher speed values mean the character acts more frequently in combat
+* Speed is typically calculated as base speed plus modifiers
+* The field is commonly used with [[change_speed()]] function for temporary modifications
+* Speed values are often used in spell effects, magical items, and character creation
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC and UNIT_ST_NPC units
+* **Access level validation**: Requires zone access level 0
+* **Value validation**: Speed values should be within reasonable game limits
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on objects or rooms (will return fail)
+* Using invalid speed values (negative or extremely high)
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[change_speed()]] - Function to modify character speed temporarily
+* [[position]] - Field for character position state
+* [[fighting]] - Field to check current combat opponent
+* [[charflags]] - Field for character flags and states
+* [[combat_speed]] - Internal speed calculation system
+
+== See Also ==
+* [[Combat system]] - Information about combat mechanics and initiative
+* [[Character attributes]] - General character statistics and properties
+* [[Movement and speed]] - Speed-related game mechanics
+* [[Spells and effects]] - Information about magical speed modifications

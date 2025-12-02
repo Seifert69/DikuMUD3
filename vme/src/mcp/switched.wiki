@@ -1,0 +1,230 @@
+= switched =
+field: unitptr '''.switched''' (Read-only)
+
+The '''switched''' field indicates which character a player is currently controlling.
+
+== Description ==
+This field provides access to the character that the current player has switched into using the [[switch]] function. When a player switches to another character, this field points to the character they are now controlling.
+
+The field is read-only and automatically updated by the game engine when character switching occurs. It's commonly used in possession systems, polymorph effects, and character control mechanics to track which character is currently being controlled.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| switched || unitptr || Read-only || Points to the character currently being controlled
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Check Current Control ===
+ dilbegin check_control_status();
+ var
+   controlled_char : unitptr;
+ code
+ {
+   controlled_char := self.switched;
+   
+   if (controlled_char)
+   {
+     sendtext("You are currently controlling: " + controlled_char.name + "<br/>", self);
+   }
+   else
+   {
+     sendtext("You are not controlling any character.<br/>", self);
+   sendtext("You are in your original body.<br/>", self);
+   }
+ }
+ dilend
+
+=== Control History ===
+ dilbegin show_control_history();
+ var
+   i : integer;
+ code
+ {
+   sendtext("Control history:<br/>", self);
+   
+   i := 0;
+   while (i < 10)
+   {
+     if (self.switched)
+     {
+       sendtext(itoa(i + 1) + ": You controlled " + self.switched.name + "<br/>", self);
+     }
+     else
+     {
+       sendtext(itoa(i + 1) + ": You were in your original body<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Switch Notification ===
+ dilbegin notify_switch(old_char : unitptr, new_char : unitptr);
+ var
+   msg : string;
+ code
+ {
+   if (self.type != UNIT_ST_PC)
+   {
+     sendtext("Only players can receive switch notifications.<br/>", self);
+     quit;
+   }
+   
+   // Check if player is switching to a valid character
+   if (new_char.type != UNIT_ST_PC and new_char.type != UNIT_ST_NPC)
+   {
+     sendtext("Invalid target character.<br/>", self);
+     quit;
+   }
+   
+   // Create notification message
+   msg := "You have switched from " + old_char.name + " to " + new_char.name + ".";
+   
+   // Send notification to old character
+   act("$1n has switched control to you.", A_SOMEONE, old_char, null, new_char, TO_CHAR);
+   
+   // Send notification to new character
+   act("$1n has switched control to you.", A_SOMEONE, new_char, null, old_char, TO_CHAR);
+   
+   // Send notification to room
+   act("$1n switches bodies.", A_SOMEONE, old_char, null, new_char, TO_REST);
+ }
+ dilend
+
+=== Possession System Integration ===
+ dilbegin possession_system();
+ var
+   target : unitptr;
+   old_controlled : unitptr;
+ code
+ {
+   target := activator;
+   
+   if (target.type != UNIT_ST_PC and target.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   old_controlled := self.switched;
+   
+   // Switch to target
+   switch(self, target);
+   
+   // Check if switch was successful
+   if (self.switched == target)
+   {
+     sendtext("You are now controlling " + target.name + ".<br/>", self);
+     
+     // Store old character reference
+     if (old_controlled)
+     {
+       addextra(self.extra, {"previous_character"}, old_controlled.name);
+     }
+     
+     // Update possession system
+     update_possession_data(target);
+   }
+   else
+   {
+     sendtext("Switch failed.<br/>", self);
+   }
+ }
+ dilend
+
+=== Polymorph Recovery ===
+ dilbegin polymorph_recovery();
+ var
+   original_char : unitptr;
+ code
+ {
+   // Check if player has a switched character stored
+   original_char := ("previous_character" in self.extra) in self.extra;
+   
+   if (original_char)
+   {
+     // Switch back to original character
+     switch(self, original_char);
+     
+     sendtext("You have returned to your original form.<br/>", self);
+     
+     // Clean up the stored reference
+     subextra(self.extra, "previous_character");
+   }
+   else
+   {
+     sendtext("No original character found to recover.<br/>", self);
+   }
+ }
+ dilend
+
+=== Character State Check ===
+ dilbegin check_character_state();
+ var
+   controlled_char : unitptr;
+   controller : unitptr;
+ code
+ {
+   controlled_char := self.switched;
+   
+   if (controlled_char)
+   {
+     // Find who is controlling this character
+     controller := controlled_char.outside;
+     
+     if (controller && controller == self)
+     {
+       sendtext("You are controlling yourself.<br/>", self);
+     }
+     else if (controller)
+     {
+       sendtext("You are being controlled by " + controller.name + ".<br/>", self);
+     }
+     else
+     {
+       sendtext("No one is controlling you.<br/>", self);
+     }
+   }
+   else
+   {
+     sendtext("You are not being controlled.<br/>", self);
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The field is read-only and automatically managed by the game engine
+* The field points to the character currently being controlled
+* When a player switches characters, the field updates automatically
+* The field is null when the player is not controlling any character
+* This field is only available for player characters (UNIT_ST_PC)
+* Common use cases include possession systems, polymorph recovery, and control state checking
+
+== Error Handling ==
+The field handles errors in the following ways:
+* Accessing the field on non-player units returns null
+* The field is read-only - attempts to modify it will fail
+* The field automatically updates when valid character switches occur
+* No runtime errors are generated when accessing the field
+
+Always check that the unit is a player character before accessing this field.
+
+== Related Functions/Fields ==
+* [[switch]] - Function to switch character control
+* [[addextra]] - Function to store character references
+* unitptr.outside - Field to find the character's environment
+* unitptr.type - Field to check unit type
+* [[isaff]] - Function to check character affects
+
+== See Also ==
+* DIL Character Control Systems Documentation
+* Possession and Switching Mechanics
+* Character State Management
+* Player Control Systems

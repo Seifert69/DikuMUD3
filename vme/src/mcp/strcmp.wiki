@@ -1,0 +1,263 @@
+= strcmp =
+function: integer '''strcmp'''(s1 : string, s2 : string);
+
+The '''strcmp''' function performs case-sensitive string comparison and returns the lexical relationship between two strings.
+
+== Description ==
+This function compares two strings lexicographically (character by character) and returns an integer indicating their relationship. The comparison is case-sensitive, meaning "Hello" and "hello" are considered different strings.
+
+The function follows standard C library strcmp behavior:
+* Returns -1 if first string (s1) is lexicographically less than second string (s2)
+* Returns 0 if both strings are identical
+* Returns 1 if first string (s1) is lexicographically greater than second string (s2)
+
+Lexicographic comparison means strings are compared character by character using their ASCII values. This is different from simple equality comparison and is useful for sorting strings or determining alphabetical order.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s1 || string || The first string to compare
+|-
+| s2 || string || The second string to compare
+|}
+
+== Return Value ==
+The function returns an integer:
+* -1 if s1 < s2 (s1 comes before s2 alphabetically)
+* 0 if s1 == s2 (strings are identical)
+* 1 if s1 > s2 (s1 comes after s2 alphabetically)
+
+== Examples ==
+=== Basic String Comparison ===
+ dilbegin test_comparison();
+ var
+   result : integer;
+ code
+ {
+   result := strcmp("apple", "banana");
+   // result will be -1 (apple < banana)
+   
+   if (result < 0)
+     sendtext("apple comes before banana<br/>", self);
+   
+   result := strcmp("zebra", "yak");
+   // result will be 1 (zebra > yak)
+   
+   if (result > 0)
+     sendtext("zebra comes after yak<br/>", self);
+   
+   result := strcmp("hello", "hello");
+   // result will be 0 (strings are equal)
+   
+   if (result == 0)
+     sendtext("hello equals hello<br/>", self);
+ }
+ dilend
+
+=== Case Sensitivity Demonstration ===
+ dilbegin case_sensitive_test();
+ var
+   result : integer;
+ code
+ {
+   result := strcmp("Hello", "hello");
+   // result will be non-zero (different case)
+   
+   if (result != 0)
+     sendtext("Hello and hello are different (case sensitive)<br/>", self);
+   
+   result := strcmp("hello", "hello");
+   // result will be 0 (same case)
+   
+   if (result == 0)
+     sendtext("hello and hello are identical<br/>", self);
+ }
+ dilend
+
+=== Password Verification ===
+ dilbegin verify_password(attempt : string, stored : string);
+ var
+   result : integer;
+ code
+ {
+   result := strcmp(attempt, stored);
+   
+   if (result == 0)
+   {
+     sendtext("Password correct!<br/>", self);
+     // Grant access or proceed with login
+   }
+   else
+   {
+     sendtext("Password incorrect.<br/>", self);
+     // Deny access or retry
+   }
+ }
+ dilend
+
+=== String Sorting ===
+ dilbegin sort_strings();
+ var
+   strings : stringlist;
+   i, j : integer;
+   temp : string;
+   swapped : integer;
+ code
+ {
+   // Initialize with some sample strings
+   strings := {"zebra", "apple", "banana", "cherry"};
+   
+   // Simple bubble sort using strcmp
+   i := 0;
+   while (i < length(strings) - 1)
+   {
+     j := 0;
+     swapped := 0;
+     
+     while (j < length(strings) - i - 1)
+     {
+       if (strcmp(strings.[j], strings.[j + 1]) > 0)
+       {
+         // Swap strings
+         temp := strings.[j];
+         strings.[j] := strings.[j + 1];
+         strings.[j + 1] := temp;
+         swapped := 1;
+       }
+       
+       j := j + 1;
+     }
+     
+     if (swapped == 0)
+       break; // Array is sorted
+     
+     i := i + 1;
+   }
+   
+   // Display sorted results
+   i := 0;
+   while (i < length(strings))
+   {
+     sendtext(itoa(i + 1) + ": " + strings.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Command Argument Validation ===
+ dilbegin check_command(cmd : string);
+ var
+   result : integer;
+ code
+ {
+   // Check if command is "quit"
+   result := strcmp(cmd, "quit");
+   
+   if (result == 0)
+   {
+     sendtext("Quit command received.<br/>", self);
+     // Handle quit logic
+     quit;
+   }
+   
+   // Check if command comes before "help" alphabetically
+   result := strcmp(cmd, "help");
+   
+   if (result < 0)
+   {
+     sendtext("Command '" + cmd + "' comes before 'help'<br/>", self);
+   }
+   else if (result > 0)
+   {
+     sendtext("Command '" + cmd + "' comes after 'help'<br/>", self);
+   }
+ }
+ dilend
+
+=== Menu Selection ===
+ dilbegin menu_handler(choice : string);
+ var
+   result : integer;
+ code
+ {
+   // Compare with menu options
+   result := strcmp(choice, "new");
+   
+   if (result == 0)
+   {
+     sendtext("Creating new character...<br/>", self);
+     // Handle new character creation
+   }
+   else
+   {
+     result := strcmp(choice, "load");
+     
+     if (result == 0)
+     {
+       sendtext("Loading existing character...<br/>", self);
+       // Handle character loading
+     }
+     else
+     {
+       result := strcmp(choice, "delete");
+       
+       if (result == 0)
+       {
+         sendtext("Deleting character...<br/>", self);
+         // Handle character deletion
+       }
+       else
+       {
+         sendtext("Invalid menu choice: " + choice + "<br/>", self);
+       }
+     }
+   }
+ }
+ dilend
+
+=== String Ordering Check ===
+ dilbegin check_order(str1 : string, str2 : string);
+ var
+   result : integer;
+ code
+ {
+   result := strcmp(str1, str2);
+   
+   if (result < 0)
+     sendtext(str1 + " comes before " + str2 + "<br/>", self);
+   else if (result == 0)
+     sendtext(str1 + " is equal to " + str2 + "<br/>", self);
+   else if (result > 0)
+     sendtext(str1 + " comes after " + str2 + "<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The function performs case-sensitive comparison
+* Comparison is lexicographic, not based on string length
+* Use standard equality operators (==, !=) for case-insensitive comparison when needed
+* The function is useful for sorting algorithms and alphabetical ordering
+* Lexicographic order follows ASCII character values
+* Empty strings are valid inputs and can be compared
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid string parameters may cause runtime errors
+* No specific error return values - always returns -1, 0, or 1
+* Function does not generate runtime errors for valid string inputs
+
+Always ensure both parameters are valid strings before calling the function.
+
+== Related Functions/Fields ==
+* [[strncmp]] - Compare strings with length limit
+* [[string]] data type and operations
+* [[getwords]] - Split string into words for comparison
+* [[length]] - Get string length for validation
+* String comparison operators (==, !=, <, >, <=, >=)
+
+== See Also ==
+* DIL String Operations Documentation
+* String comparison and sorting algorithms
+* Lexicographic ordering principles
+* ASCII character encoding reference

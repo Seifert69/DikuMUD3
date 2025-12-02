@@ -1,0 +1,208 @@
+= spellinfo =
+function: string '''spellinfo'''(idx : integer, i1 : integer, i2 : integer, i3 : integer, i4 : integer, i5 : integer, i6 : integer, i7 : integer);
+
+The '''spellinfo''' function retrieves detailed information about a spell given its index number.
+
+== Description ==
+This function returns comprehensive information about a spell based on its numerical index. The function takes a spell index as the first parameter and seven integer variables as output parameters that will be populated with various spell attributes. The function returns the full name of the spell as a string.
+
+The seven output parameters are set to specific spell attributes:
+* Spell realm (magical or divine)
+* Spell sphere (spell category)
+* Mana cost
+* Offensive flag
+* Resistance type required
+* Valid casting mediums
+* Valid targets
+
+This function is commonly used in conjunction with [[spellindex]] to validate spells and retrieve their properties for display or processing purposes.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| idx || integer || The spell index (SPL_XXX). Use [[spellindex]] to find this value
+|-
+| i1 || integer || Output variable for spell realm (MAG/DIC)
+|-
+| i2 || integer || Output variable for spell sphere (SPL_XXX)
+|-
+| i3 || integer || Output variable for mana usage
+|-
+| i4 || integer || Output variable for offensive flag (0 = non-offensive, non-zero = offensive)
+|-
+| i5 || integer || Output variable for resistance required (SPLCST_XXX)
+|-
+| i6 || integer || Output variable for valid mediums (MEDIA_XXX)
+|-
+| i7 || integer || Output variable for valid targets (FIND_UNIT_XXX & TAR_XXX)
+|}
+
+== Return Value ==
+The function returns a string containing:
+* The full name of the spell if the index is valid
+* Empty string if no such spell exists or if the index is out of range
+
+== Examples ==
+=== Basic Usage ===
+ dilbegin test_spellinfo();
+ var
+   spell_idx : integer;
+   spell_name : string;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+ code
+ {
+   // Get spell index for fireball
+   spell_idx := spellindex("fireball");
+   
+   if (spell_idx != -1)
+   {
+     spell_name := spellinfo(spell_idx, realm, sphere, mana, offensive, resist, medium, target);
+     
+     sendtext("Spell: " + spell_name + "<br/>", self);
+     sendtext("Realm: " + (realm == 0 ? "Magical" : "Divine") + "<br/>", self);
+     sendtext("Mana: " + itoa(mana) + "<br/>", self);
+     sendtext("Offensive: " + (offensive != 0 ? "Yes" : "No") + "<br/>", self);
+   }
+ }
+ dilend
+
+=== Spell Listing ===
+ dilbegin list_spells();
+ var
+   i : integer;
+   spell_name : string;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+ code
+ {
+   sendtext("Available spells:<br/>", self);
+   
+   i := 0;
+   while (i < SPL_TREE_MAX)
+   {
+     spell_name := spellinfo(i, realm, sphere, mana, offensive, resist, medium, target);
+     
+     if (spell_name == "")
+       break;
+     
+     sendtext(itoa(i) + ": " + spell_name + " (Mana: " + itoa(mana) + ")<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Spell Validation ===
+ dilbegin validate_spell_requirements(spell_idx : integer, caster : unitptr);
+ var
+   spell_name : string;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+   can_cast : integer;
+ code
+ {
+   spell_name := spellinfo(spell_idx, realm, sphere, mana, offensive, resist, medium, target);
+   
+   if (spell_name == "")
+   {
+     sendtext("Invalid spell index.<br/>", self);
+     quit;
+   }
+   
+   can_cast := 1;
+   
+   // Check mana
+   if (caster.mana < mana)
+   {
+     sendtext("Not enough mana (need " + itoa(mana) + ").<br/>", self);
+     can_cast := 0;
+   }
+   
+   // Check realm compatibility
+   if (realm == 1 and caster.class != "cleric")
+   {
+     sendtext("Divine spell - requires cleric class.<br/>", self);
+     can_cast := 0;
+   }
+   else if (realm == 0 and caster.class != "mage")
+   {
+     sendtext("Magical spell - requires mage class.<br/>", self);
+     can_cast := 0;
+   }
+   
+   if (can_cast)
+     sendtext("Can cast " + spell_name + ".<br/>", self);
+ }
+ dilend
+
+=== Dynamic Spell Information ===
+ dilbegin spell_info_command(arg : string);
+ var
+   spell_idx : integer;
+   spell_name : string;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+   realm_str, sphere_str : string;
+ code
+ {
+   if (arg == "")
+   {
+     sendtext("Usage: spellinfo <spell name><br/>", self);
+     quit;
+   }
+   
+   spell_idx := spellindex(arg);
+   
+   if (spell_idx == -1)
+   {
+     sendtext("Spell '" + arg + "' not found.<br/>", self);
+     quit;
+   }
+   
+   spell_name := spellinfo(spell_idx, realm, sphere, mana, offensive, resist, medium, target);
+   
+   // Format realm
+   if (realm == 0)
+     realm_str := "Magical";
+   else
+     realm_str := "Divine";
+   
+   sendtext("Spell Information for: " + spell_name + "<br/>", self);
+   sendtext("Index: " + itoa(spell_idx) + "<br/>", self);
+   sendtext("Realm: " + realm_str + "<br/>", self);
+   sendtext("Sphere: " + itoa(sphere) + "<br/>", self);
+   sendtext("Mana Cost: " + itoa(mana) + "<br/>", self);
+   sendtext("Type: " + (offensive != 0 ? "Offensive" : "Non-offensive") + "<br/>", self);
+   sendtext("Resistance: " + itoa(resist) + "<br/>", self);
+   sendtext("Mediums: " + itoa(medium) + "<br/>", self);
+   sendtext("Targets: " + itoa(target) + "<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The first parameter (idx) must be a valid spell index between SPL_ALL and SPL_TREE_MAX - 1
+* Parameters i1 through i7 must be integer variables (not constants) as they are used as output parameters
+* The function validates the spell index range and returns an empty string for invalid indices
+* Spell realm values: 0 = Magical (MAG), 1 = Divine (DIC)
+* The offensive flag is non-zero for offensive spells and zero for non-offensive spells
+* This function is essential for creating spell lists, validation systems, and spell information displays
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Invalid spell indices (outside range SPL_ALL to SPL_TREE_MAX - 1) return empty string
+* Non-integer first parameter causes compilation error
+* Non-variable parameters for i1-i7 cause compilation error
+* No runtime errors are generated for valid input within range
+
+Always check the return string for emptiness before using the output parameter values.
+
+== Related Functions/Fields ==
+* [[spellindex]] - Convert spell name to index
+* [[cast_spell]] - Cast a spell using its index
+* [[attack_spell]] - Cast offensive spell using its index
+* unitptr.spells[] - Array field for character spell proficiencies
+* [[findunit]] - Function using FIND_UNIT_XXX constants for target searching
+
+== See Also ==
+* DIL Spell System Documentation
+* SPL_XXX Constants (defined in values.h/vme.h)
+* FIND_UNIT_XXX Constants for target specification
+* MEDIA_XXX Constants for casting mediums
+* SPLCST_XXX Constants for resistance types

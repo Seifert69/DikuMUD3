@@ -1,0 +1,212 @@
+= spells =
+field: integer '''.spells'''[index] (Read-only)
+
+The '''spells''' field provides access to spell proficiency values for characters and magical resistance for rooms and objects.
+
+== Description ==
+The '''spells''' field is an array that behaves differently depending on the unit type:
+
+* For PCs (Player Characters): Returns spell proficiency values (0-100) for individual spells
+* For NPCs (Non-Player Characters): Returns spell proficiency values (0-100) for spell groups only
+* For Rooms: Returns magical resistance value
+* For Objects: Returns magical resistance value
+
+The field uses spell indices (SPL_XXX constants) to access specific spell data. The valid index range depends on the unit type and whether it's a PC or NPC.
+
+== Field Access ==
+{| class="wikitable"
+! Unit Type !! Index Range !! Access Type !! Description
+|-
+| UNIT_ST_PC || 0 to SPL_TREE_MAX-1 || Read/Write* || Individual spell proficiencies (0-100)
+|-
+| UNIT_ST_NPC || 0 to SPL_GROUP_MAX-1 || Read/Write* || Spell group proficiencies (0-100)
+|-
+| UNIT_ST_ROOM || 0 || Read-only || Magical resistance value
+|-
+| UNIT_ST_OBJ || 0 || Read-only || Magical resistance value
+|}
+
+*Write access is restricted by zone access level for PCs
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+=== Reading Spell Proficiency ===
+ dilbegin check_spell_proficiency(pc : unitptr, spell_name : string);
+ var
+   spell_idx : integer;
+   proficiency : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Target must be a player character.<br/>", self);
+     quit;
+   }
+   
+   spell_idx := spellindex(spell_name);
+   
+   if (spell_idx == -1)
+   {
+     sendtext("Unknown spell: " + spell_name + "<br/>", self);
+     quit;
+   }
+   
+   proficiency := pc.spells[spell_idx];
+   sendtext(pc.name + "'s proficiency in " + spell_name + ": " + itoa(proficiency) + "%<br/>", self);
+ }
+ dilend
+
+=== Setting Spell Proficiency ===
+ dilbegin teach_spell(pc : unitptr, spell_name : string, level : integer);
+ var
+   spell_idx : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Can only teach spells to player characters.<br/>", self);
+     quit;
+   }
+   
+   spell_idx := spellindex(spell_name);
+   
+   if (spell_idx == -1)
+   {
+     sendtext("Unknown spell: " + spell_name + "<br/>", self);
+     quit;
+   }
+   
+   if (level < 0 or level > 100)
+   {
+     sendtext("Proficiency must be between 0 and 100.<br/>", self);
+     quit;
+   }
+   
+   pc.spells[spell_idx] := level;
+   sendtext("Taught " + pc.name + " " + spell_name + " at " + itoa(level) + "% proficiency.<br/>", self);
+ }
+ dilend
+
+=== NPC Spell Groups ===
+ dilbegin check_npc_spells(npc : unitptr);
+ var
+   i : integer;
+   proficiency : integer;
+ code
+ {
+   if (npc.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a non-player character.<br/>", self);
+     quit;
+   }
+   
+   sendtext("Spell groups for " + npc.name + ":<br/>", self);
+   
+   i := 0;
+   while (i < SPL_GROUP_MAX)
+   {
+     proficiency := npc.spells[i];
+     
+     if (proficiency > 0)
+       sendtext("Group " + itoa(i) + ": " + itoa(proficiency) + "%<br/>", self);
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Magical Resistance ===
+ dilbegin check_magical_resistance(unit : unitptr);
+ var
+   resistance : integer;
+   unit_type : string;
+ code
+ {
+   if (unit.type == UNIT_ST_ROOM)
+   {
+     resistance := unit.spells[0];
+     sendtext("Room magical resistance: " + itoa(resistance) + "<br/>", self);
+   }
+   else if (unit.type == UNIT_ST_OBJ)
+   {
+     resistance := unit.spells[0];
+     sendtext("Object magical resistance: " + itoa(resistance) + "<br/>", self);
+   }
+   else
+   {
+     sendtext("This unit type doesn't have magical resistance.<br/>", self);
+   }
+ }
+ dilend
+
+=== Spell List Display ===
+ dilbegin show_character_spells(pc : unitptr);
+ var
+   i : integer;
+   spell_name : string;
+   proficiency : integer;
+   realm, sphere, mana, offensive, resist, medium, target : integer;
+ code
+ {
+   if (pc.type != UNIT_ST_PC)
+   {
+     sendtext("Target must be a player character.<br/>", self);
+     quit;
+   }
+   
+   sendtext("Spell list for " + pc.name + ":<br/>", self);
+   
+   i := 0;
+   while (i < SPL_TREE_MAX)
+   {
+     proficiency := pc.spells[i];
+     
+     if (proficiency > 0)
+     {
+       spell_name := spellinfo(i, realm, sphere, mana, offensive, resist, medium, target);
+       
+       if (spell_name != "")
+         sendtext(itoa(i) + ": " + spell_name + " (" + itoa(proficiency) + "%)<br/>", self);
+     }
+     
+     i := i + 1;
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* For PCs, valid indices are 0 to SPL_TREE_MAX-1 (individual spells)
+* For NPCs, valid indices are 0 to SPL_GROUP_MAX-1 (spell groups only)
+* For rooms and objects, only index 0 is valid (magical resistance)
+* Spell proficiency values typically range from 0 (no knowledge) to 100 (master)
+* Write access for PCs is restricted by the zone's access level
+* Use [[spellindex]] to convert spell names to indices
+* Use [[spellinfo]] to get spell names from indices
+
+== Error Handling ==
+The field handles errors in the following ways:
+* Invalid indices return DILV_FAIL (no value)
+* Null unit pointers return DILV_FAIL
+* Write access violations return DILV_FAIL
+* Index out of range for the unit type returns DILV_FAIL
+
+Always validate the unit type and index range before accessing the field.
+
+== Related Functions/Fields ==
+* [[spellindex]] - Convert spell name to index
+* [[spellinfo]] - Get spell information from index
+* [[abilities]] - Similar field for ability scores
+* [[skills]] - Similar field for skill proficiencies
+* [[weapons]] - Similar field for weapon proficiencies
+
+== See Also ==
+* DIL Spell System Documentation
+* SPL_XXX Constants (defined in values.h/vme.h)
+* SPL_GROUP_MAX and SPL_TREE_MAX constants
+* Magical Resistance System Documentation

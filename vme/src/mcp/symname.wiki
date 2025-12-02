@@ -1,0 +1,281 @@
+= symname =
+function: string '''symname'''(u : unitptr);
+
+The '''symname''' function returns the symbolic name of a unit as used in the game world.
+
+== Description ==
+This function retrieves the symbolic name that uniquely identifies a unit in the game world. The symbolic name is used with functions like [[findsymbolic]] to locate specific units across the entire game world, regardless of their current location.
+
+The symbolic name is different from the regular unit name (unit.name) and provides a persistent identifier that can be used to reference the unit even after reboots or when the unit moves between different zones.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to get the symbolic name of
+|}
+
+== Return Value ==
+The function returns a string containing:
+* The symbolic name of the specified unit
+* Empty string if the unit is null or invalid
+* Empty string if the unit has no symbolic name
+
+== Examples ==
+=== Basic Symbolic Name Retrieval ===
+ dilbegin get_unit_symname();
+ var
+   target : unitptr;
+   sym_name : string;
+ code
+ {
+   target := activator;
+   
+   if (target == null)
+   {
+     sendtext("No target specified.<br/>", self);
+     quit;
+   }
+   
+   sym_name := symname(target);
+   
+   if (sym_name == "")
+   {
+     sendtext("Target has no symbolic name.<br/>", self);
+   }
+   else
+   {
+     sendtext("Symbolic name: " + sym_name + "<br/>", self);
+   }
+ }
+ dilend
+
+=== City Guard Tracking ===
+ dilbegin track_city_guard();
+ var
+   guard : unitptr;
+   sym_name : string;
+ code
+ {
+   guard := findunit("guard@midgaard");
+   
+   if (guard)
+   {
+     sym_name := symname(guard);
+     
+     if (sym_name != "")
+     {
+       sendtext("City guard symbolic name: " + sym_name + "<br/>", self);
+       
+       // Store the symbolic name for later reference
+       addextra(self.extra, {"guard_symname"}, sym_name);
+     }
+     else
+     {
+       sendtext("City guard not found.<br/>", self);
+     }
+   }
+ }
+ dilend
+
+=== Bounty Hunter System ===
+ dilbegin bounty_hunter_system();
+ var
+   criminal : unitptr;
+   sym_name : string;
+ code
+ {
+   criminal := activator;
+   
+   if (criminal.type != UNIT_ST_PC)
+   {
+     sendtext("This command only works on players.<br/>", self);
+     quit;
+   }
+   
+   // Get criminal's symbolic name
+   sym_name := symname(criminal);
+   
+   if (sym_name == "")
+   {
+     sendtext("Target has no symbolic name.<br/>", self);
+     quit;
+   }
+   
+   // Check if criminal is wanted
+   if (sym_name != "bounty_target")
+   {
+     sendtext("You are not wanted for bounty hunting.<br/>", self);
+     quit;
+   }
+   
+   // Find bounty hunter
+   hunter := findsymbolic("bounty_hunter");
+   
+   if (hunter)
+   {
+     sendtext("Bounty hunter found: " + symname(hunter) + "<br/>", self);
+     
+     // Notify bounty hunter
+     act("$1n has been notified that $2n is wanted for bounty hunting.", A_SOMEONE, criminal, null, hunter, TO_CHAR);
+   }
+   else
+   {
+     sendtext("No bounty hunter available.<br/>", self);
+   }
+ }
+ dilend
+
+=== Unique Item Identification ===
+ dilbegin identify_unique_item();
+ var
+   item : unitptr;
+   sym_name : string;
+   unique_id : string;
+ code
+ {
+   item := activator;
+   
+   if (item.type != UNIT_ST_OBJ)
+   {
+     sendtext("This command only works on objects.<br/>", self);
+     quit;
+   }
+   
+   sym_name := symname(item);
+   unique_id := item.nameidx + "_" + item.zoneidx;
+   
+   sendtext("Item symbolic name: " + sym_name + "<br/>", self);
+   sendtext("Unique ID: " + unique_id + "<br/>", self);
+   
+   // Store symbolic name for tracking
+   addextra(item.extra, {"item_symname"}, sym_name);
+ }
+ dilend
+
+=== Zone-based Search ===
+ dilbegin search_by_symbolic_name();
+ var
+   units : stringlist;
+   target_sym : string;
+   i : integer;
+ code
+ {
+   target_sym := argument;
+   
+   // Find all units with matching symbolic name
+   units := findsymbolic(target_sym);
+   
+   sendtext("Found " + itoa(length(units)) + " units with symbolic name '" + target_sym + "':<br/>", self);
+   
+   i := 0;
+   while (i < length(units))
+   {
+     sendtext(itoa(i + 1) + ": " + symname(units.[i]) + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Persistent Reference Storage ===
+ dilbegin store_persistent_reference();
+ var
+   target : unitptr;
+   sym_name : string;
+   reference : string;
+ code
+ {
+   target := activator;
+   
+   if (target == null)
+   {
+     sendtext("No target specified.<br/>", self);
+     quit;
+   }
+   
+   sym_name := symname(target);
+   
+   if (sym_name != "")
+   {
+     // Create persistent reference using name and zone
+     reference := sym_name + "@" + target.zoneidx;
+     
+     sendtext("Stored reference: " + reference + "<br/>", self);
+     
+     // Store in extra description for later retrieval
+     addextra(self.extra, {"persistent_ref"}, reference);
+   }
+   else
+   {
+     sendtext("Target has no symbolic name.<br/>", self);
+   }
+ }
+ dilend
+
+=== Character Identification System ===
+ dilbegin character_identification();
+ var
+   char : unitptr;
+   sym_name : string;
+   char_type : string;
+ code
+ {
+   char := activator;
+   
+   if (char.type != UNIT_ST_PC and char.type != UNIT_ST_NPC)
+   {
+     sendtext("Target must be a character.<br/>", self);
+     quit;
+   }
+   
+   sym_name := symname(char);
+   
+   if (sym_name == "")
+   {
+     sendtext("Character has no symbolic name.<br/>", self);
+     quit;
+   }
+   
+   // Determine character type based on symbolic name
+   if (sym_name == "player_character")
+     char_type := "Player";
+   else if (sym_name == "city_guard")
+     char_type := "City Guard";
+   else if (sym_name == "shopkeeper")
+     char_type := "Shopkeeper";
+   else
+     char_type := "Unknown";
+   
+   sendtext("Character type: " + char_type + "<br/>", self);
+   sendtext("Symbolic name: " + sym_name + "<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* The symbolic name is different from the regular unit name
+* Symbolic names are persistent across reboots and zone changes
+* The function is commonly used with [[findsymbolic]] for global unit searches
+* Symbolic names are typically in the format "name@zone" or descriptive names
+* The function returns empty string for null units or units without symbolic names
+* Use [[addextra]] to store symbolic names for later reference
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid unitptr parameter returns empty string
+* No runtime errors are generated for valid unit parameters
+* The function may return empty string if the unit has no symbolic name assigned
+
+Always validate that the target is a valid unit before calling the function.
+
+== Related Functions/Fields ==
+* [[findsymbolic]] - Find units by symbolic name globally
+* [[addextra]] - Store symbolic names in extra descriptions
+* unitptr.symname - Field to access symbolic name
+* unitptr.nameidx - Field for unit name index
+* unitptr.zoneidx - Field for unit zone index
+
+== See Also ==
+* DIL Symbolic Name System Documentation
+* Global Unit Search and Tracking
+* Character Identification Systems
+* Persistent Reference Systems

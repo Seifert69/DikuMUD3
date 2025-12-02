@@ -1,0 +1,198 @@
+= skill_name =
+function: string '''skill_name'''(skill_index : integer);
+
+The '''skill_name''' function is used to get the name of a skill from its index number.
+
+== Description ==
+This function returns the name of a skill corresponding to the provided skill index. The function uses the game's internal skill name table to convert numeric skill indices to their readable string names. This is useful for displaying skill information to players or for debugging skill-related code.
+
+The function returns an empty string if the skill index is invalid or out of range.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| skill_index || integer || The numeric index of the skill to get the name for
+|}
+
+The skill_index parameter should be a valid skill index constant (SKI_*).
+
+== Examples ==
+=== Basic Skill Name Lookup ===
+ dilbegin show_skill_name();
+ var
+    skill_index : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Get name of skill at index 5 (e.g., SKI_SWORD)
+    skill_index := 5;
+    skill_name := skill_name(skill_index);
+    
+    if (skill_name != "")
+       sendtext("Skill " + itoa(skill_index) + " is: " + skill_name + "<br/>", activator);
+    else
+       sendtext("Invalid skill index.<br/>", activator);
+ } dilend
+
+=== Skill Information Display ===
+ dilbegin show_all_skill_names();
+ var
+    i : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Available Skills:<br/>", activator);
+    
+    // Display names for first 10 skills
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SKI_TREE_MAX)
+       {
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+             sendtext(itoa(i) + ": " + skill_name + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Skill Validation ===
+ dilbegin validate_skill_index(skill_idx : integer);
+ var
+    skill_name : string;
+ code
+ {
+    // Check if skill index is valid
+    if (skill_idx < 0 or skill_idx >= SKI_TREE_MAX)
+    {
+       sendtext("Invalid skill index: " + itoa(skill_idx) + "<br/>", self);
+       return("");
+    }
+    
+    skill_name := skill_name(skill_idx);
+    
+    if (skill_name == "")
+    {
+       sendtext("Skill index " + itoa(skill_idx) + " does not exist.<br/>", self);
+       return("");
+    }
+    
+    sendtext("Skill " + itoa(skill_idx) + " (" + skill_name + ") is valid.<br/>", self);
+    return(skill_name);
+ } dilend
+
+=== Skill Menu System ===
+ dilbegin skill_menu();
+ var
+    i : integer;
+    skill_name : string;
+    choice : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Select a skill to view:<br/>", activator);
+    
+    // Display numbered menu of available skills
+    for (i := 0; i < SKI_TREE_MAX; i := i + 1)
+    {
+       skill_name := skill_name(i);
+       
+       if (skill_name != "")
+          sendtext(itoa(i) + ". " + skill_name + "<br/>", activator);
+    }
+    
+    sendtext("Enter skill number (or 'quit' to exit): ", activator);
+    
+    wait(SFB_CMD, TRUE);
+    
+    choice := excmdstr;
+    
+    if (choice == "quit")
+       quit;
+    
+    // Validate and display chosen skill
+    skill_name := validate_skill_index(atoi(choice));
+    
+    if (skill_name != "")
+    {
+       sendtext("You selected: " + skill_name + "<br/>", activator);
+       // Display detailed information about the skill
+       // (could call other functions here)
+    }
+    else
+    {
+       sendtext("Invalid selection.<br/>", activator);
+       goto skill_menu;
+    }
+ } dilend
+
+=== Dynamic Skill Information ===
+ dilbegin dynamic_skill_info();
+ var
+    skill_list : stringlist;
+    skill_name : string;
+    skill_index : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Create a list of skills to check dynamically
+    skill_list := {5, 10, 15, 20};  // Example skill indices
+    
+    sendtext("Checking specific skills...<br/>", activator);
+    
+    // Check each skill in the list
+    foreach skill_index in skill_list
+    {
+       skill_name := skill_name(skill_index);
+       
+       if (skill_name != "")
+       {
+          sendtext("Skill " + itoa(skill_index) + ": " + skill_name + "<br/>", activator);
+       }
+    }
+ } dilend
+
+== Usage Notes ==
+* The function returns an empty string for invalid skill indices
+* Skill indices correspond to SKI_* constants defined in the game system
+* The function is commonly used for displaying skill information to players
+* Useful for creating skill menus, character sheets, and debugging
+* The function does not require any special permissions or access levels
+* Skill names are typically stored in internal game tables
+* The function is read-only and cannot modify skill names
+
+== Error Handling ==
+The function includes validation checks:
+
+* **Index validation**: Skill index must be within valid range
+* **Type validation**: The parameter must be an integer
+* **Return value**: Returns empty string for invalid indices
+
+Common error scenarios:
+* Using skill indices outside the valid range (0 to SKI_TREE_MAX - 1)
+* Passing non-integer skill indices
+* The function will return empty string rather than failing for invalid inputs
+
+== Related Functions/Fields ==
+* [[skill_levels]] - Field to get the current level of a skill
+* [[skill_costs]] - Field to get the experience point cost of a skill
+* [[skills]] - Field array to access all skill values
+* [[SKI_*]] - Skill index constants
+* [[Character advancement]] - Information about skill progression systems
+
+== See Also ==
+* [[Skill system]] - General information about skills and abilities
+* [[Character creation]] - Information about creating characters with skills
+* [[Training systems]] - Skill training and advancement procedures
+* [[Experience system]] - Experience point and skill cost mechanics

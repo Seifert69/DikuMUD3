@@ -1,0 +1,118 @@
+= transfermoney =
+ function: integer '''transfermoney'''(f : unitptr, t : unitptr, amount : integer);
+
+The '''transfermoney''' function transfers money between characters or creates/destroys money.
+
+== Description ==
+This function transfers a specified amount of money from one character to another. Both parameters must be character units (PCs or NPCs). The function returns 1 if the transfer was successful, or 0 if it failed (typically due to insufficient funds). Special behavior allows money creation or destruction when one of the character parameters is null.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| f || unitptr || The character to take money from (can be null to create money)
+|-
+| t || unitptr || The character to give money to (can be null to destroy money)
+|-
+| amount || integer || The amount of money to transfer (in base currency units)
+|}
+
+== Examples ==
+dilbegin unique shop_transaction(pc : unitptr, cost : integer);
+var
+    success : integer;
+code
+{
+    // Transfer money from player to shopkeeper (self)
+    success := transfermoney(pc, self, cost);
+    
+    if (success)
+    {
+        sendto("Thank you for your payment!&n", pc);
+        // Process the sale...
+    }
+    else
+    {
+        sendto("You can't afford that!&n", pc);
+    }
+} dilend
+
+dilbegin unique reward_player(pc : unitptr, reward : integer);
+var
+    success : integer;
+code
+{
+    // Create money and give to player (from null)
+    success := transfermoney(null, pc, reward);
+    
+    if (success)
+    {
+        sendto("You have been rewarded!&n", pc);
+        act("$1n receives a reward!", A_ALWAYS, pc, null, null, TO_ROOM);
+    }
+} dilend
+
+dilbegin unique fine_player(pc : unitptr, fine : integer);
+var
+    success : integer;
+code
+{
+    // Take money from player and destroy it (to null)
+    success := transfermoney(pc, null, fine);
+    
+    if (success)
+    {
+        sendto("You have paid your fine of " + moneystring(fine, 0) + "&n", pc);
+        sendto("Your fine has been collected.&n", pc);
+    }
+    else
+    {
+        sendto("You can't afford to pay the fine!&n", pc);
+    }
+} dilend
+
+dilbegin unique player_trade(pc1 : unitptr, pc2 : unitptr, amount : integer);
+var
+    success : integer;
+code
+{
+    // Transfer money between two players
+    success := transfermoney(pc1, pc2, amount);
+    
+    if (success)
+    {
+        sendto("You transfer " + moneystring(amount, 0) + " to " + pc2.name + "&n", pc1);
+        sendto(pc1.name + " transfers " + moneystring(amount, 0) + " to you&n", pc2);
+    }
+    else
+    {
+        sendto("Transfer failed - insufficient funds!&n", pc1);
+    }
+} dilend
+
+== Usage Notes ==
+* Both character parameters must be valid character units (PC or NPC). Using objects or rooms will result in failure.
+* The amount parameter must be a positive integer.
+* When 'f' is null and 't' is not null, money is created and given to 't' (used for rewards).
+* When 't' is null and 'f' is not null, money is removed from 'f' and destroyed (used for fines).
+* When both are non-null, money is transferred between characters if the source can afford it.
+* The function uses the local currency system of the target character.
+* All transactions are logged for security and auditing purposes.
+* Commonly used in shops, guilds, service providers, and reward systems.
+
+== Error Handling ==
+* If either character parameter is not a unitptr, a DIL fatal error occurs.
+* If character parameters are not character types (PC/NPC), the function returns 0 (failure).
+* If the amount parameter is not an integer, a DIL fatal error occurs.
+* If the source character cannot afford the transfer amount, the function returns 0 (failure).
+* If memory allocation fails during the transfer, the function returns 0 (failure).
+
+== Related Functions/Fields ==
+* [[moneystring]] - Formats money amounts into readable strings
+* [[char_can_afford]] - Checks if a character can afford a specific amount
+* [[purse]] - Access to character's money purse information
+
+== See Also ==
+* Money and currency functions
+* Economic system functions
+* Character transaction functions

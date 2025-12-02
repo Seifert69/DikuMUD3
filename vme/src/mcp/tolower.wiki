@@ -1,0 +1,87 @@
+= tolower =
+ function: string '''tolower'''(s : string);
+
+The '''tolower''' function converts all characters in a string to lowercase.
+
+== Description ==
+This function returns a new string with all alphabetic characters converted to their lowercase equivalents. The original string is not modified; instead, a new lowercase copy is created and returned. This function is commonly used for case-insensitive string comparisons, normalization, and text processing.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The input string to be converted to lowercase
+|}
+
+== Examples ==
+dilbegin unique case_insensitive_check(input : string);
+var
+    lower_input : string;
+code
+{
+    // Convert input to lowercase for comparison
+    lower_input := tolower(input);
+    
+    if (lower_input == "yes")
+    {
+        sendto("You answered YES!&n", self);
+    }
+    else if (lower_input == "no")
+    {
+        sendto("You answered NO!&n", self);
+    }
+    else
+    {
+        sendto("You answered: " + input + "&n", self);
+    }
+} dilend
+
+dilbegin unique normalize_name(name : string);
+var
+    normal_name : string;
+code
+{
+    // Normalize a name to lowercase for storage/lookup
+    normal_name := tolower(name);
+    sendto("Normalized name: " + normal_name + "&n", self);
+    
+    // Example usage with restore function (from mail system)
+    // ml := restore(normal_name, null);
+} dilend
+
+dilbegin unique string_processing();
+var
+    mixed_case : string;
+    lower_case : string;
+code
+{
+    mixed_case := "Hello WORLD! 123";
+    lower_case := tolower(mixed_case);
+    
+    sendto("Original: " + mixed_case + "&n", self);
+    sendto("Lowercase: " + lower_case + "&n", self);
+    // Output: "hello world! 123"
+} dilend
+
+== Usage Notes ==
+* The function only affects alphabetic characters; numbers, symbols, and whitespace remain unchanged.
+* Non-alphabetic characters are passed through unchanged.
+* The function returns a new string; the original input string is not modified.
+* Empty strings return empty strings (null pointer in C implementation).
+* This function is useful for case-insensitive comparisons and text normalization.
+* The function handles null input gracefully by returning a fail condition.
+
+== Error Handling ==
+* If the input parameter is not a string, a DIL fatal error occurs: "Arg 1 of 'tolower' not a string."
+* If the input string is null or empty, the function returns a null/empty string.
+* The function will fail gracefully if memory allocation for the new string fails.
+
+== Related Functions/Fields ==
+* [[toupper]] - Converts all characters in a string to uppercase
+* [[restore]] - Restores data from storage (often used with tolower for filename normalization)
+* [[savestr]] - Saves strings to disk for later retrieval
+
+== See Also ==
+* String manipulation functions
+* Case conversion functions
+* File system functions (for filename normalization)

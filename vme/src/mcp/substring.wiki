@@ -1,0 +1,267 @@
+= substring =
+function: '''substring'''(l : stringlist, s : string);
+
+The '''substring''' function removes the first occurrence of a specified string from a stringlist.
+
+== Description ==
+This function searches through a stringlist and removes the first element that matches the specified string. The function operates on the stringlist in order, removing only the first occurrence found with the matching string.
+
+The function is commonly used to remove specific words, commands, or values from lists of strings, particularly when processing user input or managing dynamic string collections.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| l || stringlist || The stringlist to remove the string from
+|-
+| s || string || The string to remove from the stringlist
+|}
+
+== Return Value ==
+The function does not return a value.
+
+== Examples ==
+=== Remove Specific Word ===
+ dilbegin remove_command(commands : stringlist, word : string);
+ var
+   i : integer;
+ code
+ {
+   // Remove "quit" command from available commands
+   substring(commands, "quit");
+   
+   sendtext("Available commands after removal:<br/>", self);
+   
+   i := 0;
+   while (i < length(commands))
+   {
+     sendtext(itoa(i + 1) + ": " + commands.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Remove User Input Words ===
+ dilbegin filter_input(user_input : string);
+ var
+   words : stringlist;
+   filtered_words : stringlist;
+   i : integer;
+ code
+ {
+   // Split input into words
+   words := getwords(user_input);
+   
+   // Remove unwanted words
+   filtered_words := words;
+   substring(filtered_words, "the");
+   substring(filtered_words, "a");
+   substring(filtered_words, "an");
+   
+   sendtext("Filtered words:<br/>", self);
+   
+   i := 0;
+   while (i < length(filtered_words))
+   {
+     sendtext(itoa(i + 1) + ": " + filtered_words.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Remove Multiple Occurrences ===
+ dilbegin remove_all_occurrences(items : stringlist, target : string);
+ var
+   i : integer;
+ code
+ {
+   // Remove all occurrences of target string
+   while (substring(items, target) == 0)
+   {
+     // Keep removing until substring returns non-zero (not found)
+   i := i + 1;
+   }
+   
+   sendtext("Removed all occurrences of '" + target + "'<br/>", self);
+   sendtext("Final list length: " + itoa(length(items)) + "<br/>", self);
+   
+   i := 0;
+   while (i < length(items))
+   {
+     sendtext(itoa(i + 1) + ": " + items.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Command Processing ===
+ dilbegin process_command_line(command_line : string);
+ var
+   parts : stringlist;
+   command : string;
+   arguments : stringlist;
+   i : integer;
+ code
+ {
+   // Remove command keyword from line
+   parts := split(command_line, " ");
+   
+   if (length(parts) > 0)
+   {
+     command := parts.[0];
+     
+     // Remove all command words from arguments
+     arguments := parts;
+     substring(arguments, command);
+     
+     // Rebuild arguments list
+     arguments := parts;
+     i := 1;
+     while (i < length(parts))
+     {
+       if (i > 0)
+         addstring(arguments, " ");
+       addstring(arguments, parts.[i]);
+     }
+     
+     sendtext("Command: " + command + "<br/>", self);
+     sendtext("Arguments: ", self);
+     
+     i := 0;
+     while (i < length(arguments))
+     {
+       sendtext(arguments.[i] + "<br/>", self);
+       i := i + 1;
+     }
+   }
+ }
+ dilend
+
+=== Text Cleanup ===
+ dilbegin cleanup_text(text : string);
+ var
+   words : stringlist;
+   cleaned_text : stringlist;
+   i : integer;
+ code
+ {
+   // Split text into words
+   words := getwords(text);
+   
+   // Remove common filler words
+   cleaned_text := words;
+   substring(cleaned_text, "the");
+   substring(cleaned_text, "a");
+   substring(cleaned_text, "an");
+   substring(cleaned_text, "and");
+   
+   sendtext("Cleaned text:<br/>", self);
+   
+   i := 0;
+   while (i < length(cleaned_text))
+   {
+     sendtext(cleaned_text.[i] + " ", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== List Management ===
+ dilbegin manage_string_list();
+ var
+   items : stringlist;
+   i : integer;
+ code
+ {
+   // Initialize list
+   items := {"apple", "banana", "cherry", "apple", "duplicate", "test"};
+   
+   sendtext("Original list:<br/>", self);
+   i := 0;
+   while (i < length(items))
+   {
+     sendtext(itoa(i + 1) + ": " + items.[i] + "<br/>", self);
+     i := i + 1;
+   }
+   
+   // Remove first "apple" occurrence
+   substring(items, "apple");
+   
+   sendtext("After removing first 'apple':<br/>", self);
+   
+   i := 0;
+   while (i < length(items))
+   {
+     sendtext(itoa(i + 1) + ": " + items.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== Pattern Matching ===
+ dilbegin pattern_removal();
+ var
+   filenames : stringlist;
+   i : integer;
+ code
+ {
+   // Create list of filenames
+   filenames := {"document.txt", "backup.txt", "temp_file.tmp", "config.xml", "another_file.txt"};
+   
+   sendtext("Original filenames:<br/>", self);
+   
+   i := 0;
+   while (i < length(filenames))
+   {
+     sendtext(itoa(i + 1) + ": " + filenames.[i] + "<br/>", self);
+     i := i + 1;
+   }
+   
+   // Remove all .tmp files
+   while (substring(filenames, ".tmp") == 0)
+   {
+     substring(filenames, ".tmp");
+     i := i + 1;
+   }
+   
+   sendtext("After removing .tmp files:<br/>", self);
+   
+   i := 0;
+   while (i < length(filenames))
+   {
+     sendtext(itoa(i + 1) + ": " + filenames.[i] + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The function removes only the first matching occurrence
+* The function modifies the original stringlist directly
+* Use [[getwords]] to split text into word lists for processing
+* The function is commonly used for input filtering and command parsing
+* Multiple calls may be needed to remove all occurrences of a target string
+* The function is case-sensitive in its matching
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid stringlist parameter causes no action
+* Null or empty string parameter causes no action
+* Invalid stringlist parameter causes no action
+* No runtime errors are generated for valid parameters
+* If no matching string is found, the original stringlist remains unchanged
+
+Always ensure that both parameters are valid before calling the function.
+
+== Related Functions/Fields ==
+* [[addstring]] - Add a string to a stringlist
+* [[getwords]] - Split a string into words
+* [[stringlist]] data type and operations
+* [[split]] - Split a string into a stringlist
+* [[in]] operator - Check if a string exists in a stringlist
+
+== See Also ==
+* DIL String Operations Documentation
+* String manipulation and parsing functions
+* Input filtering and validation systems
+* Text processing and cleanup functions

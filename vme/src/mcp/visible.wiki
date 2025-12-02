@@ -1,0 +1,139 @@
+= visible =
+ function: integer '''visible'''(viewer : unitptr, target : unitptr);
+ 
+The '''visible''' function checks whether one character can see another unit in the game world.
+
+== Description ==
+The '''visible''' function determines if a character (viewer) can visually perceive another unit (target). This function takes into account various visibility factors including normal sight, darkness, invisibility spells, wizard invisibility levels, and other visibility modifiers. It returns a boolean value (1 for visible, 0 for not visible) indicating whether the viewer can see the target.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| viewer || unitptr || The character who is attempting to see the target. Must be a character (PC or NPC).
+|-
+| target || unitptr || The unit that the viewer is trying to see. Can be any unit type.
+|}
+
+== Examples ==
+=== Basic Visibility Check ===
+ dilbegin check_target_visibility();
+ var
+   target : unitptr;
+ 
+ code
+ {
+   target := findunit(self, argument, FIND_UNIT_SURRO, null);
+   if (target == null)
+   {
+     sendtext("You don't see that here.<br/>", activator);
+     quit;
+   }
+   
+   if (visible(self, target))
+   {
+     sendtext("You can see " + target.name + ".<br/>", activator);
+   }
+   else
+   {
+     sendtext("You can't see " + target.name + ".<br/>", activator);
+   }
+ } dilend
+
+=== Combat Target Validation ===
+ dilbegin attack_visible_target();
+ var
+   victim : unitptr;
+ 
+ code
+ {
+   victim := findunit(self, argument, FIND_UNIT_SURRO, null);
+   
+   if ((victim == null) or not visible(self, victim))
+   {
+     sendtext("That person is not here!<br/>", activator);
+     quit;
+   }
+   
+   if (not (victim.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+   {
+     sendtext("You can only attack living things!<br/>", activator);
+     quit;
+   }
+   
+   exec("kill " + victim.name, self);
+ } dilend
+
+=== NPC Object Collection ===
+ dilbegin collect_visible_items();
+ var
+   item : unitptr;
+ 
+ code
+ {
+   foreach (UNIT_ST_OBJ, item)
+   {
+     if (not visible(self, item)) continue;
+     if (item.flags & UNIT_FL_BURIED) continue;
+     if (not isset(item.manipulate, MANIPULATE_TAKE)) continue;
+     
+     exec("get " + item.name, self);
+     sendtext("You pick up " + item.name + ".<br/>", activator);
+   }
+ } dilend
+
+=== Stealth and Detection ===
+ dilbegin stealth_check();
+ var
+   sneaker : unitptr;
+   room : unitptr;
+ 
+ code
+ {
+   room := self.outside;
+   
+   foreach (UNIT_ST_PC, sneaker)
+   {
+     if (sneaker.outside != room) continue;
+     
+     if (visible(self, sneaker))
+     {
+       exec("say I can see you, " + sneaker.name + "!", self);
+     }
+     else
+     {
+       exec("emote looks around suspiciously.", self);
+     }
+   }
+ } dilend
+
+== Usage Notes ==
+* The '''viewer''' parameter must be a character (PC or NPC). Using other unit types will result in an error.
+* The '''target''' parameter can be any unit type (character, object, or room).
+* The function considers multiple visibility factors:
+** Normal line of sight
+** Light levels and darkness
+** Invisibility spells and effects
+** [[#uptr|minv]] wizard invisibility levels
+** Blindness and other visual impairments
+** Terrain and environmental obstacles
+* Returns 1 (TRUE) if the target is visible, 0 (FALSE) if not visible
+* Commonly used before combat, spellcasting, or interaction to ensure valid targeting
+* Essential for NPCs to avoid interacting with invisible or hidden entities
+
+== Error Handling ==
+* If '''viewer''' is not a character unit, the function returns FAIL
+* If either parameter is null, the function returns FAIL
+* If either parameter is not a unitptr, a runtime error occurs
+* The function gracefully handles edge cases like destroyed units
+
+== Related Functions/Fields ==
+* [[#uptr|minv]] - Wizard invisibility level field
+* [[#findunit|findunit()]] - Find units in the environment
+* [[#act|act()]] - Perform actions with visibility checks
+* [[#gamestate|gamestate()]] - Check game state including visibility
+
+== See Also ==
+* [[#uptr|unitptr]] - Unit pointer type documentation
+* [[#sfb_dead|SFB_DEAD]] - Death and visibility considerations
+* [[#logcrime|logcrime()]] - Crime logging with visibility checks

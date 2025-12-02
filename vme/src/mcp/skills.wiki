@@ -1,0 +1,215 @@
+= skills =
+field: integer '''.skills'''[index] (Read-only)
+
+The '''skills''' field is used to get the current value of a specific skill for a player character.
+
+== Description ==
+This field provides access to the current value or proficiency level of a specific skill for a player character. The field takes an integer index parameter and returns the current skill value at that index. The field is only available on player characters and requires appropriate zone access level to read.
+
+The field uses the game's internal skill system to track character abilities and proficiencies in various skill areas.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| Read || integer || Returns the current value of the specified skill index
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Skill Value Check ===
+ dilbegin check_skill_value();
+ var
+    skill_index : integer;
+    skill_value : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Check current value of sword skill (SKI_SWORD)
+    skill_index := 5;  // Assuming SKI_SWORD = 5
+    skill_value := activator.skills[skill_index];
+    
+    sendtext("Your sword skill value is: " + itoa(skill_value) + "<br/>", activator);
+ } dilend
+
+=== Skill Proficiency Display ===
+ dilbegin show_skill_proficiencies();
+ var
+    i : integer;
+    skill_value : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Your Skill Proficiencies:<br/>", activator);
+    
+    // Display values for first 10 skills
+    for (i := 0; i < 10; i := i + 1)
+    {
+       if (i < SKI_TREE_MAX)
+       {
+          skill_value := activator.skills[i];
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+             sendtext(skill_name + ": " + itoa(skill_value) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Skill Comparison ===
+ dilbegin compare_skills(target : unitptr);
+ var
+    i : integer;
+    my_value : integer;
+    target_value : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC or target.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Skill Comparison:<br/>", activator);
+    
+    // Compare values for several key skills
+    for (i := 0; i < 5; i := i + 1)
+    {
+       my_value := activator.skills[i];
+       target_value := target.skills[i];
+       skill_name := skill_name(i);
+       
+       if (skill_name != "")
+       {
+          sendtext(skill_name + " - You: " + itoa(my_value) + ", Target: " + itoa(target_value) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Skill Validation ===
+ dilbegin validate_skill_range();
+ var
+    i : integer;
+    skill_value : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    sendtext("Validating skill ranges...<br/>", activator);
+    
+    // Check if all skills are within reasonable range
+    for (i := 0; i < SKI_TREE_MAX; i := i + 1)
+    {
+       skill_value := activator.skills[i];
+       
+       if (skill_value < 0 or skill_value > 100)
+       {
+          skill_name := skill_name(i);
+          
+          if (skill_name != "")
+             sendtext("Warning: " + skill_name + " has unusual value: " + itoa(skill_value) + "<br/>", activator);
+       }
+    }
+ } dilend
+
+=== Skill-Based Abilities ===
+ dilbegin skill_based_abilities();
+ var
+    magic_skill : integer;
+    weapon_skill : integer;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    magic_skill := activator.skills[SKI_MAGIC];
+    weapon_skill := activator.skills[SKI_SWORD];
+    
+    // Unlock abilities based on skill values
+    if (magic_skill >= 50)
+    {
+       sendtext("You can cast advanced spells.<br/>", activator);
+    }
+    
+    if (weapon_skill >= 75)
+    {
+       sendtext("You can master weapon techniques.<br/>", activator);
+    }
+    
+    if (magic_skill >= 50 and weapon_skill >= 75)
+    {
+       sendtext("You are a true battle mage.<br/>", activator);
+    }
+ } dilend
+
+=== Skill Progress Tracking ===
+ dilbegin track_skill_progress();
+ var
+    old_value : integer;
+    new_value : integer;
+    skill_name : string;
+ code
+ {
+    if (activator.type != UNIT_ST_PC)
+       quit;
+    
+    // Track improvement in a specific skill
+    old_value := activator.skills[SKI_SWORD];
+    
+    // Simulate skill improvement (would use game mechanics)
+    new_value := old_value + 5;
+    
+    // Update the skill value
+    activator.skills[SKI_SWORD] := new_value;
+    
+    skill_name := skill_name(SKI_SWORD);
+    
+    sendtext("Your " + skill_name + " skill improved from " + itoa(old_value) + " to " + itoa(new_value) + "!<br/>", activator);
+ } dilend
+
+== Usage Notes ==
+* The field is read-only and cannot be modified directly
+* Only available on player characters (UNIT_ST_PC)
+* Requires zone access level 0 to read skill values
+* Skill indices correspond to SKI_* constants defined in the game system
+* The field returns current skill values, not skill levels or costs
+* Skill values typically represent proficiency or ability levels
+* The field is commonly used with [[skill_name()]] to get skill names
+* Skill values are used in combat calculations, ability checks, and character advancement
+* The field is often used in character creation, training, and progression systems
+
+== Error Handling ==
+The field includes several validation checks:
+
+* **Unit type validation**: Only works on UNIT_ST_PC units
+* **Access level validation**: Requires zone access level 0
+* **Index validation**: Skill index must be within valid range (0 to SKI_TREE_MAX - 1)
+* **Null pointer validation**: Fails when accessed on null unit pointers
+
+Common error scenarios:
+* Accessing the field on NPCs or objects (will return fail)
+* Using invalid skill indices
+* Attempting to access from zones with restricted permissions
+* Accessing the field on destroyed units
+
+== Related Functions/Fields ==
+* [[skill_name()]] - Function to get the name of a skill from its index
+* [[skill_levels]] - Field to get the current level of a skill
+* [[skill_costs]] - Field to get the experience point cost of a skill
+* [[skill_points]] - Field to get available skill points
+* [[abilities]] - Field array to access character abilities
+* [[practice]] - Command to train skills using points
+
+== See Also ==
+* [[SKI_*]] - Skill index constants
+* [[Character advancement]] - Information about skill progression systems
+* [[Experience system]] - Experience point and skill value mechanics
+* [[Training systems]] - Skill training and improvement procedures
+* [[Ability system]] - Information about character abilities and attributes

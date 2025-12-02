@@ -1,0 +1,191 @@
+= stop_fighting =
+function: '''stop_fighting'''(ch : unitptr, vict : unitptr);
+
+The '''stop_fighting''' function terminates combat between characters or stops all combat for a specific character.
+
+== Description ==
+This function is used to cancel combat engagements in the game. It can either stop combat between two specific characters or stop all combat for a particular character. The function removes the specified combat relationships and updates the combat state accordingly.
+
+When called with a specific target (vict), it stops combat between the two characters. When called with null as the second parameter, it stops all combat engagements for the first character (ch). This function is commonly used in death sequences, area peace effects, teleportation, and other situations where combat should be terminated.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ch || unitptr || The character to stop fighting for
+|-
+| vict || unitptr || The specific opponent to stop fighting with, or null to stop all combat
+|}
+
+== Return Value ==
+The function does not return a value.
+
+== Examples ==
+=== Stop All Combat ===
+ dilbegin peace_room();
+ var
+   u : unitptr;
+ code
+ {
+   // Stop all combat in the room
+   foreach (u, self.inside)
+   {
+     if (u.type == UNIT_ST_PC or u.type == UNIT_ST_NPC)
+     {
+       stop_fighting(u, null);
+       sendtext("Combat has been stopped.<br/>", u);
+     }
+   }
+ }
+ dilend
+
+=== Stop Combat Between Two Characters ===
+ dilbegin separate_fighters(attacker : unitptr, defender : unitptr);
+ code
+ {
+   if (opponent(attacker, defender))
+   {
+     stop_fighting(attacker, defender);
+     stop_fighting(defender, attacker);
+     
+     act("$1n and $2n stop fighting.", A_SOMEONE, attacker, defender, null, TO_ALL);
+   }
+ }
+ dilend
+
+=== Death Sequence ===
+ dilbegin character_death();
+ var
+   corpse : unitptr;
+ code
+ {
+   // Stop all combat for the dying character
+   stop_fighting(self, null);
+   
+   // Set position to dead
+   self.position := POSITION_DEAD;
+   
+   // Create corpse
+   corpse := make_corpse("corpse@death");
+   
+   // Handle player vs NPC differences
+   if (self.type == UNIT_ST_NPC)
+     destroy(self);
+   else
+   {
+     link(self, findroom("death_room@basis"));
+     dilcopy("death_sequence@death", self);
+   }
+ }
+ dilend
+
+=== Area Peace Effect ===
+ dilbegin sanctuary_peace();
+ var
+   u : unitptr;
+ code
+ {
+   sendtext("A feeling of peace settles over the area.<br/>", self);
+   
+   // Stop all combat for everyone in the room
+   foreach (u, self.inside)
+   {
+     if (u.type == UNIT_ST_PC or u.type == UNIT_ST_NPC)
+     {
+       if (u.fighting)
+       {
+         stop_fighting(u, null);
+         act("$1n stops fighting as peace settles over the area.", A_SOMEONE, u, null, null, TO_ROOM);
+       }
+     }
+   }
+ }
+ dilend
+
+=== Teleportation Combat Stop ===
+ dilbegin teleport_character(target : unitptr, dest_room : string);
+ var
+   room : unitptr;
+ code
+ {
+   // Stop combat before teleportation
+   stop_fighting(target, null);
+   
+   // Find destination room
+   room := findroom(dest_room);
+   
+   if (room)
+   {
+     act("$1n vanishes in a puff of smoke!", A_SOMEONE, target, null, null, TO_ALL);
+     link(target, room);
+     act("$1n appears in a puff of smoke!", A_SOMEONE, target, null, null, TO_ALL);
+     
+     sendtext("You have been teleported.<br/>", target);
+   }
+   else
+   {
+     sendtext("Teleportation failed - destination not found.<br/>", self);
+   }
+ }
+ dilend
+
+=== Combat Cleanup ===
+ dilbegin cleanup_combat();
+ var
+   u : unitptr;
+   v : unitptr;
+ code
+ {
+   // Check all characters in room and stop any invalid combat
+   foreach (u, self.inside)
+   {
+     if (u.type == UNIT_ST_PC or u.type == UNIT_ST_NPC)
+     {
+       // Check if fighting target is still valid
+       if (u.fighting)
+       {
+         v := u.fighting;
+         
+         // Stop combat if target is dead, gone, or invalid
+         if (v.position == POSITION_DEAD or not visible(u, v))
+         {
+           stop_fighting(u, v);
+           act("$1n stops fighting $2n.", A_SOMEONE, u, v, null, TO_ALL);
+         }
+       }
+     }
+   }
+ }
+ dilend
+
+== Usage Notes ==
+* The first parameter (ch) must be a character (PC or NPC)
+* The second parameter (vict) can be a specific character or null to stop all combat
+* When vict is null, all combat engagements for ch are terminated
+* When vict is specified, only combat between ch and vict is stopped
+* The function automatically handles both sides of the combat relationship
+* Use [[opponent]]() to check if two characters are in combat
+* The [[fighting]] field can be used to check current combat status
+* Combat is automatically stopped when characters die or leave the area
+
+== Error Handling ==
+The function handles errors in the following ways:
+* Null or invalid first parameter causes no action
+* Non-character units are ignored
+* Invalid second parameter (non-unitptr) causes compilation error
+* No runtime errors are generated for valid character parameters
+
+Always validate that parameters are valid characters before calling the function.
+
+== Related Functions/Fields ==
+* [[set_fighting]] - Start combat between two characters
+* [[opponent]] - Check if two characters are in combat
+* [[fighting]] - Field showing current combat target
+* [[opponentcount]] - Field showing number of opponents
+* [[position]] - Field for character position (useful for checking death)
+
+== See Also ==
+* DIL Combat System Documentation
+* POSITION_* constants for character positions
+* SFB_COM flag for combat message detection
+* Combat-related DIL functions and fields

@@ -1,0 +1,151 @@
+= unitdir =
+ function: stringlist '''unitdir'''(match : string);
+
+The '''unitdir''' function returns a list of unit files matching a pattern.
+
+== Description ==
+This function searches the units directory for files matching the specified pattern and returns them as a stringlist. The pattern parameter supports Linux-style wildcards including asterisk (*) for any characters, question mark (?) for single characters, and character classes ([...]). This function is commonly used for finding and loading unit files based on naming patterns.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| match || string || The wildcard pattern to match against filenames in the units directory
+|}
+
+== Examples ==
+dilbegin unique find_corpses();
+var
+    corpselist : stringlist;
+    i : integer;
+    corpse : unitptr;
+code
+{
+    // Find all files starting with "corpse"
+    corpselist := unitdir("corpse*");
+    
+    sendto("Found " + itoa(length(corpselist)) + " corpse files:&n", self);
+    
+    // Process each corpse file
+    for (i := 0; i < length(corpselist); i := i + 1)
+    {
+        sendto("  " + corpselist.[i] + "&n", self);
+        
+        // Optionally restore the corpse
+        corpse := restore(corpselist.[i], null);
+        if (corpse != null)
+        {
+            // Process corpse...
+        }
+    }
+} dilend
+
+dilbegin unique load_by_pattern(pattern : string);
+var
+    filelist : stringlist;
+    i : integer;
+    unit : unitptr;
+code
+{
+    // Get all files matching the pattern
+    filelist := unitdir(pattern);
+    
+    if (length(filelist) == 0)
+    {
+        sendto("No files found matching pattern: " + pattern + "&n", self);
+        quit;
+    }
+    
+    sendto("Files matching '" + pattern + "':&n", self);
+    for (i := 0; i < length(filelist); i := i + 1)
+    {
+        sendto("  " + filelist.[i] + "&n", self);
+        
+        // Example: restore the first matching file
+        if (i == 0)
+        {
+            unit := restore(filelist.[i], null);
+            if (unit != null)
+            {
+                sendto("  Restored: " + unit.name + "&n", self);
+            }
+        }
+    }
+} dilend
+
+dilbegin unique pattern_examples();
+code
+{
+    // Different pattern matching examples
+    sendto("Pattern matching examples:&n", self);
+    
+    // Match all files
+    sendto("unitdir(\"*\") - All files&n", self);
+    
+    // Match files with specific prefix
+    sendto("unitdir(\"sword*\") - Files starting with 'sword'&n", self);
+    
+    // Match single character wildcard
+    sendto("unitdir(\"corpse?\") - 'corpse1', 'corpse2', etc.&n", self);
+    
+    // Match character class
+    sendto("unitdir(\"[abc]*\") - Files starting with a, b, or c&n", self);
+    
+    // Match specific patterns
+    sendto("unitdir(\"start[nm]end\") - 'startnend', 'startmend'&n", self);
+} dilend
+
+dilbegin unique reload_all_units();
+var
+    all_units : stringlist;
+    i : integer;
+    unit : unitptr;
+code
+{
+    // Get all unit files and reload them
+    all_units := unitdir(".*");
+    
+    sendto("Reloading all " + itoa(length(all_units)) + " unit files...&n", self);
+    
+    for (i := 0; i < length(all_units); i := i + 1)
+    {
+        unit := restore(all_units.[i], null);
+        if (unit != null)
+        {
+            sendto("  Reloaded: " + unit.name + "&n", self);
+        }
+        else
+        {
+            sendto("  Failed to load: " + all_units.[i] + "&n", self);
+        }
+    }
+} dilend
+
+== Usage Notes ==
+* The function searches the units subdirectory of the current zone's DIL file path.
+* Pattern matching follows Linux shell wildcard rules:
+** * - Matches any sequence of characters
+** ? - Matches any single character  
+** [...] - Matches any one of the enclosed characters
+* The function returns a stringlist containing only the matching filenames (not full paths).
+* Commonly used with [[restore]]() function to load matching unit files.
+* If no files match the pattern, an empty stringlist is returned.
+* The pattern matching is case-sensitive.
+* Useful for batch operations on groups of related unit files.
+
+== Error Handling ==
+* If the match parameter is not a string, a DIL fatal error occurs: "Arg 1 of 'unitdir' not string".
+* If the units directory doesn't exist or is inaccessible, the function returns an empty stringlist.
+* If the pattern contains invalid regex syntax, the function may fail or return unexpected results.
+* File system errors (permissions, etc.) will result in an empty stringlist being returned.
+
+== Related Functions/Fields ==
+* [[restore]] - Loads a unit from a file
+* [[savestr]] - Saves string data to files
+* [[loadstr]] - Loads string data from files
+* [[delstr]] - Deletes files
+
+== See Also ==
+* File system functions
+* Pattern matching functions
+* Unit management functions
