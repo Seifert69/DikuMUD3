@@ -328,7 +328,8 @@ struct dilargstype
 #define DILE_GETAFFECTS 204 /* getaffects(#) */
 #define DILI_WAITNOOP 205   /* waitnoop() */
 #define DILI_ZONERESET 206   /* zonereset(#) */
-#define DILI_MAX 206        /* The maximum node number */
+#define DILI_SETROOMEXIT 207 /* setroomexit(#,#,#) */
+#define DILI_MAX 207        /* The maximum node number */
 
 /* DIL Field references */
 #define DILF_NMS 0  /* .names */

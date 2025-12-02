@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 15  // T010, T009, ...
+#define TEST_MAXIMUM 16  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,61 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T016 =====================
+
+dilbegin T016(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+
+var
+   r : unitptr;
+code
+{
+   logtest(tstno, LOGT_INFO, "T016 running");
+   r := findroom("testlabc@test");
+
+   if (r.exit_to[DIR_NORTH] != null)
+   {
+      logtest(tstno, LOGT_INFO, "There shouldn't be a room exit north");
+      goto terminate;
+   }
+
+   if (r.exit_to[DIR_EAST] == null)
+   {
+      logtest(tstno, LOGT_INFO, "east direction was null but should be set");
+      goto terminate;
+   }
+
+   setroomexit(r, DIR_NORTH, r); // Point to self
+
+   if (r.exit_to[DIR_NORTH] != r)
+   {
+      logtest(tstno, LOGT_INFO, "T016 north direction not set to self room");
+      goto terminate;
+   }
+
+   r := null;
+   setroomexit(r, DIR_NORTH, r); // Drop the exit again
+ 
+   if (r.exit_to[DIR_NORTH] != null)
+   {
+      logtest(tstno, LOGT_INFO, "T016 north direction not reset back to null");
+      goto terminate;
+   }
+
+   logtest(tstno, LOGT_INFO, "T016 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "T016@test");
+   return;
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T016 failed");
+   sendtoalldil("fail", "T016@test");
+   quit;
 }
 dilend
 
@@ -1385,8 +1440,9 @@ code
    interrupt(SFB_MSG, argument == "done", nexttest);
 
 :loop:
-   logtest(0, LOGT_INFO, "Lab director launching test " + itoa(tstno));
-   dilcopy("T"+right("00"+itoa(tstno), 3)+"@test("+itoa(tstno)+")", self.outside);
+   s := "T" + right("00"+itoa(tstno), 3) + "@test" + "(" + itoa(tstno) + ")";
+   logtest(0, LOGT_INFO, "Lab director launching test " + s);
+   dilcopy(s, self.outside);
    i := 0;
    while (i < 4)
    {
