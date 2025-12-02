@@ -124,9 +124,9 @@ int info_rod(spec_arg *sarg)
     {
         slog(LOG_ALL, 0, "Could not clear the zone user info-file");
         send_to_char("Could not clear the zone user info-file.<br/>", sarg->activator);
+        fclose(fl);
         return SFR_BLOCK;
     }
-    fclose(fl);
 
     act("$1n uses $2n.", eA_HIDEINV, sarg->activator, sarg->owner, cActParameter(), eTO_ROOM);
     send_to_char("Zone user information file was erased.<br/>", sarg->activator);
