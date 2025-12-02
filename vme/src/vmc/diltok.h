@@ -195,6 +195,7 @@ struct symbols
     {"reset_level", DILSI_RSLV},
     {"reset_vlevel", DILSI_RSVLV},
     {"reset_race", DILSI_RSRCE},
+    {"setroomexit", DILSI_SETROOMEXIT},
 
     /* DIL Symbol Field */
     {"info", DILSF_INFO},

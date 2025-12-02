@@ -1297,7 +1297,8 @@ void dil_function_table_setup()
         {DILI_ZONERESET, dilfi_zonereset},  /* zonereset(#) */
         {DILE_FNDSIDX, dilfe_fndsidx},      /* */
         {DILE_CALL, dilfe_call},            /* dilcall(#)(#,#,#) */
-        {DILE_GETAFFECTS, dilfe_getaffects} /* getaffects(#) */
+        {DILE_GETAFFECTS, dilfe_getaffects}, /* getaffects(#) */
+        {DILI_SETROOMEXIT, dilfi_setroomexit} /* setroomexit(#,#,#) */
     };
 
     // Find the largest function key for array total size

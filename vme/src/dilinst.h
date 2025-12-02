@@ -79,6 +79,7 @@ void dilfi_inslst(dilprg *);
 void dilfi_remlst(dilprg *);
 void dilfi_reboot(dilprg *);
 void dilfi_zonereset(dilprg *p);
+void dilfi_setroomexit(dilprg *p);
 void dilfi_kedit(dilprg *);
 void dilfe_sact(dilprg *);
 void dilfe_gint(dilprg *);

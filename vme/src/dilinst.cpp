@@ -3234,6 +3234,64 @@ void dilfi_cast(dilprg *p)
     delete v4;
 }
 
+void dilfi_setroomexit(dilprg *p)
+{
+    /* setroomexit(room, direction, roomto) */
+    dilval *v3 = p->stack.pop();  // roomto
+    dilval *v2 = p->stack.pop();  // direction  
+    dilval *v1 = p->stack.pop();  // room
+
+    p->waitcmd--;
+
+    if (dil_type_check("setroomexit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP) &&
+        dil_type_check("setroomexit", p, 1, v2, TYPEFAIL_NULL, 1, DILV_INT) &&
+        dil_type_check("setroomexit", p, 1, v3, TYPEFAIL_NULL, 1, DILV_UP))
+    {
+        dil_getval(v1);
+        dil_getval(v2);
+        dil_getval(v3);
+
+        if (v1->val.ptr == nullptr)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with null room pointer.", p->frame->tmpl->prgname);
+        }
+        else if (!unit_room((unit_data *)v1->val.ptr))
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with non-room unit.", p->frame->tmpl->prgname);
+        }
+        else if (v2->val.num < 0 || v2->val.num > MAX_EXIT)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with invalid direction %d (valid: 0-%d).", p->frame->tmpl->prgname, v2->val.num, MAX_EXIT);
+        }
+        else if (v3->val.ptr != nullptr && !unit_room((unit_data *)v3->val.ptr))
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with non-room destination.", p->frame->tmpl->prgname);
+        }
+        else
+        {
+            room_data *room = (room_data *)v1->val.ptr;
+            room_data *roomto = (room_data *)v3->val.ptr;
+            int direction = v2->val.num;
+            
+            // Get or create the room direction data
+            room_direction_data *exit_data = room->getRoomDirectionDataForExit(direction);
+            if (exit_data == nullptr)
+            {
+                // Create new exit if it doesn't exist
+                exit_data = new room_direction_data();
+                room->setRoomDirectionDataForExitTo(direction, exit_data);
+            }
+            
+            // Set the destination room
+            exit_data->setToRoom(roomto);
+        }
+    }
+
+    delete v1;
+    delete v2;
+    delete v3;
+}
+
 unit_data *hometown_unit(const char *str)
 {
     if (str)

@@ -233,7 +233,7 @@ void make_code(struct exptype *dest);
 /* DIL procedures */
 %token DILSI_LNK  DILSI_EXP DILSI_SET DILSI_UST DILSI_ADE DILSI_SUE
 %token DILSI_DST  DILSI_ADL DILSI_SUL DILSI_SND DILSI_SNT DILSI_RSLV 
-%token DILSI_RSVLV DILSI_RSRCE
+%token DILSI_RSVLV DILSI_RSRCE DILSI_SETROOMEXIT
 %token DILSI_SEC  DILSI_USE DILSI_ADA DILSI_SETF DILSI_CHAS
 %token DILSI_SUA  DILSI_EQP DILSI_UEQ DILSI_SETE
 %token DILSI_QUIT DILSI_LOG DILSI_SNTA DILSI_SNTADIL DILSI_DLC DILSE_INTR
@@ -5698,6 +5698,28 @@ dilproc : corefuncall
         $$.lst = $2 + 1;
         wtmp = &tmpl.core[$2];
         bwrite_ubit8(&wtmp, DILI_REBOOT);*/
+    }
+    | DILSI_SETROOMEXIT '(' coreexp ',' coreexp ',' coreexp ')' ihold
+    {
+        if ($3.typ != DilVarType_e::DILV_UP)
+        {
+            dilfatal("Arg 1 of 'setroomexit' not an unitptr");
+        }
+        else if ($5.typ != DilVarType_e::DILV_INT)
+        {
+            dilfatal("Arg 2 of 'setroomexit' not an integer");
+        }
+        else if ($7.typ != DilVarType_e::DILV_UP)
+        {
+            dilfatal("Arg 3 of 'setroomexit' not an unitptr");
+        }
+        else
+        {
+            $$.fst = $3.fst;
+            $$.lst = $9 + 1;
+            wtmp = &tmpl.core[$9];
+            bwrite_ubit8(&wtmp, DILI_SETROOMEXIT);
+        }
     }
     | DILSI_FOLO '(' coreexp ',' coreexp ')' ihold
     {
