@@ -1,5 +1,8 @@
 project(mplex2)
 
+# Find OpenSSL for TLS support
+find_package(OpenSSL REQUIRED)
+
 set(MPLEX_SRCS
         ClientConnector.cpp ClientConnector.h
         MUDConnector.cpp MUDConnector.h
@@ -136,6 +139,8 @@ target_link_libraries(mplex
         Boost::system
         Boost::regex
         Boost::filesystem
+        OpenSSL::SSL
+        OpenSSL::Crypto
         pthread
         )
 target_include_directories(mplex
