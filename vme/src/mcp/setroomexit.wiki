@@ -1,0 +1,160 @@
+= setroomexit =
+procedure: '''setroomexit'''(room : unitptr, direction : integer, roomto : unitptr);
+
+The setroomexit procedure creates or modifies an exit from a room to another room in a specified direction.
+
+== Description ==
+The setroomexit procedure establishes a one-way exit connection between two rooms. If an exit in the specified direction already exists, it will be modified to point to the new destination room. If no exit exists in that direction, a new exit will be created. This procedure is essential for dynamic room creation, maze generation, and temporary exit modifications during special events or quests.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| room || unitptr || The source room where the exit will be created/modified
+|-
+| direction || integer || The direction for the exit (DIR_* constants from values.h and/or vme.h)
+|-
+| roomto || unitptr || The destination room the exit leads to (can be null to remove exit)
+|}
+
+== Examples ==
+ dilbegin create_simple_exit();
+ var
+    room1 : unitptr;
+    room2 : unitptr;
+ code
+ {
+    room1 := findroom("start@myzone");
+    room2 := findroom("finish@myzone");
+    
+    if (room1 and room2)
+    {
+       setroomexit(room1, DIR_NORTH, room2);
+       setroomexit(room2, DIR_SOUTH, room1);
+       sendtext("Created two-way exit between rooms.&n", self);
+    }
+    else
+    {
+       sendtext("Could not find both rooms.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin temporary_portal();
+ var
+    current_room : unitptr;
+    portal_room : unitptr;
+ code
+ {
+    current_room := self.outside;
+    portal_room := findroom("portal_dest@special");
+    
+    if (current_room and portal_room)
+    {
+       // Create temporary portal exit
+       setroomexit(current_room, DIR_UP, portal_room);
+       sendtext("A magical portal appears!&n", self);
+       
+       // Schedule removal after 30 seconds
+       pause(30);
+       setroomexit(current_room, DIR_UP, null);
+       sendtext("The portal fades away.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin maze_generator();
+ var
+    maze_room : unitptr;
+    i : integer;
+    random_dir : integer;
+    next_room : unitptr;
+ code
+ {
+    maze_room := findroom("maze_001@myzone");
+    
+    if (maze_room)
+    {
+       // Create random exits for maze room
+       for (i := 0; i < 4; i := i + 1)
+       {
+          random_dir := rnd(0, 3); // Random direction
+          next_room := findroom("maze_" + itoa(rnd(1, 10)) + "@myzone");
+          
+          if (next_room)
+          {
+             setroomexit(maze_room, random_dir, next_room);
+          }
+       }
+       sendtext("Maze room configured with random exits.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin test_exit_functionality();
+ var
+    test_room : unitptr;
+ code
+ {
+    test_room := findroom("testlabc@test");
+    
+    if (test_room == null)
+    {
+       sendtext("Test room not found.&n", self);
+       quit;
+    }
+    
+    // Test setting exit to self
+    setroomexit(test_room, DIR_NORTH, test_room);
+    
+    if (test_room.exit_to[DIR_NORTH] == test_room)
+    {
+       sendtext("Exit successfully set to point to self.&n", self);
+    }
+    else
+    {
+       sendtext("Failed to set exit correctly.&n", self);
+    }
+    
+    // Test removing exit
+    setroomexit(test_room, DIR_NORTH, null);
+    
+    if (test_room.exit_to[DIR_NORTH] == null)
+    {
+       sendtext("Exit successfully removed.&n", self);
+    }
+    else
+    {
+       sendtext("Failed to remove exit.&n", self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The direction parameter must be a valid DIR_* constant (0 to MAX_EXIT)
+* Both room and roomto parameters must be valid room units
+* Setting roomto to null removes the exit in that direction
+* The procedure creates a one-way exit; create reciprocal exits manually if needed
+* Existing exits in the specified direction will be overwritten
+* This procedure modifies the room's exit data structure directly
+* Commonly used for dynamic world building, temporary events, and maze generation
+* The exit is immediately available to players in the room
+
+== Error Handling ==
+* If room parameter is null or not a room unit, the operation fails and logs an error
+* If roomto parameter is not null and not a room unit, the operation fails and logs an error
+* If direction is outside valid range (0 to MAX_EXIT), the operation fails and logs an error
+* All errors are logged to the zone's log file for debugging
+
+== Related Functions/Fields ==
+* [[pathto]] - Get direction from one room to another
+* .exit_to[] - Read-only access to room exits
+* .exit_names[] - Access to exit names
+* .exit_info[] - Access to exit flags and conditions
+* [[findroom]] - Locate a room by name
+
+== See Also ==
+* Room system documentation
+* Direction constants (DIR_* values)
+* Dynamic world building
+* Maze and dungeon generation techniques

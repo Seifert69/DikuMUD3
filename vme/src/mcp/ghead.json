@@ -1,0 +1,8 @@
+{
+    "keyword": "ghead",
+    "opcode": "DILSE_GHEAD",
+    "yacc_rule": "| DILSE_GHEAD '(' ')'\n{\n    INITEXP($$);\n    $$.dsl = DSL_DYN;\n    $$.typ = DilVarType_e::DILV_UP;\n    add_ubit8(&($$), DILE_GHEAD);\n}",
+    "dilfe_name": "dilfe_ghead",
+    "c_implementation": "void dilfe_ghead(dilprg *p)\n{\n    dilval *v = new dilval;\n    v->atyp = DILA_NORM;\n    v->type = DILV_UP;\n    v->val.ptr = g_unit_list;\n    p->stack.push(v);\n}",
+    "dil_example": "dilbegin look_signature();\nvar\n  pc:unitptr;\n  code\n  {\n  heartbeat:=PULSE_SEC*3;\n  :start:\n  wait (SFB_CMD,(\n  (command (\"look\")) and\n  ((\"signature\"==argument ) or (\"signatures\" == argument))\n  ));\n  block;\n  pc:=ghead();\nsendtext (\"The following book signers are on line.<br/><br/>\",activator);\n\n     while (pc.type==UNIT_ST_PC)\n      {\n      if (((isset (pc.pcflags,PC_PK_RELAXED)) or\n\t\t\t(dilfind (\"no_kill@function\",pc))) and\n      (pc.level<200) and\n      (visible (activator,pc)))\n     sendtext(pc.name+\" \"+pc.title+\"<br/>\",activator);\n      pc:=pc.gnext;\n      }\n\ngoto start;\n} dilend"
+}

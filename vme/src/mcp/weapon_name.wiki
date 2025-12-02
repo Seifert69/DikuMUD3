@@ -1,0 +1,108 @@
+= weapon_name =
+function: string '''weapon_name'''(i : integer);
+
+The weapon_name function returns the descriptive name of a weapon type based on its index value.
+
+== Description ==
+The weapon_name function retrieves the human-readable name for a specific weapon type from the game's weapon collection. This function is commonly used to display weapon names to players, create menus of available weapon types, or provide descriptive output in combat and skill-related messages. The function accesses the weapon text definitions from the weapons.def configuration file.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| i || integer || Weapon type index (WPN_* constants from values.h and/or vme.h)
+|}
+
+== Examples ==
+ dilbegin list_weapons();
+ var
+    i : integer;
+    name : string;
+ code
+ {
+    sendtext("Available weapon types:&n", self);
+    
+    for (i := 0; i < 50; i := i + 1)
+    {
+       name := weapon_name(i);
+       if (name != "")
+       {
+          sendtext(itoa(i) + ": " + name + "&n", self);
+       }
+    }
+    quit;
+ } dilend
+
+ dilbegin check_weapon_type(weapon_idx : integer);
+ var
+    name : string;
+ code
+ {
+    name := weapon_name(weapon_idx);
+    
+    if (name != "")
+    {
+       sendtext("Weapon type " + itoa(weapon_idx) + " is: " + name + "&n", self);
+    }
+    else
+    {
+       sendtext("Invalid weapon type index.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin setskill_weapon_example();
+ external
+    integer weaponindex(s1 : string);
+ var
+    sname : string;
+    sdef : integer;
+    buffer : string;
+ code
+ {
+    // Example from DIL code showing usage in setskill command
+    sname := "sword";
+    sdef := weaponindex(sname);
+    
+    if (sdef == -1)
+    {
+       buffer := "Invalid weapon, please choose from the following:<br/>";
+       sdef := 0;
+       while (sdef < WPN_TREE_MAX)
+       {
+          sname := weapon_name(sdef);
+          if (sname == "")
+              break;
+          buffer := buffer + sname + "<br/>";
+          sdef := sdef + 1;
+       }
+       sendtext(buffer, self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The weapon index must be within the valid range (0 to WPN_TREE_MAX - 1)
+* Returns an empty string if the weapon index is invalid or has no name defined
+* Returns null if the weapon index is out of bounds
+* The function is useful for creating user-friendly displays of weapon types
+* Commonly used in character creation, skill training, and equipment management systems
+* The returned string is dynamically allocated and should not be modified
+
+== Error Handling ==
+* If the weapon index is out of range, returns null
+* If the weapon index is valid but has no text defined, returns an empty string
+* If the parameter is not an integer, returns an error
+
+== Related Functions/Fields ==
+* [[weapon_info]] - Get detailed information about weapon types
+* [[weapon_costs]] - Get racial weapon cost information
+* [[weapon_levels]] - Get weapon skill level requirements
+* [[skill_name]] - Get skill names (similar function for skills)
+* .weapons[] - Access weapon skill values on characters
+
+== See Also ==
+* Weapon system documentation
+* Skill system documentation
+* Character creation and training systems
+* Equipment handling functions

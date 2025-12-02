@@ -1,0 +1,8 @@
+{
+    "keyword": "dilcopy",
+    "opcode": "DILSI_DLC",
+    "yacc_rule": "| DILSI_DLC '(' coreexp ',' coreexp ')' ihold\n{\n    if ($3.typ != DilVarType_e::DILV_SP)\n    {\n        dilfatal(\"Arg 1 of 'dilcopy' not a string\");\n    }\n    else if ($5.typ != DilVarType_e::DILV_UP)\n    {\n        dilfatal(\"Arg 2 of 'dilcopy' not a unitptr\");\n    }\n    else\n    {\n        $$.fst = $3.fst;\n        $$.lst = $7 + 1;\n        wtmp = &tmpl.core[$7];\n        bwrite_ubit8(&wtmp, DILI_DLC);\n    }\n}",
+    "dilfe_name": "dilfi_dlc",
+    "c_implementation": "void dilfi_dlc(dilprg *p)\n{\n    dilval *v2 = p->stack.pop();\n    dilval *v1 = p->stack.pop();\n\n    p->waitcmd--;\n\n    if (dil_type_check(\"dilcopy\", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))\n    {\n        if (v1->val.ptr && v2->val.ptr)\n        {\n            dil_copy((char *)v1->val.ptr, (unit_data *)v2->val.ptr);\n        }\n    }\n    delete v1;\n    delete v2;\n}",
+    "dil_example": "dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);\nvar\n   depname: string;\n\ncode\n{\n   act(\"You cuff $3n.\", A_SOMEONE, deputy, null, targ, TO_CHAR);\n   act(\"$1n surprises you and put $2n around your wrists.\", A_SOMEONE, deputy, cuffs, targ, TO_VICT);\n   act(\"$1n puts $2n around $3N's wrists.\", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);\n\n   follow(targ, deputy);\n   depname := deputy.name;\n   link(cuffs, targ);\n   unequip(equipment(targ, WEAR_WRIST_R));\n   addequip(cuffs, WEAR_WRIST_R);\n   dilcopy(\"cuffed@midgaard(\"+depname+\")\", targ);\n   dilcopy(\"cuffed2@midgaard(\"+depname+\")\", targ);\n\n   exec(\"sigh\", targ); /* Do this to activate the DILs */\n   return;\n} dilend"
+}

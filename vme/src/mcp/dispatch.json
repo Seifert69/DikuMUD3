@@ -1,0 +1,8 @@
+{
+    "keyword": "dispatch",
+    "opcode": "DILSI_DISPATCH",
+    "yacc_rule": "| DILSI_DISPATCH '(' coreexp ')' ihold\n{\n    if ($3.typ != DilVarType_e::DILV_SP)\n    {\n        dilfatal(\"Arg 1 of 'dispatch' not a string\");\n    }\n    else\n    {\n        $$.fst = $3.fst;\n        $$.lst = $5 + 1;\n        wtmp = &tmpl.core[$5];\n        bwrite_ubit8(&wtmp, DILI_DISPATCH);\n    }\n}",
+    "dilfe_name": "dilfi_dispatch",
+    "c_implementation": "void dilfi_dispatch(dilprg *p)\n{\n    dilval *v1 = p->stack.pop();\n\n    if (dil_type_check(\"dispatch\", p, 1, v1, TYPEFAIL_NULL, 1, DILV_SP))\n    {\n        if (v1->val.ptr)\n        {\n            pipeMUD_write((const char *)v1->val.ptr);\n        }\n    }\n    delete v1;\n}",
+    "dil_example": "dilbegin aware cmd_bugs(st : string);\nvar\n   t : string;\n   z : unitptr;\n   i : integer;\ncode\n{\n   if (self.type!=UNIT_ST_PC)\n      return;\n   sendtext(\"Enter your bug reports. You have approximately 4000 \"+\n            \"characters to work with. Note that if you input only a \"+\n            \"single word or nothing at all, it will abort.<br/>\", self);\n   beginedit(self);\n   wait(SFB_EDIT, self == activator);\n   t := argument;\n   if (length(getwords(t)) < 2)\n   {\n      sendtext(\"Insufficient report. Exiting.<br/>\", self);\n      quit;\n   }\n   z := self.outside;\n   while (z.type != UNIT_ST_ROOM)\n      z := z.outside;\n   t := z.symname + \" [\"+self.name+\"] \" + asctime(realtime)+ argument;\n   t := textformat(t);\n   i := flog(\"bugs\", t, \"a\");\n   sendtext(\"Thank you. They will be corrected.<br/>\", self);\n   dispatch(\"discord msg #bugs @\" + self.name + \" bug report: \" + t); // Send to dispatcher.py via pipeDispatcher\n\n   quit;\n} dilend"
+}

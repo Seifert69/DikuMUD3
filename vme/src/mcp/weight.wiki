@@ -1,0 +1,111 @@
+= weight =
+field: integer '''.weight''' (Read-only)
+
+The .weight field returns the current total weight of a unit including all its contents.
+
+== Description ==
+The .weight field provides access to the total weight of a unit, which includes both the unit's base weight and the weight of all items contained within it. This is different from the .baseweight field which only returns the empty weight of the unit itself. The weight is returned in pounds (½ kg units) and is commonly used for encumbrance calculations, capacity checks, and inventory management.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.weight || integer || Returns the total weight of the unit and its contents
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin check_encumbrance(pc : unitptr);
+ var
+    total_weight : integer;
+    capacity : integer;
+ code
+ {
+    total_weight := pc.weight;
+    capacity := pc.capacity;
+    
+    if (total_weight > capacity)
+    {
+       sendtext("You are overburdened! (" + itoa(total_weight) + "/" + itoa(capacity) + ")&n", pc);
+    }
+    else
+    {
+       sendtext("You are carrying " + itoa(total_weight) + "/" + itoa(capacity) + " pounds.&n", pc);
+    }
+    quit;
+ } dilend
+
+ dilbegin inventory_weight_report(pc : unitptr);
+ var
+    item : unitptr;
+    total_weight : integer;
+    item_count : integer;
+ code
+ {
+    total_weight := 0;
+    item_count := 0;
+    
+    item := pc.inside;
+    while (item)
+    {
+       total_weight := total_weight + item.weight;
+       item_count := item_count + 1;
+       item := item.next;
+    }
+    
+    sendtext("Inventory contains " + itoa(item_count) + " items weighing " + itoa(total_weight) + " pounds total.&n", pc);
+    sendtext("Your total weight including equipment: " + itoa(pc.weight) + " pounds.&n", pc);
+    quit;
+ } dilend
+
+ dilbegin container_check(container : unitptr);
+ var
+    container_weight : integer;
+    container_capacity : integer;
+ code
+ {
+    container_weight := container.weight;
+    container_capacity := container.capacity;
+    
+    if (container_weight > container_capacity)
+    {
+       sendtext("The container is overloaded! (" + itoa(container_weight) + "/" + itoa(container_capacity) + ")&n", self);
+    }
+    else
+    {
+       sendtext("Container weight: " + itoa(container_weight) + "/" + itoa(container_capacity) + "&n", self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The weight includes both the unit's base weight and all contained items
+* Weight is measured in pounds (½ kg units)
+* This field is read-only - use [[set_weight]] to modify weight
+* For containers, this includes the weight of all items inside
+* For characters, this includes equipment and inventory weight
+* Commonly used with .capacity field for encumbrance calculations
+* The .baseweight field provides the empty weight of the unit alone
+
+== Error Handling ==
+* If accessed on a null unit pointer, the operation will fail
+* No other error conditions are expected when accessing this field
+
+== Related Functions/Fields ==
+* [[baseweight]] - The empty weight of the unit (without contents)
+* [[capacity]] - The maximum weight a unit can contain
+* [[set_weight]] - Procedure to modify a unit's weight
+* [[set_weight_base]] - Procedure to modify a unit's base weight
+* [[can_carry]] - Function to check if a unit can carry additional weight
+
+== See Also ==
+* Encumbrance system documentation
+* Inventory management functions
+* Container system documentation
+* Weight calculation mechanics

@@ -1,0 +1,8 @@
+{
+    "keyword": "clear",
+    "opcode": "DILSI_CLI",
+    "yacc_rule": "| DILSI_CLI '(' coreexp ')' ihold\n{\n    if ($3.typ != DilVarType_e::DILV_INT)\n    {\n        dilfatal(\"Arg 1 of 'clear' not an integer\");\n    }\n    else\n    {\n        $$.fst = $3.fst;\n        $$.lst = $5 + 1;\n        wtmp = &tmpl.core[$5];\n        bwrite_ubit8(&wtmp, DILI_CLI);\n    }\n}",
+    "dilfe_name": "dilfi_cli",
+    "c_implementation": "void dilfi_cli(dilprg *p)\n{\n    dilval *v1 = p->stack.pop();\n\n    if (dil_type_check(\"clear\", p, 1, v1, FAIL_NULL, 1, DILV_INT))\n    {\n        dil_intr_remove(p, v1->val.num);\n    }\n    delete v1;\n}",
+    "dil_example": "dilbegin recall aware ns_berries();\nvar\n   intridx : integer;\n\ncode\n{\n   intridx := interrupt(SFB_CMD, command(\"puke\"), the_end);\n\n   heartbeat := PULSE_SEC * 15;\n\n   act(\"The nightshade berries has a bitter taste.\",\n       A_ALWAYS, self, null, null, TO_CHAR);\n   pause;\n\n   act(\"Your stomach starts to rumble...\",\n       A_ALWAYS, self, null, null, TO_CHAR);\n   pause;\n\n   act(\"A warm feeling spreads through your body.\",\n       A_ALWAYS, self, null, null, TO_CHAR);\n   pause;\n\n   act(\"You feel psychotic!\",\n       A_ALWAYS, self, null, null, TO_CHAR);\n   pause;\n\n   :the_end:\n   clear(intridx);\n   pause;\n   act(\"You feel a little better.\",\n       A_ALWAYS, self, null, null, TO_CHAR);\n   quit;\n} dilend"
+}

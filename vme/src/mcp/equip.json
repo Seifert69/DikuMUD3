@@ -1,0 +1,8 @@
+{
+    "keyword": "equip",
+    "opcode": "DILSF_EQP",
+    "yacc_rule": "| DILSF_EQP /* .equip */\n{\n    INITEXP($$);\n    $$.rtyp = DilVarType_e::DILV_UP;\n    $$.typ = DilVarType_e::DILV_INT;\n    $$.dsl = DSL_DYN;\n    $$.num = DILF_EQP;\n}",
+    "dilfe_name": "dilfi_eqp",
+    "c_implementation": "void dilfi_eqp(dilprg *p)\n{\n    dilval *v2 = p->stack.pop();\n    dilval *v1 = p->stack.pop();\n\n    p->waitcmd--;\n\n    if (dil_type_check(\"equip\", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))\n    {\n        auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);\n        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))\n        {\n            /* Then equip char */\n            equip_char(unit->getUnitIn(), unit, v2->val.num);\n        }\n    }\n    delete v1;\n    delete v2;\n}",
+    "dil_example": "dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);\nvar\n   cuffs  : unitptr;\n   deputy : unitptr;\n   i      : integer;\ncode\n{\n   cuffs := equipment(self, WEAR_WRIST_R);\n   secure(cuffs, broken);\n\n   deputy := self.master;\n   secure(deputy, broken);\n\n   if ((deputy == null) or (cuffs == null))\n   {\n      log(\"Cuffed lost either deputy or cuffs\");\n      goto broken;\n   }\n\n   heartbeat := PULSE_SEC * 1;\n\n   :loop:\n   if (cuffs.equip != WEAR_WRIST_R)\n     goto broken;\n   priority;\n   wait(SFB_TICK|SFB_CMD, activator == self);\n   goto loop;\n\n   :broken:\n   i := dildestroy(\"cuffed2@midgaard\", self);\n   quit;\n} dilend"
+}

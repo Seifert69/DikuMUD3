@@ -1,0 +1,8 @@
+{
+    "keyword": "null",
+    "opcode": "DILSE_NULL",
+    "yacc_rule": "| DILSE_NULL\n{\n    INITEXP($$);\n    $$.typ = DilVarType_e::DILV_NULL;\n    $$.dsl = DSL_STA;\n    $$.num = 0;\n}",
+    "dilfe_name": "dilfe_null",
+    "c_implementation": "void dilfe_null(dilprg *p)\n{\n    dilval *v = new dilval;\n    /* Pointer value null */\n\n    v->type = DILV_NULL;\n    v->atyp = DILA_NONE;\n    v->val.ptr = nullptr;\n    p->stack.push(v);\n}",
+    "dil_example": "dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);\nvar\n   depname: string;\n\ncode\n{\n   act(\"You cuff $3n.\", A_SOMEONE, deputy, null, targ, TO_CHAR);\n   act(\"$1n surprises you and put $2n around your wrists.\", A_SOMEONE, deputy, cuffs, targ, TO_VICT);\n   act(\"$1n puts $2n around $3N's wrists.\", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);\n\n   follow(targ, deputy);\n   depname := deputy.name;\n   link(cuffs, targ);\n   unequip(equipment(targ, WEAR_WRIST_R));\n   addequip(cuffs, WEAR_WRIST_R);\n   dilcopy(\"cuffed@midgaard(\"+depname+\")\", targ);\n   dilcopy(\"cuffed2@midgaard(\"+depname+\")\", targ);\n\n   exec(\"sigh\", targ); /* Do this to activate the DILs */\n   return;\n} dilend"
+}

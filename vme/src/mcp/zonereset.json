@@ -1,0 +1,8 @@
+{
+    "keyword": "zonereset",
+    "opcode": "DILSI_ZONERESET",
+    "yacc_rule": "| DILSI_ZONERESET '(' coreexp ')' ihold\n{\n    if ($3.typ != DilVarType_e::DILV_ZP)\n    {\n        dilfatal(\"Arg 1 of 'resetzone' not a zone pointer\");\n    }\n    else\n    {\n        $$.fst = $3.fst;\n        $$.lst = $5 + 1;\n        wtmp = &tmpl.core[$5];\n        bwrite_ubit8(&wtmp, DILI_ZONERESET);\n    }\n}",
+    "dilfe_name": "dilfi_zonereset",
+    "c_implementation": "void dilfi_zonereset(dilprg *p)\n{\n    dilval *v1 = p->stack.pop();\n\n    if (dil_type_check(\"zonereset\", p, 1, v1, TYPEFAIL_NULL, 1, DILV_ZP))\n    {\n        dil_getval(v1);\n        if (v1->val.ptr == NULL)\n        {\n           szonelog(p->frame->tmpl->zone, \"DIL '%s' tried to call zonereset() with a null pointer.\", p->frame->tmpl->prgname);\n        }\n        else\n        {\n           szonelog(p->frame->tmpl->zone, \"DIL '%s' programatically resetting zone %s.\", p->frame->tmpl->prgname, ((zone_type *) v1->val.ptr)->getName());\n           zone_reset((zone_type *) v1->val.ptr);\n        }\n    }\n\n    delete v1;\n}",
+    "dil_example": "dilbegin cmd_reset(arg : string);\nvar\n   z : zoneptr;\n   u : unitptr;\ncode\n{\n   if (arg == \"\")\n   {\n      u := self.outside;\n      while (u.type != UNIT_ST_ROOM)\n          u := u.outside;\n      z := findzone(u.zone);\n   }\n   else\n   {\n      z := findzone(arg);\n   }\n\n   if (z == null)\n   {\n       sendtext(\"Could not find a zone named \"+ arg + \"<br/>\", self);\n       quit;\n   }\n\n   sendtext(\"Resetting zone \"+ z.name + \"<br/>\", self);\n   zonereset(z);\n\n   quit;\n} dilend"
+}

@@ -1,0 +1,132 @@
+= weather =
+variable: integer '''weather'''
+
+The weather variable returns the current sky condition for the zone where the executing unit is located.
+
+== Description ==
+The weather variable provides access to the current weather state as defined by the zone's weather system. It returns an integer value corresponding to one of the SKY_* constants defined in values.h and/or vme.h. This variable is commonly used in weather-dependent spells, outdoor activities, and environmental effects that need to react to current atmospheric conditions.
+
+== Examples ==
+ dilbegin check_weather_for_spell();
+ var
+    current_weather : integer;
+ code
+ {
+    current_weather := weather;
+    
+    if (current_weather == SKY_CLOUDLESS)
+    {
+       sendtext("The sky is completely clear.&n", self);
+    }
+    else if (current_weather == SKY_CLOUDY)
+    {
+       sendtext("The sky is cloudy.&n", self);
+    }
+    else
+    {
+       sendtext("The weather conditions are not favorable.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin sun_beam(medi : unitptr, tgt : unitptr, arg : string, hm : integer, effect : string);
+ var
+    u : unitptr;
+ code
+ {
+    hm := 0;
+    u := self.outside;
+    
+    while (u)
+    {
+       if (isset(u.flags, UNIT_FL_NO_WEATHER | UNIT_FL_INDOORS))
+       {
+          act("There is no access to the forces of nature from here.",
+              A_ALWAYS, self, null, null, TO_CHAR);
+          quit;
+       }
+       u := u.outside;
+    }
+    
+    if ((weather != SKY_CLOUDLESS) or (weather != SKY_CLOUDY))
+    {
+       act("The heavy rain clouds block any chance of casting the spell.",
+           A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+    
+    if ((mudhour < 5) or (mudhour >= 21))
+    {
+       act("The sun has not risen yet.",
+           A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+    
+    // Most powerful at noon
+    if (mudhour < 12)
+       hm := 18*(mudhour - 12);
+    else
+       hm := -15*(mudhour - 12);
+    
+    if (RACE_IS_UNDEAD(tgt.race))
+       hm := hm + 100;
+    
+    hm := attack_spell(SPL_SUN_BEAM, self, medi, tgt, hm, effect);
+    quit;
+ } dilend
+
+ dilbegin weather_report();
+ var
+    current_weather : integer;
+    report : string;
+ code
+ {
+    current_weather := weather;
+    
+    switch (current_weather)
+    {
+       case SKY_CLOUDLESS:
+          report := "The sky is completely clear.";
+          break;
+       case SKY_CLOUDY:
+          report := "Clouds drift across the sky.";
+          break;
+       case SKY_RAINING:
+          report := "Rain is falling from the sky.";
+          break;
+       case SKY_LIGHTNING:
+          report := "Lightning flashes in the stormy sky.";
+          break;
+       default:
+          report := "The weather conditions are unusual.";
+          break;
+    }
+    
+    act(report, A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The weather value is determined by the zone's weather system
+* Returns SKY_* constants (SKY_CLOUDLESS, SKY_CLOUDY, SKY_RAINING, etc.)
+* Weather affects outdoor spells and environmental effects
+* Indoor locations or areas with UNIT_FL_NO_WEATHER flag may have different behavior
+* The weather is zone-specific, so different zones can have different weather conditions
+* Commonly used with time variables like mudhour for comprehensive environmental checks
+
+== Error Handling ==
+* The weather variable is always available and returns a valid integer
+* No error conditions are expected when accessing this variable
+
+== Related Functions/Fields ==
+* [[mudhour]] - Current hour of the mud day
+* [[mudday]] - Current day of the mud month
+* [[mudmonth]] - Current month of the mud year
+* [[mudyear]] - Current mud year
+* .outside - Access to outdoor environment
+
+== See Also ==
+* Weather system documentation
+* Time system documentation
+* Environmental spell effects
+* Zone configuration and weather patterns

@@ -1,0 +1,186 @@
+= wait =
+ function: '''wait'''(flags : integer, expression : boolean);
+ 
+The '''wait''' function pauses DIL execution until a specific type of event occurs and an optional condition is satisfied.
+
+== Description ==
+The '''wait''' function suspends DIL program execution until a message matching the specified flag set is received. The program will only resume if both the message type matches the flags parameter AND the optional expression evaluates to TRUE. This is the primary mechanism for DIL programs to respond to game events, player commands, timers, and inter-program communication.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| flags || integer || Bitwise combination of message flags to wait for (SFB_* constants)
+|-
+| expression || boolean || Optional condition that must be TRUE for program to resume
+|}
+
+== Examples ==
+=== Basic Command Waiting ===
+ dilbegin simple_shopkeeper();
+ var
+   customer : unitptr;
+ 
+ code
+ {
+   :start:
+   wait(SFB_CMD, command("buy"));
+   customer := activator;
+   
+   if (customer == null)
+   {
+     sendtext("I don't see anyone here to buy from me.<br/>", self);
+     goto start;
+   }
+   
+   exec("say What would you like to buy today?", self);
+   goto start;
+ } dilend
+
+=== Timer-Based Processing ===
+ dilbegin periodic_cleaner();
+ var
+   i : integer;
+ 
+ code
+ {
+   heartbeat := PULSE_SEC * 30; // Every 30 seconds
+   i := 0;
+   
+   :start:
+   wait(SFB_TICK, TRUE);
+   
+   i := i + 1;
+   exec("emote sweeps the floor clean.", self);
+   
+   if (i < 5)
+     goto start;
+   
+   exec("say All done cleaning for now.", self);
+ } dilend
+
+=== Complex Event Handling ===
+ dilbegin item_recharger();
+ var
+   item : unitptr;
+   player : unitptr;
+ 
+ code
+ {
+   :start:
+   wait(SFB_DONE, (command("give") and (self == target)));
+   
+   player := activator;
+   item := medium;
+   
+   if (item.type != UNIT_ST_OBJ)
+   {
+     exec("say I can only recharge magical items.", self);
+     goto start;
+   }
+   
+   if ((item.objecttype != ITEM_WAND) and (item.objecttype != ITEM_STAFF))
+   {
+     exec("say This is not a rechargeable item.", self);
+     goto start;
+   }
+   
+   exec("say I will recharge your " + item.name + " for a fee.", self);
+   goto start;
+ } dilend
+
+=== Message Communication ===
+ dilbegin message_handler();
+ var
+   sender : unitptr;
+   msg : string;
+ 
+ code
+ {
+   :start:
+   wait(SFB_MSG, TRUE);
+   
+   sender := activator;
+   msg := argument;
+   
+   if (msg == "status")
+   {
+     sendto(sender, "I am operating normally.");
+   }
+   else if (msg == "shutdown")
+   {
+     sendto(sender, "Shutting down now.");
+     quit;
+   }
+   else
+   {
+     sendto(sender, "Unknown command: " + msg);
+   }
+   
+   goto start;
+ } dilend
+
+=== Multiple Event Types ===
+ dilbegin multi_event_handler();
+ var
+   event_type : integer;
+ 
+ code
+ {
+   :start:
+   wait(SFB_TICK | SFB_CMD | SFB_MSG, TRUE);
+   
+   if (command(CMD_AUTO_TICK))
+   {
+     exec("emote looks around periodically.", self);
+   }
+   else if (command("hello"))
+   {
+     exec("say Hello there, " + activator.name + "!", self);
+   }
+   else if (command(CMD_AUTO_MSG))
+   {
+     sendtext("Received message: " + argument + "<br/>", self);
+   }
+   
+   goto start;
+ } dilend
+
+== Usage Notes ==
+* The '''flags''' parameter uses SFB_* constants which can be combined with bitwise OR (|)
+* Common SFB flags include:
+** [[#sfbcmd|SFB_CMD]] - Player/NPC commands
+** [[#sfbtick|SFB_TICK]] - Timer events based on [[#heartbeat|heartbeat]]
+** [[#sfbmsg|SFB_MSG]] - Inter-program messages
+** [[#sfbdone|SFB_DONE]] - Completed command notifications
+** SFB_COM - Combat events
+** SFB_DEAD - Death events
+** SFB_PRE - Pre-command processing
+* The '''expression''' parameter is optional - if omitted, any matching message will resume execution
+* When waiting, the program sets global variables like [[#activator|activator]], [[#medium|medium]], [[#target|target]], [[#argument|argument]], and [[#cmdstr|cmdstr]]
+* Use [[#command|command()]] function to check specific commands within SFB_CMD events
+* The [[#heartbeat|heartbeat]] variable controls timer frequency for SFB_TICK events
+* Multiple wait statements can be used to create complex state machines
+
+== Error Handling ==
+* If '''flags''' parameter is not an integer, a runtime error occurs
+* If the expression parameter is not boolean, a runtime error occurs
+* Invalid flag combinations may cause the program to never resume
+* Programs waiting indefinitely may impact game performance
+* Always provide exit conditions or timeouts to prevent infinite waiting
+
+== Related Functions/Fields ==
+* [[#interrupt|interrupt()]] - Set up event handlers without waiting
+* [[#send|send()]] / [[#sendto|sendto()]] - Send messages to other DIL programs
+* [[#command|command()]] - Check specific command names
+* [[#heartbeat|heartbeat]] - Control timer frequency
+* [[#activator|activator]] - Unit that triggered the event
+* [[#argument|argument]] - Command arguments or message content
+
+== See Also ==
+* [[#sfbcmd|SFB_CMD]] - Command message documentation
+* [[#sfbtick|SFB_TICK]] - Timer message documentation  
+* [[#sfbmsg|SFB_MSG]] - User message documentation
+* [[#sfbdone|SFB_DONE]] - Command completion documentation
+* [[#sfb_com|SFB_COM]] - Combat message documentation
+* [[#sfb_dead|SFB_DEAD]] - Death message documentation

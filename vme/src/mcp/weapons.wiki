@@ -1,0 +1,126 @@
+= weapons =
+field: integer '''.weapons'''[idx] (Read-only)
+
+The .weapons field provides access to the weapon skill values for both player characters and non-player characters.
+
+== Description ==
+The .weapons field returns the current weapon skill value for a specific weapon type. For player characters, this represents their trained proficiency with individual weapon types, while for NPCs, it represents their skill with weapon groups. These values directly affect combat accuracy, damage calculations, and overall effectiveness with different weapon categories.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| char.weapons[idx] || integer || Returns the weapon skill value for weapon type 'idx'
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
+== Parameters ==
+The field requires an integer index parameter:
+; idx : integer
+: The weapon type index (WPN_* constants from values.h and/or vme.h)
+: For PCs: 0 to WPN_TREE_MAX - 1 (individual weapon types)
+: For NPCs: 0 to WPN_GROUP_MAX - 1 (weapon groups only)
+
+== Examples ==
+ dilbegin check_weapon_skill(char : unitptr, weapon_type : integer);
+ var
+    skill : integer;
+ code
+ {
+    skill := char.weapons[weapon_type];
+    
+    if (skill > 0)
+    {
+       sendtext("Weapon skill: " + itoa(skill) + "&n", self);
+    }
+    else
+    {
+       sendtext("No skill with this weapon type.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin clone_weapon_skills(original : unitptr, tgt : unitptr);
+ var
+    i : integer;
+ code
+ {
+    // Clone weapon skills from one character to another
+    if (tgt.type == UNIT_ST_PC)
+    {
+       i := 0;
+       while (i < WPN_GROUP_MAX)
+       {
+          tgt.weapons[i] := (3 * original.weapons[i]) / 2;
+          i := i + 1;
+       }
+    }
+    else
+    {
+       i := 0;
+       while (i < WPN_GROUP_MAX)
+       {
+          tgt.weapons[i] := original.weapons[i];
+          i := i + 1;
+       }
+    }
+    quit;
+ } dilend
+
+ dilbegin display_all_weapon_skills(char : unitptr);
+ var
+    i : integer;
+    skill : integer;
+    max_index : integer;
+ code
+ {
+    if (char.type == UNIT_ST_PC)
+       max_index := WPN_TREE_MAX;
+    else
+       max_index := WPN_GROUP_MAX;
+    
+    sendtext("Weapon Skills:&n", self);
+    
+    for (i := 0; i < max_index; i := i + 1)
+    {
+       skill := char.weapons[i];
+       if (skill > 0)
+       {
+          sendtext("Weapon " + itoa(i) + ": " + itoa(skill) + "&n", self);
+       }
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The field is accessible for both PCs and NPCs, but with different index ranges
+* For PCs: Can access individual weapon types (0 to WPN_TREE_MAX - 1)
+* For NPCs: Limited to weapon groups only (0 to WPN_GROUP_MAX - 1)
+* When accessed from a zone with access level 0, returns a reference to the actual value
+* When accessed from other zones, returns a copy of the value
+* Higher skill values generally indicate better proficiency with the weapon type
+* Weapon skills affect combat calculations including hit chance and damage
+* This field is read-only - skills are modified through training and practice
+
+== Error Handling ==
+* If accessed on a non-character unit, the operation will fail
+* If the weapon index is out of range for the unit type, the operation will fail
+* Invalid parameter types will result in an error
+* NPCs accessing individual weapon types (beyond WPN_GROUP_MAX) will fail
+
+== Related Functions/Fields ==
+* [[weapon_info]] - Get information about weapon types
+* [[weapon_name]] - Get the name of a weapon type
+* [[weapon_costs]] - Get racial weapon cost information
+* [[weapon_levels]] - Get weapon skill level requirements (PCs only)
+* .abilities[] - Access ability scores on characters
+
+== See Also ==
+* Combat system documentation
+* Skill training and advancement systems
+* Character creation and development
+* Weapon proficiency mechanics

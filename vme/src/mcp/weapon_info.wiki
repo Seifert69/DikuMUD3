@@ -1,0 +1,93 @@
+= weapon_info =
+function: intlist '''weapon_info'''(i : integer);
+
+The weapon_info function retrieves detailed information about a specific weapon type from the game's weapon definition tables.
+
+== Description ==
+The weapon_info function returns an integer list containing comprehensive data about a weapon type, including physical properties, combat characteristics, and damage calculations. The function accesses the weapons.def file data and weapon chart information to provide complete weapon statistics for use in equipment handling, combat calculations, and display functions.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| i || integer || Weapon type index (WPN_* constants from values.h and/or vme.h)
+|}
+
+The function returns an intlist with the following structure:
+* Index 0: Number of hands required (1 or 2)
+* Index 1: Weapon speed value
+* Index 2: Weapon type classification
+* Index 3: Shield block value
+* Index 4: Parent weapon type in weapon tree
+* Index 5+: Damage chart data (3 values per armor type: offset, base damage, alpha)
+
+== Examples ==
+ dilbegin check_two_handed(weapon_idx : integer);
+ var
+    wpn_info : intlist;
+ code
+ {
+    wpn_info := weapon_info(weapon_idx);
+    
+    if (wpn_info != null)
+    {
+       if (wpn_info.[0] == 2)
+          sendtext("This is a two-handed weapon.&n", self);
+       else
+          sendtext("This is a one-handed weapon.&n", self);
+    }
+    else
+    {
+       sendtext("Invalid weapon type.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin display_weapon_stats(weapon_idx : integer);
+ var
+    wpn_info : intlist;
+    i : integer;
+ code
+ {
+    wpn_info := weapon_info(weapon_idx);
+    
+    if (wpn_info != null)
+    {
+       sendtext("Weapon Statistics:&n", self);
+       sendtext("Hands required: " + itoa(wpn_info.[0]) + "&n", self);
+       sendtext("Speed: " + itoa(wpn_info.[1]) + "&n", self);
+       sendtext("Type: " + itoa(wpn_info.[2]) + "&n", self);
+       sendtext("Shield value: " + itoa(wpn_info.[3]) + "&n", self);
+       sendtext("Parent type: " + itoa(wpn_info.[4]) + "&n", self);
+    }
+    else
+    {
+       sendtext("No such weapon type.&n", self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The weapon index must be within the valid range (0 to WPN_TREE_MAX - 1)
+* Returns null if the weapon index is invalid
+* The returned intlist contains dynamic data that should not be modified
+* The damage chart section (indices 5+) contains 3 values per armor type
+* This function is commonly used in equipment wear/look commands and combat calculations
+* The weapon data comes from the weapons.def configuration file
+
+== Error Handling ==
+* If the weapon index is out of range, returns null
+* If the parameter is not an integer, returns an error
+* Invalid weapon types will result in a null return value
+
+== Related Functions/Fields ==
+* [[weapon_name]] - Get the name of a weapon type
+* [[weapon_costs]] - Get racial weapon cost information
+* [[weapon_levels]] - Get weapon skill level requirements
+* .weapons[] - Access weapon skill values on characters
+
+== See Also ==
+* Weapon system documentation
+* Equipment handling functions
+* Combat system functions
+* Armor type constants

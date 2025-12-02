@@ -1,0 +1,147 @@
+= vlevel =
+ field: integer '''.vlevel''' (Read-only or Read/Write)
+ 
+The '''vlevel''' field provides access to a player's virtual level, which represents their effective level for game mechanics and access control.
+
+== Description ==
+The '''vlevel''' field returns the virtual level of a player character. This virtual level may differ from the character's actual [[#upc|level]] and is used for various game mechanics including access control, skill calculations, and content restrictions. The field's access permissions depend on the zone's access level - in high-access zones it's read-only, while in normal zones it may be read-write.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| pc.vlevel || integer || Returns the virtual level of the player character
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Level Check ===
+ dilbegin check_virtual_level();
+ var
+   player : unitptr;
+ 
+ code
+ {
+   player := activator;
+   if (player.vlevel >= 50)
+   {
+     sendtext("You have sufficient virtual level for this area.<br/>", player);
+   }
+   else
+   {
+     sendtext("You need virtual level 50 to enter this area.<br/>", player);
+   }
+ } dilend
+
+=== Clan Access Control ===
+ dilbegin clan_guardian(clan_home : string);
+ var
+   visitor : unitptr;
+ 
+ code
+ {
+   heartbeat := PULSE_SEC * 10;
+   
+   :start:
+   foreach (UNIT_ST_PC, visitor)
+   {
+     if (visitor == self) continue;
+     if (visitor.level > 200) continue; // Skip immortals
+     
+     if ((visitor.vlevel < 20) and (visitor.hometown != clan_home))
+     {
+       act("$1n magically transfers $3n out of harms way....",
+           A_ALWAYS, self, null, visitor, TO_NOTVICT);
+       act("$1n magically transfers you out of harms way....",
+           A_SOMEONE, self, null, visitor, TO_VICT);
+       link(visitor, findroom("temple@udgaard"));
+       visitor.hp := 5;
+       position_update(visitor);
+       heartbeat := PULSE_SEC * 4;
+       goto start;
+     }
+   }
+   pause;
+   goto start;
+ } dilend
+
+=== Virtual Level Comparison ===
+ dilbegin compare_levels();
+ var
+   pc1 : unitptr;
+   pc2 : unitptr;
+ 
+ code
+ {
+   pc1 := self;
+   pc2 := activator;
+   
+   if (pc1.vlevel > pc2.vlevel)
+   {
+     sendtext("Your virtual level is higher than " + pc2.name + ".<br/>", pc1);
+   }
+   else if (pc1.vlevel < pc2.vlevel)
+   {
+     sendtext(pc2.name + " has a higher virtual level than you.<br/>", pc1);
+   }
+   else
+   {
+     sendtext("You and " + pc2.name + " have the same virtual level.<br/>", pc1);
+   }
+ } dilend
+
+=== Level-Based Content ===
+ dilbegin virtual_level_reward();
+ var
+   player : unitptr;
+   bonus : integer;
+ 
+ code
+ {
+   player := activator;
+   bonus := player.vlevel / 10; // Bonus based on virtual level
+   
+   if (bonus > 0)
+   {
+     sendtext("You receive a bonus of " + itoa(bonus) + " gold coins!<br/>", player);
+     // Add actual gold reward here
+   }
+   else
+   {
+     sendtext("Your virtual level is too low for a bonus.<br/>", player);
+   }
+ } dilend
+
+== Usage Notes ==
+* The '''vlevel''' field is only available on player characters (UNIT_ST_PC)
+* Access permissions vary by zone access level:
+** High-access zones: Read-only access
+** Normal zones: May have read-write access
+* Virtual level is used for:
+** Access control to restricted areas
+** Skill and ability calculations
+** Combat and damage calculations
+** Quest and content eligibility
+* Virtual level can be modified independently of the character's actual level
+* The field is commonly used in clan systems, guild systems, and area restrictions
+* Virtual level is saved with the player character
+
+== Error Handling ==
+* Accessing '''vlevel''' on a non-player unit will result in FAIL
+* Accessing '''vlevel''' on a null unit pointer will result in FAIL
+* Write access may be restricted based on zone access permissions
+* The field gracefully handles edge cases and invalid units
+
+== Related Functions/Fields ==
+* [[#upc|level]] - The character's actual level
+* [[#bpresetvlevel|reset_vlevel()]] - Reset a player's virtual level
+* [[#upc|hometown]] - Player's hometown for access control
+* [[#access|access()]] - Zone access level checking
+
+== See Also ==
+* [[#upc|UNIT_ST_PC]] - Player character unit type documentation
+* [[#bpresetlevel|reset_level()]] - Reset a player's actual level
+* [[#bpresetrace|reset_race()]] - Reset a player's race information

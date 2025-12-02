@@ -1,0 +1,8 @@
+{
+    "keyword": "destroy",
+    "opcode": "DILSI_DST",
+    "yacc_rule": "| DILSI_DST '(' coreexp ')' ihold\n{\n    if ($3.typ != DilVarType_e::DILV_UP)\n    {\n        dilfatal(\"Arg 1 of 'destruct' not a unit\");\n    }\n    else\n    {\n        $$.fst = $3.fst;\n        $$.lst = $5 + 1;\n        wtmp = &tmpl.core[$5];\n        bwrite_ubit8(&wtmp, DILI_DST);\n    }\n}",
+    "dilfe_name": "dilfi_dst",
+    "c_implementation": "void dilfi_dst(dilprg *p)\n{\n    dilval *v1 = p->stack.pop();\n\n    p->waitcmd--;\n\n    if (dil_type_check(\"purge\", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))\n    {\n        if (v1->val.ptr && !((unit_data *)v1->val.ptr)->isRoom())\n        {\n            if (v1->val.ptr == p->sarg->owner)\n            {\n                extract_unit((unit_data *)v1->val.ptr);\n                p->waitcmd = WAITCMD_DESTROYED;\n            }\n            else\n            {\n                extract_unit((unit_data *)v1->val.ptr);\n                dil_test_secure_unit_destroyed(p, (unit_data *)v1->val.ptr);\n            }\n            if (((unit_data *)v1->val.ptr)->isPC())\n            {\n                if (CHAR_DESCRIPTOR((unit_data *)v1->val.ptr))\n                {\n                    descriptor_close(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr));\n                }\n            }\n        }\n    }\n    delete v1;\n}",
+    "dil_example": "dilbegin rotaway();\ncode\n{\n   heartbeat := PULSE_SEC * 9600;\n\n   :loop:\n   pause;\n\n   if (self.outside.type == UNIT_ST_ROOM)\n   {\n      if (not isset(self.flags, UNIT_FL_BURIED))\n        act(\"A \"+self.name+\" rots away.\" , A_SOMEONE, self, null, null, TO_ROOM);\n      destroy(self);\n   }\n\n   goto loop;\n} dilend"
+}

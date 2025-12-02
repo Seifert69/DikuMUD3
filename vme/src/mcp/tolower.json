@@ -1,0 +1,8 @@
+{
+    "keyword": "tolower",
+    "opcode": "DILSE_TOLOWER",
+    "yacc_rule": "| DILSE_TOLOWER '(' dilexp ')'\n{\n    INITEXP($$);\n\n    if ($3.typ != DilVarType_e::DILV_SP)\n    {\n        dilfatal(\"Arg 1 of 'tolower' not a string.\");\n    }\n    else\n    {\n        /* Type is ok */\n        /* Make nodes dynamic */\n        $$.dsl = DSL_DYN;\n        $$.typ = DilVarType_e::DILV_SP;\n        make_code(&($3));\n        add_code(&($$), &($3));\n        add_ubit8(&($$), DILE_TOLOWER);\n    }\n    FREEEXP($3);\n}",
+    "dilfe_name": "dilfe_tolower",
+    "c_implementation": "void dilfe_tolower(dilprg *p)\n{\n    dilval *v = new dilval;\n    dilval *v1 = p->stack.pop();\n    char *s1 = nullptr;\n\n    v->type = DILV_SP;\n\n    switch (dil_getval(v1))\n    {\n        case DILV_FAIL:\n        case DILV_NULL:\n            v->type = DILV_FAIL;\n            break;\n        default:\n            v->type = DILV_ERR;\n            break;\n        case DILV_SP:\n            if (str_is_empty((char *)v1->val.ptr))\n            {\n                v->val.ptr = nullptr;\n            }\n            else\n            {\n                v->atyp = DILA_EXP;\n                s1 = str_dup((char *)v1->val.ptr);\n                str_lower(s1);\n                v->val.ptr = s1;\n            }\n            break;\n    }\n\n    p->stack.push(v);\n    delete v1;\n}",
+    "dil_example": "dilbegin got_mail();\nvar\n   ml : unitptr;\ncode\n{\n   ml := restore(tolower(self.name), null);\n\n   if (ml != null)\n   {\n      act(\"<div class='mail'>You have a sudden urge to visit the post office.</div>\",\n         A_ALWAYS, self, null, null, TO_CHAR);\n      destroy (ml);\n   }\n\n   quit;\n} dilend"
+}

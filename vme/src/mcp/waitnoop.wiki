@@ -1,0 +1,193 @@
+= waitnoop =
+ function: '''waitnoop'''();
+ function: '''waitnoop'''(command_string : string);
+ 
+The '''waitnoop''' function performs a no-operation wait that temporarily releases security constraints on secured units.
+
+== Description ==
+The '''waitnoop''' function creates a special wait state that temporarily removes [[#secure|secure()]] constraints on units. This allows DIL programs to execute commands on secured units without triggering secure violations. The function is particularly useful in follower systems where the follower needs to execute movement commands that would normally break the secure relationship with their master. There are two forms: parameterless (uses current command) and with explicit command string.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| command_string || string || Optional explicit command to execute. If omitted, uses current command.
+|}
+
+== Examples ==
+=== Basic Follower Movement ===
+ dilbegin simple_follower();
+ var
+   master : unitptr;
+ 
+ code
+ {
+   if (not self.master)
+     quit;
+   
+   master := self.master;
+   
+   :start:
+   wait(SFB_DONE, TRUE);
+   
+   if (not visible(self, master))
+     goto start;
+   
+   if (command("north"))
+   {
+     act("You follow $3n north.", A_HIDEINV, self, "north", master, TO_CHAR);
+     waitnoop;
+     exec("north", self);
+   }
+   else if (command("south"))
+   {
+     act("You follow $3n south.", A_HIDEINV, self, "south", master, TO_CHAR);
+     waitnoop;
+     exec("south", self);
+   }
+   
+   goto start;
+ } dilend
+
+=== Command with Arguments ===
+ dilbegin smart_follower();
+ var
+   master : unitptr;
+   direction : string;
+ 
+ code
+ {
+   master := self.master;
+   
+   :start:
+   wait(SFB_DONE, TRUE);
+   
+   if (command("leave") or command("exit"))
+   {
+     direction := argument;
+     if (direction == null)
+       direction := "";
+     
+     act("You follow $3n.", A_HIDEINV, self, null, master, TO_CHAR);
+     waitnoop("leave " + direction);
+     exec("leave " + direction, self);
+   }
+   
+   goto start;
+ } dilend
+
+=== Complex Movement System ===
+ dilbegin advanced_follower();
+ var
+   master : unitptr;
+   cmd : string;
+ 
+ code
+ {
+   if (not self.master)
+     quit;
+   
+   master := self.master;
+   
+   :start:
+   wait(SFB_DONE, TRUE);
+   
+   if (not visible(self, master))
+     goto start;
+   
+   if (self.position < POSITION_STANDING)
+   {
+     if (self.position <= POSITION_SLEEPING)
+       goto start;
+     act("You're not in a position to follow $2n.", A_HIDEINV, self, master, null, TO_CHAR);
+     goto start;
+   }
+   
+   if (command("north") or command("east") or command("south") or 
+       command("west") or command("up") or command("down"))
+   {
+     cmd := cmdstr;
+     act("You follow $3n $2t.", A_HIDEINV, self, cmd, master, TO_CHAR);
+     waitnoop;
+     exec(cmd, self);
+   }
+   else if (command("enter"))
+   {
+     cmd := argument;
+     if (cmd == null)
+       cmd := "";
+     
+     act("You follow $3n.", A_HIDEINV, self, null, master, TO_CHAR);
+     waitnoop("enter " + cmd);
+     exec("enter " + cmd, self);
+   }
+   
+   goto start;
+ } dilend
+
+=== Multi-Direction Support ===
+ dilbegin directional_follower();
+ var
+   master : unitptr;
+   cmd : string;
+ 
+ code
+ {
+   master := self.master;
+   
+   :start:
+   wait(SFB_DONE, TRUE);
+   
+   if (command("northeast") or command("southeast") or 
+       command("southwest") or command("northwest"))
+   {
+     cmd := cmdstr;
+     act("You follow $3n $2t.", A_HIDEINV, self, cmd, master, TO_CHAR);
+     waitnoop;
+     exec(cmd, self);
+   }
+   else if (command("north") or command("east") or 
+            command("south") or command("west"))
+   {
+     cmd := cmdstr;
+     act("You follow $3n $2t.", A_HIDEINV, self, cmd, master, TO_CHAR);
+     waitnoop;
+     exec(cmd, self);
+   }
+   
+   goto start;
+ } dilend
+
+== Usage Notes ==
+* The '''waitnoop''' function temporarily releases [[#secure|secure()]] constraints during command execution
+* This is essential for follower systems where followers need to move with their master
+* Without '''waitnoop''', followers would trigger secure violations when trying to follow their master
+* The parameterless form uses the current [[#cmdstr|cmdstr]] value
+* The parameter form allows explicit command specification with arguments
+* Common use cases include:
+** Follower movement commands (north, south, east, west, etc.)
+** Enter/exit commands for following between rooms/objects
+** Complex directional commands (northeast, southwest, etc.)
+** Commands with arguments (leave <direction>, enter <object>)
+* The function works by setting SFB_NOOP flag and managing wait command state
+* Security is automatically restored after the command execution
+
+== Error Handling ==
+* If '''command_string''' parameter is not a string, a runtime error occurs
+* The function should only be used on units that have been [[#secure|secured()]]
+* Using '''waitnoop''' without proper [[#secure|secure()]] setup may have unpredictable results
+* Always ensure the unit has a valid master before using in follower contexts
+* The function does not validate the command - invalid commands will still execute
+
+== Related Functions/Fields ==
+* [[#secure|secure()]] - Secure a unit and set up violation handling
+* [[#unsecure|unsecure()]] - Remove security constraints from a unit
+* [[#wait|wait()]] - Standard wait function for event handling
+* [[#cmdstr|cmdstr]] - Current command string
+* [[#visible|visible()]] - Check if units can see each other
+
+== See Also ==
+* [[#sfbcmd|SFB_CMD]] - Command message documentation
+* [[#sfbdone|SFB_DONE]] - Command completion documentation
+* [[#secure|secure()]] - Unit security documentation
+* [[#unsecure|unsecure()]] - Unit security removal documentation

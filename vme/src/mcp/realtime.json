@@ -1,0 +1,8 @@
+{
+    "keyword": "realtime",
+    "opcode": "DILSE_RTI",
+    "yacc_rule": "| DILSE_RTI\n{\n    INITEXP($$);\n    $$.dsl = DSL_DYN;\n    $$.typ = DilVarType_e::DILV_INT;\n    add_ubit8(&($$), DILE_RTI);\n}",
+    "dilfe_name": "dilfe_rti",
+    "c_implementation": "void dilfe_rti(dilprg *p)\n{\n    dilval *v = new dilval;\n    /* RealTime */\n\n    v->type = DILV_INT;\n    v->atyp = DILA_NONE;\n    v->val.num = time(nullptr);\n    p->stack.push(v);\n}",
+    "dil_example": "dilbegin limittime();\nvar\n  spent      : integer;\n  playagain  : integer;\n\ncode\n{\n   heartbeat := PULSE_SEC * 60 * 5;\n\n   :loop:\n\n   if (realtime > playagain)\n   {\n      spent := 0;\n      playagain := 0;\n      goto playing;\n   }\n\n   wait(SFB_CMD, self==activator);\n\n   if (command(\"quit\") or command(\"tell\") or command(\"flee\"))\n     goto loop;\n\n   act(\"You have spent your time limit, come back at \"+asctime(playagain),\nA_ALWAYS, self, null, null, TO_CHAR);\n   block;\n   goto loop;\n\n   :playing:\n\n   wait(SFB_TICK, TRUE);\n   spent := spent + 5;\n\n   if (spent < 190)\n      goto playing;\n\n   if (spent > 240)\n   {\n      playagain := realtime + SECS_PER_REAL_DAY - 240 * 60;\n      goto loop;\n   }\n   else if (spent > 230)\n   {\n      act(\"Your four hours are almost spent!\", A_ALWAYS, self, null,\nnull, TO_CHAR);\n   }\n   else if (spent > 210)\n   {\n      act(\"Time is passing...!\", A_ALWAYS, self, null, null,\nTO_CHAR);\n   }\n\n   goto playing;\n} dilend"
+}

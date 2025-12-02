@@ -1,0 +1,87 @@
+= weapon_levels =
+field: integer '''.weapon_levels'''[idx] (Read-only)
+
+The .weapon_levels field provides access to the skill level of a specific weapon type for a player character.
+
+== Description ==
+The .weapon_levels field returns the current skill level that a player character has achieved with a specific weapon type. This represents the character's proficiency and training with that particular weapon category. The skill level affects combat accuracy, damage, and other weapon-related calculations.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| pc.weapon_levels[idx] || integer || Returns the skill level for weapon type 'idx'
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Parameters ==
+The field requires an integer index parameter:
+; idx : integer
+: The weapon type index (WPN_* constants from values.h and/or vme.h)
+
+== Examples ==
+ dilbegin check_weapon_skill(pc : unitptr, weapon_type : integer);
+ var
+    level : integer;
+ code
+ {
+    level := pc.weapon_levels[weapon_type];
+    
+    if (level > 0)
+    {
+       sendtext("You have skill level " + itoa(level) + " with this weapon type.&n", pc);
+    }
+    else
+    {
+       sendtext("You have not trained with this weapon type.&n", pc);
+    }
+    quit;
+ } dilend
+
+ dilbegin list_weapon_skills(pc : unitptr);
+ var
+    i : integer;
+    level : integer;
+ code
+ {
+    sendtext("Your weapon skills:&n", pc);
+    
+    for (i := 0; i < 10; i := i + 1)
+    {
+       level := pc.weapon_levels[i];
+       if (level > 0)
+       {
+          sendtext("Weapon " + itoa(i) + ": level " + itoa(level) + "&n", pc);
+       }
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The field is only accessible for player characters (UNIT_ST_PC)
+* The weapon index must be within the valid range (0 to WPN_TREE_MAX - 1)
+* Skill levels typically range from 0 (untrained) to higher values representing proficiency
+* This field is read-only - skill levels are modified through training and practice
+* The skill level directly impacts combat effectiveness with the weapon type
+* When accessed from a zone with access level 0, returns a reference to the actual value
+* When accessed from other zones, returns a copy of the value
+
+== Error Handling ==
+* If accessed on a non-PC unit, the operation will fail
+* If the weapon index is out of range, the operation will fail
+* Invalid parameter types will result in an error
+
+== Related Functions/Fields ==
+* [[weapon_info]] - Get information about weapon types
+* [[weapon_name]] - Get the name of a weapon type
+* [[weapon_costs]] - Get racial weapon cost information
+* .weapons[] - Access weapon skill values (alternative access method)
+
+== See Also ==
+* Skill system documentation
+* Combat system documentation
+* Training and advancement systems
+* Weapon proficiency mechanics

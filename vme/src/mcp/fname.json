@@ -1,0 +1,8 @@
+{
+    "keyword": "fname",
+    "opcode": "DILSF_FNAME",
+    "yacc_rule": "| DILSF_FNAME /*.filename*/\n{\n    INITEXP($$);\n    $$.rtyp = DilVarType_e::DILV_ZP;\n    $$.typ = DilVarType_e::DILV_SP;\n    $$.dsl = DSL_LFT;\n    $$.num = DILF_FNAME;\n}",
+    "dilfe_name": "DILF_FNAME",
+    "c_implementation": "case DILF_FNAME:\n            switch (dil_getval(v1))\n            {\n                case DILV_NULL: /* not applicable */\n                case DILV_FAIL:\n                    v->type = DILV_FAIL; /* not applicable */\n                    break;\n                case DILV_ZP:\n                    if (v1->val.ptr)\n                    {\n                        v->atyp = DILA_NORM;\n                        v->type = DILV_SP;\n                        v->val.ptr = ((zone_type *)v1->val.ptr)->getNamePtr();\n                    }\n                    else\n                    {\n                        v->type = DILV_FAIL;\n                    }\n                    break;\n                default:\n                    v->type = DILV_ERR; /* wrong type */\n                    break;\n            }\n            break;",
+    "dil_example": "dilbegin T015(tstno : integer);\nexternal\n    logtest(no : integer, ltype : integer, msg : string);\n\nvar\n   z : zoneptr;\ncode\n{\n    z := zhead();\n\n    if (length(z.fname) < 1)\n        goto failure;\n    \n    goto cleanup;\n\n:failure:\n    logtest(tstno, LOGT_ERROR, \".filename not present\");\n    goto cleanup;\n   \n:cleanup:\n    // Naught\n\n:finished:\n    logtest(tstno, LOGT_INFO, \"Done\");\n    sendtoalldil(\"done\", \"labdirector@test\");\n    return;\n} dilend"
+}

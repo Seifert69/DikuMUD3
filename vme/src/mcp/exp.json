@@ -1,0 +1,8 @@
+{
+    "keyword": "exp",
+    "opcode": "DILSF_EXP",
+    "yacc_rule": "| DILSF_EXP /* .exp */\n{\n    INITEXP($$);\n    $$.rtyp = DilVarType_e::DILV_UP;\n    $$.typ = DilVarType_e::DILV_INT;\n    $$.dsl = DSL_LFT;\n    $$.num = DILF_EXP;\n}",
+    "dilfe_name": "dilfi_exp",
+    "c_implementation": "void dilfi_exp(dilprg *p)\n{\n    dilval *v2 = p->stack.pop();\n    dilval *v1 = p->stack.pop();\n    sbit32 value = 0;\n\n    p->waitcmd--;\n\n    if (dil_type_check(\"exp\", p, 2, v1, TYPEFAIL_NULL, 1, DILV_INT, v2, FAIL_NULL, 1, DILV_UP))\n    {\n        if (dil_getval(v1) == DILV_INT)\n        {\n            value = v1->val.num;\n        }\n\n        if (v2->val.ptr && ((unit_data *)v2->val.ptr)->isPC())\n        {\n            slog(LOG_ALL,\n                 0,\n                 \"%s gained %d experience from unit %s.\",\n                 ((unit_data *)v2->val.ptr)->getNames().Name(),\n                 value,\n                 p->sarg->owner->getFileIndexSymName());\n            gain_exp((unit_data *)v2->val.ptr, value);\n        }\n    }\n    delete v1;\n    delete v2;\n}",
+    "dil_example": "dilbegin gain_exp(u:unitptr, gain:integer);\nvar\n\tj:integer;\ncode\n{\n   heartbeat:=3;\n   if (u.type!=UNIT_ST_PC)\n      return;\n\n   if (gain > 0)\n   {\n      if (gain >= self.exptol)\n         sendtext(\"You can now raise a level by using the 'level' command!<br/>\",self);\n\n   \texperience (gain,self);\n\t}\n   else  /* gain <= 0 */\n\t{\n      // Dont lose XP until you're level 3\n      if (self.level >= 3)\n      {\n         // Ignore any loss leaing to less than 1650 XP\n         if ((self.exp+gain) > 1650)\n            experience(gain,self);\n      }\n   }\n   return;\n} dilend"
+}
