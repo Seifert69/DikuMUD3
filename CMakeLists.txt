@@ -3,6 +3,7 @@ project(DikuMUD3)
 
 find_package(BISON)
 find_package(FLEX)
+find_package(OpenSSL REQUIRED)
 find_package(Doxygen OPTIONAL_COMPONENTS dot mscgen dia)
 
 if (DOXYGEN_FOUND)
