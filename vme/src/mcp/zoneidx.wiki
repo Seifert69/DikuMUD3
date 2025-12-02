@@ -1,0 +1,147 @@
+= zoneidx =
+field: string '''.zoneidx''' (Read-only)
+
+The .zoneidx field returns the unique database name identifier of a unit in zone format.
+
+== Description ==
+The .zoneidx field provides access to the unique database identifier for a unit, formatted as "nameidx@zone". This identifier is commonly used for storage operations, database lookups, and zone-specific functionality. The zoneidx combines both the unit's name index and its originating zone into a single string for easy reference.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.zoneidx || string || Returns the unique database name in "nameidx@zone" format
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin check_unit_identity(unit : unitptr);
+ var
+    unit_id : string;
+ code
+ {
+    unit_id := unit.zoneidx;
+    
+    if (unit_id != "")
+    {
+       sendtext("Unit ID: " + unit_id + "&n", self);
+    }
+    else
+    {
+       sendtext("This unit has no zone identifier.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin zone_specific_storage(pc : unitptr);
+ var
+    player_id : string;
+    storage_key : string;
+    storage_unit : unitptr;
+ code
+ {
+    player_id := pc.zoneidx;
+    storage_key := "chest_" + player_id;
+    
+    sendtext("Your storage key: " + storage_key + "&n", pc);
+    
+    // Find zone-specific storage container
+    storage_unit := load(storage_key);
+    
+    if (storage_unit)
+    {
+       sendtext("Found your storage container.&n", pc);
+    }
+    else
+    {
+       sendtext("Storage container not found.&n", pc);
+    }
+    quit;
+ } dilend
+
+ dilbegin save_player_data(pc : unitptr);
+ var
+    player_id : string;
+    save_file : string;
+ code
+ {
+    player_id := pc.zoneidx;
+    save_file := "player_backup_" + player_id + ".dat";
+    
+    sendtext("Saving your data to: " + save_file + "&n", pc);
+    
+    // Store player data with zone-specific filename
+    store(save_file, pc, TRUE);
+    quit;
+ } dilend
+
+ dilbegin janitor_cleanup();
+ var
+    trash : unitptr;
+    trash_id : string;
+    trash_zone : string;
+ code
+ {
+    foreach (UNIT_ST_OBJ, trash)
+    {
+       if (not findsymbolic(self, "tbag@midgaard", FIND_UNIT_IN_ME))
+          goto s_break;
+       
+       if (self.outside.flags & UNIT_FL_NO_BURY) continue;
+       if (trash.flags & UNIT_FL_BURIED) continue;
+       if (not isset(trash.manipulate, MANIPULATE_TAKE)) continue;
+       if (not visible(self, trash)) continue;
+       if (can_carry(self, trash, 1) > 0) continue;
+       
+       trash_id := trash.zoneidx;
+       trash_zone := split(trash_id, "@").[1];
+       
+       // Only process trash from treasure zone
+       if (trash_zone == "treasure")
+       {
+          secure(trash, collect);
+          pause;
+          unsecure(trash);
+          destroy(trash);
+          continue;
+       }
+    }
+    
+    :s_break:
+    sendtext("Trash bag not found.&n", self);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The field returns a string in "nameidx@zone" format
+* This is the unique database identifier for the unit
+* Commonly used for zone-specific storage keys and file operations
+* The zoneidx is used by functions like [[store]] and [[restore]] for data persistence
+* Different from .nameidx which is just the zone name part
+* Different from .zone which is just the zone name part
+* Essential for multi-zone environments and zone-specific mechanics
+* The format is consistent across all unit types
+
+== Error Handling ==
+* If accessed on a null unit pointer, the operation will fail
+* If the unit has no zone association, may return an empty string
+* No other error conditions are expected when accessing this field
+
+== Related Functions/Fields ==
+* [[nameidx]] - The zone name part of the identifier
+* [[zone]] - The zone name part of the identifier
+* [[symname]] - The concatenated zoneidx@zone string
+* [[store]] - Store unit data with zone-specific keys
+* [[restore]] - Restore unit data from zone-specific storage
+
+== See Also ==
+* Zone system documentation
+* Storage and persistence functions
+* Unit identification and naming systems
+* Multi-zone environment handling

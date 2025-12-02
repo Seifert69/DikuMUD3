@@ -1,0 +1,131 @@
+= zone_head =
+function: zoneptr '''zone_head'''();
+
+The zone_head function returns a pointer to the first zone in the global zone list.
+
+== Description ==
+The zone_head function provides access to the head of the global zone list, allowing iteration through all zones in the game. This function is commonly used for zone management, administrative commands, and system-wide zone analysis. The returned zoneptr can be traversed using the .next field to access subsequent zones in the list. Note that this function appears to be obsolete or unused in current DIL implementations.
+
+== Examples ==
+ dilbegin list_all_zones();
+ var
+    zones : zoneptr;
+    buffer : string;
+ code
+ {
+    zones := zone_head();
+    buffer := "Available Zones:&n";
+    
+    while (zones)
+    {
+       buffer := buffer + zones.name + " - " + zones.title + "&n";
+       zones := zones.next;
+    }
+    
+    pagestring(buffer, self);
+    quit;
+ } dilend
+
+ dilbegin zone_statistics();
+ var
+    zones : zoneptr;
+    total_zones : integer;
+    total_rooms : integer;
+    total_npcs : integer;
+    total_objs : integer;
+ code
+ {
+    total_zones := 0;
+    total_rooms := 0;
+    total_npcs := 0;
+    total_objs := 0;
+    
+    zones := zone_head();
+    while (zones)
+    {
+       total_zones := total_zones + 1;
+       total_rooms := total_rooms + zones.roomcount;
+       total_npcs := total_npcs + zones.npccount;
+       total_objs := total_objs + zones.objcount;
+       zones := zones.next;
+    }
+    
+    sendtext("Zone Statistics:&n", self);
+    sendtext("Total Zones: " + itoa(total_zones) + "&n", self);
+    sendtext("Total Rooms: " + itoa(total_rooms) + "&n", self);
+    sendtext("Total NPCs: " + itoa(total_npcs) + "&n", self);
+    sendtext("Total Objects: " + itoa(total_objs) + "&n", self);
+    quit;
+ } dilend
+
+ dilbegin find_zone_by_name(search_name : string);
+ var
+    zones : zoneptr;
+    found : zoneptr;
+ code
+ {
+    found := null;
+    zones := zone_head();
+    
+    while (zones)
+    {
+       if (zones.name == search_name)
+       {
+          found := zones;
+          break;
+       }
+       zones := zones.next;
+    }
+    
+    if (found)
+    {
+       sendtext("Found zone: " + found.title + " (" + found.name + ")&n", self);
+    }
+    else
+    {
+       sendtext("Zone '" + search_name + "' not found.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin not_used(arg : string);
+ code
+ {
+    // This function appears to be obsolete/unused
+    // The functions in comments here have not been used in any DIL program.
+    // I suppose they're considered obsolete until someone needs them
+    // and they get tested.
+    //
+    // buf := zone_head(); -- NOT USED ANYWHERE
+    
+    sendtext("zone_head function is considered obsolete.&n", self);
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The function returns the first zone in the global zone list
+* Use the .next field to traverse through all zones
+* The returned zoneptr provides access to all zone properties like .name, .title, .rooms, etc.
+* Commonly used in administrative commands and zone management systems
+* The zone list includes all zones currently loaded in the game
+* This function appears to be obsolete or unused in current DIL implementations
+* Consider using [[zhead]] instead for current implementations
+
+== Error Handling ==
+* The function always returns a valid zoneptr or null if no zones are loaded
+* No error conditions are expected when calling this function
+* If no zones exist in the game, the function may return null
+
+== Related Functions/Fields ==
+* [[zoneptr]] - Zone pointer type and available fields
+* [[zhead]] - Current implementation for getting zone list head
+* [[global_head]] - Get first unit in global list
+* [[obj_head]] - Get first object in global object list
+* [[npc_head]] - Get first NPC in global NPC list
+* [[room_head]] - Get first room in global room list
+
+== See Also ==
+* Zone system documentation
+* Global list traversal functions
+* Administrative command functions
+* Zone management systems

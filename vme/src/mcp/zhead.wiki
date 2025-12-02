@@ -1,0 +1,188 @@
+= zhead =
+function: zoneptr '''zhead'''();
+
+The zhead function returns a pointer to the first zone in the global zone list.
+
+== Description ==
+The zhead function provides access to the head of the global zone list, allowing iteration through all zones in the game. This function is commonly used for zone management, administrative commands, and system-wide zone analysis. The returned zoneptr can be traversed using the .next field to access subsequent zones in the list.
+
+== Examples ==
+ dilbegin list_all_zones();
+ var
+    zones : zoneptr;
+    buffer : string;
+ code
+ {
+    zones := zhead();
+    buffer := "Available Zones:&n";
+    
+    while (zones)
+    {
+       buffer := buffer + zones.name + " - " + zones.title + "&n";
+       zones := zones.next;
+    }
+    
+    pagestring(buffer, self);
+    quit;
+ } dilend
+
+ dilbegin zone_statistics();
+ var
+    zones : zoneptr;
+    total_zones : integer;
+    total_rooms : integer;
+    total_npcs : integer;
+    total_objs : integer;
+ code
+ {
+    total_zones := 0;
+    total_rooms := 0;
+    total_npcs := 0;
+    total_objs := 0;
+    
+    zones := zhead();
+    while (zones)
+    {
+       total_zones := total_zones + 1;
+       total_rooms := total_rooms + zones.roomcount;
+       total_npcs := total_npcs + zones.npccount;
+       total_objs := total_objs + zones.objcount;
+       zones := zones.next;
+    }
+    
+    sendtext("Zone Statistics:&n", self);
+    sendtext("Total Zones: " + itoa(total_zones) + "&n", self);
+    sendtext("Total Rooms: " + itoa(total_rooms) + "&n", self);
+    sendtext("Total NPCs: " + itoa(total_npcs) + "&n", self);
+    sendtext("Total Objects: " + itoa(total_objs) + "&n", self);
+    quit;
+ } dilend
+
+ dilbegin find_zone_by_name(search_name : string);
+ var
+    zones : zoneptr;
+    found : zoneptr;
+ code
+ {
+    found := null;
+    zones := zhead();
+    
+    while (zones)
+    {
+       if (zones.name == search_name)
+       {
+          found := zones;
+          break;
+       }
+       zones := zones.next;
+    }
+    
+    if (found)
+    {
+       sendtext("Found zone: " + found.title + " (" + found.name + ")&n", self);
+    }
+    else
+    {
+       sendtext("Zone '" + search_name + "' not found.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin boot_area();
+ var
+    zones : zoneptr;
+    zonelist : stringlist;
+    donlist : stringlist;
+    nodonlist : stringlist;
+    conlist : stringlist;
+    tlist : stringlist;
+    temp : string;
+    i : integer;
+    ln : integer;
+ code
+ {
+    heartbeat := 4;
+    
+: start:
+    zones := zhead();
+    zonlist := {"$zonlist"};
+    donlist := {"$donlist"};
+    nodonlist := {"$nodonlist"};
+    conlist := {"$conlist"};
+    
+    while (zones)
+    {
+       tlist := split(zones.title, "@");
+       
+       if (length(tlist) == 2)
+       {
+          temp := tlist.[1] + "@" + tlist.[0];
+          if (zones.payonly)
+          {
+             if (not((zones.title + "@*") in zonlist))
+             {
+                addstring(zonlist, (zones.title + "@*"));
+                addstring(conlist, (temp + "@*"));
+             }
+          }
+          else
+          {
+             if (not((zones.title + "@n") in zonlist))
+             {
+                addstring(zonlist, (zones.title + "@n"));
+                addstring(conlist, (temp + "@n"));
+             }
+          }
+       }
+       
+       zones := zones.next;
+    }
+    
+    pause;
+    
+    // Additional processing for zone boot sequence
+    i := 1;
+    ln := length(zonlist);
+    while (i < ln)
+    {
+       tlist := split(zonlist.[i], "@");
+       if (tlist.[2] == "n")
+          addstring(nodonlist, tlist.[0] + "@" + tlist.[1]);
+       else
+          addstring(donlist, tlist.[0] + "@" + tlist.[1]);
+       
+       i := i + 1;
+    }
+    
+    addextra(self.extra, zonlist, "all");
+    addextra(self.extra, donlist, "all");
+    addextra(self.extra, conlist, "all");
+    addextra(self.extra, nodonlist, "all");
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The function returns the first zone in the global zone list
+* Use the .next field to traverse through all zones
+* The returned zoneptr provides access to all zone properties like .name, .title, .rooms, etc.
+* Commonly used in administrative commands and zone management systems
+* The zone list includes all zones currently loaded in the game
+* This function is essential for any operation that needs to process all zones
+
+== Error Handling ==
+* The function always returns a valid zoneptr or null if no zones are loaded
+* No error conditions are expected when calling this function
+* If no zones exist in the game, the function may return null
+
+== Related Functions/Fields ==
+* [[zoneptr]] - Zone pointer type and available fields
+* [[ghead]] - Get first player in global player list
+* [[obj_head]] - Get first object in global object list
+* [[npc_head]] - Get first NPC in global NPC list
+* [[room_head]] - Get first room in global room list
+
+== See Also ==
+* Zone system documentation
+* Global list traversal functions
+* Administrative command functions
+* Zone management systems

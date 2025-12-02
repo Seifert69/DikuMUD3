@@ -1,0 +1,142 @@
+= zonereset =
+procedure: '''zonereset'''(zone : zoneptr);
+
+The zonereset procedure triggers a reset of all mobiles and objects within a specified zone.
+
+== Description ==
+The zonereset procedure initiates a complete zone reset, causing all mobiles and objects in the specified zone to be reset to their initial states. This is commonly used by administrative commands to repopulate zones after crashes, clear out accumulated changes, or refresh zone content. The reset process follows the zone's defined reset mode and timing parameters.
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| zone || zoneptr || The zone to be reset
+|}
+
+== Examples ==
+ dilbegin reset_current_zone();
+ var
+    current_room : unitptr;
+    target_zone : zoneptr;
+ code
+ {
+    current_room := self.outside;
+    
+    if (current_room and current_room.type == UNIT_ST_ROOM)
+    {
+       target_zone := findzone(current_room.zone);
+       
+       if (target_zone)
+       {
+          sendtext("Resetting zone: " + target_zone.name + "&n", self);
+          zonereset(target_zone);
+          sendtext("Zone reset complete.&n", self);
+       }
+       else
+       {
+          sendtext("Could not find zone to reset.&n", self);
+       }
+    }
+    else
+    {
+       sendtext("You must be in a room to reset its zone.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin reset_all_zones();
+ var
+    zones : zoneptr;
+    reset_count : integer;
+ code
+ {
+    reset_count := 0;
+    zones := zone_head();
+    
+    while (zones)
+    {
+       sendtext("Resetting zone: " + zones.name + "&n", self);
+       zonereset(zones);
+       reset_count := reset_count + 1;
+       zones := zones.next;
+    }
+    
+    sendtext("Total zones reset: " + itoa(reset_count) + "&n", self);
+    quit;
+ } dilend
+
+ dilbegin zone_reset_command(arg : string);
+ var
+    target_zone : zoneptr;
+ code
+ {
+    if (arg == "")
+    {
+       sendtext("Syntax: resetzone <zone_name>&n", self);
+       quit;
+    }
+    
+    target_zone := findzone(arg);
+    
+    if (target_zone)
+    {
+       sendtext("Initiating reset for zone: " + target_zone.name + "&n", self);
+       zonereset(target_zone);
+       act("$1n has been reset.", A_ALWAYS, self, null, null, TO_ALL);
+    }
+    else
+    {
+       sendtext("Zone '" + arg + "' not found.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin emergency_reset();
+ var
+    problem_zone : zoneptr;
+ code
+ {
+    // Find problematic zone and reset it
+    problem_zone := findzone("problem_zone");
+    
+    if (problem_zone)
+    {
+       sendtext("Emergency reset initiated for problem zone.&n", self);
+       zonereset(problem_zone);
+       sendtext("Emergency reset complete.&n", self);
+    }
+    else
+    {
+       sendtext("Problem zone not found.&n", self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The procedure affects all mobiles and objects within the specified zone
+* Reset behavior is determined by the zone's reset mode and timing settings
+* Players in the zone are not affected by the reset
+* The reset process follows the zone's defined reset parameters
+* Commonly used after crashes, maintenance periods, or administrative cleanup
+* All mobiles return to their original positions and states
+* All objects are reset according to their reset definitions
+* The procedure is immediate and affects the entire zone
+
+== Error Handling ==
+* If zone parameter is null, the operation fails and logs an error
+* If zone parameter is not a valid zone pointer, the operation fails and logs an error
+* All errors are logged to the zone's log file for debugging
+* The procedure does not return any value to indicate success or failure
+
+== Related Functions/Fields ==
+* [[zone_head]] - Get first zone in global list
+* [[findzone]] - Locate a zone by name
+* [[zoneptr]] - Zone pointer type and available fields
+* [[resetmode]] - Zone reset mode setting
+* [[resettime]] - Zone reset timing setting
+
+== See Also ==
+* Zone system documentation
+* Reset system documentation
+* Administrative command functions
+* Mobile and object management

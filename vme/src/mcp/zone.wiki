@@ -1,0 +1,136 @@
+= zone =
+field: string '''.zone''' (Read-only)
+
+The .zone field returns the name of the zone that a unit belongs to.
+
+== Description ==
+The .zone field provides access to the zone name identifier for any unit. This field returns the zone name as a string, which is commonly used for zone-based checks, storage operations, and administrative functions. The zone name represents the zone where the unit was originally defined or currently exists.
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.zone || string || Returns the zone name of the unit
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
+ dilbegin check_unit_zone(unit : unitptr);
+ var
+    zone_name : string;
+ code
+ {
+    zone_name := unit.zone;
+    
+    if (zone_name != "")
+    {
+       sendtext("This unit belongs to zone: " + zone_name + "&n", self);
+    }
+    else
+    {
+       sendtext("This unit has no zone association.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin zone_specific_storage(pc : unitptr);
+ var
+    player_zone : string;
+    storage_key : string;
+ code
+ {
+    player_zone := pc.zone;
+    storage_key := "chest_" + player_zone;
+    
+    sendtext("Your zone-specific storage key is: " + storage_key + "&n", pc);
+    
+    // Store player's items in zone-specific container
+    store(storage_key, pc, FALSE);
+    quit;
+ } dilend
+
+ dilbegin make_corpse();
+ var
+    corpse : unitptr;
+    corpse_zone : string;
+    corpse_file : string;
+    time_stamp : string;
+ code
+ {
+    // Create corpse for player
+    corpse := load("corpse@death");
+    
+    if (corpse)
+    {
+       corpse_zone := self.zone;
+       time_stamp := itoa(realtime);
+       corpse_file := "corpse_" + self.name + "." + time_stamp;
+       
+       // Set corpse properties
+       corpse.name := "corpse of " + self.name;
+       corpse.title := self.name + "'s corpse";
+       
+       // Store corpse with zone-specific filename
+       store(corpse_file, corpse, TRUE);
+       
+       sendtext("Your corpse has been created in zone " + corpse_zone + "&n", self);
+    }
+    else
+    {
+       sendtext("Failed to create corpse.&n", self);
+    }
+    quit;
+ } dilend
+
+ dilbegin zone_restricted_item(item : unitptr);
+ var
+    item_zone : string;
+    player_zone : string;
+ code
+ {
+    item_zone := item.zone;
+    player_zone := self.zone;
+    
+    if (item_zone == player_zone)
+    {
+       sendtext("This item belongs to your current zone (" + item_zone + ").&n", self);
+    }
+    else
+    {
+       sendtext("This item is from zone " + item_zone + " (you are in " + player_zone + ").&n", self);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The field returns the zone name as defined in the unit's zone file
+* Zone names are typically short identifiers like "midgaard", "death", "justice"
+* This field is read-only and cannot be modified through DIL
+* Commonly used for zone-based storage keys and file operations
+* The zone name is used by functions like [[store]] and [[restore]] for zone-specific data
+* All units inherit their zone from their original definition location
+* This field is essential for multi-zone environments and zone-specific mechanics
+
+== Error Handling ==
+* If accessed on a null unit pointer, the operation will fail
+* If the unit has no zone association, may return an empty string
+* No other error conditions are expected when accessing this field
+
+== Related Functions/Fields ==
+* [[zoneidx]] - The unique database name in zone format
+* [[nameidx]] - The unique database zone name for the unit
+* [[store]] - Store unit data with zone-specific keys
+* [[restore]] - Restore unit data from zone-specific storage
+* [[fname]] - The filename of the unit's zone
+
+== See Also ==
+* Zone system documentation
+* Storage and persistence functions
+* Multi-zone environment handling
+* Unit identification and naming systems
