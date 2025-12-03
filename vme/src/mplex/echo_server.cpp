@@ -205,13 +205,17 @@ void runechoserver()
 
 void stop_websocket_server()
 {
-    if (g_websocket_thread && g_echo_server)
+    if (g_echo_server)
     {
         slog(LOG_OFF, 0, "Stopping WebSocket server...");
         
         // Stop the server - this will interrupt echo_server.run()
         g_echo_server->stop();
-        
+        g_echo_server = nullptr;
+        slog(LOG_OFF, 0, "Echo server stopped");
+    }
+    if (g_websocket_thread)
+    {
         if (g_websocket_thread->joinable())
         {
             g_websocket_thread->join();
@@ -219,7 +223,6 @@ void stop_websocket_server()
         
         delete g_websocket_thread;
         g_websocket_thread = nullptr;
-        g_echo_server = nullptr;
         slog(LOG_OFF, 0, "WebSocket server stopped");
     }
 }
