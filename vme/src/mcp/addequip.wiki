@@ -16,65 +16,38 @@ The '''addequip''' procedure equips an object unit (presumed to be in the invent
 |}
 
 == Examples ==
-=== Basic Equipment Usage ===
-dilbegin equip_ring(ch : unitptr, ring : unitptr);
+=== Basic Equipment ===
+dilbegin equip_item(character : unitptr, item : unitptr);
 code
 {
-   // Check if the character has an empty finger slot
-   if (not (equipment(ch, WEAR_FINGER_L)))
+   // Check if finger slot is empty before equipping
+   if (equipment(character, WEAR_FINGER_L) == null)
    {
-      addequip(ring, WEAR_FINGER_L);
-      act("You put $2n on your left finger.", A_ALWAYS, ch, ring, null, TO_CHAR);
-   }
-   else if (not (equipment(ch, WEAR_FINGER_R)))
-   {
-      addequip(ring, WEAR_FINGER_R);
-      act("You put $2n on your right finger.", A_ALWAYS, ch, ring, null, TO_CHAR);
+      addequip(item, WEAR_FINGER_L);
+      act("You put $2n on your left finger.", A_ALWAYS, character, item, null, TO_CHAR);
    }
    else
    {
-      act("You're already wearing two rings.", A_ALWAYS, ch, null, null, TO_CHAR);
+      sendto("Your left finger is already occupied.", character);
    }
 } dilend
 
-=== Weapon Equipment ===
-dilbegin equip_weapon(ch : unitptr, weapon : unitptr);
+=== Weapon Replacement ===
+dilbegin equip_weapon(character : unitptr, new_weapon : unitptr);
+var
+   current_weapon : unitptr;
 code
 {
-   // Unequip any currently wielded weapon
-   var wielded : unitptr;
-   wielded := equipment(ch, WEAR_WIELD);
-   if (wielded)
+   // Remove currently wielded weapon if any
+   current_weapon := equipment(character, WEAR_WIELD);
+   if (current_weapon != null)
    {
-      unequip(wielded);
+      unequip(current_weapon);
    }
    
    // Equip the new weapon
-   addequip(weapon, WEAR_WIELD);
-   act("You wield $2n.", A_ALWAYS, ch, weapon, null, TO_CHAR);
-} dilend
-
-=== Restraint Equipment (from example) ===
-dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
-var
-   depname: string;
-
-code
-{
-   act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
-   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
-   act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
-
-   follow(targ, deputy);
-   depname := deputy.name;
-   link(cuffs, targ);
-   unequip(equipment(targ, WEAR_WRIST_R));
-   addequip(cuffs, WEAR_WRIST_R);
-   dilcopy("cuffed@midgaard("+depname+")", targ);
-   dilcopy("cuffed2@midgaard("+depname+")", targ);
-
-   exec("sigh", targ);
-   return;
+   addequip(new_weapon, WEAR_WIELD);
+   act("You wield $2n.", A_ALWAYS, character, new_weapon, null, TO_CHAR);
 } dilend
 
 == Usage Notes ==

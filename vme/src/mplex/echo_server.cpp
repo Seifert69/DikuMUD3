@@ -7,6 +7,7 @@
 #include <websocketpp/server.hpp>
 
 #include <map>
+#include <mutex>
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
 
@@ -24,8 +25,12 @@ namespace mplex
 // Global map for connection handlers
 std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
 
+// Mutex to protect access to the global map
+std::mutex g_cMapHandler_mutex;
+
 void remove_gmap(cConHook *con)
 {
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
@@ -44,12 +49,19 @@ void on_close(websocketpp::connection_hdl hdl)
     cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
-    it = g_cMapHandler.find(hdl);
-
-    if (it != g_cMapHandler.end())
     {
-        con = it->second;
-        g_cMapHandler.erase(it);
+        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+        it = g_cMapHandler.find(hdl);
+
+        if (it != g_cMapHandler.end())
+        {
+            con = it->second;
+            g_cMapHandler.erase(it);
+        }
+    }
+
+    if (con)
+    {
         con->Close(TRUE);
     }
     else
@@ -110,37 +122,43 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     cConHook *con = nullptr;
 
-    if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {
-        // Crete the con hook
-        con = new cConHook();
-        con->SetWebsocket(s, hdl);
-        g_cMapHandler[hdl] = con;
-
-        // Get the IP address
-        const auto theip = s->get_con_from_hdl(hdl);
-        boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
-        std::string ip_as_string{theadr.to_string()};
-        if (theadr.is_v6())
+        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+        if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
         {
-            auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
-            // Lets hope it is a ipv4 mapped to ipv6 address space
-            if (v6.is_v4_mapped())
+            con = new cConHook();
+            con->SetWebsocket(s, hdl);
+            g_cMapHandler[hdl] = con;
+
+            // it's a new connection - Get the IP address
+            const auto theip = s->get_con_from_hdl(hdl);
+            boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
+            std::string ip_as_string{theadr.to_string()};
+            if (theadr.is_v6())
             {
-                auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
-                ip_as_string = v4.to_string();
+                auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
+                // Lets hope it is a ipv4 mapped to ipv6 address space
+                if (v6.is_v4_mapped())
+                {
+                    auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
+                    ip_as_string = v4.to_string();
+                }
+                else
+                {
+                    ip_as_string = boost::asio::ip::address_v4::any().to_string();
+                }
             }
-            else
-            {
-                ip_as_string = boost::asio::ip::address_v4::any().to_string();
-            }
+            strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
+            *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
+            slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
+
         }
-        strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
-        *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
-        slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
+        else
+        {
+            con = g_cMapHandler[hdl];
+        }
     }
 
-    con = (cConHook *)g_cMapHandler[hdl];
     assert(con);
 
     con->m_pFptr(con, msg->get_payload().c_str());
