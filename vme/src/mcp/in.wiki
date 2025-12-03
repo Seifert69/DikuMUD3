@@ -1,0 +1,241 @@
+= in =
+ operator: '''in'''
+
+The 'in' operator is a multipurpose search operator used to check for the existence of elements within various data structures in DIL.
+
+== Description ==
+The '''in''' operator provides a convenient way to search for elements within different data types. It can be used to check if a string exists within another string (substring search), if a name exists in an extra description list, if a quest exists in a player's quest list, or if an element exists in a stringlist. This operator returns a boolean value (true/false) indicating whether the search was successful.
+
+The operator is particularly useful for filtering operations, conditional checks, and data validation without requiring explicit loops or complex search functions.
+
+== Usage ==
+The 'in' operator has different behaviors depending on the data types involved:
+
+=== String Substring Search ===
+; search_term : string
+: Checks if search_term exists as a substring within another string
+
+=== Extra Description Search ===
+; name : string
+: Checks if an extra description with the specified name exists in an extra description list (or for PC .quests or PC .info - any extraptr data structure)
+
+=== Stringlist Search ===
+; element : string
+: Checks if an element exists in a stringlist
+
+== Return Value ==
+Returns integer:
+* '''1''' (true) - The element was found
+* '''0''' (false) - The element was not found
+
+== Examples ==
+=== String Substring Search ===
+dilbegin search_text();
+var
+    text : string;
+    search_term : string;
+code
+{
+    text := "The quick brown fox jumps over the lazy dog";
+    search_term := "fox";
+    
+    if (search_term in text)
+        sendtext("Found '" + search_term + "' in the text.<br/>", self);
+    else
+        sendtext("Could not find '" + search_term + "' in the text.<br/>", self);
+    
+    // Try another search
+    search_term := "cat";
+    if (search_term in text)
+        sendtext("Found '" + search_term + "' in the text.<br/>", self);
+    else
+        sendtext("Could not find '" + search_term + "' in the text.<br/>", self);
+} dilend
+
+=== Extra Description Search ===
+dilbegin check_special_flags(target : unitptr);
+var
+    ex_list : extraptr;
+code
+{
+    ex_list := target.extra;
+    
+    // Check for various special flags
+    if ("$magical" in ex_list) {
+        act("$2n has magical properties.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    if ("$cursed" in ex_list) {
+        act("$2n appears to be cursed.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    if ("$blessed" in ex_list) {
+        act("$2n has been blessed.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    // Search through all extra descriptions
+    while (ex_list) {
+        if ("$special" in ex_list.names) {
+            act("Found special extra: $3t", A_ALWAYS, self, null, ex_list.descr, TO_CHAR);
+        }
+        ex_list := ex_list.next;
+    }
+} dilend
+
+=== Quest Status Check ===
+dilbegin check_quest_status();
+var
+    quest_extra : extraptr;
+code
+{
+    // Check if player has specific quests
+    if (LIB_COMPLETE in self.quests) {
+        sendtext("You have completed the library quest.<br/>", self);
+    }
+    
+    if (not LIB_ONGOING in self.quests) {
+        sendtext("You don't have any ongoing library quests.<br/>", self);
+    }
+    
+    // Check specific quest details
+    quest_extra := LIB_ONGOING in self.quests;
+    if (quest_extra) {
+        if (("quill" in quest_extra.names) and 
+            ("book of knowledge" in quest_extra.names) and
+            ("vellum scrap" in quest_extra.names)) {
+            sendtext("You have all the library quest items.<br/>", self);
+        }
+    }
+} dilend
+
+=== Stringlist Operations ===
+dilbegin check_inventory_items();
+var
+    item_names : stringlist;
+    i : integer;
+code
+{
+    item_names := {"sword", "shield", "potion", "key"};
+    
+    // Check for specific items
+    if ("sword" in item_names) {
+        sendtext("You have a sword in your inventory.<br/>", self);
+    }
+    
+    if ("wand" in item_names) {
+        sendtext("You don't have a wand in your inventory.<br/>", self);
+    }
+    
+    // Loop through all items and check each one
+    i := 0;
+    while (i < length(item_names)) {
+        if (item_names.[i] in self.names) {
+            sendtext("Found " + item_names.[i] + " in your possessions.<br/>", self);
+        }
+        i := i + 1;
+    }
+} dilend
+
+=== Email Validation ===
+dilbegin validate_email(email : string);
+code
+{
+    // Basic email validation using 'in' operator
+    if ("@" in email) {
+        sendtext("Email contains @ symbol.<br/>", self);
+    } else {
+        sendtext("Invalid email format - missing @ symbol.<br/>", self);
+    }
+    
+    if (".com" in email) {
+        sendtext("Email has .com domain.<br/>", self);
+    }
+    
+    if (".edu" in email) {
+        sendtext("Email has .edu domain.<br/>", self);
+    }
+} dilend
+
+=== Zone Filtering ===
+dilbegin filter_zones();
+var
+    zones : zoneptr;
+    zone_list : stringlist;
+code
+{
+    zone_list := {};
+    zones := zone_head();
+    
+    // Build list of specific zone types
+    while (zones) {
+        if ((zones.title + "@*") in zone_list) {
+            // Skip zones already processed
+            zones := zones.next;
+            continue;
+        }
+        
+        if ((zones.title + "@n") in zone_list) {
+            // Skip night zones
+            zones := zones.next;
+            continue;
+        }
+        
+        addstring(zone_list, zones.title);
+        zones := zones.next;
+    }
+    
+    sendtext("Filtered zone list created.<br/>", self);
+} dilend
+
+=== Content Filtering ===
+dilbegin filter_content(content : string);
+code
+{
+    // Filter out inappropriate content
+    if ("spam" in content) {
+        sendtext("Content contains spam keywords.<br/>", self);
+        quit;
+    }
+    
+    if ("advert" in content) {
+        sendtext("Content contains advertising.<br/>", self);
+        quit;
+    }
+    
+    if (not ("game" in content) and not ("mud" in content)) {
+        sendtext("Content may not be relevant to the game.<br/>", self);
+        quit;
+    }
+    
+    sendtext("Content appears acceptable.<br/>", self);
+} dilend
+
+== Usage Notes ==
+* The 'in' operator is case-sensitive for string searches
+* For extra descriptions and quests, the search is performed on the names field
+* The operator returns boolean values (1 for true, 0 for false)
+* String searches look for exact substring matches
+* The operator is more efficient than manual loop-based searches
+* Can be used in conditional statements (if, while) for filtering logic
+* Particularly useful in quest systems and inventory management
+
+== Error Handling ==
+* Using 'in' operator on null or undefined variables will result in runtime errors
+* Ensure both operands are of compatible types before using the operator
+* For string searches, very long search strings may impact performance
+* Invalid data types will cause compilation errors
+
+== Related Functions/Fields ==
+* [[extra]] - Access to unit's extra description list
+* [[quests]] - Access to player's quest list
+* [[stringlist]] - String list type that supports 'in' operator
+* [[extraptr]] - Extra description pointer type
+* [[names]] - Field for accessing names in extra descriptions
+* [[substring]] - Function for extracting substrings
+
+== See Also ==
+* String operations and searching functions
+* Extra description management
+* Quest system documentation
+* List and array operations
+* Conditional operators and control structures

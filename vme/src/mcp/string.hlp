@@ -1,5 +1,5 @@
 == String ==
-A string is some text. They are used for a lot of things such as command
+A string is data type - some text. They are used for a lot of things such as command
 arguments, room descriptions etc. String variables are automatically resized and
 allocated when you assign them, so you do not have to worry about the string
 length nor allocation in your DIL programs. Strings may be compared either with
@@ -7,9 +7,9 @@ length nor allocation in your DIL programs. Strings may be compared either with
 ::'==' (equal to),
 ::'!=' (not equal),
 ::'<=' (less than or equal to),
-::'>=' (greater than or equal to)
+::'>=' (greater than or equal to),
 ::'<' (less than),
-::'>' (greater than.
+::'>' (greater than).
 
 Static strings are defined just as in the rest of the zone, within double
 quotations.  Strings may be searched easily with the 'in' operator.  Variables

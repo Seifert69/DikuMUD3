@@ -1,0 +1,209 @@
+= SFB_MSG =
+
+ constant: '''SFB_MSG'''
+
+Message flag that activates DIL programs when user messages are sent to them.
+
+== Description ==
+The '''SFB_MSG''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation when messages are sent to units via the '''send()''' or '''sendto()''' functions. This allows DIL programs to communicate with each other, creating complex multi-program systems and message-based interactions.
+
+When a DIL program is activated by SFB_MSG, the following global variables become available:
+* '''activator''' - unit pointer to the unit who sent the message
+* '''argument''' - string containing the message content or data
+
+The SFB_MSG flag enables DIL programs to receive messages from other DIL programs, players, or system commands, facilitating inter-program communication and event-driven behavior.
+
+== Examples ==
+=== Basic Message Reception ===
+ dilbegin message_receiver();
+ var
+    message_content : string;
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    message_content := argument;
+    exec("say I received: " + message_content, self);
+    goto start;
+ } dilend
+
+=== Conditional Message Handling ===
+ dilbegin conditional_messenger();
+ var
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    if (argument == "hello")
+    {
+       exec("say Hello to you too!", self);
+    }
+    else if (argument == "goodbye")
+    {
+       exec("say Goodbye!", self);
+    }
+    else
+    {
+       exec("say Unknown message.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Command Coordination ===
+ dilbegin command_coordinator();
+ var
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    if (argument == "ready")
+    {
+       sendto(activator, "Command completed, proceed.");
+    }
+    else if (argument == "stop")
+    {
+       sendto(activator, "Command stopped.");
+    }
+    
+    goto start;
+ } dilend
+
+=== Priority Message Handling ===
+ dilbegin priority_handler();
+ var
+    interrupt_idx : integer;
+ code
+ {
+    :start:
+    interrupt_idx := interrupt(SFB_MSG, argument == "urgent", urgent_handler);
+    
+    wait(SFB_TICK, TRUE);
+    
+    goto start;
+    
+    :urgent_handler:
+    exec("say URGENT: " + argument, self);
+    clear(interrupt_idx);
+    goto start;
+ } dilend
+
+=== Multi-Program Communication ===
+ dilbegin program_communicator();
+ var
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    // Forward messages to different handlers based on content
+    if (left(argument, 4) == "help")
+    {
+       sendto(activator, "Help requested.");
+    }
+    else if (left(argument, 6) == "status")
+    {
+       sendto(activator, "Status update.");
+    }
+    else
+    {
+       sendto(activator, "Unknown command.");
+    }
+    
+    goto start;
+ } dilend
+
+=== Service Notification ===
+ dilbegin service_notifier();
+ var
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    if (argument == "service_complete")
+    {
+       exec("say Service has been completed.", self);
+       // Notify other programs
+       sendto(self.outside, "service_ready");
+    }
+    
+    goto start;
+ } dilend
+
+=== Message Broadcasting ===
+ dilbegin message_broadcaster();
+ var
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    // Send message to all programs in the room
+    sendto(self.outside, "Announcement: " + argument);
+    
+    goto start;
+ } dilend
+
+=== Event-Driven Messaging ===
+ dilbegin event_responder();
+ var
+    event_type : string;
+ code
+ {
+    :start:
+    wait(SFB_MSG, TRUE);
+    
+    // Parse event type from message
+    if (argument == "combat_start")
+    {
+       event_type := "combat";
+    }
+    else if (argument == "combat_end")
+    {
+       event_type := "peace";
+    }
+    
+    exec("say Event type: " + event_type, self);
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_MSG triggers when messages are sent to units via '''send()''' or '''sendto()''' functions
+* The message is received by all DIL programs in the target unit that have SFB_MSG enabled
+* '''activator''' points to the unit who sent the message
+* '''argument''' contains the full message content that was sent
+* SFB_MSG enables inter-program communication and message-based event systems
+* Programs must be waiting with interrupt(SFB_MSG, ...) to receive these messages
+* The flag is commonly used for creating responsive NPCs, service systems, and complex interactions
+* SFB_MSG can be combined with other SFB_* flags using bitwise OR operations
+* Message content can be parsed and used for conditional logic within the receiving program
+
+== Error Handling ==
+* Always validate that '''activator''' is not null before using it in message handling
+* Ensure proper message format and content validation
+* Be careful with infinite loops when waiting for messages
+* Remember that SFB_MSG can trigger frequently in busy environments
+* Test message handlers thoroughly as they can affect game performance
+* Use appropriate filtering to prevent message spam or unwanted triggers
+* Ensure target programs are properly waiting for SFB_MSG messages
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_MSG
+* [[interrupt]] - Alternative method for setting up message triggers
+* [[send]] / [[sendto]] - Functions for sending messages
+* [[activator]] - Unit pointer to message sender
+* [[argument]] - Message content variable
+* [[priority]] - Function for setting message priority
+* [[sendtoall]] - Send messages to all DIL programs globally
+
+== See Also ==
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_TICK]] - Timer-based activation
+* [[SFB_DONE]] - Command completion documentation
+* [[SFB_PRE]] - Pre-command processing
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

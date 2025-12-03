@@ -1,0 +1,139 @@
+= continue =
+ statement: '''continue''';
+
+The continue statement skips the remaining code in the current loop iteration and jumps to the next iteration of the loop.
+
+== Description ==
+The '''continue''' statement is used within loop constructs to immediately terminate the current iteration and proceed to the next iteration of the loop. When executed, any remaining statements in the loop body are skipped, and the loop condition is re-evaluated to determine if another iteration should occur.
+
+This statement is particularly useful for filtering out unwanted iterations in loops, allowing the program to skip processing of items that don't meet certain criteria without exiting the entire loop.
+
+== Usage Notes ==
+* The '''continue''' statement can only be used within loop constructs (while loops, foreach loops)
+* Using '''continue''' outside of a loop will result in a compilation error: "Using continue outside loop"
+* When multiple loops are nested, '''continue''' only affects the innermost loop
+* The statement is commonly used for conditional filtering within loops
+* '''continue''' differs from '''break''' in that it doesn't exit the loop, just the current iteration
+
+== Error Handling ==
+If the '''continue''' statement is used outside of any loop construct, the DIL compiler will generate an error and the script will fail to compile.
+
+== Examples ==
+=== Basic while loop with continue ===
+dilbegin check_health_status();
+code
+{
+  while (self.inside) {
+    if (self.position & POSITION_SLEEPING)
+      break;
+    pause;
+    if (self.hp < 0) 
+      continue;
+    exec("say I am healthy and ready", self);
+    pause;
+  }
+} dilend
+
+=== Foreach loop with continue for filtering ===
+dilbegin collect_valuable_items();
+var
+    item : unitptr;
+    count : integer;
+code
+{
+    count := 0;
+    foreach (UNIT_ST_OBJ, item) {
+        // Skip items that can't be taken
+        if (not isset(item.manipulate, MANIPULATE_TAKE))
+            continue;
+        
+        // Skip buried items
+        if (item.flags & UNIT_FL_BURIED)
+            continue;
+        
+        // Skip items we can't see
+        if (not visible(self, item))
+            continue;
+        
+        // Skip treasure zone items
+        if (item.zoneidx == "treasure")
+            continue;
+        
+        act("$1n picks up $2n.", A_ALWAYS, self, item, null, TO_ALL);
+        exec("get " + item.name, self);
+        count := count + 1;
+    }
+    
+    act("Collected $2d items.", A_ALWAYS, self, itoa(count), null, TO_CHAR);
+} dilend
+
+=== Nested loops demonstrating continue scope ===
+dilbegin process_players_with_conditions();
+var
+    pc : unitptr;
+    room : unitptr;
+code
+{
+    room := self.outside;
+    
+    while (self.inside) {
+        foreach (UNIT_ST_PC, pc) {
+            // Skip self
+            if (pc == self)
+                continue;
+            
+            // Skip immortals
+            if (pc.level > 200)
+                continue;
+            
+            // Skip players not in the same room
+            if (pc.outside != room)
+                continue;
+            
+            act("Processing player: $2n", A_ALWAYS, self, pc, null, TO_CHAR);
+            // Process the player...
+        }
+        pause;
+    }
+} dilend
+
+=== Continue with conditional logic ===
+dilbegin patrol_area();
+var
+    target : unitptr;
+code
+{
+    while (self.inside) {
+        foreach (UNIT_ST_PC|UNIT_ST_NPC, target) {
+            // Skip sleeping targets
+            if (target.position & POSITION_SLEEPING)
+                continue;
+            
+            // Skip dead targets
+            if (target.hp <= 0)
+                continue;
+            
+            // Skip invisible targets
+            if (not visible(self, target))
+                continue;
+            
+            act("$1n eyes $3n warily.", A_ALWAYS, self, null, target, TO_NOTVICT);
+            pause;
+        }
+        
+        exec("say Patrol complete.", self);
+        pause;
+    }
+} dilend
+
+== Related Functions/Fields ==
+* [[break]] - Exit from a loop entirely
+* [[while]] - Loop construct that can be controlled with continue
+* [[foreach]] - Loop construct that can be controlled with continue
+* [[pause]] - Often used with continue in loops
+
+== See Also ==
+* [[break]]
+* [[while]]
+* [[foreach]]
+* Loop control statements

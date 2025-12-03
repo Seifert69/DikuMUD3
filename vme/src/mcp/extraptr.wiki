@@ -1,0 +1,213 @@
+= extraptr =
+
+ type: '''extraptr'''
+
+The '''extraptr''' type represents a pointer to an extra description structure that can contain names, values, and descriptive text. Extra descriptions are used throughout the game to store additional data for units, quests, and various game systems.
+
+== Description ==
+An extraptr is a pointer type that references extra description structures attached to units or used independently for data storage. Each extra description contains parallel arrays of names (stringlist), values (integerlist), and a description text (string). These structures are commonly used for quests, special descriptions, unit flags, and structured data storage.
+
+Extra descriptions are organized as linked lists, allowing multiple extra descriptions to be attached to a single unit. The extraptr type provides access to navigate and manipulate these structures.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| next || extraptr || Read-only || Pointer to the next extra description in the linked list (null if none)
+|-
+| names || stringlist || Read/Write || Array of names/keywords for the extra description (null if none)
+|-
+| vals || integerlist || Read/Write || Array of integer values corresponding to names (null if none)
+|-
+| descr || string || Read/Write || Description text stored in the extra description
+|}
+
+== Availability ==
+The extraptr type is used with the following operations:
+* '''unit.extra''' - Access to a unit's extra description list
+* '''unit.quests''' - Access to a player's quest extra descriptions
+* '''unit.info''' - Access to a player's information structure
+* '''addextra()''' - Function to add new extra descriptions
+* '''subextra()''' - Function to remove extra descriptions
+* '''in''' operator - Search for names in extra description lists
+
+== Examples ==
+=== Basic Extra Description Access ===
+dilbegin examine_extra_descriptions(target : unitptr);
+var
+    ex_list : extraptr;
+    count : integer;
+code
+{
+    ex_list := target.extra;
+    count := 0;
+    
+    while (ex_list) {
+        act("Extra $2d: $3t", A_ALWAYS, self, itoa(count), ex_list.descr, null, TO_CHAR);
+        
+        // Show names if any exist
+        if (ex_list.names) {
+            act("  Names: $2t", A_ALWAYS, self, ex_list.names.[0], null, TO_CHAR);
+        }
+        
+        ex_list := ex_list.next;
+        count := count + 1;
+    }
+    
+    if (count == 0) {
+        act("No extra descriptions found.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+} dilend
+
+=== Working with Names and Values ===
+dilbegin process_quest_data();
+var
+    quest_extra : extraptr;
+    i : integer;
+    total_points : integer;
+code
+{
+    // Get or create a quest extra description
+    quest_extra := self.extra.["$quest_data"];
+    
+    if (not quest_extra) {
+        act("No quest data found.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    
+    total_points := 0;
+    
+    // Process parallel name-value pairs
+    i := 0;
+    while (i < length(quest_extra.names) and i < length(quest_extra.vals)) {
+        act("Task: $2t, Points: $3d", A_ALWAYS, self, 
+            quest_extra.names.[i], itoa(quest_extra.vals.[i]), null, TO_CHAR);
+        total_points := total_points + quest_extra.vals.[i];
+        i := i + 1;
+    }
+    
+    act("Total quest points: $2d", A_ALWAYS, self, itoa(total_points), null, TO_CHAR);
+} dilend
+
+=== Adding and Modifying Extra Descriptions ===
+dilbegin add_player_note(note_text : string);
+var
+    note_extra : extraptr;
+    timestamp : string;
+code
+{
+    // Create a timestamp
+    timestamp := asctime() + " - " + self.name;
+    
+    // Add to existing notes or create new
+    note_extra := self.extra.["$notes"];
+    
+    if (not note_extra) {
+        // Create new note extra description
+        addextra(self, "$notes", note_text);
+        note_extra := self.extra.["$notes"];
+    } else {
+        // Add to existing description
+        note_extra.descr := note_extra.descr + "&n" + timestamp + ": " + note_text;
+    }
+    
+    act("Note added: $2t", A_ALWAYS, self, note_text, null, TO_CHAR);
+} dilend
+
+=== Searching Extra Descriptions ===
+dilbegin check_special_flags(target : unitptr);
+var
+    ex_list : extraptr;
+code
+{
+    ex_list := target.extra;
+    
+    // Check for specific flags using the 'in' operator
+    if ("$magical" in ex_list) {
+        act("$2n has magical properties.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    if ("$cursed" in ex_list) {
+        act("$2n appears to be cursed.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    if ("$blessed" in ex_list) {
+        act("$2n has been blessed.", A_ALWAYS, self, target, null, TO_CHAR);
+    }
+    
+    // Search through all extra descriptions
+    while (ex_list) {
+        if ("$special" in ex_list.names) {
+            act("Found special extra: $2t", A_ALWAYS, self, ex_list.descr, null, TO_CHAR);
+        }
+        ex_list := ex_list.next;
+    }
+} dilend
+
+=== Quest Management Example ===
+dilbegin manage_quest_progress(quest_name : string, progress : integer);
+var
+    quest_extra : extraptr;
+    i : integer;
+    found : integer;
+code
+{
+    quest_extra := self.quests;
+    found := 0;
+    
+    // Search for existing quest
+    while (quest_extra) {
+        i := 0;
+        while (i < length(quest_extra.names)) {
+            if (quest_extra.names.[i] == quest_name) {
+                // Update existing quest progress
+                quest_extra.vals.[i] := progress;
+                act("Updated quest '$2t' progress to $3d.", A_ALWAYS, self, 
+                    quest_name, itoa(progress), null, TO_CHAR);
+                found := 1;
+                break;
+            }
+            i := i + 1;
+        }
+        
+        if (found) break;
+        quest_extra := quest_extra.next;
+    }
+    
+    if (not found) {
+        act("Quest '$2t' not found.", A_ALWAYS, self, quest_name, null, TO_CHAR);
+    }
+} dilend
+
+== Usage Notes ==
+* Extraptr variables are volatile and may be cleared when rendered unusable
+* Cannot declare static extraptr structures in DIL programs
+* Extra descriptions are commonly used for quests, special descriptions, and unit flags
+* The '''names''' and '''vals''' fields are parallel arrays - corresponding indices should match
+* Use the '''in''' operator to efficiently search for names in extra description lists
+* Extra descriptions are automatically saved with the unit if the unit is savable
+* The linked list structure allows multiple extra descriptions per unit
+
+== Error Handling ==
+* Accessing fields on a null extraptr will result in a runtime error
+* Out-of-bounds access to names or vals arrays will return null
+* Always check if an extraptr is valid before accessing its fields
+* The system automatically handles memory management for extra description structures
+
+== Related Functions/Fields ==
+* [[extra]] - Field to access a unit's extra description list
+* [[quests]] - Field to access player quest extra descriptions
+* [[info]] - Field to access player information structure
+* [[addextra]] - Function to add new extra descriptions
+* [[subextra]] - Function to remove extra descriptions
+* [[names]] - Field for accessing extra description names
+* [[vals]] - Field for accessing extra description values
+* [[descr]] - Field for accessing extra description text
+* [[next]] - Field for traversing extra description lists
+
+== See Also ==
+* Extra description functions and operations
+* Quest system documentation
+* Unit data structures
+* Stringlist and integerlist types
+* Pointer types (unitptr, cmdptr, zoneptr)

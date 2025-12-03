@@ -1,48 +1,57 @@
 = can_carry =
+function: [integer] '''can_carry'''(ch : unitptr, u : unitptr, n : integer);
+
+Checks if a character can carry a specific number of items, testing both inventory count limits and weight constraints.
 
 == Description ==
-Checks if a character can carry a specific number of items. This function tests weight and inventory capacity constraints.
-
-== Syntax ==
- can_carry(unit, item, quantity)
+The '''can_carry''' function determines whether a character can carry a specified quantity of a particular item. It performs two separate checks: first testing if the character has enough inventory slots available, then checking if the additional weight would exceed the character's maximum carrying capacity. This function is commonly used for item pickup validation and inventory management before actually transferring items to a character.
 
 == Parameters ==
-; unit : unitptr
-: The character to check carrying capacity for
-; item : unitptr
-: The item to check if the character can carry
-; quantity : integer
-: The number of items to check (default is 1)
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| ch || unitptr || The character to check carrying capacity for (must be a character unit)
+|-
+| u || unitptr || The item to check if the character can carry (any unit type)
+|-
+| n || integer || The number of copies of the item to check (must be 1 or greater)
+|}
 
 == Return Value ==
 : integer
-: Returns the number of items the character can carry:
-:* 0 - Cannot carry any items
-:* 1 - Can carry 1 item
-:* 2 - Can carry 2 items
-:* n - Can carry n items
+: Returns a status code indicating the result of the carry check:
+:* 0 - Character can carry the specified quantity of items
+:* 1 - Cannot carry due to inventory count limit (hands are full)
+:* 2 - Cannot carry due to weight limit (too heavy)
 
 == Examples ==
- dilbegin check_carry();
+ dilbegin item_pickup_validation();
  var
   sword : unitptr;
-  can_take : integer;
+  result : integer;
  code
  {
   :start:
   sword := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
-  can_take := can_carry(self, sword, 1);
-  if (can_take == 1)
+  if (sword == null)
   {
-    sendtext("You can carry the sword.<br/>", self);
+    sendtext("No sword found here.<br/>", self);
+    goto done;
   }
+  
+  result := can_carry(activator, sword, 1);
+  
+  if (result == 1)
+    exec("say Your hands are full!", self);
+  else if (result == 2)
+    exec("say You can't carry that much weight.", self);
   else
-  {
-    sendtext("You cannot carry the sword.<br/>", self);
-  }
+    exec("give " + sword.name + " to " + activator.name, self);
+  
+  :done:
  } dilend
 
- dilbegin weight_check();
+ dilbegin multiple_item_check();
  var
   item1 : unitptr;
   item2 : unitptr;
@@ -61,39 +70,60 @@ Checks if a character can carry a specific number of items. This function tests 
   can_take2 := can_carry(self, item2, 1);
   can_take3 := can_carry(self, item3, 1);
   
-  if (can_take1 + can_take2 + can_take3 >= 3)
-  {
+  if (can_take1 + can_take2 + can_take3 == 0)
     sendtext("You can carry all three items.<br/>", self);
-  }
   else
-  {
     sendtext("You cannot carry all three items.<br/>", self);
-  }
  } dilend
 
- dilbegin inventory_limit();
+ dilbegin inventory_management();
  var
-  max_items : integer;
-  current_capacity : integer;
+  coins : unitptr;
+  quantity : integer;
+  i : integer;
  code
  {
   :start:
-  max_items := 10;
-  current_capacity := capacity(self);
-  sendtext("You can carry " + itoa(max_items) + " items.<br/>", self);
-  sendtext("Your current capacity allows " + itoa(current_capacity) + " items.<br/>", self);
+  coins := findunit(self.outside, "coins", FIND_UNIT_SURRO, null);
+  if (coins == null) goto done;
+  
+  // Check how many coin stacks we can carry
+  quantity := 1;
+  while (can_carry(self, coins, quantity) == 0)
+    quantity := quantity + 1;
+  
+  sendtext("You can carry " + itoa(quantity - 1) + " stacks of coins.<br/>", self);
+  
+  :done:
  } dilend
 
-== Notes ==
-* The function considers both weight and quantity constraints
-* Weight limits are based on the character's strength and dexterity
-* Quantity limits may be affected by character level or other factors
-* Returns 0 if the character cannot carry any of the specified items
-* Returns the actual number of items that can be carried (may be less than requested)
-* Commonly used for item pickup validation, inventory management, and encumbrance checks
-* The function does not actually give items to the character - it only checks capacity
+== Usage Notes ==
+* The function checks count limits first, then weight limits
+* Count limit is calculated as: 10 + (character dexterity / 10) items
+* Weight limit is calculated as: 50 + MAX(50, base weight / 2) + strength * 2
+* Only non-equipped items are counted toward the inventory limit
+* Money items are excluded from the count calculation
+* The function does not actually transfer items - it only performs validation
+* Commonly used in foreach loops to filter items that can be picked up
+
+== Error Handling ==
+The function will fail with DILV_FAIL if:
+* The first parameter (ch) is not a character unit or is null
+* The second parameter (u) is null
+* The third parameter (n) is less than 1
+
+Type errors will occur if:
+* Parameter 1 or 2 are not unitptr types
+* Parameter 3 is not an integer type
+
+== Related Functions/Fields ==
+* [[capacity]] - Gets the maximum weight a unit can carry
+* [[weight]] - Gets the current weight of a unit
+* [[fits]] - Checks if an item fits in a specific equipment slot
+* [[manipulate]] - Field that controls item interaction permissions
 
 == See Also ==
-* capacity - For getting the maximum weight a unit can carry
-* weight - For getting the current weight of a unit
-* fits - For checking if an item fits in a specific slot
+* [[char_can_carry_n]] - Internal count limit function
+* [[char_can_carry_w]] - Internal weight limit function
+* [[findunit]] - For locating items to check
+* [[load]] - For creating new items to test carrying capacity

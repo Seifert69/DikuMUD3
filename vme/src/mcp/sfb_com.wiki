@@ -1,0 +1,150 @@
+= SFB_COM =
+
+ constant: '''SFB_COM'''
+
+Message flag that activates DIL programs during combat events.
+
+== Description ==
+The '''SFB_COM''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation when combat-related events occur. The program does not need to be directly involved in combat to receive these messages - it will react to any combat happening in its local environment.
+
+When a DIL program is activated by SFB_COM, the following global variable becomes available:
+* '''activator''' - unit pointer to the character about to hit someone (the attacker)
+
+The combat message is sent just prior to the actual hit occurring, allowing the DIL program to react to impending combat or modify combat behavior before damage is dealt.
+
+== Examples ==
+=== Basic Combat Detection ===
+ dilbegin combat_watcher();
+ var
+ code
+ {
+    :start:
+    wait(SFB_COM, TRUE);
+    
+    exec("say Combat detected nearby!", self);
+    goto start;
+ } dilend
+
+=== Self-Combat Detection ===
+ dilbegin self_combat_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_COM, activator == self);
+    
+    exec("say I am entering combat!", self);
+    // Combat preparation logic here
+    goto start;
+ } dilend
+
+=== Combat with Command Check ===
+ dilbegin combat_command_checker();
+ var
+ code
+ {
+    :start:
+    wait(SFB_COM, TRUE);
+    
+    if (command(CMD_AUTO_COMBAT))
+    {
+       exec("flee", self);
+    }
+    else
+    {
+       exec("say Combat detected but not auto-combat.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Combined Event Handling ===
+ dilbegin multi_event_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_TICK | SFB_COM | SFB_MSG, TRUE);
+    
+    // Handle different event types
+    if (command(CMD_AUTO_COMBAT))
+    {
+       exec("say Auto-combat triggered.", self);
+    }
+    else if (activator.type == UNIT_ST_PC)
+    {
+       exec("say Player activated combat event.", self);
+    }
+    else
+    {
+       exec("say Other combat event occurred.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Position-Based Combat Detection ===
+ dilbegin position_combat_checker();
+ var
+ code
+ {
+    :start:
+    wait(SFB_COM, self.position == POSITION_FIGHTING);
+    
+    exec("say I am now in combat position.", self);
+    goto start;
+ } dilend
+
+=== Combat Interrupt with Cleanup ===
+ dilbegin combat_cleanup();
+ var
+    interrupt_idx : integer;
+ code
+ {
+    :start:
+    interrupt_idx := interrupt(SFB_COM, activator == self, broken_equipment);
+    
+    wait(SFB_TICK, TRUE);
+    
+    goto start;
+    
+    :broken_equipment:
+    exec("say My equipment broke during combat!", self);
+    clear(interrupt_idx);
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_COM triggers on combat events in the local environment, not just when the DIL program owner is fighting
+* The combat message is sent just before the actual hit occurs
+* '''activator''' points to the character who is about to attack someone
+* Use '''command(CMD_AUTO_COMBAT)''' to check if the trigger is from auto-combat system
+* Programs can receive SFB_COM messages even when not directly involved in the combat
+* SFB_COM can be combined with other SFB_* flags using bitwise OR operator
+* The flag is commonly used for combat AI, equipment checking, or combat-related triggers
+* Combat events include both player vs NPC and NPC vs NPC combat
+
+== Error Handling ==
+* Always validate that '''activator''' is not null before using it in combat logic
+* Ensure proper cleanup of interrupts when they're no longer needed
+* Be careful with infinite loops when waiting for combat events
+* Remember that SFB_COM can trigger frequently during intense combat situations
+* Use appropriate position checks if you only want to react when the DIL owner is fighting
+* Test combat handlers thoroughly as they can affect game balance
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_COM
+* [[interrupt]] - Alternative method for setting up combat triggers
+* [[command]] - Function for checking combat commands
+* [[activator]] - Unit pointer to combat participant
+* [[self.position]] - Unit position field for combat state checking
+* [[POSITION_FIGHTING]] - Constant for fighting position
+* [[CMD_AUTO_COMBAT]] - Command constant for auto-combat
+
+== See Also ==
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_TICK]] - Timer-based activation
+* [[SFB_MSG]] - Message-based activation
+* [[SFB_DEAD]] - Death event activation
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

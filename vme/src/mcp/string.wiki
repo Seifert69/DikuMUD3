@@ -1,0 +1,194 @@
+= string =
+ type: '''string'''
+
+The '''string''' type represents text data in DIL, used for command arguments, descriptions, and various text operations.
+
+== Description ==
+A string is a sequence of characters used for text manipulation in DIL. String variables are automatically resized and allocated when assigned, eliminating the need for manual memory management. Strings support comparison operators, concatenation, character access, and search operations.
+
+Strings are saved with DIL programs when attached to saved units, making them persistent across game sessions.
+
+== String Operations ==
+=== Comparison Operators ===
+Strings can be compared using the following operators:
+* `==` (equal to)
+* `!=` (not equal to)
+* `<=` (less than or equal to)
+* `>=` (greater than or equal to)
+* `<` (less than)
+* `>` (greater than)
+
+=== Concatenation ===
+Strings can be combined using the `+` operator:
+ "say "+itoa(42)+" is the answer!"
+
+=== Character Access ===
+Individual characters can be accessed by their position (0-based indexing):
+ if (str.[3]=="f")
+ {
+   exec ("say The 4th element is a F.",self);
+ }
+
+=== Search Operations ===
+The `in` operator can be used to search for substrings within strings.
+
+== String Declaration ==
+Static strings are defined within double quotations:
+ "This is a static string"
+
+String variables are declared using the `var` keyword:
+ var
+   mystring : string;
+
+ mystring := "Hello World";
+
+== Examples ==
+=== Basic String Operations ===
+ dilbegin string_operations();
+ var
+   text1 : string;
+   text2 : string;
+   result : string;
+ code
+ {
+   text1 := "Hello";
+   text2 := "World";
+   result := text1 + " " + text2;
+   
+   if (result == "Hello World")
+     sendtext("Strings match perfectly!<br/>", self);
+   else
+     sendtext("Strings do not match.<br/>", self);
+ }
+ dilend
+
+=== Character Access and Checking ===
+ dilbegin check_characters();
+ var
+   test_string : string;
+   i : integer;
+ code
+ {
+   test_string := "DikuMUD";
+   
+   i := 0;
+   while (i < length(test_string))
+   {
+     if (test_string.[i] == "M")
+       sendtext("Found 'M' at position " + itoa(i) + "<br/>", self);
+     i := i + 1;
+   }
+ }
+ dilend
+
+=== String Comparison ===
+ dilbegin string_comparison();
+ var
+   name1 : string;
+   name2 : string;
+ code
+ {
+   name1 := self.name;
+   name2 := self.names.[1];
+   
+   if (name1 == name2)
+     sendtext("Primary name matches first alias.<br/>", self);
+   else
+     sendtext("Primary name differs from first alias.<br/>", self);
+ }
+ dilend
+
+=== Dynamic String Building ===
+ dilbegin build_message();
+ var
+   message : string;
+   player_name : string;
+   health : integer;
+ code
+ {
+   player_name := self.name;
+   health := self.hp;
+   
+   message := player_name + " has " + itoa(health) + " health points.";
+   sendtext(message + "<br/>", self);
+ }
+ dilend
+
+=== Character Replacement Workaround ===
+ dilbegin replace_characters();
+ var
+   original : string;
+   modified : string;
+   i : integer;
+   ln : integer;
+ code
+ {
+   original := "DikuMUD Framework";
+   modified := "";
+   
+   i := 0;
+   ln := length(original);
+   while (i < ln)
+   {
+     if (original.[i] == "u")
+       modified := modified + "o";
+     else
+       modified := modified + original.[i];
+     i := i + 1;
+   }
+   
+   sendtext("Original: " + original + "<br/>", self);
+   sendtext("Modified: " + modified + "<br/>", self);
+ }
+ dilend
+
+=== String Search ===
+ dilbegin search_strings();
+ var
+   text : string;
+   search_term : string;
+ code
+ {
+   text := "The quick brown fox jumps over the lazy dog";
+   search_term := "fox";
+   
+   if (search_term in text)
+     sendtext("Found '" + search_term + "' in the text.<br/>", self);
+   else
+     sendtext("Could not find '" + search_term + "' in the text.<br/>", self);
+ }
+ dilend
+
+== Usage Notes ==
+* String variables are automatically managed - no manual allocation needed
+* Character indexing is 0-based (first character is at position 0)
+* String comparison is case-sensitive
+* Direct character assignment is not supported - use the workaround method shown in examples
+* Strings are persistent when attached to saved units
+* The `in` operator provides convenient substring searching
+* String concatenation uses the `+` operator
+
+== Error Handling ==
+* Accessing characters beyond string length returns null
+* Invalid string operations may cause runtime errors
+* Always check string length before accessing specific character positions
+* String comparisons require exact matches unless using search functions
+
+== Related Functions/Fields ==
+* [[stringlist]] - List of strings data type
+* [[length]] - Get string length
+* [[atoi]] - Convert string to integer
+* [[itoa]] - Convert integer to string
+* [[split]] - Split string into stringlist
+* [[getwords]] - Split string into word list
+* [[addstring]] - Add string to stringlist
+* [[substring]] - Remove string from stringlist
+* [[left]] - Get leftmost characters
+* [[right]] - Get rightmost characters
+* [[toupper]] - Convert to uppercase
+
+== See Also ==
+* DIL String Operations Documentation
+* String manipulation and parsing functions
+* Text processing and formatting functions
+* Input validation and string handling

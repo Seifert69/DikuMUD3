@@ -1,0 +1,216 @@
+= UNIT_ST_PC =
+
+ constant: '''UNIT_ST_PC'''
+
+Unit type constant that identifies player characters.
+
+== Description ==
+The '''UNIT_ST_PC''' constant is used to identify units that are player characters (PCs) in the DikuMUD3 system. This constant is commonly used in type checking operations to distinguish between player-controlled characters and non-player characters (NPCs), or to implement player-specific behaviors and restrictions.
+
+When checking unit types, the following constants are commonly used together:
+* '''UNIT_ST_PC''' - Player characters
+* '''UNIT_ST_NPC''' - Non-player characters
+* '''UNIT_ST_OBJ''' - Objects
+* '''UNIT_ST_ROOM''' - Rooms
+
+The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It's primarily used with the '''type''' function to determine the actual type of a unit pointer, and in conditional statements to implement different behaviors based on whether a unit is a player character or not.
+
+== Examples ==
+=== Basic Type Checking ===
+ dilbegin player_detector();
+ var
+    target : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    target := activator;
+    
+    if (target.type == UNIT_ST_PC)
+    {
+       exec("say Target is a player character.", self);
+    }
+    else if (target.type == UNIT_ST_NPC)
+    {
+       exec("say Target is an NPC.", self);
+    }
+    else
+    {
+       exec("say Target is of unknown type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Player-Specific Behavior ===
+ dilbegin player_only_action();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (activator.type == UNIT_ST_PC)
+    {
+       exec("say Player-specific action executed.", self);
+       // Only players can use this action
+    }
+    else
+    {
+       exec("say Non-players cannot use this action.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Type Validation in Functions ===
+ dilbegin type_validator();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("checktype"));
+    unit := activator;
+    
+    // Validate unit type before processing
+    if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Valid player character type: " + itoa(unit.objecttype) + ".", self);
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Valid NPC character type: " + itoa(unit.objecttype) + ".", self);
+    }
+    else
+    {
+       exec("say Invalid unit type for this operation.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Combined Type Checking ===
+ dilbegin multi_type_handler();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    unit := activator;
+    
+    // Handle different types with appropriate logic
+    if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Processing player character.", self);
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Processing NPC.", self);
+    }
+    else if (unit.type == UNIT_ST_OBJ)
+    {
+       exec("say Processing object.", self);
+    }
+    else if (unit.type == UNIT_ST_ROOM)
+    {
+       exec("say Processing room.", self);
+    }
+    else
+    {
+       exec("say Unknown unit type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Player Data Access ===
+ dilbegin player_data_reader();
+ var
+    player : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("getstats"));
+    player := activator;
+    
+    if (player.type == UNIT_ST_PC)
+    {
+       exec("say Accessing player data: birth=" + itoa(player.birth) + ", self);
+       exec("say Skills: " + itoa(player.skill_points), self);
+       exec("say Abilities: " + itoa(player.ability_points), self);
+    }
+    else
+    {
+       exec("say Only players have character data.", self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* '''UNIT_ST_PC''' is used to distinguish player characters from other unit types
+* The constant is read-only and cannot be modified at runtime
+* Type checking is commonly done using the '''type''' function with '''UNIT_ST_PC''' constant
+* Player characters have access to special fields like '''birth''', '''skills''', '''skill_points''', etc.
+* The constant is essential for implementing player-specific features and restrictions
+* Type checking prevents NPCs from accessing player-only data or performing player-only actions
+* Always validate unit pointers before checking their type
+* Use proper bounds checking when accessing player data by index
+* The constant works with other unit type constants for comprehensive type handling
+
+== Error Handling ==
+* Always validate that unit pointers are not null before checking their type
+* Remember that '''UNIT_ST_PC''' is a constant, not a variable that can be changed
+* Use proper type checking to avoid runtime errors
+* Be careful with assumptions about unit types - always validate using constants
+* Test type checking logic thoroughly with all possible unit types
+* Consider edge cases where unit type might be unknown or invalid
+
+== Related Functions/Fields ==
+* [[type]] - Function to get the type of a unit
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+* [[birth]] - Player birth field (PC only)
+* [[skills]] - Player skills field (PC only)
+* [[skill_points]] - Player skill points field (PC only)
+* [[ability_points]] - Player ability points field (PC only)
+* [[pcflags]] - Player flags field (PC only)
+* [[playtime]] - Player play time field (PC only)
+* [[exptol]] - Player experience points field (PC only)
+* [[guild]] - Player guild field (PC only)
+* [[prompt]] - Player prompt field (PC only)
+* [[crimes]] - Player crimes field (PC only)
+* [[full]] - Player full field (PC only)
+* [[thirst]] - Player thirst field (PC only)
+* [[drunk]] - Player drunk field (PC only)
+* [[quests]] - Player quests field (PC only)
+* [[info]] - Player info field (PC only)
+* [[acc_balance]] - Player account balance field (PC only)
+* [[acc_total]] - Player account total field (PC only)
+
+== See Also ==
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+* [[type]] - Unit type checking function
+* [[birth]] - Player birth field documentation
+* [[skills]] - Player skills field documentation
+* [[skill_points]] - Player skill points field documentation
+* [[ability_points]] - Player ability points field documentation
+* [[pcflags]] - Player flags field documentation
+* [[playtime]] - Player play time field documentation
+* [[exptol]] - Player experience points field documentation
+* [[guild]] - Player guild field documentation
+* [[prompt]] - Player prompt field documentation
+* [[crimes]] - Player crimes field documentation
+* [[full]] - Player full field documentation
+* [[thirst]] - Player thirst field documentation
+* [[drunk]] - Player drunk field documentation
+* [[quests]] - Player quests field documentation
+* [[info]] - Player info field documentation
+* [[acc_balance]] - Player account balance field documentation
+* [[acc_total]] - Player account total field documentation

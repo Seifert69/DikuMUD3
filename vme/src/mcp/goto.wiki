@@ -1,0 +1,181 @@
+= goto =
+ statement: '''goto''';
+
+The goto statement performs an unconditional jump to a specified label within the same DIL program.
+
+== Description ==
+The '''goto''' statement is used to transfer program control unconditionally to a labeled location within the same DIL program. Labels are defined using a colon prefix (':labelname:') and serve as targets for goto statements. This provides a way to create loops, implement error handling, or structure program flow when other control structures are not suitable.
+
+Goto statements are particularly useful in DIL for creating infinite loops with pause statements, implementing state machines, handling error conditions, and creating menu systems where traditional loop structures might be cumbersome.
+
+== Usage Notes ==
+* Labels are defined using the format ':labelname:' at the beginning of a line
+* The goto statement jumps to the label without the colon prefix: 'goto labelname'
+* Labels must be unique within a DIL program
+* Goto can jump both forward and backward in the code
+* The statement is commonly used with '''pause''' to create continuous loops
+* Labels are also used with '''on''' statements for interrupt handlers
+* Goto cannot jump between different DIL programs or functions
+
+== Error Handling ==
+* Attempting to goto a non-existent label will result in a compilation error
+* Labels must be defined before they can be used as goto targets
+* The DIL compiler will validate all goto statements during compilation
+
+== Examples ==
+=== Basic Infinite Loop ===
+dilbegin hello_world();
+code
+{
+  :mylabel:
+  exec("say Hello world", self);
+  pause;
+  goto mylabel;
+} dilend
+
+=== Error Handling ===
+dilbegin safe_operation();
+var
+    target : unitptr;
+code
+{
+    :start:
+    target := self.fighting;
+    
+    if (not target)
+        goto no_target;
+    
+    if (target.hp <= 0)
+        goto target_dead;
+    
+    exec("say Fighting " + target.name, self);
+    pause;
+    goto start;
+    
+    :no_target:
+    exec("say You are not fighting anyone", self);
+    quit;
+    
+    :target_dead:
+    exec("say Your target is dead", self);
+    quit;
+} dilend
+
+=== Menu System ===
+dilbegin menu_loop();
+var
+    choice : integer;
+code
+{
+    :menu_start:
+    act("1. Look around", A_ALWAYS, self, null, null, TO_CHAR);
+    act("2. Check inventory", A_ALWAYS, self, null, null, TO_CHAR);
+    act("3. Quit", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    // Simulate player choice (in real usage, this would come from player input)
+    choice := rnd(1, 3);
+    
+    if (choice == 1) goto look_choice;
+    if (choice == 2) goto inventory_choice;
+    if (choice == 3) goto quit_choice;
+    goto menu_start; // Invalid choice, show menu again
+    
+    :look_choice:
+    exec("look", self);
+    goto menu_start;
+    
+    :inventory_choice:
+    exec("inventory", self);
+    goto menu_start;
+    
+    :quit_choice:
+    exec("say Goodbye!", self);
+    quit;
+} dilend
+
+=== Time-Based Behavior ===
+dilbegin time_based_greeting();
+code
+{
+    :check_time:
+    if (mudhour >= 6 and mudhour < 12)
+        goto morning;
+    
+    if (mudhour >= 12 and mudhour < 18)
+        goto afternoon;
+    
+    if (mudhour >= 18 and mudhour < 24)
+        goto evening;
+    
+    goto night; // 0-5 hours
+    
+    :morning:
+    exec("say Good morning!", self);
+    goto wait_and_check;
+    
+    :afternoon:
+    exec("say Good afternoon!", self);
+    goto wait_and_check;
+    
+    :evening:
+    exec("say Good evening!", self);
+    goto wait_and_check;
+    
+    :night:
+    exec("say Good night!", self);
+    goto wait_and_check;
+    
+    :wait_and_check:
+    heartbeat := PULSE_SEC * 300; // Check every 5 minutes
+    pause;
+    goto check_time;
+} dilend
+
+=== Resource Management ===
+dilbegin resource_monitor();
+var
+    resource_level : integer;
+code
+{
+    :monitor_loop:
+    resource_level := self.mana; // Monitor mana as example
+    
+    if (resource_level < 10)
+        goto low_resource;
+    
+    if (resource_level < 50)
+        goto medium_resource;
+    
+    goto high_resource;
+    
+    :low_resource:
+    exec("say Resources are critically low!", self);
+    heartbeat := PULSE_SEC * 30; // Check every 30 seconds
+    pause;
+    goto monitor_loop;
+    
+    :medium_resource:
+    exec("say Resources are moderate", self);
+    heartbeat := PULSE_SEC * 60; // Check every minute
+    pause;
+    goto monitor_loop;
+    
+    :high_resource:
+    exec("say Resources are plentiful", self);
+    heartbeat := PULSE_SEC * 120; // Check every 2 minutes
+    pause;
+    goto monitor_loop;
+} dilend
+
+== Related Functions/Fields ==
+* [[on n goto (...)]] - On integer goto with list of labels
+* [[pause]] - Often used with goto to create loops
+* [[if]] - Conditional control structure
+* [[while]] - Loop construct (alternative to goto-based loops)
+* [[heartbeat]] - Timing control often used with goto loops
+
+== See Also ==
+* [[pause]] - Program timing and loop control
+* [[if]] - Conditional branching
+* Control flow structures
+* State machine patterns

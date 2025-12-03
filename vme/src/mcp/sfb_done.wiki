@@ -1,0 +1,165 @@
+= SFB_DONE =
+
+ constant: '''SFB_DONE'''
+
+Message flag that activates DIL programs when commands are successfully completed.
+
+== Description ==
+The '''SFB_DONE''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation when a command is successfully executed and completed. This allows DIL programs to be notified when other DIL programs finish executing commands that were being waited on.
+
+When a DIL program is activated by SFB_DONE, the following global variables become available:
+* '''activator''' - unit pointer to the character who executed the completed command
+* '''medium''' - unit pointer to the unit that was operated upon during the command
+* '''target''' - unit pointer to the target of the operation
+
+The SFB_DONE message is sent after a command has been successfully processed, allowing other waiting DIL programs to resume execution or perform cleanup tasks.
+
+== Examples ==
+=== Basic Command Completion ===
+ dilbegin command_notifier();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE, TRUE);
+    
+    exec("say A command was completed!", self);
+    goto start;
+ } dilend
+
+=== Item Transfer Detection ===
+ dilbegin item_transfer_watcher();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE, (command("give") or command("get")) and (self == activator));
+    
+    exec("say Item transfer completed.", self);
+    goto start;
+ } dilend
+
+=== Multi-Program Coordination ===
+ dilbegin coordinator();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE, TRUE);
+    
+    // Notify another program that operation is done
+    sendtext("Operation completed, you may proceed.<br/>", self);
+    goto start;
+ } dilend
+
+=== Service Completion Handler ===
+ dilbegin service_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE, command("buy") or command("sell"));
+    
+    if (command("buy"))
+    {
+       exec("say Purchase completed.", self);
+    }
+    else
+    {
+       exec("say Sale completed.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Conditional Completion Detection ===
+ dilbegin conditional_completion();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE, (command("repair") and (medium == activator)));
+    
+    exec("say Item repair completed.", self);
+    goto start;
+ } dilend
+
+=== Combined Event Handling ===
+ dilbegin multi_event_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DONE | SFB_CMD, TRUE);
+    
+    if (command("give") or command("get"))
+    {
+       exec("say Item operation completed.", self);
+    }
+    else if (activator.type == UNIT_ST_PC)
+    {
+       exec("say Player completed an action.", self);
+    }
+    else
+    {
+       exec("say Some event occurred.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Interrupt-Based Completion ===
+ dilbegin completion_interrupt();
+ var
+    interrupt_idx : integer;
+ code
+ {
+    :start:
+    interrupt_idx := interrupt(SFB_DONE, (command("craft") and (self == medium)), crafting_complete);
+    
+    wait(SFB_TICK, TRUE);
+    
+    goto start;
+    
+    :crafting_complete:
+    exec("say Crafting completed!", self);
+    clear(interrupt_idx);
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_DONE triggers after successful command completion, not command attempts
+* The message is sent when the command has been fully processed and executed
+* '''activator''' points to the character who executed the completed command
+* '''medium''' points to the unit that was operated upon (target of the operation)
+* '''target''' points to the target unit of the completed operation
+* SFB_DONE can be combined with other SFB_* flags using bitwise OR operator
+* Programs must be waiting with interrupt(SFB_DONE, ...) to receive these messages
+* Commonly used for multi-program coordination and service completion notifications
+* The flag allows for asynchronous program coordination and cleanup operations
+
+== Error Handling ==
+* Always validate that '''activator''' is not null before using it in completion logic
+* Ensure proper cleanup of interrupts when they're no longer needed
+* Be careful with infinite loops when waiting for completion events
+* Remember that SFB_DONE only triggers on successful completion, not failed commands
+* Test completion handlers thoroughly as they can affect game flow
+* Use appropriate condition checks to filter which completions should trigger your program
+* Ensure target programs are properly waiting for SFB_DONE messages
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_DONE
+* [[interrupt]] - Alternative method for setting up completion triggers
+* [[sendtext]] / [[sendto]] - Send messages to other DIL programs
+* [[activator]] - Unit pointer to command executor
+* [[medium]] - Unit pointer to the operated-upon unit
+* [[target]] - Unit pointer to the operation target
+* [[command]] - Function for checking specific commands
+
+== See Also ==
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_TICK]] - Timer-based activation
+* [[SFB_MSG]] - Message-based activation
+* [[SFB_PRE]] - Pre-command processing
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

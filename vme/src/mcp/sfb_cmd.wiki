@@ -1,0 +1,183 @@
+= SFB_CMD =
+
+ constant: '''SFB_CMD'''
+
+Message flag that activates DIL programs when players or NPCs issue commands, including movement commands.
+
+== Description ==
+The '''SFB_CMD''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation when any command is issued by a player character (PC) or non-player character (NPC). This includes both legal and illegal commands, as well as movement commands like north, south, east, west, etc.
+
+When a DIL program is activated by SFB_CMD, several special variables become available:
+* '''activator''' - unit pointer to the character who issued the command
+* '''cmdstr''' - the full command string as entered by the player (with command expansion applied)
+* '''excmdstr''' - the first word of the command in original case (not expanded)
+* '''excmdstr_case''' - the first word of the command in original case (preserves player's typing)
+* '''argument''' - the remainder of the command string after the first word
+
+The command interpreter processes aliases and direction shortcuts before the DIL program receives the command, so '''cmdstr''' may contain expanded commands while '''excmdstr''' contains the original input.
+
+== Examples ==
+=== Basic Command Handler ===
+ dilbegin shopkeeper();
+ var
+    customer : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("buy"));
+    customer := activator;
+    
+    if (customer == null)
+    {
+       exec("say I don't see anyone here to buy from.", self);
+       goto start;
+    }
+    
+    exec("say What would you like to buy today?", self);
+    goto start;
+ } dilend
+
+=== Multiple Command Processing ===
+ dilbegin command_router();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (command("help"))
+       exec("say Available commands: look, status, quit", self);
+    else if (command("status"))
+       exec("say You are in good health.", self);
+    else if (command("quit"))
+       quit;
+    else
+       exec("say Unknown command. Type 'help' for assistance.", self);
+    
+    goto start;
+ } dilend
+
+=== Command with Arguments ===
+ dilbegin gate_guard();
+ var
+    visitor : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("open") and (activator.type == UNIT_ST_PC));
+    visitor := activator;
+    
+    if (argument == "")
+    {
+       exec("say Open what?", self);
+       goto start;
+    }
+    
+    exec("say The gate is now open.", self);
+    goto start;
+ } dilend
+
+=== Movement Command Handling ===
+ dilbegin patrol_guard();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    // Handle movement commands
+    if (command("north") or command("south") or 
+        command("east") or command("west"))
+    {
+       exec("say Continuing patrol in that direction.", self);
+    }
+    else if (command("rest"))
+    {
+       exec("say Taking a short break.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Case-Sensitive Command Checking ===
+ dilbegin precise_commands();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    // Using excmdstr_case preserves original typing
+    if (excmdstr_case == "HELP")
+       exec("say Help system activated.", self);
+    else if (excmdstr_case == "Help")
+       exec("say Help system activated (capital H).", self);
+    else
+       exec("say Unknown command. Type HELP for assistance.", self);
+    
+    goto start;
+ } dilend
+
+=== Command vs String Comparison ===
+ dilbegin command_demo();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    // This is the RECOMMENDED way:
+    if (command("look"))
+    {
+       exec("say You looked around.", self);
+    }
+    
+    // This works but is NOT recommended:
+    if (cmdstr == "look")
+    {
+       exec("say String comparison worked.", self);
+    }
+    
+    // This may fail due to command expansion:
+    if (cmdstr == "n") // Player typed "n" but it expanded to "north"
+    {
+       exec("say This may not work!", self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_CMD triggers on ALL commands, including movement (north, south, etc.)
+* The command interpreter processes aliases and shortcuts before DIL activation
+* Use '''command()''' function for reliable command checking instead of string comparison
+* '''cmdstr''' contains the expanded command (e.g., "n" becomes "north")
+* '''excmdstr''' contains the original first word without expansion
+* '''excmdstr_case''' preserves the original case of the first word
+* '''argument''' contains everything after the first word of the command
+* Movement commands are treated as commands and will trigger SFB_CMD
+* Both legal and illegal commands can trigger SFB_CMD (use with care)
+
+== Error Handling ==
+* Always validate that '''activator''' is not null before using it
+* Use '''command()''' function instead of direct string comparison to avoid issues with command expansion
+* Be aware that '''cmdstr''' may contain expanded commands, making direct comparison unreliable
+* Ensure proper error handling for unknown commands if implementing custom command processors
+* Remember that SFB_CMD triggers on ALL commands unless filtered by expression
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_CMD
+* [[interrupt]] - Alternative method for setting up command triggers
+* [[command]] - Function for checking specific commands
+* [[activator]] - Unit pointer to command issuer
+* [[cmdstr]] - Full command string with expansion
+* [[excmdstr]] - Original command first word
+* [[excmdstr_case]] - Original command first word with case preservation
+* [[argument]] - Command arguments after first word
+
+== See Also ==
+* [[SFB_TICK]] - Timer-based activation
+* [[SFB_MSG]] - Message-based activation
+* [[SFB_COM]] - Combat event activation
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

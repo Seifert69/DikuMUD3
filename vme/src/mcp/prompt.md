@@ -1,8 +1,8 @@
-Execute the shell script getfile.sh which will output <command>_prompt.txt which is the file you must process.
+Execute the shell script getfile.sh which will output <command>.hlp which is the file you must process.
 
-Then read the <command>_prompt.txt file, which is based on this automated extract from DIKUMUD DIL. 
+Output the file you found to the console so I can see it, then read the <command>.hlp file.
 
-As a minimum you definitely want to load the <command>.hlp and <command>_prompt.txt files for <command> you're currently invesstigating.
+Try to search for examples in the .wiki files in this folder. If need be you can search in other folders too and check the src/mplex/dilpar.y source or the dil files in src/
 
 In this folder there are many help files form the DIL manual: grep "text" *.hlp to find which files you might want to read.
 In this folder there are many code extracts on disk from YACC & C++. grep "text" *.txt to find which files you might want to read.

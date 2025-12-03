@@ -1,0 +1,147 @@
+= SFB_DEAD =
+
+ constant: '''SFB_DEAD'''
+
+Message flag that activates DIL programs when a character dies.
+
+== Description ==
+The '''SFB_DEAD''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation when a player character (PC) or non-player character (NPC) dies. The death message is sent just as the character dies, before the corpse is created and items are dropped.
+
+When a DIL program is activated by SFB_DEAD, the following global variables become available:
+* '''activator''' - unit pointer to the character who is dying
+
+The death message is sent at the precise moment of death, allowing DIL programs to react to character death before the corpse is created and items are transferred to the appropriate location.
+
+== Examples ==
+=== Basic Death Detection ===
+ dilbegin death_watcher();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DEAD, TRUE);
+    
+    exec("say Someone has died!", self);
+    goto start;
+ } dilend
+
+=== Self-Death Detection ===
+ dilbegin self_death_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DEAD, activator == self);
+    
+    exec("say I am dying!", self);
+    // Death cleanup logic here
+    goto start;
+ } dilend
+
+=== Death with Action ===
+ dilbegin death_action();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DEAD, TRUE);
+    
+    if (activator.type == UNIT_ST_PC)
+    {
+       exec("say A player has died!", self);
+       // Handle player death
+    }
+    else
+    {
+       exec("say An NPC has died!", self);
+       // Handle NPC death
+    }
+    
+    goto start;
+ } dilend
+
+=== Death with Cleanup ===
+ dilbegin death_cleanup();
+ var
+    interrupt_idx : integer;
+ code
+ {
+    :start:
+    interrupt_idx := interrupt(SFB_DEAD, activator == self, inventory_cleanup);
+    
+    wait(SFB_TICK, TRUE);
+    
+    goto start;
+    
+    :inventory_cleanup:
+    exec("say Cleaning up inventory before death...", self);
+    clear(interrupt_idx);
+    goto start;
+ } dilend
+
+=== Combined Death and Combat Events ===
+ dilbegin combat_death_monitor();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DEAD | SFB_COM, TRUE);
+    
+    if (activator == self)
+    {
+       exec("say I have died!", self);
+    }
+    else
+    {
+       exec("say Combat detected.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Death with Position Check ===
+ dilbegin positional_death_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_DEAD, self.position == POSITION_DEAD);
+    
+    exec("say I am in death position!", self);
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_DEAD triggers at the exact moment of character death, before corpse creation
+* '''activator''' points to the character who is dying
+* The death message is sent before items are dropped and corpse is created
+* Programs can receive SFB_DEAD messages even when not directly involved in the death
+* SFB_DEAD can be combined with other SFB_* flags using bitwise OR operator
+* The death event allows for last-minute actions before final cleanup
+* Commonly used for death-related cleanup, item transfers, or special death effects
+* The '''argument''' variable is empty when SFB_DEAD triggers (as noted in help file)
+* Use '''command(CMD_AUTO_DEATH)''' to check if the trigger is from the auto-death system
+
+== Error Handling ==
+* Always validate that '''activator''' is not null before using it in death logic
+* Be careful with infinite loops when waiting for death events
+* Remember that SFB_DEAD can trigger frequently during dangerous situations
+* Ensure proper cleanup of interrupts when they're no longer needed
+* Test death handlers thoroughly as they can affect game balance
+* Use appropriate position checks if you only want to react when a character is actually dead
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_DEAD
+* [[interrupt]] - Alternative method for setting up death triggers
+* [[activator]] - Unit pointer to the dying character
+* [[self.position]] - Unit position field for death state checking
+* [[POSITION_DEAD]] - Constant for dead position
+* [[command]] - Function for checking death commands
+* [[visible]] - Function for checking unit visibility
+
+== See Also ==
+* [[SFB_COM]] - Combat message documentation
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_TICK]] - Timer-based activation
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

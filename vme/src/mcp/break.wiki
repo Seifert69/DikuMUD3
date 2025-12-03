@@ -1,0 +1,69 @@
+= break =
+ statement: '''break''';
+
+The break statement terminates execution of the innermost loop and transfers control to the statement immediately following the loop.
+
+== Description ==
+The '''break''' statement is used to exit prematurely from any loop construct in DIL, including '''while''' loops and '''foreach''' loops. When executed, it immediately terminates the current loop iteration and transfers program flow to the first statement following the loop body.
+
+== Usage Notes ==
+* The '''break''' statement can only be used within loop constructs
+* Using '''break''' outside of a loop will result in a compilation error: "Using break outside loop"
+* When multiple loops are nested, '''break''' only exits the innermost loop
+* The statement is particularly useful for conditional loop termination based on runtime conditions
+
+== Error Handling ==
+If the '''break''' statement is used outside of any loop construct, the DIL compiler will generate an error and the script will fail to compile.
+
+== Examples ==
+=== Basic while loop with break ===
+ dilbegin check_position();
+ code
+ {
+   while (self.inside) {
+     if (self.position & POSITION_SLEEPING)
+       break;
+     exec("say I am awake and active", self);
+     pause;
+   }
+ }
+ dilend
+
+=== Foreach loop with conditional break ===
+ dilbegin find_injured_player();
+ code
+ {
+   foreach (UNIT_ST_PC, target) {
+     if (target.hp < target.max_hp / 2) {
+       act("You found an injured player!", A_ALWAYS, self, null, target, TO_CHAR);
+       break;
+     }
+   }
+ }
+ dilend
+
+=== Nested loops demonstrating break scope ===
+ dilbegin nested_loop_example();
+ code
+ {
+   while (self.inside) {
+     foreach (UNIT_ST_PC, pc) {
+       if (pc.level > 50) {
+         break;  // Only exits the foreach loop
+       }
+       act("Processing low level player", A_ALWAYS, self, null, pc, TO_CHAR);
+     }
+     pause;
+   }
+ }
+ dilend
+
+== Related Functions/Fields ==
+* [[continue]] - Skip to next iteration of a loop
+* [[while]] - Loop construct that can be controlled with break
+* [[foreach]] - Loop construct that can be controlled with break
+
+== See Also ==
+* [[continue]]
+* [[while]]
+* [[foreach]]

@@ -1,0 +1,198 @@
+= SFB_TICK =
+
+ constant: '''SFB_TICK'''
+
+Message flag that activates DIL programs on timer events.
+
+== Description ==
+The '''SFB_TICK''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation based on timer events. The timing of these events is controlled by the '''heartbeat''' variable, which determines how frequently the program receives timer ticks.
+
+When a DIL program is activated by SFB_TICK, the following global variables become available:
+* '''activator''' - unit pointer to the unit that triggered the timer event (typically null for timer events)
+* '''argument''' - string containing any data from the timer event (typically empty for timer events)
+
+The SFB_TICK flag enables DIL programs to perform periodic actions, countdowns, or time-based behaviors without requiring external triggers.
+
+== Examples ==
+=== Basic Timer ===
+ dilbegin basic_timer();
+ var
+    counter : integer;
+ code
+ {
+    counter := 0;
+    
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    counter := counter + 1;
+    exec("say Timer tick #" + itoa(counter) + "!", self);
+    goto start;
+ } dilend
+
+=== Periodic Action ===
+ dilbegin periodic_cleaner();
+ var
+ code
+ {
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    // Perform cleaning action every 10 seconds
+    exec("emote sweeps the area clean.", self);
+    goto start;
+ } dilend
+
+=== Countdown Timer ===
+ dilbegin countdown();
+ var
+    time_left : integer;
+ code
+ {
+    time_left := 30; // 30 ticks = 30 seconds
+    
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    time_left := time_left - 1;
+    exec("say " + itoa(time_left) + " seconds remaining!", self);
+    
+    if (time_left <= 0)
+    {
+       exec("say Time's up!", self);
+       quit;
+    }
+    
+    goto start;
+ } dilend
+
+=== Heartbeat Control ===
+ dilbegin heartbeat_controller();
+ var
+    tick_rate : integer;
+ code
+ {
+    // Set heartbeat to tick every 5 seconds
+    heartbeat := PULSE_SEC * 5;
+    
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    exec("say Heartbeat tick received.", self);
+    goto start;
+ } dilend
+
+=== Combined Event Handling ===
+ dilbegin multi_event_handler();
+ var
+    event_count : integer;
+ code
+ {
+    event_count := 0;
+    
+    :start:
+    wait(SFB_TICK | SFB_CMD, TRUE);
+    
+    if (command("reset"))
+    {
+       exec("say Resetting event counter.", self);
+       event_count := 0;
+    }
+    else
+    {
+       event_count := event_count + 1;
+       exec("say Event #" + itoa(event_count) + " occurred.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Timer with Conditions ===
+ dilbegin conditional_timer();
+ var
+ code
+ {
+    :start:
+    wait(SFB_TICK, (self.position == POSITION_STANDING));
+    
+    exec("say Standing guard on duty.", self);
+    goto start;
+ } dilend
+
+=== Long-Running Process ===
+ dilbegin long_process();
+ var
+    process_time : integer;
+ code
+ {
+    process_time := 0;
+    
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    process_time := process_time + 1;
+    
+    // Perform action every 100 ticks (100 seconds)
+    if (process_time >= 100)
+    {
+       exec("say Performing periodic maintenance.", self);
+       process_time := 0;
+    }
+    
+    goto start;
+ } dilend
+
+=== Timer Interrupt ===
+ dilbegin timer_interrupt();
+ var
+    interrupt_idx : integer;
+ code
+ {
+    :start:
+    interrupt_idx := interrupt(SFB_TICK, (self.position <= POSITION_SLEEPING), sleep_handler);
+    
+    wait(SFB_TICK, TRUE);
+    
+    goto start;
+    
+    :sleep_handler:
+    exec("say Entering sleep mode - pausing timer.", self);
+    clear(interrupt_idx);
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_TICK triggers based on the '''heartbeat''' variable timing
+* The '''heartbeat''' variable controls the frequency of timer events (in 1/4th second units)
+* Use '''PULSE_SEC''' constant to convert between seconds and pulse units
+* Timer events are independent of player actions or game events
+* '''activator''' is typically null for pure timer events
+* '''argument''' is usually empty for timer events
+* SFB_TICK can be combined with other SFB_* flags using bitwise OR operations
+* Commonly used for periodic maintenance, countdowns, or time-based behaviors
+* The heartbeat can be changed at runtime to adjust timer frequency
+
+== Error Handling ==
+* Always validate that the '''heartbeat''' variable is set to a reasonable value
+* Be careful with infinite loops when using SFB_TICK without proper exit conditions
+* Remember that very fast heartbeat rates can impact game performance
+* Test timer handlers thoroughly as timing is critical for time-based behaviors
+* Ensure proper cleanup of timer interrupts when they're no longer needed
+* Use appropriate time calculations to avoid off-by-one errors in timing
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_TICK
+* [[interrupt]] - Alternative method for setting up timer triggers
+* [[heartbeat]] - Variable that controls timer frequency
+* [[PULSE_SEC]] - Constant for time unit conversion
+* [[pause]] - Function that waits for specified time periods
+* [[activator]] - Unit pointer to timer trigger source
+* [[argument]] - Timer event data variable
+
+== See Also ==
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_DONE]] - Command completion documentation
+* [[SFB_MSG]] - Message-based activation
+* [[SFB_PRE]] - Pre-command processing
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

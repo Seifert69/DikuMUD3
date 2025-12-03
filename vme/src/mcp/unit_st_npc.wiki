@@ -1,0 +1,192 @@
+= UNIT_ST_NPC =
+
+ constant: '''UNIT_ST_NPC'''
+
+Unit type constant that identifies non-player characters.
+
+== Description ==
+The '''UNIT_ST_NPC''' constant is used to identify units that are non-player characters (NPCs) in the DikuMUD3 system. This constant is commonly used in type checking operations to distinguish between player characters (PCs) and computer-controlled characters.
+
+When checking unit types, the '''UNIT_ST_NPC''' constant is used to determine if a unit pointer refers to an NPC rather than a player character. This is essential for implementing different behaviors, restrictions, or capabilities based on whether a character is player-controlled or computer-controlled.
+
+== Examples ==
+=== Basic Type Checking ===
+ dilbegin npc_checker();
+ var
+    target : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    target := activator;
+    
+    if (target.type == UNIT_ST_NPC)
+    {
+       exec("say Target is an NPC.", self);
+    }
+    else if (target.type == UNIT_ST_PC)
+    {
+       exec("say Target is a player character.", self);
+    }
+    else
+    {
+       exec("say Target is of unknown type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== NPC-Specific Behavior ===
+ dilbegin npc_behavior();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (activator.type == UNIT_ST_NPC)
+    {
+       exec("say I am an NPC with special behavior.", self);
+       // NPC-specific logic here
+    }
+    else
+    {
+       exec("say I am a player character.", self);
+       // Player-specific logic here
+    }
+    
+    goto start;
+ } dilend
+
+=== Type Validation in Functions ===
+ dilbegin type_validator();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("examine"));
+    unit := activator;
+    
+    // Only allow NPCs to be examined
+    if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say This NPC can be examined.", self);
+    }
+    else
+    {
+       exec("say Only NPCs can be examined.", self);
+       block;
+    }
+    
+    goto start;
+ } dilend
+
+=== Combined Type Checking ===
+ dilbegin multi_type_check();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    unit := activator;
+    
+    // Handle different types differently
+    if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Player character detected.", self);
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say NPC detected.", self);
+    }
+    else if (unit.type == UNIT_ST_OBJ)
+    {
+       exec("say Object detected.", self);
+    }
+    else
+    {
+       exec("say Unknown unit type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Type-Based Command Processing ===
+ dilbegin type_command_handler();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (activator.type == UNIT_ST_NPC)
+    {
+       exec("say NPC command: " + argument, self);
+    }
+    else if (activator.type == UNIT_ST_PC)
+    {
+       exec("say Player command: " + argument, self);
+    }
+    else
+    {
+       exec("say Unknown unit type.", self);
+       block;
+    }
+    
+    goto start;
+ } dilend
+
+=== NPC List Processing ===
+ dilbegin npc_list_processor();
+ var
+    npc_list : stringlist;
+    i : integer;
+ code
+ {
+    // Get all NPCs in the room
+    npc_list := {"guard","merchant","healer","trainer"};
+    
+    :start:
+    wait(SFB_CMD, command("listnpcs"));
+    
+    exec("say NPCs in this area:", self);
+    for (i := 0; i < length(npc_list); i := i + 1)
+    {
+       exec("say - " + npc_list.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* '''UNIT_ST_NPC''' is used to distinguish NPCs from player characters
+* The constant is essential for implementing different behaviors for PCs vs NPCs
+* Type checking is commonly done using bitwise operations with other unit type constants
+* Many functions and game mechanics have different behaviors based on whether a unit is an NPC
+* The constant is read-only and cannot be modified at runtime
+* '''UNIT_ST_PC''' is the complementary constant for player characters
+* '''UNIT_ST_OBJ''' and '''UNIT_ST_ROOM''' are other common unit type constants
+
+== Error Handling ==
+* Always validate that unit pointers are not null before checking their type
+* Remember that '''UNIT_ST_NPC''' is a constant, not a variable that can be changed
+* Use proper type checking to avoid runtime errors
+* Be careful with assumptions about unit types - always validate using the constants
+* Test type checking logic thoroughly with all possible unit types
+* Consider edge cases where unit type might be unknown or invalid
+
+== Related Functions/Fields ==
+* [[type]] - Function to get the type of a unit
+* [[activator]] - Unit pointer to the unit performing an action
+* [[foreach]] - Loop construct for iterating through units
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+* [[type]] - Unit type checking function

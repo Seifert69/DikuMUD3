@@ -1,0 +1,245 @@
+= while =
+
+ statement: '''while'''(expression) statement;
+
+Executes a block of code repeatedly while a boolean expression evaluates to TRUE.
+
+== Description ==
+The '''while''' statement creates a loop that continues executing a block of code as long as a specified condition remains true. This is commonly used for creating continuous processes, monitoring systems, or repetitive actions that need to run until a certain condition is met.
+
+The while loop evaluates the expression before each iteration. If the expression is TRUE, the code block is executed. If the expression becomes FALSE, the loop terminates and execution continues with the statement following the while block.
+
+== Examples ==
+=== Basic Counter ===
+ dilbegin simple_counter();
+ var
+    count : integer;
+ code
+ {
+    :start:
+    count := 0;
+    
+    :start:
+    count := count + 1;
+    exec("say Count: " + itoa(count), self);
+    
+    if (count < 10)
+    {
+       goto start;
+    }
+    else
+    {
+       exec("say Counting complete. Final count: " + itoa(count), self);
+       quit;
+    }
+    
+    goto start;
+ } dilend
+
+=== Continuous Monitoring ===
+ dilbegin monitor_system();
+ var
+    status : integer;
+ code
+ {
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    // Check system status every 5 seconds
+    status := rnd(0, 1); // 0 = normal, 1 = warning
+    
+    if (status == 1)
+    {
+       exec("say Warning: System status issue detected.", self);
+    }
+    else
+    {
+       exec("say System status: Normal.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Conditional Loop ===
+ dilbegin conditional_loop();
+ var
+    attempts : integer;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    while (attempts < 3)
+    {
+       attempts := attempts + 1;
+       exec("say Attempt #" + itoa(attempts) + " to open door.", self);
+       pause;
+    }
+    else
+    {
+       exec("say Door opened successfully on attempt #" + itoa(attempts) + ".", self);
+       attempts := 0;
+    }
+    
+    goto start;
+ } dilend
+
+=== Input Processing Loop ===
+ dilbegin input_processor();
+ var
+    input : string;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    while (TRUE)
+    {
+       input := argument;
+       
+       if (input == "quit")
+    {
+       exec("say Processing complete. Exiting.", self);
+       quit;
+    }
+       else
+    {
+       exec("say Processing input: " + input, self);
+    }
+    
+    goto start;
+ } dilend
+
+=== State Machine ===
+ dilbegin state_controller();
+ var
+    state : integer;
+ code
+ {
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    state := 0;
+    
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (state == 0)
+    {
+       exec("say State: Idle", self);
+       state := 1;
+    }
+    else if (state == 1)
+    {
+       exec("say State: Active", self);
+       state := 2;
+    }
+    else if (state == 2)
+    {
+       exec("say State: Processing", self);
+       state := 0;
+    }
+    else
+    {
+       exec("say State: Unknown", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Timer-Based Loop ===
+ dilbegin timed_loop();
+ var
+    elapsed : integer;
+    iterations : integer;
+ code
+ {
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    iterations := 0;
+    
+    :start:
+    wait(SFB_TICK, TRUE);
+    
+    iterations := iterations + 1;
+    exec("say Iteration #" + itoa(iterations) + " completed.", self);
+    
+    if (iterations >= 10)
+    {
+       exec("say Processed 10 iterations. Stopping.", self);
+       iterations := 0;
+    }
+    
+    pause;
+    goto start;
+ } dilend
+
+=== Input Validation ===
+ dilbegin validated_input();
+ var
+    input : string;
+    attempts : integer;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    input := argument;
+    
+    if (input == "quit")
+    {
+       exec("say Input validation complete.", self);
+       quit;
+    }
+    else
+    {
+       exec("say Processing input: " + input, self);
+       attempts := attempts + 1;
+    }
+    
+    if (attempts >= 3)
+    {
+       exec("say Too many invalid attempts. Please try again.", self);
+       attempts := 0;
+    }
+    else
+    {
+       exec("say Input accepted: " + input, self);
+       attempts := 0;
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* The '''while''' statement is fundamental to DIL programming for creating loops
+* The expression is evaluated before each iteration, not after
+* Use proper exit conditions to prevent infinite loops
+* Common patterns include counters, timers, and input processing
+* The while statement is commonly used with SFB_TICK for timed operations
+* Always provide a way to break out of loops (break, quit, or return)
+* Test while loops thoroughly to ensure they terminate as expected
+* Consider edge cases where conditions might never become FALSE
+
+== Error Handling ==
+* Always validate that loop conditions will eventually become FALSE
+* Be careful with counter variables to avoid overflow
+* Use proper boolean expressions that will eventually become FALSE
+* Test while loop functionality thoroughly with different conditions
+* Always provide alternative exit mechanisms for user control
+
+== Related Functions/Fields ==
+* [[wait]] - Often used with while loops for continuous processing
+* [[SFB_TICK]] - Common for timer-based loops
+* [[pause]] - Used to control loop timing
+* [[quit]] - Used to exit from loops
+* [[rnd]] - Often used for random conditions in loops
+* [[exec]] - Used for actions within loops
+* [[itoa]] - Used for number formatting in loops
+
+== See Also ==
+* [[for]] - Alternative loop construct
+* [[if]] - Conditional branching
+* [[break]] - Loop control statement
+* [[continue]] - Loop control statement

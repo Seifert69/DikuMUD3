@@ -1,0 +1,278 @@
+= SFB_PRE =
+
+ constant: '''SFB_PRE'''
+
+Message flag that activates DIL programs before command processing.
+
+== Description ==
+The '''SFB_PRE''' constant is a message flag used with '''wait()''' and '''interrupt()''' functions to trigger DIL program activation just before commands are processed by the game interpreter. This allows DIL programs to intercept, modify, or block commands before they reach the normal command processing pipeline.
+
+When a DIL program is activated by SFB_PRE, the following global variables become available:
+* '''cmdstr''' - The full command string as entered by the player
+* '''excmdstr''' - The first word of the command in original case (not expanded)
+* '''excmdstr_case''' - The first word of the command preserving original case
+
+The SFB_PRE event is triggered just before the command interpreter processes the command, giving DIL programs the opportunity to:
+* Modify or block commands before they're executed
+* Change command arguments or parameters
+* Perform custom command validation or routing
+* Implement special command aliases or shortcuts
+* Log or monitor command attempts for debugging
+
+== Examples ==
+=== Basic Command Interception ===
+ dilbegin command_interceptor();
+ var
+    original_cmd : string;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Store original command for comparison
+    original_cmd := cmdstr;
+    
+    // Modify all "north" commands to "go north"
+    if (cmdstr == "north")
+    {
+       exec("go north", self);
+    }
+    // Let other commands pass through normally
+    goto start;
+ } dilend
+
+=== Command Validation ===
+ dilbegin command_validator();
+ var
+    command_name : string;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Get the command name for validation
+    command_name := excmdstr;
+    
+    // Block dangerous commands for non-wizards
+    if (command_name == "quit")
+    {
+       exec("say Quit command is not allowed here.", self);
+       block;
+    }
+    else if (command_name == "shutdown")
+    {
+       exec("say Shutdown command is not allowed here.", self);
+       block;
+    }
+    else
+    {
+       exec("say Command '" + command_name + "' accepted.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Custom Command Processing ===
+ dilbegin custom_processor();
+ var
+    parts : stringlist;
+    i : integer;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Parse command into parts
+    parts := split(argument, " ");
+    
+    // Process each part
+    for (i := 0; i < length(parts); i := i + 1)
+    {
+       if (parts.[i] == "north")
+       {
+          exec("go north", self);
+       }
+       else if (parts.[i] == "east")
+       {
+          exec("go east", self);
+       }
+       else if (parts.[i] == "south")
+       {
+          exec("go south", self);
+       }
+       else if (parts.[i] == "west")
+       {
+          exec("go west", self);
+       }
+    }
+    
+    goto start;
+ } dilend
+
+=== Command Logging ===
+ dilbegin command_logger();
+ var
+    log_file : string;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Log all commands to a file
+    log_file := "commands.log";
+    
+    // Append command with timestamp
+    exec("log " + log_file + " " + asctime() + ": " + cmdstr + " by " + activator.name, self);
+    
+    goto start;
+ } dilend
+
+=== Command Blocking with Conditions ===
+ dilbegin conditional_blocker();
+ var
+ code
+ {
+    :start:
+    wait(SFB_PRE, (command("kill") and (activator.level < 200)));
+    
+    // Block dangerous commands from low-level players
+    exec("say You are not allowed to use that command.", self);
+    block;
+    
+    goto start;
+ } dilend
+
+=== Command Argument Modification ===
+ dilbegin argument_modifier();
+ var
+    new_arg : string;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Add a prefix to all "tell" commands
+    if (left(argument, 4) == "tell")
+    {
+       new_arg := "whisper " + substring(argument, 5);
+       exec(new_arg, self);
+    }
+    else
+    {
+       exec(argument, self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Multi-Command Router ===
+ dilbegin command_router();
+ var
+    command_type : integer;
+ code
+ {
+    :start:
+    wait(SFB_PRE, TRUE);
+    
+    // Route commands based on first word
+    if (left(argument, 4) == "look")
+    {
+       command_type := 1; // Look command
+    }
+    else if (left(argument, 6) == "attack")
+    {
+       command_type := 2; // Attack command
+    }
+    else if (left(argument, 4) == "get")
+    {
+       command_type := 3; // Get command
+    }
+    else
+    {
+       command_type := 0; // Unknown command
+    }
+    
+    // Execute based on command type
+    if (command_type == 1)
+    {
+       exec("look", self);
+    }
+    else if (command_type == 2)
+    {
+       exec("attack " + substring(argument, 7), self);
+    }
+    else if (command_type == 3)
+    {
+       exec("get " + substring(argument, 4), self);
+    }
+    else
+    {
+       exec(argument, self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Spell Casting Interception ===
+ dilbegin spell_interceptor();
+ var
+    spell_name : string;
+ code
+ {
+    :start:
+    wait(SFB_PRE, command("cast"));
+    
+    // Log all spell casting attempts
+    spell_name := getword(argument);
+    
+    // Check for dangerous spells
+    if (spell_name == "fireball" and (activator.level < 50))
+    {
+       exec("say You are not experienced enough for that spell.", self);
+       block;
+    }
+    else
+    {
+       exec("cast " + argument, self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* SFB_PRE triggers before command interpretation, giving DIL programs first access to commands
+* The command string variables contain different levels of processing:
+** '''cmdstr''' - Full command after interpreter processing (aliases expanded, shortcuts applied)
+** '''excmdstr''' - First word only, not expanded by interpreter
+** '''excmdstr_case''' - First word only, preserves original case
+* SFB_PRE can be used to implement custom command validation, security checks, or routing
+* Programs can modify commands using '''exec()''' before they reach the interpreter
+* The '''block''' command prevents the original command from being processed
+* Multiple SFB_PRE handlers can be used to create complex command processing systems
+* SFB_PRE is commonly used for command logging, debugging, and security systems
+
+== Error Handling ==
+* Always validate command strings before processing or modifying them
+* Be careful with infinite loops when using SFB_PRE without proper exit conditions
+* Remember that '''block''' only prevents the original command - the DIL program remains active
+* Use appropriate conditional logic to determine when to intercept vs when to allow commands
+* Test command interception thoroughly as it can affect all command processing
+* Ensure proper cleanup of any temporary states or variables
+* Be aware that SFB_PRE triggers for ALL commands unless filtered by expression
+
+== Related Functions/Fields ==
+* [[wait]] - Primary function used with SFB_PRE
+* [[interrupt]] - Alternative method for setting up pre-command triggers
+* [[cmdstr]] - Full command string after interpreter processing
+* [[excmdstr]] - Original command first word
+* [[excmdstr_case]] - Original command first word with case preservation
+* [[exec]] - Execute commands and optionally block them
+* [[block]] - Prevent command execution
+* [[send]] / [[sendto]] - Send messages to other DIL programs
+
+== See Also ==
+* [[SFB_CMD]] - Command message documentation
+* [[SFB_DONE]] - Command completion documentation
+* [[SFB_MSG]] - Message-based activation
+* [[wait]] - General wait function documentation
+* [[interrupt]] - General interrupt system

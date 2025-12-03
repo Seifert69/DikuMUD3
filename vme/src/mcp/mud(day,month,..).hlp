@@ -1,7 +1,0 @@
-<span id="mmmm"></span>
- 'mudday'
- 'mudhour'
- 'mudmonth'
- 'mudyear'
-    These variables lets your program keep track of the time in the mud.
-    They all have integer types.

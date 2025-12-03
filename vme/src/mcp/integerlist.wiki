@@ -1,0 +1,279 @@
+= integerlist =
+ type: '''integerlist'''
+
+The '''integerlist''' type represents an ordered array of integer values that can be dynamically resized and manipulated in DIL programs.
+
+== Description ==
+An '''integerlist''' is a collection data type that stores multiple integer values in a sequence. Unlike individual integer variables, an integerlist allows you to manage groups of related numbers, such as weapon skill values, experience amounts, damage values, or any other numeric data that needs to be processed as a set.
+
+Integerlists are automatically managed by the DIL runtime, handling memory allocation and resizing as needed. They are saved with DIL programs when attached to saved units, making them persistent across game sessions.
+
+== Declaration ==
+Integerlist variables are declared using the `var` keyword:
+ var
+    my_numbers : integerlist;
+
+Static integerlists are defined using curly braces:
+  {10, 20, 30, 40, 50}
+
+== Access ==
+Individual elements are accessed using 0-based indexing with square brackets:
+  my_list.[3]    // Access 4th element (index 3)
+
+== Examples ==
+=== Basic Declaration and Access ===
+dilbegin basic_intlist();
+var
+    weapon_skills : integerlist;
+    skill_level : integer;
+code
+{
+    // Initialize with weapon skill values
+    weapon_skills := {5, 3, 6, 9, 3, 9};
+    
+    // Access specific weapon skill
+    skill_level := weapon_skills.[2];  // Get 3rd weapon skill (value 6)
+    
+    sendtext("Weapon skill at index 2: " + itoa(skill_level) + "<br/>", self);
+    
+    // Modify a value
+    weapon_skills.[2] := 7;
+    sendtext("Modified weapon skill to: " + itoa(weapon_skills.[2]) + "<br/>", self);
+} dilend
+
+=== Dynamic Operations ===
+dilbegin dynamic_intlist();
+var
+    numbers : integerlist;
+    i : integer;
+    sum : integer;
+code
+{
+    // Start with empty list
+    numbers := {};
+    
+    // Add values dynamically
+    numbers.[0] := 10;
+    numbers.[1] := 20;
+    numbers.[2] := 30;
+    
+    // Calculate sum
+    sum := 0;
+    i := 0;
+    while (i < length(numbers)) {
+        sum := sum + numbers.[i];
+        i := i + 1;
+    }
+    
+    sendtext("List contains " + itoa(length(numbers)) + " elements.<br/>", self);
+    sendtext("Sum of all elements: " + itoa(sum) + "<br/>", self);
+} dilend
+
+=== Inserting Values ===
+dilbegin insert_example();
+var
+    items : integerlist;
+    i : integer;
+code
+{
+    // Start with some values
+    items := {100, 200, 300};
+    
+    // Insert 150 at position 1
+    insert(items, 1, 150);
+    
+    // Insert at end
+    insert(items, length(items), 400);
+    
+    // Display all values
+    i := 0;
+    while (i < length(items)) {
+        sendtext("Item " + itoa(i) + ": " + itoa(items.[i]) + "<br/>", self);
+        i := i + 1;
+    }
+} dilend
+
+=== List Processing ===
+dilbegin process_scores();
+var
+    scores : integerlist;
+    i : integer;
+    high_score : integer;
+    average : integer;
+code
+{
+    // Simulate some scores
+    scores := {85, 92, 78, 96, 88, 91};
+    
+    // Find highest score
+    high_score := 0;
+    i := 0;
+    while (i < length(scores)) {
+        if (scores.[i] > high_score) {
+            high_score := scores.[i];
+        }
+        i := i + 1;
+    }
+    
+    // Calculate average
+    average := 0;
+    i := 0;
+    while (i < length(scores)) {
+        average := average + scores.[i];
+        i := i + 1;
+    }
+    average := average / length(scores);
+    
+    sendtext("Highest score: " + itoa(high_score) + "<br/>", self);
+    sendtext("Average score: " + itoa(average) + "<br/>", self);
+} dilend
+
+=== Weapon Skill Management ===
+dilbegin weapon_skills();
+var
+    weapon_types : integerlist;
+    i : integer;
+code
+{
+    // Weapon skill values for different weapon types
+    weapon_types := {5, 3, 6, 9, 3, 9};
+    
+    // Check if player has specific weapon skill
+    i := 0;
+    while (i < length(weapon_types)) {
+        if (weapon_types.[i] == 5) {
+            sendtext("You have sword skill level " + itoa(weapon_types.[i]) + "<br/>", self);
+        } else if (weapon_types.[i] == 3) {
+            sendtext("You have axe skill level " + itoa(weapon_types.[i]) + "<br/>", self);
+        }
+        i := i + 1;
+    }
+} dilend
+
+=== Experience Tracking ===
+dilbegin track_experience();
+var
+    xp_gains : integerlist;
+    total_xp : integer;
+    i : integer;
+code
+{
+    // Track XP gains from different sources
+    xp_gains := {100, 250, 150, 300};
+    
+    // Calculate total XP gained
+    total_xp := 0;
+    i := 0;
+    while (i < length(xp_gains)) {
+        total_xp := total_xp + xp_gains.[i];
+        i := i + 1;
+    }
+    
+    sendtext("Total XP gained: " + itoa(total_xp) + "<br/>", self);
+    sendtext("Number of sources: " + itoa(length(xp_gains)) + "<br/>", self);
+} dilend
+
+=== Random Value Generation ===
+dilbegin random_values();
+var
+    random_numbers : integerlist;
+    i : integer;
+code
+{
+    // Generate list of random numbers
+    random_numbers := {};
+    
+    i := 0;
+    while (i < 5) {
+        insert(random_numbers, i, rnd(1, 100));
+        i := i + 1;
+    }
+    
+    // Display the random values
+    i := 0;
+    while (i < length(random_numbers)) {
+        sendtext("Random value " + itoa(i) + ": " + itoa(random_numbers.[i]) + "<br/>", self);
+        i := i + 1;
+    }
+} dilend
+
+=== Data Validation ===
+dilbegin validate_data();
+var
+    input_values : integerlist;
+    valid_values : integerlist;
+    i : integer;
+    invalid_count : integer;
+code
+{
+    // Some test data
+    input_values := {15, -5, 0, 25, 100, 200};
+    valid_values := {};
+    
+    // Filter for valid positive values
+    i := 0;
+    while (i < length(input_values)) {
+        if (input_values.[i] > 0) {
+            insert(valid_values, length(valid_values), input_values.[i]);
+        } else {
+            invalid_count := invalid_count + 1;
+        }
+        i := i + 1;
+    }
+    
+    sendtext("Valid values found: " + itoa(length(valid_values)) + "<br/>", self);
+    sendtext("Invalid entries: " + itoa(invalid_count) + "<br/>", self);
+} dilend
+
+=== Quest Progress Tracking ===
+dilbegin quest_progress();
+var
+    quest_stages : integerlist;
+    current_stage : integer;
+code
+{
+    // Quest stage values
+    quest_stages := {1, 2, 3, 4, 5};
+    
+    current_stage := 1;  // Player is at stage 1
+    
+    // Check if player can advance
+    if (current_stage < length(quest_stages)) {
+        sendtext("You can advance to stage " + itoa(quest_stages.[current_stage]) + "<br/>", self);
+        current_stage := current_stage + 1;
+    } else {
+        sendtext("You have completed all quest stages.<br/>", self);
+    }
+} dilend
+
+== Usage Notes ==
+* Integerlists use 0-based indexing (first element is at index 0)
+* Lists are automatically resized when accessing beyond current bounds
+* Setting an index beyond current size expands the list with empty values (0) for gaps
+* Static lists are defined with curly braces and comma-separated values
+* Lists are saved with DIL programs when attached to saved units
+* The '''length()''' function returns the current size of an integerlist
+* Use '''insert()''' function to add values at specific positions
+* Lists can contain duplicate values unless explicitly prevented by logic
+
+== Error Handling ==
+* Accessing an index that doesn't exist returns 0 (or empty value)
+* Negative indices are invalid and will cause runtime errors
+* Type mismatch errors occur when using string operations on integerlists
+* Out of memory errors can occur with extremely large lists
+* Always check list bounds when iterating with '''length()''' function
+
+== Related Functions/Fields ==
+* [[length]] - Get the number of elements in an integerlist
+* [[insert]] - Insert values at specific positions in an integerlist
+* [[remove]] - Remove elements from an integerlist
+* [[integer]] - Individual integer type documentation
+* [[stringlist]] - String list equivalent type
+* [[vals]] - Field that returns integerlist from extra descriptions
+
+== See Also ==
+* Array and list operations
+* Data structure manipulation
+* Loop and iteration patterns
+* Type conversion functions (atoi, itoa)
+* Extra description and quest systems

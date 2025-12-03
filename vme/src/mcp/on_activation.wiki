@@ -1,0 +1,176 @@
+= on_activation =
+ function: integer '''on_activation'''(dilexp : string, label : string);
+
+Sets up an interrupt that is executed before every activation of DIL program, allowing conditional control over program execution based on game state.
+
+== Description ==
+The '''on_activation''' function creates a special type of interrupt that evaluates a boolean expression each time the DIL program is about to be activated. This is particularly useful for catching situations where an NPC has fallen asleep, is fighting, is injured, or is in other states that should prevent normal program execution.
+
+When the boolean expression evaluates to TRUE:
+* If the label parameter is '''SKIP''', the program activation is skipped for this cycle but the interrupt remains active
+* If the label parameter is a valid label name, the program jumps to that label and the interrupt is automatically cleared
+
+When the boolean expression evaluates to FALSE, the program continues normal execution and the interrupt remains active for future activations.
+
+The function returns an integer index that can be used with the '''clear()''' function to manually remove the interrupt.
+
+Internally, '''on_activation''' is implemented as a macro that calls '''interrupt'''(SFB_ACTIVATE, dilexp, label).
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| dilexp || string || A boolean DIL expression to evaluate before each program activation
+|-
+| label || string || Label to jump to if expression is true, or the reserved keyword '''SKIP'''
+|}
+
+== Return Value ==
+Returns an integer representing the index to the interrupt handling the on_activation. This value can be used with the '''clear()''' function to manually remove the interrupt.
+
+== Examples ==
+=== Basic Position Checking ===
+ dilbegin guard_post();
+ var
+ code
+ {
+    // Skip activation if guard is sleeping or fighting
+    on_activation((self.position <= POSITION_SLEEPING) or 
+                 (self.position == POSITION_FIGHTING), skip);
+    
+    :start:
+    heartbeat := PULSE_SEC*5;
+    pause;
+    exec("say I am on duty and alert.", self);
+    goto start;
+ } dilend
+
+=== State Machine Handler ===
+ dilbegin state_handler();
+ var
+    state : integer;
+    i1 : integer;
+    i2 : integer;
+ code
+ {
+    state := 0;
+    
+    :start:
+    // Handle different states based on position
+    i1 := on_activation((self.position == POSITION_FIGHTING), combat_mode);
+    i2 := on_activation((self.position <= POSITION_SLEEPING), sleep_mode);
+    
+    heartbeat := PULSE_SEC*2;
+    pause;
+    goto start;
+    
+    :combat_mode:
+    exec("say Entering combat mode!", self);
+    // Combat handling logic here
+    clear(i1);
+    goto start;
+    
+    :sleep_mode:
+    exec("say Zzzz...", self);
+    // Sleep handling logic here
+    clear(i2);
+    goto start;
+ } dilend
+
+=== Complex Condition Checking ===
+ dilbegin complex_guard();
+ var
+    pc : unitptr;
+ code
+ {
+    :init:
+    heartbeat := PULSE_SEC*3;
+    
+    // Multiple conditions in one check
+    on_activation((self.position <= POSITION_SLEEPING) or
+                 (self.position == POSITION_FIGHTING) or
+                 (self.hp < 10), skip);
+    
+    :start:
+    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+    pc := activator;
+    secure(pc, lostpc);
+    
+    exec("say Hello " + pc.name + "! I am ready to help.", self);
+    unsecure(pc);
+    goto start;
+    
+    :lostpc:
+    exec("say Goodbye!", self);
+    goto start;
+ } dilend
+
+=== Manual Interrupt Management ===
+ dilbegin managed_activation();
+ var
+    interrupt_index : integer;
+    is_disabled : integer;
+ code
+ {
+    is_disabled := 0;
+    
+    :setup_interrupt:
+    if (is_disabled = 0)
+       interrupt_index := on_activation(self.position < POSITION_STANDING, skip);
+    
+    :main_loop:
+    heartbeat := PULSE_SEC*5;
+    
+    if (self.position >= POSITION_STANDING)
+       exec("say I am standing and active.", self);
+    
+    pause;
+    
+    // Check if we should disable the interrupt
+    if (mudhour = 12) // Noon
+    {
+       is_disabled := 1;
+       clear(interrupt_index);
+       exec("say Disabling activation check for now.", self);
+    }
+    else if (mudhour = 13) // 1 PM
+    {
+       is_disabled := 0;
+       goto setup_interrupt;
+    }
+    
+    goto main_loop;
+ } dilend
+
+== Usage Notes ==
+* The '''on_activation''' interrupt is evaluated before every program activation, before any other interrupts
+* When using '''SKIP''', the program simply doesn't activate for that cycle but the interrupt remains active
+* When jumping to a label, the interrupt is automatically cleared after the jump
+* The interrupt remains active until explicitly cleared with '''clear()''' or when triggered with a label jump
+* Multiple '''on_activation''' calls can be made to handle different conditions
+* The boolean expression can be complex, using logical operators (and, or) and parentheses
+* The expression should be efficient as it's evaluated frequently
+* Common use cases include checking position states, health conditions, combat status, or environmental factors
+* The expression is evaluated in the context of the program owner (self)
+
+== Error Handling ==
+* If the boolean expression contains invalid syntax, the program will fail to compile
+* If the specified label doesn't exist, a runtime error will occur when the condition evaluates to true
+* Invalid return values from '''clear()''' are ignored silently
+* The interrupt index returned should be stored if you plan to manually clear the interrupt
+* Ensure proper parentheses usage in complex boolean expressions to avoid evaluation order issues
+
+== Related Functions/Fields ==
+* [[interrupt]] - General interrupt system for specific message types
+* [[clear]] - Removes interrupts by index
+* [[pause]] - Waits for game pulses
+* [[wait]] - Waits for specific conditions
+* [[self.position]] - Unit position field commonly used in activation conditions
+* [[self.hp]] - Character health field for injury checks
+* [[mudhour]] - Current game hour for time-based conditions
+
+== See Also ==
+* [[interrupt]] - General interrupt system overview
+* [[on]] - Value-based interrupt handling
+* [[position]] - Unit position constants and values
+* [[SFB_ACTIVATE]] - Internal flag for activation interrupts

@@ -1,0 +1,258 @@
+= UNIT_ST_OBJ =
+
+ constant: '''UNIT_ST_OBJ'''
+
+Unit type constant that identifies objects.
+
+== Description ==
+The '''UNIT_ST_OBJ''' constant is used to identify units that are objects rather than characters or rooms. This constant is commonly used in type checking operations to determine if a unit pointer refers to an object, allowing DIL programs to implement object-specific behaviors and restrictions.
+
+When checking unit types, the following constants are commonly used:
+* '''UNIT_ST_PC''' - Player characters
+* '''UNIT_ST_NPC''' - Non-player characters  
+* '''UNIT_ST_OBJ''' - Objects
+* '''UNIT_ST_ROOM''' - Rooms
+
+The '''UNIT_ST_OBJ''' constant is read-only and cannot be modified at runtime. It's primarily used with the '''type''' function to determine the actual type of a unit.
+
+== Examples ==
+=== Basic Object Type Check ===
+ dilbegin object_checker();
+ var
+    item : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("examine"));
+    item := activator;
+    
+    if (item.type == UNIT_ST_OBJ)
+    {
+       exec("say This is an object.", self);
+    }
+    else
+    {
+       exec("say This is not an object.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Object-Specific Behavior ===
+ dilbegin object_handler();
+ var
+    container : unitptr;
+    item : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("get") or command("drop"));
+    item := activator;
+    
+    if (item.type == UNIT_ST_OBJ)
+    {
+       // Object-specific behavior
+       if (command("get"))
+       {
+          exec("say You pick up the " + item.title + ".", self);
+       }
+       else if (command("drop"))
+       {
+          exec("say You drop the " + item.title + ".", self);
+       }
+    }
+    else
+    {
+       exec("say You can't do that with " + item.title + ".", self);
+       block;
+    }
+    
+    goto start;
+ } dilend
+
+=== Container Object Handling ===
+ dilbegin container_manager();
+ var
+    container : unitptr;
+    item : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("put"));
+    container := activator;
+    item := medium;
+    
+    // Only allow putting items in containers
+    if (container.type == UNIT_ST_OBJ)
+    {
+       exec("say You put " + item.title + " in the " + container.title + ".", self);
+    }
+    else
+    {
+       exec("say You can only put items in containers.", self);
+       block;
+    }
+    
+    goto start;
+ } dilend
+
+=== Equipment Object Processing ===
+ dilbegin equipment_handler();
+ var
+    character : unitptr;
+    equipment : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("wear") or command("remove"));
+    equipment := activator;
+    
+    if (equipment.type == UNIT_ST_OBJ)
+    {
+       exec("say You " + command + " the " + equipment.title + ".", self);
+    }
+    else
+    {
+       exec("say You can only " + command + " equipment.", self);
+       block;
+    }
+    
+    goto start;
+ } dilend
+
+=== Type Validation in Functions ===
+ dilbegin type_validator();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("checktype"));
+    unit := activator;
+    
+    // Validate unit type before processing
+    if (unit.type == UNIT_ST_OBJ)
+    {
+       exec("say Unit is an object of type: " + itoa(unit.objecttype) + ".", self);
+    }
+    else if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Unit is a player character.", self);
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Unit is an NPC.", self);
+    }
+    else
+    {
+       exec("say Unit is of unknown type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Combined Type Checking ===
+ dilbegin multi_type_checker();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    unit := activator;
+    
+    // Handle different types appropriately
+    if (unit.type == UNIT_ST_OBJ)
+    {
+       exec("say Processing object: " + unit.title, self);
+       // Object-specific logic
+    }
+    else if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Processing player: " + unit.name, self);
+       // Player-specific logic
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Processing NPC: " + unit.name, self);
+       // NPC-specific logic
+    }
+    else if (unit.type == UNIT_ST_ROOM)
+    {
+       exec("say Processing room: " + unit.title, self);
+       // Room-specific logic
+    }
+    else
+    {
+       exec("say Unknown unit type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Object Property Access ===
+ dilbegin object_properties();
+ var
+    item : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("info"));
+    item := activator;
+    
+    if (item.type == UNIT_ST_OBJ)
+    {
+       exec("say Object type: " + itoa(item.objecttype), self);
+       exec("say Object value: " + itoa(item.value[0]), self);
+       exec("say Object flags: " + itoa(item.objectflags), self);
+       exec("say Object cost: " + itoa(item.cost), self);
+       exec("say Object rent: " + itoa(item.rent), self);
+    }
+    else
+    {
+       exec("say Target is not an object.", self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* '''UNIT_ST_OBJ''' is used to distinguish objects from characters and rooms
+* The constant is read-only and cannot be modified at runtime
+* Type checking is commonly done using the '''type''' function with '''UNIT_ST_OBJ''' constant
+* Objects have special properties like '''objecttype''', '''value[]''', '''objectflags''', '''cost''', '''rent''', and '''equip'''
+* The constant is essential for implementing object-specific behaviors and restrictions
+* Type checking prevents inappropriate operations on non-objects
+* '''UNIT_ST_OBJ''' is complementary to '''UNIT_ST_PC''' and '''UNIT_ST_NPC''' constants
+
+== Error Handling ==
+* Always validate that unit pointers are not null before checking their type
+* Remember that '''UNIT_ST_OBJ''' is a constant, not a variable that can be changed
+* Use proper bounds checking when accessing object properties by index
+* Be careful with assumptions about unit types - always validate using the '''type''' function
+* Test type checking logic thoroughly with all possible unit types
+* Consider edge cases where unit type might be unknown or invalid
+
+== Related Functions/Fields ==
+* [[type]] - Function to get the type of a unit
+* [[objecttype]] - Object type field (read-only)
+* [[value]] - Object values array (read/write)
+* [[objectflags]] - Object flags field (read/write)
+* [[cost]] - Object cost field (read/write)
+* [[rent]] - Object rent field (read/write)
+* [[equip]] - Equipment position field (read/write)
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_ROOM]] - Room type constant
+* [[type]] - Unit type checking function
+* [[objecttype]] - Object type field documentation
+* [[value]] - Object values array documentation
+* [[objectflags]] - Object flags field documentation
+* [[cost]] - Object cost field documentation
+* [[rent]] - Object rent field documentation
+* [[equip]] - Equipment position field documentation

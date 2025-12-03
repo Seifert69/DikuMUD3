@@ -1,0 +1,236 @@
+= UNIT_ST_ROOM =
+
+ constant: '''UNIT_ST_ROOM'''
+
+Unit type constant that identifies rooms.
+
+== Description ==
+The '''UNIT_ST_ROOM''' constant is used to identify units that are rooms in the DikuMUD3 system. This constant is commonly used in type checking operations to distinguish between rooms and other unit types like characters, objects, or NPCs.
+
+When checking unit types, the following constants are commonly used together:
+* '''UNIT_ST_ROOM''' - Rooms
+* '''UNIT_ST_PC''' - Player characters
+* '''UNIT_ST_NPC''' - Non-player characters
+* '''UNIT_ST_OBJ''' - Objects
+
+The '''UNIT_ST_ROOM''' constant is read-only and cannot be modified at runtime. It's primarily used with the '''type''' function to determine the actual type of a unit pointer and in conditional statements to implement room-specific behaviors.
+
+== Examples ==
+=== Basic Room Type Check ===
+ dilbegin room_checker();
+ var
+    target : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    target := activator;
+    
+    if (target.type == UNIT_ST_ROOM)
+    {
+       exec("say Target is a room.", self);
+    }
+    else if (target.type == UNIT_ST_PC)
+    {
+       exec("say Target is a player character.", self);
+    }
+    else if (target.type == UNIT_ST_NPC)
+    {
+       exec("say Target is an NPC.", self);
+    }
+    else
+    {
+       exec("say Target is of unknown type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Room-Specific Behavior ===
+ dilbegin room_only_logic();
+ var
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    if (self.type == UNIT_ST_ROOM)
+    {
+       exec("say Room-specific action executed.", self);
+       // Room-specific logic here
+    }
+    else
+    {
+       exec("say Only rooms can use this action.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Type Validation with Constants ===
+ dilbegin room_type_validator();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("checktype"));
+    unit := activator;
+    
+    // Use constants for comparison
+    if (unit.type == UNIT_ST_ROOM)
+    {
+       exec("say Valid room type: " + itoa(unit.type) + ".", self);
+    }
+    else if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Valid player type: " + itoa(unit.type) + ".", self);
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Valid NPC type: " + itoa(unit.type) + ".", self);
+    }
+    else
+    {
+       exec("say Invalid unit type for this operation.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Room Property Access ===
+ dilbegin room_properties();
+ var
+    room : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, command("roominfo"));
+    room := activator;
+    
+    if (room.type == UNIT_ST_ROOM)
+    {
+       exec("say Room name: " + room.name, self);
+       exec("say Room description: " + room.descr, self);
+       exec("say Room flags: " + itoa(room.roomflags), self);
+    }
+    else
+    {
+       exec("say Target is not a room.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Combined Type Checking ===
+ dilbegin multi_type_handler();
+ var
+    unit : unitptr;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    unit := activator;
+    
+    // Handle different types appropriately
+    if (unit.type == UNIT_ST_ROOM)
+    {
+       exec("say Processing room: " + unit.title, self);
+       // Room-specific logic
+    }
+    else if (unit.type == UNIT_ST_PC)
+    {
+       exec("say Processing player: " + unit.name, self);
+       // Player-specific logic
+    }
+    else if (unit.type == UNIT_ST_NPC)
+    {
+       exec("say Processing NPC: " + unit.name, self);
+       // NPC-specific logic
+    }
+    else if (unit.type == UNIT_ST_OBJ)
+    {
+       exec("say Processing object: " + unit.title, self);
+       // Object-specific logic
+    }
+    else
+    {
+       exec("say Unknown unit type.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Room Exit Handling ===
+ dilbegin exit_manager();
+ var
+    room : unitptr;
+    direction : string;
+ code
+ {
+    :start:
+    wait(SFB_CMD, TRUE);
+    room := activator;
+    
+    if (room.type == UNIT_ST_ROOM)
+    {
+       // Parse exit direction
+       direction := argument;
+       
+       if (direction == "north")
+       {
+          exec("say Moving north from room.", self);
+       }
+       else if (direction == "south")
+       {
+          exec("say Moving south from room.", self);
+       }
+       else
+       {
+          exec("say Unknown direction: " + direction, self);
+       }
+    }
+    else
+    {
+       exec("say Target is not a room.", self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* '''UNIT_ST_ROOM''' is used to distinguish rooms from other unit types
+* The constant is read-only and cannot be modified at runtime
+* Type checking is commonly done using bitwise operations with other unit type constants
+* Rooms have special properties like '''roomflags''', '''movement''', and '''exit_names[]'''
+* The constant is essential for implementing room-specific behaviors and restrictions
+* Type checking prevents inappropriate operations on non-room units
+* Always validate unit pointers before checking their type
+* Use proper bounds checking when accessing room properties by index
+
+== Error Handling ==
+* Always validate that unit pointers are not null before checking their type
+* Remember that '''UNIT_ST_ROOM''' is a constant, not a variable that can be changed
+* Use proper type checking to avoid runtime errors
+* Be careful with assumptions about unit types - always validate using constants
+* Test type checking logic thoroughly with all possible unit types
+* Consider edge cases where unit type might be unknown or invalid
+* Use appropriate bounds checking when accessing room properties by index
+
+== Related Functions/Fields ==
+* [[type]] - Function to get the type of a unit
+* [[roomflags]] - Room flags field (room only)
+* [[movement]] - Room movement field (room only)
+* [[exit_names]] - Room exit names field (room only)
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character type constant
+* [[UNIT_ST_NPC]] - NPC type constant
+* [[UNIT_ST_OBJ]] - Object type constant
+* [[type]] - Unit type checking function
+* [[roomflags]] - Room flags field documentation
+* [[movement]] - Room movement field documentation
+* [[exit_names]] - Room exit names field documentation

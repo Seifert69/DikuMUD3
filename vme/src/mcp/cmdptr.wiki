@@ -1,0 +1,152 @@
+= cmdptr =
+
+ type: '''cmdptr'''
+
+The '''cmdptr''' type represents a command pointer that provides access to command information in the DikuMUD command system. Command pointers allow DIL programs to traverse the command list, examine command properties, and retrieve specific command details.
+
+== Description ==
+A '''cmdptr''' is a pointer type that references individual commands in the global command table. Each command contains information such as its name, required level, position requirements, command type, and logging level. Command pointers are commonly used for command validation, permission checking, and creating command help systems.
+
+The cmdptr type supports traversal through linked lists using the next and previous fields, allowing iteration through all available commands in the system.
+
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| name || string || Read-only || The command name string
+|-
+| type || integer || Read-only || Command type identifier (social, skill, or regular command)
+|-
+| level || integer || Read-only || Minimum character level required to use the command
+|-
+| loglevel || integer || Read-only || Minimum character level that can see log entries (0 = no logging)
+|-
+| position || integer || Read-only || Minimum position required to use the command
+|-
+| next || cmdptr || Read-only || Pointer to the next command in the command list
+|-
+| previous || cmdptr || Read-only || Pointer to the previous command in the command list
+|}
+
+== Availability ==
+The cmdptr type is used with the following functions and operations:
+* '''chead()''' - Returns the first command in the global command list
+* '''getcommand(s : string)''' - Returns a specific command by name
+* '''getcmd(s : string)''' - Alternative function to get a command by name
+
+== Examples ==
+dilbegin list_all_commands();
+var
+    cmd : cmdptr;
+    info : string;
+    count : integer;
+code
+{
+    cmd := chead();
+    count := 0;
+    
+    while (cmd)
+    {
+        info := cmd.name + " (lvl:" + itoa(cmd.level) + 
+                " pos:" + itoa(cmd.position) + 
+                " type:" + itoa(cmd.type) + ")";
+        act("Command: $2t", A_ALWAYS, self, info, null, TO_CHAR);
+        cmd := cmd.next;
+        count := count + 1;
+    }
+    
+    act("Total commands: $2d", A_ALWAYS, self, itoa(count), null, TO_CHAR);
+    quit;
+} dilend
+
+dilbegin check_command_access(cmd_name : string);
+var
+    cmd : cmdptr;
+code
+{
+    cmd := getcommand(cmd_name);
+    
+    if (not cmd)
+    {
+        act("Command '$2t' does not exist.", A_ALWAYS, self, cmd_name, null, TO_CHAR);
+        quit;
+    }
+    
+    act("Command: $2t", A_ALWAYS, self, cmd.name, null, TO_CHAR);
+    act("Required level: $2d", A_ALWAYS, self, itoa(cmd.level), null, TO_CHAR);
+    act("Required position: $2d", A_ALWAYS, self, itoa(cmd.position), null, TO_CHAR);
+    act("Command type: $2d", A_ALWAYS, self, itoa(cmd.type), null, TO_CHAR);
+    
+    if (cmd.loglevel > 0)
+        act("Log level: $2d", A_ALWAYS, self, itoa(cmd.loglevel), null, TO_CHAR);
+    else
+        act("No logging enabled", A_ALWAYS, self, null, null, TO_CHAR);
+    
+    quit;
+} dilend
+
+dilbegin find_commands_by_type(target_type : integer);
+var
+    cmd : cmdptr;
+    found : string;
+    count : integer;
+code
+{
+    cmd := chead();
+    found := "";
+    count := 0;
+    
+    while (cmd)
+    {
+        if (cmd.type == target_type)
+        {
+            if (length(found) > 0)
+                found := found + ", ";
+            found := found + cmd.name;
+            count := count + 1;
+        }
+        cmd := cmd.next;
+    }
+    
+    if (count > 0)
+        act("Commands of type $2d: $3t", A_ALWAYS, self, 
+            itoa(target_type), found, null, TO_CHAR);
+    else
+        act("No commands found of type $2d", A_ALWAYS, self, 
+            itoa(target_type), null, TO_CHAR);
+    
+    quit;
+} dilend
+
+== Usage Notes ==
+* Command pointers are read-only; you cannot modify command properties through cmdptr
+* The command list is a doubly-linked list, allowing both forward and backward traversal
+* Command types are typically defined as constants in the system (social, skill, regular command)
+* Position requirements use standard position constants (standing, sitting, fighting, etc.)
+* A loglevel of 0 indicates that the command does not generate log entries
+* Use '''chead()''' to get the first command and traverse with '''next''' to iterate through all commands
+* Use '''getcommand()''' or '''getcmd()''' to find a specific command by name
+
+== Error Handling ==
+* Accessing fields on a null cmdptr will result in a DILV_FAIL condition
+* '''getcommand()''' and '''getcmd()''' return null if the command is not found
+* Always check if a cmdptr is valid before accessing its fields
+* Invalid command names passed to '''getcommand()''' will return null pointers
+
+== Related Functions/Fields ==
+* [[chead]] - Get the first command in the global command list
+* [[getcommand]] - Get a specific command by name
+* [[getcmd]] - Alternative function to get a command by name
+* [[cmdptr.name]] - Command name field
+* [[cmdptr.level]] - Required level field
+* [[cmdptr.position]] - Required position field
+* [[cmdptr.type]] - Command type field
+* [[cmdptr.loglevel]] - Log level field
+* [[cmdptr.next]] - Next command in list
+* [[cmdptr.previous]] - Previous command in list
+
+== See Also ==
+* Command position constants
+* Command type constants
+* Unit type documentation
+* DIL pointer types (unitptr, extraptr, zoneptr)

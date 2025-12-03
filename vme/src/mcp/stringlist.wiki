@@ -1,0 +1,228 @@
+= stringlist =
+
+ type: '''stringlist'''
+
+List data type that stores multiple strings in a comma-separated format.
+
+== Description ==
+The '''stringlist''' type is a specialized data structure that stores multiple strings in a comma-separated format. This type is commonly used for storing lists of names, keywords, or other string collections that need to be processed as a group.
+
+Stringlists are defined using curly braces with elements separated by commas, similar to array initialization syntax. They can be accessed by numeric index (0-based) and support various string manipulation operations for adding, removing, and searching elements.
+
+== Examples ==
+=== Basic Stringlist Definition ===
+ dilbegin basic_stringlist();
+ var
+    names : stringlist;
+ code
+ {
+    // Define a stringlist with common names
+    names := {"Alice","Bob","Charlie","Diana"};
+    
+    // Access elements by index
+    exec("say First name: " + names.[0], self);
+    exec("say Second name: " + names.[1], self);
+    exec("say Third name: " + names.[2], self);
+    
+    // Check if a name exists in the list
+    if ("Eve" in names)
+    {
+       exec("say Eve is in the list!", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Dynamic Stringlist Operations ===
+ dilbegin dynamic_strings();
+ var
+    commands : stringlist;
+    i : integer;
+ code
+ {
+    // Start with an empty stringlist
+    commands := {};
+    
+    :start:
+    wait(SFB_CMD, TRUE);
+    
+    // Add command to the list
+    if (argument != "")
+    {
+       addstring(commands, argument);
+    }
+    
+    // Display all commands in the list
+    for (i := 0; i < length(commands); i := i + 1)
+    {
+       exec("say Command #" + itoa(i) + ": " + commands.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Stringlist Searching ===
+ dilbegin string_searcher();
+ var
+    spell_names : stringlist;
+    target_spell : string;
+ code
+ {
+    // Define available spells
+    spell_names := {"fireball","lightning","heal","teleport"};
+    
+    :start:
+    wait(SFB_CMD, command("checkspell"));
+    target_spell := argument;
+    
+    // Check if spell exists in the list
+    if (target_spell in spell_names)
+    {
+       exec("say Spell '" + target_spell + "' is available!", self);
+    }
+    else
+    {
+       exec("say Spell '" + target_spell + "' is not available.", self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Stringlist Modification ===
+ dilbegin list_modifier();
+ var
+    items : stringlist;
+    i : integer;
+ code
+ {
+    // Initialize with some items
+    items := {"sword","shield","armor"};
+    
+    :start:
+    wait(SFB_CMD, command("additem"));
+    
+    // Add new item to the list
+    if (argument != "")
+    {
+       addstring(items, argument);
+    }
+    
+    // Display current list contents
+    for (i := 0; i < length(items); i := i + 1)
+    {
+       exec("say Item #" + itoa(i) + ": " + items.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Stringlist Iteration ===
+ dilbegin list_iterator();
+ var
+    players : stringlist;
+    i : integer;
+ code
+ {
+    // Get all player names in the zone
+    players := {"Alice","Bob","Charlie","Diana","Eve"};
+    
+    // Iterate through all players
+    for (i := 0; i < length(players); i := i + 1)
+    {
+       exec("say Player #" + itoa(i) + ": " + players.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Stringlist with Quest Data ===
+ dilbegin quest_manager();
+ var
+    quest_names : stringlist;
+    quest_status : stringlist;
+ code
+ {
+    // Initialize quest data
+    quest_names := {"dragon_slaying","rescue_princess","find_artifact"};
+    quest_status := {"active","completed","failed"};
+    
+    :start:
+    wait(SFB_CMD, command("queststatus"));
+    
+    // Display all quests and their status
+    for (i := 0; i < length(quest_names); i := i + 1)
+    {
+       exec("say Quest: " + quest_names.[i] + " - Status: " + quest_status.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+=== Stringlist Filtering ===
+ dilbegin list_filter();
+ var
+    all_names : stringlist;
+    filtered_names : stringlist;
+    i : integer;
+ code
+ {
+    // Get all names (could be from various sources)
+    all_names := {"Alice","Bob","Charlie","Diana","Eve","Mallory","Frank","Grace"};
+    
+    // Filter names starting with specific letters
+    filtered_names := {};
+    
+    for (i := 0; i < length(all_names); i := i + 1)
+    {
+       // Check if name starts with 'A' or 'B'
+       if ((left(all_names.[i], 1) == "A") or (left(all_names.[i], 1) == "B"))
+       {
+          addstring(filtered_names, all_names.[i]);
+       }
+    }
+    
+    // Display filtered results
+    for (i := 0; i < length(filtered_names); i := i + 1)
+    {
+       exec("say Filtered: " + filtered_names.[i], self);
+    }
+    
+    goto start;
+ } dilend
+
+== Usage Notes ==
+* Stringlists are defined using curly braces with comma-separated elements
+* Elements are accessed by 0-based numeric index using square bracket notation
+* The '''length()''' function returns the number of elements in a stringlist
+* Stringlists support '''addstring()''' and '''substring()''' operations for modification
+* The '''in''' operator checks if a string exists within the stringlist
+* Stringlists can be modified directly, affecting the original data structure
+* Stringlists are commonly used for storing names, keywords, or collections of related strings
+* When accessing elements by index, ensure the index is within bounds (0 to length-1)
+* Stringlists are saved with DIL programs and restored when the program loads
+
+== Error Handling ==
+* Always validate that the index is within bounds before accessing stringlist elements
+* Be careful with infinite loops when iterating through stringlist elements
+* Remember that stringlist operations modify the original data structure
+* Check if stringlist is null before performing operations on it
+* Use appropriate bounds checking to prevent runtime errors
+* Test stringlist operations thoroughly as they can affect game data
+* Ensure proper initialization of stringlists before use
+
+== Related Functions/Fields ==
+* [[addstring]] - Add strings to a stringlist
+* [[substring]] - Extract substrings from stringlist elements
+* [[in]] - Check if string exists in stringlist
+* [[length]] - Get number of elements in stringlist
+* [[split]] - Split strings into stringlist
+* [[stringlist]] - String list data type
+* [[string]] - String data type for individual elements
+
+== See Also ==
+* [[string]] - String data type documentation
+* [[integer]] - Integer data type documentation
+* [[stringlist]] - String list data type documentation
+* [[substring]] - Substring extraction documentation
+* [[addstring]] - String modification documentation
+* [[in]] - String existence checking documentation

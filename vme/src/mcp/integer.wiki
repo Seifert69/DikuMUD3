@@ -1,0 +1,240 @@
+= integer =
+ type: '''integer'''
+
+The '''integer''' type represents signed 32-bit numeric values used throughout DIL programs for calculations, comparisons, and boolean operations.
+
+== Description ==
+An '''integer''' is a fundamental numeric data type in DIL that supports signed 32-bit values. Integers can be used for mathematical operations, comparisons, boolean logic, and as indexes for arrays and data structures. They are essential for game mechanics calculations, character statistics, experience tracking, and conditional logic.
+
+Integer variables are automatically managed by the DIL runtime and are saved with DIL programs when attached to saved units, making them persistent across game sessions.
+
+== Declaration ==
+Integer variables are declared using the `var` keyword:
+ var
+    my_integer : integer;
+
+Static integer literals can be defined in decimal or hexadecimal format:
+ 42        // Decimal
+ 0x10      // Hexadecimal (equivalent to 16)
+
+== Operations ==
+=== Arithmetic Operators ===
+* `+` (addition)
+* `-` (subtraction/negation)
+* `*` (multiplication)
+* `/` (division)
+
+=== Comparison Operators ===
+* `==` (equal to)
+* `!=` (not equal to)
+* `<` (less than)
+* `>` (greater than)
+* `<=` (less than or equal to)
+* `>=` (greater than or equal to)
+
+=== Logical Operators ===
+* `and` - Logical AND
+* `or` - Logical OR
+* `not` - Logical NOT
+
+=== Bitwise Operators ===
+* `&` (bitwise AND) - Used for flag operations
+* `|` (bitwise OR) - Used for flag operations
+
+== Boolean Usage ==
+In DIL, integers are treated as boolean values:
+* Non-zero values evaluate to TRUE
+* Zero evaluates to FALSE
+
+This allows integers to be used directly in conditional statements:
+ if (some_integer)        // TRUE if non-zero
+ if (not some_integer)   // TRUE if zero
+
+== Examples ==
+=== Basic Arithmetic ===
+dilbegin basic_math();
+var
+    health : integer;
+    damage : integer;
+    remaining : integer;
+code
+{
+    health := 100;
+    damage := 25;
+    remaining := health - damage;
+    
+    sendtext("Health: " + itoa(health) + "<br/>", self);
+    sendtext("Damage: " + itoa(damage) + "<br/>", self);
+    sendtext("Remaining: " + itoa(remaining) + "<br/>", self);
+} dilend
+
+=== Comparison and Logic ===
+dilbegin check_combat_ready();
+var
+    level : integer;
+    health : integer;
+code
+{
+    level := self.level;
+    health := self.hp;
+    
+    if (level >= 10 and health > 50) {
+        sendtext("You are ready for combat!<br/>", self);
+    } else if (level < 10 or health <= 0) {
+        sendtext("You are not ready for combat.<br/>", self);
+    } else {
+        sendtext("You need more health to be ready.<br/>", self);
+    }
+} dilend
+
+=== Experience Calculations ===
+dilbegin calculate_xp_bonus(base_xp : integer, level : integer);
+var
+    bonus : integer;
+    total_xp : integer;
+code
+{
+    // Calculate 10% bonus for high-level characters
+    if (level > 20) {
+        bonus := base_xp / 10;
+    } else {
+        bonus := 0;
+    }
+    
+    total_xp := base_xp + bonus;
+    
+    sendtext("Base XP: " + itoa(base_xp) + "<br/>", self);
+    sendtext("Bonus: " + itoa(bonus) + "<br/>", self);
+    sendtext("Total XP: " + itoa(total_xp) + "<br/>", self);
+} dilend
+
+=== Flag Operations ===
+dilbegin check_player_flags();
+var
+    flags : integer;
+    is_admin : integer;
+    is_immortal : integer;
+code
+{
+    flags := self.pcflags;
+    
+    // Use bitwise AND to check specific flags
+    is_admin := flags & PC_ADMIN;
+    is_immortal := flags & PC_IMMORTAL;
+    
+    if (is_admin) {
+        sendtext("You have admin privileges.<br/>", self);
+    }
+    
+    if (is_immortal) {
+        sendtext("You are immortal.<br/>", self);
+    }
+    
+    if (not (is_admin or is_immortal)) {
+        sendtext("You are a regular player.<br/>", self);
+    }
+} dilend
+
+=== Loop Counter ===
+dilbegin count_items();
+var
+    i : integer;
+    count : integer;
+code
+{
+    count := 0;
+    i := 0;
+    
+    while (i < 10) {
+        count := count + 1;
+        i := i + 1;
+    }
+    
+    sendtext("Counted " + itoa(count) + " items.<br/>", self);
+} dilend
+
+=== Random Number Generation ===
+dilbegin random_damage();
+var
+    base_damage : integer;
+    random_mod : integer;
+    total_damage : integer;
+code
+{
+    base_damage := 10;
+    random_mod := rnd(1, 6);  // Random 1-6
+    total_damage := base_damage + random_mod;
+    
+    act("You deal $2d points of damage!", A_ALWAYS, self, null, null, TO_CHAR);
+    act("$1n deals $2d points of damage!", A_ALWAYS, self, itoa(total_damage), null, TO_ALL);
+} dilend
+
+=== Hexadecimal Usage ===
+dilbegin hex_examples();
+var
+    color_value : integer;
+    mask : integer;
+code
+{
+    // Using hexadecimal for color values
+    color_value := 0xFF0000;  // Blue color
+    mask := 0x00FF00;     // Green mask
+    
+    sendtext("Color value: " + itoa(color_value) + "<br/>", self);
+    sendtext("Green mask: " + itoa(mask) + "<br/>", self);
+    
+    // Extract green component
+    sendtext("Green component: " + itoa((color_value & mask) >> 8) + "<br/>", self);
+} dilend
+
+=== Array Indexing ===
+dilbegin array_access();
+var
+    numbers : intlist;
+    i : integer;
+    sum : integer;
+code
+{
+    numbers := {10, 20, 30, 40, 50};
+    sum := 0;
+    i := 0;
+    
+    while (i < length(numbers)) {
+        sum := sum + numbers.[i];
+        i := i + 1;
+    }
+    
+    sendtext("Sum: " + itoa(sum) + "<br/>", self);
+} dilend
+
+== Usage Notes ==
+* Integers are signed 32-bit values (approximately -2.1 billion to +2.1 billion)
+* Hexadecimal values are prefixed with '0x' for clarity
+* Integer division truncates toward zero
+* Use parentheses to ensure proper operator precedence
+* Boolean operations treat any non-zero value as TRUE
+* Bitwise operations are commonly used for flag manipulation
+* Integer variables are automatically allocated and managed
+* Values are persistent when attached to saved units
+
+== Error Handling ==
+* Division by zero will result in runtime error
+* Overflow can occur with very large calculations
+* Type mismatch errors occur when using string operations on integers
+* Array bounds checking is required for intlist access
+* Invalid hexadecimal format will cause compilation error
+
+== Related Functions/Fields ==
+* [[itoa]] - Convert integer to string
+* [[atoi]] - Convert string to integer
+* [[getinteger]] - Retrieve system integer values
+* [[intlist]] - Integer list type
+* [[rnd]] - Generate random integers
+* [[length]] - Get length of integer lists
+
+== See Also ==
+* String type and operations
+* Floating point operations
+* Boolean logic and control structures
+* Flag manipulation and bitwise operations
+* Array and list operations
