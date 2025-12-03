@@ -8,7 +8,6 @@
 
 #include <map>
 #include <mutex>
-#include <atomic>
 #include <thread>
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
@@ -32,7 +31,6 @@ std::mutex g_cMapHandler_mutex;
 
 // Global WebSocket thread for proper management
 std::thread *g_websocket_thread = nullptr;
-std::atomic<bool> g_websocket_running{false};
 server *g_echo_server = nullptr;  // Global server instance for stopping
 
 void remove_gmap(cConHook *con)
@@ -170,8 +168,6 @@ void runechoserver()
     server echo_server;
     g_echo_server = &echo_server;  // Store global pointer for stopping
 
-    g_websocket_running = true;
-
     try
     {
         // Set logging settings
@@ -199,31 +195,22 @@ void runechoserver()
     catch (websocketpp::exception const &e)
     {
         slog(LOG_OFF, 0, "TLS Exception: %s.", e.what());
-        g_websocket_running = false;
     }
     catch (...)
     {
         slog(LOG_OFF, 0, "TLS Exception other");
-        g_websocket_running = false;
     }
-
-    g_websocket_running = false;
     g_echo_server = nullptr;  // Clean up global pointer
 }
 
 void stop_websocket_server()
 {
-    if (g_websocket_thread && g_websocket_running.load())
+    if (g_websocket_thread && g_echo_server)
     {
         slog(LOG_OFF, 0, "Stopping WebSocket server...");
         
         // Stop the server - this will interrupt echo_server.run()
-        if (g_echo_server)
-        {
-            g_echo_server->stop();
-        }
-        
-        g_websocket_running = false;
+        g_echo_server->stop();
         
         if (g_websocket_thread->joinable())
         {
