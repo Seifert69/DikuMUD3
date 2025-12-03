@@ -49,19 +49,14 @@ void on_close(websocketpp::connection_hdl hdl)
     cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
-    {
-        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
-        it = g_cMapHandler.find(hdl);
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
 
-        if (it != g_cMapHandler.end())
-        {
-            con = it->second;
-            g_cMapHandler.erase(it);
-        }
-    }
+    it = g_cMapHandler.find(hdl);
 
-    if (con)
+    if (it != g_cMapHandler.end())
     {
+        con = it->second;
+        g_cMapHandler.erase(it);
         con->Close(TRUE);
     }
     else
