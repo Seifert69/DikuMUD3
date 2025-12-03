@@ -8,6 +8,8 @@
 
 #include <map>
 #include <mutex>
+#include <atomic>
+#include <thread>
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
 
@@ -27,6 +29,10 @@ std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::c
 
 // Mutex to protect access to the global map
 std::mutex g_cMapHandler_mutex;
+
+// Global WebSocket thread for proper management
+std::thread *g_websocket_thread = nullptr;
+std::atomic<bool> g_websocket_running{false};
 
 void remove_gmap(cConHook *con)
 {
@@ -162,6 +168,8 @@ void runechoserver()
     // Create a server endpoint
     server echo_server;
 
+    g_websocket_running = true;
+
     try
     {
         // Set logging settings
@@ -189,13 +197,47 @@ void runechoserver()
     catch (websocketpp::exception const &e)
     {
         slog(LOG_OFF, 0, "TLS Exception: %s.", e.what());
-        exit(42);
+        g_websocket_running = false;
     }
     catch (...)
     {
         slog(LOG_OFF, 0, "TLS Exception other");
-        exit(42);
+        g_websocket_running = false;
     }
+
+    g_websocket_running = false;
+}
+
+void stop_websocket_server()
+{
+    if (g_websocket_thread && g_websocket_running.load())
+    {
+        slog(LOG_OFF, 0, "Stopping WebSocket server...");
+        // Note: websocketpp doesn't provide a clean stop method, 
+        // but we can signal the thread to exit
+        g_websocket_running = false;
+        
+        if (g_websocket_thread->joinable())
+        {
+            g_websocket_thread->join();
+        }
+        
+        delete g_websocket_thread;
+        g_websocket_thread = nullptr;
+        slog(LOG_OFF, 0, "WebSocket server stopped");
+    }
+}
+
+void start_websocket_server()
+{
+    if (g_websocket_thread)
+    {
+        slog(LOG_OFF, 0, "WebSocket server already running");
+        return;
+    }
+    
+    slog(LOG_OFF, 0, "Starting WebSocket server...");
+    g_websocket_thread = new std::thread(runechoserver);
 }
 
 } // namespace mplex

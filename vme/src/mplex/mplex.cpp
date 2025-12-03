@@ -15,6 +15,7 @@
 #endif
 
 #include "MUDConnector.h"
+#include "echo_server.h"
 #include "essential.h"
 #include "hook.h"
 #include "mplex.h"
@@ -40,6 +41,12 @@ arg_type g_mplex_arg;
 void bye_signal(int signal)
 {
     g_CaptainHook.Close();
+
+    // Stop WebSocket server if running
+    if (mplex::g_mplex_arg.bWebSockets)
+    {
+        mplex::stop_websocket_server();
+    }
 
     slog(LOG_OFF,
          0,
