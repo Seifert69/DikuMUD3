@@ -33,6 +33,7 @@ std::mutex g_cMapHandler_mutex;
 // Global WebSocket thread for proper management
 std::thread *g_websocket_thread = nullptr;
 std::atomic<bool> g_websocket_running{false};
+server *g_echo_server = nullptr;  // Global server instance for stopping
 
 void remove_gmap(cConHook *con)
 {
@@ -167,6 +168,7 @@ void runechoserver()
 {
     // Create a server endpoint
     server echo_server;
+    g_echo_server = &echo_server;  // Store global pointer for stopping
 
     g_websocket_running = true;
 
@@ -206,6 +208,7 @@ void runechoserver()
     }
 
     g_websocket_running = false;
+    g_echo_server = nullptr;  // Clean up global pointer
 }
 
 void stop_websocket_server()
@@ -213,8 +216,13 @@ void stop_websocket_server()
     if (g_websocket_thread && g_websocket_running.load())
     {
         slog(LOG_OFF, 0, "Stopping WebSocket server...");
-        // Note: websocketpp doesn't provide a clean stop method, 
-        // but we can signal the thread to exit
+        
+        // Stop the server - this will interrupt echo_server.run()
+        if (g_echo_server)
+        {
+            g_echo_server->stop();
+        }
+        
         g_websocket_running = false;
         
         if (g_websocket_thread->joinable())
@@ -224,6 +232,7 @@ void stop_websocket_server()
         
         delete g_websocket_thread;
         g_websocket_thread = nullptr;
+        g_echo_server = nullptr;
         slog(LOG_OFF, 0, "WebSocket server stopped");
     }
 }
