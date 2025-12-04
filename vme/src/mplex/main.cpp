@@ -75,9 +75,8 @@ int main(int argc, char *argv[])
     {
         /* MS2020 Websockets test hack */
         slog(LOG_OFF, 0, "Creating WebSocket thread, TLS = %s", mplex::g_mplex_arg.g_bUseTLS ? "true" : "false");
-        std::thread t1(mplex::runechoserver);
-        t1.detach();
-        slog(LOG_OFF, 0, "WebSocket thread created and detached");
+        mplex::start_websocket_server();
+        slog(LOG_OFF, 0, "WebSocket thread created and managed");
         
         // In WebSocket mode, we don't connect to MUD server - WebSocket server handles clients directly
         slog(LOG_OFF, 0, "WebSocket mode: skipping MUD server connection");

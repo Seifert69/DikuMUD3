@@ -7,6 +7,8 @@
 #include <websocketpp/server.hpp>
 
 #include <map>
+#include <mutex>
+#include <thread>
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
 
@@ -24,8 +26,16 @@ namespace mplex
 // Global map for connection handlers
 std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
 
+// Mutex to protect access to the global map
+std::mutex g_cMapHandler_mutex;
+
+// Global WebSocket thread for proper management
+std::thread *g_websocket_thread = nullptr;
+server *g_echo_server = nullptr;  // Global server instance for stopping
+
 void remove_gmap(cConHook *con)
 {
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
@@ -43,6 +53,8 @@ void on_close(websocketpp::connection_hdl hdl)
 {
     cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
+
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
 
     it = g_cMapHandler.find(hdl);
 
@@ -110,14 +122,15 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     cConHook *con = nullptr;
 
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+
     if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {
-        // Crete the con hook
         con = new cConHook();
         con->SetWebsocket(s, hdl);
         g_cMapHandler[hdl] = con;
 
-        // Get the IP address
+        // it's a new connection - Get the IP address
         const auto theip = s->get_con_from_hdl(hdl);
         boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
         std::string ip_as_string{theadr.to_string()};
@@ -139,8 +152,11 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
         *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
         slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
     }
+    else
+    {
+        con = g_cMapHandler[hdl];
+    }
 
-    con = (cConHook *)g_cMapHandler[hdl];
     assert(con);
 
     con->m_pFptr(con, msg->get_payload().c_str());
@@ -150,6 +166,7 @@ void runechoserver()
 {
     // Create a server endpoint
     server echo_server;
+    g_echo_server = &echo_server;  // Store global pointer for stopping
 
     try
     {
@@ -178,13 +195,49 @@ void runechoserver()
     catch (websocketpp::exception const &e)
     {
         slog(LOG_OFF, 0, "TLS Exception: %s.", e.what());
-        exit(42);
     }
     catch (...)
     {
         slog(LOG_OFF, 0, "TLS Exception other");
-        exit(42);
     }
+    g_echo_server = nullptr;  // Clean up global pointer
+}
+
+void stop_websocket_server()
+{
+    if (g_echo_server)
+    {
+        slog(LOG_OFF, 0, "Stopping WebSocket server...");
+        
+        // Stop the server - this will interrupt echo_server.run()
+        g_echo_server->stop();
+        g_echo_server = nullptr;
+        slog(LOG_OFF, 0, "Echo server stopped");
+    }
+
+    if (g_websocket_thread)
+    {
+        if (g_websocket_thread->joinable())
+        {
+            g_websocket_thread->join();
+        }
+        
+        delete g_websocket_thread;
+        g_websocket_thread = nullptr;
+        slog(LOG_OFF, 0, "WebSocket server stopped");
+    }
+}
+
+void start_websocket_server()
+{
+    if (g_websocket_thread)
+    {
+        slog(LOG_OFF, 0, "WebSocket server already running");
+        return;
+    }
+    
+    slog(LOG_OFF, 0, "Starting WebSocket server...");
+    g_websocket_thread = new std::thread(runechoserver);
 }
 
 } // namespace mplex
