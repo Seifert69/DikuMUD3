@@ -21,15 +21,55 @@ This field is available on the following types:
 * zoneptr (Zone pointer)
 
 == Examples ==
-dilbegin unique show_room_title();
-var
-    room : unitptr;
-code
-{
-    // Get the current room's title
-    room := self.outside;
-    sendto("You are in: " + room.title + "&n", self);
-} dilend
+=== Show Room Title ===
+ dilbegin show_room_title();
+ var
+     room : unitptr;
+ code
+ {
+     // Get current room's title
+     room := self.outside;
+     sendtext("You are in: " + room.title + "<br/>", self);
+ } dilend
+
+=== Set Custom Title ===
+ dilbegin set_custom_title(new_title : string);
+ var
+     pc : unitptr;
+ code
+ {
+     // Set a custom title for a player
+     pc := self;
+     pc.title := new_title;
+     sendtext("Your title has been changed to: " + pc.title + "<br/>", pc);
+ } dilend
+
+=== Zone Information ===
+ dilbegin zone_info();
+ var
+     z : zoneptr;
+ code
+ {
+     // Display zone information
+     z := zhead();
+     while (z)
+     {
+         sendtext("Zone: " + z.name + " - " + z.title + "<br/>", self);
+         z := z.next;
+     }
+ } dilend
+
+=== Engrave Item ===
+ dilbegin engrave_item(item : unitptr, engraving : string);
+ var
+     current_title : string;
+ code
+ {
+     // Add engraving to an item's title
+     current_title := item.title;
+     item.title := current_title + " (engraved: '" + engraving + "')";
+     act("$1n engraves something on $2n.", A_ALWAYS, self, item, null, TO_ROOM);
+ } dilend
 
 dilbegin unique set_custom_title(new_title : string);
 var

@@ -1,63 +1,144 @@
 = dilcall =
+ function: '''dilcall'''(template_name : string, unit : unitptr, priority : integer, argument : string) : integer;
 
-'''dilcall''' is a DIL function that dynamically calls another DIL template by name.
+The '''dilcall''' function dynamically calls a DIL template by name.
 
-== Syntax ==
- integer := dilcall( template_name : string, unit : unitptr, priority : integer, argument : string );
+== Description ==
+The dilcall function allows dynamic invocation of DIL templates by name at runtime. This enables flexible program flow and modular DIL design where specific DIL programs can be called based on conditions or user input.
 
 == Parameters ==
-; template_name
-: The name of the DIL template to call
-; unit
-: The unit that will be the "self" context in the called DIL
-; priority
-: Priority level for the called DIL program
-; argument
-: String argument to pass to the called DIL program
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| template_name || string || The name of the DIL template to call
+|-
+| unit || unitptr || The unit that will be the "self" context in the called DIL
+|-
+| priority || integer || Priority level for the called DIL program
+|-
+| argument || string || String argument to pass to the called DIL program
+|}
 
 == Return Value ==
 Returns an integer:
-* -1 if the template was found and the call was initiated
-* Error value if the template was not found or parameters were invalid
+* '''1''' (TRUE) - If the template was found and call was initiated
+* '''0''' (FALSE) - If the template was not found or call failed
+* '''Error value''' - If parameters are invalid
 
-== Description ==
-The dilcall function allows dynamic invocation of DIL templates by name at runtime. This enables flexible program flow and modular DIL design.
+== Examples ==
+=== Basic Template Call ===
+ dilbegin call_template();
+ var
+    result : integer;
+ code
+ {
+    result := dilcall("healing_spell", self, 0, "minor");
+    
+    if (result == 1) {
+       act("Healing spell template called successfully.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to call healing spell template.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
-When called successfully:
-* The specified DIL template is located and instantiated
-* A new execution frame is pushed onto the current DIL program's stack
-* The called template executes with the provided unit as its "self" context
-* The current DIL program pauses until the called template completes
+=== Priority-Based Call ===
+ dilbegin priority_call();
+ var
+    result : integer;
+ code
+ {
+    result := dilcall("combat_action", self, 5, "attack");
+    
+    if (result == 1) {
+       act("High priority combat action template called.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to call combat action template.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Argument Passing ===
+ dilbegin argument_call();
+ var
+    result : integer;
+ code
+ {
+    result := dilcall("message_handler", self, 0, "Hello " + activator.name);
+    
+    if (result == 1) {
+       act("Message handler template called with argument.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to call message handler template.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Dynamic Quest System ===
+ dilbegin quest_router();
+ var
+    quest_type : string;
+    result : integer;
+ code
+ {
+    quest_type := argument;
+    
+    if (quest_type == "delivery") {
+       result := dilcall("delivery_quest", self, 0, "");
+    } else if (quest_type == "rescue") {
+       result := dilcall("rescue_quest", self, 0, "");
+    } else if (quest_type == "exploration") {
+       result := dilcall("exploration_quest", self, 0, "");
+    } else {
+       result := dilcall("default_quest", self, 0, "");
+    }
+    
+    if (result == 1) {
+       act("Quest template '" + quest_type + "' activated.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Unknown quest type: " + quest_type, A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Error Handling ===
+ dilbegin template_error();
+ var
+    result : integer;
+ code
+ {
+    result := dilcall("nonexistent", self, 0, "");
+    
+    if (result == 0) {
+       act("Template not found error handled correctly.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Unexpected error in template call.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
 == Usage Notes ==
 * The template name must be a valid DIL template that exists in the zone
-* If the template is not found, an error is logged and the function returns an error value
-* The function is commonly used for:
-** Dynamic quest system routing
-** Modular weapon/armor generation systems
-** Event-driven programming
-** Plugin-style architecture
+* The called DIL program runs with the specified unit as its "self" context
+* Priority levels control execution order for multiple pending calls
+* Arguments are passed as strings to the called DIL program
+* The function enables modular and dynamic DIL programming
+* Commonly used for quest systems, event handling, and plugin architectures
 
-== Example ==
- dilbegin constants();
- var
-     slWeapons : stringlist global slWeapons@randomt;
-     i : integer;
- code
- {
-     // weapon id, cost, weight, main function, main kind, sec function, sec kind, names
-     // Note that main kind, e.g. "blade" is also used to dilcall DIL func: "mat"+kind+"Idx" 
-     // e.g. matBladeIndex is used to get main material of swords.
-     slWeapons := {
-         QUOTE(WPN_BATTLE_AXE), "160", "16", "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "battle axe//axe",
-         QUOTE(WPN_LONG_SWORD), "100", "8", "setWpnSharp@randomt", "blade", "setWpnHilt@randomt", "hilt", "long sword//sword"
-     };
-     
-     // Example of dynamic function call
-     i := dilcall("setWpnSharp@randomt", self, 0, "iron");
- } dilend
+== Error Handling ==
+The function performs validation:
+* '''Template validation''' - Ensures template name exists in zone
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Parameter validation''' - Validates all parameter types
+* '''Security check''' - Prevents unauthorized template invocation
+* '''Priority validation''' - Ensures priority is within valid range
+
+== Related Functions ==
+* [[dilcopy]] - Create a copy of a DIL template
+* [[dilfind]] - Find DIL programs on units
+* [[dildestroy]] - Destroy DIL programs
 
 == See Also ==
-* [[dilcopy]] - Create a copy of a DIL template
-* [[exec]] - Execute commands
-* [[return]] - Return from DIL functions
+* [[DIL templates]] - Template system and modular programming
+* [[dynamic programming]] - Runtime code generation and execution
+* [[quest system]] - Dynamic quest and event handling

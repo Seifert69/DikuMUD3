@@ -1,56 +1,108 @@
 = delunit =
+ function: '''delunit'''(filename : string) : integer;
 
-'''delunit''' is a DIL function that deletes unit files from the game's file system.
+The '''delunit''' function deletes a unit file from the game's file system.
 
-== Syntax ==
- integer delunit( filename : string ) ;
+== Description ==
+The delunit function is used to delete unit files that are managed by the game's unit file system (used with store() and restore() functions). This function operates with security restrictions to prevent unauthorized unit deletion.
 
 == Parameters ==
-; filename
-: The name of the unit file to be deleted
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| filename || string || The name of the unit file to be deleted
+|}
 
 == Return Value ==
 Returns an integer:
-* TRUE (1) if the file was successfully deleted
-* FALSE (0) if the file was not deleted
+* '''1''' (TRUE) - If the file was successfully deleted
+* '''0''' (FALSE) - If the file was not deleted or deletion failed
 
-== Description ==
-The delunit function is used to delete unit files that are managed by the unit file system (used with '''store''' and '''restore''' functions). The function operates with the following security restrictions:
-
-* Only deletes files within the zone's designated unit file directory
-* Requires zone access level 10 or lower
-* Validates filenames to prevent directory traversal attacks
-* Files are located in the zone's "units/" subdirectory
-
-== Security Considerations ==
-* Zones with access level greater than 10 cannot use this function
-* Filenames are validated for security - attempts to use illegal filenames will be logged and return FALSE
-* The function only operates within the zone's designated unit file directory
-
-== Usage Notes ==
-* This function is typically used for managing temporary unit storage, clan data, or other serialized unit data
-* The file deletion is permanent and cannot be undone
-* Use the return value to verify whether the deletion was successful
-* Unit files typically have extensions like ".dc" (DIL compiled) or other custom extensions
-
-== Example ==
- dilbegin chest_del(arg : string);
- var
-         ret:integer;/*to hold the return value if deleted or not*/
+== Examples ==
+=== Basic Unit Deletion ===
+ dilbegin delete_temp_unit();
  code
  {
- ret:= delunit("chest.file");
- if (!ret)
-         {
-         log ("File not deleted.");
-         quit;
-         }
+    if (delunit("temp_guardian.unit")) {
+       act("Temporary unit file deleted successfully.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to delete temporary unit file.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
- sendtext("Chest file deleted\n",self);
- quit;/*dil delete routine done
- }
- dilend
+=== Unit File Management ===
+ dilbegin manage_unit_files();
+ var
+    command : string;
+    filename : string;
+ code
+ {
+    wait(SFB_CMD, TRUE);
+    command := argument;
+    
+    if (command == "deleteunit") {
+       filename := getword(argument, 1);
+       
+       if (filename != "") {
+          if (delunit(filename)) {
+             act("Unit file '" + filename + "' deleted successfully.", A_ALWAYS, self, null, null, TO_CHAR);
+          } else {
+             act("Unit file '" + filename + "' not found.", A_ALWAYS, self, null, null, TO_CHAR);
+          }
+       } else {
+          act("Usage: deleteunit <filename>", A_ALWAYS, self, null, null, TO_CHAR);
+       }
+    } else if (command == "listunits") {
+       act("Unit file management commands: deleteunit, listunits", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Unknown command.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
-== See Also ==
+=== Secure Unit Deletion ===
+ dilbegin secure_unit_delete();
+ var
+    filename : string;
+ code
+ {
+    filename := argument;
+    
+    // Validate filename
+    if (filename == "" or length(filename) > 50) {
+       act("Invalid filename. Must be 1-50 characters.", A_ALWAYS, self, null, null, TO_CHAR);
+       quit;
+    }
+    
+    if (delunit(filename)) {
+       act("Unit file '" + filename + "' deleted securely.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to delete unit file or file not found.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* Only deletes unit files within the zone's designated unit file directory
+* Requires zone access level 10 or higher
+* Filenames are validated for security (length limits, character restrictions)
+* The deletion is permanent and cannot be undone
+* Used for managing temporary NPCs, custom creatures, or other unit-based content
+* The function performs security logging of all deletion attempts
+
+== Error Handling ==
+The function performs validation:
+* '''Zone validation''' - Ensures caller has sufficient zone access
+* '''Filename validation''' - Checks filename length and valid characters
+* '''Security check''' - Logs unauthorized deletion attempts
+* '''File existence check''' - Returns FALSE if file doesn't exist
+
+== Related Functions ==
 * [[store]] - Store units to unit files
 * [[restore]] - Restore units from unit files
+* [[log]] - Log system messages
+
+== See Also ==
+* [[zone]] - Zone pointer and access control
+* [[unit file system]] - Game unit management

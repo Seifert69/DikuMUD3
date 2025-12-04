@@ -1,5 +1,5 @@
 = setroomexit =
-procedure: '''setroomexit'''(room : unitptr, direction : integer, roomto : unitptr);
+ procedure: '''setroomexit'''(room : unitptr, direction : integer, roomto : unitptr);
 
 The setroomexit procedure creates or modifies an exit from a room to another room in a specified direction.
 

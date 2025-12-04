@@ -1,9 +1,10 @@
 = ability_levels =
+ field: integer '''.ability_levels'''[ability_index] (Read-only)
 
 The '''ability_levels''' field is a read-only array field available on player character units that provides access to the training level requirements for abilities.
 
-== Syntax ==
- player.ability_levels[ability_index]
+== Description ==
+This field provides access to the training level requirements for abilities. The requirements are stored in an array indexed by ability constants.
 
 == Field Access ==
 {| class="wikitable"
@@ -12,17 +13,16 @@ The '''ability_levels''' field is a read-only array field available on player ch
 | player.ability_levels[ability_index] || integer || The training level requirement for specified ability
 |}
 
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
 == Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
 | ability_index || integer || Ability index (ABIL_* constant)
 |}
-
-== Return Value ==
-Returns an integer representing the training level requirement:
-* '''integer''' - The training level requirement value for the specified ability
-* '''fail''' - If player unit is invalid, not a PC, or ability index is out of range
 
 == Ability Constants ==
 The ability_index parameter accepts any of the ABIL_* constants defined in values.h or vme.h:
@@ -65,27 +65,6 @@ The ability_index parameter accepts any of the ABIL_* constants defined in value
     quit;
  } dilend
 
-=== Level Requirements Analysis ===
- dilbegin analyze_level_requirements(player : unitptr);
- var
-    i : integer;
-    total_levels : integer;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    total_levels := 0;
-    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
-       send("Ability " + itoa(i) + " level requirement: " + itoa(player.ability_levels[i]));
-       total_levels := total_levels + player.ability_levels[i];
-    }
-    send("Total level requirements for all abilities: " + itoa(total_levels));
-    quit;
- } dilend
-
 === Training Eligibility Check ===
  dilbegin can_train_ability(player : unitptr, ability : integer);
  var
@@ -111,65 +90,6 @@ The ability_index parameter accepts any of the ABIL_* constants defined in value
     } else {
        send("You need to be level " + itoa(required_level) + " to train this ability.");
        send("Current level: " + itoa(current_level));
-    }
-    quit;
- } dilend
-
-=== Level Comparison ===
- dilbegin compare_level_requirements(player1 : unitptr, player2 : unitptr);
- var
-    i : integer;
- code
- {
-    if (player1.type != UNIT_ST_PC or player2.type != UNIT_ST_PC) {
-       send("Both units must be players.");
-       quit;
-    }
-    
-    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
-       if (player1.ability_levels[i] != player2.ability_levels[i]) {
-          send("Ability " + itoa(i) + " level requirements differ:");
-          send("  Player 1: " + itoa(player1.ability_levels[i]));
-          send("  Player 2: " + itoa(player2.ability_levels[i]));
-       }
-    }
-    quit;
- } dilend
-
-=== Training System Integration ===
- dilbegin training_master_check(player : unitptr, ability : integer);
- var
-    required_level : integer;
-    player_level : integer;
-    ability_cost : integer;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    if (ability < 0 or ability >= ABIL_TREE_MAX) {
-       send("Invalid ability index.");
-       quit;
-    }
-    
-    required_level := player.ability_levels[ability];
-    player_level := player.level;
-    ability_cost := player.ability_costs[ability];
-    
-    send("Training Requirements:");
-    send("  Level: " + itoa(required_level) + " (You are: " + itoa(player_level) + ")");
-    send("  Cost: " + itoa(ability_cost) + " gold coins");
-    
-    if (player_level >= required_level) {
-       if (player.money[0] >= ability_cost) {
-          send("You meet all requirements for this training.");
-       } else {
-          send("You meet the level requirement but lack the gold.");
-       }
-    } else {
-       send("You don't meet the level requirement.");
     }
     quit;
  } dilend

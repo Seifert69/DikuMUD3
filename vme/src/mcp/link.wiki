@@ -1,20 +1,21 @@
 = link =
 
+function: '''link'''(u : unitptr, t : unitptr);
+
 == Description ==
 
 The '''link''' procedure moves a unit into another unit's hierarchy. This function automatically unequips items if they are currently equipped before moving them.
 
-== Syntax ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || Unit to link (the unit being moved)
+|-
+| t || unitptr || Unit to link into (the destination unit)
+|}
 
- link ( u : unitptr, t : unitptr )
-
-; u : unitptr
-: Unit to link (the unit being moved)
-
-; t : unitptr
-: Unit to link into (the destination unit)
-
-== Behavior ==
+== Usage Notes ==
 
 The link procedure performs the following operations:
 
@@ -24,7 +25,7 @@ The link procedure performs the following operations:
 * Prevents recursive linking (a unit cannot be linked into itself or its own contents)
 * Prevents linking rooms into rooms
 
-== Example Usage ==
+== Examples ==
 
  dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
  var
@@ -48,15 +49,16 @@ The link procedure performs the following operations:
     return;
  } dilend
 
-== Notes ==
+== Error Handling ==
 
-* This procedure is commonly used for moving objects between inventories, rooms, or containers
-* The automatic unequipping ensures items are properly removed before being moved
-* Recursive linking is prevented to avoid infinite loops in the unit hierarchy
-* Room-to-room linking is not allowed
+* Returns '''fail''' if either unitptr is null
+* Returns '''fail''' if attempting recursive linking
+* Returns '''fail''' if attempting to link rooms into rooms
 
-== See Also ==
+== Related Functions/Fields ==
 
 * [[unequip]]
 * [[addequip]]
 * [[equipment]]
+
+== See Also == 

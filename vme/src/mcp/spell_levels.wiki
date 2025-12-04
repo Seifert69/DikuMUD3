@@ -220,4 +220,5 @@ Common error scenarios:
 * [[Character advancement]] - Information about spell progression systems
 * [[Experience system]] - Experience point and spell level mechanics
 * [[Training systems]] - Spell training and advancement procedures
+
 * [[Magical abilities]] - Information about spell systems and magic

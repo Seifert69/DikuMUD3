@@ -1,81 +1,110 @@
 = argument =
+ field: string '''argument''' (Read-only)
+
+The '''argument''' field contains the text that follows the command name when a player types a command.
 
 == Description ==
 Returns the argument string of the command that triggered the DIL program. This variable contains the text that follows the command name when a player types a command.
 
-== Syntax ==
- argument
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| argument || string || The argument string provided by the player after the command name
+|}
 
 == Return Value ==
-: string
-: The argument string provided by the player after the command name. Returns an empty string if no argument was provided.
+Returns a string:
+* '''string''' - The argument string provided by the player after the command name
+* '''empty string''' - If no argument was provided
 
 == Examples ==
- dilbegin example_command();
- var
-  txt : string;
+=== Basic Command Processing ===
+ dilbegin hello_command();
  code
  {
-  :start:
-  wait(SFB_CMD, command("hello"));
-  txt := argument;
-  if (txt == "")
-  {
-    sendtext("Hello there!<br/>", activator);
-  }
-  else
-  {
-    sendtext("Hello " + txt + "!<br/>", activator);
-  }
+    wait(SFB_CMD, command("hello"));
+    if (argument == "") {
+       send("Hello there!");
+    } else {
+       send("Hello " + argument + "!");
+    }
+    quit;
  } dilend
 
- dilbegin give_item();
+=== Target Selection ===
+ dilbegin give_command();
  var
-  target_name : string;
-  target : unitptr;
+    target_name : string;
+    target : unitptr;
  code
  {
-  :start:
-  wait(SFB_CMD, command("give") and (self == target));
-  target_name := argument;
-  target := findunit(self.outside, target_name, FIND_UNIT_SURRO, null);
-  if (target.type == UNIT_ST_PC)
-  {
-    sendtext("You give the item to " + target.name + ".<br/>", activator);
-  }
-  else
-  {
-    sendtext("No one here by that name.<br/>", activator);
-  }
+    wait(SFB_CMD, command("give") and (self == target));
+    target_name := argument;
+    target := findunit(self.outside, target_name, FIND_UNIT_SURRO, null);
+    if (target != null and target.type == UNIT_ST_PC) {
+       send("You give item to " + target.name + ".");
+    } else {
+       send("No one here by that name.");
+    }
+    quit;
  } dilend
 
- dilbegin engrave();
+=== Text Validation ===
+ dilbegin engrave_command();
  var
-  text : string;
-  maxlength : integer;
+    text : string;
+    maxlength : integer;
  code
  {
-  :brieftext:
-  wait(SFB_DONE, command("say"));
-  text := argument;
-  maxlength := 20;
-  if (length(text) > maxlength)
-  {
-    exec("say That text is too long!", self);
-    goto brieftext;
-  }
-  exec("say Engraving: '" + text + "'", self);
+    wait(SFB_DONE, command("say"));
+    text := argument;
+    maxlength := 20;
+    if (length(text) > maxlength) {
+       exec("say That text is too long!", self);
+    } else {
+       exec("say Engraving: '" + text + "'", self);
+    }
+    quit;
  } dilend
 
-== Notes ==
+=== Argument Parsing ===
+ dilbegin parse_arguments();
+ var
+    words : stringptr;
+    first_word : string;
+ code
+ {
+    wait(SFB_CMD, command("tell"));
+    words := getwords(argument);
+    first_word := getword(words, 0);
+    send("First word of argument: " + first_word);
+    quit;
+ } dilend
+
+== Usage Notes ==
 * The argument variable is only meaningful when used within DIL programs triggered by commands (SFB_CMD)
 * It contains everything after the command name, including spaces
 * If no argument is provided, argument returns an empty string
 * Commonly used to parse player input for commands like "say", "tell", "give", etc.
 * The argument can be processed using string functions like getwords(), split(), etc.
+* This field is read-only and automatically set by the DIL runtime system
+
+== Error Handling ==
+The field performs validation:
+* '''Automatic validation'' - The field is automatically set by the DIL runtime
+* '''Context validation'' - Only meaningful when accessed within command-triggered DIL programs
+* '''Type validation'' - Always returns a string (may be empty)
+
+== Related Fields ==
+* [[command]] - The command that was executed
+* [[activator]] - The unit that executed the command
+
+== Related Functions ==
+* [[getwords]] - For parsing arguments into words
+* [[split]] - For splitting arguments by delimiter
+* [[length]] - For checking argument length
 
 == See Also ==
-* command - For checking which command was used
-* SFB_CMD - For command-based DIL triggers
-* getwords - For parsing arguments into words
-* split - For splitting arguments by delimiter
+* [[SFB_CMD]] - Command activation wait flag
+* [[wait]] - Function for waiting on specific conditions

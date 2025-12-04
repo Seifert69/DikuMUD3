@@ -1,10 +1,9 @@
 = notes =
 
-== Syntax ==
- field: '''.notes''' (Read/Write)
+ field: string '''.notes''' (Read/Write)
 
 == Description ==
-The '''notes''' field stores and retrieves zone-specific notes or documentation as a string. This field provides a way to attach descriptive text, instructions, or other information to zones, allowing zone builders and administrators to store important details about specific areas or zone configurations.
+The '''notes''' field stores zone-specific documentation as a string.
 
 == Field Access ==
 {| class="wikitable"
@@ -20,97 +19,22 @@ This field is available on the following unit types:
 * zoneptr (Zone pointer)
 
 == Examples ==
- dilbegin zone_info_display(zone : zoneptr);
- var
-    current_notes : string;
-    zone_name : string;
+ dilbegin display_zone_notes(zone : zoneptr);
  code
  {
-    if (zone.type != UNIT_ST_ROOM)
-    {
-       exec("say That's not a zone!", self);
-       return;
-    }
-    
-    zone_name := zone.name;
-    current_notes := zone.notes;
-    
-    exec("say Zone: " + zone_name, self);
-    exec("say Notes: " + current_notes, self);
+    exec("say Zone notes: " + zone.notes, self);
  } dilend
 
- dilbegin set_zone_notes();
+ dilbegin set_admin_notes();
  var
-    target_zone : zoneptr;
-    new_notes : string;
+    admin_zone : zoneptr;
  code
  {
-    target_zone := findroom("admin_zone@midgaard");
-    
-    if (target_zone != null)
+    admin_zone := findroom("admin@midgaard");
+    if (admin_zone != null)
     {
-       // Set comprehensive zone notes
-       new_notes := "This zone is for administrative use only." + "\n" +
-                   "Access restricted to authorized personnel." + "\n" +
-                   "Contact zone administrator for modifications.";
-       
-       target_zone.notes := new_notes;
-       exec("say Zone notes updated.", self);
-    }
-    else
-    {
-       exec("say Could not find admin zone.", self);
-    }
- } dilend
-
- dilbegin zone_note_reader();
- var
-    current_zone : zoneptr;
-    note_text : string;
-    note_parts : stringlist;
-    i : integer;
- code
- {
-    current_zone := findroom("example_zone@midgaard");
-    
-    if (current_zone != null)
-    {
-       note_text := current_zone.notes;
-       
-       // Split notes into lines for processing
-       note_parts := split(note_text, "\n");
-       
-       exec("say Zone Notes:", self);
-       i := 0;
-       while (i < length(note_parts))
-       {
-          exec("say Line " + itoa(i) + ": " + note_parts.[i], self);
-          i := i + 1;
-       }
-    }
-    else
-    {
-       exec("say No zone found.", self);
-    }
- } dilend
-
- dilbegin create_zone_with_notes();
- var
-    new_zone : zoneptr;
-    initial_notes : string;
- code
- {
-    // Create a new zone with initial notes
-    new_zone := findroom("new_zone@midgaard");
-    
-    if (new_zone != null)
-    {
-       initial_notes := "Created: " + mudyear + "/" + mudmonth + "/" + mudday + "\n" +
-                       "Purpose: Player starting area" + "\n" +
-                       "Status: Under development";
-       
-       new_zone.notes := initial_notes;
-       exec("say New zone created with notes.", self);
+       admin_zone.notes := "Administrative zone - restricted access";
+       exec("say Notes updated.", self);
     }
  } dilend
 
@@ -144,4 +68,4 @@ This field is available on the following unit types:
 * Zone management functions and commands
 * Zone pointer fields: '''name''', '''zoneidx''', '''resetmode''', '''resettime'''
 * Zone constants and reset modes from values.h
-* Administrative zone building tools
+* Administrative zone building tools 

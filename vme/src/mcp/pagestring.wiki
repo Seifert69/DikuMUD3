@@ -1,7 +1,5 @@
 = pagestring =
-
-== Syntax ==
-'''pagestring'''(text : string, target : unitptr)
+ function: void '''pagestring'''(text : string, target : unitptr);
 
 == Description ==
 The '''pagestring'''() function displays a formatted text string to a player character, typically used for showing multi-page information that doesn't scroll off the screen. This function formats the text for proper display and waits for the player to press enter before continuing.
@@ -45,84 +43,6 @@ The function automatically handles pagination and formatting for optimal display
     pagestring(help_text, self);
  } dilend
 
-=== Clan Information Display ===
- dilbegin show_clan_info();
- var
-    clan_name : string;
-    clan_members : stringlist;
-    member : unitptr;
-    count : integer;
-    page_text : string;
- 
- code
- {
-    clan_name := self.extra.[CLAN_NAME].descr;
-    clan_members := self.extra.[CLAN_MEMBERS].descr;
-    
-    page_text := "Clan: " + clan_name + "&n&n";
-    page_text := page_text + "Members:&n&n";
-    
-    count := 0;
-    foreach (UNIT_ST_PC, member)
-    {
-       if (member.extra.[CLAN_NAME].descr == clan_name)
-       {
-          count := count + 1;
-          page_text := page_text + "  " + member.name + "&n&n";
-       }
-    }
-    
-    page_text := page_text + "&nTotal members: " + itoa(count) + "&n&n";
-    page_text := page_text + "Press ENTER to continue...";
-    
-    pagestring(page_text, self);
- } dilend
-
-=== Skill List Display ===
- dilbegin show_skills();
- var
-    skill_text : string;
-    i : integer;
- 
- code
- {
-    skill_text := "Your Skills:&n&n";
-    
-    i := 0;
-    while (i < 10)
-    {
-       skill_text := skill_text + "  " + self.skills.[i] + " (Level " + itoa(self.abilities.[ABIL_SKILL]) + ")&n&n";
-       i := i + 1;
-    }
-    
-    skill_text := skill_text + "&nPress ENTER to continue...";
-    
-    pagestring(skill_text, self);
- } dilend
-
-=== Equipment Display ===
- dilbegin show_equipment();
- var
-    equip_text : string;
-    slot : integer;
- 
- code
- {
-    equip_text := "Your Equipment:&n&n";
-    
-    for (slot := 0; slot < 20; slot := slot + 1)
-    {
-       if (equipment(self, slot) != null)
-       {
-          equip_text := equip_text + "  Slot " + itoa(slot) + ": " + equipment(self, slot).title + "&n&n";
-       }
-    }
-    
-    equip_text := equip_text + "&nPress ENTER to continue...";
-    
-    pagestring(equip_text, self);
- } dilend
-
 === Score Display ===
  dilbegin show_score();
  var
@@ -140,59 +60,6 @@ The function automatically handles pagination and formatting for optimal display
     score_text := score_text + "&nPress ENTER to continue...";
     
     pagestring(score_text, self);
- } dilend
-
-=== Multi-Page Document ===
- dilbegin show_document();
- var
-    page_num : integer;
-    total_pages : integer;
-    page_text : string;
- 
- code
- {
-    total_pages := 5;
-    
-    for (page_num := 1; page_num <= total_pages; page_num := page_num + 1)
-    {
-       page_text := "=== PAGE " + itoa(page_num) + " of " + itoa(total_pages) + " ===&n&n";
-       page_text := page_text + "This is page " + itoa(page_num) + " of the documentation.&n&n";
-       page_text := page_text + "Press ENTER to continue to next page...&n&n";
-       
-       pagestring(page_text, self);
-       pause; // Wait for player to press enter
-    }
-    
-    page_text := "=== End of Document ===&n&n";
-    page_text := page_text + "Thank you for reading!&n&n";
-    
-    pagestring(page_text, self);
- } dilend
-
-=== Interactive Menu ===
- dilbegin interactive_menu();
- var
-    choice : integer;
-    menu_text : string;
- 
- code
- {
-    :menu_start:
-    menu_text := "Main Menu:&n&n";
-    menu_text := menu_text + "1. Help&n&n";
-    menu_text := menu_text + "2. Skills&n&n";
-    menu_text := menu_text + "3. Equipment&n&n";
-    menu_text := menu_text + "4. Score&n&n";
-    menu_text := menu_text + "5. Quit&n&n";
-    menu_text := menu_text + "Enter your choice (1-5): ";
-    
-    pagestring(menu_text, self);
-    
-    // Wait for player input (simplified for example)
-    pause;
-    
-    // In a real implementation, you would parse the player's input
-    // and branch accordingly
  } dilend
 
 == Error Handling ==

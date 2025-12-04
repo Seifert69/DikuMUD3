@@ -31,70 +31,24 @@ The '''can_carry''' function determines whether a character can carry a specifie
   result : integer;
  code
  {
-  :start:
-  sword := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
-  if (sword == null)
-  {
-    sendtext("No sword found here.<br/>", self);
-    goto done;
-  }
-  
-  result := can_carry(activator, sword, 1);
-  
-  if (result == 1)
-    exec("say Your hands are full!", self);
-  else if (result == 2)
-    exec("say You can't carry that much weight.", self);
-  else
-    exec("give " + sword.name + " to " + activator.name, self);
-  
-  :done:
- } dilend
-
- dilbegin multiple_item_check();
- var
-  item1 : unitptr;
-  item2 : unitptr;
-  item3 : unitptr;
-  can_take1 : integer;
-  can_take2 : integer;
-  can_take3 : integer;
- code
+ :start:
+ sword := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
+ if (sword == null)
  {
-  :start:
-  item1 := findunit(self.outside, "sword", FIND_UNIT_SURRO, null);
-  item2 := findunit(self.outside, "shield", FIND_UNIT_SURRO, null);
-  item3 := findunit(self.outside, "armor", FIND_UNIT_SURRO, null);
-  
-  can_take1 := can_carry(self, item1, 1);
-  can_take2 := can_carry(self, item2, 1);
-  can_take3 := can_carry(self, item3, 1);
-  
-  if (can_take1 + can_take2 + can_take3 == 0)
-    sendtext("You can carry all three items.<br/>", self);
-  else
-    sendtext("You cannot carry all three items.<br/>", self);
- } dilend
-
- dilbegin inventory_management();
- var
-  coins : unitptr;
-  quantity : integer;
-  i : integer;
- code
- {
-  :start:
-  coins := findunit(self.outside, "coins", FIND_UNIT_SURRO, null);
-  if (coins == null) goto done;
-  
-  // Check how many coin stacks we can carry
-  quantity := 1;
-  while (can_carry(self, coins, quantity) == 0)
-    quantity := quantity + 1;
-  
-  sendtext("You can carry " + itoa(quantity - 1) + " stacks of coins.<br/>", self);
-  
-  :done:
+   sendtext("No sword found here.<br/>", self);
+   goto done;
+ }
+ 
+ result := can_carry(activator, sword, 1);
+ 
+ if (result == 1)
+   exec("say Your hands are full!", self);
+ else if (result == 2)
+   exec("say You can't carry that much weight.", self);
+ else
+   exec("give " + sword.name + " to " + activator.name, self);
+ 
+ :done:
  } dilend
 
 == Usage Notes ==
@@ -103,8 +57,6 @@ The '''can_carry''' function determines whether a character can carry a specifie
 * Weight limit is calculated as: 50 + MAX(50, base weight / 2) + strength * 2
 * Only non-equipped items are counted toward the inventory limit
 * Money items are excluded from the count calculation
-* The function does not actually transfer items - it only performs validation
-* Commonly used in foreach loops to filter items that can be picked up
 
 == Error Handling ==
 The function will fail with DILV_FAIL if:

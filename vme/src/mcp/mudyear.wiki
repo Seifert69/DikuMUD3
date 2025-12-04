@@ -192,4 +192,4 @@ The '''mudyear''' variable returns the current year number in the MUD's internal
 * Time constants: '''SECS_PER_MUD_YEAR''', '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
 * Time-based functions: [[heartbeat]], [[wait]], [[pause]]
 * Character fields: '''birth''' - Character's birth timestamp
-* String functions: [[itoa]] - Convert integer to string for display
+* String functions: [[itoa]] - Convert integer to string for display 

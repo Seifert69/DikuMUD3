@@ -1,7 +1,7 @@
 = interrupt =
+ function: integer '''interrupt'''(flags : integer, dilexp : expression, label : label);
 
-; interrupt : integer ( flags : integer, dilexp, label )
-: Sets up an interrupt handler for specific message classes with conditional execution and label jumping.
+The '''interrupt''' function sets up an interrupt handler for specific message classes with conditional execution and label jumping.
 
 == Description ==
 
@@ -9,38 +9,37 @@ The '''interrupt''' function creates an interrupt handler that monitors for mess
 
 Interrupts are saved and restored when the '''recall''' keyword is used in the DIL program. The function returns an integer identifier that can be used with the '''clear()''' function to remove the interrupt.
 
-== Parameters ==
+== PARAMETERS ==
 
-; flags : integer
-: Bitwise combination of message class flags (SFB_*) to monitor. Common flags include:
-:* SFB_COM - Combat messages
-:* SFB_MSG - User messages 
-:* SFB_CMD - Command messages
-:* SFB_TICK - Timer messages
-:* SFB_DEAD - Death messages
-: Multiple flags can be combined using the bitwise OR operator (|).
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| flags || integer || Bitwise combination of message class flags (SFB_*) to monitor
+|-
+| dilexp || expression || DIL expression evaluated when matching message received
+|-
+| label || label || Target label where execution continues when dilexp is true
+|}
 
-; dilexp : expression
-: DIL expression that evaluates when a matching message is received. If true, execution jumps to the label.
+Common message flags include:
+* SFB_COM - Combat messages
+* SFB_MSG - User messages 
+* SFB_CMD - Command messages
+* SFB_TICK - Timer messages
+* SFB_DEAD - Death messages
 
-; label : label
-: Target label where execution continues when dilexp evaluates to true.
-
-== Return Value ==
-
-; integer
-: Returns an interrupt identifier that can be used with '''clear()''' to remove the interrupt.
+Multiple flags can be combined using the bitwise OR operator (|).
 
 == Examples ==
 
 === Basic Combat Interrupt ===
  interrupt(SFB_COM, activator == self, broken);
- 
+
 This sets up an interrupt that triggers on combat messages where the activator is the same as the program owner, jumping to the :broken: label.
 
 === Message Handling ===
  interrupt(SFB_MSG, argument == "cured", the_end);
- 
+
 This monitors for user messages with the argument "cured" and jumps to :the_end: when received.
 
 === Clearable Interrupt ===
@@ -62,12 +61,20 @@ This shows how to store the interrupt ID and clear it after use.
 * Interrupts with '''recall''' keyword persist across save/load cycles
 * The '''aware''' keyword may be needed to receive messages from the program owner
 
+== Error Handling ==
+
+* Invalid message flags will cause compilation errors
+* Labels must exist in the current DIL program scope
+* Expression evaluation errors may cause runtime failures
+* Ensure proper cleanup of interrupts to avoid memory leaks
+
+== Related Functions/Fields ==
+
+* [[clear]] - Removes an interrupt
+* [[wait]] - Waits for specific message classes
+
 == See Also ==
 
-; clear : Removes an interrupt
-; wait : Waits for specific message classes
-; SFB_COM : Combat message flag
-; SFB_MSG : User message flag  
-; SFB_CMD : Command message flag
-; SFB_TICK : Timer message flag
-; SFB_DEAD : Death message flag
+* Message handling and event systems
+* DIL program control structures
+* Flag constants and bitwise operations

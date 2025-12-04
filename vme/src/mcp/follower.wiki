@@ -1,20 +1,24 @@
 = follower =
+ field: unitptr '''.follower''' (Read-only)
 
-== Syntax ==
- unitptr.follower
-
-== Field Type ==
- unitptr (Read-only)
+The '''follower''' field returns the first follower of a PC or NPC character.
 
 == Description ==
-The follower field returns the first follower of a PC or NPC character. This field provides access to the character that is following the specified unit.
+The '''follower''' field provides access to the character that is following the specified unit. If the character has no followers, this field returns null.
 
-If the character has no followers, this field returns null.
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| follower || unitptr || Read-only || The first follower of the character
+|}
 
-== Return Value ==
-Returns a unitptr pointing to the first follower, or null if there are no followers.
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
 
-== Example ==
+== Examples ==
  dilbegin check_followers();
  var
     first_follower : unitptr;
@@ -32,14 +36,17 @@ Returns a unitptr pointing to the first follower, or null if there are no follow
     return;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * This field is read-only and cannot be modified directly
 * Only returns the first follower in the chain
 * To access all followers, use a foreach loop in the local environment
 * The field returns null if the character has no followers
-* This field is only available for PC and NPC unit types (UNIT_ST_PC and UNIT_ST_NPC)
 
-== See Also ==
+== Related Functions/Fields ==
 * [[follow]]
 * [[master]]
+* [[followercount]]
+* [[getfollower]]
+
+== See Also ==
 * [[unitptr]]

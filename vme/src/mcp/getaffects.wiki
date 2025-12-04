@@ -1,19 +1,10 @@
 = getaffects =
+ function: stringlist '''getaffects'''({unit : unitptr});
 
-== Syntax ==
- stringlist getaffects( unit : unitptr )
-
-== Parameters ==
-; unit : unitptr
-: The unit to scan for affects
-
-== Return Value ==
-Returns a stringlist containing information about all affects on the unit. For each affect, two strings are added to the stringlist:
-* First string: Description of what gets modified
-* Second string: Comma-separated data values (data0,data1,data2,duration)
+The '''getaffects''' function retrieves all magical and special affects currently applied to a unit.
 
 == Description ==
-The getaffects() function retrieves all magical and special affects currently applied to a unit. This is useful for identifying what spells, enchantments, or special properties are affecting a character or object.
+The '''getaffects''' function retrieves all magical and special affects currently applied to a unit. This is useful for identifying what spells, enchantments, or special properties are affecting a character or object.
 
 Each affect entry in the returned stringlist follows the format:
 {"Description", "data0,data1,data2,duration"}
@@ -30,7 +21,14 @@ The data values and their meanings depend on the type of affect:
 * Natural armor modifications: "skill_index,modifier,0,duration"
 * Speed modifications: "0,speed_modifier,0,duration"
 
-== Example ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit to scan for affects
+|}
+
+== Examples ==
  dilbegin check_affects();
  var
     affects : stringlist;
@@ -110,16 +108,22 @@ The data values and their meanings depend on the type of affect:
     return;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * Use the split() function to separate the numerical values in the data string
 * Duration of -1 typically indicates a permanent affect
 * The function returns an empty stringlist if the unit has no affects
 * This function is commonly used in identify spells and item inspection commands
 * The specific meaning of data values depends on the affect type
 
-== See Also ==
+== Error Handling ==
+* Returns an empty stringlist if the unit parameter is invalid
+* Returns fail if the input unit is null or an unsupported type
+
+== Related Functions/Fields ==
 * [[isaff]]
 * [[addaff]]
 * [[subaff]]
 * [[split]]
+
+== See Also ==
 * [[stringlist]]

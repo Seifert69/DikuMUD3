@@ -1,12 +1,10 @@
 = openflags =
+ field: integer '''.openflags''' (Read/Write)
 
-== Syntax ==
-integer '''openflags''' (unit : unitptr)
+The '''openflags''' field provides access to the open/close/lock state flags for units.
 
 == Description ==
-The '''openflags''' field provides access to the open/close/lock state flags for units. This field contains bit flags that determine whether a unit (typically doors, containers, or objects with lids) is open, closed, locked, or has other special properties.
-
-Based on the C implementation, this field returns a reference to the unit's open flags value, allowing both reading and writing of the flag bits.
+The '''openflags''' field contains bit flags that determine whether a unit (typically doors, containers, or objects with lids) is open, closed, locked, or has other special properties. Based on the C implementation, this field returns a reference to the unit's open flags value, allowing both reading and writing of the flag bits.
 
 == Field Access ==
 This is a field access on unitptrs:
@@ -20,7 +18,6 @@ This field is available on the following unit types:
 * UNIT_ST_ROOM (Room)
 
 == Usage Notes ==
-The openflags field is read-write (RW) and can be modified directly.
 This field uses bit flags that can be tested and modified using [[isset]] and bitwise operations.
 Common flag constants include:
 * '''EX_CLOSED''' - Unit is closed
@@ -29,7 +26,6 @@ Common flag constants include:
 * '''EX_PICKPROOF''' - Unit cannot be picked
 
 == Examples ==
-=== Checking Open State ===
  dilbegin check_open_state(target : unitptr);
  var
     flags : integer;
@@ -53,178 +49,6 @@ Common flag constants include:
        act("$1n is locked.", A_ALWAYS, self, target, null, TO_CHAR);
     else
        act("$1n is unlocked.", A_ALWAYS, self, target, null, TO_CHAR);
- } dilend
-
-=== Opening and Closing ===
- dilbegin toggle_door(target : unitptr);
- var
-    flags : integer;
- 
- code
- {
-    if (target == null)
-    {
-       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    flags := target.openflags;
-    
-    if (isset(flags, EX_CLOSED))
-    {
-       // Try to open it
-       if (isset(flags, EX_LOCKED))
-       {
-          act("$1n is locked - you must unlock it first.", A_ALWAYS, self, target, null, TO_CHAR);
-       }
-       else
-       {
-          unset(target.openflags, EX_CLOSED);
-          act("You open $1n.", A_ALWAYS, self, target, null, TO_CHAR);
-          act("$1n opens $2n.", A_SOMEONE, self, target, null, TO_REST);
-       }
-    }
-    else
-    {
-       // Close it
-       set(target.openflags, EX_CLOSED);
-       act("You close $1n.", A_ALWAYS, self, target, null, TO_CHAR);
-       act("$1n closes $2n.", A_SOMEONE, self, target, null, TO_REST);
-    }
- } dilend
-
-=== Lock Management ===
- dilbegin lock_container(container : unitptr);
- var
-    flags : integer;
- 
- code
- {
-    if (container == null)
-    {
-       act("No container specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    flags := container.openflags;
-    
-    // Make sure it's closed first
-    if (not isset(flags, EX_CLOSED))
-    {
-       set(container.openflags, EX_CLOSED);
-       act("You close $1n.", A_ALWAYS, self, container, null, TO_CHAR);
-    }
-    
-    // Now lock it
-    set(container.openflags, EX_LOCKED);
-    act("You lock $1n.", A_ALWAYS, self, container, null, TO_CHAR);
-    act("$1n locks $2n.", A_SOMEONE, self, container, null, TO_REST);
- } dilend
-
-=== Unlocking ===
- dilbegin unlock_door(target : unitptr);
- var
-    flags : integer;
- 
- code
- {
-    if (target == null)
-    {
-       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    flags := target.openflags;
-    
-    if (not isset(flags, EX_LOCKED))
-    {
-       act("$1n is not locked.", A_ALWAYS, self, target, null, TO_CHAR);
-       return;
-    }
-    
-    // Unlock it
-    unset(target.openflags, EX_LOCKED);
-    act("You unlock $1n.", A_ALWAYS, self, target, null, TO_CHAR);
-    act("$1n unlocks $2n.", A_SOMEONE, self, target, null, TO_REST);
- } dilend
-
-=== Comprehensive State Check ===
- dilbegin analyze_open_state(target : unitptr);
- var
-    flags : integer;
-    state : string;
- 
- code
- {
-    if (target == null)
-    {
-       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    flags := target.openflags;
-    state := "";
-    
-    if (isset(flags, EX_CLOSED))
-       state := state + "CLOSED ";
-    else
-       state := state + "OPEN ";
-    
-    if (isset(flags, EX_LOCKED))
-       state := state + "LOCKED ";
-    else
-       state := state + "UNLOCKED ";
-    
-    if (isset(flags, EX_PICKPROOF))
-       state := state + "PICKPROOF ";
-    
-    if (isset(flags, EX_OPEN_CLOSE))
-       state := state + "OPENABLE ";
-    
-    act("$1n state: $2t", A_ALWAYS, self, state, target, TO_CHAR);
-    act("Raw flags: $3d", A_ALWAYS, self, flags, target, TO_CHAR);
- } dilend
-
-=== Door Operations ===
- dilbegin door_operations();
- var
-    door : unitptr;
-    flags : integer;
- 
- code
- {
-    // Find a door in the room
-    door := findunit(self, "door", FIND_UNIT_HERE, null);
-    
-    if (door == null)
-    {
-       act("No door found here.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    flags := door.openflags;
-    
-    // Show current state
-    act("Door flags: $1d", A_ALWAYS, self, flags, null, TO_CHAR);
-    
-    // Toggle door state
-    if (isset(flags, EX_CLOSED))
-    {
-       if (isset(flags, EX_LOCKED))
-       {
-          act("The door is locked.", A_ALWAYS, self, null, null, TO_CHAR);
-       }
-       else
-       {
-          unset(door.openflags, EX_CLOSED);
-          act("You open the door.", A_ALWAYS, self, null, null, TO_CHAR);
-       }
-    }
-    else
-    {
-       set(door.openflags, EX_CLOSED);
-       act("You close the door.", A_ALWAYS, self, null, null, TO_CHAR);
-    }
  } dilend
 
 == Error Handling ==
@@ -253,4 +77,4 @@ Always verify the unit pointer is valid before accessing openflags:
 * [[exit_info]] - Exit information field
 * [[key]] - Key field for units
 * [[EX_CLOSED]] - Closed flag constant
-* [[EX_LOCKED]] - Locked flag constant
+* [[EX_LOCKED]] - Locked flag constant 

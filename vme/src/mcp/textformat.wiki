@@ -186,12 +186,15 @@ Always ensure that the input string is valid and contains appropriate escape cod
 * [[textformat]] - Format text with escape codes
 * [[sendtext]] - Send formatted text to players
 * [[note]] - Store player-specific notes
+
 * [[unitdir]] - Get list of all players globally
 * [[addextra]] - Store player-specific data
+
 
 == See Also ==
 * DIL Text Formatting Documentation
 * Escape Code Systems
 * Player Communication Systems
 * Terminal Interface Documentation
+
 * Dynamic Content Generation

@@ -1,10 +1,9 @@
 = npc_head =
 
-== Syntax ==
  function: unitptr '''npc_head'''();
 
 == Description ==
-The '''npc_head''' function returns a pointer to the first NPC in the global NPC list. This function provides access to the head of the global NPC chain, allowing DIL programs to reference and manipulate the first NPC character in the game's NPC hierarchy.
+The '''npc_head''' function returns a pointer to the first NPC in the global NPC list.
 
 == Return Value ==
 Returns '''unitptr''':
@@ -12,65 +11,38 @@ Returns '''unitptr''':
 * '''null''' - If no NPCs exist in the global list
 
 == Examples ==
- dilbegin get_first_npc();
+ dilbegin check_first_npc();
  var
     first_npc : unitptr;
  code
  {
     first_npc := npc_head();
-    
     if (first_npc != null)
     {
-       exec("say First NPC found: " + first_npc.name, self);
-       exec("say NPC zone: " + first_npc.zoneidx, self);
+       exec("say First NPC: " + first_npc.name, self);
     }
     else
     {
-       exec("say No NPCs found in global list.", self);
+       exec("say No NPCs found.", self);
     }
  } dilend
 
- dilbegin npc_chain_navigation();
+ dilbegin count_global_npcs();
  var
     current_npc : unitptr;
-    npc_count : integer;
+    count : integer;
  code
  {
     current_npc := npc_head();
-    npc_count := 0;
+    count := 0;
     
-    // Navigate through the global NPC chain
     while (current_npc != null)
     {
-       npc_count := npc_count + 1;
-       exec("say NPC " + itoa(npc_count) + ": " + current_npc.name, self);
-       
-       // Move to next NPC in the chain
+       count := count + 1;
        current_npc := current_npc.next;
     }
     
-    exec("say Found " + itoa(npc_count) + " NPCs in the global chain.", self);
- } dilend
-
- dilbegin global_npc_management();
- var
-    target_npc : unitptr;
- code
- {
-    // Get the first NPC for global operations
-    target_npc := npc_head();
-    
-    if (target_npc != null)
-    {
-       // Perform some global operation on the first NPC
-       exec("say Performing operation on: " + target_npc.name, self);
-       
-       // This could be used for global quest systems, patrols, etc.
-    }
-    else
-    {
-       exec("say No NPCs available for global operations.", self);
-    }
+    exec("say Total NPCs: " + itoa(count), self);
  } dilend
 
 == Usage Notes ==
@@ -101,4 +73,4 @@ Returns '''unitptr''':
 * Global list management functions
 * NPC creation and management functions
 * Unit pointer operations and traversal
-* Chain navigation patterns using [[next]] field
+* Chain navigation patterns using [[next]] field 

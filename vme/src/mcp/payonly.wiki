@@ -1,170 +1,72 @@
 = payonly =
-
-; payonly : integer (reference)
-: The pay status of a zone. This field determines whether the zone requires payment to access.
+ field: integer '''.payonly''' (Read-only)
 
 == Description ==
+The '''payonly''' field provides access to the payment status of a zone. This field indicates whether the zone requires payment to access or is free to access.
 
-The '''payonly''' field is a property of a zoneptr that indicates the payment status of a zone. It returns an integer value that specifies whether the zone is pay-only (requiring payment) or free to access.
+== Field Access ==
+This is a field access on zoneptrs:
+  zone.payonly
 
-== Usage ==
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone pointer)
 
-This field is accessed through a zoneptr variable and returns a reference to an integer value.
-
-== Example ==
-
-The following example demonstrates how to use the payonly field to check zone payment status:
-
- dilbegin aware boot_area();
+== Examples ==
+=== Zone Payment Check ===
+ dilbegin check_zone_payment();
  var
-  i:integer;
-  cnt:integer;
-  zones:zoneptr;
-  tlist:stringlist;
-  temp:string;
-  ln:integer;
-  iMax:integer;
-  inc:integer;
-  iVal:string;
-  j:integer;
-  donlist:stringlist;
-  zonlist:stringlist;
-  nodonlist:stringlist;
-  conlist:stringlist;
-
+    zones : zoneptr;
+    pay_zones : integer;
+    free_zones : integer;
+ 
  code
  {
-  heartbeat:=4;
- :start:
-  zonlist:={"$zonlist"};
-  donlist:={"$donlist"};
-  nodonlist:={"$nodonlist"};
-  conlist:={"$conlist"};
-  zones := zhead();
-  cnt:=0;
-  while (zones)
-  {
-   tlist := split(zones.title,"@");
-   
-   if (length(tlist)==2)
-   {
-    temp:=tlist.[1]+"@"+tlist.[0];
-    if (zones.payonly)
+    pay_zones := 0;
+    free_zones := 0;
+    
+    zones := zhead();
+    while (zones != null)
     {
-     if (not((zones.title+"@*") in zonlist))
-     {
-      addstring(zonlist,(zones.title+"@*"));
-      addstring(conlist,(temp+"@*"));
-     }
+       if (zones.payonly)
+          pay_zones := pay_zones + 1;
+       else
+          free_zones := free_zones + 1;
+       
+       act("Zone: $1t - Pay-only: $2t", A_ALWAYS, self, zones.title, 
+          (zones.payonly ? "YES" : "NO"), TO_CHAR);
+       
+       zones := zones.next;
     }
-    else
-    {
-     if (not((zones.title+"@n") in zonlist))
-     {
-      addstring(zonlist,(zones.title+"@n"));
-      addstring(conlist,(temp+"@n"));
-     }
-    }
-   }
-   
-   zones:=zones.next;
-  }
-  
-  pause;
-  
-  iMax:=length(zonlist);
-  inc:=1;
-  
-  while (inc < iMax)
-   inc := inc *3+1;
-  
-  inc:=inc/3;
-  while (inc > 0)
-  {
-   i:=inc;
-   while (i < iMax)
-   {
-    iVal := zonlist.[i];
-    j:=i;
-    while (j > (inc-1))
-    {
-     if (iVal < zonlist.[j - inc])
-     {
-      zonlist.[j] := zonlist.[j - inc];
-     }
-     else
-      break;
-     j:=j-inc;
-    }
-    zonlist.[j] := iVal;
-    i:=i+1;
-   }
-   inc := inc /3;
-  }
-  
-  pause;
-  
-  iMax:=length(conlist);
-  inc:=1;
-  
-  while (inc < iMax)
-   inc := inc *3+1;
-  
-  inc:=inc/3;
-  while (inc > 0)
-  {
-   i:=inc;
-   while (i < iMax)
-   {
-    iVal := conlist.[i];
-    j:=i;
-    while (j > (inc-1))
-    {
-     if (iVal < conlist.[j - inc])
-     {
-      conlist.[j] := conlist.[j - inc];
-     }
-     else
-      break;
-     j:=j-inc;
-    }
-    conlist.[j] := iVal;
-    i:=i+1;
-   }
-   inc := inc /3;
-  }
-  
-  pause;
-  
-  i:=1;
-  ln:=length(zonlist);
-  while (i<ln)
-  {
-   tlist:=split(zonlist.[i],"@");
-   if (tlist.[2]=="n")
-    addstring(nodonlist,tlist.[0]+"@"+tlist.[1]);
-   else
-    addstring(donlist,tlist.[0]+"@"+tlist.[1]);
-   
-   i:=i+1;
-  }
-  
-  addextra(self.extra,zonlist,"all");
-  addextra(self.extra,donlist,"all");
-  addextra(self.extra,conlist,"all");
-  addextra(self.extra,nodonlist,"all");
-  addextra(self.extra,donlist,"all");
-  quit;
+    
+    act("Total pay zones: $1d", A_ALWAYS, self, pay_zones, null, TO_CHAR);
+    act("Total free zones: $1d", A_ALWAYS, self, free_zones, null, TO_CHAR);
  } dilend
+== Usage Notes ==
+The payonly field is read-only (RO) and cannot be modified directly.
+This field indicates whether the zone requires payment for access.
+A non-zero value means the zone is pay-only.
+A zero value means the zone is free to access.
 
-== Return Value ==
+== Error Handling ==
+Always verify that zone pointer is valid before accessing payonly:
 
-Returns an integer reference indicating the payment status:
-* Non-zero value: Zone is pay-only (requires payment)
-* Zero value: Zone is free to access
+ if (zone != null)
+ {
+    is_pay_zone := zone.payonly;
+ }
+ else
+ {
+    act("Invalid zone pointer.", A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+== Related Functions/Fields ==
+* [[zhead]] - Get first zone in global list
+* [[access]] - Zone access level
+* [[loadlevel]] - Zone load level
+* [[zoneptr]] - Zone pointer type
 
 == See Also ==
-
 * [[zoneptr]] - Zone pointer type
 * [[zhead]] - Get first zone in global list
 * [[access]] - Zone access level

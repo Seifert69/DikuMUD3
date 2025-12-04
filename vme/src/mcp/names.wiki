@@ -1,10 +1,9 @@
 = names =
 
-== Syntax ==
- field: '''.names''' (Read/Write)
+ field: stringlist '''.names''' (Read/Write)
 
 == Description ==
-The '''names''' field returns a stringlist containing all names that match a unit. This field provides access to the complete list of names and keywords that can be used to identify or reference a unit, allowing for multiple aliases and alternative names.
+The '''names''' field provides access to the complete list of names and keywords that identify a unit.
 
 == Field Access ==
 {| class="wikitable"
@@ -24,141 +23,25 @@ This field is available on the following unit types:
 * extraptr (Extra description pointer)
 
 == Examples ==
- dilbegin identify_item(item : unitptr);
+ dilbegin check_item_names(item : unitptr);
+ var
+    item_names : stringlist;
+ code
+ {
+    item_names := item.names;
+    exec("say This item has " + itoa(length(item_names)) + " names.", self);
+    exec("say Primary name: " + item_names.[0], self);
+ } dilend
+
+ dilbegin find_by_keyword(target : unitptr);
  var
     all_names : stringlist;
-    name_count : integer;
-    i : integer;
- code
- {
-    if (item.type != UNIT_ST_OBJ)
-    {
-       exec("say That's not an object!", self);
-       return;
-    }
-    
-    all_names := item.names;
-    name_count := length(all_names);
-    
-    exec("say This item has " + itoa(name_count) + " names:", self);
-    
-    // Loop through all names
-    i := 0;
-    while (i < name_count)
-    {
-       exec("say Name " + itoa(i) + ": " + all_names.[i], self);
-       i := i + 1;
-    }
- } dilend
-
- dilbegin check_weapon_names(weapon : unitptr);
- var
-    weapon_names : stringlist;
- code
- {
-    weapon_names := weapon.names;
-    
-    // Check if it has specific weapon names
-    if ("sword" in weapon_names)
-    {
-       exec("say This is a sword-type weapon.", self);
-    }
-    else if ("axe" in weapon_names)
-    {
-       exec("say This is an axe-type weapon.", self);
-    }
-    else if ("mace" in weapon_names)
-    {
-       exec("say This is a mace-type weapon.", self);
-    }
-    else
-    {
-       exec("say Unknown weapon type.", self);
-    }
- } dilend
-
- dilbegin modify_npc_names(npc : unitptr);
- var
-    current_names : stringlist;
- code
- {
-    current_names := npc.names;
-    
-    // Add a new alias to the NPC
-    addstring(current_names, "guard");
-    addstring(current_names, "warrior");
-    
-    exec("say NPC now has additional names.", self);
-    
-    // Show all names
-    exec("say All names: " + current_names.[0], self);
-    exec("say All names: " + current_names.[1], self);
-    exec("say All names: " + current_names.[2], self);
- } dilend
-
- dilbegin extra_description_check(extra : extraptr);
- var
-    extra_names : stringlist;
-    name_count : integer;
-    i : integer;
- code
- {
-    extra_names := extra.names;
-    name_count := length(extra_names);
-    
-    exec("say This extra has " + itoa(name_count) + " names:", self);
-    
-    // Display all names for the extra description
-    i := 0;
-    while (i < name_count)
-    {
-       exec("say Keyword " + itoa(i) + ": " + extra_names.[i], self);
-       i := i + 1;
-    }
- } dilend
-
- dilbegin name_search_test(target : unitptr);
- var
-    all_names : stringlist;
-    search_name : string;
  code
  {
     all_names := target.names;
-    search_name := "special_item";
-    
-    // Check if the target has a specific name
-    if (search_name in all_names)
+    if ("sword" in all_names)
     {
-       exec("say Found the special item!", self);
-       exec("say It's also known as: " + target.name, self);
-    }
-    else
-    {
-       exec("say This is not the special item.", self);
-       exec("say Its names are: " + all_names.[0], self);
-    }
- } dilend
-
- dilbegin room_exit_check(room : unitptr);
- var
-    exit_names : stringlist;
-    i : integer;
- code
- {
-    if (room.type != UNIT_ST_ROOM)
-    {
-       exec("say That's not a room!", self);
-       return;
-    }
-    
-    exit_names := room.exit_names;
-    
-    // Check all exit directions for names
-    i := 0;
-    while (i < length(exit_names))
-    {
-       exec("say Exit " + itoa(i) + " names: " + exit_names.[i], self);
-       i := i + 1;
+       exec("say This is a sword-type weapon.", self);
     }
  } dilend
 
@@ -194,4 +77,4 @@ This field is available on the following unit types:
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
 * String functions: [[split]], [[getwords]], [[substring]]
 * Array access: Use bracket notation for stringlist elements
-* Extra description functions: [[addextra]], [[subextra]]
+* Extra description functions: [[addextra]], [[subextra]] 

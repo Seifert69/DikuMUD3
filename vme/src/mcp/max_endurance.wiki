@@ -1,11 +1,9 @@
 = max_endurance =
+ field: integer '''.max_endurance''' [Read-only]
 
-== Syntax ==
- field: '''.max_endurance'''
-
-== Description ==
 The '''.max_endurance''' field is accessed on character units (PC or NPC) and returns the maximum endurance points of the character. This represents the highest possible endurance value the character can have, which is used as the upper bound for current endurance calculations.
 
+== Description ==
 Endurance is typically used for physical activities, movement, and combat stamina.
 
 == Field Access ==

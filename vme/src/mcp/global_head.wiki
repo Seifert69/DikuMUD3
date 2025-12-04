@@ -1,17 +1,15 @@
 = global_head =
+ function: unitptr '''global_head'''();
 
- unitptr global_head ( )
+Returns the first unit in the global unit list, which will be the last character to have logged on.
 
 == Description ==
 Returns the first unit in the global unit list, which will be the last character to have logged on.
 
-== Return Value ==
-Returns a unitptr pointing to the first unit in the global list.
-
-== Notes ==
+== Usage Notes ==
 This function is currently marked as obsolete and not used anywhere in the existing DIL codebase. It was part of a set of head-related functions that were considered obsolete until needed and tested.
 
-== Example ==
+== Examples ==
  dilbegin example();
  code
     // This function is not used in any current DIL programs
@@ -19,10 +17,17 @@ This function is currently marked as obsolete and not used anywhere in the exist
  quit;
  dilend
 
-== See Also ==
+== Error Handling ==
+* Returns null if the global list is empty
+* Function is obsolete - use '''ghead'''() instead
+
+== Related Functions/Fields ==
 * [[ghead]] - Similar function for global head
 * [[obj_head]] - Object head function
 * [[npc_head]] - NPC head function
 * [[room_head]] - Room head function
 * [[zone_head]] - Zone head function
 * [[command_head]] - Command head function
+
+== See Also ==
+* Obsolete functions and their modern equivalents

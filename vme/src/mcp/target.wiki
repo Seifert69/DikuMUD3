@@ -28,7 +28,7 @@ The function returns a unitptr:
    target : unitptr;
  code
  {
-   target := findsymbolic(player_name + "@global");
+   target := target(player_name + "@global");
    
    if (target)
    {

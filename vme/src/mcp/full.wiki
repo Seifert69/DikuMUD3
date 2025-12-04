@@ -1,23 +1,23 @@
 = full =
+ field: integer '''.full''' (Read/Write)
 
-== Syntax ==
- unitptr.full
-
-== Field Type ==
- integer (Read-write)
+The '''full''' field represents how hungry a player character (PC) is.
 
 == Description ==
-The full field represents how hungry a player character (PC) is. This field tracks the character's hunger level and is used to determine when a character needs to eat.
+The '''full''' field tracks the character's hunger level and is used to determine when a character needs to eat. Higher values indicate more hunger, while lower values indicate less hunger (more full).
 
-This field is only available for player characters (UNIT_ST_PC).
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| full || integer || Read/Write || The hunger level of the character
+|}
 
-== Range ==
-The typical range for hunger values depends on the game's configuration, but generally:
-* Higher values indicate more hunger
-* Lower values indicate less hunger (more full)
-* The exact scale and thresholds are game-specific
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
 
-== Example ==
+== Examples ==
  dilbegin check_hunger();
  var
     hunger_level : integer;
@@ -70,16 +70,18 @@ The typical range for hunger values depends on the game's configuration, but gen
     return;
  } dilend
 
-== Notes ==
-* This field is read-write and can be modified by DIL code
+== Usage Notes ==
 * Only available for player characters (UNIT_ST_PC), not NPCs
 * Often used in conjunction with thirst and drunk fields for character condition tracking
 * The field is typically modified by eating food items or by natural hunger progression over time
 * Setting the value too low may cause the character to be unable to eat more
 * Setting the value too high may cause hunger-related messages or effects
+* The exact scale and thresholds are game-specific
 
-== See Also ==
+== Related Functions/Fields ==
 * [[thirst]]
 * [[drunk]]
+
+== See Also ==
 * [[unitptr]]
 * [[UNIT_ST_PC]]

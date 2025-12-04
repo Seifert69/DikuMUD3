@@ -4,7 +4,7 @@
  function: unitptr '''npcs'''(zone : zoneptr);
 
 == Description ==
-The '''npcs''' function returns a pointer to the first NPC (Non-Player Character) in the specified zone. This function provides access to the NPC hierarchy within zones, allowing DIL programs to locate and work with specific NPCs for administrative purposes, quest systems, or zone management operations.
+The '''npcs''' function returns a pointer to the first NPC in the specified zone.
 
 == Parameters ==
 {| class="wikitable"
@@ -19,88 +19,36 @@ Returns '''unitptr''':
 * '''null''' - If no NPCs exist in the zone or zone pointer is invalid
 
 == Examples ==
- dilbegin zone_npc_manager();
+ dilbegin find_zone_npcs(zone : zoneptr);
  var
-    target_zone : zoneptr;
     first_npc : unitptr;
-    npc_count : integer;
  code
  {
-    // Get the admin zone for NPC management
-    target_zone := findroom("admin_zone@midgaard");
-    
-    if (target_zone != null)
+    first_npc := npcs(zone);
+    if (first_npc != null)
     {
-       // Get the first NPC in the zone
-       first_npc := npcs(target_zone);
-       
-       if (first_npc != null)
-    {
-          exec("say First NPC found: " + first_npc.name, self);
-          exec("say NPC Zone: " + target_zone.name, self);
-       }
-       else
-       {
-          exec("say No NPCs found in admin zone.", self);
-       }
+       exec("say First NPC: " + first_npc.name, self);
     }
     else
     {
-       exec("say Admin zone not found.", self);
+       exec("say No NPCs in zone.", self);
     }
  } dilend
 
- dilbegin npc_patrol_system();
+ dilbegin list_zone_npcs(zone : zoneptr);
  var
-    current_zone : zoneptr;
-    patrol_npc : unitptr;
-    npc_index : integer;
+    current_npc : unitptr;
+    count : integer;
  code
  {
-    // Get the city zone for patrol NPCs
-    current_zone := findroom("city_zone@midgaard");
+    current_npc := npcs(zone);
+    count := 0;
     
-    if (current_zone != null)
+    while (current_npc != null)
     {
-       // Find all patrol NPCs in the zone
-       npc_index := 0;
-       patrol_npc := npcs(current_zone);
-       
-       while (patrol_npc != null)
-       {
-          npc_index := npc_index + 1;
-          exec("say Patrol NPC " + itoa(npc_index) + ": " + patrol_npc.name, self);
-          
-          // Move to next NPC
-          patrol_npc := npcs(patrol_npc);
-       }
-       
-       exec("say Found " + itoa(npc_index) + " patrol NPCs in " + current_zone.name, self);
-    }
-    else
-    {
-       exec("say City zone not found.", self);
-    }
- } dilend
-
- dilbegin npc_counter();
- var
-    target_zone : zoneptr;
-    total_npcs : integer;
- code
- {
-    // Count NPCs in a specific zone
-    target_zone := findroom("monster_zone@midgaard");
-    
-    if (target_zone != null)
-    {
-       total_npcs := npccount(target_zone);
-       
-       exec("say Total NPCs in monster zone: " + itoa(total_npcs), self);
-    }
-    else
-    {
-       exec("say Monster zone not found.", self);
+       count := count + 1;
+       exec("say NPC " + itoa(count) + ": " + current_npc.name, self);
+       current_npc := current_npc.next;
     }
  } dilend
 
@@ -131,4 +79,4 @@ Returns '''unitptr''':
 == See Also ==
 * Zone pointer fields: '''name''', '''zoneidx''', '''npcs''', '''rooms''', '''objs'''
 * NPC type constants: '''UNIT_ST_NPC'''
-* Administrative zone building and management
+* Administrative zone building and management 

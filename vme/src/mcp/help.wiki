@@ -1,156 +1,68 @@
 = help =
 
- string help
+ field: string '''help''' (Read-only)
 
 == Description ==
 Returns the help text associated with a zone. This is a read-only field of a zoneptr.
 
-== Return Value ==
-Returns a string containing the help text for the zone.
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| zone.help || string || The help text for the zone
+|}
 
-== Usage ==
-This field is accessed using dot notation on a zoneptr variable:
- string zone_help;
- zone_help := zone.help;
+== Availability ==
+This field is available on the following pointer types:
+* zoneptr (Zone pointer)
 
-== Example ==
- dilbegin li1();
+== Examples ==
+ dilbegin display_zone_help(zone_name : string);
  var
-   pcname   : string;
-   item     : unitptr;
-   pc       : unitptr;
-   i        : integer;
-   exdp     : extraptr;
-
+     target_zone : zoneptr;
+     help_text : string;
  code
  {
-
-   :init:
-   heartbeat := PULSE_SEC*5;
-   on_activation((self.position <= POSITION_SLEEPING) or
- 	       (self.position == POSITION_FIGHTING), skip);
-
-   :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not
-       command("give")) and ((SCRIBE_ONGOING in
- 		 activator.quests)));
-   if(LIB_COMPLETE in activator.quests)
-    goto waitawhile;
-
-   pc := activator;
-   secure(pc, lostpc);
-
-   if(not(LIB_ONGOING in pc.quests))
+     target_zone := findzone(zone_name);
+     
+     if (target_zone)
      {
-      pause;
-      exec("say You look like one who is on a quest.", self);
-      pause;
-      exec("say I have a pair of spectacles that I could " +
- 	  "give you in return for some things I need.", self);
-      pause;
-      exec("say would you like to help me?", self);
-      pause;
-      exec("say Please nod or shake.", self);
-
-      i := 0;
-      while (i < 5)
-      {
- 	wait(SFB_CMD, activator #= pc);
-
- 	if(command("nod"))
- 	{
- 	  goto quest_accepted;
- 	}
- 	else if(command("say"))
- 	{
- 	  pause;
- 	  exec("say Nod if you want to continue, shake " +
- 	       "if not.", self);
- 	}
- 	else if(command("shake"))
- 	goto no_quest;
- 	i := I + 1;
-      }
-
-   :no_quest:
-   pause;
-   exec("say Fine, good luck in your travels.", self);
-   unsecure(pc);
-   goto waitawhile;
-
-   :quest_accepted:
-   pause;
-   exec("say I am looking for something to write with.",
- 	   self);
-   pause;
-   exec("say A book containing unlimited knowledge.", self);
-   pause;
-   exec("say I also search for a little information "+
-        "relating to a group of people named "+
- 	  "Sanctuarians.", self);
-   pause;
-   exec("say Bring me these things and I can give you "+
- 	  "glasses I have.", self);
-   pause;
-   exec("say I also know what you seek, and can tell you that there are "+
-        "between six and eight scrolls containing language of "+
-        "the ancients", self);
-
-   addextra(pc.quests, {LIB_ONGOING}, "");
-   unsecure(pc);
-   goto start;
-   }
-   else
-   {
-     exdp := LIB_ONGOING in pc.quests;
-     if (("quill" in exdp.names)and
- 	("book of knowledge" in exdp.names)and
- 	   ("vellum scrap" in exdp.names))
-     {
-       pause;
-       subextra(pc.quests, LIB_ONGOING);
-       addextra(pc.quests, {LIB_COMPLETE}, "");
-       exec("say Thank you " +pc.name+ ".", self);
-       item := load("obj_15@pit");
-       link(item, pc);
-       pause;
- 	 exec("say You have helped me greatly.", self);
- 	 pause;
- 	 exec("say here are glasses.", self);
- 	 pause;
- 	 act("The librarian gives you a pair of glasses.",
- 		A_SOMEONE, pc, null, null, TO_CHAR);
-
- 	 act("The librarian give a pain of glasses to $1n.",
- 		A_SOMEONE, self.outside, null, null, TO_ROOM);
+         help_text := target_zone.help;
+         if (help_text != "")
+         {
+             act("Zone help for " + zone_name + ":", 
+                 A_ALWAYS, self, null, null, TO_CHAR);
+             act(help_text, A_ALWAYS, self, null, null, TO_CHAR);
+         }
+         else
+         {
+             act("No help text available for zone " + zone_name + ".", 
+                 A_ALWAYS, self, null, null, TO_CHAR);
+         }
      }
-   }
-
-       unsecure(pc);
-       goto start;
-
- 	:waitawhile:
- 	heartbeat := PULSE_SEC*60;
- 	pause;
- 	goto init;
-
- 	:lostpc:
- 	exec("say I guess the quest wasn't so important.",
- 	self);
- 	pause;
- 	exec("sigh", self);
- 	goto start;
+     else
+     {
+         act("Zone " + zone_name + " not found.", 
+             A_ALWAYS, self, null, null, TO_CHAR);
+     }
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * This field is read-only (RO)
 * Only available on zoneptr variables
 * Contains help text that describes the zone or provides information about it
 * Can be used to display zone information to players
 * The help text is typically set in the zone definition files
 
-== See Also ==
-* [[zoneptr]] - Zone pointer documentation
+== Error Handling ==
+* Always verify the zoneptr is valid before accessing the '''help''' field
+* The help field may return an empty string if no help text is defined
+
+== Related Functions/Fields ==
 * [[zhead]] - Get first zone in global list
 * [[notes]] - Zone notes field
 * [[zone]] - Zone name field of units
+* [[findzone]] - Find a zone by name
+
+== See Also ==
+* [[zoneptr]] - Zone pointer documentation

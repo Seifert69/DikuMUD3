@@ -1,71 +1,101 @@
 = alignment =
+ function: integer '''alignment'''(unit : unitptr);
+
+The '''alignment''' function returns the alignment value representing a unit's moral and ethical standing.
 
 == Description ==
 Returns the alignment value of a unit. Alignment represents the moral and ethical standing of characters in the game world, ranging from good to evil.
 
-== Syntax ==
- alignment(unit)
-
 == Parameters ==
-; unit : unitptr
-: The unit whose alignment is to be retrieved (player, NPC, or mobile).
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose alignment is to be retrieved
+|}
 
 == Return Value ==
-: integer
-: The alignment value of the unit, ranging from -1000 to 1000:
-:* 1000 = Maximum good
-:* 0 = Neutral
-:* -1000 = Maximum evil
+Returns an integer representing the alignment value:
+* '''integer''' - The alignment value, ranging from -1000 to 1000:
+** 1000 = Maximum good
+** 0 = Neutral
+** -1000 = Maximum evil
+* '''fail''' - If unit parameter is invalid
 
 == Examples ==
- dilbegin example();
+=== Basic Alignment Check ===
+ dilbegin check_alignment();
  var
-  i : integer;
+    align_value : integer;
  code
  {
-  :start:
-  i := alignment(self);
-  if (i > 500)
-  {
-    sendtext("You are very good!<br/>", self);
-  }
-  else if (i < -500)
-  {
-    sendtext("You are very evil!<br/>", self);
-  }
-  else
-  {
-    sendtext("You are neutral.<br/>", self);
-  }
+    align_value := alignment(self);
+    if (align_value > 500) {
+       send("You are very good!");
+    } else if (align_value < -500) {
+       send("You are very evil!");
+    } else {
+       send("You are neutral.");
+    }
+    quit;
  } dilend
 
- dilbegin alignment_check();
+=== Target Alignment Check ===
+ dilbegin check_target_alignment();
  var
-  target : unitptr;
+    target : unitptr;
+    target_align : integer;
  code
  {
-  :start:
-  target := findunit(self, argument, FIND_UNIT_SURRO, null);
-  if (target.type == UNIT_ST_PC)
-  {
-    if (alignment(target) < 0)
-    {
-      sendtext(target.name + " is evil!<br/>", self);
+    target := findunit(self, argument, FIND_UNIT_SURRO, null);
+    if (target != null) {
+       target_align := alignment(target);
+       if (target_align < 0) {
+          send(target.name + " is evil!");
+       } else {
+          send(target.name + " is good.");
+       }
+    } else {
+       send("No target found.");
     }
-    else
-    {
-      sendtext(target.name + " is good.<br/>", self);
-    }
-  }
+    quit;
  } dilend
 
-== Notes ==
-* Alignment is a read-write property that can be modified using the set procedure
+=== Alignment-Based Reaction ===
+ dilbegin alignment_reaction();
+ var
+    visitor : unitptr;
+ code
+ {
+    visitor := activator;
+    if (visitor != null) {
+       if (alignment(visitor) < -500) {
+          act("$1n snarls at your evil presence.", A_ALWAYS, self, null, visitor, TO_VICT);
+       } else if (alignment(visitor) > 500) {
+          act("$1n smiles warmly at your good nature.", A_ALWAYS, self, null, visitor, TO_VICT);
+       } else {
+          act("$1n nods neutrally at your presence.", A_ALWAYS, self, null, visitor, TO_VICT);
+       }
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* Alignment is a read-write property that can be modified using assignment
 * Alignment affects various game mechanics including NPC reactions, spell effects, and equipment restrictions
 * The alignment system is typically used for roleplaying purposes and to determine access to certain areas or equipment
 * Players can change their alignment through their actions in the game world
 * NPCs with negative alignment may attack good-aligned characters on sight
+* Alignment values persist across character saves
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation'' - Ensures unit is a valid unit pointer
+* '''Type validation'' - Returns fail if unit is not a valid type
+
+== Related Functions ==
+* [[set]] - For modifying unit properties including alignment
 
 == See Also ==
-* unitptr - For accessing unit properties including alignment
-* set - For modifying unit properties including alignment
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[UNIT_ST_NPC]] - Non-player character unit type

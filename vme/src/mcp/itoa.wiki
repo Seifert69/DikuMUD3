@@ -68,4 +68,4 @@ Updates database description with numeric information.
 ; atoi : Converts a string to an integer
 ; sendtext : Sends text to a player
 ; act : Sends formatted messages to units
-; moneystring : Converts money amounts to formatted strings
+; moneystring : Converts money amounts to formatted strings 

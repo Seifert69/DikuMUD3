@@ -6,7 +6,7 @@ The '''toupper''' function converts all characters in a string to uppercase.
 == Description ==
 This function returns a new string with all alphabetic characters converted to their uppercase equivalents. The original string is not modified; instead, a new uppercase copy is created and returned. This function is commonly used for text formatting, emphasis, and case-insensitive string comparisons.
 
-== PARAMETERS ==
+== Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -14,20 +14,64 @@ This function returns a new string with all alphabetic characters converted to t
 |}
 
 == Examples ==
-dilbegin unique capitalize_first_letter(text : string);
-var
-    first_char : string;
-    rest : string;
-    result : string;
-code
-{
-    // Capitalize first letter only (common pattern from graffiti example)
-    first_char := toupper(left(text, 1));
-    rest := right(text, length(text) - 1);
-    result := first_char + rest;
-    
-    sendto("Capitalized: " + result + "&n", self);
-} dilend
+=== Capitalize First Letter ===
+ dilbegin capitalize_first_letter(text : string);
+ var
+     first_char : string;
+     rest : string;
+     result : string;
+ code
+ {
+     // Capitalize first letter only (common pattern from graffiti example)
+     first_char := toupper(left(text, 1));
+     rest := right(text, length(text) - 1);
+     result := first_char + rest;
+     
+     sendtext("Capitalized: " + result + "<br/>", self);
+ } dilend
+
+=== Emphasize Text ===
+ dilbegin emphasize_text(input : string);
+ var
+     emphasized : string;
+ code
+ {
+     // Convert entire string to uppercase for emphasis
+     emphasized := toupper(input);
+     sendtext("EMPHASIZED: " + emphasized + "<br/>", self);
+ } dilend
+
+=== Graffiti Format ===
+ dilbegin graffiti_format(color : string, style : string);
+ var
+     formatted_text : string;
+ code
+ {
+     // Format graffiti text (from example)
+     formatted_text := toupper(left(style, 1)) + right(style, length(style) - 1);
+     sendtext("<div class='" + color + "'>" + formatted_text + " graffiti is painted all over!</div><br/>", self);
+ } dilend
+
+=== Case Insensitive Compare ===
+ dilbegin case_insensitive_compare(input1 : string, input2 : string);
+ var
+     upper1 : string;
+     upper2 : string;
+ code
+ {
+     // Case-insensitive comparison using toupper
+     upper1 := toupper(input1);
+     upper2 := toupper(input2);
+     
+     if (upper1 == upper2)
+     {
+         sendtext("The strings match (case-insensitive)!<br/>", self);
+     }
+     else
+     {
+         sendtext("The strings do not match.<br/>", self);
+     }
+ } dilend
 
 dilbegin unique emphasize_text(input : string);
 var

@@ -139,4 +139,4 @@ The procedure will fail when:
 * [[meleedamage]] - Function that automatically calls position_update
 * [[cast_spell]] - Function that may affect character position
 * [[abilities]] - Field that may affect character capabilities
-* [[update_pos]] - Underlying C function that performs the position calculation
+* [[update_pos]] - Underlying C function that performs the position calculation 

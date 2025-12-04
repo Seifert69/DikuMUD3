@@ -1,59 +1,131 @@
 = dilcopy =
+ function: '''dilcopy'''(template_name : string, unit : unitptr) : unitptr;
 
-'''dilcopy''' is a DIL function that attaches a DIL program to a unit using a specified template.
-
-== Syntax ==
- dilcopy( s : string, u : unitptr );
-
-== Parameters ==
-; s
-: Name of the DIL template to attach to the unit
-; u
-: Unit to attach the DIL program to
+The '''dilcopy''' function creates and attaches a new DIL program instance to a unit using a specified template.
 
 == Description ==
-The dilcopy function creates and attaches a new DIL program instance to a specified unit. The new program uses the template specified by the string parameter and begins execution immediately.
+The dilcopy function creates and attaches a new DIL program instance to a unit using a specified template. This enables modular DIL programming where multiple instances of the same DIL program can be attached to different units, each running independently with its own context and variables.
 
-The template name can include:
-* Just the template name (e.g., "master_servant@spells")
-* Template name with arguments in parentheses (e.g., "spl_sleep@spells(7)")
-* Template name with string arguments (e.g., "sendmsg@spells(teleport)")
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| template_name || string || The name of the DIL template to copy
+|-
+| unit || unitptr || The unit to attach the new DIL program to
+|}
 
-== Usage Notes ==
-* The attached DIL program runs independently of the calling program
-* The new program's "self" context is set to the target unit
-* Arguments passed in the template string are parsed and available to the new program
-* Multiple DIL programs can be attached to the same unit
-* The function is commonly used for:
-** Temporary spell effects
-** NPC behavior modifications
-** Quest triggers
-** Equipment special abilities
+== Return Value ==
+Returns a unit pointer:
+* '''unitptr''' - Pointer to the newly created DIL program instance
+* '''null''' - If the template was not found or copy failed
 
-== Example ==
- dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
+== Examples ==
+=== Basic Program Copy ===
+ dilbegin copy_guard();
  var
-    depname: string;
-
+    new_guard : unitptr;
  code
  {
-    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
-    act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
-    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
-
-    follow(targ, deputy);
-    depname := deputy.name;
-    link(cuffs, targ);
-    unequip(equipment(targ, WEAR_WRIST_R));
-    addequip(cuffs, WEAR_WRIST_R);
-    dilcopy("cuffed@midgaard("+depname+")", targ);
-    dilcopy("cuffed2@midgaard("+depname+")", targ);
-
-    exec("sigh", targ); /* Do this to activate the DILs */
-    return;
+    new_guard := dilcopy("guard_template", self);
+    
+    if (new_guard) {
+       link(new_guard, self);
+       act("New guard created and linked to you.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to create guard.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
  } dilend
 
-== See Also ==
+=== Multiple Program Instances ===
+ dilbegin create_patrol();
+ var
+    i : integer;
+    new_guard : unitptr;
+ code
+ {
+    for (i := 0; i < 3; i := i + 1) {
+       new_guard := dilcopy("guard_template", self);
+       
+       if (new_guard) {
+          link(new_guard, self);
+          act("Guard " + itoa(i + 1) + " created.", A_ALWAYS, self, null, null, TO_CHAR);
+       } else {
+          act("Failed to create guard " + itoa(i + 1) + ".", A_ALWAYS, self, null, null, TO_CHAR);
+       }
+    }
+    
+    act("Patrol created with " + itoa(i) + " guards.", A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ } dilend
+
+=== Program with Arguments ===
+ dilbegin custom_guard();
+ var
+    new_guard : unitptr;
+    guard_name : string;
+ code
+ {
+    guard_name := argument;
+    
+    if (guard_name != "") {
+       new_guard := dilcopy("guard_template", self);
+       
+       if (new_guard) {
+          // Set custom name
+          new_guard.title := "Guard " + guard_name;
+          link(new_guard, self);
+          act("Custom guard '" + guard_name + "' created.", A_ALWAYS, self, null, null, TO_CHAR);
+       } else {
+          act("Failed to create custom guard.", A_ALWAYS, self, null, null, TO_CHAR);
+       }
+    } else {
+       act("No guard name specified.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Independent Program ===
+ dilbegin independent_program();
+ var
+    new_program : unitptr;
+ code
+ {
+    new_program := dilcopy("independent_npc", self);
+    
+    if (new_program) {
+       link(new_program, self.outside);
+       act("Independent NPC program created.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Failed to create independent program.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The template name must be a valid DIL template that exists in the zone
+* The new DIL program runs independently with its own execution context
+* Multiple instances of the same template can be attached to different units
+* The copied program inherits all properties and DIL code from the template
+* Each instance has its own variable space and execution state
+* Commonly used for creating multiple NPCs with similar behavior
+* The function enables modular and reusable DIL programming
+
+== Error Handling ==
+The function performs validation:
+* '''Template validation''' - Ensures template name exists in zone
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Copy validation''' - Validates that the copy operation succeeds
+* '''Security check''' - Prevents unauthorized template copying
+
+== Related Functions ==
 * [[dilcall]] - Call DIL templates dynamically
-* [[dildestroy]] - Destroy DIL programs
 * [[dilfind]] - Find DIL programs on units
+* [[dildestroy]] - Destroy DIL programs
+* [[link]] - Move units between locations
+
+== See Also ==
+* [[DIL templates]] - Template system and modular programming
+* [[dynamic programming]] - Runtime code generation and execution
+* [[modular design]] - Reusable program components

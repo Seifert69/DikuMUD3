@@ -1,5 +1,5 @@
 = speed =
-field: integer '''.speed''' (Read-only)
+ field: integer '''.speed''' (Read/Write)
 
 The '''speed''' field is used to get or set the current combat speed of a character unit.
 

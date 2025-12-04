@@ -174,4 +174,4 @@ The database name pattern matching follows these rules:
 * DIL program communication and coordination
 * Message passing and synchronization systems
 * Database name patterns and matching
-* Global and zone-specific messaging systems
+* Global and zone-specific messaging systems 

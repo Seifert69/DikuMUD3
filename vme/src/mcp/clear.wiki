@@ -1,25 +1,23 @@
 = clear =
+ function: '''clear'''(interrupt_index : integer);
 
-== Syntax ==
- clear( i : integer )
-
-== Parameters ==
-; i : integer
-: The interrupt index to clear, as returned by the interrupt() function
+The '''clear''' function removes a previously set interrupt from the current DIL program.
 
 == Description ==
 The clear function removes a previously set interrupt from the current DIL program. This is used to cancel interrupt handlers that are no longer needed, preventing them from triggering when their conditions are met.
 
-When an interrupt is cleared, it is removed from the program's interrupt list and will no longer be checked for activation. This is particularly useful for one-time interrupts or when you want to dynamically change interrupt behavior during program execution.
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| interrupt_index || integer || The interrupt index to clear, as returned by a previous interrupt() call
+|}
 
-== Usage Notes ==
-* The interrupt index must be a valid value returned by a previous interrupt() call
-* If the interrupt index is invalid, the function will either clear the wrong interrupt or do nothing
-* Clearing an interrupt that has already been cleared is safe but has no effect
-* This function is commonly used with interrupt() to manage dynamic interrupt handling
+== Return Value ==
+This function does not return a value.
 
 == Examples ==
-=== Basic interrupt clearing ===
+=== Basic Interrupt Clearing ===
  dilbegin simple_interrupt();
  var
     intridx : integer;
@@ -39,7 +37,7 @@ When an interrupt is cleared, it is removed from the program's interrupt list an
     quit;
  } dilend
 
-=== One-time interrupt ===
+=== One-time Interrupt ===
  dilbegin one_time_interrupt();
  var
     intridx : integer;
@@ -58,59 +56,41 @@ When an interrupt is cleared, it is removed from the program's interrupt list an
     goto loop;
  } dilend
 
-=== Complex interrupt management ===
- dilbegin berry_effect();
- var
-    intridx : integer;
- code
- {
-    intridx := interrupt(SFB_CMD, command("puke"), the_end);
-    
-    heartbeat := PULSE_SEC * 15;
-    
-    act("The nightshade berries has a bitter taste.", A_ALWAYS, self, null, null, TO_CHAR);
-    pause;
-    
-    act("Your stomach starts to rumble...", A_ALWAYS, self, null, null, TO_CHAR);
-    pause;
-    
-    act("A warm feeling spreads through your body.", A_ALWAYS, self, null, null, TO_CHAR);
-    pause;
-    
-    act("You feel psychotic!", A_ALWAYS, self, null, null, TO_CHAR);
-    pause;
-    
-    :the_end:
-    clear(intridx);  // Clear the puke interrupt
-    pause;
-    act("You feel a little better.", A_ALWAYS, self, null, null, TO_CHAR);
-    quit;
- } dilend
-
-=== Multiple interrupt management ===
+=== Multiple Interrupt Management ===
  dilbegin manage_interrupts();
  var
     intr1, intr2, intr3 : integer;
  code
  {
     // Set up multiple interrupts
-    intr1 := interrupt(SFB_MSG, argument == "stop", stop_handler);
+    intr1 := interrupt(SFB_CMD, command("stop"), stop_handler);
     intr2 := interrupt(SFB_MSG, argument == "pause", pause_handler);
     intr3 := interrupt(SFB_CMD, command("quit"), quit_handler);
     
-    :main_loop:
-    pause;
-    goto main_loop;
+    heartbeat := PULSE_SEC * 15;
     
-    :stop_handler:
+    act("The nightshade berries have a bitter taste.", A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+    act("Your stomach starts to rumble...", A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+    act("You feel psychotic!", A_ALWAYS, self, null, null, TO_CHAR);
+    pause;
+    
+    // Clear specific interrupts
     clear(intr1);  // Remove stop interrupt
     clear(intr2);  // Remove pause interrupt
     act("All interrupts cleared except quit.", A_ALWAYS, self, null, null, TO_CHAR);
-    goto main_loop;
+    quit;
+    
+    :stop_handler:
+    clear(intr1);
+    clear(intr2);
+    clear(intr3);
+    act("All interrupts cleared, quitting.", A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
     
     :pause_handler:
     act("Pausing for a moment...", A_ALWAYS, self, null, null, TO_CHAR);
-    pause;
     goto main_loop;
     
     :quit_handler:
@@ -121,14 +101,54 @@ When an interrupt is cleared, it is removed from the program's interrupt list an
     quit;
  } dilend
 
-== Error Conditions ==
-* If the interrupt index is invalid, the function may clear the wrong interrupt or do nothing
-* Using an interrupt index that has already been cleared is safe but has no effect
+=== Dynamic Interrupt Management ===
+ dilbegin dynamic_interrupts();
+ var
+    msg_intr : integer;
+    cmd_intr : integer;
+ code
+ {
+    // Set up dynamic interrupts based on conditions
+    msg_intr := interrupt(SFB_MSG, TRUE, message_handler);
+    cmd_intr := interrupt(SFB_CMD, TRUE, command_handler);
+    
+    // Main loop
+    pause;
+    goto main_loop;
+    
+    :message_handler:
+    // Handle message interrupt
+    clear(msg_intr);  // Remove after handling
+    goto main_loop;
+    
+    :command_handler:
+    // Handle command interrupt
+    clear(cmd_intr);  // Remove after handling
+    goto main_loop;
+    
+    :main_loop:
+    pause;
+    goto main_loop;
+ } dilend
 
-== See Also ==
+== Usage Notes ==
+* The interrupt index must be a valid value returned by a previous interrupt() call
+* If the interrupt index is invalid, the function may clear the wrong interrupt or do nothing
+* Clearing an interrupt that has already been cleared is safe but has no effect
+* This function is commonly used with interrupt() to manage dynamic interrupt handling
+* The clearing is immediate and affects the current execution cycle
+
+== Error Handling ==
+The function performs validation:
+* '''Index validation''' - Ensures interrupt index is valid
+* '''State validation''' - Ensures proper interrupt context
+* '''Runtime validation''' - Validates interrupt management state
+
+== Related Functions ==
 * [[interrupt]] - Set up interrupt handlers
-* [[on_activation]] - Set up activation conditions
+* [[SFB_*]] - Interrupt trigger flags
 * [[pause]] - Pause program execution
 
-== Implementation Details ==
-The clear function calls dil_intr_remove() to remove the specified interrupt from the program's interrupt list. The interrupt index is used to identify which interrupt to remove. This operation is immediate and affects the current execution cycle.
+== See Also ==
+* [[interrupt]] - Interrupt management system
+* [[execution control]] - DIL program flow control

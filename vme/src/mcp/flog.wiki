@@ -1,18 +1,7 @@
 = flog =
+ function: integer '''flog'''(filename : string, s : string, wa : string);
 
-== Syntax ==
- integer flog( filename : string, s : string, wa : string )
-
-== Parameters ==
-; filename : string
-: The Filename of the file to appear in the log directory.
-; s : string
-: The string to be logged.
-; wa : string
-: Write or Append mode - must be "w" or "a" (lowercase, surrounded by quotes)
-
-== Return Value ==
-Returns integer (typically 0 on success, non-zero on error).
+The '''flog''' function allows you to split up your logs in the log directory so that you don't end up with everything in the main vme.log.
 
 == Description ==
 The flog function allows you to split up your logs in the log directory so that you don't end up with everything in the main vme.log.
@@ -21,35 +10,47 @@ The append/write argument must be in lower case and can only be a 'w' or a 'a' s
 
 '''Note:''' This function requires zone access level > 1 to use.
 
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| filename || string || The Filename of the file to appear in the log directory
+|-
+| s || string || The string to be logged
+|-
+| wa || string || Write or Append mode - must be "w" or "a" (lowercase, surrounded by quotes)
+|}
+
 == Examples ==
-=== Example 1: Zone Logging ===
- dilbegin zonelog (s:string);
- code
- {
-    flog (self.zonidx+".log", s, "a");
-    return;
- }
- dilend
+dilbegin zonelog(s : string);
+code
+{
+   flog(self.zonidx+".log", s, "a");
+} dilend
 
-=== Example 2: Bug Report Logging ===
- t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
- t := textformat(t);
- i := flog("bugs", t, "a");
+t := z.symname + " ["+self.name+"] " + asctime(realtime)+ argument;
+t := textformat(t);
+i := flog("bugs", t, "a");
 
-=== Example 3: Overwrite Log ===
- // Create a fresh daily log
- flog("daily.log", "Daily log started: " + asctime(realtime), "w");
+// Create a fresh daily log
+flog("daily.log", "Daily log started: " + asctime(realtime), "w");
 
-== File Modes ==
-; "w"
-: Write mode - creates new file or overwrites existing file
-; "a"
-: Append mode - adds to end of existing file or creates new file
+== Usage Notes ==
+* The wa parameter must be exactly "w" or "a" (lowercase, with quotes)
+* "w" mode creates new file or overwrites existing file
+* "a" mode adds to end of existing file or creates new file
+* Requires zone access level > 1 to use
 
-== Security ==
-The function checks for zone access level. If the calling DIL program doesn't have sufficient access (level > 1), it will log an error message and terminate.
+== Error Handling ==
+* Returns 0 on success, non-zero on error
+* Insufficient access level will cause function to fail
+* File system errors may occur (disk full, permissions, etc.)
+
+== Related Functions/Fields ==
+* [[log()]] - Write to main game log
+* [[logcrime()]] - Log criminal activities
+* [[asctime()]] - Format timestamp for log entries
 
 == See Also ==
-* [[Manual:DIL Manual/log()|log()]] - Write to main game log
-* [[Manual:DIL Manual/logcrime()|logcrime()]] - Log criminal activities
-* [[Manual:DIL Manual/asctime()|asctime()]] - Format timestamp for log entries
+* File system operations
+* Zone access and security documentation

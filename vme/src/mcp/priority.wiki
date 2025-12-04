@@ -146,4 +146,4 @@ The procedure will fail when:
 * [[secure]] - Function for protecting units during critical operations
 * [[position]] - Field that may affect DIL program execution
 * [[outside_descr]] - Field commonly modified during priority sequences
-* [[send_to_all]] - Function for sending messages to all players
+* [[send_to_all]] - Function for sending messages to all players 

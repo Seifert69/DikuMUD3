@@ -183,6 +183,7 @@ String variables are declared using the `var` keyword:
 * [[getwords]] - Split string into word list
 * [[addstring]] - Add string to stringlist
 * [[substring]] - Remove string from stringlist
+
 * [[left]] - Get leftmost characters
 * [[right]] - Get rightmost characters
 * [[toupper]] - Convert to uppercase
@@ -191,4 +192,5 @@ String variables are declared using the `var` keyword:
 * DIL String Operations Documentation
 * String manipulation and parsing functions
 * Text processing and formatting functions
+
 * Input validation and string handling

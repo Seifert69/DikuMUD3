@@ -1,5 +1,5 @@
 = set_weight_base =
-function: void '''set_weight_base'''(unit : unitptr, weight : integer);
+ function: void '''set_weight_base'''(unit : unitptr, weight : integer);
 
 The '''set_weight_base''' function is used to set the base weight of a unit and automatically adjusts the weight of all containing units to maintain consistency.
 
@@ -8,7 +8,7 @@ This function sets the base weight of a unit to the specified value in pounds (Â
 
 The function is particularly useful for creating custom objects, modifying existing items, or implementing special weight-based mechanics.
 
-== Parameters ==
+== PARAMETERS ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -31,7 +31,7 @@ The weight parameter should be a positive integer representing the desired base 
     {
        // Set a custom base weight for the sword
        set_weight_base(sword, 15);  // 7.5 kg
-       sendtext("You create a heavy custom sword.<br/>", self);
+        sendtext("You create a heavy custom sword.&n", self);
     }
  } dilend
 
@@ -75,7 +75,7 @@ The weight parameter should be a positive integer representing the desired base 
        set_weight_base(container, 0);
        set_weight(container, 0);
        
-       sendtext("You create a weightless container.<br/>", self);
+        sendtext("You create a weightless container.&n", self);
     }
  } dilend
 

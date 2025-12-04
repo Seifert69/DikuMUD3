@@ -1,28 +1,36 @@
 = findroom =
+ function: unitptr '''findroom'''(s : string);
 
-== Syntax ==
- unitptr findroom( s : string )
-
-== Parameters ==
-; s : string
-: Symbolic name of room in the format "room_name@zone_name"
-
-== Return Value ==
-Returns a pointer to the room, or null if the room is not found or if the symbolic name is not a room.
+The '''findroom''' function finds and returns a room unitptr based on its symbolic name.
 
 == Description ==
 This function finds and returns a room unitptr based on its symbolic name. The symbolic name should be in the format "room_name@zone_name".
 
 If the symbolic name exists but is not a room (e.g., it's an object, NPC, or player), the function will return null.
 
-== Notes ==
-This function is primarily provided for historical reasons. Using findsymbolic() is equally efficient and provides the same functionality, but can return any type of unit, not just rooms.
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || Symbolic name of room in the format "room_name@zone_name"
+|}
 
-== Example ==
- room := findroom("inn@udgaard");
+== Examples ==
+room := findroom("inn@udgaard");
 
-This example finds the room with the symbolic name "inn@udgaard" and assigns it to the variable room.
+== Usage Notes ==
+* This function is primarily provided for historical reasons
+* Using '''findsymbolic()''' is equally efficient and provides the same functionality
+* '''findsymbolic()''' can return any type of unit, not just rooms
+
+== Error Handling ==
+* Returns null if the room is not found
+* Returns null if the symbolic name exists but is not a room
+
+== Related Functions/Fields ==
+* [[findsymbolic()]] - Find any unit by symbolic name
+* [[findunit()]] - Find a unit by name within a specific environment
 
 == See Also ==
-* [[Manual:DIL Manual/findsymbolic()|findsymbolic()]] - Find any unit by symbolic name
-* [[Manual:DIL Manual/findunit()|findunit()]] - Find a unit by name within a specific environment
+* Room system documentation
+* Symbolic name conventions

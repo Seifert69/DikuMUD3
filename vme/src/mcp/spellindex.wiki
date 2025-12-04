@@ -121,4 +121,5 @@ Always check the return value against -1 before using the index with other funct
 == See Also ==
 * [[skillindex]] - Similar function for skill indices
 * [[weaponindex]] - Similar function for weapon indices
+
 * DIL Spell System Documentation

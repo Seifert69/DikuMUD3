@@ -190,3 +190,4 @@ When checking unit types, the '''UNIT_ST_NPC''' constant is used to determine if
 * [[UNIT_ST_OBJ]] - Object type constant
 * [[UNIT_ST_ROOM]] - Room type constant
 * [[type]] - Unit type checking function
+

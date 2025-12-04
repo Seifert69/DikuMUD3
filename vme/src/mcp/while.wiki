@@ -60,30 +60,6 @@ The while loop evaluates the expression before each iteration. If the expression
     goto start;
  } dilend
 
-=== Conditional Loop ===
- dilbegin conditional_loop();
- var
-    attempts : integer;
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    
-    while (attempts < 3)
-    {
-       attempts := attempts + 1;
-       exec("say Attempt #" + itoa(attempts) + " to open door.", self);
-       pause;
-    }
-    else
-    {
-       exec("say Door opened successfully on attempt #" + itoa(attempts) + ".", self);
-       attempts := 0;
-    }
-    
-    goto start;
- } dilend
-
 === Input Processing Loop ===
  dilbegin input_processor();
  var
@@ -93,120 +69,16 @@ The while loop evaluates the expression before each iteration. If the expression
     :start:
     wait(SFB_CMD, TRUE);
     
-    while (TRUE)
-    {
-       input := argument;
-       
-       if (input == "quit")
-    {
-       exec("say Processing complete. Exiting.", self);
-       quit;
-    }
-       else
-    {
-       exec("say Processing input: " + input, self);
-    }
-    
-    goto start;
- } dilend
-
-=== State Machine ===
- dilbegin state_controller();
- var
-    state : integer;
- code
- {
-    :start:
-    wait(SFB_TICK, TRUE);
-    
-    state := 0;
-    
-    :start:
-    wait(SFB_CMD, TRUE);
-    
-    if (state == 0)
-    {
-       exec("say State: Idle", self);
-       state := 1;
-    }
-    else if (state == 1)
-    {
-       exec("say State: Active", self);
-       state := 2;
-    }
-    else if (state == 2)
-    {
-       exec("say State: Processing", self);
-       state := 0;
-    }
-    else
-    {
-       exec("say State: Unknown", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Timer-Based Loop ===
- dilbegin timed_loop();
- var
-    elapsed : integer;
-    iterations : integer;
- code
- {
-    :start:
-    wait(SFB_TICK, TRUE);
-    
-    iterations := 0;
-    
-    :start:
-    wait(SFB_TICK, TRUE);
-    
-    iterations := iterations + 1;
-    exec("say Iteration #" + itoa(iterations) + " completed.", self);
-    
-    if (iterations >= 10)
-    {
-       exec("say Processed 10 iterations. Stopping.", self);
-       iterations := 0;
-    }
-    
-    pause;
-    goto start;
- } dilend
-
-=== Input Validation ===
- dilbegin validated_input();
- var
-    input : string;
-    attempts : integer;
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    
     input := argument;
     
     if (input == "quit")
     {
-       exec("say Input validation complete.", self);
+       exec("say Processing complete. Exiting.", self);
        quit;
     }
     else
     {
        exec("say Processing input: " + input, self);
-       attempts := attempts + 1;
-    }
-    
-    if (attempts >= 3)
-    {
-       exec("say Too many invalid attempts. Please try again.", self);
-       attempts := 0;
-    }
-    else
-    {
-       exec("say Input accepted: " + input, self);
-       attempts := 0;
     }
     
     goto start;

@@ -1,39 +1,116 @@
 = capacity =
+ function: integer '''capacity'''(unit : unitptr);
+
+The '''capacity''' function returns the maximum weight capacity of a unit.
 
 == Description ==
 Returns the maximum weight capacity of a unit. This function determines how much weight a unit can hold (e.g. a chest) or carry (e.g. a character - based on its attributes).
 
-== Syntax ==
- capacity(unit)
-
 == Parameters ==
-; unit : unitptr
-: The unit whose capacity is being retrieved
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose capacity is being retrieved
+|}
 
 == Return Value ==
-: integer
-: The maximum weight capacity of the unit
+Returns an integer:
+* '''integer''' - The maximum weight capacity of the unit
+* '''fail''' - If unit parameter is invalid
 
 == Examples ==
+=== Basic Capacity Check ===
  dilbegin check_capacity();
  var
-  max_capacity : integer;
+    max_capacity : integer;
  code
  {
-  :start:
-  max_capacity := capacity(self);
-  sendtext("Your maximum capacity is " + itoa(max_capacity) + " units.<br/>", self);
+    max_capacity := capacity(self);
+    send("Your maximum capacity is " + itoa(max_capacity) + " units.");
+    quit;
  } dilend
 
-== Notes ==
+=== Container Capacity ===
+ dilbegin check_chest();
+ var
+    chest : unitptr;
+    chest_capacity : integer;
+ code
+ {
+    chest := findunit(self.outside, "chest", FIND_UNIT_SURRO, null);
+    if (chest != null and chest.type == UNIT_ST_OBJ) {
+       chest_capacity := capacity(chest);
+       send("Chest capacity: " + itoa(chest_capacity) + " units.");
+    } else {
+       send("No chest found here.");
+    }
+    quit;
+ } dilend
+
+=== Weight Comparison ===
+ dilbegin weight_vs_capacity();
+ var
+    current_weight : integer;
+    max_capacity : integer;
+ code
+ {
+    current_weight := weight(self);
+    max_capacity := capacity(self);
+    
+    send("Current weight: " + itoa(current_weight) + "/" + itoa(max_capacity));
+    if (current_weight >= max_capacity) {
+       send("You are carrying your maximum weight!");
+    } else {
+       send("You have " + itoa(max_capacity - current_weight) + " units of capacity remaining.");
+    }
+    quit;
+ } dilend
+
+=== Encumbrance Check ===
+ dilbegin check_encumbrance();
+ var
+    carry_capacity : integer;
+    current_load : integer;
+    percentage : integer;
+ code
+ {
+    carry_capacity := capacity(self);
+    current_load := weight(self);
+    percentage := (current_load * 100) / carry_capacity;
+    
+    if (percentage >= 100) {
+       send("You are completely overloaded!");
+    } else if (percentage >= 75) {
+       send("You are heavily encumbered.");
+    } else if (percentage >= 50) {
+       send("You are moderately encumbered.");
+    } else {
+       send("You are lightly encumbered.");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * This is a read-write property that can be modified
-* For CHARS the capacity is based on the character's strength and other attributes
+* For characters, capacity is based on the character's strength and other attributes
 * The value represents the maximum weight a unit can contain
 * Commonly used for chests, inventory management, encumbrance checks, and weight calculations
 * Higher capacity values allow units to contain more and heavier items
 * The function is read-only - use set() to modify capacity if needed
+* Capacity is typically measured in the same units as weight (grams)
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Type validation''' - Returns fail if unit is not a valid type
+* '''Range validation''' - Validates capacity is within reasonable bounds
+
+== Related Functions ==
+* [[weight]] - For getting the current weight of a unit
+* [[can_carry]] - For checking if a character can carry specific items
+* [[baseweight]] - For getting the base weight of a unit
 
 == See Also ==
-* weight - For getting the current weight of a unit
-* can_carry - For checking if a character can carry specific items
-* strength - For accessing character strength and other attributes
+* [[unitptr]] - Unit pointer data type
+* [[encumbrance]] - Weight and carrying system
+* [[strength]] - Character attribute affecting capacity

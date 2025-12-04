@@ -1,19 +1,9 @@
 = foreach =
 
-== Syntax ==
- foreach( unit_type_flags, variable )
- {
-    // code block
- }
-
-== Parameters ==
-; unit_type_flags : integer
-: Bitwise combination of unit type flags (e.g., UNIT_ST_PC, UNIT_ST_NPC, UNIT_ST_OBJ)
-; variable : unitptr
-: Variable name that will hold each unit in the iteration
+The '''foreach''' statement provides an easy way to process all units in the local environment.
 
 == Description ==
-The foreach statement provides an easy way to process all units in the local environment relative to the 'self' unit executing the foreach. The function automatically creates a list of local units and secures them during iteration.
+The '''foreach''' statement provides an easy way to process all units in the local environment relative to the 'self' unit executing the foreach. The function automatically creates a list of local units and secures them during iteration.
 
 The local environment includes:
 * If 'self' is in a room: all units in that room
@@ -22,10 +12,16 @@ The local environment includes:
 
 The foreach statement supports both break and continue statements for controlling the loop flow.
 
-== Return Value ==
-None
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit_type_flags || integer || Bitwise combination of unit type flags (e.g., UNIT_ST_PC, UNIT_ST_NPC, UNIT_ST_OBJ)
+|-
+| variable || unitptr || Variable name that will hold each unit in the iteration
+|}
 
-== Example ==
+== Examples ==
  dilbegin heal_all();
  var
     u : unitptr;
@@ -74,7 +70,7 @@ None
     return;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * Foreach cannot be nested - attempting to nest foreach statements will result in a fatal error
 * The units processed are relative to the 'self' unit executing the foreach
 * All units in the iteration are automatically secured to prevent modification conflicts
@@ -86,9 +82,15 @@ None
 ** UNIT_ST_ROOM - Rooms
 * Multiple flags can be combined using bitwise OR (|)
 
-== See Also ==
+== Error Handling ==
+* Nested foreach statements will cause a fatal error
+* Invalid unit type flags may result in unexpected behavior
+
+== Related Functions/Fields ==
 * [[secure]]
 * [[unsecure]]
 * [[break]]
 * [[continue]]
+
+== See Also ==
 * [[unitptr]]

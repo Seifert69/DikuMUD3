@@ -1,72 +1,118 @@
 = attack_type =
+ field: integer '''attack_type''' (Read-write)
+
+The '''attack_type''' field determines the non-weapon attack type of a character unit.
 
 == Description ==
 Returns or sets the non-weapon attack type of a character unit. This property determines what type of unarmed combat the character uses.
 
-== Syntax ==
- attack_type(unit)
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.attack_type || integer || The current attack type of the character
+|}
 
-== Parameters ==
-; unit : unitptr
-: The character unit whose attack type is being accessed or modified
-
-== Return Value ==
-: integer
-: The current attack type of the character
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
 
 == Examples ==
+=== Check Current Attack Type ===
  dilbegin check_attack_type();
  var
-  current_attack : integer;
+    current_attack : integer;
  code
  {
-  :start:
-  current_attack := attack_type(self);
-  sendtext("Your current attack type is " + weapon_name(current_attack) + ".<br/>", self);
+    current_attack := self.attack_type;
+    send("Your current attack type is " + weapon_name(current_attack) + ".");
+    quit;
  } dilend
 
- dilbegin set_attack_type(new_type : string);
- var
-  attack_list : stringlist;
-  type_list : intlist;
-  i : integer;
-  found : integer;
+=== Set Attack Type ===
+ dilbegin set_attack_type(new_type : integer);
  code
  {
-  :start:
-  attack_list := {"fist", "kick", "knee", "elbow"};
-  type_list := {WPN_FIST, WPN_KICK, WPN_KNEE, WPN_ELBOW};  
-  i := 0;
-  found := FALSE;
-  while (i < length(attack_list))
-  {
-    if (left(attack_list.[i], length(new_type)) == new_type)
-    {
-      found := TRUE;
-      break;
+    if (new_type >= WPN_FIST and new_type <= WPN_ELBOW) {
+       self.attack_type := new_type;
+       send("Attack type set to " + weapon_name(new_type) + ".");
+    } else {
+       send("Invalid attack type.");
     }
-    i := i + 1;
-  }
-  if (found == TRUE)
-  {
-    self.attack_type := type_list.[i];
-    sendtext("Attack type set to " + attack_list.[i] + ".<br/>", self);
-  }
-  else
-  {
-    sendtext("Invalid attack type. Available: fist, kick, knee, elbow.<br/>", self);
-  }
+    quit;
  } dilend
 
-== Notes ==
+=== Attack Type Menu ===
+ dilbegin attack_menu();
+ var
+    choice : string;
+ code
+ {
+    send("Available attack types:");
+    send("1. Fist");
+    send("2. Kick");
+    send("3. Knee");
+    send("4. Elbow");
+    
+    pause;
+    choice := argument;
+    
+    if (choice == "1") {
+       self.attack_type := WPN_FIST;
+       send("Attack type set to fist.");
+    } else if (choice == "2") {
+       self.attack_type := WPN_KICK;
+       send("Attack type set to kick.");
+    } else if (choice == "3") {
+       self.attack_type := WPN_KNEE;
+       send("Attack type set to knee.");
+    } else if (choice == "4") {
+       self.attack_type := WPN_ELBOW;
+       send("Attack type set to elbow.");
+    } else {
+       send("Invalid choice.");
+    }
+    quit;
+ } dilend
+
+=== Combat Style Change ===
+ dilbegin combat_style(style : string);
+ code
+ {
+    if (style == "martial") {
+       self.attack_type := WPN_KICK;
+       send("You adopt a martial arts stance.");
+    } else if (style == "brawler") {
+       self.attack_type := WPN_FIST;
+       send("You adopt a brawler's stance.");
+    } else {
+       send("Unknown combat style.");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * This is a read-write property that can be modified
 * Attack types correspond to weapon type constants (WPN_FIST, WPN_KICK, etc.)
 * Only applies to character units (PCs and NPCs)
 * Used for unarmed combat when no weapon is equipped
 * The attack_type affects combat animations and damage calculations
 * Common attack types include: fist, kick, knee, elbow
+* Changes to attack type take effect immediately in combat
+
+== Error Handling ==
+The field performs validation:
+* '''Unit validation'' - Ensures unit is a character type
+* '''Range validation'' - Validates attack type is within valid range
+* '''Type validation'' - Ensures value is an integer
+
+== Related Fields ==
+* [[weapon_name]] - For getting the name of an attack type
+* [[weapon_info]] - For detailed weapon/attack type information
+* [[position]] - For character combat position
 
 == See Also ==
-* weapon_name - For getting the name of an attack type
-* weapon_info - For detailed weapon/attack type information
-* position - For character combat position
+* [[WPN_*]] - Weapon type constants
+* [[UNIT_ST_PC]] - Player character unit type
+* [[UNIT_ST_NPC]] - Non-player character unit type

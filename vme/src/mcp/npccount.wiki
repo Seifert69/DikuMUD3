@@ -4,7 +4,7 @@
  function: integer '''npccount'''(zone : zoneptr);
 
 == Description ==
-The '''npccount''' function returns the number of NPCs (mobiles) currently defined in a specific zone. This function provides access to zone statistics and administrative information, allowing DIL programs to monitor zone population, balance NPC loads, and track zone activity.
+The '''npccount''' function returns the number of NPCs in a specific zone.
 
 == Parameters ==
 {| class="wikitable"
@@ -20,111 +20,29 @@ Returns '''integer''':
 * '''-1''' - If zone is not found or access error occurs
 
 == Examples ==
- dilbegin zone_monitor();
+ dilbegin check_zone_population(zone : zoneptr);
  var
-    target_zone : zoneptr;
     npc_count : integer;
  code
  {
-    // Get the admin zone for monitoring
-    target_zone := findroom("admin_zone@midgaard");
-    
-    if (target_zone != null)
-    {
-       npc_count := npccount(target_zone);
-       
-       exec("say Zone: " + target_zone.name, self);
-       exec("say NPC Count: " + itoa(npc_count), self);
-       
-       // Check zone population
-       if (npc_count < 10)
-       {
-          exec("say Zone population is low.", self);
-       }
-       else if (npc_count < 50)
-       {
-          exec("say Zone has moderate population.", self);
-       }
-       else
-       {
-          exec("say Zone is heavily populated.", self);
-       }
-    }
-    else
-    {
-       exec("say Admin zone not found.", self);
-    }
+    npc_count := npccount(zone);
+    exec("say Zone has " + itoa(npc_count) + " NPCs.", self);
  } dilend
 
- dilbegin zone_balance_check();
+ dilbegin zone_capacity_check();
  var
-    current_zone : zoneptr;
-    max_npcs : integer;
+    target_zone : zoneptr;
     current_npcs : integer;
  code
  {
-    current_zone := findroom("city_zone@midgaard");
-    
-    if (current_zone != null)
+    target_zone := findroom("city@midgaard");
+    if (target_zone != null)
     {
-       max_npcs := 50;  // Maximum allowed NPCs
-       current_npcs := npccount(current_zone);
-       
-       exec("say Current NPCs: " + itoa(current_npcs), self);
-       exec("say Maximum allowed: " + itoa(max_npcs), self);
-       
-       if (current_npcs >= max_npcs)
+       current_npcs := npccount(target_zone);
+       if (current_npcs > 50)
        {
-          exec("say Zone is at maximum capacity.", self);
-       exec("say Cannot spawn more NPCs.", self);
+          exec("say Zone is overpopulated.", self);
        }
-       else
-       {
-          exec("say Room for " + itoa(max_npcs - current_npcs) + " more NPCs.", self);
-       }
-    }
-    else
-    {
-       exec("say City zone not found.", self);
-    }
- } dilend
-
- dilbegin zone_statistics();
- var
-    admin_zone : zoneptr;
-    total_zones : integer;
-    total_npcs : integer;
-    current_zone : zoneptr;
-    zone_count : integer;
-    npc_count : integer;
- code
- {
-    admin_zone := findroom("admin_zone@midgaard");
-    
-    if (admin_zone != null)
-    {
-       // Count all zones and NPCs
-       total_zones := 0;
-       total_npcs := 0;
-       current_zone := zhead();
-       zone_count := 0;
-       
-       while (current_zone != null)
-       {
-          zone_count := zone_count + 1;
-          total_npcs := total_npcs + npccount(current_zone);
-          total_zones := total_zones + 1;
-          
-          current_zone := current_zone.next;
-       }
-       
-       exec("say Total Zones: " + itoa(total_zones), self);
-       exec("say Total NPCs: " + itoa(total_npcs), self);
-       exec("say Average NPCs per zone: " + itoa(total_npcs / total_zones), self);
-    }
-    else
-    {
-       exec("say Admin zone not found.", self);
     }
  } dilend
 
@@ -155,4 +73,4 @@ Returns '''integer''':
 * Zone type constants and management
 * Administrative zone building tools
 * NPC creation and management functions
-* Zone statistics and monitoring functions
+* Zone statistics and monitoring functions 

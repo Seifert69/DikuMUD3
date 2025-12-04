@@ -1,9 +1,7 @@
 = addcolor =
+function: '''addcolor'''(character : unitptr, color_key : string);
 
-The '''addcolor''' function is a built-in DIL (DikuMUD Interactive Language) function that adds a color to a character's color palette.
-
-== Syntax ==
- addcolor(unitptr character, string color_key)
+The '''addcolor''' function adds a color to a character's color palette.
 
 == Parameters ==
 {| class="wikitable"
@@ -14,65 +12,25 @@ The '''addcolor''' function is a built-in DIL (DikuMUD Interactive Language) fun
 | color_key || string || The color key to add (e.g., "&red", "&blue")
 |}
 
-== Return Value ==
-This function does not return a value (void).
+== Availability ==
+This function is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
 
-== Color Keys ==
-The color_key parameter accepts color keys in the following format:
-
-{| class="wikitable"
-! Color Key !! Description !! Example
-|-
-| "&red" || Red color
-|-
-| "&blue" || Blue color
-|-
-| "&green" || Green color
-|-
-| "&yellow" || Yellow color
-|-
-| "&cyan" || Cyan color
-|-
-| "&magenta" || Magenta color
-|-
-| "&white" || White color
-|-
-| "&black" || Black color
-|-
-| "&brown" || Brown color
-|-
-| "&grey" || Grey color
-|-
-| "&orange" || Orange color
-|-
-| "&purple" || Purple color
-|-
-| "&pink" || Pink color
-|}
+== Usage Notes ==
+* Color keys must start with "&" and be valid color names
+* Common color keys include: "&red", "&blue", "&green", "&yellow", "&cyan", "&magenta", "&white", "&black"
+* Colors are persistent across character saves and logins
 
 == Examples ==
-=== Basic Color Addition ===
- dilbegin add_red_color(player : unitptr);
+ dilbegin add_basic_color(player : unitptr);
  code
  {
     addcolor(player, "&red");
-    send("You now have red color available.");
+    send("Red color added to your palette.");
     quit;
  } dilend
 
-=== Multiple Colors ===
- dilbegin rainbow_colors(player : unitptr);
- code
- {
-    addcolor(player, "&red");
-    addcolor(player, "&blue");
-    addcolor(player, "&green");
-    addcolor(player, "&yellow");
-    send("You now have rainbow colors available!");
-    quit;
- } dilend
-
-=== Conditional Color Addition ===
  dilbegin conditional_color(player : unitptr, color_choice : integer);
  code
  {
@@ -82,126 +40,26 @@ The color_key parameter accepts color keys in the following format:
        addcolor(player, "&blue");
     } else if (color_choice == 3) {
        addcolor(player, "&green");
-    } else {
-       send("Invalid color choice. Use 1=red, 2=blue, 3=green.");
-       quit;
-    }
-    quit;
- } dilend
-
-=== Color Removal ===
- dilbegin remove_color(player : unitptr);
- code
- {
-    delcolor(player, "&red");
-    send("Red color removed from your palette.");
-    quit;
- } dilend
-
-=== Color Check ===
- dilbegin check_color(player : unitptr, color_key : string);
- code
- {
-    if (isaff(player, color_key)) {
-       send("You already have " + color_key + " color available.");
-    } else {
-       send("You don't have " + color_key + " color available.");
-    }
-    quit;
- } dilend
-
-=== Color Management System ===
- dilbegin color_manager(player : unitptr);
- var
-    color_choice : integer;
- code
- {
-    send("=== COLOR MANAGEMENT ===");
-    send("1. Add Red");
-    send("2. Add Blue");
-    send("3. Add Green");
-    send("4. Remove Red");
-    send("5. Check Colors");
-    send("6. Exit");
-    
-    pause;
-    
-    send("Enter your choice (1-6): ");
-    input(color_choice);
-    
-    if (color_choice >= 1 and color_choice <= 6) {
-       switch (color_choice) {
-          case 1:
-             addcolor(player, "&red");
-             send("Red color added.");
-             break;
-          case 2:
-             addcolor(player, "&blue");
-             send("Blue color added.");
-             break;
-          case 3:
-             addcolor(player, "&green");
-             send("Green color added.");
-             break;
-          case 4:
-             delcolor(player, "&red");
-             send("Red color removed.");
-             break;
-          case 5:
-             send("Current colors:");
-             send("  Red: " + (isaff(player, "&red") ? "Available" : "Not available");
-             send("  Blue: " + (isaff(player, "&blue") ? "Available" : "Not available");
-             send("  Green: " + (isaff(player, "&green") ? "Available" : "Not available");
-             break;
-          case 6:
-             send("Exiting color manager.");
-             break;
-          default:
-             send("Invalid choice.");
-             break;
-       }
-    } else {
-       send("Invalid input.");
     }
     quit;
  } dilend
 
 == Error Handling ==
-The function performs validation:
-* '''Character validation'' - Ensures character is a valid unit
-* '''Type validation'' - Ensures color_key is a string type
-* '''Color key validation'' - Validates that color_key starts with "&"
-* '''Security check'' - Logs attempts to add colors to non-characters
-
-Note: The C implementation shows that this function:
-* Uses str_escape_format() to validate color key format
-* Performs security logging for unauthorized access attempts
-* Only works on character units (PCs and NPCs)
-* Supports up to 20 different colors per character
-* Colors are stored in the character's color palette
-* The function is commonly used for:
-** Color customization systems
-** Visual effects and mood changes
-** Game mechanics (e.g., colored text, special effects)
-** Player identification systems
-** Environmental storytelling
+The function will fail if:
+* The character parameter is not a valid unit
+* The color_key parameter is not a string
+* The color_key does not start with "&"
+* The character is not a PC or NPC
 
 == Usage Notes ==
-* This function is commonly used with delcolor() for color removal
+* Use with delcolor() for color removal
 * Use with isaff() to check if a color is already available
 * Color keys must start with "&" and be valid color names
-* The function is more efficient than multiple send() calls with color codes
 * Colors are persistent across character saves and logins
-* Consider using color management systems for complex color palettes
-* The function works on both players and NPCs
 
-== Related Functions ==
+== Related Functions/Fields ==
 * [[delcolor]] - Remove a color from character's palette
 * [[isaff]] - Check if character has a specific color
-* [[send]] - Send messages with color formatting
-* [[sendtext]] - Send colored text to character
 
 == See Also ==
 * [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type

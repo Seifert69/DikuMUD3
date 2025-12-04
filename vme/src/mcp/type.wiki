@@ -19,67 +19,71 @@ This field is available on the following types:
 * cmdptr (Command pointer)
 
 == Examples ==
-dilbegin unique check_unit_type(u : unitptr);
-var
-    unit_type : integer;
-code
-{
-    unit_type := u.type;
-    
-    if (unit_type == UNIT_ST_PC)
-    {
-        sendto("This is a player character.&n", self);
-    }
-    else if (unit_type == UNIT_ST_NPC)
-    {
-        sendto("This is a non-player character.&n", self);
-    }
-    else if (unit_type == UNIT_ST_OBJ)
-    {
-        sendto("This is an object.&n", self);
-    }
-    else if (unit_type == UNIT_ST_ROOM)
-    {
-        sendto("This is a room.&n", self);
-    }
-} dilend
+=== Check Unit Type ===
+ dilbegin check_unit_type(u : unitptr);
+ var
+     unit_type : integer;
+ code
+ {
+     unit_type := u.type;
+     
+     if (unit_type == UNIT_ST_PC)
+     {
+         sendtext("This is a player character.<br/>", self);
+     }
+     else if (unit_type == UNIT_ST_NPC)
+     {
+         sendtext("This is a non-player character.<br/>", self);
+     }
+     else if (unit_type == UNIT_ST_OBJ)
+     {
+         sendtext("This is an object.<br/>", self);
+     }
+     else if (unit_type == UNIT_ST_ROOM)
+     {
+         sendtext("This is a room.<br/>", self);
+     }
+ } dilend
 
-dilbegin unique validate_target(tgt : unitptr);
-code
-{
-    // Only allow targeting of characters
-    if (not (tgt.type & (UNIT_ST_PC | UNIT_ST_NPC)))
-    {
-        sendto("You can only target characters!&n", self);
-        quit;
-    }
-    
-    // Continue with valid target...
-    sendto("Target validated: " + tgt.name + "&n", self);
-} dilend
+=== Validate Target ===
+ dilbegin validate_target(tgt : unitptr);
+ code
+ {
+     // Only allow targeting of characters
+     if (not (tgt.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+     {
+         sendtext("You can only target characters!<br/>", self);
+         quit;
+     }
+     
+     // Continue with valid target...
+     sendtext("Target validated: " + tgt.name + "<br/>", self);
+ } dilend
 
-dilbegin unique command_info(cmd : cmdptr);
-var
-    cmd_type : integer;
-code
-{
-    cmd_type := cmd.type;
-    sendto("Command: " + cmd.name + " Type: " + itoa(cmd_type) + "&n", self);
-} dilend
+=== Command Information ===
+ dilbegin command_info(cmd : cmdptr);
+ var
+     cmd_type : integer;
+ code
+ {
+     cmd_type := cmd.type;
+     sendtext("Command: " + cmd.name + " Type: " + itoa(cmd_type) + "<br/>", self);
+ } dilend
 
-dilbegin unique room_validation(room : unitptr);
-code
-{
-    // Ensure we're in a room
-    if (room.type != UNIT_ST_ROOM)
-    {
-        act("$1n looks confused about $1s surroundings.",
-            A_ALWAYS, self, null, null, TO_ALL);
-        quit;
-    }
-    
-    sendto("Room confirmed: " + room.title + "&n", self);
-} dilend
+=== Room Validation ===
+ dilbegin room_validation(room : unitptr);
+ code
+ {
+     // Ensure we're in a room
+     if (room.type != UNIT_ST_ROOM)
+     {
+         act("$1n looks confused about $1s surroundings.",
+             A_ALWAYS, self, null, null, TO_ALL);
+         quit;
+     }
+     
+     sendtext("Room confirmed: " + room.title + "<br/>", self);
+ } dilend
 
 == Usage Notes ==
 * For unitptr, the field returns one of the UNIT_ST_* constants:

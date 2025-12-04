@@ -1,7 +1,6 @@
 = loadstr =
 
-== Syntax ==
- function: integer '''loadstr'''(filename : string, buff : string);
+function: integer '''loadstr'''(filename : string, buff : string);
 
 == Description ==
 The '''loadstr''' function is used to load string content from disk files into a DIL string variable. This function is essential for creating persistent data storage systems such as message boards, news systems, mail systems, and NPC memory systems. The function reads files from the zone's DIL file directory under a "strings" subdirectory.
@@ -17,25 +16,11 @@ The '''loadstr''' function is used to load string content from disk files into a
 | buff || string || A string variable that will receive the loaded file content (passed by reference)
 |}
 
-== Return Value ==
-Returns integer:
-* '''FILE_LOADED''' (non-zero) - when the file was successfully loaded
-* '''FILE_NOT_FOUND''' (0) - when the specified file does not exist
-* '''FILE_OUT_OF_MEMORY''' - when insufficient memory to load the file
-* '''FILE_TO_LARGE''' - when the file exceeds size limits
-* '''fail''' - when parameters are invalid or access is denied
-
-== Security Notes ==
+== Examples ==
 * Requires zone access level greater than 10
 * Filenames are validated using '''store_name_test''' to prevent illegal access
 * Files are restricted to the zone's DIL file directory under "strings" subdirectory
 * Security violations are logged and may terminate the DIL program
-
-== Performance Considerations ==
-Disk access is always slow. To maintain server performance:
-* Keep file sizes to a minimum
-* Avoid frequent '''loadstr''' operations in time-critical code
-* Consider caching frequently accessed data in memory
 
 == Examples ==
 Basic file loading:
@@ -68,12 +53,25 @@ Message board system (from board reply DIL):
  }
 
 == Usage Notes ==
+* Requires zone access level greater than 10
+* Filenames are validated using '''store_name_test''' to prevent illegal access
+* Files are restricted to the zone's DIL file directory under "strings" subdirectory
+* Security violations are logged and may terminate the DIL program
+* Disk access is always slow. To maintain server performance:
+** Keep file sizes to a minimum
+** Avoid frequent '''loadstr''' operations in time-critical code
+** Consider caching frequently accessed data in memory
 * The second parameter (buff) is modified by reference to contain the loaded content
 * Empty files will result in buff being set to null
 * The function automatically handles memory allocation and cleanup
 * Use with '''savestr''' for complete persistent storage solutions
 
 == Error Handling ==
+* Returns '''FILE_LOADED''' (non-zero) when the file was successfully loaded
+* Returns '''FILE_NOT_FOUND''' (0) when the specified file does not exist
+* Returns '''FILE_OUT_OF_MEMORY''' when insufficient memory to load the file
+* Returns '''FILE_TO_LARGE''' when the file exceeds size limits
+* Returns '''fail''' when parameters are invalid or access is denied
 * Invalid parameters result in '''fail''' return value
 * Security violations terminate the DIL program with WAITCMD_QUIT
 * File system errors are logged to the zone log
@@ -88,4 +86,4 @@ Message board system (from board reply DIL):
 * [[FILE_LOADED]] - Success constant
 * [[FILE_NOT_FOUND]] - File not found constant  
 * [[FILE_OUT_OF_MEMORY]] - Memory error constant
-* [[FILE_TO_LARGE]] - File size error constant
+* [[FILE_TO_LARGE]] - File size error constant 

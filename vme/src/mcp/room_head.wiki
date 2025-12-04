@@ -1,5 +1,5 @@
 = room_head =
-function: room '''room_head'''();
+function: unitptr '''room_head'''();
 
 The '''room_head''' function returns a pointer to the first room in the global room list.
 
@@ -58,8 +58,6 @@ code
     
     quit;
 }
-dilend
-
 dilend
 
 == Usage Notes ==

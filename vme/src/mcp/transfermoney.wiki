@@ -6,7 +6,7 @@ The '''transfermoney''' function transfers money between characters or creates/d
 == Description ==
 This function transfers a specified amount of money from one character to another. Both parameters must be character units (PCs or NPCs). The function returns 1 if the transfer was successful, or 0 if it failed (typically due to insufficient funds). Special behavior allows money creation or destruction when one of the character parameters is null.
 
-== PARAMETERS ==
+== Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -18,24 +18,81 @@ This function transfers a specified amount of money from one character to anothe
 |}
 
 == Examples ==
-dilbegin unique shop_transaction(pc : unitptr, cost : integer);
-var
-    success : integer;
-code
-{
-    // Transfer money from player to shopkeeper (self)
-    success := transfermoney(pc, self, cost);
-    
-    if (success)
-    {
-        sendto("Thank you for your payment!&n", pc);
-        // Process the sale...
-    }
-    else
-    {
-        sendto("You can't afford that!&n", pc);
-    }
-} dilend
+=== Shop Transaction ===
+ dilbegin shop_transaction(pc : unitptr, cost : integer);
+ var
+     success : integer;
+ code
+ {
+     // Transfer money from player to shopkeeper (self)
+     success := transfermoney(pc, self, cost);
+     
+     if (success)
+     {
+         sendtext("Thank you for your payment!<br/>", pc);
+         // Process sale...
+     }
+     else
+     {
+         sendtext("You can't afford that!<br/>", pc);
+     }
+ } dilend
+
+=== Reward Player ===
+ dilbegin reward_player(pc : unitptr, reward : integer);
+ var
+     success : integer;
+ code
+ {
+     // Create money and give to player (from null)
+     success := transfermoney(null, pc, reward);
+     
+     if (success)
+     {
+         sendtext("You have been rewarded!<br/>", pc);
+         act("$1n receives a reward!", A_ALWAYS, pc, null, null, TO_ROOM);
+     }
+ } dilend
+
+=== Fine Player ===
+ dilbegin fine_player(pc : unitptr, fine : integer);
+ var
+     success : integer;
+ code
+ {
+     // Take money from player and destroy it (to null)
+     success := transfermoney(pc, null, fine);
+     
+     if (success)
+     {
+         sendtext("You have paid your fine of " + moneystring(fine, 0) + "<br/>", pc);
+         sendtext("Your fine has been collected.<br/>", pc);
+     }
+     else
+     {
+         sendtext("You can't afford to pay fine!<br/>", pc);
+     }
+ } dilend
+
+=== Player Trade ===
+ dilbegin player_trade(pc1 : unitptr, pc2 : unitptr, amount : integer);
+ var
+     success : integer;
+ code
+ {
+     // Transfer money between two players
+     success := transfermoney(pc1, pc2, amount);
+     
+     if (success)
+     {
+         sendtext("You transfer " + moneystring(amount, 0) + " to " + pc2.name + "<br/>", pc1);
+         sendtext(pc1.name + " transfers " + moneystring(amount, 0) + " to you<br/>", pc2);
+     }
+     else
+     {
+         sendtext("Transfer failed - insufficient funds!<br/>", pc1);
+     }
+ } dilend
 
 dilbegin unique reward_player(pc : unitptr, reward : integer);
 var

@@ -1,14 +1,10 @@
 = ghead =
+ function: unitptr '''ghead'''();
 
-== Syntax ==
- unitptr := ghead();
-
-== Return Value ==
- unitptr
-    Returns the first unit in the global unit list. According to the documentation, this will be the last character to have logged on.
+The ghead() function returns the first unit in the global unit list, providing access to all units currently active in the game.
 
 == Description ==
- The ghead() function returns the first unit in the global unit list, providing access to all units currently active in the game. The global list contains all units (players, NPCs, objects, rooms) in the order they were created or logged in.
+ The '''ghead'''() function returns the first unit in the global unit list, providing access to all units currently active in the game. The global list contains all units (players, NPCs, objects, rooms) in the order they were created or logged in.
 
  This function is commonly used to iterate through all units in the game, particularly for:
  * Finding all online players
@@ -18,7 +14,7 @@
 
  The returned unit can be used with the .gnext field to traverse through the entire global list.
 
-== Example ==
+== Examples ==
  dilbegin list_online_players();
  var
     unit : unitptr;
@@ -63,8 +59,21 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* Returns the last character to have logged on as the first unit
+* Use with '''gnext''' field to iterate through the entire global list
+* The global list contains all unit types: players, NPCs, objects, and rooms
+* Returns null if no units exist in the game
+
+== Error Handling ==
+* Returns null if the global list is empty
+* Always check return value before using the returned unit
+* The function itself does not fail under normal circumstances
+
+== Related Functions/Fields ==
+* [[gnext]] - Next unit in global list
+* [[gprevious]] - Previous unit in global list
+* [[visible]] - Check if unit is visible to another
+
 == See Also ==
- * [[unitptr]] - Unit pointer type and fields
- * [[gnext]] - Next unit in global list
- * [[gprevious]] - Previous unit in global list
- * [[visible]] - Check if unit is visible to another
+* [[unitptr]] - Unit pointer type and fields

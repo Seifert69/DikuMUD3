@@ -18,7 +18,7 @@ This field is available on the following unit types:
 * UNIT_ST_OBJ (Object)
 
 == Examples ==
-=== Basic Usage ===
+=== Basic Weapon Usage ===
  dilbegin check_weapon_damage();
  var
    weapon : unitptr;
@@ -34,7 +34,7 @@ This field is available on the following unit types:
    }
  } dilend
 
-=== Food and Drink ===
+=== Food Quality Check ===
  dilbegin check_food_quality();
  var
    food : unitptr;
@@ -57,7 +57,7 @@ This field is available on the following unit types:
    }
  } dilend
 
-=== Container Management ===
+=== Container Status ===
  dilbegin check_container_status();
  var
    container : unitptr;
@@ -74,29 +74,6 @@ This field is available on the following unit types:
      if (container.value[1] == 1) // Check if container is closed
      {
        sendtext("The container is currently closed.<br/>", activator);
-     }
-   }
- } dilend
-
-=== Light Source ===
- dilbegin check_light_duration();
- var
-   light : unitptr;
-   hours_left : integer;
- 
- code
- {
-   light := self.equipment[WEAR_HOLD];
-   if (light != null and light.objecttype == ITEM_LIGHT)
-   {
-     hours_left := light.value[0]; // Get remaining hours
-     if (hours_left > 0)
-     {
-       sendtext("The light will burn for " + itoa(hours_left) + " more hours.<br/>", activator);
-     }
-     else
-     {
-       sendtext("The light has burned out.<br/>", activator);
      }
    }
  } dilend

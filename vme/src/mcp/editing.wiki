@@ -1,14 +1,7 @@
 = editing =
+ field: integer '''.editing''' (Read-only)
 
 '''editing''' is a field accessor that checks if a player character is currently in text editing mode.
-
-== Syntax ==
- integer := unitptr.editing
-
-== Return Value ==
-Returns an integer:
-* TRUE (1) if the player is currently editing text
-* FALSE (0) if the player is not editing text
 
 == Description ==
 The editing field indicates whether a player character is currently in text editing mode. This typically occurs when players are writing messages, notes, board posts, or other text content using the game's built-in editor.
@@ -19,8 +12,18 @@ The editing mode is activated by:
 * Creating notes or letters
 * Other text input scenarios
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unitptr.editing || integer || TRUE (1) if editing, FALSE (0) if not editing (Read-only)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
 == Usage Notes ==
-* This field is read-only for most DIL programs
 * The value is automatically managed by the game system
 * The field is commonly used to:
 ** Prevent multiple simultaneous editing sessions
@@ -52,7 +55,9 @@ The editing mode is activated by:
     act("Done editing", A_ALWAYS, self, null, null, TO_CHAR);
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[beginedit]] - Put a player into editing mode
 * [[killedit]] - Stop editing before completion
+
+== See Also ==
 * [[unit_st_pc]] - Player character fields

@@ -1,9 +1,5 @@
 = pathto =
-
  function: integer '''pathto'''(from : unitptr, to : unitptr);
-
-== Syntax ==
- integer pathto(from : unitptr, to : unitptr);
 
 == Description ==
 The '''pathto''' function calculates the direction needed to move from one unit to another. It determines the shortest path direction from the room containing the "from" unit to the room containing the "to" unit. The function returns a directional constant that can be used with movement commands.
@@ -74,4 +70,4 @@ The function will return '''fail''' when:
 
 == See Also ==
 * [[move]] - Move a unit in a specific direction
-* [[goto]] - Teleport to a specific location
+* [[goto]] - Teleport to a specific location 

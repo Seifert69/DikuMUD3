@@ -1,15 +1,16 @@
 = act =
+ function: void '''act'''(string : string, visibility : integer, char : unitptr, medium : unitptr, victim : unitptr, to_whom : integer);
 
 The '''act''' function is a built-in DIL (DikuMUD Interactive Language) function that sends formatted messages to characters in a room or specific targets.
 
-== Syntax ==
- act(string message, integer visibility, unitptr char, unitptr medium, unitptr victim, integer to_whom)
+== Description ==
+This function sends formatted messages to characters with support for dynamic content substitution through formatters. It's the primary method for sending messages to players in DikuMUD.
 
 == Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
-| message || string || The message to be sent (with formatters)
+| string || string || The message to be sent (with formatters)
 |-
 | visibility || integer || Visibility flag for message delivery
 |-
@@ -21,9 +22,6 @@ The '''act''' function is a built-in DIL (DikuMUD Interactive Language) function
 |-
 | to_whom || integer || Who receives the message (target audience)
 |}
-
-== Return Value ==
-This function does not return a value (void).
 
 == Visibility Flags ==
 {| class="wikitable"
@@ -100,73 +98,12 @@ The message string can contain special formatters that are replaced at runtime:
     quit;
  } dilend
 
-=== Hidden Action ===
- dilbegin hidden_action(actor : unitptr);
- code
- {
-    act("$1n vanishes into thin air.", A_HIDEINV, actor, null, null, TO_ROOM);
-    quit;
- } dilend
-
-=== Room-Wide Message ===
- dilbegin announce_to_room(message : string);
- code
- {
-    act(message, A_ALWAYS, self, null, null, TO_ROOM);
-    quit;
- } dilend
-
-=== Complex Multi-Target Message ===
- dilbegin complex_message(actor : unitptr, victim : unitptr, weapon : unitptr);
- code
- {
-    act("$1n attacks $3n with $2n, dealing a deadly blow!", A_ALWAYS, actor, weapon, victim, TO_NOTVICT);
-    act("$3n screams in agony!", A_SOMEONE, actor, null, victim, TO_VICT);
-    quit;
- } dilend
-
-=== Message with Formatters ===
- dilbegin formatted_message(actor : unitptr, victim : unitptr);
- code
- {
-    act("$1n smiles at $3n.", A_SOMEONE, actor, null, victim, TO_CHAR);
-    act("$1n smiles at $3n.", A_NOTVICT, actor, null, victim, TO_ROOM);
-    quit;
- } dilend
-
 === Gender-Aware Messages ===
  dilbegin gender_aware_message(actor : unitptr, victim : unitptr);
  code
  {
     act("$1n pats $5n on the head.", A_SOMEONE, actor, null, victim, TO_CHAR);
     act("$1n pats $5m on the head.", A_SOMEONE, actor, null, victim, TO_ROOM);
-    quit;
- } dilend
-
-=== Conditional Messaging ===
- dilbegin conditional_message(actor : unitptr, target : unitptr);
- var
-    message : string;
- code
- {
-    if (target != null) {
-       message := "$1n gives $2n to $3n.";
-       act(message, A_SOMEONE, actor, null, target, TO_CHAR);
-       act(message, A_NOTVICT, actor, null, target, TO_ROOM);
-    } else {
-       message := "$1n looks around.";
-       act(message, A_SOMEONE, actor, null, null, TO_ROOM);
-    }
-    quit;
- } dilend
-
-=== Arrest Example ===
- dilbegin arrest_example(deputy : unitptr, criminal : unitptr, cuffs : unitptr);
- code
- {
-    act("You cuff $3n.", A_SOMEONE, deputy, null, criminal, TO_CHAR);
-    act("$1n surprises you and puts $2n around your wrists.", A_SOMEONE, deputy, cuffs, criminal, TO_VICT);
-    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, criminal, TO_NOTVICT);
     quit;
  } dilend
 

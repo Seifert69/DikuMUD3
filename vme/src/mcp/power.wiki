@@ -138,4 +138,4 @@ The variable access will fail when:
 * [[argument]] - Variable containing command arguments
 * [[activator]] - Variable containing the unit that triggered the action
 * [[target]] - Variable containing the target of the action
-* [[medium]] - Variable containing the medium through which action occurs
+* [[medium]] - Variable containing the medium through which action occurs 

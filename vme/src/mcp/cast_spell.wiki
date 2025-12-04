@@ -1,61 +1,127 @@
 = cast_spell =
+ function: integer '''cast_spell'''(spell_index : integer, caster : unitptr, medium : unitptr, target : unitptr, bonus : integer, effect : string);
+
+The '''cast_spell''' function casts a spell at a target unit.
 
 == Description ==
 Casts a spell at a target unit. This is a low-level function for spell development and should only be used by developers who understand the spell system.
 
-== Syntax ==
- cast_spell(spell_index, caster, medium, target, bonus, effect)
-
 == Parameters ==
-; spell_index : integer
-: The spell index to cast (SPL_XXX constants)
-; caster : unitptr
-: The unit casting the spell
-; medium : unitptr
-: The medium through which the spell is cast (may be same as caster)
-; target : unitptr
-: The target of the spell
-; bonus : integer
-: Bonus or penalty to apply to spell (positive for advantage, negative for penalty)
-; effect : string
-: Optional effect string for the spell (can be null or empty)
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| spell_index || integer || The spell index to cast (SPL_XXX constants)
+|-
+| caster || unitptr || The unit casting the spell
+|-
+| medium || unitptr || The medium through which the spell is cast (may be same as caster)
+|-
+| target || unitptr || The target of the spell
+|-
+| bonus || integer || Bonus or penalty to apply to the spell (positive for advantage, negative for penalty)
+|-
+| effect || string || Optional effect string for the spell (can be null or empty)
+|}
 
 == Return Value ==
-: integer
-: The amount of damage dealt by the spell
+Returns an integer:
+* '''integer''' - The amount of damage dealt by the spell
+* '''0''' - If the spell fails or deals no damage
+* '''fail''' - If parameters are invalid
 
 == Examples ==
+=== Basic Spell Casting ===
  dilbegin fireball_example();
  var
-  damage : integer;
+    damage : integer;
  code
  {
-  :start:
-  damage := cast_spell(SPL_FIREBALL, self, self, 0, "");
-  sendtext("Your fireball deals " + itoa(damage) + " damage.<br/>", self);
+    damage := cast_spell(SPL_FIREBALL, self, self, 0, "");
+    send("Your fireball deals " + itoa(damage) + " damage.");
+    quit;
  } dilend
 
-dilbegin enhanced_spell();
+=== Enhanced Spell ===
+ dilbegin enhanced_spell();
  var
-  spell_damage : integer;
-code
+    spell_damage : integer;
+ code
  {
-  :start:
-  spell_damage := cast_spell(SPL_LIGHTNING, self, self, 5, "enhanced effect");
-  sendtext("Your enhanced lightning deals " + itoa(spell_damage) + " damage.<br/>", self);
+    spell_damage := cast_spell(SPL_LIGHTNING, self, self, 5, "enhanced effect");
+    send("Your enhanced lightning deals " + itoa(spell_damage) + " damage.");
+    quit;
  } dilend
 
-== Notes ==
+=== Targeted Spell ===
+ dilbegin targeted_spell(target : unitptr);
+ var
+    spell_damage : integer;
+ code
+ {
+    if (target != null) {
+       spell_damage := cast_spell(SPL_MAGIC_MISSILE, self, self, target, 0, "magical");
+       send("Magic missile strikes " + target.name + " for " + itoa(spell_damage) + " damage!");
+    } else {
+       send("No valid target for spell.");
+    }
+    quit;
+ } dilend
+
+=== Conditional Spell Casting ===
+ dilbegin conditional_cast();
+ var
+    spell_power : integer;
+ code
+ {
+    spell_power := cast_spell(SPL_HEAL, self, self, activator, 0, "");
+    
+    if (spell_power > 0) {
+       send("Your heal spell was effective!");
+    } else {
+       send("Your heal spell failed.");
+    }
+    quit;
+ } dilend
+
+=== Spell with Medium ===
+ dilbegin spell_through_wand();
+ var
+    wand : unitptr;
+    damage : integer;
+ code
+ {
+    wand := findunit(self.inside, "wand", FIND_UNIT_INVEN, null);
+    if (wand != null) {
+       damage := cast_spell(SPL_FIREBALL, self, wand, activator, 0, "");
+       send("Your wand casts fireball for " + itoa(damage) + " damage!");
+    } else {
+       send("No wand found.");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * This is an advanced function for spell development
-* Should only be used by developers who understand the spell system internals
+* Should only be used by developers who understand the spell system
 * Requires proper spell index constants (SPL_XXX)
 * The bonus parameter can modify spell effectiveness
-* Effect parameter is optional and can be null or empty
+* Effect parameter is optional and can be null or empty string
 * Returns the actual damage dealt by the spell
 * Commonly used for creating custom spells or spell modifications
 * The function handles spell casting mechanics including damage calculation
 
+== Error Handling ==
+The function performs validation:
+* '''Parameter validation''' - Ensures all parameters are valid types
+* '''Spell validation''' - Checks that spell_index is within valid range
+* '''Target validation''' - Ensures target is a valid unit
+* '''Caster validation''' - Ensures caster is a valid unit
+
+== Related Functions ==
+* [[spellinfo]] - For getting detailed information about spells
+* [[SPL_*]] - Spell index constants
+* [[attack_spell]] - For offensive spell casting (higher-level function)
+
 == See Also ==
-* spellinfo - For getting detailed information about spells
-* SPL_* constants - For spell index definitions
-* attack_spell - For offensive spell casting (higher-level function)
+* [[unitptr]] - Unit pointer data type
+* [[spell system]] - Magic and spell casting system

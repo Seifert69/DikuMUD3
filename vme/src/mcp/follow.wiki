@@ -1,25 +1,25 @@
 = follow =
+ function: void '''follow'''({follower : unitptr, leader : unitptr});
 
-== Syntax ==
- follow( follower : unitptr, leader : unitptr )
-
-== Parameters ==
-; follower : unitptr
-: The character that will follow the leader
-; leader : unitptr
-: The character to be followed. Can be null to stop following
+The '''follow''' function makes the follower character follow the leader character.
 
 == Description ==
-The follow() function makes the follower character follow the leader character. This function works unconditionally, meaning it will make the follower follow even if they are mortally wounded, sleeping, fighting, or in any other state.
+The '''follow''' function makes the follower character follow the leader character. This function works unconditionally, meaning it will make the follower follow even if they are mortally wounded, sleeping, fighting, or in any other state.
 
 If the leader parameter is null, the function will stop the follower from following anyone.
 
 When called, the function will first stop any existing following relationship for the follower, then establish the new following relationship if both the follower and leader are valid characters.
 
-== Return Value ==
-None
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| follower || unitptr || The character that will follow the leader
+|-
+| leader || unitptr || The character to be followed. Can be null to stop following
+|}
 
-== Example ==
+== Examples ==
  dilbegin cuff_target(deputy : unitptr, targ : unitptr, cuffs : unitptr);
  var
     depname: string;
@@ -42,11 +42,20 @@ None
     return;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * Both the follower and leader must be valid character units (unitptr)
 * The function will automatically stop any existing following relationship before establishing a new one
 * Use null as the leader parameter to stop a character from following anyone
 * This function is commonly used in situations like arrests, escorts, or prisoner scenarios
+
+== Error Handling ==
+* If either parameter is invalid, the function will fail gracefully
+* The function handles null leader parameter to stop following relationships
+
+== Related Functions/Fields ==
+* [[follower]]
+* [[master]]
+* [[followercount]]
 
 == See Also ==
 * [[stop_fighting]]

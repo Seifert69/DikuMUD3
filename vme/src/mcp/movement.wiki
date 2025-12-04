@@ -69,4 +69,4 @@ The terrain type affects:
 
 == See Also ==
 * Room exit fields: '''exit_to[]''', '''exit_info[]''', '''exit_names[]'''
-* Environmental constants: SECT_*, EX_*, ROOM_FL_*
+* Environmental constants: SECT_*, EX_*, ROOM_FL_* 

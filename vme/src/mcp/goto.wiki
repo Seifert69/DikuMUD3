@@ -178,4 +178,4 @@ code
 * [[pause]] - Program timing and loop control
 * [[if]] - Conditional branching
 * Control flow structures
-* State machine patterns
+* State machine patterns 

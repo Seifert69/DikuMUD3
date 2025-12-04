@@ -1,68 +1,118 @@
 = atoi =
+ function: integer '''atoi'''(text : string);
+
+The '''atoi''' function converts a string containing a numeric value into an integer.
 
 == Description ==
 Converts a string containing a numeric value into an integer. This function parses the beginning of a string to extract and return the integer value it contains.
 
-== Syntax ==
- atoi(string)
-
 == Parameters ==
-; string : string
-: The string to convert to an integer. The string should contain numeric characters.
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| text || string || The string to convert to an integer. The string should contain numeric characters.
+|}
 
 == Return Value ==
-: integer
-: The integer value extracted from the string. If the string does not begin with a valid number, returns 0.
+Returns an integer:
+* '''integer''' - The integer value extracted from the string
+* '''0''' - If the string does not begin with a valid number
 
 == Examples ==
- dilbegin number_conversion();
+=== Basic Conversion ===
+ dilbegin convert_number();
  var
-  text : string;
-  number : integer;
+    text : string;
+    number : integer;
  code
  {
-  :start:
-  text := "42";
-  number := atoi(text);
-  sendtext("The number is: " + itoa(number) + "<br/>", activator);
+    text := "42";
+    number := atoi(text);
+    send("The number is: " + itoa(number));
+    quit;
  } dilend
 
- dilbegin reward_system();
+=== User Input Processing ===
+ dilbegin process_amount();
  var
-  reward_str : string;
-  reward_amount : integer;
+    amount_str : string;
+    amount : integer;
  code
  {
-  :start:
-  reward_str := "1000";
-  reward_amount := atoi(reward_str);
-  if (reward_amount > 500)
-  {
-    sendtext("That's a high reward!<br/>", activator);
-  }
+    amount_str := argument;
+    amount := atoi(amount_str);
+    if (amount > 0) {
+       send("Processing amount: " + itoa(amount));
+    } else {
+       send("Invalid amount specified.");
+    }
+    quit;
  } dilend
 
- dilbegin jail_time();
+=== Reward System ===
+ dilbegin reward_check();
  var
-  time_str : string;
-  hours : integer;
+    reward_str : string;
+    reward_amount : integer;
  code
  {
-  :start:
-  time_str := "24";
-  hours := atoi(time_str);
-  sendtext("Jail time: " + itoa(hours) + " hours remaining.<br/>", self);
+    reward_str := "1000";
+    reward_amount := atoi(reward_str);
+    if (reward_amount > 500) {
+       send("That's a high reward!");
+    } else {
+       send("Standard reward amount.");
+    }
+    quit;
  } dilend
 
-== Notes ==
+=== Time Parsing ===
+ dilbegin parse_time();
+ var
+    time_str : string;
+    hours : integer;
+ code
+ {
+    time_str := "24 hours remaining";
+    hours := atoi(time_str);
+    send("Jail time: " + itoa(hours) + " hours remaining.");
+    quit;
+ } dilend
+
+=== Negative Numbers ===
+ dilbegin negative_conversion();
+ var
+    debt_str : string;
+    debt : integer;
+ code
+ {
+    debt_str := "-150";
+    debt := atoi(debt_str);
+    send("Debt amount: " + itoa(debt));
+    quit;
+ } dilend
+
+== Usage Notes ==
 * The function stops parsing when it encounters a non-numeric character
 * If the string begins with non-numeric characters, the function returns 0
 * Leading whitespace is ignored
 * The function handles both positive and negative numbers
 * Commonly used to convert user input or stored string values to integers
 * This is the inverse of the itoa() function
+* Useful for parsing command arguments, configuration values, and user input
+
+== Error Handling ==
+The function performs validation:
+* '''String validation'' - Ensures text parameter is a valid string
+* '''Numeric parsing'' - Stops at first non-numeric character
+* '''Range validation'' - Handles integer overflow gracefully
+* '''Sign handling'' - Properly processes positive and negative numbers
+
+== Related Functions ==
+* [[itoa]] - For converting integers to strings
+* [[getwords]] - For parsing strings into components
+* [[strcmp]] - For string comparison
 
 == See Also ==
-* itoa - For converting integers to strings
-* getwords - For parsing strings into components
-* strcmp - For string comparison
+* [[string]] - String data type
+* [[integer]] - Integer data type

@@ -1,7 +1,5 @@
 = opponent =
-
-== Syntax ==
-integer '''opponent'''(u1 : unitptr, u2 : unitptr)
+ function: integer '''opponent'''(u1 : unitptr, u2 : unitptr);
 
 == Description ==
 The '''opponent'''() function checks if two characters are in combat with each other. This function determines whether one unit is directly engaged in combat with another unit, either as attacker or defender.
@@ -45,38 +43,6 @@ Characters must be awake and capable of combat (not sleeping, etc.).
        act("$1n is not fighting with $2n.", A_ALWAYS, self, char1, char2, TO_CHAR);
  } dilend
 
-=== Combat Status Display ===
- dilbegin show_combat_status();
- var
-    unit : unitptr;
-    count : integer;
- 
- code
- {
-    act("=== Combat Status ===", A_ALWAYS, self, null, null, TO_CHAR);
-    count := 0;
-    
-    foreach (UNIT_ST_PC, unit)
-    {
-       if (opponent(self, unit))
-       {
-          count := count + 1;
-          act("Fighting: $1n", A_ALWAYS, self, unit, null, TO_CHAR);
-       }
-    }
-    
-    foreach (UNIT_ST_NPC, unit)
-    {
-       if (opponent(self, unit))
-       {
-          count := count + 1;
-          act("Fighting: $1n", A_ALWAYS, self, unit, null, TO_CHAR);
-       }
-    }
-    
-    act("Total opponents: $1d", A_ALWAYS, self, count, null, TO_CHAR);
- } dilend
-
 === Target Validation ===
  dilbegin validate_attack_target(target : unitptr);
  var
@@ -104,119 +70,6 @@ Characters must be awake and capable of combat (not sleeping, etc.).
        act("You are not in combat with $1n.", A_ALWAYS, self, target, null, TO_CHAR);
     
     return can_attack;
- } dilend
-
-=== Combat Assistant ===
- dilbegin combat_assistant();
- var
-    enemy : unitptr;
-    ally : unitptr;
-    helping_ally : integer;
- 
- code
- {
-    // Find an enemy to attack
-    enemy := findunit(self, "goblin", FIND_UNIT_SURRO, null);
-    
-    if (enemy == null)
-    {
-       act("No enemies found.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    // Check if we're already fighting this enemy
-    if (opponent(self, enemy))
-    {
-       act("You are already fighting $1n!", A_ALWAYS, self, enemy, null, TO_CHAR);
-       return;
-    }
-    
-    // Find an ally who might help
-    foreach (UNIT_ST_PC, ally)
-    {
-       if ((ally != self) and (ally.outside == self.outside) and
-           (opponent(ally, enemy)))
-       {
-          helping_ally := TRUE;
-          break;
-       }
-    }
-    
-    if (helping_ally)
-       act("$1n is already fighting $2n with $3n's help!", 
-          A_ALWAYS, self, ally, enemy, TO_CHAR);
-    else
-       act("$1n is available to attack!", A_ALWAYS, self, enemy, null, TO_CHAR);
- } dilend
-
-=== Mutual Combat Check ===
- dilbegin check_mutual_combat();
- var
-    unit1 : unitptr;
-    unit2 : unitptr;
- 
- code
- {
-    act("=== Mutual Combat Check ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    foreach (UNIT_ST_PC, unit1)
-    {
-       foreach (UNIT_ST_PC, unit2)
-       {
-          if (unit1 != unit2)
-          {
-             if (opponent(unit1, unit2))
-             {
-                act("$1n <-> $2n (mutual combat)", 
-                   A_ALWAYS, self, unit1, unit2, TO_CHAR);
-             }
-          }
-       }
-    }
- } dilend
-
-=== Combat Resolution ===
- dilbegin resolve_combat(attacker : unitptr, defender : unitptr);
- var
-    was_opponent : integer;
- 
- code
- {
-    was_opponent := opponent(attacker, defender);
-    
-    if (not was_opponent)
-    {
-       act("$1n was not fighting $2n.", A_ALWAYS, self, attacker, defender, TO_CHAR);
-       return;
-    }
-    
-    // Combat resolution logic here
-    act("$1n defeats $2n in combat!", A_ALWAYS, self, attacker, defender, TO_CHAR);
-    
-    // Clear combat relationships
-    // Note: This would typically be handled by the game engine
-    // when combat ends, but shown here for demonstration
- } dilend
-
-=== Directional Combat Check ===
- dilbegin check_combat_directions();
- var
-    other_char : unitptr;
- 
- code
- {
-    act("=== Combat Direction Check ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    foreach (UNIT_ST_PC, other_char)
-    {
-       if (other_char != self)
-       {
-          if (opponent(self, other_char))
-             act("$1n is fighting with $2n", A_ALWAYS, self, other_char, null, TO_CHAR);
-          else if (opponent(other_char, self))
-             act("$2n is fighting with $1n", A_ALWAYS, self, other_char, null, TO_CHAR);
-       }
-    }
  } dilend
 
 == Error Handling ==

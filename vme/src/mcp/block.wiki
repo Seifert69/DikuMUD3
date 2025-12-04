@@ -1,72 +1,89 @@
 = block =
+ function: '''block'''();
+
+The '''block''' function prevents commands from being processed by the interpreter.
 
 == Description ==
 Blocks commands issued by a player or mobile. This function prevents commands from being processed by the interpreter and is useful for creating special command handlers.
 
-== Syntax ==
- block
-
 == Parameters ==
-None
+This function takes no parameters.
 
 == Return Value ==
-None
+This function does not return a value.
 
 == Examples ==
+=== Basic Command Blocking ===
  dilbegin command_interceptor();
- var
  code
  {
-  :start:
-  wait(SFB_CMD, command("test"));
-  block;
-  sendtext("The 'test' command has been blocked.<br/>", activator);
+    wait(SFB_CMD, command("test"));
+    block;
+    send("The 'test' command has been blocked.");
+    quit;
  } dilend
 
+=== Special Command Handler ===
  dilbegin special_handler();
  var
-  cmd : string;
+    cmd : string;
  code
  {
-  :start:
-  wait(SFB_CMD, TRUE);
-  cmd := argument;
-  
-  if (cmd == "special")
-  {
-    block;
-    // Handle special command logic here
-    sendtext("Special command processed.<br/>", activator);
-  }
-  else
-  {
-    // Let normal command processing continue
-    sendtext("Normal command: " + cmd + "<br/>", activator);
-  }
+    wait(SFB_CMD, TRUE);
+    cmd := argument;
+    
+    if (cmd == "special") {
+       block;
+       // Handle special command logic here
+       send("Special command processed.");
+    } else {
+       // Let normal command processing continue
+       send("Normal command: " + cmd);
+    }
+    quit;
  } dilend
 
+=== Command Restriction ===
  dilbegin block_example();
  var
-  blocked_cmd : string;
+    blocked_cmd : string;
  code
  {
-  :start:
-  wait(SFB_CMD, TRUE);
-  blocked_cmd := argument;
-  
-  if (blocked_cmd != "")
-  {
-    block;
-    exec("say I'm not allowed to use that command.", self);
-    exec("emote looks confused.", self);
-  }
-  else
-  {
-    sendtext("No command to block.<br/>", self);
-  }
+    wait(SFB_CMD, TRUE);
+    blocked_cmd := argument;
+    
+    if (blocked_cmd != "") {
+       block;
+       exec("say I'm not allowed to use that command.", self);
+       exec("emote looks confused.", self);
+    } else {
+       send("No command to block.");
+    }
+    quit;
  } dilend
 
-== Notes ==
+=== Command Validation ===
+ dilbegin validate_command();
+ var
+    player_input : string;
+ code
+ {
+    wait(SFB_CMD, TRUE);
+    player_input := argument;
+    
+    if (player_input == "forbidden") {
+       block;
+       send("That command is forbidden.");
+    } else if (player_input == "restricted") {
+       block;
+       send("That command is restricted.");
+    } else {
+       send("Command accepted: " + player_input);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * The block function prevents the current command from being processed
 * When blocked, the command is intercepted and not passed to the normal interpreter
 * Useful for creating custom command handlers or restricting certain commands
@@ -75,7 +92,18 @@ None
 * The blocking is temporary - subsequent commands will process normally unless blocked again
 * Commonly used for command validation, special effects, or command restrictions
 
+== Error Handling ==
+The function performs validation:
+* '''Context validation''' - Only works within command-triggered DIL programs
+* '''State validation''' - Ensures proper command context
+* '''Runtime validation''' - Validates command processing state
+
+== Related Functions ==
+* [[exec]] - For executing alternative commands
+* [[command]] - For checking what command was issued
+* [[SFB_CMD]] - For triggering on commands
+
 == See Also ==
-* SFB_CMD - For triggering on commands
-* command - For checking what command was issued
-* exec - For executing alternative commands
+* [[command]] - Command field
+* [[argument]] - Command argument field
+* [[interpreter]] - Command processing system

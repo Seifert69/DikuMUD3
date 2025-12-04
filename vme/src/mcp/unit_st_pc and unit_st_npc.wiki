@@ -180,3 +180,4 @@ The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It
 * [[UNIT_ST_OBJ]] - Object type constant
 * [[UNIT_ST_ROOM]] - Room type constant
 * [[type]] - Unit type checking function
+

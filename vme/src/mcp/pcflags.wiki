@@ -129,4 +129,4 @@ The field access will return '''fail''' when:
 
 == See Also ==
 * [[meleedamage]] - Function that checks PC_PK_RELAXED for combat
-* [[gamestate]] - Function that checks PC_INFORM for player notifications
+* [[gamestate]] - Function that checks PC_INFORM for player notifications 

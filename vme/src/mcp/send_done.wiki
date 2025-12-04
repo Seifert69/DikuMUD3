@@ -1,7 +1,7 @@
 = send_done =
  function: void '''send_done'''(c : string, a : unitptr, m : unitptr, t : unitptr, p : integer, arg : string, o : unitptr, i : integer);
 
-The send_done function sends completion messages to DIL programs that are waiting for specific operations to finish.
+The '''send_done''' function sends completion messages to DIL programs that are waiting for specific operations to finish.
 
 == Description ==
 The send_done function sends an SFB_DONE message to DIL programs in the surrounding area that are waiting for a specific command or operation to complete. This is commonly used in command implementations to notify other DIL programs that an operation has finished, allowing them to resume execution or perform cleanup tasks.
@@ -28,34 +28,21 @@ The send_done function sends an SFB_DONE message to DIL programs in the surround
 |}
 
 == Examples ==
-=== Command Completion Notification ===
+=== Basic Command Completion ===
  dilbegin read_command(target_name : string);
  var
      board : unitptr;
-     msg_num : integer;
  code
  {
-     // Find message board object
      board := findunit(self, target_name, FIND_UNIT_SURRO, null);
-     if (board == null or board.objecttype != ITEM_BOARD)
+     if (board == null)
      {
-         sendtext("No board found with that name.&n", self);
-         quit;
-     }
-     
-     // Start reading operation
-     msg_num := atoi(argument);
-     if (msg_num <= 0)
-     {
-         sendtext("Reading which message?&n", self);
+         sendtext("No board found.&n", self);
          quit;
      }
      
      // Notify other programs that reading has started
      send_done("read", self, null, board, 0, argument, null, 0);
-     
-     // Perform reading logic here...
-     // ... reading code ...
      
      // Notify completion
      send_done("read", self, null, board, 0, argument, null, 0);
@@ -71,80 +58,20 @@ The send_done function sends an SFB_DONE message to DIL programs in the surround
      // Start operation and notify worker programs
      send_done("process", self, null, item, 1, "start", null, 0);
      
-     // Find worker NPC
-     worker := findunit(self, "worker", FIND_UNIT_SURRO, null);
-     if (worker == null)
-     {
-         act("No worker available to process " + item.name, A_ALWAYS, self, item, null, TO_CHAR);
-         quit;
-     }
-     
-     // Notify worker to start processing
-     send_done("craft", self, item, worker, 2, item.name, null, 0);
-     
-     // Wait for worker to complete (would be handled by worker's interrupt)
-     pause;
-     
      // Notify completion
-     act("Processing of " + item.name + " completed.", A_ALWAYS, self, item, null, TO_CHAR);
      send_done("process", self, null, item, 1, "complete", null, 0);
- }
- dilend
-
-=== Board System Integration ===
- dilbegin board_reply(board_name : string, message_num : integer);
- var
-     board : unitptr;
-     index_file : string;
-     temp : string;
- code
- {
-     // Find the board
-     board := findunit(self, board_name, FIND_UNIT_SURRO, null);
-     if (board == null)
-     {
-         sendtext("Board '" + board_name + "' not found.&n", self);
-         quit;
-     }
-     
-     // Load board index
-     index_file := board_name + ".idx";
-     if (loadstr(index_file, temp) <= 0)
-     {
-         sendtext("Board is empty or unavailable.&n", self);
-         quit;
-     }
-     
-     // Start reply operation
-     send_done("reply", self, null, board, 0, itoa(message_num), null, 0);
-     
-     // Reply processing would go here...
-     // ... reply logic ...
-     
-     // Notify reply completion
-     send_done("reply", self, null, board, 0, itoa(message_num), null, 0);
  }
  dilend
 
 === State Management ===
  dilbegin state_machine(target_state : string);
- var
-     current_state : string;
  code
  {
-     current_state := "idle";
-     
      // Transition to new state
      send_done("transition", self, null, null, 1, target_state, null, 0);
      
-     // State processing logic here...
-     // ... state handling code ...
-     
-     // Update current state
-     current_state := target_state;
-     
      // Notify state change complete
-     send_done("state_change", self, null, null, 2, current_state, null, 0);
+     send_done("state_change", self, null, null, 2, target_state, null, 0);
  }
  dilend
 
@@ -156,26 +83,12 @@ The send_done function sends an SFB_DONE message to DIL programs in the surround
 * The function is commonly used for multi-program coordination and command completion
 * Messages are sent to all DIL programs in the surrounding area
 * Use with [[interrupt]] function to handle incoming completion messages
-* The 'o' parameter allows sending to specific additional units
-
-== Message Reception ==
-DIL programs can receive send_done messages using:
- interrupt(SFB_DONE, condition, label)
-The condition typically checks if the message is relevant to the receiving program.
 
 == Error Handling ==
 * Function will fail if any required parameters are null or invalid
 * Invalid command strings may cause unpredictable behavior
 * No return value - function is void and cannot indicate success/failure
 * Ensure target programs are properly waiting for SFB_DONE messages
-* Parameter validation occurs at runtime - invalid types cause execution errors
-
-== Common Use Cases ==
-* Command completion notification in multi-step operations
-* Coordinating between multiple DIL programs
-* State machine implementation and synchronization
-* Board system operations and message handling
-* Resource processing and cleanup coordination
 
 == Related Functions/Fields ==
 * [[interrupt]] - Function to receive completion messages
@@ -188,4 +101,3 @@ The condition typically checks if the message is relevant to the receiving progr
 * DIL program coordination and synchronization
 * Message passing between DIL programs
 * Command implementation patterns
-* Interrupt handling and message reception

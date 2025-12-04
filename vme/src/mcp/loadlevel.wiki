@@ -1,12 +1,9 @@
 = loadlevel =
 
- field: integer loadlevel (zoneptr : zoneptr);
+field: integer '''.loadlevel''' (Read-only)
 
 == Description ==
 The '''loadlevel''' field returns the load level of a zone. This represents the minimum character level required to load items from that zone. This field is read-only and provides access to zone-level loading restrictions.
-
-== Syntax ==
- zoneptr.loadlevel
 
 == Field Access ==
 {| class="wikitable"
@@ -18,11 +15,6 @@ The '''loadlevel''' field returns the load level of a zone. This represents the 
 == Availability ==
 This field is available on the following unit types:
 * zoneptr (Zone pointer)
-
-== Return Value ==
-Returns '''integer''':
-* '''integer''' - Minimum character level required to load items from the zone
-* '''fail''' - when zoneptr is null or not applicable
 
 == Examples ==
  dilbegin check_zone_load();
@@ -91,4 +83,4 @@ Returns '''integer''':
 == See Also ==
 * [[zoneptr]] - Zone pointer type documentation
 * [[load()]] - Load a unit into the game
-* [[findzone()]] - Find zone by name
+* [[findzone()]] - Find zone by name 

@@ -1,10 +1,9 @@
 = next =
 
-== Syntax ==
- field: '''.next''' (Read-only)
+ field: unitptr '''.next''' (Read-only)
 
 == Description ==
-The '''next''' field returns a pointer to the next unit in a linked list or structure. This field provides access to traverse through sequences of units, extra descriptions, commands, or zones, allowing DIL programs to iterate through collections and navigate hierarchical structures.
+The '''next''' field returns a pointer to the next unit in a linked list for traversal.
 
 == Field Access ==
 {| class="wikitable"
@@ -24,155 +23,39 @@ This field is available on the following unit types:
 * zoneptr (Zone pointer)
 
 == Examples ==
- dilbegin inventory_walkthrough(pc : unitptr);
+ dilbegin count_inventory_items(pc : unitptr);
  var
     current_item : unitptr;
     item_count : integer;
-    i : integer;
  code
  {
-    if (pc.type != UNIT_ST_PC)
-    {
-       exec("say That's not a player!", self);
-       return;
-    }
-    
     current_item := pc.inside;
     item_count := 0;
     
-    // Walk through player's inventory using next field
     while (current_item != null)
     {
        item_count := item_count + 1;
-       exec("say Item " + itoa(item_count) + ": " + current_item.name, self);
-       
-       // Move to next item
        current_item := current_item.next;
     }
     
-    exec("say Found " + itoa(item_count) + " items in inventory.", self);
+    exec("say Found " + itoa(item_count) + " items.", self);
  } dilend
 
- dilbegin extra_description_chain(extra : extraptr);
+ dilbegin walk_extra_descriptions(extra : extraptr);
  var
     current_extra : extraptr;
-    extra_count : integer;
-    i : integer;
+    count : integer;
  code
  {
     current_extra := extra;
-    extra_count := 0;
+    count := 0;
     
-    // Walk through chain of extra descriptions
     while (current_extra != null)
     {
-       extra_count := extra_count + 1;
-       exec("say Extra " + itoa(extra_count) + ": " + current_extra.names.[0], self);
-       
-       // Move to next extra in chain
+       count := count + 1;
+       exec("say Extra " + itoa(count) + ": " + current_extra.names.[0], self);
        current_extra := current_extra.next;
     }
-    
-    exec("say Found " + itoa(extra_count) + " extra descriptions.", self);
- } dilend
-
- dilbegin command_list_check(cmd : cmdptr);
- var
-    current_cmd : cmdptr;
-    cmd_count : integer;
- code
- {
-    current_cmd := cmd;
-    cmd_count := 0;
-    
-    // Walk through command list
-    while (current_cmd != null)
-    {
-       cmd_count := cmd_count + 1;
-       exec("say Command " + itoa(cmd_count) + ": " + current_cmd.cmd_str, self);
-       
-       // Move to next command
-       current_cmd := current_cmd.next;
-    }
-    
-    exec("say Found " + itoa(cmd_count) + " commands.", self);
- } dilend
-
- dilbegin zone_iteration();
- var
-    current_zone : zoneptr;
-    zone_count : integer;
- code
- {
-    // Get first zone
-    current_zone := zhead();
-    zone_count := 0;
-    
-    // Walk through all zones
-    while (current_zone != null)
-    {
-       zone_count := zone_count + 1;
-       exec("say Zone " + itoa(zone_count) + ": " + current_zone.name, self);
-       
-       // Move to next zone
-       current_zone := current_zone.next;
-    }
-    
-    exec("say Found " + itoa(zone_count) + " zones.", self);
- } dilend
-
- dilbegin complex_navigation();
- var
-    start_unit : unitptr;
-    current_unit : unitptr;
-    step_count : integer;
- code
- {
-    start_unit := self;
-    current_unit := start_unit;
-    step_count := 0;
-    
-    // Navigate through a complex structure
-    while (current_unit != null)
-    {
-       step_count := step_count + 1;
-       exec("say Step " + itoa(step_count) + ": " + current_unit.name, self);
-       
-       // Try different navigation methods based on unit type
-       if (current_unit.type == UNIT_ST_OBJ)
-       {
-          // Objects might be in containers
-          if (current_unit.inside != null)
-          {
-             current_unit := current_unit.inside;
-          }
-          else
-          {
-             current_unit := current_unit.outside;
-          }
-       }
-       else if (current_unit.type == UNIT_ST_ROOM)
-       {
-          // Rooms have exits
-          if (length(current_unit.exit_names) > 0)
-          {
-             // Try first exit
-             current_unit := findunit(current_unit, current_unit.exit_names.[0]);
-          }
-          else
-          {
-             // No exits, end navigation
-             current_unit := null;
-          }
-       }
-       else
-       {
-          // Default: try next in list
-          current_unit := current_unit.next;
-       }
-    }
-    
-    exec("say Navigation complete after " + itoa(step_count) + " steps.", self);
  } dilend
 
 == Usage Notes ==
@@ -206,4 +89,4 @@ This field is available on the following unit types:
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
 * Pointer types: unitptr, extraptr, cmdptr, zoneptr
 * List traversal: [[names]], [[length]] for checking bounds
-* Navigation functions: [[findroom]], [[walkto]]
+* Navigation functions: [[findroom]], [[walkto]] 

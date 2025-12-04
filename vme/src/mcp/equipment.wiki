@@ -154,4 +154,4 @@ Note: The C implementation shows that the function validates the character unit 
 == See Also ==
 * [[unitptr]] - Unit pointer data type
 * [[WEAR_* constants]] - Equipment position constants
-* [[manipulate]] - Object manipulation flags for equipment validation
+* [[manipulate]] - Object manipulation flags for equipment validation 

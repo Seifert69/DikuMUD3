@@ -1,7 +1,7 @@
 = sendtoall =
  function: void '''sendtoall'''(m : string, s : string);
 
-The sendtoall function sends a message to all DIL programs that match a specific database name pattern.
+The '''sendtoall''' function sends a message to all DIL programs that match a specific database name pattern.
 
 == Description ==
 The sendtoall function sends a message to all DIL programs in the entire MUD that have a specific database name matching the provided pattern. This is commonly used for global announcements, system-wide notifications, or communicating with specific types of DIL programs (like all programs with a certain zone or function). The message is sent with the SFB_MSG message class, allowing receiving programs to filter and respond appropriately.
@@ -23,11 +23,7 @@ The sendtoall function sends a message to all DIL programs in the entire MUD tha
  code
  {
      message := "SYSTEM SHUTDOWN IN " + itoa(minutes) + " MINUTES!";
-     
-     // Send to all system programs
      sendtoall(message, "sys_control");
-     
-     act("You announce the system shutdown.", A_ALWAYS, self, null, TO_CHAR);
  }
  dilend
 
@@ -38,11 +34,7 @@ The sendtoall function sends a message to all DIL programs in the entire MUD tha
  code
  {
      message := "ZONE ANNOUNCEMENT: " + zone_name + " - " + announcement;
-     
-     // Send to all programs in specific zone
      sendtoall(message, zone_name + "_*");
-     
-     act("Zone announcement sent to " + zone_name + " programs.", A_ALWAYS, self, null, TO_CHAR);
  }
  dilend
 
@@ -53,27 +45,7 @@ The sendtoall function sends a message to all DIL programs in the entire MUD tha
  code
  {
      message := "NEW SPELL AVAILABLE: " + spell_name;
-     
-     // Send to all spell-related programs
      sendtoall(message, "spell_*");
-     
-     act("All wizards notified of new spell.", A_ALWAYS, self, null, TO_CHAR);
- }
- dilend
-
-=== Pattern Matching ===
- dilbegin broadcast_to_type(object_type : string, message : string);
- var
-     pattern : string;
- code
- {
-     // Create pattern to match specific object types
-     pattern := object_type + "_*";
-     
-     // Send to all programs matching the pattern
-     sendtoall(message, pattern);
-     
-     act("Message sent to all " + object_type + " programs.", A_ALWAYS, self, null, TO_CHAR);
  }
  dilend
 
@@ -84,39 +56,7 @@ The sendtoall function sends a message to all DIL programs in the entire MUD tha
  code
  {
      message := "EMERGENCY [" + alert_type + "] AT " + location;
-     
-     // Send to all emergency response programs
      sendtoall(message, "emergency_*");
-     
-     act("Emergency alert broadcasted.", A_ALWAYS, self, null, TO_CHAR);
- }
- dilend
-
-=== Administrative Messages ===
- dilbegin admin_broadcast(admin_message : string);
- var
-     message : string;
- code
- {
-     // Send to all administrative programs
-     sendtoall(admin_message, "admin_*");
-     
-     act("Administrative message sent.", A_ALWAYS, self, null, TO_CHAR);
- }
- dilend
-
-=== Debug Communication ===
- dilbegin debug_message(debug_info : string);
- var
-     message : string;
- code
- {
-     message := "DEBUG: " + debug_info;
-     
-     // Send to all debug programs
-     sendtoall(message, "debug_*");
-     
-     act("Debug message sent.", A_ALWAYS, self, null, TO_CHAR);
  }
  dilend
 
@@ -126,13 +66,6 @@ The sendtoall function sends a message to all DIL programs in the entire MUD tha
 * Wildcards (*) can be used in the database name pattern
 * Messages are sent with SFB_MSG message class
 * Receiving programs must be waiting with interrupt(SFB_MSG, ...) to receive messages
-* Commonly used for global announcements and system-wide communication
-* The database name pattern can be a full name or partial match with wildcards
-
-== Message Reception ==
-DIL programs can receive sendtoall messages using:
-interrupt(SFB_MSG, condition, label)
-The condition typically checks if the message is relevant to the receiving program.
 
 == Pattern Matching ==
 The database name pattern matching follows these rules:
@@ -145,16 +78,6 @@ The database name pattern matching follows these rules:
 * Function will fail if either parameter is null or invalid
 * No validation of message content - any string is accepted
 * No return value - function is void and cannot indicate success or failure
-* Messages may not be received if no programs are waiting for SFB_MSG messages
-* Invalid database name patterns may cause unpredictable behavior
-
-== Common Use Cases ==
-* Global system announcements and shutdowns
-* Zone-specific communications and notifications
-* Function-type program coordination (wizards, guards, etc.)
-* Emergency broadcasts and alerts
-* Administrative messages and debug information
-* Cross-zone communication and system synchronization
 
 == Related Functions/Fields ==
 * [[sendto]] - Function for sending messages to specific units
@@ -167,4 +90,3 @@ The database name pattern matching follows these rules:
 * DIL program communication and coordination
 * Message passing and synchronization systems
 * Database name patterns and matching
-* Global and zone-specific messaging systems

@@ -61,8 +61,8 @@ Returns an integer representing the total credit:
     
     send("=== ACCOUNT ANALYSIS ===");
     send("Total Credit: $" + itoa(player.acc_total));
-    send("Current Balance: $" + itoa(balance_dollars) + "." + itoa(balance_cents)));
-    send("Available Credit: $" + itoa((player.acc_total - player.acc_balance) / 100) + "." + itoa((player.acc_total - player.acc_balance) % 100)));
+     send("Current Balance: $" + itoa(balance_dollars) + "." + itoa(balance_cents));
+     send("Available Credit: $" + itoa((player.acc_total - player.acc_balance) / 100) + "." + itoa((player.acc_total - player.acc_balance) % 100));
     quit;
  } dilend
 
@@ -106,8 +106,8 @@ Returns an integer representing the total credit:
     send("=== CREDIT STATUS ===");
     send("Total Credit: $" + itoa(player.acc_total));
     send("Used Credit: $" + itoa(used_credit));
-    send("Available Balance: $" + itoa(available_credit / 100) + "." + itoa(available_credit % 100)));
-    send("Available Credit: $" + itoa((player.acc_total - used_credit) / 100) + "." + itoa((player.acc_total - used_credit) % 100)));
+     send("Available Balance: $" + itoa(available_credit / 100) + "." + itoa(available_credit % 100));
+     send("Available Credit: $" + itoa((player.acc_total - used_credit) / 100) + "." + itoa((player.acc_total - used_credit) % 100));
     quit;
  } dilend
 
@@ -134,34 +134,7 @@ Returns an integer representing the total credit:
     quit;
  } dilend
 
-=== Credit Management System ===
- dilbegin credit_management(player : unitptr);
- var
-    menu_choice : string;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    send("=== CREDIT MANAGEMENT ===");
-    send("1. Check Credit Status");
-    send("2. View Balance");
-    send("3. Exit");
-    
-    pause;
-    
-    if (menu_choice == "1") {
-       send("Total Credit Available: $" + itoa(player.acc_total));
-       send("Current Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100));
-    } else if (menu_choice == "2") {
-       send("Current Account Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100)));
-    } else {
-       send("Exiting credit management.");
-    }
-    quit;
- } dilend
+
 
 == Error Handling ==
 The field performs validation:

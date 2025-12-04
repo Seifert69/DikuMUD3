@@ -1,11 +1,9 @@
 = master =
+ field: unitptr '''.master''' [Read-only]
 
-== Syntax ==
- field: '''.master'''
-
-== Description ==
 The '''.master''' field is accessed on character units (PC or NPC) and returns a unitptr to the character that this character is currently following. If the character is not following anyone, this field returns null.
 
+== Description ==
 This field represents the "master" in a master/follower relationship, where the current character is the follower and the returned unitptr is the master they are following.
 
 == Field Access ==

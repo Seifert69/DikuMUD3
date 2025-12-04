@@ -14,11 +14,11 @@ This function searches the units directory for files matching the specified patt
 |}
 
 == Examples ==
+=== Basic Pattern Matching ===
 dilbegin unique find_corpses();
 var
     corpselist : stringlist;
     i : integer;
-    corpse : unitptr;
 code
 {
     // Find all files starting with "corpse"
@@ -30,16 +30,10 @@ code
     for (i := 0; i < length(corpselist); i := i + 1)
     {
         sendto("  " + corpselist.[i] + "&n", self);
-        
-        // Optionally restore the corpse
-        corpse := restore(corpselist.[i], null);
-        if (corpse != null)
-        {
-            // Process corpse...
-        }
     }
 } dilend
 
+=== Load by Pattern ===
 dilbegin unique load_by_pattern(pattern : string);
 var
     filelist : stringlist;
@@ -61,7 +55,7 @@ code
     {
         sendto("  " + filelist.[i] + "&n", self);
         
-        // Example: restore the first matching file
+        // Restore the first matching file
         if (i == 0)
         {
             unit := restore(filelist.[i], null);
@@ -69,54 +63,6 @@ code
             {
                 sendto("  Restored: " + unit.name + "&n", self);
             }
-        }
-    }
-} dilend
-
-dilbegin unique pattern_examples();
-code
-{
-    // Different pattern matching examples
-    sendto("Pattern matching examples:&n", self);
-    
-    // Match all files
-    sendto("unitdir(\"*\") - All files&n", self);
-    
-    // Match files with specific prefix
-    sendto("unitdir(\"sword*\") - Files starting with 'sword'&n", self);
-    
-    // Match single character wildcard
-    sendto("unitdir(\"corpse?\") - 'corpse1', 'corpse2', etc.&n", self);
-    
-    // Match character class
-    sendto("unitdir(\"[abc]*\") - Files starting with a, b, or c&n", self);
-    
-    // Match specific patterns
-    sendto("unitdir(\"start[nm]end\") - 'startnend', 'startmend'&n", self);
-} dilend
-
-dilbegin unique reload_all_units();
-var
-    all_units : stringlist;
-    i : integer;
-    unit : unitptr;
-code
-{
-    // Get all unit files and reload them
-    all_units := unitdir(".*");
-    
-    sendto("Reloading all " + itoa(length(all_units)) + " unit files...&n", self);
-    
-    for (i := 0; i < length(all_units); i := i + 1)
-    {
-        unit := restore(all_units.[i], null);
-        if (unit != null)
-        {
-            sendto("  Reloaded: " + unit.name + "&n", self);
-        }
-        else
-        {
-            sendto("  Failed to load: " + all_units.[i] + "&n", self);
         }
     }
 } dilend

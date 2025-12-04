@@ -1,51 +1,94 @@
 = beginedit =
+ function: '''beginedit'''(unit : unitptr);
+
+The '''beginedit''' function puts a player character into editing mode.
 
 == Description ==
 Puts a player character into editing mode. This function enables the player to use text editing commands and sets up the editing state.
 
-== Syntax ==
- beginedit(unit)
-
 == Parameters ==
-; unit : unitptr
-: The player character to put into editing mode
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The player character to put into editing mode
+|}
 
 == Return Value ==
-When the player finishes editing, an SFB_EDIT message is sent to continue the DIL program.
+This function does not return a value. When the player finishes editing, an SFB_EDIT message is sent to continue the DIL program.
 
 == Examples ==
+=== Description Editing ===
  dilbegin edit_description();
  var
-  formatted_text : string;
+    formatted_text : string;
  code
  {
-  :start:
-  beginedit(self);
-  wait(SFB_EDIT, self == activator);
-  formatted_text := textformat(argument);
-  addextra(self.extra, "general", formatted_text);
-  sendtext("Description updated.<br/>", self);
- } dilend
-
- dilbegin board_edit();
- var
-  board : unitptr;
-  message : string;
- code
- {
-  :start:
-  board := findunit(self.outside, "board", FIND_UNIT_SURRO, null);
-  if (board.type == UNIT_ST_OBJ and board.objecttype == ITEM_BOARD)
-  {
     beginedit(self);
     wait(SFB_EDIT, self == activator);
-    message := argument;
-    // Add message to board logic here
-    sendtext("Message posted to board.<br/>", self);
-  }
+    formatted_text := textformat(argument);
+    addextra(self, "general", formatted_text);
+    send("Description updated.");
+    quit;
  } dilend
 
-== Notes ==
+=== Board Message Editing ===
+ dilbegin board_edit();
+ var
+    board : unitptr;
+    message : string;
+ code
+ {
+    board := findunit(self.outside, "board", FIND_UNIT_SURRO, null);
+    if (board != null and board.type == UNIT_ST_OBJ and board.objecttype == ITEM_BOARD) {
+       beginedit(self);
+       wait(SFB_EDIT, self == activator);
+       message := argument;
+       // Add message to board logic here
+       send("Message posted to board.");
+    } else {
+       send("No board found here.");
+    }
+    quit;
+ } dilend
+
+=== Mail Composition ===
+ dilbegin compose_mail();
+ var
+    recipient : unitptr;
+    mail_text : string;
+ code
+ {
+    recipient := findunit(self.outside, argument, FIND_UNIT_SURRO, null);
+    if (recipient != null and recipient.type == UNIT_ST_PC) {
+       beginedit(self);
+       wait(SFB_EDIT, self == activator);
+       mail_text := argument;
+       // Send mail logic here
+       send("Mail sent to " + recipient.name + ".");
+    } else {
+       send("No recipient found.");
+    }
+    quit;
+ } dilend
+
+=== Document Creation ===
+ dilbegin create_document();
+ var
+    doc_title : string;
+ code
+ {
+    send("Enter document title:");
+    pause;
+    doc_title := argument;
+    
+    beginedit(self);
+    wait(SFB_EDIT, self == activator);
+    // Create document with title and content
+    send("Document '" + doc_title + "' created.");
+    quit;
+ } dilend
+
+== Usage Notes ==
 * Only works on player characters (PC units)
 * Player must have a descriptor to enter editing mode
 * While in editing mode, the player's 'editing' flag is set to true
@@ -53,8 +96,20 @@ When the player finishes editing, an SFB_EDIT message is sent to continue the DI
 * Use killedit() to force exit from editing mode if needed
 * Commonly used for board editing, description editing, and text input
 * The player can use standard editor commands while in edit mode
+* The edited text is available in the argument variable after editing completes
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid player character
+* '''Descriptor validation''' - Checks that player has an active descriptor
+* '''State validation''' - Ensures player is not already in editing mode
+
+== Related Functions ==
+* [[killedit]] - For forcing exit from edit mode
+* [[textformat]] - For formatting text input
+* [[SFB_EDIT]] - For editing trigger flag
 
 == See Also ==
-* killedit - For forcing exit from edit mode
-* textformat - For formatting text input
-* SFB_EDIT - For the editing trigger flag
+* [[UNIT_ST_PC]] - Player character unit type
+* [[descriptor]] - Player connection descriptor
+* [[argument]] - Edited text content

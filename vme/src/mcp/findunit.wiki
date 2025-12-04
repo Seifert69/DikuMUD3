@@ -1,20 +1,7 @@
 = findunit =
+ function: unitptr '''findunit'''(u : unitptr, s : string, i : integer, l : unitptr);
 
-== Syntax ==
- unitptr findunit( u : unitptr , s : string , i : integer , l : unitptr )
-
-== Parameters ==
-; u : unitptr
-: The unit the local environment is relative to.
-; s : string
-: A string with name of the unit to find.
-; i : integer
-: The environment, where to look for it, see FIND_UNIT_* in values.h and/or vme.h.
-; l : unitptr
-: An optional list of units to search.
-
-== Return Value ==
-If the unit is found, the function returns that unit. Returns null if nothing found.
+The '''findunit''' function searches for a unit by name within a specific environment or container list.
 
 == Description ==
 The first argument is typically the char that's looking for something, i.e. if Mary needs a spoon to stir the pot, she'll be the first argument.
@@ -29,47 +16,42 @@ Or you can just let her look around for it with:
 
  findunit(mary, "spoon", FIND_UNIT_INVEN or FIND_UNIT_SURRO, null);
 
-== Search Environment Values (i) ==
-The following FIND_UNIT_* values can be used for the search environment:
-
-; FIND_UNIT_EQUIP
-: The objects you will see with `equipment'. Assumes first argument to findunit is a char.
-
-; FIND_UNIT_INVEN
-: The objects you will see with `inventory' or `look in bag'
-
-; FIND_UNIT_SURRO
-: The objects you can see, and get with `get', or the characters you can `poke'
-
-; FIND_UNIT_ZONE
-: As FIND_UNIT_WORLD, only more local.
-
-; FIND_UNIT_WORLD
-: Any object in the entire world. Does NOT start looking close to the object of findunit's first argument, but rather somewhat randomly.
-
-; FIND_UNIT_IN_ME
-: Anything inside of the object of the first argument.
-
-; FIND_UNIT_HERE
-: Anything `here', i.e. in object or around it (same as IN_ME + SURRO)
-
-; FIND_UNIT_GLOBAL
-: ANYTHING, starting close to object and working out.
-
-== Special Notes ==
-Using FIND_UNIT_PAY or FIND_UNIT_NOPAY in this function will be ignored.
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit the local environment is relative to
+|-
+| s || string || A string with name of the unit to find
+|-
+| i || integer || The environment, where to look for it, see FIND_UNIT_* in values.h and/or vme.h
+|-
+| l || unitptr || An optional list of units to search
+|}
 
 == Examples ==
-=== Example 1: Search in Specific Container ===
- spoon := findunit(mary, "spoon", 0, pot);
+spoon := findunit(mary, "spoon", 0, pot);
 
-=== Example 2: Search in Inventory or Surroundings ===
- spoon := findunit(mary, "spoon", FIND_UNIT_INVEN or FIND_UNIT_SURRO, null);
+spoon := findunit(mary, "spoon", FIND_UNIT_INVEN or FIND_UNIT_SURRO, null);
 
-=== Example 3: Find Safe in Room ===
- safe := findunit(self, "safe", FIND_UNIT_SURRO, self);
+safe := findunit(self, "safe", FIND_UNIT_SURRO, self);
+
+== Usage Notes ==
+* Use either the environment parameter (i) or the list parameter (l), not both
+* Set the unused parameter to 0 or null
+* FIND_UNIT_PAY and FIND_UNIT_NOPAY are ignored in this function
+* The search is case-insensitive for unit names
+
+== Error Handling ==
+* Returns null if no matching unit is found
+* Invalid FIND_UNIT_* values may cause unexpected behavior
+* Always check the returned unitptr before use
+
+== Related Functions/Fields ==
+* [[findsymbolic()]] - Find a unit by symbolic name
+* [[findroom()]] - Find a room by symbolic name
+* [[foreach()]] - Iterate through units of specific types
 
 == See Also ==
-* [[Manual:DIL Manual/findsymbolic()|findsymbolic()]] - Find a unit by symbolic name
-* [[Manual:DIL Manual/findroom()|findroom()]] - Find a room by symbolic name
-* [[Manual:DIL Manual/foreach()|foreach()]] - Iterate through units of specific types
+* FIND_UNIT_* constants documentation
+* Container and inventory operations

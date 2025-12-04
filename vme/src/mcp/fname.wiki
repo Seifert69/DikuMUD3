@@ -1,15 +1,23 @@
 = fname =
+ field: string '''.fname''' (Read-only)
 
-== Syntax ==
- zoneptr.fname
-
-== Return Value ==
-Returns a string containing the filename of the zone.
+The '''fname''' field is used to access the filename of a zone from a zone pointer (zoneptr).
 
 == Description ==
-The '''fname''' field is used to access the filename of a zone from a zone pointer (zoneptr). This field returns the actual filename used to store the zone data on disk.
+The '''fname''' field returns the actual filename used to store the zone data on disk.
 
-== Example ==
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| fname || string || Read-only || The filename of the zone
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* zoneptr (Zone pointer)
+
+== Examples ==
  dilbegin show_zone_filename();
  var
     z : zoneptr;
@@ -29,6 +37,10 @@ The '''fname''' field is used to access the filename of a zone from a zone point
 :cleanup:
     return;
  } dilend
+
+== Usage Notes ==
+* The field returns an empty string if no filename is available
+* This is typically used for zone management and debugging purposes
 
 == See Also ==
 * [[zoneptr]]

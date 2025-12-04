@@ -1,10 +1,9 @@
 = nopriority =
 
-== Syntax ==
- function: '''nopriority'''();
+ function: integer '''nopriority'''();
 
 == Description ==
-The '''nopriority''' function cancels any active priority procedures for the current DIL program. This function is used to reset the priority system, allowing other DIL programs to handle activation interrupts without being blocked by higher-priority routines that were previously set.
+The '''nopriority''' function cancels active priority procedures for the current DIL program.
 
 == Return Value ==
 Returns '''integer''':
@@ -12,73 +11,28 @@ Returns '''integer''':
 * '''non-zero''' - Error code if cancellation failed
 
 == Examples ==
- dilbegin reset_priority_system();
+ dilbegin reset_priority();
  var
     result : integer;
  code
  {
-    // Set up a high priority routine
     priority(SFB_MSG, argument == "admin_reset");
-    
-    // Later, cancel it to allow normal operation
     result := nopriority();
     
     if (result == 0)
     {
-       exec("say Priority system reset successfully.", self);
-    }
-    else
-    {
-       exec("say Failed to reset priority system.", self);
+       exec("say Priority reset successfully.", self);
     }
  } dilend
 
- dilbegin temporary_override();
- var
-    old_priority : integer;
+ dilbegin emergency_override();
  code
  {
-    // Set a temporary high priority for emergency handling
-    priority(SFB_MSG, argument == "emergency_stop");
-    
-    // Do some emergency processing
-    exec("say Emergency protocol activated!", self);
+    priority(SFB_MSG, argument == "emergency");
+    exec("say Emergency mode active!", self);
     pause;
-    
-    // Cancel the emergency priority to restore normal operation
-    old_priority := nopriority();
-    
-    if (old_priority == 0)
-    {
-       exec("say Emergency protocol deactivated.", self);
-    }
-    else
-    {
-       exec("say Failed to deactivate emergency.", self);
-    }
- } dilend
-
- dilbegin priority_manager();
- var
-    current_priority : integer;
- code
- {
-    :check_priority:
-    pause;
-    
-    // Check current priority state (this would be set by other systems)
-    current_priority := interrupt(SFB_PRIORITY, argument == "get_status");
-    
-    if (current_priority == -1)
-    {
-       exec("say No priority procedures are currently active.", self);
-    }
-    else
-    {
-       exec("say Priority procedures are active with level: " + itoa(current_priority), self);
-    }
-    
-    goto check_priority;
+    nopriority();
+    exec("say Emergency mode deactivated.", self);
  } dilend
 
 == Usage Notes ==
@@ -105,4 +59,4 @@ Returns '''integer''':
 == See Also ==
 * Interrupt flags: '''SFB_PRIORITY''', '''SFB_MSG''', '''SFB_DEAD'''
 * Priority levels and activation order in DIL interrupt system
-* DIL program activation and interrupt handling mechanisms
+* DIL program activation and interrupt handling mechanisms 

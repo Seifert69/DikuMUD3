@@ -1,21 +1,19 @@
 = load =
 
+function: unitptr '''load'''(s : string);
+
 == Description ==
 
 The '''load''' function creates a new unit from the database using its symbolic name. The loaded unit is automatically placed inside the unit that executed the load command.
 
-== Syntax ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || Symbolic name of the unit to load (format: "name@zone")
+|}
 
- unitptr load ( s : string )
-
-; s : string
-: Symbolic name of the unit to load (format: "name@zone")
-
-== Return Value ==
-
-Returns a unit pointer to the loaded unit, or null if the unit does not exist or cannot be loaded.
-
-== Behavior ==
+== Examples ==
 
 The load function performs the following operations:
 
@@ -24,8 +22,6 @@ The load function performs the following operations:
 * If the unit is money, properly initializes the money amount
 * Automatically places the loaded unit inside the loading unit's inventory
 * Activates any load-time DIL programs on the loaded unit
-
-== Example Usage ==
 
  dilbegin example_load();
  var
@@ -45,7 +41,7 @@ The load function performs the following operations:
     }
  } dilend
 
-== Notes ==
+== Usage Notes ==
 
 * Rooms cannot be loaded and will generate an error in the system log
 * If the symbolic name does not exist, an error is logged and null is returned
@@ -54,9 +50,17 @@ The load function performs the following operations:
 * Money units are properly initialized with their correct amount
 * Symbolic names follow the format "name@zone" (e.g., "garlic@midgaard")
 
-== See Also ==
+== Error Handling ==
+
+* Returns '''null''' if the symbolic name does not exist
+* Returns '''null''' if attempting to load a room
+* Logs errors to the system log for debugging
+
+== Related Functions/Fields ==
 
 * [[link]]
 * [[findsymbolic]]
 * [[destroy]]
 * [[unitptr.symname]]
+
+== See Also == 

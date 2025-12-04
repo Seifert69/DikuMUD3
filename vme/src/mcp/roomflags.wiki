@@ -1,5 +1,5 @@
 = roomflags =
- field: integer '''.roomflags''' (Read/Write)
+field: integer '''.roomflags''' (Read/Write)
 
 The .roomflags field contains bit flags that specify various properties and behaviors of a room unit.
 

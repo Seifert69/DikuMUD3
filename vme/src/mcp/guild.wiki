@@ -1,143 +1,61 @@
 = guild =
 
- string guild
+ field: string '''guild''' (Read/Write)
 
 == Description ==
 Returns the guild that a player character (PC) belongs to. This is a read-write field available only for player characters.
 
-== Return Value ==
-Returns a string containing the name of the guild the PC belongs to.
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.guild || string || The guild name of the player character
+|}
 
-== Usage ==
-This field is accessed using dot notation on a unitptr variable that points to a player character:
- string guild_name;
- guild_name := pc.guild;
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
 
-== Example ==
- dilbegin deengrave();
- external
-    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+== Examples ==
+ dilbegin check_guild(pc : unitptr);
  var
-     pc     : unitptr;
-     ting   : unitptr;
-     pris   : integer;
-     i      : integer;
-     text   : string;
-     olddescr   : extraptr;
-     cash   : string;
-     engrv   : string;
-     engrvstr   :  stringlist;
-     newtitle   :  stringlist;
-     newdescr   :  stringlist;
+     guild_name : string;
  code
  {
-     heartbeat := PULSE_SEC*4;
-
- :start:
-     wait(SFB_DONE,command("give")and(self == target));
-     if(not visible(self,medium))goto start;
-     if(not visible(self,activator))
+     guild_name := pc.guild;
+     
+     if (guild_name == "thief")
      {
-         exec("sigh",self);
-         exec("say How can I deal with someone I can't see?", self );
-         exec("drop"+medium.name,self);
-         goto start;
+         exec("say Welcome, brother of the shadows!", self);
      }
-     pc := activator;
-     ting := medium;
-     secure(pc,nopc);
-     secure(ting,ingenting);
-     dilcopy("busy@function(Please wait; I am working right now.)",self);
-
-     if((ting.type != UNIT_ST_OBJ)or(ting.objecttype == ITEM_LIGHT)
-         or(ting.objecttype == ITEM_SCROLL)or(ting.objecttype == ITEM_FOOD)
-         or(ting.objecttype == ITEM_BOOK)or(ting.objecttype == ITEM_SPELL)
-         or(MAT_CLOTH_STR in ting.extra)or(MAT_FIRE_STR in ting.extra)or
-         ((ting.objecttype == ITEM_ARMOR)and(ting.value[0]==0)))
+     else if (guild_name == "warrior")
      {
-         exec("say Sorry, it is beyond my ability to remove the engraving from this.",self);
- :giveback:
-         unsecure(ting);
-         link(ting, pc);
-         act("$3n gives $2n to $1n.",A_SOMEONE,pc,ting,self,TO_REST);
-         act("$3n gives $2n to you.",A_SOMEONE,pc,ting,self,TO_CHAR);
-         i:=dildestroy("busy@function",self);
-         unsecure (pc);
-         goto start;
+         exec("say A warrior's strength is respected here.", self);
      }
-
-     if(not("engraving" in ting.extra))
+     else if (guild_name == "")
      {
-         exec("say Hmm... this item doesn't have an engraving, "+pc.name+
-         ".",self);
-         goto giveback;
+         exec("say You have not yet joined any guild.", self);
      }
-
-     pause;
-     if (IsInGuild@guilds(pc, GUILD_UDG_THIEF)){ // thieves guild discount
-     	exec("wink " + pc.name,self);
-     	pris := (5*SILVER_MULT)+((ting.rent)*3);
-     }else{
-     	pris := (5*PLATINUM_MULT)+((ting.rent)*3);
-     }
-     cash := moneystring(pris,TRUE);
-     exec("say Removing this engraving will cost you "+cash+".",self);
-     pause;
-     if(not transfermoney(pc,self,pris))
+     else
      {
-         exec("say ...which you don't have apparently.",self);
-         exec("say Come back when you are richer, "+pc.name+".",self);
-         goto giveback;
+         exec("say Welcome, member of the " + guild_name + " guild!", self);
      }
-     engrvstr := split(ting.extra.["engraving"].descr, "It says ");
-     newtitle := split(ting.title, " (engraved: " + engrvstr.[1] + ")");
-
-     if (length(newtitle) == 2){
- 	    ting.title := newtitle.[0] + newtitle.[1];
-     }
-     else{
-     	    ting.title := newtitle.[0];
-     }
-     subextra(ting.extra, "engraving");
-     olddescr := "" in ting.extra;
-     engrv := "<br/>" + engrvstr.[1] + " is engraved on it.";
-     newdescr := split(olddescr.descr, engrv);
-     if (length(newdescr) == 2){
- 	    olddescr.descr := newdescr.[0] + newdescr.[1];
-     }
-     else{
-     	    olddescr.descr := newdescr.[0];
-     }
-
-     exec("say There, hope you like it, " + pc.name + "!", self);
-     destroy(self.inside);
-     goto giveback;
-
- :nopc:
-     exec("shrug ",self);
-     exec("drop "+ting.name,self);
-     i:=dildestroy("busy@function",self);
-     unsecure(pc);
-     unsecure(ting);
-     goto start;
-
- :ingenting:
-     exec("say Huh? Where did that ting go?",self);
-     I:=dildestroy("busy@function",self);
-     unsecure(ting);
-     unsecure(pc);
-     goto start;
-
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * This field is only available for player characters (UNIT_ST_PC)
 * The field is read-write (RW), meaning it can be both read and modified
 * Returns an empty string if the player is not in any guild
 * Commonly used for guild-specific pricing, abilities, or restrictions
 
-== See Also ==
-* [[unit_st_pc]] - Player character specific fields
+== Error Handling ==
+* Accessing '''guild''' on non-player units will result in errors
+* Always verify the unit is a player character before accessing this field
+
+== Related Functions/Fields ==
 * [[skills]] - Player skills array
 * [[ability_points]] - Player ability points
 * [[skill_points]] - Player skill points
+
+== See Also ==
+* [[unit_st_pc]] - Player character specific fields

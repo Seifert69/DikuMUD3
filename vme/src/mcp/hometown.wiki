@@ -79,4 +79,4 @@ Returns a string pointer containing the symbolic name of the player's hometown r
 == See Also
 
 * [[findroom]] - Find a room by symbolic name
-* [[unit_st_pc]] - Player character unit fields
+* [[unit_st_pc]] - Player character unit fields 

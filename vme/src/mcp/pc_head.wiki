@@ -1,9 +1,5 @@
 = pc_head =
-
  function: unitptr '''pc_head'''();
-
-== Syntax ==
- unitptr pc_head();
 
 == Description ==
 The '''pc_head''' function returns the first player character in the global player list. This function provides access to the head of the linked list of all player characters currently connected to the game, allowing iteration through all players using the gnext field.
@@ -118,4 +114,4 @@ The function is generally safe and does not generate errors:
 == See Also ==
 * [[findunit]] - Find a specific unit in the game world
 * [[act]] - Send messages to units
-* [[exec]] - Execute a command for a specific unit
+* [[exec]] - Execute a command for a specific unit 

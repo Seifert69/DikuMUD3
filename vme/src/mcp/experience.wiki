@@ -1,10 +1,10 @@
 = experience =
+ function: void '''experience'''(amount : integer, target : unitptr);
+
+The experience function adds or subtracts experience points from a player character's total experience.
 
 == Description ==
-The '''experience()''' function adds or subtracts experience points from a player character's total experience. This function directly modifies a player's experience pool and can affect leveling progression.
-
-== Syntax ==
-  experience ( amount : integer, target : unitptr )
+The '''experience''' function adds or subtracts experience points from a player character's total experience. This function directly modifies a player's experience pool and can affect leveling progression.
 
 == Parameters ==
 {| class="wikitable"
@@ -15,8 +15,16 @@ The '''experience()''' function adds or subtracts experience points from a playe
 | target || unitptr || The player character to receive the experience change
 |}
 
-== Return Value ==
-None
+== Examples ==
+ dilbegin reward_quest_completion(pc : unitptr);
+ code
+ {
+    if (pc.type == UNIT_ST_PC)
+    {
+       experience(1000, pc);
+       sendtext("You gain 1000 experience points for completing the quest!<br/>", pc);
+    }
+ } dilend
 
 == Usage Notes ==
 * This function only works on player characters (UNIT_ST_PC)
@@ -25,34 +33,14 @@ None
 * The function logs experience gains to the system log
 * Negative values will subtract experience from the player
 
-== Example ==
- dilbegin reward_experience(pc:unitptr, base_amount:integer);
- var
-    final_amount:integer;
- code
- {
-    heartbeat:=3;
-    if (pc.type != UNIT_ST_PC)
-       return;
-
-    // Double the reward for high level players
-    if (pc.level >= 30)
-       final_amount := base_amount * 2;
-    else
-       final_amount := base_amount;
-
-    experience(final_amount, pc);
-    sendtext("You gain " + itoa(final_amount) + " experience points!<br/>", pc);
-    return;
- } dilend
-
-== Safety Considerations ==
-* Always validate that the target is a player character before calling
-* Consider using reasonable limits to prevent excessive experience gains
-* Be cautious with negative values to avoid unfairly penalizing players
+== Error Handling ==
 * The function will silently fail if called on non-player units
+* Always validate that the target is a player character before calling
 
-== See Also ==
+== Related Functions/Fields ==
 * [[exp]] - Read-only field to check current experience
 * [[exptol]] - Experience needed for next level
 * [[level]] - Current player level
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character unit type constant

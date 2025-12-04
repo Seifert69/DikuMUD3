@@ -1,16 +1,23 @@
-= hp
+= hp =
 
-== Syntax
+ field: integer '''hp''' (Read/Write)
 
-  integer .hp
-
-== Description
-
+== Description ==
 The '''hp''' field represents the current hitpoints of a unit. This field is read-write (RW) and can be accessed on any unit type including characters, mobiles, and objects.
 
-== Return Value
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.hp || integer || The current hitpoints of the unit
+|}
 
-Returns an integer representing the current hitpoints of the unit.
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
 
 == Usage Notes
 
@@ -73,4 +80,4 @@ Returns an integer representing the current hitpoints of the unit.
 
 * [[max_hp]] - Maximum hitpoints field
 * [[position_update]] - Useful when modifying hp field
-* [[unitptr]] - General unit pointer fields
+* [[unitptr]] - General unit pointer fields 

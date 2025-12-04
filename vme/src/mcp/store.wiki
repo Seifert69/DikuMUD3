@@ -42,7 +42,7 @@ The function does not return a value.
    // Save only the contents, not the chest itself
    store(chest, "chest." + chest.zoneidx, FALSE);
    
-   sendtext("Cest contents have been saved.<br/>", self);
+   sendtext("Chest contents have been saved.<br/>", self);
  }
  dilend
 
@@ -104,125 +104,6 @@ The function does not return a value.
    
    // Clean up
    destroy(storage_box);
- }
- dilend
-
-=== Room Contents Backup ===
- dilbegin backup_room();
- var
-   room : unitptr;
-   filename : string;
- code
- {
-   room := self;
-   
-   if (room.type != UNIT_ST_ROOM)
-   {
-     sendtext("This command only works in rooms.<br/>", self);
-     quit;
-   }
-   
-   // Create backup filename based on room name
-   filename := "room_backup." + room.zoneidx;
-   
-   // Save all room contents
-   store(room, filename, FALSE);
-   
-   sendtext("Room contents have been backed up to " + filename + ".<br/>", self);
- }
- dilend
-
-=== Arena Combat Storage ===
- dilbegin arena_storage();
- var
-   pc : unitptr;
-   storage_file : string;
- code
- {
-   pc := activator;
-   
-   if (pc.type != UNIT_ST_PC)
-   {
-     sendtext("Only players can use arena storage.<br/>", self);
-     quit;
-   }
-   
-   // Store player's current state before arena combat
-   storage_file := "arena_backup." + pc.name + "." + itoa(realtime);
-   
-   store(pc, storage_file, TRUE);
-   
-   sendtext("Your equipment and inventory have been stored for arena combat.<br/>", pc);
-   
-   // Clear player for arena combat
-   while (pc.inside)
-   {
-     destroy(pc.inside);
-   }
- }
- dilend
-
-=== Dynamic Storage System ===
- dilbegin dynamic_storage(item_name : string);
- var
-   item : unitptr;
-   filename : string;
-   timestamp : string;
- code
- {
-   item := findunit(self, item_name, FIND_UNIT_INVEN, null);
-   
-   if (item == null)
-   {
-     sendtext("Item '" + item_name + "' not found.<br/>", self);
-     quit;
-   }
-   
-   // Create unique filename with timestamp
-   timestamp := itoa(realtime);
-   filename := "stored_item." + item_name + "." + timestamp;
-   
-   // Store the item
-   store(item, filename, TRUE);
-   
-   sendtext("Item '" + item.title + "' stored as " + filename + ".<br/>", self);
- }
- dilend
-
-=== Mail System Storage ===
- dilbegin save_mail_entry();
- var
-   pc : unitptr;
-   mail_extra : extraptr;
-   mail_list : stringlist;
-   filename : string;
- code
- {
-   pc := activator;
-   
-   if (pc.type != UNIT_ST_PC)
-   {
-     sendtext("Only players can use mail system.<br/>", self);
-     quit;
-   }
-   
-   // Get mail extra description
-   mail_extra := ("$" + pc.name) in self.extra;
-   
-   if (mail_extra == null)
-   {
-     sendtext("You have no mail entry to save.<br/>", pc);
-     quit;
-   }
-   
-   // Update mail list and save
-   mail_list := mail_extra.names;
-   
-   // Store the mail list object
-   filename := "udgaard.mail_list_obj";
-   store(self, filename, TRUE);
-   
-   sendtext("Mail entry has been saved.<br/>", pc);
  }
  dilend
 

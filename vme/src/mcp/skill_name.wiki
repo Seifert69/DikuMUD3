@@ -196,3 +196,4 @@ Common error scenarios:
 * [[Character creation]] - Information about creating characters with skills
 * [[Training systems]] - Skill training and advancement procedures
 * [[Experience system]] - Experience point and skill cost mechanics
+

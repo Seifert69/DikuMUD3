@@ -1,12 +1,90 @@
 = cmdstr =
+ field: string '''cmdstr''' (Read-only)
 
-== Syntax ==
- cmdstr : string (read-only)
+The '''cmdstr''' field contains the full command string as entered by a player.
 
 == Description ==
 The cmdstr variable contains the full command string as entered by a player, but with command expansion applied by the interpreter. This variable is available within DIL programs that are activated by player commands (SFB_CMD).
 
 The cmdstr represents the command portion of what the player typed, after the interpreter has expanded any abbreviations or aliases. For example, if a player types "s" (abbreviation for "south"), cmdstr will contain "south".
+
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| cmdstr || string || The expanded command string as entered by the player
+|}
+
+== Examples ==
+=== Basic Command Processing ===
+ dilbegin command_handler();
+ code
+ {
+    if (cmdstr == "north") {
+       act("You go north.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else if (cmdstr == "south") {
+       act("You go south.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Unknown command: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Command Validation ===
+ dilbegin validate_command();
+ code
+ {
+    if ((cmdstr == "remove") and (cmdstr != "remove")) {
+       act("Command expansion detected: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Command accepted: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Command Logging ===
+ dilbegin log_commands();
+ code
+ {
+    log("Player " + activator.name + " used command: " + cmdstr + " with args: " + argument);
+    
+    // Process based on expanded command
+    if (cmdstr == "look") {
+       act("You look around.", A_ALWAYS, self, null, null, TO_CHAR);
+    } else if (cmdstr == "say") {
+       act("You say '" + argument + "'", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Command Comparison ===
+ dilbegin compare_commands();
+ var
+    full_command : string;
+ code
+ {
+    full_command := cmdstr + " " + argument;
+    act("Full command: " + full_command, A_ALWAYS, self, null, null, TO_CHAR);
+    
+    // Show individual parts
+    act("Command: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
+    act("Argument: " + argument, A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ } dilend
+
+=== Abbreviation Detection ===
+ dilbegin detect_abbreviation();
+ code
+ {
+    if ((cmdstr == "n") and (cmdstr != "north")) {
+       act("Abbreviation detected: 'n' expanded to 'north'", A_ALWAYS, self, null, null, TO_CHAR);
+    } else if ((cmdstr == "s") and (cmdstr != "south")) {
+       act("Abbreviation detected: 's' expanded to 'south'", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("Command: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
 == Usage Notes ==
 * This is a read-only variable that contains the expanded command
@@ -14,99 +92,23 @@ The cmdstr represents the command portion of what the player typed, after the in
 * The command is expanded by the interpreter (abbreviations become full commands)
 * Only available in DIL programs activated by SFB_CMD (command triggers)
 * Useful for parsing and processing player commands
+* The command expansion is done before the DIL program receives control
 
-== Examples ==
-=== Basic command checking ===
- dilbegin command_handler();
- code
- {
-    if (cmdstr == "north")
-        act("You go north.", A_ALWAYS, self, null, null, TO_CHAR);
-    else if (cmdstr == "south")
-        act("You go south.", A_ALWAYS, self, null, null, TO_CHAR);
-    else
-        act("Unknown command: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
-    
-    quit;
- } dilend
+== Error Handling ==
+The field performs validation:
+* '''Automatic validation''' - The field is automatically set by the DIL runtime
+* '''Context validation''' - Only meaningful when accessed within command-triggered DIL programs
+* '''Type validation''' - Always returns a string (may be empty)
 
-=== Command validation ===
- dilbegin validate_command();
- code
- {
-    // Check if the expanded command is valid
-    if ((cmdstr == "remove") and (cmdstr != "remove"))
-    {
-        act("Command expansion detected: " + cmdstr, A_ALWAYS, self, null, null, TO_CHAR);
-    }
-    
-    // Show full command
-    act("Full command: " + cmdstr + " " + argument, A_ALWAYS, self, null, null, TO_CHAR);
-    
-    quit;
- } dilend
-
-=== Command-specific processing ===
- dilbegin process_command();
- code
- {
-    if (cmdstr == "remove")
-    {
-        // Special handling for remove command
-        if (cmdstr != "remove")
-            act("You typed '" + excmdstr + "' which expanded to '" + cmdstr + "'", 
-                A_ALWAYS, self, null, null, TO_CHAR);
-        
-        // Process remove command...
-    }
-    else if (cmdstr == "get")
-    {
-        // Process get command...
-    }
-    
-    quit;
- } dilend
-
-=== Command logging ===
- dilbegin log_commands();
- code
- {
-    // Log the expanded command for debugging
-    log("Player " + activator.name + " used command: " + cmdstr + " with args: " + argument);
-    
-    // Process based on expanded command
-    switch (cmdstr)
-    {
-        case "look":
-            act("You look around.", A_ALWAYS, activator, null, null, TO_CHAR);
-            break;
-        case "say":
-            act("You say '" + argument + "'", A_ALWAYS, activator, null, null, TO_CHAR);
-            break;
-        default:
-            act("Unknown command.", A_ALWAYS, activator, null, null, TO_CHAR);
-            break;
-    }
-    
-    quit;
- } dilend
-
-== Comparison with Other Command Variables ==
-{| class="wikitable"
-! Variable !! Description !! Case !! Expansion
-|-
-| cmdstr || Expanded command || Lower case || Yes (abbreviations expanded)
-|-
-| excmdstr || Original command || Lower case || No (as typed)
-|-
-| excmdstr_case || Original command || Original case || No (as typed)
-|}
-
-== See Also ==
+== Related Fields ==
 * [[excmdstr]] - Original command as typed (lowercase)
 * [[excmdstr_case]] - Original command as typed (preserves case)
 * [[argument]] - Command arguments
-* [[command]] - Check if a specific command was used
 
-== Implementation Details ==
-The cmdstr variable is populated from the p->sarg->cmd->cmd_str field in the DIL runtime environment. This contains the command string after it has been processed by the command interpreter, which includes expanding abbreviations and applying command aliases. The variable is read-only and cannot be modified by DIL code.
+== Related Functions ==
+* [[command]] - Check if a specific command was used
+* [[SFB_CMD]] - Command activation wait flag
+
+== See Also ==
+* [[command interpreter]] - Command processing system
+* [[command expansion]] - Abbreviation and alias system

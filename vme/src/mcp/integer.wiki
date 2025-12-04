@@ -181,9 +181,6 @@ code
     mask := 0x00FF00;     // Green mask
     
     sendtext("Color value: " + itoa(color_value) + "<br/>", self);
-    sendtext("Green mask: " + itoa(mask) + "<br/>", self);
-    
-    // Extract green component
     sendtext("Green component: " + itoa((color_value & mask) >> 8) + "<br/>", self);
 } dilend
 

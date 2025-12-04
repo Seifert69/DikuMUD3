@@ -197,34 +197,6 @@ code
     }
 } dilend
 
-=== Data Validation ===
-dilbegin validate_data();
-var
-    input_values : integerlist;
-    valid_values : integerlist;
-    i : integer;
-    invalid_count : integer;
-code
-{
-    // Some test data
-    input_values := {15, -5, 0, 25, 100, 200};
-    valid_values := {};
-    
-    // Filter for valid positive values
-    i := 0;
-    while (i < length(input_values)) {
-        if (input_values.[i] > 0) {
-            insert(valid_values, length(valid_values), input_values.[i]);
-        } else {
-            invalid_count := invalid_count + 1;
-        }
-        i := i + 1;
-    }
-    
-    sendtext("Valid values found: " + itoa(length(valid_values)) + "<br/>", self);
-    sendtext("Invalid entries: " + itoa(invalid_count) + "<br/>", self);
-} dilend
-
 === Quest Progress Tracking ===
 dilbegin quest_progress();
 var

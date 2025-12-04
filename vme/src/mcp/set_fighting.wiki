@@ -113,4 +113,4 @@ Common error scenarios:
 == See Also ==
 * [[SFB_COM]] - Combat message flag for wait() statements
 * [[CHAR_FIGHTING]] - Internal character fighting state
-* [[meleedamage()]] - Function for calculating melee damage
+* [[meleedamage()]] - Function for calculating melee damage 

@@ -14,6 +14,7 @@ The weapon_name function retrieves the human-readable name for a specific weapon
 |}
 
 == Examples ==
+=== List Weapon Types ===
  dilbegin list_weapons();
  var
     i : integer;
@@ -33,6 +34,7 @@ The weapon_name function retrieves the human-readable name for a specific weapon
     quit;
  } dilend
 
+=== Check Weapon Type ===
  dilbegin check_weapon_type(weapon_idx : integer);
  var
     name : string;
@@ -47,36 +49,6 @@ The weapon_name function retrieves the human-readable name for a specific weapon
     else
     {
        sendtext("Invalid weapon type index.&n", self);
-    }
-    quit;
- } dilend
-
- dilbegin setskill_weapon_example();
- external
-    integer weaponindex(s1 : string);
- var
-    sname : string;
-    sdef : integer;
-    buffer : string;
- code
- {
-    // Example from DIL code showing usage in setskill command
-    sname := "sword";
-    sdef := weaponindex(sname);
-    
-    if (sdef == -1)
-    {
-       buffer := "Invalid weapon, please choose from the following:<br/>";
-       sdef := 0;
-       while (sdef < WPN_TREE_MAX)
-       {
-          sname := weapon_name(sdef);
-          if (sname == "")
-              break;
-          buffer := buffer + sname + "<br/>";
-          sdef := sdef + 1;
-       }
-       sendtext(buffer, self);
     }
     quit;
  } dilend

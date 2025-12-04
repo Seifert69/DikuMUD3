@@ -1,12 +1,10 @@
 = offensive =
+ field: integer '''.offensive''' (Read/Write)
 
-== Syntax ==
-integer '''offensive''' (char : unitptr)
+The '''offensive''' field provides access to the offensive bonus modifier for characters.
 
 == Description ==
-The '''offensive''' field provides access to the offensive bonus modifier for characters (PCs and NPCs). This field represents a bonus or penalty applied to the character's offensive combat capabilities, affecting their ability to successfully hit targets in combat.
-
-Based on the C implementation, this field returns a reference to the character's offensive bonus value, allowing both reading and writing of the modifier.
+The '''offensive''' field represents a bonus or penalty applied to the character's offensive combat capabilities, affecting their ability to successfully hit targets in combat. Based on the C implementation, this field returns a reference to the character's offensive bonus value, allowing both reading and writing of the modifier.
 
 == Field Access ==
 This is a field access on character unitptrs:
@@ -18,13 +16,11 @@ This field is available on the following unit types:
 * UNIT_ST_NPC (Non-Player Character)
 
 == Usage Notes ==
-The offensive field is read-write (RW) and can be modified directly.
 This field represents a combat modifier that affects attack accuracy and effectiveness.
 Positive values improve offensive capabilities, while negative values impose penalties.
 This field is part of the combat system alongside [[defensive]] and [[attack_type]].
 
 == Examples ==
-=== Checking Offensive Bonus ===
  dilbegin check_offensive(target : unitptr);
  var
     off_bonus : integer;
@@ -45,112 +41,6 @@ This field is part of the combat system alongside [[defensive]] and [[attack_typ
        act("$1n has a $2d offensive penalty.", A_ALWAYS, self, off_bonus, target, TO_CHAR);
     else
        act("$1n has no offensive modifier.", A_ALWAYS, self, target, null, TO_CHAR);
- } dilend
-
-=== Setting Offensive Bonus ===
- dilbegin enhance_offensive(target : unitptr, bonus : integer);
- var
-    old_bonus : integer;
- 
- code
- {
-    if ((target.type != UNIT_ST_PC) and (target.type != UNIT_ST_NPC))
-    {
-       act("$1n is not a character.", A_ALWAYS, self, target, null, TO_CHAR);
-       return;
-    }    
-    old_bonus := target.offensive;
-    target.offensive := bonus;
-    act("$1n's offensive bonus changed from $2d to $3d.", A_ALWAYS, self, old_bonus, target, TO_CHAR);
-    act("Your combat effectiveness has been modified!", A_ALWAYS, target, null, null, TO_CHAR);
- } dilend
-
-=== Temporary Combat Enhancement ===
- dilbegin combat_rage();
- var
-    current_bonus : integer;
- code
- {
-    if ((self.type != UNIT_ST_PC) and (self.type != UNIT_ST_NPC))
-       return;
-    current_bonus := self.offensive;
-    self.offensive := current_bonus + 5; // +5 offensive bonus
-    act("You enter a combat rage! (+5 offensive)", A_ALWAYS, self, null, null, TO_CHAR);
-    act("$1n enters a combat rage!", A_ALWAYS, self, null, null, TO_REST);
-    pause(PULSE_SEC*30); // 30 second duration
-    self.offensive := current_bonus; // Restore original bonus
-    act("Your combat rage subsides.", A_ALWAYS, self, null, null, TO_CHAR);
- } dilend
-
-=== Combat Analysis ===
- dilbegin analyze_combat();
- var
-    unit : unitptr;
-    off_bonus : integer;
-    def_bonus : integer;
- 
- code
- {
-    act("=== Combat Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    foreach (UNIT_ST_PC, unit)
-    {
-       off_bonus := unit.offensive;
-       def_bonus := unit.defensive;
-       
-       act("$1n: OFF:+$2d DEF:+$3d", A_ALWAYS, self, off_bonus, unit, TO_CHAR);
-       act("     $1n: DEF:+$2d", A_ALWAYS, self, def_bonus, unit, TO_CHAR);
-    }
-    
-    foreach (UNIT_ST_NPC, unit)
-    {
-       off_bonus := unit.offensive;
-       def_bonus := unit.defensive;
-       
-       act("$1n: OFF:+$2d DEF:+$3d", A_ALWAYS, self, off_bonus, unit, TO_CHAR);
-       act("     $1n: DEF:+$2d", A_ALWAYS, self, def_bonus, unit, TO_CHAR);
-    }
- } dilend
-
-=== Equipment-Based Modifications ===
- dilbegin apply_equipment_effects();
- var
-    item : unitptr;
-    off_mod : integer;
- 
- code
- {
-    if ((self.type != UNIT_ST_PC) and (self.type != UNIT_ST_NPC))
-       return;
-    
-    off_mod := 0;
-    
-    // Check equipped items for offensive modifiers
-    item := equipment(self, WEAR_WIELD);
-    if (item != null)
-    {
-       if (item.objecttype == ITEM_WEAPON)
-       {
-          // Magic weapon might grant offensive bonus
-          off_mod := off_mod + 2;
-       }
-    }
-    
-    item := equipment(self, WEAR_HOLD);
-    if (item != null)
-    {
-       if (item.objecttype == ITEM_WEAPON)
-       {
-          // Dual-wielding might affect offensive capability
-          off_mod := off_mod + 1;
-       }
-    }
-    
-    if (off_mod != 0)
-    {
-       self.offensive := self.offensive + off_mod;
-       act("Equipment grants +$1d offensive bonus.", A_ALWAYS, self, off_mod, null, TO_CHAR);
-    }
  } dilend
 
 == Error Handling ==
@@ -178,4 +68,4 @@ Always verify the unit is a character before accessing offensive:
 * [[defensive]] - Defensive combat modifier
 * [[attack_type]] - Attack type setting
 * [[meleeattack]] - Melee attack function
-* [[opponent]] - Current opponent in combat
+* [[opponent]] - Current opponent in combat 

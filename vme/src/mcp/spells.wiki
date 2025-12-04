@@ -209,4 +209,5 @@ Always validate the unit type and index range before accessing the field.
 * DIL Spell System Documentation
 * SPL_XXX Constants (defined in values.h/vme.h)
 * SPL_GROUP_MAX and SPL_TREE_MAX constants
+
 * Magical Resistance System Documentation

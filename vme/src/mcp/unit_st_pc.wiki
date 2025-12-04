@@ -30,13 +30,9 @@ The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It
     {
        exec("say Target is a player character.", self);
     }
-    else if (target.type == UNIT_ST_NPC)
-    {
-       exec("say Target is an NPC.", self);
-    }
     else
     {
-       exec("say Target is of unknown type.", self);
+       exec("say Target is not a player character.", self);
     }
     
     goto start;
@@ -53,97 +49,10 @@ The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It
     if (activator.type == UNIT_ST_PC)
     {
        exec("say Player-specific action executed.", self);
-       // Only players can use this action
     }
     else
     {
        exec("say Non-players cannot use this action.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Type Validation in Functions ===
- dilbegin type_validator();
- var
-    unit : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, command("checktype"));
-    unit := activator;
-    
-    // Validate unit type before processing
-    if (unit.type == UNIT_ST_PC)
-    {
-       exec("say Valid player character type: " + itoa(unit.objecttype) + ".", self);
-    }
-    else if (unit.type == UNIT_ST_NPC)
-    {
-       exec("say Valid NPC character type: " + itoa(unit.objecttype) + ".", self);
-    }
-    else
-    {
-       exec("say Invalid unit type for this operation.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Combined Type Checking ===
- dilbegin multi_type_handler();
- var
-    unit : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    unit := activator;
-    
-    // Handle different types with appropriate logic
-    if (unit.type == UNIT_ST_PC)
-    {
-       exec("say Processing player character.", self);
-    }
-    else if (unit.type == UNIT_ST_NPC)
-    {
-       exec("say Processing NPC.", self);
-    }
-    else if (unit.type == UNIT_ST_OBJ)
-    {
-       exec("say Processing object.", self);
-    }
-    else if (unit.type == UNIT_ST_ROOM)
-    {
-       exec("say Processing room.", self);
-    }
-    else
-    {
-       exec("say Unknown unit type.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Player Data Access ===
- dilbegin player_data_reader();
- var
-    player : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, command("getstats"));
-    player := activator;
-    
-    if (player.type == UNIT_ST_PC)
-    {
-       exec("say Accessing player data: birth=" + itoa(player.birth) + ", self);
-       exec("say Skills: " + itoa(player.skill_points), self);
-       exec("say Abilities: " + itoa(player.ability_points), self);
-    }
-    else
-    {
-       exec("say Only players have character data.", self);
     }
     
     goto start;

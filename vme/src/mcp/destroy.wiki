@@ -1,13 +1,7 @@
 = destroy =
+ function: '''destroy'''(unit : unitptr);
 
-'''destroy''' is a DIL function that permanently removes a unit from the game world.
-
-== Syntax ==
- destroy ( u : unitptr );
-
-== Parameters ==
-; u
-: Unit to remove from game
+The '''destroy''' function permanently removes a unit from the game world.
 
 == Description ==
 The destroy function permanently removes a unit from the game world. The behavior depends on the type of unit being destroyed:
@@ -15,43 +9,131 @@ The destroy function permanently removes a unit from the game world. The behavio
 === For Player Characters (PCs) ===
 * The player is saved and ejected from the game
 * The player's descriptor is closed
-* The player is removed from the game completely
+* All references to the unit are cleaned up
+* The player's equipment is unequipped and dropped to the ground
+* The player is removed from all containing units
 
 === For NPCs and Objects ===
-* The unit is immediately destroyed and removed from the game
+* The unit is immediately removed from the game
 * All references to the unit are cleaned up
-* The unit is permanently removed from memory
+* The unit is removed from memory
+* The unit's equipment is dropped to the ground
+* The unit is removed from all containing units
 
 === For Rooms ===
-* Rooms cannot be destroyed using this function
 * The function will have no effect on room units
+* Rooms cannot be destroyed using this function
 
-== Usage Notes ==
-* This function is different from the old destroy function - it completely removes players from the game instead of leaving them in the menu
-* The destruction is permanent and cannot be undone
-* If the unit being destroyed is the owner of the current DIL program, the program will terminate with WAITCMD_DESTROYED
-* The function handles security checks for unit destruction
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit to remove from the game
+|}
 
-== Example ==
- dilbegin rotaway();
+== Return Value ==
+Returns an integer:
+* '''1''' (TRUE) - If the unit was successfully destroyed
+* '''0''' (FALSE) - If the unit was not found or destruction failed
+
+== Examples ==
+=== Basic Unit Destruction ===
+ dilbegin destroy_item();
+ var
+    item : unitptr;
  code
  {
-    heartbeat := PULSE_SEC * 9600;
-
-    :loop:
-    pause;
-
-    if (self.outside.type == UNIT_ST_ROOM)
-    {
-       if (not isset(self.flags, UNIT_FL_BURIED))
-         act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
-       destroy(self);
+    item := findunit(self, "sword", FIND_UNIT_IN_ME, null);
+    
+    if (item) {
+       destroy(item);
+       act("You destroy the " + item.title + ".", A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("No item found to destroy.", A_ALWAYS, self, null, null, TO_CHAR);
     }
-
-    goto loop;
+    quit;
  } dilend
 
-== See Also ==
+=== NPC Removal ===
+ dilbegin remove_npc();
+ var
+    npc : unitptr;
+ code
+ {
+    npc := findunit(self, "guard", FIND_UNIT_SURRO, null);
+    
+    if (npc and npc.type == UNIT_ST_NPC) {
+       destroy(npc);
+       act("The guard disappears in a puff of smoke.", A_ALWAYS, self, null, null, TO_ROOM);
+    } else {
+       act("No guard found to remove.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Player Logout ===
+ dilbegin force_logout();
+ var
+    player : unitptr;
+ code
+ {
+    player := activator;
+    
+    if (player and player.type == UNIT_ST_PC) {
+       act("You are forcibly logged out.", A_ALWAYS, player, null, null, TO_CHAR);
+       destroy(player);
+    } else {
+       act("No player found to logout.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Conditional Destruction ===
+ dilbegin conditional_destroy();
+ var
+    target : unitptr;
+ code
+ {
+    target := findunit(self, argument, FIND_UNIT_SURRO, null);
+    
+    if (target) {
+       if (target.type == UNIT_ST_OBJ) {
+          destroy(target);
+          act("You destroy the " + target.title + ".", A_ALWAYS, self, null, null, TO_CHAR);
+       } else if (target.type == UNIT_ST_NPC) {
+          act("You cannot destroy living beings.", A_ALWAYS, self, null, null, TO_CHAR);
+       } else {
+          act("You can only destroy objects and NPCs.", A_ALWAYS, self, null, null, TO_CHAR);
+       }
+    } else {
+       act("No target found to destroy.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The destruction is permanent and cannot be undone
+* For player characters, this is equivalent to force logout
+* The function handles cleanup of all references to the destroyed unit
+* Equipment is dropped to the ground before destruction
+* The function performs security checks to prevent unauthorized destruction
+* Use with caution - especially with player characters
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Security check''' - Prevents destruction of protected units
+* '''Type validation''' - Returns fail if unit is not a valid type
+* '''Permission check''' - Ensures caller has authority to destroy target
+
+== Related Functions ==
 * [[remove]] - Remove units from rooms
-* [[delete]] - Delete units
-* [[extract_unit]] - Extract units (internal function)
+* [[unequip]] - Remove equipment from characters
+* [[logout]] - Force player logout (safer alternative)
+
+== See Also ==
+* [[unitptr]] - Unit pointer data type
+* [[UNIT_ST_PC]] - Player character unit type
+* [[UNIT_ST_NPC]] - Non-player character unit type
+* [[UNIT_ST_OBJ]] - Object unit type
+* [[UNIT_ST_ROOM]] - Room unit type

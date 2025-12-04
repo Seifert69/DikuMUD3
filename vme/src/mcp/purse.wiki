@@ -166,4 +166,4 @@ The function will return '''fail''' when:
 * [[SILVER_PIECE]] - Constant for silver piece type
 * [[COPPER_PIECE]] - Constant for copper piece type
 * [[PLATINUM_PIECE]] - Constant for platinum piece type
-* [[equipment]] - Function to manage character equipment slots
+* [[equipment]] - Function to manage character equipment slots 

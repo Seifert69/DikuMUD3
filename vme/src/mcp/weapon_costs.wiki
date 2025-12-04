@@ -23,21 +23,22 @@ The field requires an integer index parameter:
 : The weapon type index (WPN_* constants from values.h and/or vme.h)
 
 == Examples ==
+=== Basic Weapon Cost Check ===
  dilbegin racial_weapon_check(pc : unitptr);
  var
-   i : integer;
-   cost : integer;
+    i : integer;
+    cost : integer;
  code
-   // Check weapon costs for all weapon types
-   for (i := 0; i < 10; i := i + 1)
-   {
-     cost := pc.weapon_costs[i];
-     if (cost > 0)
-     {
-       sendtext("Weapon " + itoa(i) + " cost: " + itoa(cost) + "&n", self);
-     }
-   }
-   quit;
+    // Check weapon costs for all weapon types
+    for (i := 0; i < 10; i := i + 1)
+    {
+      cost := pc.weapon_costs[i];
+      if (cost > 0)
+      {
+        sendtext("Weapon " + itoa(i) + " cost: " + itoa(cost) + "&n", self);
+      }
+    }
+    quit;
  dilend
 
 == Usage Notes ==

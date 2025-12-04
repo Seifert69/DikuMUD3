@@ -1,33 +1,21 @@
 = gamestate =
+ function: void '''gamestate'''({unit : unitptr, state : integer});
 
-== Syntax ==
- gamestate( unit : unitptr, state : integer )
-
-== Parameters ==
-; unit : unitptr
-: The player character whose game state will be changed
-; state : integer
-: The new game state using GS_ defines from vme.h
+The '''gamestate''' function changes the game state of a player character.
 
 == Description ==
-The gamestate() function changes the game state of a player character. This function is primarily used for managing player connections and menu navigation in VME 2.0. When used, it removes the character from normal gameplay and transitions them to a different state.
+The '''gamestate''' function changes the game state of a player character. This function is primarily used for managing player connections and menu navigation in VME 2.0. When used, it removes the character from normal gameplay and transitions them to a different state.
 
-== Game State Constants ==
-The state parameter should use one of the following GS_ defines:
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The player character whose game state will be changed
+|-
+| state || integer || The new game state using GS_ defines from vme.h
+|}
 
-; GS_PLAY
-: Returns the player to normal gameplay mode
-; GS_QUIT
-: Extracts the player from the game (disconnects them)
-; GS_MENU
-: Transitions the player to menu mode (typically for immortal/admin menus)
-; GS_LINK_DEAD
-: Closes the player's descriptor, making them link-dead
-
-== Return Value ==
-None
-
-== Example ==
+== Examples ==
  dilbegin quit_command();
  var
     err : integer;
@@ -99,7 +87,7 @@ None
     quit;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * This function only works on player characters (UNIT_ST_PC), not NPCs
 * Using GS_QUIT will extract the unit from the game completely
 * Using GS_MENU removes the player from normal gameplay and puts them in menu mode
@@ -108,7 +96,19 @@ None
 * Be aware that players could potentially use this function to hide if not properly secured
 * This function is commonly used in login/logout sequences and immortal menu systems
 
-== See Also ==
+The state parameter should use one of the following GS_ defines:
+* GS_PLAY - Returns the player to normal gameplay mode
+* GS_QUIT - Extracts the player from the game (disconnects them)
+* GS_MENU - Transitions the player to menu mode (typically for immortal/admin menus)
+* GS_LINK_DEAD - Closes the player's descriptor, making them link-dead
+
+== Error Handling ==
+* Function will fail if the unit parameter is not a player character
+* Invalid state values may cause unexpected behavior
+
+== Related Functions/Fields ==
 * [[extract_unit]]
 * [[descriptor_close]]
+
+== See Also ==
 * [[UNIT_ST_PC]]

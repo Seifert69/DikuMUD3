@@ -1,25 +1,23 @@
 = getwords =
+ function: stringlist '''getwords'''(input_string : string);
 
-== Syntax ==
- stringlist := getwords( input_string : string );
-
-== Parameters ==
- input_string : string
-    A string containing zero or more words separated by spaces.
-
-== Return Value ==
- stringlist
-    Returns a stringlist where each element is a word from the input string.
-    Returns fail if input string is null or invalid.
+The getwords() function splits a string into individual words using spaces as delimiters and returns them as a stringlist.
 
 == Description ==
- The getwords() function splits a string into individual words using spaces as delimiters and returns them as a stringlist. Each word becomes a separate element in the resulting stringlist.
+ The '''getwords'''() function splits a string into individual words using spaces as delimiters and returns them as a stringlist. Each word becomes a separate element in the resulting stringlist.
 
  Unlike getword() which extracts one word and modifies the original string, getwords() returns all words at once without modifying the original string.
 
  The function handles multiple consecutive spaces by treating them as single delimiters (empty strings are not added to the result).
 
-== Example ==
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| input_string || string || A string containing zero or more words separated by spaces.
+|}
+
+== Examples ==
  dilbegin parse_sentence(sentence : string);
  var
     words : stringlist;
@@ -59,8 +57,23 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* The original input_string is not modified
+* Multiple consecutive spaces are treated as single delimiters
+* Leading and trailing spaces are ignored
+* Empty string input returns an empty stringlist
+* Use '''length'''() to get the number of words returned
+
+== Error Handling ==
+* Returns fail if input_string is null or invalid
+* Returns empty stringlist if input_string contains no words
+* Always check return value before accessing array elements
+
+== Related Functions/Fields ==
+* [[getword]] - Get first word and remove from string
+* [[stringlist]] - String list type and operations
+* [[length]] - Get length of string or stringlist
+* [[addstring]] - Add string to stringlist
+
 == See Also ==
- * [[getword]] - Get first word and remove from string
- * [[stringlist]] - String list type and operations
- * [[length]] - Get length of string or stringlist
- * [[addstring]] - Add string to stringlist
+* String parsing and manipulation functions

@@ -1,12 +1,9 @@
 = loadcount =
 
- field: integer '''.loadcount'''
+field: integer '''.loadcount''' (Read-only)
 
 == Description ==
 The '''loadcount''' field returns the number of units currently loaded in the game that share the same definition (zoneidx, nameidx) as the specified unit. This field is read-only and provides a way to track how many instances of a particular object, NPC, or room template are currently active in the game world.
-
-== Syntax ==
- unitptr.loadcount
 
 == Field Access ==
 {| class="wikitable"
@@ -21,11 +18,6 @@ This field is available on the following unit types:
 * UNIT_ST_NPC (Non-Player Character)
 * UNIT_ST_OBJ (Object)
 * UNIT_ST_ROOM (Room)
-
-== Return Value ==
-Returns '''integer''':
-* '''integer''' - Number of units currently loaded with the same zoneidx and nameidx
-* '''1''' - Default value when unit has no file index (typically for unique units)
 
 == Examples ==
  dilbegin check_load_counts();
@@ -65,4 +57,4 @@ Returns '''integer''':
 == See Also ==
 * [[load()]] - Load a unit into the game
 * [[destroy()]] - Remove a unit from the game
-* [[findsymbolic()]] - Find units by symbolic name and index
+* [[findsymbolic()]] - Find units by symbolic name and index 

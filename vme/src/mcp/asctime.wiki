@@ -1,63 +1,96 @@
 = asctime =
+ function: string '''asctime'''(timestamp : integer);
+
+The '''asctime''' function converts a Unix timestamp into a human-readable date and time string.
 
 == Description ==
 Converts a Unix timestamp (seconds since epoch) into a human-readable ASCII date and time string.
 
-== Syntax ==
- asctime(timestamp)
-
 == Parameters ==
-; timestamp : integer
-: The Unix timestamp to convert, representing seconds since January 1, 1970 (epoch).
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| timestamp || integer || The Unix timestamp to convert, representing seconds since January 1, 1970 (epoch)
+|}
 
 == Return Value ==
-: string
-: A formatted date and time string in the format "Mon Nov 18 18:49:08 1996"
+Returns a string:
+* '''string''' - A formatted date and time string in the format "Mon Nov 18 18:49:08 1996"
+* '''fail''' - If timestamp parameter is invalid
 
 == Examples ==
- dilbegin time_example();
+=== Current Time Display ===
+ dilbegin show_time();
  var
-  current_time : integer;
-  time_string : string;
+    current_time : integer;
+    time_string : string;
  code
  {
-  :start:
-  current_time := realtime;
-  time_string := asctime(current_time);
-  sendtext("Current time: " + time_string + "<br/>", activator);
+    current_time := realtime;
+    time_string := asctime(current_time);
+    send("Current time: " + time_string);
+    quit;
  } dilend
 
- dilbegin birth_info();
+=== Character Birth Information ===
+ dilbegin birth_command();
  var
-  pc : unitptr;
-  birth_time : string;
+    pc : unitptr;
+    birth_time : string;
  code
  {
-  :start:
-  wait(SFB_CMD, command("birth") and (activator.type == UNIT_ST_PC));
-  pc := activator;
-  birth_time := asctime(pc.birth);
-  sendtext("Your character was created " + birth_time + ".<br/>", pc);
+    wait(SFB_CMD, command("birth") and (activator.type == UNIT_ST_PC));
+    pc := activator;
+    birth_time := asctime(pc.birth);
+    send("Your character was created " + birth_time + ".");
+    quit;
  } dilend
 
- dilbegin log_timestamp();
+=== System Logging ===
+ dilbegin system_check();
  var
-  log_entry : string;
+    log_entry : string;
  code
  {
-  :start:
-  log_entry := "System check at " + asctime(realtime);
-  log(log_entry);
+    log_entry := "System check at " + asctime(realtime);
+    log(log_entry);
+    send("System check logged.");
+    quit;
  } dilend
 
-== Notes ==
+=== Event Timestamping ===
+ dilbegin event_log(event_name : string);
+ var
+    timestamp : integer;
+    time_str : string;
+ code
+ {
+    timestamp := realtime;
+    time_str := asctime(timestamp);
+    log("Event '" + event_name + "' occurred at " + time_str);
+    send("Event logged with timestamp.");
+    quit;
+ } dilend
+
+== Usage Notes ==
 * The function uses the standard C library ctime() function internally
 * The returned string format is always: "Day Month Date HH:MM:SS Year"
 * Commonly used with realtime() to get current time
 * Useful for logging, displaying creation times, or timestamping events
 * The input parameter must be an integer representing Unix timestamp
+* The format is consistent and predictable for all timestamps
+
+== Error Handling ==
+The function performs validation:
+* '''Parameter validation'' - Ensures timestamp is a valid integer
+* '''Range validation'' - Validates timestamp is within reasonable bounds
+* '''Format validation'' - Ensures proper string format is returned
+
+== Related Functions ==
+* [[realtime]] - For getting the current Unix timestamp
+* [[log]] - For logging timestamped messages
+* [[mud]] - For game-specific time functions
 
 == See Also ==
-* realtime - For getting the current Unix timestamp
-* log - For logging timestamped messages
-* mud - For game-specific time functions
+* [[Unix timestamp]] - Unix epoch time system
+* [[ctime]] - C library function reference

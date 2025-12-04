@@ -23,7 +23,6 @@ The '''unitptr''' type is used throughout DIL to:
     player : unitptr;
     npc : unitptr;
     item : unitptr;
-    room : unitptr;
  code
  {
     :start:
@@ -34,14 +33,11 @@ The '''unitptr''' type is used throughout DIL to:
     player := target;
     npc := findunit("guard", UNIT_ST_NPC);
     item := findunit("sword", UNIT_ST_OBJ);
-    room := findunit("temple", UNIT_ST_ROOM);
     
     // Use the references
     exec("say Target is: " + target.name, self);
-    exec("say Player reference: " + player.name, self);
     exec("say NPC reference: " + npc.name, self);
     exec("say Item reference: " + item.title, self);
-    exec("say Room reference: " + room.title, self);
     
     goto start;
  } dilend
@@ -67,10 +63,6 @@ The '''unitptr''' type is used throughout DIL to:
     else if (unit.type == UNIT_ST_OBJ)
     {
        exec("say Target is an object.", self);
-    }
-    else if (unit.type == UNIT_ST_ROOM)
-    {
-       exec("say Target is a room.", self);
     }
     else
     {
@@ -101,59 +93,6 @@ The '''unitptr''' type is used throughout DIL to:
     else
     {
        exec("say Target is not a player character.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Unit Navigation ===
- dilbegin unit_navigation();
- var
-    current_room : unitptr;
-    next_room : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, command("goto"));
-    current_room := activator;
-    
-    // Navigate to next room
-    next_room := current_room.outside;
-    
-    if (next_room != null)
-    {
-       exec("say Moving to: " + next_room.title, self);
-       current_room := next_room;
-    }
-    else
-    {
-       exec("say No exit from current room.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Unit Inventory Management ===
- dilbegin inventory_manager();
- var
-    player : unitptr;
-    item : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, command("get"));
-    player := activator;
-    item := medium;
-    
-    if (player.type == UNIT_ST_PC and item.type == UNIT_ST_OBJ)
-    {
-       exec("say You pick up the " + item.title + ".", self);
-       // Add to player inventory
-       addequip(player, item);
-    }
-    else
-    {
-       exec("say You can't pick up that item.", self);
     }
     
     goto start;

@@ -1,63 +1,40 @@
 = fighting =
+ field: unitptr '''fighting''' (Read-only)
+
+The '''fighting''' field returns a pointer to the unit that the character is currently fighting. If the character is not in combat, this field returns null.
 
 == Description ==
-The '''fighting''' field is a read-only unitptr field available on both player characters (PC) and non-player characters (NPC). It returns a pointer to the unit that the character is currently fighting. If the character is not in combat, this field returns null.
+The '''fighting''' field is a read-only unitptr field available on both player characters (PC) and non-player characters (NPC). It provides access to the current combat opponent.
 
 == Availability ==
-This field is available when the unit type is:
+This field is available on the following unit types:
 * UNIT_ST_PC (Player Character)
 * UNIT_ST_NPC (Non-Player Character)
 
-== Usage ==
-The fighting field provides access to the current combat opponent.
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| fighting || unitptr || Read-only || Pointer to the unit the character is currently fighting (null if not in combat)
+|}
 
-=== Syntax ===
-  unit.fighting
+== Examples ==
+dilbegin check_combat_status(ch : unitptr);
+var
+   opponent : unitptr;
+code
+{
+   heartbeat := 3;
+   if (ch.type != UNIT_ST_PC and ch.type != UNIT_ST_NPC)
+      return;
 
-=== Return Value ===
-Returns a unitptr pointing to the current opponent, or null if not fighting.
-
-== Example ==
- dilbegin check_combat_status(ch:unitptr);
- var
-    opponent : unitptr;
- code
- {
-    heartbeat:=3;
-    if (ch.type != UNIT_ST_PC and ch.type != UNIT_ST_NPC)
-       return;
-
-    opponent := ch.fighting;
-    
-    if (opponent == null)
-       sendtext(ch.name + " is not in combat.<br/>", self);
-    else
-       sendtext(ch.name + " is fighting " + opponent.name + ".<br/>", self);
-    
-    return;
- } dilend
-
-== Combat Monitoring ==
-The fighting field is commonly used with wait() statements to monitor combat events:
-
- dilbegin combat_watcher();
- var
-    target : unitptr;
- code
- {
-    heartbeat := PULSE_SEC;
-    
-    :loop:
-    wait(SFB_DEAD, self.fighting != null);
-    
-    if (self.fighting != null)
-    {
-       target := self.fighting;
-       sendtext("Combat ended with " + target.name + ".<br/>", self);
-    }
-    
-    goto loop;
- } dilend
+   opponent := ch.fighting;
+   
+   if (opponent == null)
+      sendtext(ch.name + " is not in combat.<br/>", self);
+   else
+      sendtext(ch.name + " is fighting " + opponent.name + ".<br/>", self);
+} dilend
 
 == Usage Notes ==
 * The field is read-only and cannot be directly assigned
@@ -66,8 +43,16 @@ The fighting field is commonly used with wait() statements to monitor combat eve
 * Can be used to detect when combat starts or ends
 * Useful for triggering events based on combat outcomes
 
-== See Also ==
+== Error Handling ==
+* Accessing '''fighting''' on non-character units will return null
+* Always check if the returned unitptr is valid before use
+
+== Related Functions/Fields ==
 * [[set_fighting()]] - Function to initiate combat between units
 * [[stop_fighting()]] - Function to end combat
 * [[opponentcount]] - Number of opponents being fought
 * [[position]] - Current position of the character
+
+== See Also ==
+* Combat system documentation
+* Unit pointer operations

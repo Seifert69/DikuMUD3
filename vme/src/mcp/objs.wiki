@@ -1,31 +1,18 @@
 = objs =
+ field: unitptr '''.objs''' (Read-only)
 
-== Syntax ==
-unitptr '''objs'''(zone : zoneptr);
+The '''objs''' field returns a pointer to the first object in a zone's object list.
 
 == Description ==
-The '''objs'''() function returns a pointer to the first object in a zone's object list. This function provides access to the head of the linked list containing all objects defined within a specific zone.
-
-Based on the C implementation, this function operates on a zone pointer and calls the `findFirstObj()` method to retrieve the first object in that zone's object list.
-
-== Parameters ==
-{| class="wikitable"
-! Parameter !! Type !! Description
-|-
-| zone || zoneptr || Pointer to the zone to query for objects
-|}
-
-== Return Value ==
-Returns unitptr:
-* '''unitptr''' - Pointer to the first object in the specified zone's object list
-* '''fail''' - If the zone pointer is null or no objects exist in the zone
+The '''objs''' field provides access to the head of the linked list containing all objects defined within a specific zone. Based on the C implementation, this field operates on a zone pointer and calls the `findFirstObj()` method to retrieve the first object in that zone's object list.
 
 == Field Access ==
-This is actually a field access on a zoneptr, not a standalone function. The proper syntax is:
+This is a field access on zoneptrs:
  zone.objs
 
 == Availability ==
-This field is available on zoneptr type.
+This field is available on the following unit types:
+* zoneptr
 
 == Usage Notes ==
 * This field is currently marked as obsolete and not used in any DIL programs
@@ -34,7 +21,6 @@ This field is available on zoneptr type.
 * Combine with [[objcount]] to get the total number of objects in the zone
 
 == Examples ==
-=== Basic Usage ===
  dilbegin list_zone_objects(zone_name : string);
  var
     target_zone : zoneptr;
@@ -64,114 +50,6 @@ This field is available on zoneptr type.
     }
     
     act("Total: $1d objects", A_ALWAYS, self, count, null, TO_CHAR);
- } dilend
-
-=== Zone Object Analysis ===
- dilbegin analyze_zone_objects();
- var
-    z : zoneptr;
-    first_obj : unitptr;
-    total_zones : integer;
-    zones_with_objects : integer;
- 
- code
- {
-    total_zones := 0;
-    zones_with_objects := 0;
-    
-    act("=== Zone Object Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    z := zhead();
-    while (z != null)
-    {
-       total_zones := total_zones + 1;
-       first_obj := z.objs;
-       
-       if (first_obj != null)
-       {
-          zones_with_objects := zones_with_objects + 1;
-          act("Zone $1t: has objects", A_ALWAYS, self, z.name, null, TO_CHAR);
-       }
-       else
-       {
-          act("Zone $1t: no objects", A_ALWAYS, self, z.name, null, TO_CHAR);
-       }
-       
-       z := z.next;
-    }
-    
-    act("Total zones: $1d", A_ALWAYS, self, total_zones, null, TO_CHAR);
-    act("Zones with objects: $1d", A_ALWAYS, self, zones_with_objects, null, TO_CHAR);
- } dilend
-
-=== Object Type Distribution ===
- dilbegin object_type_distribution(zone_name : string);
- var
-    target_zone : zoneptr;
-    current_obj : unitptr;
-    type_counts : integer[10];
-    i : integer;
- 
- code
- {
-    target_zone := findzone(zone_name);
-    
-    if (target_zone == null)
-    {
-       act("Zone '$1t' not found.", A_ALWAYS, self, zone_name, null, TO_CHAR);
-       return;
-    }
-    
-    // Initialize counters
-    i := 0;
-    while (i < 10)
-    {
-       type_counts.[i] := 0;
-       i := i + 1;
-    }
-    
-    // Count object types
-    current_obj := target_zone.objs;
-    while (current_obj != null)
-    {
-       type_counts.[current_obj.objecttype] := type_counts.[current_obj.objecttype] + 1;
-       current_obj := current_obj.next;
-    }
-    
-    // Report results
-    act("Object type distribution in zone '$1t':", A_ALWAYS, self, zone_name, null, TO_CHAR);
-    act("Containers: $1d", A_ALWAYS, self, type_counts.[ITEM_CONTAINER], null, TO_CHAR);
-    act("Weapons: $1d", A_ALWAYS, self, type_counts.[ITEM_WEAPON], null, TO_CHAR);
-    act("Food: $1d", A_ALWAYS, self, type_counts.[ITEM_FOOD], null, TO_CHAR);
- } dilend
-
-=== Comprehensive Zone Report ===
- dilbegin zone_comprehensive_report();
- var
-    z : zoneptr;
-    obj : unitptr;
-    obj_count : integer;
- 
- code
- {
-    act("=== Comprehensive Zone Report ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    z := zhead();
-    while (z != null)
-    {
-       obj_count := 0;
-       obj := z.objs;
-       
-       while (obj != null)
-       {
-          obj_count := obj_count + 1;
-          obj := obj.next;
-       }
-       
-       act("Zone: $1t | Objects: $2d | Count: $3d", A_ALWAYS, self, z.name, obj_count, z.objcount, TO_CHAR);
-       
-       z := z.next;
-    }
  } dilend
 
 == Error Handling ==
@@ -209,4 +87,4 @@ Always check the zone pointer for null and verify the return value:
 * [[objcount]] - Count of objects in zone
 * [[npcs]] - NPCs in zone
 * [[rooms]] - Rooms in zone
-* [[findzone]] - Zone lookup function
+* [[findzone]] - Zone lookup function 

@@ -1,9 +1,5 @@
 = paycheck =
-
  function: integer '''paycheck'''(u1 : unitptr, u2 : unitptr);
-
-== Syntax ==
- integer paycheck(u1 : unitptr, u2 : unitptr);
 
 == Description ==
 The '''paycheck''' function checks whether a player has pay access to a specific location. It determines if the player u2 is allowed to access the zone where unit u1 is located, based on the game's accounting and pay-access system.
@@ -101,4 +97,4 @@ The function will return '''fail''' when:
 == See Also ==
 * [[move]] - Move a unit in a specific direction
 * [[act]] - Send messages to units
-* [[isAccounting]] - Check if accounting mode is enabled
+* [[isAccounting]] - Check if accounting mode is enabled 

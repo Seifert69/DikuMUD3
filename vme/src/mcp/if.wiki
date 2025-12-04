@@ -1,19 +1,17 @@
-= if
+= if =
 
-== Syntax
-
-  if (condition)
-  {
-     // code to execute if condition is true
-  }
-  else
-  {
-     // code to execute if condition is false
-  }
-
-== Description
-
+== Description ==
 The '''if''' statement is a conditional control structure similar to C. It evaluates a condition and executes different code blocks based on whether the condition is true or false.
+
+== Syntax ==
+ if (condition)
+ {
+    // code to execute if condition is true
+ }
+ else
+ {
+    // code to execute if condition is false
+ }
 
 == Condition Evaluation
 
@@ -108,4 +106,4 @@ The '''if''' statement is a conditional control structure similar to C. It evalu
 == See Also
 
 * [[else]] - Optional else clause for if statements
-* [[goto]] - Unconditional jump statement
+* [[goto]] - Unconditional jump statement 

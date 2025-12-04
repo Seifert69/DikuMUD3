@@ -27,7 +27,7 @@ The function returns a stringlist containing:
 
 == Examples ==
 === Basic Word Splitting ===
- dilbegin basic_split();
+ dilbegin split_words();
  var
    text : string;
    words : stringlist;
@@ -93,110 +93,6 @@ The function returns a stringlist containing:
    
    if (length(args) > 0)
      sendtext("First argument: " + args.[0] + "<br/>", self);
- }
- dilend
-
-=== Processing File Content ===
- dilbegin process_file_content(filename : string);
- var
-   file_content : string;
-   lines : stringlist;
-   i : integer;
-   line_parts : stringlist;
- code
- {
-   file_content := loadstr(filename);
-   
-   if (file_content == "")
-   {
-     sendtext("Could not load file: " + filename + "<br/>", self);
-     quit;
-   }
-   
-   lines := split(file_content, "&x");
-   
-   sendtext("Processing " + itoa(length(lines)) + " lines:<br/>", self);
-   
-   i := 0;
-   while (i < length(lines))
-   {
-     // Skip empty lines
-     if (lines.[i] != "")
-     {
-       // Process each line (example: split by commas)
-       line_parts := split(lines.[i], ",");
-       
-       sendtext("Line " + itoa(i + 1) + " has " + itoa(length(line_parts)) + " parts<br/>", self);
-     }
-     
-     i := i + 1;
-   }
- }
- dilend
-
-=== Complex Delimiter Processing ===
- dilbegin complex_splitting();
- var
-   data : string;
-   records : stringlist;
-   fields : stringlist;
-   i, j : integer;
- code
- {
-   // Example CSV-like data
-   data := "name,age,city&xJohn,25,NYC&xJane,30,LA&xBob,35,Chicago";
-   
-   // Split into records by line
-   records := split(data, "&x");
-   
-   sendtext("Data records:<br/>", self);
-   
-   i := 0;
-   while (i < length(records))
-   {
-     if (records.[i] != "")
-     {
-       // Split each record into fields
-       fields := split(records.[i], ",");
-       
-       sendtext("Record " + itoa(i + 1) + ": ", self);
-       
-       j := 0;
-       while (j < length(fields))
-       {
-         sendtext("[" + fields.[j] + "] ", self);
-         j := j + 1;
-       }
-       
-       sendtext("<br/>", self);
-     }
-     
-     i := i + 1;
-   }
- }
- dilend
-
-=== Removing Substrings ===
- dilbegin remove_substring(text : string, to_remove : string);
- var
-   parts : stringlist;
-   result : string;
-   i : integer;
- code
- {
-   // Split by the substring to remove and rejoin
-   parts := split(text, to_remove);
-   
-   result := "";
-   i := 0;
-   while (i < length(parts))
-   {
-     result := result + parts.[i];
-     i := i + 1;
-   }
-   
-   sendtext("Original: " + text + "<br/>", self);
-   sendtext("Result: " + result + "<br/>", self);
  }
  dilend
 

@@ -14,6 +14,7 @@ The zonereset procedure initiates a complete zone reset, causing all mobiles and
 |}
 
 == Examples ==
+=== Reset Current Zone ===
  dilbegin reset_current_zone();
  var
     current_room : unitptr;
@@ -44,27 +45,7 @@ The zonereset procedure initiates a complete zone reset, causing all mobiles and
     quit;
  } dilend
 
- dilbegin reset_all_zones();
- var
-    zones : zoneptr;
-    reset_count : integer;
- code
- {
-    reset_count := 0;
-    zones := zone_head();
-    
-    while (zones)
-    {
-       sendtext("Resetting zone: " + zones.name + "&n", self);
-       zonereset(zones);
-       reset_count := reset_count + 1;
-       zones := zones.next;
-    }
-    
-    sendtext("Total zones reset: " + itoa(reset_count) + "&n", self);
-    quit;
- } dilend
-
+=== Zone Reset Command ===
  dilbegin zone_reset_command(arg : string);
  var
     target_zone : zoneptr;
@@ -91,6 +72,7 @@ The zonereset procedure initiates a complete zone reset, causing all mobiles and
     quit;
  } dilend
 
+=== Emergency Reset ===
  dilbegin emergency_reset();
  var
     problem_zone : zoneptr;

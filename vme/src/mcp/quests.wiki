@@ -160,4 +160,4 @@ The field access will return '''fail''' when:
 * [[extra]] - Field for accessing other extra descriptions
 * [[names]] - Field to access quest names
 * [[descr]] - Field to access quest descriptions
-* [[vals]] - Field to access quest values/status
+* [[vals]] - Field to access quest values/status 

@@ -1,20 +1,7 @@
 = dildestroy =
+ function: integer '''dildestroy'''(s : string, u : unitptr);
 
 '''dildestroy''' is a DIL function that removes DIL programs from units based on template name.
-
-== Syntax ==
- integer := dildestroy( s : string, u : unitptr );
-
-== Parameters ==
-; s
-: Name of DIL template to delete from unit
-; u
-: Unit to remove DIL program from
-
-== Return Value ==
-Returns an integer:
-* Number of programs destroyed (typically 1 if found, 0 if not found)
-* Error value if parameters were invalid
 
 == Description ==
 The dildestroy function searches for and removes DIL programs attached to a specified unit that match the given template name. This allows for precise removal of specific DIL instances without affecting other programs running on the same unit.
@@ -23,6 +10,21 @@ The function:
 * Searches all DIL programs attached to the target unit
 * Matches programs by template name (exact string match)
 * Removes all matching programs from the unit
+* Returns count of programs successfully destroyed
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || Name of DIL template to delete from unit
+|-
+| u || unitptr || Unit to remove DIL program from
+|}
+
+== Error Handling ==
+The function performs error checking:
+* Returns error value if parameters are invalid
+* Returns 0 if no matching DIL programs are found
 * Returns count of programs successfully destroyed
 
 == Usage Notes ==
@@ -73,7 +75,9 @@ The function:
     goto start;
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[dilcopy]] - Attach DIL programs to units
 * [[dilfind]] - Find DIL programs on units
 * [[dilcall]] - Call DIL templates dynamically
+
+== See Also ==

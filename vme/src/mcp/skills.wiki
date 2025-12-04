@@ -166,12 +166,13 @@ This field is available on the following unit types:
     // Simulate skill improvement (would use game mechanics)
     new_value := old_value + 5;
     
-    // Update the skill value
-    activator.skills[SKI_SWORD] := new_value;
+     // Note: skills field is read-only, cannot be modified directly
+     // This would typically be done through game mechanics
+     // activator.skills[SKI_SWORD] := new_value;  // This would fail
     
     skill_name := skill_name(SKI_SWORD);
     
-    sendtext("Your " + skill_name + " skill improved from " + itoa(old_value) + " to " + itoa(new_value) + "!<br/>", activator);
+     sendtext("Your " + skill_name + " skill value is " + itoa(old_value) + " (read-only).<br/>", activator);
  } dilend
 
 == Usage Notes ==

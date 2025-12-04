@@ -112,4 +112,4 @@ This field is available on the following unit types:
 == See Also ==
 * [[unitptr]] - General unit pointer documentation
 * [[wizard]] - Wizard-related commands and functions
-* [[invisibility]] - Regular invisibility mechanics
+* [[invisibility]] - Regular invisibility mechanics 

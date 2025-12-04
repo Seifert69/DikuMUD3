@@ -1,11 +1,9 @@
 = manipulate =
+ field: integer '''.manipulate''' [Read/Write]
 
-== Syntax ==
- field: '''.manipulate'''
-
-== Description ==
 The '''.manipulate''' field is accessed on any unit and returns or sets bit flags that specify how the unit can be handled. These flags determine what actions can be performed on the unit, such as taking, dropping, or manipulating it in various ways.
 
+== Description ==
 This field is read/write, allowing you to both retrieve the current manipulation flags and modify them directly.
 
 == Field Access ==

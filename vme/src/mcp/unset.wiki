@@ -16,6 +16,7 @@ This procedure removes (clears) specific bits from an integer variable by settin
 |}
 
 == Examples ==
+=== Clear Character Flag ===
 dilbegin unique clear_defence();
 var
     defence_flags : integer;
@@ -29,6 +30,7 @@ code
     sendto("Self-defence flag cleared.&n", self);
 } dilend
 
+=== Clear Multiple Flags ===
 dilbegin unique remove_protection();
 var
     protection_flags : integer;
@@ -44,6 +46,7 @@ code
     sendto("Protection flags cleared.&n", self);
 } dilend
 
+=== Unlock Door ===
 dilbegin unique unlock_door(door : unitptr);
 var
     door_flags : integer;
@@ -56,48 +59,6 @@ code
     
     act("$1n unlocks $2n.", A_ALWAYS, self, door, null, TO_ROOM);
     sendto("Door unlocked.&n", self);
-} dilend
-
-dilbegin unique clear_multiple_flags();
-var
-    status : integer;
-    i : integer;
-code
-{
-    // Clear multiple bits using a loop
-    status := CHAR_SELF_DEFENCE | CHAR_KILL_SELF | PC_SPIRIT;
-    
-    sendto("Before: " + itoa(status) + "&n", self);
-    
-    // Clear each flag individually
-    unset(status, CHAR_SELF_DEFENCE);
-    unset(status, CHAR_KILL_SELF);
-    unset(status, PC_SPIRIT);
-    
-    sendto("After: " + itoa(status) + "&n", self);
-} dilend
-
-dilbegin unique toggle_awareness(state : integer);
-var
-    awareness : integer;
-code
-{
-    // Clear or set awareness based on parameter
-    awareness := self.charflags;
-    
-    if (state == 0)
-    {
-        // Clear awareness flag
-        unset(awareness, CHAR_AWAKE);
-        sendto("You fall asleep.&n", self);
-    }
-    else
-    {
-        // Set awareness flag (using bitwise operations)
-        awareness := awareness | CHAR_AWAKE;
-        self.charflags := awareness;
-        sendto("You become more aware.&n", self);
-    }
 } dilend
 
 == Usage Notes ==

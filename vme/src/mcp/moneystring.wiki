@@ -54,4 +54,4 @@ Returns '''string''':
 * [[purse]] - Checks specific coin types in a unit's inventory
 
 == See Also ==
-* Currency constants: IRON_PIECE, COPPER_PIECE, SILVER_PIECE, GOLD_PIECE, PLATINUM_PIECE
+* Currency constants: IRON_PIECE, COPPER_PIECE, SILVER_PIECE, GOLD_PIECE, PLATINUM_PIECE 

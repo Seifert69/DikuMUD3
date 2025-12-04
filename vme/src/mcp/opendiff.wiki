@@ -1,12 +1,10 @@
 = opendiff =
+ field: integer '''.opendiff''' (Read/Write)
 
-== Syntax ==
-integer '''opendiff''' (unit : unitptr)
+The '''opendiff''' field provides access to the open difficulty modifier for units.
 
 == Description ==
-The '''opendiff''' field provides access to the open difficulty modifier for units. This field represents how difficult it is to open or pick the lock on a unit, affecting the success rate of lockpicking attempts and other opening actions.
-
-Based on the C implementation, this field returns a reference to the unit's open difficulty value, allowing both reading and writing of the modifier.
+The '''opendiff''' field represents how difficult it is to open or pick the lock on a unit, affecting the success rate of lockpicking attempts and other opening actions. Based on the C implementation, this field returns a reference to the unit's open difficulty value, allowing both reading and writing of the modifier.
 
 == Field Access ==
 This is a field access on unitptrs:
@@ -20,14 +18,12 @@ This field is available on the following unit types:
 * UNIT_ST_ROOM (Room)
 
 == Usage Notes ==
-The opendiff field is read-write (RW) and can be modified directly.
 This field represents the difficulty level for opening or picking locks on the unit.
 Higher values make locks more difficult to pick, while lower values make them easier.
 This field is used in conjunction with [[openflags]] to determine the lock state.
 The value is typically used as a modifier in skill checks for lockpicking abilities.
 
 == Examples ==
-=== Checking Open Difficulty ===
  dilbegin check_lock_difficulty(target : unitptr);
  var
     difficulty : integer;
@@ -54,151 +50,6 @@ The value is typically used as a modifier in skill checks for lockpicking abilit
        act("$1n has an extremely hard lock (difficulty: $2d).", A_ALWAYS, self, difficulty, target, TO_CHAR);
  } dilend
 
-=== Setting Lock Difficulty ===
- dilbegin set_lock_difficulty(target : unitptr, new_difficulty : integer);
- var
-    old_difficulty : integer;
- 
- code
- {
-    if (target == null)
-    {
-       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    old_difficulty := target.opendiff;
-    target.opendiff := new_difficulty;
-    
-    act("$1n's lock difficulty changed from $2d to $3d.", A_ALWAYS, self, old_difficulty, target, TO_CHAR);
-    act("The lock now feels more $4t.", A_ALWAYS, self, target, null, TO_CHAR);
-    
-    if (new_difficulty > old_difficulty)
-       act("more secure", A_ALWAYS, self, target, null, TO_CHAR);
-    else
-       act("less secure", A_ALWAYS, self, target, null, TO_CHAR);
- } dilend
-
-=== Lockpicking Skill Check ===
- dilbegin attempt_pick(target : unitptr);
- var
-    difficulty : integer;
-    skill_level : integer;
-    success_chance : integer;
- 
- code
- {
-    if (target == null)
-    {
-       act("Pick what?", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    difficulty := target.opendiff;
-    skill_level := self.skills[SKI_PICK_LOCK];
-    
-    if (skill_level <= 0)
-    {
-       act("You don't know how to pick locks.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    // Simple success calculation (actual game may use more complex formula)
-    success_chance := skill_level - difficulty + 50;
-    
-    if (rnd(1, 100) <= success_chance)
-    {
-       act("You successfully pick the lock on $1n!", A_ALWAYS, self, target, null, TO_CHAR);
-       act("$1n picks the lock on $2n.", A_SOMEONE, self, target, null, TO_REST);
-       unset(target.openflags, EX_LOCKED);
-    }
-    else
-    {
-       act("You fail to pick the lock on $1n.", A_ALWAYS, self, target, null, TO_CHAR);
-       act("$1n fumbles with $2n's lock.", A_SOMEONE, self, target, null, TO_REST);
-    }
- } dilend
-
-=== Dynamic Lock Adjustment ===
- dilbegin magical_lock(target : unitptr);
- var
-    base_difficulty : integer;
-    magical_bonus : integer;
- 
- code
- {
-    if (target == null)
-       return;
-    
-    base_difficulty := target.opendiff;
-    
-    // Add magical difficulty based on target's properties
-    if (isset(target.flags, UNIT_FL_MAGIC))
-       magical_bonus := 10;
-    else
-       magical_bonus := 0;
-    
-    target.opendiff := base_difficulty + magical_bonus;
-    
-    act("$1n's lock glows with magical energy!", A_ALWAYS, self, target, null, TO_CHAR);
-    act("Lock difficulty increased from $2d to $3d.", A_ALWAYS, self, base_difficulty, target, TO_CHAR);
- } dilend
-
-=== Security Analysis ===
- dilbegin analyze_room_security();
- var
-    unit : unitptr;
-    total_difficulty : integer;
-    item_count : integer;
-    avg_difficulty : integer;
- 
- code
- {
-    total_difficulty := 0;
-    item_count := 0;
-    
-    act("=== Room Security Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
-    
-    // Check all objects in the room
-    foreach (UNIT_ST_OBJ, unit)
-    {
-       if (unit.outside == self.outside)
-       {
-          total_difficulty := total_difficulty + unit.opendiff;
-          item_count := item_count + 1;
-          
-          act("$1n: difficulty $2d", A_ALWAYS, self, unit, unit, TO_CHAR);
-       }
-    }
-    
-    // Check all exits in the room
-    foreach (UNIT_ST_ROOM, unit)
-    {
-       if (unit == self.outside)
-       {
-          // Check each direction's difficulty
-          if (unit.exit_diff[0] > 0)
-          {
-             total_difficulty := total_difficulty + unit.exit_diff[0];
-             item_count := item_count + 1;
-             act("North exit: difficulty $1d", A_ALWAYS, self, unit.exit_diff[0], null, TO_CHAR);
-          }
-          // Add other directions as needed
-       }
-    }
-    
-    if (item_count > 0)
-    {
-       avg_difficulty := total_difficulty / item_count;
-       act("Average security difficulty: $1d", A_ALWAYS, self, avg_difficulty, null, TO_CHAR);
-       act("Total secured items: $1d", A_ALWAYS, self, item_count, null, TO_CHAR);
-    }
-    else
-    {
-       act("No secured items found.", A_ALWAYS, self, null, null, TO_CHAR);
-    }
- } dilend
-
 == Error Handling ==
 Always verify the unit pointer is valid before accessing opendiff:
 
@@ -223,4 +74,4 @@ Always verify the unit pointer is valid before accessing opendiff:
 * [[openflags]] - Open state flags
 * [[exit_diff]] - Exit difficulty values
 * [[skillchecksa]] - Skill checking system
-* [[isset]] - Flag testing function
+* [[isset]] - Flag testing function 

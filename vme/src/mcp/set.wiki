@@ -1,5 +1,5 @@
 = set =
-function: void '''set'''(var : integer, bit : integer);
+ function: void '''set'''(var : integer, bit : integer);
 
 The '''set''' function is used to set specific bits in an integer variable using bitwise OR operations.
 
@@ -67,41 +67,6 @@ The var parameter must be a modifiable integer variable, not a constant or expre
     act("$1n begins to glow with magical energy.", A_SOMEONE, obj, null, null, TO_ROOM);
  } dilend
 
-=== Combat Status Setting ===
- dilbegin set_combat_status();
- var
-    npc : unitptr;
- code
- {
-    npc := self;
-    
-    // Set NPC to be aggressive and sentinel
-    set(npc.charflags, CHAR_AGGRESSIVE);
-    set(npc.charflags, CHAR_SENTINEL);
-    
-    // Set combat preferences
-    set(npc.charflags, CHAR_WIMPY);
- } dilend
-
-=== Bit Field Configuration ===
- dilbegin configure_room_flags();
- var
-    room : unitptr;
- code
- {
-    room := self;
-    
-    if (room.type != UNIT_ST_ROOM)
-       quit;
-    
-    // Set room properties
-    set(room.roomflags, ROOM_DARK);
-    set(room.roomflags, ROOM_DEATH);
-    set(room.roomflags, ROOM_NOMOB);
-    
-    sendtext("The room has been reconfigured.<br/>", activator);
- } dilend
-
 == Usage Notes ==
 * The first parameter must be a variable (lvalue), not a constant or expression
 * The function uses bitwise OR operation: result = var | bit
@@ -109,7 +74,6 @@ The var parameter must be a modifiable integer variable, not a constant or expre
 * The function supports all standard integer sizes (8, 16, and 32-bit, both signed and unsigned)
 * Commonly used with predefined flag constants (PC_*, CHAR_*, UNIT_*, ROOM_*, etc.)
 * Setting a bit that is already set has no effect
-* The operation is atomic and modifies the variable in place
 
 == Error Handling ==
 The function includes several validation checks:
@@ -122,7 +86,6 @@ Common error scenarios:
 * Passing a constant or expression result as the first parameter
 * Using non-integer types
 * Attempting to modify read-only variables or fields
-* Passing null or invalid references
 
 == Related Functions/Fields ==
 * [[unset()]] - Function to clear specific bits in an integer variable
@@ -137,4 +100,3 @@ Common error scenarios:
 * [[PC_*]] - Player character flag constants
 * [[CHAR_*]] - Character flag constants
 * [[ROOM_*]] - Room flag constants
-* [[Bitwise operations]] - General information about bit manipulation

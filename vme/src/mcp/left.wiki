@@ -1,73 +1,83 @@
 = left =
+ function: string '''left'''(input : string, length : integer);
 
-'''left''' is a DIL function that extracts the leftmost characters from a string.
+The '''left''' function extracts the leftmost characters from a string.
 
-== Syntax ==
- string left(string input, integer length)
+== Description ==
+
+The '''left''' function extracts a specified number of characters from the beginning (left side) of a string. If the requested length is longer than the input string, the entire string is returned.
+
+This function is commonly used for string prefix matching, extracting substrings from the beginning of text, command parsing and abbreviation handling.
 
 == Parameters ==
-; input : string
-: The original string to be parsed
-; length : integer
-: The number of characters to extract from the left side of the string
+
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| input || string || The original string to be parsed
+|-
+| length || integer || The number of characters to extract from the left side of the string
+|}
 
 == Return Value ==
+
 ; string
 : Returns the left portion of the input string with the specified length. Returns '''null''' if:
 * The input string is empty
 * The length parameter is 0
 * Either parameter is invalid
 
-== Description ==
-The '''left''' function extracts a specified number of characters from the beginning (left side) of a string. If the requested length is longer than the input string, the entire string is returned.
-
-This function is commonly used for:
-* String prefix matching
-* Extracting substrings from the beginning of text
-* Command parsing and abbreviation handling
-* Text processing where only the beginning of a string is needed
-
 == Examples ==
- // Basic usage
- result := left("shorten me", 5);        // Returns "short"
 
- // When length exceeds string length
- result := left("hi", 10);               // Returns "hi"
+=== Basic Usage ===
+ result := left("shorten me", 5);
+ // result contains "short"
 
- // Empty string handling
- result := left("", 5);                  // Returns null
+Simple extraction of the first 5 characters.
 
- // Zero length
- result := left("hello", 0);             // Returns null
+=== Length Exceeds String ===
+ result := left("hi", 10);
+ // result contains "hi"
 
- // Prefix matching for commands
+When length exceeds string length, the entire string is returned.
+
+=== Command Abbreviation ===
  if (command == left("help", length(command))) {
-    // Handle help command or abbreviations
+    exec("help " + argument, self);
  }
 
-== Advanced Usage ==
-The function is particularly useful for command abbreviation systems:
+Handles command abbreviations by matching prefixes.
 
- // Check if input matches any command prefix
+=== Command System ===
  commands := {"look", "get", "drop", "inventory"};
  i := 0;
  while (i < length(commands)) {
     if (input == left(commands.[i], length(input))) {
-        // Found matching command
         exec(commands.[i] + " " + rest, self);
         break;
     }
     i := i + 1;
  }
 
-== Notes ==
+Advanced command abbreviation system that checks all possible matches.
+
+== Usage Notes ==
+
 * The function allocates new memory for the returned string
 * If the input string is shorter than the requested length, the entire string is returned
 * Empty strings or zero length requests return null
-* This is the counterpart to the [[right]] function
+* This is the counterpart to the '''right''' function
+* Commonly used in command parsing systems
+
+== Error Handling ==
+
+* Always validate input parameters before calling
+* Check for null return values when using empty strings or zero length
+* Ensure length parameter is positive
 
 == See Also ==
-* [[right]] - Extract characters from the right side of a string
-* [[mid]] - Extract characters from the middle of a string
-* [[length]] - Get the length of a string
-* [[getwords]] - Split string into words
+
+; right : Extract characters from the right side of a string
+; mid : Extract characters from the middle of a string
+; length : Get the length of a string
+; getwords : Split string into words

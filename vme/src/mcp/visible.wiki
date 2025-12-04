@@ -82,31 +82,6 @@ The '''visible''' function determines if a character (viewer) can visually perce
    }
  } dilend
 
-=== Stealth and Detection ===
- dilbegin stealth_check();
- var
-   sneaker : unitptr;
-   room : unitptr;
- 
- code
- {
-   room := self.outside;
-   
-   foreach (UNIT_ST_PC, sneaker)
-   {
-     if (sneaker.outside != room) continue;
-     
-     if (visible(self, sneaker))
-     {
-       exec("say I can see you, " + sneaker.name + "!", self);
-     }
-     else
-     {
-       exec("emote looks around suspiciously.", self);
-     }
-   }
- } dilend
-
 == Usage Notes ==
 * The '''viewer''' parameter must be a character (PC or NPC). Using other unit types will result in an error.
 * The '''target''' parameter can be any unit type (character, object, or room).

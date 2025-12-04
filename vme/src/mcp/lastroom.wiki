@@ -1,41 +1,63 @@
 = lastroom =
+ function: room '''lastroom'''(character : pc);
 
-'''lastroom''' is a DIL function that retrieves the room a player character just left.
+The '''lastroom''' function retrieves the room a player character just left.
 
-== Syntax ==
- unitptr lastroom(unitptr character)
+== Description ==
+
+The '''lastroom''' function accesses the character's last known location before their current room. This is useful for tracking player movement, creating follow effects, or implementing scripts that need to know where a player came from.
+
+This function only works on player characters (PCs). It will fail if used on NPCs or non-character units.
 
 == Parameters ==
-; character : unitptr
-: The player character (PC) to get the last room from. Must be a valid PC unit.
+
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| character || pc || The player character to get the last room from. Must be a valid PC unit.
+|}
 
 == Return Value ==
-; unitptr
-: Returns a unitptr to the room the character just left. Returns '''fail''' if:
+
+; room
+: Returns a room unitptr to the room the character just left. Returns '''fail''' if:
 * The input is not a valid unit
 * The input is not a player character (PC)
 * The character has no last room recorded
 
-== Description ==
-The '''lastroom''' function accesses the character's last known location before their current room. This is useful for tracking player movement, creating follow effects, or implementing scripts that need to know where a player came from.
-
-This function is read-only and only works on player characters (PCs). It will fail if used on NPCs or non-character units.
-
 == Examples ==
- // Get the last room a player was in
+
+=== Basic Usage ===
  previous_room := lastroom(self);
  if (previous_room != null) {
-    // Player came from somewhere
     exec("say You just arrived from " + previous_room.name, self);
  }
 
-== Notes ==
+This retrieves and displays the room the player just came from.
+
+=== Movement Tracking ===
+ if (lastroom(activator).name == "The Dark Forest") {
+    act("$1n says 'Ah, fresh from the forest I see.'", A_ALWAYS, self, null, activator, TO_VICT);
+ }
+
+This checks if a player arrived from a specific room and responds accordingly.
+
+== Usage Notes ==
+
 * This function is currently not used anywhere in the DikuMUD codebase
 * The function internally calls the C++ method '''getLastLocation()''' on the character
 * Only player characters have their last room tracked
 * The returned unitptr can be used with other room-related functions
+* Use proper error checking as the function can return fail
+
+== Error Handling ==
+
+* Always validate the return value is not null before using it
+* Ensure the input unit is a valid player character
+* Handle cases where no last room is recorded
 
 == See Also ==
-* [[unit]] - For accessing unit fields and properties
-* [[room]] - For room-related functions
-* [[position]] - For character position information
+
+; room : Room unit type
+; position : Character position information
+; outside : Current room location field

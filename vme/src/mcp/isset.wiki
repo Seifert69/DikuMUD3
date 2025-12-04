@@ -87,4 +87,4 @@ This shows how to check for multiple bits at once.
 ; visible : Checks if a unit is visible to another unit
 ; manipulate : Field showing how unit can be handled
 ; flags : Field showing general unit properties
-; charflags : Field showing character-specific properties
+; charflags : Field showing character-specific properties 

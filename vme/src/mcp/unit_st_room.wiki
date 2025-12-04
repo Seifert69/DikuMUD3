@@ -30,69 +30,9 @@ The '''UNIT_ST_ROOM''' constant is read-only and cannot be modified at runtime. 
     {
        exec("say Target is a room.", self);
     }
-    else if (target.type == UNIT_ST_PC)
-    {
-       exec("say Target is a player character.", self);
-    }
-    else if (target.type == UNIT_ST_NPC)
-    {
-       exec("say Target is an NPC.", self);
-    }
     else
     {
-       exec("say Target is of unknown type.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Room-Specific Behavior ===
- dilbegin room_only_logic();
- var
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    
-    if (self.type == UNIT_ST_ROOM)
-    {
-       exec("say Room-specific action executed.", self);
-       // Room-specific logic here
-    }
-    else
-    {
-       exec("say Only rooms can use this action.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Type Validation with Constants ===
- dilbegin room_type_validator();
- var
-    unit : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, command("checktype"));
-    unit := activator;
-    
-    // Use constants for comparison
-    if (unit.type == UNIT_ST_ROOM)
-    {
-       exec("say Valid room type: " + itoa(unit.type) + ".", self);
-    }
-    else if (unit.type == UNIT_ST_PC)
-    {
-       exec("say Valid player type: " + itoa(unit.type) + ".", self);
-    }
-    else if (unit.type == UNIT_ST_NPC)
-    {
-       exec("say Valid NPC type: " + itoa(unit.type) + ".", self);
-    }
-    else
-    {
-       exec("say Invalid unit type for this operation.", self);
+       exec("say Target is not a room.", self);
     }
     
     goto start;
@@ -113,82 +53,6 @@ The '''UNIT_ST_ROOM''' constant is read-only and cannot be modified at runtime. 
        exec("say Room name: " + room.name, self);
        exec("say Room description: " + room.descr, self);
        exec("say Room flags: " + itoa(room.roomflags), self);
-    }
-    else
-    {
-       exec("say Target is not a room.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Combined Type Checking ===
- dilbegin multi_type_handler();
- var
-    unit : unitptr;
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    unit := activator;
-    
-    // Handle different types appropriately
-    if (unit.type == UNIT_ST_ROOM)
-    {
-       exec("say Processing room: " + unit.title, self);
-       // Room-specific logic
-    }
-    else if (unit.type == UNIT_ST_PC)
-    {
-       exec("say Processing player: " + unit.name, self);
-       // Player-specific logic
-    }
-    else if (unit.type == UNIT_ST_NPC)
-    {
-       exec("say Processing NPC: " + unit.name, self);
-       // NPC-specific logic
-    }
-    else if (unit.type == UNIT_ST_OBJ)
-    {
-       exec("say Processing object: " + unit.title, self);
-       // Object-specific logic
-    }
-    else
-    {
-       exec("say Unknown unit type.", self);
-    }
-    
-    goto start;
- } dilend
-
-=== Room Exit Handling ===
- dilbegin exit_manager();
- var
-    room : unitptr;
-    direction : string;
- code
- {
-    :start:
-    wait(SFB_CMD, TRUE);
-    room := activator;
-    
-    if (room.type == UNIT_ST_ROOM)
-    {
-       // Parse exit direction
-       direction := argument;
-       
-       if (direction == "north")
-       {
-          exec("say Moving north from room.", self);
-       }
-       else if (direction == "south")
-       {
-          exec("say Moving south from room.", self);
-       }
-       else
-       {
-          exec("say Unknown direction: " + direction, self);
-       }
     }
     else
     {

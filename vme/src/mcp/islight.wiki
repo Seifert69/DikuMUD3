@@ -1,28 +1,26 @@
 = islight =
+ function: integer '''islight'''(u : unitptr);
 
-; islight : integer ( u : unitptr )
-: Tests whether a unit is a light source.
+The '''islight''' function tests whether a unit is a light source.
 
 == Description ==
 
 The '''islight''' function checks if the specified unit is a light source. This typically includes items like torches, lanterns, and other objects that can illuminate rooms. The function returns TRUE (1) if the unit is a light source, or FALSE (0) if not.
 
-== Parameters ==
+== PARAMETERS ==
 
-; u : unitptr
-: The unit to be checked. Can be any unit type, but typically used with objects.
-
-== Return Value ==
-
-; integer
-: Returns TRUE (1) if the unit is a light source, or FALSE (0) if it is not.
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to be checked (any unit type, typically objects)
+|}
 
 == Examples ==
 
 === Basic Light Check ===
  if (islight(self))
    sendtext("This item provides light.", self);
- 
+
 This checks if the current unit is a light source and sends a message if so.
 
 === Room Lighting Check ===
@@ -31,7 +29,7 @@ This checks if the current unit is a light source and sends a message if so.
     act("It is pitch black.", A_ALWAYS, self, null, null, TO_CHAR);
     return;
  }
- 
+
 This example from a directions DIL checks if the room (self.outside) has light, and if not, informs the player that it's pitch black.
 
 === Light Source Inventory Check ===
@@ -42,7 +40,7 @@ This example from a directions DIL checks if the room (self.outside) has light, 
        act("$1n glows with light.", A_SOMEONE, i, null, null, TO_ROOM);
     }
  }
- 
+
 This iterates through all objects and identifies which ones are light sources.
 
 == Usage Notes ==
@@ -54,19 +52,22 @@ This iterates through all objects and identifies which ones are light sources.
 * The '''light''' field shows how much light is currently inside a unit
 * Light sources are essential for visibility in dark rooms
 
-== Related Fields ==
+== Error Handling ==
 
-; bright : integer (RO)
-: How much the unit lights up. Can be set with '''setbright()'''
+* Null unit pointers will cause runtime errors
+* Ensure the unit exists before checking if it's a light source
+* The function returns FALSE (0) for non-light source units
 
-; light : integer (RO)  
-: How much light is inside the unit
+== Related Functions/Fields ==
 
-; illum : integer (RO)
-: How much light units inside a transparent unit create
+* [[setbright]] - Sets the brightness of a unit
+* [[bright]] - Field showing how much light a unit emits
+* [[light]] - Field showing how much light is inside a unit
+* [[illum]] - Field showing light created by units inside transparent units
+* [[objecttype]] - The type of an object (ITEM_* constants)
 
 == See Also ==
 
-; setbright : Sets the brightness of a unit
-; objecttype : The type of an object (ITEM_* constants)
-; bright : Field showing how much light a unit emits
+* Lighting and visibility systems
+* Object types and properties
+* Environmental effects and illumination

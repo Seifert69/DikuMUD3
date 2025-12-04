@@ -1,7 +1,6 @@
 = logcrime =
 
-== Syntax ==
-procedure '''logcrime'''(criminal : unitptr, victim : unitptr, crime_type : integer);
+procedure: '''logcrime'''(criminal : unitptr, victim : unitptr, crime_type : integer);
 
 == Description ==
 Registers a crime committed against a victim by a criminal. The '''logcrime''' procedure automatically handles group members of the criminal and other related entities. This function is typically used in theft, assault, and other criminal activities within the MUD to maintain a record of offenses for potential punishment or tracking purposes.
@@ -18,22 +17,6 @@ When logging crimes like theft, remember to make the criminal visible if they fa
 |-
 | crime_type || integer || The type of crime using CRIME_XXX constants from values.h and/or vme.h
 |}
-
-== Return Value ==
-This procedure does not return a value.
-
-== Usage Notes ==
-* Use CRIME_XXX constants from values.h and/or vme.h for the crime_type parameter
-* The function automatically registers group members of the criminal
-* For theft-related crimes, ensure the criminal is made visible if they fail their attempt
-* This is typically called after a criminal action has been detected or failed
-
-== Error Handling ==
-The procedure includes type checking to ensure:
-* criminal parameter is a valid unitptr
-* victim parameter is a valid unitptr  
-* crime_type parameter is an integer
-* Both criminal and victim units are character units (PC or NPC)
 
 == Examples ==
 dilbegin steal(arg : string);
@@ -192,10 +175,23 @@ code
    quit;
 } dilend
 
+== Usage Notes ==
+* Use CRIME_XXX constants from values.h and/or vme.h for the crime_type parameter
+* The function automatically registers group members of the criminal
+* For theft-related crimes, ensure the criminal is made visible if they fail their attempt
+* This is typically called after a criminal action has been detected or failed
+
+== Error Handling ==
+The procedure includes type checking to ensure:
+* criminal parameter is a valid unitptr
+* victim parameter is a valid unitptr  
+* crime_type parameter is an integer
+* Both criminal and victim units are character units (PC or NPC)
+
 == Related Functions/Fields ==
 * [[provoked_attack]] - Often called after logging a crime
 * [[awareness_check]] - Used to detect criminal activities
 * [[act]] - For displaying crime-related messages
 
 == See Also ==
-* CRIME_XXX constants in values.h and/or vme.h
+* CRIME_XXX constants in values.h and/or vme.h 

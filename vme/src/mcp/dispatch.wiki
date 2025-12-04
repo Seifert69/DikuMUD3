@@ -1,13 +1,7 @@
 = dispatch =
+ function: '''dispatch'''(s : string);
 
 '''dispatch''' is a DIL function that sends a message to the MUD's dispatcher system for external processing.
-
-== Syntax ==
- dispatch( s : string );
-
-== Parameters ==
-; s
-: String message to send to the dispatcher system
 
 == Description ==
 The dispatch function sends a string message to the MUD's external dispatcher system. This allows DIL programs to communicate with external processes and services that are monitoring or managing the game world.
@@ -17,6 +11,18 @@ The dispatcher system typically handles:
 * Cross-system messaging
 * Administrative notifications
 * Integration with external tools and services
+
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || String message to send to the dispatcher system
+|}
+
+== Error Handling ==
+The function performs basic error checking:
+* Returns fail if the dispatcher system is unavailable
+* Returns fail if the message parameter is invalid
 
 == Usage Notes ==
 * Messages are sent to the system's pipe dispatcher
@@ -60,7 +66,9 @@ The dispatcher system typically handles:
     quit;
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[flog]] - Write to log files
 * [[log]] - Log messages to system
 * [[sendtext]] - Send text to players
+
+== See Also ==

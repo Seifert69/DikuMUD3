@@ -180,4 +180,4 @@ The field access will return '''fail''' when:
 * [[PROFESSION_* constants]] - Profession identifier constants
 * [[race]] - Field for character's racial type
 * [[sex]] - Field for character's gender
-* [[guild]] - Field for character's guild affiliation
+* [[guild]] - Field for character's guild affiliation 

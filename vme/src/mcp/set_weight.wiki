@@ -1,5 +1,5 @@
 = set_weight =
-function: void '''set_weight'''(unit : unitptr, weight : integer);
+ function: void '''set_weight'''(unit : unitptr, weight : integer);
 
 The '''set_weight''' function is used to set the current total weight of a unit, including its contents.
 
@@ -8,7 +8,7 @@ This function sets the current total weight of a unit to the specified value in 
 
 The function includes validation to ensure the weight is not set below the unit's base weight. If an attempt is made to set the weight below the base weight, a warning is logged to the zone but the operation still proceeds. The function automatically updates the weight of all containing units to maintain consistency.
 
-== Parameters ==
+== PARAMETERS ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -31,7 +31,7 @@ The weight parameter should be a positive integer representing the desired total
     // Set item to be heavier (perhaps it's soaked with water)
     set_weight(item, item.baseweight * 2);
     
-    sendtext("The item becomes much heavier.<br/>", self);
+     sendtext("The item becomes much heavier.&n", self);
  } dilend
 
 === Container Weight Management ===
@@ -48,7 +48,7 @@ The weight parameter should be a positive integer representing the desired total
        set_weight_base(container, 0);
        set_weight(container, 0);
        
-       sendtext("You create a weightless container.<br/>", self);
+        sendtext("You create a weightless container.&n", self);
     }
  } dilend
 
@@ -106,14 +106,14 @@ The weight parameter should be a positive integer representing the desired total
     // Make target temporarily lighter (levitation effect)
     set_weight(target, target.baseweight / 2);
     
-    sendtext("You feel as light as a feather!<br/>", target);
+     sendtext("You feel as light as a feather!&n", target);
     
     pause;
     pause;
     
     // Restore original weight
     set_weight(target, original_weight);
-    sendtext("You return to your normal weight.<br/>", target);
+     sendtext("You return to your normal weight.&n", target);
  } dilend
 
 === Weight Validation ===
@@ -132,12 +132,12 @@ The weight parameter should be a positive integer representing the desired total
     if (item.weight < min_weight)
     {
        set_weight(item, min_weight);
-       sendtext("Item weight corrected to minimum.<br/>", self);
+        sendtext("Item weight corrected to minimum.&n", self);
     }
     else if (item.weight > max_weight)
     {
        set_weight(item, max_weight);
-       sendtext("Item weight corrected to maximum.<br/>", self);
+        sendtext("Item weight corrected to maximum.&n", self);
     }
  } dilend
 

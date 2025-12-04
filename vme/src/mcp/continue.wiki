@@ -19,7 +19,6 @@ This statement is particularly useful for filtering out unwanted iterations in l
 If the '''continue''' statement is used outside of any loop construct, the DIL compiler will generate an error and the script will fail to compile.
 
 == Examples ==
-=== Basic while loop with continue ===
 dilbegin check_health_status();
 code
 {
@@ -34,7 +33,6 @@ code
   }
 } dilend
 
-=== Foreach loop with continue for filtering ===
 dilbegin collect_valuable_items();
 var
     item : unitptr;
@@ -43,20 +41,13 @@ code
 {
     count := 0;
     foreach (UNIT_ST_OBJ, item) {
-        // Skip items that can't be taken
         if (not isset(item.manipulate, MANIPULATE_TAKE))
             continue;
         
-        // Skip buried items
         if (item.flags & UNIT_FL_BURIED)
             continue;
         
-        // Skip items we can't see
         if (not visible(self, item))
-            continue;
-        
-        // Skip treasure zone items
-        if (item.zoneidx == "treasure")
             continue;
         
         act("$1n picks up $2n.", A_ALWAYS, self, item, null, TO_ALL);
@@ -67,73 +58,12 @@ code
     act("Collected $2d items.", A_ALWAYS, self, itoa(count), null, TO_CHAR);
 } dilend
 
-=== Nested loops demonstrating continue scope ===
-dilbegin process_players_with_conditions();
-var
-    pc : unitptr;
-    room : unitptr;
-code
-{
-    room := self.outside;
-    
-    while (self.inside) {
-        foreach (UNIT_ST_PC, pc) {
-            // Skip self
-            if (pc == self)
-                continue;
-            
-            // Skip immortals
-            if (pc.level > 200)
-                continue;
-            
-            // Skip players not in the same room
-            if (pc.outside != room)
-                continue;
-            
-            act("Processing player: $2n", A_ALWAYS, self, pc, null, TO_CHAR);
-            // Process the player...
-        }
-        pause;
-    }
-} dilend
-
-=== Continue with conditional logic ===
-dilbegin patrol_area();
-var
-    target : unitptr;
-code
-{
-    while (self.inside) {
-        foreach (UNIT_ST_PC|UNIT_ST_NPC, target) {
-            // Skip sleeping targets
-            if (target.position & POSITION_SLEEPING)
-                continue;
-            
-            // Skip dead targets
-            if (target.hp <= 0)
-                continue;
-            
-            // Skip invisible targets
-            if (not visible(self, target))
-                continue;
-            
-            act("$1n eyes $3n warily.", A_ALWAYS, self, null, target, TO_NOTVICT);
-            pause;
-        }
-        
-        exec("say Patrol complete.", self);
-        pause;
-    }
-} dilend
-
 == Related Functions/Fields ==
 * [[break]] - Exit from a loop entirely
 * [[while]] - Loop construct that can be controlled with continue
 * [[foreach]] - Loop construct that can be controlled with continue
-* [[pause]] - Often used with continue in loops
 
 == See Also ==
 * [[break]]
 * [[while]]
 * [[foreach]]
-* Loop control statements

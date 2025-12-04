@@ -1,58 +1,81 @@
 = attack_spell =
+ function: integer '''attack_spell'''(spell_index : integer, caster : unitptr, medium : unitptr, target : unitptr, bonus : integer, effect : string);
+
+The '''attack_spell''' function casts an offensive spell from a caster to a target.
 
 == Description ==
 Casts an offensive spell from a caster to a target. This is a low-level function used for spell development and should only be used by developers who understand the spell system internals.
 
-== Syntax ==
- attack_spell(spell_index, caster, medium, target, bonus, effect)
-
 == Parameters ==
-; spell_index : integer
-: The spell index to cast (SPL_XXX constants)
-; caster : unitptr
-: The unit casting the spell
-; medium : unitptr
-: The medium through which the spell is cast (may be the same as caster)
-; target : unitptr
-: The target of the spell
-; bonus : integer
-: Bonus or penalty to apply to the spell (positive for advantage, negative for penalty)
-; effect : string
-: Optional effect string for the spell (can be null or empty)
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| spell_index || integer || The spell index to cast (SPL_XXX constants)
+|-
+| caster || unitptr || The unit casting the spell
+|-
+| medium || unitptr || The medium through which the spell is cast (may be same as caster)
+|-
+| target || unitptr || The target of the spell
+|-
+| bonus || integer || Bonus or penalty to apply to the spell (positive for advantage, negative for penalty)
+|-
+| effect || string || Optional effect string for the spell (can be null or empty)
+|}
 
 == Return Value ==
-: integer
-: The amount of damage dealt by the spell
+Returns an integer:
+* '''integer''' - The amount of damage dealt by the spell
+* '''0''' - If the spell fails or deals no damage
+* '''fail''' - If parameters are invalid
 
 == Examples ==
+=== Basic Spell Attack ===
  dilbegin lava_attack();
  var
-  caster : unitptr;
-  target : unitptr;
-  damage : integer;
+    caster : unitptr;
+    target : unitptr;
+    damage : integer;
  code
  {
-  :start:
-  caster := self;
-  target := activator;
-  damage := attack_spell(SPL_LAVA_1, caster, caster, target, 0, "");
-  sendtext("The lava spell deals " + itoa(damage) + " damage!<br/>", target);
+    caster := self;
+    target := activator;
+    damage := attack_spell(SPL_LAVA_1, caster, caster, target, 0, "");
+    send("The lava spell deals " + itoa(damage) + " damage!");
+    quit;
  } dilend
 
- dilbegin custom_spell();
+=== Enhanced Spell Attack ===
+ dilbegin enhanced_fireball();
  var
-  spell_damage : integer;
+    spell_damage : integer;
  code
  {
-  :start:
-  spell_damage := attack_spell(SPL_FIREBALL, self, self, opponent, 5, "burning");
-  if (spell_damage > 0)
-  {
-    sendtext("Your fireball deals " + itoa(spell_damage) + " damage!<br/>", self);
-  }
+    spell_damage := attack_spell(SPL_FIREBALL, self, self, opponent, 5, "burning");
+    if (spell_damage > 0) {
+       send("Your enhanced fireball deals " + itoa(spell_damage) + " damage!");
+    } else {
+       send("Your fireball fails to hit.");
+    }
+    quit;
  } dilend
 
-== Notes ==
+=== Conditional Spell Casting ===
+ dilbegin conditional_spell(target : unitptr);
+ var
+    damage : integer;
+ code
+ {
+    if (target != null and target.type == UNIT_ST_PC) {
+       damage := attack_spell(SPL_MAGIC_MISSILE, self, self, target, 0, "magical");
+       send("Magic missile strikes " + target.name + " for " + itoa(damage) + " damage!");
+    } else {
+       send("No valid target for spell.");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * This is an advanced function for spell development
 * Should only be used by developers who understand the spell system
 * Requires proper spell index constants (SPL_XXX)
@@ -60,8 +83,20 @@ Casts an offensive spell from a caster to a target. This is a low-level function
 * Bonus parameter can modify spell effectiveness
 * Effect parameter is optional and can be null or empty string
 * Returns the actual damage dealt by the spell
+* Use with caution - improper use can cause game balance issues
+
+== Error Handling ==
+The function performs validation:
+* '''Parameter validation'' - Ensures all parameters are valid types
+* '''Spell validation'' - Checks that spell_index is within valid range
+* '''Target validation'' - Ensures target is a valid unit
+* '''Caster validation'' - Ensures caster is a valid unit
+
+== Related Functions ==
+* [[cast_spell]] - For standard spell casting
+* [[spellinfo]] - For getting spell information
+* [[spellindex]] - For spell index constants
 
 == See Also ==
-* cast_spell - For standard spell casting
-* spellinfo - For getting spell information
-* spellindex - For spell index constants
+* [[SPL_*]] - Spell index constants
+* [[unitptr]] - Unit pointer data type

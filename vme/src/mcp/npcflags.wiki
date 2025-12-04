@@ -4,7 +4,7 @@
  function: '''npcflags'''(npc : unitptr, flags : integer);
 
 == Description ==
-The '''npcflags''' function modifies the NPC flags field, setting various behavioral and property flags for non-player characters. This function allows DIL programs to control NPC behavior, combat properties, special abilities, and administrative settings through bit manipulation.
+The '''npcflags''' function modifies behavioral flags for non-player characters.
 
 == Parameters ==
 {| class="wikitable"
@@ -20,88 +20,31 @@ Returns '''integer''':
 * '''non-zero''' - Error code if modification failed
 
 == Examples ==
- dilbegin set_guard_behavior(npc : unitptr, behavior_type : integer);
+ dilbegin set_aggressive(npc : unitptr);
  var
     current_flags : integer;
  code
  {
-    if (npc.type != UNIT_ST_NPC)
-    {
-       exec("say Target must be an NPC!", self);
-       return;
-    }
-    
     current_flags := npc.npcflags;
-    
-    // Set different behavior flags based on type
-    if (behavior_type == 1)  // Aggressive behavior
-    {
-       npcflags(npc, current_flags | NPC_AGGRESSIVE);
-       exec("say NPC set to aggressive mode.", self);
-    }
-    else if (behavior_type == 2)  // Passive behavior
-    {
-       npcflags(npc, current_flags & ~NPC_AGGRESSIVE);  // Clear aggressive bit
-       exec("say NPC set to passive mode.", self);
-    }
-    else if (behavior_type == 3)  // Guard behavior
-    {
-       npcflags(npc, current_flags | NPC_GUARD);
-       exec("say NPC set to guard mode.", self);
-    }
-    
-    exec("say Previous flags: " + itoa(current_flags), self);
-    exec("say New flags: " + itoa(npc.npcflags), self);
+    npcflags(npc, current_flags | NPC_AGGRESSIVE);
+    exec("say NPC is now aggressive.", self);
  } dilend
 
- dilbegin toggle_shopkeeper(npc : unitptr);
+ dilbegin toggle_guard_mode(npc : unitptr);
  var
-    shop_open : integer;
+    flags : integer;
  code
  {
-    if (npc.type != UNIT_ST_NPC)
+    flags := npc.npcflags;
+    if (flags & NPC_GUARD)
     {
-       exec("say Target must be an NPC!", self);
-       return;
-    }
-    
-    // Toggle shopkeeper behavior
-    shop_open := npc.npcflags;
-    
-    if (shop_open & NPC_SHOPKEEPER)
-    {
-       // Remove shopkeeper flag
-       npcflags(npc, shop_open & ~NPC_SHOPKEEPER);
-       exec("say Shopkeeper mode disabled.", self);
+       npcflags(npc, flags & ~NPC_GUARD);
+       exec("say Guard mode disabled.", self);
     }
     else
     {
-       // Add shopkeeper flag
-       npcflags(npc, shop_open | NPC_SHOPKEEPER);
-       exec("say Shopkeeper mode enabled.", self);
-    }
-    
-    exec("say Shopkeeper flag: " + ((npc.npcflags & NPC_SHOPKEEPER) != 0 ? "ON" : "OFF"), self);
- } dilend
-
- dilbegin complex_npc_setup();
- var
-    new_npc : unitptr;
- code
- {
-    // Create a new NPC with multiple flag settings
-    new_npc := load("guard_template@midgaard");
-    
-    if (new_npc != null)
-    {
-       // Set multiple flags at once using bitwise OR
-       npcflags(new_npc, NPC_AGGRESSIVE | NPC_GUARD | NPC_SENTINEL | NPC_STAY_ZONE);
-       
-       exec("say New NPC created with combined flags.", self);
-       exec("say Aggressive: " + ((new_npc.npcflags & NPC_AGGRESSIVE) != 0 ? "YES" : "NO"), self);
-       exec("say Guard: " + ((new_npc.npcflags & NPC_GUARD) != 0 ? "YES" : "NO"), self);
-       exec("say Sentinel: " + ((new_npc.npcflags & NPC_SENTINEL) != 0 ? "YES" : "NO"), self);
-       exec("say Stay in zone: " + ((new_npc.npcflags & NPC_STAY_ZONE) != 0 ? "YES" : "NO"), self);
+       npcflags(npc, flags | NPC_GUARD);
+       exec("say Guard mode enabled.", self);
     }
  } dilend
 
@@ -132,4 +75,4 @@ Returns '''integer''':
 == See Also ==
 * NPC behavior constants: '''NPC_AGGRESSIVE''', '''NPC_GUARD''', '''NPC_SENTINEL''', '''NPC_STAY_ZONE'''
 * Bit manipulation: [[and]], [[or]], [[not]] operators
-* Unit type constants: '''UNIT_ST_NPC'''
+* Unit type constants: '''UNIT_ST_NPC''' 

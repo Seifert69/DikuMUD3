@@ -1,9 +1,7 @@
 = excmdstr_case =
+ variable: string '''excmdstr_case'''
 
 '''excmdstr_case''' is a DIL variable that contains the player's command input with original case preserved.
-
-== Syntax ==
- string := excmdstr_case
 
 == Description ==
 The excmdstr_case variable provides access to the exact text that a player typed as a command, preserving the original letter case. This is different from '''excmdstr''' which converts the input to lowercase.
@@ -14,16 +12,7 @@ The variable contains:
 * Any arguments following the command
 * The complete command line as entered
 
-== Usage Notes ==
-* This variable is read-only
-* It's automatically set by the game system when players enter commands
-* The variable is commonly used for:
-** Password validation systems
-** Case-sensitive command processing
-** Text input validation
-** Command logging and analysis
-
-== Example ==
+== Examples ==
  dilbegin aware do_password(arg:string);
  var
     prmt:string;
@@ -72,7 +61,18 @@ The variable contains:
     sendtext("Password Changed.<br/>",self);
  } dilend
 
-== See Also ==
+== Usage Notes ==
+* This variable is read-only
+* It's automatically set by the game system when players enter commands
+* The variable is commonly used for:
+** Password validation systems
+** Case-sensitive command processing
+** Text input validation
+** Command logging and analysis
+
+== Related Functions/Fields ==
 * [[excmdstr]] - Command input (lowercase)
 * [[argument]] - Command arguments
 * [[set_password]] - Set player password
+
+== See Also ==

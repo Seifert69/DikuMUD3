@@ -6,7 +6,7 @@ The '''tolower''' function converts all characters in a string to lowercase.
 == Description ==
 This function returns a new string with all alphabetic characters converted to their lowercase equivalents. The original string is not modified; instead, a new lowercase copy is created and returned. This function is commonly used for case-insensitive string comparisons, normalization, and text processing.
 
-== PARAMETERS ==
+== Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -14,54 +14,57 @@ This function returns a new string with all alphabetic characters converted to t
 |}
 
 == Examples ==
-dilbegin unique case_insensitive_check(input : string);
-var
-    lower_input : string;
-code
-{
-    // Convert input to lowercase for comparison
-    lower_input := tolower(input);
-    
-    if (lower_input == "yes")
-    {
-        sendto("You answered YES!&n", self);
-    }
-    else if (lower_input == "no")
-    {
-        sendto("You answered NO!&n", self);
-    }
-    else
-    {
-        sendto("You answered: " + input + "&n", self);
-    }
-} dilend
+=== Case Insensitive Check ===
+ dilbegin case_insensitive_check(input : string);
+ var
+     lower_input : string;
+ code
+ {
+     // Convert input to lowercase for comparison
+     lower_input := tolower(input);
+     
+     if (lower_input == "yes")
+     {
+         sendtext("You answered YES!<br/>", self);
+     }
+     else if (lower_input == "no")
+     {
+         sendtext("You answered NO!<br/>", self);
+     }
+     else
+     {
+         sendtext("You answered: " + input + "<br/>", self);
+     }
+ } dilend
 
-dilbegin unique normalize_name(name : string);
-var
-    normal_name : string;
-code
-{
-    // Normalize a name to lowercase for storage/lookup
-    normal_name := tolower(name);
-    sendto("Normalized name: " + normal_name + "&n", self);
-    
-    // Example usage with restore function (from mail system)
-    // ml := restore(normal_name, null);
-} dilend
+=== Normalize Name ===
+ dilbegin normalize_name(name : string);
+ var
+     normal_name : string;
+ code
+ {
+     // Normalize a name to lowercase for storage/lookup
+     normal_name := tolower(name);
+     sendtext("Normalized name: " + normal_name + "<br/>", self);
+     
+     // Example usage with restore function (from mail system)
+     // ml := restore(normal_name, null);
+ } dilend
 
-dilbegin unique string_processing();
-var
-    mixed_case : string;
-    lower_case : string;
-code
-{
-    mixed_case := "Hello WORLD! 123";
-    lower_case := tolower(mixed_case);
-    
-    sendto("Original: " + mixed_case + "&n", self);
-    sendto("Lowercase: " + lower_case + "&n", self);
-    // Output: "hello world! 123"
-} dilend
+=== String Processing ===
+ dilbegin string_processing();
+ var
+     mixed_case : string;
+     lower_case : string;
+ code
+ {
+     mixed_case := "Hello WORLD! 123";
+     lower_case := tolower(mixed_case);
+     
+     sendtext("Original: " + mixed_case + "<br/>", self);
+     sendtext("Lowercase: " + lower_case + "<br/>", self);
+     // Output: "hello world! 123"
+ } dilend
 
 == Usage Notes ==
 * The function only affects alphabetic characters; numbers, symbols, and whitespace remain unchanged.

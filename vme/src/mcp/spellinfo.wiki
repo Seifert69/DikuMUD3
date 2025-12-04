@@ -204,5 +204,7 @@ Always check the return string for emptiness before using the output parameter v
 * DIL Spell System Documentation
 * SPL_XXX Constants (defined in values.h/vme.h)
 * FIND_UNIT_XXX Constants for target specification
+
 * MEDIA_XXX Constants for casting mediums
+
 * SPLCST_XXX Constants for resistance types

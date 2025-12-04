@@ -1,36 +1,12 @@
 = findsymbolic =
+ function: unitptr '''findsymbolic'''(s : string)
+ function: unitptr '''findsymbolic'''(s : string, idx : integer)
+ function: unitptr '''findsymbolic'''(u : unitptr, s : string, i : integer)
 
-== Syntax ==
-There are three forms of the findsymbolic function:
-
- unitptr findsymbolic( s : string )
- unitptr findsymbolic( s : string, idx : integer )
- unitptr findsymbolic( u : unitptr, s : string, i : integer )
-
-== Parameters ==
-=== Single Parameter Form ===
-; s : string
-: Symbolic name of the unit to find (player, room, object, NPC) in the format "name@zone"
-
-=== Two Parameter Form ===
-; s : string
-: Symbolic name of the unit to find (player, room, object, NPC) in the format "name@zone"
-; idx : integer
-: The index to match for finding a precise unique unit, see unitptr.idx
-
-=== Three Parameter Form ===
-; u : unitptr
-: Search is relative to this unit.
-; s : string
-: Symbolic name of the NPC or Object to find in the format "name@zone"
-; i : integer
-: FIND_UNIT_XXX bit vector of places to search.
-
-== Return Value ==
-Returns a pointer to an instance of the unit, or null if not found.
+The '''findsymbolic''' function finds units by their symbolic name, supporting three different forms for various search scenarios.
 
 == Description ==
-This routine supplements findunit() and findroom(). It comes in handy if it is important to get a unitptr to a unit in the world. This is super fast and a great routine if it doesn't matter where in the world the unit is.
+This routine supplements '''findunit()''' and '''findroom()'''. It comes in handy if it is important to get a unitptr to a unit in the world. This is super fast and a great routine if it doesn't matter where in the world the unit is.
 
 === Single Parameter Form ===
 This form finds any unit (player, room, object, NPC) by its symbolic name. If there are multiple instances of the same symbolic name, it will return a random one of them.
@@ -41,28 +17,63 @@ This form helps you find a precise unique unit in the world. The idx parameter a
 === Three Parameter Form ===
 This form searches for a unit relative to a specific unit within defined environments. It will return the first unit matching the symbolic name in the specified search locations.
 
+== PARAMETERS ==
+=== Single Parameter Form ===
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || Symbolic name of the unit to find (player, room, object, NPC) in the format "name@zone"
+|}
+
+=== Two Parameter Form ===
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || Symbolic name of the unit to find (player, room, object, NPC) in the format "name@zone"
+|-
+| idx || integer || The index to match for finding a precise unique unit, see unitptr.idx
+|}
+
+=== Three Parameter Form ===
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || Search is relative to this unit
+|-
+| s || string || Symbolic name of the NPC or Object to find in the format "name@zone"
+|-
+| i || integer || FIND_UNIT_XXX bit vector of places to search
+|}
+
 == Examples ==
-=== Example 1: Basic Usage ===
- bread := findsymbolic("bread@midgaard");
+bread := findsymbolic("bread@midgaard");
 
-=== Example 2: Finding a Specific Instance ===
- // Presume target is pointing to a particular cityguard
- s := target.symname; // Save the symbolic name
- i := target.idx;
- // Do stuff. Wake up 9 hours later. Find the target again like this:
- target := findsymbolic(s, i);
- // and if the guard is still alive you'll get your pointer back.
+// Presume target is pointing to a particular cityguard
+s := target.symname; // Save the symbolic name
+i := target.idx;
+// Do stuff. Wake up 9 hours later. Find the target again like this:
+target := findsymbolic(s, i);
+// and if the guard is still alive you'll get your pointer back.
 
-=== Example 3: Relative Search ===
- // Mary needs to check if she has her own cooking pot
- pot := findsymbolic(self, "pot@haon_dor", FIND_UNIT_IN_ME);
+// Mary needs to check if she has her own cooking pot
+pot := findsymbolic(self, "pot@haon_dor", FIND_UNIT_IN_ME);
 
-== Use Cases ==
-* Use findsymbolic() when you need to find a specific unit regardless of location
-* Use findsymbolic(s, idx) when you need to find a precise instance among duplicates
-* Use findsymbolic(u, s, i) when you need to search relative to a specific unit
+== Usage Notes ==
+* Use '''findsymbolic()''' when you need to find a specific unit regardless of location
+* Use '''findsymbolic(s, idx)''' when you need to find a precise instance among duplicates
+* Use '''findsymbolic(u, s, i)''' when you need to search relative to a specific unit
+* For players, the two-parameter form will find the online player regardless of idx
+
+== Error Handling ==
+* Returns null if no matching unit is found
+* Invalid symbolic names will return null
+* Invalid FIND_UNIT_* values may cause unexpected behavior
+
+== Related Functions/Fields ==
+* [[findunit()]] - Find a unit by name within a specific environment
+* [[findroom()]] - Find a room by symbolic name
+* [[unitptr.idx]] - Unique identifier for unit instances
 
 == See Also ==
-* [[Manual:DIL Manual/findunit()|findunit()]] - Find a unit by name within a specific environment
-* [[Manual:DIL Manual/findroom()|findroom()]] - Find a room by symbolic name
-* [[Manual:DIL Manual/unitptr.idx|unitptr.idx]] - Unique identifier for unit instances
+* FIND_UNIT_* constants documentation
+* Symbolic name conventions

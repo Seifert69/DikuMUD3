@@ -1,26 +1,24 @@
 = getcmd =
+ function: cmdptr '''getcmd'''({command_name : string});
 
-== Syntax ==
- cmdptr := getcmd( command_name : string );
-
-== Parameters ==
- command_name : string
-    The name of the command to search for in the command table.
-
-== Return Value ==
- cmdptr
-    Returns a command pointer (cmdptr) to the command if found, or null if the command does not exist.
-    Returns fail if the input string is null.
+The '''getcmd''' function searches the internal command trie for a command matching the specified name.
 
 == Description ==
- The getcmd() function searches the internal command trie for a command matching the specified name. This function provides direct access to the command information structure, allowing DIL programs to examine command properties such as required level, position, and command type.
+The '''getcmd''' function searches the internal command trie for a command matching the specified name. This function provides direct access to the command information structure, allowing DIL programs to examine command properties such as required level, position, and command type.
 
- The function is useful for:
- * Checking if a command exists in the system
- * Retrieving detailed information about a command
- * Validating command availability for players
+The function is useful for:
+* Checking if a command exists in the system
+* Retrieving detailed information about a command
+* Validating command availability for players
 
-== Example ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| command_name || string || The name of the command to search for in the command table
+|}
+
+== Examples ==
  dilbegin check_command(cmd_name : string);
  var
     cmd_ptr : cmdptr;
@@ -38,7 +36,18 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* Returns a command pointer (cmdptr) to the command if found, or null if the command does not exist
+* The command pointer can be used to access command properties like level, position, and type
+* This function is commonly used for command validation and permission checking
+
+== Error Handling ==
+* Returns null if the command does not exist
+* Returns fail if the input string is null
+
+== Related Functions/Fields ==
+* [[cmdptr]] - Command pointer type and fields
+* [[command]] - Command matching function
+* [[chead]] - Get first command in list
+
 == See Also ==
- * [[cmdptr]] - Command pointer type and fields
- * [[command]] - Command matching function
- * [[chead]] - Get first command in list

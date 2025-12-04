@@ -1,7 +1,6 @@
 = log =
 
-== Syntax ==
- procedure: '''log'''(s : string);
+procedure: '''log'''(s : string);
 
 == Description ==
 The '''log''' procedure writes a text string to the zone's log file for debugging and error tracking purposes. This is an essential tool for DIL developers to monitor program execution, track errors, and debug complex DIL programs. The logged output is written to the zone's log file using the server's logging system.
@@ -14,9 +13,6 @@ The '''log''' procedure is particularly useful for tracking program flow, debugg
 |-
 | s || string || The text message to be written to the zone log file
 |}
-
-== Return Value ==
-This procedure does not return a value.
 
 == Usage Notes ==
 * Log entries are written to the zone's log file (typically found in the server's log directory)
@@ -116,4 +112,4 @@ Error tracking in file operations:
 == See Also ==
 * [[DIL Debugging]] - General debugging techniques for DIL programs
 * [[Zone Administration]] - Zone log file management
-* [[Server Logging]] - Server-wide logging system overview
+* [[Server Logging]] - Server-wide logging system overview 

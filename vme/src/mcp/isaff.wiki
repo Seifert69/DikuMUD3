@@ -1,41 +1,40 @@
 = isaff =
+ function: integer '''isaff'''(u : unitptr, i : integer);
 
-; isaff : integer ( u : unitptr , i : integer )
-: Tests whether a unit is affected by a specific affect ID.
+The '''isaff''' function tests whether a unit is affected by a specific affect ID.
 
 == Description ==
 
 The '''isaff''' function scans a unit for any affect matching the specified affect ID and returns TRUE (1) if one is found, or FALSE (0) if not. This is commonly used to check if a character or object has a specific spell effect, status condition, or magical property.
 
-== Parameters ==
+== PARAMETERS ==
 
-; u : unitptr
-: The unit to be examined. Can be a PC, NPC, or object.
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit to be examined (PC, NPC, or object)
+|-
+| i || integer || The affect ID to check for (ID_* constants)
+|}
 
-; i : integer
-: The affect ID to check for. These are predefined constants starting with ID_* found in values.h and/or vme.h. Common affect IDs include:
-:* ID_BLIND_CHAR - Blindness affect
-:* ID_CORPSE - Corpse affect (on objects)
-:* ID_BLESS - Bless affect
-:* ID_CURSE - Curse affect
-:* ID_INVISIBILITY - Invisibility affect
-:* ID_DETECT_MAGIC - Magic detection affect
-:* ID_DETECT_INVISIBLE - Invisibility detection affect
-:* ID_HOLD - Hold/paralysis affect
-:* ID_CHARM - Charm affect
-:* ID_SPL_RAISE_* - Various spell raise affects (STR, DEX, CON, etc.)
-
-== Return Value ==
-
-; integer
-: Returns TRUE (1) if the unit has the specified affect, or FALSE (0) if not.
+Common affect IDs include:
+* ID_BLIND_CHAR - Blindness affect
+* ID_CORPSE - Corpse affect (on objects)
+* ID_BLESS - Bless affect
+* ID_CURSE - Curse affect
+* ID_INVISIBILITY - Invisibility affect
+* ID_DETECT_MAGIC - Magic detection affect
+* ID_DETECT_INVISIBLE - Invisibility detection affect
+* ID_HOLD - Hold/paralysis affect
+* ID_CHARM - Charm affect
+* ID_SPL_RAISE_* - Various spell raise affects (STR, DEX, CON, etc.)
 
 == Examples ==
 
 === Basic Blindness Check ===
  if (isaff(self, ID_BLIND_CHAR))
    sendtext("You're blinded", self);
- 
+
 This checks if the program owner is blinded and sends a message if so.
 
 === Corpse Detection ===
@@ -46,7 +45,7 @@ This checks if the program owner is blinded and sends a message if so.
        link(i.inside, i.outside);
     destroy(i);
  }
- 
+
 This example from a dog NPC checks if an object is a corpse container and eats it.
 
 === Multiple Affect Removal ===
@@ -56,7 +55,7 @@ This example from a dog NPC checks if an object is a corpse container and eats i
    subaff(self, ID_CURSE);
  else if (isaff(self, ID_INVISIBILITY))
    subaff(self, ID_INVISIBILITY);
- 
+
 This shows how to check for and remove specific affects.
 
 == Usage Notes ==
@@ -68,9 +67,20 @@ This shows how to check for and remove specific affects.
 * Use '''addaff()''' to add new affects to a unit
 * Use '''subaff()''' to remove affects from a unit
 
+== Error Handling ==
+
+* Invalid affect IDs will return FALSE (0)
+* Null unit pointers will cause runtime errors
+* Ensure the unit exists before checking affects
+
+== Related Functions/Fields ==
+
+* [[addaff]] - Adds an affect to a unit
+* [[subaff]] - Removes an affect from a unit  
+* [[getaffects]] - Returns detailed information about all affects on a unit
+
 == See Also ==
 
-; addaff : Adds an affect to a unit
-; subaff : Removes an affect from a unit  
-; getaffects : Returns detailed information about all affects on a unit
-; affected_by_spell : C function used internally by isaff
+* Spell and affect systems
+* Status condition checking
+* Magical properties and effects

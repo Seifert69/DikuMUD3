@@ -1,37 +1,81 @@
 = addextra =
+ function: '''addextra'''(unit : unitptr, index : integer, text : string);
+
+The '''addextra''' function adds a new string to a unit's extra description list for custom descriptions and keywords.
 
 == Description ==
-Adds a new string to a unit's extra description list. This function is used to add custom descriptions, keywords, and other string data to units (players, NPCs, objects, rooms).
-
-== Syntax ==
- addextra(unit, index, string)
+Adds a new string to a unit's extra description list at the specified index position. This function is used to add custom descriptions, keywords, and other string data to units (players, NPCs, objects, rooms).
 
 == Parameters ==
-- **unit** - The unit to add the extra description to (player, NPC, object, or room)
-- **index** - The index position in the extra description list (0-based)
-- **string** - The string content to add to the extra description
-
-== Return Value ==
-Returns the updated extra description list. If the operation fails, returns the original list unchanged.
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit to add the extra description to
+|-
+| index || integer || The index position in the extra description list (0-based)
+|-
+| text || string || The string content to add to the extra description
+|}
 
 == Examples ==
- // Add a custom description to a player
- addextra(self, 0, "A tall warrior with battle scars.");
+=== Basic Description Addition ===
+ dilbegin add_player_description();
+ code
+ {
+    addextra(self, 0, "A tall warrior with battle scars.");
+    send("Description added to your character.");
+    quit;
+ } dilend
 
- // Add keywords to an object
- addextra(sword, 1, "sword blade sharp weapon");
+=== Object Keywords ===
+ dilbegin add_weapon_keywords(weapon : unitptr);
+ code
+ {
+    addextra(weapon, 1, "sword blade sharp weapon");
+    send("Keywords added to weapon.");
+    quit;
+ } dilend
 
- // Add room description
- addextra(room, 0, "A dark, damp cave with echoes dripping water.");
+=== Room Description ===
+ dilbegin customize_room(room : unitptr);
+ code
+ {
+    addextra(room, 0, "A dark, damp cave with echoes of dripping water.");
+    send("Room description customized.");
+    quit;
+ } dilend
 
-== Notes ==
-- The index determines the position in the extra description list
-- Use 0 for the main description, higher numbers for additional descriptions
-- This function is commonly used for dynamic content creation
-- The function handles memory allocation automatically
-- Existing extra descriptions at the specified index will be replaced
+=== Multiple Extra Descriptions ===
+ dilbegin detailed_item_setup(item : unitptr);
+ code
+ {
+    addextra(item, 0, "A finely crafted longsword with intricate engravings.");
+    addextra(item, 1, "longsword sword blade weapon");
+    addextra(item, 2, "The blade gleams with an otherworldly light.");
+    send("Multiple extra descriptions added to item.");
+    quit;
+ } dilend
+
+== Usage Notes ==
+* The index determines the position in the extra description list
+* Use 0 for the main description, higher numbers for additional descriptions
+* This function is commonly used for dynamic content creation
+* The function handles memory allocation automatically
+* Existing extra descriptions at the specified index will be replaced
+* Works on all unit types: UNIT_ST_PC, UNIT_ST_NPC, UNIT_ST_OBJ, UNIT_ST_ROOM
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation'' - Ensures unit is a valid unit pointer
+* '''Index validation'' - Ensures index is a valid integer
+* '''Text validation'' - Ensures text is a valid string
+* '''Memory allocation'' - Handles memory allocation failures gracefully
+
+== Related Functions ==
+* [[delstr]] - Delete strings from extra descriptions
+* [[extra]] - Access extra description data
+* [[addstring]] - Add strings to string lists
 
 == See Also ==
-- [delstr](delstr.wiki) - Delete strings from extra descriptions
-- [extra](extra.wiki) - Access extra description data
-- [addstring](addstring.wiki) - Add strings to string lists
+* [[unitptr]] - Unit pointer data type
+* [[extraptr]] - Extra description pointer type

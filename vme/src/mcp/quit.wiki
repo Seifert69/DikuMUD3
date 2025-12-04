@@ -1,9 +1,7 @@
 = quit =
-
  procedure: '''quit'''();
 
-== Syntax ==
- quit();
+The '''quit''' procedure immediately terminates the current DIL program execution.
 
 == Description ==
 The '''quit''' procedure immediately terminates the current DIL program execution. This is a fundamental control flow command that stops all further processing in the current DIL program and returns control to the calling context or terminates the program entirely.
@@ -14,8 +12,7 @@ The quit procedure is commonly used for:
 * Terminating loops and wait states
 * Providing clean exit points in complex DIL logic
 
-== Return Value ==
-This procedure does not return a value.
+== Examples ==
 
 == Examples ==
  dilbegin simple_command();

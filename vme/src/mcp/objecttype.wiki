@@ -1,12 +1,10 @@
 = objecttype =
+ field: integer '''.objecttype''' (Read/Write)
 
-== Syntax ==
-Field: integer '''.objecttype''' (obj : unitptr)
+The '''objecttype''' field provides access to the type classification of objects.
 
 == Description ==
-The '''objecttype''' field provides access to the type classification of objects. This field determines what category an object belongs to and influences how the object behaves and what properties it has.
-
-Based on the C implementation, this field returns a reference to the object's type value, allowing both reading and writing of the object type. The type is stored as an integer constant that corresponds to predefined ITEM_* values.
+The '''objecttype''' field determines what category an object belongs to and influences how the object behaves and what properties it has. Based on the C implementation, this field returns a reference to the object's type value, allowing both reading and writing of the object type. The type is stored as an integer constant that corresponds to predefined ITEM_* values.
 
 == Field Access ==
 This is a field access on object unitptrs:
@@ -17,23 +15,10 @@ This field is available on the following unit types:
 * UNIT_ST_OBJ (Object)
 
 == Usage Notes ==
-The objecttype field is read-write (RW) and can be modified directly.
 Object types are defined as ITEM_* constants in values.h and/or vme.h.
 Different object types have different behaviors and use the [[value]] array differently.
 
-== Common Object Types ==
-Based on the DIL examples, some common object types include:
-* '''ITEM_CONTAINER''' - Container objects that can hold other items
-* '''ITEM_BOAT''' - Boat objects for water travel
-* '''ITEM_FOOD''' - Food items that can be eaten
-* '''ITEM_DRINKCON''' - Drink containers
-* '''ITEM_WEAPON''' - Weapons for combat
-* '''ITEM_SHIELD''' - Shields for defense
-* '''ITEM_BOARD''' - Bulletin boards
-* '''ITEM_SCROLL''' - Magical scrolls
-
 == Examples ==
-=== Checking Object Type ===
  dilbegin identify_object(obj : unitptr);
  var
     obj_type : integer;
@@ -56,107 +41,6 @@ Based on the DIL examples, some common object types include:
        act("$1n is food.", A_ALWAYS, self, obj, null, TO_CHAR);
     else
        act("$1n is of type: $2d", A_ALWAYS, self, obj_type, obj, TO_CHAR);
- } dilend
-
-=== Filtering Objects by Type ===
- dilbegin collect_food();
- var
-    item : unitptr;
-    food_count : integer;
- 
- code
- {
-    food_count := 0;
-    
-    foreach (UNIT_ST_OBJ, item)
-    {
-       if (item.objecttype == ITEM_FOOD)
-       {
-          food_count := food_count + 1;
-          act("Found food: $1n", A_ALWAYS, self, item, null, TO_CHAR);
-       }
-    }
-    
-    act("Total food items: $1d", A_ALWAYS, self, food_count, null, TO_CHAR);
- } dilend
-
-=== Type-Specific Processing ===
- dilbegin process_object(obj : unitptr);
- var
-    obj_type : integer;
- 
- code
- {
-    if (obj.type != UNIT_ST_OBJ)
-       return;
-    
-    obj_type := obj.objecttype;
-    
-    if (obj_type == ITEM_WEAPON)
-    {
-       // Process weapon-specific logic
-       act("Processing weapon: $1n", A_ALWAYS, self, obj, null, TO_CHAR);
-    }
-    else if (obj_type == ITEM_CONTAINER)
-    {
-       // Process container-specific logic
-       act("Processing container: $1n", A_ALWAYS, self, obj, null, TO_CHAR);
-    }
-    else if ((obj_type == ITEM_FOOD) or (obj_type == ITEM_DRINKCON))
-    {
-       // Process consumables
-       act("Processing consumable: $1n", A_ALWAYS, self, obj, null, TO_CHAR);
-    }
- } dilend
-
-=== Changing Object Type ===
- dilbegin convert_to_container(obj : unitptr);
- var
-    old_type : integer;
- 
- code
- {
-    if (obj.type != UNIT_ST_OBJ)
-    {
-       act("$1n is not an object.", A_ALWAYS, self, obj, null, TO_CHAR);
-       return;
-    }
-    
-    old_type := obj.objecttype;
-    obj.objecttype := ITEM_CONTAINER;
-    
-    act("$1n converted from type $2d to container", A_ALWAYS, self, old_type, obj, TO_CHAR);
- } dilend
-
-=== Comprehensive Type Analysis ===
- dilbegin analyze_all_objects();
- var
-    item : unitptr;
-    type_counts : integer[10];
-    i : integer;
- 
- code
- {
-    // Initialize counters
-    i := 0;
-    while (i < 10)
-    {
-       type_counts.[i] := 0;
-       i := i + 1;
-    }
-    
-    // Count object types
-    foreach (UNIT_ST_OBJ, item)
-    {
-       type_counts.[item.objecttype] := type_counts.[item.objecttype] + 1;
-    }
-    
-    // Report results
-    act("=== Object Type Analysis ===", A_ALWAYS, self, null, null, TO_CHAR);
-    act("Containers: $1d", A_ALWAYS, self, type_counts.[ITEM_CONTAINER], null, TO_CHAR);
-    act("Weapons: $1d", A_ALWAYS, self, type_counts.[ITEM_WEAPON], null, TO_CHAR);
-    act("Food: $1d", A_ALWAYS, self, type_counts.[ITEM_FOOD], null, TO_CHAR);
-    act("Drink containers: $1d", A_ALWAYS, self, type_counts.[ITEM_DRINKCON], null, TO_CHAR);
  } dilend
 
 == Error Handling ==
@@ -182,4 +66,4 @@ Always verify the unit is an object before accessing objecttype:
 * [[unit_st_obj]] - Other object fields
 * [[value]] - Object-specific values
 * [[objectflags]] - Object property flags
-* [[manipulate]] - Object manipulation flags
+* [[manipulate]] - Object manipulation flags 

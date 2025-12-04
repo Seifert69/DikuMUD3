@@ -21,6 +21,7 @@ This field is available on the following unit types:
 * UNIT_ST_ROOM (Room)
 
 == Examples ==
+=== Check Encumbrance ===
  dilbegin check_encumbrance(pc : unitptr);
  var
     total_weight : integer;
@@ -41,29 +42,7 @@ This field is available on the following unit types:
     quit;
  } dilend
 
- dilbegin inventory_weight_report(pc : unitptr);
- var
-    item : unitptr;
-    total_weight : integer;
-    item_count : integer;
- code
- {
-    total_weight := 0;
-    item_count := 0;
-    
-    item := pc.inside;
-    while (item)
-    {
-       total_weight := total_weight + item.weight;
-       item_count := item_count + 1;
-       item := item.next;
-    }
-    
-    sendtext("Inventory contains " + itoa(item_count) + " items weighing " + itoa(total_weight) + " pounds total.&n", pc);
-    sendtext("Your total weight including equipment: " + itoa(pc.weight) + " pounds.&n", pc);
-    quit;
- } dilend
-
+=== Container Check ===
  dilbegin container_check(container : unitptr);
  var
     container_weight : integer;

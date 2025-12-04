@@ -124,4 +124,4 @@ This field is available on the following unit types:
 == See Also ==
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
 * String functions: [[length]], [[addstring]], [[substring]]
-* Identification functions: [[isplayer]], [[findunit]], [[findsymbolic]]
+* Identification functions: [[isplayer]], [[findunit]], [[findsymbolic]] 

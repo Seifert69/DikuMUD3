@@ -1,12 +1,117 @@
 = crimes =
+ field: integer '''crimes''' (Read-only)
 
-== Syntax ==
- unit.crimes : integer (read-only)
+The '''crimes''' field returns the number of crimes a character has committed.
 
 == Description ==
 The crimes field is a read-only property of player character units that returns the number of crimes the character has committed. This field tracks the character's criminal history and is used by justice systems, law enforcement mechanics, and various gameplay systems that need to monitor player behavior.
 
-The crimes counter typically increases when a character commits criminal acts such as theft, assault, murder, or other illegal activities within the game world.
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.crimes || integer || The number of crimes committed
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
+== Examples ==
+=== Basic Crime Check ===
+ dilbegin check_criminal();
+ code
+ {
+    if (activator.crimes > 0) {
+       act("You have committed " + itoa(activator.crimes) + " crimes.", 
+          A_ALWAYS, self, null, null, TO_CHAR);
+    } else {
+       act("You have a clean record.", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    quit;
+ } dilend
+
+=== Crime Status Display ===
+ dilbegin crime_status();
+ var
+    status : string;
+ code
+ {
+    if (activator.crimes > 10) {
+       status := "Habitual Criminal";
+    } else if (activator.crimes > 5) {
+       status := "Known Criminal";
+    } else if (activator.crimes > 0) {
+       status := "Minor Offender";
+    } else {
+       status := "Clean Record";
+    }
+    
+    act("Crime Status: " + status, A_ALWAYS, self, null, null, TO_CHAR);
+    act("Total Crimes: " + itoa(activator.crimes), A_ALWAYS, self, null, null, TO_CHAR);
+    quit;
+ } dilend
+
+=== Justice System ===
+ dilbegin justice_system();
+ var
+    suspect : unitptr;
+ code
+ {
+    suspect := activator;
+    
+    if (suspect.crimes > 3) {
+       act("Guards! This person is a known criminal with " + itoa(suspect.crimes) + 
+          " offenses!", A_ALWAYS, self, suspect, null, TO_ROOM);
+       act("You're under arrest!", A_ALWAYS, suspect, null, null, TO_CHAR);
+    } else if (suspect.crimes > 0) {
+       act("This person has a minor criminal record.", A_ALWAYS, self, suspect, null, TO_ROOM);
+    } else {
+       act("This person has a clean record.", A_ALWAYS, self, suspect, null, TO_ROOM);
+    }
+    quit;
+ } dilend
+
+=== Crime Tracking ===
+ dilbegin track_crimes();
+ var
+    criminal : unitptr;
+ code
+ {
+    criminal := activator;
+    
+    // Log criminal activity
+    log("Criminal " + criminal.name + " detected with " + 
+          itoa(criminal.crimes) + " prior offenses.");
+    
+    if (criminal.crimes >= 10) {
+       act("WANTED: " + criminal.name, A_ALWAYS, criminal, null, null, TO_ROOM);
+       set(criminal.charflags, CHAR_OUTLAW);
+    } else {
+       unset(criminal.charflags, CHAR_OUTLAW);
+    }
+    quit;
+ } dilend
+
+=== Entry Restriction ===
+ dilbegin city_gates();
+ var
+    traveler : unitptr;
+ code
+ {
+    traveler := activator;
+    
+    if (traveler.crimes > 3) {
+       act("Guards block your path. \"Your criminal record prevents entry.\"",
+          A_ALWAYS, self, traveler, null, TO_CHAR);
+       act("The guards turn away " + traveler.name + " at the city gates.", 
+          A_ALWAYS, self, traveler, null, TO_ROOM);
+    } else {
+       act("You pass through the city gates unmolested.", 
+          A_ALWAYS, self, traveler, null, TO_CHAR);
+    }
+    quit;
+ } dilend
 
 == Usage Notes ==
 * Only available on player character units (UNIT_ST_PC)
@@ -15,126 +120,19 @@ The crimes counter typically increases when a character commits criminal acts su
 * Used by justice systems, guard NPCs, and law enforcement mechanics
 * Often checked alongside other character flags like CHAR_OUTLAW
 * The value persists across character sessions and is saved with the player
+* Higher values indicate more serious criminal history
 
-== Examples ==
-=== Basic crime check ===
- dilbegin check_criminal();
- var
-    player : unitptr;
- code
- {
-    player := activator;
-    
-    if (player.crimes > 0)
-        act("You have committed " + itoa(player.crimes) + " crimes.", 
-            A_ALWAYS, player, null, null, TO_CHAR);
-    else
-        act("You have a clean record.", A_ALWAYS, player, null, null, TO_CHAR);
-    
-    quit;
- } dilend
+== Error Handling ==
+The field performs validation:
+* '''Unit validation''' - Ensures unit is a player character
+* '''Type validation''' - Returns fail if unit is not a valid type
+* '''Range validation''' - Validates crime count is within reasonable bounds
 
-=== Law enforcement ===
- dilbegin guard_check();
- var
-    suspect : unitptr;
- code
- {
-    suspect := activator;
-    
-    if (suspect.type == UNIT_ST_PC)
-    {
-        if (suspect.crimes > 5)
-        {
-            act("$1n is a known criminal with " + itoa(suspect.crimes) + 
-                " offenses!", A_ALWAYS, self, suspect, null, TO_ROOM);
-            act("You're under arrest for your crimes!", 
-                    A_ALWAYS, self, suspect, null, TO_CHAR);
-        }
-        else if (suspect.crimes > 0)
-        {
-            act("$1n has a minor criminal record.", A_ALWAYS, self, suspect, null, TO_ROOM);
-        }
-        else
-        {
-            act("$1n has a clean record.", A_ALWAYS, self, suspect, null, TO_ROOM);
-        }
-    }
-    
-    quit;
- } dilend
-
-=== Justice system ===
- dilbegin justice_system();
- var
-    defendant : unitptr;
-    verdict : string;
- code
- {
-    defendant := activator;
-    
-    if (defendant.crimes == 0)
-        verdict := "innocent";
-    else if (defendant.crimes <= 2)
-        verdict := "minor offender";
-    else if (defendant.crimes <= 5)
-        verdict := "criminal";
-    else
-        verdict := "habitual criminal";
-    
-    act("Justice System Verdict: " + verdict, A_ALWAYS, defendant, null, null, TO_CHAR);
-    act("Crimes committed: " + itoa(defendant.crimes), 
-                A_ALWAYS, defendant, null, null, TO_CHAR);
-    
-    quit;
- } dilend
-
-=== Entry restriction ===
- dilbegin city_gates();
- var
-    traveler : unitptr;
- code
- {
-    traveler := activator;
-    
-    if (traveler.crimes > 3)
-    {
-        act("Guards block your path. \"Your criminal record prevents entry.\"",
-                A_ALWAYS, self, traveler, null, TO_CHAR);
-        act("The guards turn away $1n at the city gates.", 
-                A_ALWAYS, self, traveler, null, TO_ROOM);
-    }
-    else
-    {
-        act("You pass through the city gates unmolested.", 
-                A_ALWAYS, self, traveler, null, TO_CHAR);
-    }
-    
-    quit;
- } dilend
-
-=== Crime tracking ===
- dilbegin crime_report();
- var
-    criminal : unitptr;
-    i : integer;
- code
- {
-    criminal := activator;
-    
-    act("=== CRIME REPORT ===", A_ALWAYS, criminal, null, null, TO_CHAR);
-    act("Player: " + criminal.name, A_ALWAYS, criminal, null, null, TO_CHAR);
-    act("Total Crimes: " + itoa(criminal.crimes), A_ALWAYS, criminal, null, null, TO_CHAR);
-    act("Status: " + (isset(criminal.charflags, CHAR_OUTLAW) ? "WANTED" : "CLEAN"),
-                A_ALWAYS, criminal, null, null, TO_CHAR);
-    
-    quit;
- } dilend
-
-== Implementation Details ==
-The crimes field is implemented as a reference to the player's crime counter (getNumberOfCrimesCommittedPtr()). This returns an integer value representing the total number of criminal acts the character has committed. The field is read-only to prevent unauthorized modification of criminal records through DIL code. The value is typically managed by game systems that handle criminal acts and is persisted as part of the player's data.
-
-== See Also ==
+== Related Functions ==
 * [[charflags]] - Character flags including CHAR_OUTLAW
 * [[isplayer]] - Check if a unit is a player character
-* [[quests]] - Quest and achievement tracking
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character unit type
+* [[justice system]] - Law enforcement and crime tracking
+* [[CHAR_OUTLAW]] - Outlaw character flag

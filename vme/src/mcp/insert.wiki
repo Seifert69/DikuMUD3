@@ -1,7 +1,7 @@
 = insert =
+ function: void '''insert'''(sl : stringlist or intlist, i : integer, s : string or integer);
 
-; insert( sl : stringlist or intlist, i : integer, s : string or integer ) 
-: Inserts a value into a stringlist or intlist at the specified index position.
+The '''insert''' function inserts a value into a stringlist or intlist at the specified index position.
 
 == Description ==
 
@@ -9,111 +9,80 @@ The '''insert''' function allows you to insert a value into a stringlist or intl
 
 The function automatically handles both stringlist and intlist types based on the first parameter's type.
 
-== Parameters ==
+== PARAMETERS ==
 
-; sl : stringlist or intlist
-: The stringlist or intlist you are inserting into. This must be a variable reference, not a static list.
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| sl || stringlist or intlist || The list to insert into (must be a variable reference)
+|-
+| i || integer || The index position where the value will be inserted
+|-
+| s || string or integer || The value to insert (type must match list type)
+|}
 
-; i : integer
-: The index position where you want to insert the value. The list will be expanded to accommodate this position if necessary.
-
-; s : string or integer
-: The value you want to insert. For stringlist, this should be a string. For intlist, this should be an integer (or a string that can be converted to an integer).
-
-== Usage ==
+== Examples ==
 
 === Inserting into Stringlist ===
-
- dilbegin insert_string_example();
-    var
-       names : stringlist;
-    code
-    {
-       names := {"Alice", "Charlie", "David"};
-       
-       // Insert "Bob" at position 1 (0-based indexing)
-       insert(names, 1, "Bob");
-       
-       // Result: {"Alice", "Bob", "Charlie", "David"}
-    } dilend
+dilbegin insert_string_example();
+var
+   names : stringlist;
+code
+{
+   names := {"Alice", "Charlie", "David"};
+   
+   // Insert "Bob" at position 1 (0-based indexing)
+   insert(names, 1, "Bob");
+   
+   // Result: {"Alice", "Bob", "Charlie", "David"}
+} dilend
 
 === Inserting into Intlist ===
-
- dilbegin insert_int_example();
-    var
-       numbers : intlist;
-    code
-    {
-       numbers := {10, 30, 40};
-       
-       // Insert 20 at position 1
-       insert(numbers, 1, 20);
-       
-       // Result: {10, 20, 30, 40}
-    } dilend
+dilbegin insert_int_example();
+var
+   numbers : intlist;
+code
+{
+   numbers := {10, 30, 40};
+   
+   // Insert 20 at position 1
+   insert(numbers, 1, 20);
+   
+   // Result: {10, 20, 30, 40}
+} dilend
 
 === Inserting at End ===
+dilbegin insert_at_end();
+var
+   items : stringlist;
+code
+{
+   items := {"first", "second"};
+   
+   // Insert at the end using length()
+   insert(items, length(items), "third");
+   
+   // Result: {"first", "second", "third"}
+} dilend
 
- dilbegin insert_at_end();
-    var
-       items : stringlist;
-    code
-    {
-       items := {"first", "second"};
-       
-       // Insert at the end using length()
-       insert(items, length(items), "third");
-       
-       // Result: {"first", "second", "third"}
-    } dilend
+== Usage Notes ==
 
-=== Practical Example from DIL Code ===
-
-This example from the prompt shows how insert is used in a donation system:
-
- dilbegin donation_system();
-    var
-       donor_names : stringlist;
-       donor_amounts : intlist;
-       donor_name : string;
-       amount : integer;
-    code
-    {
-       // Add new donor at the end of the lists
-       donor_name := "JohnDoe";
-       amount := 100;
-       
-       insert(donor_names, length(donor_names), donor_name);
-       insert(donor_amounts, length(donor_amounts), amount);
-    } dilend
-
-== Return Value ==
-
-This function does not return a value. It modifies the list in-place.
-
-== Indexing ==
-
-The function uses 0-based indexing:
+* The function uses 0-based indexing
 * Position 0 inserts at the beginning of the list
-* Position equal to the current length appends to the end
-* Positions beyond the current length expand the list with empty values
+* Position equal to current length appends to the end
+* Positions beyond current length expand the list with empty values
+* For '''stringlist''': the third parameter should be a string
+* For '''intlist''': the third parameter can be an integer or convertible string
+* The function modifies the list in-place and does not return a value
 
-== Type Handling ==
-
-* For '''stringlist''': The third parameter should be a string
-* For '''intlist''': The third parameter can be an integer or a string that converts to an integer
-
-== Error Conditions ==
+== Error Handling ==
 
 * The first parameter must be a variable reference to a stringlist or intlist
 * The second parameter must be an integer
 * The third parameter must be compatible with the list type
+* Type mismatch errors will occur at compile time if parameters are incorrect
 
-== Performance ==
-
-The insert function is more efficient than manually rebuilding a list when you need to insert elements at specific positions, as it operates directly on the underlying data structure.
-
-== See Also ==
+== Related Functions/Fields ==
 
 * [[stringlist]] - Information about stringlist data structure
 * [[integerlist]] - Information about intlist data structure  
@@ -121,9 +90,8 @@ The insert function is more efficient than manually rebuilding a list when you n
 * [[remove]] - Function to remove elements from a list
 * [[length]] - Function to get the length of a list
 
-== Notes ==
+== See Also ==
 
-* The function modifies the list in-place
-* Indexing is 0-based
-* The list is automatically expanded if inserting beyond current bounds
-* Empty positions are filled with default values (empty strings or 0 for integers)
+* List and array operations
+* Data structure manipulation
+* Type conversion functions

@@ -1,5 +1,5 @@
 = sex =
-field: integer '''.sex''' (Read/Write)
+ field: integer '''.sex''' (Read/Write)
 
 The '''sex''' field is used to get or set the gender of a character unit (PC or NPC).
 
@@ -106,7 +106,7 @@ This field is available on the following unit types:
     {
        // Reset to neutral if invalid
        char.sex := SEX_NEUTRAL;
-       sendtext("Character gender reset to neutral.<br/>", self);
+        sendtext("Character gender reset to neutral.&n", self);
     }
  } dilend
 

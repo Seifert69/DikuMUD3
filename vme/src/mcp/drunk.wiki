@@ -1,12 +1,7 @@
 = drunk =
+ field: integer '''.drunk''' (Read-only)
 
 '''drunk''' is a field accessor that retrieves the drunkenness level of a player character.
-
-== Syntax ==
- integer := unitptr.drunk
-
-== Return Value ==
-Returns an integer representing the character's current drunkenness level.
 
 == Description ==
 The drunk field provides access to a player character's current intoxication level. This value affects various game mechanics and can be used to determine if a character is under the influence of alcohol.
@@ -16,8 +11,19 @@ The drunkenness level typically ranges from:
 * 1-10: Slightly intoxicated
 * 10+: Drunk (visible in score display)
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unitptr.drunk || integer || Current drunkenness level of the character (Read-only)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
 == Usage Notes ==
-* This field is read-only for most DIL programs
 * The value is modified by consuming alcoholic beverages
 * Higher drunkenness levels may affect:
 ** Combat abilities and penalties
@@ -46,7 +52,9 @@ The drunkenness level typically ranges from:
     act("Your status: "+stat, A_ALWAYS, self, null, null, TO_CHAR);
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[thirst]] - Character thirst level
 * [[full]] - Character hunger level
+
+== See Also ==
 * [[unit_st_pc]] - Player character fields

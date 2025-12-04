@@ -1,11 +1,9 @@
 = max_mana =
+ field: integer '''.max_mana''' [Read-only]
 
-== Syntax ==
- field: '''.max_mana'''
-
-== Description ==
 The '''.max_mana''' field is accessed on character units (PC or NPC) and returns the maximum mana points of the character. This represents the highest possible mana value the character can have, which is used as the upper bound for current mana calculations.
 
+== Description ==
 Mana is typically used for casting spells, using magical abilities, and powering special effects.
 
 == Field Access ==

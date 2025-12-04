@@ -166,4 +166,4 @@ The field access will return '''fail''' when:
 * [[fighting]] - Field to check if character is in combat
 * [[sleep]] - Command to put character to sleep
 * [[wake]] - Command to wake up character
-* [[stand]] - Command to make character stand
+* [[stand]] - Command to make character stand 

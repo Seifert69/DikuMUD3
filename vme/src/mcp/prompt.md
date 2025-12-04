@@ -1,19 +1,20 @@
-Execute the shell script getfile.sh which will output <command>.hlp which is the file you must process.
+Execute the  shell script:
 
-Output the file you found to the console so I can see it, then read the <command>.hlp file.
+./check_wiki_status.sh | tail -10
 
-Try to search for examples in the .wiki files in this folder. If need be you can search in other folders too and check the src/mplex/dilpar.y source or the dil files in src/
+For each of the 10 <file>.wiki do this:
 
-In this folder there are many help files form the DIL manual: grep "text" *.hlp to find which files you might want to read.
-In this folder there are many code extracts on disk from YACC & C++. grep "text" *.txt to find which files you might want to read.
+Ensure that the styling adheres to the WikiMedia markdown principles below.
 
-Do NOT create any output about YACC: only use YACC understand the DIL function, procedure, or field.
-Do NOT create any output about C implementation: only use the C code to understand the DIL function, procedure, or field, and to make relevant DIL notes to the user.
+Critically evaluate the code examples so that there is just the amount needed - not too much - not too little. Adjust the examples as necessary.
 
-Then lookup any DIL manual .hlp files that are relevant to understand the function, procedure, or field being described - the DIL manual files might be incorrect as they are very dated.
+If you need to you can cross reference the other .wiki files in this folder. 
 
-Finally with all this knowledge create a high quality WikiMedia markdown article for the function, procedure, or field described in the <command>_prompt.txt file. Output and save the article as a .wiki file with the name <command>.wiki
+It shouldn't be necessary, but you can also cross reference the zone files in ../../zone/*.zon if you need to check a real live working example.
 
+If a .wiki file does NOT need modification then please execute this script once per file to add a spacec so that the file is "modified" (and thus will not be repeated in your next batch of files):
+
+echo -n " " >> <file>.wiki
 
 When creating or editing DikuMUD3 .wiki documentation files, follow this standard:
 
@@ -70,7 +71,7 @@ Always specify:
 
 ## EXAMPLES
 - Use complete DIL code blocks with dilbegin...dilend
-- Include multiple example categories when relevant
+- Include multiple example categories only if relevant
 - Show real-world usage scenarios
 ## CONSISTENCY REQUIREMENTS
 - Use '''bold''' for function/field names in descriptions

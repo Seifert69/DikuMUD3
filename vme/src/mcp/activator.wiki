@@ -1,9 +1,10 @@
 = activator =
+ field: unitptr '''.activator''' (Read-only)
 
 The '''activator''' field is a read-only unit pointer field available in DIL programs that provides access to the unit which activated the current DIL program.
 
-== Syntax ==
- activator
+== Description ==
+This field provides access to the unit that triggered the current DIL program. It's automatically set by the DIL runtime system when a command, spell, or event activates the program.
 
 == Field Access ==
 {| class="wikitable"
@@ -12,21 +13,8 @@ The '''activator''' field is a read-only unit pointer field available in DIL pro
 | activator || unitptr || The unit that activated the current DIL program
 |}
 
-== Return Value ==
-Returns a unit pointer:
-* '''unitptr''' - The unit that activated the DIL program
-* '''null''' - If no unit activated the program
-
-== Field Properties ==
-{| class="wikitable"
-! Property !! Type !! Description
-|-
-| Read/Write || Read-only (RO)
-|-
-| Unit Type || Available in all DIL programs
-|-
-| Context || Only meaningful when program is activated by a command or event
-|}
+== Availability ==
+This field is available in all DIL programs.
 
 == Examples ==
 === Basic Activator Check ===
@@ -37,33 +25,6 @@ Returns a unit pointer:
        send("Program activated by: " + activator.name);
     } else {
        send("No activator for this program.");
-    }
-    quit;
- } dilend
-
-=== Command Processing ===
- dilbegin process_command(player : unitptr);
- code
- {
-    if (activator == player) {
-       send("You activated this command yourself.");
-    } else if (activator != null) {
-       send("This command was activated by: " + activator.name);
-    } else {
-       send("No activator information available.");
-    }
-    quit;
- } dilend
-
-=== Item Interaction ===
- dilbegin item_interaction(item : unitptr);
- code
- {
-    if (activator == item) {
-       send("You are the activator of this item interaction.");
-       act("$1n glows with inner power.", A_ALWAYS, item, null, null, TO_CHAR);
-    } else {
-       send("You are not the activator of this item.");
     }
     quit;
  } dilend
@@ -84,28 +45,6 @@ Returns a unit pointer:
     quit;
  } dilend
 
-=== Multi-Program Coordination ===
- dilbegin coordinator_example();
- var
-    last_activator : unitptr;
- code
- {
-    if (activator != null) {
-       last_activator := activator;
-       send("Current activator: " + activator.name);
-    } else {
-       send("No activator set.");
-    }
-    
-    wait(SFB_CMD, command("check"));
-    
-    if (activator != null and activator != last_activator) {
-       send("Activator changed from: " + last_activator.name + " to: " + activator.name);
-       last_activator := activator;
-    }
-    quit;
- } dilend
-
 === Spell Casting Detection ===
  dilbegin spell_detection();
  code
@@ -120,19 +59,6 @@ Returns a unit pointer:
        }
     } else {
        send("No activator information available.");
-    }
-    quit;
- } dilend
-
-=== Trap Activation ===
- dilbegin trap_trigger(trap : unitptr, victim : unitptr);
- code
- {
-    if (activator == trap) {
-       act("$1n is triggered by your presence!", A_ALWAYS, trap, null, victim, TO_VICT);
-       send("You have activated the trap.");
-    } else {
-       send("You did not activate this trap.");
     }
     quit;
  } dilend

@@ -1,9 +1,10 @@
 = addaff =
+ function: void '''addaff'''(character : unitptr, affect_id : integer, duration : integer, beat : integer, data0 : integer, data1 : integer, data2 : integer, tif_first : integer, tif_last : integer, apf : integer, tif_tick : integer);
 
 The '''addaff''' function is a built-in DIL (DikuMUD Interactive Language) function that adds a new affect to a character unit.
 
-== Syntax ==
- addaff(unitptr character, integer affect_id, integer duration, integer beat, integer data0, integer data1, integer data2, integer tif_first, integer tif_last, integer apf, integer tif_tick)
+== Description ==
+This function adds a new affect to a character with comprehensive control over duration, timing, data values, and behavior flags. It's commonly used for combat systems, magic effects, and temporary character modifications.
 
 == Parameters ==
 {| class="wikitable"
@@ -31,9 +32,6 @@ The '''addaff''' function is a built-in DIL (DikuMUD Interactive Language) funct
 |-
 | tif_tick || integer || Tick interval modifier (TIF_XXX flags)
 |}
-
-== Return Value ==
-This function does not return a value (void).
 
 == Affect ID Constants ==
 The affect_id parameter accepts any of the following constants defined in values.h or vme.h:
@@ -193,7 +191,7 @@ The tif_first and tif_last parameters modify when the affect triggers:
  dilbegin blind_target(victim : unitptr);
  code
  {
-    addaff(victim, ID_BLIND, 10, 0, 0, 0, APF_DURATION | APF_FIRST, TIF_EVERY);
+    addaff(victim, ID_BLIND, 40, 0, 0, 0, 0, 0, APF_DURATION | APF_FIRST, 0);
     send("You have been blinded!");
     quit;
  } dilend
@@ -202,7 +200,7 @@ The tif_first and tif_last parameters modify when the affect triggers:
  dilbegin invisibility_spell(caster : unitptr, target : unitptr);
  code
  {
-    addaff(target, ID_INVISIBLE, 5, 0, 0, 0, APF_DURATION | APF_FIRST);
+    addaff(target, ID_INVISIBLE, 20, 0, 0, 0, 0, 0, APF_DURATION | APF_FIRST, 0);
     send("You fade from view.");
     quit;
  } dilend
@@ -211,7 +209,7 @@ The tif_first and tif_last parameters modify when the affect triggers:
  dilbegin sanctuary_bless(player : unitptr);
  code
  {
-    addaff(player, ID_SANCTUARY, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
+    addaff(player, ID_SANCTUARY, -1, 0, 0, 0, 0, 0, APF_DURATION | APF_FIRST, 0);
     send("You feel protected by divine power.");
     quit;
  } dilend
@@ -220,17 +218,8 @@ The tif_first and tif_last parameters modify when the affect triggers:
  dilbegin poison_damage(victim : unitptr);
  code
  {
-    addaff(victim, ID_POISON, 1, 0, 0, 0, APF_DURATION | APF_TICK | TIF_EVERY);
+    addaff(victim, ID_POISON, 100, 4, 0, 0, 0, 0, APF_DURATION | APF_TICK, TIF_EVERY);
     send("You feel poison coursing through your veins!");
-    quit;
- } dilend
-
-=== Regeneration Buff ===
- dilbegin regeneration_aura(player : unitptr);
- code
- {
-    addaff(player, ID_REGENERATION, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
-    send("You feel a warm regenerative aura.");
     quit;
  } dilend
 
@@ -238,42 +227,9 @@ The tif_first and tif_last parameters modify when the affect triggers:
  dilbegin combat_enhancement(player : unitptr);
  code
  {
-    addaff(player, ID_WEAPON_DAMAGE, 5, 0, 0, 0, APF_DURATION | APF_FIRST);
-    addaff(player, ID_SKILL_DAMAGE, 3, 0, 0, 0, APF_DURATION | APF_FIRST);
-    addaff(player, ID_ARMOR, 2, 0, 0, 0, APF_DURATION | APF_FIRST);
+    addaff(player, ID_WEAPON_DAMAGE, -1, 0, 5, 0, 0, 0, APF_DURATION | APF_FIRST, 0);
+    addaff(player, ID_SKILL_DAMAGE, -1, 0, 3, 0, 0, 0, APF_DURATION | APF_FIRST, 0);
     send("You feel enhanced for combat!");
-    quit;
- } dilend
-
-=== Stacking Affects ===
- dilbegin stacking_bonuses(player : unitptr);
- code
- {
-    addaff(player, ID_DAMAGE, 2, 0, 0, 0, APF_CUMULATIVE | APF_FIRST);
-    addaff(player, ID_DAMAGE, 3, 0, 0, 0, APF_CUMULATIVE | APF_FIRST);
-    send("You have multiple damage bonuses!");
-    quit;
- } dilend
-
-=== Timed Spell Effect ===
- dilbegin timed_spell_effect(caster : unitptr, target : unitptr);
- code
- {
-    addaff(target, ID_SPELL, 10, 0, 0, 0, APF_DURATION | APF_FIRST | TIF_EVERY);
-    send("You are magically enhanced!");
-    quit;
- } dilend
-
-=== Conditional Affect ===
- dilbegin conditional_affect(player : unitptr, condition : integer);
- code
- {
-    if (condition > 0) {
-       addaff(player, ID_GOOD, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
-    } else {
-       addaff(player, ID_EVIL, -1, 0, 0, 0, APF_DURATION | APF_FIRST);
-    }
-    send("Your alignment has been affected.");
     quit;
  } dilend
 

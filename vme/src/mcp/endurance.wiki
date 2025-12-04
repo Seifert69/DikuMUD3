@@ -1,12 +1,7 @@
 = endurance =
+ field: integer '''.endurance''' (Read/Write)
 
 '''endurance''' is a field accessor that retrieves the current endurance points of a character.
-
-== Syntax ==
- integer := unitptr.endurance
-
-== Return Value ==
-Returns an integer representing the character's current endurance points.
 
 == Description ==
 The endurance field provides access to a character's current endurance (stamina) points. Endurance represents physical stamina and is consumed by various activities such as:
@@ -21,8 +16,19 @@ Endurance works alongside:
 * '''hp''' - Health points
 * '''mana''' - Magic points
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unitptr.endurance || integer || Current endurance points of the character (Read/Write)
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+
 == Usage Notes ==
-* This field is read-write for most DIL programs
 * Endurance naturally regenerates over time
 * When endurance reaches 0, characters may become exhausted or incapacitated
 * The field is commonly used in:
@@ -64,8 +70,10 @@ Endurance works alongside:
     goto start;
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[max_endurance]] - Maximum endurance points
 * [[hp]] - Health points
 * [[mana]] - Magic points
+
+== See Also ==
 * [[unit_st_pc]] - Player character fields

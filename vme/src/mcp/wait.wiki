@@ -59,36 +59,6 @@ The '''wait''' function suspends DIL program execution until a message matching 
    exec("say All done cleaning for now.", self);
  } dilend
 
-=== Complex Event Handling ===
- dilbegin item_recharger();
- var
-   item : unitptr;
-   player : unitptr;
- 
- code
- {
-   :start:
-   wait(SFB_DONE, (command("give") and (self == target)));
-   
-   player := activator;
-   item := medium;
-   
-   if (item.type != UNIT_ST_OBJ)
-   {
-     exec("say I can only recharge magical items.", self);
-     goto start;
-   }
-   
-   if ((item.objecttype != ITEM_WAND) and (item.objecttype != ITEM_STAFF))
-   {
-     exec("say This is not a rechargeable item.", self);
-     goto start;
-   }
-   
-   exec("say I will recharge your " + item.name + " for a fee.", self);
-   goto start;
- } dilend
-
 === Message Communication ===
  dilbegin message_handler();
  var
@@ -115,32 +85,6 @@ The '''wait''' function suspends DIL program execution until a message matching 
    else
    {
      sendto(sender, "Unknown command: " + msg);
-   }
-   
-   goto start;
- } dilend
-
-=== Multiple Event Types ===
- dilbegin multi_event_handler();
- var
-   event_type : integer;
- 
- code
- {
-   :start:
-   wait(SFB_TICK | SFB_CMD | SFB_MSG, TRUE);
-   
-   if (command(CMD_AUTO_TICK))
-   {
-     exec("emote looks around periodically.", self);
-   }
-   else if (command("hello"))
-   {
-     exec("say Hello there, " + activator.name + "!", self);
-   }
-   else if (command(CMD_AUTO_MSG))
-   {
-     sendtext("Received message: " + argument + "<br/>", self);
    }
    
    goto start;

@@ -36,7 +36,6 @@ Common race constants include:
 * '''RACE_HALF_ELF''' - Half-elf race
 * '''RACE_GROLL''' - Troll race
 * '''RACE_DARK_ELF''' - Dark elf race
-* '''RACE_HALF_ORC''' - Half-orc race
 * '''RACE_HALF_DROW''' - Dark elf (drow) race
 
 == Examples ==

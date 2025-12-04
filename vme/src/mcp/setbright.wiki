@@ -1,5 +1,5 @@
 = setbright =
-function: void '''setbright'''(unit : unitptr, brightness : integer);
+ function: void '''setbright'''(unit : unitptr, brightness : integer);
 
 The '''setbright''' function is used to set the light output brightness of a unit.
 
@@ -8,7 +8,7 @@ This function sets the amount of light that a unit emits into its environment. T
 
 Units with brightness values greater than zero will light up rooms and enable players to see in otherwise dark environments.
 
-== Parameters ==
+== PARAMETERS ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
@@ -31,7 +31,7 @@ The brightness parameter should be a positive integer representing the desired l
     {
        // Set torch to emit light
        setbright(torch, 2);
-       sendtext("The torch bursts into flame!<br/>", self);
+        sendtext("The torch bursts into flame!&n", self);
     }
  } dilend
 
@@ -57,9 +57,9 @@ The brightness parameter should be a positive integer representing the desired l
     setbright(item, new_bright);
     
     if (new_bright > current_bright)
-       sendtext("The item glows more brightly.<br/>", self);
+        sendtext("The item glows more brightly.&n", self);
     else
-       sendtext("The item dims slightly.<br/>", self);
+        sendtext("The item dims slightly.&n", self);
  } dilend
 
 === Random Light Generation ===
@@ -105,7 +105,7 @@ The brightness parameter should be a positive integer representing the desired l
     
     // Boost brightness temporarily
     setbright(target, original_bright + 5);
-    sendtext("The item flares with brilliant light!<br/>", self);
+     sendtext("The item flares with brilliant light!&n", self);
     
     // Wait for duration
     for (i := 0; i < duration; i := i + 1)
@@ -115,7 +115,7 @@ The brightness parameter should be a positive integer representing the desired l
     
     // Restore original brightness
     setbright(target, original_bright);
-    sendtext("The light returns to normal.<br/>", self);
+     sendtext("The light returns to normal.&n", self);
  } dilend
 
 === Conditional Lighting ===

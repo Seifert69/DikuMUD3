@@ -1,65 +1,127 @@
 = baseweight =
+ function: integer '''baseweight'''(unit : unitptr);
+
+The '''baseweight''' function returns the base weight of a unit without contents.
 
 == Description ==
-Returns the base weight of a unit. This represents the empty weight of the unit without any contents or additional weight.
-
-== Syntax ==
- baseweight(unit)
+Returns the base weight of a unit. This represents the empty weight of a unit without any contents or additional weight.
 
 == Parameters ==
-; unit : unitptr
-: The unit whose base weight is being retrieved
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose base weight is being retrieved
+|}
 
 == Return Value ==
-: integer
-: The base weight of the unit in grams
+Returns an integer:
+* '''integer''' - The base weight of the unit in grams
+* '''fail''' - If unit parameter is invalid
 
 == Examples ==
- dilbegin check_weight();
+=== Weight Comparison ===
+ dilbegin compare_weights();
  var
-  base_wt : integer;
-  current_wt : integer;
+    base_wt : integer;
+    current_wt : integer;
  code
  {
-  :start:
-  base_wt := baseweight(self);
-  current_wt := weight(self);
-  sendtext("Base weight: " + itoa(base_wt) + "g<br/>", self);
-  sendtext("Current weight: " + itoa(current_wt) + "g<br/>", self);
+    base_wt := baseweight(self);
+    current_wt := weight(self);
+    send("Base weight: " + itoa(base_wt) + "g");
+    send("Current weight: " + itoa(current_wt) + "g");
+    send("Contents weight: " + itoa(current_wt - base_wt) + "g");
+    quit;
  } dilend
 
+=== Item Creation ===
+ dilbegin create_item_weight();
+ var
+    new_item : unitptr;
+    target_weight : integer;
+ code
+ {
+    target_weight := atoi(argument);
+    if (target_weight > 0) {
+       new_item := load("generic_item");
+       set_weight_base(new_item, target_weight);
+       send("Item created with base weight: " + itoa(target_weight) + "g");
+    } else {
+       send("Invalid weight specified.");
+    }
+    quit;
+ } dilend
+
+=== Corpse Processing ===
  dilbegin decapitation_example();
  var
-  corpse : unitptr;
-  head : unitptr;
+    corpse : unitptr;
+    head : unitptr;
+    head_weight : integer;
  code
  {
-  :start:
-  corpse := medium;
-  if (corpse.type == UNIT_ST_OBJ)
-  {
-    head := load("head@death");
-    set_weight_base(head, baseweight(corpse) / 70);
-    if (head.baseweight > 100)
-    {
-      set_weight_base(head, 100);
+    corpse := medium;
+    if (corpse != null and corpse.type == UNIT_ST_OBJ) {
+       head := load("head@death");
+       head_weight := baseweight(corpse) / 70;
+       set_weight_base(head, head_weight);
+       
+       if (head.baseweight > 100) {
+          set_weight_base(head, 100);
+       }
+       if (head.baseweight < 1) {
+          set_weight_base(head, 1);
+       }
+       send("Head created with appropriate weight.");
+    } else {
+       send("No valid corpse found.");
     }
-    if (head.baseweight < 1)
-    {
-      set_weight_base(head, 1);
-    }
-  }
+    quit;
  } dilend
 
-== Notes ==
+=== Weight Validation ===
+ dilbegin check_weight_limits(item : unitptr);
+ var
+    item_base : integer;
+ code
+ {
+    if (item != null) {
+       item_base := baseweight(item);
+       if (item_base > 50000) {
+          send("Item is extremely heavy (" + itoa(item_base) + "g)");
+       } else if (item_base > 10000) {
+          send("Item is very heavy (" + itoa(item_base) + "g)");
+       } else if (item_base > 5000) {
+          send("Item is heavy (" + itoa(item_base) + "g)");
+       } else {
+          send("Item weight is reasonable (" + itoa(item_base) + "g)");
+       }
+    } else {
+       send("No item specified.");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
 * This is a read-only property that returns the empty weight of a unit
 * Base weight is different from current weight (which includes contents)
 * Used in calculations for item creation, weight limits, and encumbrance
 * Base weight is typically used with set_weight_base() function
 * Weight values are in grams
 * Commonly used in corpse processing, item creation, and equipment systems
+* Base weight remains constant throughout the unit's lifetime
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Type validation''' - Returns fail if unit is not a valid type
+* '''Range validation''' - Validates weight is within reasonable bounds
+
+== Related Functions ==
+* [[weight]] - For getting the current weight including contents
+* [[set_weight_base]] - For setting the base weight of a unit
+* [[capacity]] - For checking the weight capacity of containers
 
 == See Also ==
-* weight - For getting the current weight including contents
-* set_weight_base - For setting the base weight of a unit
-* capacity - For checking weight capacity of containers
+* [[unitptr]] - Unit pointer data type
+* [[grams]] - Weight unit system

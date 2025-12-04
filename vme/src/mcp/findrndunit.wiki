@@ -1,18 +1,7 @@
 = findrndunit =
+ function: unitptr '''findrndunit'''(u : unitptr, sv : integer, uf : integer);
 
-== Syntax ==
- unitptr findrndunit( u : unitptr, sv : integer, uf : integer)
-
-== Parameters ==
-; u : unitptr
-: The unit pointer which the search is relative to.
-; sv : integer
-: The search-location, a value (not bit vector) of FIND_UNIT_XXX
-; uf : integer
-: Bit vector. The unit flags which can match of UNIT_ST_XXX
-
-== Return Value ==
-Returns a pointer to a random unit, or null if no matching unit is found.
+The '''findrndunit''' function returns a random unit that matches the specified criteria within a defined search environment.
 
 == Description ==
 This routine returns a random unit that matches the specified criteria. The function searches within the defined environment and returns a unit of the specified type(s).
@@ -21,56 +10,36 @@ The '''uf''' parameter lets you specify exactly what unit types to look for usin
 
 The '''sv''' parameter is not a bit vector, although FIND_UNIT_XXX is usually used as such. If you need to search multiple environments, then call the routine once for each.
 
-== Search Location Values (sv) ==
-The following FIND_UNIT_* values can be used for the search location:
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The unit pointer which the search is relative to
+|-
+| sv || integer || The search-location, a value (not bit vector) of FIND_UNIT_XXX
+|-
+| uf || integer || Bit vector. The unit flags which can match of UNIT_ST_XXX
+|}
 
-; FIND_UNIT_EQUIP
-: The objects you will see with `equipment'. Assumes first argument is a char.
+== Examples ==
+u := findrndunit(self, FIND_UNIT_ZONE, UNIT_ST_PC|UNIT_ST_NPC);
 
-; FIND_UNIT_INVEN
-: The objects you will see with `inventory' or `look in bag'
+== Usage Notes ==
+* The '''sv''' parameter is a single value, not a bit vector
+* The '''uf''' parameter is a bit vector that can combine multiple UNIT_ST_* flags
+* Using FIND_UNIT_PAY or FIND_UNIT_NOPAY will filter by player payment status
+* For rooms, payment status affects accessibility
+* For objects, payment status filtering returns null
 
-; FIND_UNIT_SURRO
-: The objects you can see, and get with `get', or the characters you can `poke'
+== Error Handling ==
+* Returns null if no matching unit is found
+* Invalid search location values may cause unexpected behavior
 
-; FIND_UNIT_ZONE
-: As FIND_UNIT_WORLD, only more local.
-
-; FIND_UNIT_WORLD
-: Any object in the entire world. Does NOT start looking close to the object of findrndunit's first argument, but rather somewhat randomly.
-
-; FIND_UNIT_IN_ME
-: Anything inside of the object of the first argument.
-
-; FIND_UNIT_HERE
-: Anything `here', i.e. in object or around it (same as IN_ME + SURRO)
-
-; FIND_UNIT_GLOBAL
-: ANYTHING, starting close to object and working out.
-
-== Unit Type Flags (uf) ==
-The following UNIT_ST_* flags can be combined to specify which unit types to match:
-
-; UNIT_ST_PC
-: Player characters
-
-; UNIT_ST_NPC
-: Non-player characters (mobiles)
-
-; UNIT_ST_OBJ
-: Objects
-
-; UNIT_ST_ROOM
-: Rooms
-
-== Special Notes ==
-Using FIND_UNIT_PAY or FIND_UNIT_NOPAY in this function will pick a random player which in addition to being in the search environment also is registered as valid payer (or not). Asking for a room would yield a random room registered to be accessible for paying players only (or not). Asking for objects would return no unit (null).
-
-== Example ==
- u := findrndunit(self, FIND_UNIT_ZONE, UNIT_ST_PC|UNIT_ST_NPC);
-
-This example finds a random character (either player or NPC) within the same zone as the calling unit.
+== Related Functions/Fields ==
+* [[findunit()]] - Find a specific unit by name
+* [[findsymbolic()]] - Find a unit by symbolic name
+* [[foreach()]] - Iterate through units of specific types
 
 == See Also ==
-* [[Manual:DIL Manual/findunit()|findunit()]] - Find a specific unit by name
-* [[Manual:DIL Manual/foreach()|foreach()]] - Iterate through units of specific types
+* FIND_UNIT_* constants documentation
+* UNIT_ST_* constants documentation

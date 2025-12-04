@@ -1,67 +1,124 @@
 = birth =
+ function: integer '''birth'''(unit : unitptr);
+
+The '''birth''' function returns the birth time of a player character.
 
 == Description ==
 Returns the birth time of a player character. This represents when the character was created in the game.
 
-== Syntax ==
- birth(unit)
-
 == Parameters ==
-; unit : unitptr
-: The player character whose birth time is being retrieved
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The player character whose birth time is being retrieved
+|}
 
 == Return Value ==
-: integer
-: The Unix timestamp when the character was created
+Returns an integer:
+* '''integer''' - The Unix timestamp when the character was created
+* '''fail''' - If unit parameter is invalid or not a player
 
 == Examples ==
+=== Character Age ===
  dilbegin check_age();
  var
-  birth_time : integer;
-  age_days : integer;
+    birth_time : integer;
+    age_days : integer;
  code
  {
-  :start:
-  birth_time := birth(self);
-  age_days := (realtime - birth_time) / (60 * 60 * 24);
-  sendtext("You are " + itoa(age_days) + " days old.<br/>", self);
+    birth_time := birth(self);
+    age_days := (realtime - birth_time) / (60 * 60 * 24);
+    send("You are " + itoa(age_days) + " days old.");
+    quit;
  } dilend
 
+=== Character Information ===
  dilbegin character_info();
  var
-  creation_time : integer;
-  creation_date : string;
+    creation_time : integer;
+    creation_date : string;
  code
  {
-  :start:
-  creation_time := birth(activator);
-  creation_date := asctime(creation_time);
-  sendtext("Character created: " + creation_date + "<br/>", activator);
+    creation_time := birth(activator);
+    creation_date := asctime(creation_time);
+    send("Character created: " + creation_date);
+    quit;
  } dilend
 
+=== Birthday Check ===
  dilbegin birthday_check();
  var
-  char_birth : integer;
-  current_time : integer;
-  years_old : integer;
+    char_birth : integer;
+    current_time : integer;
+    years_old : integer;
  code
  {
-  :start:
-  char_birth := birth(self);
-  current_time := realtime;
-  years_old := (current_time - char_birth) / (60 * 60 * 24 * 365);
-  sendtext("You are " + itoa(years_old) + " years old.<br/>", self);
+    char_birth := birth(self);
+    current_time := realtime;
+    years_old := (current_time - char_birth) / (60 * 60 * 24 * 365);
+    send("You are " + itoa(years_old) + " years old.");
+    quit;
  } dilend
 
-== Notes ==
-* This is a read-only property that returns character creation time
+=== Account Age Verification ===
+ dilbegin verify_account_age(minimum_days : integer);
+ var
+    player_birth : integer;
+    account_age : integer;
+ code
+ {
+    player_birth := birth(activator);
+    account_age := (realtime - player_birth) / (60 * 60 * 24);
+    
+    if (account_age >= minimum_days) {
+       send("Account is old enough: " + itoa(account_age) + " days.");
+    } else {
+       send("Account is too young: " + itoa(account_age) + " days (minimum: " + itoa(minimum_days) + ")");
+    }
+    quit;
+ } dilend
+
+=== Veteran Status ===
+ dilbegin check_veteran_status();
+ var
+    char_birth : integer;
+    days_old : integer;
+ code
+ {
+    char_birth := birth(self);
+    days_old := (realtime - char_birth) / (60 * 60 * 24);
+    
+    if (days_old >= 365) {
+       send("You are a veteran player (" + itoa(days_old) + " days old)!");
+    } else if (days_old >= 30) {
+       send("You are an experienced player (" + itoa(days_old) + " days old).");
+    } else {
+       send("You are a new player (" + itoa(days_old) + " days old).");
+    }
+    quit;
+ } dilend
+
+== Usage Notes ==
+* This is a read-only property that returns the character creation time
 * The value is a Unix timestamp (seconds since epoch)
 * Commonly used with asctime() to convert to readable format
 * Used for age calculations, character history, and account management
 * Birth time is set when a character is first created and never changes
 * The timestamp can be used for various time-based calculations
+* Only works on player characters (UNIT_ST_PC), not NPCs
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Type validation''' - Returns fail if unit is not a player character
+* '''Range validation''' - Validates timestamp is within reasonable bounds
+
+== Related Functions ==
+* [[asctime]] - For converting timestamp to readable date format
+* [[realtime]] - For getting the current time
+* [[age calculations]] - For determining character age from birth time
 
 == See Also ==
-* asctime - For converting timestamp to readable date format
-* realtime - For getting current time
-* age calculations - For determining character age from birth time
+* [[UNIT_ST_PC]] - Player character unit type
+* [[Unix timestamp]] - Unix epoch time system
+* [[account management]] - Player account systems

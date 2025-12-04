@@ -1,70 +1,126 @@
 = bright =
+ function: integer '''bright'''(unit : unitptr);
+
+The '''bright''' function returns the light output value of a unit.
 
 == Description ==
 Returns the light output value of a unit. This function gets the brightness level for light-producing units like torches or lanterns.
 
-== Syntax ==
- bright(unit)
-
 == Parameters ==
-; unit : unitptr
-: The unit whose brightness value is being retrieved
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| unit || unitptr || The unit whose brightness value is being retrieved
+|}
 
 == Return Value ==
-: integer
-: The light output value of the unit
+Returns an integer:
+* '''integer''' - The light output value of the unit
+* '''fail''' - If unit parameter is invalid
 
 == Examples ==
+=== Check Torch Brightness ===
  dilbegin check_torch();
  var
-  torch_brightness : integer;
+    torch_brightness : integer;
  code
  {
-  :start:
-  torch_brightness := bright(self);
-  sendtext("Torch brightness: " + itoa(torch_brightness) + "<br/>", self);
+    torch_brightness := bright(self);
+    send("Torch brightness: " + itoa(torch_brightness));
+    quit;
  } dilend
 
+=== Adjust Light Source ===
  dilbegin adjust_light();
  var
-  light_obj : unitptr;
+    light_obj : unitptr;
  code
  {
-  :start:
-  light_obj := findunit(self.outside, "torch", FIND_UNIT_SURRO, null);
-  if (light_obj.type == UNIT_ST_OBJ and light_obj.objecttype == ITEM_LIGHT)
-  {
-    setbright(light_obj, 5);
-    sendtext("You adjust the torch to brightness 5.<br/>", self);
-  }
+    light_obj := findunit(self.outside, "torch", FIND_UNIT_SURRO, null);
+    if (light_obj != null and light_obj.type == UNIT_ST_OBJ and light_obj.objecttype == ITEM_LIGHT) {
+       setbright(light_obj, 5);
+       send("You adjust the torch to brightness 5.");
+    } else {
+       send("No torch found here.");
+    }
+    quit;
  } dilend
 
+=== Light Level Check ===
+ dilbegin check_room_light();
+ var
+    current_bright : integer;
+ code
+ {
+    current_bright := bright(self);
+    if (current_bright > 0) {
+       send("The room is illuminated by your light.");
+    } else {
+       send("The light source is not providing illumination.");
+    }
+    quit;
+ } dilend
+
+=== Multiple Light Sources ===
+ dilbegin count_lights();
+ var
+    total_brightness : integer;
+    item : unitptr;
+ code
+ {
+    total_brightness := 0;
+    
+    // Check all light sources in inventory
+    foreach (item in self.inside) {
+       if (item.type == UNIT_ST_OBJ and item.objecttype == ITEM_LIGHT) {
+          total_brightness := total_brightness + bright(item);
+       }
+    }
+    
+    send("Total light output: " + itoa(total_brightness));
+    quit;
+ } dilend
+
+=== Magical Light ===
  dilbegin magical_light();
  var
-  current_bright : integer;
+    light_level : integer;
  code
  {
-  :start:
-  current_bright := bright(self);
-  if (current_bright > 0)
-  {
-    sendtext("The room is illuminated by your light.<br/>", activator);
-  }
-  else
-  {
-    sendtext("The light source is not providing illumination.<br/>", activator);
-  }
+    light_level := bright(self);
+    if (light_level >= 10) {
+       send("Your light source shines brilliantly!");
+    } else if (light_level >= 5) {
+       send("Your light source glows brightly.");
+    } else if (light_level > 0) {
+       send("Your light source glows dimly.");
+    } else {
+       send("Your light source is not providing illumination.");
+    }
+    quit;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * This is a read-only property that returns light output value
 * Only applies to units that can produce light (lights, torches, etc.)
 * The brightness value affects how much light the unit provides to its surroundings
 * Higher brightness values provide more illumination
 * Commonly used with light-producing objects and room lighting calculations
 * The function is read-only - use setbright() to modify brightness
+* Brightness values are typically in range 0-20 for most light sources
+
+== Error Handling ==
+The function performs validation:
+* '''Unit validation''' - Ensures unit is a valid unit pointer
+* '''Type validation''' - Returns fail if unit is not a valid type
+* '''Property validation''' - Validates that unit has brightness property
+
+== Related Functions ==
+* [[setbright]] - For setting the brightness of a unit
+* [[islight]] - For checking if a unit produces light
+* [[light]] - For getting current light level of a room
 
 == See Also ==
-* setbright - For setting the brightness of a unit
-* islight - For checking if a unit produces light
-* light - For getting the current light level of a room
+* [[ITEM_LIGHT]] - Light object type constant
+* [[unitptr]] - Unit pointer data type
+* [[illumination]] - Room lighting system

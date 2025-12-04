@@ -1,10 +1,9 @@
 = natural_armour =
 
-== Syntax ==
- field: '''.natural_armour''' (Read/Write)
+ field: integer '''.natural_armour''' (Read/Write)
 
 == Description ==
-The '''natural_armour''' field specifies the natural armor class of an NPC character when not wearing any equipment. This field determines the base armor protection that an NPC has inherently, without relying on worn items. It represents the NPC's innate defensive capabilities.
+The '''natural_armour''' field specifies the base armor class of an NPC when not wearing equipment.
 
 == Field Access ==
 {| class="wikitable"
@@ -20,94 +19,27 @@ This field is available on the following unit types:
 * UNIT_ST_NPC (Non-Player Character)
 
 == Examples ==
- dilbegin set_npc_armor(npc : unitptr, armor_type : integer);
+ dilbegin set_npc_armor(npc : unitptr, armor_value : integer);
+ code
+ {
+    npc.natural_armour := armor_value;
+    exec("say NPC armor set to: " + itoa(armor_value), self);
+ } dilend
+
+ dilbegin check_npc_protection(npc : unitptr);
  var
     current_armor : integer;
  code
  {
-    if (npc.type != UNIT_ST_NPC)
-    {
-       exec("say That's not an NPC!", self);
-       return;
-    }
-    
     current_armor := npc.natural_armour;
-    exec("say Current natural armor: " + itoa(current_armor), self);
-    
-    // Set new natural armor value
-    npc.natural_armour := armor_type;
-    exec("say Natural armor changed to: " + itoa(armor_type), self);
- } dilend
-
- dilbegin create_guard();
- var
-    new_guard : unitptr;
- code
- {
-    // Create a new guard NPC
-    new_guard := load("guard_template@midgaard");
-    
-    if (new_guard != null)
+    if (current_armor > 50)
     {
-       // Set guard's natural armor to a reasonable value
-       new_guard.natural_armour := 50;  // Medium armor class
-       
-       exec("say New guard created with natural armor: " + itoa(new_guard.natural_armour), self);
+       exec("say This NPC has heavy natural armor.", self);
     }
     else
     {
-       exec("say Failed to create guard.", self);
+       exec("say This NPC has light natural armor.", self);
     }
- } dilend
-
- dilbegin armor_comparison(npc1 : unitptr, npc2 : unitptr);
- var
-    armor1 : integer;
-    armor2 : integer;
- code
- {
-    if ((npc1.type != UNIT_ST_NPC) or (npc2.type != UNIT_ST_NPC))
-    {
-       exec("say Both units must be NPCs!", self);
-       return;
-    }
-    
-    armor1 := npc1.natural_armour;
-    armor2 := npc2.natural_armour;
-    
-    exec("say NPC 1 natural armor: " + itoa(armor1), self);
-    exec("say NPC 2 natural armor: " + itoa(armor2), self);
-    
-    if (armor1 > armor2)
-    {
-       exec("say NPC 1 has better natural armor.", self);
-    }
-    else if (armor2 > armor1)
-    {
-       exec("say NPC 2 has better natural armor.", self);
-    }
-    else
-    {
-       exec("say Both NPCs have equal natural armor.", self);
-    }
- } dilend
-
- dilbegin reset_npc_armor(npc : unitptr);
- var
-    original_armor : integer;
- code
- {
-    if (npc.type != UNIT_ST_NPC)
-    {
-       exec("say That's not an NPC!", self);
-       return;
-    }
-    
-    // Store original value and reset to default
-    original_armor := npc.natural_armour;
-    npc.natural_armour := 0;  // No natural armor
-    
-    exec("say NPC armor reset from " + itoa(original_armor) + " to 0", self);
  } dilend
 
 == Usage Notes ==
@@ -135,4 +67,4 @@ This field is available on the following unit types:
 * Unit type constants: '''UNIT_ST_NPC''', '''UNIT_ST_PC'''
 * Combat-related fields: '''attack_type''', '''natural_armour'''
 * NPC creation functions: [[reset_race]], [[reset_level]]
-* Equipment functions: [[addequip]], [[unequip]]
+* Equipment functions: [[addequip]], [[unequip]] 

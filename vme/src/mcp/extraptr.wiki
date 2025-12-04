@@ -210,4 +210,4 @@ code
 * Quest system documentation
 * Unit data structures
 * Stringlist and integerlist types
-* Pointer types (unitptr, cmdptr, zoneptr)
+* Pointer types (unitptr, cmdptr, zoneptr) 

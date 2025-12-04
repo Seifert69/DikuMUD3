@@ -4,7 +4,7 @@ function: '''addequip'''(u : unitptr, i : integer);
 The '''addequip''' function equips an object unit to a specific equipment position on a character.
 
 == Description ==
-The '''addequip''' procedure equips an object unit (presumed to be in the inventory of a PC/NPC) to the specified equipment position. The object must be in the character's inventory before calling this function. The equipment position is specified using one of the WEAR_* constants defined in values.h and/or vme.h.
+The '''addequip''' function equips an object unit to the specified equipment position. The object must be in the character's inventory before calling this function. The equipment position is specified using one of the WEAR_* constants.
 
 == Parameters ==
 {| class="wikitable"
@@ -16,6 +16,7 @@ The '''addequip''' procedure equips an object unit (presumed to be in the invent
 |}
 
 == Examples ==
+<<<<<<< Updated upstream
 === Basic Equipment Usage ===
 dilbegin equip_ring(ch : unitptr, ring : unitptr);
 code
@@ -34,9 +35,24 @@ code
    else
    {
       act("You're already wearing two rings.", A_ALWAYS, ch, null, null, TO_CHAR);
+=======
+dilbegin equip_item(item : unitptr);
+code
+{
+   if (equipment(activator, WEAR_FINGER_L) == null)
+   {
+      addequip(item, WEAR_FINGER_L);
+      act("You put $2n on your left finger.", A_ALWAYS, activator, item, null, TO_CHAR);
    }
+   else
+   {
+      sendto("Your left finger is already occupied.", activator);
+>>>>>>> Stashed changes
+   }
+   quit;
 } dilend
 
+<<<<<<< Updated upstream
 === Weapon Equipment ===
 dilbegin equip_weapon(ch : unitptr, weapon : unitptr);
 code
@@ -45,10 +61,20 @@ code
    var wielded : unitptr;
    wielded := equipment(ch, WEAR_WIELD);
    if (wielded)
+=======
+dilbegin equip_weapon(new_weapon : unitptr);
+var
+   current_weapon : unitptr;
+code
+{
+   current_weapon := equipment(activator, WEAR_WIELD);
+   if (current_weapon != null)
+>>>>>>> Stashed changes
    {
       unequip(wielded);
    }
    
+<<<<<<< Updated upstream
    // Equip the new weapon
    addequip(weapon, WEAR_WIELD);
    act("You wield $2n.", A_ALWAYS, ch, weapon, null, TO_CHAR);
@@ -75,31 +101,17 @@ code
 
    exec("sigh", targ);
    return;
+=======
+   addequip(new_weapon, WEAR_WIELD);
+   act("You wield $2n.", A_ALWAYS, activator, new_weapon, null, TO_CHAR);
+   quit;
+>>>>>>> Stashed changes
 } dilend
 
 == Usage Notes ==
 * The object to be equipped must already be in the character's inventory
-* The target equipment position must be empty (no item already equipped there)
-* The character parameter is inferred from the object's container (the object must be inside a character)
-* Common WEAR_* constants include:
-** WEAR_FINGER_L, WEAR_FINGER_R (left/right finger)
-** WEAR_NECK_1, WEAR_NECK_2 (neck slots)
-** WEAR_BODY (body armor)
-** WEAR_HEAD (helmet)
-** WEAR_LEGS (leg armor)
-** WEAR_FEET (boots)
-** WEAR_HANDS (gloves)
-** WEAR_ARMS (arm armor)
-** WEAR_ABOUT (cloak)
-** WEAR_WAIST (belt)
-** WEAR_WRIST_L, WEAR_WRIST_R (left/right wrist)
-** WEAR_WIELD (wielded weapon)
-** WEAR_HOLD (held item)
-** WEAR_SHIELD (shield)
-** WEAR_CHEST (chest armor)
-** WEAR_BACK (backpack/cloak)
-** WEAR_EAR_L, WEAR_EAR_R (left/right ear)
-** WEAR_ANKLE_L, WEAR_ANKLE_R (left/right ankle)
+* The target equipment position must be empty
+* Common WEAR_* constants include: WEAR_FINGER_L, WEAR_FINGER_R, WEAR_BODY, WEAR_HEAD, WEAR_LEGS, WEAR_FEET, WEAR_HANDS, WEAR_WIELD, WEAR_HOLD, WEAR_SHIELD
 
 == Error Handling ==
 The function will fail silently if:

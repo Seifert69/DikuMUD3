@@ -1,9 +1,10 @@
 = ability_costs =
+ field: integer '''.ability_costs'''[ability_index] (Read-only)
 
 The '''ability_costs''' field is a read-only array field available on player character units that provides access to the training costs for abilities based on the character's race.
 
-== Syntax ==
- player.ability_costs[ability_index]
+== Description ==
+This field provides access to the training costs for abilities based on the character's race. The costs are stored in an array indexed by ability constants.
 
 == Field Access ==
 {| class="wikitable"
@@ -12,17 +13,16 @@ The '''ability_costs''' field is a read-only array field available on player cha
 | player.ability_costs[ability_index] || integer || The training cost for specified ability
 |}
 
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+
 == Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
 | ability_index || integer || Ability index (ABIL_* constant)
 |}
-
-== Return Value ==
-Returns an integer representing the training cost:
-* '''integer''' - The training cost value for the specified ability
-* '''fail''' - If player unit is invalid, not a PC, or ability index is out of range
 
 == Ability Constants ==
 The ability_index parameter accepts any of the ABIL_* constants defined in values.h or vme.h:
@@ -61,48 +61,6 @@ The ability_index parameter accepts any of the ABIL_* constants defined in value
        send("Training cost: " + itoa(player.ability_costs[ability]));
     } else {
        send("Invalid ability index.");
-    }
-    quit;
- } dilend
-
-=== Race-Based Cost Analysis ===
- dilbegin analyze_training_costs(player : unitptr);
- var
-    i : integer;
-    total_cost : integer;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    total_cost := 0;
-    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
-       send("Ability " + itoa(i) + " cost: " + itoa(player.ability_costs[i]));
-       total_cost := total_cost + player.ability_costs[i];
-    }
-    send("Total training cost for all abilities: " + itoa(total_cost));
-    quit;
- } dilend
-
-=== Training Cost Comparison ===
- dilbegin compare_costs(player1 : unitptr, player2 : unitptr);
- var
-    i : integer;
- code
- {
-    if (player1.type != UNIT_ST_PC or player2.type != UNIT_ST_PC) {
-       send("Both units must be players.");
-       quit;
-    }
-    
-    for (i := 0; i < ABIL_TREE_MAX; i := i + 1) {
-       if (player1.ability_costs[i] != player2.ability_costs[i]) {
-          send("Ability " + itoa(i) + " costs differ:");
-          send("  Player 1: " + itoa(player1.ability_costs[i]));
-          send("  Player 2: " + itoa(player2.ability_costs[i]));
-       }
     }
     quit;
  } dilend

@@ -1,7 +1,6 @@
 = mana =
 
-== Syntax ==
- field: '''.mana'''
+field: integer '''.mana''' (Read/Write)
 
 == Description ==
 The '''.mana''' field is accessed on character units (PC or NPC) and returns or sets the current mana points of the character. Mana is typically used for casting spells and using magical abilities.
@@ -93,4 +92,4 @@ This field is available on the following unit types:
 
 == See Also ==
 * [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation 

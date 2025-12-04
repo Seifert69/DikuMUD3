@@ -21,6 +21,7 @@ This field is available on the following unit types:
 * UNIT_ST_ROOM (Room)
 
 == Examples ==
+=== Check Unit Zone ===
  dilbegin check_unit_zone(unit : unitptr);
  var
     zone_name : string;
@@ -39,6 +40,7 @@ This field is available on the following unit types:
     quit;
  } dilend
 
+=== Zone-Specific Storage ===
  dilbegin zone_specific_storage(pc : unitptr);
  var
     player_zone : string;
@@ -55,39 +57,7 @@ This field is available on the following unit types:
     quit;
  } dilend
 
- dilbegin make_corpse();
- var
-    corpse : unitptr;
-    corpse_zone : string;
-    corpse_file : string;
-    time_stamp : string;
- code
- {
-    // Create corpse for player
-    corpse := load("corpse@death");
-    
-    if (corpse)
-    {
-       corpse_zone := self.zone;
-       time_stamp := itoa(realtime);
-       corpse_file := "corpse_" + self.name + "." + time_stamp;
-       
-       // Set corpse properties
-       corpse.name := "corpse of " + self.name;
-       corpse.title := self.name + "'s corpse";
-       
-       // Store corpse with zone-specific filename
-       store(corpse_file, corpse, TRUE);
-       
-       sendtext("Your corpse has been created in zone " + corpse_zone + "&n", self);
-    }
-    else
-    {
-       sendtext("Failed to create corpse.&n", self);
-    }
-    quit;
- } dilend
-
+=== Zone-Restricted Item ===
  dilbegin zone_restricted_item(item : unitptr);
  var
     item_zone : string;

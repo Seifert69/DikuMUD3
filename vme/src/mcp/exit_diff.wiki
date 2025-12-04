@@ -1,63 +1,53 @@
 = exit_diff =
+ field: integer '''.exit_diff'''[direction] (Read-only)
 
-== Syntax ==
- room.exit_diff[direction] : integer (Read-Only)
-
-== Parameters ==
- room : A unit of type UNIT_ST_ROOM
- direction : Exit direction index (NORTH, EAST, SOUTH, WEST, UP, DOWN)
+The exit_diff field returns the skill difficulty value for a specific exit in a room.
 
 == Description ==
-The exit_diff field returns the skill difficulty value for a specific exit in a room. This difficulty value is used in skill checks to determine whether a character can successfully traverse the exit, particularly for exits that require special skills like climbing.
+The '''exit_diff''' field returns the skill difficulty value for a specific exit in a room. This difficulty value is used in skill checks to determine whether a character can successfully traverse the exit, particularly for exits that require special skills like climbing.
 
-The difficulty is an integer that represents how challenging it is to use the exit. Higher values indicate greater difficulty. This value is typically used in conjunction with skill check functions to determine success or failure.
+The difficulty is an integer that represents how challenging it is to use the exit. Higher values indicate greater difficulty.
 
-== Return Value ==
-Returns an integer representing the difficulty level of the specified exit. Returns DILV_FAIL if the exit doesn't exist or the parameters are invalid.
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| room.exit_diff[direction] || integer || The difficulty level of the specified exit
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_ROOM (Room)
 
 == Examples ==
-=== Basic Usage ===
- difficulty := room.exit_diff[NORTH];
- 
-=== Skill Check Example ===
- // Check if character can climb an exit
- if (room.exit_info[dir] & EX_CLIMB)
+ dilbegin check_climb_difficulty(room : unitptr, dir : integer);
+ var
+    difficulty : integer;
+ code
  {
-    difficulty := room.exit_diff[dir];
-    success := skillcheck(SKI_CLIMB, ABIL_DEX, difficulty);
-    if (success > 0)
+    if (room.exit_info[dir] & EX_CLIMB)
     {
-       act("You successfully climb the $2t.", A_ALWAYS, self, exit_name, null, TO_CHAR);
+       difficulty := room.exit_diff[dir];
+       if (skillcheck(SKI_CLIMB, ABIL_DEX, difficulty) > 0)
+          act("You successfully climb.", A_ALWAYS, self, null, null, TO_CHAR);
+       else
+          act("You fail to climb.", A_ALWAYS, self, null, null, TO_CHAR);
     }
-    else
-    {
-       act("You fail to climb the $2t.", A_ALWAYS, self, exit_name, null, TO_CHAR);
-    }
- }
+ } dilend
 
-=== Complete Example from DIL ===
- // From climb_dil example
- room_going := room.exit_to[dir];
- difficulty := room.exit_diff[dir];
-
- if (self.drunk > 0)
- {
-    difficulty := difficulty + 5 * self.drunk;
-    act("Climbing under influence isn't easy.", A_SOMEONE, self, null, null, TO_CHAR);
- }
-
- hm := skillchecksa@skills(SKI_CLIMB, ABIL_DEX, difficulty);
-
-== Notes ==
+== Usage Notes ==
 * The direction parameter must be one of the predefined direction constants (NORTH, EAST, SOUTH, WEST, UP, DOWN)
 * This field is read-only - difficulty values are typically set through the building/editor system
-* The difficulty value is used by skill check functions to determine success probability
-* Common difficulty values might range from 0 (easy) to 100+ (very difficult)
-* Some exits may have a difficulty of 0 if they don't require special skills
+* Common difficulty values range from 0 (easy) to 100+ (very difficult)
+
+== Error Handling ==
+* Returns DILV_FAIL if the exit doesn't exist or the parameters are invalid
+
+== Related Functions/Fields ==
+* [[exit_to]] - Gets the room unit an exit leads to
+* [[exit_info]] - Gets the flags/properties of an exit
+* [[exit_names]] - Gets the names of an exit
+* [[skillcheck]] - For performing skill checks against difficulty
 
 == See Also ==
-* exit_to[] - Gets the room unit an exit leads to
-* exit_info[] - Gets the flags/properties of an exit
-* exit_names[] - Gets the names of an exit
-* skillcheck() - For performing skill checks against difficulty
-* skill_name() - For getting the name of a skill
+* [[UNIT_ST_ROOM]] - Room unit type constant

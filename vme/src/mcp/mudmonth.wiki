@@ -166,4 +166,4 @@ The '''mudmonth''' variable returns the current month number in the MUD's intern
 == See Also ==
 * Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
 * Time-based functions: [[heartbeat]], [[wait]], [[pause]]
-* String functions: [[itoa]] - Convert integer to string for display
+* String functions: [[itoa]] - Convert integer to string for display 

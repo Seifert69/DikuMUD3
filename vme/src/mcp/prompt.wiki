@@ -163,4 +163,4 @@ The field access will return '''fail''' when:
 * [[%m]] - Mana display format code
 * [[%e]] - Endurance display format code
 * [[%n]] - Name display format code
-* [[title]] - Field for player's title used in %t
+* [[title]] - Field for player's title used in %t 

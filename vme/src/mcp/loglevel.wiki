@@ -1,7 +1,6 @@
 = loglevel =
 
-== Syntax ==
- field: '''.loglevel'''
+field: integer '''.loglevel''' (Read-only)
 
 == Description ==
 The '''.loglevel''' field is accessed on a '''cmdptr''' (command pointer) and returns an integer value representing the minimum character level that can see log entries for this command. A value of 0 indicates that no logging is performed for this command.
@@ -65,4 +64,4 @@ This field is available on the following unit type:
 * [[cmdptr.position]] - Gets the minimum position to use the command
 
 == See Also ==
-* [[cmdptr]] - Command pointer type documentation
+* [[cmdptr]] - Command pointer type documentation 

@@ -1,56 +1,48 @@
 = exptol =
+ field: integer '''.exptol''' (Read/Write)
+
+The exptol field represents the experience points needed to reach the next level.
 
 == Description ==
 The '''exptol''' field is a read-write integer field available on player characters (PC). It represents the amount of experience points the player needs to reach the next level. This value is dynamically calculated based on the player's current virtual level and total experience.
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.exptol || integer || The experience points needed to reach the next level
+|}
+
 == Availability ==
-This field is available when the unit type is:
+This field is available on the following unit types:
 * UNIT_ST_PC (Player Character)
 
-== Usage ==
-The exptol field can be both read and modified, though modification should be done with care as it affects player progression.
-
-=== Syntax ===
-  unit.exptol
-
-=== Return Value ===
-Returns an integer representing the experience points needed to reach the next level.
-
-== Calculation ==
-The exptol value is calculated as:
-  required_xp(PC_VIRTUAL_LEVEL(unit) + 1) - CHAR_EXP(unit)
-
-Where:
-* PC_VIRTUAL_LEVEL() gets the player's virtual level
-* required_xp() calculates the experience needed for a specific level
-* CHAR_EXP() gets the player's current total experience
-
-== Example ==
- dilbegin check_level_up(pc:unitptr);
- var
-    exp_needed:integer;
+== Examples ==
+ dilbegin check_level_progress(pc : unitptr);
  code
  {
-    heartbeat:=3;
-    if (pc.type != UNIT_ST_PC)
-       return;
-
-    exp_needed := pc.exptol;
-    sendtext("You need " + itoa(exp_needed) + " more experience to level.<br/>", pc);
-    
-    if (exp_needed <= 0)
-       sendtext("You can level up now! Use the 'level' command.<br/>", pc);
-    
-    return;
+    if (pc.type == UNIT_ST_PC)
+    {
+       if (pc.exptol <= 0)
+          sendtext("You can level up now! Use the 'level' command.<br/>", pc);
+       else
+          sendtext("You need " + itoa(pc.exptol) + " more experience to level.<br/>", pc);
+    }
  } dilend
 
 == Usage Notes ==
-* The field is marked as read-write in the manual but is typically dynamically calculated
+* The field is typically dynamically calculated as: required_xp(PC_VIRTUAL_LEVEL(unit) + 1) - CHAR_EXP(unit)
 * Modifying this value directly can affect player progression balance
 * The value automatically updates as the player gains experience
 * When exptol reaches 0 or less, the player can use the 'level' command to advance
 
-== See Also ==
+== Error Handling ==
+* Returns fail if accessed on non-player character units
+
+== Related Functions/Fields ==
 * [[exp]] - Current experience points
 * [[level]] - Current player level
-* [[experience()]] - Function to modify experience values
+* [[experience]] - Function to modify experience values
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character unit type constant

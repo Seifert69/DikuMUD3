@@ -20,31 +20,44 @@ This field is available on the following unit types:
 * UNIT_ST_PC (Player Character)
 
 == Examples ==
-dilbegin unique thirst_check();
-var
-    pc : unitptr;
-    thirst_level : integer;
-code
-{
-    // Get the player character
-    pc := self;
-    
-    // Check current thirst level
-    thirst_level := pc.thirst;
-    
-    if (thirst_level < 5)
-    {
-        sendto("You are extremely thirsty!&n", pc);
-    }
-    else if (thirst_level < 10)
-    {
-        sendto("You are quite thirsty.&n", pc);
-    }
-    else
-    {
-        sendto("You feel reasonably hydrated.&n", pc);
-    }
-} dilend
+=== Basic Thirst Check ===
+ dilbegin thirst_check();
+ var
+     pc : unitptr;
+     thirst_level : integer;
+ code
+ {
+     // Get player character
+     pc := self;
+     
+     // Check current thirst level
+     thirst_level := pc.thirst;
+     
+     if (thirst_level < 5)
+     {
+         sendtext("You are extremely thirsty!<br/>", pc);
+     }
+     else if (thirst_level < 10)
+     {
+         sendtext("You are quite thirsty.<br/>", pc);
+     }
+     else
+     {
+         sendtext("You feel reasonably hydrated.<br/>", pc);
+     }
+ } dilend
+
+=== Quench Thirst ===
+ dilbegin quench_thirst();
+ var
+     pc : unitptr;
+ code
+ {
+     // Fully quench thirst (value 24 appears to be maximum)
+     pc := self;
+     pc.thirst := 24;
+     sendtext("You feel completely refreshed and hydrated!<br/>", pc);
+ } dilend
 
 dilbegin unique quench_thirst();
 var

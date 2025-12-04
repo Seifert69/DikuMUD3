@@ -1,11 +1,9 @@
 = meleedamage =
-
-== Syntax ==
  function: integer '''meleedamage'''(ch : unitptr, vict : unitptr, b : integer, wt : integer);
 
-== Description ==
 The '''meleedamage''' function performs a melee damage calculation from one character against another. This function is specifically designed for missile and thrown weapon damage calculations, taking into account weapon types, bonuses, and special circumstances.
 
+== Description ==
 The function handles the complete damage resolution including hit determination and damage amount calculation.
 
 == Parameters ==

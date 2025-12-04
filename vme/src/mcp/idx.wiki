@@ -1,16 +1,23 @@
-= idx
+= idx =
 
-== Syntax
+ field: integer '''idx''' (Read-only)
 
-  integer .idx
-
-== Description
-
+== Description ==
 The '''idx''' field returns a constant integer ID for a unit. For players, this ID is persistent across reboots. For non-player characters (NPCs) and objects, this is the memory pointer converted to an integer.
 
-== Return Value
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.idx || integer || Unique identifier for the unit
+|}
 
-Returns an integer representing the unique identifier for the unit.
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
 
 == Usage Notes
 
@@ -65,4 +72,4 @@ Returns an integer representing the unique identifier for the unit.
 
 * [[findsymbolic]] - Find units by symbolic name and optional idx
 * [[symname]] - Get the symbolic name of a unit
-* [[unitptr]] - General unit pointer fields
+* [[unitptr]] - General unit pointer fields 

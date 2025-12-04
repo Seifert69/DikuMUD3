@@ -29,12 +29,10 @@ Internally, '''on_activation''' is implemented as a macro that calls '''interrup
 Returns an integer representing the index to the interrupt handling the on_activation. This value can be used with the '''clear()''' function to manually remove the interrupt.
 
 == Examples ==
-=== Basic Position Checking ===
  dilbegin guard_post();
  var
  code
  {
-    // Skip activation if guard is sleeping or fighting
     on_activation((self.position <= POSITION_SLEEPING) or 
                  (self.position == POSITION_FIGHTING), skip);
     
@@ -43,103 +41,6 @@ Returns an integer representing the index to the interrupt handling the on_activ
     pause;
     exec("say I am on duty and alert.", self);
     goto start;
- } dilend
-
-=== State Machine Handler ===
- dilbegin state_handler();
- var
-    state : integer;
-    i1 : integer;
-    i2 : integer;
- code
- {
-    state := 0;
-    
-    :start:
-    // Handle different states based on position
-    i1 := on_activation((self.position == POSITION_FIGHTING), combat_mode);
-    i2 := on_activation((self.position <= POSITION_SLEEPING), sleep_mode);
-    
-    heartbeat := PULSE_SEC*2;
-    pause;
-    goto start;
-    
-    :combat_mode:
-    exec("say Entering combat mode!", self);
-    // Combat handling logic here
-    clear(i1);
-    goto start;
-    
-    :sleep_mode:
-    exec("say Zzzz...", self);
-    // Sleep handling logic here
-    clear(i2);
-    goto start;
- } dilend
-
-=== Complex Condition Checking ===
- dilbegin complex_guard();
- var
-    pc : unitptr;
- code
- {
-    :init:
-    heartbeat := PULSE_SEC*3;
-    
-    // Multiple conditions in one check
-    on_activation((self.position <= POSITION_SLEEPING) or
-                 (self.position == POSITION_FIGHTING) or
-                 (self.hp < 10), skip);
-    
-    :start:
-    wait(SFB_CMD, (activator.type == UNIT_ST_PC));
-    pc := activator;
-    secure(pc, lostpc);
-    
-    exec("say Hello " + pc.name + "! I am ready to help.", self);
-    unsecure(pc);
-    goto start;
-    
-    :lostpc:
-    exec("say Goodbye!", self);
-    goto start;
- } dilend
-
-=== Manual Interrupt Management ===
- dilbegin managed_activation();
- var
-    interrupt_index : integer;
-    is_disabled : integer;
- code
- {
-    is_disabled := 0;
-    
-    :setup_interrupt:
-    if (is_disabled = 0)
-       interrupt_index := on_activation(self.position < POSITION_STANDING, skip);
-    
-    :main_loop:
-    heartbeat := PULSE_SEC*5;
-    
-    if (self.position >= POSITION_STANDING)
-       exec("say I am standing and active.", self);
-    
-    pause;
-    
-    // Check if we should disable the interrupt
-    if (mudhour = 12) // Noon
-    {
-       is_disabled := 1;
-       clear(interrupt_index);
-       exec("say Disabling activation check for now.", self);
-    }
-    else if (mudhour = 13) // 1 PM
-    {
-       is_disabled := 0;
-       goto setup_interrupt;
-    }
-    
-    goto main_loop;
  } dilend
 
 == Usage Notes ==
@@ -173,4 +74,4 @@ Returns an integer representing the index to the interrupt handling the on_activ
 * [[interrupt]] - General interrupt system overview
 * [[on]] - Value-based interrupt handling
 * [[position]] - Unit position constants and values
-* [[SFB_ACTIVATE]] - Internal flag for activation interrupts
+* [[SFB_ACTIVATE]] - Internal flag for activation interrupts 

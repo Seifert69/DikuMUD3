@@ -1,22 +1,21 @@
 = getinteger =
+ function: integer '''getinteger'''(index : integer, unit : unitptr, value : integer);
 
-== Syntax ==
- integer := getinteger( index : integer, unit : unitptr, value : integer );
-
-== Parameters ==
- index : integer
-    The type of value to retrieve. See the table below for valid indices.
- unit : unitptr
-    The unit to operate on (required for some indices, can be null for others).
- value : integer
-    An integer value used by some index types (e.g., level for XP calculations).
-
-== Return Value ==
- integer
-    Returns the requested integer value, or fail if parameters are invalid or index is unsupported.
+The getinteger() function is a versatile utility that retrieves various game system values based on the index parameter.
 
 == Description ==
- The getinteger() function is a versatile utility that retrieves various game system values based on the index parameter. It can calculate character statistics, experience requirements, check player status, and access real-world time information.
+ The '''getinteger'''() function is a versatile utility that retrieves various game system values based on the index parameter. It can calculate character statistics, experience requirements, check player status, and access real-world time information.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| index || integer || The type of value to retrieve. See the table below for valid indices.
+|-
+| unit || unitptr || The unit to operate on (required for some indices, can be null for others).
+|-
+| value || integer || An integer value used by some index types (e.g., level for XP calculations).
+|}
 
 === Supported Indices ===
 
@@ -50,7 +49,7 @@
 | DIL_GINT_REALDAY || Current real-world day of month || No || Ignored
 |}
 
-== Example ==
+== Examples ==
  dilbegin check_character_stats(pc_name : string);
  var
     pc : unitptr;
@@ -86,7 +85,20 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* Some indices require a valid unit parameter, others ignore it
+* The value parameter is only used by specific index types
+* Real-world time indices return actual system time values
+
+== Error Handling ==
+* Returns fail if index is unsupported or parameters are invalid
+* Returns fail if unit is required but not provided or invalid
+* Always check return value before using in calculations
+
+== Related Functions/Fields ==
+* [[experience]] - Modify player experience
+* [[realtime]] - Get current Unix timestamp
+* [[mud(day,month,..)]] - MUD time variables
+
 == See Also ==
- * [[experience]] - Modify player experience
- * [[realtime]] - Get current Unix timestamp
- * [[mud(day,month,..)]] - MUD time variables
+* Character statistics and regeneration systems

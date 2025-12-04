@@ -1,11 +1,9 @@
 = meleeattack =
-
-== Syntax ==
  function: integer '''meleeattack'''(ch : unitptr, vict : unitptr, bonus : integer, wtype : integer, primary : integer);
 
-== Description ==
 The '''meleeattack''' function performs a melee attack from one character against another. The attacker uses their currently wielded weapon or bare hands to strike the victim, with optional bonuses and weapon type specifications.
 
+== Description ==
 This function handles the complete combat resolution including weapon checks, damage calculations, and hit determination.
 
 == Parameters ==

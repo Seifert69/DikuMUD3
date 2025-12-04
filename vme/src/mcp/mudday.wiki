@@ -77,4 +77,4 @@ The '''mudday''' variable returns the current day number in the MUD's internal t
 
 == See Also ==
 * Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
-* Time-based functions: [[heartbeat]], [[wait]], [[pause]]
+* Time-based functions: [[heartbeat]], [[wait]], [[pause]] 

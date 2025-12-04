@@ -21,53 +21,53 @@ This field is available on the following unit types:
 === Basic Usage ===
  dilbegin process_donations();
  var
-   i : integer;
-   total : integer;
-   extra : extraptr;
+     i : integer;
+     total : integer;
+     extra : extraptr;
  
  code
  {
-   extra := self.extra.["$dlist"];
-   total := 0;
-   i := 0;
-   while (i < length(extra.vals))
-   {
-     total := total + extra.vals.[i];
-     i := i + 1;
-   }
-   sendtext("Total donations: " + itoa(total) + "<br/>", activator);
+     extra := self.extra.["$dlist"];
+     total := 0;
+     i := 0;
+     while (i < length(extra.vals))
+     {
+       total := total + extra.vals.[i];
+       i := i + 1;
+     }
+     sendtext("Total donations: " + itoa(total) + "<br/>", activator);
  } dilend
 
 === Adding Values ===
  dilbegin add_value(name : string, value : integer);
  var
-   extra : extraptr;
+     extra : extraptr;
  
  code
  {
-   extra := self.extra.["$stats"];
-   addstring(extra.names, name);
-   insert(extra.vals, length(extra.vals), value);
+     extra := self.extra.["$stats"];
+     addstring(extra.names, name);
+     insert(extra.vals, length(extra.vals), value);
  } dilend
 
 === Parallel Access ===
  dilbegin show_pairs();
  var
-   i : integer;
-   extra : extraptr;
-   buf : string;
+     i : integer;
+     extra : extraptr;
+     buf : string;
  
  code
  {
-   extra := self.extra.["$pairs"];
-   buf := "Name-Value Pairs:<br/>";
-   i := 0;
-   while (i < length(extra.names) and i < length(extra.vals))
-   {
-     buf := buf + extra.names.[i] + ": " + itoa(extra.vals.[i]) + "<br/>";
-     i := i + 1;
-   }
-   sendtext(buf, activator);
+     extra := self.extra.["$pairs"];
+     buf := "Name-Value Pairs:<br/>";
+     i := 0;
+     while (i < length(extra.names) and i < length(extra.vals))
+     {
+       buf := buf + extra.names.[i] + ": " + itoa(extra.vals.[i]) + "<br/>";
+       i := i + 1;
+     }
+     sendtext(buf, activator);
  } dilend
 
 == Usage Notes ==
@@ -90,4 +90,5 @@ This field is available on the following unit types:
 == See Also ==
 * [[#eptr|extraptr]] - Extra description pointer type
 * [[#intlist|intlist]] - Integer list type documentation
+
 * [[#strl|stringlist]] - String list type documentation

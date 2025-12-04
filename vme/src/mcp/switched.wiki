@@ -223,6 +223,7 @@ Always check that the unit is a player character before accessing this field.
 * unitptr.type - Field to check unit type
 * [[isaff]] - Function to check character affects
 
+
 == See Also ==
 * DIL Character Control Systems Documentation
 * Possession and Switching Mechanics

@@ -23,6 +23,7 @@ The field requires an integer index parameter:
 : The weapon type index (WPN_* constants from values.h and/or vme.h)
 
 == Examples ==
+=== Check Weapon Skill ===
  dilbegin check_weapon_skill(pc : unitptr, weapon_type : integer);
  var
     level : integer;
@@ -41,6 +42,7 @@ The field requires an integer index parameter:
     quit;
  } dilend
 
+=== List Weapon Skills ===
  dilbegin list_weapon_skills(pc : unitptr);
  var
     i : integer;

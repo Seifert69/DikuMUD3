@@ -58,16 +58,16 @@ Returns an integer representing the account balance:
     
     balance_cents := player.acc_balance;
     
-    if (balance_cents >= cost) {
-       send("You can afford this purchase.");
-       send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100)));
-       send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100)));
-    } else {
-       send("You cannot afford this purchase.");
-       send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100)));
-       send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100)));
-       send("Needed: " + itoa((cost - balance_cents) / 100) + "." + itoa((cost - balance_cents) % 100)));
-    }
+     if (balance_cents >= cost) {
+        send("You can afford this purchase.");
+        send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100));
+        send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100));
+     } else {
+        send("You cannot afford this purchase.");
+        send("Cost: " + itoa(cost / 100) + "." + itoa(cost % 100));
+        send("Balance: " + itoa(balance_cents / 100) + "." + itoa(balance_cents % 100));
+        send("Needed: " + itoa((cost - balance_cents) / 100) + "." + itoa((cost - balance_cents) % 100));
+     }
     quit;
  } dilend
 
@@ -106,13 +106,13 @@ Returns an integer representing the account balance:
     
     new_balance := player.acc_balance + amount;
     
-    send("Transaction processed:");
-    send("  Previous balance: $" + itoa(player.acc_balance / 100) + "." + 
-          itoa(player.acc_balance % 100));
-    send("  Transaction amount: $" + itoa(amount / 100) + "." + 
-          itoa(amount % 100));
-    send("  New balance: $" + itoa(new_balance / 100) + "." + 
-          itoa(new_balance % 100)));
+     send("Transaction processed:");
+     send("  Previous balance: $" + itoa(player.acc_balance / 100) + "." + 
+           itoa(player.acc_balance % 100));
+     send("  Transaction amount: $" + itoa(amount / 100) + "." + 
+           itoa(amount % 100));
+     send("  New balance: $" + itoa(new_balance / 100) + "." + 
+           itoa(new_balance % 100));
     
     quit;
  } dilend
@@ -133,14 +133,14 @@ Returns an integer representing the account balance:
     if (player.acc_balance >= cost_cents) {
        send("You pay $" + itoa(price) + " for the drink.");
        acc_modify(player, -cost_cents);
-       send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + 
-             "." + itoa((player.acc_balance - cost_cents) % 100));
-    } else {
-       send("You don't have enough money for this drink.");
-       send("Cost: $" + itoa(price));
-       send("Your balance: $" + itoa(player.acc_balance / 100) + "." + 
-             itoa(player.acc_balance % 100)));
-    }
+        send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + 
+              "." + itoa((player.acc_balance - cost_cents) % 100));
+     } else {
+        send("You don't have enough money for this drink.");
+        send("Cost: $" + itoa(price));
+        send("Your balance: $" + itoa(player.acc_balance / 100) + "." + 
+              itoa(player.acc_balance % 100));
+     }
     quit;
  } dilend
 

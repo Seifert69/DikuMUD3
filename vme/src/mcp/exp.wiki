@@ -1,46 +1,44 @@
 = exp =
+ field: integer '''.exp''' (Read-only)
+
+The exp field provides access to a unit's experience points.
 
 == Description ==
 The '''exp''' field is a read-only integer field available on both player characters (PC) and non-player characters (NPC). For PCs, it represents the total number of experience points the character has accumulated. For NPCs, it represents the experience quality or value of the monster.
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.exp || integer || The experience points of the unit
+|}
+
 == Availability ==
-This field is available when the unit type is:
+This field is available on the following unit types:
 * UNIT_ST_PC (Player Character)
 * UNIT_ST_NPC (Non-Player Character)
 
-== Usage ==
-The exp field is read-only and cannot be directly assigned. To modify experience values, use the [[experience()]] function.
-
-=== Syntax ===
-  unit.exp
-
-=== Return Value ===
-Returns an integer representing:
-* For PCs: Total experience points accumulated
-* For NPCs: Experience quality/value of the monster
-
-== Example ==
- dilbegin check_exp(u:unitptr);
- var
-    current_exp:integer;
+== Examples ==
+ dilbegin show_experience(pc : unitptr);
  code
  {
-    heartbeat:=3;
-    if (u.type!=UNIT_ST_PC and u.type!=UNIT_ST_NPC)
-       return;
-
-    current_exp := u.exp;
-    sendtext("Current experience: " + itoa(current_exp) + "<br/>", self);
-    return;
+    if (pc.type == UNIT_ST_PC)
+       sendtext("You have " + itoa(pc.exp) + " experience points.<br/>", pc);
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * The field is read-only - use the experience() function to modify values
 * For PCs, this value affects leveling when compared against the exptol field
 * For NPCs, this value typically determines the experience reward when killed
-* The experience() function should be used with care, preferably with integer constants
 
-== See Also ==
-* [[experience()]] - Function to modify experience values
+== Error Handling ==
+* Returns fail if accessed on invalid unit types
+
+== Related Functions/Fields ==
+* [[experience]] - Function to modify experience values
 * [[exptol]] - Experience needed for next level (PC only)
 * [[level]] - Current level of the unit
+
+== See Also ==
+* [[UNIT_ST_PC]] - Player character unit type constant
+* [[UNIT_ST_NPC]] - Non-player character unit type constant

@@ -75,4 +75,4 @@ This handles cases where a player is moved while editing.
 
 ; beginedit : Starts editing mode
 ; textformat : Formats text from editing input
-; SFB_EDIT : Editing completion message flag
+; SFB_EDIT : Editing completion message flag 

@@ -1,17 +1,26 @@
 = light =
 
-; light : integer (RO)
-: The number of active light sources in the unit.
+field: integer '''.light''' (Read-only)
 
 == Description ==
 
-The '''light''' field is a read-only property that returns the number of active light sources contained within a unit. This field is accessed using the dot notation on a unit pointer.
+The '''light''' field returns the number of active light sources contained within a unit.
 
-== Return Value ==
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access !! Description
+|-
+| light || integer || Read-only || Number of active light sources in the unit
+|}
 
-Returns an integer representing the count of active light sources in the specified unit.
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
 
-== Example Usage ==
+== Examples ==
 
  dilbegin example_light();
  var
@@ -23,16 +32,23 @@ Returns an integer representing the count of active light sources in the specifi
     exec("say This unit contains " + itoa(light_count) + " light sources.", self);
  } dilend
 
-== Notes ==
+== Usage Notes ==
 
 * This field is read-only and cannot be modified directly
 * Use the [[setbright]] procedure to change how much light a unit emits
 * The '''islight''' function can be used to check if a unit is a light source
 * Related fields include '''bright''' (how much the unit lights up) and '''illum''' (light from transparent containers)
 
-== See Also ==
+== Error Handling ==
+
+* Returns '''fail''' if the unitptr is null
+* Returns '''fail''' if the unit is not applicable
+
+== Related Functions/Fields ==
 
 * [[islight]]
 * [[setbright]]
 * [[unitptr.bright]]
 * [[unitptr.illum]]
+
+== See Also == 

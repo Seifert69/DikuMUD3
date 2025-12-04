@@ -1,16 +1,10 @@
 = abilities =
+ field: integer '''.abilities'''[ability_index] (Read-only)
 
-The '''abilities''' field is a read-only array field available on character units (PCs and NPCs) that provides access to the character's ability scores.
+The '''abilities''' field provides access to character ability scores for both PCs and NPCs.
 
-== Syntax ==
- character.abilities[ability_index]
-
-== Field Access ==
-{| class="wikitable"
-! Access !! Type !! Description
-|-
-| character.abilities[ability_index] || integer || The ability score for specified ability
-|}
+== Description ==
+Accesses ability scores for character units using array indexing with ABIL_* constants.
 
 == Parameters ==
 {| class="wikitable"
@@ -19,10 +13,17 @@ The '''abilities''' field is a read-only array field available on character unit
 | ability_index || integer || Ability index (ABIL_* constant)
 |}
 
-== Return Value ==
-Returns an integer representing the ability score:
-* '''integer''' - The ability score value
-* '''fail''' - If character unit is invalid or ability index is out of range
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| character.abilities[ability_index] || integer || The ability score for specified ability
+|}
+
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
 
 == Ability Constants ==
 The ability_index parameter accepts any of the following constants defined in values.h or vme.h:
@@ -101,58 +102,6 @@ The ability_index parameter accepts any of the following constants defined in va
        send("Attack misses!");
     }
     quit;
- } dilend
-
-=== Item Recharge Example ===
- dilbegin item_charge(base_charge : integer);
- external
-   string accept_dil@function (pc:unitptr,s:string);
- var
-    tcost : integer;
-    thing : unitptr;
-    pc : unitptr;
-    answer : string;
-    mn : string;
- code
- {
-    heartbeat := PULSE_SEC*5;
-    self.spells[SPL_RECONSTRUCT] := 200;
-    self.abilities[ABIL_BRA] := 150;
-    self.abilities[ABIL_MAG] := 150;   
-    position_update(self);
- :start:
-    wait (SFB_DONE, (command("give") and (self==target)));
-    pc := activator;
-    thing := medium;
-    secure(pc, lost_pc);
-    secure(thing, lost_pc);    
-    if (not visible(self, pc)) {
-       exec("say I only do business with people I can see.", self);
-       exec("drop " + (thing.name), self);
-       goto lost_pc;
-    }
-    tcost := base_charge * 160;
-    mn := moneystring(tcost, 0);
-    exec("say It will cost you " + mn + " for me to recharge that for you.", self);
-    answer := accept_dil@function(pc, "Are you sure you want me to recharge it?");
-    pause;
-    if (answer == "no") {
-       exec("say Very well. Come back to me when you want it recharged.", self);
-       goto give_back;
-    }
-    if (transfermoney(pc, self, tcost)) {
-       exec(", touches " + thing.name + " softly and begins to chant...", self);
-       exec("say There, hope you like it, " + pc.name + "!", self);
-    } else {
-       exec("say You can't afford my services right now.", self);
-    }
- :give_back:
-    act(self.name + " returns your " + thing.name + " to you.", A_ALWAYS, pc, null, null, TO_CHAR);
-    link(thing, pc);
- :lost_pc:
-    unsecure(pc);
-    unsecure(thing);
-    goto start;
  } dilend
 
 == Error Handling ==

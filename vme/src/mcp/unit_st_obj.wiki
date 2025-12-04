@@ -250,6 +250,7 @@ The '''UNIT_ST_OBJ''' constant is read-only and cannot be modified at runtime. I
 * [[UNIT_ST_NPC]] - NPC type constant
 * [[UNIT_ST_ROOM]] - Room type constant
 * [[type]] - Unit type checking function
+
 * [[objecttype]] - Object type field documentation
 * [[value]] - Object values array documentation
 * [[objectflags]] - Object flags field documentation

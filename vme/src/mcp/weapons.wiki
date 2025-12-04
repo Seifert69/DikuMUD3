@@ -26,6 +26,7 @@ The field requires an integer index parameter:
 : For NPCs: 0 to WPN_GROUP_MAX - 1 (weapon groups only)
 
 == Examples ==
+=== Check Weapon Skill ===
  dilbegin check_weapon_skill(char : unitptr, weapon_type : integer);
  var
     skill : integer;
@@ -44,33 +45,7 @@ The field requires an integer index parameter:
     quit;
  } dilend
 
- dilbegin clone_weapon_skills(original : unitptr, tgt : unitptr);
- var
-    i : integer;
- code
- {
-    // Clone weapon skills from one character to another
-    if (tgt.type == UNIT_ST_PC)
-    {
-       i := 0;
-       while (i < WPN_GROUP_MAX)
-       {
-          tgt.weapons[i] := (3 * original.weapons[i]) / 2;
-          i := i + 1;
-       }
-    }
-    else
-    {
-       i := 0;
-       while (i < WPN_GROUP_MAX)
-       {
-          tgt.weapons[i] := original.weapons[i];
-          i := i + 1;
-       }
-    }
-    quit;
- } dilend
-
+=== Display All Weapon Skills ===
  dilbegin display_all_weapon_skills(char : unitptr);
  var
     i : integer;

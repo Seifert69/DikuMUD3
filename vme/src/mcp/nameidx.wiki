@@ -145,4 +145,4 @@ This field is available on the following unit types:
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
 * String functions: [[substring]], [[length]]
 * Database functions: [[store]], [[restore]], [[delunit]]
-* Reference format: nameidx@zoneidx (standard unit identification)
+* Reference format: nameidx@zoneidx (standard unit identification) 

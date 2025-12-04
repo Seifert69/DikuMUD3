@@ -1,108 +1,41 @@
 = heartbeat =
 
- integer heartbeat
+ variable: '''heartbeat'''
 
 == Description ==
 Controls the heartbeat rate of a DIL program. This determines how frequently the SFB_TICK (tick) event is activated for the program.
 
-== Usage ==
+== Usage Notes ==
 The heartbeat can be assigned at runtime to change the rate with which SFB_TICK is activated. The value is specified in 1/4th of a second units.
 
  heartbeat := PULSE_SEC * 25; // Tick every 25 seconds
 
-== Constants ==
 Use the PULSE_SEC constant to multiply your wanted delay:
 * PULSE_SEC = 4 (represents 1 second)
 * PULSE_SEC * 5 = 20 (represents 5 seconds)
 * PULSE_SEC * 60 = 240 (represents 1 minute)
 
-== Example ==
- dilbegin guardroutine(guardloc : string, dayguard : integer);
- external
-    DailyRoutine@quests(sl : stringlist, arg2 : string);
+== Examples ==
+ dilbegin simple_timer();
  var
-    i  : integer;
-    sch : intlist;
+     counter : integer;
  code
  {
-    on_activation((self.position == POSITION_FIGHTING), skip);
-
-    if (dayguard)
-       sch := {5, 18};  // Wake up at 5, go back at 6pm
-    else
-       sch := {17,6};   // Wake up at 17, go home at 6
-
- :start:
-    heartbeat := WAIT_SEC*5;
-    pause;
-    if (mudhour == sch.[0])
-    {
-       DailyRoutine@quests({
-          "wake", 
-          "::descr::A $1N is here heading to work.",
-          "yawn",
-          "say Time to get going guys!", 
-          "::walkto::$2t",
-          "::descr::A $1N is here guarding the gate."
-       }, guardloc);
-    }
-
-    if(mudhour == sch.[1])
-    {
-       i := rnd(1,3);
-       if (i == 1) goto bar1;
-       if (i == 2) goto bar2;
-       if (i == 3) goto bar3;
-       else goto start;
-
- :bar1:
-       pause;
-       DailyRoutine@quests({
-       "::walkto::grunting_inn@midgaard",
-       "::descr::A $1N is here on $1s evening break.",
-       "buy beer", 
-       "drink beer",
-       "stretch", 
-       "::descr::A $1N is here heading home.",
-       "::walkto::guard_dorm@midgaard",
-       "yawn",
-       "::descr::A $1N is here resting.",
-       "sleep"
-    }, "");
-    goto start;
-
-    :bar2:
-    pause;
-    DailyRoutine@quests({
-       "::walkto::grub_inn@midgaard",
-       "::descr::A $1N is here on $1s evening break.",
-       "buy firebreather", 
-       "drink firebreather",
-       "::descr::A $1N is here heading home.",
-       "::walkto::guard_dorm@midgaard",
-       "::descr::A $1N is here resting.",
-       "yawn",
-       "sleep"}, "");
-
-    goto start;
-
-    :bar3:
-    pause;
-    DailyRoutine@quests({
-       "::walkto::park_cafe@midgaard",
-       "::descr::A $1N is here on $1s evening break.",
-       "::buy coffee", 
-       "::drink coffee",
-       "::descr::A $1N is here heading home.",
-       "::walkto::guard_dorm@midgaard",
-       "::descr::A $1N is here resting.",
-       "::yawn",
-       "::sleep"}, "");
-    goto start;
-   }
+     counter := 0;
+     heartbeat := PULSE_SEC * 10; // Tick every 10 seconds
+     
+:start:
+     wait(SFB_TICK, TRUE);
+     counter := counter + 1;
+     act("Timer tick #" + itoa(counter), A_ALWAYS, self, null, null, TO_CHAR);
+     
+     if (counter < 5)
+         goto start;
+     else
+         exec("say Timer finished!", self);
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * Do not set the heartbeat too low as it can impact server performance
 * The heartbeat value is in 1/4 second increments (4 = 1 second)
 * Use PULSE_SEC constant for readability and proper timing
@@ -112,8 +45,15 @@ Use the PULSE_SEC constant to multiply your wanted delay:
 ** PULSE_SEC * 60 = 240 (1 minute)
 ** WAIT_SEC * 5 = commonly used for 5-second intervals
 
-== See Also ==
+== Error Handling ==
+* Setting heartbeat to 0 or negative values may cause unexpected behavior
+* Very low heartbeat values (less than PULSE_SEC) can impact server performance
+
+== Related Functions/Fields ==
 * [[wait]] - Wait for specific events
 * [[pause]] - Pause execution
 * [[SFB_TICK]] - Tick event trigger
 * [[realtime]] - Get current game time
+
+== See Also ==
+* [[PULSE_SEC]] - Time constant

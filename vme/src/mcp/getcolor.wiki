@@ -1,24 +1,23 @@
 = getcolor =
+ function: string '''getcolor'''({color_string : string});
 
-== Syntax ==
- string := getcolor( color_string : string );
-
-== Parameters ==
- color_string : string
-    A string containing color codes to be converted/divided.
-
-== Return Value ==
- string
-    Returns the processed color string. Returns fail if the input is null, fail, or an unsupported type.
+The '''getcolor''' function processes color strings by calling the internal divcolor() function.
 
 == Description ==
- The getcolor() function processes color strings by calling the internal divcolor() function. This function appears to convert or divide color codes within the input string.
+The '''getcolor''' function processes color strings by calling the internal divcolor() function. This function appears to convert or divide color codes within the input string.
 
- Note: This function is different from the player-specific color functions (addcolor, delcolor, changecolor) which work with individual player color settings. The getcolor() function works with color code processing and conversion.
+Note: This function is different from the player-specific color functions (addcolor, delcolor, changecolor) which work with individual player color settings. The getcolor() function works with color code processing and conversion.
 
- The function is currently marked as unused in the codebase, suggesting it may be obsolete or awaiting testing and implementation.
+The function is currently marked as unused in the codebase, suggesting it may be obsolete or awaiting testing and implementation.
 
-== Example ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| color_string || string || A string containing color codes to be converted/divided
+|}
+
+== Examples ==
  dilbegin process_colors(input : string);
  var
     processed : string;
@@ -35,7 +34,18 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* This function works with color code processing and conversion
+* Different from player-specific color functions which work with individual player color settings
+* Currently marked as unused in the codebase
+
+== Error Handling ==
+* Returns fail if the input is null, fail, or an unsupported type
+* Returns the processed color string on success
+
+== Related Functions/Fields ==
+* [[addcolor]] - Add color to player's personal color list
+* [[delcolor]] - Delete color from player's personal color list  
+* [[changecolor]] - Change color in player's personal color list
+
 == See Also ==
- * [[addcolor]] - Add color to player's personal color list
- * [[delcolor]] - Delete color from player's personal color list  
- * [[changecolor]] - Change color in player's personal color list

@@ -14,6 +14,7 @@ This procedure removes the secure protection that was placed on a unit using the
 |}
 
 == Examples ==
+=== Basic Item Processing ===
 dilbegin unique process_item(item : unitptr);
 var
     original_owner : unitptr;
@@ -33,72 +34,7 @@ code
     act("$1n finishes processing $2n.", A_ALWAYS, self, item, null, TO_ROOM);
 } dilend
 
-dilbegin unique janitor_cleanup();
-var
-    trash : unitptr;
-    i : integer;
-code
-{
-    // Find and process trash items
-    foreach (UNIT_ST_OBJ, trash)
-    {
-        if (not findsymbolic(self, "tbag@midgaard", FIND_UNIT_IN_ME)) 
-            goto s_break;
-
-        if (self.outside.flags & UNIT_FL_NO_BURY) continue;
-        if (trash.flags & UNIT_FL_BURIED) continue;
-        if (not isset (trash.manipulate, MANIPULATE_TAKE)) continue;
-        if (not visible(self,trash)) continue;
-        if (can_carry (self, trash, 1) > 0) continue;
-
-        // Secure trash before processing
-        secure(trash, :collect);
-        pause;
-        
-        // Process the trash item
-        exec("get " + trash.name, self);
-        if (trash.value[3] > 0)
-        {
-            exec("say This " + trash.name + " is unfit for consumption!", self);
-            act("$1n heaves the $2n into the distance.", A_ALWAYS, self, trash, null, TO_ALL);
-            unsecure(trash);
-            destroy(trash);
-            continue;
-        }
-
-        // Unsecure after processing
-        unsecure(trash);
-        dilcopy("rotaway@midgaard()", trash);
-        act("$1n donates $2n to a worthy cause.", A_ALWAYS, self, trash, null, TO_ALL);
-        link(trash, findroom("jandump@midgaard"));
-    }
-} dilend
-
-dilbegin unique secure_transfer(item : unitptr, target : unitptr);
-var
-    success : integer;
-code
-{
-    // Secure item during transfer to prevent interference
-    secure(item, :transfer_failed);
-    
-    // Perform the transfer
-    success := transfermoney(self.outside, target, 100);
-    
-    if (success)
-    {
-        link(item, target);
-        act("$1n transfers $2n to $3n.", A_ALWAYS, self, item, target, TO_ALL);
-    }
-    else
-    {
-        act("$1n failed to transfer $2n to $3n.", A_ALWAYS, self, item, target, TO_ALL);
-    }
-    
-    // Always unsecure when done
-    unsecure(item);
-} dilend
-
+=== Temporary Protection ===
 dilbegin unique temporary_protection();
 var
     protected_unit : unitptr;

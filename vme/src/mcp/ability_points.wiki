@@ -1,9 +1,10 @@
 = ability_points =
+ field: integer '''.ability_points''' (Read/Write)
 
 The '''ability_points''' field is a read-write integer field available on player character units that represents the number of unused ability points the player has available for training.
 
-== Syntax ==
- player.ability_points
+== Description ==
+This field represents the number of unused ability points that a player has available for training abilities. Points can be awarded for leveling up, completing quests, or special events.
 
 == Field Access ==
 {| class="wikitable"
@@ -12,21 +13,9 @@ The '''ability_points''' field is a read-write integer field available on player
 | player.ability_points || integer || The number of unused ability points available
 |}
 
-== Return Value ==
-Returns an integer representing available ability points:
-* '''integer''' - The current number of unused ability points
-* '''fail''' - If player unit is invalid or not a PC
-
-== Field Properties ==
-{| class="wikitable"
-! Property !! Type !! Description
-|-
-| Read/Write || Read-write (RW)
-|-
-| Unit Type || Only available on UNIT_ST_PC (player characters)
-|-
-| Default Value || Typically starts at 0 or a set amount
-|}
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
 
 == Examples ==
 === Basic Points Check ===
@@ -82,99 +71,6 @@ Returns an integer representing available ability points:
        send("You don't have enough ability points.");
        send("You have: " + itoa(player.ability_points) + " available.");
     }
-    quit;
- } dilend
-
-=== Training Validation ===
- dilbegin can_train_abilities(player : unitptr);
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    if (player.ability_points >= 10) {
-       send("You have enough ability points for advanced training.");
-    } else if (player.ability_points >= 5) {
-       send("You have some ability points available for training.");
-    } else if (player.ability_points > 0) {
-       send("You have a few ability points available.");
-    } else {
-       send("You have no ability points available.");
-    }
-    quit;
- } dilend
-
-=== Score Command Integration ===
- dilbegin do_score(arg : string);
- external
-    string titlestring();
-    string agestring(rce : integer);
-    string playingstring();
- var
-    i : integer;
- code
- {
-    if (arg != "") {
-       if (arg == "hp") {
-          sendtext(itoa(self.hp) + "<br/>", self);
-          quit;
-       } else if (arg == "ep") {
-          sendtext(itoa(self.endurance) + "<br/>", self);
-          quit;
-       } else if (arg == "mp") {
-          sendtext(itoa(self.mana) + "<br/>", self);
-          quit;
-       }
-    }
-    
-    if (self.position == POSITION_FIGHTING) {
-       sendtext("Not while fighting!<br/>", self);
-       quit;
-    }
-    
-    if ((self.ability_points >= 10) or (self.skill_points >= 10)) {
-       sendtext("<b>You have unspent practice points, you should <a cmd='#'>practice auto</a> now or go visit a teacher.</b><br/>", self);
-    }
-    
-    sendtext("<div class='score'>You have "+itoa(self.hp)+"("+itoa(self.max_hp)+") hit, "
-          +itoa(self.mana)+"("+itoa(self.max_mana)+") mana, "
-          +itoa(self.endurance)+"("+itoa(self.max_endurance)+") endurance points.</div><br/>"
-          +"<div class='score'>You have "+itoa(self.ability_points)+" ability points available.</div>", self);
-    quit;
- } dilend
-
-=== Points Reset ===
- dilbegin reset_ability_points(player : unitptr);
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    player.ability_points := 0;
-    send("Your ability points have been reset to 0.");
-    quit;
- } dilend
-
-=== Points for Level Up ===
- dilbegin level_up_bonus(player : unitptr);
- var
-    bonus_points : integer;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    bonus_points := player.level / 5; /* 1 point per 5 levels */
-    player.ability_points := player.ability_points + bonus_points;
-    
-    send("You gain " + itoa(bonus_points) + " ability points for reaching level " + itoa(player.level) + "!");
-    send("Total ability points: " + itoa(player.ability_points));
     quit;
  } dilend
 

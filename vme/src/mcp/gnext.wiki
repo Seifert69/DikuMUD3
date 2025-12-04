@@ -1,19 +1,26 @@
 = gnext =
+ field: unitptr '''.gnext''' (Read-only)
 
- unitptr gnext
+Returns the next unit in the global list of units.
 
 == Description ==
 Returns the next unit in the global list of units. This is a read-only field of a unitptr.
 
-== Return Value ==
-Returns a unitptr pointing to the next unit in the global list, or null if there is no next unit.
+== Field Access ==
+{| class="wikitable"
+! Field !! Type !! Access
+|-
+| gnext || unitptr || Read-only
+|}
 
-== Usage ==
-This field is accessed using dot notation on a unitptr variable:
- unitptr next_unit;
- next_unit := current_unit.gnext;
+== Availability ==
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
 
-== Example ==
+== Examples ==
  dilbegin look_signature();
  var
    pc:unitptr;
@@ -42,14 +49,22 @@ This field is accessed using dot notation on a unitptr variable:
    goto start;
  } dilend
 
-== Notes ==
+== Usage Notes ==
 * The global list contains all units in the game
 * This field is read-only (RO)
 * Returns null when called on the last unit in the global list
 * Commonly used for iterating through all units in the game
+* Use with '''ghead'''() to start iteration from the beginning
 
-== See Also ==
+== Error Handling ==
+* Returns null when called on the last unit in the global list
+* Always check return value before using the returned unit
+* No error occurs when accessing on null units (returns null)
+
+== Related Functions/Fields ==
 * [[ghead]] - Get the first unit in the global list
 * [[gprevious]] - Get the previous unit in the global list
 * [[next]] - Get the next unit in the local list
+
+== See Also ==
 * [[unitptr]] - Unit pointer documentation

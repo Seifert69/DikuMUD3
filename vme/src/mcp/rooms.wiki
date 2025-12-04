@@ -1,5 +1,5 @@
 = rooms =
- field: unitptr '''.rooms''' (Read-only)
+field: unitptr '''.rooms''' (Read-only)
 
 The .rooms field provides access to the first room unit in a zone, allowing iteration through all rooms within that zone.
 

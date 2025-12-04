@@ -70,4 +70,4 @@ This shows how an administrator can validate a player exists before deleting the
 
 ; delete_player : Deletes a player from the database
 ; findunit : Finds a unit by name (online units only)
-; findsymbolic : Finds a unit by symbolic name
+; findsymbolic : Finds a unit by symbolic name 

@@ -271,6 +271,7 @@ Always validate that the target is a valid unit before calling the function.
 * [[findsymbolic]] - Find units by symbolic name globally
 * [[addextra]] - Store symbolic names in extra descriptions
 * unitptr.symname - Field to access symbolic name
+
 * unitptr.nameidx - Field for unit name index
 * unitptr.zoneidx - Field for unit zone index
 

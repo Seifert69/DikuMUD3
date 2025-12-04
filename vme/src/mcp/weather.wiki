@@ -7,6 +7,7 @@ The weather variable returns the current sky condition for the zone where the ex
 The weather variable provides access to the current weather state as defined by the zone's weather system. It returns an integer value corresponding to one of the SKY_* constants defined in values.h and/or vme.h. This variable is commonly used in weather-dependent spells, outdoor activities, and environmental effects that need to react to current atmospheric conditions.
 
 == Examples ==
+=== Basic Weather Check ===
  dilbegin check_weather_for_spell();
  var
     current_weather : integer;
@@ -26,6 +27,38 @@ The weather variable provides access to the current weather state as defined by 
     {
        sendtext("The weather conditions are not favorable.&n", self);
     }
+    quit;
+ } dilend
+
+=== Weather Report ===
+ dilbegin weather_report();
+ var
+    current_weather : integer;
+    report : string;
+ code
+ {
+    current_weather := weather;
+    
+    switch (current_weather)
+    {
+       case SKY_CLOUDLESS:
+          report := "The sky is completely clear.";
+          break;
+       case SKY_CLOUDY:
+          report := "Clouds drift across sky.";
+          break;
+       case SKY_RAINING:
+          report := "Rain is falling from sky.";
+          break;
+       case SKY_LIGHTNING:
+          report := "Lightning flashes in stormy sky.";
+          break;
+       default:
+          report := "The weather conditions are unusual.";
+          break;
+    }
+    
+    act(report, A_ALWAYS, self, null, null, TO_CHAR);
     quit;
  } dilend
 

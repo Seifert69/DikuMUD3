@@ -1,5 +1,4 @@
 = on...goto =
-
  statement: '''on''' n : integer goto (label1 : string, label2 : string, ...);
 
 Conditional goto statement that transfers program control to different labels based on integer value.
@@ -23,14 +22,13 @@ Where 'n' is the integer value to evaluate, and the program jumps to the label c
 |}
 
 == Examples ==
-=== Basic Multi-Direction ===
  dilbegin multi_direction();
  var
     direction : integer;
  code
  {
     :start:
-    direction := rnd(0, 3); // Random direction 0-3
+    direction := rnd(0, 3);
     
     on direction goto (north, south, east, west);
     
@@ -48,180 +46,6 @@ Where 'n' is the integer value to evaluate, and the program jumps to the label c
     
     :west:
     exec("go west", self);
-    goto start;
- } dilend
-
-=== State Machine ===
- dilbegin state_machine();
- var
-    state : integer;
- code
- {
-    state := 0;
-    
-    :start:
-    on state goto (idle, walking, fighting, sleeping);
-    
-    :idle:
-    exec("say I am idle.", self);
-    state := 1;
-    goto start;
-    
-    :walking:
-    exec("say I am walking.", self);
-    state := 2;
-    goto start;
-    
-    :fighting:
-    exec("say I am fighting!", self);
-    state := 3;
-    goto start;
-    
-    :sleeping:
-    exec("say I am sleeping.", self);
-    state := 0;
-    goto start;
- } dilend
-
-=== Menu System ===
- dilbegin menu_system();
- var
-    choice : integer;
- code
- {
-    :start:
-    exec("say 1. Talk to guard", self);
-    exec("say 2. Buy equipment", self);
-    exec("say 3. Leave", self);
-    
-    wait(SFB_CMD, command("1") or command("2") or command("3"));
-    choice := atoi(argument);
-    
-    on choice goto (talk_guard, buy_equipment, leave_area);
-    
-    :talk_guard:
-    exec("say You talk to the guard.", self);
-    goto start;
-    
-    :buy_equipment:
-    exec("say You browse the equipment shop.", self);
-    goto start;
-    
-    :leave_area:
-    exec("say You leave the area.", self);
-    goto start;
- } dilend
-
-=== Random Action Selector ===
- dilbegin random_action();
- var
-    action : integer;
- code
- {
-    :start:
-    action := rnd(0, 4); // Random action 0-4
-    
-    on action goto (dance, sing, tell_story, play_music, rest);
-    
-    :dance:
-    exec("emote dances around happily.", self);
-    goto start;
-    
-    :sing:
-    exec("say " + self.name + " sings a beautiful song.", self);
-    goto start;
-    
-    :tell_story:
-    exec("say " + self.name + " tells an ancient tale.", self);
-    goto start;
-    
-    :play_music:
-    exec("say " + self.name + " plays a haunting melody.", self);
-    goto start;
-    
-    :rest:
-    exec("say " + self.name + " rests quietly.", self);
-    goto start;
- } dilend
-
-
-=== Error Handler ===
- dilbegin error_router();
- var
-    error_code : integer;
- code
- {
-    :start:
-    error_code := rnd(0, 3); // Random error 0-3
-    
-    on error_code goto (file_error, memory_error, network_error, unknown_command);
-    
-    :file_error:
-    exec("say Error: File not found.", self);
-    goto start;
-    
-    :memory_error:
-    exec("say Error: Out of memory.", self);
-    goto start;
-    
-    :network_error:
-    exec("say Error: Network connection lost.", self);
-    goto start;
-    
-    :unknown_command:
-    exec("say Error: Unknown command.", self);
-    goto start;
- } dilend
-
-=== Extended Label List ===
- dilbegin extended_labels();
- var
-    option : integer;
- code
- {
-    :start:
-    option := rnd(0, 9); // Random option 0-9
-    
-    on option goto (opt0, opt1, opt2, opt3, opt4, opt5, opt6, opt7, opt8, opt9);
-    
-    :opt0:
-    exec("say Option 0 selected.", self);
-    goto start;
-    
-    :opt1:
-    exec("say Option 1 selected.", self);
-    goto start;
-    
-    :opt2:
-    exec("say Option 2 selected.", self);
-    goto start;
-    
-    :opt3:
-    exec("say Option 3 selected.", self);
-    goto start;
-    
-    :opt4:
-    exec("say Option 4 selected.", self);
-    goto start;
-    
-    :opt5:
-    exec("say Option 5 selected.", self);
-    goto start;
-    
-    :opt6:
-    exec("say Option 6 selected.", self);
-    goto start;
-    
-    :opt7:
-    exec("say Option 7 selected.", self);
-    goto start;
-    
-    :opt8:
-    exec("say Option 8 selected.", self);
-    goto start;
-    
-    :opt9:
-    exec("say Option 9 selected.", self);
     goto start;
  } dilend
 
@@ -254,4 +78,4 @@ Where 'n' is the integer value to evaluate, and the program jumps to the label c
 * [[goto]] - Unconditional jumping
 * [[if]] - Conditional branching
 * [[while]] - Loop construct (alternative to on-based loops)
-* [[switch]] - Similar multi-way branching construct
+* [[switch]] - Similar multi-way branching construct 

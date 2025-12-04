@@ -1,42 +1,93 @@
 = addstring =
+ function: '''addstring'''(stringlist : stringptr, text : string);
+
+The '''addstring''' function adds a new string to a string list for building dynamic data structures.
 
 == Description ==
 Adds a new string to a string list. This function is used to build and manage dynamic string lists for various purposes like command arguments, message queues, or data collections.
 
-== Syntax ==
- addstring(stringlist, string)
-
 == Parameters ==
-- **stringlist** - The string list to add the string to (can be null to create a new list)
-- **string** - The string content to add to the list
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| stringlist || stringptr || The string list to add string to (can be null to create a new list)
+|-
+| text || string || The string content to add to list
+|}
 
 == Return Value ==
-Returns the updated string list. If the operation fails, returns the original list unchanged.
+Returns an updated string list pointer. If the operation fails, returns the original list unchanged.
 
 == Examples ==
- // Create a new string list
- mylist := addstring(null, "first item");
+=== Basic List Creation ===
+ dilbegin create_list();
+ var
+    mylist : stringptr;
+ code
+ {
+    mylist := addstring(null, "first item");
+    mylist := addstring(mylist, "second item");
+    mylist := addstring(mylist, "third item");
+    send("List created with 3 items.");
+    quit;
+ } dilend
 
- // Add more items to the list
- mylist := addstring(mylist, "second item");
- mylist := addstring(mylist, "third item");
+=== Command Arguments ===
+ dilbegin process_arguments();
+ var
+    args : stringptr;
+ code
+ {
+    args := addstring(null, argument);
+    args := addstring(args, extra_argument);
+    send("Arguments processed.");
+    quit;
+ } dilend
 
- // Use with command arguments
- args := addstring(null, argument);
- args := addstring(args, extra_argument);
+=== Message Queue ===
+ dilbegin build_messages();
+ var
+    messages : stringptr;
+ code
+ {
+    messages := addstring(messages, "Welcome to the game!");
+    messages := addstring(messages, "Type 'help' for commands.");
+    send("Message queue built.");
+    quit;
+ } dilend
 
- // Build message queue
- messages := addstring(messages, "Welcome to the game!");
- messages := addstring(messages, "Type 'help' for commands.");
+=== Dynamic Data Structure ===
+ dilbegin dynamic_collection();
+ var
+    data : stringptr;
+    i : integer;
+ code
+ {
+    for (i := 1; i <= 5; i := i + 1) {
+       data := addstring(data, "item " + itoa(i));
+    }
+    send("Collection created with 5 items.");
+    quit;
+ } dilend
 
-== Notes ==
-- If stringlist is null, a new string list is created
-- Strings are added to the end of the list
-- The function handles memory allocation automatically
-- Commonly used for dynamic data structures
-- Used extensively in command parsing and message handling
+== Usage Notes ==
+* If stringlist is null, a new string list is created
+* Strings are added to the end of the list
+* The function handles memory allocation automatically
+* Commonly used for dynamic data structures
+* Used extensively in command parsing and message handling
+* Returns a string pointer that can be used with other string functions
+
+== Error Handling ==
+The function performs validation:
+* '''String validation'' - Ensures text parameter is a valid string
+* '''Memory allocation'' - Handles memory allocation failures gracefully
+* '''List validation'' - Validates string list parameter
+
+== Related Functions ==
+* [[delstr]] - Delete strings from string lists
+* [[getwords]] - Extract words from strings
+* [[addextra]] - Add strings to unit extra descriptions
 
 == See Also ==
-- [delstr](delstr.wiki) - Delete strings from string lists
-- [getwords](getwords.wiki) - Extract words from strings
-- [addextra](addextra.wiki) - Add strings to unit extra descriptions
+* [[stringptr]] - String pointer data type

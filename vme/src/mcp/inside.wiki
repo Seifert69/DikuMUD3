@@ -1,7 +1,7 @@
 = inside =
+ field: unitptr '''inside''' (Read-only)
 
-; inside : unitptr (RO)
-: The inside of the unit hierarchy (carry, contains). This field points to the first unit contained within this unit, or null if the unit is empty.
+The '''inside''' field points to the first unit contained within this unit, or null if the unit is empty.
 
 == Description ==
 
@@ -9,163 +9,118 @@ The '''inside''' field provides access to the first unit in a unit's contents. T
 
 This field is read-only (RO) and represents the "contains" relationship in the unit hierarchy. For example, a room's inside field points to the first player/object in that room, and a player's inside field points to the first item in their inventory.
 
-== Usage ==
+== Field Access ==
+
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.inside || unitptr || Returns pointer to first contained unit or null
+|}
+
+== Availability ==
+
+This field is available on the following unit types:
+* UNIT_ST_PC (Player Character)
+* UNIT_ST_NPC (Non-Player Character)
+* UNIT_ST_OBJ (Object)
+* UNIT_ST_ROOM (Room)
+
+== Examples ==
 
 === Checking if Unit is Empty ===
-
- dilbegin check_contents();
-    var
-       container : unitptr;
-    code
-    {
-       container := self;
-       
-       if (container.inside == null)
-       {
-          act("The container is empty.", A_ALWAYS, activator, null, null, TO_CHAR);
-       }
-       else
-       {
-          act("The container contains something.", A_ALWAYS, activator, null, null, TO_CHAR);
-       }
-    } dilend
+dilbegin check_contents();
+var
+   container : unitptr;
+code
+{
+   container := self;
+   
+   if (container.inside == null)
+   {
+      act("The container is empty.", A_ALWAYS, activator, null, null, TO_CHAR);
+   }
+   else
+   {
+      act("The container contains something.", A_ALWAYS, activator, null, null, TO_CHAR);
+   }
+} dilend
 
 === Iterating Through Contents ===
+dilbegin list_inventory();
+var
+   pc : unitptr;
+   item : unitptr;
+   count : integer;
+code
+{
+   pc := activator;
+   count := 0;
+   
+   item := pc.inside;
+   while (item != null)
+   {
+      act("Item " + itoa(count + 1) + ": " + item.name, 
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      item := item.next;
+      count := count + 1;
+   }
+   
+   if (count == 0)
+   {
+      act("You are not carrying anything.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   else
+   {
+      act("Total items: " + itoa(count), A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+} dilend
 
- dilbegin list_inventory();
-    var
-       pc : unitptr;
-       item : unitptr;
-       count : integer;
-    code
-    {
-       pc := activator;
-       count := 0;
-       
-       item := pc.inside;
-       while (item != null)
-       {
-          act("Item " + itoa(count + 1) + ": " + item.name, 
-              A_ALWAYS, pc, null, null, TO_CHAR);
-          item := item.next;
-          count := count + 1;
-       }
-       
-       if (count == 0)
-       {
-          act("You are not carrying anything.", A_ALWAYS, pc, null, null, TO_CHAR);
-       }
-       else
-       {
-          act("Total items: " + itoa(count), A_ALWAYS, pc, null, null, TO_CHAR);
-       }
-    } dilend
+=== Corpse Processing ===
+dilbegin process_corpse();
+var
+   corpse : unitptr;
+code
+{
+   corpse := self;
+   
+   // Check if corpse has contents
+   if (corpse.inside != null)
+   {
+      act("The corpse still contains items.", A_ALWAYS, activator, null, null, TO_CHAR);
+      exec("get all from corpse", activator);
+   }
+   else
+   {
+      act("The corpse is empty.", A_ALWAYS, activator, null, null, TO_CHAR);
+      exec("bury corpse", activator);
+   }
+} dilend
 
-=== Practical Example - Corpse Processing ===
-
-This example from the prompt shows how inside is used to check corpse contents:
-
- dilbegin process_corpse();
-    var
-       corpse : unitptr;
-    code
-    {
-       corpse := self;
-       
-       // Check if corpse has contents
-       if (corpse.inside != null)
-       {
-          act("The corpse still contains items.", A_ALWAYS, activator, null, null, TO_CHAR);
-          exec("get all from corpse", activator);
-       }
-       else
-       {
-          act("The corpse is empty.", A_ALWAYS, activator, null, null, TO_CHAR);
-          exec("bury corpse", activator);
-       }
-    } dilend
-
-=== Nested Container Navigation ===
-
- dilbegin check_nested();
-    var
-       room : unitptr;
-       pc : unitptr;
-       bag : unitptr;
-       item : unitptr;
-    code
-    {
-       room := self.outside;
-       
-       // Find first player in room
-       pc := room.inside;
-       while (pc != null)
-       {
-          if (pc.type == UNIT_ST_PC)
-          {
-             // Check player's inventory for bags
-             bag := pc.inside;
-             while (bag != null)
-             {
-                if ("bag" in bag.names)
-                {
-                   // Check bag's contents
-                   item := bag.inside;
-                   while (item != null)
-                   {
-                      act("Found " + item.name + " in " + pc.name + "'s bag.",
-                          A_ALWAYS, activator, null, null, TO_CHAR);
-                      item := item.next;
-                   }
-                }
-                bag := bag.next;
-             }
-          }
-          pc := pc.next;
-       }
-    } dilend
-
-== Common Use Cases ==
-
-* '''Inventory Management''' - Accessing and manipulating player inventories
-* '''Container Operations''' - Checking contents of bags, chests, and other containers
-* '''Room Population''' - Iterating through all units in a room
-* '''Corpse Processing''' - Checking if corpses contain items before burial
-* '''Nested Structures''' - Navigating through containers within containers
-* '''Content Validation''' - Verifying if units are empty before operations
-
-== Return Value ==
-
-Returns a unitptr to the first unit contained within this unit, or null if the unit contains no other units.
-
-== Navigation Pattern ==
-
-The typical pattern for navigating through a unit's contents:
-
- unit := container.inside;
- while (unit != null)
- {
-    // Process unit
-    unit := unit.next;
- }
-
-== Hierarchy Relationships ==
-
-* '''outside''' - Points to the unit that contains this unit
-* '''inside''' - Points to the first unit contained within this unit  
-* '''next''' - Points to the next unit at the same containment level
-
-== See Also ==
-
-* [[outside]] - The unit that contains this unit
-* [[next]] - The next unit at the same containment level
-* [[unitptr]] - Information about unit pointers and their fields
-* [[foreach]] - Function for iterating through units of specific types
-
-== Notes ==
+== Usage Notes ==
 
 * The field is read-only (RO)
 * Returns null if the unit contains no other units
-* Creates a linked list structure when combined with the next field
+* Creates a linked list structure when combined with the '''next''' field
 * Commonly used with while loops to iterate through contents
 * Essential for inventory management and container operations
+* The typical navigation pattern is: unit := container.inside; while (unit != null) { /* process */ unit := unit.next; }
+
+== Error Handling ==
+
+* Always check if the returned unitptr is null before accessing its fields
+* Be careful with nested container navigation to avoid infinite loops
+* Ensure proper type checking when processing mixed unit types
+
+== Related Functions/Fields ==
+
+* [[outside]] - The unit that contains this unit
+* [[next]] - The next unit at the same containment level
+* [[foreach]] - Function for iterating through units of specific types
+* [[unitptr]] - Information about unit pointers and their fields
+
+== See Also ==
+
+* Inventory management systems
+* Container operations
+* Unit hierarchy and relationships
+* Linked list navigation patterns

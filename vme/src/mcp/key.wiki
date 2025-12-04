@@ -73,4 +73,4 @@ Typical key identifier formats.
 ; findsymbolic : Finds units by symbolic name
 ; isset : Tests flag bits like EX_LOCKED
 ; openflags : Field containing open/lock state
-; EX_LOCKED : Flag indicating locked state
+; EX_LOCKED : Flag indicating locked state 

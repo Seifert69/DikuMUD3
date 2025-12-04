@@ -1,7 +1,5 @@
 = outside =
-
-== Syntax ==
-unitptr '''.outside''' (unit : unitptr)
+ field: unitptr '''.outside''' (Read-only)
 
 == Description ==
 The '''outside''' field provides access to the containing unit of a given unit. This field points to the unit that contains the specified unit in the game's hierarchy.
@@ -57,7 +55,6 @@ A value of null indicates the unit is at the top level of the hierarchy
  dilbegin analyze_inventory();
  var
     item : unitptr;
-    container : unitptr;
     item_count : integer;
  
  code
@@ -71,134 +68,11 @@ A value of null indicates the unit is at the top level of the hierarchy
        if (item.outside == self)
        {
           item_count := item_count + 1;
-          container := item.outside;
-          
-          if (container.type == UNIT_ST_PC)
-             act("$1n: $2n (carried by player)", 
-                A_ALWAYS, self, item, container, TO_CHAR);
-          else if (container.type == UNIT_ST_ROOM)
-             act("$1n: $2n (in room)", 
-                A_ALWAYS, self, item, container, TO_CHAR);
-          else
-             act("$1n: $2n (other)", 
-                A_ALWAYS, self, item, container, TO_CHAR);
-       }
-    }
-    
-    act("Total items carried: $1d", A_ALWAYS, self, item_count, null, TO_CHAR);
- } dilend
-
-=== Room Navigation ===
- dilbegin room_navigation();
- var
-    current_room : unitptr;
-    outside_room : unitptr;
- 
- code
- {
-    current_room := self.outside;
-    
-    if (current_room == null)
-    {
-       act("You are not in any room.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    if (current_room.type != UNIT_ST_ROOM)
-    {
-       act("Your outside is not a room.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    outside_room := current_room.outside;
-    
-    if (outside_room == null)
-       act("You are at the top level.", A_ALWAYS, self, null, null, TO_CHAR);
-    else
-       act("You are in room: $1n", A_ALWAYS, self, outside_room, null, TO_CHAR);
- } dilend
-
-=== Container Contents ===
- dilbegin list_container_contents(container : unitptr);
- var
-    item : unitptr;
-    count : integer;
- 
- code
- {
-    if (container == null)
-    {
-       act("No container specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    count := 0;
-    
-    // List all items directly inside the container
-    foreach (UNIT_ST_OBJ, item)
-    {
-       if (item.outside == container)
-       {
-          count := count + 1;
           act("$1n", A_ALWAYS, self, item, null, TO_CHAR);
        }
     }
     
-    act("Total items in $1n: $2d", A_ALWAYS, self, container, count, TO_CHAR);
- } dilend
-
-=== Hierarchy Traversal ===
- dilbegin trace_hierarchy(target : unitptr);
- var
-    current : unitptr;
-    level : integer;
-    path : string;
- 
- code
- {
-    if (target == null)
-    {
-       act("No target specified.", A_ALWAYS, self, null, null, TO_CHAR);
-       return;
-    }
-    
-    current := target;
-    level := 0;
-    path := target.nameidx + "@" + target.zoneidx;
-    
-    act("=== Hierarchy Trace for $1t ===", A_ALWAYS, self, path, null, TO_CHAR);
-    
-    while (current.outside != null)
-    {
-       level := level + 1;
-       current := current.outside;
-       
-       if (current.type == UNIT_ST_PC)
-          path := current.nameidx + "@" + current.zoneidx + " (PC)";
-       else if (current.type == UNIT_ST_NPC)
-          path := current.nameidx + "@" + current.zoneidx + " (NPC)";
-       else if (current.type == UNIT_ST_OBJ)
-          path := current.nameidx + "@" + current.zoneidx + " (OBJ)";
-       else if (current.type == UNIT_ST_ROOM)
-          path := current.nameidx + "@" + current.zoneidx + " (ROOM)";
-       
-       act("Level $1d: $2t", A_ALWAYS, self, level, path, TO_CHAR);
-    }
- } dilend
-
-=== Top Level Check ===
- dilbegin check_top_level();
- var
-    outside : unitptr;
- 
- code
- {
-    outside := self.outside;
-    
-    if (outside == null)
-       act("You are at the top level.", A_ALWAYS, self, null, null, TO_CHAR);
-    else
-       act("You are inside: $1n", A_ALWAYS, self, outside, null, TO_CHAR);
+    act("Total items carried: $1d", A_ALWAYS, self, item_count, null, TO_CHAR);
  } dilend
 
 == Error Handling ==

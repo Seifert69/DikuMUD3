@@ -1,23 +1,21 @@
 = getword =
+ function: string '''getword'''(var input_string : string);
 
-== Syntax ==
- string := getword( var input_string : string );
-
-== Parameters ==
- input_string : string
-    A string containing one or more words separated by spaces. This parameter is passed by reference and will be modified.
-
-== Return Value ==
- string
-    Returns the first word from the input string.
-    Returns fail if the input string is null or invalid.
+The getword() function extracts the first word from a string and removes it from the original string.
 
 == Description ==
- The getword() function extracts the first word from a string and removes it from the original string. The function treats spaces as word separators and skips any leading spaces before finding the first word.
+ The '''getword'''() function extracts the first word from a string and removes it from the original string. The function treats spaces as word separators and skips any leading spaces before finding the first word.
 
  Important: The input_string parameter is modified by this function - the returned word is removed from the original string. This makes getword() useful for parsing command arguments sequentially.
 
-== Example ==
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| input_string || string || A string containing one or more words separated by spaces. This parameter is passed by reference and will be modified.
+|}
+
+== Examples ==
  dilbegin parse_command(cmd_line : string);
  var
     first_word : string;
@@ -60,8 +58,23 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* The input_string parameter is modified by reference
+* Leading spaces are skipped before finding the first word
+* Multiple consecutive spaces are treated as single separators
+* Returns empty string if no words are found
+* Commonly used for parsing command arguments sequentially
+
+== Error Handling ==
+* Returns fail if input_string is null or invalid
+* Returns empty string if input_string contains no words
+* Always check return value before using in string operations
+
+== Related Functions/Fields ==
+* [[getwords]] - Get all words as a stringlist
+* [[argument]] - Command argument string
+* [[left]] - Get left portion of string
+* [[right]] - Get right portion of string
+
 == See Also ==
- * [[getwords]] - Get all words as a stringlist
- * [[argument]] - Command argument string
- * [[left]] - Get left portion of string
- * [[right]] - Get right portion of string
+* String parsing and manipulation functions

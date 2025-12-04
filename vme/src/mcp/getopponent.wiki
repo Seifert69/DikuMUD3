@@ -1,22 +1,10 @@
 = getopponent =
+ function: unitptr '''getopponent'''(character : unitptr, index : integer);
 
-== Syntax ==
- unitptr := getopponent( character : unitptr, index : integer );
-
-== Parameters ==
- character : unitptr
-    The character whose opponent list should be searched. Must be a character unit (PC or NPC) that is currently in combat.
- index : integer
-    The zero-based index of the opponent to retrieve. Must be >= 0.
-
-== Return Value ==
- unitptr
-    Returns the opponent unit at the specified index if found.
-    Returns null if the index is out of range, the character is not in combat, or no opponent exists at that position.
-    Returns fail if the character parameter is null, not a character, or if parameters are invalid.
+The getopponent() function retrieves a specific opponent from a character's opponent list by index.
 
 == Description ==
- The getopponent() function retrieves a specific opponent from a character's opponent list by index. In the DikuMUD combat system, a character can be fighting multiple opponents simultaneously, with one primary opponent (accessible via the .fighting field) and additional opponents in the opponent list.
+ The '''getopponent'''() function retrieves a specific opponent from a character's opponent list by index. In the DikuMUD combat system, a character can be fighting multiple opponents simultaneously, with one primary opponent (accessible via the .fighting field) and additional opponents in the opponent list.
 
  This function is commonly used to:
  * Iterate through all opponents of a character
@@ -25,7 +13,16 @@
 
  The index is zero-based, so index 0 retrieves the first opponent in the list.
 
-== Example ==
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| character || unitptr || The character whose opponent list should be searched. Must be a character unit (PC or NPC) that is currently in combat.
+|-
+| index || integer || The zero-based index of the opponent to retrieve. Must be >= 0.
+|}
+
+== Examples ==
  dilbegin list_opponents(target_name : string);
  var
     target : unitptr;
@@ -63,8 +60,24 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* The index is zero-based, so index 0 retrieves the first opponent
+* Use '''opponentcount''' field to determine the valid range of indices
+* Returns null for invalid indices, allowing safe iteration
+* The primary opponent is also accessible via the '''fighting''' field
+
+== Error Handling ==
+* Returns fail if character parameter is null or not a character unit
+* Returns null if index is negative or exceeds opponent count
+* Returns null if character is not in combat (opponentcount is 0)
+* Always check return value before using the returned unit
+
+== Related Functions/Fields ==
+* [[opponent]] - Check if two units are opponents
+* [[set_fighting]] - Set two characters fighting
+* [[stop_fighting]] - Stop combat between characters
+* [[fighting]] - Primary opponent field
+* [[opponentcount]] - Number of opponents a character is fighting
+
 == See Also ==
- * [[opponent]] - Check if two units are opponents
- * [[set_fighting]] - Set two characters fighting
- * [[stop_fighting]] - Stop combat between characters
- * [[unit_st_pc and unit_st_npc]] - Character fields including fighting and opponentcount
+* [[unit_st_pc and unit_st_npc]] - Character fields including fighting and opponentcount

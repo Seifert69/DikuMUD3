@@ -1,11 +1,9 @@
 = mapx =
+ field: integer '''.mapx''' [Read-only]
 
-== Syntax ==
- field: '''.mapx'''
-
-== Description ==
 The '''.mapx''' field is accessed on room units and returns the X coordinate of the room on a map grid. This field is used to position rooms within a coordinate system, typically for mapping, visualization, or spatial calculations.
 
+== Description ==
 If a room has not been assigned map coordinates, this field returns -1.
 
 == Field Access ==

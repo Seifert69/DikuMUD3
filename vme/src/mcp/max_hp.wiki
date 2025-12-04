@@ -1,11 +1,9 @@
 = max_hp =
+ field: integer '''.max_hp''' [Read-only (PC) / Read-write (NPC & Obj)]
 
-== Syntax ==
- field: '''.max_hp'''
-
-== Description ==
 The '''.max_hp''' field is accessed on character units (PC/NPC) and objects, returning the maximum hitpoints of the unit. This represents the highest possible health value the unit can have.
 
+== Description ==
 For player characters, this field is read-only. For mobiles (NPCs) and objects, this field is read/write, allowing modification of their maximum health.
 
 == Field Access ==

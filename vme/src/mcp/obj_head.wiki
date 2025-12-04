@@ -1,12 +1,10 @@
 = obj_head =
+ function: unitptr '''obj_head'''();
 
-== Syntax ==
-Variable: unitptr '''obj_head'''();
+The '''obj_head'''() function returns a pointer to the first object in the global object list.
 
 == Description ==
-The '''obj_head'''() function returns a pointer to the first object in the global object list. This function provides access to the head of the linked list containing all objects currently loaded in the game.
-
-Based on the C implementation, the function checks if the global object head pointer (`g_obj_head`) points to a valid object using the `isObj()` method. If valid, it returns the pointer; otherwise, it returns null.
+The '''obj_head'''() function provides access to the head of the linked list containing all objects currently loaded in the game. Based on the C implementation, the function checks if the global object head pointer (`g_obj_head`) points to a valid object using the `isObj()` method. If valid, it returns the pointer; otherwise, it returns null.
 
 == Return Value ==
 Returns unitptr:
@@ -20,7 +18,6 @@ Returns unitptr:
 * This function provides access to all objects in the game, regardless of location
 
 == Examples ==
-=== Basic Usage ===
  dilbegin list_objects();
  var
     current_obj : unitptr;
@@ -35,25 +32,10 @@ Returns unitptr:
     {
        count := count + 1;
        act("Object: $1n", A_ALWAYS, self, current_obj, null, TO_CHAR);
-       current_obj := current_obj.next; // Navigate to next object
+       current_obj := current_obj.next;
     }
     
     act("Total objects: $2d", A_ALWAYS, self, count, null, TO_CHAR);
- } dilend
-
-=== Checking for Objects ===
- dilbegin check_objects_exist();
- var
-    first_obj : unitptr;
- 
- code
- {
-    first_obj := obj_head();
-    
-    if (first_obj == null)
-       act("No objects are currently loaded.", A_ALWAYS, self, null, null, TO_CHAR);
-    else
-       act("Objects are loaded in the game.", A_ALWAYS, self, null, null, TO_CHAR);
  } dilend
 
 == Error Handling ==
@@ -62,12 +44,10 @@ Always check the return value for null before using it:
  first_obj := obj_head();
  if (first_obj != null)
  {
-    // Safe to use the pointer
     name := first_obj.name;
  }
  else
  {
-    // Handle the case where no objects exist
     act("No objects found.", A_ALWAYS, self, null, null, TO_CHAR);
  }
 
@@ -81,4 +61,4 @@ Always check the return value for null before using it:
 == See Also ==
 * [[unitptr]]
 * [[next]] - Navigate to next unit in list
-* [[isObj]] - Check if unit is an object
+* [[isObj]] - Check if unit is an object 

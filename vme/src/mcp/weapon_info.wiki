@@ -22,6 +22,7 @@ The function returns an intlist with the following structure:
 * Index 5+: Damage chart data (3 values per armor type: offset, base damage, alpha)
 
 == Examples ==
+=== Check Two-Handed Weapon ===
  dilbegin check_two_handed(weapon_idx : integer);
  var
     wpn_info : intlist;
@@ -43,10 +44,10 @@ The function returns an intlist with the following structure:
     quit;
  } dilend
 
+=== Display Weapon Stats ===
  dilbegin display_weapon_stats(weapon_idx : integer);
  var
     wpn_info : intlist;
-    i : integer;
  code
  {
     wpn_info := weapon_info(weapon_idx);

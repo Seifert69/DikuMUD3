@@ -16,7 +16,6 @@ The '''break''' statement is used to exit prematurely from any loop construct in
 If the '''break''' statement is used outside of any loop construct, the DIL compiler will generate an error and the script will fail to compile.
 
 == Examples ==
-=== Basic while loop with break ===
  dilbegin check_position();
  code
  {
@@ -26,10 +25,8 @@ If the '''break''' statement is used outside of any loop construct, the DIL comp
      exec("say I am awake and active", self);
      pause;
    }
- }
- dilend
+ } dilend
 
-=== Foreach loop with conditional break ===
  dilbegin find_injured_player();
  code
  {
@@ -39,24 +36,7 @@ If the '''break''' statement is used outside of any loop construct, the DIL comp
        break;
      }
    }
- }
- dilend
-
-=== Nested loops demonstrating break scope ===
- dilbegin nested_loop_example();
- code
- {
-   while (self.inside) {
-     foreach (UNIT_ST_PC, pc) {
-       if (pc.level > 50) {
-         break;  // Only exits the foreach loop
-       }
-       act("Processing low level player", A_ALWAYS, self, null, pc, TO_CHAR);
-     }
-     pause;
-   }
- }
- dilend
+ } dilend
 
 == Related Functions/Fields ==
 * [[continue]] - Skip to next iteration of a loop

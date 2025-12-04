@@ -124,4 +124,4 @@ The '''mudhour''' variable returns the current hour number in the MUD's internal
 == See Also ==
 * Time constants: '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
 * Time-based functions: [[heartbeat]], [[wait]], [[pause]]
-* Scheduling functions: [[DailyRoutine@quests]]
+* Scheduling functions: [[DailyRoutine@quests]] 

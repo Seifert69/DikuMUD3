@@ -1,26 +1,23 @@
 = getfollower =
+ function: unitptr '''getfollower'''(master_unit : unitptr, index : integer);
 
-== Syntax ==
- unitptr := getfollower( master_unit : unitptr, index : integer );
-
-== Parameters ==
- master_unit : unitptr
-    The character whose follower list should be searched. Must be a character unit (PC or NPC).
- index : integer
-    The zero-based index of the follower to retrieve. Must be >= 0.
-
-== Return Value ==
- unitptr
-    Returns the follower unit at the specified index if found.
-    Returns null if the index is out of range or no follower exists at that position.
-    Returns fail if the master_unit is null, not a character, or if parameters are invalid.
+The getfollower() function retrieves a specific follower from a character's follower list by index.
 
 == Description ==
- The getfollower() function retrieves a specific follower from a character's follower list by index. This is commonly used in group management systems to iterate through all followers of a group leader.
+ The '''getfollower'''() function retrieves a specific follower from a character's follower list by index. This is commonly used in group management systems to iterate through all followers of a group leader.
 
  The function works with the internal follower chain where each character can have multiple followers arranged in a linked list. The index parameter allows direct access to followers without needing to traverse the entire chain.
 
-== Example ==
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| master_unit || unitptr || The character whose follower list should be searched. Must be a character unit (PC or NPC).
+|-
+| index || integer || The zero-based index of the follower to retrieve. Must be >= 0.
+|}
+
+== Examples ==
  dilbegin list_followers(leader_name : string);
  var
     leader : unitptr;
@@ -53,7 +50,20 @@
     quit;
  } dilend
 
+== Usage Notes ==
+* The index is zero-based, so index 0 retrieves the first follower
+* Use '''followercount''' field to determine the valid range of indices
+* Returns null for invalid indices, allowing safe iteration
+
+== Error Handling ==
+* Returns fail if master_unit is null or not a character unit
+* Returns null if index is negative or exceeds follower count
+* Always check return value before using the returned unit
+
+== Related Functions/Fields ==
+* [[follow]] - Make a character follow another
+* [[followercount]] - Number of followers a character has
+* [[unit_st_pc and unit_st_npc]] - Character fields including follower and master
+
 == See Also ==
- * [[follow]] - Make a character follow another
- * [[unit_st_pc and unit_st_npc]] - Character fields including follower and master
- * [[unitptr]] - Unit pointer type and fields
+* [[unitptr]] - Unit pointer type and fields

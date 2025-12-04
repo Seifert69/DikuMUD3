@@ -26,8 +26,8 @@ The acc_modify function performs the following operations:
 * '''Transaction logging'' - All transactions are logged in encrypted account log file
 
 == Examples ==
-=== Basic Credit ===
- dilbegin credit_player(player : unitptr, amount : integer);
+=== Basic Transaction ===
+ dilbegin account_transaction(player : unitptr, amount : integer);
  code
  {
     if (player.type != UNIT_ST_PC) {
@@ -35,29 +35,11 @@ The acc_modify function performs the following operations:
        quit;
     }
     
+    acc_modify(player, amount);
     if (amount > 0) {
-       acc_modify(player, amount);
        send("Account credited: $" + itoa(amount / 100) + "." + itoa(amount % 100));
     } else {
-       send("Amount must be positive for credit.");
-    }
-    quit;
- } dilend
-
-=== Basic Debit ===
- dilbegin debit_player(player : unitptr, amount : integer);
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    if (amount < 0) {
-       acc_modify(player, amount);
-       send("Account debited: $" + itoa((-amount) / 100) + "." + itoa((-amount) % 100)));
-    } else {
-       send("Amount must be negative for debit.");
+       send("Account debited: $" + itoa((-amount) / 100) + "." + itoa((-amount) % 100));
     }
     quit;
  } dilend
@@ -96,11 +78,11 @@ The acc_modify function performs the following operations:
     if (player.acc_balance >= cost_cents) {
        acc_modify(player, -cost_cents);
        send("Payment processed: $" + itoa(price) + " deducted from account.");
-       send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + "." + itoa((player.acc_balance - cost_cents) % 100)));
+        send("Remaining balance: $" + itoa((player.acc_balance - cost_cents) / 100) + "." + itoa((player.acc_balance - cost_cents) % 100));
     } else {
        send("Insufficient funds for this purchase.");
        send("Cost: $" + itoa(price));
-       send("Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100)));
+        send("Balance: $" + itoa(player.acc_balance / 100) + "." + itoa(player.acc_balance % 100));
     }
     quit;
  } dilend
@@ -117,7 +99,7 @@ The acc_modify function performs the following operations:
     if (amount > 0) {
        acc_modify(source, -amount);
        acc_modify(target, amount);
-       send("Transfer completed: $" + itoa(amount / 100) + "." + itoa(amount % 100)));
+        send("Transfer completed: $" + itoa(amount / 100) + "." + itoa(amount % 100));
        send("Transferred from " + source.name + " to " + target.name);
     } else {
        send("Amount must be positive for transfer.");
@@ -139,30 +121,12 @@ The acc_modify function performs the following operations:
     refund_cents := refund_amount * 100;
     
     acc_modify(player, refund_cents);
-    send("Refund processed: $" + itoa(refund_amount / 100) + "." + itoa(refund_amount % 100)));
+     send("Refund processed: $" + itoa(refund_amount / 100) + "." + itoa(refund_amount % 100));
     send("Added to account balance.");
     quit;
  } dilend
 
-=== Complex Transaction Example ===
- dilbegin complex_transaction(player : unitptr);
- var
-    transaction_amount : integer;
- code
- {
-    if (player.type != UNIT_ST_PC) {
-       send("This function only works on players.");
-       quit;
-    }
-    
-    transaction_amount := 5000; /* $50.00 */
-    
-    acc_modify(player, transaction_amount);
-    send("Account credited with bonus funds.");
-    send("New balance: $" + itoa((player.acc_balance + transaction_amount) / 100) + "." + itoa((player.acc_balance + transaction_amount) % 100)));
-    
-    quit;
- } dilend
+
 
 == Error Handling ==
 The function performs comprehensive validation:

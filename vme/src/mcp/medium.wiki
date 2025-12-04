@@ -1,11 +1,9 @@
 = medium =
+ variable: unitptr '''medium'''
 
-== Syntax ==
- variable: '''medium'''
-
-== Description ==
 The '''medium''' variable is a built-in unit pointer that refers to the unit which was used as the medium during an operation. This variable is automatically set by the game engine when certain commands or actions are performed.
 
+== Description ==
 For example, when using the 'get' command to take an item from a container, the container (such as a bag) becomes the medium. In spell casting or recharge operations, the item being affected becomes the medium.
 
 == Return Value ==

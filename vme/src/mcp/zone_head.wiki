@@ -7,6 +7,7 @@ The zone_head function returns a pointer to the first zone in the global zone li
 The zone_head function provides access to the head of the global zone list, allowing iteration through all zones in the game. This function is commonly used for zone management, administrative commands, and system-wide zone analysis. The returned zoneptr can be traversed using the .next field to access subsequent zones in the list. Note that this function appears to be obsolete or unused in current DIL implementations.
 
 == Examples ==
+=== List All Zones ===
  dilbegin list_all_zones();
  var
     zones : zoneptr;
@@ -26,6 +27,7 @@ The zone_head function provides access to the head of the global zone list, allo
     quit;
  } dilend
 
+=== Zone Statistics ===
  dilbegin zone_statistics();
  var
     zones : zoneptr;
@@ -58,6 +60,7 @@ The zone_head function provides access to the head of the global zone list, allo
     quit;
  } dilend
 
+=== Find Zone by Name ===
  dilbegin find_zone_by_name(search_name : string);
  var
     zones : zoneptr;
@@ -85,20 +88,6 @@ The zone_head function provides access to the head of the global zone list, allo
     {
        sendtext("Zone '" + search_name + "' not found.&n", self);
     }
-    quit;
- } dilend
-
- dilbegin not_used(arg : string);
- code
- {
-    // This function appears to be obsolete/unused
-    // The functions in comments here have not been used in any DIL program.
-    // I suppose they're considered obsolete until someone needs them
-    // and they get tested.
-    //
-    // buf := zone_head(); -- NOT USED ANYWHERE
-    
-    sendtext("zone_head function is considered obsolete.&n", self);
     quit;
  } dilend
 

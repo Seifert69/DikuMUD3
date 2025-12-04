@@ -1,71 +1,50 @@
 = delete_player =
+function: '''delete_player'''(s : string);
 
-'''delete_player''' is a DIL function that permanently deletes a player character from the game world.
-
-== Syntax ==
- delete_player( s : string ) ;
-
-== Parameters ==
-; s
-: The player name you want to delete
+The '''delete_player''' function permanently deletes a player character from the game world.
 
 == Description ==
-This function deletes a player character from the game. The deletion process includes:
+The '''delete_player''' function deletes a player character from the game. The deletion process includes:
 * Removing the player from the global unit list if they are currently loaded
 * Closing their descriptor if they are currently online
 * Deleting their player file from disk
 
-== Security Considerations ==
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| s || string || The player name to delete
+|}
+
+== Examples ==
+dilbegin delete_character(pname : string);
+code
+{
+   if (isplayer(pname))
+   {
+      delete_player(pname);
+      act("Player " + pname + " has been deleted.", A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   else
+   {
+      act("Player " + pname + " does not exist.", A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   quit;
+} dilend
+
+== Usage Notes ==
+* The function does not verify if the player existed or was successfully deleted
+* Use the isplayer() function to check if a player exists before attempting deletion
+* The deletion is permanent and cannot be undone
+* Only DIL programs running in zones with access level 0 can use this function
+
+== Error Handling ==
 The function includes security checks to prevent unauthorized use:
 * Only DIL programs running in zones with access level 0 can use this function
 * Attempts to use it from higher access level zones will be logged and the DIL program will terminate
 
-== Return Value ==
-This function does not return any value. It performs the deletion operation silently.
-
-== Usage Notes ==
-* The function does not verify if the player existed or was successfully deleted
-* Use the '''isplayer()''' function to check if a player exists before attempting deletion
-* The deletion is permanent and cannot be undone
-
-== Example ==
- dilbegin god_delete(pname:string);
- external
-  integer submember (s:string,pname:string);
-	var
-		i:integer;
-		err:integer;
-		buf:string;
-		ln:integer;
-
-		clist:stringlist;
- code
-{
-	err:=loadstr ("clanlist.data",buf);
-	if (err<1)
-	{
-		delete_player(pname);
-		return;
-	}
-
-	clist:=split(buf,"\n");
-	ln:=length (clist);
-	ln:=ln-1;
-	if (ln<1)
-	{
-		delete_player(pname);
-		return;
-	}
-	i:=0;
-	while (i<ln)
-	{
-		err:=submember(clist.[i],pname);
-		i:=i+1;
-	}
-	delete_player(pname);
-	return;
-} dilend
+== Related Functions/Fields ==
+* [[isplayer]] - Check if a player exists
 
 == See Also ==
-* [[isplayer]] - Check if a player exists
 * [[delete]] - Delete non-player units

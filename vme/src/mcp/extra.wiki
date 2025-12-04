@@ -1,73 +1,53 @@
 = extra =
+ field: extraptr '''.extra''' (Read-only)
+
+The extra field provides access to a unit's extra description list.
 
 == Description ==
 The '''extra''' field provides access to a unit's extra description list. Extra descriptions are additional data structures that can contain names, values, and descriptive text attached to units. This field returns an extraptr that points to the linked list of extra descriptions.
 
+== Field Access ==
+{| class="wikitable"
+! Access !! Type !! Description
+|-
+| unit.extra || extraptr || Pointer to the unit's extra description list
+|}
+
 == Availability ==
-This field is available on all unit types:
+This field is available on the following unit types:
 * UNIT_ST_PC (Player Character)
 * UNIT_ST_NPC (Non-Player Character)
 * UNIT_ST_OBJ (Object)
 * UNIT_ST_ROOM (Room)
 
-== Usage ==
-The extra field returns an extraptr that can be used to access and manipulate extra descriptions.
-
-=== Syntax ===
-  unit.extra
-
-=== Return Value ===
-Returns an extraptr pointing to the unit's extra description list.
-
-== Extraptr Structure ==
-The returned extraptr provides access to the following members:
-
-{| class="wikitable"
-! Member !! Type !! Description
-|-
-| next || extraptr || Points to the next extra description in the list
-|-
-| names || stringlist || Array of names for the extra description
-|-
-| vals || integerlist || Array of integer values for the extra description
-|-
-| descr || string || Descriptive text
-|}
-
-== Example ==
- dilbegin check_corpse_notification(corpse:unitptr);
- var
-    ex_list : extraptr;
+== Examples ==
+ dilbegin check_quest_flag(pc : unitptr);
  code
  {
-    heartbeat:=3;
-    if (corpse.type != UNIT_ST_OBJ)
-       return;
-
-    ex_list := corpse.extra;
-    
-    // Check if owner was already notified
-    if ("$owner notified" in ex_list)
-       sendtext("Owner has already been notified about this corpse.<br/>", self);
+    if ("completed_quest" in pc.extra)
+       sendtext("You have already completed this quest.<br/>", pc);
     else
-       sendtext("Owner has not been notified yet.<br/>", self);
-    
-    return;
+       sendtext("You can start this quest.<br/>", pc);
  } dilend
 
-== Common Operations ==
-* Use the '''in''' operator to check if a name exists in the extra list
-* Use [[addextra()]] to add new extra descriptions
-* Use [[subextra()]] to remove extra descriptions
-* Navigate through the list using the '''next''' member
-
 == Usage Notes ==
+* Use the '''in''' operator to check if a name exists in the extra list
+* Use [[addextra]] to add new extra descriptions
+* Use [[subextra]] to remove extra descriptions
+* Navigate through the list using the '''next''' member
 * Extraptr variables are volatile and may be cleared when rendered unusable
-* Cannot declare static extraptr structures in DIL programs
-* Extra descriptions are commonly used for quests, special descriptions, and unit flags
+
+== Error Handling ==
+* Returns null if the unit has no extra descriptions
+* Returns fail if accessed on invalid unit types
+
+== Related Functions/Fields ==
+* [[addextra]] - Add extra descriptions to a unit
+* [[subextra]] - Remove extra descriptions from a unit
+* [[extraptr]] - Extra description pointer type
 
 == See Also ==
-* [[addextra()]] - Add extra descriptions to a unit
-* [[subextra()]] - Remove extra descriptions from a unit
-* [[extraptr]] - Extra description pointer type
-* [[quests]] - Player quest extra descriptions
+* [[UNIT_ST_PC]] - Player character unit type constant
+* [[UNIT_ST_NPC]] - Non-player character unit type constant
+* [[UNIT_ST_OBJ]] - Object unit type constant
+* [[UNIT_ST_ROOM]] - Room unit type constant

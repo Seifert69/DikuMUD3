@@ -207,4 +207,5 @@ Common error scenarios:
 * [[Character advancement]] - Information about spell progression systems
 * [[Experience system]] - Experience point and spell cost mechanics
 * [[Racial bonuses]] - Racial modifications to spell costs
+
 * [[Training systems]] - Spell training and advancement procedures

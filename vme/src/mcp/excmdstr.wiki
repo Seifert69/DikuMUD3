@@ -1,6 +1,7 @@
 = excmdstr =
+ variable: string '''excmdstr'''
 
-excmdstr is a built-in DIL variable that returns the first word/command string entered by a player as a string value.
+'''excmdstr''' is a built-in DIL variable that returns the first word/command string entered by a player as a string value.
 
 == Description ==
 
@@ -10,19 +11,7 @@ When combined with the '''argument''' variable, you can reconstruct the complete
 
  excmdstr + " " + argument
 
-== Return Value ==
-
-Returns a string containing the command word. If no extended command is available, returns NULL.
-
-== Usage Notes ==
-
-* The command string is converted to lowercase automatically
-* For case-sensitive command checking, use '''excmdstr_case''' instead
-* Commonly used in command validation and processing
-* Essential for determining which command triggered a DIL program
-
-== Example ==
-
+== Examples ==
 The following example shows excmdstr being used to validate a quit command:
 
  dilbegin aware do_quit(arg : string);
@@ -51,8 +40,16 @@ The following example shows excmdstr being used to validate a quit command:
     // Continue with quit processing...
  } dilend
 
-== See Also ==
+== Usage Notes ==
+* The command string is converted to lowercase automatically
+* For case-sensitive command checking, use '''excmdstr_case''' instead
+* Commonly used in command validation and processing
+* Essential for determining which command triggered a DIL program
+* Returns NULL if no extended command is available
 
+== Related Functions/Fields ==
 * [[excmdstr_case]] - Case-sensitive version of excmdstr
 * [[argument]] - The argument portion of a command
 * [[cmdstr]] - Alternative command string variable
+
+== See Also ==

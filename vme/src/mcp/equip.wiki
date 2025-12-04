@@ -1,18 +1,7 @@
 = equip =
+ function: unitptr '''equip'''(u : unitptr, i : integer);
 
 '''equip''' is a function that retrieves the unit currently equipped in a specific equipment position.
-
-== Syntax ==
- unitptr := equipment( u : unitptr, i : integer );
-
-== Parameters ==
-; u
-: The character to search for equipment
-; i
-: The equipment position to check (any of the WEAR_* constants)
-
-== Return Value ==
-Returns a unitptr to the item equipped in the specified position, or null if no item is equipped there.
 
 == Description ==
 The equip function searches a character's equipment slots and returns the item currently equipped in the specified position. This allows DIL programs to examine, manipulate, or check specific equipped items.
@@ -31,8 +20,22 @@ Common equipment positions include:
 * WEAR_SHIELD - Shield slot
 * WEAR_BACK - Back slot
 
-== Usage Notes ==
+== PARAMETERS ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The character to search for equipment
+|-
+| i || integer || The equipment position to check (any of the WEAR_* constants)
+|}
+
+== Error Handling ==
+The function performs error checking:
 * Returns null if no item is equipped in the specified position
+* Returns fail if the character parameter is invalid or not a character unit
+* Returns fail if the equipment position is invalid
+
+== Usage Notes ==
 * The function only works on character units (PCs and NPCs)
 * Equipment positions are defined by WEAR_* constants in values.h
 * The function is commonly used for:
@@ -74,7 +77,9 @@ Common equipment positions include:
     quit;
  } dilend
 
-== See Also ==
+== Related Functions/Fields ==
 * [[addequip]] - Equip items to characters
 * [[unequip]] - Remove items from characters
 * [[equipment]] - Equipment field (different function)
+
+== See Also ==
