@@ -48,10 +48,10 @@ code
 * Always check if the returned unitptr is valid before use
 
 == Related Functions/Fields ==
-* [[set_fighting()]] - Function to initiate combat between units
-* [[stop_fighting()]] - Function to end combat
-* [[opponentcount]] - Number of opponents being fought
-* [[position]] - Current position of the character
+* [[Manual:DIL_Manual/set_fighting()|set_fighting()]] - Function to initiate combat between units
+* [[Manual:DIL_Manual/stop_fighting()|stop_fighting()]] - Function to end combat
+* [[Manual:DIL_Manual/opponentcount|opponentcount]] - Number of opponents being fought
+* [[Manual:DIL_Manual/position|position]] - Current position of the character
 
 == See Also ==
 * Combat system documentation

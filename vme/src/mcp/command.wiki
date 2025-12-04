@@ -137,10 +137,10 @@ The function performs validation:
 * '''Command validation''' - Always returns a valid boolean result
 
 == Related Functions ==
-* [[cmdstr]] - Get the expanded command string
-* [[excmdstr]] - Get the original command as typed
-* [[SFB_CMD]] - Command activation wait flag
+* [[Manual:DIL_Manual/cmdstr|cmdstr]] - Get the expanded command string
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Get the original command as typed
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command activation wait flag
 
 == See Also ==
-* [[command interpreter]] - Command processing system
-* [[command registry]] - System command database
+* [[Manual:DIL_Manual/command interpreter|command interpreter]] - Command processing system
+* [[Manual:DIL_Manual/command registry|command registry]] - System command database

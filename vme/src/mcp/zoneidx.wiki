@@ -88,7 +88,7 @@ This field is available on the following unit types:
 * The field returns a string in "nameidx@zone" format
 * This is the unique database identifier for the unit
 * Commonly used for zone-specific storage keys and file operations
-* The zoneidx is used by functions like [[store]] and [[restore]] for data persistence
+* The zoneidx is used by functions like [[Manual:DIL_Manual/store|store]] and [[Manual:DIL_Manual/restore|restore]] for data persistence
 * Different from .nameidx which is just the zone name part
 * Different from .zone which is just the zone name part
 * Essential for multi-zone environments and zone-specific mechanics
@@ -100,11 +100,11 @@ This field is available on the following unit types:
 * No other error conditions are expected when accessing this field
 
 == Related Functions/Fields ==
-* [[nameidx]] - The zone name part of the identifier
-* [[zone]] - The zone name part of the identifier
-* [[symname]] - The concatenated zoneidx@zone string
-* [[store]] - Store unit data with zone-specific keys
-* [[restore]] - Restore unit data from zone-specific storage
+* [[Manual:DIL_Manual/nameidx|nameidx]] - The zone name part of the identifier
+* [[Manual:DIL_Manual/zone|zone]] - The zone name part of the identifier
+* [[Manual:DIL_Manual/symname|symname]] - The concatenated zoneidx@zone string
+* [[Manual:DIL_Manual/store|store]] - Store unit data with zone-specific keys
+* [[Manual:DIL_Manual/restore|restore]] - Restore unit data from zone-specific storage
 
 == See Also ==
 * Zone system documentation

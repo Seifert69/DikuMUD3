@@ -43,6 +43,6 @@ This field is available on the following unit types:
 * This is typically used for zone management and debugging purposes
 
 == See Also ==
-* [[zoneptr]]
-* [[zhead]]
-* [[name]]
+* [[Manual:DIL_Manual/zoneptr|zoneptr]]
+* [[Manual:DIL_Manual/zhead|zhead]]
+* [[Manual:DIL_Manual/name|name]]

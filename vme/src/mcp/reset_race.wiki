@@ -144,7 +144,7 @@ code
 == Usage Notes ==
 * The function only works on player characters (UNIT_ST_PC), not NPCs
 * The function requires zone access level > 1 to execute
-* This is typically used in conjunction with [[reset_level]] and [[reset_vlevel]]
+* This is typically used in conjunction with [[Manual:DIL_Manual/reset_level|reset_level]] and [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]]
 * The function adjusts the following attributes:
 ** Weight based on race defaults
 ** Height based on race defaults  
@@ -162,14 +162,14 @@ The function will fail and log an error if:
 * The character's race value is invalid
 
 == Related Functions/Fields ==
-* [[reset_level]] - Resets a player's level to 1
-* [[reset_vlevel]] - Resets a player's virtual level
-* [[race]] - Field containing character's race (RACE_* constants)
-* [[pcinitabils]] - Initializes player abilities
-* [[experience]] - Modifies character experience
-* [[SECS_PER_MUD_YEAR]] - Constant for time calculations
+* [[Manual:DIL_Manual/reset_level|reset_level]] - Resets a player's level to 1
+* [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]] - Resets a player's virtual level
+* [[Manual:DIL_Manual/race|race]] - Field containing character's race (RACE_* constants)
+* [[Manual:DIL_Manual/pcinitabils|pcinitabils]] - Initializes player abilities
+* [[Manual:DIL_Manual/experience|experience]] - Modifies character experience
+* [[Manual:DIL_Manual/SECS_PER_MUD_YEAR|SECS_PER_MUD_YEAR]] - Constant for time calculations
 
 == See Also ==
-* [[reset_level]]
-* [[reset_vlevel]]
-* [[unit_st_pc and unit_st_npc]]
+* [[Manual:DIL_Manual/reset_level|reset_level]]
+* [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]]
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]]

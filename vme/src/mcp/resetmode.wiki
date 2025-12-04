@@ -39,17 +39,17 @@ dilend
 * The '''resetmode''' field returns an integer value that corresponds to reset mode constants defined in values.h
 * This field is read-only and cannot be modified directly
 * The actual reset behavior is controlled by the zone reset system based on this value
-* To trigger a zone reset, use the [[zonereset]] function instead
+* To trigger a zone reset, use the [[Manual:DIL_Manual/zonereset|zonereset]] function instead
 
 == Error Handling ==
 * Accessing '''resetmode''' on a null zoneptr will result in a DILV_FAIL
 * The field will return DILV_ERR if accessed on an inappropriate unit type
 
 == Related Functions/Fields ==
-* [[zonereset]] - Function to manually trigger a zone reset
-* [[resettime]] - Field to get/set the reset time interval of a zone
-* [[loadlevel]] - Field to get/set the load level of a zone
+* [[Manual:DIL_Manual/zonereset|zonereset]] - Function to manually trigger a zone reset
+* [[Manual:DIL_Manual/resettime|resettime]] - Field to get/set the reset time interval of a zone
+* [[Manual:DIL_Manual/loadlevel|loadlevel]] - Field to get/set the load level of a zone
 
 == See Also ==
-* [[zoneptr]] - Zone pointer type documentation
-* [[zhead]] - Function to get the first zone in the global zone list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the global zone list

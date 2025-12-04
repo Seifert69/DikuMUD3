@@ -98,12 +98,12 @@ Note: The C implementation shows that this function:
 * Zone access is separate from character level or other security measures
 
 == Related Functions ==
-* [[findsymbolic]] - Function to find zones by name
-* [[zhead]] - Function to get the first zone in the list
-* [[zoneptr]] - Zone pointer type and related fields
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Function to find zones by name
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and related fields
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[zoneptr]] - Zone pointer type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[access]] - Zone access level field
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/access|access]] - Zone access level field

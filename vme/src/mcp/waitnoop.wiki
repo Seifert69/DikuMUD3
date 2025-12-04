@@ -5,7 +5,7 @@
 The '''waitnoop''' function performs a no-operation wait that temporarily releases security constraints on secured units.
 
 == Description ==
-The '''waitnoop''' function creates a special wait state that temporarily removes [[#secure|secure()]] constraints on units. This allows DIL programs to execute commands on secured units without triggering secure violations. The function is particularly useful in follower systems where the follower needs to execute movement commands that would normally break the secure relationship with their master. There are two forms: parameterless (uses current command) and with explicit command string.
+The '''waitnoop''' function creates a special wait state that temporarily removes [[Manual:DIL_Manual/#secure|secure()]] constraints on units. This allows DIL programs to execute commands on secured units without triggering secure violations. The function is particularly useful in follower systems where the follower needs to execute movement commands that would normally break the secure relationship with their master. There are two forms: parameterless (uses current command) and with explicit command string.
 
 == PARAMETERS ==
 {| class="wikitable"
@@ -77,10 +77,10 @@ The '''waitnoop''' function creates a special wait state that temporarily remove
  } dilend
 
 == Usage Notes ==
-* The '''waitnoop''' function temporarily releases [[#secure|secure()]] constraints during command execution
+* The '''waitnoop''' function temporarily releases [[Manual:DIL_Manual/#secure|secure()]] constraints during command execution
 * This is essential for follower systems where followers need to move with their master
 * Without '''waitnoop''', followers would trigger secure violations when trying to follow their master
-* The parameterless form uses the current [[#cmdstr|cmdstr]] value
+* The parameterless form uses the current [[Manual:DIL_Manual/#cmdstr|cmdstr]] value
 * The parameter form allows explicit command specification with arguments
 * Common use cases include:
 ** Follower movement commands (north, south, east, west, etc.)
@@ -92,20 +92,20 @@ The '''waitnoop''' function creates a special wait state that temporarily remove
 
 == Error Handling ==
 * If '''command_string''' parameter is not a string, a runtime error occurs
-* The function should only be used on units that have been [[#secure|secured()]]
-* Using '''waitnoop''' without proper [[#secure|secure()]] setup may have unpredictable results
+* The function should only be used on units that have been [[Manual:DIL_Manual/#secure|secured()]]
+* Using '''waitnoop''' without proper [[Manual:DIL_Manual/#secure|secure()]] setup may have unpredictable results
 * Always ensure the unit has a valid master before using in follower contexts
 * The function does not validate the command - invalid commands will still execute
 
 == Related Functions/Fields ==
-* [[#secure|secure()]] - Secure a unit and set up violation handling
-* [[#unsecure|unsecure()]] - Remove security constraints from a unit
-* [[#wait|wait()]] - Standard wait function for event handling
-* [[#cmdstr|cmdstr]] - Current command string
-* [[#visible|visible()]] - Check if units can see each other
+* [[Manual:DIL_Manual/#secure|secure()]] - Secure a unit and set up violation handling
+* [[Manual:DIL_Manual/#unsecure|unsecure()]] - Remove security constraints from a unit
+* [[Manual:DIL_Manual/#wait|wait()]] - Standard wait function for event handling
+* [[Manual:DIL_Manual/#cmdstr|cmdstr]] - Current command string
+* [[Manual:DIL_Manual/#visible|visible()]] - Check if units can see each other
 
 == See Also ==
-* [[#sfbcmd|SFB_CMD]] - Command message documentation
-* [[#sfbdone|SFB_DONE]] - Command completion documentation
-* [[#secure|secure()]] - Unit security documentation
-* [[#unsecure|unsecure()]] - Unit security removal documentation
+* [[Manual:DIL_Manual/#sfbcmd|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/#sfbdone|SFB_DONE]] - Command completion documentation
+* [[Manual:DIL_Manual/#secure|secure()]] - Unit security documentation
+* [[Manual:DIL_Manual/#unsecure|unsecure()]] - Unit security removal documentation

@@ -118,10 +118,10 @@ The function performs validation:
 * '''Range validation''' - Validates weight is within reasonable bounds
 
 == Related Functions ==
-* [[weight]] - For getting the current weight including contents
-* [[set_weight_base]] - For setting the base weight of a unit
-* [[capacity]] - For checking the weight capacity of containers
+* [[Manual:DIL_Manual/weight|weight]] - For getting the current weight including contents
+* [[Manual:DIL_Manual/set_weight_base|set_weight_base]] - For setting the base weight of a unit
+* [[Manual:DIL_Manual/capacity|capacity]] - For checking the weight capacity of containers
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[grams]] - Weight unit system
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/grams|grams]] - Weight unit system

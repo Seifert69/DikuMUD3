@@ -85,9 +85,9 @@ The function performs validation:
 * '''List validation'' - Validates string list parameter
 
 == Related Functions ==
-* [[delstr]] - Delete strings from string lists
-* [[getwords]] - Extract words from strings
-* [[addextra]] - Add strings to unit extra descriptions
+* [[Manual:DIL_Manual/delstr|delstr]] - Delete strings from string lists
+* [[Manual:DIL_Manual/getwords|getwords]] - Extract words from strings
+* [[Manual:DIL_Manual/addextra|addextra]] - Add strings to unit extra descriptions
 
 == See Also ==
-* [[stringptr]] - String pointer data type
+* [[Manual:DIL_Manual/stringptr|stringptr]] - String pointer data type

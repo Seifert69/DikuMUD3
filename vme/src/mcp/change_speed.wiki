@@ -44,8 +44,8 @@ The function will have no effect if:
 * The parameters are of incorrect types
 
 == Related Functions/Fields ==
-* [[set_fighting]] - To initiate combat between units
-* [[stop_fighting]] - To cancel combat
+* [[Manual:DIL_Manual/set_fighting|set_fighting]] - To initiate combat between units
+* [[Manual:DIL_Manual/stop_fighting|stop_fighting]] - To cancel combat
 
 == See Also ==
-* [[PULSE_VIOLENCE]] - Combat timing constant
+* [[Manual:DIL_Manual/PULSE_VIOLENCE|PULSE_VIOLENCE]] - Combat timing constant

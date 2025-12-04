@@ -183,12 +183,12 @@ The function handles errors in the following ways:
 Always ensure that the input string is valid and contains appropriate escape codes for the intended use case.
 
 == Related Functions/Fields ==
-* [[textformat]] - Format text with escape codes
-* [[sendtext]] - Send formatted text to players
-* [[note]] - Store player-specific notes
+* [[Manual:DIL_Manual/textformat|textformat]] - Format text with escape codes
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Send formatted text to players
+* [[Manual:DIL_Manual/note|note]] - Store player-specific notes
 
-* [[unitdir]] - Get list of all players globally
-* [[addextra]] - Store player-specific data
+* [[Manual:DIL_Manual/unitdir|unitdir]] - Get list of all players globally
+* [[Manual:DIL_Manual/addextra|addextra]] - Store player-specific data
 
 
 == See Also ==

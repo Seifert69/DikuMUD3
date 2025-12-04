@@ -262,13 +262,13 @@ Note: The C implementation shows that this function:
 * The function is more powerful than individual affect spells due to direct data manipulation
 
 == Related Functions ==
-* [[isaff]] - Check if a character has a specific affect
-* [[getaffects]] - Get all affects on a character
-* [[subaff]] - Remove a specific affect from a character
-* [[create_affect]] - Internal function used by addaff
+* [[Manual:DIL_Manual/isaff|isaff]] - Check if a character has a specific affect
+* [[Manual:DIL_Manual/getaffects|getaffects]] - Get all affects on a character
+* [[Manual:DIL_Manual/subaff|subaff]] - Remove a specific affect from a character
+* [[Manual:DIL_Manual/create_affect|create_affect]] - Internal function used by addaff
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[ID_*]] - Affect ID constants
-* [[APF_*]] - Apply flag constants
-* [[TIF_*]] - Tick flag constants
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/ID_*|ID_*]] - Affect ID constants
+* [[Manual:DIL_Manual/APF_*|APF_*]] - Apply flag constants
+* [[Manual:DIL_Manual/TIF_*|TIF_*]] - Tick flag constants

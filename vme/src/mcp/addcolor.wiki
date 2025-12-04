@@ -58,8 +58,8 @@ The function will fail if:
 * Colors are persistent across character saves and logins
 
 == Related Functions/Fields ==
-* [[delcolor]] - Remove a color from character's palette
-* [[isaff]] - Check if character has a specific color
+* [[Manual:DIL_Manual/delcolor|delcolor]] - Remove a color from character's palette
+* [[Manual:DIL_Manual/isaff|isaff]] - Check if character has a specific color
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type

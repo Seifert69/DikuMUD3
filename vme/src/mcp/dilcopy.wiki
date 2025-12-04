@@ -120,12 +120,12 @@ The function performs validation:
 * '''Security check''' - Prevents unauthorized template copying
 
 == Related Functions ==
-* [[dilcall]] - Call DIL templates dynamically
-* [[dilfind]] - Find DIL programs on units
-* [[dildestroy]] - Destroy DIL programs
-* [[link]] - Move units between locations
+* [[Manual:DIL_Manual/dilcall|dilcall]] - Call DIL templates dynamically
+* [[Manual:DIL_Manual/dilfind|dilfind]] - Find DIL programs on units
+* [[Manual:DIL_Manual/dildestroy|dildestroy]] - Destroy DIL programs
+* [[Manual:DIL_Manual/link|link]] - Move units between locations
 
 == See Also ==
-* [[DIL templates]] - Template system and modular programming
-* [[dynamic programming]] - Runtime code generation and execution
-* [[modular design]] - Reusable program components
+* [[Manual:DIL_Manual/DIL templates|DIL templates]] - Template system and modular programming
+* [[Manual:DIL_Manual/dynamic programming|dynamic programming]] - Runtime code generation and execution
+* [[Manual:DIL_Manual/modular design|modular design]] - Reusable program components

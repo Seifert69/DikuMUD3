@@ -53,11 +53,11 @@ This field is available on the following unit types:
 * Operation fails if the direction index is out of range
 
 == Related Functions/Fields ==
-* [[exit_names]] - Get the names of exits
-* [[exit_to]] - Get the destination room of an exit
-* [[isset]] - Test if a flag bit is set
-* [[set]] - Set a flag bit
-* [[unset]] - Clear a flag bit
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Get the names of exits
+* [[Manual:DIL_Manual/exit_to|exit_to]] - Get the destination room of an exit
+* [[Manual:DIL_Manual/isset|isset]] - Test if a flag bit is set
+* [[Manual:DIL_Manual/set|set]] - Set a flag bit
+* [[Manual:DIL_Manual/unset|unset]] - Clear a flag bit
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant

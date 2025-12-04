@@ -49,12 +49,12 @@ This field is available on the following unit types:
 * Returns '''fail''' if the unit is not applicable
 
 == Related Functions/Fields ==
-* [[nameidx]] - The unique database name in the zone
-* [[zoneidx]] - The unique database zone name
-* [[symname]] - The concatenated nameidx@zoneidx
-* [[idx]] - The constant ID for the unit
+* [[Manual:DIL_Manual/nameidx|nameidx]] - The unique database name in the zone
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - The unique database zone name
+* [[Manual:DIL_Manual/symname|symname]] - The concatenated nameidx@zoneidx
+* [[Manual:DIL_Manual/idx|idx]] - The constant ID for the unit
 
 == See Also ==
-* [[load()]] - Load a unit into the game
-* [[destroy()]] - Remove a unit from the game
-* [[findsymbolic()]] - Find units by symbolic name and index 
+* [[Manual:DIL_Manual/load()|load()]] - Load a unit into the game
+* [[Manual:DIL_Manual/destroy()|destroy()]] - Remove a unit from the game
+* [[Manual:DIL_Manual/findsymbolic()|findsymbolic()]] - Find units by symbolic name and index 

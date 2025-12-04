@@ -139,13 +139,13 @@ Returns integer:
 * Always ensure both attacker and victim are valid character units before calling
 
 == Related Functions/Fields ==
-* [[cast_spell]] - For magical attacks instead of melee
-* [[one_hit]] - The underlying combat resolution function
-* [[fighting]] - Field to check current combat target
-* [[position]] - Field to check combat readiness
-* [[weapon]] - Field to check equipped weapon type
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - For magical attacks instead of melee
+* [[Manual:DIL_Manual/one_hit|one_hit]] - The underlying combat resolution function
+* [[Manual:DIL_Manual/fighting|fighting]] - Field to check current combat target
+* [[Manual:DIL_Manual/position|position]] - Field to check combat readiness
+* [[Manual:DIL_Manual/weapon|weapon]] - Field to check equipped weapon type
 
 == See Also ==
 * WPN_* constants in values.h for weapon type definitions
 * Combat and damage system documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation

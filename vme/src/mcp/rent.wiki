@@ -115,12 +115,12 @@ Accessing the '''rent''' field will fail if:
 * Attempting to set a negative rent value (may be allowed but not recommended)
 
 == Related Functions/Fields ==
-* [[cost]] - The basic purchase cost of an object
-* [[objecttype]] - The type of object, which may affect rental eligibility
-* [[value]] - Additional object values that may influence rental pricing
-* [[moneystring]] - Function to convert monetary values to readable strings
+* [[Manual:DIL_Manual/cost|cost]] - The basic purchase cost of an object
+* [[Manual:DIL_Manual/objecttype|objecttype]] - The type of object, which may affect rental eligibility
+* [[Manual:DIL_Manual/value|value]] - Additional object values that may influence rental pricing
+* [[Manual:DIL_Manual/moneystring|moneystring]] - Function to convert monetary values to readable strings
 
 == See Also ==
-* [[unit_st_obj]]
-* [[cost]]
-* [[transfermoney]]
+* [[Manual:DIL_Manual/unit_st_obj|unit_st_obj]]
+* [[Manual:DIL_Manual/cost|cost]]
+* [[Manual:DIL_Manual/transfermoney|transfermoney]]

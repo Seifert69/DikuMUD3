@@ -36,7 +36,7 @@ Returns '''integer''':
  } dilend
 
 == Usage Notes ==
-* The '''nopriority''' function cancels all priority procedures set by [[priority]] function
+* The '''nopriority''' function cancels all priority procedures set by [[Manual:DIL_Manual/priority|priority]] function
 * Used to reset interrupt handling to default state
 * Common in systems that need to temporarily override priority behavior:
 ** Emergency stop routines
@@ -51,10 +51,10 @@ Returns '''integer''':
 * The function itself does not validate parameters - errors come from the underlying priority system
 
 == Related Functions/Fields ==
-* [[priority]] - Set priority for activation interrupts
-* [[interrupt]] - Set up interrupt handling for specific message classes
-* [[clear]] - Clear specific interrupt handlers
-* [[on_activation]] - Handle activation-time interrupts
+* [[Manual:DIL_Manual/priority|priority]] - Set priority for activation interrupts
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Set up interrupt handling for specific message classes
+* [[Manual:DIL_Manual/clear|clear]] - Clear specific interrupt handlers
+* [[Manual:DIL_Manual/on_activation|on_activation]] - Handle activation-time interrupts
 
 == See Also ==
 * Interrupt flags: '''SFB_PRIORITY''', '''SFB_MSG''', '''SFB_DEAD'''

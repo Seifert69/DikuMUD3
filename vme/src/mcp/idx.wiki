@@ -70,6 +70,6 @@ This field is available on the following unit types:
 
 == See Also
 
-* [[findsymbolic]] - Find units by symbolic name and optional idx
-* [[symname]] - Get the symbolic name of a unit
-* [[unitptr]] - General unit pointer fields 
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Find units by symbolic name and optional idx
+* [[Manual:DIL_Manual/symname|symname]] - Get the symbolic name of a unit
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer fields 

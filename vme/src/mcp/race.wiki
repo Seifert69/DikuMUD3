@@ -193,13 +193,13 @@ The field access will return '''fail''' when:
 * The race value is not a valid race constant
 
 == Related Functions/Fields ==
-* [[reset_race]] - Function to reset a character's race
-* [[abilities]] - Array of character abilities affected by race
-* [[equipment]] - Function that may have race-based restrictions
-* [[profession]] - Field that may interact with race requirements
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Function to reset a character's race
+* [[Manual:DIL_Manual/abilities|abilities]] - Array of character abilities affected by race
+* [[Manual:DIL_Manual/equipment|equipment]] - Function that may have race-based restrictions
+* [[Manual:DIL_Manual/profession|profession]] - Field that may interact with race requirements
 
 == See Also ==
-* [[RACE_* constants]] - Race identifier constants
-* [[sex]] - Field for character's gender
-* [[level]] - Field for character's experience level
-* [[guild]] - Field for character's guild affiliation
+* [[Manual:DIL_Manual/RACE_* constants|RACE_* constants]] - Race identifier constants
+* [[Manual:DIL_Manual/sex|sex]] - Field for character's gender
+* [[Manual:DIL_Manual/level|level]] - Field for character's experience level
+* [[Manual:DIL_Manual/guild|guild]] - Field for character's guild affiliation

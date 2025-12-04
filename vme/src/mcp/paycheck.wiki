@@ -89,12 +89,12 @@ The function will return '''fail''' when:
 * The second parameter is not a character unit (isChar() returns false)
 
 == Related Functions/Fields ==
-* [[findroom]] - Find a specific room by name
-* [[unit_room]] - Get the room containing a unit
-* [[acc_balance]] - Get player's account balance (when accounting is enabled)
-* [[acc_total]] - Get player's total credit (when accounting is enabled)
+* [[Manual:DIL_Manual/findroom|findroom]] - Find a specific room by name
+* [[Manual:DIL_Manual/unit_room|unit_room]] - Get the room containing a unit
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Get player's account balance (when accounting is enabled)
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Get player's total credit (when accounting is enabled)
 
 == See Also ==
-* [[move]] - Move a unit in a specific direction
-* [[act]] - Send messages to units
-* [[isAccounting]] - Check if accounting mode is enabled 
+* [[Manual:DIL_Manual/move|move]] - Move a unit in a specific direction
+* [[Manual:DIL_Manual/act|act]] - Send messages to units
+* [[Manual:DIL_Manual/isAccounting|isAccounting]] - Check if accounting mode is enabled 

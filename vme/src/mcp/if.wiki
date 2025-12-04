@@ -105,5 +105,5 @@ The '''if''' statement is a conditional control structure similar to C. It evalu
 
 == See Also
 
-* [[else]] - Optional else clause for if statements
-* [[goto]] - Unconditional jump statement 
+* [[Manual:DIL_Manual/else|else]] - Optional else clause for if statements
+* [[Manual:DIL_Manual/goto|goto]] - Unconditional jump statement 

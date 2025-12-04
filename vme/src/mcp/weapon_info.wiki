@@ -82,9 +82,9 @@ The function returns an intlist with the following structure:
 * Invalid weapon types will result in a null return value
 
 == Related Functions/Fields ==
-* [[weapon_name]] - Get the name of a weapon type
-* [[weapon_costs]] - Get racial weapon cost information
-* [[weapon_levels]] - Get weapon skill level requirements
+* [[Manual:DIL_Manual/weapon_name|weapon_name]] - Get the name of a weapon type
+* [[Manual:DIL_Manual/weapon_costs|weapon_costs]] - Get racial weapon cost information
+* [[Manual:DIL_Manual/weapon_levels|weapon_levels]] - Get weapon skill level requirements
 * .weapons[] - Access weapon skill values on characters
 
 == See Also ==

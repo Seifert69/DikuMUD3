@@ -78,16 +78,16 @@ Always validate that target is a valid player character:
  }
 
 == Related Functions/Fields ==
-* [[sendtext]] - Send text to a player
-* [[act]] - Display messages to players
-* [[extra]] - Access to extra descriptions
-* [[skills]] - Character skills array
-* [[abilities]] - Character abilities array
-* [[equipment]] - Get equipment in specific slot
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Send text to a player
+* [[Manual:DIL_Manual/act|act]] - Display messages to players
+* [[Manual:DIL_Manual/extra|extra]] - Access to extra descriptions
+* [[Manual:DIL_Manual/skills|skills]] - Character skills array
+* [[Manual:DIL_Manual/abilities|abilities]] - Character abilities array
+* [[Manual:DIL_Manual/equipment|equipment]] - Get equipment in specific slot
 
 == See Also ==
-* [[sendtext]] - Text output function
-* [[act]] - Action display function
-* [[extra]] - Extra description system
-* [[skills]] - Character skills documentation
-* [[abilities]] - Character abilities documentation
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Text output function
+* [[Manual:DIL_Manual/act|act]] - Action display function
+* [[Manual:DIL_Manual/extra|extra]] - Extra description system
+* [[Manual:DIL_Manual/skills|skills]] - Character skills documentation
+* [[Manual:DIL_Manual/abilities|abilities]] - Character abilities documentation

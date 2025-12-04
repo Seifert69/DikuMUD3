@@ -171,13 +171,13 @@ The field access will return '''fail''' when:
 * The zone has insufficient access level to read profession information
 
 == Related Functions/Fields ==
-* [[level]] - Field representing character's level
-* [[abilities]] - Array of character's ability scores
-* [[skills]] - Array of character's skill levels
-* [[equipment]] - Function to manage character equipment
+* [[Manual:DIL_Manual/level|level]] - Field representing character's level
+* [[Manual:DIL_Manual/abilities|abilities]] - Array of character's ability scores
+* [[Manual:DIL_Manual/skills|skills]] - Array of character's skill levels
+* [[Manual:DIL_Manual/equipment|equipment]] - Function to manage character equipment
 
 == See Also ==
-* [[PROFESSION_* constants]] - Profession identifier constants
-* [[race]] - Field for character's racial type
-* [[sex]] - Field for character's gender
-* [[guild]] - Field for character's guild affiliation 
+* [[Manual:DIL_Manual/PROFESSION_* constants|PROFESSION_* constants]] - Profession identifier constants
+* [[Manual:DIL_Manual/race|race]] - Field for character's racial type
+* [[Manual:DIL_Manual/sex|sex]] - Field for character's gender
+* [[Manual:DIL_Manual/guild|guild]] - Field for character's guild affiliation 

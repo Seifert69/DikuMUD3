@@ -91,7 +91,7 @@ The function returns an integer:
 * The function performs case-sensitive comparison
 * Only the first 'l' characters are compared, regardless of total string length
 * Use standard equality operators (==, !=) for full string comparison when needed
-* The function is more efficient than [[strcmp]] when you only need to compare prefixes
+* The function is more efficient than [[Manual:DIL_Manual/strcmp|strcmp]] when you only need to compare prefixes
 * Lexicographic comparison follows ASCII character values
 * Length parameter of 0 is valid and will always return 0 (equal)
 * The function is commonly used for command validation and prefix checking
@@ -106,11 +106,11 @@ The function handles errors in the following ways:
 Always ensure both parameters are valid strings and length is non-negative before calling the function.
 
 == Related Functions/Fields ==
-* [[strcmp]] - Compare complete strings
-* [[string]] data type and operations
-* [[getwords]] - Split string into words for comparison
-* [[length]] - Get string length for validation
-* [[left]] - Extract string prefix for comparison
+* [[Manual:DIL_Manual/strcmp|strcmp]] - Compare complete strings
+* [[Manual:DIL_Manual/string|string]] data type and operations
+* [[Manual:DIL_Manual/getwords|getwords]] - Split string into words for comparison
+* [[Manual:DIL_Manual/length|length]] - Get string length for validation
+* [[Manual:DIL_Manual/left|left]] - Extract string prefix for comparison
 * String comparison operators (==, !=, <, >, <=, >=)
 
 == See Also ==

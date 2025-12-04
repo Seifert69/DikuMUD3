@@ -71,9 +71,9 @@ The ghead() function returns the first unit in the global unit list, providing a
 * The function itself does not fail under normal circumstances
 
 == Related Functions/Fields ==
-* [[gnext]] - Next unit in global list
-* [[gprevious]] - Previous unit in global list
-* [[visible]] - Check if unit is visible to another
+* [[Manual:DIL_Manual/gnext|gnext]] - Next unit in global list
+* [[Manual:DIL_Manual/gprevious|gprevious]] - Previous unit in global list
+* [[Manual:DIL_Manual/visible|visible]] - Check if unit is visible to another
 
 == See Also ==
-* [[unitptr]] - Unit pointer type and fields
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and fields

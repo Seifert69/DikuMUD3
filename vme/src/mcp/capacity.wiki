@@ -106,11 +106,11 @@ The function performs validation:
 * '''Range validation''' - Validates capacity is within reasonable bounds
 
 == Related Functions ==
-* [[weight]] - For getting the current weight of a unit
-* [[can_carry]] - For checking if a character can carry specific items
-* [[baseweight]] - For getting the base weight of a unit
+* [[Manual:DIL_Manual/weight|weight]] - For getting the current weight of a unit
+* [[Manual:DIL_Manual/can_carry|can_carry]] - For checking if a character can carry specific items
+* [[Manual:DIL_Manual/baseweight|baseweight]] - For getting the base weight of a unit
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[encumbrance]] - Weight and carrying system
-* [[strength]] - Character attribute affecting capacity
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/encumbrance|encumbrance]] - Weight and carrying system
+* [[Manual:DIL_Manual/strength|strength]] - Character attribute affecting capacity

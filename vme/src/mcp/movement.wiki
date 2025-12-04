@@ -30,7 +30,7 @@ The movement field uses SECT_* constants defined in values.h and/or vme.h. Commo
 * '''SECT_DESERT''' - Desert areas
 
 The terrain type affects:
-* Movement endurance costs via the [[movementloss]] function
+* Movement endurance costs via the [[Manual:DIL_Manual/movementloss|movementloss]] function
 * Swimming requirements and drowning checks
 * Special movement behaviors for different races
 
@@ -63,9 +63,9 @@ The terrain type affects:
 * The field requires a valid room unit pointer
 
 == Related Functions/Fields ==
-* [[movementloss]] - Calculates movement cost for terrain types
-* [[unit_room@function]] - Gets the room a unit is in
-* [[roomflags]] - Additional room properties
+* [[Manual:DIL_Manual/movementloss|movementloss]] - Calculates movement cost for terrain types
+* [[Manual:DIL_Manual/unit_room@function|unit_room@function]] - Gets the room a unit is in
+* [[Manual:DIL_Manual/roomflags|roomflags]] - Additional room properties
 
 == See Also ==
 * Room exit fields: '''exit_to[]''', '''exit_info[]''', '''exit_names[]'''

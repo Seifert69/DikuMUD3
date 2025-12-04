@@ -182,7 +182,7 @@ This field is available on the following unit types:
 * Skill indices correspond to SKI_* constants defined in the game system
 * The field returns current skill values, not skill levels or costs
 * Skill values typically represent proficiency or ability levels
-* The field is commonly used with [[skill_name()]] to get skill names
+* The field is commonly used with [[Manual:DIL_Manual/skill_name()|skill_name()]] to get skill names
 * Skill values are used in combat calculations, ability checks, and character advancement
 * The field is often used in character creation, training, and progression systems
 
@@ -201,16 +201,16 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[skill_name()]] - Function to get the name of a skill from its index
-* [[skill_levels]] - Field to get the current level of a skill
-* [[skill_costs]] - Field to get the experience point cost of a skill
-* [[skill_points]] - Field to get available skill points
-* [[abilities]] - Field array to access character abilities
-* [[practice]] - Command to train skills using points
+* [[Manual:DIL_Manual/skill_name()|skill_name()]] - Function to get the name of a skill from its index
+* [[Manual:DIL_Manual/skill_levels|skill_levels]] - Field to get the current level of a skill
+* [[Manual:DIL_Manual/skill_costs|skill_costs]] - Field to get the experience point cost of a skill
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Field to get available skill points
+* [[Manual:DIL_Manual/abilities|abilities]] - Field array to access character abilities
+* [[Manual:DIL_Manual/practice|practice]] - Command to train skills using points
 
 == See Also ==
-* [[SKI_*]] - Skill index constants
-* [[Character advancement]] - Information about skill progression systems
-* [[Experience system]] - Experience point and skill value mechanics
-* [[Training systems]] - Skill training and improvement procedures
-* [[Ability system]] - Information about character abilities and attributes
+* [[Manual:DIL_Manual/SKI_*|SKI_*]] - Skill index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about skill progression systems
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and skill value mechanics
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Skill training and improvement procedures
+* [[Manual:DIL_Manual/Ability system|Ability system]] - Information about character abilities and attributes

@@ -102,10 +102,10 @@ Returns string:
 * Always validate positions before calling the function to avoid errors
 
 == Related Functions/Fields ==
-* [[left]] - Extracts characters from the left side of a string
-* [[right]] - Extracts characters from the right side of a string
-* [[substring]] - Alternative function for string extraction
-* [[strlen]] - Gets the length of a string for bounds checking
+* [[Manual:DIL_Manual/left|left]] - Extracts characters from the left side of a string
+* [[Manual:DIL_Manual/right|right]] - Extracts characters from the right side of a string
+* [[Manual:DIL_Manual/substring|substring]] - Alternative function for string extraction
+* [[Manual:DIL_Manual/strlen|strlen]] - Gets the length of a string for bounds checking
 
 == See Also ==
 * String manipulation and parsing functions documentation

@@ -88,15 +88,15 @@ Common error scenarios:
 * Attempting to modify read-only variables or fields
 
 == Related Functions/Fields ==
-* [[unset()]] - Function to clear specific bits in an integer variable
-* [[isset()]] - Function to test if specific bits are set in an integer
-* [[pcflags]] - Player character flags field
-* [[charflags]] - Character flags field
-* [[flags]] - General unit flags field
-* [[roomflags]] - Room flags field
+* [[Manual:DIL_Manual/unset()|unset()]] - Function to clear specific bits in an integer variable
+* [[Manual:DIL_Manual/isset()|isset()]] - Function to test if specific bits are set in an integer
+* [[Manual:DIL_Manual/pcflags|pcflags]] - Player character flags field
+* [[Manual:DIL_Manual/charflags|charflags]] - Character flags field
+* [[Manual:DIL_Manual/flags|flags]] - General unit flags field
+* [[Manual:DIL_Manual/roomflags|roomflags]] - Room flags field
 
 == See Also ==
-* [[UNIT_FL_*]] - Unit flag constants
-* [[PC_*]] - Player character flag constants
-* [[CHAR_*]] - Character flag constants
-* [[ROOM_*]] - Room flag constants
+* [[Manual:DIL_Manual/UNIT_FL_*|UNIT_FL_*]] - Unit flag constants
+* [[Manual:DIL_Manual/PC_*|PC_*]] - Player character flag constants
+* [[Manual:DIL_Manual/CHAR_*|CHAR_*]] - Character flag constants
+* [[Manual:DIL_Manual/ROOM_*|ROOM_*]] - Room flag constants

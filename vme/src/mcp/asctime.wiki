@@ -87,10 +87,10 @@ The function performs validation:
 * '''Format validation'' - Ensures proper string format is returned
 
 == Related Functions ==
-* [[realtime]] - For getting the current Unix timestamp
-* [[log]] - For logging timestamped messages
-* [[mud]] - For game-specific time functions
+* [[Manual:DIL_Manual/realtime|realtime]] - For getting the current Unix timestamp
+* [[Manual:DIL_Manual/log|log]] - For logging timestamped messages
+* [[Manual:DIL_Manual/mud|mud]] - For game-specific time functions
 
 == See Also ==
-* [[Unix timestamp]] - Unix epoch time system
-* [[ctime]] - C library function reference
+* [[Manual:DIL_Manual/Unix timestamp|Unix timestamp]] - Unix epoch time system
+* [[Manual:DIL_Manual/ctime|ctime]] - C library function reference

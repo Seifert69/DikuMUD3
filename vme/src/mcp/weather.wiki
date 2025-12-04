@@ -152,10 +152,10 @@ The weather variable provides access to the current weather state as defined by 
 * No error conditions are expected when accessing this variable
 
 == Related Functions/Fields ==
-* [[mudhour]] - Current hour of the mud day
-* [[mudday]] - Current day of the mud month
-* [[mudmonth]] - Current month of the mud year
-* [[mudyear]] - Current mud year
+* [[Manual:DIL_Manual/mudhour|mudhour]] - Current hour of the mud day
+* [[Manual:DIL_Manual/mudday|mudday]] - Current day of the mud month
+* [[Manual:DIL_Manual/mudmonth|mudmonth]] - Current month of the mud year
+* [[Manual:DIL_Manual/mudyear|mudyear]] - Current mud year
 * .outside - Access to outdoor environment
 
 == See Also ==

@@ -147,11 +147,11 @@ The setroomexit procedure establishes a one-way exit connection between two room
 * All errors are logged to the zone's log file for debugging
 
 == Related Functions/Fields ==
-* [[pathto]] - Get direction from one room to another
+* [[Manual:DIL_Manual/pathto|pathto]] - Get direction from one room to another
 * .exit_to[] - Read-only access to room exits
 * .exit_names[] - Access to exit names
 * .exit_info[] - Access to exit flags and conditions
-* [[findroom]] - Locate a room by name
+* [[Manual:DIL_Manual/findroom|findroom]] - Locate a room by name
 
 == See Also ==
 * Room system documentation

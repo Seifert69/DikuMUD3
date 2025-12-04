@@ -32,8 +32,8 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * Use the '''in''' operator to check if a name exists in the extra list
-* Use [[addextra]] to add new extra descriptions
-* Use [[subextra]] to remove extra descriptions
+* Use [[Manual:DIL_Manual/addextra|addextra]] to add new extra descriptions
+* Use [[Manual:DIL_Manual/subextra|subextra]] to remove extra descriptions
 * Navigate through the list using the '''next''' member
 * Extraptr variables are volatile and may be cleared when rendered unusable
 
@@ -42,12 +42,12 @@ This field is available on the following unit types:
 * Returns fail if accessed on invalid unit types
 
 == Related Functions/Fields ==
-* [[addextra]] - Add extra descriptions to a unit
-* [[subextra]] - Remove extra descriptions from a unit
-* [[extraptr]] - Extra description pointer type
+* [[Manual:DIL_Manual/addextra|addextra]] - Add extra descriptions to a unit
+* [[Manual:DIL_Manual/subextra|subextra]] - Remove extra descriptions from a unit
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Extra description pointer type
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type constant
-* [[UNIT_ST_NPC]] - Non-player character unit type constant
-* [[UNIT_ST_OBJ]] - Object unit type constant
-* [[UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant

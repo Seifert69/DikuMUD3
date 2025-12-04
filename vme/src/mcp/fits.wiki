@@ -48,9 +48,9 @@ else
 * Always check the returned string for fit status
 
 == Related Functions/Fields ==
-* [[equipment()]] - Get equipment in specific position
-* [[addequip()]] - Add equipment to character
-* [[unequip()]] - Remove equipment from character
+* [[Manual:DIL_Manual/equipment()|equipment()]] - Get equipment in specific position
+* [[Manual:DIL_Manual/addequip()|addequip()]] - Add equipment to character
+* [[Manual:DIL_Manual/unequip()|unequip()]] - Remove equipment from character
 
 == See Also ==
 * WEAR_* constants documentation

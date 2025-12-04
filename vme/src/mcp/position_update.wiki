@@ -130,13 +130,13 @@ The procedure will fail when:
 * The unit is null or invalid
 
 == Related Functions/Fields ==
-* [[position]] - Field to read or set character position directly
-* [[hp]] - Field representing character's hitpoints
-* [[secure]] - Function that may be triggered if character dies during position_update
-* [[die]] - Function called if character position becomes POSITION_DEAD
+* [[Manual:DIL_Manual/position|position]] - Field to read or set character position directly
+* [[Manual:DIL_Manual/hp|hp]] - Field representing character's hitpoints
+* [[Manual:DIL_Manual/secure|secure]] - Function that may be triggered if character dies during position_update
+* [[Manual:DIL_Manual/die|die]] - Function called if character position becomes POSITION_DEAD
 
 == See Also ==
-* [[meleedamage]] - Function that automatically calls position_update
-* [[cast_spell]] - Function that may affect character position
-* [[abilities]] - Field that may affect character capabilities
-* [[update_pos]] - Underlying C function that performs the position calculation 
+* [[Manual:DIL_Manual/meleedamage|meleedamage]] - Function that automatically calls position_update
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - Function that may affect character position
+* [[Manual:DIL_Manual/abilities|abilities]] - Field that may affect character capabilities
+* [[Manual:DIL_Manual/update_pos|update_pos]] - Underlying C function that performs the position calculation 

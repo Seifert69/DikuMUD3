@@ -115,13 +115,13 @@ This field is available on the following unit types:
 * Always check if the unit is valid before accessing the name field
 
 == Related Functions/Fields ==
-* [[names]] - Stringlist of all names for a unit
-* [[title]] - Title field for characters
-* [[symname]] - Symbolic name of a unit
-* [[nameidx]] - Name index of a unit
-* [[zoneidx]] - Zone index of a unit
+* [[Manual:DIL_Manual/names|names]] - Stringlist of all names for a unit
+* [[Manual:DIL_Manual/title|title]] - Title field for characters
+* [[Manual:DIL_Manual/symname|symname]] - Symbolic name of a unit
+* [[Manual:DIL_Manual/nameidx|nameidx]] - Name index of a unit
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Zone index of a unit
 
 == See Also ==
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
-* String functions: [[length]], [[addstring]], [[substring]]
-* Identification functions: [[isplayer]], [[findunit]], [[findsymbolic]] 
+* String functions: [[Manual:DIL_Manual/length|length]], [[Manual:DIL_Manual/addstring|addstring]], [[Manual:DIL_Manual/substring|substring]]
+* Identification functions: [[Manual:DIL_Manual/isplayer|isplayer]], [[Manual:DIL_Manual/findunit|findunit]], [[Manual:DIL_Manual/findsymbolic|findsymbolic]] 

@@ -48,7 +48,7 @@ This field is available on the following unit types:
 ** Development status tracking
 ** Zone-specific rules or policies
 * Notes are stored as plain text strings
-* Use [[split]] function to process multi-line notes
+* Use [[Manual:DIL_Manual/split|split]] function to process multi-line notes
 
 == Error Handling ==
 * Returns '''fail''' if zone pointer is null or invalid
@@ -57,12 +57,12 @@ This field is available on the following unit types:
 * Always validate zone pointer before accessing the notes field
 
 == Related Functions/Fields ==
-* [[name]] - Zone name field
-* [[zoneidx]] - Zone identifier field
-* [[findroom]] - Locate specific zones
-* [[split]] - Process multi-line strings
-* [[pagestring]] - Display text to players
-* String functions: [[length]], [[substring]]
+* [[Manual:DIL_Manual/name|name]] - Zone name field
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Zone identifier field
+* [[Manual:DIL_Manual/findroom|findroom]] - Locate specific zones
+* [[Manual:DIL_Manual/split|split]] - Process multi-line strings
+* [[Manual:DIL_Manual/pagestring|pagestring]] - Display text to players
+* String functions: [[Manual:DIL_Manual/length|length]], [[Manual:DIL_Manual/substring|substring]]
 
 == See Also ==
 * Zone management functions and commands

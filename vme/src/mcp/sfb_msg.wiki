@@ -192,18 +192,18 @@ The SFB_MSG flag enables DIL programs to receive messages from other DIL program
 * Ensure target programs are properly waiting for SFB_MSG messages
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_MSG
-* [[interrupt]] - Alternative method for setting up message triggers
-* [[send]] / [[sendto]] - Functions for sending messages
-* [[activator]] - Unit pointer to message sender
-* [[argument]] - Message content variable
-* [[priority]] - Function for setting message priority
-* [[sendtoall]] - Send messages to all DIL programs globally
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_MSG
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up message triggers
+* [[Manual:DIL_Manual/send|send]] / [[Manual:DIL_Manual/sendto|sendto]] - Functions for sending messages
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to message sender
+* [[Manual:DIL_Manual/argument|argument]] - Message content variable
+* [[Manual:DIL_Manual/priority|priority]] - Function for setting message priority
+* [[Manual:DIL_Manual/sendtoall|sendtoall]] - Send messages to all DIL programs globally
 
 == See Also ==
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_TICK]] - Timer-based activation
-* [[SFB_DONE]] - Command completion documentation
-* [[SFB_PRE]] - Pre-command processing
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Timer-based activation
+* [[Manual:DIL_Manual/SFB_DONE|SFB_DONE]] - Command completion documentation
+* [[Manual:DIL_Manual/SFB_PRE|SFB_PRE]] - Pre-command processing
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

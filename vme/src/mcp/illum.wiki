@@ -84,8 +84,8 @@ This field is available on the following unit types:
 
 == See Also
 
-* [[light]] - How much light is inside a unit
-* [[bright]] - How much a unit lights up its surroundings
-* [[setbright]] - Procedure to change a unit's brightness
-* [[islight]] - Check if a unit is a light source
-* [[unitptr]] - General unit pointer fields 
+* [[Manual:DIL_Manual/light|light]] - How much light is inside a unit
+* [[Manual:DIL_Manual/bright|bright]] - How much a unit lights up its surroundings
+* [[Manual:DIL_Manual/setbright|setbright]] - Procedure to change a unit's brightness
+* [[Manual:DIL_Manual/islight|islight]] - Check if a unit is a light source
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer fields 

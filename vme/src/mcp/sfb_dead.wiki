@@ -131,17 +131,17 @@ The death message is sent at the precise moment of death, allowing DIL programs 
 * Use appropriate position checks if you only want to react when a character is actually dead
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_DEAD
-* [[interrupt]] - Alternative method for setting up death triggers
-* [[activator]] - Unit pointer to the dying character
-* [[self.position]] - Unit position field for death state checking
-* [[POSITION_DEAD]] - Constant for dead position
-* [[command]] - Function for checking death commands
-* [[visible]] - Function for checking unit visibility
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_DEAD
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up death triggers
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to the dying character
+* [[Manual:DIL_Manual/self.position|self.position]] - Unit position field for death state checking
+* [[Manual:DIL_Manual/POSITION_DEAD|POSITION_DEAD]] - Constant for dead position
+* [[Manual:DIL_Manual/command|command]] - Function for checking death commands
+* [[Manual:DIL_Manual/visible|visible]] - Function for checking unit visibility
 
 == See Also ==
-* [[SFB_COM]] - Combat message documentation
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_TICK]] - Timer-based activation
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_COM|SFB_COM]] - Combat message documentation
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Timer-based activation
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

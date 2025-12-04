@@ -139,9 +139,9 @@ The function performs comprehensive error checking:
 Note: The C implementation shows that the function validates the character unit using the isChar() method to ensure it's a valid character before proceeding with the equipment lookup.
 
 == Related Functions ==
-* [[addequip]] - Equips an item in a specific position
-* [[unequip]] - Removes an equipped item
-* [[fits]] - Checks if an item can be equipped in a position
+* [[Manual:DIL_Manual/addequip|addequip]] - Equips an item in a specific position
+* [[Manual:DIL_Manual/unequip|unequip]] - Removes an equipped item
+* [[Manual:DIL_Manual/fits|fits]] - Checks if an item can be equipped in a position
 
 == Usage Notes ==
 * The function only works on character units (PCs and NPCs), not on rooms or objects
@@ -152,6 +152,6 @@ Note: The C implementation shows that the function validates the character unit 
 * The function is commonly used in equipment management, combat checks, and item validation
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[WEAR_* constants]] - Equipment position constants
-* [[manipulate]] - Object manipulation flags for equipment validation 
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/WEAR_* constants|WEAR_* constants]] - Equipment position constants
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Object manipulation flags for equipment validation 

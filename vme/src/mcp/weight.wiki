@@ -66,7 +66,7 @@ This field is available on the following unit types:
 == Usage Notes ==
 * The weight includes both the unit's base weight and all contained items
 * Weight is measured in pounds (½ kg units)
-* This field is read-only - use [[set_weight]] to modify weight
+* This field is read-only - use [[Manual:DIL_Manual/set_weight|set_weight]] to modify weight
 * For containers, this includes the weight of all items inside
 * For characters, this includes equipment and inventory weight
 * Commonly used with .capacity field for encumbrance calculations
@@ -77,11 +77,11 @@ This field is available on the following unit types:
 * No other error conditions are expected when accessing this field
 
 == Related Functions/Fields ==
-* [[baseweight]] - The empty weight of the unit (without contents)
-* [[capacity]] - The maximum weight a unit can contain
-* [[set_weight]] - Procedure to modify a unit's weight
-* [[set_weight_base]] - Procedure to modify a unit's base weight
-* [[can_carry]] - Function to check if a unit can carry additional weight
+* [[Manual:DIL_Manual/baseweight|baseweight]] - The empty weight of the unit (without contents)
+* [[Manual:DIL_Manual/capacity|capacity]] - The maximum weight a unit can contain
+* [[Manual:DIL_Manual/set_weight|set_weight]] - Procedure to modify a unit's weight
+* [[Manual:DIL_Manual/set_weight_base|set_weight_base]] - Procedure to modify a unit's base weight
+* [[Manual:DIL_Manual/can_carry|can_carry]] - Function to check if a unit can carry additional weight
 
 == See Also ==
 * Encumbrance system documentation

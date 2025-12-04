@@ -38,9 +38,9 @@ The '''experience''' function adds or subtracts experience points from a player 
 * Always validate that the target is a player character before calling
 
 == Related Functions/Fields ==
-* [[exp]] - Read-only field to check current experience
-* [[exptol]] - Experience needed for next level
-* [[level]] - Current player level
+* [[Manual:DIL_Manual/exp|exp]] - Read-only field to check current experience
+* [[Manual:DIL_Manual/exptol|exptol]] - Experience needed for next level
+* [[Manual:DIL_Manual/level|level]] - Current player level
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type constant

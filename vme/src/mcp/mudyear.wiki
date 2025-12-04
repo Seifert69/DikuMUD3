@@ -182,14 +182,14 @@ The '''mudyear''' variable returns the current year number in the MUD's internal
 * Returns valid integer values in all contexts
 
 == Related Functions/Fields ==
-* [[mudday]] - Current day in the MUD
-* [[mudhour]] - Current hour in the MUD
-* [[mudmonth]] - Current month in the MUD
-* [[realtime]] - Real-world system time
-* [[asctime]] - Convert real time to formatted string
+* [[Manual:DIL_Manual/mudday|mudday]] - Current day in the MUD
+* [[Manual:DIL_Manual/mudhour|mudhour]] - Current hour in the MUD
+* [[Manual:DIL_Manual/mudmonth|mudmonth]] - Current month in the MUD
+* [[Manual:DIL_Manual/realtime|realtime]] - Real-world system time
+* [[Manual:DIL_Manual/asctime|asctime]] - Convert real time to formatted string
 
 == See Also ==
 * Time constants: '''SECS_PER_MUD_YEAR''', '''MUD_DAY''', '''MUD_HOUR''', '''MUD_MONTH'''
-* Time-based functions: [[heartbeat]], [[wait]], [[pause]]
+* Time-based functions: [[Manual:DIL_Manual/heartbeat|heartbeat]], [[Manual:DIL_Manual/wait|wait]], [[Manual:DIL_Manual/pause|pause]]
 * Character fields: '''birth''' - Character's birth timestamp
-* String functions: [[itoa]] - Convert integer to string for display 
+* String functions: [[Manual:DIL_Manual/itoa|itoa]] - Convert integer to string for display 

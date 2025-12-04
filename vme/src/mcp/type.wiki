@@ -103,10 +103,10 @@ This field is available on the following types:
 * No error occurs for valid unitptr or cmdptr types.
 
 == Related Functions/Fields ==
-* [[unitptr]] - Unit pointer type documentation
-* [[cmdptr]] - Command pointer type documentation
-* [[findrndunit]] - Function that uses unit type filtering
-* [[foreach]] - Function that can iterate by unit type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/cmdptr|cmdptr]] - Command pointer type documentation
+* [[Manual:DIL_Manual/findrndunit|findrndunit]] - Function that uses unit type filtering
+* [[Manual:DIL_Manual/foreach|foreach]] - Function that can iterate by unit type
 
 == See Also ==
 * Unit type constants (UNIT_ST_*)

@@ -82,19 +82,19 @@ The '''UNIT_ST_ROOM''' constant is read-only and cannot be modified at runtime. 
 * Use appropriate bounds checking when accessing room properties by index
 
 == Related Functions/Fields ==
-* [[type]] - Function to get the type of a unit
-* [[roomflags]] - Room flags field (room only)
-* [[movement]] - Room movement field (room only)
-* [[exit_names]] - Room exit names field (room only)
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/type|type]] - Function to get the type of a unit
+* [[Manual:DIL_Manual/roomflags|roomflags]] - Room flags field (room only)
+* [[Manual:DIL_Manual/movement|movement]] - Room movement field (room only)
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Room exit names field (room only)
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[type]] - Unit type checking function
-* [[roomflags]] - Room flags field documentation
-* [[movement]] - Room movement field documentation
-* [[exit_names]] - Room exit names field documentation
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/type|type]] - Unit type checking function
+* [[Manual:DIL_Manual/roomflags|roomflags]] - Room flags field documentation
+* [[Manual:DIL_Manual/movement|movement]] - Room movement field documentation
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Room exit names field documentation

@@ -105,7 +105,7 @@ The function does not return a value.
 * The function removes only the first matching extra found
 * Extra descriptions are accessed via the unitptr.extra field
 * The function operates on the extra description list in order
-* Use [[addextra]] to add new extra descriptions
+* Use [[Manual:DIL_Manual/addextra|addextra]] to add new extra descriptions
 * Common extra names include quest markers, status flags, and temporary effects
 * The function is commonly used for cleanup operations and state management
 
@@ -120,11 +120,11 @@ The function handles errors in the following ways:
 Always validate that the target is a valid character and that the extra exists before calling the function.
 
 == Related Functions/Fields ==
-* [[addextra]] - Add an extra description to a unit
-* [[subextra]] - Remove an extra description (this function)
+* [[Manual:DIL_Manual/addextra|addextra]] - Add an extra description to a unit
+* [[Manual:DIL_Manual/subextra|subextra]] - Remove an extra description (this function)
 * unitptr.extra - Field for accessing extra description list
 * extraptr.names - Field for getting list of extra names
-* [[in]] operator - Check if an extra exists in the list
+* [[Manual:DIL_Manual/in|in]] operator - Check if an extra exists in the list
 
 == See Also ==
 * DIL Extra Description System Documentation

@@ -110,11 +110,11 @@ The function performs validation:
 * '''Type validation''' - Always returns a valid cmdptr or null
 
 == Related Functions ==
-* [[getcommand]] - Get a specific command by name
-* [[ghead]] - Get the first unit in the global unit list
-* [[cmdptr]] - Command pointer type and field documentation
+* [[Manual:DIL_Manual/getcommand|getcommand]] - Get a specific command by name
+* [[Manual:DIL_Manual/ghead|ghead]] - Get the first unit in the global unit list
+* [[Manual:DIL_Manual/cmdptr|cmdptr]] - Command pointer type and field documentation
 
 == See Also ==
-* [[command]] - Command field for checking current command
-* [[SFB_CMD]] - Command activation wait flag
-* [[global command list]] - System command registry
+* [[Manual:DIL_Manual/command|command]] - Command field for checking current command
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command activation wait flag
+* [[Manual:DIL_Manual/global command list|global command list]] - System command registry

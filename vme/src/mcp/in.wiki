@@ -111,12 +111,12 @@ code
 * Invalid data types will cause compilation errors
 
 == Related Functions/Fields ==
-* [[extra]] - Access to unit's extra description list
-* [[quests]] - Access to player's quest list
-* [[stringlist]] - String list type that supports 'in' operator
-* [[extraptr]] - Extra description pointer type
-* [[names]] - Field for accessing names in extra descriptions
-* [[substring]] - Function for extracting substrings
+* [[Manual:DIL_Manual/extra|extra]] - Access to unit's extra description list
+* [[Manual:DIL_Manual/quests|quests]] - Access to player's quest list
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list type that supports 'in' operator
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Extra description pointer type
+* [[Manual:DIL_Manual/names|names]] - Field for accessing names in extra descriptions
+* [[Manual:DIL_Manual/substring|substring]] - Function for extracting substrings
 
 == See Also ==
 * String operations and searching functions

@@ -59,11 +59,11 @@ code
 } dilend
 
 == Related Functions/Fields ==
-* [[break]] - Exit from a loop entirely
-* [[while]] - Loop construct that can be controlled with continue
-* [[foreach]] - Loop construct that can be controlled with continue
+* [[Manual:DIL_Manual/break|break]] - Exit from a loop entirely
+* [[Manual:DIL_Manual/while|while]] - Loop construct that can be controlled with continue
+* [[Manual:DIL_Manual/foreach|foreach]] - Loop construct that can be controlled with continue
 
 == See Also ==
-* [[break]]
-* [[while]]
-* [[foreach]]
+* [[Manual:DIL_Manual/break|break]]
+* [[Manual:DIL_Manual/while|while]]
+* [[Manual:DIL_Manual/foreach|foreach]]

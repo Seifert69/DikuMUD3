@@ -156,14 +156,14 @@ The function will return '''fail''' when:
 * The coinage parameter is not a recognized money type
 
 == Related Functions/Fields ==
-* [[money]] - Field for direct money access on units
-* [[transfermoney]] - Function to transfer money between characters
-* [[load]] - Function to create money objects
-* [[destroy]] - Function to remove money objects
+* [[Manual:DIL_Manual/money|money]] - Field for direct money access on units
+* [[Manual:DIL_Manual/transfermoney|transfermoney]] - Function to transfer money between characters
+* [[Manual:DIL_Manual/load|load]] - Function to create money objects
+* [[Manual:DIL_Manual/destroy|destroy]] - Function to remove money objects
 
 == See Also ==
-* [[GOLD_PIECE]] - Constant for gold piece type
-* [[SILVER_PIECE]] - Constant for silver piece type
-* [[COPPER_PIECE]] - Constant for copper piece type
-* [[PLATINUM_PIECE]] - Constant for platinum piece type
-* [[equipment]] - Function to manage character equipment slots 
+* [[Manual:DIL_Manual/GOLD_PIECE|GOLD_PIECE]] - Constant for gold piece type
+* [[Manual:DIL_Manual/SILVER_PIECE|SILVER_PIECE]] - Constant for silver piece type
+* [[Manual:DIL_Manual/COPPER_PIECE|COPPER_PIECE]] - Constant for copper piece type
+* [[Manual:DIL_Manual/PLATINUM_PIECE|PLATINUM_PIECE]] - Constant for platinum piece type
+* [[Manual:DIL_Manual/equipment|equipment]] - Function to manage character equipment slots 

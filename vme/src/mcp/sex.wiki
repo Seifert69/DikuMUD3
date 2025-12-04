@@ -158,15 +158,15 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[race]] - Field for character race
-* [[position]] - Field for character position
-* [[level]] - Field for character level
-* [[charflags]] - Field for character flags
-* [[act()]] - Function for gender-specific messaging
+* [[Manual:DIL_Manual/race|race]] - Field for character race
+* [[Manual:DIL_Manual/position|position]] - Field for character position
+* [[Manual:DIL_Manual/level|level]] - Field for character level
+* [[Manual:DIL_Manual/charflags|charflags]] - Field for character flags
+* [[Manual:DIL_Manual/act()|act()]] - Function for gender-specific messaging
 
 == See Also ==
-* [[SEX_*]] - Gender constants (SEX_MALE, SEX_FEMALE, SEX_NEUTRAL)
-* [[Character creation]] - Information about creating characters
-* [[Social interactions]] - Gender-based interaction systems
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/SEX_*|SEX_*]] - Gender constants (SEX_MALE, SEX_FEMALE, SEX_NEUTRAL)
+* [[Manual:DIL_Manual/Character creation|Character creation]] - Information about creating characters
+* [[Manual:DIL_Manual/Social interactions|Social interactions]] - Gender-based interaction systems
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type

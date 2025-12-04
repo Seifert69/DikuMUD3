@@ -110,7 +110,7 @@ Returns unitptr:
 ** Spell casting - the item or focus being used
 ** Recharge operations - the item being recharged
 * The variable is typically null outside of these specific operation contexts
-* Use [[activator]] to identify who initiated the operation
+* Use [[Manual:DIL_Manual/activator|activator]] to identify who initiated the operation
 
 == Error Handling ==
 * The '''medium''' variable itself never fails - it always returns a unitptr (which may be null)
@@ -118,10 +118,10 @@ Returns unitptr:
 * The variable is only meaningful in the appropriate operation context
 
 == Related Functions/Fields ==
-* [[activator]] - The unit that activated the DIL program
-* [[target]] - The target of an operation
-* [[self]] - The unit executing the DIL program
+* [[Manual:DIL_Manual/activator|activator]] - The unit that activated the DIL program
+* [[Manual:DIL_Manual/target|target]] - The target of an operation
+* [[Manual:DIL_Manual/self|self]] - The unit executing the DIL program
 
 == See Also ==
 * DIL message documentation for more information on operation contexts
-* [[unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation

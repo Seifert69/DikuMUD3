@@ -74,7 +74,7 @@ code
 ** ? - Matches any single character  
 ** [...] - Matches any one of the enclosed characters
 * The function returns a stringlist containing only the matching filenames (not full paths).
-* Commonly used with [[restore]]() function to load matching unit files.
+* Commonly used with [[Manual:DIL_Manual/restore|restore]]() function to load matching unit files.
 * If no files match the pattern, an empty stringlist is returned.
 * The pattern matching is case-sensitive.
 * Useful for batch operations on groups of related unit files.
@@ -86,10 +86,10 @@ code
 * File system errors (permissions, etc.) will result in an empty stringlist being returned.
 
 == Related Functions/Fields ==
-* [[restore]] - Loads a unit from a file
-* [[savestr]] - Saves string data to files
-* [[loadstr]] - Loads string data from files
-* [[delstr]] - Deletes files
+* [[Manual:DIL_Manual/restore|restore]] - Loads a unit from a file
+* [[Manual:DIL_Manual/savestr|savestr]] - Saves string data to files
+* [[Manual:DIL_Manual/loadstr|loadstr]] - Loads string data from files
+* [[Manual:DIL_Manual/delstr|delstr]] - Deletes files
 
 == See Also ==
 * File system functions

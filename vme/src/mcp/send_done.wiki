@@ -82,7 +82,7 @@ The send_done function sends an SFB_DONE message to DIL programs in the surround
 * Parameter 'i' uses CMD_AUTO_* constants or 0 for no auto command
 * The function is commonly used for multi-program coordination and command completion
 * Messages are sent to all DIL programs in the surrounding area
-* Use with [[interrupt]] function to handle incoming completion messages
+* Use with [[Manual:DIL_Manual/interrupt|interrupt]] function to handle incoming completion messages
 
 == Error Handling ==
 * Function will fail if any required parameters are null or invalid
@@ -91,11 +91,11 @@ The send_done function sends an SFB_DONE message to DIL programs in the surround
 * Ensure target programs are properly waiting for SFB_DONE messages
 
 == Related Functions/Fields ==
-* [[interrupt]] - Function to receive completion messages
-* [[send_pre]] - Function for sending command preparation messages
-* [[exec]] - Function for executing commands on units
-* [[activator]] - Built-in variable for operation trigger
-* [[medium]] - Built-in variable for operation context
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Function to receive completion messages
+* [[Manual:DIL_Manual/send_pre|send_pre]] - Function for sending command preparation messages
+* [[Manual:DIL_Manual/exec|exec]] - Function for executing commands on units
+* [[Manual:DIL_Manual/activator|activator]] - Built-in variable for operation trigger
+* [[Manual:DIL_Manual/medium|medium]] - Built-in variable for operation context
 
 == See Also ==
 * DIL program coordination and synchronization

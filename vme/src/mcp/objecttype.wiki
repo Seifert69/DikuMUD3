@@ -16,7 +16,7 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 Object types are defined as ITEM_* constants in values.h and/or vme.h.
-Different object types have different behaviors and use the [[value]] array differently.
+Different object types have different behaviors and use the [[Manual:DIL_Manual/value|value]] array differently.
 
 == Examples ==
  dilbegin identify_object(obj : unitptr);
@@ -56,14 +56,14 @@ Always verify the unit is an object before accessing objecttype:
  }
 
 == Related Functions/Fields ==
-* [[value]] - Object-specific values array
-* [[objectflags]] - Object property flags
-* [[manipulate]] - Object manipulation flags
-* [[type]] - Unit type field
-* [[equip]] - Equipment position
+* [[Manual:DIL_Manual/value|value]] - Object-specific values array
+* [[Manual:DIL_Manual/objectflags|objectflags]] - Object property flags
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Object manipulation flags
+* [[Manual:DIL_Manual/type|type]] - Unit type field
+* [[Manual:DIL_Manual/equip|equip]] - Equipment position
 
 == See Also ==
-* [[unit_st_obj]] - Other object fields
-* [[value]] - Object-specific values
-* [[objectflags]] - Object property flags
-* [[manipulate]] - Object manipulation flags 
+* [[Manual:DIL_Manual/unit_st_obj|unit_st_obj]] - Other object fields
+* [[Manual:DIL_Manual/value|value]] - Object-specific values
+* [[Manual:DIL_Manual/objectflags|objectflags]] - Object property flags
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Object manipulation flags 

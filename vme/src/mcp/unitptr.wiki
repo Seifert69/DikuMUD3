@@ -117,70 +117,70 @@ The '''unitptr''' type is used throughout DIL to:
 * Consider edge cases where unit pointers might be null or invalid
 
 == Related Functions/Fields ==
-* [[type]] - Function to get the type of a unit
-* [[findunit]] - Function to find a unit by name and type
-* [[addequip]] / [[unequip]] - Equipment management functions
-* [[inside]] / [[outside]] - Unit hierarchy navigation
-* [[names]] - Unit name list field
-* [[title]] - Unit title field
-* [[extra]] - Unit extra descriptions field
-* [[hp]] - Unit hitpoints field
-* [[max_hp]] - Unit maximum hitpoints field
-* [[alignment]] - Unit alignment field
-* [[openflags]] - Unit open flags field
-* [[light]] - Unit light level field
-* [[bright]] - Unit brightness level field
-* [[illum]] - Unit illumination level field
-* [[minv]] - Unit minimum visibility level field
-* [[spells]] - Unit spells array field
-* [[zoneidx]] - Unit zone index field
-* [[nameidx]] - Unit name index field
-* [[symname]] - Unit symbolic name field
-* [[idx]] - Unit constant ID field
-* [[hasfunc]] - Unit function presence field
-* [[manipulate]] - Unit manipulation procedure
-* [[setweight]] - Unit weight setting procedure
-* [[weight]] - Unit weight field
-* [[height]] - Unit height field
-* [[capacity]] - Unit capacity field
-* [[lifespan]] - Unit lifespan field
-* [[key]] - Unit key field
-* [[gnext]] / [[gprevious]] - Unit navigation fields
-* [[master]] - Unit master field
-* [[loadcount]] - Unit load count field
+* [[Manual:DIL_Manual/type|type]] - Function to get the type of a unit
+* [[Manual:DIL_Manual/findunit|findunit]] - Function to find a unit by name and type
+* [[Manual:DIL_Manual/addequip|addequip]] / [[Manual:DIL_Manual/unequip|unequip]] - Equipment management functions
+* [[Manual:DIL_Manual/inside|inside]] / [[Manual:DIL_Manual/outside|outside]] - Unit hierarchy navigation
+* [[Manual:DIL_Manual/names|names]] - Unit name list field
+* [[Manual:DIL_Manual/title|title]] - Unit title field
+* [[Manual:DIL_Manual/extra|extra]] - Unit extra descriptions field
+* [[Manual:DIL_Manual/hp|hp]] - Unit hitpoints field
+* [[Manual:DIL_Manual/max_hp|max_hp]] - Unit maximum hitpoints field
+* [[Manual:DIL_Manual/alignment|alignment]] - Unit alignment field
+* [[Manual:DIL_Manual/openflags|openflags]] - Unit open flags field
+* [[Manual:DIL_Manual/light|light]] - Unit light level field
+* [[Manual:DIL_Manual/bright|bright]] - Unit brightness level field
+* [[Manual:DIL_Manual/illum|illum]] - Unit illumination level field
+* [[Manual:DIL_Manual/minv|minv]] - Unit minimum visibility level field
+* [[Manual:DIL_Manual/spells|spells]] - Unit spells array field
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Unit zone index field
+* [[Manual:DIL_Manual/nameidx|nameidx]] - Unit name index field
+* [[Manual:DIL_Manual/symname|symname]] - Unit symbolic name field
+* [[Manual:DIL_Manual/idx|idx]] - Unit constant ID field
+* [[Manual:DIL_Manual/hasfunc|hasfunc]] - Unit function presence field
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Unit manipulation procedure
+* [[Manual:DIL_Manual/setweight|setweight]] - Unit weight setting procedure
+* [[Manual:DIL_Manual/weight|weight]] - Unit weight field
+* [[Manual:DIL_Manual/height|height]] - Unit height field
+* [[Manual:DIL_Manual/capacity|capacity]] - Unit capacity field
+* [[Manual:DIL_Manual/lifespan|lifespan]] - Unit lifespan field
+* [[Manual:DIL_Manual/key|key]] - Unit key field
+* [[Manual:DIL_Manual/gnext|gnext]] / [[Manual:DIL_Manual/gprevious|gprevious]] - Unit navigation fields
+* [[Manual:DIL_Manual/master|master]] - Unit master field
+* [[Manual:DIL_Manual/loadcount|loadcount]] - Unit load count field
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[type]] - Unit type checking function
-* [[findunit]] - Unit finding function
-* [[addequip]] - Equipment management
-* [[inside]] / [[outside]] - Unit hierarchy
-* [[names]] - Unit name list
-* [[title]] - Unit title field
-* [[extra]] - Unit extra descriptions
-* [[hp]] - Unit hitpoints field
-* [[alignment]] - Unit alignment field
-* [[openflags]] - Unit open flags field
-* [[light]] - Unit light level field
-* [[bright]] - Unit brightness level field
-* [[illum]] - Unit illumination level field
-* [[minv]] - Unit minimum visibility level field
-* [[spells]] - Unit spells field
-* [[zoneidx]] - Unit zone index field
-* [[nameidx]] - Unit name index field
-* [[symname]] - Unit symbolic name field
-* [[idx]] - Unit constant ID field
-* [[hasfunc]] - Unit function presence field
-* [[manipulate]] - Unit manipulation procedure
-* [[setweight]] - Unit weight setting procedure
-* [[weight]] - Unit weight field
-* [[height]] - Unit height field
-* [[capacity]] - Unit capacity field
-* [[lifespan]] - Unit lifespan field
-* [[key]] - Unit key field
-* [[gnext]] / [[gprevious]] - Unit navigation fields
-* [[master]] - Unit master field
-* [[loadcount]] - Unit load count field
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/type|type]] - Unit type checking function
+* [[Manual:DIL_Manual/findunit|findunit]] - Unit finding function
+* [[Manual:DIL_Manual/addequip|addequip]] - Equipment management
+* [[Manual:DIL_Manual/inside|inside]] / [[Manual:DIL_Manual/outside|outside]] - Unit hierarchy
+* [[Manual:DIL_Manual/names|names]] - Unit name list
+* [[Manual:DIL_Manual/title|title]] - Unit title field
+* [[Manual:DIL_Manual/extra|extra]] - Unit extra descriptions
+* [[Manual:DIL_Manual/hp|hp]] - Unit hitpoints field
+* [[Manual:DIL_Manual/alignment|alignment]] - Unit alignment field
+* [[Manual:DIL_Manual/openflags|openflags]] - Unit open flags field
+* [[Manual:DIL_Manual/light|light]] - Unit light level field
+* [[Manual:DIL_Manual/bright|bright]] - Unit brightness level field
+* [[Manual:DIL_Manual/illum|illum]] - Unit illumination level field
+* [[Manual:DIL_Manual/minv|minv]] - Unit minimum visibility level field
+* [[Manual:DIL_Manual/spells|spells]] - Unit spells field
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Unit zone index field
+* [[Manual:DIL_Manual/nameidx|nameidx]] - Unit name index field
+* [[Manual:DIL_Manual/symname|symname]] - Unit symbolic name field
+* [[Manual:DIL_Manual/idx|idx]] - Unit constant ID field
+* [[Manual:DIL_Manual/hasfunc|hasfunc]] - Unit function presence field
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Unit manipulation procedure
+* [[Manual:DIL_Manual/setweight|setweight]] - Unit weight setting procedure
+* [[Manual:DIL_Manual/weight|weight]] - Unit weight field
+* [[Manual:DIL_Manual/height|height]] - Unit height field
+* [[Manual:DIL_Manual/capacity|capacity]] - Unit capacity field
+* [[Manual:DIL_Manual/lifespan|lifespan]] - Unit lifespan field
+* [[Manual:DIL_Manual/key|key]] - Unit key field
+* [[Manual:DIL_Manual/gnext|gnext]] / [[Manual:DIL_Manual/gprevious|gprevious]] - Unit navigation fields
+* [[Manual:DIL_Manual/master|master]] - Unit master field
+* [[Manual:DIL_Manual/loadcount|loadcount]] - Unit load count field

@@ -134,11 +134,11 @@ The field performs validation:
 * '''Range validation''' - Validates cost is within reasonable bounds
 
 == Related Functions ==
-* [[value]] - Get the base value of an item
-* [[moneystring]] - Format money amounts for display
-* [[transfermoney]] - Transfer money between units
+* [[Manual:DIL_Manual/value|value]] - Get the base value of an item
+* [[Manual:DIL_Manual/moneystring|moneystring]] - Format money amounts for display
+* [[Manual:DIL_Manual/transfermoney|transfermoney]] - Transfer money between units
 
 == See Also ==
-* [[UNIT_ST_OBJ]] - Object unit type
-* [[shop systems]] - Economic and trading systems
-* [[gold pieces]] - Currency system
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object unit type
+* [[Manual:DIL_Manual/shop systems|shop systems]] - Economic and trading systems
+* [[Manual:DIL_Manual/gold pieces|gold pieces]] - Currency system

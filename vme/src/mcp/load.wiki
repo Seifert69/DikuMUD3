@@ -46,7 +46,7 @@ The load function performs the following operations:
 * Rooms cannot be loaded and will generate an error in the system log
 * If the symbolic name does not exist, an error is logged and null is returned
 * The loaded unit is automatically placed in the loader's inventory
-* Use the [[link]] procedure to move the loaded unit to a different location
+* Use the [[Manual:DIL_Manual/link|link]] procedure to move the loaded unit to a different location
 * Money units are properly initialized with their correct amount
 * Symbolic names follow the format "name@zone" (e.g., "garlic@midgaard")
 
@@ -58,9 +58,9 @@ The load function performs the following operations:
 
 == Related Functions/Fields ==
 
-* [[link]]
-* [[findsymbolic]]
-* [[destroy]]
-* [[unitptr.symname]]
+* [[Manual:DIL_Manual/link|link]]
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]]
+* [[Manual:DIL_Manual/destroy|destroy]]
+* [[Manual:DIL_Manual/unitptr.symname|unitptr.symname]]
 
 == See Also == 

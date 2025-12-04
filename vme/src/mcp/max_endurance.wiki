@@ -86,7 +86,7 @@ This field is available on the following unit types:
 * The '''.max_endurance''' field is read-only and cannot be modified directly
 * This field represents the theoretical maximum endurance a character can have
 * Maximum endurance is typically determined by character level, race, and other attributes
-* This field is commonly used in conjunction with [[endurance]] to calculate percentages and ratios
+* This field is commonly used in conjunction with [[Manual:DIL_Manual/endurance|endurance]] to calculate percentages and ratios
 * The value is used as the upper bound when restoring endurance after death, rest, or magical effects
 * Endurance systems are often used for movement costs, combat fatigue, and special abilities
 
@@ -96,12 +96,12 @@ This field is available on the following unit types:
 * The field itself never fails - it always returns an integer value
 
 == Related Functions/Fields ==
-* [[endurance]] - Gets/sets the current endurance points
-* [[max_hp]] - Gets the maximum hit points
-* [[max_mana]] - Gets the maximum mana points
-* [[hp]] - Gets/sets the current hit points
-* [[mana]] - Gets/sets the current mana points
+* [[Manual:DIL_Manual/endurance|endurance]] - Gets/sets the current endurance points
+* [[Manual:DIL_Manual/max_hp|max_hp]] - Gets the maximum hit points
+* [[Manual:DIL_Manual/max_mana|max_mana]] - Gets the maximum mana points
+* [[Manual:DIL_Manual/hp|hp]] - Gets/sets the current hit points
+* [[Manual:DIL_Manual/mana|mana]] - Gets/sets the current mana points
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation

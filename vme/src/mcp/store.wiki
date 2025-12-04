@@ -4,7 +4,7 @@ function: '''store'''(u : unitptr, filename : string, container : integer);
 The '''store''' function saves a unit and its contents to a file for later restoration.
 
 == Description ==
-This function saves a copy of a unit to a file on disk, allowing it to be restored later using the [[restore]] function. The function can save either just the contents of a unit or the unit itself along with its contents, depending on the container parameter.
+This function saves a copy of a unit to a file on disk, allowing it to be restored later using the [[Manual:DIL_Manual/restore|restore]] function. The function can save either just the contents of a unit or the unit itself along with its contents, depending on the container parameter.
 
 When container is TRUE, the unit itself and all its contents are saved. When container is FALSE, only the contents of the unit are saved, not the unit itself. This makes the function versatile for different storage needs like saving player inventories, room contents, or storage containers.
 
@@ -114,7 +114,7 @@ The function does not return a value.
 * Use TRUE for container parameter to save unit and its contents
 * Use FALSE for container parameter to save only contents
 * The filename should not include path or extension
-* Use [[restore]] function to load previously stored units
+* Use [[Manual:DIL_Manual/restore|restore]] function to load previously stored units
 * Disk access is slow - use sparingly to avoid server performance issues
 * Player inventories are automatically saved, so explicit storage is only needed for special cases
 
@@ -129,10 +129,10 @@ The function handles errors in the following ways:
 Always validate unit type and access level before calling the function.
 
 == Related Functions/Fields ==
-* [[restore]] - Load a previously stored unit
-* [[delunit]] - Delete a stored unit file
-* [[load]] - Load a unit from main database
-* [[findunit]] - Find a unit in the game world
+* [[Manual:DIL_Manual/restore|restore]] - Load a previously stored unit
+* [[Manual:DIL_Manual/delunit|delunit]] - Delete a stored unit file
+* [[Manual:DIL_Manual/load|load]] - Load a unit from main database
+* [[Manual:DIL_Manual/findunit|findunit]] - Find a unit in the game world
 
 == See Also ==
 * DIL File System Documentation

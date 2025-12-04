@@ -61,9 +61,9 @@ The getfollower() function retrieves a specific follower from a character's foll
 * Always check return value before using the returned unit
 
 == Related Functions/Fields ==
-* [[follow]] - Make a character follow another
-* [[followercount]] - Number of followers a character has
-* [[unit_st_pc and unit_st_npc]] - Character fields including follower and master
+* [[Manual:DIL_Manual/follow|follow]] - Make a character follow another
+* [[Manual:DIL_Manual/followercount|followercount]] - Number of followers a character has
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character fields including follower and master
 
 == See Also ==
-* [[unitptr]] - Unit pointer type and fields
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and fields

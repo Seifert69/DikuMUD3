@@ -78,11 +78,11 @@ This field is available on the following unit types:
 * Always validate flag combinations before setting them
 
 == Related Functions/Fields ==
-* [[isset]] - Function to check if specific bits are set in an integer
-* [[movement]] - Field that controls the movement type of the room
-* [[exit_info]] - Field that controls exit properties and flags
+* [[Manual:DIL_Manual/isset|isset]] - Function to check if specific bits are set in an integer
+* [[Manual:DIL_Manual/movement|movement]] - Field that controls the movement type of the room
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Field that controls exit properties and flags
 
 == See Also ==
-* [[unit_st_room]] - Complete documentation of room unit fields
-* [[exit_info]] - Exit flag management
-* [[movement]] - Room movement type configuration
+* [[Manual:DIL_Manual/unit_st_room|unit_st_room]] - Complete documentation of room unit fields
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Exit flag management
+* [[Manual:DIL_Manual/movement|movement]] - Room movement type configuration

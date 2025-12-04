@@ -60,11 +60,11 @@ This iterates through all objects and identifies which ones are light sources.
 
 == Related Functions/Fields ==
 
-* [[setbright]] - Sets the brightness of a unit
-* [[bright]] - Field showing how much light a unit emits
-* [[light]] - Field showing how much light is inside a unit
-* [[illum]] - Field showing light created by units inside transparent units
-* [[objecttype]] - The type of an object (ITEM_* constants)
+* [[Manual:DIL_Manual/setbright|setbright]] - Sets the brightness of a unit
+* [[Manual:DIL_Manual/bright|bright]] - Field showing how much light a unit emits
+* [[Manual:DIL_Manual/light|light]] - Field showing how much light is inside a unit
+* [[Manual:DIL_Manual/illum|illum]] - Field showing light created by units inside transparent units
+* [[Manual:DIL_Manual/objecttype|objecttype]] - The type of an object (ITEM_* constants)
 
 == See Also ==
 

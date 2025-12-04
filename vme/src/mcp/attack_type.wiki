@@ -108,11 +108,11 @@ The field performs validation:
 * '''Type validation'' - Ensures value is an integer
 
 == Related Fields ==
-* [[weapon_name]] - For getting the name of an attack type
-* [[weapon_info]] - For detailed weapon/attack type information
-* [[position]] - For character combat position
+* [[Manual:DIL_Manual/weapon_name|weapon_name]] - For getting the name of an attack type
+* [[Manual:DIL_Manual/weapon_info|weapon_info]] - For detailed weapon/attack type information
+* [[Manual:DIL_Manual/position|position]] - For character combat position
 
 == See Also ==
-* [[WPN_*]] - Weapon type constants
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/WPN_*|WPN_*]] - Weapon type constants
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type

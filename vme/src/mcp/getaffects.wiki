@@ -120,10 +120,10 @@ The data values and their meanings depend on the type of affect:
 * Returns fail if the input unit is null or an unsupported type
 
 == Related Functions/Fields ==
-* [[isaff]]
-* [[addaff]]
-* [[subaff]]
-* [[split]]
+* [[Manual:DIL_Manual/isaff|isaff]]
+* [[Manual:DIL_Manual/addaff|addaff]]
+* [[Manual:DIL_Manual/subaff|subaff]]
+* [[Manual:DIL_Manual/split|split]]
 
 == See Also ==
-* [[stringlist]]
+* [[Manual:DIL_Manual/stringlist|stringlist]]

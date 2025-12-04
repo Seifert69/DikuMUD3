@@ -39,11 +39,11 @@ If the '''break''' statement is used outside of any loop construct, the DIL comp
  } dilend
 
 == Related Functions/Fields ==
-* [[continue]] - Skip to next iteration of a loop
-* [[while]] - Loop construct that can be controlled with break
-* [[foreach]] - Loop construct that can be controlled with break
+* [[Manual:DIL_Manual/continue|continue]] - Skip to next iteration of a loop
+* [[Manual:DIL_Manual/while|while]] - Loop construct that can be controlled with break
+* [[Manual:DIL_Manual/foreach|foreach]] - Loop construct that can be controlled with break
 
 == See Also ==
-* [[continue]]
-* [[while]]
-* [[foreach]]
+* [[Manual:DIL_Manual/continue|continue]]
+* [[Manual:DIL_Manual/while|while]]
+* [[Manual:DIL_Manual/foreach|foreach]]

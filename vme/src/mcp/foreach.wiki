@@ -87,10 +87,10 @@ The foreach statement supports both break and continue statements for controllin
 * Invalid unit type flags may result in unexpected behavior
 
 == Related Functions/Fields ==
-* [[secure]]
-* [[unsecure]]
-* [[break]]
-* [[continue]]
+* [[Manual:DIL_Manual/secure|secure]]
+* [[Manual:DIL_Manual/unsecure|unsecure]]
+* [[Manual:DIL_Manual/break|break]]
+* [[Manual:DIL_Manual/continue|continue]]
 
 == See Also ==
-* [[unitptr]]
+* [[Manual:DIL_Manual/unitptr|unitptr]]

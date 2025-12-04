@@ -123,13 +123,13 @@ code
 * When setting titles, extremely long strings may be truncated or rejected by the system.
 
 == Related Functions/Fields ==
-* [[name]] - The primary name field of units
-* [[names]] - The list of names that match a unit
-* [[outside_descr]] - The description of a unit from the outside
-* [[inside_descr]] - The description of a unit from the inside
-* [[zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/name|name]] - The primary name field of units
+* [[Manual:DIL_Manual/names|names]] - The list of names that match a unit
+* [[Manual:DIL_Manual/outside_descr|outside_descr]] - The description of a unit from the outside
+* [[Manual:DIL_Manual/inside_descr|inside_descr]] - The description of a unit from the inside
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[zoneptr]] - Zone pointer type documentation
-* [[sact]] - String activation function for formatting titles
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/sact|sact]] - String activation function for formatting titles

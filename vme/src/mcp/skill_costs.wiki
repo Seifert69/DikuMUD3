@@ -145,7 +145,7 @@ This field is available on the following unit types:
 * Skill indices correspond to SKI_* constants defined in the game system
 * The field returns experience point costs, not skill levels or proficiency
 * Skill costs may be modified by racial bonuses, class bonuses, or other game mechanics
-* The field is commonly used with [[skill_name()]] to get skill names
+* The field is commonly used with [[Manual:DIL_Manual/skill_name()|skill_name()]] to get skill names
 * Skill costs are typically used in character creation, training, and advancement systems
 
 == Error Handling ==
@@ -163,15 +163,15 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[skill_name()]] - Function to get the name of a skill from its index
-* [[skill_levels]] - Field to get the current level of a skill
-* [[skills]] - Field array to access all skill values
-* [[exp]] - Field to get current experience points
-* [[skill_points]] - Field to get available skill points
+* [[Manual:DIL_Manual/skill_name()|skill_name()]] - Function to get the name of a skill from its index
+* [[Manual:DIL_Manual/skill_levels|skill_levels]] - Field to get the current level of a skill
+* [[Manual:DIL_Manual/skills|skills]] - Field array to access all skill values
+* [[Manual:DIL_Manual/exp|exp]] - Field to get current experience points
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Field to get available skill points
 
 == See Also ==
-* [[SKI_*]] - Skill index constants
-* [[Character advancement]] - Information about skill progression
-* [[Experience system]] - Experience point and skill cost mechanics
-* [[Racial bonuses]] - Racial modifications to skill costs
-* [[Training systems]] - Skill training and advancement procedures
+* [[Manual:DIL_Manual/SKI_*|SKI_*]] - Skill index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about skill progression
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and skill cost mechanics
+* [[Manual:DIL_Manual/Racial bonuses|Racial bonuses]] - Racial modifications to skill costs
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Skill training and advancement procedures

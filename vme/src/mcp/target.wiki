@@ -222,7 +222,7 @@ The function returns a unitptr:
 ** "unique_item_12345@global" - for unique items
 ** "guard@midgaard" - for city guards
 * The function returns null if no matching unit is found
-* Use [[findunit]] for local searches when possible instead of global searches
+* Use [[Manual:DIL_Manual/findunit|findunit]] for local searches when possible instead of global searches
 
 == Error Handling ==
 The function handles errors in the following ways:
@@ -234,10 +234,10 @@ The function handles errors in the following ways:
 Always validate that the symbolic name parameter is not empty before calling the function.
 
 == Related Functions/Fields ==
-* [[findsymbolic]] - Find unit by symbolic name globally
-* [[findunit]] - Find unit locally
-* [[symname]] - Get symbolic name of a unit
-* [[addextra]] - Store symbolic names in extra descriptions
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Find unit by symbolic name globally
+* [[Manual:DIL_Manual/findunit|findunit]] - Find unit locally
+* [[Manual:DIL_Manual/symname|symname]] - Get symbolic name of a unit
+* [[Manual:DIL_Manual/addextra|addextra]] - Store symbolic names in extra descriptions
 * unitptr.symname - Field to access symbolic name
 
 == See Also ==

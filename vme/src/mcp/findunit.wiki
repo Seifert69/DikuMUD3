@@ -48,9 +48,9 @@ safe := findunit(self, "safe", FIND_UNIT_SURRO, self);
 * Always check the returned unitptr before use
 
 == Related Functions/Fields ==
-* [[findsymbolic()]] - Find a unit by symbolic name
-* [[findroom()]] - Find a room by symbolic name
-* [[foreach()]] - Iterate through units of specific types
+* [[Manual:DIL_Manual/findsymbolic()|findsymbolic()]] - Find a unit by symbolic name
+* [[Manual:DIL_Manual/findroom()|findroom()]] - Find a room by symbolic name
+* [[Manual:DIL_Manual/foreach()|foreach()]] - Iterate through units of specific types
 
 == See Also ==
 * FIND_UNIT_* constants documentation

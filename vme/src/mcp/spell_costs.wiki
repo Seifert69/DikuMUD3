@@ -178,7 +178,7 @@ This field is available on the following unit types:
 * Spell indices correspond to SPL_* constants defined in the game system
 * The field returns experience point costs, not spell levels or proficiency
 * Spell costs may be modified by racial bonuses, class bonuses, or other game mechanics
-* The field is commonly used with [[spell_name()]] to get spell names
+* The field is commonly used with [[Manual:DIL_Manual/spell_name()|spell_name()]] to get spell names
 * Spell costs are typically used in character creation, training, and advancement systems
 
 == Error Handling ==
@@ -196,16 +196,16 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[spell_name()]] - Function to get the name of a spell from its index
-* [[spell_levels]] - Field to get the current level of a spell
-* [[spells]] - Field array to access all spell values
-* [[exp]] - Field to get current experience points
-* [[skill_points]] - Field to get available skill points
+* [[Manual:DIL_Manual/spell_name()|spell_name()]] - Function to get the name of a spell from its index
+* [[Manual:DIL_Manual/spell_levels|spell_levels]] - Field to get the current level of a spell
+* [[Manual:DIL_Manual/spells|spells]] - Field array to access all spell values
+* [[Manual:DIL_Manual/exp|exp]] - Field to get current experience points
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Field to get available skill points
 
 == See Also ==
-* [[SPL_*]] - Spell index constants
-* [[Character advancement]] - Information about spell progression systems
-* [[Experience system]] - Experience point and spell cost mechanics
-* [[Racial bonuses]] - Racial modifications to spell costs
+* [[Manual:DIL_Manual/SPL_*|SPL_*]] - Spell index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about spell progression systems
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and spell cost mechanics
+* [[Manual:DIL_Manual/Racial bonuses|Racial bonuses]] - Racial modifications to spell costs
 
-* [[Training systems]] - Spell training and advancement procedures
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Spell training and advancement procedures

@@ -15,13 +15,13 @@ The seven output parameters are set to specific spell attributes:
 * Valid casting mediums
 * Valid targets
 
-This function is commonly used in conjunction with [[spellindex]] to validate spells and retrieve their properties for display or processing purposes.
+This function is commonly used in conjunction with [[Manual:DIL_Manual/spellindex|spellindex]] to validate spells and retrieve their properties for display or processing purposes.
 
 == Parameters ==
 {| class="wikitable"
 ! Parameter !! Type !! Description
 |-
-| idx || integer || The spell index (SPL_XXX). Use [[spellindex]] to find this value
+| idx || integer || The spell index (SPL_XXX). Use [[Manual:DIL_Manual/spellindex|spellindex]] to find this value
 |-
 | i1 || integer || Output variable for spell realm (MAG/DIC)
 |-
@@ -194,11 +194,11 @@ The function handles errors in the following ways:
 Always check the return string for emptiness before using the output parameter values.
 
 == Related Functions/Fields ==
-* [[spellindex]] - Convert spell name to index
-* [[cast_spell]] - Cast a spell using its index
-* [[attack_spell]] - Cast offensive spell using its index
+* [[Manual:DIL_Manual/spellindex|spellindex]] - Convert spell name to index
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - Cast a spell using its index
+* [[Manual:DIL_Manual/attack_spell|attack_spell]] - Cast offensive spell using its index
 * unitptr.spells[] - Array field for character spell proficiencies
-* [[findunit]] - Function using FIND_UNIT_XXX constants for target searching
+* [[Manual:DIL_Manual/findunit|findunit]] - Function using FIND_UNIT_XXX constants for target searching
 
 == See Also ==
 * DIL Spell System Documentation

@@ -4,7 +4,7 @@
 The sact function formats a message string using the same syntax as act() but returns the formatted result as a string instead of sending it to players.
 
 == Description ==
-The sact function processes a message template with formatters and returns the formatted message as a string. It uses the same parameter structure and formatting rules as the [[act]] function, but instead of sending the message to players, it returns the processed text. This is useful when you need to capture formatted messages for later use, such as setting descriptions, logging, or building complex output strings.
+The sact function processes a message template with formatters and returns the formatted message as a string. It uses the same parameter structure and formatting rules as the [[Manual:DIL_Manual/act|act]] function, but instead of sending the message to players, it returns the processed text. This is useful when you need to capture formatted messages for later use, such as setting descriptions, logging, or building complex output strings.
 
 == PARAMETERS ==
 {| class="wikitable"
@@ -94,7 +94,7 @@ The sact function processes a message template with formatters and returns the f
  dilend
 
 == Usage Notes ==
-* Uses the same message formatters as the [[act]] function ($1n, $2n, $3n, etc.)
+* Uses the same message formatters as the [[Manual:DIL_Manual/act|act]] function ($1n, $2n, $3n, etc.)
 * Visibility constants (A_SOMEONE, A_HIDEINV, A_ALWAYS) work the same as in act()
 * The to_whom parameter affects how visibility is processed but doesn't send messages
 * Returns an empty string if formatting fails or required parameters are invalid
@@ -120,12 +120,12 @@ The function supports all standard act() formatters:
 ; $1t, $2t, $3t : Raw string values
 
 == Related Functions/Fields ==
-* [[act]] - Function that sends formatted messages to players
-* [[sendtext]] - Function for sending raw text to players
-* [[pagestring]] - Function for sending paginated output
-* [[outside_descr]] - Field commonly set with sact() results
+* [[Manual:DIL_Manual/act|act]] - Function that sends formatted messages to players
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Function for sending raw text to players
+* [[Manual:DIL_Manual/pagestring|pagestring]] - Function for sending paginated output
+* [[Manual:DIL_Manual/outside_descr|outside_descr]] - Field commonly set with sact() results
 
 == See Also ==
-* [[act]] - Message sending function with same formatting
-* [[sendtext]] - Simple text output function
-* [[pagestring]] - Paginated text output function
+* [[Manual:DIL_Manual/act|act]] - Message sending function with same formatting
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Simple text output function
+* [[Manual:DIL_Manual/pagestring|pagestring]] - Paginated text output function

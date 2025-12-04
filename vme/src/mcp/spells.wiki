@@ -186,8 +186,8 @@ This field is available on the following unit types:
 * For rooms and objects, only index 0 is valid (magical resistance)
 * Spell proficiency values typically range from 0 (no knowledge) to 100 (master)
 * Write access for PCs is restricted by the zone's access level
-* Use [[spellindex]] to convert spell names to indices
-* Use [[spellinfo]] to get spell names from indices
+* Use [[Manual:DIL_Manual/spellindex|spellindex]] to convert spell names to indices
+* Use [[Manual:DIL_Manual/spellinfo|spellinfo]] to get spell names from indices
 
 == Error Handling ==
 The field handles errors in the following ways:
@@ -199,11 +199,11 @@ The field handles errors in the following ways:
 Always validate the unit type and index range before accessing the field.
 
 == Related Functions/Fields ==
-* [[spellindex]] - Convert spell name to index
-* [[spellinfo]] - Get spell information from index
-* [[abilities]] - Similar field for ability scores
-* [[skills]] - Similar field for skill proficiencies
-* [[weapons]] - Similar field for weapon proficiencies
+* [[Manual:DIL_Manual/spellindex|spellindex]] - Convert spell name to index
+* [[Manual:DIL_Manual/spellinfo|spellinfo]] - Get spell information from index
+* [[Manual:DIL_Manual/abilities|abilities]] - Similar field for ability scores
+* [[Manual:DIL_Manual/skills|skills]] - Similar field for skill proficiencies
+* [[Manual:DIL_Manual/weapons|weapons]] - Similar field for weapon proficiencies
 
 == See Also ==
 * DIL Spell System Documentation

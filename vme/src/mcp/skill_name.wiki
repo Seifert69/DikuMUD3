@@ -185,15 +185,15 @@ Common error scenarios:
 * The function will return empty string rather than failing for invalid inputs
 
 == Related Functions/Fields ==
-* [[skill_levels]] - Field to get the current level of a skill
-* [[skill_costs]] - Field to get the experience point cost of a skill
-* [[skills]] - Field array to access all skill values
-* [[SKI_*]] - Skill index constants
-* [[Character advancement]] - Information about skill progression systems
+* [[Manual:DIL_Manual/skill_levels|skill_levels]] - Field to get the current level of a skill
+* [[Manual:DIL_Manual/skill_costs|skill_costs]] - Field to get the experience point cost of a skill
+* [[Manual:DIL_Manual/skills|skills]] - Field array to access all skill values
+* [[Manual:DIL_Manual/SKI_*|SKI_*]] - Skill index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about skill progression systems
 
 == See Also ==
-* [[Skill system]] - General information about skills and abilities
-* [[Character creation]] - Information about creating characters with skills
-* [[Training systems]] - Skill training and advancement procedures
-* [[Experience system]] - Experience point and skill cost mechanics
+* [[Manual:DIL_Manual/Skill system|Skill system]] - General information about skills and abilities
+* [[Manual:DIL_Manual/Character creation|Character creation]] - Information about creating characters with skills
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Skill training and advancement procedures
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and skill cost mechanics
 

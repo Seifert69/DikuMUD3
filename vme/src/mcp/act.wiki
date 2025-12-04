@@ -132,13 +132,13 @@ Note: The C implementation shows that this function:
 * The char parameter is required for most visibility modes except TO_ROOM and TO_ALL
 
 == Related Functions ==
-* [[send]] - Send message to specific character
-* [[sendtext]] - Send text to character without formatting
-* [[sendto]] - Send message to specific unit
-* [[sendtoall]] - Send message to all units in local environment
+* [[Manual:DIL_Manual/send|send]] - Send message to specific character
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Send text to character without formatting
+* [[Manual:DIL_Manual/sendto|sendto]] - Send message to specific unit
+* [[Manual:DIL_Manual/sendtoall|sendtoall]] - Send message to all units in local environment
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[visibility]] - Unit visibility field
-* [[position]] - Character position field
-* [[A_*]] - Action visibility constants
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/visibility|visibility]] - Unit visibility field
+* [[Manual:DIL_Manual/position|position]] - Character position field
+* [[Manual:DIL_Manual/A_*|A_*]] - Action visibility constants

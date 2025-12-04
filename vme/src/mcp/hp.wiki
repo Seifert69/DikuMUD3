@@ -78,6 +78,6 @@ This field is available on the following unit types:
 
 == See Also
 
-* [[max_hp]] - Maximum hitpoints field
-* [[position_update]] - Useful when modifying hp field
-* [[unitptr]] - General unit pointer fields 
+* [[Manual:DIL_Manual/max_hp|max_hp]] - Maximum hitpoints field
+* [[Manual:DIL_Manual/position_update|position_update]] - Useful when modifying hp field
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer fields 

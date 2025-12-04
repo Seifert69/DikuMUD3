@@ -93,9 +93,9 @@ The function performs validation:
 * '''Type validation'' - Returns fail if unit is not a valid type
 
 == Related Functions ==
-* [[set]] - For modifying unit properties including alignment
+* [[Manual:DIL_Manual/set|set]] - For modifying unit properties including alignment
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type

@@ -80,9 +80,9 @@ This function returns a new string with all alphabetic characters converted to t
 * The function will fail gracefully if memory allocation for the new string fails.
 
 == Related Functions/Fields ==
-* [[toupper]] - Converts all characters in a string to uppercase
-* [[restore]] - Restores data from storage (often used with tolower for filename normalization)
-* [[savestr]] - Saves strings to disk for later retrieval
+* [[Manual:DIL_Manual/toupper|toupper]] - Converts all characters in a string to uppercase
+* [[Manual:DIL_Manual/restore|restore]] - Restores data from storage (often used with tolower for filename normalization)
+* [[Manual:DIL_Manual/savestr|savestr]] - Saves strings to disk for later retrieval
 
 == See Also ==
 * String manipulation functions

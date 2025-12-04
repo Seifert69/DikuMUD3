@@ -51,9 +51,9 @@ This field is available on the following unit types:
 * The field will return 0 for null or invalid unit pointers
 
 == Related Functions/Fields ==
-* [[dilfind]] - Find DIL programs attached to units
-* [[dilcopy]] - Copy DIL programs to units
-* [[dildestroy]] - Destroy DIL programs on units
+* [[Manual:DIL_Manual/dilfind|dilfind]] - Find DIL programs attached to units
+* [[Manual:DIL_Manual/dilcopy|dilcopy]] - Copy DIL programs to units
+* [[Manual:DIL_Manual/dildestroy|dildestroy]] - Destroy DIL programs on units
 
 == See Also ==
-* [[unitptr]] - Unit pointer documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer documentation

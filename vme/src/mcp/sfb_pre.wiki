@@ -261,18 +261,18 @@ The SFB_PRE event is triggered just before the command interpreter processes the
 * Be aware that SFB_PRE triggers for ALL commands unless filtered by expression
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_PRE
-* [[interrupt]] - Alternative method for setting up pre-command triggers
-* [[cmdstr]] - Full command string after interpreter processing
-* [[excmdstr]] - Original command first word
-* [[excmdstr_case]] - Original command first word with case preservation
-* [[exec]] - Execute commands and optionally block them
-* [[block]] - Prevent command execution
-* [[send]] / [[sendto]] - Send messages to other DIL programs
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_PRE
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up pre-command triggers
+* [[Manual:DIL_Manual/cmdstr|cmdstr]] - Full command string after interpreter processing
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Original command first word
+* [[Manual:DIL_Manual/excmdstr_case|excmdstr_case]] - Original command first word with case preservation
+* [[Manual:DIL_Manual/exec|exec]] - Execute commands and optionally block them
+* [[Manual:DIL_Manual/block|block]] - Prevent command execution
+* [[Manual:DIL_Manual/send|send]] / [[Manual:DIL_Manual/sendto|sendto]] - Send messages to other DIL programs
 
 == See Also ==
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_DONE]] - Command completion documentation
-* [[SFB_MSG]] - Message-based activation
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_DONE|SFB_DONE]] - Command completion documentation
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message-based activation
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

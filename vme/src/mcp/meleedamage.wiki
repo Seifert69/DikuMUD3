@@ -145,7 +145,7 @@ Returns integer:
 * The '''b''' parameter can be positive (bonus) or negative (penalty) to modify the attack roll
 * This function is specifically designed for missile and thrown weapon damage calculations
 * The function automatically handles combat resolution, including hit/miss determination
-* Unlike [[meleeattack]], this function focuses on weapon damage rather than character combat
+* Unlike [[Manual:DIL_Manual/meleeattack|meleeattack]], this function focuses on weapon damage rather than character combat
 * The function respects standard combat mechanics like position checks and visibility requirements
 
 == Error Handling ==
@@ -155,13 +155,13 @@ Returns integer:
 * Always ensure both attacker and victim are valid character units before calling
 
 == Related Functions/Fields ==
-* [[meleeattack]] - For direct character melee attacks
-* [[one_hit]] - The underlying combat resolution function
-* [[equipment]] - To check equipped weapon type
-* [[weapon]] - Field to check equipped weapon
-* [[cast_spell]] - For magical attacks instead of melee
+* [[Manual:DIL_Manual/meleeattack|meleeattack]] - For direct character melee attacks
+* [[Manual:DIL_Manual/one_hit|one_hit]] - The underlying combat resolution function
+* [[Manual:DIL_Manual/equipment|equipment]] - To check equipped weapon type
+* [[Manual:DIL_Manual/weapon|weapon]] - Field to check equipped weapon
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - For magical attacks instead of melee
 
 == See Also ==
 * WPN_* constants in values.h for weapon type definitions
 * Combat and damage system documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation

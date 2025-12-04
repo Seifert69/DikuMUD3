@@ -44,10 +44,10 @@ This field is available on the following unit types:
 * Returns DILV_FAIL if the exit doesn't exist or the parameters are invalid
 
 == Related Functions/Fields ==
-* [[exit_to]] - Gets the room unit an exit leads to
-* [[exit_info]] - Gets the flags/properties of an exit
-* [[exit_names]] - Gets the names of an exit
-* [[skillcheck]] - For performing skill checks against difficulty
+* [[Manual:DIL_Manual/exit_to|exit_to]] - Gets the room unit an exit leads to
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Gets the flags/properties of an exit
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Gets the names of an exit
+* [[Manual:DIL_Manual/skillcheck|skillcheck]] - For performing skill checks against difficulty
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant

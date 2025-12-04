@@ -4,7 +4,7 @@
 The '''unsecure''' procedure removes secure protection from a previously secured unit.
 
 == Description ==
-This procedure removes the secure protection that was placed on a unit using the [[secure]]() procedure. Once a unit is unsecured, it can be modified, destroyed, or moved by other DIL programs. The secure/unsecure mechanism is used to prevent race conditions and protect units during critical operations.
+This procedure removes the secure protection that was placed on a unit using the [[Manual:DIL_Manual/secure|secure]]() procedure. Once a unit is unsecured, it can be modified, destroyed, or moved by other DIL programs. The secure/unsecure mechanism is used to prevent race conditions and protect units during critical operations.
 
 == PARAMETERS ==
 {| class="wikitable"
@@ -56,8 +56,8 @@ code
 } dilend
 
 == Usage Notes ==
-* The unit parameter must have been previously secured using the [[secure]]() procedure.
-* Each call to [[secure]]() should have a corresponding call to '''unsecure'''() to avoid leaving units permanently secured.
+* The unit parameter must have been previously secured using the [[Manual:DIL_Manual/secure|secure]]() procedure.
+* Each call to [[Manual:DIL_Manual/secure|secure]]() should have a corresponding call to '''unsecure'''() to avoid leaving units permanently secured.
 * The secure/unsecure mechanism prevents other DIL programs from modifying the unit during critical operations.
 * Commonly used when:
 ** Processing items that might be targeted by other programs
@@ -74,9 +74,9 @@ code
 * The procedure will fail if the unit is not in the current DIL program's local environment.
 
 == Related Functions/Fields ==
-* [[secure]] - Secures a unit and sets up protection monitoring
-* [[dil_sub_secure]] - Internal function called by unsecure
-* [[findsymbolic]] - Used to check if units are in local environment
+* [[Manual:DIL_Manual/secure|secure]] - Secures a unit and sets up protection monitoring
+* [[Manual:DIL_Manual/dil_sub_secure|dil_sub_secure]] - Internal function called by unsecure
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Used to check if units are in local environment
 
 == See Also ==
 * DIL program security mechanisms

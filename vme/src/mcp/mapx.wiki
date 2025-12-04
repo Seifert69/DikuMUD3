@@ -107,7 +107,7 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * The '''.mapx''' field is read-only and cannot be modified through DIL
-* This field works in conjunction with [[mapy]] to provide complete 2D coordinates
+* This field works in conjunction with [[Manual:DIL_Manual/mapy|mapy]] to provide complete 2D coordinates
 * A value of -1 indicates that the room has not been assigned map coordinates
 * Map coordinates are typically set in the zone files or through administrative commands
 * This field is commonly used for mapping systems, spatial calculations, and room visualization
@@ -119,11 +119,11 @@ This field is available on the following unit types:
 * The field itself never fails - it always returns an integer (coordinates or -1)
 
 == Related Functions/Fields ==
-* [[mapy]] - Gets the Y coordinate of a room
-* [[unit_st_room]] - Room-specific fields documentation
-* [[findroom]] - Finds a room by name
-* [[zoneidx]] - Gets the zone name of a room
+* [[Manual:DIL_Manual/mapy|mapy]] - Gets the Y coordinate of a room
+* [[Manual:DIL_Manual/unit_st_room|unit_st_room]] - Room-specific fields documentation
+* [[Manual:DIL_Manual/findroom|findroom]] - Finds a room by name
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Gets the zone name of a room
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_room]] - Room-specific fields and properties
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_room|unit_st_room]] - Room-specific fields and properties

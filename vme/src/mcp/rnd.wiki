@@ -104,11 +104,11 @@ dilend
 * No runtime errors occur for valid integer inputs, even if i1 > i2
 
 == Related Functions/Fields ==
-* [[openroll]] - Function for open-ended dice rolls with explosion mechanics
-* [[findrndunit]] - Function to find a random unit matching criteria
-* [[number]] - Core random number generation function (internal)
+* [[Manual:DIL_Manual/openroll|openroll]] - Function for open-ended dice rolls with explosion mechanics
+* [[Manual:DIL_Manual/findrndunit|findrndunit]] - Function to find a random unit matching criteria
+* [[Manual:DIL_Manual/number|number]] - Core random number generation function (internal)
 
 == See Also ==
-* [[atoi]] - Function to convert strings to integers
-* [[itoa]] - Function to convert integers to strings
-* [[mudhour]] - Variable for current game hour (often used with rnd for time-based events)
+* [[Manual:DIL_Manual/atoi|atoi]] - Function to convert strings to integers
+* [[Manual:DIL_Manual/itoa|itoa]] - Function to convert integers to strings
+* [[Manual:DIL_Manual/mudhour|mudhour]] - Variable for current game hour (often used with rnd for time-based events)

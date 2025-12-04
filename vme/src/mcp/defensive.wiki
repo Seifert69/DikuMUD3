@@ -133,11 +133,11 @@ The field performs validation:
 * '''Range validation''' - Validates defensive value is within reasonable bounds
 
 == Related Functions ==
-* [[charflags]] - Character flags and status
-* [[combat]] - Combat systems and damage calculations
-* [[equipment]] - Equipment that affects defensive capabilities
+* [[Manual:DIL_Manual/charflags|charflags]] - Character flags and status
+* [[Manual:DIL_Manual/combat|combat]] - Combat systems and damage calculations
+* [[Manual:DIL_Manual/equipment|equipment]] - Equipment that affects defensive capabilities
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
-* [[combat mechanics]] - Defensive and offensive systems
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/combat mechanics|combat mechanics]] - Defensive and offensive systems

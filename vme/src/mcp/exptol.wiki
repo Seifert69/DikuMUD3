@@ -40,9 +40,9 @@ This field is available on the following unit types:
 * Returns fail if accessed on non-player character units
 
 == Related Functions/Fields ==
-* [[exp]] - Current experience points
-* [[level]] - Current player level
-* [[experience]] - Function to modify experience values
+* [[Manual:DIL_Manual/exp|exp]] - Current experience points
+* [[Manual:DIL_Manual/level|level]] - Current player level
+* [[Manual:DIL_Manual/experience|experience]] - Function to modify experience values
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type constant

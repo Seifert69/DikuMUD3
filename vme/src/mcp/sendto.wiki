@@ -65,7 +65,7 @@ The sendto function sends a message to all DIL programs that are currently insid
 * Receiving programs must be waiting with interrupt(SFB_MSG, ...) to receive messages
 * The target unit must contain DIL programs for the messages to be received
 * Commonly used for object-NPC, object-room, and room-program communication
-* No automatic formatting like [[sendtext]] - messages are sent as-is
+* No automatic formatting like [[Manual:DIL_Manual/sendtext|sendtext]] - messages are sent as-is
 
 == Message Reception ==
 DIL programs can receive sendto messages using:
@@ -79,12 +79,12 @@ The condition typically checks if the message is relevant to the receiving progr
 * Invalid unit pointers may cause runtime errors
 
 == Related Functions/Fields ==
-* [[sendtoall]] - Function for sending messages to all units globally
-* [[sendtoalldil]] - Function for sending to specific DIL programs
-* [[sendtext]] - Function for sending text to specific units
-* [[interrupt]] - Function for receiving incoming messages
-* [[unitptr]] - Unit pointer type and operations
-* [[inside]] - Field for accessing units within containers
+* [[Manual:DIL_Manual/sendtoall|sendtoall]] - Function for sending messages to all units globally
+* [[Manual:DIL_Manual/sendtoalldil|sendtoalldil]] - Function for sending to specific DIL programs
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Function for sending text to specific units
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Function for receiving incoming messages
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and operations
+* [[Manual:DIL_Manual/inside|inside]] - Field for accessing units within containers
 
 == See Also ==
 * DIL program communication and coordination

@@ -70,10 +70,10 @@ The getwords() function splits a string into individual words using spaces as de
 * Always check return value before accessing array elements
 
 == Related Functions/Fields ==
-* [[getword]] - Get first word and remove from string
-* [[stringlist]] - String list type and operations
-* [[length]] - Get length of string or stringlist
-* [[addstring]] - Add string to stringlist
+* [[Manual:DIL_Manual/getword|getword]] - Get first word and remove from string
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list type and operations
+* [[Manual:DIL_Manual/length|length]] - Get length of string or stringlist
+* [[Manual:DIL_Manual/addstring|addstring]] - Add string to stringlist
 
 == See Also ==
 * String parsing and manipulation functions

@@ -73,11 +73,11 @@ The getopponent() function retrieves a specific opponent from a character's oppo
 * Always check return value before using the returned unit
 
 == Related Functions/Fields ==
-* [[opponent]] - Check if two units are opponents
-* [[set_fighting]] - Set two characters fighting
-* [[stop_fighting]] - Stop combat between characters
-* [[fighting]] - Primary opponent field
-* [[opponentcount]] - Number of opponents a character is fighting
+* [[Manual:DIL_Manual/opponent|opponent]] - Check if two units are opponents
+* [[Manual:DIL_Manual/set_fighting|set_fighting]] - Set two characters fighting
+* [[Manual:DIL_Manual/stop_fighting|stop_fighting]] - Stop combat between characters
+* [[Manual:DIL_Manual/fighting|fighting]] - Primary opponent field
+* [[Manual:DIL_Manual/opponentcount|opponentcount]] - Number of opponents a character is fighting
 
 == See Also ==
-* [[unit_st_pc and unit_st_npc]] - Character fields including fighting and opponentcount
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character fields including fighting and opponentcount

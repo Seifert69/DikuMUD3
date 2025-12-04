@@ -151,13 +151,13 @@ The field access will return '''fail''' when:
 * Memory allocation fails during quest manipulation
 
 == Related Functions/Fields ==
-* [[addextra]] - Function to add new quest entries
-* [[subextra]] - Function to remove quest entries
-* [[extraptr]] - Type for quest extra description pointers
-* [[in]] - Operator to search within extra description lists
+* [[Manual:DIL_Manual/addextra|addextra]] - Function to add new quest entries
+* [[Manual:DIL_Manual/subextra|subextra]] - Function to remove quest entries
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Type for quest extra description pointers
+* [[Manual:DIL_Manual/in|in]] - Operator to search within extra description lists
 
 == See Also ==
-* [[extra]] - Field for accessing other extra descriptions
-* [[names]] - Field to access quest names
-* [[descr]] - Field to access quest descriptions
-* [[vals]] - Field to access quest values/status 
+* [[Manual:DIL_Manual/extra|extra]] - Field for accessing other extra descriptions
+* [[Manual:DIL_Manual/names|names]] - Field to access quest names
+* [[Manual:DIL_Manual/descr|descr]] - Field to access quest descriptions
+* [[Manual:DIL_Manual/vals|vals]] - Field to access quest values/status 

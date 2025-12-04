@@ -172,14 +172,14 @@ Common error scenarios:
 * Setting extremely high brightness values (may cause performance issues)
 
 == Related Functions/Fields ==
-* [[bright]] - Field to read current brightness of a unit
-* [[light]] - Field to read light level inside a unit
-* [[illum]] - Field to read light created by unit contents
-* [[islight()]] - Function to check if a unit is a light source
-* [[modify_bright()]] - Internal brightness modification function
+* [[Manual:DIL_Manual/bright|bright]] - Field to read current brightness of a unit
+* [[Manual:DIL_Manual/light|light]] - Field to read light level inside a unit
+* [[Manual:DIL_Manual/illum|illum]] - Field to read light created by unit contents
+* [[Manual:DIL_Manual/islight()|islight()]] - Function to check if a unit is a light source
+* [[Manual:DIL_Manual/modify_bright()|modify_bright()]] - Internal brightness modification function
 
 == See Also ==
-* [[Light sources]] - General information about light-emitting objects
-* [[Room lighting]] - Information about room light levels
-* [[UNIT_FL_*]] - Unit flags that may affect light behavior
-* [[getNumberOfActiveLightSources()]] - Internal light counting function
+* [[Manual:DIL_Manual/Light sources|Light sources]] - General information about light-emitting objects
+* [[Manual:DIL_Manual/Room lighting|Room lighting]] - Information about room light levels
+* [[Manual:DIL_Manual/UNIT_FL_*|UNIT_FL_*]] - Unit flags that may affect light behavior
+* [[Manual:DIL_Manual/getNumberOfActiveLightSources()|getNumberOfActiveLightSources()]] - Internal light counting function

@@ -164,11 +164,11 @@ The database name pattern matching follows these rules:
 * Pattern matching with wildcards for flexible targeting
 
 == Related Functions/Fields ==
-* [[sendtoall]] - Function for sending messages to all units globally
-* [[sendto]] - Function for sending messages to specific units
-* [[interrupt]] - Function for receiving incoming messages
-* [[unitptr]] - Unit pointer type and database name operations
-* [[nameidx]] - Field for unit's database name
+* [[Manual:DIL_Manual/sendtoall|sendtoall]] - Function for sending messages to all units globally
+* [[Manual:DIL_Manual/sendto|sendto]] - Function for sending messages to specific units
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Function for receiving incoming messages
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and database name operations
+* [[Manual:DIL_Manual/nameidx|nameidx]] - Field for unit's database name
 
 == See Also ==
 * DIL program communication and coordination

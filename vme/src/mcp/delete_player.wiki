@@ -44,7 +44,7 @@ The function includes security checks to prevent unauthorized use:
 * Attempts to use it from higher access level zones will be logged and the DIL program will terminate
 
 == Related Functions/Fields ==
-* [[isplayer]] - Check if a player exists
+* [[Manual:DIL_Manual/isplayer|isplayer]] - Check if a player exists
 
 == See Also ==
-* [[delete]] - Delete non-player units
+* [[Manual:DIL_Manual/delete|delete]] - Delete non-player units

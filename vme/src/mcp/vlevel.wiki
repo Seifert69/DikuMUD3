@@ -4,7 +4,7 @@
 The '''vlevel''' field provides access to a player's virtual level, which represents their effective level for game mechanics and access control.
 
 == Description ==
-The '''vlevel''' field returns the virtual level of a player character. This virtual level may differ from the character's actual [[#upc|level]] and is used for various game mechanics including access control, skill calculations, and content restrictions. The field's access permissions depend on the zone's access level - in high-access zones it's read-only, while in normal zones it may be read-write.
+The '''vlevel''' field returns the virtual level of a player character. This virtual level may differ from the character's actual [[Manual:DIL_Manual/#upc|level]] and is used for various game mechanics including access control, skill calculations, and content restrictions. The field's access permissions depend on the zone's access level - in high-access zones it's read-only, while in normal zones it may be read-write.
 
 == Field Access ==
 {| class="wikitable"
@@ -104,12 +104,12 @@ This field is available on the following unit types:
 * The field gracefully handles edge cases and invalid units
 
 == Related Functions/Fields ==
-* [[#upc|level]] - The character's actual level
-* [[#bpresetvlevel|reset_vlevel()]] - Reset a player's virtual level
-* [[#upc|hometown]] - Player's hometown for access control
-* [[#access|access()]] - Zone access level checking
+* [[Manual:DIL_Manual/#upc|level]] - The character's actual level
+* [[Manual:DIL_Manual/#bpresetvlevel|reset_vlevel()]] - Reset a player's virtual level
+* [[Manual:DIL_Manual/#upc|hometown]] - Player's hometown for access control
+* [[Manual:DIL_Manual/#access|access()]] - Zone access level checking
 
 == See Also ==
-* [[#upc|UNIT_ST_PC]] - Player character unit type documentation
-* [[#bpresetlevel|reset_level()]] - Reset a player's actual level
-* [[#bpresetrace|reset_race()]] - Reset a player's race information
+* [[Manual:DIL_Manual/#upc|UNIT_ST_PC]] - Player character unit type documentation
+* [[Manual:DIL_Manual/#bpresetlevel|reset_level()]] - Reset a player's actual level
+* [[Manual:DIL_Manual/#bpresetrace|reset_race()]] - Reset a player's race information

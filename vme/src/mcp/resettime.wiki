@@ -63,7 +63,7 @@ dilend
 
 == Usage Notes ==
 * The '''resettime''' value is specified in minutes, not in game ticks
-* To convert resettime to game ticks for use with [[heartbeat]], multiply by 60 and then by [[PULSE_SEC]]
+* To convert resettime to game ticks for use with [[Manual:DIL_Manual/heartbeat|heartbeat]], multiply by 60 and then by [[Manual:DIL_Manual/PULSE_SEC|PULSE_SEC]]
 * The field is read-write, allowing dynamic modification of zone reset intervals
 * Changes to resettime take effect immediately and affect the next reset cycle
 * A resettime of 0 typically means the zone will not reset automatically
@@ -74,13 +74,13 @@ dilend
 * Setting negative values may result in undefined behavior
 
 == Related Functions/Fields ==
-* [[resetmode]] - Field to get the reset mode of the zone
-* [[zonereset]] - Function to manually trigger a zone reset
-* [[loadlevel]] - Field to get/set the load level of a zone
-* [[heartbeat]] - Variable to control DIL program timing
-* [[PULSE_SEC]] - Constant for time conversion
+* [[Manual:DIL_Manual/resetmode|resetmode]] - Field to get the reset mode of the zone
+* [[Manual:DIL_Manual/zonereset|zonereset]] - Function to manually trigger a zone reset
+* [[Manual:DIL_Manual/loadlevel|loadlevel]] - Field to get/set the load level of a zone
+* [[Manual:DIL_Manual/heartbeat|heartbeat]] - Variable to control DIL program timing
+* [[Manual:DIL_Manual/PULSE_SEC|PULSE_SEC]] - Constant for time conversion
 
 == See Also ==
-* [[zoneptr]] - Zone pointer type documentation
-* [[zhead]] - Function to get the first zone in the global zone list
-* [[SFB_TICK]] - Tick flag for wait() function
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the global zone list
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Tick flag for wait() function

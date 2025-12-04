@@ -116,9 +116,9 @@ code
 * The function only works on player characters (UNIT_ST_PC), not NPCs
 * Immortal characters are protected from level reset
 * The function requires zone access level > 1 to execute
-* This is typically used in conjunction with [[reset_race]] and [[reset_vlevel]]
+* This is typically used in conjunction with [[Manual:DIL_Manual/reset_race|reset_race]] and [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]]
 * The function sets the character's level to exactly 1
-* Experience is not automatically adjusted - use [[experience]] function separately if needed
+* Experience is not automatically adjusted - use [[Manual:DIL_Manual/experience|experience]] function separately if needed
 * Hit points, mana, and endurance may need to be recalculated after level reset
 * Skills and abilities are not affected by this function - reset them separately if needed
 
@@ -130,13 +130,13 @@ The function will fail and log an error if:
 * The character is immortal (protected from level reset)
 
 == Related Functions/Fields ==
-* [[reset_vlevel]] - Resets a player's virtual level
-* [[reset_race]] - Resets a player's race-specific attributes
-* [[experience]] - Modifies character experience
-* [[IS_IMMORTAL]] - Checks if character is immortal
-* [[pcinitabils]] - Initializes player abilities
+* [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]] - Resets a player's virtual level
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Resets a player's race-specific attributes
+* [[Manual:DIL_Manual/experience|experience]] - Modifies character experience
+* [[Manual:DIL_Manual/IS_IMMORTAL|IS_IMMORTAL]] - Checks if character is immortal
+* [[Manual:DIL_Manual/pcinitabils|pcinitabils]] - Initializes player abilities
 
 == See Also ==
-* [[reset_vlevel]]
-* [[reset_race]]
-* [[unit_st_pc and unit_st_npc]]
+* [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]]
+* [[Manual:DIL_Manual/reset_race|reset_race]]
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]]

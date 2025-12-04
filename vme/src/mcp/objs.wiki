@@ -16,9 +16,9 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * This field is currently marked as obsolete and not used in any DIL programs
-* The returned pointer can be used to traverse the zone's object list using the [[next]] field
-* Use with [[findzone]] to get a zone pointer by name
-* Combine with [[objcount]] to get the total number of objects in the zone
+* The returned pointer can be used to traverse the zone's object list using the [[Manual:DIL_Manual/next|next]] field
+* Use with [[Manual:DIL_Manual/findzone|findzone]] to get a zone pointer by name
+* Combine with [[Manual:DIL_Manual/objcount|objcount]] to get the total number of objects in the zone
 
 == Examples ==
  dilbegin list_zone_objects(zone_name : string);
@@ -75,16 +75,16 @@ Always check the zone pointer for null and verify the return value:
  }
 
 == Related Functions/Fields ==
-* [[objcount]] - Number of objects in a zone
-* [[npcs]] - Pointer to first NPC in zone
-* [[rooms]] - Pointer to first room in zone
-* [[findzone]] - Find a zone by name
-* [[zhead]] - Get first zone in global list
-* [[next]] - Navigate to next object in list
+* [[Manual:DIL_Manual/objcount|objcount]] - Number of objects in a zone
+* [[Manual:DIL_Manual/npcs|npcs]] - Pointer to first NPC in zone
+* [[Manual:DIL_Manual/rooms|rooms]] - Pointer to first room in zone
+* [[Manual:DIL_Manual/findzone|findzone]] - Find a zone by name
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/next|next]] - Navigate to next object in list
 
 == See Also ==
-* [[zoneptr]] - Zone pointer type
-* [[objcount]] - Count of objects in zone
-* [[npcs]] - NPCs in zone
-* [[rooms]] - Rooms in zone
-* [[findzone]] - Zone lookup function 
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type
+* [[Manual:DIL_Manual/objcount|objcount]] - Count of objects in zone
+* [[Manual:DIL_Manual/npcs|npcs]] - NPCs in zone
+* [[Manual:DIL_Manual/rooms|rooms]] - Rooms in zone
+* [[Manual:DIL_Manual/findzone|findzone]] - Zone lookup function 

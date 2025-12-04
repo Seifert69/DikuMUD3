@@ -88,10 +88,10 @@ code
 
 == Related Functions/Fields ==
 
-* [[outside_descr]] - The description of the unit from the outside
-* [[extra]] - Extra descriptions system for more complex description handling
-* [[act]] - Function for sending messages to players
-* [[unitptr]] - Information about unit pointers and their fields
+* [[Manual:DIL_Manual/outside_descr|outside_descr]] - The description of the unit from the outside
+* [[Manual:DIL_Manual/extra|extra]] - Extra descriptions system for more complex description handling
+* [[Manual:DIL_Manual/act|act]] - Function for sending messages to players
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Information about unit pointers and their fields
 
 == See Also ==
 

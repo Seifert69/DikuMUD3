@@ -124,14 +124,14 @@ Note: The C implementation shows different behavior for PCs vs NPCs:
 * Ability constants are defined in values.h and vme.h header files
 
 == Related Fields ==
-* [[weapons]] - Array of weapon skill values
-* [[charflags]] - Character flags and affects
-* [[level]] - Character level
-* [[exp]] - Character experience points
+* [[Manual:DIL_Manual/weapons|weapons]] - Array of weapon skill values
+* [[Manual:DIL_Manual/charflags|charflags]] - Character flags and affects
+* [[Manual:DIL_Manual/level|level]] - Character level
+* [[Manual:DIL_Manual/exp|exp]] - Character experience points
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[position_update]] - Function to update character after ability changes
-* [[openroll]] - Function for dice rolls and skill checks
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/position_update|position_update]] - Function to update character after ability changes
+* [[Manual:DIL_Manual/openroll|openroll]] - Function for dice rolls and skill checks
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type

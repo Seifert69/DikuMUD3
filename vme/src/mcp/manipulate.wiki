@@ -73,11 +73,11 @@ This field is available on the following unit types:
  dilend
 
 == Usage Notes ==
-* The '''.manipulate''' field uses bit flags that can be checked with [[isset]] and modified with [[set]]/[[unset]]
+* The '''.manipulate''' field uses bit flags that can be checked with [[Manual:DIL_Manual/isset|isset]] and modified with [[Manual:DIL_Manual/set|set]]/[[Manual:DIL_Manual/unset|unset]]
 * Common manipulation flags include MANIPULATE_TAKE, MANIPULATE_DROP, and others defined in values.h/vme.h
 * This field is essential for controlling object behavior and accessibility
 * Setting inappropriate flags may cause unexpected behavior in the game
-* The field is commonly used in conjunction with [[can_carry]] and other movement-related functions
+* The field is commonly used in conjunction with [[Manual:DIL_Manual/can_carry|can_carry]] and other movement-related functions
 
 == Error Handling ==
 * If accessed on a null '''unitptr''', the operation will return '''fail'''
@@ -85,12 +85,12 @@ This field is available on the following unit types:
 * Some flags may be overridden by the game engine based on unit type or state
 
 == Related Functions/Fields ==
-* [[isset]] - Checks if specific bits are set in an integer
-* [[set]] - Sets specific bits in an integer
-* [[unset]] - Clears specific bits in an integer
-* [[can_carry]] - Checks if a unit can carry another unit
-* [[flags]] - General unit flags field
+* [[Manual:DIL_Manual/isset|isset]] - Checks if specific bits are set in an integer
+* [[Manual:DIL_Manual/set|set]] - Sets specific bits in an integer
+* [[Manual:DIL_Manual/unset|unset]] - Clears specific bits in an integer
+* [[Manual:DIL_Manual/can_carry|can_carry]] - Checks if a unit can carry another unit
+* [[Manual:DIL_Manual/flags|flags]] - General unit flags field
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
 * MANIPULATE_* flags in values.h and/or vme.h for complete flag definitions

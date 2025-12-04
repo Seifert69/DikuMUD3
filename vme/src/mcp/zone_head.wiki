@@ -98,7 +98,7 @@ The zone_head function provides access to the head of the global zone list, allo
 * Commonly used in administrative commands and zone management systems
 * The zone list includes all zones currently loaded in the game
 * This function appears to be obsolete or unused in current DIL implementations
-* Consider using [[zhead]] instead for current implementations
+* Consider using [[Manual:DIL_Manual/zhead|zhead]] instead for current implementations
 
 == Error Handling ==
 * The function always returns a valid zoneptr or null if no zones are loaded
@@ -106,12 +106,12 @@ The zone_head function provides access to the head of the global zone list, allo
 * If no zones exist in the game, the function may return null
 
 == Related Functions/Fields ==
-* [[zoneptr]] - Zone pointer type and available fields
-* [[zhead]] - Current implementation for getting zone list head
-* [[global_head]] - Get first unit in global list
-* [[obj_head]] - Get first object in global object list
-* [[npc_head]] - Get first NPC in global NPC list
-* [[room_head]] - Get first room in global room list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and available fields
+* [[Manual:DIL_Manual/zhead|zhead]] - Current implementation for getting zone list head
+* [[Manual:DIL_Manual/global_head|global_head]] - Get first unit in global list
+* [[Manual:DIL_Manual/obj_head|obj_head]] - Get first object in global object list
+* [[Manual:DIL_Manual/npc_head|npc_head]] - Get first NPC in global NPC list
+* [[Manual:DIL_Manual/room_head|room_head]] - Get first room in global room list
 
 == See Also ==
 * Zone system documentation

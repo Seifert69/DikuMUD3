@@ -88,17 +88,17 @@ Always verify that unit pointer is valid before accessing outside:
  }
 
 == Related Functions/Fields ==
-* [[inside]] - Access to contained units
-* [[next]] - Navigate to next unit in list
-* [[gnext]] - Navigate to next unit in global list
-* [[findunit]] - Find units in environment
-* [[link]] - Link units together
-* [[unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/inside|inside]] - Access to contained units
+* [[Manual:DIL_Manual/next|next]] - Navigate to next unit in list
+* [[Manual:DIL_Manual/gnext|gnext]] - Navigate to next unit in global list
+* [[Manual:DIL_Manual/findunit|findunit]] - Find units in environment
+* [[Manual:DIL_Manual/link|link]] - Link units together
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
 
 == See Also ==
-* [[unitptr]] - General unit pointer documentation
-* [[inside]] - Internal contents field
-* [[next]] - List navigation
-* [[link]] - Unit linking
-* [[findunit]] - Unit searching
-* [[gnext]] - Global navigation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/inside|inside]] - Internal contents field
+* [[Manual:DIL_Manual/next|next]] - List navigation
+* [[Manual:DIL_Manual/link|link]] - Unit linking
+* [[Manual:DIL_Manual/findunit|findunit]] - Unit searching
+* [[Manual:DIL_Manual/gnext|gnext]] - Global navigation

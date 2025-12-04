@@ -153,14 +153,14 @@ The field access will return '''fail''' when:
 * The player has the "$noprompt" extra description flag set
 
 == Related Functions/Fields ==
-* [[sendtext]] - Function to send text to player's screen
-* [[exec]] - Function to execute commands for player
-* [[position]] - Field that may affect prompt display
-* [[extra]] - Field to access extra descriptions like "$noprompt"
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Function to send text to player's screen
+* [[Manual:DIL_Manual/exec|exec]] - Function to execute commands for player
+* [[Manual:DIL_Manual/position|position]] - Field that may affect prompt display
+* [[Manual:DIL_Manual/extra|extra]] - Field to access extra descriptions like "$noprompt"
 
 == See Also ==
-* [[%h]] - Health display format code
-* [[%m]] - Mana display format code
-* [[%e]] - Endurance display format code
-* [[%n]] - Name display format code
-* [[title]] - Field for player's title used in %t 
+* [[Manual:DIL_Manual/%h|%h]] - Health display format code
+* [[Manual:DIL_Manual/%m|%m]] - Mana display format code
+* [[Manual:DIL_Manual/%e|%e]] - Endurance display format code
+* [[Manual:DIL_Manual/%n|%n]] - Name display format code
+* [[Manual:DIL_Manual/title|title]] - Field for player's title used in %t 

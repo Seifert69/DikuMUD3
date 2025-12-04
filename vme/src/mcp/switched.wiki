@@ -4,7 +4,7 @@ field: unitptr '''.switched''' (Read-only)
 The '''switched''' field indicates which character a player is currently controlling.
 
 == Description ==
-This field provides access to the character that the current player has switched into using the [[switch]] function. When a player switches to another character, this field points to the character they are now controlling.
+This field provides access to the character that the current player has switched into using the [[Manual:DIL_Manual/switch|switch]] function. When a player switches to another character, this field points to the character they are now controlling.
 
 The field is read-only and automatically updated by the game engine when character switching occurs. It's commonly used in possession systems, polymorph effects, and character control mechanics to track which character is currently being controlled.
 
@@ -217,11 +217,11 @@ The field handles errors in the following ways:
 Always check that the unit is a player character before accessing this field.
 
 == Related Functions/Fields ==
-* [[switch]] - Function to switch character control
-* [[addextra]] - Function to store character references
+* [[Manual:DIL_Manual/switch|switch]] - Function to switch character control
+* [[Manual:DIL_Manual/addextra|addextra]] - Function to store character references
 * unitptr.outside - Field to find the character's environment
 * unitptr.type - Field to check unit type
-* [[isaff]] - Function to check character affects
+* [[Manual:DIL_Manual/isaff|isaff]] - Function to check character affects
 
 
 == See Also ==

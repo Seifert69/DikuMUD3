@@ -69,12 +69,12 @@ Returns '''unitptr''':
 * Zone pointer does not point to a valid zone
 
 == Related Functions/Fields ==
-* [[npccount]] - Count NPCs in a zone
-* [[findroom]] - Find a specific zone by name
-* [[npcflags]] - Modify NPC behavior flags
-* [[npc_head]] - Get first NPC in global list
-* [[zoneptr]] - Zone pointer type and fields
-* Zone management functions: [[store]], [[restore]]
+* [[Manual:DIL_Manual/npccount|npccount]] - Count NPCs in a zone
+* [[Manual:DIL_Manual/findroom|findroom]] - Find a specific zone by name
+* [[Manual:DIL_Manual/npcflags|npcflags]] - Modify NPC behavior flags
+* [[Manual:DIL_Manual/npc_head|npc_head]] - Get first NPC in global list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and fields
+* Zone management functions: [[Manual:DIL_Manual/store|store]], [[Manual:DIL_Manual/restore|restore]]
 
 == See Also ==
 * Zone pointer fields: '''name''', '''zoneidx''', '''npcs''', '''rooms''', '''objs'''

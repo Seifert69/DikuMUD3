@@ -113,10 +113,10 @@ code
 
 == Related Functions/Fields ==
 
-* [[outside]] - The unit that contains this unit
-* [[next]] - The next unit at the same containment level
-* [[foreach]] - Function for iterating through units of specific types
-* [[unitptr]] - Information about unit pointers and their fields
+* [[Manual:DIL_Manual/outside|outside]] - The unit that contains this unit
+* [[Manual:DIL_Manual/next|next]] - The next unit at the same containment level
+* [[Manual:DIL_Manual/foreach|foreach]] - Function for iterating through units of specific types
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Information about unit pointers and their fields
 
 == See Also ==
 

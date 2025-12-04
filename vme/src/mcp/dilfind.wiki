@@ -66,8 +66,8 @@ The function performs error checking:
  } dilend
 
 == Related Functions/Fields ==
-* [[dilcopy]] - Attach DIL programs to units
-* [[dildestroy]] - Remove DIL programs from units
-* [[dilcall]] - Call DIL templates dynamically
+* [[Manual:DIL_Manual/dilcopy|dilcopy]] - Attach DIL programs to units
+* [[Manual:DIL_Manual/dildestroy|dildestroy]] - Remove DIL programs from units
+* [[Manual:DIL_Manual/dilcall|dilcall]] - Call DIL templates dynamically
 
 == See Also ==

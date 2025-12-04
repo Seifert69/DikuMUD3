@@ -56,12 +56,12 @@ This field is available on the following unit type:
 * If accessed on an invalid pointer type, the operation will result in an error
 
 == Related Functions/Fields ==
-* [[chead]] - Gets the first command in the command list
-* [[getcommand]] - Gets a specific command by name
-* [[cmdptr.name]] - Gets the command name
-* [[cmdptr.level]] - Gets the minimum level to use the command
-* [[cmdptr.type]] - Gets the command type
-* [[cmdptr.position]] - Gets the minimum position to use the command
+* [[Manual:DIL_Manual/chead|chead]] - Gets the first command in the command list
+* [[Manual:DIL_Manual/getcommand|getcommand]] - Gets a specific command by name
+* [[Manual:DIL_Manual/cmdptr.name|cmdptr.name]] - Gets the command name
+* [[Manual:DIL_Manual/cmdptr.level|cmdptr.level]] - Gets the minimum level to use the command
+* [[Manual:DIL_Manual/cmdptr.type|cmdptr.type]] - Gets the command type
+* [[Manual:DIL_Manual/cmdptr.position|cmdptr.position]] - Gets the minimum position to use the command
 
 == See Also ==
-* [[cmdptr]] - Command pointer type documentation 
+* [[Manual:DIL_Manual/cmdptr|cmdptr]] - Command pointer type documentation 

@@ -128,10 +128,10 @@ code
 * The function will fail gracefully if memory allocation for the new string fails.
 
 == Related Functions/Fields ==
-* [[tolower]] - Converts all characters in a string to lowercase
-* [[left]] - Extracts left portion of a string
-* [[right]] - Extracts right portion of a string
-* [[length]] - Returns the length of a string
+* [[Manual:DIL_Manual/tolower|tolower]] - Converts all characters in a string to lowercase
+* [[Manual:DIL_Manual/left|left]] - Extracts left portion of a string
+* [[Manual:DIL_Manual/right|right]] - Extracts right portion of a string
+* [[Manual:DIL_Manual/length|length]] - Returns the length of a string
 
 == See Also ==
 * String manipulation functions

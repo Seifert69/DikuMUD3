@@ -137,13 +137,13 @@ The procedure will fail when:
 * The system cannot set priority due to internal state conflicts
 
 == Related Functions/Fields ==
-* [[nopriority]] - Procedure to cancel priority and allow other DIL programs to execute
-* [[SFB_PRIORITY]] - Event flag that enables priority-based execution control
-* [[pause]] - Often used with priority to maintain control during sequences
-* [[wait]] - Used with priority to control execution flow
+* [[Manual:DIL_Manual/nopriority|nopriority]] - Procedure to cancel priority and allow other DIL programs to execute
+* [[Manual:DIL_Manual/SFB_PRIORITY|SFB_PRIORITY]] - Event flag that enables priority-based execution control
+* [[Manual:DIL_Manual/pause|pause]] - Often used with priority to maintain control during sequences
+* [[Manual:DIL_Manual/wait|wait]] - Used with priority to control execution flow
 
 == See Also ==
-* [[secure]] - Function for protecting units during critical operations
-* [[position]] - Field that may affect DIL program execution
-* [[outside_descr]] - Field commonly modified during priority sequences
-* [[send_to_all]] - Function for sending messages to all players 
+* [[Manual:DIL_Manual/secure|secure]] - Function for protecting units during critical operations
+* [[Manual:DIL_Manual/position|position]] - Field that may affect DIL program execution
+* [[Manual:DIL_Manual/outside_descr|outside_descr]] - Field commonly modified during priority sequences
+* [[Manual:DIL_Manual/send_to_all|send_to_all]] - Function for sending messages to all players 

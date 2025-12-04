@@ -97,17 +97,17 @@ Note: The C implementation shows that this field:
 * Typical values range from 0 to potentially high numbers depending on character progression
 
 == Related Fields ==
-* [[skill_points]] - Number of unused skill points available
-* [[abilities]] - Array of current ability score values
-* [[level]] - Character's current level
-* [[experience]] - Character's experience points
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Number of unused skill points available
+* [[Manual:DIL_Manual/abilities|abilities]] - Array of current ability score values
+* [[Manual:DIL_Manual/level|level]] - Character's current level
+* [[Manual:DIL_Manual/experience|experience]] - Character's experience points
 
 == Related Functions ==
-* [[reset_race]] - Function that may reset ability points
-* [[reset_level]] - Function that may reset ability points
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Function that may reset ability points
+* [[Manual:DIL_Manual/reset_level|reset_level]] - Function that may reset ability points
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[practice]] - Command for spending ability/skill points
-* [[abilities]] - Ability scores array field
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/practice|practice]] - Command for spending ability/skill points
+* [[Manual:DIL_Manual/abilities|abilities]] - Ability scores array field

@@ -84,11 +84,11 @@ code
 
 == Related Functions/Fields ==
 
-* [[stringlist]] - Information about stringlist data structure
-* [[integerlist]] - Information about intlist data structure  
-* [[addstring]] - Function to add strings to the end of a stringlist
-* [[remove]] - Function to remove elements from a list
-* [[length]] - Function to get the length of a list
+* [[Manual:DIL_Manual/stringlist|stringlist]] - Information about stringlist data structure
+* [[Manual:DIL_Manual/integerlist|integerlist]] - Information about intlist data structure  
+* [[Manual:DIL_Manual/addstring|addstring]] - Function to add strings to the end of a stringlist
+* [[Manual:DIL_Manual/remove|remove]] - Function to remove elements from a list
+* [[Manual:DIL_Manual/length|length]] - Function to get the length of a list
 
 == See Also ==
 

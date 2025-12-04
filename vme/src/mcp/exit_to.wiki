@@ -62,10 +62,10 @@ This field is available on the following unit types:
 * Returns fail if the direction index is out of range
 
 == Related Functions/Fields ==
-* [[exit_names]] - Array of exit name strings for each direction
-* [[exit_info]] - Array of exit flag bits for each direction
-* [[link]] - Function to move units between rooms
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Array of exit name strings for each direction
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Array of exit flag bits for each direction
+* [[Manual:DIL_Manual/link|link]] - Function to move units between rooms
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type constant
-* [[unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type

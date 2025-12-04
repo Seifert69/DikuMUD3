@@ -79,9 +79,9 @@ This field is available on the following unit types:
 * The exact scale and thresholds are game-specific
 
 == Related Functions/Fields ==
-* [[thirst]]
-* [[drunk]]
+* [[Manual:DIL_Manual/thirst|thirst]]
+* [[Manual:DIL_Manual/drunk|drunk]]
 
 == See Also ==
-* [[unitptr]]
-* [[UNIT_ST_PC]]
+* [[Manual:DIL_Manual/unitptr|unitptr]]
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]]

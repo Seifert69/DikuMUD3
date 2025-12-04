@@ -155,14 +155,14 @@ Common error scenarios:
 * Setting negative weights (may cause undefined behavior)
 
 == Related Functions/Fields ==
-* [[set_weight()]] - Function to set current weight (not base weight)
-* [[baseweight]] - Field to read current base weight
-* [[weight]] - Field to read current total weight
-* [[capacity]] - Field for container capacity
-* [[can_carry()]] - Function to check if character can carry weight
+* [[Manual:DIL_Manual/set_weight()|set_weight()]] - Function to set current weight (not base weight)
+* [[Manual:DIL_Manual/baseweight|baseweight]] - Field to read current base weight
+* [[Manual:DIL_Manual/weight|weight]] - Field to read current total weight
+* [[Manual:DIL_Manual/capacity|capacity]] - Field for container capacity
+* [[Manual:DIL_Manual/can_carry()|can_carry()]] - Function to check if character can carry weight
 
 == See Also ==
-* [[weight_change_unit()]] - Internal weight management function
-* [[UNIT_FL_*]] - Unit flags that may affect weight
-* [[MANIPULATE_*]] - Manipulation flags for weight handling
-* [[Object creation]] - General object creation procedures
+* [[Manual:DIL_Manual/weight_change_unit()|weight_change_unit()]] - Internal weight management function
+* [[Manual:DIL_Manual/UNIT_FL_*|UNIT_FL_*]] - Unit flags that may affect weight
+* [[Manual:DIL_Manual/MANIPULATE_*|MANIPULATE_*]] - Manipulation flags for weight handling
+* [[Manual:DIL_Manual/Object creation|Object creation]] - General object creation procedures

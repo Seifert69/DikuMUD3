@@ -105,12 +105,12 @@ Common error scenarios:
 * Attempting to set a character to fight themselves
 
 == Related Functions/Fields ==
-* [[fighting]] - Field to read current combat opponent
-* [[stop_fighting()]] - Function to end combat between units
-* [[opponentcount]] - Field showing number of opponents
-* [[position]] - Field showing current position (affects combat ability)
+* [[Manual:DIL_Manual/fighting|fighting]] - Field to read current combat opponent
+* [[Manual:DIL_Manual/stop_fighting()|stop_fighting()]] - Function to end combat between units
+* [[Manual:DIL_Manual/opponentcount|opponentcount]] - Field showing number of opponents
+* [[Manual:DIL_Manual/position|position]] - Field showing current position (affects combat ability)
 
 == See Also ==
-* [[SFB_COM]] - Combat message flag for wait() statements
-* [[CHAR_FIGHTING]] - Internal character fighting state
-* [[meleedamage()]] - Function for calculating melee damage 
+* [[Manual:DIL_Manual/SFB_COM|SFB_COM]] - Combat message flag for wait() statements
+* [[Manual:DIL_Manual/CHAR_FIGHTING|CHAR_FIGHTING]] - Internal character fighting state
+* [[Manual:DIL_Manual/meleedamage()|meleedamage()]] - Function for calculating melee damage 

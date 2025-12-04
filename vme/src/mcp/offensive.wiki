@@ -18,7 +18,7 @@ This field is available on the following unit types:
 == Usage Notes ==
 This field represents a combat modifier that affects attack accuracy and effectiveness.
 Positive values improve offensive capabilities, while negative values impose penalties.
-This field is part of the combat system alongside [[defensive]] and [[attack_type]].
+This field is part of the combat system alongside [[Manual:DIL_Manual/defensive|defensive]] and [[Manual:DIL_Manual/attack_type|attack_type]].
 
 == Examples ==
  dilbegin check_offensive(target : unitptr);
@@ -56,16 +56,16 @@ Always verify the unit is a character before accessing offensive:
  }
 
 == Related Functions/Fields ==
-* [[defensive]] - Defensive bonus modifier
-* [[attack_type]] - Non-weapon attack type
-* [[meleeattack]] - Perform melee attack
-* [[meleedamage]] - Calculate melee damage
-* [[weapons]] - Weapon skills array
-* [[abilities]] - Abilities array
+* [[Manual:DIL_Manual/defensive|defensive]] - Defensive bonus modifier
+* [[Manual:DIL_Manual/attack_type|attack_type]] - Non-weapon attack type
+* [[Manual:DIL_Manual/meleeattack|meleeattack]] - Perform melee attack
+* [[Manual:DIL_Manual/meleedamage|meleedamage]] - Calculate melee damage
+* [[Manual:DIL_Manual/weapons|weapons]] - Weapon skills array
+* [[Manual:DIL_Manual/abilities|abilities]] - Abilities array
 
 == See Also ==
-* [[unit_st_pc and unit_st_npc]] - Other character fields
-* [[defensive]] - Defensive combat modifier
-* [[attack_type]] - Attack type setting
-* [[meleeattack]] - Melee attack function
-* [[opponent]] - Current opponent in combat 
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Other character fields
+* [[Manual:DIL_Manual/defensive|defensive]] - Defensive combat modifier
+* [[Manual:DIL_Manual/attack_type|attack_type]] - Attack type setting
+* [[Manual:DIL_Manual/meleeattack|meleeattack]] - Melee attack function
+* [[Manual:DIL_Manual/opponent|opponent]] - Current opponent in combat 

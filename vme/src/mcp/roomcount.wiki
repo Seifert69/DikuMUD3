@@ -59,13 +59,13 @@ dilend
 * Always check that the zoneptr is valid before accessing this field
 
 == Related Functions/Fields ==
-* [[objcount]] - Field to get the number of objects in a zone
-* [[npccount]] - Field to get the number of NPCs in a zone
-* [[zhead]] - Function to get the first zone in the global zone list
-* [[zoneptr]] - Zone pointer type documentation
-* [[resettime]] - Field to get the reset time of a zone
+* [[Manual:DIL_Manual/objcount|objcount]] - Field to get the number of objects in a zone
+* [[Manual:DIL_Manual/npccount|npccount]] - Field to get the number of NPCs in a zone
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the global zone list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/resettime|resettime]] - Field to get the reset time of a zone
 
 == See Also ==
-* [[zone]] - Zone unit type documentation
-* [[findroom]] - Function to find a specific room by name
-* [[room_head]] - Function to get the first room in the global room list
+* [[Manual:DIL_Manual/zone|zone]] - Zone unit type documentation
+* [[Manual:DIL_Manual/findroom|findroom]] - Function to find a specific room by name
+* [[Manual:DIL_Manual/room_head|room_head]] - Function to get the first room in the global room list

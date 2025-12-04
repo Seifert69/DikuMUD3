@@ -165,19 +165,19 @@ The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It
 * Consider edge cases where unit type might be unknown or invalid
 
 == Related Functions/Fields ==
-* [[type]] - Function to get the type of a unit
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[activator]] - Unit pointer to the unit performing an action
-* [[birth]] - Player birth field (PC only)
-* [[skills]] - Player skills field (PC only)
-* [[skill_points]] - Player skill points field (PC only)
+* [[Manual:DIL_Manual/type|type]] - Function to get the type of a unit
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to the unit performing an action
+* [[Manual:DIL_Manual/birth|birth]] - Player birth field (PC only)
+* [[Manual:DIL_Manual/skills|skills]] - Player skills field (PC only)
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Player skill points field (PC only)
 
 == See Also ==
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[type]] - Unit type checking function
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/type|type]] - Unit type checking function
 

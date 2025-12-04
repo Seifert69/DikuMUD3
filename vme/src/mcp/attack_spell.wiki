@@ -93,10 +93,10 @@ The function performs validation:
 * '''Caster validation'' - Ensures caster is a valid unit
 
 == Related Functions ==
-* [[cast_spell]] - For standard spell casting
-* [[spellinfo]] - For getting spell information
-* [[spellindex]] - For spell index constants
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - For standard spell casting
+* [[Manual:DIL_Manual/spellinfo|spellinfo]] - For getting spell information
+* [[Manual:DIL_Manual/spellindex|spellindex]] - For spell index constants
 
 == See Also ==
-* [[SPL_*]] - Spell index constants
-* [[unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/SPL_*|SPL_*]] - Spell index constants
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type

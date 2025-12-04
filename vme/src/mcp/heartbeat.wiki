@@ -50,10 +50,10 @@ Use the PULSE_SEC constant to multiply your wanted delay:
 * Very low heartbeat values (less than PULSE_SEC) can impact server performance
 
 == Related Functions/Fields ==
-* [[wait]] - Wait for specific events
-* [[pause]] - Pause execution
-* [[SFB_TICK]] - Tick event trigger
-* [[realtime]] - Get current game time
+* [[Manual:DIL_Manual/wait|wait]] - Wait for specific events
+* [[Manual:DIL_Manual/pause|pause]] - Pause execution
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Tick event trigger
+* [[Manual:DIL_Manual/realtime|realtime]] - Get current game time
 
 == See Also ==
-* [[PULSE_SEC]] - Time constant
+* [[Manual:DIL_Manual/PULSE_SEC|PULSE_SEC]] - Time constant

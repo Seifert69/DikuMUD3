@@ -51,8 +51,8 @@ The function will fail and return FALSE if:
 * The specified color key does not exist in the player's color list
 
 == Related Functions/Fields ==
-* [[addcolor]] - Add new color entries to a player's color list
-* [[delcolor]] - Remove color entries from a player's color list
+* [[Manual:DIL_Manual/addcolor|addcolor]] - Add new color entries to a player's color list
+* [[Manual:DIL_Manual/delcolor|delcolor]] - Remove color entries from a player's color list
 
 == See Also ==
-* [[getcolor]] - Retrieve color values from a player's color list
+* [[Manual:DIL_Manual/getcolor|getcolor]] - Retrieve color values from a player's color list

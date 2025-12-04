@@ -15,7 +15,7 @@ This field is available on the following unit types:
 * UNIT_ST_OBJ (Object)
 
 == Usage Notes ==
-Use the [[isset]] function to test for specific flag values.
+Use the [[Manual:DIL_Manual/isset|isset]] function to test for specific flag values.
 Use bitwise operations to set or clear flags.
 
 == Examples ==
@@ -52,14 +52,14 @@ Always verify the unit is an object before accessing objectflags:
  }
 
 == Related Functions/Fields ==
-* [[isset]] - Test if specific flag bits are set
-* [[objecttype]] - Type of the object
-* [[value]] - Object values array
-* [[manipulate]] - Object manipulation flags
-* [[equip]] - Equipment position of object
+* [[Manual:DIL_Manual/isset|isset]] - Test if specific flag bits are set
+* [[Manual:DIL_Manual/objecttype|objecttype]] - Type of the object
+* [[Manual:DIL_Manual/value|value]] - Object values array
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Object manipulation flags
+* [[Manual:DIL_Manual/equip|equip]] - Equipment position of object
 
 == See Also ==
-* [[unit_st_obj]] - Other object fields
-* [[manipulate]] - Object manipulation flags
-* [[isset]] - Bit testing function
-* [[value]] - Object-specific values 
+* [[Manual:DIL_Manual/unit_st_obj|unit_st_obj]] - Other object fields
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Object manipulation flags
+* [[Manual:DIL_Manual/isset|isset]] - Bit testing function
+* [[Manual:DIL_Manual/value|value]] - Object-specific values 

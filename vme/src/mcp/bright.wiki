@@ -116,11 +116,11 @@ The function performs validation:
 * '''Property validation''' - Validates that unit has brightness property
 
 == Related Functions ==
-* [[setbright]] - For setting the brightness of a unit
-* [[islight]] - For checking if a unit produces light
-* [[light]] - For getting current light level of a room
+* [[Manual:DIL_Manual/setbright|setbright]] - For setting the brightness of a unit
+* [[Manual:DIL_Manual/islight|islight]] - For checking if a unit produces light
+* [[Manual:DIL_Manual/light|light]] - For getting current light level of a room
 
 == See Also ==
-* [[ITEM_LIGHT]] - Light object type constant
-* [[unitptr]] - Unit pointer data type
-* [[illumination]] - Room lighting system
+* [[Manual:DIL_Manual/ITEM_LIGHT|ITEM_LIGHT]] - Light object type constant
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/illumination|illumination]] - Room lighting system

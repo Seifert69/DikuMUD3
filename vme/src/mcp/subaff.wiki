@@ -90,8 +90,8 @@ The function does not return a value.
 
 == Usage Notes ==
 * The function removes only the first matching affect found
-* Use [[isaff]]() to check if a specific affect is present
-* Use [[getaffects]]() to get a list of all current affects
+* Use [[Manual:DIL_Manual/isaff|isaff]]() to check if a specific affect is present
+* Use [[Manual:DIL_Manual/getaffects|getaffects]]() to get a list of all current affects
 * Affect IDs are defined as ID_* constants in values.h/vme.h
 * The function operates on the affect list in order (first match first)
 * Common affect IDs include: ID_BLIND_CHAR, ID_SPL_POISON, ID_SPL_CURSE, etc.
@@ -107,10 +107,10 @@ The function handles errors in the following ways:
 Always validate that the target is a character and the affect ID is valid before calling the function.
 
 == Related Functions/Fields ==
-* [[isaff]] - Check if a unit has a specific affect
-* [[addaff]] - Add an affect to a unit
-* [[getaffects]] - Get a list of all affects on a unit
-* [[subextra]] - Remove extra descriptions from units
+* [[Manual:DIL_Manual/isaff|isaff]] - Check if a unit has a specific affect
+* [[Manual:DIL_Manual/addaff|addaff]] - Add an affect to a unit
+* [[Manual:DIL_Manual/getaffects|getaffects]] - Get a list of all affects on a unit
+* [[Manual:DIL_Manual/subextra|subextra]] - Remove extra descriptions from units
 * unitptr.affected field - Access to affect system
 
 == See Also ==

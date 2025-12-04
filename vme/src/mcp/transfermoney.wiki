@@ -165,9 +165,9 @@ code
 * If memory allocation fails during the transfer, the function returns 0 (failure).
 
 == Related Functions/Fields ==
-* [[moneystring]] - Formats money amounts into readable strings
-* [[char_can_afford]] - Checks if a character can afford a specific amount
-* [[purse]] - Access to character's money purse information
+* [[Manual:DIL_Manual/moneystring|moneystring]] - Formats money amounts into readable strings
+* [[Manual:DIL_Manual/char_can_afford|char_can_afford]] - Checks if a character can afford a specific amount
+* [[Manual:DIL_Manual/purse|purse]] - Access to character's money purse information
 
 == See Also ==
 * Money and currency functions

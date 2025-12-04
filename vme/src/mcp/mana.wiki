@@ -84,12 +84,12 @@ This field is available on the following unit types:
 * Setting negative values may result in unexpected behavior
 
 == Related Functions/Fields ==
-* [[max_mana]] - Gets the maximum mana of a character
-* [[endurance]] - Gets/sets the current endurance points
-* [[hp]] - Gets/sets the current hit points
-* [[experience]] - Sets experience points
-* [[cast_spell]] - Function that typically consumes mana
+* [[Manual:DIL_Manual/max_mana|max_mana]] - Gets the maximum mana of a character
+* [[Manual:DIL_Manual/endurance|endurance]] - Gets/sets the current endurance points
+* [[Manual:DIL_Manual/hp|hp]] - Gets/sets the current hit points
+* [[Manual:DIL_Manual/experience|experience]] - Sets experience points
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - Function that typically consumes mana
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation 
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation 

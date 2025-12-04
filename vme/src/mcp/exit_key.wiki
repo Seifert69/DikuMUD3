@@ -47,10 +47,10 @@ This field is available on the following unit types:
 * Returns fail if accessed on non-room units
 
 == Related Functions/Fields ==
-* [[exit_info]] - Get/set exit flags (locked, closed, etc.)
-* [[exit_names]] - Get the names of exits
-* [[exit_to]] - Get the destination room of an exit
-* [[findsymbolic]] - Find a unit by its symbolic name
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Get/set exit flags (locked, closed, etc.)
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Get the names of exits
+* [[Manual:DIL_Manual/exit_to|exit_to]] - Get the destination room of an exit
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Find a unit by its symbolic name
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant

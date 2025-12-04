@@ -47,15 +47,15 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * The '''names''' field provides read/write access to the complete name list
-* The first name in the list (index 0) is typically the primary name used by [[name]] field
+* The first name in the list (index 0) is typically the primary name used by [[Manual:DIL_Manual/name|name]] field
 * Names can be accessed by index using array notation: `unit.names.[index]`
 * Common uses include:
 ** Multiple aliases for NPCs and objects
 ** Keyword matching for extra descriptions
 ** Exit names for rooms
 ** Weapon type identification
-* Use [[addstring]] and [[remove]] functions to modify the names list
-* Use [[length]] function to get the number of names
+* Use [[Manual:DIL_Manual/addstring|addstring]] and [[Manual:DIL_Manual/remove|remove]] functions to modify the names list
+* Use [[Manual:DIL_Manual/length|length]] function to get the number of names
 * Use the '''in''' operator to check if a specific name exists in the list
 
 == Error Handling ==
@@ -65,16 +65,16 @@ This field is available on the following unit types:
 * Always validate the unit type before accessing the names field
 
 == Related Functions/Fields ==
-* [[name]] - Primary name field (first name in names list)
-* [[addstring]] - Add a name to the names list
-* [[remove]] - Remove a name from the names list
-* [[insert]] - Insert a name at specific position
-* [[length]] - Get number of names in the list
-* [[substring]] - Extract part of a name string
-* [[in]] - Check if name exists in the names list
+* [[Manual:DIL_Manual/name|name]] - Primary name field (first name in names list)
+* [[Manual:DIL_Manual/addstring|addstring]] - Add a name to the names list
+* [[Manual:DIL_Manual/remove|remove]] - Remove a name from the names list
+* [[Manual:DIL_Manual/insert|insert]] - Insert a name at specific position
+* [[Manual:DIL_Manual/length|length]] - Get number of names in the list
+* [[Manual:DIL_Manual/substring|substring]] - Extract part of a name string
+* [[Manual:DIL_Manual/in|in]] - Check if name exists in the names list
 
 == See Also ==
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
-* String functions: [[split]], [[getwords]], [[substring]]
+* String functions: [[Manual:DIL_Manual/split|split]], [[Manual:DIL_Manual/getwords|getwords]], [[Manual:DIL_Manual/substring|substring]]
 * Array access: Use bracket notation for stringlist elements
-* Extra description functions: [[addextra]], [[subextra]] 
+* Extra description functions: [[Manual:DIL_Manual/addextra|addextra]], [[Manual:DIL_Manual/subextra|subextra]] 

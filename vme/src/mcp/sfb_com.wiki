@@ -133,18 +133,18 @@ The combat message is sent just prior to the actual hit occurring, allowing the 
 * Test combat handlers thoroughly as they can affect game balance
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_COM
-* [[interrupt]] - Alternative method for setting up combat triggers
-* [[command]] - Function for checking combat commands
-* [[activator]] - Unit pointer to combat participant
-* [[self.position]] - Unit position field for combat state checking
-* [[POSITION_FIGHTING]] - Constant for fighting position
-* [[CMD_AUTO_COMBAT]] - Command constant for auto-combat
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_COM
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up combat triggers
+* [[Manual:DIL_Manual/command|command]] - Function for checking combat commands
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to combat participant
+* [[Manual:DIL_Manual/self.position|self.position]] - Unit position field for combat state checking
+* [[Manual:DIL_Manual/POSITION_FIGHTING|POSITION_FIGHTING]] - Constant for fighting position
+* [[Manual:DIL_Manual/CMD_AUTO_COMBAT|CMD_AUTO_COMBAT]] - Command constant for auto-combat
 
 == See Also ==
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_TICK]] - Timer-based activation
-* [[SFB_MSG]] - Message-based activation
-* [[SFB_DEAD]] - Death event activation
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Timer-based activation
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message-based activation
+* [[Manual:DIL_Manual/SFB_DEAD|SFB_DEAD]] - Death event activation
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

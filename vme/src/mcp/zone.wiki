@@ -83,7 +83,7 @@ This field is available on the following unit types:
 * Zone names are typically short identifiers like "midgaard", "death", "justice"
 * This field is read-only and cannot be modified through DIL
 * Commonly used for zone-based storage keys and file operations
-* The zone name is used by functions like [[store]] and [[restore]] for zone-specific data
+* The zone name is used by functions like [[Manual:DIL_Manual/store|store]] and [[Manual:DIL_Manual/restore|restore]] for zone-specific data
 * All units inherit their zone from their original definition location
 * This field is essential for multi-zone environments and zone-specific mechanics
 
@@ -93,11 +93,11 @@ This field is available on the following unit types:
 * No other error conditions are expected when accessing this field
 
 == Related Functions/Fields ==
-* [[zoneidx]] - The unique database name in zone format
-* [[nameidx]] - The unique database zone name for the unit
-* [[store]] - Store unit data with zone-specific keys
-* [[restore]] - Restore unit data from zone-specific storage
-* [[fname]] - The filename of the unit's zone
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - The unique database name in zone format
+* [[Manual:DIL_Manual/nameidx|nameidx]] - The unique database zone name for the unit
+* [[Manual:DIL_Manual/store|store]] - Store unit data with zone-specific keys
+* [[Manual:DIL_Manual/restore|restore]] - Restore unit data from zone-specific storage
+* [[Manual:DIL_Manual/fname|fname]] - The filename of the unit's zone
 
 == See Also ==
 * Zone system documentation

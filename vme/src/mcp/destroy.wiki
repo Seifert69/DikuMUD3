@@ -127,13 +127,13 @@ The function performs validation:
 * '''Permission check''' - Ensures caller has authority to destroy target
 
 == Related Functions ==
-* [[remove]] - Remove units from rooms
-* [[unequip]] - Remove equipment from characters
-* [[logout]] - Force player logout (safer alternative)
+* [[Manual:DIL_Manual/remove|remove]] - Remove units from rooms
+* [[Manual:DIL_Manual/unequip|unequip]] - Remove equipment from characters
+* [[Manual:DIL_Manual/logout|logout]] - Force player logout (safer alternative)
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
-* [[UNIT_ST_OBJ]] - Object unit type
-* [[UNIT_ST_ROOM]] - Room unit type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object unit type
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type

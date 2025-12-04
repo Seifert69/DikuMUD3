@@ -54,13 +54,13 @@ The field requires an integer index parameter:
 * Invalid parameter types will result in an error
 
 == Related Functions/Fields ==
-* [[weapon_info]] - Get information about weapon types
-* [[weapon_name]] - Get the name of a weapon type
-* [[weapon_levels]] - Get weapon skill level requirements
+* [[Manual:DIL_Manual/weapon_info|weapon_info]] - Get information about weapon types
+* [[Manual:DIL_Manual/weapon_name|weapon_name]] - Get the name of a weapon type
+* [[Manual:DIL_Manual/weapon_levels|weapon_levels]] - Get weapon skill level requirements
 * .weapons[] - Access weapon skill values
 
 == See Also ==
-* [[skill_costs]] - Skill cost information
-* [[ability_costs]] - Ability cost information
+* [[Manual:DIL_Manual/skill_costs|skill_costs]] - Skill cost information
+* [[Manual:DIL_Manual/ability_costs|ability_costs]] - Ability cost information
 * Racial system documentation
 * Weapon skill system

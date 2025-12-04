@@ -70,9 +70,9 @@ pot := findsymbolic(self, "pot@haon_dor", FIND_UNIT_IN_ME);
 * Invalid FIND_UNIT_* values may cause unexpected behavior
 
 == Related Functions/Fields ==
-* [[findunit()]] - Find a unit by name within a specific environment
-* [[findroom()]] - Find a room by symbolic name
-* [[unitptr.idx]] - Unique identifier for unit instances
+* [[Manual:DIL_Manual/findunit()|findunit()]] - Find a unit by name within a specific environment
+* [[Manual:DIL_Manual/findroom()|findroom()]] - Find a room by symbolic name
+* [[Manual:DIL_Manual/unitptr.idx|unitptr.idx]] - Unique identifier for unit instances
 
 == See Also ==
 * FIND_UNIT_* constants documentation

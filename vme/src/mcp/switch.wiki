@@ -115,11 +115,11 @@ The function handles errors in the following ways:
 Always validate that both the caller is a player and the target is a valid character before calling the function.
 
 == Related Functions/Fields ==
-* [[switched]] - Field to check if a character is currently switched
+* [[Manual:DIL_Manual/switched|switched]] - Field to check if a character is currently switched
 * unitptr.type - Field to check unit type
 * unitptr.name - Field to get character name
-* [[log]] - Function for logging switch operations
-* [[addextra]] - Function for storing character references
+* [[Manual:DIL_Manual/log|log]] - Function for logging switch operations
+* [[Manual:DIL_Manual/addextra|addextra]] - Function for storing character references
 
 == See Also ==
 * DIL Character Control Systems Documentation

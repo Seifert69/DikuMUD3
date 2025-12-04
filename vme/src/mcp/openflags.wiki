@@ -18,7 +18,7 @@ This field is available on the following unit types:
 * UNIT_ST_ROOM (Room)
 
 == Usage Notes ==
-This field uses bit flags that can be tested and modified using [[isset]] and bitwise operations.
+This field uses bit flags that can be tested and modified using [[Manual:DIL_Manual/isset|isset]] and bitwise operations.
 Common flag constants include:
 * '''EX_CLOSED''' - Unit is closed
 * '''EX_LOCKED''' - Unit is locked
@@ -64,17 +64,17 @@ Always verify the unit pointer is valid before accessing openflags:
  }
 
 == Related Functions/Fields ==
-* [[isset]] - Test if specific flag bits are set
-* [[opendiff]] - Open difficulty modifier
-* [[exit_info]] - Exit-specific information
-* [[exit_diff]] - Exit difficulty values
-* [[key]] - Key required to open unit
+* [[Manual:DIL_Manual/isset|isset]] - Test if specific flag bits are set
+* [[Manual:DIL_Manual/opendiff|opendiff]] - Open difficulty modifier
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Exit-specific information
+* [[Manual:DIL_Manual/exit_diff|exit_diff]] - Exit difficulty values
+* [[Manual:DIL_Manual/key|key]] - Key required to open unit
 
 == See Also ==
-* [[unitptr]] - General unit pointer documentation
-* [[isset]] - Flag testing function
-* [[opendiff]] - Open difficulty field
-* [[exit_info]] - Exit information field
-* [[key]] - Key field for units
-* [[EX_CLOSED]] - Closed flag constant
-* [[EX_LOCKED]] - Locked flag constant 
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/isset|isset]] - Flag testing function
+* [[Manual:DIL_Manual/opendiff|opendiff]] - Open difficulty field
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Exit information field
+* [[Manual:DIL_Manual/key|key]] - Key field for units
+* [[Manual:DIL_Manual/EX_CLOSED|EX_CLOSED]] - Closed flag constant
+* [[Manual:DIL_Manual/EX_LOCKED|EX_LOCKED]] - Locked flag constant 

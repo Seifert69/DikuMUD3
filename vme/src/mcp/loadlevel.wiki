@@ -73,14 +73,14 @@ This field is available on the following unit types:
 * Returns '''fail''' if the zone is not applicable
 
 == Related Functions/Fields ==
-* [[access]] - Zone access level
-* [[resettime]] - Zone reset time
-* [[resetmode]] - Zone reset mode
-* [[payonly]] - Zone pay-only status
-* [[findzone()]] - Find a zone by name
-* [[zhead()]] - Get first zone in global list
+* [[Manual:DIL_Manual/access|access]] - Zone access level
+* [[Manual:DIL_Manual/resettime|resettime]] - Zone reset time
+* [[Manual:DIL_Manual/resetmode|resetmode]] - Zone reset mode
+* [[Manual:DIL_Manual/payonly|payonly]] - Zone pay-only status
+* [[Manual:DIL_Manual/findzone()|findzone()]] - Find a zone by name
+* [[Manual:DIL_Manual/zhead()|zhead()]] - Get first zone in global list
 
 == See Also ==
-* [[zoneptr]] - Zone pointer type documentation
-* [[load()]] - Load a unit into the game
-* [[findzone()]] - Find zone by name 
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/load()|load()]] - Load a unit into the game
+* [[Manual:DIL_Manual/findzone()|findzone()]] - Find zone by name 

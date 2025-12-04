@@ -120,9 +120,9 @@ The function performs validation:
 * '''Security check''' - Only allows color deletion on player's own color list
 
 == Related Functions ==
-* [[addcolor]] - Add a color to a player's color list
-* [[getcolor]] - Get a color from a player's color list
+* [[Manual:DIL_Manual/addcolor|addcolor]] - Add a color to a player's color list
+* [[Manual:DIL_Manual/getcolor|getcolor]] - Get a color from a player's color list
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type
-* [[color system]] - Player color management
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/color system|color system]] - Player color management

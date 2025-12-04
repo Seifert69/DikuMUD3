@@ -129,13 +129,13 @@ The variable access will fail when:
 * The variable is not initialized for the current action type
 
 == Related Functions/Fields ==
-* [[send_pre]] - Function that uses power for message power level
-* [[send_done]] - Function that includes power in message parameters
-* [[SFB_PRE]] - Event flag that enables power variable access
-* [[command]] - Function to check current command being executed
+* [[Manual:DIL_Manual/send_pre|send_pre]] - Function that uses power for message power level
+* [[Manual:DIL_Manual/send_done|send_done]] - Function that includes power in message parameters
+* [[Manual:DIL_Manual/SFB_PRE|SFB_PRE]] - Event flag that enables power variable access
+* [[Manual:DIL_Manual/command|command]] - Function to check current command being executed
 
 == See Also ==
-* [[argument]] - Variable containing command arguments
-* [[activator]] - Variable containing the unit that triggered the action
-* [[target]] - Variable containing the target of the action
-* [[medium]] - Variable containing the medium through which action occurs 
+* [[Manual:DIL_Manual/argument|argument]] - Variable containing command arguments
+* [[Manual:DIL_Manual/activator|activator]] - Variable containing the unit that triggered the action
+* [[Manual:DIL_Manual/target|target]] - Variable containing the target of the action
+* [[Manual:DIL_Manual/medium|medium]] - Variable containing the medium through which action occurs 

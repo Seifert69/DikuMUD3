@@ -291,7 +291,7 @@ The function does not return a value.
 == Usage Notes ==
 * The function removes only the first matching occurrence
 * The function modifies the original stringlist directly
-* Use [[getwords]] to split text into word lists for processing
+* Use [[Manual:DIL_Manual/getwords|getwords]] to split text into word lists for processing
 * The function is commonly used for input filtering and command parsing
 * Multiple calls may be needed to remove all occurrences of a target string
 * The function is case-sensitive in its matching
@@ -307,11 +307,11 @@ The function handles errors in the following ways:
 Always ensure that both parameters are valid before calling the function.
 
 == Related Functions/Fields ==
-* [[addstring]] - Add a string to a stringlist
-* [[getwords]] - Split a string into words
-* [[stringlist]] data type and operations
-* [[split]] - Split a string into a stringlist
-* [[in]] operator - Check if a string exists in a stringlist
+* [[Manual:DIL_Manual/addstring|addstring]] - Add a string to a stringlist
+* [[Manual:DIL_Manual/getwords|getwords]] - Split a string into words
+* [[Manual:DIL_Manual/stringlist|stringlist]] data type and operations
+* [[Manual:DIL_Manual/split|split]] - Split a string into a stringlist
+* [[Manual:DIL_Manual/in|in]] operator - Check if a string exists in a stringlist
 
 == See Also ==
 * DIL String Operations Documentation

@@ -111,11 +111,11 @@ The zonereset procedure initiates a complete zone reset, causing all mobiles and
 * The procedure does not return any value to indicate success or failure
 
 == Related Functions/Fields ==
-* [[zone_head]] - Get first zone in global list
-* [[findzone]] - Locate a zone by name
-* [[zoneptr]] - Zone pointer type and available fields
-* [[resetmode]] - Zone reset mode setting
-* [[resettime]] - Zone reset timing setting
+* [[Manual:DIL_Manual/zone_head|zone_head]] - Get first zone in global list
+* [[Manual:DIL_Manual/findzone|findzone]] - Locate a zone by name
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and available fields
+* [[Manual:DIL_Manual/resetmode|resetmode]] - Zone reset mode setting
+* [[Manual:DIL_Manual/resettime|resettime]] - Zone reset timing setting
 
 == See Also ==
 * Zone system documentation

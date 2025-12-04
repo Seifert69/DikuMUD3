@@ -75,9 +75,9 @@ This shows how to check for and remove specific affects.
 
 == Related Functions/Fields ==
 
-* [[addaff]] - Adds an affect to a unit
-* [[subaff]] - Removes an affect from a unit  
-* [[getaffects]] - Returns detailed information about all affects on a unit
+* [[Manual:DIL_Manual/addaff|addaff]] - Adds an affect to a unit
+* [[Manual:DIL_Manual/subaff|subaff]] - Removes an affect from a unit  
+* [[Manual:DIL_Manual/getaffects|getaffects]] - Returns detailed information about all affects on a unit
 
 == See Also ==
 

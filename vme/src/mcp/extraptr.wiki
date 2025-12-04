@@ -195,15 +195,15 @@ code
 * The system automatically handles memory management for extra description structures
 
 == Related Functions/Fields ==
-* [[extra]] - Field to access a unit's extra description list
-* [[quests]] - Field to access player quest extra descriptions
-* [[info]] - Field to access player information structure
-* [[addextra]] - Function to add new extra descriptions
-* [[subextra]] - Function to remove extra descriptions
-* [[names]] - Field for accessing extra description names
-* [[vals]] - Field for accessing extra description values
-* [[descr]] - Field for accessing extra description text
-* [[next]] - Field for traversing extra description lists
+* [[Manual:DIL_Manual/extra|extra]] - Field to access a unit's extra description list
+* [[Manual:DIL_Manual/quests|quests]] - Field to access player quest extra descriptions
+* [[Manual:DIL_Manual/info|info]] - Field to access player information structure
+* [[Manual:DIL_Manual/addextra|addextra]] - Function to add new extra descriptions
+* [[Manual:DIL_Manual/subextra|subextra]] - Function to remove extra descriptions
+* [[Manual:DIL_Manual/names|names]] - Field for accessing extra description names
+* [[Manual:DIL_Manual/vals|vals]] - Field for accessing extra description values
+* [[Manual:DIL_Manual/descr|descr]] - Field for accessing extra description text
+* [[Manual:DIL_Manual/next|next]] - Field for traversing extra description lists
 
 == See Also ==
 * Extra description functions and operations

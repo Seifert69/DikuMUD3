@@ -22,12 +22,12 @@ This function is currently marked as obsolete and not used anywhere in the exist
 * Function is obsolete - use '''ghead'''() instead
 
 == Related Functions/Fields ==
-* [[ghead]] - Similar function for global head
-* [[obj_head]] - Object head function
-* [[npc_head]] - NPC head function
-* [[room_head]] - Room head function
-* [[zone_head]] - Zone head function
-* [[command_head]] - Command head function
+* [[Manual:DIL_Manual/ghead|ghead]] - Similar function for global head
+* [[Manual:DIL_Manual/obj_head|obj_head]] - Object head function
+* [[Manual:DIL_Manual/npc_head|npc_head]] - NPC head function
+* [[Manual:DIL_Manual/room_head|room_head]] - Room head function
+* [[Manual:DIL_Manual/zone_head|zone_head]] - Zone head function
+* [[Manual:DIL_Manual/command_head|command_head]] - Command head function
 
 == See Also ==
 * Obsolete functions and their modern equivalents

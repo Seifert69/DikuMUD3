@@ -84,10 +84,10 @@ The function will fail silently if:
 * The equipment position is already occupied
 
 == Related Functions/Fields ==
-* [[equipment]] - Returns the unit equipped at a specific position
-* [[unequip]] - Removes an equipped item
-* [[unit_st_obj.equip]] - Field showing an object's current equipment position
+* [[Manual:DIL_Manual/equipment|equipment]] - Returns the unit equipped at a specific position
+* [[Manual:DIL_Manual/unequip|unequip]] - Removes an equipped item
+* [[Manual:DIL_Manual/unit_st_obj.equip|unit_st_obj.equip]] - Field showing an object's current equipment position
 
 == See Also ==
-* [[link]]
-* [[unit_st_obj]]
+* [[Manual:DIL_Manual/link|link]]
+* [[Manual:DIL_Manual/unit_st_obj|unit_st_obj]]

@@ -89,7 +89,7 @@ The '''visible''' function determines if a character (viewer) can visually perce
 ** Normal line of sight
 ** Light levels and darkness
 ** Invisibility spells and effects
-** [[#uptr|minv]] wizard invisibility levels
+** [[Manual:DIL_Manual/#uptr|minv]] wizard invisibility levels
 ** Blindness and other visual impairments
 ** Terrain and environmental obstacles
 * Returns 1 (TRUE) if the target is visible, 0 (FALSE) if not visible
@@ -103,12 +103,12 @@ The '''visible''' function determines if a character (viewer) can visually perce
 * The function gracefully handles edge cases like destroyed units
 
 == Related Functions/Fields ==
-* [[#uptr|minv]] - Wizard invisibility level field
-* [[#findunit|findunit()]] - Find units in the environment
-* [[#act|act()]] - Perform actions with visibility checks
-* [[#gamestate|gamestate()]] - Check game state including visibility
+* [[Manual:DIL_Manual/#uptr|minv]] - Wizard invisibility level field
+* [[Manual:DIL_Manual/#findunit|findunit()]] - Find units in the environment
+* [[Manual:DIL_Manual/#act|act()]] - Perform actions with visibility checks
+* [[Manual:DIL_Manual/#gamestate|gamestate()]] - Check game state including visibility
 
 == See Also ==
-* [[#uptr|unitptr]] - Unit pointer type documentation
-* [[#sfb_dead|SFB_DEAD]] - Death and visibility considerations
-* [[#logcrime|logcrime()]] - Crime logging with visibility checks
+* [[Manual:DIL_Manual/#uptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/#sfb_dead|SFB_DEAD]] - Death and visibility considerations
+* [[Manual:DIL_Manual/#logcrime|logcrime()]] - Crime logging with visibility checks

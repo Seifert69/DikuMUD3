@@ -193,7 +193,7 @@ This field is available on the following unit types:
 * Skill indices correspond to SKI_* constants defined in the game system
 * The field returns current skill level, not skill cost or proficiency
 * Skill levels typically range from 0 to a maximum (often 100 or higher)
-* The field is commonly used with [[skill_name()]] to get skill names
+* The field is commonly used with [[Manual:DIL_Manual/skill_name()|skill_name()]] to get skill names
 * Skill levels are used in character advancement and ability calculations
 * The field is often used in training, guild, and progression systems
 
@@ -212,14 +212,14 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[skill_name()]] - Function to get the name of a skill from its index
-* [[skill_costs]] - Field to get the experience point cost of a skill
-* [[skills]] - Field array to access all skill values
-* [[skill_points]] - Field to get available skill points
-* [[exp]] - Field to get current experience points
+* [[Manual:DIL_Manual/skill_name()|skill_name()]] - Function to get the name of a skill from its index
+* [[Manual:DIL_Manual/skill_costs|skill_costs]] - Field to get the experience point cost of a skill
+* [[Manual:DIL_Manual/skills|skills]] - Field array to access all skill values
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Field to get available skill points
+* [[Manual:DIL_Manual/exp|exp]] - Field to get current experience points
 
 == See Also ==
-* [[SKI_*]] - Skill index constants
-* [[Character advancement]] - Information about skill progression systems
-* [[Training systems]] - Skill training and improvement procedures
-* [[Experience system]] - Experience point and skill level mechanics
+* [[Manual:DIL_Manual/SKI_*|SKI_*]] - Skill index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about skill progression systems
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Skill training and improvement procedures
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and skill level mechanics

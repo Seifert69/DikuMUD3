@@ -56,7 +56,7 @@ Returns '''integer''':
 ** '''NPC_SENTINEL''' - NPC will stay in designated area
 ** '''NPC_STAY_ZONE''' - NPC will not leave its zone
 * Flags are combined using bitwise OR (|) operator
-* Use [[isaff]] function to check if specific flags are set
+* Use [[Manual:DIL_Manual/isaff|isaff]] function to check if specific flags are set
 * The function provides direct field modification equivalent to: `npc.npcflags := npc.npcflags | flags`
 
 == Error Handling ==
@@ -67,12 +67,12 @@ Returns '''integer''':
 * NPC is not of type UNIT_ST_NPC
 
 == Related Functions/Fields ==
-* [[npcflags]] - NPC flags field (this function)
-* [[isaff]] - Check if specific NPC flags are set
-* [[unit_st_npc.hlp]] - NPC-specific fields and constants
+* [[Manual:DIL_Manual/npcflags|npcflags]] - NPC flags field (this function)
+* [[Manual:DIL_Manual/isaff|isaff]] - Check if specific NPC flags are set
+* [[Manual:DIL_Manual/unit_st_npc.hlp|unit_st_npc.hlp]] - NPC-specific fields and constants
 * Bitwise operations: Use | (OR) operator to combine flags
 
 == See Also ==
 * NPC behavior constants: '''NPC_AGGRESSIVE''', '''NPC_GUARD''', '''NPC_SENTINEL''', '''NPC_STAY_ZONE'''
-* Bit manipulation: [[and]], [[or]], [[not]] operators
+* Bit manipulation: [[Manual:DIL_Manual/and|and]], [[Manual:DIL_Manual/or|or]], [[Manual:DIL_Manual/not|not]] operators
 * Unit type constants: '''UNIT_ST_NPC''' 

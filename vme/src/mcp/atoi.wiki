@@ -109,10 +109,10 @@ The function performs validation:
 * '''Sign handling'' - Properly processes positive and negative numbers
 
 == Related Functions ==
-* [[itoa]] - For converting integers to strings
-* [[getwords]] - For parsing strings into components
-* [[strcmp]] - For string comparison
+* [[Manual:DIL_Manual/itoa|itoa]] - For converting integers to strings
+* [[Manual:DIL_Manual/getwords|getwords]] - For parsing strings into components
+* [[Manual:DIL_Manual/strcmp|strcmp]] - For string comparison
 
 == See Also ==
-* [[string]] - String data type
-* [[integer]] - Integer data type
+* [[Manual:DIL_Manual/string|string]] - String data type
+* [[Manual:DIL_Manual/integer|integer]] - Integer data type

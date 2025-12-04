@@ -148,18 +148,18 @@ The SFB_DONE message is sent after a command has been successfully processed, al
 * Ensure target programs are properly waiting for SFB_DONE messages
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_DONE
-* [[interrupt]] - Alternative method for setting up completion triggers
-* [[sendtext]] / [[sendto]] - Send messages to other DIL programs
-* [[activator]] - Unit pointer to command executor
-* [[medium]] - Unit pointer to the operated-upon unit
-* [[target]] - Unit pointer to the operation target
-* [[command]] - Function for checking specific commands
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_DONE
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up completion triggers
+* [[Manual:DIL_Manual/sendtext|sendtext]] / [[Manual:DIL_Manual/sendto|sendto]] - Send messages to other DIL programs
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to command executor
+* [[Manual:DIL_Manual/medium|medium]] - Unit pointer to the operated-upon unit
+* [[Manual:DIL_Manual/target|target]] - Unit pointer to the operation target
+* [[Manual:DIL_Manual/command|command]] - Function for checking specific commands
 
 == See Also ==
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_TICK]] - Timer-based activation
-* [[SFB_MSG]] - Message-based activation
-* [[SFB_PRE]] - Pre-command processing
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Timer-based activation
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message-based activation
+* [[Manual:DIL_Manual/SFB_PRE|SFB_PRE]] - Pre-command processing
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

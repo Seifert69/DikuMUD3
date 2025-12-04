@@ -88,17 +88,17 @@ Always validate parameters before calling opponent:
  }
 
 == Related Functions/Fields ==
-* [[set_fighting]] - Set two characters to fight each other
-* [[fighting]] - Get current opponent of a character
-* [[opponentcount]] - Number of opponents a character is fighting
-* [[position]] - Character position (affects combat ability)
-* [[CHAR_SELF_DEFENCE]] - Self-defense character flag
-* [[CHAR_LEGAL_TARGET]] - Legal target character flag
+* [[Manual:DIL_Manual/set_fighting|set_fighting]] - Set two characters to fight each other
+* [[Manual:DIL_Manual/fighting|fighting]] - Get current opponent of a character
+* [[Manual:DIL_Manual/opponentcount|opponentcount]] - Number of opponents a character is fighting
+* [[Manual:DIL_Manual/position|position]] - Character position (affects combat ability)
+* [[Manual:DIL_Manual/CHAR_SELF_DEFENCE|CHAR_SELF_DEFENCE]] - Self-defense character flag
+* [[Manual:DIL_Manual/CHAR_LEGAL_TARGET|CHAR_LEGAL_TARGET]] - Legal target character flag
 
 == See Also ==
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields
-* [[set_fighting]] - Manual combat setup
-* [[fighting]] - Current opponent field
-* [[meleeattack]] - Perform melee attack
-* [[meleedamage]] - Calculate melee damage
-* [[position]] - Character positioning system
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields
+* [[Manual:DIL_Manual/set_fighting|set_fighting]] - Manual combat setup
+* [[Manual:DIL_Manual/fighting|fighting]] - Current opponent field
+* [[Manual:DIL_Manual/meleeattack|meleeattack]] - Perform melee attack
+* [[Manual:DIL_Manual/meleedamage|meleedamage]] - Calculate melee damage
+* [[Manual:DIL_Manual/position|position]] - Character positioning system

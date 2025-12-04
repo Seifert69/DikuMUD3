@@ -122,11 +122,11 @@ The field access will return '''fail''' when:
 * The unit is null or invalid
 
 == Related Functions/Fields ==
-* [[isset]] - Check if a flag bit is set
-* [[set]] - Set a flag bit
-* [[clear]] - Clear a flag bit
-* [[npcflags]] - Similar field for NPC flags
+* [[Manual:DIL_Manual/isset|isset]] - Check if a flag bit is set
+* [[Manual:DIL_Manual/set|set]] - Set a flag bit
+* [[Manual:DIL_Manual/clear|clear]] - Clear a flag bit
+* [[Manual:DIL_Manual/npcflags|npcflags]] - Similar field for NPC flags
 
 == See Also ==
-* [[meleedamage]] - Function that checks PC_PK_RELAXED for combat
-* [[gamestate]] - Function that checks PC_INFORM for player notifications 
+* [[Manual:DIL_Manual/meleedamage|meleedamage]] - Function that checks PC_PK_RELAXED for combat
+* [[Manual:DIL_Manual/gamestate|gamestate]] - Function that checks PC_INFORM for player notifications 

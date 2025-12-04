@@ -127,15 +127,15 @@ The function will fail silently if:
 * The list parameter is not a variable (cannot be a function return value)
 
 == Related Functions/Fields ==
-* [[insert]] - Inserts an element at a specified position
-* [[addstring]] - Adds a string to the end of a stringlist
-* [[substring]] - Removes a specific string from a stringlist
-* [[length]] - Returns the number of elements in a list
-* [[stringlist]] - String list type documentation
-* [[intlist]] - Integer list type documentation
+* [[Manual:DIL_Manual/insert|insert]] - Inserts an element at a specified position
+* [[Manual:DIL_Manual/addstring|addstring]] - Adds a string to the end of a stringlist
+* [[Manual:DIL_Manual/substring|substring]] - Removes a specific string from a stringlist
+* [[Manual:DIL_Manual/length|length]] - Returns the number of elements in a list
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list type documentation
+* [[Manual:DIL_Manual/intlist|intlist]] - Integer list type documentation
 
 == See Also ==
-* [[stringlist]]
-* [[intlist]]
-* [[insert]]
-* [[addstring]]
+* [[Manual:DIL_Manual/stringlist|stringlist]]
+* [[Manual:DIL_Manual/intlist|intlist]]
+* [[Manual:DIL_Manual/insert|insert]]
+* [[Manual:DIL_Manual/addstring|addstring]]

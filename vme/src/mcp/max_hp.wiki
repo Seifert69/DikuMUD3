@@ -97,7 +97,7 @@ This field is available on the following unit types:
 * The '''.max_hp''' field has different access permissions based on unit type
 * For players (PCs), this field is read-only to maintain game balance
 * For NPCs and objects, this field is read-write, allowing dynamic modification
-* This field is commonly used in conjunction with [[hp]] to calculate health percentages
+* This field is commonly used in conjunction with [[Manual:DIL_Manual/hp|hp]] to calculate health percentages
 * Maximum hitpoints are typically determined by character level, race, class, and equipment
 * The value is used as an upper bound when restoring health after death, healing, or rest
 * Objects use this field to determine durability and breakage thresholds
@@ -108,11 +108,11 @@ This field is available on the following unit types:
 * The field itself never fails when reading - it always returns an integer value
 
 == Related Functions/Fields ==
-* [[hp]] - Gets/sets the current hitpoints
-* [[max_mana]] - Gets the maximum mana points
-* [[max_endurance]] - Gets the maximum endurance points
-* [[experience]] - Sets experience points (which can affect max_hp for NPCs)
+* [[Manual:DIL_Manual/hp|hp]] - Gets/sets the current hitpoints
+* [[Manual:DIL_Manual/max_mana|max_mana]] - Gets the maximum mana points
+* [[Manual:DIL_Manual/max_endurance|max_endurance]] - Gets the maximum endurance points
+* [[Manual:DIL_Manual/experience|experience]] - Sets experience points (which can affect max_hp for NPCs)
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation

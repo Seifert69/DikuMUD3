@@ -144,13 +144,13 @@ Common error scenarios:
 * Invalid command syntax or non-existent commands
 
 == Related Functions/Fields ==
-* [[exec()]] - Function to execute commands as a specific unit
-* [[command()]] - Function to check if a command was entered
-* [[cmdstr]] - Field containing the command string entered
-* [[excmdstr]] - Field containing the full command string with arguments
+* [[Manual:DIL_Manual/exec()|exec()]] - Function to execute commands as a specific unit
+* [[Manual:DIL_Manual/command()|command()]] - Function to check if a command was entered
+* [[Manual:DIL_Manual/cmdstr|cmdstr]] - Field containing the command string entered
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Field containing the full command string with arguments
 
 == See Also ==
-* [[System commands]] - Information about available system commands
-* [[Zone access levels]] - Security and permission system
-* [[Thread management]] - Information about multi-threading in DIL
-* [[Security restrictions]] - Command execution security policies
+* [[Manual:DIL_Manual/System commands|System commands]] - Information about available system commands
+* [[Manual:DIL_Manual/Zone access levels|Zone access levels]] - Security and permission system
+* [[Manual:DIL_Manual/Thread management|Thread management]] - Information about multi-threading in DIL
+* [[Manual:DIL_Manual/Security restrictions|Security restrictions]] - Command execution security policies

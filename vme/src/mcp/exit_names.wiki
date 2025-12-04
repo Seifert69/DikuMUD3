@@ -50,10 +50,10 @@ This field is available on the following unit types:
 * Returns fail if accessed on non-room units
 
 == Related Functions/Fields ==
-* [[exit_info]] - Get/set exit flags (closed, locked, etc.)
-* [[exit_to]] - Get the destination room of an exit
-* [[exit_key]] - Get the key required for an exit
-* [[stringlist]] - Working with string lists
+* [[Manual:DIL_Manual/exit_info|exit_info]] - Get/set exit flags (closed, locked, etc.)
+* [[Manual:DIL_Manual/exit_to|exit_to]] - Get the destination room of an exit
+* [[Manual:DIL_Manual/exit_key|exit_key]] - Get the key required for an exit
+* [[Manual:DIL_Manual/stringlist|stringlist]] - Working with string lists
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type constant

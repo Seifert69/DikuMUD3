@@ -292,7 +292,7 @@ The function returns a stringlist containing:
 * Question mark (?) matches any single character
 * Character sets ([abc]) match any character in the brackets
 * Returned filenames do not include the .dil extension
-* Use [[load]] function to load the returned filenames as DIL programs
+* Use [[Manual:DIL_Manual/load|load]] function to load the returned filenames as DIL programs
 * The function returns an empty stringlist if no files match the pattern
 
 == Error Handling ==
@@ -305,11 +305,11 @@ The function handles errors in the following ways:
 Always check if the returned stringlist has elements before attempting to access them.
 
 == Related Functions/Fields ==
-* [[load]] - Load a DIL program from filename
-* [[dilcopy]] - Copy and execute a DIL program
-* [[stringlist]] - Data type for handling filename lists
-* [[length]] - Get number of files in returned list
-* [[split]] - Split filenames for processing
+* [[Manual:DIL_Manual/load|load]] - Load a DIL program from filename
+* [[Manual:DIL_Manual/dilcopy|dilcopy]] - Copy and execute a DIL program
+* [[Manual:DIL_Manual/stringlist|stringlist]] - Data type for handling filename lists
+* [[Manual:DIL_Manual/length|length]] - Get number of files in returned list
+* [[Manual:DIL_Manual/split|split]] - Split filenames for processing
 
 == See Also ==
 * DIL File System Documentation

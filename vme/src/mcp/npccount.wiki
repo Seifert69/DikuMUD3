@@ -63,11 +63,11 @@ Returns '''integer''':
 * Always validate the zone pointer before calling the function
 
 == Related Functions/Fields ==
-* [[zhead]] - Get first zone in global list
-* [[findroom]] - Find specific zone by name
-* [[zoneptr]] - Zone pointer type and fields
-* Zone management functions: [[reset]], [[store]]
-* Zone fields: [[name]], [[zoneidx]], [[npcs]]
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/findroom|findroom]] - Find specific zone by name
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and fields
+* Zone management functions: [[Manual:DIL_Manual/reset|reset]], [[Manual:DIL_Manual/store|store]]
+* Zone fields: [[Manual:DIL_Manual/name|name]], [[Manual:DIL_Manual/zoneidx|zoneidx]], [[Manual:DIL_Manual/npcs|npcs]]
 
 == See Also ==
 * Zone type constants and management

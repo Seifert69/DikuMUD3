@@ -99,10 +99,10 @@ The function performs validation:
 * '''File existence check''' - Returns FALSE if file doesn't exist
 
 == Related Functions ==
-* [[store]] - Store units to unit files
-* [[restore]] - Restore units from unit files
-* [[log]] - Log system messages
+* [[Manual:DIL_Manual/store|store]] - Store units to unit files
+* [[Manual:DIL_Manual/restore|restore]] - Restore units from unit files
+* [[Manual:DIL_Manual/log|log]] - Log system messages
 
 == See Also ==
-* [[zone]] - Zone pointer and access control
-* [[unit file system]] - Game unit management
+* [[Manual:DIL_Manual/zone|zone]] - Zone pointer and access control
+* [[Manual:DIL_Manual/unit file system|unit file system]] - Game unit management

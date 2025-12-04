@@ -71,8 +71,8 @@ The variable contains:
 ** Command logging and analysis
 
 == Related Functions/Fields ==
-* [[excmdstr]] - Command input (lowercase)
-* [[argument]] - Command arguments
-* [[set_password]] - Set player password
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Command input (lowercase)
+* [[Manual:DIL_Manual/argument|argument]] - Command arguments
+* [[Manual:DIL_Manual/set_password|set_password]] - Set player password
 
 == See Also ==

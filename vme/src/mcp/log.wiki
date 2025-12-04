@@ -105,11 +105,11 @@ Error tracking in file operations:
 * Large log messages should be avoided for performance reasons
 
 == Related Functions/Fields ==
-* [[flog]] - Log to specific files with more control over output destination
-* [[logcrime]] - Log criminal activities for justice system tracking
-* [[szonelog]] - Low-level zone logging function (internal use)
+* [[Manual:DIL_Manual/flog|flog]] - Log to specific files with more control over output destination
+* [[Manual:DIL_Manual/logcrime|logcrime]] - Log criminal activities for justice system tracking
+* [[Manual:DIL_Manual/szonelog|szonelog]] - Low-level zone logging function (internal use)
 
 == See Also ==
-* [[DIL Debugging]] - General debugging techniques for DIL programs
-* [[Zone Administration]] - Zone log file management
-* [[Server Logging]] - Server-wide logging system overview 
+* [[Manual:DIL_Manual/DIL Debugging|DIL Debugging]] - General debugging techniques for DIL programs
+* [[Manual:DIL_Manual/Zone Administration|Zone Administration]] - Zone log file management
+* [[Manual:DIL_Manual/Server Logging|Server Logging]] - Server-wide logging system overview 

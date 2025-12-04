@@ -68,7 +68,7 @@ The sendtext function sends a text message directly to a specified unit. This is
 * For non-player units, text is sent as a simple message
 * No automatic line break - you must manually add &n for new lines
 * Commonly used for player feedback, status updates, and error messages
-* More efficient than multiple [[act]] calls for simple text delivery
+* More efficient than multiple [[Manual:DIL_Manual/act|act]] calls for simple text delivery
 * Text is sent immediately - no queuing or delay
 
 == Player-Specific Behavior ==
@@ -84,11 +84,11 @@ When sending to player characters (UNIT_ST_PC):
 * Always validate target unit before calling sendtext
 
 == Related Functions/Fields ==
-* [[act]] - Function for sending formatted social messages
-* [[send_done]] - Function for sending completion notifications
-* [[send_pre]] - Function for sending preparation messages
-* [[pagestring]] - Function for sending paginated output
-* [[unitptr]] - Unit pointer type and operations
+* [[Manual:DIL_Manual/act|act]] - Function for sending formatted social messages
+* [[Manual:DIL_Manual/send_done|send_done]] - Function for sending completion notifications
+* [[Manual:DIL_Manual/send_pre|send_pre]] - Function for sending preparation messages
+* [[Manual:DIL_Manual/pagestring|pagestring]] - Function for sending paginated output
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and operations
 
 == See Also ==
 * Player communication and message systems

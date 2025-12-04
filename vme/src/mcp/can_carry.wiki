@@ -69,13 +69,13 @@ Type errors will occur if:
 * Parameter 3 is not an integer type
 
 == Related Functions/Fields ==
-* [[capacity]] - Gets the maximum weight a unit can carry
-* [[weight]] - Gets the current weight of a unit
-* [[fits]] - Checks if an item fits in a specific equipment slot
-* [[manipulate]] - Field that controls item interaction permissions
+* [[Manual:DIL_Manual/capacity|capacity]] - Gets the maximum weight a unit can carry
+* [[Manual:DIL_Manual/weight|weight]] - Gets the current weight of a unit
+* [[Manual:DIL_Manual/fits|fits]] - Checks if an item fits in a specific equipment slot
+* [[Manual:DIL_Manual/manipulate|manipulate]] - Field that controls item interaction permissions
 
 == See Also ==
-* [[char_can_carry_n]] - Internal count limit function
-* [[char_can_carry_w]] - Internal weight limit function
-* [[findunit]] - For locating items to check
-* [[load]] - For creating new items to test carrying capacity
+* [[Manual:DIL_Manual/char_can_carry_n|char_can_carry_n]] - Internal count limit function
+* [[Manual:DIL_Manual/char_can_carry_w|char_can_carry_w]] - Internal weight limit function
+* [[Manual:DIL_Manual/findunit|findunit]] - For locating items to check
+* [[Manual:DIL_Manual/load|load]] - For creating new items to test carrying capacity

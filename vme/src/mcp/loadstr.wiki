@@ -78,12 +78,12 @@ Message board system (from board reply DIL):
 * Memory allocation failures return appropriate error codes
 
 == Related Functions/Fields ==
-* [[savestr]] - Save string content to files
-* [[delstr]] - Delete string files
-* [[split]] - Split loaded strings into arrays (useful for line-by-line processing)
+* [[Manual:DIL_Manual/savestr|savestr]] - Save string content to files
+* [[Manual:DIL_Manual/delstr|delstr]] - Delete string files
+* [[Manual:DIL_Manual/split|split]] - Split loaded strings into arrays (useful for line-by-line processing)
 
 == See Also ==
-* [[FILE_LOADED]] - Success constant
-* [[FILE_NOT_FOUND]] - File not found constant  
-* [[FILE_OUT_OF_MEMORY]] - Memory error constant
-* [[FILE_TO_LARGE]] - File size error constant 
+* [[Manual:DIL_Manual/FILE_LOADED|FILE_LOADED]] - Success constant
+* [[Manual:DIL_Manual/FILE_NOT_FOUND|FILE_NOT_FOUND]] - File not found constant  
+* [[Manual:DIL_Manual/FILE_OUT_OF_MEMORY|FILE_OUT_OF_MEMORY]] - Memory error constant
+* [[Manual:DIL_Manual/FILE_TO_LARGE|FILE_TO_LARGE]] - File size error constant 

@@ -114,11 +114,11 @@ The function performs validation:
 * '''Range validation''' - Validates timestamp is within reasonable bounds
 
 == Related Functions ==
-* [[asctime]] - For converting timestamp to readable date format
-* [[realtime]] - For getting the current time
-* [[age calculations]] - For determining character age from birth time
+* [[Manual:DIL_Manual/asctime|asctime]] - For converting timestamp to readable date format
+* [[Manual:DIL_Manual/realtime|realtime]] - For getting the current time
+* [[Manual:DIL_Manual/age calculations|age calculations]] - For determining character age from birth time
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type
-* [[Unix timestamp]] - Unix epoch time system
-* [[account management]] - Player account systems
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/Unix timestamp|Unix timestamp]] - Unix epoch time system
+* [[Manual:DIL_Manual/account management|account management]] - Player account systems

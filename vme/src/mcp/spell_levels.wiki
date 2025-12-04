@@ -190,7 +190,7 @@ This field is available on the following unit types:
 * Spell indices correspond to SPL_* constants defined in the game system
 * The field returns current spell level, not spell cost or mana cost
 * Spell levels typically range from 0 to a maximum (often 100 or higher)
-* The field is commonly used with [[spell_name()]] to get spell names
+* The field is commonly used with [[Manual:DIL_Manual/spell_name()|spell_name()]] to get spell names
 * Spell levels are used in character advancement and magical ability calculations
 * The field is often used in training, guild, and progression systems
 
@@ -209,16 +209,16 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[spell_name()]] - Function to get the name of a spell from its index
-* [[spell_costs]] - Field to get the mana cost of a spell
-* [[spells]] - Field array to access all spell values
-* [[exp]] - Field to get current experience points
-* [[spell_points]] - Field to get available spell points
+* [[Manual:DIL_Manual/spell_name()|spell_name()]] - Function to get the name of a spell from its index
+* [[Manual:DIL_Manual/spell_costs|spell_costs]] - Field to get the mana cost of a spell
+* [[Manual:DIL_Manual/spells|spells]] - Field array to access all spell values
+* [[Manual:DIL_Manual/exp|exp]] - Field to get current experience points
+* [[Manual:DIL_Manual/spell_points|spell_points]] - Field to get available spell points
 
 == See Also ==
-* [[SPL_*]] - Spell index constants
-* [[Character advancement]] - Information about spell progression systems
-* [[Experience system]] - Experience point and spell level mechanics
-* [[Training systems]] - Spell training and advancement procedures
+* [[Manual:DIL_Manual/SPL_*|SPL_*]] - Spell index constants
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about spell progression systems
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and spell level mechanics
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Spell training and advancement procedures
 
-* [[Magical abilities]] - Information about spell systems and magic
+* [[Manual:DIL_Manual/Magical abilities|Magical abilities]] - Information about spell systems and magic

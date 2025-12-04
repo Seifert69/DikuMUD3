@@ -141,11 +141,11 @@ The field performs validation:
 * '''List validation''' - Ensures stringlist is properly formatted
 
 == Related Functions ==
-* [[zhead]] - Get first zone in the list
-* [[stringlist]] - String list data type
-* [[pagestring]] - Display string lists to players
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in the list
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list data type
+* [[Manual:DIL_Manual/pagestring|pagestring]] - Display string lists to players
 
 == See Also ==
-* [[UNIT_ST_ROOM]] - Room unit type
-* [[zone]] - Zone pointer and navigation
-* [[zone properties]] - Zone-specific fields
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room unit type
+* [[Manual:DIL_Manual/zone|zone]] - Zone pointer and navigation
+* [[Manual:DIL_Manual/zone properties|zone properties]] - Zone-specific fields

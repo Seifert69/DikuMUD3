@@ -97,7 +97,7 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * The '''.master''' field is read-only and cannot be modified directly
-* To change who a character follows, use the [[follow]] function
+* To change who a character follows, use the [[Manual:DIL_Manual/follow|follow]] function
 * A character following themselves indicates they are not following anyone
 * This field is commonly used in group management, pet control, and NPC behavior systems
 * The master/follower relationship forms chains - a character can be both a master and a follower simultaneously
@@ -109,10 +109,10 @@ This field is available on the following unit types:
 * The field itself never fails - it always returns a unitptr (which may be null)
 
 == Related Functions/Fields ==
-* [[follow]] - Makes a character follow another character
-* [[follower]] - Gets the first follower of a character
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/follow|follow]] - Makes a character follow another character
+* [[Manual:DIL_Manual/follower|follower]] - Gets the first follower of a character
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields and properties
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields and properties

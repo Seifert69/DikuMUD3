@@ -145,10 +145,10 @@ The function performs validation:
 * '''Runtime validation''' - Validates interrupt management state
 
 == Related Functions ==
-* [[interrupt]] - Set up interrupt handlers
-* [[SFB_*]] - Interrupt trigger flags
-* [[pause]] - Pause program execution
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Set up interrupt handlers
+* [[Manual:DIL_Manual/SFB_*|SFB_*]] - Interrupt trigger flags
+* [[Manual:DIL_Manual/pause|pause]] - Pause program execution
 
 == See Also ==
-* [[interrupt]] - Interrupt management system
-* [[execution control]] - DIL program flow control
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Interrupt management system
+* [[Manual:DIL_Manual/execution control|execution control]] - DIL program flow control

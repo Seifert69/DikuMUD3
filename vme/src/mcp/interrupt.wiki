@@ -70,8 +70,8 @@ This shows how to store the interrupt ID and clear it after use.
 
 == Related Functions/Fields ==
 
-* [[clear]] - Removes an interrupt
-* [[wait]] - Waits for specific message classes
+* [[Manual:DIL_Manual/clear|clear]] - Removes an interrupt
+* [[Manual:DIL_Manual/wait|wait]] - Waits for specific message classes
 
 == See Also ==
 

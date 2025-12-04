@@ -96,9 +96,9 @@ The getinteger() function is a versatile utility that retrieves various game sys
 * Always check return value before using in calculations
 
 == Related Functions/Fields ==
-* [[experience]] - Modify player experience
-* [[realtime]] - Get current Unix timestamp
-* [[mud(day,month,..)]] - MUD time variables
+* [[Manual:DIL_Manual/experience|experience]] - Modify player experience
+* [[Manual:DIL_Manual/realtime|realtime]] - Get current Unix timestamp
+* [[Manual:DIL_Manual/mud(day,month,..)|mud(day,month,..)]] - MUD time variables
 
 == See Also ==
 * Character statistics and regeneration systems

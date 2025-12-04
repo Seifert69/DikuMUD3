@@ -35,8 +35,8 @@ This field is available on the following unit types:
 == Usage Notes ==
 * This field is currently marked as obsolete and not used in any DIL programs
 * The count includes all objects defined in the zone's file, regardless of whether they are currently loaded
-* Use with [[findzone]] to get a zone pointer by name
-* Combine with [[roomcount]] and [[npccount]] for complete zone statistics
+* Use with [[Manual:DIL_Manual/findzone|findzone]] to get a zone pointer by name
+* Combine with [[Manual:DIL_Manual/roomcount|roomcount]] and [[Manual:DIL_Manual/npccount|npccount]] for complete zone statistics
 
 == Error Handling ==
 Always check the zone pointer for null before accessing objcount:
@@ -51,14 +51,14 @@ Always check the zone pointer for null before accessing objcount:
  }
 
 == Related Functions/Fields ==
-* [[roomcount]] - Number of rooms in a zone
-* [[npccount]] - Number of NPCs in a zone
-* [[findzone]] - Find a zone by name
-* [[zhead]] - Get first zone in global list
-* [[zoneptr]] - Zone pointer type
+* [[Manual:DIL_Manual/roomcount|roomcount]] - Number of rooms in a zone
+* [[Manual:DIL_Manual/npccount|npccount]] - Number of NPCs in a zone
+* [[Manual:DIL_Manual/findzone|findzone]] - Find a zone by name
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type
 
 == See Also ==
-* [[zoneptr]]
-* [[objs]] - Pointer to base objects of zone
-* [[resetmode]] - Zone reset mode
-* [[loadlevel]] - Zone load level 
+* [[Manual:DIL_Manual/zoneptr|zoneptr]]
+* [[Manual:DIL_Manual/objs|objs]] - Pointer to base objects of zone
+* [[Manual:DIL_Manual/resetmode|resetmode]] - Zone reset mode
+* [[Manual:DIL_Manual/loadlevel|loadlevel]] - Zone load level 

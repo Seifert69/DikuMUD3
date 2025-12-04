@@ -107,8 +107,8 @@ The state parameter should use one of the following GS_ defines:
 * Invalid state values may cause unexpected behavior
 
 == Related Functions/Fields ==
-* [[extract_unit]]
-* [[descriptor_close]]
+* [[Manual:DIL_Manual/extract_unit|extract_unit]]
+* [[Manual:DIL_Manual/descriptor_close|descriptor_close]]
 
 == See Also ==
-* [[UNIT_ST_PC]]
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]]

@@ -62,16 +62,16 @@ Returns an integer representing the index to the interrupt handling the on_activ
 * Ensure proper parentheses usage in complex boolean expressions to avoid evaluation order issues
 
 == Related Functions/Fields ==
-* [[interrupt]] - General interrupt system for specific message types
-* [[clear]] - Removes interrupts by index
-* [[pause]] - Waits for game pulses
-* [[wait]] - Waits for specific conditions
-* [[self.position]] - Unit position field commonly used in activation conditions
-* [[self.hp]] - Character health field for injury checks
-* [[mudhour]] - Current game hour for time-based conditions
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system for specific message types
+* [[Manual:DIL_Manual/clear|clear]] - Removes interrupts by index
+* [[Manual:DIL_Manual/pause|pause]] - Waits for game pulses
+* [[Manual:DIL_Manual/wait|wait]] - Waits for specific conditions
+* [[Manual:DIL_Manual/self.position|self.position]] - Unit position field commonly used in activation conditions
+* [[Manual:DIL_Manual/self.hp|self.hp]] - Character health field for injury checks
+* [[Manual:DIL_Manual/mudhour|mudhour]] - Current game hour for time-based conditions
 
 == See Also ==
-* [[interrupt]] - General interrupt system overview
-* [[on]] - Value-based interrupt handling
-* [[position]] - Unit position constants and values
-* [[SFB_ACTIVATE]] - Internal flag for activation interrupts 
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system overview
+* [[Manual:DIL_Manual/on|on]] - Value-based interrupt handling
+* [[Manual:DIL_Manual/position|position]] - Unit position constants and values
+* [[Manual:DIL_Manual/SFB_ACTIVATE|SFB_ACTIVATE]] - Internal flag for activation interrupts 

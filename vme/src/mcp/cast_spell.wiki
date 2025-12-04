@@ -118,10 +118,10 @@ The function performs validation:
 * '''Caster validation''' - Ensures caster is a valid unit
 
 == Related Functions ==
-* [[spellinfo]] - For getting detailed information about spells
-* [[SPL_*]] - Spell index constants
-* [[attack_spell]] - For offensive spell casting (higher-level function)
+* [[Manual:DIL_Manual/spellinfo|spellinfo]] - For getting detailed information about spells
+* [[Manual:DIL_Manual/SPL_*|SPL_*]] - Spell index constants
+* [[Manual:DIL_Manual/attack_spell|attack_spell]] - For offensive spell casting (higher-level function)
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[spell system]] - Magic and spell casting system
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/spell system|spell system]] - Magic and spell casting system

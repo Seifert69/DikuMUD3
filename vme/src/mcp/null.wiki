@@ -44,14 +44,14 @@ When working with functions that return pointers, always check for '''null''' be
  }
 
 == Related Functions/Fields ==
-* [[findunit]] - Returns null if unit not found
-* [[findroom]] - Returns null if room not found
-* [[restore]] - Returns null if restore fails
-* [[load]] - Returns null if load fails
-* [[act]] - Often uses null as optional medium parameter
+* [[Manual:DIL_Manual/findunit|findunit]] - Returns null if unit not found
+* [[Manual:DIL_Manual/findroom|findroom]] - Returns null if room not found
+* [[Manual:DIL_Manual/restore|restore]] - Returns null if restore fails
+* [[Manual:DIL_Manual/load|load]] - Returns null if load fails
+* [[Manual:DIL_Manual/act|act]] - Often uses null as optional medium parameter
 
 == See Also ==
-* [[unitptr]]
-* [[extraptr]]
-* [[cmdptr]]
-* [[if]] - Can test for null values in conditions 
+* [[Manual:DIL_Manual/unitptr|unitptr]]
+* [[Manual:DIL_Manual/extraptr|extraptr]]
+* [[Manual:DIL_Manual/cmdptr|cmdptr]]
+* [[Manual:DIL_Manual/if|if]] - Can test for null values in conditions 

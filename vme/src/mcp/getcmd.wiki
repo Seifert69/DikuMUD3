@@ -46,8 +46,8 @@ The function is useful for:
 * Returns fail if the input string is null
 
 == Related Functions/Fields ==
-* [[cmdptr]] - Command pointer type and fields
-* [[command]] - Command matching function
-* [[chead]] - Get first command in list
+* [[Manual:DIL_Manual/cmdptr|cmdptr]] - Command pointer type and fields
+* [[Manual:DIL_Manual/command|command]] - Command matching function
+* [[Manual:DIL_Manual/chead|chead]] - Get first command in list
 
 == See Also ==

@@ -56,8 +56,8 @@ This field is available on the following unit types:
  } dilend
 
 == Related Functions/Fields ==
-* [[beginedit]] - Put a player into editing mode
-* [[killedit]] - Stop editing before completion
+* [[Manual:DIL_Manual/beginedit|beginedit]] - Put a player into editing mode
+* [[Manual:DIL_Manual/killedit|killedit]] - Stop editing before completion
 
 == See Also ==
-* [[unit_st_pc]] - Player character fields
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character fields

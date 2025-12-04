@@ -109,18 +109,18 @@ Stringlists are defined using curly braces with elements separated by commas, si
 * Ensure proper initialization of stringlists before use
 
 == Related Functions/Fields ==
-* [[addstring]] - Add strings to a stringlist
-* [[substring]] - Extract substrings from stringlist elements
-* [[in]] - Check if string exists in stringlist
-* [[length]] - Get number of elements in stringlist
-* [[split]] - Split strings into stringlist
-* [[stringlist]] - String list data type
-* [[string]] - String data type for individual elements
+* [[Manual:DIL_Manual/addstring|addstring]] - Add strings to a stringlist
+* [[Manual:DIL_Manual/substring|substring]] - Extract substrings from stringlist elements
+* [[Manual:DIL_Manual/in|in]] - Check if string exists in stringlist
+* [[Manual:DIL_Manual/length|length]] - Get number of elements in stringlist
+* [[Manual:DIL_Manual/split|split]] - Split strings into stringlist
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list data type
+* [[Manual:DIL_Manual/string|string]] - String data type for individual elements
 
 == See Also ==
-* [[string]] - String data type documentation
-* [[integer]] - Integer data type documentation
-* [[stringlist]] - String list data type documentation
-* [[substring]] - Substring extraction documentation
-* [[addstring]] - String modification documentation
-* [[in]] - String existence checking documentation
+* [[Manual:DIL_Manual/string|string]] - String data type documentation
+* [[Manual:DIL_Manual/integer|integer]] - Integer data type documentation
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list data type documentation
+* [[Manual:DIL_Manual/substring|substring]] - Substring extraction documentation
+* [[Manual:DIL_Manual/addstring|addstring]] - String modification documentation
+* [[Manual:DIL_Manual/in|in]] - String existence checking documentation

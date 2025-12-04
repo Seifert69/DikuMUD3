@@ -44,8 +44,8 @@ The function is currently marked as unused in the codebase, suggesting it may be
 * Returns the processed color string on success
 
 == Related Functions/Fields ==
-* [[addcolor]] - Add color to player's personal color list
-* [[delcolor]] - Delete color from player's personal color list  
-* [[changecolor]] - Change color in player's personal color list
+* [[Manual:DIL_Manual/addcolor|addcolor]] - Add color to player's personal color list
+* [[Manual:DIL_Manual/delcolor|delcolor]] - Delete color from player's personal color list  
+* [[Manual:DIL_Manual/changecolor|changecolor]] - Change color in player's personal color list
 
 == See Also ==

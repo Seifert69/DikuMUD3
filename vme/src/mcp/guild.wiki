@@ -53,9 +53,9 @@ This field is available on the following unit types:
 * Always verify the unit is a player character before accessing this field
 
 == Related Functions/Fields ==
-* [[skills]] - Player skills array
-* [[ability_points]] - Player ability points
-* [[skill_points]] - Player skill points
+* [[Manual:DIL_Manual/skills|skills]] - Player skills array
+* [[Manual:DIL_Manual/ability_points|ability_points]] - Player ability points
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Player skill points
 
 == See Also ==
-* [[unit_st_pc]] - Player character specific fields
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character specific fields

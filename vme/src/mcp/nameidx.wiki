@@ -124,8 +124,8 @@ This field is available on the following unit types:
 * The full unit identifier is composed of: nameidx@zoneidx
 * Used for database operations and unit referencing
 * Common for identifying specific instances of units within zones
-* Essential for [[load]] function and database operations
-* Different from [[name]] field which returns the display name
+* Essential for [[Manual:DIL_Manual/load|load]] function and database operations
+* Different from [[Manual:DIL_Manual/name|name]] field which returns the display name
 * The nameidx is typically the filename or database identifier without zone prefix
 
 == Error Handling ==
@@ -134,15 +134,15 @@ This field is available on the following unit types:
 * Always validate unit before accessing nameidx field
 
 == Related Functions/Fields ==
-* [[name]] - Primary display name of the unit
-* [[zoneidx]] - Zone identifier portion of unit reference
-* [[symname]] - Symbolic name of the unit
-* [[load]] - Load unit by nameidx@zoneidx reference
-* [[findunit]] - Find unit by name search
-* [[findsymbolic]] - Find unit by symbolic name
+* [[Manual:DIL_Manual/name|name]] - Primary display name of the unit
+* [[Manual:DIL_Manual/zoneidx|zoneidx]] - Zone identifier portion of unit reference
+* [[Manual:DIL_Manual/symname|symname]] - Symbolic name of the unit
+* [[Manual:DIL_Manual/load|load]] - Load unit by nameidx@zoneidx reference
+* [[Manual:DIL_Manual/findunit|findunit]] - Find unit by name search
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Find unit by symbolic name
 
 == See Also ==
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
-* String functions: [[substring]], [[length]]
-* Database functions: [[store]], [[restore]], [[delunit]]
+* String functions: [[Manual:DIL_Manual/substring|substring]], [[Manual:DIL_Manual/length|length]]
+* Database functions: [[Manual:DIL_Manual/store|store]], [[Manual:DIL_Manual/restore|restore]], [[Manual:DIL_Manual/delunit|delunit]]
 * Reference format: nameidx@zoneidx (standard unit identification) 

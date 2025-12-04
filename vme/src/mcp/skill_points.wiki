@@ -169,7 +169,7 @@ This field is available on the following unit types:
 * Only available on player characters (UNIT_ST_PC)
 * Skill points are typically earned through experience gain
 * Points are spent on learning new skills or improving existing ones
-* The field works with [[ability_points]] for total character development points
+* The field works with [[Manual:DIL_Manual/ability_points|ability_points]] for total character development points
 * Skill points are separate from ability points in most game systems
 * The field is commonly used in character creation, training, and advancement systems
 * Point values are typically non-negative integers
@@ -188,16 +188,16 @@ Common error scenarios:
 * Using the field for non-player characters
 
 == Related Functions/Fields ==
-* [[ability_points]] - Field to get unused ability points
-* [[skill_costs]] - Field to get the cost of skills
-* [[skill_levels]] - Field to get the current level of skills
-* [[exp]] - Field to get current experience points
-* [[exptol]] - Field to get experience needed for next level
-* [[practice]] - Command to train skills using points
+* [[Manual:DIL_Manual/ability_points|ability_points]] - Field to get unused ability points
+* [[Manual:DIL_Manual/skill_costs|skill_costs]] - Field to get the cost of skills
+* [[Manual:DIL_Manual/skill_levels|skill_levels]] - Field to get the current level of skills
+* [[Manual:DIL_Manual/exp|exp]] - Field to get current experience points
+* [[Manual:DIL_Manual/exptol|exptol]] - Field to get experience needed for next level
+* [[Manual:DIL_Manual/practice|practice]] - Command to train skills using points
 
 == See Also ==
-* [[Character advancement]] - Information about skill progression systems
-* [[Experience system]] - Experience point and skill point mechanics
-* [[Training systems]] - Skill training and improvement procedures
+* [[Manual:DIL_Manual/Character advancement|Character advancement]] - Information about skill progression systems
+* [[Manual:DIL_Manual/Experience system|Experience system]] - Experience point and skill point mechanics
+* [[Manual:DIL_Manual/Training systems|Training systems]] - Skill training and improvement procedures
 
-* [[Character creation]] - Information about creating characters with skills
+* [[Manual:DIL_Manual/Character creation|Character creation]] - Information about creating characters with skills

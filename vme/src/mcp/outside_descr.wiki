@@ -81,16 +81,16 @@ Always verify that unit pointer is valid before accessing outside_descr:
  }
 
 == Related Functions/Fields ==
-* [[inside_descr]] - Description seen from inside
-* [[title]] - Unit title field
-* [[names]] - Unit names list
-* [[extra]] - Extra descriptions
-* [[description]] - General description field
+* [[Manual:DIL_Manual/inside_descr|inside_descr]] - Description seen from inside
+* [[Manual:DIL_Manual/title|title]] - Unit title field
+* [[Manual:DIL_Manual/names|names]] - Unit names list
+* [[Manual:DIL_Manual/extra|extra]] - Extra descriptions
+* [[Manual:DIL_Manual/description|description]] - General description field
 
 == See Also ==
-* [[unitptr]] - General unit pointer documentation
-* [[inside_descr]] - Internal description field
-* [[title]] - Unit title field
-* [[extra]] - Extra description system
-* [[sact]] - String action construction
-* [[act]] - Action function for displaying descriptions
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/inside_descr|inside_descr]] - Internal description field
+* [[Manual:DIL_Manual/title|title]] - Unit title field
+* [[Manual:DIL_Manual/extra|extra]] - Extra description system
+* [[Manual:DIL_Manual/sact|sact]] - String action construction
+* [[Manual:DIL_Manual/act|act]] - Action function for displaying descriptions

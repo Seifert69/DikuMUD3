@@ -62,9 +62,9 @@ code
 * Always check the returned zoneptr before use
 
 == Related Functions/Fields ==
-* [[zoneptr]] - Zone pointer type and fields
-* [[zhead()]] - Get the first zone in the global list
-* [[zonereset()]] - Reset a zone
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and fields
+* [[Manual:DIL_Manual/zhead()|zhead()]] - Get the first zone in the global list
+* [[Manual:DIL_Manual/zonereset()|zonereset()]] - Reset a zone
 
 == See Also ==
 * Zone system documentation

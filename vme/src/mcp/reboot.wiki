@@ -95,7 +95,7 @@ code
 * The function immediately terminates the current DIL program
 * All players will be disconnected during the reboot process
 * The server will restart automatically after reboot
-* Use [[quit]] to terminate only the current DIL program without rebooting the server
+* Use [[Manual:DIL_Manual/quit|quit]] to terminate only the current DIL program without rebooting the server
 
 == Error Handling ==
 The '''reboot''' function includes security checks and error handling:
@@ -108,10 +108,10 @@ The '''reboot''' function includes security checks and error handling:
 * If the exit_code parameter is not an integer, a type error will be generated
 
 == Related Functions/Fields ==
-* [[quit]] - Terminates the current DIL program without rebooting the server
-* [[heartbeat]] - Controls DIL program execution timing for countdown sequences
-* [[wait]] - Pauses DIL execution for specified conditions
-* [[realtime]] - Provides current system time for scheduling
+* [[Manual:DIL_Manual/quit|quit]] - Terminates the current DIL program without rebooting the server
+* [[Manual:DIL_Manual/heartbeat|heartbeat]] - Controls DIL program execution timing for countdown sequences
+* [[Manual:DIL_Manual/wait|wait]] - Pauses DIL execution for specified conditions
+* [[Manual:DIL_Manual/realtime|realtime]] - Provides current system time for scheduling
 
 == See Also ==
 * Zone privilege management

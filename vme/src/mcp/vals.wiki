@@ -71,8 +71,8 @@ This field is available on the following unit types:
  } dilend
 
 == Usage Notes ==
-* The '''vals''' field is parallel to the [[#eptr|names]] field - they should have corresponding indices
-* When accessing by index, ensure the index is within bounds using the [[#length|length()]] function
+* The '''vals''' field is parallel to the [[Manual:DIL_Manual/#eptr|names]] field - they should have corresponding indices
+* When accessing by index, ensure the index is within bounds using the [[Manual:DIL_Manual/#length|length()]] function
 * The integerlist is saved with the unit if the extra description is on a savable unit
 * If the extra description has no values, the field returns NULL
 
@@ -82,13 +82,13 @@ This field is available on the following unit types:
 * The field automatically handles memory management for the integerlist
 
 == Related Functions/Fields ==
-* [[#eptr|extraptr.names]] - Corresponding stringlist for names
-* [[#length|length()]] - Get the number of elements in the vals list
-* [[#insert|insert()]] - Insert values into the integerlist
-* [[#remove|remove()]] - Remove values from the integerlist
+* [[Manual:DIL_Manual/#eptr|extraptr.names]] - Corresponding stringlist for names
+* [[Manual:DIL_Manual/#length|length()]] - Get the number of elements in the vals list
+* [[Manual:DIL_Manual/#insert|insert()]] - Insert values into the integerlist
+* [[Manual:DIL_Manual/#remove|remove()]] - Remove values from the integerlist
 
 == See Also ==
-* [[#eptr|extraptr]] - Extra description pointer type
-* [[#intlist|intlist]] - Integer list type documentation
+* [[Manual:DIL_Manual/#eptr|extraptr]] - Extra description pointer type
+* [[Manual:DIL_Manual/#intlist|intlist]] - Integer list type documentation
 
-* [[#strl|stringlist]] - String list type documentation
+* [[Manual:DIL_Manual/#strl|stringlist]] - String list type documentation

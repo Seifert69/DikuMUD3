@@ -73,10 +73,10 @@ This field is available on the following unit types:
 * Useful for group management and follower tracking systems
 
 == Related Functions/Fields ==
-* [[follower]]
-* [[follow]]
-* [[master]]
-* [[getfollower]]
+* [[Manual:DIL_Manual/follower|follower]]
+* [[Manual:DIL_Manual/follow|follow]]
+* [[Manual:DIL_Manual/master|master]]
+* [[Manual:DIL_Manual/getfollower|getfollower]]
 
 == See Also ==
-* [[unitptr]]
+* [[Manual:DIL_Manual/unitptr|unitptr]]

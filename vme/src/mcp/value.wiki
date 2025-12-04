@@ -4,7 +4,7 @@
 The '''value''' field provides indexed access to an object's value array, which contains object-specific numeric data.
 
 == Description ==
-The '''value''' field is an array of 5 integers (indices 0-4) that stores object-specific data. The meaning and usage of each value index varies depending on the object's [[#uobj|objecttype]]. This field allows direct access to modify or read object properties such as weapon damage, armor protection, food nutrition, spell power, and other type-specific attributes.
+The '''value''' field is an array of 5 integers (indices 0-4) that stores object-specific data. The meaning and usage of each value index varies depending on the object's [[Manual:DIL_Manual/#uobj|objecttype]]. This field allows direct access to modify or read object properties such as weapon damage, armor protection, food nutrition, spell power, and other type-specific attributes.
 
 == Field Access ==
 {| class="wikitable"
@@ -80,7 +80,7 @@ This field is available on the following unit types:
 
 == Usage Notes ==
 * Valid indices are 0 through 4 (inclusive)
-* The meaning of each index depends on the object's [[#uobj|objecttype]]
+* The meaning of each index depends on the object's [[Manual:DIL_Manual/#uobj|objecttype]]
 * Common uses include:
 ** Weapons: value[0] = weapon type, value[1] = damage, value[2] = bonus damage
 ** Armor: value[0] = armor type, value[1] = protection, value[2] = enchantment
@@ -88,7 +88,7 @@ This field is available on the following unit types:
 ** Containers: value[0] = closable flag, value[1] = closed flag, value[2] = pick-proof flag
 ** Lights: value[0] = hours remaining, value[1] = illumination level
 ** Spell items: value[0] = spell power, value[1] = spell number, value[2] = charges
-* Always check the object's [[#uobj|objecttype]] before interpreting values
+* Always check the object's [[Manual:DIL_Manual/#uobj|objecttype]] before interpreting values
 * Values are saved with the object if it's a savable item
 
 == Error Handling ==
@@ -98,12 +98,12 @@ This field is available on the following unit types:
 * Invalid object types may return unexpected values or cause errors
 
 == Related Functions/Fields ==
-* [[#uobj|objecttype]] - Determines how value array indices are interpreted
-* [[#uobj|objectflags]] - Additional object properties and flags
-* [[#uobj|cost]] - Object's monetary value
-* [[#uobj|rent]] - Object's rental cost
+* [[Manual:DIL_Manual/#uobj|objecttype]] - Determines how value array indices are interpreted
+* [[Manual:DIL_Manual/#uobj|objectflags]] - Additional object properties and flags
+* [[Manual:DIL_Manual/#uobj|cost]] - Object's monetary value
+* [[Manual:DIL_Manual/#uobj|rent]] - Object's rental cost
 
 == See Also ==
-* [[#uobj|UNIT_ST_OBJ]] - Object unit type documentation
-* [[#getaffects|getaffects()]] - Get object affects and properties
-* [[#objectflags|objectflags]] - Object flag manipulation
+* [[Manual:DIL_Manual/#uobj|UNIT_ST_OBJ]] - Object unit type documentation
+* [[Manual:DIL_Manual/#getaffects|getaffects()]] - Get object affects and properties
+* [[Manual:DIL_Manual/#objectflags|objectflags]] - Object flag manipulation

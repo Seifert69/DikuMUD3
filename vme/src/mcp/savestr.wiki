@@ -118,7 +118,7 @@ The function returns an integer indicating the operation result:
 * Zone access level restrictions apply - zones with access level > 10 cannot use savestr
 * Empty filename or content parameters cause function failure
 * Disk operations are relatively slow - minimize file sizes and access frequency
-* Use with [[loadstr]] for complete persistent data storage solutions
+* Use with [[Manual:DIL_Manual/loadstr|loadstr]] for complete persistent data storage solutions
 
 == Error Handling ==
 * Returns 0 or negative values for failed operations
@@ -136,12 +136,12 @@ The function returns an integer indicating the operation result:
 * Security violations are logged and terminate the DIL program
 
 == Related Functions/Fields ==
-* [[loadstr]] - Function to load strings saved with savestr
-* [[delstr]] - Function to delete files created with savestr
-* [[log]] - Function for server-side logging
-* [[realtime]] - Function for getting current timestamp
+* [[Manual:DIL_Manual/loadstr|loadstr]] - Function to load strings saved with savestr
+* [[Manual:DIL_Manual/delstr|delstr]] - Function to delete files created with savestr
+* [[Manual:DIL_Manual/log|log]] - Function for server-side logging
+* [[Manual:DIL_Manual/realtime|realtime]] - Function for getting current timestamp
 
 == See Also ==
-* [[loadstr]] - Loading string data from files
-* [[delstr]] - Deleting string files
+* [[Manual:DIL_Manual/loadstr|loadstr]] - Loading string data from files
+* [[Manual:DIL_Manual/delstr|delstr]] - Deleting string files
 * File I/O patterns for persistent data storage

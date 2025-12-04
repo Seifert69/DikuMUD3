@@ -86,7 +86,7 @@ This field is available on the following unit types:
 * The '''.max_mana''' field is read-only and cannot be modified directly
 * This field represents the theoretical maximum mana a character can have
 * Maximum mana is typically determined by character level, class, race, intelligence, and other attributes
-* This field is commonly used in conjunction with [[mana]] to calculate percentages and ratios
+* This field is commonly used in conjunction with [[Manual:DIL_Manual/mana|mana]] to calculate percentages and ratios
 * The value is used as the upper bound when restoring mana after death, rest, or magical effects
 * Mana systems are often used for spell casting costs, magical item usage, and special abilities
 
@@ -96,12 +96,12 @@ This field is available on the following unit types:
 * The field itself never fails - it always returns an integer value
 
 == Related Functions/Fields ==
-* [[mana]] - Gets/sets the current mana points
-* [[max_hp]] - Gets the maximum hit points
-* [[max_endurance]] - Gets the maximum endurance points
-* [[cast_spell]] - Function that typically consumes mana
-* [[experience]] - Sets experience points (which can affect max_mana indirectly)
+* [[Manual:DIL_Manual/mana|mana]] - Gets/sets the current mana points
+* [[Manual:DIL_Manual/max_hp|max_hp]] - Gets the maximum hit points
+* [[Manual:DIL_Manual/max_endurance|max_endurance]] - Gets the maximum endurance points
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - Function that typically consumes mana
+* [[Manual:DIL_Manual/experience|experience]] - Sets experience points (which can affect max_mana indirectly)
 
 == See Also ==
-* [[unitptr]] - Unit pointer type documentation
-* [[unit_st_pc and unit_st_npc]] - Character-specific fields documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]] - Character-specific fields documentation

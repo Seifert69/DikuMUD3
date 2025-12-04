@@ -1,10 +1,10 @@
 = restore =
 function: unitptr '''restore'''(filename : string, u : unitptr);
 
-The '''restore''' function loads a copy of a unit or units that were previously saved with the [[store]] function from a file.
+The '''restore''' function loads a copy of a unit or units that were previously saved with the [[Manual:DIL_Manual/store|store]] function from a file.
 
 == Description ==
-The '''restore''' function retrieves units that were previously saved to disk using the [[store]] function. The function can either restore units into a specified container unit or return a pointer to the restored unit if no container is provided. The restored units are placed in the zone's DIL file directory under a "units" subdirectory.
+The '''restore''' function retrieves units that were previously saved to disk using the [[Manual:DIL_Manual/store|store]] function. The function can either restore units into a specified container unit or return a pointer to the restored unit if no container is provided. The restored units are placed in the zone's DIL file directory under a "units" subdirectory.
 
 == PARAMETERS ==
 {| class="wikitable"
@@ -82,10 +82,10 @@ dilend
 * Logs attempts to restore files with illegal names
 
 == Related Functions/Fields ==
-* [[store]] - Function to save units to a file
-* [[delunit]] - Function to delete unit files
-* [[load]] - Function to load units from the main database
+* [[Manual:DIL_Manual/store|store]] - Function to save units to a file
+* [[Manual:DIL_Manual/delunit|delunit]] - Function to delete unit files
+* [[Manual:DIL_Manual/load|load]] - Function to load units from the main database
 
 == See Also ==
-* [[link]] - Function to link units into containers
-* [[sendtext]] - Function to send text to players
+* [[Manual:DIL_Manual/link|link]] - Function to link units into containers
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Function to send text to players

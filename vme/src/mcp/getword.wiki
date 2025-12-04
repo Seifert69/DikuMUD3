@@ -71,10 +71,10 @@ The getword() function extracts the first word from a string and removes it from
 * Always check return value before using in string operations
 
 == Related Functions/Fields ==
-* [[getwords]] - Get all words as a stringlist
-* [[argument]] - Command argument string
-* [[left]] - Get left portion of string
-* [[right]] - Get right portion of string
+* [[Manual:DIL_Manual/getwords|getwords]] - Get all words as a stringlist
+* [[Manual:DIL_Manual/argument|argument]] - Command argument string
+* [[Manual:DIL_Manual/left|left]] - Get left portion of string
+* [[Manual:DIL_Manual/right|right]] - Get right portion of string
 
 == See Also ==
 * String parsing and manipulation functions

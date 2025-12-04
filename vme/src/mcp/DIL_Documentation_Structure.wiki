@@ -5,83 +5,83 @@
 === 1.1 Data Types ===
 
 ==== Basic Types ====
-; integer : Basic numeric data type
+; [[Manual:DIL_Manual/integer|integer]] : Basic numeric data type
 : Used for mathematical operations and counters
-; string : Text data type
+; [[Manual:DIL_Manual/string|string]] : Text data type
 : Used for messages, names, and descriptions
 
 ==== Complex Types ====
-; unitptr : Unit pointer data type
+; [[Manual:DIL_Manual/unitptr|unitptr]] : Unit pointer data type
 : References to game units (characters, objects, rooms)
-; integerlist : Integer list data type
+; [[Manual:DIL_Manual/integerlist|integerlist]] : Integer list data type
 : Collections of integer values
-; stringlist : String list data type
+; [[Manual:DIL_Manual/stringlist|stringlist]] : String list data type
 : Collections of string values
 
 ==== Type Conversion Functions ====
-; atoi : Convert string to integer
+; [[Manual:DIL_Manual/atoi|atoi]] : Convert [[Manual:DIL_Manual/string|string]] to [[Manual:DIL_Manual/integer|integer]]
 : Parses numeric values from text
-; itoa : Convert integer to string
+; [[Manual:DIL_Manual/itoa|itoa]] : Convert [[Manual:DIL_Manual/integer|integer]] to [[Manual:DIL_Manual/string|string]]
 : Formats numbers as text
 
 === 1.2 Variables and Constants ===
 
 ==== Built-in Variables ====
-; self : unitptr
+; [[Manual:DIL_Manual|self]] : [[Manual:DIL_Manual/unitptr|unitptr]]
 : Current unit executing the DIL program
-; activator : unitptr
+; [[Manual:DIL_Manual|activator]] : [[Manual:DIL_Manual/unitptr|unitptr]]
 : Unit that activated the current DIL program
-; argument : string
+; [[Manual:DIL_Manual|argument]] : [[Manual:DIL_Manual/string|string]]
 : Arguments provided with the command
-; command : string
+; [[Manual:DIL_Manual|command]] : [[Manual:DIL_Manual/string|string]]
 : The command that was executed
-; cmdstr : string
+; [[Manual:DIL_Manual|cmdstr]] : [[Manual:DIL_Manual/string|string]]
 : Full command string
-; null : null value
+; [[Manual:DIL_Manual|null]] : null value
 : Represents null/empty value
 
 ==== Unit Type Constants ====
-; UNIT_ST_PC : Player character unit type
+; [[Manual:DIL_Manual|UNIT_ST_PC]] : Player character unit type
 : Identifies player-controlled characters
-; UNIT_ST_NPC : Non-player character unit type
+; [[Manual:DIL_Manual|UNIT_ST_NPC]] : Non-player character unit type
 : Identifies computer-controlled characters
-; UNIT_ST_OBJ : Object unit type
+; [[Manual:DIL_Manual|UNIT_ST_OBJ]] : Object unit type
 : Identifies items and objects
-; UNIT_ST_ROOM : Room unit type
+; [[Manual:DIL_Manual|UNIT_ST_ROOM]] : Room unit type
 : Identifies locations and areas
 
 ==== Game Constants ====
-; POSITION_* : Position constants
+; [[Manual:DIL_Manual|POSITION_*]] : Position constants
 : Character positions (standing, sitting, fighting, etc.)
-; CHAR_* : Character flag constants
+; [[Manual:DIL_Manual|CHAR_*]] : Character flag constants
 : Character states and affects
-; OBJ_* : Object flag constants
+; [[Manual:DIL_Manual|OBJ_*]] : Object flag constants
 : Object properties and states
-; ROOM_* : Room flag constants
+; [[Manual:DIL_Manual|ROOM_*]] : Room flag constants
 : Room properties and characteristics
 
 === 1.3 Control Structures ===
 
 ==== Conditional ====
-; if : Conditional statement
+; [[Manual:DIL_Manual/if|if]] : Conditional statement
 : Executes code based on boolean conditions
-; switch : Multi-way conditional
+; [[Manual:DIL_Manual/switch|switch]] : Multi-way conditional
 : Selects between multiple code paths
 
 ==== Loops ====
-; while : Loop construct
+; [[Manual:DIL_Manual/while|while]] : Loop construct
 : Repeats code while condition is true
-; goto : Unconditional jump
+; [[Manual:DIL_Manual/goto|goto]] : Unconditional jump
 : Transfers control to labeled statements
-; break : Loop control
+; [[Manual:DIL_Manual/break|break]] : Loop control
 : Exit from loop
-; continue : Loop control
+; [[Manual:DIL_Manual/continue|continue]] : Loop control
 : Continue to next iteration
 
 ==== Functions ====
-; return : Return from function
+; [[Manual:DIL_Manual/return|return]] : Return from function
 : Exits current function with optional value
-; quit : Terminate DIL program
+; [[Manual:DIL_Manual/quit|quit]] : Terminate DIL program
 : Ends program execution immediately
 
 === 1.4 Operators and Expressions ===
@@ -109,19 +109,19 @@
 : Numeric comparison
 
 ==== Logical Operators ====
-; and : Logical AND
+; [[Manual:DIL_Manual/and|and]] : Logical AND
 : Boolean conjunction
-; or : Logical OR
+; [[Manual:DIL_Manual/or|or]] : Logical OR
 : Boolean disjunction
-; not : Logical NOT
+; [[Manual:DIL_Manual/not|not]] : Logical NOT
 : Boolean negation
 
 ==== Bit Operations ====
-; set : Set bits
+; [[Manual:DIL_Manual/set|set]] : Set bits
 : Turn on bit flags
-; unset : Clear bits
+; [[Manual:DIL_Manual/unset|unset]] : Clear bits
 : Turn off bit flags
-; isset : Test bits
+; [[Manual:DIL_Manual/isset|isset]] : Test bits
 : Check bit flags
 
 == 2. Unit System ==
@@ -129,437 +129,437 @@
 === 2.1 Unit Types ===
 
 ==== Player Characters (UNIT_ST_PC) ====
-; birth : Creation timestamp
+; [[Manual:DIL_Manual/birth|birth]] : Creation timestamp
 : When the character was created
-; skills : Skill proficiencies array
+; [[Manual:DIL_Manual/skills|skills]] : Skill proficiencies array
 : Character skill values
-; skill_points : Available skill points
+; [[Manual:DIL_Manual/skill_points|skill_points]] : Available skill points
 : Points for skill advancement
-; pcflags : Player-specific flags
+; [[Manual:DIL_Manual/pcflags|pcflags]] : Player-specific flags
 : Player-only properties
-; acc_balance : Account balance
+; [[Manual:DIL_Manual/acc_balance|acc_balance]] : Account balance
 : Bank account funds
-; acc_total : Total assets
+; [[Manual:DIL_Manual/acc_total|acc_total]] : Total assets
 : Complete wealth
-; acc_modify : Modify account
+; [[Manual:DIL_Manual/acc_modify|acc_modify]] : Modify account
 : Account operations
-; playtime : Play time
+; [[Manual:DIL_Manual/playtime|playtime]] : Play time
 : Time spent playing
-; gamestate : Game state
+; [[Manual:DIL_Manual/gamestate|gamestate]] : Game state
 : Player game state
-; quests : Quest information
+; [[Manual:DIL_Manual/quests|quests]] : Quest information
 : Player quest data
-; notes : Notes
+; [[Manual:DIL_Manual/notes|notes]] : Notes
 : Player notes
-; lifespan : Lifespan
+; [[Manual:DIL_Manual/lifespan|lifespan]] : Lifespan
 : Character lifespan
-; reset_level : Reset level
+; [[Manual:DIL_Manual/reset_level|reset_level]] : Reset level
 : Character level reset
-; reset_race : Reset race
+; [[Manual:DIL_Manual/reset_race|reset_race]] : Reset race
 : Character race reset
-; reset_vlevel : Reset virtual level
+; [[Manual:DIL_Manual/reset_vlevel|reset_vlevel]] : Reset virtual level
 : Virtual level reset
 
 ==== Non-Player Characters (UNIT_ST_NPC) ====
-; npcflags : NPC-specific flags
+; [[Manual:DIL_Manual/npcflags|npcflags]] : NPC-specific flags
 : NPC behavior and properties
-; hometown : Home location
+; [[Manual:DIL_Manual/hometown|hometown]] : Home location
 : NPC's origin location
-; profession : Profession
+; [[Manual:DIL_Manual/profession|profession]] : Profession
 : NPC job/role
-; master : Master/leader
+; [[Manual:DIL_Manual/master|master]] : Master/leader
 : NPC leader
-; follower : Follower
+; [[Manual:DIL_Manual/follower|follower]] : Follower
 : NPC follower
-; followercount : Number of followers
+; [[Manual:DIL_Manual/followercount|followercount]] : Number of followers
 : Count of followers
-; getfollower : Get specific follower
+; [[Manual:DIL_Manual/getfollower|getfollower]] : Get specific follower
 : Get specific follower unit
-; follow : Follow relationship
+; [[Manual:DIL_Manual/follow|follow]] : Follow relationship
 : Following behavior
 
 ==== Objects (UNIT_ST_OBJ) ====
-; objectflags : Object properties
+; [[Manual:DIL_Manual/objectflags|objectflags]] : Object properties
 : Object state and characteristics
-; objecttype : Object classification
+; [[Manual:DIL_Manual/objecttype|objecttype]] : Object classification
 : Type of object (weapon, armor, container, etc.)
-; value : Monetary value
+; [[Manual:DIL_Manual/value|value]] : Monetary value
 : Object's worth in currency
-; cost : Item cost
+; [[Manual:DIL_Manual/cost|cost]] : Item cost
 : Purchase price
-; rent : Rental cost
+; [[Manual:DIL_Manual/rent|rent]] : Rental cost
 : Equipment rental fees
-; weight : Current weight
+; [[Manual:DIL_Manual/weight|weight]] : Current weight
 : Total weight including contents
-; baseweight : Base weight
+; [[Manual:DIL_Manual/baseweight|baseweight]] : Base weight
 : Empty weight of object
-; capacity : Carrying capacity
+; [[Manual:DIL_Manual/capacity|capacity]] : Carrying capacity
 : Maximum weight capacity
-; manipulate : Manipulation flags
+; [[Manual:DIL_Manual/manipulate|manipulate]] : Manipulation flags
 : How object can be handled
-; key : Key value
+; [[Manual:DIL_Manual/key|key]] : Key value
 : Object key
-; idx : Index
+; [[Manual:DIL_Manual/idx|idx]] : Index
 : Object index
-; fits : Check if fits
+; [[Manual:DIL_Manual/fits|fits]] : Check if fits
 : Check if object fits
-; can_carry : Check if can carry
+; [[Manual:DIL_Manual/can_carry|can_carry]] : Check if can carry
 : Check carry capacity
-; illum : Illumination
+; [[Manual:DIL_Manual/illum|illum]] : Illumination
 : Object illumination
-; light : Light source
+; [[Manual:DIL_Manual/light|light]] : Light source
 : Object light output
-; fname : File name
+; [[Manual:DIL_Manual/fname|fname]] : File name
 : Object file name
-; names : Object names
+; [[Manual:DIL_Manual/names|names]] : Object names
 : Object name list
-; extra : Extra descriptions
+; [[Manual:DIL_Manual/extra|extra]] : Extra descriptions
 : Additional descriptions
-; extraptr : Extra description pointer
+; [[Manual:DIL_Manual/extraptr|extraptr]] : Extra description pointer
 : Pointer to extra descriptions
 
 ==== Rooms (UNIT_ST_ROOM) ====
-; roomflags : Room properties
+; [[Manual:DIL_Manual/roomflags|roomflags]] : Room properties
 : Room characteristics and states
-; zoneidx : Zone index
+; [[Manual:DIL_Manual/zoneidx|zoneidx]] : Zone index
 : Which zone the room belongs to
-; mapx : Map X coordinate
+; [[Manual:DIL_Manual/mapx|mapx]] : Map X coordinate
 : Horizontal position
-; mapy : Map Y coordinate
+; [[Manual:DIL_Manual/mapy|mapy]] : Map Y coordinate
 : Vertical position
-; bright : Brightness level
+; [[Manual:DIL_Manual/bright|bright]] : Brightness level
 : Light level in room
-; light : Light sources
+; [[Manual:DIL_Manual/light|light]] : Light sources
 : Available illumination
-; islight : Light check
+; [[Manual:DIL_Manual/islight|islight]] : Light check
 : Whether room is lit
-; movement : Movement type
+; [[Manual:DIL_Manual/movement|movement]] : Movement type
 : Room movement restrictions
-; exit_to : Exit destinations
+; [[Manual:DIL_Manual/exit_to|exit_to]] : Exit destinations
 : Where exits lead
-; exit_names : Exit names
+; [[Manual:DIL_Manual/exit_names|exit_names]] : Exit names
 : Exit identifiers
-; exit_info : Exit properties
+; [[Manual:DIL_Manual/exit_info|exit_info]] : Exit properties
 : Exit characteristics
-; exit_key : Exit key
+; [[Manual:DIL_Manual/exit_key|exit_key]] : Exit key
 : Key required for exit
-; exit_diff : Exit difficulty
+; [[Manual:DIL_Manual/exit_diff|exit_diff]] : Exit difficulty
 : Exit difficulty level
-; resetmode : Reset mode
+; [[Manual:DIL_Manual/resetmode|resetmode]] : Reset mode
 : Zone reset behavior
-; resettime : Reset time
+; [[Manual:DIL_Manual/resettime|resettime]] : Reset time
 : Reset schedule
-; lastroom : Last room
+; [[Manual:DIL_Manual/lastroom|lastroom]] : Last room
 : Previous room location
 
 === 2.2 Character Fields ===
 
 ==== Core Attributes ====
-; abilities : Ability scores array
+; [[Manual:DIL_Manual/abilities|abilities]] : Ability scores array
 : Character attributes (STR, DEX, CON, etc.)
-; ability_points : Available ability points
+; [[Manual:DIL_Manual/ability_points|ability_points]] : Available ability points
 : Points for abilities
-; ability_levels : Ability level requirements
+; [[Manual:DIL_Manual/ability_levels|ability_levels]] : Ability level requirements
 : Advancement requirements
-; ability_costs : Ability costs
+; [[Manual:DIL_Manual/ability_costs|ability_costs]] : Ability costs
 : Experience costs
-; level : Character level
+; [[Manual:DIL_Manual/level|level]] : Character level
 : Experience and power level
-; vlevel : Virtual level
+; [[Manual:DIL_Manual/vlevel|vlevel]] : Virtual level
 : Effective level
-; alignment : Moral alignment
+; [[Manual:DIL_Manual/alignment|alignment]] : Moral alignment
 : Good/evil alignment value
-; race : Racial type
+; [[Manual:DIL_Manual/race|race]] : Racial type
 : Character's race
-; sex : Gender
+; [[Manual:DIL_Manual/sex|sex]] : Gender
 : Character gender
-; height : Character height
+; [[Manual:DIL_Manual/height|height]] : Character height
 : Physical height
-; weight : Character weight
+; [[Manual:DIL_Manual/weight|weight]] : Character weight
 : Physical weight
-; speed : Movement speed
+; [[Manual:DIL_Manual/speed|speed]] : Movement speed
 : Movement speed value
 
 ==== Combat Attributes ====
-; position : Current position
+; [[Manual:DIL_Manual/position|position]] : Current position
 : Physical state (standing, fighting, etc.)
-; defaultpos : Default position
+; [[Manual:DIL_Manual/defaultpos|defaultpos]] : Default position
 : Default position state
-; position_update : Update character position
+; [[Manual:DIL_Manual/position_update|position_update]] : Update character position
 : Update position based on HP
-; attack_type : Unarmed attack type
+; [[Manual:DIL_Manual/attack_type|attack_type]] : Unarmed attack type
 : Natural combat style
-; fighting : Combat opponent
+; [[Manual:DIL_Manual/fighting|fighting]] : Combat opponent
 : Current combat target
-; opponent : Combat target
+; [[Manual:DIL_Manual/opponent|opponent]] : Combat target
 : Alternative opponent reference
-; getopponent : Get opponent
+; [[Manual:DIL_Manual/getopponent|getopponent]] : Get opponent
 : Get current opponent
-; opponentcount : Number of opponents
+; [[Manual:DIL_Manual/opponentcount|opponentcount]] : Number of opponents
 : Count of opponents
-; hp : Hit points
+; [[Manual:DIL_Manual/hp|hp]] : Hit points
 : Current health
-; max_hp : Maximum hit points
+; [[Manual:DIL_Manual/max_hp|max_hp]] : Maximum hit points
 : Health capacity
-; endurance : Endurance
+; [[Manual:DIL_Manual/endurance|endurance]] : Endurance
 : Current endurance
-; max_endurance : Maximum endurance
+; [[Manual:DIL_Manual/max_endurance|max_endurance]] : Maximum endurance
 : Endurance capacity
-; mana : Mana points
+; [[Manual:DIL_Manual/mana|mana]] : Mana points
 : Current mana
-; max_mana : Maximum mana
+; [[Manual:DIL_Manual/max_mana|max_mana]] : Maximum mana
 : Mana capacity
-; natural_armour : Natural armor
+; [[Manual:DIL_Manual/natural_armour|natural_armour]] : Natural armor
 : Built-in armor
-; defensive : Defense value
+; [[Manual:DIL_Manual/defensive|defensive]] : Defense value
 : Protection rating
-; offensive : Attack value
+; [[Manual:DIL_Manual/offensive|offensive]] : Attack value
 : Combat effectiveness
 
 ==== Skills & Spells ====
-; skills : Skill proficiencies
+; [[Manual:DIL_Manual/skills|skills]] : Skill proficiencies
 : Character skill values
-; skill_points : Available skill points
+; [[Manual:DIL_Manual/skill_points|skill_points]] : Available skill points
 : Points for advancement
-; skill_levels : Skill level requirements
+; [[Manual:DIL_Manual/skill_levels|skill_levels]] : Skill level requirements
 : Advancement thresholds
-; skill_costs : Skill costs
+; [[Manual:DIL_Manual/skill_costs|skill_costs]] : Skill costs
 : Training costs
-; skill_name : Get skill name
+; [[Manual:DIL_Manual/skill_name|skill_name]] : Get skill name
 : Get name from skill index
-; spells : Spell proficiencies
+; [[Manual:DIL_Manual/spells|spells]] : Spell proficiencies
 : Magical ability levels
-; spell_levels : Spell level requirements
+; [[Manual:DIL_Manual/spell_levels|spell_levels]] : Spell level requirements
 : Magical advancement
-; spell_costs : Spell costs
+; [[Manual:DIL_Manual/spell_costs|spell_costs]] : Spell costs
 : Magical training costs
-; spellindex : Spell index lookup
+; [[Manual:DIL_Manual/spellindex|spellindex]] : Spell index lookup
 : Find spell by index
-; spellinfo : Spell information
+; [[Manual:DIL_Manual/spellinfo|spellinfo]] : Spell information
 : Detailed spell data
-; weapons : Weapon proficiencies
+; [[Manual:DIL_Manual/weapons|weapons]] : Weapon proficiencies
 : Combat skill levels
-; weapon_levels : Weapon requirements
+; [[Manual:DIL_Manual/weapon_levels|weapon_levels]] : Weapon requirements
 : Weapon skill thresholds
-; weapon_costs : Weapon costs
+; [[Manual:DIL_Manual/weapon_costs|weapon_costs]] : Weapon costs
 : Weapon training costs
-; weapon_name : Weapon name
+; [[Manual:DIL_Manual/weapon_name|weapon_name]] : Weapon name
 : Get weapon type name
-; weapon_info : Weapon information
+; [[Manual:DIL_Manual/weapon_info|weapon_info]] : Weapon information
 : Detailed weapon data
 
 ==== Flags & States ====
-; charflags : Character flags
+; [[Manual:DIL_Manual/charflags|charflags]] : Character flags
 : States and affects
-; visible : Visibility
+; [[Manual:DIL_Manual/visible|visible]] : Visibility
 : Character visibility
-; isplayer : Check if player
+; [[Manual:DIL_Manual/isplayer|isplayer]] : Check if player
 : Player check
-; power : Power level
+; [[Manual:DIL_Manual/power|power]] : Power level
 : Character power
-; crimes : Criminal record
+; [[Manual:DIL_Manual/crimes|crimes]] : Criminal record
 : Criminal history
 
 ==== Economic ====
-; purse : Money container
+; [[Manual:DIL_Manual/purse|purse]] : Money container
 : Character's wealth
-; paycheck : Regular income
+; [[Manual:DIL_Manual/paycheck|paycheck]] : Regular income
 : Periodic earnings
-; transfermoney : Transfer currency
+; [[Manual:DIL_Manual/transfermoney|transfermoney]] : Transfer currency
 : Move money between characters
-; moneystring : Format money
+; [[Manual:DIL_Manual/moneystring|moneystring]] : Format money
 : Display currency properly
 
 ==== Social ====
-; hometown : Home location
+; [[Manual:DIL_Manual/hometown|hometown]] : Home location
 : Character's home
-; guild : Guild affiliation
+; [[Manual:DIL_Manual/guild|guild]] : Guild affiliation
 : Guild membership
-; master : Master/leader
+; [[Manual:DIL_Manual/master|master]] : Master/leader
 : Character's master
-; follower : Follower
+; [[Manual:DIL_Manual/follower|follower]] : Follower
 : Character followers
-; followercount : Number of followers
+; [[Manual:DIL_Manual/followercount|followercount]] : Number of followers
 : Count of followers
-; getfollower : Get specific follower
+; [[Manual:DIL_Manual/getfollower|getfollower]] : Get specific follower
 : Get follower unit
-; follow : Follow relationship
+; [[Manual:DIL_Manual/follow|follow]] : Follow relationship
 : Following behavior
 
 ==== Equipment ====
-; equipment : Equipment slots
+; [[Manual:DIL_Manual/equipment|equipment]] : Equipment slots
 : Worn items
-; equip : Equip item
+; [[Manual:DIL_Manual/equip|equip]] : Equip item
 : Wear/wield object
-; unequip : Remove equipment
+; [[Manual:DIL_Manual/unequip|unequip]] : Remove equipment
 : Take off item
-; addequip : Add equipment
+; [[Manual:DIL_Manual/addequip|addequip]] : Add equipment
 : Add equipment item
 
 === 2.3 Object Fields ===
 
 ==== Basic Properties ====
-; name : Object name
+; [[Manual:DIL_Manual/name|name]] : Object name
 : Short identifier
-; title : Object title
+; [[Manual:DIL_Manual/title|title]] : Object title
 : Descriptive name
-; descr : Description
+; [[Manual:DIL_Manual/descr|descr]] : Description
 : Detailed description
-; names : Object names
+; [[Manual:DIL_Manual/names|names]] : Object names
 : List of object names
-; extra : Extra descriptions
+; [[Manual:DIL_Manual/extra|extra]] : Extra descriptions
 : Additional descriptions
-; extraptr : Extra description pointer
+; [[Manual:DIL_Manual/extraptr|extraptr]] : Extra description pointer
 : Pointer to extra descriptions
-; fname : File name
+; [[Manual:DIL_Manual/fname|fname]] : File name
 : Object file name
 
 ==== Physical Properties ====
-; weight : Current weight
+; [[Manual:DIL_Manual/weight|weight]] : Current weight
 : Total weight including contents
-; baseweight : Base weight
+; [[Manual:DIL_Manual/baseweight|baseweight]] : Base weight
 : Empty weight of object
-; value : Monetary value
+; [[Manual:DIL_Manual/value|value]] : Monetary value
 : Object's worth
-; cost : Item cost
+; [[Manual:DIL_Manual/cost|cost]] : Item cost
 : Purchase price
-; rent : Rental cost
+; [[Manual:DIL_Manual/rent|rent]] : Rental cost
 : Equipment rental fees
 
 ==== Container Properties ====
-; capacity : Carrying capacity
+; [[Manual:DIL_Manual/capacity|capacity]] : Carrying capacity
 : Maximum weight capacity
-; manipulate : Manipulation flags
+; [[Manual:DIL_Manual/manipulate|manipulate]] : Manipulation flags
 : How object can be handled
-; key : Key value
+; [[Manual:DIL_Manual/key|key]] : Key value
 : Object key
-; idx : Index
+; [[Manual:DIL_Manual/idx|idx]] : Index
 : Object index
-; fits : Check if fits
+; [[Manual:DIL_Manual/fits|fits]] : Check if fits
 : Check if object fits
-; can_carry : Check if can carry
+; [[Manual:DIL_Manual/can_carry|can_carry]] : Check if can carry
 : Check carry capacity
 
 ==== Magical Properties ====
-; illum : Illumination
+; [[Manual:DIL_Manual/illum|illum]] : Illumination
 : Object illumination
-; light : Light source
+; [[Manual:DIL_Manual/light|light]] : Light source
 : Object light output
 
 ==== Type & Flags ====
-; objectflags : Object flags
+; [[Manual:DIL_Manual/objectflags|objectflags]] : Object flags
 : Object characteristics
-; objecttype : Object type
+; [[Manual:DIL_Manual/objecttype|objecttype]] : Object type
 : Object classification
 
 === 2.4 Room Fields ===
 
 ==== Basic Properties ====
-; name : Room name
+; [[Manual:DIL_Manual/name|name]] : Room name
 : Short identifier
-; title : Room title
+; [[Manual:DIL_Manual/title|title]] : Room title
 : Descriptive name
-; descr : Room description
+; [[Manual:DIL_Manual/descr|descr]] : Room description
 : Detailed description
 
 ==== Environmental ====
-; bright : Brightness level
+; [[Manual:DIL_Manual/bright|bright]] : Brightness level
 : Light level in room
-; light : Light sources
+; [[Manual:DIL_Manual/light|light]] : Light sources
 : Available illumination
-; islight : Light check
+; [[Manual:DIL_Manual/islight|islight]] : Light check
 : Whether room is lit
-; movement : Movement type
+; [[Manual:DIL_Manual/movement|movement]] : Movement type
 : Room movement restrictions
 
 ==== Exits ====
-; exit_to : Exit destinations
+; [[Manual:DIL_Manual/exit_to|exit_to]] : Exit destinations
 : Where exits lead
-; exit_names : Exit names
+; [[Manual:DIL_Manual/exit_names|exit_names]] : Exit names
 : Exit identifiers
-; exit_info : Exit properties
+; [[Manual:DIL_Manual/exit_info|exit_info]] : Exit properties
 : Exit characteristics
-; exit_key : Exit key
+; [[Manual:DIL_Manual/exit_key|exit_key]] : Exit key
 : Key required for exit
-; exit_diff : Exit difficulty
+; [[Manual:DIL_Manual/exit_diff|exit_diff]] : Exit difficulty
 : Exit difficulty level
 
 ==== Location & Zone ====
-; mapx : Map X coordinate
+; [[Manual:DIL_Manual/mapx|mapx]] : Map X coordinate
 : Horizontal position
-; mapy : Map Y coordinate
+; [[Manual:DIL_Manual/mapy|mapy]] : Map Y coordinate
 : Vertical position
-; zoneidx : Zone index
+; [[Manual:DIL_Manual/zoneidx|zoneidx]] : Zone index
 : Zone membership
-; lastroom : Last room
+; [[Manual:DIL_Manual/lastroom|lastroom]] : Last room
 : Previous room location
 
 ==== Reset Properties ====
-; resetmode : Reset mode
+; [[Manual:DIL_Manual/resetmode|resetmode]] : Reset mode
 : Zone reset behavior
-; resettime : Reset time
+; [[Manual:DIL_Manual/resettime|resettime]] : Reset time
 : Reset schedule
 
 ==== Flags ====
-; roomflags : Room flags
+; [[Manual:DIL_Manual/roomflags|roomflags]] : Room flags
 : Room properties
 
 === 2.5 Unit Operations ===
 
 ==== Finding Units ====
-; findunit : Search for units
+; [[Manual:DIL_Manual/findunit|findunit]] : Search for units
 : Find units by name and location
-; findsymbolic : Find by symbolic name
+; [[Manual:DIL_Manual/findsymbolic|findsymbolic]] : Find by symbolic name
 : Locate units by symbolic reference
-; findroom : Find room by name
+; [[Manual:DIL_Manual/findroom|findroom]] : Find room by name
 : Locate specific rooms
-; findrndunit : Find random unit
+; [[Manual:DIL_Manual/findrndunit|findrndunit]] : Find random unit
 : Find random unit
-; findzone : Find zone
+; [[Manual:DIL_Manual/findzone|findzone]] : Find zone
 : Locate specific zone
 
 ==== Creating/Destroying ====
-; load : Load unit from database
+; [[Manual:DIL_Manual/load|load]] : Load unit from database
 : Create new unit instance
-; destroy : Destroy unit
+; [[Manual:DIL_Manual/destroy|destroy]] : Destroy unit
 : Remove unit from game
-; delunit : Delete unit
+; [[Manual:DIL_Manual/delunit|delunit]] : Delete unit
 : Permanent unit removal
-; clone : Duplicate unit
+; [[Manual:DIL_Manual/clone|clone]] : Duplicate unit
 : Create copy of unit
 
 ==== Linking ====
-; link : Link units together
+; [[Manual:DIL_Manual/link|link]] : Link units together
 : Establish parent-child relationships
-; outside : Outside container
+; [[Manual:DIL_Manual/outside|outside]] : Outside container
 : External container reference
-; inside : Inside container
+; [[Manual:DIL_Manual/inside|inside]] : Inside container
 : Internal container reference
-; inside_descr : Inside description
+; [[Manual:DIL_Manual/inside_descr|inside_descr]] : Inside description
 : Inside container description
-; outside_descr : Outside description
+; [[Manual:DIL_Manual/outside_descr|outside_descr]] : Outside description
 : Outside container description
 
 ==== Movement ====
-; transfer : Move unit
+; [[Manual:DIL_Manual/transfer|transfer]] : Move unit
 : Relocate unit to new location
-; setroomexit : Set room exit
+; [[Manual:DIL_Manual/setroomexit|setroomexit]] : Set room exit
 : Define room connections
-; pathto : Path finding
+; [[Manual:DIL_Manual/pathto|pathto]] : Path finding
 : Find path to location
 
 ==== Item Operations ====
-; remove : Remove item
+; [[Manual:DIL_Manual/remove|remove]] : Remove item
 : Remove from inventory
-; insert : Insert item
+; [[Manual:DIL_Manual/insert|insert]] : Insert item
 : Add to inventory
 
 ==== Equipment Operations ====
-; equip : Equip item
+; [[Manual:DIL_Manual/equip|equip]] : Equip item
 : Wear/wield object
-; unequip : Remove equipment
+; [[Manual:DIL_Manual/unequip|unequip]] : Remove equipment
 : Take off item
-; addequip : Add equipment
+; [[Manual:DIL_Manual/addequip|addequip]] : Add equipment
 : Add equipment item
 
 == 3. Communication System ==
@@ -567,29 +567,29 @@
 === 3.1 Message Functions ===
 
 ==== Basic Messaging ====
-; sendtext : Send text to unit
+; [[Manual:DIL_Manual/sendtext|sendtext]] : Send text to unit
 : Direct message delivery
-; sendto : Send message to unit
+; [[Manual:DIL_Manual/sendto|sendto]] : Send message to unit
 : Alternative message function
-; send : Send message
+; [[Manual:DIL_Manual/send|send]] : Send message
 : Basic message delivery
-; sendtoall : Send to all units
+; [[Manual:DIL_Manual/sendtoall|sendtoall]] : Send to all units
 : Broadcast message
-; sendtoalldil : Send to all DIL programs
+; [[Manual:DIL_Manual/sendtoalldil|sendtoalldil]] : Send to all DIL programs
 : Message all programs
 
 ==== Formatted Messaging ====
-; act : Send formatted social message
+; [[Manual:DIL_Manual/act|act]] : Send formatted social message
 : Complex message with formatters
-; sact : Send formatted message (alternative)
+; [[Manual:DIL_Manual/sact|sact]] : Send formatted message (alternative)
 : Alternative formatted messaging
 
 ==== Specialized ====
-; pagestring : Send paginated output
+; [[Manual:DIL_Manual/pagestring|pagestring]] : Send paginated output
 : Long text with pagination
-; send_pre : Send preparation message
+; [[Manual:DIL_Manual/send_pre|send_pre]] : Send preparation message
 : Pre-action notification
-; send_done : Send completion message
+; [[Manual:DIL_Manual/send_done|send_done]] : Send completion message
 : Post-action notification
 
 === 3.2 Message Formatters ===
@@ -619,65 +619,65 @@
 === 3.3 Input/Output ===
 
 ==== Command Processing ====
-; argument : Command arguments
+; [[Manual:DIL_Manual/argument|argument]] : Command arguments
 : Parameters passed to command
-; command : Command name
+; [[Manual:DIL_Manual/command|command]] : Command name
 : The command executed
-; cmdstr : Command string
+; [[Manual:DIL_Manual/cmdstr|cmdstr]] : Command string
 : Full command text
-; excmdstr : Expanded command string
+; [[Manual:DIL_Manual/excmdstr|excmdstr]] : Expanded command string
 : Expanded command with aliases
-; excmdstr_case : Case-sensitive command
+; [[Manual:DIL_Manual/excmdstr_case|excmdstr_case]] : Case-sensitive command
 : Case-sensitive command
-; getcmd : Get command
+; [[Manual:DIL_Manual/getcmd|getcmd]] : Get command
 : Get command pointer
 
 ==== User Interaction ====
-; pause : Wait for input
+; [[Manual:DIL_Manual/pause|pause]] : Wait for input
 : Suspend execution for user input
-; exec : Execute command
+; [[Manual:DIL_Manual/exec|exec]] : Execute command
 : Run game command
-; prompt : Set prompt
+; [[Manual:DIL_Manual/prompt|prompt]] : Set prompt
 : Set user prompt
-; clear : Clear screen
+; [[Manual:DIL_Manual/clear|clear]] : Clear screen
 : Clear user display
-; help : Help system
+; [[Manual:DIL_Manual/help|help]] : Help system
 : Display help information
 
 ==== Text Processing ====
-; substring : Extract substring
+; [[Manual:DIL_Manual/substring|substring]] : Extract substring
 : Get portion of string
-; split : Split string
+; [[Manual:DIL_Manual/split|split]] : Split string
 : Divide string into parts
-; replace : Replace text
+; [[Manual:DIL_Manual/replace|replace]] : Replace text
 : Substitute text patterns
-; left : Left portion
+; [[Manual:DIL_Manual/left|left]] : Left portion
 : Get left part
-; right : Right portion
+; [[Manual:DIL_Manual/right|right]] : Right portion
 : Get right part
-; length : String length
+; [[Manual:DIL_Manual/length|length]] : String length
 : Number of characters
-; strcmp : String comparison
+; [[Manual:DIL_Manual/strcmp|strcmp]] : String comparison
 : Compare two strings
-; strncmp : Partial comparison
+; [[Manual:DIL_Manual/strncmp|strncmp]] : Partial comparison
 : Compare string portions
-; getword : Get word
+; [[Manual:DIL_Manual/getword|getword]] : Get word
 : Extract single word
-; getwords : Get words
+; [[Manual:DIL_Manual/getwords|getwords]] : Get words
 : Extract word list
-; textformat : Format text
+; [[Manual:DIL_Manual/textformat|textformat]] : Format text
 : Apply formatting rules
-; toupper : Uppercase conversion
+; [[Manual:DIL_Manual/toupper|toupper]] : Uppercase conversion
 : Convert to uppercase
-; tolower : Lowercase conversion
+; [[Manual:DIL_Manual/tolower|tolower]] : Lowercase conversion
 : Convert to lowercase
-; addstring : Add string
+; [[Manual:DIL_Manual/addstring|addstring]] : Add string
 : Add to string collection
-; delstr : Delete string
+; [[Manual:DIL_Manual/delstr|delstr]] : Delete string
 : Delete from string collection
-; savestr : Save string
+; [[Manual:DIL_Manual/savestr|savestr]] : Save string
 : Save string data
-; loadstr : Load string
+; [[Manual:DIL_Manual/loadstr|loadstr]] : Load string
 : Load string data
 
 == 4. Game Systems ==
@@ -685,169 +685,169 @@
 === 4.1 Combat System ===
 
 ==== Combat State ====
-; fighting : Combat opponent
+; [[Manual:DIL_Manual/fighting|fighting]] : Combat opponent
 : Current combat target
-; opponent : Combat target
+; [[Manual:DIL_Manual/opponent|opponent]] : Combat target
 : Alternative opponent reference
-; getopponent : Get opponent
+; [[Manual:DIL_Manual/getopponent|getopponent]] : Get opponent
 : Get current opponent
-; opponentcount : Number of opponents
+; [[Manual:DIL_Manual/opponentcount|opponentcount]] : Number of opponents
 : Count of opponents
-; position : Combat position
+; [[Manual:DIL_Manual/position|position]] : Combat position
 : Fighting stance/state
 
 ==== Combat Control ====
-; set_fighting : Start combat
+; [[Manual:DIL_Manual/set_fighting|set_fighting]] : Start combat
 : Initiate combat
-; stop_fighting : End combat
+; [[Manual:DIL_Manual/stop_fighting|stop_fighting]] : End combat
 : Terminate combat
 
 ==== Attack Types ====
-; attack_type : Unarmed combat
+; [[Manual:DIL_Manual/attack_type|attack_type]] : Unarmed combat
 : Natural attack style
-; weapon_info : Weapon data
+; [[Manual:DIL_Manual/weapon_info|weapon_info]] : Weapon data
 : Weapon statistics
-; weapon_name : Weapon name
+; [[Manual:DIL_Manual/weapon_name|weapon_name]] : Weapon name
 : Get weapon type name
-; meleeattack : Melee attack
+; [[Manual:DIL_Manual/meleeattack|meleeattack]] : Melee attack
 : Perform melee attack
-; attack_spell : Attack spell
+; [[Manual:DIL_Manual/attack_spell|attack_spell]] : Attack spell
 : Cast attack spell
-; cast_spell : Cast spell
+; [[Manual:DIL_Manual/cast_spell|cast_spell]] : Cast spell
 : Cast any spell
 
 ==== Damage Calculation ====
-; meleedamage : Melee damage
+; [[Manual:DIL_Manual/meleedamage|meleedamage]] : Melee damage
 : Calculate combat damage
-; defensive : Defense value
+; [[Manual:DIL_Manual/defensive|defensive]] : Defense value
 : Protection rating
-; offensive : Attack value
+; [[Manual:DIL_Manual/offensive|offensive]] : Attack value
 : Combat effectiveness
 
 === 4.2 Skills & Abilities ===
 
 ==== Ability System ====
-; abilities : Ability scores
+; [[Manual:DIL_Manual/abilities|abilities]] : Ability scores
 : Character attributes
-; ability_levels : Ability level requirements
+; [[Manual:DIL_Manual/ability_levels|ability_levels]] : Ability level requirements
 : Advancement requirements
-; ability_costs : Ability costs
+; [[Manual:DIL_Manual/ability_costs|ability_costs]] : Ability costs
 : Experience costs
-; ability_points : Available ability points
+; [[Manual:DIL_Manual/ability_points|ability_points]] : Available ability points
 : Points for abilities
 
 ==== Skill System ====
-; skills : Skill proficiencies
+; [[Manual:DIL_Manual/skills|skills]] : Skill proficiencies
 : Character skill values
-; skill_levels : Skill level requirements
+; [[Manual:DIL_Manual/skill_levels|skill_levels]] : Skill level requirements
 : Advancement thresholds
-; skill_costs : Skill costs
+; [[Manual:DIL_Manual/skill_costs|skill_costs]] : Skill costs
 : Training costs
-; skill_points : Available skill points
+; [[Manual:DIL_Manual/skill_points|skill_points]] : Available skill points
 : Points for advancement
-; skill_name : Get skill name
+; [[Manual:DIL_Manual/skill_name|skill_name]] : Get skill name
 : Get name from skill index
 
 ==== Spell System ====
-; spells : Spell proficiencies
+; [[Manual:DIL_Manual/spells|spells]] : Spell proficiencies
 : Magical ability levels
-; spell_levels : Spell level requirements
+; [[Manual:DIL_Manual/spell_levels|spell_levels]] : Spell level requirements
 : Magical advancement
-; spell_costs : Spell costs
+; [[Manual:DIL_Manual/spell_costs|spell_costs]] : Spell costs
 : Magical training costs
-; spellindex : Spell index lookup
+; [[Manual:DIL_Manual/spellindex|spellindex]] : Spell index lookup
 : Find spell by index
-; spellinfo : Spell information
+; [[Manual:DIL_Manual/spellinfo|spellinfo]] : Spell information
 : Detailed spell data
 
 ==== Weapon System ====
-; weapons : Weapon proficiencies
+; [[Manual:DIL_Manual/weapons|weapons]] : Weapon proficiencies
 : Combat skill levels
-; weapon_levels : Weapon requirements
+; [[Manual:DIL_Manual/weapon_levels|weapon_levels]] : Weapon requirements
 : Weapon skill thresholds
-; weapon_costs : Weapon costs
+; [[Manual:DIL_Manual/weapon_costs|weapon_costs]] : Weapon costs
 : Weapon training costs
-; weapon_name : Weapon name
+; [[Manual:DIL_Manual/weapon_name|weapon_name]] : Weapon name
 : Get weapon type name
-; weapon_info : Weapon information
+; [[Manual:DIL_Manual/weapon_info|weapon_info]] : Weapon information
 : Detailed weapon data
 
 === 4.3 Economic System ===
 
 ==== Money Operations ====
-; transfermoney : Transfer currency
+; [[Manual:DIL_Manual/transfermoney|transfermoney]] : Transfer currency
 : Move money between characters
-; moneystring : Format money
+; [[Manual:DIL_Manual/moneystring|moneystring]] : Format money
 : Display currency properly
 
 ==== Character Money ====
-; purse : Money container
+; [[Manual:DIL_Manual/purse|purse]] : Money container
 : Character's wealth
-; acc_balance : Account balance
+; [[Manual:DIL_Manual/acc_balance|acc_balance]] : Account balance
 : Bank account funds
-; acc_total : Total assets
+; [[Manual:DIL_Manual/acc_total|acc_total]] : Total assets
 : Complete wealth
-; acc_modify : Modify account
+; [[Manual:DIL_Manual/acc_modify|acc_modify]] : Modify account
 : Account operations
-; paycheck : Regular income
+; [[Manual:DIL_Manual/paycheck|paycheck]] : Regular income
 : Periodic earnings
 
 ==== Commercial Transactions ====
-; cost : Item cost
+; [[Manual:DIL_Manual/cost|cost]] : Item cost
 : Purchase price
-; value : Item value
+; [[Manual:DIL_Manual/value|value]] : Item value
 : Sale price
-; rent : Rental cost
+; [[Manual:DIL_Manual/rent|rent]] : Rental cost
 : Equipment rental fees
 
 === 4.4 Time & Calendar ===
 
 ==== Game Time ====
-; mudday : Day of month
+; [[Manual:DIL_Manual/mudday|mudday]] : Day of month
 : In-game day
-; mudhour : Hour of day
+; [[Manual:DIL_Manual/mudhour|mudhour]] : Hour of day
 : In-game hour
-; mudmonth : Month
+; [[Manual:DIL_Manual/mudmonth|mudmonth]] : Month
 : In-game month
-; mudyear : Year
+; [[Manual:DIL_Manual/mudyear|mudyear]] : Year
 : In-game year
 
 ==== Real Time ====
-; realtime : Real-world time
+; [[Manual:DIL_Manual/realtime|realtime]] : Real-world time
 : System time
-; heartbeat : Game tick
+; [[Manual:DIL_Manual/heartbeat|heartbeat]] : Game tick
 : Time pulse
-; asctime : Time formatting
+; [[Manual:DIL_Manual/asctime|asctime]] : Time formatting
 : Format time display
 
 ==== Time Functions ====
-; wait : Wait for condition
+; [[Manual:DIL_Manual/wait|wait]] : Wait for condition
 : Delay execution
-; sleep : Sleep duration
+; [[Manual:DIL_Manual/sleep|sleep]] : Sleep duration
 : Timed pause
 
 === 4.5 Experience & Advancement ===
 
 ==== Experience ====
-; exp : Experience points
+; [[Manual:DIL_Manual/exp|exp]] : Experience points
 : Current experience
-; experience : Experience value
+; [[Manual:DIL_Manual/experience|experience]] : Experience value
 : Alternative experience reference
-; exptol : Experience to level
+; [[Manual:DIL_Manual/exptol|exptol]] : Experience to level
 : Experience needed for next level
 
 ==== Levels ====
-; level : Current level
+; [[Manual:DIL_Manual/level|level]] : Current level
 : Character level
-; vlevel : Virtual level
+; [[Manual:DIL_Manual/vlevel|vlevel]] : Virtual level
 : Effective level
-; loadlevel : Load level
+; [[Manual:DIL_Manual/loadlevel|loadlevel]] : Load level
 : Content difficulty level
 
 ==== Progression ====
-; skill_points : Available skill points
+; [[Manual:DIL_Manual/skill_points|skill_points]] : Available skill points
 : Points for advancement
-; ability_points : Available ability points
+; [[Manual:DIL_Manual/ability_points|ability_points]] : Available ability points
 : Points for abilities
 
 == 5. Utility Functions ==
@@ -855,135 +855,135 @@
 === 5.1 String Operations ===
 
 ==== Basic ====
-; length : String length
+; [[Manual:DIL_Manual/length|length]] : String length
 : Number of characters
-; substring : Extract portion
+; [[Manual:DIL_Manual/substring|substring]] : Extract portion
 : Get substring
-; left : Left portion
+; [[Manual:DIL_Manual/left|left]] : Left portion
 : Get left part
-; right : Right portion
+; [[Manual:DIL_Manual/right|right]] : Right portion
 : Get right part
 
 ==== Comparison ====
-; strcmp : String comparison
+; [[Manual:DIL_Manual/strcmp|strcmp]] : String comparison
 : Compare two strings
-; strncmp : Partial comparison
+; [[Manual:DIL_Manual/strncmp|strncmp]] : Partial comparison
 : Compare string portions
 
 ==== Conversion ====
-; atoi : String to integer
+; [[Manual:DIL_Manual/atoi|atoi]] : String to integer
 : Parse number from text
-; itoa : Integer to string
+; [[Manual:DIL_Manual/itoa|itoa]] : Integer to string
 : Format number as text
-; toupper : Uppercase conversion
+; [[Manual:DIL_Manual/toupper|toupper]] : Uppercase conversion
 : Convert to uppercase
-; tolower : Lowercase conversion
+; [[Manual:DIL_Manual/tolower|tolower]] : Lowercase conversion
 : Convert to lowercase
 
 ==== Formatting ====
-; textformat : Format text
+; [[Manual:DIL_Manual/textformat|textformat]] : Format text
 : Apply formatting rules
-; moneystring : Format currency
+; [[Manual:DIL_Manual/moneystring|moneystring]] : Format currency
 : Display money properly
 
 ==== Text Processing ====
-; split : Split string
+; [[Manual:DIL_Manual/split|split]] : Split string
 : Divide string into parts
-; replace : Replace text
+; [[Manual:DIL_Manual/replace|replace]] : Replace text
 : Substitute text patterns
-; getword : Get word
+; [[Manual:DIL_Manual/getword|getword]] : Get word
 : Extract single word
-; getwords : Get words
+; [[Manual:DIL_Manual/getwords|getwords]] : Get words
 : Extract word list
-; addstring : Add string
+; [[Manual:DIL_Manual/addstring|addstring]] : Add string
 : Add to string collection
-; delstr : Delete string
+; [[Manual:DIL_Manual/delstr|delstr]] : Delete string
 : Delete from string collection
-; savestr : Save string
+; [[Manual:DIL_Manual/savestr|savestr]] : Save string
 : Save string data
-; loadstr : Load string
+; [[Manual:DIL_Manual/loadstr|loadstr]] : Load string
 : Load string data
 
 === 5.2 Mathematical Functions ===
 
 ==== Random ====
-; rnd : Random number
+; [[Manual:DIL_Manual/rnd|rnd]] : Random number
 : Generate random value
-; openroll : Open dice roll
+; [[Manual:DIL_Manual/openroll|openroll]] : Open dice roll
 : Dice roll with modifiers
 
 ==== Arithmetic ====
-; max : Maximum value
+; [[Manual:DIL_Manual/max|max]] : Maximum value
 : Find larger value
-; min : Minimum value
+; [[Manual:DIL_Manual/min|min]] : Minimum value
 : Find smaller value
-; abs : Absolute value
+; [[Manual:DIL_Manual/abs|abs]] : Absolute value
 : Positive magnitude
 
 ==== Bit Operations ====
-; set : Set bits
+; [[Manual:DIL_Manual/set|set]] : Set bits
 : Turn on bit flags
-; unset : Clear bits
+; [[Manual:DIL_Manual/unset|unset]] : Clear bits
 : Turn off bit flags
-; isset : Test bits
+; [[Manual:DIL_Manual/isset|isset]] : Test bits
 : Check bit flags
 
 === 5.3 List Operations ===
 
 ==== Integer Lists ====
-; integerlist : Integer collection
+; [[Manual:DIL_Manual/integerlist|integerlist]] : Integer collection
 : List of integers
-; getinteger : Get integer from list
+; [[Manual:DIL_Manual/getinteger|getinteger]] : Get integer from list
 : Extract integer value
 
 ==== String Lists ====
-; stringlist : String collection
+; [[Manual:DIL_Manual/stringlist|stringlist]] : String collection
 : List of strings
-; getwords : Extract words
+; [[Manual:DIL_Manual/getwords|getwords]] : Extract words
 : Get word list
 
 ==== Navigation ====
-; next : Next item
+; [[Manual:DIL_Manual/next|next]] : Next item
 : Move to next element
-; previous : Previous item
+; [[Manual:DIL_Manual/previous|previous]] : Previous item
 : Move to previous element
-; head : First item
+; [[Manual:DIL_Manual/head|head]] : First item
 : Get first element
-; ghead : Global head
+; [[Manual:DIL_Manual/ghead|ghead]] : Global head
 : Global list head
-; gnext : Global next
+; [[Manual:DIL_Manual/gnext|gnext]] : Global next
 : Global next item
-; gprevious : Global previous
+; [[Manual:DIL_Manual/gprevious|gprevious]] : Global previous
 : Global previous item
 
 === 5.4 System Utilities ===
 
 ==== Logging ====
-; log : System log
+; [[Manual:DIL_Manual/log|log]] : System log
 : Write to log file
-; flog : File log
+; [[Manual:DIL_Manual/flog|flog]] : File log
 : Write to specific file
-; logcrime : Crime log
+; [[Manual:DIL_Manual/logcrime|logcrime]] : Crime log
 : Write to crime log
-; loglevel : Log level
+; [[Manual:DIL_Manual/loglevel|loglevel]] : Log level
 : Set logging level
 
 ==== Debugging ====
-; debug : Debug output
+; [[Manual:DIL_Manual/debug|debug]] : Debug output
 : Debug information
-; info : Information output
+; [[Manual:DIL_Manual/info|info]] : Information output
 : System information
-; hasfunc : Check function
+; [[Manual:DIL_Manual/hasfunc|hasfunc]] : Check function
 : Test function existence
 
 ==== Administration ====
-; secure : Security level
+; [[Manual:DIL_Manual/secure|secure]] : Security level
 : Set security
-; access : Access control
+; [[Manual:DIL_Manual/access|access]] : Access control
 : Manage permissions
-; reboot : System restart
+; [[Manual:DIL_Manual/reboot|reboot]] : System restart
 : Restart game
-; shell : Execute shell command
+; [[Manual:DIL_Manual/shell|shell]] : Execute shell command
 : Run system command
 
 == 6. DIL Program Management ==
@@ -991,15 +991,15 @@
 === 6.1 Program Structure ===
 
 ==== Program Definition ====
-; dilbegin : Program start
+; [[Manual:DIL_Manual/dilbegin|dilbegin]] : Program start
 : Begin DIL program
-; dilend : Program end
+; [[Manual:DIL_Manual/dilend|dilend]] : Program end
 : End DIL program
 
 ==== Variables ====
-; var : Variable declaration
+; [[Manual:DIL_Manual/var|var]] : Variable declaration
 : Declare variables
-; code : Code section
+; [[Manual:DIL_Manual/code|code]] : Code section
 : Program code block
 
 ==== Parameters & Return Values ====
@@ -1008,85 +1008,85 @@
 === 6.2 Program Control ===
 
 ==== Execution Control ====
-; wait : Wait for event
+; [[Manual:DIL_Manual/wait|wait]] : Wait for event
 : Suspend execution
-; interrupt : Interrupt execution
+; [[Manual:DIL_Manual/interrupt|interrupt]] : Interrupt execution
 : Break execution
-; quit : Terminate program
+; [[Manual:DIL_Manual/quit|quit]] : Terminate program
 : End program
-; waitnoop : Wait with no operation
+; [[Manual:DIL_Manual/waitnoop|waitnoop]] : Wait with no operation
 : Wait without action
 
 ==== State Management ====
-; priority : Execution priority
+; [[Manual:DIL_Manual/priority|priority]] : Execution priority
 : Set program priority
-; nopriority : Clear priority
+; [[Manual:DIL_Manual/nopriority|nopriority]] : Clear priority
 : Remove priority setting
 
 ==== Event Handling ====
-; on_activation : Activation event
+; [[Manual:DIL_Manual/on_activation|on_activation]] : Activation event
 : Handle program activation
-; on_goto : Goto event
+; [[Manual:DIL_Manual/on_goto|on_goto]] : Goto event
 : Handle goto events
-; SFB_* : State function bits
+; [[Manual:DIL_Manual/SFB_*|SFB_*]] : State function bits
 : Event wait flags
-; sfb_cmd : Command activation
+; [[Manual:DIL_Manual/sfb_cmd|sfb_cmd]] : Command activation
 : Command wait flag
-; sfb_com : Combat activation
+; [[Manual:DIL_Manual/sfb_com|sfb_com]] : Combat activation
 : Combat wait flag
-; sfb_dead : Death activation
+; [[Manual:DIL_Manual/sfb_dead|sfb_dead]] : Death activation
 : Death wait flag
-; sfb_done : Completion activation
+; [[Manual:DIL_Manual/sfb_done|sfb_done]] : Completion activation
 : Completion wait flag
-; sfb_msg : Message activation
+; [[Manual:DIL_Manual/sfb_msg|sfb_msg]] : Message activation
 : Message wait flag
-; sfb_pre : Preparation activation
+; [[Manual:DIL_Manual/sfb_pre|sfb_pre]] : Preparation activation
 : Preparation wait flag
-; sfb_tick : Timer activation
+; [[Manual:DIL_Manual/sfb_tick|sfb_tick]] : Timer activation
 : Timer wait flag
 
 === 6.3 Program Interaction ===
 
 ==== DIL Operations ====
-; dilcall : Call DIL program
+; [[Manual:DIL_Manual/dilcall|dilcall]] : Call DIL program
 : Execute another program
-; dilfind : Find DIL program
+; [[Manual:DIL_Manual/dilfind|dilfind]] : Find DIL program
 : Locate program instance
-; dilcopy : Copy DIL program
+; [[Manual:DIL_Manual/dilcopy|dilcopy]] : Copy DIL program
 : Duplicate program
-; dildestroy : Destroy DIL program
+; [[Manual:DIL_Manual/dildestroy|dildestroy]] : Destroy DIL program
 : Remove program
 
 ==== Program Communication ====
-; sendtoalldil : Message all DIL programs
+; [[Manual:DIL_Manual/sendtoalldil|sendtoalldil]] : Message all DIL programs
 : Broadcast to programs
 
 ==== Shared Data ====
-; global_head : Global variables head
+; [[Manual:DIL_Manual/global_head|global_head]] : Global variables head
 : Global data head
-; store : Store data
+; [[Manual:DIL_Manual/store|store]] : Store data
 : Save information
 
 === 6.4 Development Tools ===
 
 ==== Editing ====
-; beginedit : Begin editing
+; [[Manual:DIL_Manual/beginedit|beginedit]] : Begin editing
 : Start edit mode
-; killedit : End editing
+; [[Manual:DIL_Manual/killedit|killedit]] : End editing
 : Exit edit mode
-; editing : Edit status
+; [[Manual:DIL_Manual/editing|editing]] : Edit status
 : Check edit state
 
 ==== Testing ====
-; shell : Execute shell command
+; [[Manual:DIL_Manual/shell|shell]] : Execute shell command
 : Run system command
-; exec : Execute command
+; [[Manual:DIL_Manual/exec|exec]] : Execute command
 : Run game command
 
 ==== Debugging ====
-; log : Write log
+; [[Manual:DIL_Manual/log|log]] : Write log
 : Log information
-; hasfunc : Check function
+; [[Manual:DIL_Manual/hasfunc|hasfunc]] : Check function
 : Test function existence
 
 == 7. World Management ==
@@ -1094,109 +1094,109 @@
 === 7.1 Zone System ===
 
 ==== Zone Operations ====
-; zone_head : First zone
+; [[Manual:DIL_Manual/zone_head|zone_head]] : First zone
 : Get zone list head
-; zhead : Zone head
+; [[Manual:DIL_Manual/zhead|zhead]] : Zone head
 : Alternative zone reference
-; findzone : Find zone
+; [[Manual:DIL_Manual/findzone|findzone]] : Find zone
 : Locate specific zone
-; zone : Zone operations
+; [[Manual:DIL_Manual/zone|zone]] : Zone operations
 : General zone functions
 
 ==== Zone Properties ====
-; zoneidx : Zone index
+; [[Manual:DIL_Manual/zoneidx|zoneidx]] : Zone index
 : Zone identifier
-; resetmode : Reset mode
+; [[Manual:DIL_Manual/resetmode|resetmode]] : Reset mode
 : Zone reset behavior
-; resettime : Reset timing
+; [[Manual:DIL_Manual/resettime|resettime]] : Reset timing
 : Reset schedule
 
 ==== Zone Resets ====
-; zonereset : Zone reset
+; [[Manual:DIL_Manual/zonereset|zonereset]] : Zone reset
 : Reset zone contents
 
 === 7.2 Room Management ===
 
 ==== Room Navigation ====
-; room_head : First room
+; [[Manual:DIL_Manual/room_head|room_head]] : First room
 : Get room list head
-; findroom : Find room
+; [[Manual:DIL_Manual/findroom|findroom]] : Find room
 : Locate specific room
-; pathto : Path finding
+; [[Manual:DIL_Manual/pathto|pathto]] : Path finding
 : Find path to location
-; rooms : Room list
+; [[Manual:DIL_Manual/rooms|rooms]] : Room list
 : All rooms
-; roomcount : Room count
+; [[Manual:DIL_Manual/roomcount|roomcount]] : Room count
 : Number of rooms
 
 ==== Room Properties ====
-; roomflags : Room flags
+; [[Manual:DIL_Manual/roomflags|roomflags]] : Room flags
 : Room characteristics
-; mapx : Map X coordinate
+; [[Manual:DIL_Manual/mapx|mapx]] : Map X coordinate
 : Horizontal position
-; mapy : Map Y coordinate
+; [[Manual:DIL_Manual/mapy|mapy]] : Map Y coordinate
 : Vertical position
 
 ==== Room Operations ====
-; setroomexit : Set exit
+; [[Manual:DIL_Manual/setroomexit|setroomexit]] : Set exit
 : Define room connection
 
 === 7.3 NPC Management ===
 
 ==== NPC Operations ====
-; npc_head : First NPC
+; [[Manual:DIL_Manual/npc_head|npc_head]] : First NPC
 : Get NPC list head
-; npcs : NPC list
+; [[Manual:DIL_Manual/npcs|npcs]] : NPC list
 : All NPCs
-; npccount : NPC count
+; [[Manual:DIL_Manual/npccount|npccount]] : NPC count
 : Number of NPCs
 
 ==== NPC Properties ====
-; npcflags : NPC flags
+; [[Manual:DIL_Manual/npcflags|npcflags]] : NPC flags
 : NPC characteristics
-; hometown : Home location
+; [[Manual:DIL_Manual/hometown|hometown]] : Home location
 : NPC origin
-; profession : Profession
+; [[Manual:DIL_Manual/profession|profession]] : Profession
 : NPC job/role
-; guild : Guild affiliation
+; [[Manual:DIL_Manual/guild|guild]] : Guild affiliation
 : NPC guild membership
 
 ==== NPC Behavior ====
-; master : Master/leader
+; [[Manual:DIL_Manual/master|master]] : Master/leader
 : NPC leader
-; follower : Follower
+; [[Manual:DIL_Manual/follower|follower]] : Follower
 : NPC follower
-; followercount : Number of followers
+; [[Manual:DIL_Manual/followercount|followercount]] : Number of followers
 : Count of followers
-; getfollower : Get specific follower
+; [[Manual:DIL_Manual/getfollower|getfollower]] : Get specific follower
 : Get follower unit
-; follow : Follow relationship
+; [[Manual:DIL_Manual/follow|follow]] : Follow relationship
 : Following behavior
 
 === 7.4 Object Management ===
 
 ==== Object Operations ====
-; obj_head : First object
+; [[Manual:DIL_Manual/obj_head|obj_head]] : First object
 : Get object list head
-; objs : Object list
+; [[Manual:DIL_Manual/objs|objs]] : Object list
 : All objects
-; objcount : Object count
+; [[Manual:DIL_Manual/objcount|objcount]] : Object count
 : Number of objects
 
 ==== Object Properties ====
-; objectflags : Object flags
+; [[Manual:DIL_Manual/objectflags|objectflags]] : Object flags
 : Object characteristics
-; objecttype : Object type
+; [[Manual:DIL_Manual/objecttype|objecttype]] : Object type
 : Object classification
 
 ==== Equipment ====
-; equip : Equip item
+; [[Manual:DIL_Manual/equip|equip]] : Equip item
 : Wear/wield object
-; unequip : Remove equipment
+; [[Manual:DIL_Manual/unequip|unequip]] : Remove equipment
 : Take off item
-; equipment : Equipment slots
+; [[Manual:DIL_Manual/equipment|equipment]] : Equipment slots
 : Worn items
-; addequip : Add equipment
+; [[Manual:DIL_Manual/addequip|addequip]] : Add equipment
 : Add equipment item
 
 == 8. Reference Materials ==
@@ -1204,41 +1204,41 @@
 === 8.1 Constants Reference ===
 
 ==== Unit Types ====
-; UNIT_ST_PC : Player character
+; [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] : Player character
 : Player-controlled unit
-; UNIT_ST_NPC : Non-player character
+; [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] : Non-player character
 : Computer-controlled unit
-; UNIT_ST_OBJ : Object
+; [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] : Object
 : Item or equipment
-; UNIT_ST_ROOM : Room
+; [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] : Room
 : Location or area
 
 ==== Positions ====
-; POSITION_STANDING : Standing
+; [[Manual:DIL_Manual/POSITION_STANDING|POSITION_STANDING]] : Standing
 : Upright position
-; POSITION_SITTING : Sitting
+; [[Manual:DIL_Manual/POSITION_SITTING|POSITION_SITTING]] : Sitting
 : Seated position
-; POSITION_RESTING : Resting
+; [[Manual:DIL_Manual/POSITION_RESTING|POSITION_RESTING]] : Resting
 : Recovering position
-; POSITION_SLEEPING : Sleeping
+; [[Manual:DIL_Manual/POSITION_SLEEPING|POSITION_SLEEPING]] : Sleeping
 : Unconscious position
-; POSITION_FIGHTING : Fighting
+; [[Manual:DIL_Manual/POSITION_FIGHTING|POSITION_FIGHTING]] : Fighting
 : Combat position
 
 ==== Flags ====
-; CHAR_* : Character flags
+; [[Manual:DIL_Manual/CHAR_*|CHAR_*]] : Character flags
 : Character states
-; OBJ_* : Object flags
+; [[Manual:DIL_Manual/OBJ_*|OBJ_*]] : Object flags
 : Object properties
-; ROOM_* : Room flags
+; [[Manual:DIL_Manual/ROOM_*|ROOM_*]] : Room flags
 : Room characteristics
 
 ==== Find Flags ====
-; FIND_UNIT_* : Find unit flags
+; [[Manual:DIL_Manual/FIND_UNIT_*|FIND_UNIT_*]] : Find unit flags
 : Search parameters
 
 ==== State Function Bits ====
-; SFB_* : State function bits
+; [[Manual:DIL_Manual/SFB_*|SFB_*]] : State function bits
 : Event wait flags
 
 === 8.2 Error Handling ===
@@ -1247,11 +1247,11 @@
 : Typical error conditions and solutions
 
 ==== Validation Functions ====
-; check_password : Password validation
+; [[Manual:DIL_Manual/check_password|check_password]] : Password validation
 : Validate user password
-; delete_player : Player deletion
+; [[Manual:DIL_Manual/delete_player|delete_player]] : Player deletion
 : Delete player account
-; set_password : Set password
+; [[Manual:DIL_Manual/set_password|set_password]] : Set password
 : Set user password
 
 ==== Debugging Techniques ====

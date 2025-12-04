@@ -122,11 +122,11 @@ The cmdptr type is used with the following functions and operations:
 * Always check if a cmdptr is valid before accessing its fields
 
 == Related Functions ==
-* [[chead]] - Get the first command in the global command list
-* [[getcommand]] - Get a specific command by name
-* [[getcmd]] - Alternative function to get a command by name
+* [[Manual:DIL_Manual/chead|chead]] - Get the first command in the global command list
+* [[Manual:DIL_Manual/getcommand|getcommand]] - Get a specific command by name
+* [[Manual:DIL_Manual/getcmd|getcmd]] - Alternative function to get a command by name
 
 == See Also ==
-* [[command]] - Command field for checking current command
-* [[SFB_CMD]] - Command activation wait flag
-* [[global command list]] - System command registry
+* [[Manual:DIL_Manual/command|command]] - Command field for checking current command
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command activation wait flag
+* [[Manual:DIL_Manual/global command list|global command list]] - System command registry

@@ -166,18 +166,18 @@ The command interpreter processes aliases and direction shortcuts before the DIL
 * Remember that SFB_CMD triggers on ALL commands unless filtered by expression
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_CMD
-* [[interrupt]] - Alternative method for setting up command triggers
-* [[command]] - Function for checking specific commands
-* [[activator]] - Unit pointer to command issuer
-* [[cmdstr]] - Full command string with expansion
-* [[excmdstr]] - Original command first word
-* [[excmdstr_case]] - Original command first word with case preservation
-* [[argument]] - Command arguments after first word
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_CMD
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up command triggers
+* [[Manual:DIL_Manual/command|command]] - Function for checking specific commands
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to command issuer
+* [[Manual:DIL_Manual/cmdstr|cmdstr]] - Full command string with expansion
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Original command first word
+* [[Manual:DIL_Manual/excmdstr_case|excmdstr_case]] - Original command first word with case preservation
+* [[Manual:DIL_Manual/argument|argument]] - Command arguments after first word
 
 == See Also ==
-* [[SFB_TICK]] - Timer-based activation
-* [[SFB_MSG]] - Message-based activation
-* [[SFB_COM]] - Combat event activation
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Timer-based activation
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message-based activation
+* [[Manual:DIL_Manual/SFB_COM|SFB_COM]] - Combat event activation
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

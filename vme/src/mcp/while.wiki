@@ -102,16 +102,16 @@ The while loop evaluates the expression before each iteration. If the expression
 * Always provide alternative exit mechanisms for user control
 
 == Related Functions/Fields ==
-* [[wait]] - Often used with while loops for continuous processing
-* [[SFB_TICK]] - Common for timer-based loops
-* [[pause]] - Used to control loop timing
-* [[quit]] - Used to exit from loops
-* [[rnd]] - Often used for random conditions in loops
-* [[exec]] - Used for actions within loops
-* [[itoa]] - Used for number formatting in loops
+* [[Manual:DIL_Manual/wait|wait]] - Often used with while loops for continuous processing
+* [[Manual:DIL_Manual/SFB_TICK|SFB_TICK]] - Common for timer-based loops
+* [[Manual:DIL_Manual/pause|pause]] - Used to control loop timing
+* [[Manual:DIL_Manual/quit|quit]] - Used to exit from loops
+* [[Manual:DIL_Manual/rnd|rnd]] - Often used for random conditions in loops
+* [[Manual:DIL_Manual/exec|exec]] - Used for actions within loops
+* [[Manual:DIL_Manual/itoa|itoa]] - Used for number formatting in loops
 
 == See Also ==
-* [[for]] - Alternative loop construct
-* [[if]] - Conditional branching
-* [[break]] - Loop control statement
-* [[continue]] - Loop control statement
+* [[Manual:DIL_Manual/for|for]] - Alternative loop construct
+* [[Manual:DIL_Manual/if|if]] - Conditional branching
+* [[Manual:DIL_Manual/break|break]] - Loop control statement
+* [[Manual:DIL_Manual/continue|continue]] - Loop control statement

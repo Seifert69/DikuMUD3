@@ -75,11 +75,11 @@ code
 * Runtime logging if return types don't match (should never happen with proper compilation)
 
 == Related Functions/Fields ==
-* [[quit]] - Statement to terminate the entire DIL program
-* [[dilcopy]] - Function to start new DIL programs
-* [[dilbegin]] - Keyword to start DIL template definitions
+* [[Manual:DIL_Manual/quit|quit]] - Statement to terminate the entire DIL program
+* [[Manual:DIL_Manual/dilcopy|dilcopy]] - Function to start new DIL programs
+* [[Manual:DIL_Manual/dilbegin|dilbegin]] - Keyword to start DIL template definitions
 
 == See Also ==
-* [[function]] - DIL function declarations
-* [[procedure]] - DIL procedure declarations
-* [[external]] - Keyword for external function declarations
+* [[Manual:DIL_Manual/function|function]] - DIL function declarations
+* [[Manual:DIL_Manual/procedure|procedure]] - DIL procedure declarations
+* [[Manual:DIL_Manual/external|external]] - Keyword for external function declarations

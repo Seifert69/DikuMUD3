@@ -48,8 +48,8 @@ The following example shows excmdstr being used to validate a quit command:
 * Returns NULL if no extended command is available
 
 == Related Functions/Fields ==
-* [[excmdstr_case]] - Case-sensitive version of excmdstr
-* [[argument]] - The argument portion of a command
-* [[cmdstr]] - Alternative command string variable
+* [[Manual:DIL_Manual/excmdstr_case|excmdstr_case]] - Case-sensitive version of excmdstr
+* [[Manual:DIL_Manual/argument|argument]] - The argument portion of a command
+* [[Manual:DIL_Manual/cmdstr|cmdstr]] - Alternative command string variable
 
 == See Also ==

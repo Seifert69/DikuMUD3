@@ -175,18 +175,18 @@ String variables are declared using the `var` keyword:
 * String comparisons require exact matches unless using search functions
 
 == Related Functions/Fields ==
-* [[stringlist]] - List of strings data type
-* [[length]] - Get string length
-* [[atoi]] - Convert string to integer
-* [[itoa]] - Convert integer to string
-* [[split]] - Split string into stringlist
-* [[getwords]] - Split string into word list
-* [[addstring]] - Add string to stringlist
-* [[substring]] - Remove string from stringlist
+* [[Manual:DIL_Manual/stringlist|stringlist]] - List of strings data type
+* [[Manual:DIL_Manual/length|length]] - Get string length
+* [[Manual:DIL_Manual/atoi|atoi]] - Convert string to integer
+* [[Manual:DIL_Manual/itoa|itoa]] - Convert integer to string
+* [[Manual:DIL_Manual/split|split]] - Split string into stringlist
+* [[Manual:DIL_Manual/getwords|getwords]] - Split string into word list
+* [[Manual:DIL_Manual/addstring|addstring]] - Add string to stringlist
+* [[Manual:DIL_Manual/substring|substring]] - Remove string from stringlist
 
-* [[left]] - Get leftmost characters
-* [[right]] - Get rightmost characters
-* [[toupper]] - Convert to uppercase
+* [[Manual:DIL_Manual/left|left]] - Get leftmost characters
+* [[Manual:DIL_Manual/right|right]] - Get rightmost characters
+* [[Manual:DIL_Manual/toupper|toupper]] - Convert to uppercase
 
 == See Also ==
 * DIL String Operations Documentation

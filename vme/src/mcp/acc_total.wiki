@@ -161,15 +161,15 @@ Note: The C implementation shows that this field:
 * The total credit typically includes both used and available credit amounts
 
 == Related Fields ==
-* [[acc_balance]] - Current account balance
-* [[acc_modify]] - Function to modify account balance
-* [[money]] - Physical currency carried by the player
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Current account balance
+* [[Manual:DIL_Manual/acc_modify|acc_modify]] - Function to modify account balance
+* [[Manual:DIL_Manual/money|money]] - Physical currency carried by the player
 
 == Related Functions ==
-* [[getPCAccountData]] - Internal function for account data access
-* [[account_insert]] - Internal function for account transactions
+* [[Manual:DIL_Manual/getPCAccountData|getPCAccountData]] - Internal function for account data access
+* [[Manual:DIL_Manual/account_insert|account_insert]] - Internal function for account transactions
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[accounting]] - Server accounting mode configuration
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/accounting|accounting]] - Server accounting mode configuration

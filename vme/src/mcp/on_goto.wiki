@@ -69,13 +69,13 @@ Where 'n' is the integer value to evaluate, and the program jumps to the label c
 * Use meaningful label names to improve code readability and maintenance
 
 == Related Functions/Fields ==
-* [[goto]] - Unconditional jump to a specific label
-* [[if]] - Conditional branching based on boolean expressions
-* [[rnd]] - Generate random numbers for on statement selection
-* [[atoi]] - Convert strings to integers for numeric comparisons
+* [[Manual:DIL_Manual/goto|goto]] - Unconditional jump to a specific label
+* [[Manual:DIL_Manual/if|if]] - Conditional branching based on boolean expressions
+* [[Manual:DIL_Manual/rnd|rnd]] - Generate random numbers for on statement selection
+* [[Manual:DIL_Manual/atoi|atoi]] - Convert strings to integers for numeric comparisons
 
 == See Also ==
-* [[goto]] - Unconditional jumping
-* [[if]] - Conditional branching
-* [[while]] - Loop construct (alternative to on-based loops)
-* [[switch]] - Similar multi-way branching construct 
+* [[Manual:DIL_Manual/goto|goto]] - Unconditional jumping
+* [[Manual:DIL_Manual/if|if]] - Conditional branching
+* [[Manual:DIL_Manual/while|while]] - Loop construct (alternative to on-based loops)
+* [[Manual:DIL_Manual/switch|switch]] - Similar multi-way branching construct 

@@ -64,7 +64,7 @@ dilend
 * The function returns the first room in the global room list, which may not be in any particular order
 * Use the '''next''' field to traverse through the complete list of rooms
 * This function is primarily used for administrative or system-level DIL programs that need to process all rooms
-* For finding specific rooms, consider using [[findroom]] which is more efficient for targeted searches
+* For finding specific rooms, consider using [[Manual:DIL_Manual/findroom|findroom]] which is more efficient for targeted searches
 * The returned pointer is of type room (UNIT_ST_ROOM)
 * This function appears to be rarely used in modern DIL code and may be considered obsolete
 
@@ -75,13 +75,13 @@ dilend
 * Always check the return value before using it to avoid null pointer errors
 
 == Related Functions/Fields ==
-* [[ghead]] - Function to get the first unit in the global unit list
-* [[chead]] - Function to get the first command in the global command list
-* [[zhead]] - Function to get the first zone in the global zone list
-* [[findroom]] - Function to find a specific room by name
-* [[next]] - Field to get the next room in the list
+* [[Manual:DIL_Manual/ghead|ghead]] - Function to get the first unit in the global unit list
+* [[Manual:DIL_Manual/chead|chead]] - Function to get the first command in the global command list
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the global zone list
+* [[Manual:DIL_Manual/findroom|findroom]] - Function to find a specific room by name
+* [[Manual:DIL_Manual/next|next]] - Field to get the next room in the list
 
 == See Also ==
-* [[room]] - Room unit type documentation
-* [[unitptr]] - Unit pointer type documentation
-* [[zoneptr]] - Zone pointer type documentation
+* [[Manual:DIL_Manual/room|room]] - Room unit type documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type documentation
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type documentation

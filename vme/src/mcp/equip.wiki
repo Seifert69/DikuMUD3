@@ -78,8 +78,8 @@ The function performs error checking:
  } dilend
 
 == Related Functions/Fields ==
-* [[addequip]] - Equip items to characters
-* [[unequip]] - Remove items from characters
-* [[equipment]] - Equipment field (different function)
+* [[Manual:DIL_Manual/addequip|addequip]] - Equip items to characters
+* [[Manual:DIL_Manual/unequip|unequip]] - Remove items from characters
+* [[Manual:DIL_Manual/equipment|equipment]] - Equipment field (different function)
 
 == See Also ==

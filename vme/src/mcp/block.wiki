@@ -99,11 +99,11 @@ The function performs validation:
 * '''Runtime validation''' - Validates command processing state
 
 == Related Functions ==
-* [[exec]] - For executing alternative commands
-* [[command]] - For checking what command was issued
-* [[SFB_CMD]] - For triggering on commands
+* [[Manual:DIL_Manual/exec|exec]] - For executing alternative commands
+* [[Manual:DIL_Manual/command|command]] - For checking what command was issued
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - For triggering on commands
 
 == See Also ==
-* [[command]] - Command field
-* [[argument]] - Command argument field
-* [[interpreter]] - Command processing system
+* [[Manual:DIL_Manual/command|command]] - Command field
+* [[Manual:DIL_Manual/argument|argument]] - Command argument field
+* [[Manual:DIL_Manual/interpreter|interpreter]] - Command processing system

@@ -36,9 +36,9 @@ code
 * Extra descriptions are commonly used for object descriptions, room details, and character descriptions
 
 == Related Functions/Fields ==
-* [[extraptr]] - Extra description pointer type
-* [[addextra]] - Add extra descriptions
-* [[subextra]] - Remove extra descriptions
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Extra description pointer type
+* [[Manual:DIL_Manual/addextra|addextra]] - Add extra descriptions
+* [[Manual:DIL_Manual/subextra|subextra]] - Remove extra descriptions
 
 == See Also ==
-* [[in]] - Search extra descriptions
+* [[Manual:DIL_Manual/in|in]] - Search extra descriptions

@@ -67,10 +67,10 @@ The weapon_name function retrieves the human-readable name for a specific weapon
 * If the parameter is not an integer, returns an error
 
 == Related Functions/Fields ==
-* [[weapon_info]] - Get detailed information about weapon types
-* [[weapon_costs]] - Get racial weapon cost information
-* [[weapon_levels]] - Get weapon skill level requirements
-* [[skill_name]] - Get skill names (similar function for skills)
+* [[Manual:DIL_Manual/weapon_info|weapon_info]] - Get detailed information about weapon types
+* [[Manual:DIL_Manual/weapon_costs|weapon_costs]] - Get racial weapon cost information
+* [[Manual:DIL_Manual/weapon_levels|weapon_levels]] - Get weapon skill level requirements
+* [[Manual:DIL_Manual/skill_name|skill_name]] - Get skill names (similar function for skills)
 * .weapons[] - Access weapon skill values on characters
 
 == See Also ==

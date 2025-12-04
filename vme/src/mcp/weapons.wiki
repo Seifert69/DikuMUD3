@@ -88,10 +88,10 @@ The field requires an integer index parameter:
 * NPCs accessing individual weapon types (beyond WPN_GROUP_MAX) will fail
 
 == Related Functions/Fields ==
-* [[weapon_info]] - Get information about weapon types
-* [[weapon_name]] - Get the name of a weapon type
-* [[weapon_costs]] - Get racial weapon cost information
-* [[weapon_levels]] - Get weapon skill level requirements (PCs only)
+* [[Manual:DIL_Manual/weapon_info|weapon_info]] - Get information about weapon types
+* [[Manual:DIL_Manual/weapon_name|weapon_name]] - Get the name of a weapon type
+* [[Manual:DIL_Manual/weapon_costs|weapon_costs]] - Get racial weapon cost information
+* [[Manual:DIL_Manual/weapon_levels|weapon_levels]] - Get weapon skill level requirements (PCs only)
 * .abilities[] - Access ability scores on characters
 
 == See Also ==

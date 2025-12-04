@@ -101,14 +101,14 @@ The field performs validation:
 * '''Type validation''' - Always returns a string (may be empty)
 
 == Related Fields ==
-* [[excmdstr]] - Original command as typed (lowercase)
-* [[excmdstr_case]] - Original command as typed (preserves case)
-* [[argument]] - Command arguments
+* [[Manual:DIL_Manual/excmdstr|excmdstr]] - Original command as typed (lowercase)
+* [[Manual:DIL_Manual/excmdstr_case|excmdstr_case]] - Original command as typed (preserves case)
+* [[Manual:DIL_Manual/argument|argument]] - Command arguments
 
 == Related Functions ==
-* [[command]] - Check if a specific command was used
-* [[SFB_CMD]] - Command activation wait flag
+* [[Manual:DIL_Manual/command|command]] - Check if a specific command was used
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command activation wait flag
 
 == See Also ==
-* [[command interpreter]] - Command processing system
-* [[command expansion]] - Abbreviation and alias system
+* [[Manual:DIL_Manual/command interpreter|command interpreter]] - Command processing system
+* [[Manual:DIL_Manual/command expansion|command expansion]] - Abbreviation and alias system

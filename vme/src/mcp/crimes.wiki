@@ -129,10 +129,10 @@ The field performs validation:
 * '''Range validation''' - Validates crime count is within reasonable bounds
 
 == Related Functions ==
-* [[charflags]] - Character flags including CHAR_OUTLAW
-* [[isplayer]] - Check if a unit is a player character
+* [[Manual:DIL_Manual/charflags|charflags]] - Character flags including CHAR_OUTLAW
+* [[Manual:DIL_Manual/isplayer|isplayer]] - Check if a unit is a player character
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type
-* [[justice system]] - Law enforcement and crime tracking
-* [[CHAR_OUTLAW]] - Outlaw character flag
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/justice system|justice system]] - Law enforcement and crime tracking
+* [[Manual:DIL_Manual/CHAR_OUTLAW|CHAR_OUTLAW]] - Outlaw character flag

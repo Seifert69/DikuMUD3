@@ -116,10 +116,10 @@ The function handles errors in the following ways:
 Always ensure both parameters are valid strings before calling the function.
 
 == Related Functions/Fields ==
-* [[strncmp]] - Compare strings with length limit
-* [[string]] data type and operations
-* [[getwords]] - Split string into words for comparison
-* [[length]] - Get string length for validation
+* [[Manual:DIL_Manual/strncmp|strncmp]] - Compare strings with length limit
+* [[Manual:DIL_Manual/string|string]] data type and operations
+* [[Manual:DIL_Manual/getwords|getwords]] - Split string into words for comparison
+* [[Manual:DIL_Manual/length|length]] - Get string length for validation
 * String comparison operators (==, !=, <, >, <=, >=)
 
 == See Also ==

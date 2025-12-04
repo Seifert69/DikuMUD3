@@ -133,13 +133,13 @@ The procedure does not generate errors under normal conditions:
 * The only "error" condition is when the program cannot be terminated (which shouldn't occur)
 
 == Related Functions/Fields ==
-* [[return]] - Function to return values from procedures
-* [[wait]] - Function that can be interrupted by quit
-* [[pause]] - Function that can be terminated by quit
-* [[exec]] - Function that can be terminated by quit
+* [[Manual:DIL_Manual/return|return]] - Function to return values from procedures
+* [[Manual:DIL_Manual/wait|wait]] - Function that can be interrupted by quit
+* [[Manual:DIL_Manual/pause|pause]] - Function that can be terminated by quit
+* [[Manual:DIL_Manual/exec|exec]] - Function that can be terminated by quit
 
 == See Also ==
-* [[SFB_CMD]] - Wait flag that quit can interrupt
-* [[dilbegin]] - Program start that quit can end
-* [[dilend]] - Program end that quit can replace
-* [[on_activation]] - Function that may be interrupted by quit
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Wait flag that quit can interrupt
+* [[Manual:DIL_Manual/dilbegin|dilbegin]] - Program start that quit can end
+* [[Manual:DIL_Manual/dilend|dilend]] - Program end that quit can replace
+* [[Manual:DIL_Manual/on_activation|on_activation]] - Function that may be interrupted by quit

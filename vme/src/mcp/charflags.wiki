@@ -115,11 +115,11 @@ The field performs validation:
 * '''Range validation''' - Validates flag values are within valid range
 
 == Related Functions ==
-* [[set]] - Set specific bits in an integer
-* [[unset]] - Clear specific bits in an integer
-* [[isset]] - Check if specific bits are set in an integer
+* [[Manual:DIL_Manual/set|set]] - Set specific bits in an integer
+* [[Manual:DIL_Manual/unset|unset]] - Clear specific bits in an integer
+* [[Manual:DIL_Manual/isset|isset]] - Check if specific bits are set in an integer
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type
-* [[UNIT_ST_NPC]] - Non-player character unit type
-* [[CHAR_*]] - Character flag constants
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type
+* [[Manual:DIL_Manual/CHAR_*|CHAR_*]] - Character flag constants

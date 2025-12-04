@@ -63,14 +63,14 @@ Returns '''unitptr''':
 * The function itself does not validate parameters
 
 == Related Functions/Fields ==
-* [[ghead]] - Get first unit in global list (same as npc_head for NPCs)
-* [[next]] - Navigate to next unit in a list (used for NPC chain traversal)
+* [[Manual:DIL_Manual/ghead|ghead]] - Get first unit in global list (same as npc_head for NPCs)
+* [[Manual:DIL_Manual/next|next]] - Navigate to next unit in a list (used for NPC chain traversal)
 * Global NPC management functions
 * Unit type constants: '''UNIT_ST_NPC'''
-* NPC-specific fields: [[npcflags]], [[natural_armour]], [[defaultpos]]
+* NPC-specific fields: [[Manual:DIL_Manual/npcflags|npcflags]], [[Manual:DIL_Manual/natural_armour|natural_armour]], [[Manual:DIL_Manual/defaultpos|defaultpos]]
 
 == See Also ==
 * Global list management functions
 * NPC creation and management functions
 * Unit pointer operations and traversal
-* Chain navigation patterns using [[next]] field 
+* Chain navigation patterns using [[Manual:DIL_Manual/next|next]] field 

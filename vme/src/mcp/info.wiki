@@ -101,10 +101,10 @@ code
 
 == Related Functions/Fields ==
 
-* [[extraptr]] - Information about the extraptr data structure
-* [[addextra]] - Function to add entries to extra descriptions
-* [[subextra]] - Function to remove entries from extra descriptions
-* [[in]] - Operator for searching within extra descriptions
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Information about the extraptr data structure
+* [[Manual:DIL_Manual/addextra|addextra]] - Function to add entries to extra descriptions
+* [[Manual:DIL_Manual/subextra|subextra]] - Function to remove entries from extra descriptions
+* [[Manual:DIL_Manual/in|in]] - Operator for searching within extra descriptions
 
 == See Also ==
 

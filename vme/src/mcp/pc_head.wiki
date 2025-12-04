@@ -106,12 +106,12 @@ The function is generally safe and does not generate errors:
 * The underlying C implementation checks if g_unit_list is a PC before returning it
 
 == Related Functions/Fields ==
-* [[npc_head]] - Get the first NPC in the global NPC list
-* [[obj_head]] - Get the first object in the global object list
-* [[room_head]] - Get the first room in the global room list
-* [[gnext]] - Field to navigate to the next unit in the global list
+* [[Manual:DIL_Manual/npc_head|npc_head]] - Get the first NPC in the global NPC list
+* [[Manual:DIL_Manual/obj_head|obj_head]] - Get the first object in the global object list
+* [[Manual:DIL_Manual/room_head|room_head]] - Get the first room in the global room list
+* [[Manual:DIL_Manual/gnext|gnext]] - Field to navigate to the next unit in the global list
 
 == See Also ==
-* [[findunit]] - Find a specific unit in the game world
-* [[act]] - Send messages to units
-* [[exec]] - Execute a command for a specific unit 
+* [[Manual:DIL_Manual/findunit|findunit]] - Find a specific unit in the game world
+* [[Manual:DIL_Manual/act|act]] - Send messages to units
+* [[Manual:DIL_Manual/exec|exec]] - Execute a command for a specific unit 

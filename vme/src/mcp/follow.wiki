@@ -53,10 +53,10 @@ When called, the function will first stop any existing following relationship fo
 * The function handles null leader parameter to stop following relationships
 
 == Related Functions/Fields ==
-* [[follower]]
-* [[master]]
-* [[followercount]]
+* [[Manual:DIL_Manual/follower|follower]]
+* [[Manual:DIL_Manual/master|master]]
+* [[Manual:DIL_Manual/followercount|followercount]]
 
 == See Also ==
-* [[stop_fighting]]
-* [[unitptr]]
+* [[Manual:DIL_Manual/stop_fighting|stop_fighting]]
+* [[Manual:DIL_Manual/unitptr|unitptr]]

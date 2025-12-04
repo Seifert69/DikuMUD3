@@ -78,48 +78,48 @@ The '''UNIT_ST_PC''' constant is read-only and cannot be modified at runtime. It
 * Consider edge cases where unit type might be unknown or invalid
 
 == Related Functions/Fields ==
-* [[type]] - Function to get the type of a unit
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[birth]] - Player birth field (PC only)
-* [[skills]] - Player skills field (PC only)
-* [[skill_points]] - Player skill points field (PC only)
-* [[ability_points]] - Player ability points field (PC only)
-* [[pcflags]] - Player flags field (PC only)
-* [[playtime]] - Player play time field (PC only)
-* [[exptol]] - Player experience points field (PC only)
-* [[guild]] - Player guild field (PC only)
-* [[prompt]] - Player prompt field (PC only)
-* [[crimes]] - Player crimes field (PC only)
-* [[full]] - Player full field (PC only)
-* [[thirst]] - Player thirst field (PC only)
-* [[drunk]] - Player drunk field (PC only)
-* [[quests]] - Player quests field (PC only)
-* [[info]] - Player info field (PC only)
-* [[acc_balance]] - Player account balance field (PC only)
-* [[acc_total]] - Player account total field (PC only)
+* [[Manual:DIL_Manual/type|type]] - Function to get the type of a unit
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/birth|birth]] - Player birth field (PC only)
+* [[Manual:DIL_Manual/skills|skills]] - Player skills field (PC only)
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Player skill points field (PC only)
+* [[Manual:DIL_Manual/ability_points|ability_points]] - Player ability points field (PC only)
+* [[Manual:DIL_Manual/pcflags|pcflags]] - Player flags field (PC only)
+* [[Manual:DIL_Manual/playtime|playtime]] - Player play time field (PC only)
+* [[Manual:DIL_Manual/exptol|exptol]] - Player experience points field (PC only)
+* [[Manual:DIL_Manual/guild|guild]] - Player guild field (PC only)
+* [[Manual:DIL_Manual/prompt|prompt]] - Player prompt field (PC only)
+* [[Manual:DIL_Manual/crimes|crimes]] - Player crimes field (PC only)
+* [[Manual:DIL_Manual/full|full]] - Player full field (PC only)
+* [[Manual:DIL_Manual/thirst|thirst]] - Player thirst field (PC only)
+* [[Manual:DIL_Manual/drunk|drunk]] - Player drunk field (PC only)
+* [[Manual:DIL_Manual/quests|quests]] - Player quests field (PC only)
+* [[Manual:DIL_Manual/info|info]] - Player info field (PC only)
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Player account balance field (PC only)
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Player account total field (PC only)
 
 == See Also ==
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_OBJ]] - Object type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[type]] - Unit type checking function
-* [[birth]] - Player birth field documentation
-* [[skills]] - Player skills field documentation
-* [[skill_points]] - Player skill points field documentation
-* [[ability_points]] - Player ability points field documentation
-* [[pcflags]] - Player flags field documentation
-* [[playtime]] - Player play time field documentation
-* [[exptol]] - Player experience points field documentation
-* [[guild]] - Player guild field documentation
-* [[prompt]] - Player prompt field documentation
-* [[crimes]] - Player crimes field documentation
-* [[full]] - Player full field documentation
-* [[thirst]] - Player thirst field documentation
-* [[drunk]] - Player drunk field documentation
-* [[quests]] - Player quests field documentation
-* [[info]] - Player info field documentation
-* [[acc_balance]] - Player account balance field documentation
-* [[acc_total]] - Player account total field documentation
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_OBJ|UNIT_ST_OBJ]] - Object type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/type|type]] - Unit type checking function
+* [[Manual:DIL_Manual/birth|birth]] - Player birth field documentation
+* [[Manual:DIL_Manual/skills|skills]] - Player skills field documentation
+* [[Manual:DIL_Manual/skill_points|skill_points]] - Player skill points field documentation
+* [[Manual:DIL_Manual/ability_points|ability_points]] - Player ability points field documentation
+* [[Manual:DIL_Manual/pcflags|pcflags]] - Player flags field documentation
+* [[Manual:DIL_Manual/playtime|playtime]] - Player play time field documentation
+* [[Manual:DIL_Manual/exptol|exptol]] - Player experience points field documentation
+* [[Manual:DIL_Manual/guild|guild]] - Player guild field documentation
+* [[Manual:DIL_Manual/prompt|prompt]] - Player prompt field documentation
+* [[Manual:DIL_Manual/crimes|crimes]] - Player crimes field documentation
+* [[Manual:DIL_Manual/full|full]] - Player full field documentation
+* [[Manual:DIL_Manual/thirst|thirst]] - Player thirst field documentation
+* [[Manual:DIL_Manual/drunk|drunk]] - Player drunk field documentation
+* [[Manual:DIL_Manual/quests|quests]] - Player quests field documentation
+* [[Manual:DIL_Manual/info|info]] - Player info field documentation
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Player account balance field documentation
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Player account total field documentation

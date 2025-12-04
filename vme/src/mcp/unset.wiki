@@ -72,7 +72,7 @@ code
 * The bit parameter is 0-based (bit 0 clears the least significant bit).
 * Commonly used for clearing flag bits in character flags, door flags, and other status properties.
 * The procedure modifies the variable in-place; the original variable is updated.
-* Often used in conjunction with [[setbit]] or bitwise operations for flag management.
+* Often used in conjunction with [[Manual:DIL_Manual/setbit|setbit]] or bitwise operations for flag management.
 * Bit positions are typically defined by constants in values.h and/or vme.h (e.g., CHAR_SELF_DEFENCE, PC_SPIRIT, EX_LOCKED).
 
 == Error Handling ==
@@ -82,11 +82,11 @@ code
 * The procedure will fail if the bit position is out of range for the integer type.
 
 == Related Functions/Fields ==
-* [[setbit]] - Sets specific bits in an integer variable
-* [[is_set]] - Checks if specific bits are set in an integer variable
-* [[charflags]] - Character flags field (common target for unset operations)
-* [[pcflags]] - Player character flags field
-* [[openflags]] - Door/container open flags field
+* [[Manual:DIL_Manual/setbit|setbit]] - Sets specific bits in an integer variable
+* [[Manual:DIL_Manual/is_set|is_set]] - Checks if specific bits are set in an integer variable
+* [[Manual:DIL_Manual/charflags|charflags]] - Character flags field (common target for unset operations)
+* [[Manual:DIL_Manual/pcflags|pcflags]] - Player character flags field
+* [[Manual:DIL_Manual/openflags|openflags]] - Door/container open flags field
 
 == See Also ==
 * Bit manipulation functions

@@ -190,15 +190,15 @@ Note: The C implementation shows that this field:
 * Accounting mode must be enabled in server configuration for this field to work properly
 
 == Related Fields ==
-* [[acc_total]] - Total credit available to the player
-* [[acc_modify]] - Function to modify account balance
-* [[money]] - Physical currency carried by the player
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Total credit available to the player
+* [[Manual:DIL_Manual/acc_modify|acc_modify]] - Function to modify account balance
+* [[Manual:DIL_Manual/money|money]] - Physical currency carried by the player
 
 == Related Functions ==
-* [[acc_modify]] - Function to modify player account balance
-* [[getPCAccountData]] - Internal function for account data access
+* [[Manual:DIL_Manual/acc_modify|acc_modify]] - Function to modify player account balance
+* [[Manual:DIL_Manual/getPCAccountData|getPCAccountData]] - Internal function for account data access
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[accounting]] - Server accounting mode configuration
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/accounting|accounting]] - Server accounting mode configuration

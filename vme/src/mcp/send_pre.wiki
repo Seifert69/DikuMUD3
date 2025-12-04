@@ -109,11 +109,11 @@ The function returns an integer indicating the result:
 * Parameter validation occurs at runtime - invalid types cause execution errors
 
 == Related Functions/Fields ==
-* [[send_done]] - Function for sending completion messages
-* [[interrupt]] - Function to receive preparation messages
-* [[exec]] - Function for executing commands
-* [[send]] - Function for sending messages to units
-* [[wait]] - Function for waiting with interrupt conditions
+* [[Manual:DIL_Manual/send_done|send_done]] - Function for sending completion messages
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Function to receive preparation messages
+* [[Manual:DIL_Manual/exec|exec]] - Function for executing commands
+* [[Manual:DIL_Manual/send|send]] - Function for sending messages to units
+* [[Manual:DIL_Manual/wait|wait]] - Function for waiting with interrupt conditions
 
 == See Also ==
 * DIL program coordination and synchronization

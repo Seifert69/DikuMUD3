@@ -105,11 +105,11 @@ This field is available on the following unit types:
 * The field will return 0 for units that don't have wizard invisibility set
 
 == Related Functions/Fields ==
-* [[level]] - Player's wizard level
-* [[findunit]] - Finding units (respects wizard invisibility)
-* [[findsymbolic]] - Finding units by symbolic name (respects wizard invisibility)
+* [[Manual:DIL_Manual/level|level]] - Player's wizard level
+* [[Manual:DIL_Manual/findunit|findunit]] - Finding units (respects wizard invisibility)
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Finding units by symbolic name (respects wizard invisibility)
 
 == See Also ==
-* [[unitptr]] - General unit pointer documentation
-* [[wizard]] - Wizard-related commands and functions
-* [[invisibility]] - Regular invisibility mechanics 
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/wizard|wizard]] - Wizard-related commands and functions
+* [[Manual:DIL_Manual/invisibility|invisibility]] - Regular invisibility mechanics 

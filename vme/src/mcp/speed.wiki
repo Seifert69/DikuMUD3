@@ -187,7 +187,7 @@ This field is available on the following unit types:
 * Speed values affect combat initiative and action order
 * Higher speed values mean the character acts more frequently in combat
 * Speed is typically calculated as base speed plus modifiers
-* The field is commonly used with [[change_speed()]] function for temporary modifications
+* The field is commonly used with [[Manual:DIL_Manual/change_speed()|change_speed()]] function for temporary modifications
 * Speed values are often used in spell effects, magical items, and character creation
 
 == Error Handling ==
@@ -205,14 +205,14 @@ Common error scenarios:
 * Accessing the field on destroyed units
 
 == Related Functions/Fields ==
-* [[change_speed()]] - Function to modify character speed temporarily
-* [[position]] - Field for character position state
-* [[fighting]] - Field to check current combat opponent
-* [[charflags]] - Field for character flags and states
-* [[combat_speed]] - Internal speed calculation system
+* [[Manual:DIL_Manual/change_speed()|change_speed()]] - Function to modify character speed temporarily
+* [[Manual:DIL_Manual/position|position]] - Field for character position state
+* [[Manual:DIL_Manual/fighting|fighting]] - Field to check current combat opponent
+* [[Manual:DIL_Manual/charflags|charflags]] - Field for character flags and states
+* [[Manual:DIL_Manual/combat_speed|combat_speed]] - Internal speed calculation system
 
 == See Also ==
-* [[Combat system]] - Information about combat mechanics and initiative
-* [[Character attributes]] - General character statistics and properties
-* [[Movement and speed]] - Speed-related game mechanics
-* [[Spells and effects]] - Information about magical speed modifications
+* [[Manual:DIL_Manual/Combat system|Combat system]] - Information about combat mechanics and initiative
+* [[Manual:DIL_Manual/Character attributes|Character attributes]] - General character statistics and properties
+* [[Manual:DIL_Manual/Movement and speed|Movement and speed]] - Speed-related game mechanics
+* [[Manual:DIL_Manual/Spells and effects|Spells and effects]] - Information about magical speed modifications

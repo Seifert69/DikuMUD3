@@ -134,11 +134,11 @@ The function performs validation:
 * '''Priority validation''' - Ensures priority is within valid range
 
 == Related Functions ==
-* [[dilcopy]] - Create a copy of a DIL template
-* [[dilfind]] - Find DIL programs on units
-* [[dildestroy]] - Destroy DIL programs
+* [[Manual:DIL_Manual/dilcopy|dilcopy]] - Create a copy of a DIL template
+* [[Manual:DIL_Manual/dilfind|dilfind]] - Find DIL programs on units
+* [[Manual:DIL_Manual/dildestroy|dildestroy]] - Destroy DIL programs
 
 == See Also ==
-* [[DIL templates]] - Template system and modular programming
-* [[dynamic programming]] - Runtime code generation and execution
-* [[quest system]] - Dynamic quest and event handling
+* [[Manual:DIL_Manual/DIL templates|DIL templates]] - Template system and modular programming
+* [[Manual:DIL_Manual/dynamic programming|dynamic programming]] - Runtime code generation and execution
+* [[Manual:DIL_Manual/quest system|quest system]] - Dynamic quest and event handling

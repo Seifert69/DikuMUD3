@@ -98,8 +98,8 @@ This procedure removes an item from a character's equipment slots and returns it
 * The unit parameter must be an object that is currently equipped by a character.
 * Only works on objects that are in valid equipment positions (defined by WEAR_* constants).
 * The unequipped item is returned to the character's inventory.
-* Commonly used with the [[equipment]]() function to find specific equipped items.
-* Often paired with [[addequip]]() for equipment management.
+* Commonly used with the [[Manual:DIL_Manual/equipment|equipment]]() function to find specific equipped items.
+* Often paired with [[Manual:DIL_Manual/addequip|addequip]]() for equipment management.
 * The procedure will fail silently if the item is not equipped or is not an object.
 * Equipment positions are defined by WEAR_* constants in values.h and/or vme.h.
 
@@ -110,9 +110,9 @@ This procedure removes an item from a character's equipment slots and returns it
 * If the object is not in a valid equipment position, the procedure fails.
 
 == Related Functions/Fields ==
-* [[addequip]] - Equips an item to a character
-* [[equipment]] - Returns the unit equipped at a specific position
-* [[OBJ_EQP_POS]] - Internal check for equipment position validity
+* [[Manual:DIL_Manual/addequip|addequip]] - Equips an item to a character
+* [[Manual:DIL_Manual/equipment|equipment]] - Returns the unit equipped at a specific position
+* [[Manual:DIL_Manual/OBJ_EQP_POS|OBJ_EQP_POS]] - Internal check for equipment position validity
 
 == See Also ==
 * Equipment management functions

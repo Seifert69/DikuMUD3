@@ -168,14 +168,14 @@ code
 } dilend
 
 == Related Functions/Fields ==
-* [[on n goto (...)]] - On integer goto with list of labels
-* [[pause]] - Often used with goto to create loops
-* [[if]] - Conditional control structure
-* [[while]] - Loop construct (alternative to goto-based loops)
-* [[heartbeat]] - Timing control often used with goto loops
+* [[Manual:DIL_Manual/on n goto (...)|on n goto (...)]] - On integer goto with list of labels
+* [[Manual:DIL_Manual/pause|pause]] - Often used with goto to create loops
+* [[Manual:DIL_Manual/if|if]] - Conditional control structure
+* [[Manual:DIL_Manual/while|while]] - Loop construct (alternative to goto-based loops)
+* [[Manual:DIL_Manual/heartbeat|heartbeat]] - Timing control often used with goto loops
 
 == See Also ==
-* [[pause]] - Program timing and loop control
-* [[if]] - Conditional branching
+* [[Manual:DIL_Manual/pause|pause]] - Program timing and loop control
+* [[Manual:DIL_Manual/if|if]] - Conditional branching
 * Control flow structures
 * State machine patterns 

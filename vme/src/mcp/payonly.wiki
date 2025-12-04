@@ -61,13 +61,13 @@ Always verify that zone pointer is valid before accessing payonly:
  }
 
 == Related Functions/Fields ==
-* [[zhead]] - Get first zone in global list
-* [[access]] - Zone access level
-* [[loadlevel]] - Zone load level
-* [[zoneptr]] - Zone pointer type
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/access|access]] - Zone access level
+* [[Manual:DIL_Manual/loadlevel|loadlevel]] - Zone load level
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type
 
 == See Also ==
-* [[zoneptr]] - Zone pointer type
-* [[zhead]] - Get first zone in global list
-* [[access]] - Zone access level
-* [[loadlevel]] - Zone load level
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/access|access]] - Zone access level
+* [[Manual:DIL_Manual/loadlevel|loadlevel]] - Zone load level

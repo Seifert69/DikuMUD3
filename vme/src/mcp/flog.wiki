@@ -47,9 +47,9 @@ flog("daily.log", "Daily log started: " + asctime(realtime), "w");
 * File system errors may occur (disk full, permissions, etc.)
 
 == Related Functions/Fields ==
-* [[log()]] - Write to main game log
-* [[logcrime()]] - Log criminal activities
-* [[asctime()]] - Format timestamp for log entries
+* [[Manual:DIL_Manual/log()|log()]] - Write to main game log
+* [[Manual:DIL_Manual/logcrime()|logcrime()]] - Log criminal activities
+* [[Manual:DIL_Manual/asctime()|asctime()]] - Format timestamp for log entries
 
 == See Also ==
 * File system operations

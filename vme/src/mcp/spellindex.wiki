@@ -6,7 +6,7 @@ The '''spellindex''' function converts a spell name or abbreviation to its corre
 == Description ==
 This function searches for a spell name in the spell collection and returns its numerical index. It accepts either full spell names or abbreviated spell names as input. The function uses the spell collection database to match the provided string against known spells.
 
-If the spell is found, the function returns the spell index (SPL_XXX constant) which can be used with other spell-related functions like [[spellinfo]], [[cast_spell]], and [[attack_spell]]. If no matching spell is found, the function returns -1.
+If the spell is found, the function returns the spell index (SPL_XXX constant) which can be used with other spell-related functions like [[Manual:DIL_Manual/spellinfo|spellinfo]], [[Manual:DIL_Manual/cast_spell|cast_spell]], and [[Manual:DIL_Manual/attack_spell|attack_spell]]. If no matching spell is found, the function returns -1.
 
 == Parameters ==
 {| class="wikitable"
@@ -113,13 +113,13 @@ The function handles errors gracefully:
 Always check the return value against -1 before using the index with other functions.
 
 == Related Functions/Fields ==
-* [[spellinfo]] - Get detailed information about a spell using its index
-* [[cast_spell]] - Cast a spell using its index
-* [[attack_spell]] - Cast an offensive spell using its index
+* [[Manual:DIL_Manual/spellinfo|spellinfo]] - Get detailed information about a spell using its index
+* [[Manual:DIL_Manual/cast_spell|cast_spell]] - Cast a spell using its index
+* [[Manual:DIL_Manual/attack_spell|attack_spell]] - Cast an offensive spell using its index
 * unitptr.spells[] - Array field for storing character spell proficiencies
 
 == See Also ==
-* [[skillindex]] - Similar function for skill indices
-* [[weaponindex]] - Similar function for weapon indices
+* [[Manual:DIL_Manual/skillindex|skillindex]] - Similar function for skill indices
+* [[Manual:DIL_Manual/weaponindex|weaponindex]] - Similar function for weapon indices
 
 * DIL Spell System Documentation

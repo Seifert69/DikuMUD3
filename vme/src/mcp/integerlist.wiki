@@ -236,12 +236,12 @@ code
 * Always check list bounds when iterating with '''length()''' function
 
 == Related Functions/Fields ==
-* [[length]] - Get the number of elements in an integerlist
-* [[insert]] - Insert values at specific positions in an integerlist
-* [[remove]] - Remove elements from an integerlist
-* [[integer]] - Individual integer type documentation
-* [[stringlist]] - String list equivalent type
-* [[vals]] - Field that returns integerlist from extra descriptions
+* [[Manual:DIL_Manual/length|length]] - Get the number of elements in an integerlist
+* [[Manual:DIL_Manual/insert|insert]] - Insert values at specific positions in an integerlist
+* [[Manual:DIL_Manual/remove|remove]] - Remove elements from an integerlist
+* [[Manual:DIL_Manual/integer|integer]] - Individual integer type documentation
+* [[Manual:DIL_Manual/stringlist|stringlist]] - String list equivalent type
+* [[Manual:DIL_Manual/vals|vals]] - Field that returns integerlist from extra descriptions
 
 == See Also ==
 * Array and list operations

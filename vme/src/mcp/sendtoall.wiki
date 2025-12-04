@@ -80,11 +80,11 @@ The database name pattern matching follows these rules:
 * No return value - function is void and cannot indicate success or failure
 
 == Related Functions/Fields ==
-* [[sendto]] - Function for sending messages to specific units
-* [[sendtoalldil]] - Function for sending to specific DIL programs
-* [[interrupt]] - Function for receiving incoming messages
-* [[unitptr]] - Unit pointer type and database name matching
-* [[nameidx]] - Field for unit's database name
+* [[Manual:DIL_Manual/sendto|sendto]] - Function for sending messages to specific units
+* [[Manual:DIL_Manual/sendtoalldil|sendtoalldil]] - Function for sending to specific DIL programs
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Function for receiving incoming messages
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and database name matching
+* [[Manual:DIL_Manual/nameidx|nameidx]] - Field for unit's database name
 
 == See Also ==
 * DIL program communication and coordination

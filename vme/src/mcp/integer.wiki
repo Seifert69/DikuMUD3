@@ -222,12 +222,12 @@ code
 * Invalid hexadecimal format will cause compilation error
 
 == Related Functions/Fields ==
-* [[itoa]] - Convert integer to string
-* [[atoi]] - Convert string to integer
-* [[getinteger]] - Retrieve system integer values
-* [[intlist]] - Integer list type
-* [[rnd]] - Generate random integers
-* [[length]] - Get length of integer lists
+* [[Manual:DIL_Manual/itoa|itoa]] - Convert integer to string
+* [[Manual:DIL_Manual/atoi|atoi]] - Convert string to integer
+* [[Manual:DIL_Manual/getinteger|getinteger]] - Retrieve system integer values
+* [[Manual:DIL_Manual/intlist|intlist]] - Integer list type
+* [[Manual:DIL_Manual/rnd|rnd]] - Generate random integers
+* [[Manual:DIL_Manual/length|length]] - Get length of integer lists
 
 == See Also ==
 * String type and operations

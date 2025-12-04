@@ -68,7 +68,7 @@ This field is available on the following unit types:
 ** Command lists
 ** Zone lists
 ** Room exits
-* Essential for [[foreach]] loops and list traversal
+* Essential for [[Manual:DIL_Manual/foreach|foreach]] loops and list traversal
 * Common pattern: check for null before accessing next
 
 == Error Handling ==
@@ -78,15 +78,15 @@ This field is available on the following unit types:
 * Infinite loops can occur if not properly checking for null termination
 
 == Related Functions/Fields ==
-* [[foreach]] - Iterate through units in local environment
-* [[findunit]] - Find specific unit by name
-* [[ghead]] - Get first unit in global list
-* [[inside]] - Access contained units
-* [[outside]] - Access containing unit
-* [[exit_names]] - Room exit names list
+* [[Manual:DIL_Manual/foreach|foreach]] - Iterate through units in local environment
+* [[Manual:DIL_Manual/findunit|findunit]] - Find specific unit by name
+* [[Manual:DIL_Manual/ghead|ghead]] - Get first unit in global list
+* [[Manual:DIL_Manual/inside|inside]] - Access contained units
+* [[Manual:DIL_Manual/outside|outside]] - Access containing unit
+* [[Manual:DIL_Manual/exit_names|exit_names]] - Room exit names list
 
 == See Also ==
 * Unit type constants: '''UNIT_ST_PC''', '''UNIT_ST_NPC''', '''UNIT_ST_OBJ''', '''UNIT_ST_ROOM'''
 * Pointer types: unitptr, extraptr, cmdptr, zoneptr
-* List traversal: [[names]], [[length]] for checking bounds
-* Navigation functions: [[findroom]], [[walkto]] 
+* List traversal: [[Manual:DIL_Manual/names|names]], [[Manual:DIL_Manual/length|length]] for checking bounds
+* Navigation functions: [[Manual:DIL_Manual/findroom|findroom]], [[Manual:DIL_Manual/walkto|walkto]] 

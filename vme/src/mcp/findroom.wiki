@@ -28,8 +28,8 @@ room := findroom("inn@udgaard");
 * Returns null if the symbolic name exists but is not a room
 
 == Related Functions/Fields ==
-* [[findsymbolic()]] - Find any unit by symbolic name
-* [[findunit()]] - Find a unit by name within a specific environment
+* [[Manual:DIL_Manual/findsymbolic()|findsymbolic()]] - Find any unit by symbolic name
+* [[Manual:DIL_Manual/findunit()|findunit()]] - Find a unit by name within a specific environment
 
 == See Also ==
 * Room system documentation

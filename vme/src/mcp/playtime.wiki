@@ -134,11 +134,11 @@ The field access will return '''fail''' when:
 * The unit is null or invalid
 
 == Related Functions/Fields ==
-* [[birth]] - The time when the PC was created (timestamp)
-* [[editing]] - Whether the PC is currently in edit mode
-* [[hometown]] - The player's hometown setting
+* [[Manual:DIL_Manual/birth|birth]] - The time when the PC was created (timestamp)
+* [[Manual:DIL_Manual/editing|editing]] - Whether the PC is currently in edit mode
+* [[Manual:DIL_Manual/hometown|hometown]] - The player's hometown setting
 
 == See Also ==
-* [[itoa]] - Convert integer to string for display
-* [[sendtext]] - Send text to a player
-* [[act]] - Send formatted messages to units 
+* [[Manual:DIL_Manual/itoa|itoa]] - Convert integer to string for display
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Send text to a player
+* [[Manual:DIL_Manual/act|act]] - Send formatted messages to units 

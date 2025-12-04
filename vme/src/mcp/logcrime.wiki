@@ -189,9 +189,9 @@ The procedure includes type checking to ensure:
 * Both criminal and victim units are character units (PC or NPC)
 
 == Related Functions/Fields ==
-* [[provoked_attack]] - Often called after logging a crime
-* [[awareness_check]] - Used to detect criminal activities
-* [[act]] - For displaying crime-related messages
+* [[Manual:DIL_Manual/provoked_attack|provoked_attack]] - Often called after logging a crime
+* [[Manual:DIL_Manual/awareness_check|awareness_check]] - Used to detect criminal activities
+* [[Manual:DIL_Manual/act|act]] - For displaying crime-related messages
 
 == See Also ==
 * CRIME_XXX constants in values.h and/or vme.h 

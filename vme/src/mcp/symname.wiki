@@ -4,7 +4,7 @@ function: string '''symname'''(u : unitptr);
 The '''symname''' function returns the symbolic name of a unit as used in the game world.
 
 == Description ==
-This function retrieves the symbolic name that uniquely identifies a unit in the game world. The symbolic name is used with functions like [[findsymbolic]] to locate specific units across the entire game world, regardless of their current location.
+This function retrieves the symbolic name that uniquely identifies a unit in the game world. The symbolic name is used with functions like [[Manual:DIL_Manual/findsymbolic|findsymbolic]] to locate specific units across the entire game world, regardless of their current location.
 
 The symbolic name is different from the regular unit name (unit.name) and provides a persistent identifier that can be used to reference the unit even after reboots or when the unit moves between different zones.
 
@@ -254,10 +254,10 @@ The function returns a string containing:
 == Usage Notes ==
 * The symbolic name is different from the regular unit name
 * Symbolic names are persistent across reboots and zone changes
-* The function is commonly used with [[findsymbolic]] for global unit searches
+* The function is commonly used with [[Manual:DIL_Manual/findsymbolic|findsymbolic]] for global unit searches
 * Symbolic names are typically in the format "name@zone" or descriptive names
 * The function returns empty string for null units or units without symbolic names
-* Use [[addextra]] to store symbolic names for later reference
+* Use [[Manual:DIL_Manual/addextra|addextra]] to store symbolic names for later reference
 
 == Error Handling ==
 The function handles errors in the following ways:
@@ -268,8 +268,8 @@ The function handles errors in the following ways:
 Always validate that the target is a valid unit before calling the function.
 
 == Related Functions/Fields ==
-* [[findsymbolic]] - Find units by symbolic name globally
-* [[addextra]] - Store symbolic names in extra descriptions
+* [[Manual:DIL_Manual/findsymbolic|findsymbolic]] - Find units by symbolic name globally
+* [[Manual:DIL_Manual/addextra|addextra]] - Store symbolic names in extra descriptions
 * unitptr.symname - Field to access symbolic name
 
 * unitptr.nameidx - Field for unit name index

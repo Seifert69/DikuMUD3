@@ -35,10 +35,10 @@ This field is available on the following unit types:
 * Returns fail if accessed on invalid unit types
 
 == Related Functions/Fields ==
-* [[experience]] - Function to modify experience values
-* [[exptol]] - Experience needed for next level (PC only)
-* [[level]] - Current level of the unit
+* [[Manual:DIL_Manual/experience|experience]] - Function to modify experience values
+* [[Manual:DIL_Manual/exptol|exptol]] - Experience needed for next level (PC only)
+* [[Manual:DIL_Manual/level|level]] - Current level of the unit
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character unit type constant
-* [[UNIT_ST_NPC]] - Non-player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - Non-player character unit type constant

@@ -240,11 +240,11 @@ The zhead function provides access to the head of the global zone list, allowing
 * If no zones exist in the game, the function may return null
 
 == Related Functions/Fields ==
-* [[zoneptr]] - Zone pointer type and available fields
-* [[ghead]] - Get first player in global player list
-* [[obj_head]] - Get first object in global object list
-* [[npc_head]] - Get first NPC in global NPC list
-* [[room_head]] - Get first room in global room list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and available fields
+* [[Manual:DIL_Manual/ghead|ghead]] - Get first player in global player list
+* [[Manual:DIL_Manual/obj_head|obj_head]] - Get first object in global object list
+* [[Manual:DIL_Manual/npc_head|npc_head]] - Get first NPC in global NPC list
+* [[Manual:DIL_Manual/room_head|room_head]] - Get first room in global room list
 
 == See Also ==
 * Zone system documentation

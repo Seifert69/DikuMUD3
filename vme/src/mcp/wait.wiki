@@ -93,17 +93,17 @@ The '''wait''' function suspends DIL program execution until a message matching 
 == Usage Notes ==
 * The '''flags''' parameter uses SFB_* constants which can be combined with bitwise OR (|)
 * Common SFB flags include:
-** [[#sfbcmd|SFB_CMD]] - Player/NPC commands
-** [[#sfbtick|SFB_TICK]] - Timer events based on [[#heartbeat|heartbeat]]
-** [[#sfbmsg|SFB_MSG]] - Inter-program messages
-** [[#sfbdone|SFB_DONE]] - Completed command notifications
+** [[Manual:DIL_Manual/#sfbcmd|SFB_CMD]] - Player/NPC commands
+** [[Manual:DIL_Manual/#sfbtick|SFB_TICK]] - Timer events based on [[Manual:DIL_Manual/#heartbeat|heartbeat]]
+** [[Manual:DIL_Manual/#sfbmsg|SFB_MSG]] - Inter-program messages
+** [[Manual:DIL_Manual/#sfbdone|SFB_DONE]] - Completed command notifications
 ** SFB_COM - Combat events
 ** SFB_DEAD - Death events
 ** SFB_PRE - Pre-command processing
 * The '''expression''' parameter is optional - if omitted, any matching message will resume execution
-* When waiting, the program sets global variables like [[#activator|activator]], [[#medium|medium]], [[#target|target]], [[#argument|argument]], and [[#cmdstr|cmdstr]]
-* Use [[#command|command()]] function to check specific commands within SFB_CMD events
-* The [[#heartbeat|heartbeat]] variable controls timer frequency for SFB_TICK events
+* When waiting, the program sets global variables like [[Manual:DIL_Manual/#activator|activator]], [[Manual:DIL_Manual/#medium|medium]], [[Manual:DIL_Manual/#target|target]], [[Manual:DIL_Manual/#argument|argument]], and [[Manual:DIL_Manual/#cmdstr|cmdstr]]
+* Use [[Manual:DIL_Manual/#command|command()]] function to check specific commands within SFB_CMD events
+* The [[Manual:DIL_Manual/#heartbeat|heartbeat]] variable controls timer frequency for SFB_TICK events
 * Multiple wait statements can be used to create complex state machines
 
 == Error Handling ==
@@ -114,17 +114,17 @@ The '''wait''' function suspends DIL program execution until a message matching 
 * Always provide exit conditions or timeouts to prevent infinite waiting
 
 == Related Functions/Fields ==
-* [[#interrupt|interrupt()]] - Set up event handlers without waiting
-* [[#send|send()]] / [[#sendto|sendto()]] - Send messages to other DIL programs
-* [[#command|command()]] - Check specific command names
-* [[#heartbeat|heartbeat]] - Control timer frequency
-* [[#activator|activator]] - Unit that triggered the event
-* [[#argument|argument]] - Command arguments or message content
+* [[Manual:DIL_Manual/#interrupt|interrupt()]] - Set up event handlers without waiting
+* [[Manual:DIL_Manual/#send|send()]] / [[Manual:DIL_Manual/#sendto|sendto()]] - Send messages to other DIL programs
+* [[Manual:DIL_Manual/#command|command()]] - Check specific command names
+* [[Manual:DIL_Manual/#heartbeat|heartbeat]] - Control timer frequency
+* [[Manual:DIL_Manual/#activator|activator]] - Unit that triggered the event
+* [[Manual:DIL_Manual/#argument|argument]] - Command arguments or message content
 
 == See Also ==
-* [[#sfbcmd|SFB_CMD]] - Command message documentation
-* [[#sfbtick|SFB_TICK]] - Timer message documentation  
-* [[#sfbmsg|SFB_MSG]] - User message documentation
-* [[#sfbdone|SFB_DONE]] - Command completion documentation
-* [[#sfb_com|SFB_COM]] - Combat message documentation
-* [[#sfb_dead|SFB_DEAD]] - Death message documentation
+* [[Manual:DIL_Manual/#sfbcmd|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/#sfbtick|SFB_TICK]] - Timer message documentation  
+* [[Manual:DIL_Manual/#sfbmsg|SFB_MSG]] - User message documentation
+* [[Manual:DIL_Manual/#sfbdone|SFB_DONE]] - Command completion documentation
+* [[Manual:DIL_Manual/#sfb_com|SFB_COM]] - Combat message documentation
+* [[Manual:DIL_Manual/#sfb_dead|SFB_DEAD]] - Death message documentation

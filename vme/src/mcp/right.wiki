@@ -80,11 +80,11 @@ dilend
 * Handles length overflow gracefully by returning the entire string when r exceeds string length
 
 == Related Functions/Fields ==
-* [[left]] - Function to extract leftmost characters from a string
-* [[mid]] - Function to extract a substring from the middle of a string
-* [[length]] - Function to get the length of a string
-* [[substring]] - Procedure to work with stringlist substrings
+* [[Manual:DIL_Manual/left|left]] - Function to extract leftmost characters from a string
+* [[Manual:DIL_Manual/mid|mid]] - Function to extract a substring from the middle of a string
+* [[Manual:DIL_Manual/length|length]] - Function to get the length of a string
+* [[Manual:DIL_Manual/substring|substring]] - Procedure to work with stringlist substrings
 
 == See Also ==
-* [[getwords]] - Function to split string into words
-* [[strdup]] - Function to duplicate strings
+* [[Manual:DIL_Manual/getwords|getwords]] - Function to split string into words
+* [[Manual:DIL_Manual/strdup|strdup]] - Function to duplicate strings

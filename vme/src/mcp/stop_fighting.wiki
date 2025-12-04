@@ -85,8 +85,8 @@ The function does not return a value.
 * When vict is null, all combat engagements for ch are terminated
 * When vict is specified, only combat between ch and vict is stopped
 * The function automatically handles both sides of the combat relationship
-* Use [[opponent]]() to check if two characters are in combat
-* The [[fighting]] field can be used to check current combat status
+* Use [[Manual:DIL_Manual/opponent|opponent]]() to check if two characters are in combat
+* The [[Manual:DIL_Manual/fighting|fighting]] field can be used to check current combat status
 * Combat is automatically stopped when characters die or leave the area
 
 == Error Handling ==
@@ -99,11 +99,11 @@ The function handles errors in the following ways:
 Always validate that parameters are valid characters before calling the function.
 
 == Related Functions/Fields ==
-* [[set_fighting]] - Start combat between two characters
-* [[opponent]] - Check if two characters are in combat
-* [[fighting]] - Field showing current combat target
-* [[opponentcount]] - Field showing number of opponents
-* [[position]] - Field for character position (useful for checking death)
+* [[Manual:DIL_Manual/set_fighting|set_fighting]] - Start combat between two characters
+* [[Manual:DIL_Manual/opponent|opponent]] - Check if two characters are in combat
+* [[Manual:DIL_Manual/fighting|fighting]] - Field showing current combat target
+* [[Manual:DIL_Manual/opponentcount|opponentcount]] - Field showing number of opponents
+* [[Manual:DIL_Manual/position|position]] - Field for character position (useful for checking death)
 
 == See Also ==
 * DIL Combat System Documentation

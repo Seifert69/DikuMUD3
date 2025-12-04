@@ -64,8 +64,8 @@ code
 * Position constants are typically defined as POSITION_* constants
 
 == Related Functions/Fields ==
-* [[position]] - Current position of a character
+* [[Manual:DIL_Manual/position|position]] - Current position of a character
 
 == See Also ==
-* [[POSITION_STANDING]] - Standing position constant
-* [[POSITION_SLEEPING]] - Sleeping position constant
+* [[Manual:DIL_Manual/POSITION_STANDING|POSITION_STANDING]] - Standing position constant
+* [[Manual:DIL_Manual/POSITION_SLEEPING|POSITION_SLEEPING]] - Sleeping position constant

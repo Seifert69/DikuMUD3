@@ -71,9 +71,9 @@ This field is available on the following unit types:
  } dilend
 
 == Related Functions/Fields ==
-* [[max_endurance]] - Maximum endurance points
-* [[hp]] - Health points
-* [[mana]] - Magic points
+* [[Manual:DIL_Manual/max_endurance|max_endurance]] - Maximum endurance points
+* [[Manual:DIL_Manual/hp|hp]] - Health points
+* [[Manual:DIL_Manual/mana|mana]] - Magic points
 
 == See Also ==
-* [[unit_st_pc]] - Player character fields
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character fields

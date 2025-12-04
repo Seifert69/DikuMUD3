@@ -35,9 +35,9 @@ The '''exec''' function forces a unit (PC or NPC) to execute a command as if the
 * If the command fails, the target is notified normally
 
 == Related Functions/Fields ==
-* [[secure]] - For securing units against destruction/movement
-* [[command]] - For checking what command was entered
-* [[send]] - For sending messages to units
+* [[Manual:DIL_Manual/secure|secure]] - For securing units against destruction/movement
+* [[Manual:DIL_Manual/command|command]] - For checking what command was entered
+* [[Manual:DIL_Manual/send|send]] - For sending messages to units
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type

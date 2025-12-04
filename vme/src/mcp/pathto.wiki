@@ -64,10 +64,10 @@ The function will return '''fail''' when:
 * The parameters are not of unitptr type
 
 == Related Functions/Fields ==
-* [[findroom]] - Find a specific room by name
-* [[findunit]] - Find a specific unit in the world
-* [[unit_room]] - Get the room containing a unit
+* [[Manual:DIL_Manual/findroom|findroom]] - Find a specific room by name
+* [[Manual:DIL_Manual/findunit|findunit]] - Find a specific unit in the world
+* [[Manual:DIL_Manual/unit_room|unit_room]] - Get the room containing a unit
 
 == See Also ==
-* [[move]] - Move a unit in a specific direction
-* [[goto]] - Teleport to a specific location 
+* [[Manual:DIL_Manual/move|move]] - Move a unit in a specific direction
+* [[Manual:DIL_Manual/goto|goto]] - Teleport to a specific location 

@@ -151,10 +151,10 @@ The function will return null if:
 * Memory allocation fails for the new unit
 
 == Related Functions ==
-* [[load]] - Load a unit from database by name
-* [[destroy]] - Remove a unit from the game
-* [[link]] - Move a unit to a different location
+* [[Manual:DIL_Manual/load|load]] - Load a unit from database by name
+* [[Manual:DIL_Manual/destroy|destroy]] - Remove a unit from the game
+* [[Manual:DIL_Manual/link|link]] - Move a unit to a different location
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[EXTRA_NOSAVE]] - Extra description flag for temporary units
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/EXTRA_NOSAVE|EXTRA_NOSAVE]] - Extra description flag for temporary units

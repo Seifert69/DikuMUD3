@@ -115,16 +115,16 @@ Note: The C implementation shows that this field:
 * This field appears to be obsolete or rarely used based on code comments
 
 == Related Fields ==
-* [[abilities]] - Array of ability score values
-* [[race]] - Character race field
-* [[money]] - Character money array for cost validation
+* [[Manual:DIL_Manual/abilities|abilities]] - Array of ability score values
+* [[Manual:DIL_Manual/race|race]] - Character race field
+* [[Manual:DIL_Manual/money|money]] - Character money array for cost validation
 
 == Related Functions ==
-* [[reset_race]] - Function to reset character race and related attributes
-* [[get_racial_ability]] - Internal function for racial ability calculations
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Function to reset character race and related attributes
+* [[Manual:DIL_Manual/get_racial_ability|get_racial_ability]] - Internal function for racial ability calculations
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[RACE_*]] - Race constants
-* [[ABIL_*]] - Ability constants
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/RACE_*|RACE_*]] - Race constants
+* [[Manual:DIL_Manual/ABIL_*|ABIL_*]] - Ability constants

@@ -8,7 +8,7 @@ This function takes a source string and a delimiter string, then returns a strin
 
 The resulting stringlist contains each segment as a separate string element. If the delimiter is not found in the source string, the function returns a stringlist containing the original string as its single element.
 
-A common use case is splitting text by line breaks using the '&x' character, which is particularly useful when processing files read with the [[loadstr]] function.
+A common use case is splitting text by line breaks using the '&x' character, which is particularly useful when processing files read with the [[Manual:DIL_Manual/loadstr|loadstr]] function.
 
 == Parameters ==
 {| class="wikitable"
@@ -102,7 +102,7 @@ The function returns a stringlist containing:
 * The function is case-sensitive for delimiter matching
 * Use '&x' to split by line breaks when working with file content
 * The resulting stringlist can be accessed using array notation: result.[index]
-* Use [[length]]() to get the number of elements in the resulting stringlist
+* Use [[Manual:DIL_Manual/length|length]]() to get the number of elements in the resulting stringlist
 * Stringlist elements are indexed starting from 0
 
 == Error Handling ==
@@ -113,13 +113,13 @@ The function handles errors in the following ways:
 * Always check the length of the returned stringlist before accessing elements
 
 == Related Functions/Fields ==
-* [[length]] - Get the number of elements in a stringlist
-* [[addstring]] - Add a string to a stringlist
-* [[substring]] - Remove a string from a stringlist
-* [[getwords]] - Split string into words (space-delimited)
-* [[loadstr]] - Load file content (often used with split and '&x')
-* [[insert]] - Insert element into stringlist at specific position
-* [[remove]] - Remove element from stringlist at specific position
+* [[Manual:DIL_Manual/length|length]] - Get the number of elements in a stringlist
+* [[Manual:DIL_Manual/addstring|addstring]] - Add a string to a stringlist
+* [[Manual:DIL_Manual/substring|substring]] - Remove a string from a stringlist
+* [[Manual:DIL_Manual/getwords|getwords]] - Split string into words (space-delimited)
+* [[Manual:DIL_Manual/loadstr|loadstr]] - Load file content (often used with split and '&x')
+* [[Manual:DIL_Manual/insert|insert]] - Insert element into stringlist at specific position
+* [[Manual:DIL_Manual/remove|remove]] - Remove element from stringlist at specific position
 
 == See Also ==
 * Stringlist data type documentation

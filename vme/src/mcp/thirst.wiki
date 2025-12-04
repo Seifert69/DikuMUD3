@@ -81,9 +81,9 @@ code
 * The field will return DILV_ERR if accessed on an invalid unit pointer or inappropriate unit type.
 
 == Related Functions/Fields ==
-* [[full]] - The hunger condition field for player characters
-* [[drunk]] - The intoxication level field for player characters
+* [[Manual:DIL_Manual/full|full]] - The hunger condition field for player characters
+* [[Manual:DIL_Manual/drunk|drunk]] - The intoxication level field for player characters
 
 == See Also ==
-* [[unit_st_pc]] - Player character unit type documentation
-* [[pcflags]] - Player character flags and options
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character unit type documentation
+* [[Manual:DIL_Manual/pcflags|pcflags]] - Player character flags and options

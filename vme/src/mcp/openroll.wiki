@@ -87,13 +87,13 @@ Always validate parameters are positive integers:
  }
 
 == Related Functions/Fields ==
-* [[rnd]] - Basic random number generation
-* [[dice]] - Traditional dice rolling
-* [[random]] - Random number generation
-* [[skillchecksa]] - Skill checking system
+* [[Manual:DIL_Manual/rnd|rnd]] - Basic random number generation
+* [[Manual:DIL_Manual/dice|dice]] - Traditional dice rolling
+* [[Manual:DIL_Manual/random|random]] - Random number generation
+* [[Manual:DIL_Manual/skillchecksa|skillchecksa]] - Skill checking system
 
 == See Also ==
-* [[dice]] - Standard dice rolling
-* [[rnd]] - Random number generation
-* [[skillchecksa]] - Skill resolution system
-* [[random]] - General randomization
+* [[Manual:DIL_Manual/dice|dice]] - Standard dice rolling
+* [[Manual:DIL_Manual/rnd|rnd]] - Random number generation
+* [[Manual:DIL_Manual/skillchecksa|skillchecksa]] - Skill resolution system
+* [[Manual:DIL_Manual/random|random]] - General randomization

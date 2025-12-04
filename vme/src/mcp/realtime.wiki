@@ -76,7 +76,7 @@ code
 * This value is independent of game time or MUD uptime
 * The timestamp is in UTC, not local server time
 * Useful for coordinating with external systems or implementing real-world time constraints
-* Can be used with the [[asctime]] function to convert to human-readable format
+* Can be used with the [[Manual:DIL_Manual/asctime|asctime]] function to convert to human-readable format
 
 == Error Handling ==
 The '''realtime''' variable does not generate errors under normal circumstances. However:
@@ -84,9 +84,9 @@ The '''realtime''' variable does not generate errors under normal circumstances.
 * The value may wrap around on systems with 32-bit time_t after January 19, 2038 (Year 2038 problem)
 
 == Related Functions/Fields ==
-* [[asctime]] - Converts Unix timestamp to human-readable string format
-* [[heartbeat]] - Controls DIL program execution timing
-* [[wait]] - Pauses DIL execution for specified conditions
+* [[Manual:DIL_Manual/asctime|asctime]] - Converts Unix timestamp to human-readable string format
+* [[Manual:DIL_Manual/heartbeat|heartbeat]] - Controls DIL program execution timing
+* [[Manual:DIL_Manual/wait|wait]] - Pauses DIL execution for specified conditions
 
 == See Also ==
 * Unix timestamp documentation

@@ -146,7 +146,7 @@ Common position constants include:
 == Usage Notes ==
 * For characters, the position field represents their current physical state
 * For commands, the position field specifies the minimum position required to use the command
-* Use [[position_update]] after modifying HP to ensure proper position updates
+* Use [[Manual:DIL_Manual/position_update|position_update]] after modifying HP to ensure proper position updates
 * Common position checks include comparing against POSITION_SLEEPING, POSITION_FIGHTING, etc.
 * Position constants are defined in values.h and/or vme.h with POSITION_ prefix
 * The field is read/write for characters, allowing manual position changes
@@ -158,12 +158,12 @@ The field access will return '''fail''' when:
 * Attempting to set an invalid position value
 
 == Related Functions/Fields ==
-* [[position_update]] - Updates character position based on current HP
-* [[on_activation]] - Can be used to check position conditions
-* [[cmdptr]] - Command pointer type that also has position field
+* [[Manual:DIL_Manual/position_update|position_update]] - Updates character position based on current HP
+* [[Manual:DIL_Manual/on_activation|on_activation]] - Can be used to check position conditions
+* [[Manual:DIL_Manual/cmdptr|cmdptr]] - Command pointer type that also has position field
 
 == See Also ==
-* [[fighting]] - Field to check if character is in combat
-* [[sleep]] - Command to put character to sleep
-* [[wake]] - Command to wake up character
-* [[stand]] - Command to make character stand 
+* [[Manual:DIL_Manual/fighting|fighting]] - Field to check if character is in combat
+* [[Manual:DIL_Manual/sleep|sleep]] - Command to put character to sleep
+* [[Manual:DIL_Manual/wake|wake]] - Command to wake up character
+* [[Manual:DIL_Manual/stand|stand]] - Command to make character stand 

@@ -181,18 +181,18 @@ The SFB_TICK flag enables DIL programs to perform periodic actions, countdowns, 
 * Use appropriate time calculations to avoid off-by-one errors in timing
 
 == Related Functions/Fields ==
-* [[wait]] - Primary function used with SFB_TICK
-* [[interrupt]] - Alternative method for setting up timer triggers
-* [[heartbeat]] - Variable that controls timer frequency
-* [[PULSE_SEC]] - Constant for time unit conversion
-* [[pause]] - Function that waits for specified time periods
-* [[activator]] - Unit pointer to timer trigger source
-* [[argument]] - Timer event data variable
+* [[Manual:DIL_Manual/wait|wait]] - Primary function used with SFB_TICK
+* [[Manual:DIL_Manual/interrupt|interrupt]] - Alternative method for setting up timer triggers
+* [[Manual:DIL_Manual/heartbeat|heartbeat]] - Variable that controls timer frequency
+* [[Manual:DIL_Manual/PULSE_SEC|PULSE_SEC]] - Constant for time unit conversion
+* [[Manual:DIL_Manual/pause|pause]] - Function that waits for specified time periods
+* [[Manual:DIL_Manual/activator|activator]] - Unit pointer to timer trigger source
+* [[Manual:DIL_Manual/argument|argument]] - Timer event data variable
 
 == See Also ==
-* [[SFB_CMD]] - Command message documentation
-* [[SFB_DONE]] - Command completion documentation
-* [[SFB_MSG]] - Message-based activation
-* [[SFB_PRE]] - Pre-command processing
-* [[wait]] - General wait function documentation
-* [[interrupt]] - General interrupt system
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command message documentation
+* [[Manual:DIL_Manual/SFB_DONE|SFB_DONE]] - Command completion documentation
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message-based activation
+* [[Manual:DIL_Manual/SFB_PRE|SFB_PRE]] - Pre-command processing
+* [[Manual:DIL_Manual/wait|wait]] - General wait function documentation
+* [[Manual:DIL_Manual/interrupt|interrupt]] - General interrupt system

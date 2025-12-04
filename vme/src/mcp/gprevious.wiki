@@ -73,9 +73,9 @@ This field is available on the following unit types:
 * No error occurs when accessing on null units (returns null)
 
 == Related Functions/Fields ==
-* [[ghead]] - Get the first unit in the global list
-* [[gnext]] - Get the next unit in the global list
-* [[previous]] - Get the previous unit in the local list
+* [[Manual:DIL_Manual/ghead|ghead]] - Get the first unit in the global list
+* [[Manual:DIL_Manual/gnext|gnext]] - Get the next unit in the global list
+* [[Manual:DIL_Manual/previous|previous]] - Get the previous unit in the local list
 
 == See Also ==
-* [[unitptr]] - Unit pointer documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer documentation

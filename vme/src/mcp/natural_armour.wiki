@@ -57,14 +57,14 @@ This field is available on the following unit types:
 * Always validate unit type before accessing natural_armour field
 
 == Related Functions/Fields ==
-* [[armor]] - Worn armor equipment
-* [[defensive]] - Defensive combat values
-* [[offensive]] - Offensive combat values
-* [[npcflags]] - NPC-specific flags and settings
-* [[defaultpos]] - Default position of NPCs
+* [[Manual:DIL_Manual/armor|armor]] - Worn armor equipment
+* [[Manual:DIL_Manual/defensive|defensive]] - Defensive combat values
+* [[Manual:DIL_Manual/offensive|offensive]] - Offensive combat values
+* [[Manual:DIL_Manual/npcflags|npcflags]] - NPC-specific flags and settings
+* [[Manual:DIL_Manual/defaultpos|defaultpos]] - Default position of NPCs
 
 == See Also ==
 * Unit type constants: '''UNIT_ST_NPC''', '''UNIT_ST_PC'''
 * Combat-related fields: '''attack_type''', '''natural_armour'''
-* NPC creation functions: [[reset_race]], [[reset_level]]
-* Equipment functions: [[addequip]], [[unequip]] 
+* NPC creation functions: [[Manual:DIL_Manual/reset_race|reset_race]], [[Manual:DIL_Manual/reset_level|reset_level]]
+* Equipment functions: [[Manual:DIL_Manual/addequip|addequip]], [[Manual:DIL_Manual/unequip|unequip]] 

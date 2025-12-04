@@ -52,13 +52,13 @@ Always check the return value for null before using it:
  }
 
 == Related Functions/Fields ==
-* [[npc_head]] - Returns first NPC in global list
-* [[room_head]] - Returns first room in global list
-* [[ghead]] - Returns first unit in global list
-* [[zone_head]] - Returns first zone in global list
-* [[command_head]] - Returns first command in global list
+* [[Manual:DIL_Manual/npc_head|npc_head]] - Returns first NPC in global list
+* [[Manual:DIL_Manual/room_head|room_head]] - Returns first room in global list
+* [[Manual:DIL_Manual/ghead|ghead]] - Returns first unit in global list
+* [[Manual:DIL_Manual/zone_head|zone_head]] - Returns first zone in global list
+* [[Manual:DIL_Manual/command_head|command_head]] - Returns first command in global list
 
 == See Also ==
-* [[unitptr]]
-* [[next]] - Navigate to next unit in list
-* [[isObj]] - Check if unit is an object 
+* [[Manual:DIL_Manual/unitptr|unitptr]]
+* [[Manual:DIL_Manual/next|next]] - Navigate to next unit in list
+* [[Manual:DIL_Manual/isObj|isObj]] - Check if unit is an object 

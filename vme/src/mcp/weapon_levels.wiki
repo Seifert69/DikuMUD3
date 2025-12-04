@@ -77,9 +77,9 @@ The field requires an integer index parameter:
 * Invalid parameter types will result in an error
 
 == Related Functions/Fields ==
-* [[weapon_info]] - Get information about weapon types
-* [[weapon_name]] - Get the name of a weapon type
-* [[weapon_costs]] - Get racial weapon cost information
+* [[Manual:DIL_Manual/weapon_info|weapon_info]] - Get information about weapon types
+* [[Manual:DIL_Manual/weapon_name|weapon_name]] - Get the name of a weapon type
+* [[Manual:DIL_Manual/weapon_costs|weapon_costs]] - Get racial weapon cost information
 * .weapons[] - Access weapon skill values (alternative access method)
 
 == See Also ==

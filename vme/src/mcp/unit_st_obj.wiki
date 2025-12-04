@@ -234,26 +234,26 @@ The '''UNIT_ST_OBJ''' constant is read-only and cannot be modified at runtime. I
 * Consider edge cases where unit type might be unknown or invalid
 
 == Related Functions/Fields ==
-* [[type]] - Function to get the type of a unit
-* [[objecttype]] - Object type field (read-only)
-* [[value]] - Object values array (read/write)
-* [[objectflags]] - Object flags field (read/write)
-* [[cost]] - Object cost field (read/write)
-* [[rent]] - Object rent field (read/write)
-* [[equip]] - Equipment position field (read/write)
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/type|type]] - Function to get the type of a unit
+* [[Manual:DIL_Manual/objecttype|objecttype]] - Object type field (read-only)
+* [[Manual:DIL_Manual/value|value]] - Object values array (read/write)
+* [[Manual:DIL_Manual/objectflags|objectflags]] - Object flags field (read/write)
+* [[Manual:DIL_Manual/cost|cost]] - Object cost field (read/write)
+* [[Manual:DIL_Manual/rent|rent]] - Object rent field (read/write)
+* [[Manual:DIL_Manual/equip|equip]] - Equipment position field (read/write)
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
 
 == See Also ==
-* [[UNIT_ST_PC]] - Player character type constant
-* [[UNIT_ST_NPC]] - NPC type constant
-* [[UNIT_ST_ROOM]] - Room type constant
-* [[type]] - Unit type checking function
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character type constant
+* [[Manual:DIL_Manual/UNIT_ST_NPC|UNIT_ST_NPC]] - NPC type constant
+* [[Manual:DIL_Manual/UNIT_ST_ROOM|UNIT_ST_ROOM]] - Room type constant
+* [[Manual:DIL_Manual/type|type]] - Unit type checking function
 
-* [[objecttype]] - Object type field documentation
-* [[value]] - Object values array documentation
-* [[objectflags]] - Object flags field documentation
-* [[cost]] - Object cost field documentation
-* [[rent]] - Object rent field documentation
-* [[equip]] - Equipment position field documentation
+* [[Manual:DIL_Manual/objecttype|objecttype]] - Object type field documentation
+* [[Manual:DIL_Manual/value|value]] - Object values array documentation
+* [[Manual:DIL_Manual/objectflags|objectflags]] - Object flags field documentation
+* [[Manual:DIL_Manual/cost|cost]] - Object cost field documentation
+* [[Manual:DIL_Manual/rent|rent]] - Object rent field documentation
+* [[Manual:DIL_Manual/equip|equip]] - Equipment position field documentation

@@ -142,14 +142,14 @@ The function will fail if:
 * The function returns a fail value if any parameter validation fails
 
 == Related Functions/Fields ==
-* [[left]] - Extracts left portion of a string
-* [[right]] - Extracts right portion of a string
-* [[length]] - Returns length of a string
-* [[substring]] - Removes strings from stringlists
-* [[in]] - Operator to check if string contains another string
+* [[Manual:DIL_Manual/left|left]] - Extracts left portion of a string
+* [[Manual:DIL_Manual/right|right]] - Extracts right portion of a string
+* [[Manual:DIL_Manual/length|length]] - Returns length of a string
+* [[Manual:DIL_Manual/substring|substring]] - Removes strings from stringlists
+* [[Manual:DIL_Manual/in|in]] - Operator to check if string contains another string
 
 == See Also ==
-* [[string]]
-* [[left]]
-* [[right]]
-* [[in]]
+* [[Manual:DIL_Manual/string|string]]
+* [[Manual:DIL_Manual/left|left]]
+* [[Manual:DIL_Manual/right|right]]
+* [[Manual:DIL_Manual/in|in]]

@@ -157,16 +157,16 @@ Note: The C implementation shows that this function:
 * Consider using acc_balance field to check available funds before transactions
 
 == Related Functions ==
-* [[acc_balance]] - Field to read player's account balance
-* [[acc_total]] - Field to read player's total credit
-* [[transfermoney]] - Function to transfer physical money between units
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Field to read player's account balance
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Field to read player's total credit
+* [[Manual:DIL_Manual/transfermoney|transfermoney]] - Function to transfer physical money between units
 
 == Related Fields ==
-* [[acc_balance]] - Current account balance
-* [[acc_total]] - Total credit available
-* [[money]] - Physical currency carried by the player
+* [[Manual:DIL_Manual/acc_balance|acc_balance]] - Current account balance
+* [[Manual:DIL_Manual/acc_total|acc_total]] - Total credit available
+* [[Manual:DIL_Manual/money|money]] - Physical currency carried by the player
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[accounting]] - Server accounting mode configuration
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/accounting|accounting]] - Server accounting mode configuration

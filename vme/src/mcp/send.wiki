@@ -54,13 +54,13 @@ The send function broadcasts a message to all DIL programs in the current local 
 * The C implementation includes null pointer checking before sending the message
 
 == Related Functions/Fields ==
-* [[sendto]] - Sends a message to DIL programs in a specific unit
-* [[sendtext]] - Sends text directly to a player
-* [[sendtoall]] - Sends a message to all DIL programs globally
-* [[sendtoalldil]] - Sends a message to all DIL programs matching a pattern
+* [[Manual:DIL_Manual/sendto|sendto]] - Sends a message to DIL programs in a specific unit
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Sends text directly to a player
+* [[Manual:DIL_Manual/sendtoall|sendtoall]] - Sends a message to all DIL programs globally
+* [[Manual:DIL_Manual/sendtoalldil|sendtoalldil]] - Sends a message to all DIL programs matching a pattern
 
 == See Also ==
-* [[SFB_MSG]] - Message class flag for receiving messages
-* [[wait]] - Function for waiting on specific message classes
-* [[activator]] - Variable containing the message sender
-* [[argument]] - Variable containing the message content
+* [[Manual:DIL_Manual/SFB_MSG|SFB_MSG]] - Message class flag for receiving messages
+* [[Manual:DIL_Manual/wait|wait]] - Function for waiting on specific message classes
+* [[Manual:DIL_Manual/activator|activator]] - Variable containing the message sender
+* [[Manual:DIL_Manual/argument|argument]] - Variable containing the message content

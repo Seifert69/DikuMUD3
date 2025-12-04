@@ -118,17 +118,17 @@ Note: The C implementation shows that this field:
 * Often used together with ability_costs field for complete training validation
 
 == Related Fields ==
-* [[abilities]] - Array of current ability score values
-* [[ability_costs]] - Array of ability training costs
-* [[level]] - Character's current level
-* [[money]] - Character money array for cost validation
+* [[Manual:DIL_Manual/abilities|abilities]] - Array of current ability score values
+* [[Manual:DIL_Manual/ability_costs|ability_costs]] - Array of ability training costs
+* [[Manual:DIL_Manual/level|level]] - Character's current level
+* [[Manual:DIL_Manual/money|money]] - Character money array for cost validation
 
 == Related Functions ==
-* [[reset_race]] - Function to reset character race and related attributes
-* [[getAbilityLevelAtIndex]] - Internal function for level requirement calculations
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Function to reset character race and related attributes
+* [[Manual:DIL_Manual/getAbilityLevelAtIndex|getAbilityLevelAtIndex]] - Internal function for level requirement calculations
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[UNIT_ST_PC]] - Player character unit type
-* [[ABIL_*]] - Ability constants
-* [[ability_costs]] - Ability training costs field
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/UNIT_ST_PC|UNIT_ST_PC]] - Player character unit type
+* [[Manual:DIL_Manual/ABIL_*|ABIL_*]] - Ability constants
+* [[Manual:DIL_Manual/ability_costs|ability_costs]] - Ability training costs field

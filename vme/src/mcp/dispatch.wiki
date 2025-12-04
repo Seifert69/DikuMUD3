@@ -67,8 +67,8 @@ The function performs basic error checking:
  } dilend
 
 == Related Functions/Fields ==
-* [[flog]] - Write to log files
-* [[log]] - Log messages to system
-* [[sendtext]] - Send text to players
+* [[Manual:DIL_Manual/flog|flog]] - Write to log files
+* [[Manual:DIL_Manual/log|log]] - Log messages to system
+* [[Manual:DIL_Manual/sendtext|sendtext]] - Send text to players
 
 == See Also ==

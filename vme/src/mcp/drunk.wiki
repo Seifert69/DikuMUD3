@@ -53,8 +53,8 @@ This field is available on the following unit types:
  } dilend
 
 == Related Functions/Fields ==
-* [[thirst]] - Character thirst level
-* [[full]] - Character hunger level
+* [[Manual:DIL_Manual/thirst|thirst]] - Character thirst level
+* [[Manual:DIL_Manual/full|full]] - Character hunger level
 
 == See Also ==
-* [[unit_st_pc]] - Player character fields
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character fields

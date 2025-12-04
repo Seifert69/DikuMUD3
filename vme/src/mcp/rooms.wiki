@@ -149,13 +149,13 @@ This field is available on the following unit types:
 * Invalid zoneptr types will result in DILV_ERR
 
 == Related Functions/Fields ==
-* [[zhead]] - Function to get the first zone in the global zone list
-* [[zoneptr]] - Zone pointer type and its available fields
-* [[unitptr]] - Unit pointer type and navigation methods (.next field)
-* [[roomcount]] - Field that returns the number of rooms in a zone
+* [[Manual:DIL_Manual/zhead|zhead]] - Function to get the first zone in the global zone list
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer type and its available fields
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer type and navigation methods (.next field)
+* [[Manual:DIL_Manual/roomcount|roomcount]] - Field that returns the number of rooms in a zone
 
 == See Also ==
-* [[zoneptr]] - Complete documentation of zone pointer fields
-* [[zhead]] - Getting the first zone in the list
-* [[roomcount]] - Getting room count without iteration
-* [[unitptr]] - Unit pointer navigation and fields
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Complete documentation of zone pointer fields
+* [[Manual:DIL_Manual/zhead|zhead]] - Getting the first zone in the list
+* [[Manual:DIL_Manual/roomcount|roomcount]] - Getting room count without iteration
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer navigation and fields

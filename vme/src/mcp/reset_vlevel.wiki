@@ -159,11 +159,11 @@ code
 * The function only works on player characters (UNIT_ST_PC), not NPCs
 * Immortal characters are protected from virtual level reset
 * The function requires zone access level > 1 to execute
-* This is typically used in conjunction with [[reset_level]] and [[reset_race]]
+* This is typically used in conjunction with [[Manual:DIL_Manual/reset_level|reset_level]] and [[Manual:DIL_Manual/reset_race|reset_race]]
 * The virtual level is separate from the regular level field (pc.level)
 * Virtual level may affect different game mechanics than regular level
 * The function sets virtual level to exactly 1
-* Experience is not automatically adjusted - use [[experience]] function separately if needed
+* Experience is not automatically adjusted - use [[Manual:DIL_Manual/experience|experience]] function separately if needed
 * Virtual level is often used for progression systems, training calculations, or special abilities
 
 == Error Handling ==
@@ -174,14 +174,14 @@ The function will fail and log an error if:
 * The character is immortal (protected from virtual level reset)
 
 == Related Functions/Fields ==
-* [[reset_level]] - Resets a player's regular level to 1
-* [[reset_race]] - Resets a player's race-specific attributes
-* [[vlevel]] - Field containing character's virtual level
-* [[experience]] - Modifies character experience
-* [[IS_IMMORTAL]] - Checks if character is immortal
-* [[pcinitabils]] - Initializes player abilities
+* [[Manual:DIL_Manual/reset_level|reset_level]] - Resets a player's regular level to 1
+* [[Manual:DIL_Manual/reset_race|reset_race]] - Resets a player's race-specific attributes
+* [[Manual:DIL_Manual/vlevel|vlevel]] - Field containing character's virtual level
+* [[Manual:DIL_Manual/experience|experience]] - Modifies character experience
+* [[Manual:DIL_Manual/IS_IMMORTAL|IS_IMMORTAL]] - Checks if character is immortal
+* [[Manual:DIL_Manual/pcinitabils|pcinitabils]] - Initializes player abilities
 
 == See Also ==
-* [[reset_level]]
-* [[reset_race]]
-* [[unit_st_pc and unit_st_npc]]
+* [[Manual:DIL_Manual/reset_level|reset_level]]
+* [[Manual:DIL_Manual/reset_race|reset_race]]
+* [[Manual:DIL_Manual/unit_st_pc and unit_st_npc|unit_st_pc and unit_st_npc]]

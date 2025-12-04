@@ -72,10 +72,10 @@ The function performs validation:
 * '''Memory allocation'' - Handles memory allocation failures gracefully
 
 == Related Functions ==
-* [[delstr]] - Delete strings from extra descriptions
-* [[extra]] - Access extra description data
-* [[addstring]] - Add strings to string lists
+* [[Manual:DIL_Manual/delstr|delstr]] - Delete strings from extra descriptions
+* [[Manual:DIL_Manual/extra|extra]] - Access extra description data
+* [[Manual:DIL_Manual/addstring|addstring]] - Add strings to string lists
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[extraptr]] - Extra description pointer type
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/extraptr|extraptr]] - Extra description pointer type

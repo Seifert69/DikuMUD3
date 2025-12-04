@@ -62,10 +62,10 @@ This field is available on the following unit types:
 * Always validate height ranges are appropriate for the unit type
 
 == Related Functions/Fields ==
-* [[weight]] - Unit weight field
-* [[baseweight]] - Base weight field
-* [[objecttype]] - Object type field
-* [[value]] - Object values array
+* [[Manual:DIL_Manual/weight|weight]] - Unit weight field
+* [[Manual:DIL_Manual/baseweight|baseweight]] - Base weight field
+* [[Manual:DIL_Manual/objecttype|objecttype]] - Object type field
+* [[Manual:DIL_Manual/value|value]] - Object values array
 
 == See Also ==
-* [[unitptr]] - Unit pointer documentation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer documentation

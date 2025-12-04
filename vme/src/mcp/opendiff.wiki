@@ -20,7 +20,7 @@ This field is available on the following unit types:
 == Usage Notes ==
 This field represents the difficulty level for opening or picking locks on the unit.
 Higher values make locks more difficult to pick, while lower values make them easier.
-This field is used in conjunction with [[openflags]] to determine the lock state.
+This field is used in conjunction with [[Manual:DIL_Manual/openflags|openflags]] to determine the lock state.
 The value is typically used as a modifier in skill checks for lockpicking abilities.
 
 == Examples ==
@@ -63,15 +63,15 @@ Always verify the unit pointer is valid before accessing opendiff:
  }
 
 == Related Functions/Fields ==
-* [[openflags]] - Open/close/lock state flags
-* [[exit_diff]] - Exit-specific difficulty values
-* [[skillchecksa]] - Skill checking function
-* [[skills]] - Character skills array
-* [[SKI_PICK_LOCK]] - Lockpicking skill constant
+* [[Manual:DIL_Manual/openflags|openflags]] - Open/close/lock state flags
+* [[Manual:DIL_Manual/exit_diff|exit_diff]] - Exit-specific difficulty values
+* [[Manual:DIL_Manual/skillchecksa|skillchecksa]] - Skill checking function
+* [[Manual:DIL_Manual/skills|skills]] - Character skills array
+* [[Manual:DIL_Manual/SKI_PICK_LOCK|SKI_PICK_LOCK]] - Lockpicking skill constant
 
 == See Also ==
-* [[unitptr]] - General unit pointer documentation
-* [[openflags]] - Open state flags
-* [[exit_diff]] - Exit difficulty values
-* [[skillchecksa]] - Skill checking system
-* [[isset]] - Flag testing function 
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer documentation
+* [[Manual:DIL_Manual/openflags|openflags]] - Open state flags
+* [[Manual:DIL_Manual/exit_diff|exit_diff]] - Exit difficulty values
+* [[Manual:DIL_Manual/skillchecksa|skillchecksa]] - Skill checking system
+* [[Manual:DIL_Manual/isset|isset]] - Flag testing function 

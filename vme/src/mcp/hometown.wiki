@@ -78,5 +78,5 @@ Returns a string pointer containing the symbolic name of the player's hometown r
 
 == See Also
 
-* [[findroom]] - Find a room by symbolic name
-* [[unit_st_pc]] - Player character unit fields 
+* [[Manual:DIL_Manual/findroom|findroom]] - Find a room by symbolic name
+* [[Manual:DIL_Manual/unit_st_pc|unit_st_pc]] - Player character unit fields 

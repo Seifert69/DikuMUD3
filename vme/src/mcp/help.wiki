@@ -59,10 +59,10 @@ This field is available on the following pointer types:
 * The help field may return an empty string if no help text is defined
 
 == Related Functions/Fields ==
-* [[zhead]] - Get first zone in global list
-* [[notes]] - Zone notes field
-* [[zone]] - Zone name field of units
-* [[findzone]] - Find a zone by name
+* [[Manual:DIL_Manual/zhead|zhead]] - Get first zone in global list
+* [[Manual:DIL_Manual/notes|notes]] - Zone notes field
+* [[Manual:DIL_Manual/zone|zone]] - Zone name field of units
+* [[Manual:DIL_Manual/findzone|findzone]] - Find a zone by name
 
 == See Also ==
-* [[zoneptr]] - Zone pointer documentation
+* [[Manual:DIL_Manual/zoneptr|zoneptr]] - Zone pointer documentation

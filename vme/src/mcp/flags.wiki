@@ -55,11 +55,11 @@ unit.flags := unit.flags & ~UNIT_FL_INVISIBLE;
 * Some flags may be read-only depending on unit type
 
 == Related Functions/Fields ==
-* [[isset()]] - Test if a flag is set
-* [[unset()]] - Clear a flag
-* [[charflags]] - Character-specific flags
-* [[roomflags]] - Room-specific flags
-* [[objectflags]] - Object-specific flags
+* [[Manual:DIL_Manual/isset()|isset()]] - Test if a flag is set
+* [[Manual:DIL_Manual/unset()|unset()]] - Clear a flag
+* [[Manual:DIL_Manual/charflags|charflags]] - Character-specific flags
+* [[Manual:DIL_Manual/roomflags|roomflags]] - Room-specific flags
+* [[Manual:DIL_Manual/objectflags|objectflags]] - Object-specific flags
 
 == See Also ==
 * UNIT_FL_* constants documentation

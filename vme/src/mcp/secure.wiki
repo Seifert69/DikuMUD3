@@ -155,33 +155,33 @@ The secure function sets up monitoring on a unitptr, causing the DIL program to 
 * "Leaving local environment" includes: destruction, moving to another room, or becoming unavailable
 * Transparent rooms within the same room do NOT trigger secure (unit is still in local environment)
 * Multiple units can be secured simultaneously, each with their own labels
-* Use [[unsecure]] to remove monitoring when no longer needed
+* Use [[Manual:DIL_Manual/unsecure|unsecure]] to remove monitoring when no longer needed
 * Security checks cascade through DIL sub-function frames
 * The label must be defined in the current DIL program scope
 
 == Trigger Conditions ==
 A secure() is automatically triggered under these circumstances:
-* When the secured unit is destroyed (via [[destroy]] function)
+* When the secured unit is destroyed (via [[Manual:DIL_Manual/destroy|destroy]] function)
 * When the secured unit moves to a different room/location
 * When the secured unit otherwise becomes unavailable in local environment
 * When certain DIL functions are called that might affect the unit (exec, destroy, etc.)
-* At every step of a [[foreach]] loop
+* At every step of a [[Manual:DIL_Manual/foreach|foreach]] loop
 * When returning from sub-functions that have active secure() monitoring
 
 == Error Handling ==
 * If the unit parameter is null, the function will fail with a runtime error
 * If the label doesn't exist, the program will fail when triggered
-* Always pair secure() with corresponding [[unsecure]]() calls
+* Always pair secure() with corresponding [[Manual:DIL_Manual/unsecure|unsecure]]() calls
 * Multiple triggered secures will jump to the last event's label
 * Nested secure() calls in sub-functions propagate to parent frames
 
 == Related Functions/Fields ==
-* [[unsecure]] - Function to remove unit monitoring
-* [[destroy]] - Function that can trigger secure() monitoring
-* [[exec]] - Function that can trigger secure() monitoring
-* [[foreach]] - Loop structure that checks secure() at each iteration
+* [[Manual:DIL_Manual/unsecure|unsecure]] - Function to remove unit monitoring
+* [[Manual:DIL_Manual/destroy|destroy]] - Function that can trigger secure() monitoring
+* [[Manual:DIL_Manual/exec|exec]] - Function that can trigger secure() monitoring
+* [[Manual:DIL_Manual/foreach|foreach]] - Loop structure that checks secure() at each iteration
 
 == See Also ==
-* [[unsecure]] - Removing unit security monitoring
+* [[Manual:DIL_Manual/unsecure|unsecure]] - Removing unit security monitoring
 * Unit management and protection patterns
 * DIL program control flow structures

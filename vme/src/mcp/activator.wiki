@@ -89,11 +89,11 @@ Note: The field is set by the DIL runtime system when:
 * Use with wait() and SFB_CMD to create responsive programs that react to different activators
 
 == Related Fields ==
-* [[self]] - The current unit executing the DIL program
-* [[command]] - The command that was executed
-* [[argument]] - Arguments provided with the command
+* [[Manual:DIL_Manual/self|self]] - The current unit executing the DIL program
+* [[Manual:DIL_Manual/command|command]] - The command that was executed
+* [[Manual:DIL_Manual/argument|argument]] - Arguments provided with the command
 
 == See Also ==
-* [[unitptr]] - Unit pointer data type
-* [[SFB_CMD]] - Command activation wait flag
-* [[wait]] - Function for waiting on specific conditions
+* [[Manual:DIL_Manual/unitptr|unitptr]] - Unit pointer data type
+* [[Manual:DIL_Manual/SFB_CMD|SFB_CMD]] - Command activation wait flag
+* [[Manual:DIL_Manual/wait|wait]] - Function for waiting on specific conditions

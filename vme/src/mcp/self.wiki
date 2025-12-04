@@ -145,10 +145,10 @@ Depending on the unit type, self provides access to different fields:
 * Some operations may fail if self is in an invalid state (e.g., dead PC)
 
 == Related Functions/Fields ==
-* [[activator]] - Unit that triggered the current DIL activation
-* [[unitptr]] - General unit pointer type and operations
-* [[position]] - Field for unit's current position
-* [[type]] - Field for unit's type (UNIT_ST_* constants)
+* [[Manual:DIL_Manual/activator|activator]] - Unit that triggered the current DIL activation
+* [[Manual:DIL_Manual/unitptr|unitptr]] - General unit pointer type and operations
+* [[Manual:DIL_Manual/position|position]] - Field for unit's current position
+* [[Manual:DIL_Manual/type|type]] - Field for unit's type (UNIT_ST_* constants)
 
 == See Also ==
 * Unit type constants and their specific fields
