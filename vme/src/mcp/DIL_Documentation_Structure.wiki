@@ -1,0 +1,836 @@
+= DikuMUD3 DIL Documentation =
+
+== 1. Language Fundamentals ==
+
+=== 1.1 Data Types ===
+==== Basic Types ====
+; integer : Basic numeric data type
+: Used for mathematical operations and counters
+; string : Text data type
+: Used for messages, names, and descriptions
+
+==== Complex Types ====
+; unitptr : Unit pointer data type
+: References to game units (characters, objects, rooms)
+; intlist : Integer list data type
+: Collections of integer values
+; stringlist : String list data type
+: Collections of string values
+
+==== Type Conversion Functions ====
+; atoi : Convert string to integer
+: Parses numeric values from text
+; itoa : Convert integer to string
+: Formats numbers as text
+
+=== 1.2 Variables and Constants ===
+
+==== Built-in Variables ====
+; self : unitptr
+: Current unit executing the DIL program
+; activator : unitptr
+: Unit that activated the current DIL program
+; argument : string
+: Arguments provided with the command
+; command : string
+: The command that was executed
+
+==== Unit Type Constants ====
+; UNIT_ST_PC : Player character unit type
+: Identifies player-controlled characters
+; UNIT_ST_NPC : Non-player character unit type
+: Identifies computer-controlled characters
+; UNIT_ST_OBJ : Object unit type
+: Identifies items and objects
+; UNIT_ST_ROOM : Room unit type
+: Identifies locations and areas
+
+==== Game Constants ====
+; POSITION_* : Position constants
+: Character positions (standing, sitting, fighting, etc.)
+; CHAR_* : Character flag constants
+: Character states and affects
+; OBJ_* : Object flag constants
+: Object properties and states
+; ROOM_* : Room flag constants
+: Room properties and characteristics
+
+=== 1.3 Control Structures ===
+
+==== Conditional ====
+; if : Conditional statement
+: Executes code based on boolean conditions
+; switch : Multi-way conditional
+: Selects between multiple code paths
+
+==== Loops ====
+; while : Loop construct
+: Repeats code while condition is true
+; goto : Unconditional jump
+: Transfers control to labeled statements
+
+==== Functions ====
+; return : Return from function
+: Exits current function with optional value
+; quit : Terminate DIL program
+: Ends program execution immediately
+
+=== 1.4 Operators and Expressions ===
+
+==== Arithmetic Operators ====
+; + : Addition
+: Mathematical addition
+; - : Subtraction
+: Mathematical subtraction
+; * : Multiplication
+: Mathematical multiplication
+; / : Division
+: Mathematical division
+
+==== Comparison Operators ====
+; = : Equality test
+: Checks if values are equal
+; < : Less than
+: Numeric comparison
+; > : Greater than
+: Numeric comparison
+; <= : Less than or equal
+: Numeric comparison
+; >= : Greater than or equal
+: Numeric comparison
+
+==== Logical Operators ====
+; and : Logical AND
+: Boolean conjunction
+; or : Logical OR
+: Boolean disjunction
+; not : Logical NOT
+: Boolean negation
+
+== 2. Unit System ==
+
+=== 2.1 Unit Types ===
+
+==== Player Characters (UNIT_ST_PC) ====
+; birth : Creation timestamp
+: When the character was created
+; skills : Skill proficiencies array
+: Character skill values
+; skill_points : Available skill points
+: Points for skill advancement
+
+==== Non-Player Characters (UNIT_ST_NPC) ====
+; npcflags : NPC-specific flags
+: NPC behavior and properties
+; hometown : Home location
+: NPC's origin location
+
+==== Objects (UNIT_ST_OBJ) ====
+; objectflags : Object properties
+: Object state and characteristics
+; objecttype : Object classification
+: Type of object (weapon, armor, container, etc.)
+; value : Monetary value
+: Object's worth in currency
+
+==== Rooms (UNIT_ST_ROOM) ====
+; roomflags : Room properties
+: Room characteristics and states
+; zoneidx : Zone index
+: Which zone the room belongs to
+
+=== 2.2 Character Fields ===
+
+==== Core Attributes ====
+; abilities : Ability scores array
+: Character attributes (STR, DEX, CON, etc.)
+; level : Character level
+: Experience and power level
+; alignment : Moral alignment
+: Good/evil alignment value
+; race : Racial type
+: Character's race
+
+==== Combat Attributes ====
+; position : Current position
+: Physical state (standing, fighting, etc.)
+; attack_type : Unarmed attack type
+: Natural combat style
+; fighting : Combat opponent
+: Current combat target
+; hp : Hit points
+: Current health
+; max_hp : Maximum hit points
+: Health capacity
+
+==== Skills & Spells ====
+; skills : Skill proficiencies
+: Character skill values
+; spells : Spell proficiencies
+: Magical ability levels
+; weapons : Weapon proficiencies
+: Combat skill levels
+
+==== Flags & States ====
+; charflags : Character flags
+: States and affects
+; pcflags : Player-specific flags
+: Player-only properties
+
+==== Economic ====
+; purse : Money container
+: Character's wealth
+; paycheck : Regular income
+: Periodic earnings
+
+=== 2.3 Object Fields ===
+
+==== Basic Properties ====
+; name : Object name
+: Short identifier
+; title : Object title
+: Descriptive name
+; descr : Description
+: Detailed description
+
+==== Physical Properties ====
+; weight : Current weight
+: Total weight including contents
+; baseweight : Base weight
+: Empty weight of object
+; value : Monetary value
+: Object's worth
+
+==== Container Properties ====
+; capacity : Carrying capacity
+: Maximum weight capacity
+; manipulation : Manipulation flags
+: How object can be handled
+
+=== 2.4 Room Fields ===
+
+==== Basic Properties ====
+; name : Room name
+: Short identifier
+; title : Room title
+: Descriptive name
+; descr : Room description
+: Detailed description
+
+==== Environmental ====
+; bright : Brightness level
+: Light level in room
+; light : Light sources
+: Available illumination
+; islight : Light check
+: Whether room is lit
+
+==== Exits ====
+; exit_to : Exit destinations
+: Where exits lead
+; exit_names : Exit names
+: Exit identifiers
+; exit_info : Exit properties
+: Exit characteristics
+
+==== Flags & Zones ====
+; roomflags : Room flags
+: Room properties
+; zoneidx : Zone index
+: Zone membership
+
+=== 2.5 Unit Operations ===
+
+==== Finding Units ====
+; findunit : Search for units
+: Find units by name and location
+; findsymbolic : Find by symbolic name
+: Locate units by symbolic reference
+; findroom : Find room by name
+: Locate specific rooms
+
+==== Creating/Destroying ====
+; load : Load unit from database
+: Create new unit instance
+; destroy : Destroy unit
+: Remove unit from game
+; delunit : Delete unit
+: Permanent unit removal
+; clone : Duplicate unit
+: Create copy of unit
+
+==== Linking ====
+; link : Link units together
+: Establish parent-child relationships
+; outside : Outside container
+: External container reference
+; inside : Inside container
+: Internal container reference
+
+==== Movement ====
+; transfer : Move unit
+: Relocate unit to new location
+; setroomexit : Set room exit
+: Define room connections
+
+== 3. Communication System ==
+
+=== 3.1 Message Functions ===
+
+==== Basic Messaging ====
+; sendtext : Send text to unit
+: Direct message delivery
+; sendto : Send message to unit
+: Alternative message function
+; send : Send message
+: Basic message delivery
+
+==== Formatted Messaging ====
+; act : Send formatted social message
+: Complex message with formatters
+; sact : Send formatted message (alternative)
+: Alternative formatted messaging
+
+==== Specialized ====
+; pagestring : Send paginated output
+: Long text with pagination
+; send_pre : Send preparation message
+: Pre-action notification
+; send_done : Send completion message
+: Post-action notification
+
+=== 3.2 Message Formatters ===
+
+==== Character References ====
+; $1 : First character name
+: Actor in action
+; $2 : Second character name
+: Medium or object
+; $3 : Third character name
+: Target or victim
+
+==== Gender-Aware References ====
+; $5 : Gender-aware pronoun (subject)
+: he/she/it
+; $6 : Gender-aware pronoun (object)
+: him/her/it
+; $n : Gender-aware possessive
+: his/her/its
+
+==== Visibility Flags ====
+; A_* : Action visibility flags
+: Who sees the action
+; TO_* : Target specification
+: Message recipients
+
+=== 3.3 Input/Output ===
+
+==== Command Processing ====
+; argument : Command arguments
+: Parameters passed to command
+; command : Command name
+: The command executed
+; cmdstr : Command string
+: Full command text
+
+==== Text Processing ====
+; substring : Extract substring
+: Get portion of string
+; split : Split string
+: Divide string into parts
+; replace : Replace text
+: Substitute text patterns
+
+==== User Interaction ====
+; pause : Wait for input
+: Suspend execution for user input
+; exec : Execute command
+: Run game command
+
+== 4. Game Systems ==
+
+=== 4.1 Combat System ===
+
+==== Combat State ====
+; fighting : Combat opponent
+: Current combat target
+; opponent : Combat target
+: Alternative opponent reference
+; position : Combat position
+: Fighting stance/state
+
+==== Attack Types ====
+; attack_type : Unarmed combat
+: Natural attack style
+; weapon_info : Weapon data
+: Weapon statistics
+; weapon_name : Weapon name
+: Get weapon type name
+
+==== Damage Calculation ====
+; meleedamage : Melee damage
+: Calculate combat damage
+; defensive : Defense value
+: Protection rating
+; offensive : Attack value
+: Combat effectiveness
+
+==== Combat Functions ====
+; set_fighting : Start combat
+: Initiate combat
+; stop_fighting : End combat
+: Terminate combat
+
+=== 4.2 Skills & Abilities ===
+
+==== Ability System ====
+; abilities : Ability scores
+: Character attributes
+; ability_levels : Ability level requirements
+: Advancement requirements
+; ability_costs : Ability costs
+: Experience costs
+
+==== Skill System ====
+; skills : Skill proficiencies
+: Character skill values
+; skill_levels : Skill level requirements
+: Advancement thresholds
+; skill_costs : Skill costs
+: Training costs
+
+==== Spell System ====
+; spells : Spell proficiencies
+: Magical ability levels
+; spell_levels : Spell level requirements
+: Magical advancement
+; spell_costs : Spell costs
+: Magical training costs
+
+==== Weapon System ====
+; weapons : Weapon proficiencies
+: Combat skill levels
+; weapon_levels : Weapon requirements
+: Weapon skill thresholds
+; weapon_costs : Weapon costs
+: Weapon training costs
+
+=== 4.3 Economic System ===
+
+==== Money Operations ====
+; transfermoney : Transfer currency
+: Move money between characters
+; moneystring : Format money
+: Display currency properly
+
+==== Character Money ====
+; purse : Money container
+: Character's wealth
+; acc_balance : Account balance
+: Bank account funds
+; acc_total : Total assets
+: Complete wealth
+
+==== Commercial Transactions ====
+; cost : Item cost
+: Purchase price
+; value : Item value
+: Sale price
+; rent : Rental cost
+: Equipment rental fees
+
+=== 4.4 Time & Calendar ===
+
+==== Game Time ====
+; mudday : Day of month
+: In-game day
+; mudhour : Hour of day
+: In-game hour
+; mudmonth : Month
+: In-game month
+; mudyear : Year
+: In-game year
+
+==== Real Time ====
+; realtime : Real-world time
+: System time
+; heartbeat : Game tick
+: Time pulse
+
+==== Time Functions ====
+; wait : Wait for condition
+: Delay execution
+; sleep : Sleep duration
+: Timed pause
+
+=== 4.5 Experience & Advancement ===
+
+==== Experience ====
+; exp : Experience points
+: Current experience
+; experience : Experience value
+: Alternative experience reference
+; exptol : Experience to level
+: Experience needed for next level
+
+==== Levels ====
+; level : Current level
+: Character level
+; vlevel : Virtual level
+: Effective level
+; loadlevel : Load level
+: Content difficulty level
+
+==== Progression ====
+; skill_points : Available skill points
+: Points for advancement
+; ability_points : Available ability points
+: Points for abilities
+
+== 5. Utility Functions ==
+
+=== 5.1 String Operations ===
+
+==== Basic ====
+; length : String length
+: Number of characters
+; substring : Extract portion
+: Get substring
+; left : Left portion
+: Get left part
+; right : Right portion
+: Get right part
+
+==== Comparison ====
+; strcmp : String comparison
+: Compare two strings
+; strncmp : Partial comparison
+: Compare string portions
+
+==== Conversion ====
+; atoi : String to integer
+: Parse number from text
+; itoa : Integer to string
+: Format number as text
+; toupper : Uppercase conversion
+: Convert to uppercase
+; tolower : Lowercase conversion
+: Convert to lowercase
+
+==== Formatting ====
+; textformat : Format text
+: Apply formatting rules
+; moneystring : Format currency
+: Display money properly
+
+=== 5.2 Mathematical Functions ===
+
+==== Random ====
+; rnd : Random number
+: Generate random value
+; openroll : Open dice roll
+: Dice roll with modifiers
+
+==== Arithmetic ====
+; max : Maximum value
+: Find larger value
+; min : Minimum value
+: Find smaller value
+; abs : Absolute value
+: Positive magnitude
+
+==== Bit Operations ====
+; set : Set bits
+: Turn on bit flags
+; unset : Clear bits
+: Turn off bit flags
+; isset : Test bits
+: Check bit flags
+
+=== 5.3 List Operations ===
+
+==== Integer Lists ====
+; integerlist : Integer collection
+: List of integers
+; getinteger : Get integer from list
+: Extract integer value
+
+==== String Lists ====
+; stringlist : String collection
+: List of strings
+; getwords : Extract words
+: Get word list
+
+==== Navigation ====
+; next : Next item
+: Move to next element
+; previous : Previous item
+: Move to previous element
+; head : First item
+: Get first element
+
+=== 5.4 System Utilities ===
+
+==== Logging ====
+; log : System log
+: Write to log file
+; flog : File log
+: Write to specific file
+
+==== Debugging ====
+; debug : Debug output
+: Debug information
+; info : Information output
+: System information
+
+==== Administration ====
+; secure : Security level
+: Set security
+; access : Access control
+: Manage permissions
+; reboot : System restart
+: Restart game
+
+== 6. DIL Program Management ==
+
+=== 6.1 Program Structure ===
+
+==== Program Definition ====
+; dilbegin : Program start
+: Begin DIL program
+; dilend : Program end
+: End DIL program
+
+==== Variables ====
+; var : Variable declaration
+: Declare variables
+; code : Code section
+: Program code block
+
+==== Parameters & Return Values ====
+: Function parameters and return value handling
+
+=== 6.2 Program Control ===
+
+==== Execution Control ====
+; wait : Wait for event
+: Suspend execution
+; interrupt : Interrupt execution
+: Break execution
+; quit : Terminate program
+: End program
+
+==== State Management ====
+; priority : Execution priority
+: Set program priority
+; nopriority : Clear priority
+: Remove priority setting
+
+==== Event Handling ====
+; on_activation : Activation event
+: Handle program activation
+; SFB_* : State function bits
+: Event wait flags
+
+=== 6.3 Program Interaction ===
+
+==== DIL Operations ====
+; dilcall : Call DIL program
+: Execute another program
+; dilfind : Find DIL program
+: Locate program instance
+; dilcopy : Copy DIL program
+: Duplicate program
+; dildestroy : Destroy DIL program
+: Remove program
+
+==== Program Communication ====
+; sendtoalldil : Message all DIL programs
+: Broadcast to programs
+
+==== Shared Data ====
+; global : Global variables
+: Shared data storage
+; store : Store data
+: Save information
+
+=== 6.4 Development Tools ===
+
+==== Editing ====
+; beginedit : Begin editing
+: Start edit mode
+; killedit : End editing
+: Exit edit mode
+; editing : Edit status
+: Check edit state
+
+==== Testing ====
+; shell : Execute shell command
+: Run system command
+; exec : Execute command
+: Run game command
+
+==== Debugging ====
+; log : Write log
+: Log information
+; hasfunc : Check function
+: Test function existence
+
+== 7. World Management ==
+
+=== 7.1 Zone System ===
+
+==== Zone Operations ====
+; zone_head : First zone
+: Get zone list head
+; zhead : Zone head
+: Alternative zone reference
+; findzone : Find zone
+: Locate specific zone
+
+==== Zone Properties ====
+; zoneidx : Zone index
+: Zone identifier
+; resetmode : Reset mode
+: Zone reset behavior
+
+==== Zone Resets ====
+; zonereset : Zone reset
+: Reset zone contents
+; resettime : Reset timing
+: Reset schedule
+
+=== 7.2 Room Management ===
+
+==== Room Navigation ====
+; room_head : First room
+: Get room list head
+; findroom : Find room
+: Locate specific room
+
+==== Room Properties ====
+; roomflags : Room flags
+: Room characteristics
+; mapx : Map X coordinate
+: Horizontal position
+; mapy : Map Y coordinate
+: Vertical position
+
+==== Room Operations ====
+; setroomexit : Set exit
+: Define room connection
+; pathto : Path finding
+: Find path to location
+
+=== 7.3 NPC Management ===
+
+==== NPC Operations ====
+; npc_head : First NPC
+: Get NPC list head
+; npcs : NPC list
+: All NPCs
+
+==== NPC Properties ====
+; npcflags : NPC flags
+: NPC characteristics
+; hometown : Home location
+: NPC origin
+
+==== NPC Behavior ====
+; guild : Guild affiliation
+: NPC guild membership
+; profession : Profession
+: NPC job/role
+
+=== 7.4 Object Management ===
+
+==== Object Operations ====
+; obj_head : First object
+: Get object list head
+; objs : Object list
+: All objects
+
+==== Object Properties ====
+; objectflags : Object flags
+: Object characteristics
+; objecttype : Object type
+: Object classification
+
+==== Equipment ====
+; equip : Equip item
+: Wear/wield object
+; unequip : Remove equipment
+: Take off item
+; equipment : Equipment slots
+: Worn items
+
+== 8. Reference Materials ==
+
+=== 8.1 Constants Reference ===
+
+==== Unit Types ====
+; UNIT_ST_PC : Player character
+: Player-controlled unit
+; UNIT_ST_NPC : Non-player character
+: Computer-controlled unit
+; UNIT_ST_OBJ : Object
+: Item or equipment
+; UNIT_ST_ROOM : Room
+: Location or area
+
+==== Positions ====
+; POSITION_STANDING : Standing
+: Upright position
+; POSITION_SITTING : Sitting
+: Seated position
+; POSITION_RESTING : Resting
+: Recovering position
+; POSITION_SLEEPING : Sleeping
+: Unconscious position
+; POSITION_FIGHTING : Fighting
+: Combat position
+
+==== Flags ====
+; CHAR_* : Character flags
+: Character states
+; OBJ_* : Object flags
+: Object properties
+; ROOM_* : Room flags
+: Room characteristics
+
+==== Find Flags ====
+; FIND_UNIT_* : Find unit flags
+: Search parameters
+
+=== 8.2 Error Handling ===
+
+==== Common Errors ====
+: Typical error conditions and solutions
+
+==== Validation Functions ====
+: Input validation and checking
+
+==== Debugging Techniques ====
+: Methods for finding and fixing errors
+
+=== 8.3 Best Practices ===
+
+==== Code Organization ====
+: Structuring DIL programs effectively
+
+==== Performance Tips ====
+: Optimizing DIL code
+
+==== Security Considerations ====
+: Writing secure DIL programs
+
+=== 8.4 Examples and Tutorials ===
+
+==== Basic DIL Programs ====
+: Simple program examples
+
+==== Common Patterns ====
+: Frequently used code patterns
+
+==== Advanced Techniques ====
+: Complex programming methods
