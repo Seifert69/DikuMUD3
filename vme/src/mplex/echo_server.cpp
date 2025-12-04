@@ -51,26 +51,25 @@ void on_close(websocketpp::connection_hdl hdl)
 
     slog(LOG_OFF, 0, "on_close called for hdl %p", hdl.lock().get());
 
-    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
-
-    it = g_cMapHandler.find(hdl);
-
-    if (it != g_cMapHandler.end())
     {
-        con = it->second;
-        g_cMapHandler.erase(it);
-        slog(LOG_OFF, 0, "on_close found and removed connection from map");
+        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+
+        it = g_cMapHandler.find(hdl);
+
+        if (it != g_cMapHandler.end())
+        {
+            con = it->second;
+            g_cMapHandler.erase(it);
+            slog(LOG_OFF, 0, "on_close found and removed connection from map");
+        }
+        else
+        {
+            slog(LOG_OFF, 0, "on_close unable to locate class for hdl %p", hdl.lock().get());
+            slog(LOG_OFF, 0, "Current map size: %zu", g_cMapHandler.size());
+            // Don't crash - just log and return
+            return;
+        }
     }
-    else
-    {
-        slog(LOG_OFF, 0, "on_close unable to locate class for hdl %p", hdl.lock().get());
-        slog(LOG_OFF, 0, "Current map size: %zu", g_cMapHandler.size());
-        // Don't crash - just log and return
-        return;
-    }
-    
-    // Unlock before calling Close() to avoid deadlock
-    lock.~lock_guard();
     
     if (con)
     {
