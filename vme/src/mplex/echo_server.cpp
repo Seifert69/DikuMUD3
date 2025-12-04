@@ -214,6 +214,7 @@ void stop_websocket_server()
         g_echo_server = nullptr;
         slog(LOG_OFF, 0, "Echo server stopped");
     }
+
     if (g_websocket_thread)
     {
         if (g_websocket_thread->joinable())
