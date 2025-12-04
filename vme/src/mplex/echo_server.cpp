@@ -7,6 +7,7 @@
 #include <websocketpp/server.hpp>
 
 #include <map>
+#include <mutex>
 
 typedef websocketpp::server<websocketpp::config::asio_tls> server;
 
@@ -24,8 +25,12 @@ namespace mplex
 // Global map for connection handlers
 std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
 
+// Mutex to protect access to the global map
+std::mutex g_cMapHandler_mutex;
+
 void remove_gmap(cConHook *con)
 {
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
     for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
@@ -44,17 +49,32 @@ void on_close(websocketpp::connection_hdl hdl)
     cConHook *con = nullptr;
     std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
 
+    slog(LOG_OFF, 0, "on_close called for hdl %p", hdl.lock().get());
+
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+
     it = g_cMapHandler.find(hdl);
 
     if (it != g_cMapHandler.end())
     {
         con = it->second;
         g_cMapHandler.erase(it);
-        con->Close(TRUE);
+        slog(LOG_OFF, 0, "on_close found and removed connection from map");
     }
     else
     {
-        slog(LOG_OFF, 0, "on_close unable to locate class.");
+        slog(LOG_OFF, 0, "on_close unable to locate class for hdl %p", hdl.lock().get());
+        slog(LOG_OFF, 0, "Current map size: %zu", g_cMapHandler.size());
+        // Don't crash - just log and return
+        return;
+    }
+    
+    // Unlock before calling Close() to avoid deadlock
+    lock.~lock_guard();
+    
+    if (con)
+    {
+        con->Close(TRUE);
     }
 }
 
@@ -82,6 +102,10 @@ context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
         slog(LOG_OFF, 0, "TLS context initialized successfully");
     } catch (std::exception& e) {
         slog(LOG_OFF, 0, "TLS init exception: %s", e.what());
+        slog(LOG_OFF, 0, "TLS init failed - connection may be unstable");
+    } catch (...) {
+        slog(LOG_OFF, 0, "TLS init unknown exception");
+        slog(LOG_OFF, 0, "TLS init failed - connection may be unstable");
     }
     return ctx;
 }
@@ -100,7 +124,14 @@ int ws_send_message(wsserver_tls *s, websocketpp::connection_hdl hdl, const char
     }
     catch (websocketpp::exception const &e)
     {
-        slog(LOG_OFF, 0, "Send failed: %s", e.what());
+        slog(LOG_OFF, 0, "Send failed for hdl %p: %s", hdl.lock().get(), e.what());
+        slog(LOG_OFF, 0, "Send failed message: %s", txt);
+        return 0;
+    }
+    catch (...)
+    {
+        slog(LOG_OFF, 0, "Send failed with unknown exception for hdl %p", hdl.lock().get());
+        slog(LOG_OFF, 0, "Send failed message: %s", txt);
         return 0;
     }
 }
@@ -110,14 +141,16 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     cConHook *con = nullptr;
 
+    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+
     if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
     {
-        // Crete the con hook
         con = new cConHook();
         con->SetWebsocket(s, hdl);
         g_cMapHandler[hdl] = con;
+        slog(LOG_OFF, 0, "on_message: Created new connection for hdl %p, map size: %zu", hdl.lock().get(), g_cMapHandler.size());
 
-        // Get the IP address
+        // it's a new connection - Get the IP address
         const auto theip = s->get_con_from_hdl(hdl);
         boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
         std::string ip_as_string{theadr.to_string()};
@@ -139,8 +172,11 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
         *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
         slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
     }
+    else
+    {
+        con = g_cMapHandler[hdl];
+    }
 
-    con = (cConHook *)g_cMapHandler[hdl];
     assert(con);
 
     con->m_pFptr(con, msg->get_payload().c_str());
