@@ -3,7 +3,7 @@
 This document provides a comprehensive AGENTA reference for DIL - the scripting language used in DikuMUD3 for creating interactive game content, NPCs, objects and complex game systems. 
 
 ## Compiling a zone
-To compile a zone: vme/bin/vmc -I../include/ zonename.zon
+To compile a zone: cd vme/zone/ && vme/bin/vmc -I../include/ zonename.zon
 
 ## Zones with good DIL examples
 vme/zone/haon-dor.zon
