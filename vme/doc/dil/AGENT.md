@@ -6,7 +6,7 @@ This document provides a comprehensive AGENT.md reference for DIL - the scriptin
 To compile a zone: cd vme/zone/ && vme/bin/vmc -I../include/ zonename.zon
 
 ## Zones with good DIL examples
-vme/zone/haon-dor.zon
+vme/zone/haon_dor.zon
 vme/zone/udgaard.zon
 vme/zone/midgaard.zon
 vme/zone/cypress.zon
@@ -55,8 +55,47 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[continue]** - Continue iteration: `foreach (UNIT_ST_OBJ, item) { if (not isset(item.manipulate, MANIPULATE_TAKE)) continue; }`
 - **[return]** - Return from function: `return(damage); // Functions: return value; Procedures: return;`
 - **[quit]** - Terminate program: `if (input == "exit") { sendtext("Goodbye!", self); quit; }`
-- **[block]** - Block commands: `wait(SFB_CMD, command("forbidden")); block; send("Command blocked!", self);`
+- **[block]** - Block commands: `wait(SFB_CMD, command("forbidden")); block; send("Command blocked!", activator);`
+
 **⚠️ IMPORTANT:** DIL does NOT support C-style `for` loops. Use `while` loops instead.
+
+### Common Patterns
+Use these templates for typical DIL tasks to ensure structured code.
+
+- **Infinite Event Loop (NPC AI):**
+:start:
+  wait(SFB_CMD | SFB_MSG, TRUE);  // Wait for any command or message
+  // Handle event...
+  goto start;
+
+- **Secure Target Handling (Prevent Null Pointers):**
+  target := findunit(self, "player", FIND_UNIT_SURRO, UNIT_ST_PC);
+  if (target != null) {
+    secure(target, lost_target);
+  // Safe operations on target...
+  unsecure(target);
+
+:lost_target:
+  log("Target lost");
+
+- **Random Decision Tree:**
+chance := rnd(1, 100);
+if (chance <= 30) {
+  // Action 1
+} else if (chance <= 70) {
+  // Action 2
+} else {
+  // Action 3
+}
+
+- **Quest Flag Check/Update (Using Extra):**
+if ("quest_done" in self.quests) {
+  sendtext("Quest already complete!", activator);
+} else {
+  addstring(self.quests, "quest_done");
+  experience(500, activator);
+}
+
 
 ### Operators
 - **[and]** - Logical operators: `if (self.level >= 10 and self.hp > 50) { /* ready for combat */ }`
@@ -275,7 +314,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[openroll]** - Open roll: `roll := openroll(100, 5); // Open-ended 1-100 roll with 5% continuation chance`
 - **[max]** - Maximum: `result := max(a, b); // Larger of two numbers`
 - **[min]** - Minimum: `result := min(a, b); // Smaller of two numbers`
-- **[abs]** - Absolute: `result := abs(-5); // Returns 5`
 - **[skill_name]** - Get skill name: `name := skill_name(SKI_SWORD); sendtext("Skill: " + name, self);`
 - **[spellindex]** - Find spell index: `idx := spellindex("fireball"); if (idx != -1) { cast_spell(idx, self, self, target, 0, ""); }`
 - **[spellinfo]** - Get spell details: `name := spellinfo(idx, realm, sphere, mana, off, resist, med, targ); sendtext("Spell: " + name + " (Mana: " + itoa(mana) + ")", self); }`
@@ -445,3 +483,686 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[changecolor]** - Modify colors: `if (changecolor(player, "clan_color", "&c+w&bn")) { send("Clan color updated!", player); }`
 - **[getcolor]** - Color processing: `processed := getcolor("&brBold red text&n"); // Process color codes`
 
+## 🏷️ **Constants & Types** (vme/include/vme.h and vme/include/values.h)
+
+### SFB
+## 🏷️ **Constants & Types** (vme/include/vme.h and vme/include/values.h)
+These are #define constants from the source headers. Use them in DIL for flags, types, etc. (e.g., `if (self.type == UNIT_ST_PC)`). Values are numeric; descriptions are based on code comments/context.
+
+### State Function Bits (SFB_*)
+Used in wait(), interrupt(), etc., for event triggers.
+
+| Constant | Description |
+|----------|-------------|
+| SFB_CMD  | Normal command trigger. |
+| SFB_TICK | Tick-message trigger.   |
+| SFB_DEAD | Death-message trigger. |
+| SFB_COM  | Combat-event trigger. |
+| SFB_MSG  | Message-event trigger. |
+| SFB_SAVE | Save-event trigger. |
+| SFB_DONE | Indicates something has been done. |
+| SFB_ALL  | (SFB_CMD \| SFB_TICK \| SFB_DEAD \| SFB_COM \| SFB_MSG \| SFB_SAVE) | All common triggers. |
+
+### Unit Types (UNIT_ST_*)
+For unit.type checks (e.g., in findunit()).
+
+| Constant | Description |
+|----------|-------------|
+| UNIT_ST_NPC | Non-player character. |
+| UNIT_ST_PC | Player character. |
+| UNIT_ST_ROOM | Room. |
+| UNIT_ST_OBJ | Object. |
+
+### Positions (POSITION_*)
+For char.position, defaultpos, etc.
+
+| Constant | Description |
+|----------|-------------|
+| POSITION_DEAD Dead (use corpse). |
+| POSITION_MORTALLYW | Mortally wounded. |
+| POSITION_INCAP | Incapacitated. |
+| POSITION_STUNNED | Stunned. |
+| POSITION_SLEEPING | Sleeping. |
+| POSITION_RESTING | Resting. |
+| POSITION_SITTING | Sitting. |
+| POSITION_FIGHTING | Fighting (do not set manually). |
+| POSITION_STANDING | Standing. |
+
+### Character Flags (CHAR_*)
+For char.charflags.
+
+| Constant |  Description |
+|----------|--------------|
+| CHAR_PROTECTED | Protected by law system. |
+| CHAR_LEGAL_TARGET | Internal (do not use). |
+| CHAR_OUTLAW | Outlaw status (do not use). |
+| CHAR_GROUP | In group (do not use). |
+| CHAR_BLIND | Blinded. |
+| CHAR_HIDE | Hidden. |
+| CHAR_MUTE | Mute. |
+| CHAR_SNEAK | Sneaking. |
+| CHAR_DETECT_ALIGN | Detect alignment (PCs only). |
+| CHAR_DETECT_INVISIBLE | See invisible. |
+| CHAR_DETECT_MAGIC | Detect magic (PCs only). |
+| CHAR_DETECT_POISON | Detect poison (PCs only). |
+| CHAR_DETECT_UNDEAD | Detect undead (PCs only). |
+| CHAR_DETECT_CURSE | Detect curse (PCs only). |
+| CHAR_DETECT_LIFE | Detect life (PCs only). |
+| CHAR_WIMPY | Wimpy mode (flee low HP). |
+| CHAR_SELF_DEFENCE | Internal use (do not use). |
+| CHAR_PEACEFUL | No auto-attack. |
+| CHAR_KILL_SELF | Self-kill detection. |
+
+### Object Flags (OBJ_*)
+For obj.objectflags.
+
+| Constant | Description |
+|----------|-------------|
+| OBJ_NO_UNEQUIP |Cannot unequip. |
+| OBJ_TWO_HANDS | Requires two hands. |
+| OBJ_NOCOVER | Doesn't cover body part. |
+| OBJ_NO_DUAL | Cannot dual-wield. |
+| OBJ_VEHICLE | Vehicle type (extended). |
+
+(Truncate for brevity; full list includes OBJ_MAGIC from snippets.)
+
+### Room Flags (ROOM_*)
+For room.roomflags (e.g., UNIT_FL_INDOORS in zone).
+
+| Constant | Description |
+|----------|-------------|
+| UNIT_FL_INDOORS Indoors (no weather). |
+| UNIT_FL_NO_WEATHER | No weather effects. |
+| UNIT_FL_NO_MOB | No mobiles allowed. |
+| ROOM_FL_DARK | Dark
+
+### Flags
+- **[ROOM_*]** - Room flags
+- **[CMD_*]** - Command flags
+- **[SPL_*]** - Spell flags
+- **[SKI_*]** - Skill flags
+- **[ABIL_*]** - Ability flags
+
+### Zone Macros (vme/include/macros.h)
+Used in .zon files (e.g., for NPC/object defs). Not directly in DIL, but referenced.
+Easy way to create all kind of standard objects or characters. 
+
+| Macro | Expansion/Usage | Description |
+|-------|-----------------|-------------|
+| M_AVG_HUMAN(level, sex) | (Sets height, weight, etc. based on level/sex) | Average human NPC stats. |
+| WEAPON_DEF(wpn_type, def_bonus, att_bonus) | (Sets value[0-4] for weapons) | Defines weapon type/damage. |
+| BONUS_AVERAGE | 0 | Average bonus (use -5 to 5 for poor/excellent). |
+| OUT_DARK_NON_NOON | (Sets outside_descr based on time) | Dark description except noon. |
+
+
+## 🚨 **Critical Compilation Guidelines**
+
+### Reserved Keywords (⚠️ IMPORTANT)
+The following words are **reserved** in DIL and **cannot be used as variable names**:
+- `opponent` - **Function name, not variable** - use `opp`, `target_unit`, or `target` instead
+- `for` - **Not supported** - use `while` loops instead
+- Other reserved words may exist during compilation
+
+### Variable Naming Conventions
+- **Maximum name length:** 16 characters for unit names
+- **Use descriptive names:** `target_unit` instead of `target`
+- **Use underscores:** `current_room` for readability
+- **Avoid all reserved keywords** listed above
+
+# ZONE example with DIL examples
+
+/*
+filename    minimal-zone
+password    testpass
+changedby   AI Assistant
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+%zone
+title "Minimal Test Zone@Mainland"
+lifespan 10
+reset RESET_ANYHOW
+creators {"ai_assistant"}
+
+notes
+"A minimal zone demonstrating all major Haon-Dor zone fields and expressions.
+Contains two comprehensive DIL examples:
+1. comprehensive_demo() - Advanced DIL patterns for LLM learning
+2. simple_demo() - Basic DIL patterns for beginners
+Both examples demonstrate key concepts: variables, control flow, string/integer
+operations, unit manipulation, combat, time functions, and more."
+
+help
+"This is a minimal test zone created to demonstrate all of the key zone fields
+and expressions used in Haon-Dor. Contains comprehensive DIL examples perfect
+for learning DIL programming patterns. Zone by AI Assistant."
+
+%dil
+/* ========================================================================
+   COMPREHENSIVE DIL EXAMPLE - Perfect for LLM Learning
+   This example demonstrates the most important DIL concepts and patterns
+   ======================================================================== */
+
+dilbegin demo();
+var
+   target_player : unitptr;     // Unit pointer for finding players
+   random_num : integer;        // For random number generation
+   message_text : string;       // For string manipulation
+   item_found : unitptr;        // For object manipulation
+   oppo : unitptr;              // For combat operations
+   plyr : unitptr;
+   health_pct : integer;        // For calculations
+   current_hour : integer;      // For time functions
+   intr_hdl : integer;
+   sl : stringlist;
+   i : integer;
+
+code
+{
+   // Set heartbeat to check every 5 seconds
+   heartbeat := PULSE_SEC * 5;
+   
+   // Skip execution if NPC is asleep or fighting
+   on_activation((self.position <= POSITION_SLEEPING), skip);
+   interrupt(SFB_COM, activator == self, imfighting);
+
+ :main_loop:
+   // ====================================================================
+   // 1. COMMAND WAITING - Basic interaction pattern
+   // ====================================================================
+   wait(SFB_CMD, command("say"));
+
+   if (not ("hello" in argument) and not ("greet" in argument))
+     goto main_loop;
+   
+   if (activator.type == UNIT_ST_PC)
+   {
+      plyr := activator;
+      secure(plyr, main_loop);
+
+      // String concatenation with itoa() for numbers
+      message_text := "Greetings, " + plyr.name + "! Your level is " + itoa(plyr.level) + ".";
+      exec("say " + message_text, self);
+      pause; // After this pause plyr is null
+      
+      // Random number generation and conditional logic
+      random_num := rnd(1, 100);
+      if (random_num > 70)
+      {
+         exec("emote smiles warmly.", self);
+         pause;
+      }
+      else if (random_num > 30)
+      {
+         exec("emote nods politely.", self);
+         pause;
+      }
+      else
+      {
+         exec("emote watches you with interest.", self);
+         pause;
+      }
+   }
+
+   // ====================================================================
+   // 2. TIME FUNCTIONS - Demonstrate game time awareness
+   // ====================================================================
+   current_hour := mudhour;
+   sl := {"say Good morning to you!", "say Good afternoon!", "say What a lovely time to be alive!"};
+   if (current_hour >= 6 and current_hour < 12) 
+      i := 0;
+   else if (current_hour >= 12 and current_hour < 18)
+      i := 1;
+   else
+      i := 2;
+
+   exec(sl.[i], self);
+   pause;
+
+   // ====================================================================
+   // 3. UNIT SEARCHING - Find and interact with nearby units
+   // ====================================================================
+   target_player := findrndunit(self, FIND_UNIT_SURRO, UNIT_ST_PC);
+   if (target_player != null)
+   {
+      // Health percentage calculation
+      health_pct := (target_player.hp * 100) / target_player.max_hp;
+      
+      if (health_pct < 50)
+      {
+         act("$1n says 'You look wounded! Let me help you.'",
+             A_SOMEONE, self, null, null, TO_ROOM);
+         pause;
+         
+         // Healing demonstration
+         target_player.hp := target_player.hp + 10;
+         act("$1n touches $3n, who feels slightly better.",
+             A_SOMEONE, self, null, target_player, TO_NOTVICT);
+         act("$1n touches you, and you feel slightly better.",
+             A_SOMEONE, self, null, target_player, TO_VICT);
+      }
+   }
+
+   // ====================================================================
+   // 4. OBJECT MANIPULATION - Search for and handle items
+   // ====================================================================
+   foreach (UNIT_ST_OBJ, item_found)
+   {
+      if (item_found.outside == self)  // Item is on the NPC
+      {
+         if (item_found.objecttype == ITEM_WEAPON)
+         {
+            exec("say I am armed with " + item_found.title, self);
+            break;  // Exit foreach loop after finding first weapon
+         }
+      }
+      else if (item_found.outside == self.outside)  // Item is in the same room
+      {
+         if (item_found.objecttype == ITEM_CONTAINER)
+         {
+            exec("say I see a container here: " + item_found.title, self);
+            break;
+         }
+      }
+   }
+   pause;
+
+   // ====================================================================
+   // 5. COMBAT OPERATIONS - Basic combat AI
+   // ====================================================================
+   if (self.position == POSITION_FIGHTING)
+   {
+      oppo := self.fighting;
+      if (oppo != null)
+      {
+         // Combat taunts based on oppo type
+         if (oppo.type == UNIT_ST_PC)
+         {
+            exec("say You should not have challenged me!", self);
+         }
+         else
+         {
+            exec("say Die, foul creature!", self);
+         }
+         pause;
+         
+         // Wait for combat to end
+         while (self.position == POSITION_FIGHTING)
+            pause;
+      }
+   }
+
+   // ====================================================================
+   // 6. MOVEMENT AND EXPLORATION - Room navigation
+   // ====================================================================
+   random_num := rnd(1, 10);
+   if (random_num <= 3)  // 30% chance to move
+   {
+      exec("say I think I'll take a little walk.", self);
+      pause;
+      
+      // Try random directions (simplified example)
+      random_num := rnd(1, 4);
+      if (random_num == 1)
+         exec("north", self);
+      else if (random_num == 2)
+         exec("south", self);
+      else if (random_num == 3)
+         exec("east", self);
+      else
+         exec("west", self);
+      
+      pause;
+   }
+
+   // ====================================================================
+   // 7. ALIGNMENT AND ROLEPLAYING - React to player alignment
+   // ====================================================================
+   if (plyr.type == UNIT_ST_PC)
+   {
+      if (plyr.alignment < -300)
+      {
+         exec("say Your evil nature disturbs me.", self);
+         pause;
+         exec("emote watches you warily.", self);
+      }
+      else if (plyr.alignment > 300)
+      {
+         exec("say It is good to see a noble soul like yourself!", self);
+         pause;
+         exec("emote smiles warmly.", self);
+      }
+      else
+      {
+         exec("say You seem to walk the middle path.", self);
+         pause;
+      }
+   }
+
+   // ====================================================================
+   // 8. MEMORY AND STATE - Simple quest/interaction tracking
+   // ====================================================================
+   // Check if player has a specific quest flag (simplified example)
+   if (plyr.type == UNIT_ST_PC)
+   {
+      // This would normally check quest flags, simplified for demo
+      exec("say I remember meeting you before.", self);
+      pause;
+   }
+
+   unsecure(plyr);
+   // Loop back to main loop
+   goto main_loop;
+
+:imfighting:
+   exec("say Darn it! I hate being in combat all the time", self);
+   // We could clear the interrupt here with
+   // clear(intr_hdl);
+   // But let's keep it coming.
+   goto main_loop;
+}
+dilend
+
+/* ========================================================================
+   SIMPLE DIL EXAMPLE - Basic patterns for beginners
+   This demonstrates fundamental DIL concepts in a simple, clear way
+   ======================================================================== */
+
+dilbegin basic();
+var
+   player : unitptr;          // Unit pointer for players
+   roll : integer;            // Random number storage
+   greeting : string;         // String manipulation
+
+code
+{
+   // Check every 10 seconds
+   heartbeat := PULSE_SEC * 10;
+   
+   // Don't run if asleep or fighting
+   on_activation((self.position <= POSITION_SLEEPING) or
+                 (self.position == POSITION_FIGHTING), skip);
+
+   :start:
+   
+   // Wait for any command from players or npcs
+   wait(SFB_CMD, TRUE);
+   
+   // Only respond to players, not other NPCs
+   if (activator.type != UNIT_ST_PC)
+      goto start;
+   
+   player := activator;
+
+   // If the char leaves, reset and go back to start
+   // right after the exec, player can be reset
+   // unless we add this secure
+   secure(player, start);
+
+   // Basic greeting with string concatenation
+   greeting := "Hello, " + player.name + "!";
+   exec("say " + greeting, self);
+   pause;
+
+   // We cannot use activator down here because it'll be null
+   
+   // Random response pattern
+   roll := rnd(1, 3);
+   if (roll == 1)
+   {
+      exec("say It's a fine day for adventure!", self);
+   }
+   else if (roll == 2)
+   {
+      exec("hug " + player.name, self);
+   }
+   else
+   {
+      exec("say May fortune favor you!", self);
+   }
+   pause;
+   
+   // Simple health check
+   if (player.hp < player.max_hp / 2)
+   {
+      exec("say You look wounded - be careful!", self);
+      pause;
+   }
+   
+   unsecure(player);
+
+   // Loop back
+   goto start;
+}
+dilend
+
+%rooms
+
+/* Minimal room demonstrating all key room fields */
+minimal_room
+
+names {"minimal room", "room"}
+title "A Minimal Room"
+descr "This is a minimal room demonstrating all the key room fields and
+expressions used in Haon-Dor. The room is simple but contains examples of
+all major room properties."
+
+extra {"wall", "walls"}
+"The walls are made of simple stone blocks."
+
+extra {"floor", "ground"}
+"The floor is made of rough wooden planks."
+
+extra {"ceiling"}
+"The ceiling is low and made of dark wooden beams."
+
+movement SECT_INSIDE
+gmap(100,100)
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
+OUT_DARK_NON_NOON
+
+end
+
+/* Second room for exit demonstrations */
+minimal_room2
+
+title "Another Minimal Room"
+descr "This is the second minimal room, used to demonstrate various exit
+types and room connections."
+
+extra {"ceiling"}
+"The ceiling is low and made of dark wooden beams."
+
+movement SECT_INSIDE
+gmap(100,101)
+
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+
+end
+
+/* Third room for special terrain */
+minimal_room3
+
+title "Room with Special Terrain"
+descr "This room demonstrates special terrain types and movement
+sectors. The ground here is different from other rooms."
+
+extra {"terrain", "ground"}
+"The terrain here is rough and uneven, making movement difficult."
+
+movement SECT_FOREST
+gmap(100,99)
+
+OUT_DARK_NON_NOON
+
+end
+
+%objects
+
+/* Minimal object demonstrating all key object fields */
+minimal_key
+
+names {"key", "minimal key"}
+title "a small minimal key"
+descr "This is a small, simple key that seems to fit minimal locks."
+
+extra {"lock", "mechanism"}
+"The key has a simple mechanism with basic teeth."
+
+extra {"$identify"}
+"This key can be identified to reveal its purpose."
+
+cost 10 IRON_PIECE
+rent 1 IRON_PIECE
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_KEY
+
+
+weight 1
+bright 0
+
+key minimal_key
+
+end
+
+/* Weapon example */
+minimal_sword
+
+names {"sword", "minimal sword"}
+title "a minimal sword"
+descr "This is a simple, unadorned sword with minimal decoration."
+
+extra {"blade", "hilt"}
+"The blade is plain but sharp. The hilt is wrapped in basic leather."
+
+extra {"$identify"}
+"This sword can be identified to reveal its craftsmanship."
+
+extra {"$improved identify"}
+"This sword can be identified to reveal its craftsmanship."
+
+WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)
+
+cost 50 IRON_PIECE
+rent 5 IRON_PIECE
+flags {UNIT_FL_MAGIC}
+
+weight 10
+bright 0
+
+end
+
+/* Container example */
+minimal_chest
+
+names {"chest", "minimal chest"}
+title "a minimal chest"
+descr "This is a simple wooden chest with minimal decoration."
+
+extra {"lock", "hinges"}
+"The chest has a simple lock and basic metal hinges."
+
+extra {"$identify"}
+"This chest can be identified to reveal its contents capacity."
+
+cost 25 IRON_PIECE
+rent 2 IRON_PIECE
+
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+type ITEM_CONTAINER
+
+
+weight 15
+bright 0
+
+capacity 50
+key minimal_key
+
+end
+
+%mobiles
+
+/* Minimal NPC demonstrating all key NPC fields */
+minimal_guard
+
+names {"guard", "minimal guard"}
+title "a minimal guard"
+descr "This is a simple guard with minimal equipment and basic appearance."
+
+extra {"armor", "weapon"}
+"The guard wears basic leather armor and carries a simple sword."
+
+extra {"$identify"}
+"This guard can be identified to reveal his combat capabilities."
+
+dilcopy demo@minimal_zone();
+
+M_AVG_HUMAN(5, SEX_MALE)
+
+alignment 100
+exp 100
+
+position POSITION_STANDING
+end
+
+/* Second NPC for variety */
+minimal_merch
+
+names {"merchant", "minimal merchant"}
+title "a minimal merchant"
+descr "This is a simple merchant with basic goods and minimal haggling skills."
+
+extra {"goods", "wares"}
+"The merchant has a small selection of basic goods for sale."
+
+extra {"$identify"}
+"This merchant can be identified to reveal her shop inventory."
+
+dilcopy basic@minimal_zone();
+
+M_AVG_HUMAN(3, SEX_FEMALE)
+
+alignment 0
+exp 50
+
+position POSITION_STANDING
+end
+
+%reset
+
+/* Reset actions demonstrating all key reset expressions */
+
+/* Load NPCs */
+load minimal_guard into minimal_room max 1
+{
+    equip minimal_sword position WEAR_WIELD max 1
+}
+
+load minimal_merch into minimal_room2 max 1
+
+/* Load objects */
+load minimal_key into minimal_guard max 1
+load minimal_chest into minimal_room max 1
+load minimal_key into minimal_chest max 1
+load minimal_sword into minimal_room max 1
+
+
+
+/* Door states */
+door minimal_room NORTH {EX_OPEN_CLOSE}
+
+/* Local objects (zone-wide) */
+load minimal_key local 5
+
+/* Zone max objects */
+load minimal_sword zonemax 10
+
+/* Zone reset time */
+
+%end
