@@ -43,7 +43,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[if]** - Conditional statement: `if (self.hp > 10) { exec("say Hehe!", self); } else { exec("say ouch!", self); }`
 - **[while]** - Loop construct: `while (self.inside) { if (self.position & POSITION_SLEEPING) break; pause; }`
 - **[foreach]** - Loop construct: `foreach (UNIT_ST_PC|UNIT_ST_NPC, u) { if (u.hp < u.max_hp) { u.hp := u.hp + 6; } pause; }`
-- **[goto]** - Unconditional jump: `:start: exec("say Hello", self); pause; goto start;`
+- **[goto]** - Unconditional jump: `:main_loop: pause; goto main_loop; // Create infinite loop`
 - **[on_goto]** - Goto construct: `on direction goto (north, south, east, west); // 0=north, 1=south, etc.`
 - **[break]** - Exit loop: `foreach (UNIT_ST_PC, target) { if (target.hp < target.max_hp / 2) { break; } }`
 - **[continue]** - Continue iteration: `foreach (UNIT_ST_OBJ, item) { if (not isset(item.manipulate, MANIPULATE_TAKE)) continue; }`
@@ -64,6 +64,10 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[ability_points]** - Available points: `points := self.ability_points; if (points >= 5) { /* can train */ }`
 - **[skills]** - Skill system: `skill := self.skills.[SKI_BASH];`
 - **[spells]** - Magic system: `spell := self.spells.[SPL_FIREBALL];`
+
+### Unit Fields
+- **[inside]** - Unit positioning: `item := chest.inside; if (item != null) { sendtext("Found: " + item.name, self); }`
+- **[outside]** - Unit positioning
 
 ### Object Fields
 - **[name]** - Object identification: `item_name := item.name; sendtext("This is called: " + item_name, self);`
@@ -133,10 +137,10 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[strncmp]** - Compare with length limit: `if (strncmp("hello", "help", 3) == 0) { sendtext("Strings match for first 3 chars.", self); }`
 
 ### Stringlist Processing
-- **[substring]** - Remove from stringlist: `substring(mylist, "text")` (NOT extract substring)
+- **[substring]** - Remove from stringlist: `sl:={"hello","world"}; substring(sl, "world") // sl now only contains "hello"`
 - **[in]** - Stringlist membership: `if ("fox" in {"hello", "fox"}) { /* found substring */ }`
 - **[split]** - Split into stringlist: `words := split("hello world this is a test", " ");`
-- **[getwords]** - Get stringlist: `sl := getwords("hello world");` (sl is {"hello", "world"}, original preserved)
+- **[getwords]** - Get stringlist: `sl := getwords("hello world"); // sl is {"hello", "world"}, original preserved`
 
 **⚠️ Critical Notes:**
 - Stringlists use dot notation: `words.[0]` NOT `words[0]`
@@ -161,9 +165,9 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Money Management
 - **[purse]** - Character money: `gold := purse(player, GOLD_PIECE); if (gold >= 100) { sendtext("You have enough gold!", player); }`
-- **[paycheck]** - Character money: `coins := purse(player);`
+- **[paycheck]** - Character money: `if (paycheck(shop_room, player)) { sendtext("Access granted!", player); }`
 - **[acc_balance]** - Bank accounts: `balance := player.acc_balance; if (balance >= 10000) { sendtext("You have $100+ in your account!", player); }`
-- **[acc_total]** - Bank accounts: `balance := acc_balance(player);`
+- **[acc_total]** - Bank accounts: `total_credit := player.acc_total; if (total_credit >= 50000) { sendtext("Premium account!", player); }`
 - **[acc_modify]** - Bank accounts: `acc_modify(player, -5000); // Remove $50 from account`
 - **[transfermoney]** - Money operations: `success := transfermoney(buyer, seller, 1000); // Transfer 1000 coins`
 - **[moneystring]** - Money operations: `price := moneystring(2500, 1); // "25 gold pieces" or "25 gp"`
@@ -179,15 +183,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[realtime]** - Real time: `start_time := realtime(); // Record start time in seconds`
 - **[wait]** - Time control: `wait(SFB_CMD, command("hello")); // Wait for "hello" command`
 - **[sleep]** - Sleep control: `sleep; // Put unit to sleep`
-- **[mudday]** - Game time
-- **[mudhour]** - Game time
-- **[mudmonth]** - Game time
-- **[mudyear]** - Game time
-- **[realtime]** - Real time
-- **[heartbeat]** - Real time: `heartbeat := PULSE_SEC * 10; // Tick every 10 seconds`
-- **[asctime]** - Real time
-- **[wait]** - Time control
-- **[sleep]** - Time control
 
 ## 🛠️ **Utility Functions**
 
@@ -211,7 +206,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[logcrime]** - Crime logging: `logcrime(thief, victim, CRIME_STEALING);`
 - **[info]** - Player info: `email_expd := "$email" in pc.info; if (email_expd != null) email := email_expd.descr;`
 - **[hasfunc]** - Function check: `if (item.hasfunc == 1) { act("$1n has special powers.", A_ALWAYS, item, null, null, TO_ROOM); }`
-- **[secure]** - Security control: `secure(victim, victim_fled); // Jump to victim_fled: if target disappears`
 - **[access]** - Access control: `if (access(player, restricted_zone) >= 3) { sendtext("Access granted!", player); }`
 - **[reboot]** - System restart: `act("Rebooting MUD now...", A_ALWAYS, self, null, null, TO_ALL); reboot(0);`
 
@@ -230,9 +224,11 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[waitnoop]** - Program flow: `waitnoop; // Temporarily release secure constraints for command execution`
 
 ### Event Handling
+- **[secure]** - Security control: `secure(victim, victim_fled); // Jump to victim_fled: if target disappears`
+- **[unsecure]** - Security control: 
 - **[on_activation]** - Event handlers
-- **[clear]** - User interface: `clear(intridx); // Remove interrupt handler by index`
 - **[interrupt]** - Program flow: `intr_id := interrupt(SFB_MSG, argument == "help", help_handler); // Handle help requests`
+- **[clear]** - Program flow: `clear(intridx); // Remove interrupt handler by index`
 
 ### DIL Operations
 - **[dilcall]** - Program management: `success := dilcall("heal_spell", self, 0, "minor"); // Call DIL template`
@@ -244,37 +240,37 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[store]** - Inter-program communication: `store(chest, "chest_backup." + chest.zoneidx, TRUE); // Save chest and contents`
 
 ### Development Tools
-- **[beginedit]** - Editing
-- **[killedit]** - Editing
-- **[editing]** - Editing
-- **[shell]** - Testing
-- **[exec]** - Testing: `exec("say Hello there!", target); // Force target to speak`
+- **[beginedit]** - Start editing mode: `beginedit(self); wait(SFB_EDIT, self == activator); // Get edited text in argument`
+- **[killedit]** - Force exit editing: `killedit(self); // Stop editing session immediately`
+- **[editing]** - Check editing status: `if (self.editing) { sendtext("Already editing!", self); }`
+- **[shell]** - Execute system command: `result := shell("backup_script.sh"); // Returns 0 if thread created`
+- **[exec]** - Execute a command: `exec("say Hello there!", target); // Force target char to speak`
 
 ## 🌍 **World Management**
 
 ### Zone System
 - **[zone_head]** - Zone operations: `first_zone := zone_head(); // Get first zone in global list`
-- **[zhead]** - Zone operations
+- **[zhead]** - Zone operations: `zone := zhead(); while (zone) { sendtext(zone.name, self); zone := zone.next; }`
 - **[findzone]** - Zone operations: `zone := findzone("midgaard"); if (zone != null) { sendtext("Found zone: " + zone.name, self); }`
-- **[zoneidx]** - Zone properties
-- **[resetmode]** - Zone properties
-- **[resettime]** - Zone properties
-- **[zonereset]** - Zone resets
+- **[zoneidx]** - Zone properties: `unit_id := self.zoneidx; // Returns "name@zone" format`
+- **[resetmode]** - Zone properties: `mode := zone.resetmode; // Get zone reset mode (read-only)`
+- **[resettime]** - Zone properties: `zone.resettime := 30; // Set reset interval to 30 minutes`
+- **[zonereset]** - Zone resets: `zonereset(zone); // Reset all NPCs and objects in zone`
 - **[help]** - Zone information: `target_zone := findzone(zone_name); help_text := target_zone.help; act(help_text, A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Room Management
-- **[room_head]** - Room operations
+- **[room_head]** - Room operations: `room := room_head(); while (room) { sendtext(room.name, self); room := room.next; }`
 - **[findroom]** - Room operations: `room := findroom("temple@midgaard"); if (room != null) { transfer(self, room); }`
-- **[pathto]** - Room operations
-- **[rooms]** - Room lists
-- **[roomcount]** - Room lists
-- **[setroomexit]** - Room connections
+- **[pathto]** - Room operations: `direction := pathto(self, target_room); // Get direction to target`
+- **[rooms]** - Room lists: `room := zone.rooms; while (room) { sendtext(room.name, self); room := room.next; }`
+- **[roomcount]** - Room lists: `count := zone.roomcount; // Get number of rooms in zone`
+- **[setroomexit]** - Room connections: `setroomexit(room, DIR_NORTH, target_room); // Create north exit`
 
 ### NPC fields
-- **[npc_head]** - NPC operations
-- **[npcs]** - NPC operations
-- **[npccount]** - NPC operations
-- **[npcflags]** - NPC properties
+- **[npc_head]** - NPC operations: `npc := npc_head(); while (npc) { sendtext(npc.name, self); npc := npc.next; }`
+- **[npcs]** - NPC operations: `npc := npcs(zone); while (npc) { sendtext(npc.name, self); npc := npc.next; }`
+- **[npccount]** - NPC operations: `count := npccount(zone); // Get number of NPCs in zone`
+- **[npcflags]** - NPC properties: `npcflags(npc, npc.npcflags | NPC_AGGRESSIVE); // Make NPC aggressive`
 
 ### Object Management
 - **[obj_head]** - Object operations
@@ -299,8 +295,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Movement & Linking
 - **[transfer]** - Unit positioning
 - **[link]** - Unit positioning: `link(item, player); // Move item to player's inventory`
-- **[inside]** - Unit positioning: `item := chest.inside; if (item != null) { sendtext("Found: " + item.name, self); }`
-- **[outside]** - Unit positioning
 - **[remove]** - Inventory management: `remove(mylist, 2); // Remove element at index 2`
 - **[insert]** - Inventory management: `insert(mylist, 1, "new_item"); // Insert at position 1`
 
@@ -310,7 +304,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[check_password]** - Account management
 - **[set_password]** - Account management: `set_password(player, "newpass123"); // Change player password`
 - **[delete_player]** - Account management: `if (isplayer("troublemaker")) { delete_player("troublemaker"); }`
-- **[secure]** - Security control
 - **[access]** - Security control
 
 ### God Functions
