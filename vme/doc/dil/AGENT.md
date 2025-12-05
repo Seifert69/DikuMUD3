@@ -35,13 +35,12 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Built-in Variables
 - **[self]** - Current executing unit: `hp_pct := (self.hp * 100) / self.max_hp;`
 - **[activator]** - Unit that triggered program: `if (activator.level >= IMMORTAL_LEVEL) { /* admin access */ }`
-- **[argument]** - Command arguments: `wait(SFB_CMD, command("hello")); if (argument == "") { send("Hello there!"); } else { send("Hello " + argument + "!"); }`
+- **[argument]** - Command arguments: `wait(SFB_CMD, command("hello")); if (argument != "") { send("Hello " + argument + "!"); }`
 - **[command]** - Command name: `if (command("north")) { act("You go north.", A_ALWAYS, self, null, null, TO_CHAR); }`
 - **[cmdstr]** - Full command string: `full_cmd := cmdstr + " " + argument; act("Full: " + full_cmd, A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Control Structures
 - **[if]** - Conditional statement: `if (self.hp > 10) { exec("say Hehe!", self); } else { exec("say ouch!", self); }`
-- **[switch]** - Character control: `switch(self, target); sendtext("You have switched to " + target.name + ".", self);`
 - **[while]** - Loop construct: `while (self.inside) { if (self.position & POSITION_SLEEPING) break; pause; }`
 - **[foreach]** - Loop construct: `foreach (UNIT_ST_PC|UNIT_ST_NPC, u) { if (u.hp < u.max_hp) { u.hp := u.hp + 6; } pause; }`
 - **[goto]** - Unconditional jump: `:start: exec("say Hello", self); pause; goto start;`
@@ -104,7 +103,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
 - **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
 - **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
-- **[help]** - Zone information: `target_zone := findzone(zone_name); help_text := target_zone.help; act(help_text, A_ALWAYS, self, null, null, TO_CHAR);`
 act.wiki
 sact.wiki
 
@@ -255,6 +253,7 @@ sact.wiki
 - **[resetmode]** - Zone properties
 - **[resettime]** - Zone properties
 - **[zonereset]** - Zone resets
+- **[help]** - Zone information: `target_zone := findzone(zone_name); help_text := target_zone.help; act(help_text, A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Room Management
 - **[room_head]** - Room operations
@@ -312,3 +311,5 @@ sact.wiki
 - **[secure]** - Security control
 - **[access]** - Security control
 
+### God Functions
+- **[switch]** - Character control: `switch(self, target); sendtext("You have switched to " + target.name + ".", self);`
