@@ -63,18 +63,26 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 Use these templates for typical DIL tasks to ensure structured code.
 
 - **Infinite Event Loop (NPC AI):**
+  // Skip if NPC is busy
+  on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 :start:
-  wait(SFB_CMD | SFB_MSG, TRUE);  // Wait for any command or message
-  // Handle event...
+  wait(SFB_CMD | SFB_MSG, activator.type == UNIT_ST_PC);  // Wait for any command or message from PC
+  if (not visible(self, activator)) // We deal with players we can see
+    goto start;
+  u := activator;
+  secure(u, start); // If pc disappears we jump to start
+  // Handle event... 
+:cleanup:
+  unsecure(u);
   goto start;
 
 - **Secure Target Handling (Prevent Null Pointers):**
   target := findunit(self, "player", FIND_UNIT_SURRO, UNIT_ST_PC);
   if (target != null) {
     secure(target, lost_target);
-  // Safe operations on target...
+    // Safe operations on target...
+  }
   unsecure(target);
-
 :lost_target:
   log("Target lost");
 
@@ -89,11 +97,12 @@ if (chance <= 30) {
 }
 
 - **Quest Flag Check/Update (Using Extra):**
-if ("quest_done" in self.quests) {
+if ("rabbit quest ongoing" in self.quests) {
+  sendtext("Bring me that skin.", activator);
+} else if ("rabbit quest complete" in self.quests) {
   sendtext("Quest already complete!", activator);
 } else {
-  addstring(self.quests, "quest_done");
-  experience(500, activator);
+   addextra(pc.quests, {"rabbit quest ongoing"}, "kill the killer rabbit");
 }
 
 
