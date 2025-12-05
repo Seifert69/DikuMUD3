@@ -6,17 +6,17 @@ This document provides a comprehensive AGENT.md reference for DIL - the scriptin
 To compile a zone: cd vme/zone/ && vme/bin/vmc -I../include/ zonename.zon
 
 ## Zones with good DIL examples
-vme/zone/haon_dor.zon
-vme/zone/udgaard.zon
-vme/zone/midgaard.zon
-vme/zone/cypress.zon
+- vme/zone/haon_dor.zon
+- vme/zone/udgaard.zon
+- vme/zone/midgaard.zon
+- vme/zone/cypress.zon
 
 ## Quest helper DIL functions
-Look in vme/zone/quests.zon for the DIL library of quest helper functions broadly exemplified in vme/zone/haon-dor.zon.
-Look in vme/zone/randomt.zon for generating random treasure in DIL.
+Look in **vme/zone/quests.zon** for the DIL library of quest helper functions broadly exemplified in **vme/zone/haon-dor.zon**.
+Look in **vme/zone/randomt.zon** for generating random treasure in DIL.
 
 ## 📚 **Core Documentation**
-**🔗 Quick Access**: This condensed list covers all 315+ DIL functions. Each entry is reference their respective .wiki files in the DikuMUD3 DIL Manual documentation system. [string] for example, if explained in vme/src/mcp/string.wiki
+**🔗 Quick Access**: This condensed list covers all 314+ DIL language features. Each entry is reference their respective .wiki files in the DikuMUD3 DIL Manual documentation system. [string] for example is detailed in **vme/src/mcp/string.wiki**
 
 ## 🔧 **Language Overview**
 
@@ -63,6 +63,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 Use these templates for typical DIL tasks to ensure structured code.
 
 - **Infinite Event Loop (NPC AI):**
+```
   // Skip if NPC is busy
   on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
 :start:
@@ -77,7 +78,7 @@ Use these templates for typical DIL tasks to ensure structured code.
   goto start;
 
 - **Secure Target Handling (Prevent Null Pointers):**
-  target := findunit(self, "player", FIND_UNIT_SURRO, UNIT_ST_PC);
+  target := findunit(self, "playername", FIND_UNIT_SURRO, UNIT_ST_PC);
   if (target != null) {
     secure(target, lost_target);
     // Safe operations on target...
@@ -85,8 +86,10 @@ Use these templates for typical DIL tasks to ensure structured code.
   unsecure(target);
 :lost_target:
   log("Target lost");
+```
 
 - **Random Decision Tree:**
+```
 chance := rnd(1, 100);
 if (chance <= 30) {
   // Action 1
@@ -97,14 +100,87 @@ if (chance <= 30) {
 }
 
 - **Quest Flag Check/Update (Using Extra):**
-if ("rabbit quest ongoing" in self.quests) {
+if ("rabbit quest ongoing" in activator.quests) {
   sendtext("Bring me that skin.", activator);
-} else if ("rabbit quest complete" in self.quests) {
+} else if ("rabbit quest complete" in activator.quests) {
   sendtext("Quest already complete!", activator);
 } else {
    addextra(pc.quests, {"rabbit quest ongoing"}, "kill the killer rabbit");
 }
+```
 
+- **Coordinated NPC Movement and Event Triggering (Multi-NPC AI):**
+```
+  external
+    integer walk_room@function (s:string,i:integer);  // Import pathfinding function
+  var
+    tf:integer;  // Temp for walk result
+    target_room: string;  // Destination symbolic name
+  code
+  {
+    // Skip if busy or invalid state
+    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+:start:
+    // Wait for trigger (e.g., message from another DIL)
+    wait(SFB_MSG, argument == "raid_start");
+    // Move to target with pathfinding
+    target_room := "cabin@haon_dor";
+    tf := walk_room@function(target_room, 4);  // 4 = speed/mode; adjust as needed
+    if (tf == TRUE)
+    {
+       // Perform action at destination
+       exec("emote raids the cabin!", self);
+       pause;
+       // Signal completion to other NPCs/DILs
+       sendto("raid_complete", findsymbolic("orc_chief@haon_dor"));
+    }
+
+    // Return or loop
+    tf := FALSE;
+    while (tf == FALSE)
+      tf := walk_room@function("orc_cave@haon_dor", 4);
+    goto start;  // Back to waiting loop
+  }
+  // The orc chief could send a message like this
+  //    sendto("raid_start", findsymbolic("orc1@somezone"));
+```
+- **Advanced pattern for handcuffing player**
+```
+dilbegin cuff_target(deputy : unitptr, targ : unitptr);
+var
+  cuffs : unitptr;
+code {
+  act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+  follow(targ, deputy);  // Force target to follow
+  unequip(equipment(targ, WEAR_WRIST_R));  // Remove existing wrist item
+
+  cuffs := load("cuffs@midgaard"); // Now inside the deputy
+  link(cuffs, targ);     // Move cuffs to target
+  addequip(cuffs, WEAR_WRIST_R);  // Equip cuffs on the char it is .inside
+  dilcopy("cuffed@midgaard("+self.name+")", targ);  // Apply restraint DIL to cuffs
+  return;
+}
+dilend
+```
+
+- ** Guard routine utilizing vme/zone/quest.zon DIL functions ** 
+```
+dilbegin guardroutine(guardloc: string, dayguard: integer);
+var sch: intlist;
+code {
+  if (dayguard) sch := {5, 18};  // Day schedule
+  while (TRUE) {
+    pause;
+    if (mudhour == sch.[0]) {  // Wake/move at hour
+      DailyRoutine@quests({"wake", "walkto::$2t", ...}, "gate@midgaard");
+    }
+    if (mudhour == sch.[1]) {  // Evening routine
+      DailyRoutine@quests({"walkto::grunting_inn@midgaard", "buy beer", "sleep"}, "");
+    }
+  }
+}
+dilend
+```
 
 ### Operators
 - **[and]** - Logical operators: `if (self.level >= 10 and self.hp > 50) { /* ready for combat */ }`
