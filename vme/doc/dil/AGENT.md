@@ -21,122 +21,110 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ## 🔧 **Language Overview**
 
 ### Data Types
-- **[integer]** - Numeric data type
-- **[string]** - Text data type  
-- **[unitptr]** - Unit pointer (characters, objects, rooms)
-- **[integerlist]** - Integer collections
-- **[stringlist]** - String collections
-- **[null]** - Null value
+- **[integer]** - Numeric data type: `health := 100; damage := 25; remaining := health - damage;`
+- **[string]** - Text data type: `name := "Player"; message := name + " has " + itoa(health) + " HP";`
+- **[unitptr]** - Unit pointer: `target := activator; npc := findunit("guard", UNIT_ST_NPC);`
+- **[integerlist]** - Integer collections: `skills := {5, 3, 6, 9}; level := skills.[2]; // == 6`
+- **[stringlist]** - String collections: `names := {"Alice","Bob","Charlie"}; first := names.[0];`
+- **[null]** - Null value: `if (self.fighting == null) { /* not fighting anyone */ }`
 
 ### Type Conversion
 - **[atoi]** - String to integer: `num := atoi("42"); // num == 42`
 - **[itoa]** - Integer to string: `str := itoa(100); // str == "100"`
 
 ### Built-in Variables
-- **[self]** - Current executing unit
-- **[activator]** - Unit that triggered program
-- **[argument]** - Command arguments
-- **[command]** - Command name (use with `command("text")` syntax)
-- **[cmdstr]** - Full command string
+- **[self]** - Current executing unit: `hp_pct := (self.hp * 100) / self.max_hp;`
+- **[activator]** - Unit that triggered program: `if (activator.level >= IMMORTAL_LEVEL) { /* admin access */ }`
+- **[argument]** - Command arguments: `if (argument == "") { send("Hello!"); } else { send("Hello " + argument + "!"); }`
+- **[command]** - Command name: `if (command("north")) { act("You go north.", A_ALWAYS, self, null, null, TO_CHAR); }`
+- **[cmdstr]** - Full command string: `full_cmd := cmdstr + " " + argument; act("Full: " + full_cmd, A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Control Structures
-- **[if]** - Conditional statement: `if (condition) { /* code */ }`
+- **[if]** - Conditional statement: `if (self.hp > 10) { exec("say Hehe!", self); } else { exec("say ouch!", self); }`
 - **[switch]** - Multi-way conditional: `switch (value) { case 1: /* code */ }`
-- **[while]** - Loop construct: `while (condition) { /* code */ }`
+- **[while]** - Loop construct: `while (self.inside) { if (self.position & POSITION_SLEEPING) break; pause; }`
 - **[for_each]** - Loop construct: `for each // TODO`
-- **[goto]** - Unconditional jump: `goto labelname; // Jump to label`
-- **[on_goto]** - Goto construct: `on i goto label0, label1;` (0 is label0)
-- **[break]** - Exit loop: `break; // Exit current loop`
-- **[continue]** - Continue iteration: `continue; // Skip to next iteration`
-- **[return]** - Return from function: `return value;`
-- **[quit]** - Terminate program: `quit;`
+- **[goto]** - Unconditional jump: `:start: exec("say Hello", self); pause; goto start;`
+- **[on_goto]** - Goto construct: `on direction goto (north, south, east, west); // 0=north, 1=south, etc.`
+- **[break]** - Exit loop: `foreach (UNIT_ST_PC, target) { if (target.hp < target.max_hp / 2) { break; } }`
+- **[continue]** - Continue iteration: `foreach (UNIT_ST_OBJ, item) { if (not isset(item.manipulate, MANIPULATE_TAKE)) continue; }`
+- **[return]** - Return from function: `return(damage); // Functions: return value; Procedures: return;`
+- **[quit]** - Terminate program: `if (input == "exit") { sendtext("Goodbye!", self); quit; }`
 **⚠️ IMPORTANT:** DIL does NOT support C-style `for` loops. Use `while` loops instead.
 
 ### Operators
-- **[and]** - Logical operators
-- **[or]** - Logical operators
-- **[not]** - Logical operators
-- **[set]** - Bit operations
-- **[unset]** - Bit operations
-- **[isset]** - Bit operations
-
-## 🎮 **Game Systems**
-
-### Operators
-- **[and]** - Logical operators: `if (a and b) { /* code */ }`
-- **[or]** - Logical operators: `if (a and b) { /* code */ }`
-- **[not]** - Logical operators: `if (a and b) { /* code */ }`
-- **[set]** - Bit operations: `flags := flags | UNIT_FL_NO_MOB;`
-- **[unset]** - Bit operations: `flags := flags | UNIT_FL_NO_MOB;`
-- **[isset]** - Bit operations: `flags := flags | UNIT_FL_NO_MOB;`
-- **[in]** - String/list membership: `if ("key" in mylist) { /* found */ }`
+- **[and]** - Logical operators: `if (self.level >= 10 and self.hp > 50) { /* ready for combat */ }`
+- **[or]** - Logical operators: `if (self.level < 10 or self.hp <= 0) { /* not ready */ }`
+- **[not]** - Logical operators: `if (not (self.fighting)) { /* not in combat */ }`
+- **[set]** - Bit operations: `set(self.pcflags, PC_WIZARD); // Set wizard mode flag`
+- **[unset]** - Bit operations: `unset(self.charflags, CHAR_SELF_DEFENCE); // Clear defence flag`
+- **[isset]** - Bit operations: `if (isset(self.flags, UNIT_FL_BURIED)) { /* item is buried */ }`
+- **[in]** - String/list membership: `if ("fox" in "The quick brown fox") { /* found substring */ }`
 
 ### Character System
-- **[abilities]** - Character attributes: `str := self.abilities.[ABIL_STR];`
-- **[ability_points]** - Available points: `points := self.ability_points;`
+- **[abilities]** - Character attributes: `str := self.abilities[ABIL_STR]; dex := self.abilities[ABIL_DEX];`
+- **[ability_points]** - Available points: `points := self.ability_points; if (points >= 5) { /* can train */ }`
 - **[skills]** - Skill system: `skill := self.skills.[SKI_BASH];`
 - **[spells]** - Magic system: `spell := self.spells.[SPL_FIREBALL];`
 
 ### Character Fields
-- **[level]** - Character levels: `lvl := self.level; exp := self.exp;`
+- **[level]** - Character levels: `if (self.level >= 10) { sendtext("You are experienced!", self); }`
 - **[vlevel]** - Character levels: `lvl := self.level; exp := self.exp;`
-- **[hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp;`
-- **[max_hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp;`
-- **[position]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ }`
+- **[hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; if (self.hp < 10) { /* low health */ }`
+- **[max_hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; target.hp := target.max_hp; // Full heal`
+- **[position]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ } else if (self.position == POSITION_SLEEPING) { /* asleep */ }`
 - **[defaultpos]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ }`
-- **[fighting]** - Combat: `opp := self.fighting;`
+- **[fighting]** - Combat: `opp := self.fighting; if (opp != null) { sendtext("Fighting " + opp.name, self); }`
 - **[opponent]** - Combat: `opp := self.fighting;`
 
 ### Object System
-- **[name]** - Object identification: `obj.title := "A shiny sword";`
-- **[title]** - Object identification: `obj.title := "A shiny sword";`
+- **[name]** - Object identification: `item_name := item.name; sendtext("This is called: " + item_name, self);`
+- **[title]** - Object identification: `obj.title := "A shiny sword"; sendtext("Item title updated to: " + obj.title, self);`
 - **[descr]** - Object identification: `obj.title := "A shiny sword";`
-- **[weight]** - Weight: `total := obj.weight * obj.count;`
+- **[weight]** - Weight: `total_weight := pc.weight; capacity := pc.capacity; if (total_weight > capacity) { /* overburdened */ }`
 - **[baseweight]** - Weight: `total := obj.weight * obj.count;`
-- **[value]** - Economics: `obj.cost := 1000; obj.rent := 10;`
+- **[value]** - Economics: `damage := weapon.value[1]; // Get weapon damage from value array`
 - **[cost]** - Economics: `obj.cost := 1000; obj.rent := 10;`
 - **[rent]** - Economics: `obj.cost := 1000; obj.rent := 10;`
-- **[objectflags]** - Classification: `if (obj.flags & OBJ_FL_MAGIC) { /* magic item */ }`
+- **[objectflags]** - Classification: `if (isset(obj.objectflags, OBJ_NO_DUAL)) { sendtext("Too large for dual-wielding.", self); }`
 - **[objecttype]** - Classification: `if (obj.flags & OBJ_FL_MAGIC) { /* magic item */ }`
 
 ### Room System
-- **[roomflags]** - Room properties: `if (room.flags & UNIT_FL_INDOORS) { /* inside */ }`
-- **[bright]** - Lighting: `if (islight(room)) { /* lit room */ }`
-- **[light]** - Lighting: `if (islight(room)) { /* lit room */ }`
-- **[islight]** - Lighting: `if (islight(room)) { /* lit room */ }`
-- **[exit_to]** - Room exits: `if (room.exit_to[DIR_NORTH]) { /* north exit */ }`
+- **[roomflags]** - Room properties: `if (isset(my_room.roomflags, ROOM_FL_DARK)) { sendtext("This room is dark.", self); }`
+- **[bright]** - Lighting: `torch_brightness := bright(self); sendtext("Torch brightness: " + itoa(torch_brightness), self);`
+- **[light]** - Lighting: `light_count := self.light; sendtext("This unit contains " + itoa(light_count) + " light sources.", self);`
+- **[islight]** - Lighting: `if (islight(self)) { sendtext("This item provides light.", self); }`
+- **[exit_to]** - Room exits: `if (room.exit_to[NORTH] != null) { sendtext("There is an exit to the north.", self); }`
 - **[exit_names]** - Room exits: `if (room.exit_to[DIR_NORTH]) { /* north exit */ }`
-- **[mapx]** - Coordinates: `room.mapx := 100; room.mapy := 200;`
-- **[mapy]** - Coordinates: `room.mapx := 100; room.mapy := 200;`
+- **[mapx]** - Coordinates: `if (room.mapx != -1 and room.mapy != -1) { act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR); }`
+- **[mapy]** - Coordinates: `distance := (room2.mapx - room1.mapx) + (room2.mapy - room1.mapy);`
 
 ## 💬 **Communication System**
 
 ### Message Functions
-- **[send]** - Basic messaging
-- **[sendtext]** - Basic messaging
-- **[sendto]** - Basic messaging
-- **[act]** - Formatted social messages
-- **[sact]** - Formatted social messages
-- **[sendtoall]** - Broadcast functions
-- **[sendtoalldil]** - Broadcast functions
-- **[pagestring]** - Paginated output
-- **[prompt]** - User interface
-- **[clear]** - User interface
-- **[help]** - User interface
+- **[send]** - Basic messaging: `send("hello_world"); // Send to all waiting DIL programs`
+- **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
+- **[sendto]** - Basic messaging: `sendto("The sword glows with ancient power.", self); // Send to all DIL programs within a unit`
+- **[sendtoall]** - Broadcast functions: `sendtoall("SYSTEM SHUTDOWN IN 10 MINUTES!", "sys_control"); // Send to all matching DIL programs globally`
+- **[sendtoalldil]** - Broadcast functions: `sendtoall("NEW SPELL AVAILABLE: fireball", "spell_*"); // Send to specific DIL programs by pattern`
+- **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
+- **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
+- **[clear]** - User interface: `clear(intridx); // Remove interrupt handler by index`
+- **[help]** - User interface: `act("Zone help for " + zone_name + ":", A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Text Processing
 - **[length]** - Get string length: `l := length("hello"); // == 5`
 - **[substring]** - Remove from stringlist: `substring(mylist, "text")` (NOT extract substring)
 - **[left]** - Extract left characters: `l := left("hello", 2); // == "he"`
 - **[right]** - Extract right characters: `r := right("world.txt", 3); // == "txt"`
-- **[strcmp]** - String comparison: `if (strcmp("a", "b") == 0)` (use `==` for simple equality)
-- **[split]** - Split into stringlist: `words := split("hello world", " ");`
-- **[replace]** - Replace text: `new := replace("old", "new", text);`
-- **[getword]** - Extract first word: `s:="hello sam"; w := getword(s);` (w == "hello", s =="sam")
+- **[strcmp]** - String comparison: `if (strcmp("apple", "banana") < 0) { sendtext("apple comes before banana.", self); }`
+- **[split]** - Split into stringlist: `words := split("hello world this is a test", " ");`
+- **[replace]** - Replace text: `new := replace("The quick brown fox jumps over the lazy dog.", "cat", "text");`
+- **[getword]** - Extract first word: `s:="hello sam"; w := getword(s);` (w == "hello", s =="sam")`
 - **[getwords]** - Get word list: `sl := getwords("hello world");` (sl is {"hello", "world"}, original preserved)
 - **[toupper]** - Convert to uppercase: `u := toupper("hello"); // == "HELLO"`
-- **[tolower]** - Convert to lowercase `l := tolower("HellO"); // == "hello"`
-- **[strncmp]** - Compare with length limit: `if (strncmp("hello", "help", 3) == 0)`
+- **[tolower]** - Convert to lowercase: `l := tolower("HellO"); // == "hello"`
+- **[strncmp]** - Compare with length limit: `if (strncmp("hello", "help", 3) == 0) { sendtext("Strings match for first 3 chars.", self); }`
 
 **⚠️ Critical Notes:**
 - Stringlists use dot notation: `words.[0]` NOT `words[0]`
@@ -148,15 +136,14 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Combat Functions
 - **[set_fighting]** - Set combat: `set_fighting(attacker, target);`
 - **[stop_fighting]** - Stop combat: `stop_fighting(unit);`
-- **[attack_type]** - Combat data
+- **[attack_type]** - Combat data: `current_attack := self.attack_type; sendtext("Your current attack type is: " + weapon_name(current_attack), self);`
 - **[weapon_info]** - Combat data
 - **[weapon_name]** - Combat data
-- **[meleeattack]** - Attack actions
-- **[attack_spell]** - Attack actions
-- **[cast_spell]** - Attack actions
-- **[meleedamage]** - Combat calculations: `dmg := meleedamage(attacker, 50);`
-- **[defensive]** - Combat calculations: `dmg := meleedamage(attacker, 50);`
-- **[offensive]** - Combat calculations: `dmg := meleedamage(attacker, 50);`
+- **[meleeattack]** - Attack actions: `damage := meleeattack(self, victim, 0, 0, TRUE); if (damage > 0) { act("You hit $1n for $2d damage!", A_ALWAYS, self, victim, damage, TO_CHAR); }`
+- **[attack_spell]** - Attack actions: `damage := attack_spell(SPL_FIREBALL, caster, target, 0, ""); if (damage > 0) { act("Your fireball deals " + itoa(damage) + " damage!", A_ALWAYS, caster, null, target, damage, TO_CHAR); }`
+- **[meleedamage]** - Combat calculations: `damage := meleedamage(attacker, 50); // Calculate melee damage with base 50`
+- **[defensive]** - Combat calculations: `defense_bonus := defender.defensive - attacker.defensive; if (defense_bonus > 50) { act("Superior defense!", A_ALWAYS, defender, null, null, TO_CHAR); }`
+- **[offensive]** - Combat calculations: `off_bonus := target.offensive - attacker.offensive; if (off_bonus > 20) { act("Significant offensive advantage!", A_ALWAYS, attacker, null, null, TO_CHAR); }`
 
 ## 💰 **Economic System**
 
@@ -309,417 +296,12 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[remove]** - Inventory management
 - **[insert]** - Inventory management
 
-## 🏷️ **Constants & Types** (vme.h and values.h)
-
-### ...
-- **[SFB_*]** - State function bits (SFB_CMD, SFB_COM, SFB_DEAD, etc.)
-
-### Unit Types
-- **[UNIT_ST_PC]** - Player characters
-- **[UNIT_ST_NPC]** - Non-player characters  
-- **[UNIT_ST_OBJ]** - Objects
-- **[UNIT_ST_ROOM]** - Rooms
-
-### Positions
-- **[POSITION_STANDING]**, **[POSITION_SITTING]**, **[POSITION_RESTING]**, **[POSITION_SLEEPING]**, **[POSITION_FIGHTING]** - Character positions
-
-### Flags
-- **[CHAR_*]** - Character flags
-- **[OBJ_*]** - Object flags
-- **[ROOM_*]** - Room flags
-
 ## 🔐 **Security & Validation**
 
 ### Security Functions
-- **[check_password]**, **[set_password]**, **[delete_player]** - Account management
-- **[secure]**, **[access]** - Security control
+- **[check_password]** - Account management
+- **[set_password]** - Account management
+- **[delete_player]** - Account management
+- **[secure]** - Security control
+- **[access]** - Security control
 
----
-
-## 🚨 **Critical Compilation Guidelines**
-
-### Reserved Keywords (⚠️ IMPORTANT)
-The following words are **reserved** in DIL and **cannot be used as variable names**:
-- `opponent` - **Function name, not variable** - use `opp`, `target_unit`, or `target` instead
-- `for` - **Not supported** - use `while` loops instead
-- Other reserved words may exist during compilation
-
-### Variable Naming Conventions
-- **Maximum name length:** 16 characters for unit names
-- **Use descriptive names:** `target_unit` instead of `target`
-- **Use underscores:** `current_room` for readability
-- **Avoid all reserved keywords** listed above
-
-### Loop Structures (⚠️ CRITICAL)
-**✅ SUPPORTED - While Loops:**
-```dil
-i := 0;
-while (i < 10) {
-    exec("say Count: " + itoa(i), self);
-    i := i + 1;
-}
-```
-
-**❌ NOT SUPPORTED - For Loops:**
-```dil
-// This does NOT work in DIL:
-for (i := 0; i < 10; i := i + 1) {
-    // code
-}
-
-// Use while loop instead:
-i := 0;
-while (i < 10) {
-    // code
-    i := i + 1;
-}
-```
-
-## 🔧 **Common Compilation Errors & Solutions**
-
-### "Arg 2 of '+' not string"
-**Cause:** Trying to concatenate non-string values
-**Solution:** Convert integers to strings using `itoa()`
-```dil
-// WRONG
-exec("say Value: " + number, self);
-
-// RIGHT  
-exec("say Value: " + itoa(number), self);
-```
-
-### "No such variable: X"
-**Cause:** Using undeclared variables or reserved keywords
-**Solution:** Check variable declarations and avoid reserved words
-```dil
-// WRONG
-var
-   opponent : unitptr;  // 'opponent' is reserved
-
-// RIGHT
-var
-   opp : unitptr;
-   target_unit : unitptr;
-```
-
-### "Syntax error: Token 'X'"
-**Cause:** Incorrect function syntax or missing external declarations
-**Solution:** Verify function signatures and add external declarations
-```dil
-// WRONG - missing external declaration
-result := max(num1, num2);
-
-// RIGHT
-external
-   integer max(a:integer, b:integer);
-
-// Later in code:
-result := max(num1, num2);
-```
-
-### "Unit name too long. truncated"
-**Cause:** Unit names exceed 16 character limit
-**Solution:** Use shorter unit names
-```dil
-// WRONG
-names {"very_long_unit_name_that_exceeds_limit"}
-
-// RIGHT
-names {"short_name"}
-```
-
-### "Illegal lvalue"
-**Cause:** Incorrect assignment or comparison syntax
-**Solution:** Use proper assignment operators
-```dil
-// WRONG
-if (found = 1)  // Assignment instead of comparison
-
-// RIGHT
-if (found == 1)  // Proper comparison
-```
-
----
-
-**💡 These critical guidelines help developers avoid the most common compilation pitfalls encountered in practical DIL development.**
-
-## 🚨 **Critical Compilation Guidelines**
-
-### Reserved Keywords (⚠️ IMPORTANT)
-The following words are **reserved** in DIL and **cannot be used as variable names**:
-- `opponent` - **Function name, not variable** - use `opp`, `target_unit`, or `target` instead
-- `for` - **Not supported** - use `while` loops instead
-- Other reserved words may exist during compilation
-
-### Variable Naming Conventions
-- **Maximum name length:** 16 characters for unit names
-- **Use descriptive names:** `target_unit` instead of `target`
-- **Use underscores:** `current_room` for readability
-- **Avoid all reserved keywords** listed above
-
-### Loop Structures (⚠️ CRITICAL)
-**✅ SUPPORTED - While Loops:**
-```dil
-i := 0;
-while (i < 10) {
-    exec("say Count: " + itoa(i), self);
-    i := i + 1;
-}
-```
-
-**❌ NOT SUPPORTED - For Loops:**
-```dil
-// This does NOT work in DIL:
-for (i := 0; i < 10; i := i + 1) {
-    // code
-}
-
-// Use while loop instead:
-i := 0;
-while (i < 10) {
-    // code
-    i := i + 1;
-}
-```
-
-## 🔧 **Common Compilation Errors & Solutions**
-
-### "Arg 2 of '+' not string"
-**Cause:** Trying to concatenate non-string values
-**Solution:** Convert integers to strings using `itoa()`
-```dil
-// WRONG
-exec("say Value: " + number, self);
-
-// RIGHT  
-exec("say Value: " + itoa(number), self);
-```
-
-### "No such variable: X"
-**Cause:** Using undeclared variables or reserved keywords
-**Solution:** Check variable declarations and avoid reserved words
-```dil
-// WRONG
-var
-   opponent : unitptr;  // 'opponent' is reserved
-
-// RIGHT
-var
-   opp : unitptr;
-   target_unit : unitptr;
-```
-
-### "Syntax error: Token 'X'"
-**Cause:** Incorrect function syntax or missing external declarations
-**Solution:** Verify function signatures and add external declarations
-```dil
-// WRONG - missing external declaration
-result := max(num1, num2);
-
-// RIGHT
-external
-   integer max(a:integer, b:integer);
-
-// Later in code:
-result := max(num1, num2);
-```
-
-### "Unit name too long. truncated"
-**Cause:** Unit names exceed 16 character limit
-**Solution:** Use shorter unit names
-```dil
-// WRONG
-names {"very_long_unit_name_that_exceeds_limit"}
-
-// RIGHT
-names {"short_name"}
-```
-
-### "Illegal lvalue"
-**Cause:** Incorrect assignment or comparison syntax
-**Solution:** Use proper assignment operators
-```dil
-// WRONG
-if (found = 1)  // Assignment instead of comparison
-
-// RIGHT
-if (found == 1)  // Proper comparison
-```
-
----
-
-**💡 These critical guidelines help developers avoid the most common compilation pitfalls encountered in practical DIL development.**
-
-
-## 🚨 **Critical Compilation Guidelines**
-
-### Reserved Keywords
-All the 315+ language keywords are reserved and cannot be used for variables names.
-Examples of illegal variable names: `opponent`, `activator`, `for`, etc.
-Other reserved words may exist during compilation
-
-### Variable Naming Conventions
-- Maximum name length: 16 characters for unit names
-- Use underscores for readability: `current_room`
-- Avoid all reserved keywords listed above
-
-### Built-in vs External Functions
-
-#### External Functions (Require Declaration)
-In this example you locally declare and use DIL functions that exist in zone/function.zon
-```dil external
-     integer max@function(a:integer, b:integer);
-     integer min@function(a:integer, b:integer);
-```
-
-### String Operations
-**Correct Syntax:**
-```dil
-// String comparison
-if (string1 == string2)
-
-// Command checking (CRITICAL - use function syntax)
-if (command("say"))
-
-// String concatenation
-message := "Hello " + name;
-
-// String list access (CRITICAL - use dot notation)
-mylist := {"item1", "item2"};
-item := mylist.[0];  // Note: dot notation REQUIRED
-```
-
-**Incorrect Syntax (Causes Compilation Errors):**
-```dil
-// Wrong string comparison
-if (string1 $= string2)  // ERROR - use ==
-
-// Wrong command checking (CRITICAL ERROR)
-if (command == "say")  // ERROR - use command("say")
-
-// Wrong string list access (CRITICAL ERROR)
-item := mylist[0];  // ERROR - use mylist.[0] with dot
-```
-
-**Incorrect Syntax (Causes Compilation Errors):**
-```dil
-// Wrong string comparison
-if (string1 $= string2)  // ERROR
-
-// Wrong command checking  
-if (command == "say")  // ERROR
-
-// Wrong string list access
-item := mylist[0];  // ERROR - need dot notation mylist.[0];
-```
-
-### Unit Field Access
-**Correct:**
-```dil
-unit.title        // Unit's title
-unit.type         // Unit type (UNIT_ST_PC, UNIT_ST_NPC, etc.)
-unit.position     // Position state
-unit.outside      // Room containing unit
-unit.fighting     // Current opponent (CRITICAL: NOT unit.opponent - reserved)
-```
-
-**Incorrect (Causes Compilation Errors):**
-```dil
-unit.name         // May cause errors - use unit.title instead
-unit.opponent     // RESERVED KEYWORD - use unit.fighting instead
-```
-
-**Incorrect (Causes Compilation Errors):**
-```dil
-unit.name         // May cause errors
-unit.opponent     // Reserved keyword - use unit.fighting instead
-```
-
-### Loop Structures
-**Supported - While Loops:**
-```dil
-i := 0;
-while (i < 10) {
-    exec("say Count: " + itoa(i), self);
-    i := i + 1;
-}
-```
-
-**Not Supported - For Loops:**
-```dil
-// This does NOT work in DIL:
-for (i := 0; i < 10; i := i + 1) {
-    // code
-}
-
-// Use while loop instead:
-i := 0;
-while (i < 10) {
-    // code
-    i := i + 1;
-}
-```
-
-## 🔧 **Common Compilation Errors & Solutions**
-
-### "Arg 2 of '+' not string"
-**Cause:** Trying to concatenate non-string values
-**Solution:** Convert integers to strings using `itoa()`
-```dil
-// WRONG
-exec("say Value: " + number, self);
-
-// RIGHT  
-exec("say Value: " + itoa(number), self);
-```
-
-### "No such variable: X"
-**Cause:** Using undeclared variables or reserved keywords
-**Solution:** Check variable declarations and avoid reserved words
-```dil
-// WRONG
-var
-   opponent : unitptr;  // 'opponent' is reserved
-
-// RIGHT
-var
-   opp : unitptr;
-   target_unit : unitptr;
-```
-
-### "Syntax error: Token 'X'"
-**Cause:** Incorrect function syntax or missing external declarations
-**Solution:** Verify function signatures and add external declarations
-```dil
-// WRONG - missing external declaration
-result := max(num1, num2);
-
-// RIGHT
-external
-   integer max(a:integer, b:integer);
-
-// Later in code:
-result := max(num1, num2);
-```
-
-### "Unit name too long. truncated"
-**Cause:** Unit names exceed 16 character limit
-**Solution:** Use shorter unit names
-```dil
-// WRONG
-names {"very_long_unit_name_that_exceeds_limit"}
-
-// RIGHT
-names {"short_name"}
-```
-
-### "Illegal lvalue"
-**Cause:** Incorrect assignment or comparison syntax
-**Solution:** Use proper assignment operators
-```dil
-// WRONG
-if (found = 1)  // Assignment instead of comparison
-
-// RIGHT
-if (found == 1)  // Proper comparison
-```
