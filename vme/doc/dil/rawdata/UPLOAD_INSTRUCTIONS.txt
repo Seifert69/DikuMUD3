@@ -1,0 +1,57 @@
+
+MediaWiki XML Import Instructions
+==================================
+
+You now have a file called 'dil_manual_import.xml' that contains all your .wiki files
+in MediaWiki's XML import format. Here are several ways to upload it:
+
+METHOD 1: Using MediaWiki's importDump.php (Recommended)
+-------------------------------------------------------
+If you have server access to your MediaWiki installation:
+
+1. Upload the XML file to your MediaWiki server (e.g., via scp/ftp)
+2. SSH into your server
+3. Navigate to your MediaWiki directory
+4. Run: php maintenance/importDump.php dil_manual_import.xml
+5. Run: php maintenance/rebuildrecentchanges.php (to update recent changes)
+
+METHOD 2: Using Special:Import in the wiki interface
+----------------------------------------------------
+1. Log in as an admin user on your wiki
+2. Go to Special:Import (https://wiki.dikumud.net/wiki/Special:Import)
+3. Upload the XML file through the web interface
+4. Note: This may require admin privileges and file upload permissions
+
+METHOD 3: Enable API editing
+---------------------------
+If you want to use the original API uploader, you may need to edit LocalSettings.php:
+
+1. Add or uncomment these lines:
+   $wgEnableAPI = true;
+   $wgEnableWriteAPI = true;
+   
+2. Ensure your user has API editing permissions:
+   $wgGroupPermissions['user']['writeapi'] = true;
+   $wgGroupPermissions['bot']['writeapi'] = true;
+
+3. Restart your web server
+
+METHOD 4: Manual page creation
+------------------------------
+As a last resort, you can create pages manually:
+1. For each .wiki file, go to: https://wiki.dikumud.net/wiki/Manual:DIL_Manual/filename
+2. Click "Create" or "Edit"
+3. Copy and paste the content from the .wiki file (after removing line numbers)
+
+FILE FORMAT NOTES
+-----------------
+- Line numbers (like "00001| ") have been automatically removed
+- Pages are created under "Manual:DIL_Manual/" namespace
+- All content is properly escaped for XML
+- Each page includes attribution and timestamps
+
+NEXT STEPS
+----------
+1. Try Method 1 first if you have server access
+2. If not, try Method 2 through the web interface
+3. For future uploads, consider enabling API editing (Method 3)
