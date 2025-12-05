@@ -38,6 +38,9 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[argument]** - Command arguments: `wait(SFB_CMD, command("hello")); if (argument != "") { send("Hello " + argument + "!"); }`
 - **[command]** - Command name: `if (command("north")) { act("You go north.", A_ALWAYS, self, null, null, TO_CHAR); }`
 - **[cmdstr]** - Full command string: `full_cmd := cmdstr + " " + argument; act("Full: " + full_cmd, A_ALWAYS, self, null, null, TO_CHAR);`
+- **[cmdptr]** - Command pointer: `cmd := getcommand("say"); if (cmd) { send("Command level: " + itoa(cmd.level), self); }`
+- **[excmdstr]** - Command string (lowercase): `if (excmdstr != "quit") { sendtext("You must type 'quit' to quit.", self); }`
+- **[excmdstr_case]** - Command string (case-sensitive): `if (length(excmdstr_case) < 5) { sendtext("Password too short.", self); }`
 
 ### Control Structures
 - **[if]** - Conditional statement: `if (self.hp > 10) { exec("say Hehe!", self); } else { exec("say ouch!", self); }`
@@ -49,6 +52,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[continue]** - Continue iteration: `foreach (UNIT_ST_OBJ, item) { if (not isset(item.manipulate, MANIPULATE_TAKE)) continue; }`
 - **[return]** - Return from function: `return(damage); // Functions: return value; Procedures: return;`
 - **[quit]** - Terminate program: `if (input == "exit") { sendtext("Goodbye!", self); quit; }`
+- **[block]** - Block commands: `wait(SFB_CMD, command("forbidden")); block; send("Command blocked!", self);`
 **⚠️ IMPORTANT:** DIL does NOT support C-style `for` loops. Use `while` loops instead.
 
 ### Operators
@@ -69,6 +73,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[descr]** - Object identification: `extra.descr := "This item glows with magical energy."; // Set extra description`
 - **[weight]** - Weight: `total_weight := pc.weight; capacity := pc.capacity; if (total_weight > capacity) { /* overburdened */ }`
 - **[baseweight]** - Weight: `empty_weight := baseweight(chest); // Get chest weight without contents`
+- **[capacity]** - Carrying capacity: `max_cap := capacity(self); remaining := max_cap - weight(self); send("Capacity: " + itoa(remaining) + " remaining", self);`
 
 ### Object Fields
 - **[value]** - Economics: `weapon_damage := weapon.value[1]; // Get damage from weapon value array`
@@ -83,6 +88,9 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[exit_names]** - Room exits: `names := room.exit_names[NORTH]; if (length(names) > 0) { act("Exit: " + names.[0], A_ALWAYS, self, null, null, TO_CHAR); }`
 - **[mapx]** - Coordinates: `if (room.mapx != -1 and room.mapy != -1) { act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR); }`
 - **[mapy]** - Coordinates: `distance := (room2.mapx - room1.mapx) + (room2.mapy - room1.mapy);`
+- **[exit_diff]** - Exit difficulty: `difficulty := room.exit_diff[NORTH]; if (skillcheck(SKI_CLIMB, ABIL_DEX, difficulty) > 0) { sendtext("You climb successfully!", self); }`
+- **[exit_info]** - Exit flags: `if (isset(room.exit_info[NORTH], EX_CLOSED)) { unset(room.exit_info[NORTH], EX_CLOSED); act("Door opens!", A_ALWAYS, self, null, null, TO_ALL); }`
+- **[exit_key]** - Exit key: `key_name := room.exit_key[NORTH]; if (key_name != "" and findsymbolic(key_name, FIND_UNIT_IN_ME)) { sendtext("You have the key!", self); }`
 
 ### Character Fields
 - **[level]** - Character levels: `if (self.level >= 10) { sendtext("You are experienced!", self); }`
@@ -98,8 +106,16 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[followercount]** - Social relationships: `count := self.followercount; if (count > 0) { sendtext("You have " + itoa(count) + " followers.", self); }`
 - **[abilities]** - Character attributes: `str := self.abilities[ABIL_STR]; dex := self.abilities[ABIL_DEX];`
 - **[ability_points]** - Available points: `points := self.ability_points; if (points >= 5) { /* can train */ }`
+- **[ability_costs]** - Training costs: `cost := self.ability_costs[ABIL_STR]; if (money >= cost) { /* can afford training */ }`
+- **[ability_levels]** - Training requirements: `required := self.ability_levels[ABIL_STR]; if (level >= required) { /* can train */ }`
 - **[skills]** - Skill system: `skill := self.skills.[SKI_BASH];`
 - **[spells]** - Magic system: `spell := self.spells.[SPL_FIREBALL];`
+- **[alignment]** - Moral standing: `align := alignment(self); if (align < -500) { send("You are evil!", self); }`
+- **[birth]** - Character creation: `age_days := (realtime - birth(self)) / 86400; send("You are " + itoa(age_days) + " days old.", self);`
+- **[drunk]** - Character state: `if (self.drunk > 10) { sendtext("You are drunk!", self); }`
+- **[endurance]** - Physical stamina: `if (self.endurance < 2) { sendtext("You are exhausted!", self); } else { self.endurance := self.endurance - 1; }`
+- **[charflags]** - Character flags: `if (isset(activator.charflags, CHAR_OUTLAW)) { send("You are an outlaw!", activator); }`
+- **[crimes]** - Criminal record: `if (activator.crimes > 0) { send("You have " + itoa(activator.crimes) + " crimes on record.", activator); }`
 
 #### PC fields
 - **[profession]** - PC properties: `if (activator.profession == PROFESSION_THIEF) { sendtext("Welcome, shadow walker!", activator); }`
@@ -127,6 +143,11 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[split]** - Split into stringlist: `words := split("hello world this is a test", " ");`
 - **[getwords]** - Get stringlist: `sl := getwords("hello world"); // sl is {"hello", "world"}, original preserved`
 
+### Extra Description Functions
+- **[addextra]** - Add descriptions: `addextra(item, 0, "A finely crafted sword with ancient runes."); // Add main description`
+- **[delstr]** - Delete string files: `if (delstr("news.txt")) { sendtext("News file deleted.", self); }`
+- **[extra]** - .extra field: `desc := item.extra.descr; // Get extra description text`
+
 **⚠️ Critical Notes:**
 - Stringlists use dot notation: `words.[0]` NOT `words[0]`
 - Convert integers for concatenation: `"Value: " + itoa(num)`
@@ -151,9 +172,18 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[weapon_name]** - Combat data: `name := weapon_name(WPN_SWORD); sendtext("Weapon type: " + name, self);`
 - **[meleeattack]** - Attack actions: `damage := meleeattack(self, victim, 0, 0, TRUE); if (damage > 0) { act("You hit $1n for $2d damage!", A_ALWAYS, self, victim, damage, TO_CHAR); }`
 - **[attack_spell]** - Attack actions: `damage := attack_spell(SPL_FIREBALL, caster, target, 0, ""); if (damage > 0) { act("Your fireball deals " + itoa(damage) + " damage!", A_ALWAYS, caster, null, target, damage, TO_CHAR); }`
+- **[cast_spell]** - Spell casting: `damage := cast_spell(SPL_FIREBALL, self, self, target, 0, ""); if (damage > 0) { send("Fireball deals " + itoa(damage) + " damage!", self); }`
 - **[meleedamage]** - Combat calculations: `damage := meleedamage(attacker, 50); // Calculate melee damage with base 50`
 - **[defensive]** - Combat calculations: `defense_bonus := defender.defensive - attacker.defensive; if (defense_bonus > 50) { act("Superior defense!", A_ALWAYS, defender, null, null, TO_CHAR); }`
 - **[offensive]** - Combat calculations: `off_bonus := target.offensive - attacker.offensive; if (off_bonus > 20) { act("Significant offensive advantage!", A_ALWAYS, attacker, null, null, TO_CHAR); }`
+- **[change_speed]** - Combat timing: `change_speed(target, 12); // Delay target's next combat action by 12 pulses`
+
+## ✨ **Affects & Magic System**
+
+### Affect Functions
+- **[addaff]** - Add affects: `addaff(player, ID_SANCTUARY, -1, 0, 0, 0, 0, 0, APF_DURATION | APF_FIRST, 0); // Permanent sanctuary`
+- **[isaff]** - Check affects: `if (isaff(player, ID_BLIND)) { send("You are blind!", player); }`
+- **[getaffects]** - Get all affects: `affects := getaffects(player); // Get list of all active affects`
 
 ## 💰 **Economic System**
 
@@ -191,6 +221,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[hasfunc]** - Function check: `if (item.hasfunc == 1) { act("$1n has special powers.", A_ALWAYS, item, null, null, TO_ROOM); }`
 - **[access]** - Access control: `if (access(player, restricted_zone) >= 3) { sendtext("Access granted!", player); }`
 - **[reboot]** - System restart: `act("Rebooting MUD now...", A_ALWAYS, self, null, null, TO_ALL); reboot(0);`
+- **[dispatch]** - External messaging: `dispatch("discord msg #bugs @" + self.name + " bug report: " + report_text); // Send to external dispatcher`
 
 ## 📋 **Unit Operations**
 
@@ -199,7 +230,11 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[findsymbolic]** - Unit search: `target := findsymbolic("sword@midgaard"); if (target != null) { act("Found: $1n", A_ALWAYS, self, target, null, TO_CHAR); }`
 - **[findrndunit]** - Unit search: `random_pc := findrndunit(self, FIND_UNIT_ZONE, UNIT_ST_PC); if (random_pc != null) { act("Random player: $1n", A_ALWAYS, self, random_pc, null, TO_CHAR); }`
 - **[delunit]** - Unit lifecycle: `if (delunit("temp_guardian.unit")) { act("Temporary unit deleted.", A_ALWAYS, self, null, null, TO_CHAR); }`
+- **[destroy]** - Unit lifecycle: `item := findunit(self, "sword", FIND_UNIT_IN_ME, null); if (item) { destroy(item); act("Item destroyed!", self, null, null, TO_CHAR); }`
 - **[clone]** - Unit lifecycle: `copy := clone(original_item); if (copy != null) { link(copy, self); }`
+
+### Unit Validation
+- **[can_carry]** - Carry validation: `result := can_carry(player, item, 1); if (result == 0) { /* can carry */ }`
 
 
 ### Finding & Managing Rooms
@@ -279,6 +314,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[npccount]** - Zone properties: `count := npccount(zone); // Get number of NPCs in zone`
 - **[objs]** - Field Object operations: `zone := findzone("midgaard"); first_obj := zone.objs; while (first_obj != null) { act("Zone object: $1n", A_ALWAYS, self, first_obj, null, TO_CHAR); first_obj := first_obj.next; }`
 - **[objcount]** - Object operations: `zone := findzone("midgaard"); count := zone.objcount; act("Zone has $1d objects", A_ALWAYS, self, count, null, TO_CHAR);`
+- **[creators]** - Zone authors: `if (zone.creators) { foreach (name in zone.creators) { act("Creator: " + name, self); } }`
 
 ### List management
 - **[global_head]** - Inter-program communication: `first_unit := global_head(); // Get first unit in global list`
@@ -288,7 +324,8 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[npc_head]** - NPC operations: `npc := npc_head(); while (npc) { sendtext(npc.name, self); npc := npc.next; }`
 - **[zone_head]** - Zone operations: `first_zone := zone_head(); // Get first zone in global list`
 - **[zhead]** - Zone operations: `zone := zhead(); while (zone) { sendtext(zone.name, self); zone := zone.next; }`
-- **[chead]** - Command operations: `cmd := chead(); while (cmd) { act("Command: " + cmd.name, A_ALWAYS, self, null, null, TO_CHAR); cmd := cmd.next; }` 
+- **[chead]** - Command operations: `cmd := chead(); while (cmd) { act("Command: " + cmd.name, A_ALWAYS, self, null, null, TO_CHAR); cmd := cmd.next; }`
+- **[command_head]** - Command list: `cmd := command_head(); while (cmd) { act("Found: " + cmd.name, self); cmd := cmd.next; }` 
 
 #### List Operations
 - **[next]** - Next element: `item := item.next; // Move to next item in list`
@@ -305,8 +342,15 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### God Functions
 - **[switch]** - Character control: `switch(self, target); sendtext("You have switched to " + target.name + ".", self);`
 
-### Pay to Play functions
+### Pay to Play functions (not in use)
 - **[paycheck]** - Character money: `if (paycheck(shop_room, player)) { sendtext("Access granted!", player); }`
 - **[acc_balance]** - Bank accounts: `balance := player.acc_balance; if (balance >= 10000) { sendtext("You have $100+ in your account!", player); }`
 - **[acc_total]** - Bank accounts: `total_credit := player.acc_total; if (total_credit >= 50000) { sendtext("Premium account!", player); }`
 - **[acc_modify]** - Bank accounts: `acc_modify(player, -5000); // Remove $50 from account`
+
+### Color Functions (not in use)
+- **[addcolor]** - Add colors: `addcolor(player, "&red"); // Add red to player's color palette`
+- **[delcolor]** - Remove colors: `delcolor(player, "&red"); // Remove red from player's color palette`
+- **[changecolor]** - Modify colors: `if (changecolor(player, "clan_color", "&c+w&bn")) { send("Clan color updated!", player); }`
+- **[getcolor]** - Get colors: `if (getcolor(player, "&red")) { send("Red available!", player); }`
+
