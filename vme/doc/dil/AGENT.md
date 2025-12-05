@@ -65,17 +65,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[skills]** - Skill system: `skill := self.skills.[SKI_BASH];`
 - **[spells]** - Magic system: `spell := self.spells.[SPL_FIREBALL];`
 
-### Character Fields
-- **[level]** - Character levels: `if (self.level >= 10) { sendtext("You are experienced!", self); }`
-- **[vlevel]** - Character levels: `lvl := self.level; exp := self.exp;`
-- **[hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; if (self.hp < 10) { /* low health */ }`
-- **[max_hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; target.hp := target.max_hp; // Full heal`
-- **[position]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ } else if (self.position == POSITION_SLEEPING) { /* asleep */ }`
-- **[defaultpos]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ }`
-- **[fighting]** - Combat: `opp := self.fighting; if (opp != null) { sendtext("Fighting " + opp.name, self); }`
-- **[opponent]** - Combat: `opp := self.fighting;`
-
-### Object System
+### Object Fields
 - **[name]** - Object identification: `item_name := item.name; sendtext("This is called: " + item_name, self);`
 - **[title]** - Object identification: `obj.title := "A shiny sword"; sendtext("Item title updated to: " + obj.title, self);`
 - **[descr]** - Object identification: `obj.title := "A shiny sword";`
@@ -87,7 +77,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[objectflags]** - Classification: `if (isset(obj.objectflags, OBJ_NO_DUAL)) { sendtext("Too large for dual-wielding.", self); }`
 - **[objecttype]** - Classification: `if (obj.flags & OBJ_FL_MAGIC) { /* magic item */ }`
 
-### Room System
+### Room Fields
 - **[roomflags]** - Room properties: `if (isset(my_room.roomflags, ROOM_FL_DARK)) { sendtext("This room is dark.", self); }`
 - **[bright]** - Lighting: `torch_brightness := bright(self); sendtext("Torch brightness: " + itoa(torch_brightness), self);`
 - **[light]** - Lighting: `light_count := self.light; sendtext("This unit contains " + itoa(light_count) + " light sources.", self);`
@@ -97,14 +87,32 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[mapx]** - Coordinates: `if (room.mapx != -1 and room.mapy != -1) { act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR); }`
 - **[mapy]** - Coordinates: `distance := (room2.mapx - room1.mapx) + (room2.mapy - room1.mapy);`
 
+### Character Fields
+- **[level]** - Character levels: `if (self.level >= 10) { sendtext("You are experienced!", self); }`
+- **[vlevel]** - Character levels: `lvl := self.level; exp := self.exp;`
+- **[hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; if (self.hp < 10) { /* low health */ }`
+- **[max_hp]** - Health: `hp_pct := (self.hp * 100) / self.max_hp; target.hp := target.max_hp; // Full heal`
+- **[position]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ } else if (self.position == POSITION_SLEEPING) { /* asleep */ }`
+- **[defaultpos]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ }`
+- **[fighting]** - Combat: `opp := self.fighting; if (opp != null) { sendtext("Fighting " + opp.name, self); }`
+- **[opponent]** - Combat: `opp := self.fighting;`
+- **[master]** - Social relationships
+- **[follower]** - Social relationships
+- **[followercount]** - Social relationships
+
+#### PC fields
+- **[profession]** - PC properties
+- **[guild]** - PC properties
+
+
 ## 💬 **Communication System**
 
 ### Communication Functions
 - **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
 - **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
 - **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
-act.wiki
-sact.wiki
+- **[act]** - Message formatting: `act("You hit $3n for $2d damage!", A_ALWAYS, self, null, victim, damage, TO_CHAR);`
+- **[sact]** - String formatting: `desc := sact("$1n is standing here.", A_SOMEONE, target, null, null, TO_CHAR);`
 
 ### Message Functions
 - **[send]** - Inter-program messaging: `send("task_complete"); pause; send("cleanup_ready"); // Send to waiting DIL programs with SFB_MSG`
@@ -141,8 +149,8 @@ sact.wiki
 - **[set_fighting]** - Set combat: `set_fighting(attacker, target);`
 - **[stop_fighting]** - Stop combat: `stop_fighting(unit);`
 - **[attack_type]** - Combat data: `current_attack := self.attack_type; sendtext("Your current attack type is: " + weapon_name(current_attack), self);`
-- **[weapon_info]** - Combat data
-- **[weapon_name]** - Combat data
+- **[weapon_info]** - Combat data: `wpn_info := weapon_info(WPN_SWORD); hands := wpn_info.[0]; // 1=one-handed, 2=two-handed`
+- **[weapon_name]** - Combat data: `name := weapon_name(WPN_SWORD); sendtext("Weapon type: " + name, self);`
 - **[meleeattack]** - Attack actions: `damage := meleeattack(self, victim, 0, 0, TRUE); if (damage > 0) { act("You hit $1n for $2d damage!", A_ALWAYS, self, victim, damage, TO_CHAR); }`
 - **[attack_spell]** - Attack actions: `damage := attack_spell(SPL_FIREBALL, caster, target, 0, ""); if (damage > 0) { act("Your fireball deals " + itoa(damage) + " damage!", A_ALWAYS, caster, null, target, damage, TO_CHAR); }`
 - **[meleedamage]** - Combat calculations: `damage := meleedamage(attacker, 50); // Calculate melee damage with base 50`
@@ -198,29 +206,28 @@ sact.wiki
 - **[addstring]** - Add to list: `addstring(mylist, "new"); // Adds "new" to end`
 
 ### System Utilities
-- **[log]** - Logging
-- **[flog]** - Logging
-- **[logcrime]** - Logging
-- **[debug]** - Debugging
-- **[info]** - Debugging
-- **[hasfunc]** - Debugging
-- **[secure]** - Administration
-- **[access]** - Administration
-- **[reboot]** - Administration
+- **[log]** - Logging: `log("Player " + self.name + " completed quest at " + asctime());`
+- **[flog]** - File logging: `flog("quests.log", self.name + " completed quest: " + quest_name, "a");`
+- **[logcrime]** - Crime logging: `logcrime(thief, victim, CRIME_STEALING);`
+- **[info]** - Player info: `email_expd := "$email" in pc.info; if (email_expd != null) email := email_expd.descr;`
+- **[hasfunc]** - Function check: `if (target.hasfunc == 1) sendtext("Unit has DIL programs attached.", self);`
+- **[secure]** - Security control: `secure(target, target_lost); // Jump to target_lost: if unit disappears`
+- **[access]** - Access control: `if (access(player, admin_zone) >= 3) sendtext("You have admin access.", self);`
+- **[reboot]** - System restart: `act("Rebooting MUD now...", A_ALWAYS, self, null, null, TO_ALL); reboot(0);`
 
 ## 🎭 **DIL Program Management**
 
 ### Program Structure
-- **[dilbegin]** - Program definition
-- **[dilend]** - Program definition
-- **[var]** - Program structure
-- **[external]** - ???
-- **[code]** - Program structure
+- **[dilbegin]** - Program definition: `dilbegin my_function(param : string);`
+- **[dilend]** - Program definition: `} dilend`
+- **[var]** - Variable declaration: `var i : integer; name : string;`
+- **[external]** - External function: `external int my_func(unitptr : unitptr);`
+- **[code]** - Code block: `code { /* program logic here */ }`
 
 ### Program Control
-- **[priority]** - Execution control
-- **[nopriority]** - Execution control
-- **[waitnoop]** - Program flow
+- **[priority]** - Execution control: `priority; // Block other DIL programs until nopriority called`
+- **[nopriority]** - Execution control: `nopriority(); // Allow other DIL programs to execute again`
+- **[waitnoop]** - Program flow: `waitnoop; // Temporarily release secure constraints for command execution`
 
 ### Event Handling
 - **[on_activation]** - Event handlers
@@ -263,20 +270,15 @@ sact.wiki
 - **[roomcount]** - Room lists
 - **[setroomexit]** - Room connections
 
-### NPC Management
+### NPC fields
 - **[npc_head]** - NPC operations
 - **[npcs]** - NPC operations
 - **[npccount]** - NPC operations
 - **[npcflags]** - NPC properties
-- **[profession]** - NPC properties
-- **[guild]** - NPC properties
-- **[master]** - Social relationships
-- **[follower]** - Social relationships
-- **[followercount]** - Social relationships
 
 ### Object Management
 - **[obj_head]** - Object operations
-- **[objs]** - Object operations
+- **[objs]** - Field Object operations
 - **[objcount]** - Object operations
 - **[equip]** - Equipment
 - **[unequip]** - Equipment
