@@ -136,7 +136,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Communication Functions
 - **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
-- **[pagestring]** - Paginated output: `pagestring("=== HELP ===\nCommands:\n  look - Examine surroundings\n  say - Speak to others\n\nPress ENTER to continue...", self);`
+- **[pagestring]** - Paginated output: `pagestring("a very long string will be paged...", self);`
 - **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
 - **[act]** - Message formatting: `act("You hit $3n for $2d damage!", A_ALWAYS, self, null, victim, damage, TO_CHAR);`
 - **[sact]** - String formatting: `desc := sact("$1n is standing here.", A_SOMEONE, target, null, null, TO_CHAR); // Format message as string`
@@ -159,10 +159,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Money Management
 - **[purse]** - Character money: `gold := purse(player, GOLD_PIECE); if (gold >= 100) { sendtext("You have enough gold!", player); }`
-- **[paycheck]** - Character money: `if (paycheck(shop_room, player)) { sendtext("Access granted!", player); }`
-- **[acc_balance]** - Bank accounts: `balance := player.acc_balance; if (balance >= 10000) { sendtext("You have $100+ in your account!", player); }`
-- **[acc_total]** - Bank accounts: `total_credit := player.acc_total; if (total_credit >= 50000) { sendtext("Premium account!", player); }`
-- **[acc_modify]** - Bank accounts: `acc_modify(player, -5000); // Remove $50 from account`
 - **[transfermoney]** - Money operations: `success := transfermoney(buyer, seller, 1000); // Transfer 1000 coins`
 - **[moneystring]** - Money operations: `price := moneystring(2500, 1); // "25 gold pieces" or "25 gp"`
 
@@ -207,18 +203,17 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 
 ### Finding & Managing Rooms
-- **[findroom]** - Room operations: `room := findroom("temple@midgaard"); if (room != null) { transfer(self, room); }`
+- **[findroom]** - Room operations: `room := findroom("temple@midgaard"); if (room != null) { link(self, room); }`
 - **[pathto]** - Room operations: `direction := pathto(self, target_room); // Get direction to target`
 - **[setroomexit]** - Room connections: `setroomexit(room, DIR_NORTH, target_room); // Create north exit`
 
 ### Object Management
 - **[equip]** - Get Equipment: `weapon := equip(self, WEAR_HANDS); if (weapon != null) { sendtext("Wielding: " + weapon.name, self); }`
-- **[unequip]** - Remove Equipment: 
-- **[equipment]** - Check Equipment:
+- **[unequip]** - Remove Equipment: `weapon := equipment(self, WEAR_WIELD); if (weapon != null) { unequip(weapon); act("You unequip " + weapon.title, A_ALWAYS, self, null, null, TO_CHAR); }` 
+- **[equipment]** - Check Equipment: `weapon := equipment(player, WEAR_WIELD); if (weapon != null) { send("You are wielding " + weapon.name, player); } else { send("You are not wielding anything.", player); }`
 - **[addequip]** - Add Equipment: `ring := load("ring@midgaard"); if (ring != null) { addequip(ring, WEAR_FINGER_L); }`
 
 ### Movement & Linking & Lighting
-- **[transfer]** - Unit positioning: `link(item, player); // Move item to player's inventory (transfer functionality via link)`
 - **[link]** - Unit positioning: `link(item, player); // Move item to player's inventory`
 - **[remove]** - Inventory management: `remove(mylist, 2); // Remove element at index 2`
 - **[insert]** - Inventory management: `insert(mylist, 1, "new_item"); // Insert at position 1`
@@ -241,8 +236,8 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Event Handling
 - **[secure]** - Security control: `secure(victim, victim_fled); // Jump to victim_fled: if target disappears`
-- **[unsecure]** - Security control: 
-- **[on_activation]** - Event handlers
+- **[unsecure]** - Security control: `secure(item, :item_lost); // Process item safely; unsecure(item); // Remove protection when done` 
+- **[on_activation]** - Event handlers: `on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip); // Skip if asleep or fighting`
 - **[interrupt]** - Program flow: `intr_id := interrupt(SFB_MSG, argument == "help", help_handler); // Handle help requests`
 - **[clear]** - Program flow: `clear(intridx); // Remove interrupt handler by index`
 
@@ -293,7 +288,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[npc_head]** - NPC operations: `npc := npc_head(); while (npc) { sendtext(npc.name, self); npc := npc.next; }`
 - **[zone_head]** - Zone operations: `first_zone := zone_head(); // Get first zone in global list`
 - **[zhead]** - Zone operations: `zone := zhead(); while (zone) { sendtext(zone.name, self); zone := zone.next; }`
-- **[chead]** - Command operations: 
+- **[chead]** - Command operations: `cmd := chead(); while (cmd) { act("Command: " + cmd.name, A_ALWAYS, self, null, null, TO_CHAR); cmd := cmd.next; }` 
 
 #### List Operations
 - **[next]** - Next element: `item := item.next; // Move to next item in list`
@@ -302,10 +297,16 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ## 🔐 **Security & Validation**
 
 ### Security Functions
-- **[check_password]** - Account management
+- **[check_password]** - Account management: `if (check_password(player, argument)) { send("Password verified.", player); } else { send("Invalid password.", player); }`
 - **[set_password]** - Account management: `set_password(player, "newpass123"); // Change player password`
 - **[delete_player]** - Account management: `if (isplayer("troublemaker")) { delete_player("troublemaker"); }`
 - **[access]** - Security control: `if (access(player, restricted_zone) >= 3) { sendtext("Access granted!", player); }`
 
 ### God Functions
 - **[switch]** - Character control: `switch(self, target); sendtext("You have switched to " + target.name + ".", self);`
+
+### Pay to Play functions
+- **[paycheck]** - Character money: `if (paycheck(shop_room, player)) { sendtext("Access granted!", player); }`
+- **[acc_balance]** - Bank accounts: `balance := player.acc_balance; if (balance >= 10000) { sendtext("You have $100+ in your account!", player); }`
+- **[acc_total]** - Bank accounts: `total_credit := player.acc_total; if (total_credit >= 50000) { sendtext("Premium account!", player); }`
+- **[acc_modify]** - Bank accounts: `acc_modify(player, -5000); // Remove $50 from account`
