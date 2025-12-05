@@ -35,15 +35,15 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Built-in Variables
 - **[self]** - Current executing unit: `hp_pct := (self.hp * 100) / self.max_hp;`
 - **[activator]** - Unit that triggered program: `if (activator.level >= IMMORTAL_LEVEL) { /* admin access */ }`
-- **[argument]** - Command arguments: `if (argument == "") { send("Hello!"); } else { send("Hello " + argument + "!"); }`
+- **[argument]** - Command arguments: `wait(SFB_CMD, command("hello")); if (argument == "") { send("Hello there!"); } else { send("Hello " + argument + "!"); }`
 - **[command]** - Command name: `if (command("north")) { act("You go north.", A_ALWAYS, self, null, null, TO_CHAR); }`
 - **[cmdstr]** - Full command string: `full_cmd := cmdstr + " " + argument; act("Full: " + full_cmd, A_ALWAYS, self, null, null, TO_CHAR);`
 
 ### Control Structures
 - **[if]** - Conditional statement: `if (self.hp > 10) { exec("say Hehe!", self); } else { exec("say ouch!", self); }`
-- **[switch]** - Multi-way conditional: `switch (value) { case 1: /* code */ }`
+- **[switch]** - Character control: `switch(self, target); sendtext("You have switched to " + target.name + ".", self);`
 - **[while]** - Loop construct: `while (self.inside) { if (self.position & POSITION_SLEEPING) break; pause; }`
-- **[for_each]** - Loop construct: `for each // TODO`
+- **[foreach]** - Loop construct: `foreach (UNIT_ST_PC|UNIT_ST_NPC, u) { if (u.hp < u.max_hp) { u.hp := u.hp + 6; } pause; }`
 - **[goto]** - Unconditional jump: `:start: exec("say Hello", self); pause; goto start;`
 - **[on_goto]** - Goto construct: `on direction goto (north, south, east, west); // 0=north, 1=south, etc.`
 - **[break]** - Exit loop: `foreach (UNIT_ST_PC, target) { if (target.hp < target.max_hp / 2) { break; } }`
@@ -59,7 +59,6 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[set]** - Bit operations: `set(self.pcflags, PC_WIZARD); // Set wizard mode flag`
 - **[unset]** - Bit operations: `unset(self.charflags, CHAR_SELF_DEFENCE); // Clear defence flag`
 - **[isset]** - Bit operations: `if (isset(self.flags, UNIT_FL_BURIED)) { /* item is buried */ }`
-- **[in]** - String/list membership: `if ("fox" in "The quick brown fox") { /* found substring */ }`
 
 ### Character System
 - **[abilities]** - Character attributes: `str := self.abilities[ABIL_STR]; dex := self.abilities[ABIL_DEX];`
@@ -101,30 +100,37 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ## 💬 **Communication System**
 
-### Message Functions
-- **[send]** - Basic messaging: `send("hello_world"); // Send to all waiting DIL programs`
+### Communication Functions
 - **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
+- **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
+- **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
+- **[help]** - Zone information: `target_zone := findzone(zone_name); help_text := target_zone.help; act(help_text, A_ALWAYS, self, null, null, TO_CHAR);`
+act.wiki
+sact.wiki
+
+### Message Functions
+- **[send]** - Inter-program messaging: `send("task_complete"); pause; send("cleanup_ready"); // Send to waiting DIL programs with SFB_MSG`
 - **[sendto]** - Basic messaging: `sendto("The sword glows with ancient power.", self); // Send to all DIL programs within a unit`
 - **[sendtoall]** - Broadcast functions: `sendtoall("SYSTEM SHUTDOWN IN 10 MINUTES!", "sys_control"); // Send to all matching DIL programs globally`
 - **[sendtoalldil]** - Broadcast functions: `sendtoall("NEW SPELL AVAILABLE: fireball", "spell_*"); // Send to specific DIL programs by pattern`
-- **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
-- **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
-- **[clear]** - User interface: `clear(intridx); // Remove interrupt handler by index`
-- **[help]** - User interface: `act("Zone help for " + zone_name + ":", A_ALWAYS, self, null, null, TO_CHAR);`
 
-### Text Processing
+### String Processing
 - **[length]** - Get string length: `l := length("hello"); // == 5`
-- **[substring]** - Remove from stringlist: `substring(mylist, "text")` (NOT extract substring)
+- **[in]** - String/list membership: `if ("fox" in "The quick brown fox") { /* found substring */ }`
 - **[left]** - Extract left characters: `l := left("hello", 2); // == "he"`
 - **[right]** - Extract right characters: `r := right("world.txt", 3); // == "txt"`
 - **[strcmp]** - String comparison: `if (strcmp("apple", "banana") < 0) { sendtext("apple comes before banana.", self); }`
-- **[split]** - Split into stringlist: `words := split("hello world this is a test", " ");`
 - **[replace]** - Replace text: `new := replace("The quick brown fox jumps over the lazy dog.", "cat", "text");`
 - **[getword]** - Extract first word: `s:="hello sam"; w := getword(s);` (w == "hello", s =="sam")`
-- **[getwords]** - Get word list: `sl := getwords("hello world");` (sl is {"hello", "world"}, original preserved)
 - **[toupper]** - Convert to uppercase: `u := toupper("hello"); // == "HELLO"`
 - **[tolower]** - Convert to lowercase: `l := tolower("HellO"); // == "hello"`
 - **[strncmp]** - Compare with length limit: `if (strncmp("hello", "help", 3) == 0) { sendtext("Strings match for first 3 chars.", self); }`
+
+### Stringlist Processing
+- **[substring]** - Remove from stringlist: `substring(mylist, "text")` (NOT extract substring)
+- **[in]** - Stringlist membership: `if ("fox" in {"hello", "fox"}) { /* found substring */ }`
+- **[split]** - Split into stringlist: `words := split("hello world this is a test", " ");`
+- **[getwords]** - Get stringlist: `sl := getwords("hello world");` (sl is {"hello", "world"}, original preserved)
 
 **⚠️ Critical Notes:**
 - Stringlists use dot notation: `words.[0]` NOT `words[0]`
@@ -210,17 +216,18 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[dilbegin]** - Program definition
 - **[dilend]** - Program definition
 - **[var]** - Program structure
+- **[external]** - ???
 - **[code]** - Program structure
 
 ### Program Control
 - **[priority]** - Execution control
 - **[nopriority]** - Execution control
-- **[interrupt]** - Program flow
 - **[waitnoop]** - Program flow
 
 ### Event Handling
 - **[on_activation]** - Event handlers
-- **[on_goto]** - Event handlers
+- **[clear]** - User interface: `clear(intridx); // Remove interrupt handler by index`
+- **[interrupt]** - Program flow
 
 ### DIL Operations
 - **[dilcall]** - Program management
