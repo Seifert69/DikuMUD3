@@ -610,7 +610,7 @@ The following words are **reserved** in DIL and **cannot be used as variable nam
 - **Avoid all reserved keywords** listed above
 
 # ZONE example with DIL examples
-
+```
 /*
 filename    minimal-zone
 password    testpass
@@ -1166,3 +1166,4 @@ load minimal_sword zonemax 10
 /* Zone reset time */
 
 %end
+```
