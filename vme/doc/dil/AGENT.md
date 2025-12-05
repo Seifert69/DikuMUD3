@@ -68,13 +68,13 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Object Fields
 - **[name]** - Object identification: `item_name := item.name; sendtext("This is called: " + item_name, self);`
 - **[title]** - Object identification: `obj.title := "A shiny sword"; sendtext("Item title updated to: " + obj.title, self);`
-- **[descr]** - Object identification: `obj.title := "A shiny sword";`
+- **[descr]** - Object identification: `extra.descr := "This item glows with magical energy."; // Set extra description`
 - **[weight]** - Weight: `total_weight := pc.weight; capacity := pc.capacity; if (total_weight > capacity) { /* overburdened */ }`
-- **[baseweight]** - Weight: `total := obj.weight * obj.count;`
-- **[value]** - Economics: `damage := weapon.value[1]; // Get weapon damage from value array`
+- **[baseweight]** - Weight: `empty_weight := baseweight(chest); // Get chest weight without contents`
+- **[value]** - Economics: `weapon_damage := weapon.value[1]; // Get damage from weapon value array`
 - **[cost]** - Economics: `obj.cost := 1000; obj.rent := 10;`
 - **[rent]** - Economics: `obj.cost := 1000; obj.rent := 10;`
-- **[objectflags]** - Classification: `if (isset(obj.objectflags, OBJ_NO_DUAL)) { sendtext("Too large for dual-wielding.", self); }`
+- **[objectflags]** - Classification: `if (isset(item.objectflags, OBJ_MAGIC)) { act("$1n glows with magic!", A_ALWAYS, item, null, null, TO_ROOM); }`
 - **[objecttype]** - Classification: `if (obj.flags & OBJ_FL_MAGIC) { /* magic item */ }`
 
 ### Room Fields
@@ -83,7 +83,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[light]** - Lighting: `light_count := self.light; sendtext("This unit contains " + itoa(light_count) + " light sources.", self);`
 - **[islight]** - Lighting: `if (islight(self)) { sendtext("This item provides light.", self); }`
 - **[exit_to]** - Room exits: `if (room.exit_to[NORTH] != null) { sendtext("There is an exit to the north.", self); }`
-- **[exit_names]** - Room exits: `if (room.exit_to[DIR_NORTH]) { /* north exit */ }`
+- **[exit_names]** - Room exits: `names := room.exit_names[NORTH]; if (length(names) > 0) { act("Exit: " + names.[0], A_ALWAYS, self, null, null, TO_CHAR); }`
 - **[mapx]** - Coordinates: `if (room.mapx != -1 and room.mapy != -1) { act("Room coordinates: X=$2d, Y=$3d", A_ALWAYS, self, room.mapx, room.mapy, TO_CHAR); }`
 - **[mapy]** - Coordinates: `distance := (room2.mapx - room1.mapx) + (room2.mapy - room1.mapy);`
 
@@ -96,23 +96,23 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[defaultpos]** - States: `if (self.position == POSITION_FIGHTING) { /* in combat */ }`
 - **[fighting]** - Combat: `opp := self.fighting; if (opp != null) { sendtext("Fighting " + opp.name, self); }`
 - **[opponent]** - Combat: `opp := self.fighting;`
-- **[master]** - Social relationships
-- **[follower]** - Social relationships
-- **[followercount]** - Social relationships
+- **[master]** - Social relationships: `leader := self.master; if (leader != null) { act("You are following $1n.", A_ALWAYS, self, leader, null, TO_CHAR); }`
+- **[follower]** - Social relationships: `first := self.follower; if (first != null) { act("$1n is your first follower.", A_ALWAYS, self, null, first, TO_CHAR); }`
+- **[followercount]** - Social relationships: `count := self.followercount; if (count > 0) { sendtext("You have " + itoa(count) + " followers.", self); }`
 
 #### PC fields
-- **[profession]** - PC properties
-- **[guild]** - PC properties
+- **[profession]** - PC properties: `if (activator.profession == PROFESSION_THIEF) { sendtext("Welcome, shadow walker!", activator); }`
+- **[guild]** - PC properties: `if (activator.guild == "thief") { sendtext("Welcome, brother of the shadows!", activator); }`
 
 
 ## 💬 **Communication System**
 
 ### Communication Functions
 - **[sendtext]** - Basic messaging: `sendtext("Hello, " + player_name + "!", target); // Send formatted text to specific player`
-- **[pagestring]** - Paginated output: `pagestring(help_text, self); // Display multi-page content with pagination`
+- **[pagestring]** - Paginated output: `pagestring("=== HELP ===\nCommands:\n  look - Examine surroundings\n  say - Speak to others\n\nPress ENTER to continue...", self);`
 - **[prompt]** - User interface: `self.prompt := "[%n%h/%Hhp %m/%M]> "; // Set custom prompt with health/mana display`
 - **[act]** - Message formatting: `act("You hit $3n for $2d damage!", A_ALWAYS, self, null, victim, damage, TO_CHAR);`
-- **[sact]** - String formatting: `desc := sact("$1n is standing here.", A_SOMEONE, target, null, null, TO_CHAR);`
+- **[sact]** - String formatting: `desc := sact("$1n is standing here.", A_SOMEONE, target, null, null, TO_CHAR); // Format message as string`
 
 ### Message Functions
 - **[send]** - Inter-program messaging: `send("task_complete"); pause; send("cleanup_ready"); // Send to waiting DIL programs with SFB_MSG`
@@ -125,11 +125,11 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[in]** - String/list membership: `if ("fox" in "The quick brown fox") { /* found substring */ }`
 - **[left]** - Extract left characters: `l := left("hello", 2); // == "he"`
 - **[right]** - Extract right characters: `r := right("world.txt", 3); // == "txt"`
-- **[strcmp]** - String comparison: `if (strcmp("apple", "banana") < 0) { sendtext("apple comes before banana.", self); }`
-- **[replace]** - Replace text: `new := replace("The quick brown fox jumps over the lazy dog.", "cat", "text");`
-- **[getword]** - Extract first word: `s:="hello sam"; w := getword(s);` (w == "hello", s =="sam")`
-- **[toupper]** - Convert to uppercase: `u := toupper("hello"); // == "HELLO"`
-- **[tolower]** - Convert to lowercase: `l := tolower("HellO"); // == "hello"`
+- **[strcmp]** - String comparison: `if (strcmp(password, stored) == 0) { sendtext("Access granted.", self); }`
+- **[replace]** - Replace text: `new := replace("fox", "cat", "The quick brown fox jumps over the lazy dog.");`
+- **[getword]** - Extract first word: `s:="hello sam"; w := getword(s); // w="hello", s="sam"`
+- **[toupper]** - Convert to uppercase: `shout := toupper("help!"); // == "HELP!"`
+- **[tolower]** - Convert to lowercase: `answer := tolower(argument); if (answer == "yes") { sendtext("Great!", self); }`
 - **[strncmp]** - Compare with length limit: `if (strncmp("hello", "help", 3) == 0) { sendtext("Strings match for first 3 chars.", self); }`
 
 ### Stringlist Processing
@@ -146,10 +146,10 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ## ⚔️ **Combat System**
 
 ### Combat Functions
-- **[set_fighting]** - Set combat: `set_fighting(attacker, target);`
-- **[stop_fighting]** - Stop combat: `stop_fighting(unit);`
+- **[set_fighting]** - Set combat: `set_fighting(self, intruder); // Start fighting intruder`
+- **[stop_fighting]** - Stop combat: `stop_fighting(self, null); // Stop all combat`
 - **[attack_type]** - Combat data: `current_attack := self.attack_type; sendtext("Your current attack type is: " + weapon_name(current_attack), self);`
-- **[weapon_info]** - Combat data: `wpn_info := weapon_info(WPN_SWORD); hands := wpn_info.[0]; // 1=one-handed, 2=two-handed`
+- **[weapon_info]** - Combat data: `wpn_info := weapon_info(WPN_SWORD); if (wpn_info.[0] == 2) { sendtext("Two-handed weapon", self); }`
 - **[weapon_name]** - Combat data: `name := weapon_name(WPN_SWORD); sendtext("Weapon type: " + name, self);`
 - **[meleeattack]** - Attack actions: `damage := meleeattack(self, victim, 0, 0, TRUE); if (damage > 0) { act("You hit $1n for $2d damage!", A_ALWAYS, self, victim, damage, TO_CHAR); }`
 - **[attack_spell]** - Attack actions: `damage := attack_spell(SPL_FIREBALL, caster, target, 0, ""); if (damage > 0) { act("Your fireball deals " + itoa(damage) + " damage!", A_ALWAYS, caster, null, target, damage, TO_CHAR); }`
@@ -160,31 +160,31 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ## 💰 **Economic System**
 
 ### Money Management
-- **[purse]** - Character money: `coins := purse(player);`
+- **[purse]** - Character money: `gold := purse(player, GOLD_PIECE); if (gold >= 100) { sendtext("You have enough gold!", player); }`
 - **[paycheck]** - Character money: `coins := purse(player);`
-- **[acc_balance]** - Bank accounts: `balance := acc_balance(player);`
+- **[acc_balance]** - Bank accounts: `balance := player.acc_balance; if (balance >= 10000) { sendtext("You have $100+ in your account!", player); }`
 - **[acc_total]** - Bank accounts: `balance := acc_balance(player);`
-- **[acc_modify]** - Bank accounts: `balance := acc_balance(player);`
-- **[transfermoney]** - Money operations: `amount_str := moneystring(1000, 1);`
-- **[moneystring]** - Money operations: `amount_str := moneystring(1000, 1);`
+- **[acc_modify]** - Bank accounts: `acc_modify(player, -5000); // Remove $50 from account`
+- **[transfermoney]** - Money operations: `success := transfermoney(buyer, seller, 1000); // Transfer 1000 coins`
+- **[moneystring]** - Money operations: `price := moneystring(2500, 1); // "25 gold pieces" or "25 gp"`
 
 ## ⏰ **Time & Calendar**
 
 ### Time Functions
-- **[mudhour]** - Game time: `h := mudhour(); d := mudday(); m := mudmonth(); y := mudyear();`
+- **[mudhour]** - Game time: `hour := mudhour(); if (hour >= 6 and hour < 18) { sendtext("Shop is open!", self); }`
 - **[mudday]** - Game time: `h := mudhour(); d := mudday(); m := mudmonth(); y := mudyear();`
 - **[mudmonth]** - Game time: `h := mudhour(); d := mudday(); m := mudmonth(); y := mudyear();`
 - **[mudyear]** - Game time: `h := mudhour(); d := mudday(); m := mudmonth(); y := mudyear();`
 - **[asctime]** - Format time string: `time_str := asctime(); // "Mon Dec  5 12:34:56 2025"`
-- **[realtime]** - Real time: `t := realtime(); // Get system time`
-- **[wait]** - Time control: `wait; // Pause execution`
+- **[realtime]** - Real time: `start_time := realtime(); // Record start time in seconds`
+- **[wait]** - Time control: `wait(SFB_CMD, command("hello")); // Wait for "hello" command`
 - **[sleep]** - Sleep control: `sleep; // Put unit to sleep`
 - **[mudday]** - Game time
 - **[mudhour]** - Game time
 - **[mudmonth]** - Game time
 - **[mudyear]** - Game time
 - **[realtime]** - Real time
-- **[heartbeat]** - Real time
+- **[heartbeat]** - Real time: `heartbeat := PULSE_SEC * 10; // Tick every 10 seconds`
 - **[asctime]** - Real time
 - **[wait]** - Time control
 - **[sleep]** - Time control
@@ -193,36 +193,36 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Mathematics
 - **[rnd]** - Random number: `num := rnd(1, 100); // Random 1-100`
-- **[openroll]** - Open roll: `roll := openroll(20, 5, 3); // Roll 3d6, keep best 3`
+- **[openroll]** - Open roll: `roll := openroll(100, 5); // Open-ended 1-100 roll with 5% continuation chance`
 - **[max]** - Maximum: `result := max(a, b); // Larger of two numbers`
 - **[min]** - Minimum: `result := min(a, b); // Smaller of two numbers`
 - **[abs]** - Absolute: `result := abs(-5); // Returns 5`
 
 ### List Operations
 - **[integerlist]**, **[stringlist]** - List types: `nums := {1, 2, 3}; words := {"hello", "world"};`
-- **[next]** - Next element: `next(nums); // Returns 2`
-- **[previous]** - Previous element: `prev(nums); // Returns 2`
-- **[head]** - First element: `first := head(nums); // Returns 1`
-- **[addstring]** - Add to list: `addstring(mylist, "new"); // Adds "new" to end`
+- **[next]** - Next element: `item := item.next; // Move to next item in list`
+- **[previous]** - Previous element: `prev_unit := unit.gprevious; // Get previous unit in global list`
+- **[head]** - First element: `first_npc := npc_head(); // Get first NPC in global list`
+- **[addstring]** - Add to list: `mylist := addstring(mylist, "new_item"); // Add item to list`
 
 ### System Utilities
 - **[log]** - Logging: `log("Player " + self.name + " completed quest at " + asctime());`
 - **[flog]** - File logging: `flog("quests.log", self.name + " completed quest: " + quest_name, "a");`
 - **[logcrime]** - Crime logging: `logcrime(thief, victim, CRIME_STEALING);`
 - **[info]** - Player info: `email_expd := "$email" in pc.info; if (email_expd != null) email := email_expd.descr;`
-- **[hasfunc]** - Function check: `if (target.hasfunc == 1) sendtext("Unit has DIL programs attached.", self);`
-- **[secure]** - Security control: `secure(target, target_lost); // Jump to target_lost: if unit disappears`
-- **[access]** - Access control: `if (access(player, admin_zone) >= 3) sendtext("You have admin access.", self);`
+- **[hasfunc]** - Function check: `if (item.hasfunc == 1) { act("$1n has special powers.", A_ALWAYS, item, null, null, TO_ROOM); }`
+- **[secure]** - Security control: `secure(victim, victim_fled); // Jump to victim_fled: if target disappears`
+- **[access]** - Access control: `if (access(player, restricted_zone) >= 3) { sendtext("Access granted!", player); }`
 - **[reboot]** - System restart: `act("Rebooting MUD now...", A_ALWAYS, self, null, null, TO_ALL); reboot(0);`
 
 ## 🎭 **DIL Program Management**
 
 ### Program Structure
 - **[dilbegin]** - Program definition: `dilbegin my_function(param : string);`
+- **[var]** - Variable declaration: `dilbegin f(); var i : integer; name : string; code { /* program logic here */ } dilend`
+- **[external]** - External function: `dilbegin f(); external integer my_func@function(u : unitptr); code { /* program logic here */ } dilend`
+- **[code]** - Code block: `dilbegin f(); code { /* program logic here */ } dilend`
 - **[dilend]** - Program definition: `} dilend`
-- **[var]** - Variable declaration: `var i : integer; name : string;`
-- **[external]** - External function: `external int my_func(unitptr : unitptr);`
-- **[code]** - Code block: `code { /* program logic here */ }`
 
 ### Program Control
 - **[priority]** - Execution control: `priority; // Block other DIL programs until nopriority called`
@@ -232,30 +232,30 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 ### Event Handling
 - **[on_activation]** - Event handlers
 - **[clear]** - User interface: `clear(intridx); // Remove interrupt handler by index`
-- **[interrupt]** - Program flow
+- **[interrupt]** - Program flow: `intr_id := interrupt(SFB_MSG, argument == "help", help_handler); // Handle help requests`
 
 ### DIL Operations
-- **[dilcall]** - Program management
-- **[dilfind]** - Program management
-- **[dilcopy]** - Program management
-- **[dildestroy]** - Program management
-- **[sendtoalldil]** - Inter-program communication
-- **[global_head]** - Inter-program communication
-- **[store]** - Inter-program communication
+- **[dilcall]** - Program management: `success := dilcall("heal_spell", self, 0, "minor"); // Call DIL template`
+- **[dilfind]** - Program management: `if (dilfind("quest_active", player)) { sendtext("Quest already in progress.", self); }`
+- **[dilcopy]** - Program management: `new_prog := dilcopy("guard_ai", self); // Create guard AI instance`
+- **[dildestroy]** - Program management: `count := dildestroy("temp_effect", self); // Remove temporary effect`
+- **[sendtoalldil]** - Inter-program communication: `sendtoalldil("SYSTEM: Reboot in 5 minutes!", "admin_*"); // Alert all admins`
+- **[global_head]** - Inter-program communication: `first_unit := global_head(); // Get first unit in global list`
+- **[store]** - Inter-program communication: `store(chest, "chest_backup." + chest.zoneidx, TRUE); // Save chest and contents`
 
 ### Development Tools
 - **[beginedit]** - Editing
 - **[killedit]** - Editing
 - **[editing]** - Editing
 - **[shell]** - Testing
-- **[exec]** - Testing
+- **[exec]** - Testing: `exec("say Hello there!", target); // Force target to speak`
 
 ## 🌍 **World Management**
 
 ### Zone System
-- **[zone_head]** - Zone operations
+- **[zone_head]** - Zone operations: `first_zone := zone_head(); // Get first zone in global list`
 - **[zhead]** - Zone operations
-- **[findzone]** - Zone operations
+- **[findzone]** - Zone operations: `zone := findzone("midgaard"); if (zone != null) { sendtext("Found zone: " + zone.name, self); }`
 - **[zoneidx]** - Zone properties
 - **[resetmode]** - Zone properties
 - **[resettime]** - Zone properties
@@ -264,7 +264,7 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 
 ### Room Management
 - **[room_head]** - Room operations
-- **[findroom]** - Room operations
+- **[findroom]** - Room operations: `room := findroom("temple@midgaard"); if (room != null) { transfer(self, room); }`
 - **[pathto]** - Room operations
 - **[rooms]** - Room lists
 - **[roomcount]** - Room lists
@@ -280,36 +280,36 @@ Look in vme/zone/randomt.zon for generating random treasure in DIL.
 - **[obj_head]** - Object operations
 - **[objs]** - Field Object operations
 - **[objcount]** - Object operations
-- **[equip]** - Equipment
-- **[unequip]** - Equipment
+- **[equip]** - Equipment: `weapon := equip(self, WEAR_HANDS); if (weapon != null) { sendtext("Wielding: " + weapon.name, self); }`
+- **[unequip]** - Equipment: `weapon := equip(self, WEAR_WIELD); if (weapon != null) { unequip(weapon); }`
 - **[equipment]** - Equipment
-- **[addequip]** - Equipment
+- **[addequip]** - Equipment: `ring := load("ring@midgaard"); if (ring != null) { addequip(ring, WEAR_FINGER_L); }`
 
 ## 📋 **Unit Operations**
 
 ### Finding & Creating
-- **[findunit]** - Unit search
+- **[findunit]** - Unit search: `target := findunit(self, "sword", FIND_UNIT_INVEN, null); // Find sword in inventory`
 - **[findsymbolic]** - Unit search
 - **[findrndunit]** - Unit search
-- **[load]** - Unit lifecycle
-- **[destroy]** - Unit lifecycle
+- **[load]** - Unit lifecycle: `item := load("sword@midgaard"); if (item != null) { link(item, self); }`
+- **[destroy]** - Unit lifecycle: `item := findunit(self, "trash", FIND_UNIT_INVEN, null); if (item != null) { destroy(item); }`
 - **[delunit]** - Unit lifecycle
-- **[clone]** - Unit lifecycle
+- **[clone]** - Unit lifecycle: `copy := clone(original_item); if (copy != null) { link(copy, self); }`
 
 ### Movement & Linking
 - **[transfer]** - Unit positioning
-- **[link]** - Unit positioning
-- **[inside]** - Unit positioning
+- **[link]** - Unit positioning: `link(item, player); // Move item to player's inventory`
+- **[inside]** - Unit positioning: `item := chest.inside; if (item != null) { sendtext("Found: " + item.name, self); }`
 - **[outside]** - Unit positioning
-- **[remove]** - Inventory management
-- **[insert]** - Inventory management
+- **[remove]** - Inventory management: `remove(mylist, 2); // Remove element at index 2`
+- **[insert]** - Inventory management: `insert(mylist, 1, "new_item"); // Insert at position 1`
 
 ## 🔐 **Security & Validation**
 
 ### Security Functions
 - **[check_password]** - Account management
-- **[set_password]** - Account management
-- **[delete_player]** - Account management
+- **[set_password]** - Account management: `set_password(player, "newpass123"); // Change player password`
+- **[delete_player]** - Account management: `if (isplayer("troublemaker")) { delete_player("troublemaker"); }`
 - **[secure]** - Security control
 - **[access]** - Security control
 
