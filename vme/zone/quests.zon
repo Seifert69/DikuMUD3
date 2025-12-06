@@ -325,10 +325,11 @@ dilend
 //Action() is the atomic form of DailyRoutine.
 //
 // Executes the msg, also interprets :: codes for acts(). See Explainer()
+// Additionally adds the ::descr:: which changes the outside description, e.g. "::descr::$1n is merrily skipping along.".
 //    returns 0 if not done.
 //    returns 1 if successful
 // 'self' is the mob unit (arg3, i.e. $1n)
-// 'arg2' is a string ($2t)
+// 'arg2' is a string ($2t) which is passed to all act() as string argument 2.
 // 'arg3' is a unit ($3n)
 //
 dilbegin integer Action(msg : string, arg2 : string, arg3 : unitptr);

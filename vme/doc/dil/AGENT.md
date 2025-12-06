@@ -59,129 +59,6 @@ Look in **vme/zone/randomt.zon** for generating random treasure in DIL.
 
 **⚠️ IMPORTANT:** DIL does NOT support C-style `for` loops. Use `while` loops instead.
 
-### Common Patterns
-Use these templates for typical DIL tasks to ensure structured code.
-
-- **Infinite Event Loop (NPC AI):**
-```
-  // Skip if NPC is busy
-  on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-:start:
-  wait(SFB_CMD | SFB_MSG, activator.type == UNIT_ST_PC);  // Wait for any command or message from PC
-  if (not visible(self, activator)) // We deal with players we can see
-    goto start;
-  u := activator;
-  secure(u, start); // If pc disappears we jump to start
-  // Handle event... 
-:cleanup:
-  unsecure(u);
-  goto start;
-
-- **Secure Target Handling (Prevent Null Pointers):**
-  target := findunit(self, "playername", FIND_UNIT_SURRO, UNIT_ST_PC);
-  if (target != null) {
-    secure(target, lost_target);
-    // Safe operations on target...
-  }
-  unsecure(target);
-:lost_target:
-  log("Target lost");
-```
-
-- **Random Decision Tree:**
-```
-chance := rnd(1, 100);
-if (chance <= 30) {
-  // Action 1
-} else if (chance <= 70) {
-  // Action 2
-} else {
-  // Action 3
-}
-
-- **Quest Flag Check/Update (Using Extra):**
-if ("rabbit quest ongoing" in activator.quests) {
-  sendtext("Bring me that skin.", activator);
-} else if ("rabbit quest complete" in activator.quests) {
-  sendtext("Quest already complete!", activator);
-} else {
-   addextra(pc.quests, {"rabbit quest ongoing"}, "kill the killer rabbit");
-}
-```
-
-- **Coordinated NPC Movement and Event Triggering (Multi-NPC AI):**
-```
-  external
-    integer walk_room@function (s:string,i:integer);  // Import pathfinding function
-  var
-    tf:integer;  // Temp for walk result
-    target_room: string;  // Destination symbolic name
-  code
-  {
-    // Skip if busy or invalid state
-    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
-:start:
-    // Wait for trigger (e.g., message from another DIL)
-    wait(SFB_MSG, argument == "raid_start");
-    // Move to target with pathfinding
-    target_room := "cabin@haon_dor";
-    tf := walk_room@function(target_room, 4);  // 4 = speed/mode; adjust as needed
-    if (tf == TRUE)
-    {
-       // Perform action at destination
-       exec("emote raids the cabin!", self);
-       pause;
-       // Signal completion to other NPCs/DILs
-       sendto("raid_complete", findsymbolic("orc_chief@haon_dor"));
-    }
-
-    // Return or loop
-    tf := FALSE;
-    while (tf == FALSE)
-      tf := walk_room@function("orc_cave@haon_dor", 4);
-    goto start;  // Back to waiting loop
-  }
-  // The orc chief could send a message like this
-  //    sendto("raid_start", findsymbolic("orc1@somezone"));
-```
-- **Advanced pattern for handcuffing player**
-```
-dilbegin cuff_target(deputy : unitptr, targ : unitptr);
-var
-  cuffs : unitptr;
-code {
-  act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
-  follow(targ, deputy);  // Force target to follow
-  unequip(equipment(targ, WEAR_WRIST_R));  // Remove existing wrist item
-
-  cuffs := load("cuffs@midgaard"); // Now inside the deputy
-  link(cuffs, targ);     // Move cuffs to target
-  addequip(cuffs, WEAR_WRIST_R);  // Equip cuffs on the char it is .inside
-  dilcopy("cuffed@midgaard("+self.name+")", targ);  // Apply restraint DIL to cuffs
-  return;
-}
-dilend
-```
-
-- ** Guard routine utilizing vme/zone/quest.zon DIL functions ** 
-```
-dilbegin guardroutine(guardloc: string, dayguard: integer);
-var sch: intlist;
-code {
-  if (dayguard) sch := {5, 18};  // Day schedule
-  while (TRUE) {
-    pause;
-    if (mudhour == sch.[0]) {  // Wake/move at hour
-      DailyRoutine@quests({"wake", "walkto::$2t", ...}, "gate@midgaard");
-    }
-    if (mudhour == sch.[1]) {  // Evening routine
-      DailyRoutine@quests({"walkto::grunting_inn@midgaard", "buy beer", "sleep"}, "");
-    }
-  }
-}
-dilend
-```
-
 ### Operators
 - **[and]** - Logical operators: `if (self.level >= 10 and self.hp > 50) { /* ready for combat */ }`
 - **[or]** - Logical operators: `if (self.level < 10 or self.hp <= 0) { /* not ready */ }`
@@ -668,7 +545,7 @@ For room.roomflags (e.g., UNIT_FL_INDOORS in zone).
 - **[SKI_*]** - Skill flags
 - **[ABIL_*]** - Ability flags
 
-### Zone Macros (vme/include/macros.h)
+### Zone Macros (vme/include/wmacros.h vme/include/monster.h)
 Used in .zon files (e.g., for NPC/object defs). Not directly in DIL, but referenced.
 Easy way to create all kind of standard objects or characters. 
 
@@ -694,6 +571,247 @@ The following words are **reserved** in DIL and **cannot be used as variable nam
 - **Use underscores:** `current_room` for readability
 - **Avoid all reserved keywords** listed above
 
+# Common DIL Patterns and templates
+These examples demonstrate common DIL idioms using the language features above. Use them as starting points for your scripts.
+
+- **Infinite Event Loop (NPC AI):**
+```
+  // Skip if NPC is busy
+  on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+:start:
+  wait(SFB_CMD | SFB_MSG, activator.type == UNIT_ST_PC);  // Wait for any command or message from PC
+  if (not visible(self, activator)) // We deal with players we can see
+    goto start;
+  u := activator;
+  secure(u, start); // If pc disappears we jump to start
+  // Handle event... 
+:cleanup:
+  unsecure(u);
+  goto start;
+
+- **Secure Target Handling (Prevent Null Pointers):**
+  target := findunit(self, "playername", FIND_UNIT_SURRO, UNIT_ST_PC);
+  if (target != null) {
+    secure(target, lost_target);
+    // Safe operations on target...
+  }
+  unsecure(target);
+:lost_target:
+  log("Target lost");
+```
+
+- **Random Decision Tree:**
+```
+chance := rnd(1, 100);
+if (chance <= 30) {
+  // Action 1
+} else if (chance <= 70) {
+  // Action 2
+} else {
+  // Action 3
+}
+
+- **Quest Flag Check/Update (Using Extra):**
+if ("rabbit quest ongoing" in activator.quests) {
+  sendtext("Bring me that skin.", activator);
+} else if ("rabbit quest complete" in activator.quests) {
+  sendtext("Quest already complete!", activator);
+} else {
+   addextra(pc.quests, {"rabbit quest ongoing"}, "kill the killer rabbit");
+}
+```
+
+- **Coordinated NPC Movement and Event Triggering (Multi-NPC AI):**
+```
+  external
+    integer walk_room@function (s:string,i:integer);  // Import pathfinding function
+  var
+    tf:integer;  // Temp for walk result
+    target_room: string;  // Destination symbolic name
+  code
+  {
+    // Skip if busy or invalid state
+    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+:start:
+    // Wait for trigger (e.g., message from another DIL)
+    wait(SFB_MSG, argument == "raid_start");
+    // Move to target with pathfinding
+    target_room := "cabin@haon_dor";
+    tf := walk_room@function(target_room, 4);  // 4 = speed/mode; adjust as needed
+    if (tf == TRUE)
+    {
+       // Perform action at destination
+       exec("emote raids the cabin!", self);
+       pause;
+       // Signal completion to other NPCs/DILs
+       sendto("raid_complete", findsymbolic("orc_chief@haon_dor"));
+    }
+
+    // Return or loop
+    tf := FALSE;
+    while (tf == FALSE)
+      tf := walk_room@function("orc_cave@haon_dor", 4);
+    goto start;  // Back to waiting loop
+  }
+  // The orc chief could send a message like this
+  //    sendto("raid_start", findsymbolic("orc1@somezone"));
+```
+- **Advanced pattern for handcuffing player**
+```
+dilbegin cuff_target(deputy : unitptr, targ : unitptr);
+var
+  cuffs : unitptr;
+code {
+  act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
+  follow(targ, deputy);  // Force target to follow
+  unequip(equipment(targ, WEAR_WRIST_R));  // Remove existing wrist item
+
+  cuffs := load("cuffs@midgaard"); // Now inside the deputy
+  link(cuffs, targ);     // Move cuffs to target
+  addequip(cuffs, WEAR_WRIST_R);  // Equip cuffs on the char it is .inside
+  dilcopy("cuffed@midgaard("+self.name+")", targ);  // Apply restraint DIL to cuffs
+  return;
+}
+dilend
+```
+
+- **Handcuffs blocks all DILs**
+```
+// The person with this DIL can only execute a few commands
+// fnpri is the execution priority of the DIL (the order in which they are executed on events)
+// unique means there can not be a duplicate of this running, only one copy per unit
+// aware means events from the unit itself also trigger events (normally excluded)
+dilbegin fnpri(FN_PRI_RESCUE-2) aware unique cuffed2(depname : string);
+var
+   i      : integer;
+   u      : unitptr;
+code
+{
+   interrupt(SFB_COM, activator == self, broken); // If in combat, stop this
+
+   :loop:
+   wait(SFB_CMD, TRUE);
+
+   :postloop:
+   if (activator == self.master)
+   {
+      if (activator.position < POSITION_STANDING)
+        goto loop;
+
+      /* Do this trickery to allow the cuffed person to follow! */
+
+      if (command("north") or command("east") or command("south") or
+          command("west") or command("up") or command("down"))
+      {
+         wait(SFB_CMD, TRUE);
+         if (activator == self)
+         {
+            if (command("north") or command("east") or
+               command("south") or command("west") or
+               command("up") or command("down"))
+            {
+               goto loop;
+            }
+         }
+         goto postloop;
+      }
+      goto loop;
+   }
+   else if (activator == self)
+   {
+      if (command("look") or command("say") or
+          command("ask") or command("tell"))
+        goto loop;
+      else
+      {
+         block; // Block execution of all other commands
+         act(depname + " prevents you from removing the hand cuffs.",
+            A_ALWAYS, self, null, null, TO_CHAR);
+      }
+   }
+   goto loop;
+
+   :broken:
+   i := dildestroy("cuffed@midgaard", self);
+   quit;
+}
+dilend
+
+// Make sure the handcuffs blocks execution of other DILs.
+// So it's one worse priority (-1) than "cuffed2" (-2).
+//  meaning cuffed2 will run, and cuffed will block.
+//
+dilbegin fnpri(FN_PRI_RESCUE-1) aware unique cuffed(depname : string);
+var
+   cuffs  : unitptr;
+   deputy : unitptr;
+   i      : integer;
+code
+{
+   cuffs := equipment(self, WEAR_WRIST_R);
+   secure(cuffs, broken);
+
+   deputy := self.master;
+   secure(deputy, broken);
+
+   if ((deputy == null) or (cuffs == null))
+   {
+      log("Cuffed lost either deputy or cuffs");
+      goto broken;
+   }
+
+   heartbeat := PULSE_SEC * 1;
+
+   :loop:
+   if (cuffs.equip != WEAR_WRIST_R)
+     goto broken;
+   priority; // Block all DILs running with a worse priority on this unit
+   wait(SFB_TICK|SFB_CMD, activator == self);
+   goto loop;
+
+   :broken:
+   i := dildestroy("cuffed2@midgaard", self);
+   quit;
+}
+dilend
+```
+
+
+- **Guard routine utilizing vme/zone/quest.zon DIL functions**
+```
+dilbegin guardroutine(guardloc: string, dayguard: integer);
+external DailyRoutine@quests(sl : stringlist, sarg2 : string);
+var sch: intlist;
+code {
+  if (dayguard) sch := {5, 18};  // Day schedule
+  while (TRUE) {
+    pause;
+    if (mudhour == sch.[0]) {  // Wake/move at hour
+      DailyRoutine@quests({"wake", "walkto::$2t", ...}, "");
+    }
+    if (mudhour == sch.[1]) {  // Evening routine
+      DailyRoutine@quests({"walkto::grunting_inn@midgaard", "buy beer", "sleep"}, "");
+    }
+  }
+}
+dilend
+```
+
+- **Corpse scavenger** 
+```
+dilbegin janitors(rate: integer);
+var trash: unitptr;
+code {
+  foreach (UNIT_ST_OBJ, trash) {  // Scan surroundings for objects
+    if (trash.objecttype == ITEM_CONTAINER && isaff(trash, ID_CORPSE)) {
+      // No need to secure item, foreach does it automatically
+      exec("get all from corpse", self);
+      // Scavenger would quickly be unable to carry more
+    }
+  }
+}
+dilend
+```
 # ZONE example with DIL examples
 ```
 /*
