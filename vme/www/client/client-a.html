@@ -1,26 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <title>DikuMUD Web Client</title>
     <meta charset="UTF-8">
-    <meta http-equiv="Content-Security-Policy"  content="connect-src * 'unsafe-inline';">
-    <meta name="viewport" content="width=device-width, initial-scale=2">
+    <meta http-equiv="Content-Security-Policy" content="connect-src * 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="wsclient.js"></script>
-    <link rel="stylesheet"  id="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" id="stylesheet" type="text/css" href="style.css">
     <link href='https://fonts.googleapis.com/css?family=VT323' rel='stylesheet'>
 </head>
 <body>
-    <!-- ============ CONTENT ============== *-->
+    <!-- ============ CONTENT ============== -->
     <div class="c_container flex-direction"> <!-- Outer -->
 	    <div class="c_left">
-		<div id="al_text" role="tree" aria-live="polite" ondblclick="onMainClick()">
+		<div id="al_text" role="log" aria-live="polite" ondblclick="onMainClick()">
                 <ul id="converse" style="list-style-type: none; display: inline;"></ul>
             </div>
             <div id="al_cmd">
                 <table width="100%">
                     <tr>
-                        <td style="width:4%; height:34px; color:white;">&nbsp;Cmd</td>
-                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/><input style="width:97%;display:none" type="password" id="pwd"/></td>
+                        <td style="width:4%; height:34px; color:white;"><label for="message" style="color:white;">Cmd</label></td>
+                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message" aria-label="Command input"/><input style="width:97%;display:none" type="password" id="pwd" aria-label="Password input"/></td>
                         <td style="width:15%;height:34px;"><input id="btnSend" type="button" value=">" disabled="disabled" onclick="onSendClick()"></td>
                     </tr>
                 </table>
@@ -28,7 +28,7 @@
         </div>
         <div class="c_center">
             <div id="ac_map" role="navigation" aria-label="Graphical Map" onclick="onMapClick()">
-		     <div id="mymap"><img id ='crosshairs' src='img/crosshair.png' style='position: relative; top: 50px; left: 50px' hidden><img></div>
+		     <div id="mymap"><img id ='crosshairs' src='img/crosshair.png' style='position: relative; top: 50px; left: 50px' hidden aria-label="Map crosshair indicator"/></div>
             </div>
             <div id="ac_paged" aria-live="polite" role="navigation" aria-label="Static Text Snapshot" ondblclick="modalShow()" >
                 <div id="acp_text">Text that sticks.</div>
@@ -44,43 +44,43 @@
                     <div id="mp-bar">M</div>
                 </div>
             </div>
-	    <div id="ac_exits" role="navigation" aria-label="Exits">Obvious Exits:</br>
+	    <div id="ac_exits" role="navigation" aria-label="Exits">Obvious Exits:<br>
                 <div id="ace_text">N, S, E, W</div>
             </div>
         </div> <!-- ac_center -->
         <div class="c_right">
 		<div id="ac_right" role="navigation" aria-label="Right Menu">
             <br/>
-            <a href="#" aria-label="Settings" role="presentation" aria-haspopup="settings dialog" onclick="shSettings()"><img src="img/settings.png" alt="Settings" class="center"/></a><br/>
-            <a href="#" aria-label="History" role="presentation" aria-haspopup="communication history" onclick="shHistory()"><img src="img/chat.png" alt="communication history" class="center"/></a><br/>
+            <a href="#" aria-label="Settings" aria-haspopup="true" onclick="shSettings()"><img src="img/settings.png" alt="Open settings dialog" class="center"/></a><br/>
+            <a href="#" aria-label="History" aria-haspopup="true" onclick="shHistory()"><img src="img/chat.png" alt="View communication history" class="center"/></a><br/>
             <br/>
                 <a href="#" role="presentation" aria-label="Inventory" onclick="cmd('inventory')">In</a><br/>
                 <a href="#" role="presentation" aria-label="Equipment" onclick="cmd('equipment')">Eq</a><br/>
                 <a href="#" role="presentation" aria-label="Help" onclick="cmd('help')">He</a><br/>
         		<a href="#" role="presentation" aria-label="Score" onclick="cmd('score')">Sc</a><br/> 
-		        <a href="#" role="presentation" aria-label="Show static text snapshot" aria-haspopup="Static Text Popup" onclick="modalShow()">MOD</a><br/>
+		        <a href="#" aria-label="Show static text snapshot" aria-haspopup="true" onclick="modalShow()">MOD</a><br/>
             </div>
         </div> <!-- ac_right -->
     </div> <!-- outer -->
 
-    <!-- ============ MODAL ============== *-->
+    <!-- ============ MODAL ============== -->
 
     <!-- The Modal -->
     <div id="myModal" class='modal'>
         <!-- Modal content -->
         <div id="modal-header" class="modal-header"><span class="close" onclick="modalHide()">&times;</span></div>
-        <div class="modal-content"><div id="modtext" role="modal text" aria-live="polite">Text in the Modal</div></div>
+        <div class="modal-content"><div id="modtext" role="dialog" aria-live="polite">Text in the Modal</div></div>
     </div>
 
-    <!-- ============ SCRIPTS ============== *-->
+    <!-- ============ SCRIPTS ============== -->
 
 
 <script type="text/javascript">
             document.addEventListener("keyup", event => {
-                if (event.key == "Escape")
+                if (event.key === "Escape")
                 {
                     var modal = document.getElementById("myModal");
-                    if (modal.style.display != "none")
+                    if (modal.style.display !== "none")
                     {
                         modalHide();
                         event.preventDefault();
@@ -89,7 +89,7 @@
                     {
                         g_nHistoryPos = 0;
                         var myfld = document.getElementById("message");
-                        if (myfld != document.activeElement)
+                        if (myfld && myfld !== document.activeElement)
                         {
                             InputFocus(null);
                             event.preventDefault();
@@ -99,7 +99,7 @@
             });
 
             document.querySelector("#pwd").addEventListener("keydown", event => {
-                if(event.key == "Enter")
+                if(event.key === "Enter")
                 {
                     document.querySelector("#btnSend").click();
                     event.preventDefault(); // No need to `return false;`.
@@ -109,7 +109,7 @@
             // We need keydown otherwise super quick typing will cause the next lette entered
             // after RETURN to become part of the message.
             document.querySelector("#message").addEventListener("keydown", event => {
-                if(event.key == "Enter")
+                if(event.key === "Enter")
                 {
                     document.querySelector("#btnSend").click();
                     event.preventDefault(); // No need to `return false;`.
@@ -117,14 +117,14 @@
             });
 
             document.querySelector("#message").addEventListener("keyup", event => {
-                if (event.keyCode == 38) // arrow up
+                if (event.key == "ArrowUp") // arrow up
                 {
                     g_nHistoryPos += 1;
                     var s = HistoryGet(g_nHistoryPos);
                     InputFocus(s);
                     event.preventDefault(); // No need to `return false;`.
                 }
-                else if (event.keyCode == 40) // arrow down
+                else if (event.key == "ArrowDown") // arrow down
                 {
                     if (g_nHistoryPos > 0)
                         g_nHistoryPos -= 1;
@@ -132,7 +132,7 @@
                     InputFocus(s);
                     event.preventDefault(); // No need to `return false;`.
                 } 
-                else if (event.key == "Escape")
+                else if (event.key === "Escape")
                 {
                     InputFocus("");
                 }
@@ -146,13 +146,19 @@
                 }
             });
 
-            g_crosshairs = new Image;
+            g_crosshairs = new Image();
             g_crosshairs.src = "img/crosshair.png";
 
             window.onload = function () {
                 const urlParams = new URLSearchParams(window.location.search);
-                //var strConn = encodeURI(urlParams.get('protocol')) + "://" + encodeURI(urlParams.get('host')) + ":" +
-                //                encodeURI(urlParams.get('port')) + encodeURI(urlParams.get('endpoint'));
+                
+                // Validate URL parameters with defaults
+                const protocol = urlParams.get('protocol') || 'ws';
+                const host = urlParams.get('host') || 'localhost';
+                const port = urlParams.get('port') || '4000';
+                const endpoint = urlParams.get('endpoint') || '';
+                const reader = urlParams.get('reader') || 'false';
+                
                 outputText("Accessible MUD client<br/>", false);
                 outputText("ESC - clear/focus input field<br/>", false);
                 outputText("Up arrow - Scroll back through last commands<br/>", false);
@@ -161,23 +167,17 @@
                 outputText("Double click main - Pop up fixed main (for easy copy & paste)<br/>", false);
                 outputText("Alias, triggers and variables - use commands on MUD server<br/>", false);
 
-                openWSConnection(encodeURI(urlParams.get('protocol')), encodeURI(urlParams.get('host')), 
-                                encodeURI(urlParams.get('port')), encodeURI(urlParams.get('endpoint')));
+                openWSConnection(encodeURI(protocol), encodeURI(host), encodeURI(port), encodeURI(endpoint));
             
-                if (encodeURI(urlParams.get('reader')) != 'true')
+                if (reader !== 'true')
                 {
                     bScreenReader = false;
                 }
-                console.log("Screen Reader = " + bScreenReader + " " + encodeURI(urlParams.get('reader')));
+                console.log("Screen Reader = " + bScreenReader + " " + reader);
+                
+                // Initialize drag functionality after DOM is ready
+                dragElement(document.getElementById("myModal"));
             };
-
-            window.addEventListener("focus", function(event)
-            {
-                console.log("Window got focus");
-                InputFocus(null);
-            }, false);
-
-            setInterval(keepAlive, 60000);
 
             function PasswordOn() {
                 g_bCommsChanged = false;
@@ -208,10 +208,6 @@
                 document.getElementById("pwd").style.display = "none"; 
             }
 
-            function alertme(){
-                alert("Alert me called");
-            }
-
             document.addEventListener('visibilitychange', function(e) {
                 if (document.hidden == false)
                 {
@@ -223,8 +219,7 @@
 
         // DRAG
 
-// Make the DIV element draggable:
-dragElement(document.getElementById("myModal"));
+// Make the DIV element draggable (moved to window.onload):
 
 function dragElement(elmnt) {
   var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
@@ -234,7 +229,6 @@ function dragElement(elmnt) {
   } else {
     // otherwise, move the DIV from anywhere inside the DIV:
     elmnt.onmousedown = dragMouseDown;
-    return;
   }
 
   function dragMouseDown(e) {
@@ -266,8 +260,8 @@ function dragElement(elmnt) {
     document.onmouseup = null;
     document.onmousemove = null;
   }
-}        
+}
         </script>
 
-        </body>
+</body>
 </html>
