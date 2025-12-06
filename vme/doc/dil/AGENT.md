@@ -1328,6 +1328,22 @@ extra {"$identify"}
 "This merchant can be identified to reveal her shop inventory."
 
 dilcopy basic@minimal_zone();
+dilcopy qstSimpleQuest@quests("Merchant Quest",
+    {"say I need a specific key - or ANY kind of carrot! Can you help?",
+     "say Please bring me the key quickly!"},
+    {"say Thanks for the key!"},
+    "Fetch a key for minimal merchant in minimal world.",
+    {"thank $1N",
+     "emote adores his new key."},
+    500, 1 * COPPER_MULT, {""}, "");
+
+// The empty stringlist {""} could be a custom DIL function to validate each item,
+// e.g. if a barrel is more than half full of water or if it's a real boat "boatcheck@quests".
+// By default it's just checking name matching
+dilcopy qstItemsWanted@quests(QUEST_MY_FETCH, {"carrot", "minimal_key@minimal_zone"}, {""},
+    {"say Perfect, that's just the key I needed!"},
+    "say I need a specific key, not that garbage!");
+
 
 M_AVG_HUMAN(3, SEX_FEMALE)
 
