@@ -20,7 +20,7 @@
                 <table width="100%">
                     <tr>
                         <td style="width:4%; height:34px; color:white;">&nbsp;Cmd</td>
-                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/><input style="width:97%;display:none" type="password" id="pwd"/></td>
+                        <td style="width:76%;height:34px;"><input style="width:97%;" type="text" id="message"/><input style="width:97%;display:none" type="text" id="pwd"/></td>
                         <td style="width:15%;height:34px;"><input id="btnSend" type="button" value=">" disabled="disabled" onclick="onSendClick()"></td>
                     </tr>
                 </table>
@@ -185,7 +185,8 @@
                 g_sPlyName = "";
                 window.document.title = "Login Password - DikuMUD";
                 document.getElementById("message").style.display = "none";
-                document.getElementById("pwd").style.display = "inline"; 
+                document.getElementById("pwd").style.display = "inline";
+                document.getElementById("pwd").style.webkitTextSecurity = 'disc';
             }
 
             function PasswordOff(plyname, mudname) {
