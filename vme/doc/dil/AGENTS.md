@@ -1,6 +1,6 @@
 # DikuMUD3 DIL (DikuMUD Interactive Language) Reference
 
-This document provides a comprehensive AGENT.md reference for DIL - the scripting language used in DikuMUD3 for creating interactive game content, NPCs, objects and complex game systems. 
+This document provides a comprehensive AGENTS.md reference for DIL - the scripting language used in DikuMUD3 for creating interactive game content, NPCs, objects and complex game systems. 
 
 ## Compiling a zone
 To compile a zone: cd vme/zone/ && vme/bin/vmc -I../include/ zonename.zon
