@@ -278,6 +278,7 @@ oroom_field : MOVEMENT PNUM
     }
     | VIN reference
     {
+        // Saves the char * in the unit_data *
         cur->setUnitIn(reinterpret_cast<unit_data*>($2));
     }
     | SPELL number
@@ -1594,8 +1595,9 @@ reference   : cunitname
         else
         {
             $$ = (char *)mmalloc(strlen($1) + strlen(g_zone.z_zone.name) + 2);
-            strcpy($$, g_zone.z_zone.name);
-            strcpy($$ + strlen(g_zone.z_zone.name) + 1, $1);
+            strcpy($$, $1);
+            $$[strlen($1)] = '@';  // Add the @ separator
+            strcpy($$ + strlen($1) + 1, g_zone.z_zone.name);
         }
     }
     | cunitname '@' czonename
