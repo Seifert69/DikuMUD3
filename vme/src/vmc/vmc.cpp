@@ -793,16 +793,21 @@ void write_dot(char *prefix)
     {
         if (!u->isRoom())
             continue;
-            
-        // This room is inside another room - but it's disguised as a string
-        unit_data *parent_room = u->getUnitIn();
 
-        if (parent_room)
+        if (u->getUnitIn())
         {
-            char *str = (char *) parent_room;
+            // This room is inside another room - but it's disguised as a string
+            char *str = (char *) u->getUnitIn();
+            char zone[256];
+            char name[256];
+            split_fi_ref(str, zone, name);
 
-            dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
-                << str << "\"\t\t[dir=inside];" << std::endl;
+            if (strcmp(zone, g_zone.z_zone.name) == 0)
+                dotfl << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
+                    << name << "@" << zone << "\"\t\t[dir=inside];" << std::endl;
+            else
+                interconnect << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
+                    << name << "@" << zone << "\"\t\t[dir=inside];" << std::endl;
         }
         
         // Handle normal exits
@@ -810,53 +815,34 @@ void write_dot(char *prefix)
         {
             if (ROOM_EXIT(u, i))
             {
-                const char *c1 = "";
-                const char *c2 = "";
-                const char *direction_name = "";
+                char zone[256];
+                char name[256];
+                zone[0] = 0;
+                name[0] = 0;
 
                 if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
                 {
-                    c1 = (char *)ROOM_EXIT(u, i)->getToRoom();
-                    c2 = c1;
-                    TAIL(c2);
-                    c2++;
+                    char *str = (char *)ROOM_EXIT(u, i)->getToRoom();
+                    split_fi_ref(str, zone, name);
                 }
 
-                // Get direction name based on exit index
-                switch (i)
+                if (strcmp(zone, g_zone.z_zone.name) == 0)
                 {
-                    case 0: direction_name = "north"; break;
-                    case 1: direction_name = "east"; break;
-                    case 2: direction_name = "south"; break;
-                    case 3: direction_name = "west"; break;
-                    case 4: direction_name = "up"; break;
-                    case 5: direction_name = "down"; break;
-                    case 6: direction_name = "northeast"; break;
-                    case 7: direction_name = "northwest"; break;
-                    case 8: direction_name = "southeast"; break;
-                    case 9: direction_name = "southwest"; break;
-                    case 10: direction_name = "enter"; break;
-                    case 11: direction_name = "exit"; break;
-                    default: direction_name = "unknown"; break;
-                }
-
-                if (strcmp(c1, g_zone.z_zone.name) == 0)
-                {
-                    dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
-                            << c2 << "@" << c1 << "\"\t\t[dir=" << direction_name << "];" << std::endl;
+                    dotfl << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
+                            << name << "@" << zone << "\"\t\t[dir=" << g_dirs[i] << "];" << std::endl;
                 }
                 else
                 {
-                    interconnect << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
-                                    << c2 << "@" << c1 << "\"\t\t[dir=" << direction_name << "];"
+                    interconnect << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
+                                    << name << "@" << zone << "\"\t\t[dir=" << g_dirs[i] << "];"
                                     << std::endl;
                 }
             }
         }
     }
-    dotfl << "}" << std::endl;
+    dotfl << std::endl;
     dotfl << std::endl << "/*  Zone Interconnect Points */" << std::endl << std::endl;
-    interconnect << std::endl << "/*  End of subgraph " << g_zone.z_zone.name << " */" << std::endl << std::ends;
+    interconnect << std::endl << "} /*  End of subgraph " << g_zone.z_zone.name << " */" << std::endl;
     dotfl << interconnect.str() << std::endl;
     dotfl.close();
 }

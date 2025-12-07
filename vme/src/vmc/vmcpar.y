@@ -1594,23 +1594,21 @@ reference   : cunitname
         }
         else
         {
-            $$ = (char *)mmalloc(strlen($1) + strlen(g_zone.z_zone.name) + 2);
-            strcpy($$, $1);
-            $$[strlen($1)] = '@';  // Add the @ separator
-            strcpy($$ + strlen($1) + 1, g_zone.z_zone.name);
+            int zonelen = strlen(g_zone.z_zone.name);
+            int unitlen = strlen($1);
+            $$ = (char *)mmalloc(unitlen + 1 + zonelen + 1);  // unit + @ + zone + \0
+            sprintf($$, "%s/%s", g_zone.z_zone.name, $1);
         }
     }
     | cunitname '@' czonename
     {
-        $$ = (char *)mmalloc(strlen($1) + strlen($3) + 2);
-        strcpy($$, $3);
-        strcpy($$ + strlen($3) + 1, $1);
+        $$ = (char *)mmalloc(strlen($1) + 1 + strlen($3) + 1);
+        sprintf($$, "%s/%s", $3, $1);
     }
     | czonename '/' cunitname
     {
-        $$ = (char *)mmalloc(strlen($1) + strlen($3) + 2);
-        strcpy($$, $1);
-        strcpy($$ + strlen($1) + 1, $3);
+        $$ = (char *)mmalloc(strlen($1) + 1 + strlen($3) + 1);
+        sprintf($$, "%s/%s", $1, $3);
     }
     ;
 
