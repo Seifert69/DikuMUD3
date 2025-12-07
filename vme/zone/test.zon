@@ -126,12 +126,12 @@ code
 
    logtest(tstno, LOGT_INFO, "T016 Success");
    logtest(tstno, LOGT_INFO, "Done");
-   sendtoalldil("done", "T016@test");
+   sendtoalldil("done", "labdirector@test");
    return;
 
 :terminate:
    logtest(tstno, LOGT_INFO, "T016 failed");
-   sendtoalldil("fail", "T016@test");
+   sendtoalldil("fail", "labdirector@test");
    quit;
 }
 dilend
@@ -1437,7 +1437,7 @@ code
    tstno := TEST_MAXIMUM; // If you add a new T003, then set this to 3, and so forth
 
    heartbeat := PULSE_SEC * 30;
-   interrupt(SFB_MSG, argument == "done", nexttest);
+   interrupt(SFB_MSG, TRUE, nexttest);
 
 :loop:
    s := "T" + right("00"+itoa(tstno), 3) + "@test" + "(" + itoa(tstno) + ")";
@@ -1452,15 +1452,18 @@ code
    goto timeout;
 
 :nexttest:
+   logtest(tstno, LOGT_INFO, "Lab director received signal=" + argument);
+   if (argument != "done")
+      goto shutdown;
    tstno := tstno - 1;
    if (tstno > 0)
       goto loop;
 
-   logtest(0, LOGT_SUCCESS, "Lab director finished running all tests.");
+   logtest(tstno, LOGT_SUCCESS, "Lab director finished running all tests.");
    goto shutdown;
 
 :timeout:
-   logtest(0, LOGT_ERROR, "Lab director stuck.");
+   logtest(tstno, LOGT_ERROR, "Lab director stuck.");
    goto shutdown;
 
 :shutdown:
