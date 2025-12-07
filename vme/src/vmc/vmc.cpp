@@ -799,6 +799,7 @@ void write_dot(char *prefix)
                 {
                     const char *c1 = "";
                     const char *c2 = "";
+                    const char *direction_name = "";
 
                     if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
                     {
@@ -808,13 +809,33 @@ void write_dot(char *prefix)
                         c2++;
                     }
 
+                    // Get direction name based on exit index
+                    switch (i)
+                    {
+                        case 0: direction_name = "north"; break;
+                        case 1: direction_name = "east"; break;
+                        case 2: direction_name = "south"; break;
+                        case 3: direction_name = "west"; break;
+                        case 4: direction_name = "up"; break;
+                        case 5: direction_name = "down"; break;
+                        case 6: direction_name = "northeast"; break;
+                        case 7: direction_name = "northwest"; break;
+                        case 8: direction_name = "southeast"; break;
+                        case 9: direction_name = "southwest"; break;
+                        case 10: direction_name = "enter"; break;
+                        case 11: direction_name = "exit"; break;
+                        default: direction_name = "unknown"; break;
+                    }
+
                     if (strcmp(c1, g_zone.z_zone.name) == 0)
                     {
-                        dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";" << std::endl;
+                        dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
+                              << c2 << "@" << c1 << "\"\t\t[dir=" << direction_name << "];" << std::endl;
                     }
                     else
                     {
-                        interconnect << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\"->\"" << c2 << "@" << c1 << "\";"
+                        interconnect << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
+                                     << c2 << "@" << c1 << "\"\t\t[dir=" << direction_name << "];"
                                      << std::endl;
                     }
                 }
