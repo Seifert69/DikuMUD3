@@ -793,6 +793,22 @@ void write_dot(char *prefix)
     {
         if (u->isRoom())
         {
+            // This room is inside another room - but it's disguised as a string
+            unit_data *parent_room = u->getUnitIn();
+
+            if (parent_room)
+            {
+                char *str = (char *) parent_room;
+
+                // Debug output
+                std::cout << "DEBUG: Room '" << UNIT_IDENT(u) << "' is inside room '" 
+                        << str << std::endl;
+
+                dotfl << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
+                    << str << "\"\t\t[dir=inside];" << std::endl;
+            }
+            
+            // Handle normal exits
             for (int i = 0; i < MAX_EXIT; i++)
             {
                 if (ROOM_EXIT(u, i))
