@@ -1596,19 +1596,19 @@ reference   : cunitname
         {
             int zonelen = strlen(g_zone.z_zone.name);
             int unitlen = strlen($1);
-            $$ = (char *)mmalloc(unitlen + 1 + zonelen + 1);  // unit + @ + zone + \0
-            sprintf($$, "%s/%s", g_zone.z_zone.name, $1);
+            $$ = (char *)mmalloc(unitlen + 1 + zonelen + 1);  // zone + / + unit + \0
+            sprintf($$, "%s%c%s", g_zone.z_zone.name, 0, $1);
         }
     }
     | cunitname '@' czonename
     {
         $$ = (char *)mmalloc(strlen($1) + 1 + strlen($3) + 1);
-        sprintf($$, "%s/%s", $3, $1);
+        sprintf($$, "%s%c%s", $3, 0, $1);
     }
     | czonename '/' cunitname
     {
         $$ = (char *)mmalloc(strlen($1) + 1 + strlen($3) + 1);
-        sprintf($$, "%s/%s", $1, $3);
+        sprintf($$, "%s%c%s", $1, 0, $3);
     }
     ;
 

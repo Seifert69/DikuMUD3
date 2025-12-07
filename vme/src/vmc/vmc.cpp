@@ -797,10 +797,9 @@ void write_dot(char *prefix)
         if (u->getUnitIn())
         {
             // This room is inside another room - but it's disguised as a string
-            char *str = (char *) u->getUnitIn();
-            char zone[256];
-            char name[256];
-            split_fi_ref(str, zone, name);
+            // String format is zone-string \0 name-string
+            char *zone = (char *) u->getUnitIn();
+            char *name = zone; TAIL(name); name++;
 
             if (strcmp(zone, g_zone.z_zone.name) == 0)
                 dotfl << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
@@ -815,15 +814,14 @@ void write_dot(char *prefix)
         {
             if (ROOM_EXIT(u, i))
             {
-                char zone[256];
-                char name[256];
-                zone[0] = 0;
-                name[0] = 0;
+                const char *zone = "";
+                const char *name = "";
 
                 if (ROOM_EXIT(u, i) && ROOM_EXIT(u, i)->getToRoom())
                 {
-                    char *str = (char *)ROOM_EXIT(u, i)->getToRoom();
-                    split_fi_ref(str, zone, name);
+                    // String format is zone-string \0 name-string
+                    zone = (char *)ROOM_EXIT(u, i)->getToRoom();
+                    name = zone; TAIL(name); name++;
                 }
 
                 if (strcmp(zone, g_zone.z_zone.name) == 0)
