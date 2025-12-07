@@ -67,19 +67,32 @@ class MyDispatcher():
         message = message.replace("&gt;", '>')
         print('Relaying message to Discord: ' + message)
         encmsg = message.encode()
-        numBytes = os.write(self.pipeDiscord, encmsg)
-        print('Message of ', len(encmsg), ' bytes sent, wrote ', numBytes, ' bytes')
+        try:
+            numBytes = os.write(self.pipeDiscord, encmsg)
+            print('Message of ', len(encmsg), ' bytes sent, wrote ', numBytes, ' bytes')
+        except OSError as e:
+            if e.errno == errno.EAGAIN:
+                print('Warning: Discord pipe buffer full, message dropped')
+            else:
+                print('Error writing to Discord pipe:', e)
+        except Exception as e:
+            print('Unexpected error writing to Discord pipe:', e)
 
 
     #
     def ProcessMUDMessage(self, txt):
-        print('MUD said: [' + txt +']')
-        sDispatch = txt.partition(' ')[0]
-        
-        if (sDispatch == "discord"):
-            self.DispatchDiscord("<discord> " + txt.split(' ', 1)[1])
-        else:
-            print('Unrecognized destination:' + sDispatch)
+        try:
+            print('MUD said: [' + txt +']')
+            sDispatch = txt.partition(' ')[0]
+            
+            if (sDispatch == "discord"):
+                self.DispatchDiscord("<discord> " + txt.split(' ', 1)[1])
+            else:
+                print('Unrecognized destination:' + sDispatch)
+        except Exception as e:
+            print('Error processing MUD message:', e)
+            import traceback
+            traceback.print_exc()
 
 
     #
@@ -99,10 +112,23 @@ class MyDispatcher():
 
         print('Pipe has been accessed ' + FIFO)
         while True:
-            with open(FIFO) as fifopipe:
-                for line in fifopipe:
-                    self.ProcessMUDMessage(line)
-                    print('Ready for next line in fifopipe')
+            try:
+                with open(FIFO) as fifopipe:
+                    for line in fifopipe:
+                        try:
+                            self.ProcessMUDMessage(line)
+                            print('Ready for next line in fifopipe')
+                        except Exception as e:
+                            print('Error processing line from pipe:', e)
+                            import traceback
+                            traceback.print_exc()
+                            continue
+            except Exception as e:
+                print('Error with pipe connection, reopening:', e)
+                import traceback
+                traceback.print_exc()
+                time.sleep(5)  # Wait before retrying
+                continue
 
 dispatcher = MyDispatcher()
 MyDispatcher.MUDlistener(dispatcher)

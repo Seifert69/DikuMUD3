@@ -129,10 +129,14 @@ class MyClient(discord.Client):
 
         try:
             nBytes = os.write(self.pipeMUD, encmsg)
+            print('Message of ', len(encmsg), ' bytes sent, wrote ', nBytes, ' bytes')
+        except OSError as e:
+            if e.errno == errno.EAGAIN:
+                print('Warning: MUD pipe buffer full, message dropped')
+            else:
+                print('Error writing to MUD pipe:', e)
         except Exception:
             print("Exception: ", traceback.format_exc())
-
-        print('Message of ', len(encmsg), ' bytes sent, wrote ', nBytes, ' bytes')
         #if message.content.startswith('$hello'):
         #    await message.channel.send('da robot replies Hello!')
 
@@ -172,6 +176,12 @@ class MyClient(discord.Client):
             whotime = tnow
             whodata = ""
             print("editWho: Done")
+        except discord.errors.Forbidden:
+            print("editWho: No permission to edit message")
+        except discord.errors.NotFound:
+            print("editWho: Message not found")
+        except discord.errors.HTTPException as e:
+            print("editWho: HTTP error:", e)
         except Exception:
             print("editWho Exception: ", traceback.format_exc())
         return
@@ -199,9 +209,19 @@ class MyClient(discord.Client):
             print('Cant find the builder channel.')
 
         print("Getting my whomsg to pin and alter")
-        whomsg = await self.resolveChannel('mudstatus').fetch_message(802048971446157332)
-        if whomsg == None:
+        try:
+            whomsg = await self.resolveChannel('mudstatus').fetch_message(802048971446157332)
+            if whomsg == None:
+                print('Cant find the mudstatus channel message with ID 802048971446157332. Make one and change the ID')
+                sys.exit(1)
+        except discord.errors.NotFound:
             print('Cant find the mudstatus channel message with ID 802048971446157332. Make one and change the ID')
+            sys.exit(1)
+        except discord.errors.Forbidden:
+            print('No permission to access the mudstatus channel message with ID 802048971446157332')
+            sys.exit(1)
+        except Exception as e:
+            print('Error fetching whomsg:', e)
             sys.exit(1)
 
         print("Got whomsg and ready to begin")
@@ -271,9 +291,13 @@ class MyClient(discord.Client):
                             print('Partition = ', line.split(' ', 3)[-1])
                             try:
                                 message = await channel.send(line.split(' ', 3)[-1])
+                                print('Send as message id = ', message.id)
+                            except discord.errors.Forbidden:
+                                print("No permission to send to channel")
+                            except discord.errors.HTTPException as e:
+                                print("HTTP error sending message:", e)
                             except Exception:
                                 print("Exception: ", traceback.format_exc())
-                            print('Send as message id = ', message.id)
                         else:
                             print("Unknown type ", words[1])
                             continue
