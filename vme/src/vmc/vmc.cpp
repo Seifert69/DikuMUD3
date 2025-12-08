@@ -831,7 +831,7 @@ void write_dot(char *prefix)
                 }
                 else
                 {
-                    interconnect << "\"" << UNIT_IDENT(u) << "@" << zone << "\" -> \"" 
+                    interconnect << "\"" << UNIT_IDENT(u) << "@" << g_zone.z_zone.name << "\" -> \"" 
                                     << name << "@" << zone << "\"\t\t[dir=" << g_dirs[i] << "];"
                                     << std::endl;
                 }
