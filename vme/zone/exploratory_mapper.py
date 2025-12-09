@@ -8,6 +8,8 @@ import re
 from collections import defaultdict, deque
 from typing import Dict, List, Tuple, Set, Optional
 
+default_elongate = 1
+
 # Direction mappings for 12 exit directions
 DIRECTION_MAP = {
     0: 'north',     1: 'east',      2: 'south',     3: 'west',
@@ -82,7 +84,7 @@ class ExploratoryPathAnalyzer:
                         
                 if dir_index is not None:
                     # Initialize with default values: (target_room_id, path_elongation=1, path_length=0)
-                    room.exits[dir_index] = (to_room, 1, 0)
+                    room.exits[dir_index] = (to_room, default_elongate, 0)
                     
     def calculate_path_lengths(self):
         """Calculate the longest paths for each direction pair"""
@@ -337,20 +339,21 @@ class ExploratoryPathAnalyzer:
             
         # Initialize map grid - make it wider for horizontal paths
         grid_width = 120
-        grid_height = 40
+        grid_height = 80
         grid = [[' ' for _ in range(grid_width)] for _ in range(grid_height)]
         rendered_paths = set()
         room_positions = {}
         
+        elong = default_elongate
         direction_lookup = {
-            (1, 3): {'dx': 3, 'dy': 0, 'char': '-'},  # east/west
-            (3, 1): {'dx': 3, 'dy': 0, 'char': '-'},  # west/east
-            (0, 2): {'dx': 0, 'dy': -2, 'char': '|'},  # north/south
-            (2, 0): {'dx': 0, 'dy': -2, 'char': '|'},  # south/north
-            (6, 9): {'dx': -2, 'dy': -1, 'char': '\\'},  # northwest/southeast
-            (9, 6): {'dx': -2, 'dy': -1, 'char': '\\'},  # southeast/northwest
-            (7, 8): {'dx': 2, 'dy': -1, 'char': '/'},  # northeast/southwest
-            (8, 7): {'dx': 2, 'dy': -1, 'char': '/'},  # southwest/northeast
+            (1, 3): {'dx': 2*elong + 1, 'dy': 0, 'char': '-'},  # east/west
+            (3, 1): {'dx': 2*elong + 1, 'dy': 0, 'char': '-'},  # west/east
+            (0, 2): {'dx': 0, 'dy': -(2*elong + 1), 'char': '|'},  # north/south
+            (2, 0): {'dx': 0, 'dy': -(2*elong + 1), 'char': '|'},  # south/north
+            (6, 9): {'dx': -(elong + 1), 'dy': -(elong + 1), 'char': '\\'},  # northwest/southeast
+            (9, 6): {'dx': -(elong + 1), 'dy': -(elong + 1), 'char': '\\'},  # southeast/northwest
+            (7, 8): {'dx': elong + 1, 'dy': -(elong + 1), 'char': '/'},  # northeast/southwest
+            (8, 7): {'dx': elong + 1, 'dy': -(elong + 1), 'char': '/'},  # southwest/northeast
         }
         
         # Render paths: longest first, then those that connect
@@ -494,7 +497,7 @@ class ExploratoryPathAnalyzer:
                     p1y = conn_y + (p1i - connection_index) * actual_dy
                     p2x = conn_x + (p2i - connection_index) * actual_dx
                     p2y = conn_y + (p2i - connection_index) * actual_dy
-                    elongation = 1
+                    elongation = default_elongate
                     if path[p1i] in self.rooms:
                         room = self.rooms[path[p1i]]
                         for d, exit_info in room.exits.items():
@@ -508,20 +511,14 @@ class ExploratoryPathAnalyzer:
                         end_x = max(p1x, p2x)
                         for gx in range(start_x + 1, end_x):
                             grid[y][gx] = char
-                        for e in range(1, elongation):
-                            gx = end_x + e - 1
-                            if gx < len(grid[0]):
-                                grid[y][gx] = char
+
                     elif actual_dx == 0 and actual_dy != 0:  # vertical
                         x = p1x
                         start_y = min(p1y, p2y)
                         end_y = max(p1y, p2y)
                         for gy in range(start_y + 1, end_y):
                             grid[gy][x] = char
-                        for e in range(1, elongation):
-                            gy = end_y + e - 1
-                            if gy < len(grid):
-                                grid[gy][x] = char
+
                     else:  # diagonal
                         mx = (p1x + p2x) // 2
                         my = (p1y + p2y) // 2
@@ -585,7 +582,7 @@ class ExploratoryPathAnalyzer:
             y1 = start_y + i * dy
             x2 = start_x + (i+1) * dx
             y2 = start_y + (i+1) * dy
-            elongation = 1
+            elongation = default_elongate
             if path[i] in self.rooms:
                 room = self.rooms[path[i]]
                 for d, exit_info in room.exits.items():
@@ -596,18 +593,12 @@ class ExploratoryPathAnalyzer:
                 y = y1
                 for gx in range(min(x1, x2) + 1, max(x1, x2)):
                     grid[y][gx] = char
-                for e in range(1, elongation):
-                    gx = max(x1, x2) + e - 1
-                    if gx < len(grid[0]):
-                        grid[y][gx] = char
+
             elif dx == 0 and dy != 0:
                 x = x1
                 for gy in range(min(y1, y2) + 1, max(y1, y2)):
                     grid[gy][x] = char
-                for e in range(1, elongation):
-                    gy = max(y1, y2) + e - 1
-                    if gy < len(grid):
-                        grid[gy][x] = char
+
             else:
                 mx = (x1 + x2) // 2
                 my = (y1 + y2) // 2
@@ -671,7 +662,7 @@ class ExploratoryPathAnalyzer:
                     if room_name in self.rooms:
                         elongation, _ = self._get_connection_info(room_name, next_room)
                     else:
-                        elongation = 1  # Default for inter-zone connections
+                        elongation = default_elongate  # Default for inter-zone connections
                     # Use the overall path length for consistency
                     path_with_lengths.append(f"-({elongation}/{length})>")
                     
