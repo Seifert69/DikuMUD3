@@ -325,6 +325,296 @@ class ExploratoryPathAnalyzer:
                 
         return interzone_connections
         
+    def render_ascii_map(self) -> str:
+        """Render ASCII map based on room data structure"""
+        print("Rendering ASCII map...")
+        
+        # Get all paths
+        all_paths = self.find_all_bidirectional_paths()
+        
+        if not all_paths:
+            return "No paths to render"
+            
+        # Initialize map grid - make it wider for horizontal paths
+        grid_width = 120
+        grid_height = 40
+        grid = [[' ' for _ in range(grid_width)] for _ in range(grid_height)]
+        rendered_paths = set()
+        room_positions = {}
+        
+        direction_lookup = {
+            (1, 3): {'dx': 3, 'dy': 0, 'char': '-'},  # east/west
+            (3, 1): {'dx': 3, 'dy': 0, 'char': '-'},  # west/east
+            (0, 2): {'dx': 0, 'dy': -2, 'char': '|'},  # north/south
+            (2, 0): {'dx': 0, 'dy': -2, 'char': '|'},  # south/north
+            (6, 9): {'dx': -2, 'dy': -1, 'char': '\\'},  # northwest/southeast
+            (9, 6): {'dx': -2, 'dy': -1, 'char': '\\'},  # southeast/northwest
+            (7, 8): {'dx': 2, 'dy': -1, 'char': '/'},  # northeast/southwest
+            (8, 7): {'dx': 2, 'dy': -1, 'char': '/'},  # southwest/northeast
+        }
+        
+        # Render paths: longest first, then those that connect
+        collision_occurred = False
+
+        # Step 1: Render the longest path
+        dir1, dir2, longest_path, length = all_paths[0]
+        config = direction_lookup.get((dir1, dir2)) or direction_lookup.get((dir2, dir1))
+        if not config:
+            raise ValueError(f"No rendering config found for direction pair ({dir1}, {dir2})")
+
+        collision_occurred, _ = self._render_path(grid, longest_path, rendered_paths, room_positions, config['dx'], config['dy'], config['char'])
+        if collision_occurred:
+            raise ValueError(f"Impossible collision occurred on the first path!?")
+
+        # Step 2: Render remaining paths that connect
+        for dir1, dir2, path, length in all_paths[1:5]:
+            path_set = frozenset(path)
+            
+            # Skip if already rendered
+            if path_set in rendered_paths:
+                continue
+                
+            # For the first path, render it regardless of connections
+            # For subsequent paths, only render if they connect to existing network
+            if len(rendered_paths) > 0:
+                connects_to_rendered = any(room in rendered_path for room in path for rendered_path in rendered_paths)
+                if not connects_to_rendered:
+                    continue
+                    
+            config = direction_lookup.get((dir1, dir2)) or direction_lookup.get((dir2, dir1))
+            if not config:
+                raise ValueError(f"No rendering config found for direction pair ({dir1}, {dir2})")
+                
+            collision_occurred_render, collision_pos = self._render_path(grid, path, rendered_paths, room_positions, config['dx'], config['dy'], config['char'])
+
+            # If collision occurred during rendering, mark it and stop
+            if collision_occurred_render:
+                collision_occurred = True
+                print(f"Collision detected while rendering path: {path[0]} -> {path[-1]}")
+                # Mark collision location with !!
+                self._mark_collision_at_point(grid, path, collision_pos)
+                break
+                
+        return self._format_grid_output(grid, collision_occurred)
+
+    def _mark_collision_at_point(self, grid: List[List[str]], path: List[str], collision_pos: Optional[Tuple[int,int]] = None):
+        """Mark collision location where path attempted to render"""
+        if collision_pos:
+            x, y = collision_pos
+            if 0 <= x < len(grid[0]) and 0 <= y < len(grid):
+                grid[y][x] = '!'
+                if x + 1 < len(grid[0]):
+                    grid[y][x + 1] = '!'
+            return
+        # Fallback to old way
+        for y in range(len(grid)):
+            for x in range(len(grid[0]) - 1):
+                if grid[y][x] != ' ':
+                    grid[y][x] = '!'
+                    if x + 1 < len(grid[0]):
+                        grid[y][x + 1] = '!'
+                    return
+                    
+    def _format_grid_output(self, grid: List[List[str]], collision_occurred: bool = False) -> str:
+        """Format grid for display"""
+        # Trim empty rows/columns
+        min_row = len(grid)
+        max_row = -1
+        min_col = len(grid[0]) if grid else 0
+        max_col = -1
+        
+        for y, row in enumerate(grid):
+            for x, char in enumerate(row):
+                if char != ' ':
+                    min_row = min(min_row, y)
+                    max_row = max(max_row, y)
+                    min_col = min(min_col, x)
+                    max_col = max(max_col, x)
+                    
+        if min_row > max_row:
+            return "Empty map"
+            
+        # Extract and format the relevant portion
+        result = []
+        
+        for y in range(min_row, max_row + 1):
+            row_str = ""
+            for x in range(min_col, max_col + 1):
+                row_str += grid[y][x]
+            result.append(f"     {row_str}")
+        
+        if collision_occurred:
+            result.append("")
+            result.append("!! - Collision detected, rendering stopped")
+        
+        return '\n'.join(result)
+
+    def _render_path(self, grid, path, rendered_paths, room_positions, dx, dy, char):
+        if len(path) < 2:
+            return False
+        actual_dx = dx
+        actual_dy = dy
+        # Try to connect to existing if possible
+        if len(rendered_paths) > 0:
+            existing_rooms = room_positions
+            connection_candidates = [room_name for room_name in path if room_name in existing_rooms]
+            connection_room = None
+            connection_index = -1
+            if connection_candidates:
+                # Choose the connection room closest to the center of the grid
+                center_x = len(grid[0]) // 2
+                connection_room = min(connection_candidates, key=lambda r: abs(existing_rooms[r][0] - center_x))
+                connection_index = path.index(connection_room)
+                print(f"Debug: Path {path[0]} -> {path[-1]}, connection candidates: {connection_candidates}, chosen: {connection_room} at x={existing_rooms[connection_room][0]}, center_x={center_x}")
+            if connection_room:
+                conn_x, conn_y = existing_rooms[connection_room]
+                # Check if can place the other rooms
+                for i, room_name in enumerate(path):
+                    if i == connection_index:
+                        continue
+                    offset = i - connection_index
+                    px = conn_x + offset * actual_dx
+                    py = conn_y + offset * actual_dy
+                    if not (0 <= px < len(grid[0]) and 0 <= py < len(grid) and grid[py][px] == ' '):
+                        return True, (px, py) if 0 <= px < len(grid[0]) and 0 <= py < len(grid) else None
+                # Place
+                for i, room_name in enumerate(path):
+                    if i == connection_index:
+                        continue
+                    offset = i - connection_index
+                    px = conn_x + offset * actual_dx
+                    py = conn_y + offset * actual_dy
+                    grid[py][px] = 'O'
+                    room_positions[room_name] = (px, py)
+                # Draw connections
+                for i in range(len(path)-1):
+                    p1i = i
+                    p2i = i+1
+                    p1x = conn_x + (p1i - connection_index) * actual_dx
+                    p1y = conn_y + (p1i - connection_index) * actual_dy
+                    p2x = conn_x + (p2i - connection_index) * actual_dx
+                    p2y = conn_y + (p2i - connection_index) * actual_dy
+                    elongation = 1
+                    if path[p1i] in self.rooms:
+                        room = self.rooms[path[p1i]]
+                        for d, exit_info in room.exits.items():
+                            if exit_info[0] == path[p2i]:
+                                elongation = exit_info[1]
+                                break
+                    # Draw line
+                    if actual_dx != 0 and actual_dy == 0:  # horizontal
+                        y = p1y
+                        start_x = min(p1x, p2x)
+                        end_x = max(p1x, p2x)
+                        for gx in range(start_x + 1, end_x):
+                            grid[y][gx] = char
+                        for e in range(1, elongation):
+                            gx = end_x + e - 1
+                            if gx < len(grid[0]):
+                                grid[y][gx] = char
+                    elif actual_dx == 0 and actual_dy != 0:  # vertical
+                        x = p1x
+                        start_y = min(p1y, p2y)
+                        end_y = max(p1y, p2y)
+                        for gy in range(start_y + 1, end_y):
+                            grid[gy][x] = char
+                        for e in range(1, elongation):
+                            gy = end_y + e - 1
+                            if gy < len(grid):
+                                grid[gy][x] = char
+                    else:  # diagonal
+                        mx = (p1x + p2x) // 2
+                        my = (p1y + p2y) // 2
+                        grid[my][mx] = char
+                rendered_paths.add(frozenset(path))
+                return False, None
+            # else:
+                #     # No connection, for diagonal, can't render
+                #     if dx != 0 and dy != 0:
+                #         return True
+            if not connection_room and dx != 0 and dy != 0:
+                return True, None
+        # Standalone placement
+        center = len(grid) // 2
+        if dx > 0 and dy == 0:  # east
+            start_x = 2
+            start_y = center
+        elif dx < 0 and dy == 0:  # west
+            start_x = len(grid[0]) - 2 - (len(path)-1) * abs(dx)
+            start_y = center
+        elif dx == 0 and dy > 0:  # south
+            start_x = center
+            start_y = 2
+        elif dx == 0 and dy < 0:  # north
+            start_x = center
+            start_y = len(grid) - 2 - (len(path)-1) * abs(dy)
+        elif dx > 0 and dy < 0:  # ne
+            start_x = 2
+            start_y = len(grid) - 2 - (len(path)-1) * abs(dy)
+        elif dx < 0 and dy < 0:  # nw
+            start_x = len(grid[0]) - 2 - (len(path)-1) * abs(dx)
+            start_y = len(grid) - 2 - (len(path)-1) * abs(dy)
+        elif dx > 0 and dy > 0:  # se
+            start_x = 2
+            start_y = 2
+        elif dx < 0 and dy > 0:  # sw
+            start_x = len(grid[0]) - 2 - (len(path)-1) * abs(dx)
+            start_y = 2
+        else:
+            return True, None
+        # Check bounds
+        end_x = start_x + (len(path)-1) * dx
+        end_y = start_y + (len(path)-1) * dy
+        if end_x < 0 or end_x >= len(grid[0]) or end_y < 0 or end_y >= len(grid):
+            return True, None
+        # Check collisions
+        for i in range(len(path)):
+            x = start_x + i * dx
+            y = start_y + i * dy
+            if grid[y][x] != ' ':
+                return True, (x, y)
+        # Place
+        for i, room in enumerate(path):
+            x = start_x + i * dx
+            y = start_y + i * dy
+            grid[y][x] = 'O'
+            room_positions[room] = (x, y)
+        # Draw connections
+        for i in range(len(path)-1):
+            x1 = start_x + i * dx
+            y1 = start_y + i * dy
+            x2 = start_x + (i+1) * dx
+            y2 = start_y + (i+1) * dy
+            elongation = 1
+            if path[i] in self.rooms:
+                room = self.rooms[path[i]]
+                for d, exit_info in room.exits.items():
+                    if exit_info[0] == path[i+1]:
+                        elongation = exit_info[1]
+                        break
+            if dx != 0 and dy == 0:
+                y = y1
+                for gx in range(min(x1, x2) + 1, max(x1, x2)):
+                    grid[y][gx] = char
+                for e in range(1, elongation):
+                    gx = max(x1, x2) + e - 1
+                    if gx < len(grid[0]):
+                        grid[y][gx] = char
+            elif dx == 0 and dy != 0:
+                x = x1
+                for gy in range(min(y1, y2) + 1, max(y1, y2)):
+                    grid[gy][x] = char
+                for e in range(1, elongation):
+                    gy = max(y1, y2) + e - 1
+                    if gy < len(grid):
+                        grid[gy][x] = char
+            else:
+                mx = (x1 + x2) // 2
+                my = (y1 + y2) // 2
+                grid[my][mx] = char
+        rendered_paths.add(frozenset(path))
+        return False, None
+ 
     def analyze_paths(self) -> str:
         """Main analysis function"""
         print(f"Analyzing paths for zone: {self.zone_name}")
@@ -361,6 +651,7 @@ class ExploratoryPathAnalyzer:
             dir2_name = DIRECTION_MAP[dir2]
             
             result.append(f"{i+1}. {dir1_name}/{dir2_name}: {length} rooms")
+            result.append(f"   {path[0]} -> {path[-1]}")
             
             # Build path with elongation/total_length indicators
             path_with_lengths = []
@@ -412,8 +703,17 @@ def main():
     dot_file = sys.argv[1] if len(sys.argv) > 1 else 'udgaard.dot'
     
     analyzer = ExploratoryPathAnalyzer(dot_file)
+    
+    # Show path analysis
     analysis = analyzer.analyze_paths()
     print(analysis)
+    print("\n" + "="*60)
+    
+    # Show ASCII map
+    ascii_map = analyzer.render_ascii_map()
+    print("ASCII MAP:")
+    print("-" * 40)
+    print(ascii_map)
 
 if __name__ == "__main__":
     main()
