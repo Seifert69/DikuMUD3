@@ -18,7 +18,25 @@ class ExploratoryPathAnalyzer:
         self.dot_reader = DotReader(dot_file)
         self.rooms = self.dot_reader.rooms
         self.zone_name = self.dot_reader.zone_name
-        
+
+    def set_room_elongate_bidir(self, room_name: str, direction: int, elongate: int):
+        """Set elongate for a room's exit in both directions if the connection exists"""
+        if room_name not in self.rooms:
+            return
+        room = self.rooms[room_name]
+        if direction not in room.exits:
+            return
+        target, _, length = room.exits[direction]
+        room.exits[direction] = (target, elongate, length)
+
+        # Set in the opposite direction from the target room
+        opp_dir = OPPOSITE_DIRECTIONS[direction]
+        if target in self.rooms:
+            target_room = self.rooms[target]
+            if opp_dir in target_room.exits and target_room.exits[opp_dir][0] == room_name:
+                _, _, tgt_length = target_room.exits[opp_dir]
+                target_room.exits[opp_dir] = (room_name, elongate, tgt_length)
+
 
                     
     def calculate_path_lengths(self):
