@@ -30,7 +30,7 @@ void dilfe_fld(dilprg *p)
     dilval *v2 = nullptr;
     v1 = p->stack.pop();
     v2 = nullptr;
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     int fldno = 0;
 
     fldno = bread_ubit8(&(p->fp->pc));
@@ -4820,9 +4820,9 @@ void dilfe_fld(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
     if (v2)
     {
-        delete v2;
+        dilval::free(v2);
     }
 }

@@ -373,7 +373,7 @@ static void stat_global_dil(unit_data *ch, ubit32 nCount)
 
     msg += "</div><br/>"; // MS2020
     msg += diku::format_to_str("Total number of DIL instructions: %u<br/>", instructionSum);
-    msg += diku::format_to_str("dilval blocks: %d live, %d on the freelist<br/>", g_nDilVal, g_nDilValFreelist);
+    msg += diku::format_to_str("dilval blocks: %d live, %d pooled (pool capacity %d)<br/>", g_nDilVal, dilvalPoolFree(), dilvalPoolCapacity());
     send_to_char(msg, ch);
 }
 

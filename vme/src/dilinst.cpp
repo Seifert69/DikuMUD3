@@ -146,7 +146,7 @@ void dilfi_edit(dilprg *p)
         }
     }
 
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfi_kedit(dilprg *p)
@@ -177,7 +177,7 @@ void dilfi_kedit(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfi_gamestate(dilprg *p)
@@ -213,8 +213,8 @@ void dilfi_gamestate(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_send_done(dilprg *p)
@@ -312,14 +312,14 @@ void dilfi_send_done(dilprg *p)
                      (char *)v1->val.ptr);
         }
     }
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
-    delete v7;
-    delete v8;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
+    dilval::free(v7);
+    dilval::free(v8);
 }
 
 /* pagestring */
@@ -339,8 +339,8 @@ void dilfi_pgstr(dilprg *p)
             page_string(CHAR_DESCRIPTOR((unit_data *)v2->val.ptr), (char *)v1->val.ptr);
         }
     }
-    delete v2;
-    delete v1;
+    dilval::free(v2);
+    dilval::free(v1);
 }
 
 void dilfi_setpwd(dilprg *p)
@@ -365,8 +365,8 @@ void dilfi_setpwd(dilprg *p)
             pc->setPassword(crypt(reinterpret_cast<char *>(v2->val.ptr), PC_FILENAME(pc)));
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_delpc(dilprg *p)
@@ -406,7 +406,7 @@ void dilfi_delpc(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 
@@ -428,7 +428,7 @@ void dilfi_zonereset(dilprg *p)
         }
     }
 
-    delete v1;
+    dilval::free(v1);
 }
 
 
@@ -452,7 +452,7 @@ void dilfi_reboot(dilprg *p)
         }
     }
 
-    delete v1;
+    dilval::free(v1);
 }
 
 /* foreach - clear / build */
@@ -501,7 +501,7 @@ void dilfi_foe(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* foreach - next */
@@ -554,7 +554,7 @@ void dilfi_fon(dilprg *p)
             *((unit_data **)v1->ref) = u;
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* DIL store() */
@@ -610,9 +610,9 @@ void dilfi_stora(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* set bright */
@@ -632,8 +632,8 @@ void dilfi_sbt(dilprg *p)
         }
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* acc_modify */
@@ -664,8 +664,8 @@ void dilfi_amod(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_dispatch(dilprg *p)
@@ -679,7 +679,7 @@ void dilfi_dispatch(dilprg *p)
             pipeMUD_write((const char *)v1->val.ptr);
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 // set_weight_base
@@ -705,8 +705,8 @@ void dilfi_set_weight_base(dilprg *p)
             weight_change_unit(unit, dif);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // set_weight
@@ -739,8 +739,8 @@ void dilfi_set_weight(dilprg *p)
             weight_change_unit(unit, dif);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* set weight */
@@ -763,8 +763,8 @@ void dilfi_swt(dilprg *p)
             weight_change_unit(unit, dif);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* change_speed */
@@ -781,8 +781,8 @@ void dilfi_chas(dilprg *p)
             CHAR_COMBAT(character)->changeSpeed(v2->val.num, character->getSpeedPercentage());
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* reset_level */
@@ -809,7 +809,7 @@ void dilfi_rslv(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* reset_vlevel */
@@ -836,7 +836,7 @@ void dilfi_rsvlv(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* reset_race */
@@ -858,7 +858,7 @@ void dilfi_rsrce(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* stop_fighting */
@@ -881,8 +881,8 @@ void dilfi_stopf(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* set_fighting */
@@ -905,8 +905,8 @@ void dilfi_setf(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* clear interrupt */
@@ -918,7 +918,7 @@ void dilfi_cli(dilprg *p)
     {
         dil_intr_remove(p, v1->val.num);
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Return from function / procedure */
@@ -971,11 +971,11 @@ void dilfi_rtf(dilprg *p)
         {
             slog(LOG_ALL, 0, "DIL: Error return types do not match.");
             p->waitcmd = WAITCMD_QUIT;
-            delete v1;
+            dilval::free(v1);
             return;
         }
 
-        dilval *v = new dilval;
+        dilval *v = dilval::alloc();
 
         switch (typ)
         {
@@ -1032,7 +1032,7 @@ void dilfi_rtf(dilprg *p)
                 dil_typeerr(p, "function call evaltuated to failed result.");
                 break;
         }
-        delete v1;
+        dilval::free(v1);
 
         // Push the copied return value so that it can be assigned
         p->stack.push(v);
@@ -1232,7 +1232,7 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
     }
     for (i = 0; i < rtmpl->argc; i++)
     {
-        delete (p->stack.pop());
+        dilval::free(p->stack.pop());
     }
 
     frm->stacklen = p->stack.length();
@@ -1270,7 +1270,7 @@ void dilfi_rfunc(dilprg *p)
         p->waitcmd = WAITCMD_STOP;
         for (int i = 0; (i < argcnt); i++)
         {
-            delete (p->stack.pop());
+            dilval::free(p->stack.pop());
         }
         return;
     }
@@ -1386,15 +1386,15 @@ void dilfi_rsfunc(dilprg *p)
                  (char *)v1->val.ptr);
         p->waitcmd = WAITCMD_STOP;
 
-        delete v1;
+        dilval::free(v1);
         for (i = 0; (i < argcnt); i++)
         {
-            delete (p->stack.pop());
+            dilval::free(p->stack.pop());
         }
     }
     else
     {
-        delete v1;
+        dilval::free(v1);
         dil_push_frame(p, ntmpl);
     }
 }
@@ -1754,8 +1754,8 @@ void dilfi_ass(dilprg *p)
             dil_typeerr(p, "lvalue assignemt");
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Link unit into other unit */
@@ -1782,8 +1782,8 @@ void dilfi_lnk(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* dilcopy */
@@ -1801,8 +1801,8 @@ void dilfi_dlc(dilprg *p)
             dil_copy((char *)v1->val.ptr, (unit_data *)v2->val.ptr);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* sendtext */
@@ -1833,8 +1833,8 @@ void dilfi_sete(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Set one char to follow another unconditionally */
@@ -1864,8 +1864,8 @@ void dilfi_folo(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* logcrime */
@@ -1884,9 +1884,9 @@ void dilfi_lcri(dilprg *p)
             log_crime((unit_data *)v1->val.ptr, (unit_data *)v2->val.ptr, v3->val.num);
         }
     }
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* Assign EXP to player */
@@ -1916,8 +1916,8 @@ void dilfi_exp(dilprg *p)
             gain_exp((unit_data *)v2->val.ptr, value);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Branch on expression */
@@ -1933,7 +1933,7 @@ void dilfi_if(dilprg *p)
     {                                              /* might be pointer, but ok! */
         p->fp->pc = &(p->fp->tmpl->core[coreptr]); /* choose else branch */
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Set bits in integer */
@@ -1974,8 +1974,8 @@ void dilfi_set(dilprg *p)
                 break;
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Unset bits in integer */
@@ -2017,8 +2017,8 @@ void dilfi_uset(dilprg *p)
                 break;
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Add element to string list (addstring) */
@@ -2051,8 +2051,8 @@ void dilfi_adl(dilprg *p)
             dil_typeerr(p, "lvalue addstring");
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_inslst(dilprg *p)
@@ -2104,9 +2104,9 @@ void dilfi_inslst(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* Substract element from a list */
@@ -2145,8 +2145,8 @@ void dilfi_remlst(dilprg *p)
             dil_typeerr(p, "lvalue substring");
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Substract element from stringlist */
@@ -2177,8 +2177,8 @@ void dilfi_sul(dilprg *p)
             }
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* add element to extra description */
@@ -2244,10 +2244,10 @@ void dilfi_ade2(dilprg *p)
 
             break;
     }
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
 }
 
 /* add element to extra description */
@@ -2294,9 +2294,9 @@ void dilfi_ade(dilprg *p)
 
             break;
     }
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* Substract elemnt from extra description */
@@ -2351,8 +2351,8 @@ void dilfi_sue(dilprg *p)
             }
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* destroy unit */
@@ -2385,7 +2385,7 @@ void dilfi_dst(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Execute command */
@@ -2452,8 +2452,8 @@ void dilfi_exec(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Execute command */
@@ -2515,8 +2515,8 @@ void dilfi_wit(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Act call */
@@ -2590,12 +2590,12 @@ void dilfi_act(dilprg *p)
                 }
         }
     }
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
 }
 
 /* Goto new command */
@@ -2645,7 +2645,7 @@ void dilfi_on(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Substract affect from unit */
@@ -2668,8 +2668,8 @@ void dilfi_sua(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Add affect */
@@ -2838,17 +2838,17 @@ void dilfi_ada(dilprg *p)
             szonelog(p->frame->tmpl->zone, "DIL '%s' addaffect, NULL unit pointer (ada).", p->frame->tmpl->prgname);
         }
     }
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
-    delete v7;
-    delete v8;
-    delete v9;
-    delete v10;
-    delete v11;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
+    dilval::free(v7);
+    dilval::free(v8);
+    dilval::free(v9);
+    dilval::free(v10);
+    dilval::free(v11);
 }
 
 /* Priority */
@@ -2879,7 +2879,7 @@ void dilfi_snd(dilprg *p)
             dil_test_secure(p);
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Send message to DIL programs in the specified unit */
@@ -2911,8 +2911,8 @@ void dilfi_snt(dilprg *p)
             dil_test_secure(p);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_snta(dilprg *p)
@@ -2967,8 +2967,8 @@ void dilfi_snta(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfi_sntadil(dilprg *p)
@@ -3043,8 +3043,8 @@ void dilfi_sntadil(dilprg *p)
             }
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // DIL log string
@@ -3063,7 +3063,7 @@ void dilfi_log(dilprg *p)
             szonelog(p->owner->getFileIndex()->getZone(), "%s", (char *)v1->val.ptr);
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Secure */
@@ -3084,7 +3084,7 @@ void dilfi_sec(dilprg *p)
             dil_add_secure(p, (unit_data *)v1->val.ptr, &(p->fp->tmpl->core[adr]));
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Unsecure */
@@ -3101,13 +3101,13 @@ void dilfi_use(dilprg *p)
             dil_sub_secure(p->fp, (unit_data *)v1->val.ptr);
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfi_popstk(dilprg *p)
 {
     dilval *v1 = p->stack.pop();
-    delete v1;
+    dilval::free(v1);
 }
 
 /* Equip unit in inventory of PC/NPC */
@@ -3127,8 +3127,8 @@ void dilfi_eqp(dilprg *p)
             equip_char(unit->getUnitIn(), unit, v2->val.num);
         }
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* Unequip unit in inventory of PC/NPC */
@@ -3145,7 +3145,7 @@ void dilfi_ueq(dilprg *p)
             unequip_object((unit_data *)v1->val.ptr);
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfi_quit(dilprg *p)
@@ -3179,7 +3179,7 @@ void dilfi_pup(dilprg *p)
             }
         }
     }
-    delete v1;
+    dilval::free(v1);
 }
 
 
@@ -3228,10 +3228,10 @@ void dilfi_cast(dilprg *p)
         }
     }
 
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
 }
 
 void dilfi_setroomexit(dilprg *p)
@@ -3287,9 +3287,9 @@ void dilfi_setroomexit(dilprg *p)
         }
     }
 
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 unit_data *hometown_unit(const char *str)
