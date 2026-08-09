@@ -16,6 +16,46 @@
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
 
+// Freelist of fixed-size dilval blocks, linked through their first
+// pointer-size bytes. dilval allocation is strictly LIFO (expression
+// evaluation stack) and main-thread only, so a plain list with no locking
+// or trimming is enough: its length never exceeds the peak number of
+// simultaneously live dilvals, which is bounded by expression nesting depth.
+// Under MEMORY_DEBUG every allocation goes to the system allocator so the
+// memory debugging machinery sees each block.
+static void *g_dilval_freelist = nullptr;
+
+void *dilval::operator new(size_t size)
+{
+    assert(size == sizeof(dilval)); // dilval is final
+
+#ifndef MEMORY_DEBUG
+    if (g_dilval_freelist != nullptr)
+    {
+        void *block = g_dilval_freelist;
+        g_dilval_freelist = *static_cast<void **>(block);
+        return block;
+    }
+#endif
+
+    return ::operator new(size);
+}
+
+void dilval::operator delete(void *ptr) noexcept
+{
+    if (ptr == nullptr)
+    {
+        return;
+    }
+
+#ifndef MEMORY_DEBUG
+    *static_cast<void **>(ptr) = g_dilval_freelist;
+    g_dilval_freelist = ptr;
+#else
+    ::operator delete(ptr);
+#endif
+}
+
 DilVarType_e DilVarTypeIntToEnum(int n)
 {
     if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
