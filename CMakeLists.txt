@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.16.3)
 project(DikuMUD3)
 
+if (POLICY CMP0167)
+    # Use Boost's own BoostConfig.cmake; CMake's FindBoost module is removed in CMake 4
+    cmake_policy(SET CMP0167 NEW)
+endif ()
+
 find_package(BISON)
 find_package(FLEX)
 find_package(OpenSSL REQUIRED)
@@ -50,7 +55,7 @@ else ()
     set(Boost_USE_STATIC_LIBS OFF)
     message(STATUS "DIKU: Linking with dynamic boost libraries")
 endif ()
-find_package(Boost COMPONENTS unit_test_framework filesystem regex system REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework filesystem regex REQUIRED)
 
 # Makes cmake set -std=c++17 rather than -std=gnu++17 for g++ flags
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -132,6 +137,4 @@ add_custom_command(TARGET all_binaries POST_BUILD
         COMMAND mplex_unit_tests ${TEST_RUN_ARGS}
         COMMAND vme_unit_tests ${TEST_RUN_ARGS}
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/bin
-        WORKING_DIRECTORY
-        DEPENDS all_binaries
         )

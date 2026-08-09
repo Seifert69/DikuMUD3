@@ -197,9 +197,9 @@ BOOST_FIXTURE_TEST_CASE(get_file_in_dir_throw_tests, CServerConfiguration_Fixtur
     CServerConfiguration config;
     config.Boot(fake_server_config_filename);
 
-    BOOST_CHECK_THROW(config.getFileInEtcDir(nullptr), diku_exception);
-    BOOST_CHECK_THROW(config.getFileInLibDir(nullptr), diku_exception);
-    BOOST_CHECK_THROW(config.getFileInLogDir(nullptr), diku_exception);
+    BOOST_CHECK_THROW(static_cast<void>(config.getFileInEtcDir(nullptr)), diku_exception);
+    BOOST_CHECK_THROW(static_cast<void>(config.getFileInLibDir(nullptr)), diku_exception);
+    BOOST_CHECK_THROW(static_cast<void>(config.getFileInLogDir(nullptr)), diku_exception);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

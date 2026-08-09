@@ -150,7 +150,7 @@ ubit1 apf_weapon_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     modify = af->getDataAtIndex(0);
     if (unit->isNPC())
     {
-        while (modify > WPN_GROUP_MAX)
+        while (modify >= WPN_GROUP_MAX)
         {
             modify = TREE_PARENT(g_WpnColl.tree, modify);
         }
@@ -235,7 +235,7 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
     modify = af->getDataAtIndex(0);
     if (unit->isNPC())
     {
-        while (modify > SPL_GROUP_MAX)
+        while (modify >= SPL_GROUP_MAX)
         {
             modify = TREE_PARENT(g_SplColl.tree, modify);
         }

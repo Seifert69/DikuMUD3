@@ -92,6 +92,7 @@ void warning(const char *str);
 }
 
 /* general */
+%expect 2
 %token FLAGS END UNKNOWN
 %token OBJECTS ZONE RESET ROOMS MOBILES ENDMARK DIL
 %token NULLRET
