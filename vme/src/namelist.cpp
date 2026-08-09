@@ -724,6 +724,103 @@ void cNamelist::InsertName(const char *name, ubit32 loc)
     }
 }
 
+// Find the index of the entry matching 'name' exactly (case insensitive,
+// surrounding whitespace ignored). Unlike IsName() / IsNameRaw(), a stored
+// name that is merely a word-boundary prefix of 'name' does not match.
+// Returns -1 when no entry matches.
+int cNamelist::IsNameExactIdx(const char *name) const
+{
+    if (name == nullptr)
+    {
+        return -1;
+    }
+
+    while (isspace(*name))
+    {
+        name++;
+    }
+
+    size_t len = strlen(name);
+    while (len > 0 && isspace(name[len - 1]))
+    {
+        len--;
+    }
+
+    if (len == 0)
+    {
+        return -1;
+    }
+
+    std::string trimmed(name, len);
+
+    for (ubit32 i = 0; i < length; i++)
+    {
+        if (str_ccmp(namelist[i]->c_str(), trimmed.c_str()) == 0)
+        {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
+// Insert 'name' keeping the list ordered longest-to-shortest, so that a
+// short name never shadows a longer name it is a prefix of (with
+// {"bag", "bag of tricks"} in that order, IsName("bag of tricks") stops at
+// "bag" and the longer name is unreachable).
+// Exact duplicates are not added; a stored name that is only a prefix of
+// 'name' does not count as a duplicate (issue #406).
+// Returns true when the name was inserted.
+bool cNamelist::InsertNameOrdered(const char *name)
+{
+    if (name == nullptr)
+    {
+        return false;
+    }
+
+    while (isspace(*name))
+    {
+        name++;
+    }
+
+    size_t len = strlen(name);
+    while (len > 0 && isspace(name[len - 1]))
+    {
+        len--;
+    }
+
+    if (len == 0)
+    {
+        return false;
+    }
+
+    std::string trimmed(name, len);
+    str_remspc(trimmed.data());
+    trimmed.resize(strlen(trimmed.c_str()));
+
+    if (IsNameExactIdx(trimmed.c_str()) != -1)
+    {
+        return false;
+    }
+
+    ubit32 loc = 0;
+    while (loc < length && namelist[loc]->length() >= trimmed.length())
+    {
+        loc++;
+    }
+
+    if (loc < length)
+    {
+        InsertName(trimmed.c_str(), loc);
+    }
+    else
+    {
+        AppendName(trimmed.c_str());
+    }
+
+    return true;
+}
+
 void cNamelist::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const
 {
     writer.StartObject();

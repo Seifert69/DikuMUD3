@@ -45,11 +45,13 @@ public:
     void AppendName(const char *name);
     void PrependName(const char *name);
     void InsertName(const char *name, ubit32 loc);
+    bool InsertNameOrdered(const char *name);
 
     cNamelist *Duplicate();
 
     const int IsNameIdx(const char *name);
     const int IsNameRawIdx(const char *name);
+    int IsNameExactIdx(const char *name) const;
     const char *IsNameRaw(const char *name);
     const char *IsNameRaw(const char *name) const;
     const char *IsNameRawAbbrev(const char *name);
