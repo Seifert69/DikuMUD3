@@ -363,10 +363,12 @@ int get_type(char *typdef, const char *structure[])
     return search_block_set(typdef, structure, FALSE);
 }
 
-void insert_comma_names(cNamelist *nl, char *argument)
+// Returns the number of names actually inserted (exact duplicates and empty
+// strings are skipped, see cNamelist::InsertNameOrdered()).
+int insert_comma_names(cNamelist *nl, char *argument)
 {
     if (str_is_empty(argument))
-        return;
+        return 0;
 
     argument = (char *)skip_spaces(argument);
     strip_trailing_blanks(argument);
@@ -377,13 +379,17 @@ void insert_comma_names(cNamelist *nl, char *argument)
 
     boost::split(results, text, [](char c) { return c == ','; });
 
+    int added = 0;
+
     for (int i = 0; i < (int)results.size(); i++)
     {
-        if (!nl->IsName(results[i].c_str()) && !str_is_empty(results[i].c_str()))
+        if (nl->InsertNameOrdered(results[i].c_str()))
         {
-            nl->AppendNameTrim(results[i].c_str());
+            added++;
         }
     }
+
+    return added;
 }
 
 void insert_comma_ints(cintlist *il, char *argument)
@@ -738,8 +744,14 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 return;
             }
 
-            insert_comma_names(&unt->getNames(), argument);
-            send_to_char("The extra name was added.<br/>", ch);
+            if (insert_comma_names(&unt->getNames(), argument) > 0)
+            {
+                send_to_char("The extra name was added.<br/>", ch);
+            }
+            else
+            {
+                send_to_char("No name added (empty or already in the name list).<br/>", ch);
+            }
             return;
 
         case 1: /* "del-name" */
