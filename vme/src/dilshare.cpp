@@ -15,6 +15,7 @@
 
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
+int g_nDilValFreelist = 0; // Number of blocks currently on the dilval freelist
 
 // Freelist of fixed-size dilval blocks, linked through their first
 // pointer-size bytes. dilval allocation is strictly LIFO (expression
@@ -34,6 +35,7 @@ void *dilval::operator new(size_t size)
     {
         void *block = g_dilval_freelist;
         g_dilval_freelist = *static_cast<void **>(block);
+        g_nDilValFreelist--;
         return block;
     }
 #endif
@@ -51,6 +53,7 @@ void dilval::operator delete(void *ptr) noexcept
 #ifndef MEMORY_DEBUG
     *static_cast<void **>(ptr) = g_dilval_freelist;
     g_dilval_freelist = ptr;
+    g_nDilValFreelist++;
 #else
     ::operator delete(ptr);
 #endif
