@@ -71,10 +71,10 @@ public:
     typedef lib::asio::ssl::stream<lib::asio::ip::tcp::socket> socket_type;
     /// Type of a shared pointer to the ASIO socket being used
     typedef lib::shared_ptr<socket_type> socket_ptr;
-    /// Type of a pointer to the ASIO io_service being used
-    typedef lib::asio::io_service * io_service_ptr;
-    /// Type of a pointer to the ASIO io_service strand being used
-    typedef lib::shared_ptr<lib::asio::io_service::strand> strand_ptr;
+    /// Type of a pointer to the ASIO io_context being used
+    typedef lib::asio::io_context * io_context_ptr;
+    /// Type of a pointer to the ASIO io_context strand being used
+    typedef lib::shared_ptr<lib::asio::io_context::strand> strand_ptr;
     /// Type of a shared pointer to the ASIO TLS context being used
     typedef lib::shared_ptr<lib::asio::ssl::context> context_ptr;
 
@@ -176,13 +176,13 @@ protected:
     /// Perform one time initializations
     /**
      * init_asio is called once immediately after construction to initialize
-     * Asio components to the io_service
+     * Asio components to the io_context
      *
-     * @param service A pointer to the endpoint's io_service
+     * @param context A pointer to the endpoint's io_context
      * @param strand A pointer to the connection's strand
      * @param is_server Whether or not the endpoint is a server or not.
      */
-    lib::error_code init_asio (io_service_ptr service, strand_ptr strand,
+    lib::error_code init_asio (io_context_ptr context, strand_ptr strand,
         bool is_server)
     {
         if (!m_tls_init_handler) {
@@ -193,13 +193,9 @@ protected:
         if (!m_context) {
             return socket::make_error_code(socket::error::invalid_tls_context);
         }
-        m_socket.reset(new socket_type(*service, *m_context));
+        m_socket.reset(new socket_type(*context, *m_context));
 
-        if (m_socket_init_handler) {
-            m_socket_init_handler(m_hdl, get_socket());
-        }
-
-        m_io_service = service;
+        m_io_context = context;
         m_strand = strand;
         m_is_server = is_server;
 
@@ -234,19 +230,34 @@ protected:
     void pre_init(init_handler callback) {
         // TODO: is this the best way to check whether this function is 
         //       available in the version of OpenSSL being used?
-        // TODO: consider case where host is an IP address
 #if OPENSSL_VERSION_NUMBER >= 0x90812f
         if (!m_is_server) {
             // For clients on systems with a suitable OpenSSL version, set the
             // TLS SNI hostname header so connecting to TLS servers using SNI
             // will work.
-            long res = SSL_set_tlsext_host_name(
-                get_socket().native_handle(), m_uri->get_host().c_str());
-            if (!(1 == res)) {
-                callback(socket::make_error_code(socket::error::tls_failed_sni_hostname));
+            std::string const & host = m_uri->get_host();
+            lib::asio::error_code ec_addr;
+            
+            // run the hostname through make_address to check if it is a valid IP literal
+            lib::asio::ip::address addr = lib::asio::ip::make_address(host, ec_addr);
+            (void)addr;
+            
+            // If the parsing as an IP literal fails, proceed to register the hostname
+            // with the TLS handshake via SNI.
+            // The SNI applies only to DNS host names, not for IP addresses
+            // See RFC3546 Section 3.1
+            if (ec_addr) {
+                long res = SSL_set_tlsext_host_name(
+                    get_socket().native_handle(), host.c_str());
+                if (!(1 == res)) {
+                    callback(socket::make_error_code(socket::error::tls_failed_sni_hostname));
+                }
             }
         }
 #endif
+        if (m_socket_init_handler) {
+            m_socket_init_handler(m_hdl, get_socket());
+        }
 
         callback(lib::error_code());
     }
@@ -266,7 +277,7 @@ protected:
         if (m_strand) {
             m_socket->async_handshake(
                 get_handshake_type(),
-                m_strand->wrap(lib::bind(
+                lib::asio::bind_executor(*m_strand, lib::bind(
                     &type::handle_init, get_shared(),
                     callback,
                     lib::placeholders::_1
@@ -326,7 +337,7 @@ protected:
 
     void async_shutdown(socket::shutdown_handler callback) {
         if (m_strand) {
-            m_socket->async_shutdown(m_strand->wrap(callback));
+            m_socket->async_shutdown(lib::asio::bind_executor(*m_strand, callback));
         } else {
             m_socket->async_shutdown(callback);
         }
@@ -381,7 +392,7 @@ private:
         }
     }
 
-    io_service_ptr      m_io_service;
+    io_context_ptr      m_io_context;
     strand_ptr          m_strand;
     context_ptr         m_context;
     socket_ptr          m_socket;

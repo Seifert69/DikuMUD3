@@ -136,7 +136,6 @@ target_compile_definitions(mplex PUBLIC LINUX POSIX MPLEX_COMPILE)
 target_link_libraries(mplex
         mplex_objs
         crypt
-        Boost::system
         Boost::regex
         Boost::filesystem
         OpenSSL::SSL

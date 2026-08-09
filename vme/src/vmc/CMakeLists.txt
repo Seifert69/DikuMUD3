@@ -34,7 +34,7 @@ set(VMC_SRCS
 
 BISON_TARGET(vmcpar vmcpar.y
         ${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.cpp
-        COMPILE_FLAGS "--debug -y -d -v"
+        COMPILE_FLAGS "--debug -d -v"
         DEFINES_FILE ${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.h
         REPORT_FILE ${CMAKE_CURRENT_BINARY_DIR}/tmp_vmcpar.output
         )

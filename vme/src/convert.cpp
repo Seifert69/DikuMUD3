@@ -26,6 +26,7 @@
 #include <iostream>
 #include <string>
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 

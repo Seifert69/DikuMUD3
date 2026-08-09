@@ -88,7 +88,7 @@ void npc_data::increaseSpellSkillAtIndexBy(size_t index, sbit16 value)
 
 void npc_data::decreaseSpellSkillAtIndexBy(size_t index, sbit16 value)
 {
-    m_spells[index] += value;
+    m_spells[index] -= value;
 }
 
 ubit8 npc_data::getDefaultPosition() const

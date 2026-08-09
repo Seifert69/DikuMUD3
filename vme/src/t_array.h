@@ -60,7 +60,7 @@ t_array<T>::t_array()
 }
 
 template<class T>
-t_array<T>::~t_array<T>()
+t_array<T>::~t_array()
 {
     for (int i = 0; i < len; i++)
     {

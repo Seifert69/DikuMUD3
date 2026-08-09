@@ -60,6 +60,7 @@ $Revision: 2.18 $
 #include <filesystem>
 #include <string>
 
+#include <boost/filesystem/directory.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <boost/regex.hpp>

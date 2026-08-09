@@ -18,3 +18,7 @@ Testing/
 unit_tests/CTestTestfile.cmake
 core.*
 gmon.out
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+Doxyfile.*
+/vme/mplex.log
