@@ -1425,4 +1425,77 @@ BOOST_AUTO_TEST_CASE(StrStr5_test)
     BOOST_TEST(std::string(ret) == "HOMER");
 }
 
+BOOST_AUTO_TEST_CASE(insert_name_ordered_keeps_longest_first)
+{
+    cNamelist list;
+    ////////////////////////// Test Subject //////////////////////////////
+    bool added_short = list.InsertNameOrdered("bag");
+    bool added_long = list.InsertNameOrdered("bag of tricks");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(added_short);
+    BOOST_TEST(added_long);
+    BOOST_REQUIRE(list.Length() == 2);
+    // "bag" must never come before "bag of tricks": IsName() matching stops
+    // at the prefix and the longer name would be unreachable.
+    BOOST_TEST(std::string(list.Name(0)) == "bag of tricks");
+    BOOST_TEST(std::string(list.Name(1)) == "bag");
+}
+
+// Regression test for issue #406: a stored name that is a word-boundary
+// prefix of the new name ("bag" vs "bag of tricks") made the old
+// IsName()-based duplicate check reject the insert silently.
+BOOST_AUTO_TEST_CASE(insert_name_ordered_prefix_is_not_a_duplicate)
+{
+    const char *data[] = {"trick bag", "bag", nullptr};
+    cNamelist list(data);
+    ////////////////////////// Test Subject //////////////////////////////
+    bool added = list.InsertNameOrdered("bag of tricks");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(added);
+    BOOST_REQUIRE(list.Length() == 3);
+    BOOST_TEST(std::string(list.Name(0)) == "bag of tricks");
+    BOOST_TEST(std::string(list.Name(1)) == "trick bag");
+    BOOST_TEST(std::string(list.Name(2)) == "bag");
+}
+
+BOOST_AUTO_TEST_CASE(insert_name_ordered_rejects_exact_duplicates)
+{
+    const char *data[] = {"bag of tricks", "bag", nullptr};
+    cNamelist list(data);
+    ////////////////////////// Test Subject //////////////////////////////
+    bool added_case = list.InsertNameOrdered("BAG");
+    bool added_spaces = list.InsertNameOrdered("  bag  ");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(!added_case);   // case insensitive
+    BOOST_TEST(!added_spaces); // surrounding whitespace ignored
+    BOOST_TEST(list.Length() == 2);
+}
+
+BOOST_AUTO_TEST_CASE(insert_name_ordered_rejects_empty)
+{
+    cNamelist list;
+    ////////////////////////// Test Subject //////////////////////////////
+    bool added_empty = list.InsertNameOrdered("");
+    bool added_blank = list.InsertNameOrdered("   ");
+    bool added_null = list.InsertNameOrdered(nullptr);
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(!added_empty);
+    BOOST_TEST(!added_blank);
+    BOOST_TEST(!added_null);
+    BOOST_TEST(list.Length() == 0);
+}
+
+BOOST_AUTO_TEST_CASE(insert_name_ordered_equal_length_is_stable)
+{
+    const char *data[] = {"axe", nullptr};
+    cNamelist list(data);
+    ////////////////////////// Test Subject //////////////////////////////
+    bool added = list.InsertNameOrdered("bow");
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(added);
+    BOOST_REQUIRE(list.Length() == 2);
+    BOOST_TEST(std::string(list.Name(0)) == "axe");
+    BOOST_TEST(std::string(list.Name(1)) == "bow");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
