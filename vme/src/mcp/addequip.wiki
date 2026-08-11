@@ -1,0 +1,93 @@
+= addequip =
+function: '''addequip'''(u : unitptr, i : integer);
+
+The '''addequip''' function equips an object unit to a specific equipment position on a character.
+
+== Description ==
+The '''addequip''' procedure equips an object unit (presumed to be in the inventory of a PC/NPC) to the specified equipment position. The object must be in the character's inventory before calling this function. The equipment position is specified using one of the WEAR_* constants defined in values.h and/or vme.h.
+
+== Parameters ==
+{| class="wikitable"
+! Parameter !! Type !! Description
+|-
+| u || unitptr || The object unit to be equipped
+|-
+| i || integer || The equipment position where the object should be equipped (WEAR_* constant)
+|}
+
+== Examples ==
+=== Basic Equipment ===
+dilbegin equip_item(character : unitptr, item : unitptr);
+code
+{
+   // Check if finger slot is empty before equipping
+   if (equipment(character, WEAR_FINGER_L) == null)
+   {
+      addequip(item, WEAR_FINGER_L);
+      act("You put $2n on your left finger.", A_ALWAYS, character, item, null, TO_CHAR);
+   }
+   else
+   {
+      sendto("Your left finger is already occupied.", character);
+   }
+} dilend
+
+=== Weapon Replacement ===
+dilbegin equip_weapon(character : unitptr, new_weapon : unitptr);
+var
+   current_weapon : unitptr;
+code
+{
+   // Remove currently wielded weapon if any
+   current_weapon := equipment(character, WEAR_WIELD);
+   if (current_weapon != null)
+   {
+      unequip(current_weapon);
+   }
+   
+   // Equip the new weapon
+   addequip(new_weapon, WEAR_WIELD);
+   act("You wield $2n.", A_ALWAYS, character, new_weapon, null, TO_CHAR);
+} dilend
+
+== Usage Notes ==
+* The object to be equipped must already be in the character's inventory
+* The target equipment position must be empty (no item already equipped there)
+* The character parameter is inferred from the object's container (the object must be inside a character)
+* Common WEAR_* constants include:
+** WEAR_FINGER_L, WEAR_FINGER_R (left/right finger)
+** WEAR_NECK_1, WEAR_NECK_2 (neck slots)
+** WEAR_BODY (body armor)
+** WEAR_HEAD (helmet)
+** WEAR_LEGS (leg armor)
+** WEAR_FEET (boots)
+** WEAR_HANDS (gloves)
+** WEAR_ARMS (arm armor)
+** WEAR_ABOUT (cloak)
+** WEAR_WAIST (belt)
+** WEAR_WRIST_L, WEAR_WRIST_R (left/right wrist)
+** WEAR_WIELD (wielded weapon)
+** WEAR_HOLD (held item)
+** WEAR_SHIELD (shield)
+** WEAR_CHEST (chest armor)
+** WEAR_BACK (backpack/cloak)
+** WEAR_EAR_L, WEAR_EAR_R (left/right ear)
+** WEAR_ANKLE_L, WEAR_ANKLE_R (left/right ankle)
+
+== Error Handling ==
+The function will fail silently if:
+* The first parameter is not a unit pointer
+* The second parameter is not an integer
+* The object is not in a character's inventory
+* The object is not an object type (UNIT_ST_OBJ)
+* The target character is not a character type (UNIT_ST_PC or UNIT_ST_NPC)
+* The equipment position is already occupied
+
+== Related Functions/Fields ==
+* [[equipment]] - Returns the unit equipped at a specific position
+* [[unequip]] - Removes an equipped item
+* [[unit_st_obj.equip]] - Field showing an object's current equipment position
+
+== See Also ==
+* [[link]]
+* [[unit_st_obj]]
