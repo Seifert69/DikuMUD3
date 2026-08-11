@@ -933,20 +933,11 @@ void cConHook::StripHTML(char *dest, const char *src)
             {
                 if (strncasecmp(p, "PasswordOn()", 12) == 0)
                 {
-                    if (g_mplex_arg.bMudProtocol)
-                    {
-                        // Kyle, might be something here for MUD protocol
-                    }
-
                     Control_Echo_Off(this, &dest, 0);
                     p += 12;
                 }
                 else if (strncasecmp(p, "PasswordOff(", 12) == 0)
                 {
-                    if (g_mplex_arg.bMudProtocol)
-                    {
-                        // Kyle, might be something here for MUD protocol
-                    }
                     Control_Echo_On(this, &dest, 0);
                     p += 12;
                 }
@@ -969,49 +960,22 @@ void cConHook::StripHTML(char *dest, const char *src)
                 char buf[256];
                 int l = 0;
 
-                if (g_mplex_arg.bMudProtocol)
+                if (m_bGmcpOk)
                 {
-                    // Kyle: if you remove these comments you'll see the full tag contents
-                    //       which is nice for debugging. Or use gdb ;)
-                    // strcpy(dest, "||"); TAIL(dest);
-                    // strcpy(dest, aTag); TAIL(dest);
-                    // strcpy(dest, "||"); TAIL(dest);
-
-                    // If the tag has 'bars' it's a health update
+                    // The prompt div's bars attribute -> GMCP Char.Vitals
                     l = getHTMLValue("bars", aTag, buf, sizeof(buf) - 1);
-
                     if (l != 0)
                     {
-                        strcpy(dest, "||");
-                        TAIL(dest);
-                        strcpy(dest, buf);
-                        TAIL(dest);
-                        strcpy(dest, "||");
-                        TAIL(dest);
-
-                        // KYLE: buf will have the hp,mp,ep
-                        // remove the three debug lines above, parse the string, and
-                        // output mud protocol codes
-                        //
-                        continue;
+                        GmcpVitals(buf);
                     }
 
-                    l = getHTMLValue("exits", aTag, buf, sizeof(buf) - 1);
-
+                    // The room header's roomid attribute -> GMCP Room.Info
+                    // (peeks ahead at the title text without consuming it;
+                    // the visible output below is unaffected)
+                    l = getHTMLValue("roomid", aTag, buf, sizeof(buf) - 1);
                     if (l != 0)
                     {
-                        strcpy(dest, "||");
-                        TAIL(dest);
-                        strcpy(dest, buf);
-                        TAIL(dest);
-                        strcpy(dest, "||");
-                        TAIL(dest);
-
-                        // KYLE: buf will have the visible exits
-                        // remove the three debug lines above, parse the string, and
-                        // output mud protocol codes
-                        //
-                        continue;
+                        GmcpRoomInfo(aTag, buf, p);
                     }
                 }
 
@@ -1383,10 +1347,16 @@ void cConHook::getLine(ubit8 buf[], int *size)
  *
  * Supported: NAWS (window size -> live wrap/paging), TTYPE incl. the MTTS
  * walk (client name/capabilities), EOR (preferred prompt terminator for
- * e.g. Mudlet - see the go-ahead conversion in StripHTML()). Everything
- * else is politely refused. All negotiation state lives with the TCP
- * connection and survives a MUD reboot (see ResetSessionState()).
+ * e.g. Mudlet - see the go-ahead conversion in StripHTML()), and GMCP
+ * (out-of-band JSON packages: Char.Vitals from the prompt bars, Room.Info
+ * from the room header - see the Gmcp* methods below). Everything else is
+ * politely refused. All negotiation state lives with the TCP connection
+ * and survives a MUD reboot (see ResetSessionState()).
  */
+
+// GMCP (Generic MUD Communication Protocol) telnet option - not in
+// arpa/telnet.h, which predates it
+#define TELOPT_GMCP 201
 
 // Append an IAC <verb> <option> triplet to the response buffer
 static void telnet_reply(ubit8 *pOut, int *pnOutLen, ubit8 verb, ubit8 opt)
@@ -1457,6 +1427,10 @@ void cConHook::TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen)
             {
                 m_bEorOk = true; // Ack of our WILL EOR
             }
+            else if (opt == TELOPT_GMCP)
+            {
+                m_bGmcpOk = true; // Ack of our WILL GMCP; SB packages follow
+            }
             else if (opt == TELOPT_ECHO)
             {
                 // Echo mode is driven by the PasswordOn()/PasswordOff()
@@ -1477,6 +1451,14 @@ void cConHook::TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen)
                 if (m_bEorOk)
                 {
                     m_bEorOk = false;
+                    telnet_reply(pOut, pnOutLen, WONT, opt);
+                }
+            }
+            else if (opt == TELOPT_GMCP)
+            {
+                if (m_bGmcpOk)
+                {
+                    m_bGmcpOk = false;
                     telnet_reply(pOut, pnOutLen, WONT, opt);
                 }
             }
@@ -1546,6 +1528,23 @@ void cConHook::TelnetSubneg(ubit8 *pOut, int *pnOutLen)
             // answer SEND forever with the same string.
             m_nTtypeCount++;
             telnet_ttype_send(pOut, pnOutLen);
+        }
+    }
+    else if (m_aSubneg[0] == TELOPT_GMCP && m_nSubnegLen >= 2)
+    {
+        // Client package: "Package.Name {json}". We accept everything and
+        // send our packages regardless of Core.Supports (clients ignore
+        // packages they did not ask for); Core.Hello is logged next to the
+        // TTYPE client identification.
+        char payload[256];
+        int len = MIN(m_nSubnegLen - 1, (int)sizeof(payload) - 1);
+
+        memcpy(payload, m_aSubneg + 1, len);
+        payload[len] = 0;
+
+        if (strncmp(payload, "Core.Hello", 10) == 0)
+        {
+            slog(LOG_ALL, 0, "GMCP Core.Hello:%s", payload + 10);
         }
     }
     // Other subnegotiations: discard silently
@@ -1677,8 +1676,207 @@ void cConHook::SendTelnetInitialNegotiation()
     telnet_reply(buf, &len, DO, TELOPT_NAWS);
     telnet_reply(buf, &len, DO, TELOPT_TTYPE);
     telnet_reply(buf, &len, WILL, TELOPT_EOR);
+    telnet_reply(buf, &len, WILL, TELOPT_GMCP);
 
     Write(buf, len);
+}
+
+// JSON string escaping for GMCP payloads: quotes, backslash and control
+// chars; UTF-8 passes through unchanged
+static void json_escape(const char *src, char *dst, int cap)
+{
+    int o = 0;
+
+    for (const ubit8 *s = (const ubit8 *)src; *s && o < cap - 7; s++)
+    {
+        if (*s == '"' || *s == '\\')
+        {
+            dst[o++] = '\\';
+            dst[o++] = *s;
+        }
+        else if (*s < ' ')
+        {
+            o += sprintf(dst + o, "\\u%04x", *s);
+        }
+        else
+        {
+            dst[o++] = *s;
+        }
+    }
+    dst[o] = 0;
+}
+
+// Emit one GMCP package: IAC SB GMCP "<package> <json>" IAC SE.
+// Sent via the raw Write() path (qTX/PushWrite) - GMCP frames must never
+// enter StripHTML's output buffer, because IndentText() would word-wrap
+// \n\r sequences into the middle of the JSON. Only reachable on the
+// telnet path (m_bGmcpOk can only be set there).
+void cConHook::GmcpSend(const char *package, const char *json)
+{
+    ubit8 frame[1024];
+    char payload[900];
+    int o = 0;
+
+    frame[o++] = IAC;
+    frame[o++] = SB;
+    frame[o++] = TELOPT_GMCP;
+
+    snprintf(payload, sizeof(payload), "%s %s", package, json);
+
+    for (const ubit8 *s = (const ubit8 *)payload; *s && o < (int)sizeof(frame) - 4; s++)
+    {
+        if (*s == IAC)
+        {
+            frame[o++] = IAC; // Escape 0xFF as IAC IAC per RFC 854
+        }
+        frame[o++] = *s;
+    }
+
+    frame[o++] = IAC;
+    frame[o++] = SE;
+
+    Write(frame, o);
+}
+
+// The prompt div's bars attribute ("hp/maxhp ep/maxep mp/maxmp", see
+// prompt_data() in update.zon) becomes GMCP Char.Vitals
+void cConHook::GmcpVitals(const char *bars)
+{
+    int hp = 0;
+    int maxhp = 0;
+    int ep = 0;
+    int maxep = 0;
+    int mana = 0;
+    int maxmana = 0;
+    char json[192];
+
+    if (strcmp(bars, m_aLastBars) == 0)
+    {
+        return; // Prompts fire constantly; only send changed vitals
+    }
+
+    if (sscanf(bars, "%d/%d %d/%d %d/%d", &hp, &maxhp, &ep, &maxep, &mana, &maxmana) != 6)
+    {
+        return;
+    }
+
+    strncpy(m_aLastBars, bars, sizeof(m_aLastBars) - 1);
+    m_aLastBars[sizeof(m_aLastBars) - 1] = 0;
+
+    snprintf(json,
+             sizeof(json),
+             "{\"hp\":%d,\"maxhp\":%d,\"ep\":%d,\"maxep\":%d,\"mana\":%d,\"maxmana\":%d}",
+             hp,
+             maxhp,
+             ep,
+             maxep,
+             mana,
+             maxmana);
+
+    GmcpSend("Char.Vitals", json);
+}
+
+// The room header <h1 class='room_title' zone= exits= map= roomid=>Title</h1>
+// becomes GMCP Room.Info. 'aTag' is the full h1 tag, 'roomid' its roomid
+// value ("nameidx@zoneidx"), 'text' points just past the tag - the title is
+// the element text, read by peeking ahead to the next tag WITHOUT consuming
+// (StripHTML continues processing it as visible output afterwards).
+void cConHook::GmcpRoomInfo(const char *aTag, const char *roomid, const char *text)
+{
+    char zone[128] = "";
+    char exits[128] = "";
+    char map[64] = "";
+    char title[256];
+    char etitle[512];
+    char exjson[256];
+    char json[1024];
+    int o = 0;
+
+    getHTMLValue("zone", aTag, zone, sizeof(zone) - 1);
+    getHTMLValue("exits", aTag, exits, sizeof(exits) - 1);
+    getHTMLValue("map", aTag, map, sizeof(map) - 1);
+
+    for (const char *q = text; *q && *q != '<' && o < (int)sizeof(title) - 1; q++)
+    {
+        title[o++] = *q;
+    }
+    title[o] = 0;
+
+    // Immortals get a " [name@zone]" suffix appended to the title text -
+    // strip it, the id is already a proper field
+    char *br = strstr(title, " [");
+    if (br && o > 0 && title[o - 1] == ']')
+    {
+        *br = 0;
+    }
+    strip_trailing_blanks(title);
+
+    // Mudlet mappers key rooms on an integer: FNV-1a of the symbolic id,
+    // masked positive
+    ubit32 num = 2166136261u;
+    for (const ubit8 *s = (const ubit8 *)roomid; *s; s++)
+    {
+        num = (num ^ *s) * 16777619u;
+    }
+    num &= 0x7fffffff;
+
+    // exits "n e s " -> ["n","e","s"] (may be empty: dark rooms)
+    o = 0;
+    exjson[o++] = '[';
+    for (const char *s = exits; *s;)
+    {
+        while (*s == ' ')
+        {
+            s++;
+        }
+        if (*s == 0)
+        {
+            break;
+        }
+        if (o > 1)
+        {
+            exjson[o++] = ',';
+        }
+        exjson[o++] = '"';
+        while (*s && *s != ' ' && o < (int)sizeof(exjson) - 4)
+        {
+            exjson[o++] = *s++;
+        }
+        exjson[o++] = '"';
+    }
+    exjson[o++] = ']';
+    exjson[o] = 0;
+
+    json_escape(title, etitle, sizeof(etitle));
+
+    int x = 0;
+    int y = 0;
+    if (sscanf(map, "%d,%d", &x, &y) == 2)
+    {
+        snprintf(json,
+                 sizeof(json),
+                 "{\"num\":%u,\"id\":\"%s\",\"name\":\"%s\",\"area\":\"%s\",\"exits\":%s,\"coords\":[%d,%d]}",
+                 num,
+                 roomid,
+                 etitle,
+                 zone,
+                 exjson,
+                 x,
+                 y);
+    }
+    else
+    {
+        snprintf(json,
+                 sizeof(json),
+                 "{\"num\":%u,\"id\":\"%s\",\"name\":\"%s\",\"area\":\"%s\",\"exits\":%s}",
+                 num,
+                 roomid,
+                 etitle,
+                 zone,
+                 exjson);
+    }
+
+    GmcpSend("Room.Info", json);
 }
 
 /* =================== END TELNET OPTION NEGOTIATION ================= */

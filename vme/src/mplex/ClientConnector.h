@@ -114,20 +114,25 @@ public:
     };
     ubit8 m_nTelnetState{TS_DATA};
     ubit8 m_nTelnetCmd{0};   ///< Pending WILL/WONT/DO/DONT verb
-    ubit8 m_aSubneg[64];     ///< [0] = option, rest = payload
+    ubit8 m_aSubneg[1024];   ///< [0] = option, rest = payload (sized for GMCP Core.Supports.Set)
     int m_nSubnegLen{0};     ///< -1 = overflowed, discard until SE
     bool m_bNawsOk{false};   ///< Client agreed to NAWS
     bool m_bTtypeOk{false};  ///< Client agreed to TTYPE
     bool m_bEorOk{false};    ///< Client wants IAC EOR instead of IAC GA
+    bool m_bGmcpOk{false};   ///< Client accepted GMCP (out-of-band JSON packages)
     ubit8 m_nTtypeCount{0};  ///< TTYPE SEND rounds issued (MTTS walk, max 3)
     char m_aClientName[64]{}; ///< First TTYPE IS response, e.g. "Mudlet"
     int m_nMTTS{-1};         ///< MTTS capability bitfield, -1 = not seen
     ubit8 m_nNawsWidth{0};   ///< Last clamped NAWS width, 0 = never received
     ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
+    char m_aLastBars[64]{};  ///< Last bars value sent as Char.Vitals (dedupe)
 
 private:
     void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);
     void TelnetSubneg(ubit8 *pOut, int *pnOutLen);
+    void GmcpSend(const char *package, const char *json);
+    void GmcpVitals(const char *bars);
+    void GmcpRoomInfo(const char *aTag, const char *roomid, const char *text);
 
     std::mutex m_mtx; ///< Mutex for websockets threading
 };

@@ -1273,6 +1273,11 @@ code
       if (room.mapx != -1)
          temp_pos := " map='"+itoa(room.mapx) + "," + itoa(room.mapy)+"'";
 
+      // roomid is appended LAST: the web client dispatches on the exact
+      // "<h1 class='room_title' zone=" prefix. Mplex turns it into GMCP
+      // Room.Info for clients like Mudlet.
+      temp_pos := temp_pos + " roomid='" + room.nameidx + "@" + room.zoneidx + "'";
+
       if (looker.level >= IMMORTAL_LEVEL)
          temp := " [" + room.nameidx + "@" + room.zoneidx + "]";
 
