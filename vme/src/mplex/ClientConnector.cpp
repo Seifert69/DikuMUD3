@@ -285,13 +285,18 @@ void cConHook::Close(int bNotifyMud)
 
     m_pWebsServer = nullptr;
 
+    m_mtx.unlock();
+
+    // Deliberately outside the m_mtx region: remove_gmap() takes
+    // g_cMapHandler_mutex, and the websocket thread (on_close/on_message)
+    // takes g_cMapHandler_mutex before calling into the hook. Holding m_mtx
+    // here while waiting for the map mutex would be an ABBA deadlock with
+    // that thread. Never hold both locks at once.
     remove_gmap(this);
 
     // Still have the issue that we ought to close the
     // websocket connection here and remove from g_cMapHandler - but what if we were call by
     // websockets.
-
-    m_mtx.unlock();
 }
 
 /* ================================================================== */

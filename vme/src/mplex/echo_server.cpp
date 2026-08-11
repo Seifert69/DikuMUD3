@@ -140,40 +140,48 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
     cConHook *con = nullptr;
 
-    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
-
-    if (g_cMapHandler.find(hdl) == g_cMapHandler.end())
+    // Hold the map mutex only for the lookup/insert. It must be released
+    // before calling into the hook below: the input processing can reach
+    // cConHook::Close() (e.g. on a failed write), which calls remove_gmap(),
+    // and that relocks g_cMapHandler_mutex - instant self-deadlock if we
+    // still held it here.
     {
-        con = new cConHook();
-        con->SetWebsocket(s, hdl);
-        g_cMapHandler[hdl] = con;
-        slog(LOG_OFF, 0, "on_message: Created new connection for hdl %p, map size: %zu", hdl.lock().get(), g_cMapHandler.size());
+        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
 
-        // it's a new connection - Get the IP address
-        const auto theip = s->get_con_from_hdl(hdl);
-        boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
-        std::string ip_as_string{theadr.to_string()};
-        if (theadr.is_v6())
+        auto it = g_cMapHandler.find(hdl);
+        if (it == g_cMapHandler.end())
         {
-            auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
-            // Lets hope it is a ipv4 mapped to ipv6 address space
-            if (v6.is_v4_mapped())
+            con = new cConHook();
+            con->SetWebsocket(s, hdl);
+            g_cMapHandler[hdl] = con;
+            slog(LOG_OFF, 0, "on_message: Created new connection for hdl %p, map size: %zu", hdl.lock().get(), g_cMapHandler.size());
+
+            // it's a new connection - Get the IP address
+            const auto theip = s->get_con_from_hdl(hdl);
+            boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
+            std::string ip_as_string{theadr.to_string()};
+            if (theadr.is_v6())
             {
-                auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
-                ip_as_string = v4.to_string();
+                auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
+                // Lets hope it is a ipv4 mapped to ipv6 address space
+                if (v6.is_v4_mapped())
+                {
+                    auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
+                    ip_as_string = v4.to_string();
+                }
+                else
+                {
+                    ip_as_string = boost::asio::ip::address_v4::any().to_string();
+                }
             }
-            else
-            {
-                ip_as_string = boost::asio::ip::address_v4::any().to_string();
-            }
+            strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
+            *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
+            slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
         }
-        strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
-        *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
-        slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
-    }
-    else
-    {
-        con = g_cMapHandler[hdl];
+        else
+        {
+            con = it->second;
+        }
     }
 
     assert(con);
