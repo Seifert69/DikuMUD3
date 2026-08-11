@@ -22,55 +22,100 @@ typedef websocketpp::lib::shared_ptr<websocketpp::lib::asio::ssl::context> conte
 namespace mplex
 {
 
-// Global map for connection handlers
-std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> g_cMapHandler;
+// Monitor owning the websocket connection map: the mutex is private, every
+// method locks internally, and no method calls into cConHook code while
+// holding the lock. That structure is what prevents the two deadlocks this
+// file used to have - holding the map lock while entering hook code that
+// re-locks it (self-deadlock), and holding it while acquiring
+// cConHook::m_mtx (ABBA with cConHook::Close()).
+//
+// The monitor protects map MEMBERSHIP only; the cConHook objects themselves
+// are guarded by their own m_mtx. Handing out raw cConHook pointers is safe
+// because hooks are never deleted - if hook deletion is ever introduced,
+// this design must be revisited.
+class cConnectionMap
+{
+public:
+    // Look up hdl; when absent, run factory() to create the hook and insert
+    // it atomically (a separate find + insert would race against removal
+    // from the main thread).
+    // NOTE: factory runs UNDER the internal lock. It must never call back
+    // into this map nor lock any cConHook::m_mtx. Construction/setup code
+    // only.
+    template<typename Factory>
+    cConHook *find_or_insert(websocketpp::connection_hdl hdl, Factory factory)
+    {
+        std::lock_guard<std::mutex> lock(m_mtx);
 
-// Mutex to protect access to the global map
-std::mutex g_cMapHandler_mutex;
+        auto it = m_map.find(hdl);
+        if (it != m_map.end())
+        {
+            return it->second;
+        }
+
+        cConHook *con = factory();
+        m_map[hdl] = con;
+        slog(LOG_OFF, 0, "connection map: created new connection for hdl %p, map size: %zu", hdl.lock().get(), m_map.size());
+        return con;
+    }
+
+    // Find and remove hdl in one atomic step, returning the hook (nullptr
+    // if absent). The caller can then Close() it with no lock held.
+    cConHook *take(websocketpp::connection_hdl hdl)
+    {
+        std::lock_guard<std::mutex> lock(m_mtx);
+
+        auto it = m_map.find(hdl);
+        if (it == m_map.end())
+        {
+            slog(LOG_OFF, 0, "connection map: no entry for hdl %p, map size: %zu", hdl.lock().get(), m_map.size());
+            return nullptr;
+        }
+
+        cConHook *con = it->second;
+        m_map.erase(it);
+        return con;
+    }
+
+    // Remove any entry pointing at con (reached via remove_gmap() from
+    // cConHook::Close(), which must not hold m_mtx of the hook - see the
+    // lock-order comment there).
+    void erase_value(cConHook *con)
+    {
+        std::lock_guard<std::mutex> lock(m_mtx);
+
+        for (auto it = m_map.begin(); it != m_map.end(); it++)
+        {
+            if (it->second == con)
+            {
+                slog(LOG_OFF, 0, "connection map: located con class, removed.");
+                m_map.erase(it);
+                return;
+            }
+        }
+    }
+
+private:
+    std::mutex m_mtx; // Only this class can ever hold it
+    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>> m_map;
+};
+
+// File-local by design: the only entry point for code outside this file is
+// remove_gmap() below.
+static cConnectionMap g_connections;
 
 void remove_gmap(cConHook *con)
 {
-    std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
-    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
-
-    for (it = g_cMapHandler.begin(); it != g_cMapHandler.end(); it++)
-    {
-        if (it->second == con)
-        {
-            slog(LOG_OFF, 0, "remove_gmap located con class, removed.");
-            g_cMapHandler.erase(it);
-            return;
-        }
-    }
+    g_connections.erase_value(con);
 }
 
 void on_close(websocketpp::connection_hdl hdl)
 {
-    cConHook *con = nullptr;
-    std::map<websocketpp::connection_hdl, cConHook *, std::owner_less<websocketpp::connection_hdl>>::iterator it;
-
     slog(LOG_OFF, 0, "on_close called for hdl %p", hdl.lock().get());
 
-    {
-        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
+    // take() removes the entry and releases the map lock before we Close()
+    cConHook *con = g_connections.take(hdl);
 
-        it = g_cMapHandler.find(hdl);
-
-        if (it != g_cMapHandler.end())
-        {
-            con = it->second;
-            g_cMapHandler.erase(it);
-            slog(LOG_OFF, 0, "on_close found and removed connection from map");
-        }
-        else
-        {
-            slog(LOG_OFF, 0, "on_close unable to locate class for hdl %p", hdl.lock().get());
-            slog(LOG_OFF, 0, "Current map size: %zu", g_cMapHandler.size());
-            // Don't crash - just log and return
-            return;
-        }
-    }
-    
     if (con)
     {
         con->Close(TRUE);
@@ -138,51 +183,39 @@ int ws_send_message(wsserver_tls *s, websocketpp::connection_hdl hdl, const char
 // Define a callback to handle incoming messages
 void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
 {
-    cConHook *con = nullptr;
+    // The monitor holds its lock only for the lookup/insert (plus the
+    // factory below for new connections) and releases it before we call
+    // into the hook: the input processing can reach cConHook::Close()
+    // (e.g. on a failed write), which re-enters the map via remove_gmap().
+    cConHook *con = g_connections.find_or_insert(hdl,
+                                                 [s, hdl]()
+                                                 {
+                                                     cConHook *con = new cConHook();
+                                                     con->SetWebsocket(s, hdl);
 
-    // Hold the map mutex only for the lookup/insert. It must be released
-    // before calling into the hook below: the input processing can reach
-    // cConHook::Close() (e.g. on a failed write), which calls remove_gmap(),
-    // and that relocks g_cMapHandler_mutex - instant self-deadlock if we
-    // still held it here.
-    {
-        std::lock_guard<std::mutex> lock(g_cMapHandler_mutex);
-
-        auto it = g_cMapHandler.find(hdl);
-        if (it == g_cMapHandler.end())
-        {
-            con = new cConHook();
-            con->SetWebsocket(s, hdl);
-            g_cMapHandler[hdl] = con;
-            slog(LOG_OFF, 0, "on_message: Created new connection for hdl %p, map size: %zu", hdl.lock().get(), g_cMapHandler.size());
-
-            // it's a new connection - Get the IP address
-            const auto theip = s->get_con_from_hdl(hdl);
-            boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
-            std::string ip_as_string{theadr.to_string()};
-            if (theadr.is_v6())
-            {
-                auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
-                // Lets hope it is a ipv4 mapped to ipv6 address space
-                if (v6.is_v4_mapped())
-                {
-                    auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
-                    ip_as_string = v4.to_string();
-                }
-                else
-                {
-                    ip_as_string = boost::asio::ip::address_v4::any().to_string();
-                }
-            }
-            strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
-            *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
-            slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
-        }
-        else
-        {
-            con = it->second;
-        }
-    }
+                                                     // it's a new connection - Get the IP address
+                                                     const auto theip = s->get_con_from_hdl(hdl);
+                                                     boost::asio::ip::address theadr = theip->get_raw_socket().remote_endpoint().address();
+                                                     std::string ip_as_string{theadr.to_string()};
+                                                     if (theadr.is_v6())
+                                                     {
+                                                         auto v6 = boost::asio::ip::make_address_v6(theadr.to_string());
+                                                         // Lets hope it is a ipv4 mapped to ipv6 address space
+                                                         if (v6.is_v4_mapped())
+                                                         {
+                                                             auto v4 = boost::asio::ip::make_address_v4(boost::asio::ip::v4_mapped_t::v4_mapped, v6);
+                                                             ip_as_string = v4.to_string();
+                                                         }
+                                                         else
+                                                         {
+                                                             ip_as_string = boost::asio::ip::address_v4::any().to_string();
+                                                         }
+                                                     }
+                                                     strncpy(con->m_aHost, ip_as_string.c_str(), sizeof(con->m_aHost) - 1);
+                                                     *(con->m_aHost + sizeof(con->m_aHost) - 1) = '\0';
+                                                     slog(LOG_OFF, 0, "IP connection from: %s", con->m_aHost);
+                                                     return con;
+                                                 });
 
     assert(con);
 
