@@ -1375,7 +1375,7 @@ static int check_interrupt(dilprg *prg)
                 if (adr == SKIP)
                 {
                     prg->fp->pc = oldpc;
-                    delete v1;
+                    dilval::free(v1);
                     return 1;
                 }
 
@@ -1387,14 +1387,14 @@ static int check_interrupt(dilprg *prg)
                     prg->fp->intr[i].flags = 0;
                     prg->fp->intr[i].lab = nullptr;
                 }
-                delete v1;
+                dilval::free(v1);
                 return 0;
             }
             else
             {
                 prg->fp->pc = oldpc;
             }
-            delete v1;
+            dilval::free(v1);
         }
     }
     return 0;

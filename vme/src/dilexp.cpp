@@ -81,7 +81,7 @@ void dilfe_illegal(dilprg *p)
    replace(old, new, string 3)*/
 void dilfe_replace(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     // char *buf;
     // int olen, nlen, buflen, i;
     dilval *v3 = p->stack.pop();
@@ -163,14 +163,14 @@ void dilfe_replace(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_tolower(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     char *s1 = nullptr;
 
@@ -201,12 +201,12 @@ void dilfe_tolower(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_toupper(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     char *s1 = nullptr;
 
@@ -238,12 +238,12 @@ void dilfe_toupper(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_left(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     int strl = 0;
@@ -307,13 +307,13 @@ void dilfe_left(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_right(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     int strl = 0;
@@ -378,13 +378,13 @@ void dilfe_right(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_mid(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -478,15 +478,15 @@ void dilfe_mid(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* islight */
 void dilfe_islt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
@@ -520,12 +520,12 @@ void dilfe_islt(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_ghead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     v->atyp = DILA_NORM;
     v->type = DILV_UP;
     v->val.ptr = g_unit_list;
@@ -534,7 +534,7 @@ void dilfe_ghead(dilprg *p)
 
 void dilfe_phead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     if (g_unit_list->isPC())
     {
         v->atyp = DILA_NORM;
@@ -550,7 +550,7 @@ void dilfe_phead(dilprg *p)
 
 void dilfe_ohead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     if (g_obj_head->isObj())
     {
         v->atyp = DILA_NORM;
@@ -566,7 +566,7 @@ void dilfe_ohead(dilprg *p)
 
 void dilfe_nhead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     if (g_npc_head->isNPC())
     {
         v->atyp = DILA_NORM;
@@ -582,7 +582,7 @@ void dilfe_nhead(dilprg *p)
 
 void dilfe_rhead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     if (g_room_head->isRoom())
     {
         v->atyp = DILA_NORM;
@@ -598,7 +598,7 @@ void dilfe_rhead(dilprg *p)
 
 void dilfe_zhead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     v->atyp = DILA_NORM;
     v->type = DILV_ZP;
     v->val.ptr = g_zone_info.mmp.begin()->second;
@@ -607,7 +607,7 @@ void dilfe_zhead(dilprg *p)
 
 void dilfe_chead(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     v->atyp = DILA_NORM;
     v->type = DILV_CP;
     v->val.ptr = g_cmdlist;
@@ -616,7 +616,7 @@ void dilfe_chead(dilprg *p)
 
 void dilfe_clr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_SP;
@@ -634,12 +634,12 @@ void dilfe_clr(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_sendpre(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     command_info *cmd = nullptr;
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
@@ -735,18 +735,18 @@ void dilfe_sendpre(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
-    delete v7;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
+    dilval::free(v7);
 }
 
 void dilfe_clradd(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     char full_name[21];
     char *color = nullptr;
@@ -841,14 +841,14 @@ void dilfe_clradd(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_clrchg(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     char full_name[21];
     char *color = nullptr;
@@ -942,14 +942,14 @@ void dilfe_clrchg(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_clrdel(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     char full_name[21];
     unsigned int x = 0;
@@ -1030,13 +1030,13 @@ void dilfe_clrdel(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_ckpwd(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1088,13 +1088,13 @@ void dilfe_ckpwd(dilprg *p)
             v->type = DILV_ERR;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_atsp(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
@@ -1226,17 +1226,17 @@ void dilfe_atsp(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
 }
 
 void dilfe_cast2(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
@@ -1341,16 +1341,16 @@ void dilfe_cast2(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
 }
 
 void dilfe_resta(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -1413,13 +1413,13 @@ void dilfe_resta(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_opro(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -1452,13 +1452,13 @@ void dilfe_opro(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_eqpm(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -1500,14 +1500,14 @@ void dilfe_eqpm(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* int meleeAttack(unit, unit, int, int, int) */
 void dilfe_mel(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
@@ -1587,17 +1587,17 @@ void dilfe_mel(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
 }
 
 /* int meleedamage(unit, unit, int, int) */
 void dilfe_meldam(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -1675,15 +1675,15 @@ void dilfe_meldam(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
 }
 
 void dilfe_flog(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1745,15 +1745,15 @@ void dilfe_flog(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 // loadstr()
 void dilfe_ldstr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
     char *sstr = nullptr;
@@ -1819,13 +1819,13 @@ void dilfe_ldstr(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_delstr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
@@ -1862,12 +1862,12 @@ void dilfe_delstr(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_delunit(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
@@ -1904,13 +1904,13 @@ void dilfe_delunit(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 /* savestr - write a string to a file */
 void dilfe_svstr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -1984,14 +1984,14 @@ void dilfe_svstr(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_filesz(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
@@ -2029,13 +2029,13 @@ void dilfe_filesz(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 /* visible, some vs other */
 void dilfe_visi(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2081,14 +2081,14 @@ void dilfe_visi(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* is unit opponent of other */
 void dilfe_oppo(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2136,14 +2136,14 @@ void dilfe_oppo(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* get unit opponent of other */
 void dilfe_gopp(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2199,14 +2199,14 @@ void dilfe_gopp(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* get unit follower of other */
 void dilfe_gfol(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2258,14 +2258,14 @@ void dilfe_gfol(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* spellindex */
 void dilfe_splx(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_INT;
@@ -2299,13 +2299,13 @@ void dilfe_splx(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 /* spellinfo */
 void dilfe_spli(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v8 = p->stack.pop();
     dilval *v7 = p->stack.pop();
     dilval *v6 = p->stack.pop();
@@ -2428,20 +2428,20 @@ void dilfe_spli(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
-    delete v7;
-    delete v8;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
+    dilval::free(v7);
+    dilval::free(v8);
 }
 
 /* contents of purse */
 void dilfe_purs(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2511,14 +2511,14 @@ void dilfe_purs(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* money_string */
 void dilfe_mons(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2545,14 +2545,14 @@ void dilfe_mons(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* pathto */
 void dilfe_path(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -2605,14 +2605,14 @@ void dilfe_path(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 /* can_carry */
 void dilfe_cary(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2688,15 +2688,15 @@ void dilfe_cary(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* transfermoney */
 void dilfe_trmo(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     char buf[1024];
     int i = 0;
     buf[0] = 0;
@@ -2797,14 +2797,14 @@ void dilfe_trmo(dilprg *p)
         }
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_fits(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -2865,14 +2865,14 @@ void dilfe_fits(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_intr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* add interrupt to current frame */
     ubit16 intnum = 0;
     ubit8 *beg = nullptr;
@@ -2897,12 +2897,12 @@ void dilfe_intr(dilprg *p)
     v->atyp = DILA_NONE;
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_not(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     ;
     dilval *v1 = p->stack.pop();
     /* Negation of integers (and booleans, etc.) */
@@ -2911,12 +2911,12 @@ void dilfe_not(dilprg *p)
     v->atyp = DILA_NONE;
     v->val.num = !dil_getbool(v1, p);
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_umin(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     /* Unary minus */
 
@@ -2934,13 +2934,13 @@ void dilfe_umin(dilprg *p)
             v->type = DILV_ERR; /* wrong type */
             break;
     }
-    delete v1;
+    dilval::free(v1);
     p->stack.push(v);
 }
 
 void dilfe_skitxt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     /* skill_name uses ski_text values to return skill names for a skill */
 
@@ -2966,12 +2966,12 @@ void dilfe_skitxt(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_wpntxt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* weapon_name uses wpn_text values to return skill names for a skill */
     dilval *v1 = p->stack.pop();
 
@@ -3005,12 +3005,12 @@ void dilfe_wpntxt(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_itoa(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Conversion of integers to strings */
     dilval *v1 = p->stack.pop();
 
@@ -3029,12 +3029,12 @@ void dilfe_itoa(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_atoi(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Conversion of strings to integers */
     dilval *v1 = p->stack.pop();
 
@@ -3061,12 +3061,12 @@ void dilfe_atoi(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_isplayer(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Check to see if a player exists by name xxx */
     dilval *v1 = p->stack.pop();
 
@@ -3101,7 +3101,7 @@ void dilfe_isplayer(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void *threadcallout(void *p)
@@ -3143,7 +3143,7 @@ void *threadcallout(void *p)
 // DIL shell()
 void dilfe_shell(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Get the ID number of a player. */
     dilval *v1 = p->stack.pop();
 
@@ -3181,12 +3181,12 @@ void dilfe_shell(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_len(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* length of strings, stringlists, or intlist */
     dilval *v1 = p->stack.pop();
 
@@ -3237,7 +3237,7 @@ void dilfe_len(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 long space_quick_count(char *src)
@@ -3277,7 +3277,7 @@ long str_escape_size(char *sbuf, long ln)
 /* textformat */
 void dilfe_txf(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     char *dest = nullptr;
 
@@ -3312,13 +3312,13 @@ void dilfe_txf(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 /* sact - return string (call act_generate) */
 void dilfe_sact(dilprg *p)
 {
-    dilval *v = new dilval; // Return variable
+    dilval *v = dilval::alloc(); // Return variable
     v->type = DILV_FAIL;    // NULL string
 
     /* sact() function call */
@@ -3403,12 +3403,12 @@ void dilfe_sact(dilprg *p)
 
     p->stack.push(v);
 
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
 }
 
 /* getinteger(idx, p_u, p_i) : index is the kind of int to get.
@@ -3416,7 +3416,7 @@ void dilfe_sact(dilprg *p)
  */
 void dilfe_gint(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v3 = p->stack.pop(); // INT
     dilval *v2 = p->stack.pop(); // UNIT
     dilval *v1 = p->stack.pop(); // INT
@@ -3566,15 +3566,15 @@ void dilfe_gint(dilprg *p)
 
     p->stack.push(v);
 
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 /* asctime */
 void dilfe_ast(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     char *c = nullptr;
 
@@ -3600,12 +3600,12 @@ void dilfe_ast(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_getw(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Get first word of a string */
     dilval *v1 = p->stack.pop();
     char *c = nullptr;
@@ -3645,12 +3645,12 @@ void dilfe_getw(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_getws(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Get first word of a string */
     dilval *v1 = p->stack.pop();
     char *tmp = nullptr;
@@ -3693,14 +3693,14 @@ void dilfe_getws(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_getaffects(dilprg *p)
 {
     dilval *v1 = p->stack.pop();
 
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     v->type = DILV_FAIL;
 
     switch (dil_getval(v1))
@@ -3725,12 +3725,12 @@ void dilfe_getaffects(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_split(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Get first word of a string */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -3814,15 +3814,15 @@ void dilfe_split(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // BOOST VERSION
 /*return a unit file directory listing */
 void dilfe_udir(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     cNamelist *words = new cNamelist;
@@ -3902,14 +3902,14 @@ void dilfe_udir(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 // BOOST VERSION
 /*return a string file directory listing */
 void dilfe_sdir(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
     cNamelist *words = new cNamelist;
 
@@ -3985,13 +3985,13 @@ void dilfe_sdir(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 // weapon_info
 void dilfe_wepinfo(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     v->type = DILV_ILP;
@@ -4027,12 +4027,12 @@ void dilfe_wepinfo(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_load(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Load a unit from database */
     dilval *v1 = p->stack.pop();
 
@@ -4092,12 +4092,12 @@ void dilfe_load(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_getcmd(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     switch (dil_getval(v1))
@@ -4130,12 +4130,12 @@ void dilfe_getcmd(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_clone(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Load a unit from database */
     dilval *v1 = p->stack.pop();
 
@@ -4171,12 +4171,12 @@ void dilfe_clone(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_plus(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Addition of strings or integers */
 
     dilval *v2 = p->stack.pop();
@@ -4257,14 +4257,14 @@ void dilfe_plus(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // DIL destroy
 void dilfe_dld(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Destruction of DIL programs */
 
     dilval *v2 = p->stack.pop();
@@ -4304,13 +4304,13 @@ void dilfe_dld(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_dlf(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Detection of DIL programs (TRUE/FALSE) */
 
     dilval *v2 = p->stack.pop();
@@ -4355,13 +4355,13 @@ void dilfe_dlf(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_call(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Detection of DIL programs (TRUE/FALSE) */
 
     dilval *v4 = p->stack.pop(); // string
@@ -4401,7 +4401,7 @@ void dilfe_call(dilprg *p)
                                             p->stack.push(v3);
                                             p->stack.push(v4);
 
-                                            delete v1;
+                                            dilval::free(v1);
                                             // Don't delete v2-v4 they now live on the stack.
 
                                             dil_push_frame(p, tmpl);
@@ -4437,10 +4437,10 @@ void dilfe_call(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
 }
 
 void dilfe_min(dilprg *p)
@@ -4448,7 +4448,7 @@ void dilfe_min(dilprg *p)
     /* Subtraction of integers */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v2))
     {
@@ -4475,8 +4475,8 @@ void dilfe_min(dilprg *p)
             v->type = DILV_ERR; /* wrong type */
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -4484,7 +4484,7 @@ void dilfe_mul(dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v2))
     {
@@ -4511,8 +4511,8 @@ void dilfe_mul(dilprg *p)
             v->type = DILV_ERR; /* wrong type */
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -4520,7 +4520,7 @@ void dilfe_div(dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v2))
     {
@@ -4554,8 +4554,8 @@ void dilfe_div(dilprg *p)
             v->type = DILV_ERR; /* wrong type */
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -4563,7 +4563,7 @@ void dilfe_mod(dilprg *p)
 {
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v2))
     {
@@ -4597,8 +4597,8 @@ void dilfe_mod(dilprg *p)
             v->type = DILV_ERR; /* wrong type */
             break;
     }
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -4607,7 +4607,7 @@ void dilfe_and(dilprg *p)
     /* And two integers (or booleans) */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     if ((dil_getval(v2) == DILV_INT) && (dil_getval(v1) == DILV_INT))
     {
@@ -4620,14 +4620,14 @@ void dilfe_and(dilprg *p)
         v->type = DILV_FAIL;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
 void dilfe_land(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* And two integers (or booleans) */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4636,13 +4636,13 @@ void dilfe_land(dilprg *p)
     v->atyp = DILA_NONE;
     v->val.num = dil_getbool(v1, p) && dil_getbool(v2, p);
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_or(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Or two integers (or booleans) */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4659,13 +4659,13 @@ void dilfe_or(dilprg *p)
         v->type = DILV_FAIL;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_lor(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Or two integers (or booleans) */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4674,13 +4674,13 @@ void dilfe_lor(dilprg *p)
     v->atyp = DILA_NONE;
     v->val.num = dil_getbool(v1, p) || dil_getbool(v2, p);
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_isa(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Test if unit is affected by affect */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4720,13 +4720,13 @@ void dilfe_isa(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_rnd(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Random in an integer range */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -4759,14 +4759,14 @@ void dilfe_rnd(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // findroom(#)
 void dilfe_fndr(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a room */
     dilval *v1 = p->stack.pop();
     char zone[MAX_STRING_LENGTH];
@@ -4805,13 +4805,13 @@ void dilfe_fndr(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 // findzone(#)
 void dilfe_fndz(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
     switch (dil_getval(v1))
@@ -4844,13 +4844,13 @@ void dilfe_fndz(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 // findsymbolic(#,#,#)
 void dilfe_fnds2(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a symbolic unit */
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -4936,15 +4936,15 @@ void dilfe_fnds2(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 // findsymbolic(#,#)
 void dilfe_fndsidx(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a symbolic unit */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5001,14 +5001,14 @@ void dilfe_fndsidx(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 // findsymbolic(#)
 void dilfe_fnds(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a symbolic unit */
     dilval *v1 = p->stack.pop();
     char zone[MAX_STRING_LENGTH];
@@ -5039,7 +5039,7 @@ void dilfe_fnds(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_gt(dilprg *p)
@@ -5047,7 +5047,7 @@ void dilfe_gt(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v1))
     {
@@ -5075,8 +5075,8 @@ void dilfe_gt(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -5085,7 +5085,7 @@ void dilfe_lt(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v1))
     {
@@ -5113,8 +5113,8 @@ void dilfe_lt(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -5123,7 +5123,7 @@ void dilfe_ge(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v1))
     {
@@ -5151,8 +5151,8 @@ void dilfe_ge(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -5161,7 +5161,7 @@ void dilfe_le(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v1))
     {
@@ -5189,8 +5189,8 @@ void dilfe_le(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
@@ -5199,7 +5199,7 @@ void dilfe_eq(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v1))
     {
@@ -5227,8 +5227,8 @@ void dilfe_eq(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_ne(dilprg *p)
@@ -5236,7 +5236,7 @@ void dilfe_ne(dilprg *p)
     /* Greater Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
 
     switch (dil_getval(v2))
     {
@@ -5264,14 +5264,14 @@ void dilfe_ne(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
 void dilfe_slt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5326,13 +5326,13 @@ void dilfe_slt(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_sgt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5387,13 +5387,13 @@ void dilfe_sgt(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_sle(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5448,13 +5448,13 @@ void dilfe_sle(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_sge(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Less Than operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5509,13 +5509,13 @@ void dilfe_sge(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_se(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* String equal operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5580,13 +5580,13 @@ void dilfe_se(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_sne(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* String not equal operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -5643,13 +5643,13 @@ void dilfe_sne(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_pe(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     int ilp1 = 0;
     int slp1 = 0;
     int ilp2 = 0;
@@ -5745,13 +5745,13 @@ void dilfe_pe(dilprg *p)
         }
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_pne(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Pointer Equality operator */
     int ilp1 = 0;
     int slp1 = 0;
@@ -5840,8 +5840,8 @@ void dilfe_pne(dilprg *p)
         }
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_iss(dilprg *p)
@@ -5849,7 +5849,7 @@ void dilfe_iss(dilprg *p)
     // Test if bist are set
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     switch (dil_getval(v2))
     {
         case DILV_FAIL:
@@ -5876,14 +5876,14 @@ void dilfe_iss(dilprg *p)
             break;
     }
 
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
     p->stack.push(v);
 }
 
 void dilfe_in(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Test if string in string, stringlist or extra description */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -6006,13 +6006,13 @@ void dilfe_in(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_strcmp(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* String equal operator */
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -6070,13 +6070,13 @@ void dilfe_strcmp(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_strncmp(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* String equal operator */
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -6148,14 +6148,14 @@ void dilfe_strncmp(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 void dilfe_fndu2(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a unit */
     dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
@@ -6307,16 +6307,16 @@ void dilfe_fndu2(dilprg *p)
         v->type = DILV_FAIL;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
 }
 
 void dilfe_fndu(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a unit */
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
@@ -6451,16 +6451,16 @@ void dilfe_fndu(dilprg *p)
         v->type = DILV_FAIL;
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
 }
 
 // findrndunit(#,#,#)
 void dilfe_fndru(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Find a unit */
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
@@ -6542,15 +6542,15 @@ void dilfe_fndru(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
 }
 
 // read a fixed string
 void dilfe_fs(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* A Fixed String */
     v->type = DILV_SP;
     v->atyp = DILA_NORM;
@@ -6569,7 +6569,7 @@ void dilfe_fs(dilprg *p)
 
 void dilfe_fsl(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     cNamelist *namelist = new cNamelist;
     /* A Fixed String list */
 
@@ -6583,7 +6583,7 @@ void dilfe_fsl(dilprg *p)
 
 void dilfe_fil(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     cintlist *intlist = new cintlist;
     /* A Fixed Int list */
 
@@ -6597,7 +6597,7 @@ void dilfe_fil(dilprg *p)
 
 void dilfe_var(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* A variable */
     int varno = 0;
 
@@ -6654,7 +6654,7 @@ void dilfe_var(dilprg *p)
 
 void dilfe_weat(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Self */
 
     v->type = DILV_INT;
@@ -6665,7 +6665,7 @@ void dilfe_weat(dilprg *p)
 
 void dilfe_self(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Self */
 
     v->type = DILV_UP;
@@ -6676,7 +6676,7 @@ void dilfe_self(dilprg *p)
 
 void dilfe_hrt(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Heartbeat */
 
     v->type = DILV_SINT2R;
@@ -6687,7 +6687,7 @@ void dilfe_hrt(dilprg *p)
 
 void dilfe_tho(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* MudHour */
 
     v->type = DILV_INT;
@@ -6698,7 +6698,7 @@ void dilfe_tho(dilprg *p)
 
 void dilfe_tda(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* MudDay */
 
     v->type = DILV_INT;
@@ -6709,7 +6709,7 @@ void dilfe_tda(dilprg *p)
 
 void dilfe_tmd(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* MudMonth */
 
     v->type = DILV_INT;
@@ -6720,7 +6720,7 @@ void dilfe_tmd(dilprg *p)
 
 void dilfe_tye(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* MudYear */
 
     v->type = DILV_INT;
@@ -6731,7 +6731,7 @@ void dilfe_tye(dilprg *p)
 
 void dilfe_rti(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* RealTime */
 
     v->type = DILV_INT;
@@ -6742,7 +6742,7 @@ void dilfe_rti(dilprg *p)
 
 void dilfe_acti(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Activator */
 
     v->type = DILV_UP;
@@ -6753,7 +6753,7 @@ void dilfe_acti(dilprg *p)
 
 void dilfe_medi(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Medium */
 
     v->type = DILV_UP;
@@ -6764,7 +6764,7 @@ void dilfe_medi(dilprg *p)
 
 void dilfe_targ(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Target */
 
     v->type = DILV_UP;
@@ -6775,7 +6775,7 @@ void dilfe_targ(dilprg *p)
 
 void dilfe_powe(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Power */
 
     static int dummy = 0;
@@ -6796,7 +6796,7 @@ void dilfe_powe(dilprg *p)
 
 void dilfe_cmst(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* cmdstr */
 
     v->type = DILV_SP;
@@ -6816,7 +6816,7 @@ void dilfe_cmst(dilprg *p)
 
 void dilfe_excmst(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* cmdstr */
 
     v->type = DILV_SP;
@@ -6836,7 +6836,7 @@ void dilfe_excmst(dilprg *p)
 
 void dilfe_excmstc(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* excmdc */
 
     v->type = DILV_SP;
@@ -6856,7 +6856,7 @@ void dilfe_excmstc(dilprg *p)
 
 void dilfe_argm(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Argument */
 
     v->type = DILV_SP;
@@ -6875,7 +6875,7 @@ void dilfe_argm(dilprg *p)
 
 void dilfe_null(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Pointer value null */
 
     v->type = DILV_NULL;
@@ -6886,7 +6886,7 @@ void dilfe_null(dilprg *p)
 
 void dilfe_int(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Fixed integer */
 
     v->type = DILV_INT;
@@ -6897,7 +6897,7 @@ void dilfe_int(dilprg *p)
 
 void dilfe_cmds(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     /* Check if the input command might the supplied argument */
     dilval *v1 = p->stack.pop();
 
@@ -6930,12 +6930,12 @@ void dilfe_cmds(dilprg *p)
             break;
     }
     p->stack.push(v);
-    delete v1;
+    dilval::free(v1);
 }
 
 void dilfe_pck(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -6992,13 +6992,13 @@ void dilfe_pck(dilprg *p)
     }
 
     p->stack.push(v);
-    delete v1;
-    delete v2;
+    dilval::free(v1);
+    dilval::free(v2);
 }
 
 void dilfe_act(dilprg *p)
 {
-    dilval *v = new dilval;
+    dilval *v = dilval::alloc();
     char buf[1024];
     /* Conversion of integers to strings */
     dilval *v6 = p->stack.pop();
@@ -7073,10 +7073,10 @@ void dilfe_act(dilprg *p)
         }
     }
     p->stack.push(v);
-    delete v1;
-    delete v2;
-    delete v3;
-    delete v4;
-    delete v5;
-    delete v6;
+    dilval::free(v1);
+    dilval::free(v2);
+    dilval::free(v3);
+    dilval::free(v4);
+    dilval::free(v5);
+    dilval::free(v6);
 }

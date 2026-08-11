@@ -16,6 +16,65 @@
 int g_nDilPrg = 0;
 int g_nDilVal = 0;
 
+// Pool of fixed-size dilval blocks: free blocks are kept on an explicit
+// stack (array + counter). dilval allocation is strictly LIFO (expression
+// evaluation) and main-thread only, so no locking or trimming is needed:
+// the stack never holds more than the peak number of simultaneously live
+// dilvals, which is bounded by expression nesting depth.
+// Under MEMORY_DEBUG the pool is bypassed entirely so the memory debugging
+// machinery sees every block.
+#define DILVAL_POOL_GROW 50
+
+static struct
+{
+    void **blocks; // stack of free blocks
+    int count;     // number of free blocks on the stack
+    int capacity;  // allocated size of blocks[]
+} g_dilval_pool;
+
+int dilvalPoolFree()
+{
+    return g_dilval_pool.count;
+}
+
+int dilvalPoolCapacity()
+{
+    return g_dilval_pool.capacity;
+}
+
+dilval *dilval::alloc()
+{
+#ifndef MEMORY_DEBUG
+    if (g_dilval_pool.count > 0)
+    {
+        return new (g_dilval_pool.blocks[--g_dilval_pool.count]) dilval;
+    }
+#endif
+
+    return new dilval;
+}
+
+void dilval::free(dilval *v)
+{
+    if (v == nullptr)
+    {
+        return;
+    }
+
+#ifndef MEMORY_DEBUG
+    v->~dilval();
+
+    if (g_dilval_pool.count == g_dilval_pool.capacity)
+    {
+        g_dilval_pool.capacity += DILVAL_POOL_GROW;
+        RECREATE(g_dilval_pool.blocks, void *, g_dilval_pool.capacity);
+    }
+    g_dilval_pool.blocks[g_dilval_pool.count++] = v;
+#else
+    delete v;
+#endif
+}
+
 DilVarType_e DilVarTypeIntToEnum(int n)
 {
     if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
@@ -240,7 +299,7 @@ dilprg::~dilprg()
     while (this->stack.length() > 0)
     {
         v = this->stack.pop();
-        delete v;
+        dilval::free(v);
     }
 
 #endif

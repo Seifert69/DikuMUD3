@@ -510,11 +510,20 @@ enum class DilValAlloc_e : ubit8
 #define DILA_EXP 2  /* temp. expression malloc */
 
 /* DIL evaluation result. */
-class dilval
+class dilval final
 {
 public:
     dilval();
     ~dilval();
+
+    // Every expression node evaluation allocates one dilval and frees it
+    // when consumed, strictly LIFO and only on the main thread. alloc() and
+    // free() recycle blocks through a small pool (see dilshare.cpp) whose
+    // size caps out at the deepest expression nesting ever seen, removing a
+    // malloc/free pair per evaluated node. All dilvals must be created with
+    // alloc() and released with free() - never plain new/delete.
+    static dilval *alloc();
+    static void free(dilval *v);
 
     DilVarType_e type; /* result type     */
     ubit8 atyp; /* allocation type */
