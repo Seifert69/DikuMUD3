@@ -184,11 +184,21 @@ void Control()
         // Took me forever to find this bug. When run in websockets mode
         // if the MUDHook is closed then only the motherport is open (4242).
         // Since we're on Websockets and no traffic comes in now on 4242,
-        // CaptainHook will be stuck forever in Wait(). In telnet mode that's
-        // not a problem because somebody will either trigger an existing connection
-        // or telnet to get a new connection. Then Wait() will finish and a new
-        // round begins.
-        n = g_CaptainHook.Wait(nullptr);
+        // CaptainHook will be stuck forever in Wait(). In telnet mode we
+        // used to block in Wait() until a client sent input (issue #395:
+        // players saw nothing after a reboot until they pressed enter).
+        // So while the MUD is down, wait with a 1 second timeout so the
+        // loop keeps calling test_mud_up() and reconnects by itself.
+        //
+        if (!g_MudHook.IsHooked())
+        {
+            timeval tv{1, 0}; // select() may modify it; fresh every iteration
+            n = g_CaptainHook.Wait(&tv);
+        }
+        else
+        {
+            n = g_CaptainHook.Wait(nullptr);
+        }
 
         if (n == -1)
         {
