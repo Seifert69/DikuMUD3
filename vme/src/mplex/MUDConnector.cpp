@@ -373,6 +373,20 @@ int cMudHook::read_mud()
                         con->m_sSetup.emulation = TERM_INTERNAL;
                     }
 
+                    // A NAWS-negotiated window size outranks the setup the
+                    // MUD pushes at login / on 'set' commands: the client's
+                    // actual window is authoritative (and NAWS clients like
+                    // Mudlet re-send on every resize). Values pre-clamped
+                    // to the asserted range below.
+                    if (con->m_nNawsWidth)
+                    {
+                        con->m_sSetup.width = con->m_nNawsWidth;
+                    }
+                    if (con->m_nNawsHeight)
+                    {
+                        con->m_sSetup.height = con->m_nNawsHeight;
+                    }
+
                     assert(is_in(con->m_sSetup.emulation, TERM_DUMB, TERM_INTERNAL));
 
                     assert(con->m_sSetup.width >= 40 && con->m_sSetup.width <= 240);

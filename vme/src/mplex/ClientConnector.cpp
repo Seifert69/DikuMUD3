@@ -546,6 +546,21 @@ void cConHook::Input(int nFlags)
             }
         }
 
+        // Runs deliberately AFTER the two one-shot legacy filters above:
+        // the serial-line hack's signature IS telnet bytes (IAC WILL ECHO),
+        // and both filters self-disarm on the first non-matching byte
+        // without consuming anything, so a modern client's buffer reaches
+        // the parser intact. Skipped for TERM_INTERNAL (the W32 client sets
+        // telnet = FALSE) and 'set telnet off' users.
+        if (m_sSetup.telnet && n > 0)
+        {
+            TelnetParse(buf, &n);
+            if (n <= 0)
+            {
+                return;
+            }
+        }
+
         buf[n] = 0;
         AddString((char *)buf);
 
@@ -908,8 +923,10 @@ void cConHook::StripHTML(char *dest, const char *src)
             }
             if (strcmp(aTag, "go-ahead/") == 0)
             {
+                // Clients that negotiated EOR (e.g. Mudlet) get the modern
+                // prompt terminator; everyone else keeps the classic GA
                 *dest++ = IAC;
-                *dest++ = GA;
+                *dest++ = m_bEorOk ? EOR : GA;
                 continue;
             }
             if (strcmp(aTag, "script") == 0)
@@ -1355,6 +1372,317 @@ void cConHook::getLine(ubit8 buf[], int *size)
     *size -= i;
 }
 
+/* ==================== TELNET OPTION NEGOTIATION ==================== */
+/*
+ * A minimal RFC 854 negotiation core for the telnet path. Before this
+ * existed, client negotiation bytes were dropped one at a time by
+ * AddInputChar()'s range filter - and option bytes in the printable range
+ * leaked into the input line (a TTYPE payload could literally end up as
+ * the game command "Mudlet"). mplex also never answered anything, so
+ * clients timed out their probes and fell back to dumb defaults.
+ *
+ * Supported: NAWS (window size -> live wrap/paging), TTYPE incl. the MTTS
+ * walk (client name/capabilities), EOR (preferred prompt terminator for
+ * e.g. Mudlet - see the go-ahead conversion in StripHTML()). Everything
+ * else is politely refused. All negotiation state lives with the TCP
+ * connection and survives a MUD reboot (see ResetSessionState()).
+ */
+
+// Append an IAC <verb> <option> triplet to the response buffer
+static void telnet_reply(ubit8 *pOut, int *pnOutLen, ubit8 verb, ubit8 opt)
+{
+    pOut[(*pnOutLen)++] = IAC;
+    pOut[(*pnOutLen)++] = verb;
+    pOut[(*pnOutLen)++] = opt;
+}
+
+// Append IAC SB TTYPE SEND IAC SE - ask the client for (the next)
+// terminal type
+static void telnet_ttype_send(ubit8 *pOut, int *pnOutLen)
+{
+    pOut[(*pnOutLen)++] = IAC;
+    pOut[(*pnOutLen)++] = SB;
+    pOut[(*pnOutLen)++] = TELOPT_TTYPE;
+    pOut[(*pnOutLen)++] = TELQUAL_SEND;
+    pOut[(*pnOutLen)++] = IAC;
+    pOut[(*pnOutLen)++] = SE;
+}
+
+// React to IAC <cmd> <opt>. Responds only on state change so two
+// well-behaved endpoints can never enter a negotiation loop, and never
+// answers what is merely the ack of our own initial request.
+void cConHook::TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen)
+{
+    switch (cmd)
+    {
+        case WILL:
+            if (opt == TELOPT_NAWS)
+            {
+                m_bNawsOk = true; // Ack of our DO NAWS; SB follows
+            }
+            else if (opt == TELOPT_TTYPE)
+            {
+                if (!m_bTtypeOk)
+                {
+                    m_bTtypeOk = true;
+                    m_nTtypeCount = 0;
+                    telnet_ttype_send(pOut, pnOutLen);
+                }
+            }
+            else if (opt == TELOPT_ECHO)
+            {
+                // Client offering to echo; we always echo server side
+                telnet_reply(pOut, pnOutLen, DONT, opt);
+            }
+            else
+            {
+                telnet_reply(pOut, pnOutLen, DONT, opt);
+            }
+            break;
+
+        case WONT:
+            if (opt == TELOPT_NAWS)
+            {
+                m_bNawsOk = false;
+            }
+            else if (opt == TELOPT_TTYPE)
+            {
+                m_bTtypeOk = false;
+            }
+            // No reply: refusing an already-off option needs no ack
+            break;
+
+        case DO:
+            if (opt == TELOPT_EOR)
+            {
+                m_bEorOk = true; // Ack of our WILL EOR
+            }
+            else if (opt == TELOPT_ECHO)
+            {
+                // Echo mode is driven by the PasswordOn()/PasswordOff()
+                // script tags (Control_Echo_Off/On in translate.cpp) which
+                // embed IAC WILL/WONT ECHO in the output stream. There is no
+                // state here to answer from - swallow, so we neither fight
+                // the password logic nor leak the bytes into the input line.
+            }
+            else
+            {
+                telnet_reply(pOut, pnOutLen, WONT, opt);
+            }
+            break;
+
+        case DONT:
+            if (opt == TELOPT_EOR)
+            {
+                if (m_bEorOk)
+                {
+                    m_bEorOk = false;
+                    telnet_reply(pOut, pnOutLen, WONT, opt);
+                }
+            }
+            // TELOPT_ECHO: swallowed, same reason as DO ECHO above.
+            // Unknown options: already off, no ack needed.
+            break;
+    }
+}
+
+// A complete IAC SB ... IAC SE arrived in m_aSubneg (option in [0])
+void cConHook::TelnetSubneg(ubit8 *pOut, int *pnOutLen)
+{
+    if (m_aSubneg[0] == TELOPT_NAWS && m_nSubnegLen == 5)
+    {
+        int w = (m_aSubneg[1] << 8) | m_aSubneg[2];
+        int h = (m_aSubneg[3] << 8) | m_aSubneg[4];
+
+        // 0 means "unknown" per RFC 1073 - keep the current dimension.
+        // Clamp to the same range the MULTI_SETUP_CHAR handler asserts.
+        if (w > 0)
+        {
+            m_nNawsWidth = MAX(40, MIN(w, 240));
+            m_sSetup.width = m_nNawsWidth;
+        }
+        if (h > 0)
+        {
+            m_nNawsHeight = MAX(15, MIN(h, 60));
+            m_sSetup.height = m_nNawsHeight;
+        }
+    }
+    else if (m_aSubneg[0] == TELOPT_TTYPE && m_nSubnegLen >= 2 && m_aSubneg[1] == TELQUAL_IS)
+    {
+        char name[sizeof(m_aClientName)];
+        int len = MIN(m_nSubnegLen - 2, (int)sizeof(name) - 1);
+        int o = 0;
+
+        for (int i = 0; i < len; i++)
+        {
+            ubit8 c = m_aSubneg[2 + i];
+            if (c >= ' ' && c <= 126)
+            {
+                name[o++] = c;
+            }
+        }
+        name[o] = 0;
+
+        if (m_nTtypeCount == 0)
+        {
+            strncpy(m_aClientName, name, sizeof(m_aClientName) - 1);
+            m_aClientName[sizeof(m_aClientName) - 1] = 0;
+            slog(LOG_ALL, 0, "Client terminal type: %s", m_aClientName);
+        }
+
+        if (strncmp(name, "MTTS ", 5) == 0)
+        {
+            m_nMTTS = atoi(name + 5); // End of the MTTS walk
+        }
+        else if (m_nTtypeCount < 3 && strcmp(name, m_aClientName) != 0)
+        {
+            m_nTtypeCount++;
+            telnet_ttype_send(pOut, pnOutLen);
+        }
+        else if (m_nTtypeCount == 0)
+        {
+            // First response: ask once more to walk toward MTTS. The
+            // repeat-response check above terminates against clients that
+            // answer SEND forever with the same string.
+            m_nTtypeCount++;
+            telnet_ttype_send(pOut, pnOutLen);
+        }
+    }
+    // Other subnegotiations: discard silently
+}
+
+// Parse (and consume) telnet protocol bytes from the read buffer, in
+// place, keeping only regular data. Length based - never relies on NUL
+// termination - and the state survives across read() calls, so sequences
+// split over TCP segments are handled.
+void cConHook::TelnetParse(ubit8 *pBuf, int *pnLen)
+{
+    ubit8 out[128];
+    int outlen = 0;
+    int j = 0;
+
+    for (int i = 0; i < *pnLen; i++)
+    {
+        ubit8 c = pBuf[i];
+
+        switch (m_nTelnetState)
+        {
+            case TS_DATA:
+                if (c == IAC)
+                {
+                    m_nTelnetState = TS_IAC;
+                }
+                else
+                {
+                    pBuf[j++] = c;
+                }
+                break;
+
+            case TS_IAC:
+                if (c == IAC)
+                {
+                    pBuf[j++] = c; // Escaped literal 255
+                    m_nTelnetState = TS_DATA;
+                }
+                else if (c == WILL || c == WONT || c == DO || c == DONT)
+                {
+                    m_nTelnetCmd = c;
+                    m_nTelnetState = TS_CMD;
+                }
+                else if (c == SB)
+                {
+                    m_nSubnegLen = 0;
+                    m_nTelnetState = TS_SB;
+                }
+                else
+                {
+                    // NOP, AYT, GA, EOR, ... - consume silently
+                    m_nTelnetState = TS_DATA;
+                }
+                break;
+
+            case TS_CMD:
+                if (outlen < (int)sizeof(out) - 16)
+                {
+                    TelnetNegotiate(m_nTelnetCmd, c, out, &outlen);
+                }
+                m_nTelnetState = TS_DATA;
+                break;
+
+            case TS_SB:
+                if (c == IAC)
+                {
+                    m_nTelnetState = TS_SB_IAC;
+                }
+                else if (m_nSubnegLen >= 0)
+                {
+                    if (m_nSubnegLen < (int)sizeof(m_aSubneg))
+                    {
+                        m_aSubneg[m_nSubnegLen++] = c;
+                    }
+                    else
+                    {
+                        m_nSubnegLen = -1; // Overlong: eat until SE, discard
+                    }
+                }
+                break;
+
+            case TS_SB_IAC:
+                if (c == IAC)
+                {
+                    if (m_nSubnegLen >= 0 && m_nSubnegLen < (int)sizeof(m_aSubneg))
+                    {
+                        m_aSubneg[m_nSubnegLen++] = c; // Escaped 255 in payload
+                    }
+                    m_nTelnetState = TS_SB;
+                }
+                else if (c == SE)
+                {
+                    if (m_nSubnegLen > 0 && outlen < (int)sizeof(out) - 16)
+                    {
+                        TelnetSubneg(out, &outlen);
+                    }
+                    m_nTelnetState = TS_DATA;
+                }
+                else
+                {
+                    // Malformed subnegotiation - drop it, reprocess the
+                    // byte as if we had just seen a lone IAC
+                    m_nTelnetState = TS_IAC;
+                    i--;
+                }
+                break;
+        }
+    }
+
+    *pnLen = j;
+
+    if (outlen > 0)
+    {
+        // Raw socket path (qTX/PushWrite) - negotiation bytes must never
+        // pass through the HTML/color processing of SendCon()
+        Write(out, outlen);
+    }
+}
+
+// Our opening offer, sent once per TCP connection right after accept():
+// please tell us your window size and terminal type, and we can terminate
+// prompts with EOR. RFC-compliant clients that support none of it simply
+// refuse; clients predating negotiation ignore unknown IAC sequences.
+void cConHook::SendTelnetInitialNegotiation()
+{
+    ubit8 buf[16];
+    int len = 0;
+
+    telnet_reply(buf, &len, DO, TELOPT_NAWS);
+    telnet_reply(buf, &len, DO, TELOPT_TTYPE);
+    telnet_reply(buf, &len, WILL, TELOPT_EOR);
+
+    Write(buf, len);
+}
+
+/* =================== END TELNET OPTION NEGOTIATION ================= */
+
 /* Returns new point (NULL if done) */
 void cConHook::ShowChunk()
 {
@@ -1453,8 +1781,10 @@ void cConHook::SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hd
 // not leak into the new session (issue #395).
 // Deliberately NOT touched here: the one-shot client detection state
 // (m_nSequenceCompare, m_nFirst), the serial line id (m_nLine, re-sent to
-// the MUD on reconnect), m_nId, m_aHost, the websocket fields and the
-// g_connection_list linkage.
+// the MUD on reconnect), m_nId, m_aHost, the websocket fields, the
+// g_connection_list linkage, and the telnet negotiation state (parser
+// state, NAWS/TTYPE/EOR results) - negotiated capabilities belong to the
+// TCP connection, not the MUD session.
 void cConHook::ResetSessionState()
 {
     m_bGobble = false;
@@ -1489,6 +1819,18 @@ void cConHook::ResetSessionState()
     m_sSetup.width = 80;
     m_sSetup.colour_convert = 0;
     m_nBgColor = CONTROL_BG_BLACK_CHAR;
+
+    // A NAWS-negotiated window size is the client's real geometry - it
+    // outranks the 80x15 defaults, across MUD reboots too. Guarded
+    // separately: RFC 1073 allows either dimension to be 0 (unknown).
+    if (m_nNawsWidth)
+    {
+        m_sSetup.width = m_nNawsWidth;
+    }
+    if (m_nNawsHeight)
+    {
+        m_sSetup.height = m_nNawsHeight;
+    }
 }
 
 cConHook::cConHook()
@@ -1603,6 +1945,11 @@ cConHook::cConHook()
     }
 
     g_CaptainHook.Hook(fd, this);
+
+    if (m_sSetup.telnet)
+    {
+        SendTelnetInitialNegotiation();
+    }
 
     g_nConnectionsLeft--;
 }
