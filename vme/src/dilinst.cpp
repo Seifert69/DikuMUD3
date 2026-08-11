@@ -1068,7 +1068,7 @@ void dilfi_rtf(dilprg *p)
                     return;
                 }
 
-                delete(p->stack.pop());
+                dilval::free(p->stack.pop());
             }
         }
     }
