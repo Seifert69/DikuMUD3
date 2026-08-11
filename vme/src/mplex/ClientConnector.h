@@ -60,6 +60,10 @@ public:
     void Input(int nFlags);
     void getLine(ubit8 buf[], int *size);
     void testChar(ubit8 c);
+
+    void TelnetParse(ubit8 *pBuf, int *pnLen);
+    void SendTelnetInitialNegotiation();
+
     color_type color;
 
     bool m_bColorChange;
@@ -95,7 +99,36 @@ public:
 
     cQueue m_qInput; ///< Input from user
     cQueue m_qPaged; ///< Paged text output
+
+    // Telnet negotiation state (see TelnetParse). Lives with the TCP
+    // connection - deliberately NOT reset by ResetSessionState() - and is
+    // initialized here (NSDMI) because the constructor runs
+    // ResetSessionState() before its own body, which reads m_nNawsWidth.
+    enum eTelnetState : ubit8
+    {
+        TS_DATA = 0, // regular data flow
+        TS_IAC,      // seen IAC
+        TS_CMD,      // seen IAC WILL/WONT/DO/DONT, expecting option
+        TS_SB,       // inside subnegotiation
+        TS_SB_IAC    // seen IAC inside subnegotiation
+    };
+    ubit8 m_nTelnetState{TS_DATA};
+    ubit8 m_nTelnetCmd{0};   ///< Pending WILL/WONT/DO/DONT verb
+    ubit8 m_aSubneg[64];     ///< [0] = option, rest = payload
+    int m_nSubnegLen{0};     ///< -1 = overflowed, discard until SE
+    bool m_bNawsOk{false};   ///< Client agreed to NAWS
+    bool m_bTtypeOk{false};  ///< Client agreed to TTYPE
+    bool m_bEorOk{false};    ///< Client wants IAC EOR instead of IAC GA
+    ubit8 m_nTtypeCount{0};  ///< TTYPE SEND rounds issued (MTTS walk, max 3)
+    char m_aClientName[64]{}; ///< First TTYPE IS response, e.g. "Mudlet"
+    int m_nMTTS{-1};         ///< MTTS capability bitfield, -1 = not seen
+    ubit8 m_nNawsWidth{0};   ///< Last clamped NAWS width, 0 = never received
+    ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
+
 private:
+    void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);
+    void TelnetSubneg(ubit8 *pOut, int *pnOutLen);
+
     std::mutex m_mtx; ///< Mutex for websockets threading
 };
 
