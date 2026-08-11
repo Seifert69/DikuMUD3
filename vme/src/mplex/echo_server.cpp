@@ -30,9 +30,14 @@ namespace mplex
 // cConHook::m_mtx (ABBA with cConHook::Close()).
 //
 // The monitor protects map MEMBERSHIP only; the cConHook objects themselves
-// are guarded by their own m_mtx. Handing out raw cConHook pointers is safe
-// because hooks are never deleted - if hook deletion is ever introduced,
-// this design must be revisited.
+// are guarded by their own m_mtx. NOTE on lifetime: hooks ARE deleted - the
+// main thread's ClearUnhooked() sweep frees any hook that is no longer
+// hooked (for websocket hooks: after Close() nulls m_pWebsServer). A raw
+// pointer returned by take()/find_or_insert() therefore has a narrow window
+// where a concurrent main-thread Close() + sweep could free it while the
+// websocket thread is still calling into it. Closing that window for real
+// needs shared ownership (shared_ptr in map + connection list) or handing
+// message processing off to the main thread.
 class cConnectionMap
 {
 public:
