@@ -22,3 +22,5 @@ pp_unit_tests
 vmc_unit_tests
 vme_unit_tests
 *.json
+server.pem
+dh.pem
