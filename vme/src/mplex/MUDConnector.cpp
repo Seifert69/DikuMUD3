@@ -111,9 +111,25 @@ void test_mud_up()
         auto buf = diku::format_to_str("%s has begun rebooting... please wait.<br/>", g_mudname);
         con->SendCon(buf);
 
+        // Give the connection a fresh-session state so the dead session's
+        // terminal setup and prompt bookkeeping don't leak into the new one.
+        // TERM_INTERNAL is set exactly once by the W32 client's magic
+        // sequence and never re-sent, so preserve it - same guard as the
+        // MULTI_SETUP_CHAR handler below.
+        if (con->m_sSetup.emulation != TERM_INTERNAL)
+        {
+            con->ResetSessionState();
+        }
+        else
+        {
+            con->m_nPromptMode = 0;
+            con->m_nPromptLen = 0;
+        }
+
         con->m_pFptr = dumbMenuSelect;
         con->m_nState = 0;
         con->m_qInput.Flush();
+        con->m_qPaged.Flush();
         con->m_pFptr(con, "");
     }
 }
