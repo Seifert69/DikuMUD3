@@ -1446,7 +1446,16 @@ void cConHook::SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hd
 }
 
 // cConHook Constructor
-cConHook::cConHook()
+// Reset the per-session state of a connection to the same defaults a brand
+// new connection gets. Used by the constructor, and by test_mud_up() when
+// the MUD comes back after a reboot: the dead session's terminal setup
+// (pushed via MULTI_SETUP_CHAR), prompt bookkeeping and partial buffers must
+// not leak into the new session (issue #395).
+// Deliberately NOT touched here: the one-shot client detection state
+// (m_nSequenceCompare, m_nFirst), the serial line id (m_nLine, re-sent to
+// the MUD on reconnect), m_nId, m_aHost, the websocket fields and the
+// g_connection_list linkage.
+void cConHook::ResetSessionState()
 {
     m_bGobble = false;
     m_bColorCreate = false;
@@ -1455,22 +1464,12 @@ cConHook::cConHook()
     m_bColorRemove = false;
     m_bColorDelete = false;
     m_bColorInsert = false;
-    m_bGobble = false;
     m_nEscapeCode = 0;
     m_aOutput[0] = 0;
     m_aInputBuf[0] = 0;
-    m_nState = 0;
-
-    m_nSequenceCompare = 0;
-    m_nId = 0;
-    m_nFirst = 0;
-    m_nLine = 255;
 
     m_nPromptMode = 0;
     m_nPromptLen = 0;
-
-    // m_pWebsHdl = 0;
-    m_pWebsServer = nullptr;
 
     m_sSetup.echo = g_mplex_arg.g_bModeEcho;
     m_sSetup.redraw = g_mplex_arg.g_bModeRedraw;
@@ -1490,6 +1489,21 @@ cConHook::cConHook()
     m_sSetup.width = 80;
     m_sSetup.colour_convert = 0;
     m_nBgColor = CONTROL_BG_BLACK_CHAR;
+}
+
+cConHook::cConHook()
+{
+    ResetSessionState();
+
+    m_nState = 0;
+
+    m_nSequenceCompare = 0;
+    m_nId = 0;
+    m_nFirst = 0;
+    m_nLine = 255;
+
+    // m_pWebsHdl = 0;
+    m_pWebsServer = nullptr;
 
     m_pNext = g_connection_list;
     g_connection_list = this;

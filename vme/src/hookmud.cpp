@@ -190,6 +190,11 @@ int cMultiHook::Read()
             send_to_descriptor("<mud-init/>", d);
             send_to_descriptor(g_cServerConfig.getLogo(), d);
             send_to_descriptor("By what name do they call you? ", d);
+            // GA-terminate the prompt: it is a partial line, and clients that
+            // have seen IAC GA before (any reconnect after a reboot) hold
+            // partial lines until a GA arrives - issue #395, missing name
+            // prompt in Mudlet after reboot.
+            send_to_descriptor("<go-ahead/>", d);
             break;
 
         case MULTI_HOST_CHAR:

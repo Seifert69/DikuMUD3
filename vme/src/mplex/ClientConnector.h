@@ -33,6 +33,7 @@ public:
     void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
 
     void Close(int bNotifyMud);
+    void ResetSessionState();
     char AddInputChar(ubit8 c);
     void AddString(char *str);
     void ParseInput();
