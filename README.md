@@ -65,6 +65,13 @@ For a server on the open internet you want `wss` instead: run mplex as
 setup. A page served over https cannot open a plain `ws://` connection, so a
 public deployment has to have it; on localhost it is only a nuisance.
 
+One thing to know before you try `wss` locally with the self-signed certificate
+that ships in the repo: a browser will not prompt you about it on a websocket
+connection the way it does on a page load. It fails silently, with nothing in
+mplex.log to find. Visit `https://localhost:4280/` first and accept the warning,
+then the client will connect. mplex.md has the details -- but for local work,
+plain `ws` is the easier road.
+
 6) Connect with a player named 'Papi' to create your first god character. 
    This value is configurable in vme/etc/server.cfg 
 
