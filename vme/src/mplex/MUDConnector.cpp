@@ -473,7 +473,7 @@ int cMudHook::read_mud()
                     {
                         case MULTI_PAGE_CHAR:
                             // Dont page to the web-client - it pops up an overlay instead.
-                            if (con->m_pWebsServer)
+                            if (con->m_fWebsSend)
                             {
                                 con->Write((ubit8 *)parsed, strlen(parsed));
                             }

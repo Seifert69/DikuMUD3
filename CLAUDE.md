@@ -25,7 +25,8 @@ ctest                                  # 5 Boost.Test suites, must all pass
 cd vme/bin
 ./vme                       # game server; reads ../etc/server.cfg, listens on 4999 for mplexers
 ./mplex -p 4242             # telnet multiplexer -> telnet localhost 4242
-./mplex -w -t -p 4280       # websocket multiplexer for the web client
+./mplex -w -p 4280          # websocket multiplexer, plain ws:// (use this locally)
+./mplex -w -t -p 4280       # same over wss://; needs server.pem and dh.pem in the cwd
 ```
 
 - Web client: open `vme/www/client/index.html` in a browser, set host

@@ -14,13 +14,25 @@
 #include "queue.h"
 
 #include <cstring>
-#include <websocketpp/config/asio.hpp>
-#include <websocketpp/server.hpp>
+#include <functional>
+#include <mutex>
+#include <websocketpp/common/connection_hdl.hpp>
 
 namespace mplex
 {
 
-typedef websocketpp::server<websocketpp::config::asio_tls> wsserver_tls;
+/**
+ * How a hook writes to its websocket, without naming the server type.
+ *
+ * websocketpp fixes the transport in the server's template parameter, so a
+ * plain server and a TLS one are unrelated types and no pointer can hold
+ * either. Only echo_server.cpp knows which is running; a hook only ever needs
+ * to send a string, so that is all it is given. Returns 1 on success and 0 on
+ * failure, as ws_send_message did.
+ *
+ * Empty on a telnet hook, which is also how the code tells the two apart.
+ */
+using WebsocketSender = std::function<int(websocketpp::connection_hdl, const char *)>;
 
 class cConHook : public cHook
 {
@@ -54,7 +66,7 @@ public:
     void MudDown(const char *cmd);
     void MenuSelect(const char *cmd);
     void SequenceCompare(ubit8 *pBuf, int *pnLen);
-    void SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hdl);
+    void SetWebsocket(WebsocketSender sender, websocketpp::connection_hdl hdl);
     void StripHTML(char *dest, const char *src);
 
     void Input(int nFlags);
@@ -88,7 +100,7 @@ public:
     char m_aHost[50];
     void (*m_pFptr)(cConHook *, const char *cmd);
 
-    wsserver_tls *m_pWebsServer;
+    WebsocketSender m_fWebsSend;
     websocketpp::connection_hdl m_pWebsHdl;
 
     cConHook *m_pNext;

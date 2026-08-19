@@ -217,7 +217,7 @@ void ClearUnhooked()
 
 int cConHook::IsHooked()
 {
-    if (this->m_pWebsServer)
+    if (this->m_fWebsSend)
     {
         return TRUE;
     }
@@ -235,7 +235,7 @@ void cConHook::Unhook()
         g_CaptainHook.Unhook(this);
     }
 
-    if (this->m_pWebsServer == nullptr)
+    if (!this->m_fWebsSend)
     {
         cHook::Unhook();
     }
@@ -243,10 +243,10 @@ void cConHook::Unhook()
 
 void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
 {
-    if (this->m_pWebsServer)
+    if (this->m_fWebsSend)
     {
         assert(pData[nLen] == 0);
-        if (!ws_send_message(m_pWebsServer, m_pWebsHdl, (const char *)pData))
+        if (!m_fWebsSend(m_pWebsHdl, (const char *)pData))
         {
             this->Close(TRUE);
         }
@@ -283,7 +283,7 @@ void cConHook::Close(int bNotifyMud)
     m_pFptr = Idle;
     m_nId = 0;
 
-    m_pWebsServer = nullptr;
+    m_fWebsSend = nullptr;
 
     m_mtx.unlock();
 
@@ -1089,7 +1089,7 @@ char *cConHook::ParseOutput(const char *text)
 
     assert(strlen(text) < sizeof(Outbuf));
 
-    if (this->m_pWebsServer && !g_mplex_arg.bForceAscii)
+    if (this->m_fWebsSend && !g_mplex_arg.bForceAscii)
     {
         size_t n = strlen(text);
         if (n < sizeof(Outbuf))
@@ -1962,12 +1962,10 @@ void cConHook::ShowChunk()
     Write((ubit8 *)buffer, strlen(buffer));
 }
 
-typedef websocketpp::server<websocketpp::config::asio> wsserver;
-
 // Nice if it could be in the constructor
-void cConHook::SetWebsocket(wsserver_tls *server, websocketpp::connection_hdl hdl)
+void cConHook::SetWebsocket(WebsocketSender sender, websocketpp::connection_hdl hdl)
 {
-    m_pWebsServer = server;
+    m_fWebsSend = std::move(sender);
     m_pWebsHdl = hdl;
 }
 
@@ -2043,7 +2041,7 @@ cConHook::cConHook()
     m_nLine = 255;
 
     // m_pWebsHdl = 0;
-    m_pWebsServer = nullptr;
+    m_fWebsSend = nullptr;
 
     m_pNext = g_connection_list;
     g_connection_list = this;
