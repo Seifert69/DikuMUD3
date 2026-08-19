@@ -44,7 +44,7 @@ How to build & launch (using the new cmake)
        cd ../bin/
        ./vme # tab1
        tail -f vme.log # tab2
-       ./mplex -w -t -p 4280 # tab3
+       ./mplex -w -p 4280 # tab3
        tail -f mplex.log #tab4
 
 You can also launch a telnet mplex using e.g. `mplex -p 4242`
@@ -56,9 +56,14 @@ to the server, some supporting telnet some support web sockets.
        cd ../www/client/
        firefox index.html
 
-Set the host to your fqdn or localhost and set the port to match mplex (4280 if you used that)
-And you'll see the welcome screen in Firefox. Look in vme/src/mplex/mplex.md for info
-on how to setup SSL certificates for secure websockets.
+Set the host to your fqdn or localhost, leave the protocol on `ws`, and set the
+port to match mplex (4280 if you used that). And you'll see the welcome screen
+in Firefox.
+
+For a server on the open internet you want `wss` instead: run mplex as
+`./mplex -w -t -p 4280` and see vme/src/mplex/mplex.md for the certificate
+setup. A page served over https cannot open a plain `ws://` connection, so a
+public deployment has to have it; on localhost it is only a nuisance.
 
 6) Connect with a player named 'Papi' to create your first god character. 
    This value is configurable in vme/etc/server.cfg 
