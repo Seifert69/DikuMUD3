@@ -3,13 +3,28 @@
 #include "slog.h"
 #include "textutil.h"
 
+#include "mplex.h"
+
 #include <websocketpp/config/asio.hpp>
+#include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
 #include <map>
 #include <mutex>
+#include <type_traits>
 
-typedef websocketpp::server<websocketpp::config::asio_tls> server;
+/*
+ * Two server types, because websocketpp fixes the transport in the template
+ * parameter: a plain server and a TLS one are unrelated types with no common
+ * base. Everything below that touches one is a template over the config, and
+ * runechoserver() picks the instantiation from -t.
+ *
+ * The two were one for a while, hardcoded to TLS, and -t did nothing but
+ * print itself to the log. A browser told to speak ws:// then got a TLS
+ * handshake and no explanation.
+ */
+typedef websocketpp::server<websocketpp::config::asio_tls> wsserver_tls_t;
+typedef websocketpp::server<websocketpp::config::asio> wsserver_plain_t;
 
 using websocketpp::lib::placeholders::_1;
 using websocketpp::lib::placeholders::_2;
@@ -160,7 +175,8 @@ context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
 }
 
 // send message back to websocket client: 1 is message sent, 0 if failure
-int ws_send_message(wsserver_tls *s, websocketpp::connection_hdl hdl, const char *txt)
+template <typename Server>
+static int ws_send_message(Server *s, websocketpp::connection_hdl hdl, const char *txt)
 {
     std::string mystr(txt);
 
@@ -186,7 +202,8 @@ int ws_send_message(wsserver_tls *s, websocketpp::connection_hdl hdl, const char
 }
 
 // Define a callback to handle incoming messages
-void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
+template <typename Server>
+static void on_message(Server *s, websocketpp::connection_hdl hdl, typename Server::message_ptr msg)
 {
     // The monitor holds its lock only for the lookup/insert (plus the
     // factory below for new connections) and releases it before we call
@@ -196,7 +213,12 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
                                                  [s, hdl]()
                                                  {
                                                      cConHook *con = new cConHook();
-                                                     con->SetWebsocket(s, hdl);
+                                                     // The hook cannot name the server type, so it
+                                                     // is handed the one thing it does with it.
+                                                     con->SetWebsocket(
+                                                         [s](websocketpp::connection_hdl h, const char *txt)
+                                                         { return ws_send_message(s, h, txt); },
+                                                         hdl);
 
                                                      // it's a new connection - Get the IP address
                                                      const auto theip = s->get_con_from_hdl(hdl);
@@ -227,10 +249,18 @@ void on_message(server* s, websocketpp::connection_hdl hdl, message_ptr msg)
     con->m_pFptr(con, msg->get_payload().c_str());
 }
 
-void runechoserver()
+/**
+ * The accept loop, for whichever transport was asked for.
+ *
+ * Identical either way but for the TLS init handler, which only exists on the
+ * TLS server type -- so it is registered under `if constexpr` rather than by
+ * duplicating the function.
+ */
+template <typename Server>
+static void run_websocket_server()
 {
     // Create a server endpoint
-    server echo_server;
+    Server echo_server;
 
     try
     {
@@ -243,8 +273,12 @@ void runechoserver()
 
         // Register our message handler
         echo_server.set_close_handler(bind(&on_close, _1));
-        echo_server.set_message_handler(bind(&on_message, &echo_server, _1, _2));
-        echo_server.set_tls_init_handler(bind(&on_tls_init, _1));
+        echo_server.set_message_handler(bind(&on_message<Server>, &echo_server, _1, _2));
+
+        if constexpr (std::is_same_v<Server, wsserver_tls_t>)
+        {
+            echo_server.set_tls_init_handler(bind(&on_tls_init, _1));
+        }
 
         // Listen on port
         echo_server.set_reuse_addr(true);
@@ -258,13 +292,27 @@ void runechoserver()
     }
     catch (websocketpp::exception const &e)
     {
-        slog(LOG_OFF, 0, "TLS Exception: %s.", e.what());
+        slog(LOG_OFF, 0, "Websocket exception: %s.", e.what());
         exit(42);
     }
     catch (...)
     {
-        slog(LOG_OFF, 0, "TLS Exception other");
+        slog(LOG_OFF, 0, "Websocket exception other");
         exit(42);
+    }
+}
+
+void runechoserver()
+{
+    if (g_mplex_arg.g_bUseTLS)
+    {
+        slog(LOG_OFF, 0, "Websocket listening on port %d, wss:// (TLS)", g_mplex_arg.nMotherPort);
+        run_websocket_server<wsserver_tls_t>();
+    }
+    else
+    {
+        slog(LOG_OFF, 0, "Websocket listening on port %d, ws:// (no TLS, -t not given)", g_mplex_arg.nMotherPort);
+        run_websocket_server<wsserver_plain_t>();
     }
 }
 

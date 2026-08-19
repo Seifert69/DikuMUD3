@@ -1,10 +1,25 @@
 # mplex TLS/SSL Setup Guide
 
 ## Overview
-mplex supports secure WebSocket (wss://) connections - browsers are so impossible with unsecure websocket that it's not worth using. Websocket support is enabled with the `-w` flag and TLS support is enabled with the mplex `-t` command line flag.
+Websocket support is enabled with the `-w` flag, and TLS on top of it with `-t`:
+
+- `mplex -w` listens for plain `ws://`. No certificates are read and none are
+  needed. This is the one to use on localhost, where a browser is happy with
+  `ws://` and getting a certificate it will accept is a nuisance.
+- `mplex -w -t` listens for `wss://`, and needs the two certificate files
+  below. This is what a public server should run: a page served over https
+  cannot open a `ws://` connection at all.
+
+The two are separate listeners, so a host that wants both runs two mplexers on
+two ports.
+
+> For a while `-t` set a flag that nothing read, and `-w` alone listened for
+> TLS regardless. A browser pointed at `ws://` got "TLS handshake failed" while
+> the log said `TLS = false` on the line above. Fixed; the log now names the
+> scheme it is actually listening for.
 
 ## Prerequisites
-- OpenSSL development libraries
+- OpenSSL development libraries (only needed for `-t`)
 - Compiled mplex with TLS support (default in current build)
 
 ## TLS Certificate Files
@@ -32,7 +47,15 @@ cp ../src/mplex/server.pem .
 cp ../src/mplex/dh.pem .
 ```
 
-## Running mplex with TLS
+## Running mplex
+
+### Plain websocket, for local development:
+```bash
+cd ~/diku/DikuMUD3/vme/bin
+./mplex -w -p 4280
+```
+Then point the client at it with `protocol=ws`:
+`https://www.valhalla.com/v3/client/client-a.html?protocol=ws&host=localhost&port=4280&endpoint=%2Fecho&reader=false`
 
 ### Start TLS-enabled mplex:
 ```bash
@@ -41,8 +64,8 @@ cd ~/diku/DikuMUD3/vme/bin
 ```
 
 ### Flags:
-- `-w`: WebSocket mode (required for TLS)
-- `-t`: Enable TLS/SSL support
+- `-w`: WebSocket mode. Without `-t` this is plain `ws://`
+- `-t`: Enable TLS/SSL support, making it `wss://`. Requires `-w`
 
 ## Testing TLS Connection
 
