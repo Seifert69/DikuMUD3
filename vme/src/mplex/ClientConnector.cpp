@@ -921,6 +921,13 @@ void cConHook::StripHTML(char *dest, const char *src)
                 *dest++ = '\r';
                 continue;
             }
+            if (strcmp(aTag, "/td") == 0)
+            {
+                // Separate table cells so "*Cypress Forest" and "Mainland" don't run together
+                *dest++ = ' ';
+                *dest++ = ' ';
+                continue;
+            }
             if (strcmp(aTag, "go-ahead/") == 0)
             {
                 // Clients that negotiated EOR (e.g. Mudlet) get the modern
