@@ -1555,6 +1555,169 @@ int my_str_replace_space(char *sbuf)
     return 0;
 }
 
+// Marks a colour change while fix_old_codes_to_html() runs. DEL is not
+// below ' ', so str_rem_codes() keeps it, and no other step touches it.
+#define OLD_CODE_MARK '\x7F'
+
+/*
+ * Units older than v70 store colour as two byte control codes, ESC + letter
+ * (the CONTROL_* chars in mplex/translate.h). Turn them into markers -
+ * DEL <classes> DEL opens a colour, DEL / DEL closes it - which
+ * old_code_markers_to_html() makes into <div> tags once the text has been
+ * escaped. With bColour FALSE the codes are just removed, letter and all.
+ */
+static std::string old_codes_to_markers(const char *c, int bColour)
+{
+    static const char colours[] = "nrgybmcw"; // Order of CONTROL_FG_BLACK_CHAR..WHITE
+    std::string out;
+    std::string fg;
+    std::string bg;
+    std::string open;
+
+    for (const char *s = c; *s; s++)
+    {
+        if (*s != '\x1B')
+        {
+            if (*s == OLD_CODE_MARK)
+            {
+                continue;
+            }
+
+            // Change colour only when there is text to show in it, so
+            // back to back codes don't leave empty <div>s
+            std::string want = fg;
+            if (!fg.empty() && !bg.empty())
+            {
+                want += " ";
+            }
+            want += bg;
+
+            if (bColour && want != open)
+            {
+                if (!open.empty())
+                {
+                    out += std::string(1, OLD_CODE_MARK) + "/" + OLD_CODE_MARK;
+                }
+                if (!want.empty())
+                {
+                    out += OLD_CODE_MARK + want + OLD_CODE_MARK;
+                }
+                open = want;
+            }
+
+            out += *s;
+            continue;
+        }
+
+        char code = *(s + 1);
+
+        if (code == 0)
+        {
+            break;
+        }
+        s++;
+
+        if (code >= 'a' && code <= 'h')
+        {
+            // Plain white is the normal colour, so it ends the colour
+            fg = (code == 'h') ? "" : std::string("c") + colours[code - 'a'];
+        }
+        else if (code >= 'i' && code <= 'p')
+        {
+            fg = std::string("cp") + colours[code - 'i'];
+        }
+        else if (code >= 'q' && code <= 'x')
+        {
+            // Black is the normal background
+            bg = (code == 'q') ? "" : std::string("b") + colours[code - 'q'];
+        }
+        else if (code == 'E')
+        {
+            fg = "";
+            bg = "";
+        }
+        else if (code == 'I' || (code >= 'K' && code <= 'O'))
+        {
+            // ESC I hides text until ESC J. ESC K..O carry a colour name
+            // until ESC P, which was never shown; ESC O default ESC P
+            // switches back to the normal colour.
+            const char end = (code == 'I') ? 'J' : 'P';
+            const char *e = s + 1;
+
+            while (*e && !(*e == '\x1B' && *(e + 1) == end))
+            {
+                e++;
+            }
+
+            if (*e == 0)
+            {
+                continue; // No terminator - only drop the code itself
+            }
+
+            if (code == 'O' && e - (s + 1) == 7 && strncasecmp(s + 1, "default", 7) == 0)
+            {
+                fg = "";
+                bg = "";
+            }
+            s = e + 1;
+        }
+        else if (code == '[')
+        {
+            // A real ANSI sequence: skip to its final byte
+            while (*(s + 1) && !(*(s + 1) >= '@' && *(s + 1) <= '~'))
+            {
+                s++;
+            }
+            if (*(s + 1))
+            {
+                s++;
+            }
+            continue;
+        }
+        // Anything else (echo, bold, reverse, ...) has no HTML version and
+        // is dropped
+    }
+
+    if (!open.empty())
+    {
+        out += std::string(1, OLD_CODE_MARK) + "/" + OLD_CODE_MARK;
+    }
+
+    return out;
+}
+
+// Turn the markers left by old_codes_to_markers() into <div> tags
+static std::string old_code_markers_to_html(const char *s)
+{
+    std::string out;
+
+    for (; *s; s++)
+    {
+        const char *e = nullptr;
+
+        if (*s == OLD_CODE_MARK && (e = strchr(s + 1, OLD_CODE_MARK)))
+        {
+            std::string classes(s + 1, e - (s + 1));
+
+            if (classes == "/")
+            {
+                out += "</div>";
+            }
+            else
+            {
+                out += "<div class='" + classes + "'>";
+            }
+            s = e;
+        }
+        else
+        {
+            out += *s;
+        }
+    }
+
+    return out;
+}
+
 //
 // Changes old codes such as &l &c to HTML
 // Only used in char conversion of units < v70
@@ -1570,7 +1733,15 @@ char *fix_old_codes_to_html(const char *c)
     int bPre = 0;
 
     assert(strlen(c) < sizeof(buf) / 2);
-    strcpy(buf, c);
+
+    // Colour markers are longer than the codes they replace. If they would
+    // not fit, keep the text and lose the colour.
+    std::string marked = old_codes_to_markers(c, TRUE);
+    if (marked.length() >= sizeof(buf) / 2)
+    {
+        marked = old_codes_to_markers(c, FALSE);
+    }
+    strcpy(buf, marked.c_str());
 
     // Remove all codes (anything less than ' ')
     str_rem_codes(buf);
@@ -1642,7 +1813,7 @@ char *fix_old_codes_to_html(const char *c)
     }
 
     str_nr_brnr(buf, buf2);
-    return str_dup(buf2); // Dont worry about memory leaks it's a one time thing
+    return str_dup(old_code_markers_to_html(buf2).c_str()); // Dont worry about memory leaks it's a one time thing
 }
 
 /* Get the contents between <htmltag> and convert it to lowercase
