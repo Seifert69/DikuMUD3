@@ -7,28 +7,15 @@
 #include <boost/test/unit_test.hpp>
 
 /**********************************************************************************
- * Fix_Old_Codes_Suite
- *
- * fix_old_codes_to_html() converts the titles and descriptions of units saved
- * before version 70. They can hold the old two byte codes, ESC + letter (see
- * mplex/translate.h).
+ * Fix_Old_Codes_Suite - fix_old_codes_to_html(), for units saved before v70
  */
 BOOST_AUTO_TEST_SUITE(Fix_Old_Codes_Suite)
 
-// A few names from etc/color.dat
-static const color_type &colours()
-{
-    static color_type c;
-    if (c.get("default").empty())
-    {
-        c.create("default:cw bn:say_self:cw bn:time:cw bn");
-    }
-    return c;
-}
-
 static std::string convert(const char *old)
 {
-    char *html = fix_old_codes_to_html(old, colours());
+    color_type colours; // A few names from etc/color.dat
+    colours.create("default:cw bn:say_self:cw bn:time:cw bn");
+    char *html = fix_old_codes_to_html(old, &colours);
     std::string result(html);
     free(html);
     return result;
@@ -104,14 +91,11 @@ BOOST_AUTO_TEST_CASE(non_ascii_letters_kept)
     BOOST_TEST(convert("\033bCaf\303\251\033h") == "Caf\303\251");
 }
 
-BOOST_AUTO_TEST_CASE(lone_esc_at_end_removed)
-{
-    BOOST_TEST(convert("a black belt\033") == "a black belt");
-}
-
 BOOST_AUTO_TEST_CASE(text_without_codes_unchanged)
 {
     BOOST_TEST(convert("a black belt") == "a black belt");
+    BOOST_TEST(convert("a black belt\033") == "a black belt"); // A lone ESC goes
+    BOOST_TEST(convert("a\001black\tbelt") == "ablackbelt");      // Other control codes go
     BOOST_TEST(convert("") == "");
 }
 
