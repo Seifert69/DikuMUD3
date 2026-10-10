@@ -7,6 +7,7 @@
 
 #include "textutil.h"
 
+#include "color.h"
 #include "common.h"
 #include "db.h"
 #include "formatter.h"
@@ -1560,10 +1561,11 @@ int my_str_replace_space(char *sbuf)
 // so "\x1BpHoly Symbol\x1Bh" became "pHoly Symbolh". Text the old protocol
 // never showed goes too: a gobble region (ESC I .. ESC J) and a colour name
 // (ESC K..O name ESC P). Without a terminator only the code goes, as the
-// converted text is saved for good. Raw ANSI sequences (ESC [ .. m) are
+// converted text is saved for good - except a known colour name right after
+// ESC O, which can only be the name. Raw ANSI sequences (ESC [ .. m) are
 // removed whole. Any other ESC is left for str_rem_codes(), which keeps the
 // character after it. The colours are lost, the text is kept.
-static void str_rem_old_esc_codes(char *s)
+static void str_rem_old_esc_codes(char *s, const color_type &colours)
 {
     char *d = s;
 
@@ -1620,6 +1622,22 @@ static void str_rem_old_esc_codes(char *s)
             {
                 s = e + 2;
             }
+            else if (code == 'O')
+            {
+                // The whole word must be a colour name, so "time" doesn't
+                // match "timeless"
+                e = s;
+                while (isalnum((unsigned char)*e) || *e == '_')
+                {
+                    e++;
+                }
+                std::string name(s, e - s);
+                std::string full_name;
+                if (!colours.get(name, full_name).empty() && full_name == name)
+                {
+                    s = e;
+                }
+            }
         }
     }
 
@@ -1630,12 +1648,12 @@ static void str_rem_old_esc_codes(char *s)
 // Changes old codes such as &l &c to HTML
 // Only used in char conversion of units < v70
 // so no bother with mem leaks of strings
-char *fix_old_codes_to_html(const std::string &c)
+char *fix_old_codes_to_html(const std::string &c, const color_type &colours)
 {
-    return fix_old_codes_to_html(c.c_str());
+    return fix_old_codes_to_html(c.c_str(), colours);
 }
 
-char *fix_old_codes_to_html(const char *c)
+char *fix_old_codes_to_html(const char *c, const color_type &colours)
 {
     char buf[2 * MAX_STRING_LENGTH];
     int bPre = 0;
@@ -1643,7 +1661,7 @@ char *fix_old_codes_to_html(const char *c)
     assert(strlen(c) < sizeof(buf) / 2);
     strcpy(buf, c);
 
-    str_rem_old_esc_codes(buf);
+    str_rem_old_esc_codes(buf, colours);
 
     // Remove all codes (anything less than ' ')
     str_rem_codes(buf);

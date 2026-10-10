@@ -7,6 +7,8 @@
 #include "db_file.h"
 
 #include "bytestring.h"
+#include "color.h"
+#include "config.h"
 #include "db.h"
 #include "dil.h"
 #include "dilrun.h"
@@ -72,7 +74,11 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
 
         if (unit_version < 70)
         {
-            c = fix_old_codes_to_html(c);
+#ifdef DMSERVER
+            c = fix_old_codes_to_html(c, g_cServerConfig.getColorType());
+#else
+            c = fix_old_codes_to_html(c, color_type{}); // vmc doesn't load old units
+#endif
         }
         e = new (extra_descr_data);
         e->descr = c;

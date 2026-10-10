@@ -1,3 +1,4 @@
+#include "color.h"
 #include "textutil.h"
 
 #include <cstdlib>
@@ -14,9 +15,20 @@
  */
 BOOST_AUTO_TEST_SUITE(Fix_Old_Codes_Suite)
 
+// A few names from etc/color.dat
+static const color_type &colours()
+{
+    static color_type c;
+    if (c.get("default").empty())
+    {
+        c.create("default:cw bn:say_self:cw bn:time:cw bn");
+    }
+    return c;
+}
+
 static std::string convert(const char *old)
 {
-    char *html = fix_old_codes_to_html(old);
+    char *html = fix_old_codes_to_html(old, colours());
     std::string result(html);
     free(html);
     return result;
@@ -58,6 +70,17 @@ BOOST_AUTO_TEST_CASE(unterminated_regions_keep_the_text)
 {
     BOOST_TEST(convert("A sword\033I of fire") == "A sword of fire");
     BOOST_TEST(convert("A sword\033O of fire") == "A sword of fire");
+}
+
+// ESC O is always followed by a colour name, so a known name there goes even
+// without its ESC P. It must be the whole word, and unknown names stay.
+BOOST_AUTO_TEST_CASE(known_colour_name_without_terminator_removed)
+{
+    BOOST_TEST(convert("A sword\033Odefault") == "A sword");
+    BOOST_TEST(convert("\033Osay_self said hi") == " said hi");
+    BOOST_TEST(convert("\033Otimeless blade") == "timeless blade");
+    BOOST_TEST(convert("\033Otim blade") == "tim blade");
+    BOOST_TEST(convert("\033Ofoo bar") == "foo bar");
 }
 
 // An ESC before something that isn't a letter isn't a code. Only the ESC

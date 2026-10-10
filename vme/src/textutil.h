@@ -88,7 +88,10 @@ std::string str_json_encode_quote(const char *str);
 
 int pwdcompare(const char *p1, const char *p2, int nMax);
 
-char *fix_old_codes_to_html(const std::string &c);
-char *fix_old_codes_to_html(const char *c);
+class color_type;
+// colours: the known colour names, to remove a name after ESC O that has
+// lost its ESC P
+char *fix_old_codes_to_html(const std::string &c, const color_type &colours);
+char *fix_old_codes_to_html(const char *c, const color_type &colours);
 
 extern const char *g_fillwords[];
