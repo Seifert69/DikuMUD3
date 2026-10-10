@@ -687,7 +687,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setTitle(c);
     if (unit_version < 70)
     {
-        u->setTitle(fix_old_codes_to_html(u->getTitle()));
+        u->setTitle(fix_old_codes_to_html(u->getTitle(), &g_cServerConfig.getColorType()));
     }
 
     if (pBuf->SkipString(&c))
@@ -697,7 +697,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfOutside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfOutside(fix_old_codes_to_html(u->getDescriptionOfOutside()));
+        u->setDescriptionOfOutside(fix_old_codes_to_html(u->getDescriptionOfOutside(), &g_cServerConfig.getColorType()));
     }
 
     if (pBuf->SkipString(&c))
@@ -707,7 +707,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfInside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfInside(fix_old_codes_to_html(u->getDescriptionOfInside()));
+        u->setDescriptionOfInside(fix_old_codes_to_html(u->getDescriptionOfInside(), &g_cServerConfig.getColorType()));
     }
 
     g_nCorrupt += bread_extra(pBuf, u->getExtraList(), unit_version);
