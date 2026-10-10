@@ -1555,6 +1555,57 @@ int my_str_replace_space(char *sbuf)
     return 0;
 }
 
+// Removes the old two byte codes, ESC + letter (see mplex/translate.h), as
+// whole codes. str_rem_codes() alone removes the ESC but keeps the letter,
+// so "\x1BpHoly Symbol\x1Bh" became "pHoly Symbolh". Text the old protocol
+// never showed goes too: a gobble region (ESC I .. ESC J) and a colour name
+// (ESC K..O name ESC P), up to the end of the text if unterminated.
+// The colours are lost, the text is kept.
+static void str_rem_old_esc_codes(char *s)
+{
+    char *d = s;
+
+    while (*s)
+    {
+        if (*s != '\x1B')
+        {
+            *d++ = *s++;
+            continue;
+        }
+
+        char code = *(s + 1);
+        if (code == 0)
+        {
+            break; // Lone ESC at the end
+        }
+        s += 2;
+
+        char end = 0;
+        if (code == 'I')
+        {
+            end = 'J';
+        }
+        else if (code >= 'K' && code <= 'O')
+        {
+            end = 'P';
+        }
+
+        if (end)
+        {
+            while (*s && !(*s == '\x1B' && *(s + 1) == end))
+            {
+                s++;
+            }
+            if (*s)
+            {
+                s += 2;
+            }
+        }
+    }
+
+    *d = 0;
+}
+
 //
 // Changes old codes such as &l &c to HTML
 // Only used in char conversion of units < v70
@@ -1571,6 +1622,8 @@ char *fix_old_codes_to_html(const char *c)
 
     assert(strlen(c) < sizeof(buf) / 2);
     strcpy(buf, c);
+
+    str_rem_old_esc_codes(buf);
 
     // Remove all codes (anything less than ' ')
     str_rem_codes(buf);
