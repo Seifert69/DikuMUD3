@@ -918,7 +918,7 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             // We got a HTML tag
             if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
             {
-                if (*p == '\n' || *(p + 1) == '\n')
+                if (*p == '\n' || (*p == '\r' && *(p + 1) == '\n'))
                 { // If the next is \n then dont add <br>
                     continue;
                 }
@@ -972,8 +972,10 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             {
                 // Hm, this'll send a lot of code... but telnet's a hack now :)
                 // How on earth will I get the "default color" if someone prefers e.g. yellow... ?
+                // White on black. Setting the background first lets the
+                // white foreground send it, so it is only sent once.
+                m_nBgColor = CONTROL_BG_BLACK_CHAR;
                 Control_ANSI_Fg(this, &dest, 'w', FALSE);
-                Control_ANSI_Bg(this, &dest, 'n');
             }
             else if ((strncmp(aTag, "div ", 4) == 0) || (strncmp(aTag, "h1 ", 3) == 0))
             {
@@ -1061,10 +1063,10 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
                 *dest++ = '&';
                 p += 5;
             }
-            else if (strncasecmp(p, "&apos;", 5) == 0)
+            else if (strncasecmp(p, "&apos;", 6) == 0)
             {
                 *dest++ = '\'';
-                p += 5;
+                p += 6;
             }
             else if (strncasecmp(p, "&nbsp;", 6) == 0)
             {

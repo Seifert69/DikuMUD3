@@ -214,9 +214,8 @@ void Control_ANSI_Fg(cConHook *con, char **dest, ubit8 code, int bBold)
             slog(LOG_ALL, 0, "Illegal fg color code %c", code);
             break;
     }
-
-    if ((con->m_nBgColor >= (ubit8)CONTROL_FG_BLACK_CHAR) && (con->m_nBgColor <= (ubit8)CONTROL_BG_WHITE_CHAR))
-        PROTOCOL_TRANSLATE(con, con->m_nBgColor, dest);
+    // The normal Control_ANSI_Fg_*() functions send the background again
+    // themselves. The bold ones don't need to, they keep it.
 }
 
 void Control_ANSI_Bg(cConHook *con, char **dest, ubit8 code)
