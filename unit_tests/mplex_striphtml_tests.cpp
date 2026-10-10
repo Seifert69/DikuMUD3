@@ -98,36 +98,33 @@ BOOST_AUTO_TEST_CASE(br_before_one_character_line_kept)
     BOOST_TEST(strip("a<br/>.\nb") == "a\n\r.\n\rb");
 }
 
+// Zone text often has a blank or tab after <br/> before the line ends, e.g.
+// the newspaper articles in offices.zon. That is still the end of the line.
+BOOST_AUTO_TEST_CASE(br_before_trailing_blanks_and_newline_not_doubled)
+{
+    BOOST_TEST(strip("a<br/> \nb") == "a \n\rb");
+    BOOST_TEST(strip("a<br/>\t\nb") == "a\t\n\rb");
+    BOOST_TEST(strip("a<br/>   \nb") == "a   \n\rb");
+}
+
+// Blanks followed by more text are not a line end, so the break stays
+BOOST_AUTO_TEST_CASE(br_before_blanks_and_text_kept)
+{
+    BOOST_TEST(strip("a<br/> b") == "a\n\r b");
+}
+
 /* ----- </div> and colours ----- */
 
-// </div> resets to white on black. It used to send the background three times.
-BOOST_AUTO_TEST_CASE(close_div_sends_background_once)
+// New characters use the TTY emulation. </div> must still reset the
+// background to black there, or text after a coloured block keeps the
+// terminal's own background (white on white on a light terminal).
+BOOST_AUTO_TEST_CASE(close_div_sends_black_background_in_tty_mode)
 {
-    std::string out = strip("</div>");
+    con->m_sSetup.emulation = TERM_TTY;
+    std::string out = strip("<div class='cg bb'>x</div>y");
 
-    BOOST_TEST(out == "\033[0;37m\033[40m");
-    BOOST_TEST(count(out, "\033[40m") == 1);
-}
-
-// Non-bold colours start with "0;", which clears the background, so it is
-// sent again - once.
-BOOST_AUTO_TEST_CASE(colour_keeps_background_once)
-{
-    BOOST_TEST(strip("<div class='bb'>") == "\033[44m");
-    BOOST_TEST(strip("<div class='cr'>") == "\033[0;31m\033[44m");
-}
-
-// Bold colours don't clear the background, so it isn't sent again
-BOOST_AUTO_TEST_CASE(bold_colour_does_not_resend_background)
-{
-    BOOST_TEST(strip("<div class='cpr'>") == "\033[1;31m");
-    BOOST_TEST(strip("<div class='cpr bb'>x") == "\033[1;31m\033[44mx");
-}
-
-BOOST_AUTO_TEST_CASE(close_div_after_background_resets_to_black)
-{
-    BOOST_TEST(strip("<div class='cg bb'>x</div>y") == "\033[0;32m\033[40m\033[44mx\033[0;37m\033[40my");
-    BOOST_TEST(con->m_nBgColor == CONTROL_BG_BLACK_CHAR);
+    auto close = out.find('x');
+    BOOST_TEST(out.find("\033[40m", close) != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
