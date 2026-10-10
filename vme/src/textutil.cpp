@@ -822,7 +822,7 @@ void str_rem_codes(char *s)
 
     for (diff = 0; *(s + diff);)
     {
-        if ((*s < ' ') && (*s != '\n') && (*s != '\r'))
+        if (((unsigned char)*s < ' ') && (*s != '\n') && (*s != '\r'))
         {
             diff++;
         }
@@ -1559,8 +1559,10 @@ int my_str_replace_space(char *sbuf)
 // whole codes. str_rem_codes() alone removes the ESC but keeps the letter,
 // so "\x1BpHoly Symbol\x1Bh" became "pHoly Symbolh". Text the old protocol
 // never showed goes too: a gobble region (ESC I .. ESC J) and a colour name
-// (ESC K..O name ESC P), up to the end of the text if unterminated.
-// The colours are lost, the text is kept.
+// (ESC K..O name ESC P). Without a terminator only the code goes, as the
+// converted text is saved for good. Raw ANSI sequences (ESC [ .. m) are
+// removed whole. Any other ESC is left for str_rem_codes(), which keeps the
+// character after it. The colours are lost, the text is kept.
 static void str_rem_old_esc_codes(char *s)
 {
     char *d = s;
@@ -1574,9 +1576,26 @@ static void str_rem_old_esc_codes(char *s)
         }
 
         char code = *(s + 1);
-        if (code == 0)
+
+        if (code == '[')
         {
-            break; // Lone ESC at the end
+            // ANSI: parameters up to and including the final letter
+            s += 2;
+            while (*s && !isalpha((unsigned char)*s))
+            {
+                s++;
+            }
+            if (*s)
+            {
+                s++;
+            }
+            continue;
+        }
+
+        if (!isalpha((unsigned char)code))
+        {
+            *d++ = *s++; // Not a code, str_rem_codes() drops the ESC
+            continue;
         }
         s += 2;
 
@@ -1592,13 +1611,14 @@ static void str_rem_old_esc_codes(char *s)
 
         if (end)
         {
-            while (*s && !(*s == '\x1B' && *(s + 1) == end))
+            char *e = s;
+            while (*e && !(*e == '\x1B' && *(e + 1) == end))
             {
-                s++;
+                e++;
             }
-            if (*s)
+            if (*e)
             {
-                s += 2;
+                s = e + 2;
             }
         }
     }

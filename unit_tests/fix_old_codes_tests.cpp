@@ -52,11 +52,33 @@ BOOST_AUTO_TEST_CASE(gobbled_text_removed)
     BOOST_TEST(convert("x\033Ihidden \033bred\033Jy") == "xy");
 }
 
-// Without a terminator the old protocol hid everything after the code
-BOOST_AUTO_TEST_CASE(unterminated_regions_removed_to_the_end)
+// Without a terminator only the code goes. The old protocol hid the rest
+// when showing it, but never deleted it, and the converted text is saved.
+BOOST_AUTO_TEST_CASE(unterminated_regions_keep_the_text)
 {
-    BOOST_TEST(convert("A sword\033Ihidden") == "A sword");
-    BOOST_TEST(convert("A sword\033Odefault") == "A sword");
+    BOOST_TEST(convert("A sword\033I of fire") == "A sword of fire");
+    BOOST_TEST(convert("A sword\033O of fire") == "A sword of fire");
+}
+
+// An ESC before something that isn't a letter isn't a code. Only the ESC
+// goes, so line breaks and spaces survive.
+BOOST_AUTO_TEST_CASE(esc_before_non_letter_keeps_the_character)
+{
+    BOOST_TEST(convert("line\033\n\rnext") == "line<br/>\n\rnext");
+    BOOST_TEST(convert("a\033 b") == "a b");
+}
+
+BOOST_AUTO_TEST_CASE(raw_ansi_sequences_removed)
+{
+    BOOST_TEST(convert("\033[1;31mRed\033[0m") == "Red");
+    BOOST_TEST(convert("\033[mplain") == "plain");
+}
+
+// Bytes from 0x80 up were taken for control codes and deleted
+BOOST_AUTO_TEST_CASE(non_ascii_letters_kept)
+{
+    BOOST_TEST(convert("Bl\345 kappe") == "Bl\345 kappe");
+    BOOST_TEST(convert("\033bCaf\303\251\033h") == "Caf\303\251");
 }
 
 BOOST_AUTO_TEST_CASE(lone_esc_at_end_removed)
