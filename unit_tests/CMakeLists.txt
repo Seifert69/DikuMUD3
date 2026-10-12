@@ -11,6 +11,7 @@ add_executable(vme_unit_tests
         cNamelist_tests.cpp
         color_type_tests.cpp
         fix_old_codes_tests.cpp
+        textutil_cpp_tests.cpp
         weather_cpp_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)

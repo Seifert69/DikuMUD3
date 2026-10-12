@@ -1985,3 +1985,52 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
 
     return 0;
 }
+
+// How long ago "then" was, in its two largest units, e.g. "3 days, 4 hours ago".
+// The second unit is only shown when it is the next unit down and isn't zero.
+std::string time_ago_string(time_t then, time_t now)
+{
+    static const struct
+    {
+        long long seconds;
+        const char *name;
+    } units[] = {{365LL * 24 * 60 * 60, "year"}, {24 * 60 * 60, "day"}, {60 * 60, "hour"}, {60, "minute"}};
+
+    long long left = (long long)now - (long long)then;
+
+    if (left < 60)
+    {
+        return "less than a minute ago";
+    }
+
+    std::string result;
+    int parts = 0;
+
+    for (const auto &unit : units)
+    {
+        long long n = left / unit.seconds;
+
+        if (n == 0)
+        {
+            if (parts > 0)
+            {
+                break;
+            }
+            continue;
+        }
+
+        if (parts > 0)
+        {
+            result += ", ";
+        }
+        result += std::to_string(n) + " " + unit.name + (n == 1 ? "" : "s");
+        left -= n * unit.seconds;
+
+        if (++parts == 2)
+        {
+            break;
+        }
+    }
+
+    return result + " ago";
+}

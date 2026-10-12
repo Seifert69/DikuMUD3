@@ -12,9 +12,13 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "pcsave.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
+
+#include <cctype>
+#include <ctime>
 
 /**
  * @note also used in "corpses" wizard-command
@@ -149,4 +153,85 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
         mystr += " matches<br/>";
         page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
     }
+}
+
+/**
+ * when <player>: when a player last logged on. Players in the game, link dead
+ * included, are "playing right now". Players that "who" would hide from the
+ * asker, and wizards invisible to them, are treated as unknown.
+ */
+void do_when(unit_data *ch, char *arg, const command_info *cmd)
+{
+    static const char *no_one = "No one by that name here.<br/>";
+    char name[MAX_INPUT_LENGTH];
+
+    if (str_is_empty(arg))
+    {
+        send_to_char("Usage: when &lt;player name&gt;<br/>", ch);
+        return;
+    }
+
+    one_argument(arg, name);
+
+    // The name becomes part of the player file path, so only letters, as in player names
+    size_t len = strlen(name);
+    if (len == 0 || len >= pc_data::PC_MAX_NAME)
+    {
+        send_to_char(no_one, ch);
+        return;
+    }
+    for (size_t i = 0; i < len; i++)
+    {
+        if (!isalpha((unsigned char)name[i]))
+        {
+            send_to_char(no_one, ch);
+            return;
+        }
+    }
+
+    // Players are at the head of the unit list, as in "who"
+    for (unit_data *u = g_unit_list; u && u->isPC(); u = u->getGlobalNext())
+    {
+        if (!str_ccmp(PC_FILENAME(u), name))
+        {
+            // Not the file: it may still hold the visibility from before they went invisible
+            if (!CHAR_CAN_SEE(ch, u))
+            {
+                send_to_char(no_one, ch);
+                return;
+            }
+            send_to_char(diku::format_to_str("%s is playing right now.<br/>", u->getNames().Name()), ch);
+            return;
+        }
+    }
+
+    // Only the player file is read (not the inventory), and it is never saved
+    unit_data *pc = load_player(name);
+    if (pc == nullptr)
+    {
+        send_to_char(no_one, ch);
+        return;
+    }
+
+    const time_t last = PC_TIME(pc).getPlayerLastConnectTime();
+    const bool hidden = CHAR_LEVEL(ch) < pc->getLevelOfWizardInvisibility();
+    const std::string pc_name = pc->getNames().Name();
+    extract_unit(pc);
+
+    if (hidden || last == 0)
+    {
+        send_to_char(no_one, ch);
+        return;
+    }
+
+    std::string msg = diku::format_to_str("%s last logged on %s", pc_name, time_ago_string(last, time(nullptr)));
+
+    char date[64];
+    const tm *local = localtime(&last);
+    if (local && strftime(date, sizeof(date), "%a %d %b %Y %H:%M", local))
+    {
+        msg += diku::format_to_str(" (%s)", date);
+    }
+
+    send_to_char(msg + ".<br/>", ch);
 }
