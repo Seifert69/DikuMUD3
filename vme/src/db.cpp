@@ -1002,17 +1002,17 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     j = pBuf->ReadU16(&g_nCorrupt);
                 }
 
+                // The count comes from the file: read every entry, but only keep
+                // those that fit (a corrupt count would write past the arrays)
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SPL_TREE_MAX)
                     {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSpellSKillAtIndexTo(i, skill);
+                        UPC(u)->setSpellLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-                    UPC(u)->setSpellLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
 
                     if (unit_version < 72)
                     {
@@ -1039,16 +1039,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SKI_TREE_MAX)
                     {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSkillAtIndexTo(i, skill);
+                        UPC(u)->setSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1059,16 +1056,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < WPN_TREE_MAX)
                     {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setWeaponSkillAtIndexTo(i, skill);
+                        UPC(u)->setWeaponSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setWeaponSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1094,7 +1088,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    UPC(u)->setConditionAtIndexTo(i, pBuf->ReadS8(&g_nCorrupt));
+                    sbit8 condition = pBuf->ReadS8(&g_nCorrupt);
+                    if (i < 3) // DRUNK, FULL, THIRST: m_conditions[3]
+                    {
+                        UPC(u)->setConditionAtIndexTo(i, condition);
+                    }
                 }
 
                 if (unit_version >= 56)
