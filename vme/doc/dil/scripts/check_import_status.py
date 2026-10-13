@@ -8,7 +8,7 @@ import time
 from pathlib import Path
 import urllib.parse
 
-def check_existing_pages(base_url: str = "https://wiki.dikumud.net") -> set:
+def check_existing_pages(base_url: str = "https://wiki.dikumud.com") -> set:
     """Check which pages already exist on the wiki."""
     existing_pages = set()
     
@@ -108,7 +108,7 @@ echo "==============================================="
     for title in sorted(existing_pages):
         # Convert title to URL
         url_title = title.replace(' ', '_')
-        edit_url = f"https://wiki.dikumud.net/wiki/{urllib.parse.quote(url_title)}?action=edit"
+        edit_url = f"https://wiki.dikumud.com/wiki/{urllib.parse.quote(url_title)}?action=edit"
         script_content += f'echo "{title}"\necho "  Edit: {edit_url}"\necho ""\n'
     
     script_content += '''
