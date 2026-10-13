@@ -888,6 +888,8 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
 
     const char *p = nullptr;
     const char *t = nullptr;
+    char aHref[256] = "";      // Web address of the <a> being copied, printed at its </a>
+    char *pLinkText = nullptr; // Where that link's text starts in dest
 
     p = src;
 
@@ -907,6 +909,7 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
         if (*p == '<')
         {
             char aTag[256];
+            const char *pTagStart = p;
 
             p = getHTMLTag(p, aTag, sizeof(aTag));
 
@@ -942,6 +945,33 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
                 // Separate table cells so "*Cypress Forest" and "Mainland" don't run together
                 *dest++ = ' ';
                 *dest++ = ' ';
+                continue;
+            }
+            if (strncmp(aTag, "a ", 2) == 0)
+            {
+                // Telnet can't follow links, so a web address is printed after the
+                // link text. aTag is lowercased; take the address from the original.
+                char aOrig[sizeof(aTag)];
+                size_t n = std::min(static_cast<size_t>(p - pTagStart - 2), sizeof(aOrig) - 1);
+                memcpy(aOrig, pTagStart + 1, n);
+                aOrig[n] = 0;
+                getHTMLLinkTarget(aOrig, aHref, sizeof(aHref));
+                pLinkText = dest;
+                continue;
+            }
+            if (strcmp(aTag, "/a") == 0)
+            {
+                size_t l = strlen(aHref);
+                // Nothing to add if the link text already is the address
+                if (l && !(pLinkText && static_cast<size_t>(dest - pLinkText) == l && strncmp(pLinkText, aHref, l) == 0))
+                {
+                    *dest++ = ':';
+                    *dest++ = ' ';
+                    memcpy(dest, aHref, l);
+                    dest += l;
+                }
+                aHref[0] = 0;
+                pLinkText = nullptr;
                 continue;
             }
             if (strcmp(aTag, "go-ahead/") == 0)

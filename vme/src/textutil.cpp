@@ -1838,6 +1838,27 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce - c;
 }
 
+// The web address of an <a ...> tag, for clients that can't follow links.
+// tagText is the text between < and > with its case kept (getHTMLTag()
+// lowercases, which would break case-sensitive addresses such as wiki
+// pages). Only http:// and https:// addresses count, so command links
+// (<a cmd='...'>) give nothing. Returns the length copied to pHref, or 0.
+int getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax)
+{
+    if (getHTMLValue("href", tagText, pHref, nHrefMax) == 0)
+    {
+        return 0;
+    }
+
+    if (strncasecmp(pHref, "http://", 7) != 0 && strncasecmp(pHref, "https://", 8) != 0)
+    {
+        *pHref = 0;
+        return 0;
+    }
+
+    return strlen(pHref);
+}
+
 /*
  * Given an HTML tag pOldTag without <>, change the value of the attribute pAttr to pNewVal
  * and put the result in pNewTag
