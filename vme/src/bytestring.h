@@ -94,6 +94,7 @@ public:
 protected:
     void SetSize(ubit32 nSize);
     void IncreaseSize(ubit32 nSize);
+    int StringLengthAtReadPos(ubit32 *pnLen);
 
 private:
     ubit32 m_nReadPos;

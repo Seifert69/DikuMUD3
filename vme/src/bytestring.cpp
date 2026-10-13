@@ -279,11 +279,33 @@ int CByteBuffer::ReadFloat(float *pFloat)
     return Read((ubit8 *)pFloat, sizeof(float));
 }
 
+// Length of the string at the read position, including its NUL. Returns 1
+// (corrupt) when the data ends before a NUL, where strlen() would read on
+// past the end of the data.
+int CByteBuffer::StringLengthAtReadPos(ubit32 *pnLen)
+{
+    if (m_nReadPos >= m_nLength)
+    {
+        return 1;
+    }
+
+    const ubit8 *pStart = m_pData + m_nReadPos;
+    const ubit8 *pNul = static_cast<const ubit8 *>(memchr(pStart, 0, m_nLength - m_nReadPos));
+
+    if (pNul == nullptr)
+    {
+        return 1;
+    }
+
+    *pnLen = pNul - pStart + 1;
+    return 0;
+}
+
 int CByteBuffer::ReadStringCopy(char *pStr, ubit32 nMaxSize)
 {
-    ubit32 nLen = 1 + strlen((char *)m_pData + m_nReadPos);
+    ubit32 nLen = 0;
 
-    if (nLen > nMaxSize)
+    if (StringLengthAtReadPos(&nLen) || nLen > nMaxSize)
     {
         pStr[0] = 0;
         return 1;
@@ -294,7 +316,13 @@ int CByteBuffer::ReadStringCopy(char *pStr, ubit32 nMaxSize)
 
 int CByteBuffer::ReadStringAlloc(char **ppStr)
 {
-    int nLen = 1 + strlen((char *)m_pData + m_nReadPos);
+    ubit32 nLen = 0;
+
+    if (StringLengthAtReadPos(&nLen))
+    {
+        *ppStr = nullptr; // as for an empty string below
+        return 1;
+    }
 
     if (nLen == 1)
     {
@@ -393,15 +421,20 @@ int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
     *ppData = nullptr;
 
     *pnLen = ReadS32(&corrupt);
-    if (corrupt)
+
+    // The length comes from the data: it must fit in what is left, or it is
+    // corrupt (and could ask for gigabytes before the read fails)
+    if (corrupt || *pnLen > m_nLength - m_nReadPos)
     {
+        *pnLen = 0;
         return 1;
     }
 
     *ppData = (ubit8 *)malloc(*pnLen);
 
-    if (ppData == nullptr)
+    if (*ppData == nullptr)
     {
+        *pnLen = 0;
         return 1;
     }
 
@@ -442,12 +475,23 @@ int CByteBuffer::SkipFloat()
 
 int CByteBuffer::SkipString(char **ppStr)
 {
+    ubit32 nLen = 0;
+
+    if (StringLengthAtReadPos(&nLen))
+    {
+        if (ppStr)
+        {
+            *ppStr = const_cast<char *>(""); // callers that ignore the error get an empty name
+        }
+        return 1;
+    }
+
     if (ppStr)
     {
         *ppStr = (char *)m_pData + m_nReadPos;
     }
 
-    return Skip(1 + strlen((char *)m_pData + m_nReadPos));
+    return Skip(nLen);
 }
 
 int CByteBuffer::SkipNames()
