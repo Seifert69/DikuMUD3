@@ -655,7 +655,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
-    assert(unit_version >= 37);
+    // No file is older than version 37: anything below is corrupt data, which
+    // must be rejected rather than abort the whole server
+    if (g_nCorrupt || unit_version < 37)
+    {
+        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
+        g_nCorrupt = TRUE;
+        delete u; // nothing read into it yet, and in no list
+        return nullptr;
+    }
 
     if (unit_version > UNIT_VERSION)
     {
