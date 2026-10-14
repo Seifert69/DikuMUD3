@@ -68,6 +68,7 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     {
         if (pBuf->SkipString(&c))
         {
+            cExtra.m_pList = first; // what was read is freed with the unit
             return 1;
         }
 
@@ -727,6 +728,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int stspec)
 {
     unit_fptr *fptr = nullptr;
+    unit_fptr *prev = nullptr;
     unit_fptr *head = nullptr;
     int i = 0;
 
@@ -741,6 +743,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
     for (; i > 0; i--)
     {
+        prev = fptr;
         if (fptr)
         {
             fptr->setNext(new EMPLACE(unit_fptr) unit_fptr);
@@ -758,7 +761,18 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
-            return nullptr;
+            // Drop only this entry. Those before it may hold DIL programs already
+            // linked to their templates: they go back with the unit to be freed.
+            if (prev)
+            {
+                prev->setNext(nullptr);
+            }
+            else
+            {
+                head = nullptr;
+            }
+            DELETE(unit_fptr, fptr);
+            return head;
         }
 
         if (version >= 70)

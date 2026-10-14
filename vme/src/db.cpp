@@ -622,6 +622,65 @@ void post_read_unit(unit_data *u)
     }
 }
 
+#ifdef DMSERVER
+/**
+ * Frees function pointers read by bread_func() for a unit that turned out to
+ * be corrupt, before they were ever started. No special routine is called: a
+ * corrupt index can name one that would free its data as some other type, and
+ * the data is always what bread_func() made it - a DIL program, a DIL copy's
+ * arguments, or the string read for any other routine. Deleting a DIL program
+ * also unlinks it from its template's program list.
+ *
+ * Kept here, not in db_file.cpp: vmc links the server objects with -zmuldefs,
+ * and a server-only symbol in db_file.cpp would pull the server's db_file.o
+ * into vmc next to its own (two g_FileBuffer constructors: double free).
+ */
+static void bread_func_free(unit_fptr *head)
+{
+    while (head)
+    {
+        unit_fptr *next = head->getNext();
+
+        if (head->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
+        {
+            dilprg *prg = (dilprg *)head->getData();
+            if (prg)
+            {
+                // A template that no longer exists got a placeholder from bread_dil()
+                // with its own copy of the name, which dil_free_template() leaves
+                // behind. Freed after the program: its destructor still logs the name.
+                char *placeholder_name = nullptr;
+                if (prg->frame[0].tmpl && prg->frame[0].tmpl->flags == DILFL_FREEME)
+                {
+                    placeholder_name = prg->frame[0].tmpl->prgname;
+                }
+                DELETE(dilprg, prg);
+                if (placeholder_name)
+                {
+                    FREE(placeholder_name);
+                }
+            }
+        }
+        else if (head->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
+        {
+            if (head->getData())
+            {
+                dil_free_dilargs((dilargstype *)head->getData());
+            }
+        }
+        else if (head->getData())
+        {
+            void *data = head->getData();
+            FREE(data);
+        }
+
+        head->setData(nullptr);
+        DELETE(unit_fptr, head);
+        head = next;
+    }
+}
+#endif
+
 /**
  * Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
@@ -1316,6 +1375,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     else
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->getNames().Name());
+
+        // The unit isn't in any unit list yet, so free it here, or it leaks. Its DIL
+        // programs are already linked into their templates' program lists and its
+        // affects into the global affect list, so neither can just be dropped:
+        // bread_func_free() frees the function pointers (unlinking the programs)
+        // without calling any special routine, and the destructor unlinks the affects
+        // (unlink_affect() runs no affect code).
+#ifdef DMSERVER
+        bread_func_free(u->getFunctionPointer());
+        u->setFunctionPointer(nullptr);
+#endif
+        delete u;
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {

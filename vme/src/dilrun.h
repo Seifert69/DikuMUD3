@@ -87,5 +87,6 @@ void dil_intr_remove(dilprg *p, int idx);
 int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags);
 int run_dil(spec_arg *sarg);
 void dil_free_template(diltemplate *tmpl, int copy);
+void dil_free_dilargs(dilargstype *dilargs);
 void dil_function_table_setup();
 void boot_global_dil(void);
