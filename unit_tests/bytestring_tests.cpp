@@ -1,4 +1,5 @@
 #include "bytestring.h"
+#include "textutil.h"
 
 #include <cstdlib>
 #include <cstring>
@@ -137,6 +138,74 @@ BOOST_AUTO_TEST_CASE(ReadBlock_missing_length_is_corrupt)
     BOOST_TEST(buf.ReadBlock(&data, &len) == 1);
     BOOST_TEST(data == nullptr);
     BOOST_TEST(len == 0u);
+}
+
+// ReadNames() and ReadIntList() read a count and then that many entries (DIL copy
+// arguments in unit files). A corrupt count looped, or allocated, up to 2^31 times
+// after the data had ended; ReadIntList() then hit assert(FALSE).
+BOOST_AUTO_TEST_CASE(ReadNames_reads_a_valid_list)
+{
+    CByteBuffer buf;
+    const char *names[] = {"one", "two", nullptr};
+    buf.AppendNames(names, 0);
+
+    char **list = nullptr;
+    BOOST_TEST(buf.ReadNames(&list, 0) == 0);
+    BOOST_TEST(std::string(list[0]) == "one");
+    BOOST_TEST(std::string(list[1]) == "two");
+    BOOST_TEST(list[2] == nullptr);
+    BOOST_TEST(buf.GetReadPosition() == buf.GetLength());
+    free_namelist(list);
+}
+
+BOOST_AUTO_TEST_CASE(ReadNames_huge_count_stops_at_the_end_of_the_data)
+{
+    CByteBuffer buf;
+    buf.Append32(1000000000);
+    buf.AppendString("one");
+
+    char **list = nullptr;
+    BOOST_TEST(buf.ReadNames(&list, 0) == 1);
+    BOOST_TEST(std::string(list[0]) == "one"); // what was there, nothing more
+    BOOST_TEST(list[1] == nullptr);
+    free_namelist(list);
+}
+
+BOOST_AUTO_TEST_CASE(ReadIntList_reads_a_valid_list)
+{
+    CByteBuffer buf;
+    buf.Append32(2);
+    buf.Append32(7);
+    buf.Append32(static_cast<ubit32>(-8));
+
+    int *list = nullptr;
+    BOOST_TEST(buf.ReadIntList(&list) == 0);
+    BOOST_TEST(list != nullptr);
+    BOOST_TEST(list[0] == 2);
+    BOOST_TEST(list[1] == 7);
+    BOOST_TEST(list[2] == -8);
+    free(list);
+}
+
+BOOST_AUTO_TEST_CASE(ReadIntList_length_beyond_the_data_is_corrupt)
+{
+    CByteBuffer buf;
+    buf.Append32(1000000000);
+    buf.Append32(7);
+
+    int *list = nullptr;
+    BOOST_TEST(buf.ReadIntList(&list) == 1);
+    BOOST_TEST(list == nullptr);
+}
+
+BOOST_AUTO_TEST_CASE(ReadIntList_negative_length_is_corrupt)
+{
+    CByteBuffer buf;
+    buf.Append32(static_cast<ubit32>(-1));
+
+    int *list = nullptr;
+    BOOST_TEST(buf.ReadIntList(&list) == 1);
+    BOOST_TEST(list == nullptr);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

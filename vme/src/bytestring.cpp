@@ -372,9 +372,14 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
 
         int i = 0;
 
+        // The count comes from the data: stop when the data runs out (a corrupt
+        // count, up to 2^31, kept adding empty names long after it had)
         for (i = 0; i < l; i++)
         {
-            Corrupt += ReadStringCopy(buf, sizeof(buf) - 1);
+            if (ReadStringCopy(buf, sizeof(buf) - 1))
+            {
+                return 1;
+            }
             *pppStr = add_name(buf, *pppStr);
         }
 
@@ -394,7 +399,10 @@ int CByteBuffer::ReadIntList(int **ilist)
 
     len = ReadS32(&corrupt);
 
-    if (corrupt)
+    // The length comes from the data: the values (4 bytes each) must fit in what
+    // is left, or it is corrupt. A corrupt length used to be allocated, up to 8 GB,
+    // and the read past the end of the data then hit assert(FALSE).
+    if (corrupt || len < 0 || static_cast<ubit32>(len) > (m_nLength - m_nReadPos) / 4)
     {
         return 1;
     }
@@ -406,7 +414,8 @@ int CByteBuffer::ReadIntList(int **ilist)
         c = ReadS32(&corrupt);
         if (corrupt)
         {
-            assert(FALSE);
+            FREE(intlist);
+            return 1;
         }
 
         intlist[i] = c;
