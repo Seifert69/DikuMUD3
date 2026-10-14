@@ -786,41 +786,51 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             CREATE(dilargs, dilargstype, 1);
 
-            pBuf->ReadStringCopy(name, sizeof(name));
-            strcat(name, "/");
-            pBuf->SkipString(&c);
-            strcat(name, c);
+            // Saved as two strings (AppendDoubleString), joined by '/'. Both come from
+            // the file, so the joined name must be bounded (strcat overran the stack).
+            char first[256];
+            g_nCorrupt += pBuf->ReadStringCopy(first, sizeof(first));
+            g_nCorrupt += pBuf->SkipString(&c);
+            if (snprintf(name, sizeof(name), "%s/%s", first, c) >= (int)sizeof(name))
+            {
+                g_nCorrupt++;
+            }
 
             dilargs->name = str_dup(name);
 
-            dilargs->no = pBuf->ReadU8();
+            int nArgError = 0;
+            dilargs->no = pBuf->ReadU8(&nArgError);
 
-            for (int j = 0; j < dilargs->no; j++)
+            // Stop at the first argument that can't be read: the rest of the data is
+            // no longer in step. Arguments not read keep type 0 and hold nothing to free.
+            for (int j = 0; j < dilargs->no && nArgError == 0; j++)
             {
-                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8());
+                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8(&nArgError));
 
                 switch (dilargs->dilarg[j].type)
                 {
                     case DilVarType_e::DILV_SLP:
-                        pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
+                        nArgError += pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
                         break;
 
                     case DilVarType_e::DILV_SP:
-                        pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
+                        nArgError += pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
                         break;
 
                     case DilVarType_e::DILV_INT:
-                        dilargs->dilarg[j].data.num = pBuf->ReadS32();
+                        dilargs->dilarg[j].data.num = pBuf->ReadS32(&nArgError);
                         break;
 
                     case DilVarType_e::DILV_ILP:
-                        pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
+                        nArgError += pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
                         break;
 
                     default:
-                        error(HERE, "Uhadada");
+                        // A type from corrupt data: error() here terminated the server
+                        nArgError++;
                 }
             }
+            g_nCorrupt += nArgError;
 
             fptr->setData(dilargs);
         }
