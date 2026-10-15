@@ -108,9 +108,6 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     return 0;
 }
 
-/**
- * This function reads a DIL template
- */
 /*
  * A count read from the data can't be larger than the data left, as each
  * entry takes at least min_bytes. A larger count means the data is corrupt:
@@ -130,6 +127,9 @@ static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
     return 0;
 }
 
+/**
+ * This function reads a DIL template
+ */
 diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
     int i = 0;
