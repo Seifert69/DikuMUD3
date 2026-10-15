@@ -161,6 +161,8 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
  * on or off: wizard invisibility above ch's level, or invisibility that ch can't
  * detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where they are.
  */
+static constexpr double WHEN_LOOKUP_SECONDS = 5; ///< Between player file reads by a mortal
+
 static bool when_hides(const unit_data *ch, const unit_data *pc)
 {
     if (ch == pc)
@@ -222,6 +224,20 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
             send_to_char(diku::format_to_str("%s is playing right now.<br/>", u->getNames().Name()), ch);
             return;
         }
+    }
+
+    // Reading a player file is the expensive part, so mortals may do it once every
+    // few seconds (as "save" limits saves). Players in the game cost nothing.
+    descriptor_data *d = CHAR_DESCRIPTOR(ch);
+    if (d && CHAR_LEVEL(ch) < IMMORTAL_LEVEL)
+    {
+        const time_t now = time(nullptr);
+        if (difftime(now, d->getLastWhenLookupTime()) < WHEN_LOOKUP_SECONDS)
+        {
+            send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
+            return;
+        }
+        d->setLastWhenLookupTime(now);
     }
 
     // Only the player file is read (not the inventory), and it is never saved
