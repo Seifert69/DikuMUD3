@@ -78,7 +78,13 @@
     function atBottom() {
         return out.el.scrollHeight - out.el.scrollTop - out.el.clientHeight < 48;
     }
+    // Scrolling the player did (wheel, touch, scrollbar, Page Up) as opposed to the browser's own.
+    const userScrolled = () => (out.userScrollAt = performance.now());
+    for (const ev of ["wheel", "touchmove", "pointerdown"]) out.el.addEventListener(ev, userScrolled, { passive: true });
     out.el.addEventListener("scroll", () => {
+        // While new output waits for our scroll to the end (next frame), the browser can fire
+        // scroll events that are not the player scrolling up; only the player's own count then.
+        if (out.scrollQueued && performance.now() - (out.userScrollAt || 0) > 500) return;
         out.stick = atBottom();
         if (out.stick) {
             out.unseen = 0;
@@ -95,7 +101,10 @@
         out.scrollQueued = true;
         requestAnimationFrame(() => {
             out.scrollQueued = false;
-            if (out.stick) out.el.scrollTop = out.el.scrollHeight;
+            if (!out.stick) return;
+            out.el.scrollTop = out.el.scrollHeight;
+            out.unseen = 0;
+            out.pill.hidden = true;
         });
     }
 
@@ -898,6 +907,7 @@
             input.setSelectionRange(input.value.length, input.value.length);
         } else if (e.key === "PageUp" || e.key === "PageDown") {
             e.preventDefault();
+            userScrolled();
             out.el.scrollBy({ top: (e.key === "PageUp" ? -0.85 : 0.85) * out.el.clientHeight });
         } else if (e.key === "Escape") {
             if (input.value) {
@@ -1126,7 +1136,7 @@
      * Start
      * ====================================================================== */
     // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>")
-    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame };
+    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame, out };
 
     prefersLight.addEventListener("change", applySettings);
     applySettings();
