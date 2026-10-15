@@ -156,9 +156,28 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 }
 
 /**
+ * Whether "when" hides player pc from ch. The same rule for players in the game
+ * and players read from their file, so the answer doesn't change when they log
+ * on or off: wizard invisibility above ch's level, or invisibility that ch can't
+ * detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where they are.
+ */
+static bool when_hides(const unit_data *ch, const unit_data *pc)
+{
+    if (ch == pc)
+    {
+        return false;
+    }
+    if (CHAR_LEVEL(ch) < pc->getLevelOfWizardInvisibility())
+    {
+        return true;
+    }
+    return CHAR_LEVEL(ch) < CREATOR_LEVEL && IS_SET(pc->getUnitFlags(), UNIT_FL_INVISIBLE) && !CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE);
+}
+
+/**
  * when <player>: when a player last logged on. Players in the game, link dead
- * included, are "playing right now". Players that "who" would hide from the
- * asker, and wizards invisible to them, are treated as unknown.
+ * included, are "playing right now". Players hidden by when_hides() are treated
+ * as unknown.
  */
 void do_when(unit_data *ch, char *arg, const command_info *cmd)
 {
@@ -195,7 +214,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         if (!str_ccmp(PC_FILENAME(u), name))
         {
             // Not the file: it may still hold the visibility from before they went invisible
-            if (!CHAR_CAN_SEE(ch, u))
+            if (when_hides(ch, u))
             {
                 send_to_char(no_one, ch);
                 return;
@@ -214,7 +233,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
     }
 
     const time_t last = PC_TIME(pc).getPlayerLastConnectTime();
-    const bool hidden = CHAR_LEVEL(ch) < pc->getLevelOfWizardInvisibility();
+    const bool hidden = when_hides(ch, pc);
     const std::string pc_name = pc->getNames().Name();
     extract_unit(pc);
 
