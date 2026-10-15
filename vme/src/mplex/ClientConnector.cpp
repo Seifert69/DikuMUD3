@@ -918,8 +918,11 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             // We got a HTML tag
             if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
             {
-                if (*p == '\n' || *(p + 1) == '\n')
-                { // If the next is \n then dont add <br>
+                const char *q = p;
+                while (*q == ' ' || *q == '\t')
+                    q++;
+                if (*q == '\n' || (*q == '\r' && *(q + 1) == '\n'))
+                { // A real newline follows (maybe after trailing blanks), so dont add <br>
                     continue;
                 }
 
@@ -1061,10 +1064,10 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
                 *dest++ = '&';
                 p += 5;
             }
-            else if (strncasecmp(p, "&apos;", 5) == 0)
+            else if (strncasecmp(p, "&apos;", 6) == 0)
             {
                 *dest++ = '\'';
-                p += 5;
+                p += 6;
             }
             else if (strncasecmp(p, "&nbsp;", 6) == 0)
             {
