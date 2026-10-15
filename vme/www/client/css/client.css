@@ -200,7 +200,6 @@ details.cgroup[open] summary::before { transform: rotate(90deg); }
 .ptext { color: var(--accent); font-family: var(--f-out); font-weight: 600; white-space: nowrap; max-width: 40%; overflow: hidden; text-overflow: ellipsis; }
 .cmdbar input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; padding: 10px 0; font-family: var(--f-out); font-size: var(--fs-input); }
 .cmdbar input::placeholder { color: var(--faint); }
-.cmdbar.pw { border-color: color-mix(in srgb, var(--accent) 60%, var(--line)); }
 .send { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 7px; padding: 8px 14px; font-weight: 600; text-shadow: none; }
 
 /* ---------- Status column ---------- */
