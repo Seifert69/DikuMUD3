@@ -708,33 +708,22 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         return nullptr;
     }
 
-    // u = new EMPLACE(unit_data) unit_data(type);
-    u = new_unit_data(type, nullptr); // Would be preferable to have a file_index_type passed here 
-
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
-    // No file is older than version 37: anything below is corrupt data, which
-    // must be rejected rather than abort the whole server
-    if (g_nCorrupt || unit_version < 37)
+    // No file is older than version 48, and none is newer than this server: any
+    // other version is corrupt data (often a single flipped bit), which must be
+    // rejected rather than parsed in an old format or shut the server down.
+    // read_unit() still stops the server for zone data it can't read.
+    if (g_nCorrupt || unit_version < 48 || unit_version > UNIT_VERSION)
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
         g_nCorrupt = TRUE;
-        delete u; // nothing read into it yet, and in no list
         return nullptr;
     }
 
-    if (unit_version > UNIT_VERSION)
-    {
-        slog(LOG_EXTENSIVE,
-             0,
-             "FATAL: Attempted to read '%s' but found "
-             "version number %d which was NEWER than this implementation "
-             "can handle! Aborting server.",
-             whom,
-             unit_version);
-        exit(0);
-    }
+    // u = new EMPLACE(unit_data) unit_data(type);
+    u = new_unit_data(type, nullptr); // Would be preferable to have a file_index_type passed here
 
     g_nCorrupt += u->getNames().ReadBuffer(pBuf, unit_version);
 
@@ -1492,6 +1481,17 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
                          org_fi->getLength(),
                          str_cc(org_fi->getName(), org_fi->getZone()->getName().c_str()),
                          ins_list);
+    if (u == nullptr)
+    {
+        // Zone data comes from vmc, never from a player: a unit version this server
+        // can't read means the zones and the server don't match.
+        slog(LOG_OFF,
+             0,
+             "FATAL: Can't read %s@%s from the zone data (wrong unit version?). Aborting server.",
+             org_fi->getName(),
+             org_fi->getZone()->getName().c_str());
+        exit(0);
+    }
     u->setFileIndex(org_fi);
 
     bonus_setup(u);
