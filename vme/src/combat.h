@@ -45,7 +45,6 @@ public:
     inline unit_data *Melee() { return pMelee; }
     inline int When() { return nWhen; }
     inline int NoOpponents() { return nNoOpponents; }
-    inline bool WebSent() const { return bWebSent; }
 
     int calculateHastedActions(int actions, int hastePercentage);
     void changeSpeed(int delta, int speedPercentage);

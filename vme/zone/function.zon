@@ -7029,6 +7029,7 @@ var
   r : string;
 code
 {
+   // No " here: DIL strings can't hold one, and it can't end a single-quoted value
    r := replace("&", "&amp;", s);
    r := replace("'", "&#39;", r);
    r := replace("<", "&lt;", r);
@@ -7054,6 +7055,8 @@ var
   rclanname:string;
   sclanname:string;
   garbage:string;
+  sChanAttr : string;
+  sFromAttr : string;
 
 code
 {
@@ -7096,6 +7099,10 @@ code
       }
    }
 
+   // Escaped once here for the chan= and from= attributes below
+   sChanAttr := html_attr(sChan);
+   sFromAttr := html_attr(talker.name);
+
    sFirst := getword(msg);
    //log("sFirst == " + sFirst);
    if ( sFirst in slKeys ) {
@@ -7114,12 +7121,12 @@ code
       //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
       if (sChan in DISCORD_CHANNELS)
       {
-         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
+         sendtext("<div class='comm_emote' chan='"+sChanAttr+"'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }
       else if (self.level >= talker.minv) {
-         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
+         sendtext("<div class='comm_emote' chan='"+sChanAttr+"' from='"+sFromAttr+"'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
       } else {
-         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"' from='Someone'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
+         sendtext("<div class='comm_emote' chan='"+sChanAttr+"' from='Someone'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
       }
    }
    else if (sKey == "#"){
@@ -7164,7 +7171,7 @@ code
    {
       if (jmode ==1) {
          if (self.level >= talker.minv ) {
-            sendtext("<div class='comm_join' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
+            sendtext("<div class='comm_join' chan='"+sChanAttr+"' from='"+sFromAttr+"'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
                   "channel.</div><br/>",self);
          }
       }
@@ -7173,7 +7180,7 @@ code
    {
       if (dmode ==1) {
          if (self.level >= talker.minv ) {
-            sendtext("<div class='comm_leave' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
+            sendtext("<div class='comm_leave' chan='"+sChanAttr+"' from='"+sFromAttr+"'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
                      "channel.</div><br/>",self);
          }
       }
@@ -7183,9 +7190,9 @@ code
       //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
 
       if (self.level >= talker.minv) {
-         sendtext("<div class='comm_say' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say' chan='"+sChanAttr+"' from='"+sFromAttr+"'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
       } else {
-         sendtext("<div class='comm_say' chan='"+html_attr(sChan)+"' from='Someone'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say' chan='"+sChanAttr+"' from='Someone'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
       }
    }
 

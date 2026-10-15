@@ -22,6 +22,9 @@
 
     const BUFFER_LIMIT = 4 * 1024 * 1024; // an unterminated container is flushed as text past this
 
+    const END_TAG = { paged: /<\/paged\s*>/i, data: /<\/data\s*>/i, script: /<\/script\s*>/i };
+    const END_TAG_MAX = 10; // longest end tag without whitespace: </script>
+
     /* Splits the frame stream into html / paged / data / script segments. */
     class Framer {
         constructor() {
@@ -32,12 +35,15 @@
 
         push(frame) {
             const out = [];
+            // Inside a container only the new text (and an end tag split across frames) needs searching.
+            let from = Math.max(0, this.buf.length - END_TAG_MAX);
             let s = this.buf + frame;
             this.buf = "";
             while (s.length) {
                 if (this.mode) {
-                    const end = new RegExp("</" + this.mode + "\\s*>", "i").exec(s);
-                    const i = end ? end.index : -1;
+                    const end = END_TAG[this.mode].exec(from ? s.slice(from) : s);
+                    const i = end ? end.index + from : -1;
+                    from = 0;
                     if (i < 0) {
                         if (s.length > BUFFER_LIMIT) {
                             out.push({ type: "html", html: s });
@@ -155,11 +161,11 @@
     function classify(html) {
         const tree = H.parse(html);
         const events = [];
-        const shape = { blank: true, prompt: false, combat: false, other: false };
+        const shape = { blank: false, prompt: false, combat: false, other: false };
 
         function visit(node, top) {
             if (node.text !== undefined) {
-                if (top && node.text.trim()) shape.other = true;
+                if (top && H.hasText(node)) shape.other = true;
                 return;
             }
             const cls = H.classes(node);
@@ -189,7 +195,7 @@
             if (cls.includes("death")) events.push({ type: "death", text: H.textOf(node).trim() });
             if (cls.includes("xpgain")) events.push({ type: "xp", text: H.textOf(node).trim() });
             // Only something visible makes a segment "other"; <go-ahead/>, <mud-init/> and empty divs don't.
-            if (top && (H.textOf(node).trim() || /^(img|hr|table)$/.test(node.tag))) shape.other = true;
+            if (top && (H.hasText(node) || /^(img|hr|table)$/.test(node.tag))) shape.other = true;
             for (const c of node.children) visit(c, false);
         }
 
@@ -247,7 +253,7 @@
 
     /*
      * feed(frame) -> events, in order:
-     *   {type:'html', html, events:[...], shape}   ordinary output (events: prompt, room, comm, combat, death, xp)
+     *   {type:'html', html, tree, events:[...], shape}   ordinary output (events: prompt, room, comm, combat, death, xp)
      *   {type:'paged', html}                       a page of text
      *   {type:'data', dtype, ...}                  structured data
      *   {type:'password', on, name, mud}           login password mode on/off
@@ -262,10 +268,9 @@
             const out = [];
             for (const seg of this.framer.push(frame)) {
                 if (seg.type === "html") {
-                    const { events, shape } = classify(seg.html);
-                    out.push({ type: "html", html: seg.html, events, shape });
+                    out.push({ type: "html", html: seg.html, ...classify(seg.html) });
                 } else if (seg.type === "paged") {
-                    out.push({ type: "paged", html: seg.html });
+                    out.push(seg);
                 } else if (seg.type === "data") {
                     out.push(dataEvent(seg.dtype, seg.body));
                 } else {

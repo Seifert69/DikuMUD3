@@ -1023,14 +1023,18 @@ int lose_exp(class unit_data *ch)
 /* Die is only called when a PC or NPC is killed for real, causing XP loss
    and transfer of rewards */
 
-void die(unit_data *ch)
+/// bWebDeathSent: the caller already told the web clients (combat_web_death)
+void die(unit_data *ch, bool bWebDeathSent)
 {
     if (ch->is_destructed())
     {
         return;
     }
 
-    combat_web_death(ch);
+    if (!bWebDeathSent)
+    {
+        combat_web_death(ch);
+    }
     send_death(ch);
     dilprg *prg = dil_copy_template(g_dil_death, ch, nullptr);
     if (prg)
@@ -1344,11 +1348,12 @@ void damage(unit_data *ch,
         }
         else
         {
+            combat_web_death(victim); // before the fight is torn down and restarted below
             stop_fighting(victim);
             set_fighting(victim, ch, TRUE);
             set_fighting(ch, victim, TRUE);
 
-            die(victim); /* Lose experience */
+            die(victim, true); /* Lose experience */
         }
 
         return;

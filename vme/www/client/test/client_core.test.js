@@ -26,6 +26,11 @@ test("textOf turns <br> and blocks into newlines and decodes entities", () => {
     assert.equal(H.htmlToText("<h1>Title</h1>text"), "Title\ntext");
 });
 
+test("hasText ignores whitespace and empty elements", () => {
+    assert.equal(H.hasText(H.parse("<go-ahead/> <br/>\u00a0<div class='x'></div>")), false);
+    assert.equal(H.hasText(H.parse("<div><b> a</b></div>")), true);
+});
+
 test("quoted attributes may contain >", () => {
     const t = H.parse("<a cmd='look >' href='#'>x</a>");
     assert.equal(t.children[0].attrs.cmd, "look >");
@@ -43,6 +48,12 @@ test("Framer joins a <paged> block split over several frames", () => {
     assert.deepEqual(f.push("<paged><h1>Help</h1>part one "), []);
     assert.deepEqual(f.push("part two"), []);
     assert.deepEqual(f.push(" end</paged>"), [{ type: "paged", html: "<h1>Help</h1>part one part two end" }]);
+});
+
+test("Framer finds an end tag split across frames", () => {
+    const f = new P.Framer();
+    assert.deepEqual(f.push("<paged>" + "x".repeat(50) + "</pa"), []);
+    assert.deepEqual(f.push("ged>after"), [{ type: "paged", html: "x".repeat(50) }, { type: "html", html: "after" }]);
 });
 
 test("Framer splits text, data and script inside one frame", () => {
@@ -179,7 +190,10 @@ test("Protocol.feed runs the whole pipeline", () => {
 
 test("History skips movement and repeats and browses both ways", () => {
     const h = new E.History(3);
-    for (const c of ["look", "n", "kill rat", "kill rat", "say hi", "score"]) h.add(c);
+    assert.equal(h.add("n"), false);
+    assert.equal(h.add("look"), true);
+    assert.equal(h.add("look"), false);
+    for (const c of ["kill rat", "kill rat", "say hi", "score"]) h.add(c);
     assert.deepEqual(h.items, ["kill rat", "say hi", "score"]);
     assert.equal(h.up(), "score");
     assert.equal(h.up(), "say hi");

@@ -33,14 +33,14 @@
         return ATTRS["*"].includes(name) || (ATTRS[tag] || []).includes(name);
     }
 
-    function cleanNode(src, doc) {
-        if (src.nodeType === 3) return doc.createTextNode(src.data);
+    function cleanNode(src) {
+        if (src.nodeType === 3) return document.createTextNode(src.data);
         if (src.nodeType !== 1) return null;
         const tag = src.localName;
         if (DROP.has(tag)) return null;
         let out;
         if (ALLOWED.has(tag)) {
-            out = doc.createElement(tag);
+            out = document.createElement(tag);
             for (const a of src.attributes) {
                 const name = a.name.toLowerCase();
                 if (!allowedAttr(tag, name)) continue;
@@ -55,7 +55,7 @@
                         out.setAttribute("rel", "noopener noreferrer");
                     }
                 } else if (name === "src") {
-                    if (SAFE_URL.test(v.trim()) && !/^\s*\w+script:/i.test(v)) out.setAttribute("src", v.trim());
+                    if (SAFE_URL.test(v.trim())) out.setAttribute("src", v.trim());
                 } else if (name === "style") {
                     if (!BAD_STYLE.test(v)) out.setAttribute("style", v);
                 } else if (name !== "cmd") {
@@ -63,10 +63,10 @@
                 }
             }
         } else {
-            out = doc.createDocumentFragment(); // unknown element: keep its contents only
+            out = document.createDocumentFragment(); // unknown element: keep its contents only
         }
         for (const c of src.childNodes) {
-            const n = cleanNode(c, doc);
+            const n = cleanNode(c);
             if (n) out.appendChild(n);
         }
         if (tag === "a" && src.hasAttribute("cmd")) {
@@ -84,7 +84,7 @@
         const src = parser.parseFromString("<!doctype html><body>" + html, "text/html").body;
         const frag = document.createDocumentFragment();
         for (const c of src.childNodes) {
-            const n = cleanNode(c, document);
+            const n = cleanNode(c);
             if (n) frag.appendChild(n);
         }
         return frag;

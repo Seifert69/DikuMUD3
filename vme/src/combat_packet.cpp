@@ -8,7 +8,7 @@
 
 namespace combat_packet
 {
-std::string listJSON(int round, const std::vector<Entry> &list)
+std::string listJSON(int round, const std::vector<Entry> &list, bool end)
 {
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -36,6 +36,11 @@ std::string listJSON(int round, const std::vector<Entry> &list)
         writer.EndObject();
     }
     writer.EndArray();
+    if (end)
+    {
+        writer.Key("end");
+        writer.Bool(true);
+    }
     writer.EndObject();
 
     return buffer.GetString();
@@ -43,20 +48,7 @@ std::string listJSON(int round, const std::vector<Entry> &list)
 
 std::string endJSON(int round)
 {
-    rapidjson::StringBuffer buffer;
-    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartObject();
-    writer.Key("round");
-    writer.Int(round);
-    writer.Key("list");
-    writer.StartArray();
-    writer.EndArray();
-    writer.Key("end");
-    writer.Bool(true);
-    writer.EndObject();
-
-    return buffer.GetString();
+    return listJSON(round, {}, true);
 }
 
 std::string deathJSON(const std::string &id)

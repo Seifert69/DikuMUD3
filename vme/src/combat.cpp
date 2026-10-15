@@ -357,25 +357,11 @@ static void web_send(unit_data *ch, const std::string &json)
     }
 }
 
-/// u's name as viewer sees it, same rules as act()'s $1n
-static std::string web_seen_name(unit_data *viewer, unit_data *u)
+static bool contains(const std::vector<unit_data *> &v, const unit_data *u)
 {
-    if (!CHAR_CAN_SEE(viewer, u))
-    {
-        return SOMETON(u);
-    }
-
-    if (u->isPC())
-    {
-        return STR(u->getNames().Name());
-    }
-
-    return u->getTitle();
+    return std::find(v.begin(), v.end(), u) != v.end();
 }
 
-/// The others in viewer's fight, in the same room: foes (viewer's opponents,
-/// anyone meleeing viewer, anyone an ally fights) and allies (those fighting
-/// one of viewer's opponents). At most MAX_ENTRIES - 1 in total, foes first.
 /// True if a and b are both grouped under the same leader (see the group command)
 static bool web_same_group(unit_data *a, unit_data *b)
 {
@@ -390,33 +376,37 @@ static bool web_same_group(unit_data *a, unit_data *b)
     return la == lb;
 }
 
+/// The others in viewer's fight, in the same room: foes (viewer's opponents,
+/// anyone meleeing viewer, anyone an ally fights) and allies (group members in
+/// combat, and those fighting one of viewer's opponents). At most
+/// MAX_ENTRIES - 1 in total, foes first.
 static void web_combat_members(unit_data *viewer, std::vector<unit_data *> &foes, std::vector<unit_data *> &allies)
 {
     unit_data *room = viewer->getUnitIn();
     cCombat *pc = CHAR_COMBAT(viewer);
-
-    auto has = [](const std::vector<unit_data *> &v, const unit_data *u) { return std::find(v.begin(), v.end(), u) != v.end(); };
 
     if (room == nullptr || pc == nullptr)
     {
         return;
     }
 
-    for (int i = 0; i < pc->NoOpponents(); i++)
-    {
-        unit_data *u = pc->Opponent(i);
-
-        if (u && u != viewer && u->getUnitIn() == room && !u->is_destructed() && !has(foes, u))
+    auto addFoe = [&](unit_data *u) {
+        if (u && u != viewer && u->getUnitIn() == room && !u->is_destructed() && !contains(foes, u) && !contains(allies, u))
         {
             foes.push_back(u);
         }
+    };
+
+    for (int i = 0; i < pc->NoOpponents(); i++)
+    {
+        addFoe(pc->Opponent(i));
     }
 
     const size_t nOpponents = foes.size();
 
     for (unit_data *u = room->getUnitContains(); u; u = u->getNext())
     {
-        if (u == viewer || !u->isChar() || u->is_destructed() || CHAR_COMBAT(u) == nullptr || has(foes, u))
+        if (u == viewer || !u->isChar() || u->is_destructed() || CHAR_COMBAT(u) == nullptr || contains(foes, u))
         {
             continue;
         }
@@ -452,12 +442,7 @@ static void web_combat_members(unit_data *viewer, std::vector<unit_data *> &foes
 
         for (int i = 0; i < ac->NoOpponents(); i++)
         {
-            unit_data *u = ac->Opponent(i);
-
-            if (u && u != viewer && u->getUnitIn() == room && !u->is_destructed() && !has(foes, u) && !has(allies, u))
-            {
-                foes.push_back(u);
-            }
+            addFoe(ac->Opponent(i));
         }
     }
 
@@ -480,7 +465,7 @@ static combat_packet::Entry web_combat_entry(unit_data *viewer, unit_data *u, bo
 
     e.id = combat_packet::opaqueId(u);
     e.me = (u == viewer);
-    e.name = e.me ? "you" : web_seen_name(viewer, u);
+    e.name = e.me ? "you" : UNIT_SEE_TITLE(viewer, u);
     e.hp = combat_packet::hpPercent(u->getCurrentHitpoints(), u->getMaximumHitpoints());
     e.foe = bFoe;
 
@@ -492,7 +477,7 @@ static combat_packet::Entry web_combat_entry(unit_data *viewer, unit_data *u, bo
     }
     else if (t)
     {
-        e.target = web_seen_name(viewer, t);
+        e.target = UNIT_SEE_TITLE(viewer, t);
     }
 
     return e;
@@ -528,8 +513,9 @@ void cCombat::sendWebRound()
     bWebSent = true;
 }
 
-/// ch is dying: tell the web clients in the room that had ch in their
-/// '$combat' list. Only looks at the room ch is in.
+/// ch is dying: tell the web clients in the room that have ch in their
+/// '$combat' list. Only looks at the room ch is in. Call it while the fight
+/// is still standing (see the kill path in damage()).
 void combat_web_death(unit_data *ch)
 {
     if (ch == nullptr || !ch->isChar() || ch->getUnitIn() == nullptr)
@@ -541,24 +527,16 @@ void combat_web_death(unit_data *ch)
 
     for (unit_data *u = ch->getUnitIn()->getUnitContains(); u; u = u->getNext())
     {
-        // Not WebSent(): a kill stops and restarts both fighters' combat just before die(),
-        // so the flag is already reset. A death for a fight the client never saw is ignored there.
-        if (!u->isChar() || CHAR_COMBAT(u) == nullptr || web_descriptor(u) == nullptr)
+        if (u == ch || !u->isChar() || CHAR_COMBAT(u) == nullptr || web_descriptor(u) == nullptr)
         {
             continue;
         }
 
-        bool bListed = (u == ch);
+        std::vector<unit_data *> foes;
+        std::vector<unit_data *> allies;
+        web_combat_members(u, foes, allies);
 
-        if (!bListed)
-        {
-            std::vector<unit_data *> foes;
-            std::vector<unit_data *> allies;
-            web_combat_members(u, foes, allies);
-            bListed = std::find(foes.begin(), foes.end(), ch) != foes.end() || std::find(allies.begin(), allies.end(), ch) != allies.end();
-        }
-
-        if (bListed)
+        if (contains(foes, ch) || contains(allies, ch))
         {
             if (json.empty())
             {

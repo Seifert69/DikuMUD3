@@ -40,9 +40,10 @@
     /* ---------- Settings ---------- */
     const settings = Object.assign({ skin: "auto", size: "m", fold: true, showPrompt: false, echo: true, stamps: true }, store.get("dk.settings", {}));
 
+    const prefersLight = window.matchMedia("(prefers-color-scheme: light)");
+
     function applySettings() {
-        if (settings.skin === "auto") delete root.dataset.skin;
-        else root.dataset.skin = settings.skin;
+        root.dataset.skin = settings.skin !== "auto" ? settings.skin : prefersLight.matches ? "vellum" : "hall";
         root.dataset.size = settings.size;
         root.dataset.stamps = settings.stamps ? "on" : "off";
         $("#skin").value = settings.skin;
@@ -62,7 +63,6 @@
         mud: "",
         password: false,
         vit: null,
-        room: null,
     };
     const protocol = new D.protocol.Protocol();
     const engine = new D.engine.Engine();
@@ -71,7 +71,7 @@
     /* ======================================================================
      * Output log
      * ====================================================================== */
-    const out = { el: $("#output"), stick: true, unseen: 0, gap: false, group: null };
+    const out = { el: $("#output"), pill: $("#newlines"), stick: true, unseen: 0, gap: false, group: null, scrollQueued: false };
     const MAX_ENTRIES = 3000;
 
     function atBottom() {
@@ -81,13 +81,22 @@
         out.stick = atBottom();
         if (out.stick) {
             out.unseen = 0;
-            $("#newlines").hidden = true;
+            out.pill.hidden = true;
         }
     });
     new ResizeObserver(() => {
         if (out.stick) out.el.scrollTop = out.el.scrollHeight;
     }).observe(out.el);
-    $("#newlines").addEventListener("click", () => out.el.scrollTo({ top: out.el.scrollHeight, behavior: "smooth" }));
+    out.pill.addEventListener("click", () => out.el.scrollTo({ top: out.el.scrollHeight, behavior: "smooth" }));
+
+    function scrollToEnd() {
+        if (out.scrollQueued) return;
+        out.scrollQueued = true;
+        requestAnimationFrame(() => {
+            out.scrollQueued = false;
+            if (out.stick) out.el.scrollTop = out.el.scrollHeight;
+        });
+    }
 
     function push(node) {
         if (out.gap && out.el.lastElementChild && !out.el.lastElementChild.classList.contains("gap")) out.el.append(el("div", "gap"));
@@ -96,18 +105,26 @@
         out.el.append(node);
         while (out.el.childElementCount > MAX_ENTRIES) out.el.firstElementChild.remove();
         if (out.stick) {
-            out.el.scrollTop = out.el.scrollHeight;
+            scrollToEnd();
         } else {
             out.unseen++;
-            const b = $("#newlines");
-            b.textContent = `${out.unseen} new ${out.unseen === 1 ? "message" : "messages"} ↓`;
-            b.hidden = false;
+            out.pill.textContent = `${out.unseen} new ${out.unseen === 1 ? "message" : "messages"} ↓`;
+            out.pill.hidden = false;
         }
         return node;
     }
 
     function sys(text, err) {
         return push(el("div", "seg sys" + (err ? " err" : ""), text));
+    }
+
+    // Safe DOM for server HTML, in the box the server-class CSS applies to
+    function serverHtml(html, cls = "seg") {
+        const box = el("div", cls);
+        const srv = el("div", "srv");
+        srv.append(D.sanitize(html));
+        box.append(srv);
+        return box;
     }
 
     function echo(cmd) {
@@ -127,13 +144,8 @@
             foldCombat(ev);
             return;
         }
-        const seg = el("div", "seg");
-        seg.append(D.sanitize(ev.html));
+        const seg = serverHtml(ev.html);
         if (!settings.showPrompt) seg.querySelectorAll(".prompt").forEach(p => p.remove());
-        if (!seg.textContent.trim() && !seg.querySelector("img,hr,table")) {
-            out.gap = true;
-            return;
-        }
         push(seg);
     }
 
@@ -149,9 +161,7 @@
             push(g.details);
         }
         g.last = now;
-        const seg = el("div", "seg");
-        seg.append(D.sanitize(ev.html));
-        g.details.append(seg);
+        g.details.append(serverHtml(ev.html));
         for (const c of ev.events) {
             if (c.type !== "combat") continue;
             if (c.what === "hit" && c.who === "me") g.hit++;
@@ -163,7 +173,7 @@
     }
 
     function renderGroupSummary(g) {
-        const foes = combat.hasData ? [...combat.rows.values()].filter(r => r.foe).map(r => r.name) : [];
+        const foes = [...combat.rows.values()].filter(r => r.foe).map(r => r.name);
         g.sum.replaceChildren(el("span", "ctag", "Combat"));
         if (foes.length) g.sum.append(el("span", "cfoes", foes.slice(0, 3).join(", ") + (foes.length > 3 ? ` +${foes.length - 3}` : "")));
         g.sum.append(el("span", "t-hit", `you hit ${g.hit}×`), el("span", "t-hurt", `hit you ${g.hurt}×`), el("span", "t-miss", `misses ${g.miss}`));
@@ -177,8 +187,7 @@
     /* Paged text goes into the log; long pages are folded with a button to read them in full. */
     function showPaged(html) {
         const box = el("div", "seg paged");
-        const body = el("div", "paged-body");
-        body.append(D.sanitize(html));
+        const body = serverHtml(html, "paged-body");
         box.append(body);
         push(box);
         requestAnimationFrame(() => {
@@ -196,7 +205,7 @@
             });
             tools.append(read, expand);
             box.append(tools);
-            if (out.stick) out.el.scrollTop = out.el.scrollHeight;
+            scrollToEnd();
         });
     }
 
@@ -227,9 +236,7 @@
         const x = el("button", "btn close", "Close");
         x.type = "button";
         x.dataset.close = "";
-        const body = el("div", "seg");
-        body.append(D.sanitize(html));
-        r.append(x, body);
+        r.append(x, serverHtml(html));
         openScrim(r);
         x.focus();
     }
@@ -266,7 +273,7 @@
                 const num = v.querySelector(".num");
                 num.replaceChildren(String(cur), el("small", null, "/" + max));
                 if (k === "hp") v.classList.toggle("low", max > 0 && cur / max < 0.3);
-                if (delta && Math.abs(delta) >= 1 && prev) {
+                if (delta) {
                     const d = el("span", "delta" + (delta > 0 ? " plus" : ""), (delta > 0 ? "+" : "−") + Math.abs(delta));
                     v.append(d);
                     setTimeout(() => d.remove(), 1200);
@@ -278,10 +285,9 @@
     /* ======================================================================
      * Room, compass and map
      * ====================================================================== */
-    const DIRNAMES = { n: "north", e: "east", s: "south", w: "west", u: "up", d: "down", ne: "northeast", nw: "northwest", se: "southeast", sw: "southwest" };
+    const DIRNAMES = D.engine.DIRNAMES;
 
     function showRoom(r) {
-        S.room = r;
         closeCombatGroup();
         $("#rctitle").textContent = r.title || "Somewhere";
         $("#rcsub").textContent = [cap(r.zone), r.exits.length ? `${r.exits.length} ${r.exits.length === 1 ? "exit" : "exits"}` : "no obvious exits"].filter(Boolean).join(" · ");
@@ -377,9 +383,21 @@
         return p >= 100 ? "unhurt" : p > 90 ? "scratched" : p > 70 ? "lightly wounded" : p > 50 ? "wounded" : p > 30 ? "badly wounded" : p > 10 ? "bleeding heavily" : p > 0 ? "near death" : "dead";
     }
 
+    // The fight is over: show that, then hide the dock and forget the fight after a while.
+    function endCombat(delay) {
+        combat.active = false;
+        closeCombatGroup();
+        scheduleDock();
+        clearTimeout(combat.hideTimer);
+        combat.hideTimer = setTimeout(() => {
+            dock.hidden = true;
+            combat.rows.clear();
+            combat.lines = [];
+        }, delay);
+    }
+
     function combatData(j) {
         combat.hasData = true;
-        clearTimeout(combat.hideTimer);
         if (j.event === "death") {
             const r = combat.rows.get(j.id);
             if (r) {
@@ -387,19 +405,15 @@
                 r.hp = 0;
                 r.deadAt = ++combat.deadOrder;
             }
-            renderDock();
+            if (combat.active) scheduleDock();
+            else endCombat(6000); // the death can follow the end of the fight
             return;
         }
         if (j.end || !Array.isArray(j.list) || !j.list.length) {
-            combat.active = false;
-            closeCombatGroup();
-            renderDock();
-            combat.hideTimer = setTimeout(() => {
-                dock.hidden = true;
-                combat.rows.clear();
-            }, 6000);
+            endCombat(6000);
             return;
         }
+        clearTimeout(combat.hideTimer);
         combat.active = true;
         combat.round = j.round || combat.round + 1;
         const seen = new Set();
@@ -412,12 +426,11 @@
             combat.rows.set(c.id, r);
         }
         for (const [id, r] of combat.rows) if (!seen.has(id) && !r.dead) combat.rows.delete(id); // fled or left
-        renderDock();
+        scheduleDock();
     }
 
     // Shows a combat line on the card of the being it is about (by name), or in the plain list.
     function combatLine(c) {
-        clearTimeout(combat.hideTimer);
         if (combat.hasData) {
             const t = c.text.toLowerCase();
             let best = null;
@@ -429,24 +442,28 @@
                 best.r.last = c.text;
                 best.r.lastCls = c.cls;
                 best.r.flash = Date.now();
-                renderDock();
+                scheduleDock();
             }
             return;
         }
         // No $combat data from this server: show the latest lines, not a scrolling log.
+        clearTimeout(combat.hideTimer);
         combat.active = true;
         combat.lines.push(c);
         combat.lines = combat.lines.slice(-4);
         clearTimeout(combat.idleTimer);
-        combat.idleTimer = setTimeout(() => {
-            combat.active = false;
+        combat.idleTimer = setTimeout(() => endCombat(4000), 8000);
+        scheduleDock();
+    }
+
+    // A round brings many lines and a packet; draw the dock once per frame.
+    function scheduleDock() {
+        if (combat.drawQueued) return;
+        combat.drawQueued = true;
+        requestAnimationFrame(() => {
+            combat.drawQueued = false;
             renderDock();
-            combat.hideTimer = setTimeout(() => {
-                dock.hidden = true;
-                combat.lines = [];
-            }, 4000);
-        }, 8000);
-        renderDock();
+        });
     }
 
     function renderDock() {
@@ -511,23 +528,30 @@
     const AVATAR_COLOURS = ["#c7a5f2", "#8cbde0", "#9fd3c8", "#f1c56f", "#ef8f7a", "#a8d98a"];
     const chat = { threads: new Map(), active: null, saveTimer: null };
 
+    // The conversation a comm line belongs to: one per person, per channel, plus Shouts and Room.
     function threadFor(ev) {
+        let base;
         if (ev.kind === "tell") {
             const who = (ev.self ? ev.to : ev.from) || "Someone";
-            const id = "tell:" + who.toLowerCase();
-            return chat.threads.get(id) || { id, kind: "tell", name: cap(who), sub: "tells", cmd: "tell " + who.split(/\s+/)[0].toLowerCase(), msgs: [], unread: 0 };
-        }
-        if (ev.kind === "channel") {
+            base = { id: "tell:" + who.toLowerCase(), kind: "tell", name: cap(who), sub: "tells", cmd: "tell " + who.split(/\s+/)[0].toLowerCase() };
+        } else if (ev.kind === "channel") {
             const ch = (ev.chan || "channel").toLowerCase();
-            const id = "chan:" + ch;
-            return chat.threads.get(id) || { id, kind: "chan", name: cap(ch), sub: "channel", cmd: ch, msgs: [], unread: 0 };
+            base = { id: "chan:" + ch, kind: "chan", name: cap(ch), sub: "channel", cmd: ch };
+        } else if (ev.kind === "shout") {
+            base = { id: "shout", kind: "shout", name: "Shouts", sub: "heard far and wide", cmd: "shout" };
+        } else {
+            base = { id: "room", kind: "room", name: "Room", sub: "say, ask and whisper", cmd: "say" };
         }
-        if (ev.kind === "shout") return chat.threads.get("shout") || { id: "shout", kind: "shout", name: "Shouts", sub: "heard far and wide", cmd: "shout", msgs: [], unread: 0 };
-        return chat.threads.get("room") || { id: "room", kind: "room", name: "Room", sub: "say, ask and whisper", cmd: "say", msgs: [], unread: 0 };
+        return chat.threads.get(base.id) || { ...base, msgs: [], unread: 0 };
     }
 
+    // Same breakpoints as client.css: three columns, then a side switch, then phone tabs.
+    const wide = window.matchMedia("(min-width: 1280px)"), phone = window.matchMedia("(max-width: 820px)");
+
     function chatsVisible() {
-        return getComputedStyle($("#chats")).display !== "none" && !document.hidden;
+        if (document.hidden) return false;
+        if (wide.matches) return true;
+        return phone.matches ? $("#app").dataset.view === "chats" : $("#app").dataset.side === "chats";
     }
 
     function addComm(ev) {
@@ -544,7 +568,7 @@
         } else if (!ev.self && !ev.system) {
             t.unread++;
         }
-        renderThreads();
+        scheduleThreads();
         saveChats();
     }
 
@@ -553,6 +577,16 @@
         const a = el("span", "av", t.name.charAt(0));
         a.style.background = AVATAR_COLOURS[[...t.name].reduce((n, c) => n + c.charCodeAt(0), 0) % AVATAR_COLOURS.length];
         return a;
+    }
+
+    // Busy channels bring several lines a second; redraw the list once per frame.
+    function scheduleThreads() {
+        if (chat.drawQueued) return;
+        chat.drawQueued = true;
+        requestAnimationFrame(() => {
+            chat.drawQueued = false;
+            renderThreads();
+        });
     }
 
     function renderThreads() {
@@ -605,6 +639,7 @@
     function openThread(id) {
         const t = chat.threads.get(id);
         if (!t) return;
+        const changed = chat.active !== id || t.unread > 0;
         chat.active = id;
         t.unread = 0;
         $("#thname").textContent = t.name;
@@ -614,18 +649,25 @@
         box.replaceChildren(...t.msgs.map(msgNode));
         box.scrollTop = box.scrollHeight;
         renderThreads();
-        saveChats();
+        if (changed) saveChats();
+    }
+
+    // Conversations are kept per character; written a few seconds after a change, and on leaving the page.
+    function writeChats() {
+        clearTimeout(chat.saveTimer);
+        chat.saveTimer = null;
+        if (!S.player) return;
+        const keep = [...chat.threads.values()].sort((a, b) => (b.last || 0) - (a.last || 0)).slice(0, 40)
+            .map(t => ({ ...t, msgs: t.msgs.slice(-100) }));
+        store.set("dk.chats." + S.player.toLowerCase(), { active: chat.active, threads: keep });
     }
 
     function saveChats() {
-        clearTimeout(chat.saveTimer);
-        chat.saveTimer = setTimeout(() => {
-            if (!S.player) return;
-            const keep = [...chat.threads.values()].sort((a, b) => (b.last || 0) - (a.last || 0)).slice(0, 40)
-                .map(t => Object.assign({}, t, { msgs: t.msgs.slice(-100) }));
-            store.set("dk.chats." + S.player.toLowerCase(), { active: chat.active, threads: keep });
-        }, 1500);
+        if (!chat.saveTimer) chat.saveTimer = setTimeout(writeChats, 5000);
     }
+    window.addEventListener("pagehide", () => {
+        if (chat.saveTimer) writeChats();
+    });
 
     function loadChats() {
         const saved = store.get("dk.chats." + S.player.toLowerCase(), null);
@@ -689,7 +731,7 @@
                     combatLine(e);
                 }
             }
-            if (!S.password) runTriggers(D.html.htmlToText(ev.html));
+            if (!S.password && engine.triggers.length) runTriggers(D.html.textOf(ev.tree));
             break;
         case "paged":
             showPaged(ev.html);
@@ -726,6 +768,7 @@
                 $("#mudname").textContent = ev.mud;
             }
             if (ev.name && ev.name !== S.player) {
+                if (chat.saveTimer) writeChats(); // the previous character's conversations
                 S.player = cap(ev.name);
                 $("#plyname").textContent = S.player;
                 $$(".vit-name").forEach(n => (n.textContent = S.player));
@@ -758,14 +801,13 @@
             send("");
             return;
         }
-        history.add(line);
-        store.set("dk.history", history.items.slice(-200));
+        if (history.add(line)) store.set("dk.history", history.items);
         const { commands, errors } = engine.expand(line);
         errors.forEach(m => sys(m, true));
         commands.forEach(c => send(c));
-        if (out.el && !out.stick) {
+        if (!out.stick) {
             out.stick = true;
-            out.el.scrollTop = out.el.scrollHeight;
+            scrollToEnd();
         }
     }
 
@@ -838,23 +880,17 @@
     /* ======================================================================
      * Layout switches, settings
      * ====================================================================== */
-    $$(".side-switch [data-side]").forEach(b => b.addEventListener("click", () => setSide(b.dataset.side)));
-    $$(".tabs [data-view]").forEach(b => b.addEventListener("click", () => setView(b.dataset.view)));
-
-    function setSide(s) {
-        $("#app").dataset.side = s;
-        $$(".side-switch [data-side]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.side === s)));
-        if (s === "chats" && chat.active) openThread(chat.active);
-        if (s === "status") placeMap();
+    // Shows pane `value` ("play", "status", "chats"): the side switch on laptops sets data-side,
+    // the phone tabs set data-view.
+    function showPane(key, value) {
+        $("#app").dataset[key] = value;
+        $$(`[data-${key}]:not(#app)`).forEach(b => b.setAttribute("aria-pressed", String(b.dataset[key] === value)));
+        if (value === "chats" && chat.active) openThread(chat.active);
+        if (value === "status") placeMap();
+        if (value === "play") scrollToEnd();
     }
-
-    function setView(v) {
-        $("#app").dataset.view = v;
-        $$(".tabs [data-view]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === v)));
-        if (v === "chats" && chat.active) openThread(chat.active);
-        if (v === "status") placeMap();
-        if (v === "play" && out.stick) out.el.scrollTop = out.el.scrollHeight;
-    }
+    $$(".side-switch [data-side]").forEach(b => b.addEventListener("click", () => showPane("side", b.dataset.side)));
+    $$(".tabs [data-view]").forEach(b => b.addEventListener("click", () => showPane("view", b.dataset.view)));
 
     function toggleSettings(show) {
         const s = $("#settings");
@@ -1017,7 +1053,6 @@
                     banner("Disconnected.", [["Reconnect", () => connect(server)], ["Change server", showConnect]]);
                 }
             },
-            onError() { /* onClose follows and reports it */ },
         });
         S.conn = conn;
         conn.connect();
@@ -1029,6 +1064,7 @@
     // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>")
     if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame };
 
+    prefersLight.addEventListener("change", applySettings);
     applySettings();
     renderThreads();
     updateTitle();

@@ -1,8 +1,9 @@
 # Web client protocol
 
 What the server (vme, through a websocket mplex) sends to the browser clients, and
-what `core/protocol.js` makes of it. The visual client (`index.html`) and the
-screen reader client share the `core/` code.
+what `core/protocol.js` makes of it. `core/` has no browser dependencies so that a
+new screen reader client can share it; the current one (`client-a.html`) still
+uses the older `wsclient.js`.
 
 ## Transport
 

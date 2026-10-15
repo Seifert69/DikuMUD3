@@ -29,8 +29,8 @@ struct Entry
     bool foe{false};    ///< hostile to the receiving player
 };
 
-/// {"round":N,"list":[…]}
-std::string listJSON(int round, const std::vector<Entry> &list);
+/// {"round":N,"list":[…]}, with "end":true added when end is set
+std::string listJSON(int round, const std::vector<Entry> &list, bool end = false);
 
 /// {"round":N,"list":[],"end":true}
 std::string endJSON(int round);

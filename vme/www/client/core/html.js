@@ -4,7 +4,8 @@
  * The game server sends HTML fragments that are often unbalanced (a <div> left open, a stray
  * </div>). This reader turns a fragment into a small tree the same forgiving way a browser
  * would, so the protocol layer can find prompts, room titles and comm lines without a DOM.
- * It is shared by the visual and the accessible client and runs under Node for the tests.
+ * It has no browser dependencies (it runs under Node for the tests), so the coming
+ * screen reader client can share it.
  */
 (function (root, factory) {
     const mod = factory();
@@ -24,10 +25,6 @@
             const v = ENTITIES[e.toLowerCase()];
             return v === undefined ? m : v;
         });
-    }
-
-    function escapeHtml(s) {
-        return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" })[c]);
     }
 
     const ATTR = /([^\s"'<>/=]+)(?:\s*=\s*(?:'([^']*)'|"([^"]*)"|([^\s'">]+)))?/g;
@@ -112,5 +109,11 @@
         return textOf(parse(html));
     }
 
-    return { decodeEntities, escapeHtml, parseAttrs, parse, classes, textOf, htmlToText };
+    // True if node has any non-blank text; stops at the first.
+    function hasText(node) {
+        if (node.text !== undefined) return /[^\s\u00a0]/.test(node.text);
+        return node.children.some(hasText);
+    }
+
+    return { decodeEntities, parseAttrs, parse, classes, textOf, htmlToText, hasText };
 });

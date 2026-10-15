@@ -15,8 +15,8 @@
     "use strict";
 
     const MAX_DEPTH = 5;
-    const DIRECTIONS = new Set(["n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw",
-        "north", "east", "south", "west", "up", "down", "northeast", "northwest", "southeast", "southwest"]);
+    const DIRNAMES = { n: "north", e: "east", s: "south", w: "west", u: "up", d: "down", ne: "northeast", nw: "northwest", se: "southeast", sw: "southwest" };
+    const DIRECTIONS = new Set(Object.entries(DIRNAMES).flat());
 
     /* Command history. Movement is not worth remembering, nor is repeating the last command. */
     class History {
@@ -26,12 +26,14 @@
             this.pos = 0; // 0 = not browsing, 1 = newest
         }
 
+        // Returns true if cmd was added
         add(cmd) {
             const s = cmd.trim();
             this.pos = 0;
-            if (!s || DIRECTIONS.has(s.toLowerCase()) || this.items[this.items.length - 1] === s) return;
+            if (!s || DIRECTIONS.has(s.toLowerCase()) || this.items[this.items.length - 1] === s) return false;
             this.items.push(s);
             if (this.items.length > this.max) this.items.shift();
+            return true;
         }
 
         // Older entry; returns the text to show
@@ -203,5 +205,5 @@
         }
     }
 
-    return { History, Engine, splitCommands, substitute, DIRECTIONS };
+    return { History, Engine, splitCommands, substitute, DIRNAMES };
 });
