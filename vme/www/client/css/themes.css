@@ -1,0 +1,116 @@
+/*
+ * Themes. Each theme is a set of colour and font tokens; client.css uses only these tokens.
+ * Without a chosen theme the client follows the system: Mead-hall when dark, Vellum when light.
+ *
+ * --m-*   semantic message colours (room titles, NPCs, tells, combat...)
+ * --a-*   the old MUD colour codes (cr/cpr = red/bright red, ... see client.css)
+ */
+:root {
+    /* Mead-hall: deep blue-slate, brass accents */
+    --bg: #10141c; --panel: #161c27; --raise: #1e2633; --line: #2a3447; --fg: #dfe3ea; --muted: #8e98ab; --faint: #5f697c;
+    --accent: #e2ae57; --accent-ink: #1a1206; --frost: #8cbde0;
+    --hp: #e2604e; --ep: #73c07e; --mp: #8d92f2; --good: #73c07e; --bad: #ef6c5a;
+    --m-room: #e2ae57; --m-npc: #9fd3c8; --m-obj: #d8c4a2; --m-pc: #8cbde0; --m-say: #d3e5f4; --m-self: #9aa6ba;
+    --m-tell: #c7a5f2; --m-chan: #8cbde0; --m-hit: #f1c56f; --m-hurt: #ef6c5a; --m-miss: #6e788b; --m-xp: #9ee190; --m-death: #ff8270;
+    --m-who: #f0a07a; --m-hint: #9ee190; --m-spell: #b9a3f5;
+    --a-r: #c0504a; --a-R: #ff6b5e; --a-g: #4f9a5c; --a-G: #7fd98a; --a-y: #c09a3a; --a-Y: #ffd866; --a-b: #4f6fc0; --a-B: #7f9cff;
+    --a-m: #9b59b6; --a-M: #e07cf0; --a-c: #3a9aa8; --a-C: #6fe0ee; --a-w: #c8ccd4; --a-W: #ffffff; --a-n: #10141c; --a-N: #6b7280;
+    --map-filter: invert(.88) hue-rotate(180deg) contrast(.95) brightness(.95);
+    --glow: 0 0 0 1px rgb(226 174 87 / .35), 0 0 18px rgb(226 174 87 / .18);
+    --shadow: 0 20px 60px rgb(0 0 0 / .45);
+    --f-display: "Alegreya SC", "Palatino Linotype", Palatino, Georgia, serif;
+    --f-out: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    --f-ui: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+    --radius: 10px;
+    --glowtext: none;
+    color-scheme: dark;
+}
+
+/* Vellum: cool paper, ink and brass */
+@media (prefers-color-scheme: light) {
+    :root:not([data-skin]) {
+        --bg: #e9edf2; --panel: #fbfcfd; --raise: #f1f4f8; --line: #d3dae5; --fg: #19202d; --muted: #586378; --faint: #8b94a4;
+        --accent: #95650f; --accent-ink: #ffffff; --frost: #2a6898;
+        --hp: #c43a2b; --ep: #2f8646; --mp: #4a51c6; --good: #2f8646; --bad: #c43a2b;
+        --m-room: #8a5a08; --m-npc: #17766a; --m-obj: #7a5a2a; --m-pc: #2a6898; --m-say: #1d3550; --m-self: #5d6779;
+        --m-tell: #6a3fb0; --m-chan: #2a6898; --m-hit: #9a6400; --m-hurt: #c43a2b; --m-miss: #8b94a4; --m-xp: #2f8646; --m-death: #c43a2b;
+        --m-who: #a8501f; --m-hint: #2f8646; --m-spell: #5b3fb0;
+        --a-r: #a32b22; --a-R: #d1352a; --a-g: #2f7a3e; --a-G: #2f9a4a; --a-y: #8a6400; --a-Y: #a87a00; --a-b: #2a4fa8; --a-B: #3a66d8;
+        --a-m: #7a2f98; --a-M: #a83ac0; --a-c: #17767f; --a-C: #1a8f9a; --a-w: #3a4250; --a-W: #10141c; --a-n: #10141c; --a-N: #6b7280;
+        --map-filter: sepia(.12) contrast(.95);
+        --glow: 0 0 0 1px rgb(149 101 15 / .35), 0 0 14px rgb(149 101 15 / .15);
+        --shadow: 0 20px 50px rgb(20 30 50 / .22);
+        color-scheme: light;
+    }
+}
+:root[data-skin="vellum"] {
+    --bg: #e9edf2; --panel: #fbfcfd; --raise: #f1f4f8; --line: #d3dae5; --fg: #19202d; --muted: #586378; --faint: #8b94a4;
+    --accent: #95650f; --accent-ink: #ffffff; --frost: #2a6898;
+    --hp: #c43a2b; --ep: #2f8646; --mp: #4a51c6; --good: #2f8646; --bad: #c43a2b;
+    --m-room: #8a5a08; --m-npc: #17766a; --m-obj: #7a5a2a; --m-pc: #2a6898; --m-say: #1d3550; --m-self: #5d6779;
+    --m-tell: #6a3fb0; --m-chan: #2a6898; --m-hit: #9a6400; --m-hurt: #c43a2b; --m-miss: #8b94a4; --m-xp: #2f8646; --m-death: #c43a2b;
+    --m-who: #a8501f; --m-hint: #2f8646; --m-spell: #5b3fb0;
+    --a-r: #a32b22; --a-R: #d1352a; --a-g: #2f7a3e; --a-G: #2f9a4a; --a-y: #8a6400; --a-Y: #a87a00; --a-b: #2a4fa8; --a-B: #3a66d8;
+    --a-m: #7a2f98; --a-M: #a83ac0; --a-c: #17767f; --a-C: #1a8f9a; --a-w: #3a4250; --a-W: #10141c; --a-n: #10141c; --a-N: #6b7280;
+    --map-filter: sepia(.12) contrast(.95);
+    --glow: 0 0 0 1px rgb(149 101 15 / .35), 0 0 14px rgb(149 101 15 / .15);
+    --shadow: 0 20px 50px rgb(20 30 50 / .22);
+    color-scheme: light;
+}
+
+/* Amber CRT */
+:root[data-skin="amber"] {
+    --bg: #0c0803; --panel: #120c05; --raise: #1a1208; --line: #3b2a11; --fg: #ffb547; --muted: #c08433; --faint: #7d5620;
+    --accent: #ffd27a; --accent-ink: #1a0f00; --frost: #ffc35e;
+    --hp: #ff9d3a; --ep: #ffc35e; --mp: #ffe2a3; --good: #ffd27a; --bad: #ff7a2e;
+    --m-room: #ffd27a; --m-npc: #ffc35e; --m-obj: #e9a243; --m-pc: #ffc35e; --m-say: #ffcf7f; --m-self: #c08433;
+    --m-tell: #ffe2a3; --m-chan: #ffc35e; --m-hit: #ffe2a3; --m-hurt: #ff7a2e; --m-miss: #7d5620; --m-xp: #ffe2a3; --m-death: #ff7a2e;
+    --m-who: #ffc35e; --m-hint: #ffe2a3; --m-spell: #ffd27a;
+    --a-r: #d9822b; --a-R: #ff9d3a; --a-g: #c08433; --a-G: #ffc35e; --a-y: #e9a243; --a-Y: #ffd27a; --a-b: #9a6a2a; --a-B: #c08433;
+    --a-m: #d9822b; --a-M: #ffb547; --a-c: #e9a243; --a-C: #ffd27a; --a-w: #ffb547; --a-W: #ffe2a3; --a-n: #0c0803; --a-N: #7d5620;
+    --map-filter: invert(1) sepia(1) saturate(4) hue-rotate(-12deg) brightness(.75);
+    --glow: 0 0 0 1px rgb(255 181 71 / .4), 0 0 18px rgb(255 181 71 / .25);
+    --f-display: "VT323", ui-monospace, monospace;
+    --f-out: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+    --f-ui: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+    --radius: 2px;
+    --glowtext: 0 0 6px rgb(255 160 40 / .35);
+    color-scheme: dark;
+}
+
+/* Green screen */
+:root[data-skin="green"] {
+    --bg: #040a05; --panel: #07110a; --raise: #0c1a10; --line: #183a20; --fg: #5bff8a; --muted: #2fae57; --faint: #1d6b36;
+    --accent: #a6ffbf; --accent-ink: #021006; --frost: #7dffa3;
+    --hp: #5bff8a; --ep: #2fd967; --mp: #a6ffbf; --good: #a6ffbf; --bad: #e8ff6b;
+    --m-room: #a6ffbf; --m-npc: #7dffa3; --m-obj: #45d873; --m-pc: #7dffa3; --m-say: #a6ffbf; --m-self: #2fae57;
+    --m-tell: #d2ffe0; --m-chan: #7dffa3; --m-hit: #d2ffe0; --m-hurt: #e8ff6b; --m-miss: #1d6b36; --m-xp: #d2ffe0; --m-death: #e8ff6b;
+    --m-who: #7dffa3; --m-hint: #d2ffe0; --m-spell: #a6ffbf;
+    --a-r: #2fae57; --a-R: #e8ff6b; --a-g: #2fae57; --a-G: #7dffa3; --a-y: #45d873; --a-Y: #d2ffe0; --a-b: #1d8a44; --a-B: #45d873;
+    --a-m: #2fae57; --a-M: #7dffa3; --a-c: #45d873; --a-C: #a6ffbf; --a-w: #5bff8a; --a-W: #d2ffe0; --a-n: #040a05; --a-N: #1d6b36;
+    --map-filter: invert(1) sepia(1) saturate(5) hue-rotate(70deg) brightness(.7);
+    --glow: 0 0 0 1px rgb(91 255 138 / .4), 0 0 18px rgb(91 255 138 / .22);
+    --f-display: "VT323", ui-monospace, monospace;
+    --f-out: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+    --f-ui: "VT323", "IBM Plex Mono", ui-monospace, monospace;
+    --radius: 2px;
+    --glowtext: 0 0 6px rgb(60 255 120 / .35);
+    color-scheme: dark;
+}
+
+/* Valhalla Classic: black, the original client's colours */
+:root[data-skin="classic"] {
+    --bg: #000000; --panel: #0b0b0b; --raise: #161616; --line: #2c2c2c; --fg: #cccccc; --muted: #9a9a9a; --faint: #666666;
+    --accent: #ffa500; --accent-ink: #000000; --frost: #00ffff;
+    --hp: #d63a3a; --ep: #2fbf4f; --mp: #4f6fff; --good: #2fbf4f; --bad: #ff4040;
+    --m-room: #ffa500; --m-npc: #00ffff; --m-obj: #ffe4c4; --m-pc: #00ffff; --m-say: #5f9ea0; --m-self: #f0f8ff;
+    --m-tell: #f0f8ff; --m-chan: #f0f8ff; --m-hit: #ffa500; --m-hurt: #ff4040; --m-miss: #708090; --m-xp: #ff5050; --m-death: #ff6347;
+    --m-who: #ff7f50; --m-hint: #00ff00; --m-spell: #9932cc;
+    --a-r: #b22222; --a-R: #ff0000; --a-g: #228b22; --a-G: #00ff00; --a-y: #daa520; --a-Y: #ffff00; --a-b: #3050d0; --a-B: #4f6fff;
+    --a-m: #9932cc; --a-M: #ff00ff; --a-c: #008b8b; --a-C: #00ffff; --a-w: #cccccc; --a-W: #ffffff; --a-n: #000000; --a-N: #696969;
+    --map-filter: invert(.9) contrast(.95);
+    --glow: 0 0 0 1px rgb(255 165 0 / .4), 0 0 14px rgb(255 165 0 / .2);
+    --f-display: "IBM Plex Mono", ui-monospace, monospace;
+    --radius: 4px;
+    color-scheme: dark;
+}

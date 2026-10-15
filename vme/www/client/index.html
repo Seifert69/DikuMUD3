@@ -1,43 +1,153 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-    </head>
-    <body>
-        <h2>MUD Connector (websockets)</h2>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src ws: wss:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'; base-uri 'none'">
+    <title>DikuMUD</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=VT323&display=swap">
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/client.css">
+    <script src="core/html.js" defer></script>
+    <script src="core/protocol.js" defer></script>
+    <script src="core/engine.js" defer></script>
+    <script src="core/connection.js" defer></script>
+    <script src="ui/sanitize.js" defer></script>
+    <script src="ui/app.js" defer></script>
+</head>
+<body>
+<div class="app" id="app" data-side="status" data-view="play">
+    <header class="top">
+        <div class="brand"><span class="wordmark" id="mudname">DikuMUD</span><small>web client</small></div>
+        <div class="whoami"><span class="ply" id="plyname">Not logged in</span><span class="where" id="where"></span></div>
+        <div class="spacer"></div>
+        <button class="conn" id="conn" data-state="closed" type="button" title="Connection"><span class="dot"></span><span class="host" id="connhost">Not connected</span></button>
+        <button class="iconbtn" id="settingsbtn" type="button" aria-haspopup="dialog" aria-expanded="false">⚙ <span>Settings</span></button>
+    </header>
 
-        <a href="https://www.valhalla.com/v3/client-a.html?protocol=wss&host=valhalla.com&port=4280&endpoint=%2Fecho&reader=true">Accessible Quick Link Valhalla.com</a><br/>
-        <a href="https://www.valhalla.com/v3/client-a.html?protocol=wss&host=valhalla.com&port=4280&endpoint=%2Fecho&reader=false">Quick Link Valhalla.com (no screen reader)</a><br/>
-        <br/>
+    <main class="play" id="play">
+        <section class="panel play-vitals" aria-label="Vitals" data-vitals></section>
+        <div class="panel out-wrap">
+            <div class="banner" id="banner" hidden></div>
+            <div class="output" id="output" role="log" aria-label="Game output"></div>
+            <button class="newlines" id="newlines" type="button" hidden></button>
+        </div>
+        <section class="panel combat" id="combat" aria-label="Combat" hidden></section>
+        <div class="quick" id="quick">
+            <button class="chip" type="button" data-cmd="look">look</button>
+            <button class="chip" type="button" data-cmd="inventory">inventory</button>
+            <button class="chip" type="button" data-cmd="equipment">equipment</button>
+            <button class="chip" type="button" data-cmd="score">score</button>
+            <button class="chip" type="button" data-cmd="who">who</button>
+            <button class="chip" type="button" data-cmd="help">help</button>
+        </div>
+        <form class="panel cmdbar" id="cmdform" autocomplete="off">
+            <span class="ptext" id="ptext" aria-hidden="true">›</span>
+            <label class="sr" for="cmd">Command</label>
+            <input id="cmd" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" enterkeyhint="send" placeholder="Type a command">
+            <button class="send" type="submit">Send</button>
+        </form>
+    </main>
 
-        <input type="checkbox" id="sreader" checked="checked">Screen Reader Support (helps with screen readers but adds additional line breaks on screen)</input>
-        <br/>
-        <select id="protocol">
-            <option value="ws" selected="selected">ws</option>
-            <option value="wss">wss</option>
+    <div class="panel side-switch" role="group" aria-label="Side panel">
+        <button type="button" data-side="status" aria-pressed="true">Status</button>
+        <button type="button" data-side="chats" aria-pressed="false">Conversations <span class="badge" data-unread hidden></span></button>
+    </div>
+
+    <aside class="status" id="status" aria-label="Status">
+        <section class="panel card vitals" aria-label="Vitals" data-vitals></section>
+        <section class="panel card roomcard" aria-label="Room">
+            <div>
+                <div class="eyebrow"><span>You are in</span><span id="rcid"></span></div>
+                <div class="rc-title" id="rctitle">Nowhere yet</div>
+                <div class="rc-sub" id="rcsub"></div>
+            </div>
+            <div class="compass" id="compass">
+                <div class="rose">
+                    <button class="dir" type="button" data-dir="nw" disabled>NW</button><button class="dir" type="button" data-dir="n" disabled>N</button><button class="dir" type="button" data-dir="ne" disabled>NE</button>
+                    <button class="dir" type="button" data-dir="w" disabled>W</button><button class="dir hub" type="button" data-cmd="look" title="Look around">look</button><button class="dir" type="button" data-dir="e" disabled>E</button>
+                    <button class="dir" type="button" data-dir="sw" disabled>SW</button><button class="dir" type="button" data-dir="s" disabled>S</button><button class="dir" type="button" data-dir="se" disabled>SE</button>
+                </div>
+                <div class="updn"><button class="dir" type="button" data-dir="u" disabled>Up</button><button class="dir d" type="button" data-dir="d" disabled>Down</button></div>
+            </div>
+        </section>
+        <section class="panel mapcard" aria-label="Map">
+            <div class="eyebrow"><span>Map</span><span>click to enlarge</span></div>
+            <button class="mapview" id="mapview" type="button" aria-label="Enlarge map"><img id="mapimg" alt="" hidden><span class="you" id="mapyou" hidden></span><span class="nomap" id="nomap">The map appears when you walk somewhere that has one.</span></button>
+            <div class="mapzone"><span id="mapzone"></span><span id="mapxy"></span></div>
+        </section>
+    </aside>
+
+    <aside class="panel chats" id="chats" aria-label="Conversations">
+        <header><h2>Conversations</h2></header>
+        <ul class="threads" id="threads"></ul>
+        <div class="thread" id="thread" hidden>
+            <div class="thread-head"><b id="thname"></b><small id="thsub"></small></div>
+            <div class="msgs" id="msgs"></div>
+            <form class="panel reply" id="replyform" autocomplete="off">
+                <span class="prefix" id="prefix"></span>
+                <label class="sr" for="reply">Reply</label>
+                <input id="reply" type="text" spellcheck="true" placeholder="Reply…">
+            </form>
+        </div>
+    </aside>
+
+    <nav class="tabs" aria-label="Views">
+        <button type="button" data-view="play" aria-pressed="true">Play</button>
+        <button type="button" data-view="status" aria-pressed="false">Status</button>
+        <button type="button" data-view="chats" aria-pressed="false">Chats <span class="badge" data-unread hidden></span></button>
+    </nav>
+</div>
+
+<section class="panel settings" id="settings" role="dialog" aria-label="Settings" hidden>
+    <h2>Settings</h2>
+    <label class="opt" for="skin">Theme
+        <select id="skin">
+            <option value="auto">Match system</option>
+            <option value="hall">Mead-hall</option>
+            <option value="vellum">Vellum</option>
+            <option value="amber">Amber CRT</option>
+            <option value="green">Green screen</option>
+            <option value="classic">Valhalla Classic</option>
         </select>
-        <input type="text" id="hostname" value="localhost"/>
-        <input type="text" id="port" value="4280"/>
-        <input type="text" id="endpoint" value="/echo"/>
-        <input type="button" value="Connect" onclick="ConnectClick()" />
-    </body>
+    </label>
+    <div>
+        <div class="eyebrow"><span>Text size</span></div>
+        <div class="seg-ctl" id="sizes" role="group" aria-label="Text size">
+            <button type="button" data-size="s">S</button><button type="button" data-size="m">M</button><button type="button" data-size="l">L</button><button type="button" data-size="xl">XL</button>
+        </div>
+    </div>
+    <label class="opt"><input type="checkbox" id="opt-fold"> Fold combat into one line per fight</label>
+    <label class="opt"><input type="checkbox" id="opt-prompt"> Show the prompt in the log</label>
+    <label class="opt"><input type="checkbox" id="opt-echo"> Show my commands in the log</label>
+    <label class="opt"><input type="checkbox" id="opt-stamps"> Show times when hovering a line</label>
+    <div class="actions">
+        <button class="btn" type="button" id="btn-server">Change server…</button>
+        <button class="btn warn" type="button" id="btn-disconnect">Disconnect</button>
+    </div>
+</section>
 
-    <script>
-        function encodeQueryData(data) {
-        const ret = [];
-        for (let d in data)
-            ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
-        return ret.join('&');
-        }
+<div class="scrim" id="scrim" hidden></div>
 
-        function ConnectClick() {
-            const data = { 'protocol': document.getElementById("protocol").value, 'host': document.getElementById("hostname").value,
-                    'port': document.getElementById("port").value, 'endpoint' : document.getElementById("endpoint").value,
-                    'reader' : document.getElementById("sreader").checked };
-            const querystring = encodeQueryData(data);
-            //alert(document.getElementById("sreader").checked );
-            window.open ('client-a.html?'+querystring,'_self', false)
-        }            
-    </script>
-
+<template id="connect-tpl">
+    <form class="panel connect" id="connectform" autocomplete="on">
+        <h1>Connect</h1>
+        <p>Pick a server, or fill in your own.</p>
+        <div class="presets" id="presets"></div>
+        <div class="fields">
+            <label>Protocol<select id="f-protocol"><option value="wss">wss</option><option value="ws">ws</option></select></label>
+            <label>Host<input id="f-host" type="text" required spellcheck="false" autocapitalize="off"></label>
+            <label>Port<input id="f-port" type="text" inputmode="numeric" spellcheck="false"></label>
+            <label class="wide">Path<input id="f-endpoint" type="text" spellcheck="false" autocapitalize="off"></label>
+        </div>
+        <div class="row">
+            <a id="readerlink" href="client-a.html?reader=true">Screen reader client</a>
+            <button class="btn primary" type="submit">Connect</button>
+        </div>
+    </form>
+</template>
+</body>
 </html>
