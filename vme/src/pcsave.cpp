@@ -434,12 +434,32 @@ unit_data *load_player_file(FILE *pFile)
         return nullptr;
     }
 
+    // The length comes from the file: it must fit in what is left of it, or it
+    // is corrupt. A length near 2^32 used to wrap the buffer size in
+    // IncreaseSize() and fread() then wrote past the end of the buffer.
+    const long nStart = ftell(pFile);
+    if (nStart < 0 || fseek(pFile, 0L, SEEK_END))
+    {
+        return nullptr;
+    }
+    const long nEnd = ftell(pFile);
+    if (nEnd < nStart || fseek(pFile, nStart, SEEK_SET))
+    {
+        return nullptr;
+    }
+    if (nPlyLen == 0 || nPlyLen > static_cast<unsigned long>(nEnd - nStart))
+    {
+        slog(LOG_ALL, 0, "ERROR: PC FILE RECORDED LENGTH %u, BUT ONLY %ld BYTES IN THE FILE!", nPlyLen, nEnd - nStart);
+        return nullptr;
+    }
+
     pBuf = &g_FileBuffer;
     n = pBuf->FileRead(pFile, nPlyLen);
 
     if (n != nPlyLen)
     {
         slog(LOG_ALL, 0, "ERROR: PC FILE LENGTH MISMATCHED RECORDED LENGTH!");
+        return nullptr;
     }
 
     pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
