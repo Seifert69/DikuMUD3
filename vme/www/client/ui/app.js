@@ -302,8 +302,11 @@
         setMap(r.zone, r.map);
     }
 
-    const map = { zone: null, ok: false, w: 0, h: 0, pos: null };
+    const map = { zone: null, ok: false, w: 0, h: 0, pos: null, dir: null };
     const mapImg = $("#mapimg");
+    // Zone maps are in ../img in the repository but next to the page (img/) on valhalla.com.
+    // Both are tried until one has worked; after that only that one.
+    const MAP_DIRS = ["../img/", "img/"];
 
     function setMap(zone, pos) {
         map.pos = pos;
@@ -318,8 +321,10 @@
             $("#nomap").hidden = false;
             if (zone) {
                 const want = zone;
+                let dir = map.dir ?? 0;
                 mapImg.onload = () => {
                     if (map.zone !== want) return;
+                    map.dir = dir;
                     map.ok = true;
                     map.w = mapImg.naturalWidth;
                     map.h = mapImg.naturalHeight;
@@ -330,9 +335,11 @@
                     placeMap();
                 };
                 mapImg.onerror = () => {
-                    if (map.zone === want) $("#nomap").textContent = `There is no map of ${cap(want)}.`;
+                    if (map.zone !== want) return;
+                    if (map.dir === null && ++dir < MAP_DIRS.length) mapImg.src = MAP_DIRS[dir] + encodeURIComponent(want) + ".jpg";
+                    else $("#nomap").textContent = `There is no map of ${cap(want)}.`;
                 };
-                mapImg.src = "../img/" + encodeURIComponent(zone) + ".jpg";
+                mapImg.src = MAP_DIRS[dir] + encodeURIComponent(zone) + ".jpg";
             }
         }
         placeMap();
