@@ -876,11 +876,13 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
  *  <br/><br/>\n\r becomes \n\r\n\r.
  *  That's by design to support both telnet and HTML reasonably.
  */
-void cConHook::StripHTML(char *dest, const char *src)
+void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
 {
+    char *const pDestEnd = dest + nDestMax;
+
     if (g_mplex_arg.g_bModeRawHTML)
     {
-        strcpy(dest, src);
+        snprintf(dest, nDestMax, "%s", src);
         return;
     }
 
@@ -891,6 +893,17 @@ void cConHook::StripHTML(char *dest, const char *src)
 
     while (*p)
     {
+        // Colour codes make the output longer than the HTML (</div> becomes
+        // about 22 bytes), so stop short of the end of dest. One step below
+        // writes at most what one tag holds: a 256-byte aTag, or up to three
+        // colour codes for a div class. Recheck this if a step writes more.
+        constexpr ptrdiff_t STEP_MAX = 512;
+        if (pDestEnd - dest < STEP_MAX)
+        {
+            slog(LOG_ALL, 0, "StripHTML(): output too long for a %zu-byte buffer, cut short", nDestMax);
+            break;
+        }
+
         if (*p == '<')
         {
             char aTag[256];
@@ -1091,8 +1104,8 @@ char *cConHook::ParseOutput(const char *text)
 {
     extern arg_type g_mplex_arg;
 
-    static char Outbuf[65536];  // I know this sucks. Got to rewrite thath StripHTML and 
-    static char Outbuf2[65536]; // rewrite indentText too to either stop at the end or realloc...
+    static char Outbuf[65536];  // StripHTML() and IndentText() stop at the end of these;
+    static char Outbuf2[65536]; // growing them instead of cutting long output is still to do
 
     assert(strlen(text) < sizeof(Outbuf));
 
@@ -1113,7 +1126,7 @@ char *cConHook::ParseOutput(const char *text)
     }
     else
     {
-        StripHTML(Outbuf2, text);
+        StripHTML(Outbuf2, sizeof(Outbuf2), text);
 
         return IndentText(Outbuf2, Outbuf, sizeof(Outbuf), m_sSetup.width);
     }
@@ -2155,6 +2168,7 @@ cConHook::cConHook()
     }
 
     g_nConnectionsLeft--;
+    m_bTakesConnection = true;
 }
 
 // cConHook Destructor
@@ -2178,7 +2192,10 @@ cConHook::~cConHook()
         tmp->m_pNext = this->m_pNext;
     }
 
-    g_nConnectionsLeft++;
+    if (m_bTakesConnection)
+    {
+        g_nConnectionsLeft++;
+    }
 }
 
 } // namespace mplex
