@@ -61,6 +61,7 @@
         server: null,
         player: "",
         mud: "",
+        lastLine: "",
         password: false,
         vit: null,
     };
@@ -242,8 +243,9 @@
         scrim.hidden = false;
     }
 
+    // The password dialog stays until the server ends the password step (closePasswordDialog).
     function closeScrim() {
-        if (scrim.hidden) return;
+        if (scrim.hidden || scrim.querySelector(".pwdlg")) return;
         scrim.hidden = true;
         scrim.replaceChildren();
         focusInput();
@@ -777,12 +779,52 @@
         commands.forEach(c => send(c, true));
     }
 
+    /*
+     * Passwords go in a dialog of their own. Turning the command field into a password field made
+     * Firefox treat it as a login field for good, with a password manager popup on every click.
+     * The dialog's form names the character, so a saved password belongs to that character.
+     */
+    function lastServerLine() {
+        const lines = (out.el.lastElementChild?.textContent || "").split("\n").map(l => l.trim()).filter(Boolean);
+        return lines[lines.length - 1] || "";
+    }
+
+    function showPasswordDialog() {
+        const question = lastServerLine();
+        const form = el("form", "panel connect pwdlg");
+        form.append(el("h1", null, "Password"), el("p", null, question || "Enter your password."));
+        const user = el("input", "sr");
+        Object.assign(user, { type: "text", name: "username", autocomplete: "username", readOnly: true, tabIndex: -1, value: S.lastLine });
+        const label = el("label", "wide", "Password");
+        const pw = el("input");
+        Object.assign(pw, { type: "password", name: "password", id: "pw", autocomplete: /new|retype/i.test(question) ? "new-password" : "current-password" });
+        label.append(pw);
+        const fields = el("div", "fields");
+        fields.append(label);
+        const go = el("button", "btn primary", "Enter");
+        go.type = "submit";
+        const row = el("div", "row");
+        row.append(el("span"), go);
+        form.append(user, fields, row);
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            if (S.conn && S.conn.isOpen) S.conn.send(pw.value);
+            pw.value = "";
+        });
+        openScrim(form);
+        pw.focus();
+    }
+
+    function closePasswordDialog() {
+        if (!scrim.querySelector(".pwdlg")) return;
+        scrim.hidden = true;
+        scrim.replaceChildren();
+    }
+
     function setPassword(ev) {
         S.password = ev.on;
-        const input = $("#cmd");
-        input.type = ev.on ? "password" : "text";
-        input.placeholder = ev.on ? "Password" : "Type a command";
-        $("#cmdform").classList.toggle("pw", ev.on);
+        if (ev.on) showPasswordDialog();
+        else closePasswordDialog();
         if (!ev.on) {
             if (ev.mud) {
                 S.mud = ev.mud;
@@ -815,9 +857,10 @@
     // A typed line: history, aliases and ';' splitting. The password is sent exactly as typed.
     function runLine(line) {
         if (S.password) {
-            if (S.conn && S.conn.isOpen) S.conn.send(line);
+            $("#pw")?.focus(); // the password goes in its dialog, never through here
             return;
         }
+        if (line.trim()) S.lastLine = line.trim(); // before a password prompt, that's the character's name
         if (!line.trim()) {
             send("");
             return;
