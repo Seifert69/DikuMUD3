@@ -79,7 +79,7 @@ void strip_trailing_blanks(char *str);
 const char *divcolor(const char *colorstr);
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);
 int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax);
-int getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax);
+void getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax);
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
 
 std::string str_json(const char *lbl, ubit64 nInt);

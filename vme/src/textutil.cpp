@@ -323,7 +323,7 @@ const char *skip_blanks(const char *string)
         return nullptr;
     }
 
-    for (; *string && isspace(*string); string++)
+    for (; *string && isspace(static_cast<unsigned char>(*string)); string++)
     {
         ;
     }
@@ -1838,25 +1838,139 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce - c;
 }
 
-// The web address of an <a ...> tag, for clients that can't follow links.
-// tagText is the text between < and > with its case kept (getHTMLTag()
-// lowercases, which would break case-sensitive addresses such as wiki
-// pages). Only http:// and https:// addresses count, so command links
-// (<a cmd='...'>) give nothing. Returns the length copied to pHref, or 0.
-int getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax)
+// True if s starts with an http:// or https:// address
+static bool isWebAddress(const char *s)
 {
-    if (getHTMLValue("href", tagText, pHref, nHrefMax) == 0)
+    return strncasecmp(s, "http://", 7) == 0 || strncasecmp(s, "https://", 8) == 0;
+}
+
+// The web address of an <a ...> tag, for clients that can't follow links.
+// tagText points just past the '<' in the original text, and the tag ends at
+// the first '>' (as for getHTMLTag()). It is read as sent, because
+// getHTMLTag() lowercases and addresses such as wiki pages are
+// case-sensitive. Unlike getHTMLValue(), this walks the attributes one by
+// one, so "href" must be a whole attribute name (any case, not part of
+// data-href or of another attribute's value), and the value may use either
+// quote, or none. Entities in the value (&amp; etc.) are decoded and control
+// characters dropped.
+// Only http:// and https:// addresses count, so command links
+// (<a cmd='...'>) give nothing: pHref is then empty.
+void getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax)
+{
+    static const struct
     {
-        return 0;
+        const char *entity;
+        int len;
+        char c;
+    } entities[] = {{"&amp;", 5, '&'}, {"&lt;", 4, '<'}, {"&gt;", 4, '>'}, {"&quot;", 6, '"'}, {"&apos;", 6, '\''}, {"&#39;", 5, '\''}};
+
+    const char *c = tagText;
+    const char *val = nullptr;
+    const char *valEnd = nullptr;
+
+    *pHref = 0;
+
+    while (*c && *c != '>' && !isspace(static_cast<unsigned char>(*c))) // Skip the element name
+    {
+        c++;
     }
 
-    if (strncasecmp(pHref, "http://", 7) != 0 && strncasecmp(pHref, "https://", 8) != 0)
+    // Find the first href, as a browser does
+    for (;;)
     {
-        *pHref = 0;
-        return 0;
+        while (isspace(static_cast<unsigned char>(*c)) || *c == '/')
+        {
+            c++;
+        }
+        if (*c == 0 || *c == '>')
+        {
+            return; // No href
+        }
+
+        const char *name = c;
+        while (*c && *c != '>' && *c != '=' && *c != '/' && !isspace(static_cast<unsigned char>(*c)))
+        {
+            c++;
+        }
+        bool bHref = c - name == 4 && strncasecmp(name, "href", 4) == 0;
+        val = valEnd = c; // No '=' means an empty value
+
+        c = skip_blanks(c);
+        if (*c == '=')
+        {
+            c = skip_blanks(c + 1);
+            char quote = (*c == '\'' || *c == '"') ? *c++ : 0;
+            val = c;
+            while (*c && *c != '>' && (quote ? *c != quote : !isspace(static_cast<unsigned char>(*c))))
+            {
+                c++;
+            }
+            valEnd = c;
+            if (quote && *c++ != quote)
+            {
+                return; // Not closed inside the tag
+            }
+        }
+
+        if (bHref)
+        {
+            break;
+        }
     }
 
-    return strlen(pHref);
+    // Blanks around the address don't count, as in a browser
+    while (val < valEnd && isspace(static_cast<unsigned char>(*val)))
+    {
+        val++;
+    }
+    while (valEnd > val && isspace(static_cast<unsigned char>(valEnd[-1])))
+    {
+        valEnd--;
+    }
+
+    // Checked before decoding: no entity decodes to a character of "https://",
+    // and the quote, blank or '>' after the value can't extend a match.
+    if (!isWebAddress(val))
+    {
+        return;
+    }
+
+    int n = 0;
+    for (const char *v = val; v < valEnd;)
+    {
+        char ch = *v;
+        int step = 1;
+        if (ch == '&')
+        {
+            for (const auto &e : entities)
+            {
+                if (valEnd - v >= e.len && strncasecmp(v, e.entity, e.len) == 0)
+                {
+                    ch = e.c;
+                    step = e.len;
+                    break;
+                }
+            }
+        }
+        v += step;
+
+        // Control characters (newline, ESC, ...) would go to the terminal as
+        // they are, and 0xFF starts a telnet command (IAC); browsers drop tabs
+        // and newlines from addresses too
+        auto uch = static_cast<unsigned char>(ch);
+        if (uch < ' ' || uch == 0x7f || uch == 0xff)
+        {
+            continue;
+        }
+
+        if (n >= nHrefMax - 1)
+        {
+            *pHref = 0;
+            return; // Not enough space
+        }
+        pHref[n++] = ch;
+    }
+    pHref[n] = 0;
 }
 
 /*
