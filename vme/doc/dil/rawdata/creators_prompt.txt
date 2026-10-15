@@ -141,6 +141,6 @@ code
 
    temp := split(txt, ".");
    txt := toupper(temp.[0].[0]) + right(temp.[0], length(temp.[0])-1);
-   sendtext("<a href='https://wiki.dikumud.net/wiki/Help/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
+   sendtext("<a href='https://wiki.dikumud.com/wiki/Help/"+txt+"'>View or Contribute on Wiki</a><br/>", self);
    quit;
 } dilend

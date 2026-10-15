@@ -7,7 +7,7 @@ import urllib.error
 
 # MS2020
 # use this script to retrieve a help file from the Wiki.
-# Will get the page in wiki.dikumud.net/Help/thepage
+# Will get the page in wiki.dikumud.com/Help/thepage
 # and save it to a .hlp file.
 #
 # The idea is that we can maintain help files in the Wiki
@@ -16,7 +16,7 @@ import urllib.error
 # Example: 
 #   python getwikihelppage.py Help
 #
-# will retrieve wiki.dikumud.net/Help/Help and save it as help.hlp
+# will retrieve wiki.dikumud.com/Help/Help and save it as help.hlp
 #
 
 if len(sys.argv) != 2:
@@ -24,10 +24,10 @@ if len(sys.argv) != 2:
     sys.exit()
     quit()
 
-print("Getting Wiki page from wiki.dikumud.net: " + sys.argv[1])
+print("Getting Wiki page from wiki.dikumud.com: " + sys.argv[1])
 
 try: 
-    j = urllib.request.urlopen('https://wiki.dikumud.net/api.php?action=parse&format=json&page=Help/'+sys.argv[1])
+    j = urllib.request.urlopen('https://wiki.dikumud.com/api.php?action=parse&format=json&page=Help/'+sys.argv[1])
 except urllib.error.HTTPError as e:
     print('HTTPError = ' + str(e.code))
     sys.exit()

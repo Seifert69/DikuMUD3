@@ -59,7 +59,7 @@ def test_url_construction():
     print("=" * 30)
     
     sample_files = ["string.wiki", "abilities.wiki", "act.wiki"]
-    base_url = "https://wiki.dikumud.net"
+    base_url = "https://wiki.dikumud.com"
     
     for filename in sample_files:
         page_title = f"Manual:DIL_Manual/{Path(filename).stem}"

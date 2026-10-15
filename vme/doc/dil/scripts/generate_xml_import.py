@@ -111,7 +111,7 @@ If you have server access to your MediaWiki installation:
 METHOD 2: Using Special:Import in the wiki interface
 ----------------------------------------------------
 1. Log in as an admin user on your wiki
-2. Go to Special:Import (https://wiki.dikumud.net/wiki/Special:Import)
+2. Go to Special:Import (https://wiki.dikumud.com/wiki/Special:Import)
 3. Upload the XML file through the web interface
 4. Note: This may require admin privileges and file upload permissions
 
@@ -132,7 +132,7 @@ If you want to use the original API uploader, you may need to edit LocalSettings
 METHOD 4: Manual page creation
 ------------------------------
 As a last resort, you can create pages manually:
-1. For each .wiki file, go to: https://wiki.dikumud.net/wiki/Manual:DIL_Manual/filename
+1. For each .wiki file, go to: https://wiki.dikumud.com/wiki/Manual:DIL_Manual/filename
 2. Click "Create" or "Edit"
 3. Copy and paste the content from the .wiki file (after removing line numbers)
 

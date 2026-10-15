@@ -20,7 +20,7 @@ class MediaWikiUploaderAlternative:
         Initialize the MediaWiki uploader with alternative methods.
         
         Args:
-            base_url: Base URL of the wiki (e.g., "https://wiki.dikumud.net")
+            base_url: Base URL of the wiki (e.g., "https://wiki.dikumud.com")
             username: Wiki username
             password: Wiki password
         """
@@ -187,7 +187,7 @@ class MediaWikiUploaderAlternative:
 # Manual upload script for MediaWiki pages
 # This script provides curl commands for manual upload
 
-WIKI_URL="https://wiki.dikumud.net"
+WIKI_URL="https://wiki.dikumud.com"
 USERNAME="''' + self.username + '''"
 
 echo "MediaWiki Manual Upload Script"
@@ -250,7 +250,7 @@ def main():
     print("MediaWiki Alternative Upload Methods")
     print("=" * 50)
     
-    WIKI_URL = "https://wiki.dikumud.net"
+    WIKI_URL = "https://wiki.dikumud.com"
     USERNAME = input("Enter wiki username: ").strip()
     PASSWORD = input("Enter wiki password: ").strip()
     
