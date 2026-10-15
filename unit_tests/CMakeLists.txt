@@ -9,6 +9,7 @@ add_executable(vme_unit_tests
         FixtureBase.cpp FixtureBase.h
         account_cpp_tests.cpp
         bytestring_tests.cpp
+        char_point_data_tests.cpp
         cintlist_tests.cpp
         cNamelist_tests.cpp
         color_type_tests.cpp
