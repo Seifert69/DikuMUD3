@@ -708,6 +708,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         return nullptr;
     }
 
+    pBuf->ClearCorrupt(); // any failed read from here on makes this unit corrupt
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
@@ -1328,6 +1329,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     if (len != (int)(pBuf->GetReadPosition() - nStart))
     {
         slog(LOG_ALL, 0, "FATAL: Length read mismatch (%d / %d)", len, pBuf->GetReadPosition());
+        g_nCorrupt++;
+    }
+
+    // Catches the reads whose errors aren't counted above (e.g. the DIL variable
+    // lists in bread_dil(), the extra descriptions in bread_extra())
+    if (pBuf->IsCorrupt())
+    {
+        slog(LOG_ALL, 0, "FATAL: Read past the end of the data for '%s'.", whom);
         g_nCorrupt++;
     }
 

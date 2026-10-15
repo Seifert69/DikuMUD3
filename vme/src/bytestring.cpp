@@ -25,6 +25,7 @@ CByteBuffer::CByteBuffer(ubit32 nSize)
     m_nLength = 0;
     m_nReadPos = 0;
     m_nAllocated = nSize;
+    m_bCorrupt = false;
     CREATE(m_pData, ubit8, nSize);
 
     assert(m_pData != nullptr);
@@ -145,7 +146,7 @@ int CByteBuffer::Read(ubit8 *pBuf, ubit32 nLen)
 {
     if (m_nReadPos + nLen > m_nLength)
     {
-        return 1;
+        return Corrupt();
     }
 
     memcpy(pBuf, m_pData + m_nReadPos, nLen);
@@ -286,7 +287,7 @@ int CByteBuffer::StringLengthAtReadPos(ubit32 *pnLen)
 {
     if (m_nReadPos >= m_nLength)
     {
-        return 1;
+        return Corrupt();
     }
 
     const ubit8 *pStart = m_pData + m_nReadPos;
@@ -294,7 +295,7 @@ int CByteBuffer::StringLengthAtReadPos(ubit32 *pnLen)
 
     if (pNul == nullptr)
     {
-        return 1;
+        return Corrupt();
     }
 
     *pnLen = pNul - pStart + 1;
@@ -308,7 +309,7 @@ int CByteBuffer::ReadStringCopy(char *pStr, ubit32 nMaxSize)
     if (StringLengthAtReadPos(&nLen) || nLen > nMaxSize)
     {
         pStr[0] = 0;
-        return 1;
+        return Corrupt();
     }
 
     return Read((ubit8 *)pStr, nLen);
@@ -404,7 +405,7 @@ int CByteBuffer::ReadIntList(int **ilist)
     // and the read past the end of the data then hit assert(FALSE).
     if (corrupt || len < 0 || static_cast<ubit32>(len) > (m_nLength - m_nReadPos) / 4)
     {
-        return 1;
+        return Corrupt();
     }
 
     CREATE(intlist, int, len + 1);
@@ -436,7 +437,7 @@ int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
     if (corrupt || *pnLen > m_nLength - m_nReadPos)
     {
         *pnLen = 0;
-        return 1;
+        return Corrupt();
     }
 
     *ppData = (ubit8 *)malloc(*pnLen);
@@ -454,7 +455,7 @@ int CByteBuffer::Skip(int nLen)
 {
     if (m_nReadPos + nLen > m_nLength)
     {
-        return 1;
+        return Corrupt();
     }
 
     m_nReadPos += nLen;

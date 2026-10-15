@@ -208,4 +208,73 @@ BOOST_AUTO_TEST_CASE(ReadIntList_negative_length_is_corrupt)
     BOOST_TEST(list == nullptr);
 }
 
+// Readers whose callers ignore the return value: the buffer remembers the
+// failure, so read_unit_string() can still reject the unit.
+BOOST_AUTO_TEST_CASE(failed_reads_leave_the_buffer_corrupt)
+{
+    CByteBuffer buf;
+    buf.Append8(7);
+    BOOST_TEST(!buf.IsCorrupt());
+
+    BOOST_TEST(buf.ReadU8() == 7);
+    BOOST_TEST(!buf.IsCorrupt()); // reading exactly to the end is fine
+
+    BOOST_TEST(buf.ReadU16() == 0); // nothing left, error not asked for
+    BOOST_TEST(buf.IsCorrupt());
+
+    buf.Append8(8); // later reads that work don't clear it
+    BOOST_TEST(buf.ReadU8() == 8);
+    BOOST_TEST(buf.IsCorrupt());
+
+    buf.ClearCorrupt();
+    BOOST_TEST(!buf.IsCorrupt());
+}
+
+BOOST_AUTO_TEST_CASE(each_failing_reader_sets_corrupt)
+{
+    {
+        CByteBuffer buf;
+        BOOST_TEST(buf.Skip(1) == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf;
+        append_bytes(buf, "no nul");
+        char *p = nullptr;
+        BOOST_TEST(buf.SkipString(&p) == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf;
+        buf.AppendString("toolong");
+        char out[4];
+        BOOST_TEST(buf.ReadStringCopy(out, sizeof(out)) == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf;
+        buf.Append32(1000); // count of ints, none follow
+        int *list = nullptr;
+        BOOST_TEST(buf.ReadIntList(&list) == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf;
+        buf.Append32(1000); // block length, no data follows
+        ubit8 *data = nullptr;
+        ubit32 len = 0;
+        BOOST_TEST(buf.ReadBlock(&data, &len) == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(clear_resets_corrupt)
+{
+    CByteBuffer buf;
+    BOOST_TEST(buf.ReadU8() == 0);
+    BOOST_TEST(buf.IsCorrupt());
+    buf.Clear();
+    BOOST_TEST(!buf.IsCorrupt());
+}
+
 BOOST_AUTO_TEST_SUITE_END()
