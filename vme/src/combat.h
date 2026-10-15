@@ -45,6 +45,7 @@ public:
     inline unit_data *Melee() { return pMelee; }
     inline int When() { return nWhen; }
     inline int NoOpponents() { return nNoOpponents; }
+    inline bool WebSent() const { return bWebSent; }
 
     int calculateHastedActions(int actions, int hastePercentage);
     void changeSpeed(int delta, int speedPercentage);
@@ -56,6 +57,9 @@ public:
     void status(const unit_data *ch);
 
     void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
+
+    /// Send this round's '$combat' packet if the owner is on a web client
+    void sendWebRound();
 
 private:
     void add(unit_data *victim);
@@ -69,6 +73,8 @@ private:
     unit_data **pOpponents;         ///< Array of opponents (given damage)
     int nNoOpponents;               ///< Number of opponents
     char cmd[MAX_INPUT_LENGTH + 1]; ///< A combat command
+    int nRound{0};                  ///< Combat rounds performed by this element
+    bool bWebSent{false};           ///< A '$combat' packet was sent to the owner
 };
 
 void set_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);
@@ -76,5 +82,6 @@ void add_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);
 void stop_fighting(unit_data *ch, unit_data *victim = nullptr);
 void stat_combat(unit_data *ch, unit_data *u, const char *pStr);
 void stat_spell(unit_data *god, unit_data *u, const char *pStr);
+void combat_web_death(unit_data *ch);
 
 extern cCombatList g_CombatList;

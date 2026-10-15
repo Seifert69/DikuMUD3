@@ -1030,6 +1030,7 @@ void die(unit_data *ch)
         return;
     }
 
+    combat_web_death(ch);
     send_death(ch);
     dilprg *prg = dil_copy_template(g_dil_death, ch, nullptr);
     if (prg)

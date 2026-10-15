@@ -774,6 +774,44 @@ void str_substitute(const char *old, const char *newstr, char *str)
     }
 }
 
+/// Escapes src for use inside a quoted HTML attribute value:
+/// & < > ' " become entities, so a name can't end the attribute or tag
+std::string str_html_attr_escape(const char *src)
+{
+    std::string dest;
+
+    if (src == nullptr)
+    {
+        return dest;
+    }
+
+    for (const char *p = src; *p; p++)
+    {
+        switch (*p)
+        {
+            case '&':
+                dest.append("&amp;");
+                break;
+            case '<':
+                dest.append("&lt;");
+                break;
+            case '>':
+                dest.append("&gt;");
+                break;
+            case '\'':
+                dest.append("&#39;");
+                break;
+            case '"':
+                dest.append("&quot;");
+                break;
+            default:
+                dest.push_back(*p);
+        }
+    }
+
+    return dest;
+}
+
 // Search is the string to search for in subject and replace with replace
 void str_substitute(const std::string &search, const std::string &replace, std::string &subject)
 {

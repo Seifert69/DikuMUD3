@@ -7018,8 +7018,29 @@ example: dilcopy ("channel",pc);
 no need to copy recieve channel takes care of the recieve part.
 */
 #define MAX_CHAN 25
+
+/*
+function  html_attr - escape a string for a single-quoted HTML attribute
+          value, e.g. "<div class='comm_say' from='"+html_attr(name)+"'>",
+          so a ' < > or & in a name can't break the tag.
+*/
+dilbegin string html_attr(s : string);
+var
+  r : string;
+code
+{
+   r := replace("&", "&amp;", s);
+   r := replace("'", "&#39;", r);
+   r := replace("<", "&lt;", r);
+   r := replace(">", "&gt;", r);
+   return(r);
+}
+dilend
+
 dilbegin recieve( slActive : stringlist, msg : string , talker : unitptr,
                   jmode : integer, dmode : integer);
+external
+  string html_attr(s : string);
 var
   nWizinv : integer;
   sChan : string;
@@ -7093,12 +7114,12 @@ code
       //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
       if (sChan in DISCORD_CHANNELS)
       {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
+         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }
       else if (self.level >= talker.minv) {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
+         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name+ " "+msg+"</div><br/>", self );
       } else {
-         sendtext("<div class='comm_emote'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
+         sendtext("<div class='comm_emote' chan='"+html_attr(sChan)+"' from='Someone'>&lt;"+sChan+"&gt; Someone "+msg+"</div><br/>", self );
       }
    }
    else if (sKey == "#"){
@@ -7143,7 +7164,7 @@ code
    {
       if (jmode ==1) {
          if (self.level >= talker.minv ) {
-            sendtext("<div class='comm_join'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
+            sendtext("<div class='comm_join' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name + " has entered the " +
                   "channel.</div><br/>",self);
          }
       }
@@ -7152,7 +7173,7 @@ code
    {
       if (dmode ==1) {
          if (self.level >= talker.minv ) {
-            sendtext("<div class='comm_leave'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
+            sendtext("<div class='comm_leave' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; " +talker.name + " has left the " +
                      "channel.</div><br/>",self);
          }
       }
@@ -7162,9 +7183,9 @@ code
       //log("Recieve else(): sKey="+sKey+" sChan="+sChan+" msg="+msg);
 
       if (self.level >= talker.minv) {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say' chan='"+html_attr(sChan)+"' from='"+html_attr(talker.name)+"'>&lt;"+sChan+"&gt; "+talker.name+" says '"+msg+"'</div><br/>",self);
       } else {
-         sendtext("<div class='comm_say'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
+         sendtext("<div class='comm_say' chan='"+html_attr(sChan)+"' from='Someone'>&lt;"+sChan+"&gt; "+"Someone says '" +msg+"'</div><br/>",self);
       }
    }
 

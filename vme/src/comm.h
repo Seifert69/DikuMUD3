@@ -37,6 +37,9 @@ enum actType_e : uint8_t
 
 actType_e ActType(int n);
 
+class color_type;
+void substHTMLcolor(std::string &dest, const char *src, color_type &color);
+
 
 enum actShow_e : uint8_t
 {
