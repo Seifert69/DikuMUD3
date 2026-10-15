@@ -646,19 +646,7 @@ static void bread_func_free(unit_fptr *head)
             dilprg *prg = (dilprg *)head->getData();
             if (prg)
             {
-                // A template that no longer exists got a placeholder from bread_dil()
-                // with its own copy of the name, which dil_free_template() leaves
-                // behind. Freed after the program: its destructor still logs the name.
-                char *placeholder_name = nullptr;
-                if (prg->frame[0].tmpl && prg->frame[0].tmpl->flags == DILFL_FREEME)
-                {
-                    placeholder_name = prg->frame[0].tmpl->prgname;
-                }
                 DELETE(dilprg, prg);
-                if (placeholder_name)
-                {
-                    FREE(placeholder_name);
-                }
             }
         }
         else if (head->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)

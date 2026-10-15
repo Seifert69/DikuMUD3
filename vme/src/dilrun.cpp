@@ -436,8 +436,8 @@ void dil_free_template(diltemplate *tmpl, int copy)
 
     if (tmpl->flags == DILFL_FREEME)
     {
-        /* free dummy template */
-        // FREE(tmpl->prgname); xxx
+        /* free dummy template, and the copy of the name bread_dil() gave it */
+        FREE(tmpl->prgname);
         tmpl->zone = nullptr;
         tmpl->argt = nullptr;
         tmpl->xrefs = nullptr;
