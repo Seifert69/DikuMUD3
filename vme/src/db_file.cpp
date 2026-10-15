@@ -188,6 +188,16 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
     g_nCorrupt += pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
 
+    // Each interrupt is set by an instruction in the code, so a template can't
+    // have more interrupts than bytes of code. A corrupt count (up to 65535)
+    // made every program copied from it allocate that many interrupts.
+    if (tmpl->intrcount > tmpl->coresz)
+    {
+        g_nCorrupt++;
+        slog(LOG_ALL, 0, "Corrupt DIL data: %u interrupts, but only %u bytes of code.", tmpl->intrcount, tmpl->coresz);
+        tmpl->intrcount = 0;
+    }
+
     tmpl->varc = dil_count_fits(pBuf, pBuf->ReadU16(), 1); /* number of variables */
 
     if (tmpl->varc)
@@ -313,8 +323,22 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
     int i = 0;
     ubit32 lab = 0;
 
-    /* read interrupts */
-    prg->frame[0].intrcount = pBuf->ReadU16();
+    /* read interrupts: flags, label and (from version 65) end label each */
+    prg->frame[0].intrcount = dil_count_fits(pBuf, pBuf->ReadU16(), version > 64 ? 10 : 6);
+
+    // Labels are offsets into the template's code, which a running program may
+    // reach the end of but not go past (as asserted in dilrun.cpp). A placeholder
+    // for a missing template has no code; its labels are only kept for saving.
+    const diltemplate *tmpl = prg->frame[0].tmpl;
+    auto label = [&](ubit32 offset) -> ubit8 * {
+        if (tmpl->core && offset > tmpl->coresz)
+        {
+            g_nCorrupt++;
+            slog(LOG_ALL, 0, "Corrupt DIL data: interrupt label %u, but %s has only %u bytes of code.", offset, tmpl->prgname, tmpl->coresz);
+            offset = 0;
+        }
+        return &(tmpl->core[offset]);
+    };
 
     if (prg->frame[0].intrcount)
     {
@@ -324,12 +348,12 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
         {
             prg->frame[0].intr[i].flags = pBuf->ReadU16();
             lab = pBuf->ReadU32();
-            prg->frame[0].intr[i].lab = &(prg->frame[0].tmpl->core[lab]);
+            prg->frame[0].intr[i].lab = label(lab);
             if (version > 64)
             {
                 lab = pBuf->ReadU32();
             }
-            prg->frame[0].intr[i].elab = &(prg->frame[0].tmpl->core[lab]);
+            prg->frame[0].intr[i].elab = label(lab);
         }
     }
     else
