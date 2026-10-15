@@ -19,7 +19,7 @@ struct SFightColorSet
     char *pOthers;
 };
 
-void die(unit_data *ch);
+void die(unit_data *ch, bool bWebDeathSent = false);
 
 void update_pos(unit_data *victim);
 

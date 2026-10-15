@@ -17,6 +17,7 @@ char *str_escape_format(const char *src, int formatting = TRUE);
 void str_correct_utf8(std::string &src);
 char *html_encode_utf8(const char *src);
 std::string scriptwrap(const std::string &str);
+std::string str_html_attr_escape(const char *src);
 void str_cescape_format(const char *src, char *dest);
 void str_cescape_transform(char *src);
 

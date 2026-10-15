@@ -374,6 +374,11 @@ void act_generate(char *buf,
         }
     }
 
+    // A $-code used inside an HTML tag of str, e.g. <div class='say_other' from='$1n'>,
+    // is an attribute value: escape it so a ' or > in a name can't break the tag
+    bool bInTag = false;
+    std::string sEscaped;
+
     for (strp = str, point = buf;;)
     {
         if (*strp == '$')
@@ -532,6 +537,12 @@ void act_generate(char *buf,
                 i = "NULL";
             }
 
+            if (bInTag)
+            {
+                sEscaped = str_html_attr_escape(i);
+                i = sEscaped.c_str();
+            }
+
             /*	  if (uppercase && *i)
                   {
                     *point++ = toupper(*i);
@@ -548,9 +559,21 @@ void act_generate(char *buf,
 
             ++strp;
         }
-        else if (!(*(point++) = *(strp++)))
+        else
         {
-            break;
+            if (*strp == '<')
+            {
+                bInTag = true;
+            }
+            else if (*strp == '>')
+            {
+                bInTag = false;
+            }
+
+            if (!(*(point++) = *(strp++)))
+            {
+                break;
+            }
         }
     }
 

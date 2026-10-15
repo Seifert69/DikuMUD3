@@ -36,6 +36,7 @@ set(MPLEX_SRCS
         ../cmdload.cpp ../cmdload.h
         ../color.cpp ../color.h
         ../combat.cpp ../combat.h
+        ../combat_packet.cpp ../combat_packet.h
         ../comm.cpp ../comm.h
         ../common.cpp ../combat.h
         ../config.cpp ../config.h

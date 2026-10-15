@@ -4,19 +4,26 @@
  $Date: 2001/04/29 03:46:05 $
  $Revision: 2.1 $
  */
+#include "combat_packet.h"
 #include "comm.h"
+#include "descriptor_data.h"
 #include "experience.h"
 #include "fight.h"
 #include "formatter.h"
+#include "hookmud.h"
 #include "interpreter.h"
 #include "json_helper.h"
 #include "modify.h"
+#include "protocol.h"
 #include "skills.h"
 #include "slog.h"
 #include "textutil.h"
 #include "unitfind.h"
 #include "utility.h"
 #include "utils.h"
+
+#include <algorithm>
+#include <vector>
 
 /// The Global Combat List...
 cCombatList g_CombatList;
@@ -144,6 +151,7 @@ void cCombatList::PerformViolence()
     for (nIdx = 0; nIdx < nTop; nIdx++)
     {
         pElems[nIdx]->nAttackNo = 0;
+        pElems[nIdx]->nRound++;
         // if (pElems[nIdx]->nWhen > 0)  -- Removed, I don't understand it's purpose
         pElems[nIdx]->nWhen = MAX(0, pElems[nIdx]->nWhen - SPEED_DEFAULT);
         // send_to_char("Combat begin<br/>", pElems[nIdx]->pOwner);
@@ -294,6 +302,13 @@ void cCombatList::PerformViolence()
 
     // for (nIdx = 0; nIdx < nTop; nIdx++) { send_to_char("Combat end<br/>", pElems[nIdx]->pOwner); }
 
+    // The round is over: tell web clients where their fight stands.
+    // Sending never changes the list, so a plain loop is safe here.
+    for (nIdx = 0; nIdx < nTop; nIdx++)
+    {
+        pElems[nIdx]->sendWebRound();
+    }
+
     nIdx = -1;
 }
 
@@ -301,6 +316,235 @@ void cCombatList::status(const unit_data *ch)
 {
     auto msg = diku::format_to_str("The Global Combat List contains [%d] entries.<br/>", nTop);
     send_to_char(msg, ch);
+}
+
+/* ======================================================================= */
+/*                                                                         */
+/*                    Web client '$combat' packets                         */
+/*                                                                         */
+/* ======================================================================= */
+
+/// ch's descriptor if it is a web client (websocket mplex), else nullptr.
+/// Telnet clients must never get the packets: StripHTML() would drop the
+/// <data> tag but print the JSON inside it.
+static descriptor_data *web_descriptor(unit_data *ch)
+{
+    if (ch == nullptr || !ch->isChar() || ch->is_destructed())
+    {
+        return nullptr;
+    }
+
+    descriptor_data *d = CHAR_DESCRIPTOR(ch);
+
+    if (d == nullptr || d->getMultiHookPtr() == nullptr || !d->getMultiHookPtr()->bWebsockets)
+    {
+        return nullptr;
+    }
+
+    return d;
+}
+
+/// Sends a '$combat' packet straight to ch's web client. Deliberately not
+/// send_to_descriptor(): that would echo it to a (maybe telnet) snooper.
+static void web_send(unit_data *ch, const std::string &json)
+{
+    descriptor_data *d = web_descriptor(ch);
+
+    if (d)
+    {
+        std::string packet = combat_packet::wrap(json);
+        protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), packet.c_str(), MULTI_TEXT_CHAR);
+    }
+}
+
+static bool contains(const std::vector<unit_data *> &v, const unit_data *u)
+{
+    return std::find(v.begin(), v.end(), u) != v.end();
+}
+
+/// True if a and b are both grouped under the same leader (see the group command)
+static bool web_same_group(unit_data *a, unit_data *b)
+{
+    if (!CHAR_HAS_FLAG(a, CHAR_GROUP) || !CHAR_HAS_FLAG(b, CHAR_GROUP))
+    {
+        return false;
+    }
+
+    unit_data *la = CHAR_MASTER(a) ? CHAR_MASTER(a) : a;
+    unit_data *lb = CHAR_MASTER(b) ? CHAR_MASTER(b) : b;
+
+    return la == lb;
+}
+
+/// The others in viewer's fight, in the same room: foes (viewer's opponents,
+/// anyone meleeing viewer, anyone an ally fights) and allies (group members in
+/// combat, and those fighting one of viewer's opponents). At most
+/// MAX_ENTRIES - 1 in total, foes first.
+static void web_combat_members(unit_data *viewer, std::vector<unit_data *> &foes, std::vector<unit_data *> &allies)
+{
+    unit_data *room = viewer->getUnitIn();
+    cCombat *pc = CHAR_COMBAT(viewer);
+
+    if (room == nullptr || pc == nullptr)
+    {
+        return;
+    }
+
+    auto addFoe = [&](unit_data *u) {
+        if (u && u != viewer && u->getUnitIn() == room && !u->is_destructed() && !contains(foes, u) && !contains(allies, u))
+        {
+            foes.push_back(u);
+        }
+    };
+
+    for (int i = 0; i < pc->NoOpponents(); i++)
+    {
+        addFoe(pc->Opponent(i));
+    }
+
+    const size_t nOpponents = foes.size();
+
+    for (unit_data *u = room->getUnitContains(); u; u = u->getNext())
+    {
+        if (u == viewer || !u->isChar() || u->is_destructed() || CHAR_COMBAT(u) == nullptr || contains(foes, u))
+        {
+            continue;
+        }
+
+        if (CHAR_FIGHTING(u) == viewer)
+        {
+            foes.push_back(u);
+            continue;
+        }
+
+        if (web_same_group(viewer, u))
+        {
+            allies.push_back(u); // a group fights together, whatever each member is hitting
+            continue;
+        }
+
+        cCombat *uc = CHAR_COMBAT(u);
+
+        for (int i = 0; i < uc->NoOpponents(); i++)
+        {
+            if (std::find(foes.begin(), foes.begin() + nOpponents, uc->Opponent(i)) != foes.begin() + nOpponents)
+            {
+                allies.push_back(u);
+                break;
+            }
+        }
+    }
+
+    // Whatever the allies fight here is hostile too
+    for (auto *a : allies)
+    {
+        cCombat *ac = CHAR_COMBAT(a);
+
+        for (int i = 0; i < ac->NoOpponents(); i++)
+        {
+            addFoe(ac->Opponent(i));
+        }
+    }
+
+    const size_t nMaxOthers = combat_packet::MAX_ENTRIES - 1;
+
+    if (foes.size() > nMaxOthers)
+    {
+        foes.resize(nMaxOthers);
+    }
+
+    if (allies.size() > nMaxOthers - foes.size())
+    {
+        allies.resize(nMaxOthers - foes.size());
+    }
+}
+
+static combat_packet::Entry web_combat_entry(unit_data *viewer, unit_data *u, bool bFoe)
+{
+    combat_packet::Entry e;
+
+    e.id = combat_packet::opaqueId(u);
+    e.me = (u == viewer);
+    e.name = e.me ? "you" : UNIT_SEE_TITLE(viewer, u);
+    e.hp = combat_packet::hpPercent(u->getCurrentHitpoints(), u->getMaximumHitpoints());
+    e.foe = bFoe;
+
+    unit_data *t = CHAR_FIGHTING(u);
+
+    if (t == viewer)
+    {
+        e.target = "you";
+    }
+    else if (t)
+    {
+        e.target = UNIT_SEE_TITLE(viewer, t);
+    }
+
+    return e;
+}
+
+void cCombat::sendWebRound()
+{
+    if (web_descriptor(pOwner) == nullptr)
+    {
+        return;
+    }
+
+    std::vector<unit_data *> foes;
+    std::vector<unit_data *> allies;
+    web_combat_members(pOwner, foes, allies);
+
+    std::vector<combat_packet::Entry> list;
+    list.reserve(foes.size() + allies.size() + 1);
+
+    for (auto *u : foes)
+    {
+        list.push_back(web_combat_entry(pOwner, u, true));
+    }
+
+    for (auto *u : allies)
+    {
+        list.push_back(web_combat_entry(pOwner, u, false));
+    }
+
+    list.push_back(web_combat_entry(pOwner, pOwner, false));
+
+    web_send(pOwner, combat_packet::listJSON(nRound, list));
+    bWebSent = true;
+}
+
+/// ch is dying: tell the web clients in the room that have ch in their
+/// '$combat' list. Only looks at the room ch is in. Call it while the fight
+/// is still standing (see the kill path in damage()).
+void combat_web_death(unit_data *ch)
+{
+    if (ch == nullptr || !ch->isChar() || ch->getUnitIn() == nullptr)
+    {
+        return;
+    }
+
+    std::string json;
+
+    for (unit_data *u = ch->getUnitIn()->getUnitContains(); u; u = u->getNext())
+    {
+        if (u == ch || !u->isChar() || CHAR_COMBAT(u) == nullptr || web_descriptor(u) == nullptr)
+        {
+            continue;
+        }
+
+        std::vector<unit_data *> foes;
+        std::vector<unit_data *> allies;
+        web_combat_members(u, foes, allies);
+
+        if (contains(foes, ch) || contains(allies, ch))
+        {
+            if (json.empty())
+            {
+                json = combat_packet::deathJSON(combat_packet::opaqueId(ch));
+            }
+            web_send(u, json);
+        }
+    }
 }
 
 /* ======================================================================= */
@@ -336,6 +580,11 @@ cCombat::~cCombat()
     {
         FREE(pOpponents);
         pOpponents = nullptr;
+    }
+
+    if (bWebSent)
+    {
+        web_send(pOwner, combat_packet::endJSON(nRound));
     }
 
     UCHAR(pOwner)->setCombat(nullptr);
