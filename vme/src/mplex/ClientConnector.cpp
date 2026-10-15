@@ -620,15 +620,27 @@ std::string mplex_getcolor(cConHook *hook, const char *colorstr)
     return gcolor;
 }
 
+// s is at an ESC: returns just past the final letter of its colour code,
+// e.g. ESC [ 1 ; 3 2 m, or to if it ends there
+static const char *SkipColourCode(const char *s, const char *to)
+{
+    for (s++; s < to && !isalpha(static_cast<unsigned char>(*s)); s++)
+    {
+        ;
+    }
+    return s < to ? s + 1 : to;
+}
+
 char *cConHook::IndentText(const char *source, char *dest, int dest_size, int width)
 {
-    const char *last = source;
+    const char *last = nullptr; // The last space after text on this line, where it can break
+    bool bLineHasText = false;  // Anything but blanks copied on this line
+    bool bDropBlanks = false;   // Blanks and tabs after a break go
     const char *current = nullptr;
     char tmpbuf[MAX_STRING_LENGTH * 2];
     int i = 0;
     char *newptr = nullptr;
     int column = 0;
-    int cutpoint = MIN(30, width / 2);
 
     if (!(current = source))
     {
@@ -833,35 +845,60 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
             continue;
         }
 
+        if (bDropBlanks)
+        {
+            if (*current == ' ' || *current == '\t')
+            {
+                current++;
+                continue;
+            }
+            bDropBlanks = false;
+        }
+
         if (isaspace(*current))
-        { /* Remember last space */
-            last = current;
+        { /* Remember last space, if breaking there leaves no empty line */
+            last = bLineHasText ? current : nullptr;
         }
 
         if (*current == '\n' || *current == '\r')
-        { /* Newlines signify new col. */
+        { /* Newlines signify new col, and take none themselves */
             column = 0;
+            last = nullptr;
+            bLineHasText = false;
+            *(newptr++) = *(current++);
+            continue;
         }
 
-        if ((++column <= width))
-        { /* MS: Added '<=' Have some space.. */
-            *(newptr++) = *(current++);
-        }
-        else
-        /* Out of space, so... */
-        {
-            column = 0;
-            if (last == nullptr || cutpoint < current - last)
-            { /* backtrack or cut */
-                last = current;
-            }
+        if (++column > width && last)
+        { /* Out of space: the newline replaces the last space */
             newptr -= (current - last);
-            current = ++last;
-            *(newptr++) = '\n';
-            *(newptr++) = '\r';
-            current = skip_spaces(current); /* Skip any double spaces, etc. */
+            current = last + 1;
+
+            // Unless a newline follows anyway, past blanks, tabs and colour codes
+            const char *next = current;
+            while (*next == ' ' || *next == '\t' || *next == CONTROL_CHAR)
+            {
+                next = *next == CONTROL_CHAR ? SkipColourCode(next, next + strlen(next)) : next + 1;
+            }
+            if (*next != '\n' && *next != '\r')
+            {
+                *(newptr++) = '\n';
+                *(newptr++) = '\r';
+            }
+            bDropBlanks = true;
+            column = 0;
             last = nullptr;
+            bLineHasText = false;
+            continue;
         }
+
+        // A word is never cut: one too long for the line (e.g. a web address)
+        // runs on for the terminal to wrap, so it can still be followed
+        if (*current != ' ' && *current != '\t')
+        {
+            bLineHasText = true;
+        }
+        *(newptr++) = *(current++);
     }
 
     *newptr = '\0';
@@ -869,6 +906,141 @@ char *cConHook::IndentText(const char *source, char *dest, int dest_size, int wi
     assert(dest + dest_size > newptr);
 
     return dest;
+}
+
+// Punctuation that can end a sentence right after a web address without
+// being read as part of it
+static const char *g_pAddressPunctuation = ".,;:!?)]}>\"'";
+
+// The visible text from..to (colour codes skipped) into buf, at most
+// nMax - 1 chars (none if nMax is 0); *pbCut tells if it didn't all fit.
+// Returns its last char, or 0 if none.
+static char VisibleText(const char *from, const char *to, char *buf, size_t nMax, bool *pbCut)
+{
+    size_t n = 0;
+    char cLast = 0;
+
+    *pbCut = false;
+    for (const char *s = from; s < to;)
+    {
+        if (*s == CONTROL_CHAR)
+        {
+            s = SkipColourCode(s, to);
+            continue;
+        }
+        if (n + 1 < nMax)
+        {
+            buf[n++] = *s;
+        }
+        else
+        {
+            *pbCut = true;
+        }
+        cLast = *s++;
+    }
+    if (nMax > 0)
+    {
+        buf[n] = 0;
+    }
+
+    return cLast;
+}
+
+// The last visible char from..to (colour codes skipped), or cLast if none
+static char LastVisibleChar(const char *from, const char *to, char cLast)
+{
+    bool bCut = false;
+    char c = VisibleText(from, to, nullptr, 0, &bCut);
+
+    return c ? c : cLast;
+}
+
+// Where the web address pHref shows in the link text pText, a final '/' and
+// the case of the scheme and host aside (the rest of an address can be
+// case-sensitive): returns the end of it, or nullptr. Only punctuation may
+// follow it before a blank or the end. bCut: pText was cut short.
+static const char *FindAddress(const char *pText, bool bCut, const char *pHref)
+{
+    size_t lHref = strlen(pHref);
+    if (lHref > 0 && pHref[lHref - 1] == '/')
+    {
+        lHref--;
+    }
+
+    // The scheme and host end at the first '/' after "://"
+    const char *sep = strstr(pHref, "://");
+    size_t lHost = sep ? MIN(static_cast<size_t>(sep + 3 - pHref), lHref) : 0;
+    while (lHost < lHref && pHref[lHost] != '/')
+    {
+        lHost++;
+    }
+
+    for (const char *t = pText; *t; t++)
+    {
+        if (strncasecmp(t, pHref, lHost) != 0 || strncmp(t + lHost, pHref + lHost, lHref - lHost) != 0)
+        {
+            continue;
+        }
+
+        const char *end = t + lHref;
+        if (*end == '/')
+        {
+            end++;
+        }
+        const char *after = end + strspn(end, g_pAddressPunctuation);
+        if (*after == 0 ? !bCut : isspace(static_cast<unsigned char>(*after)))
+        {
+            return end;
+        }
+    }
+    return nullptr;
+}
+
+// At the end of a link (its </a>, or the next <a>), add its web address
+// pHref to dest as "text: address". The link text is in dest from pLinkText
+// on, and cBefore is the last visible char before the link (0 if none).
+// Nothing is added when the text already shows the address. The address is
+// kept apart from the last visible char by a blank, and from link text by
+// ": " unless the text already ends in ':'. *pbAddressLast tells if dest
+// now ends with the address. Adds at most strlen(pHref) + 2 bytes, and
+// StripHTML() one blank more after it: fewer than the <a href='...'> tag
+// replaced, so a link never makes the output longer than the HTML.
+static char *AppendLinkAddress(char *dest, const char *pLinkText, char cBefore, const char *pHref, bool *pbAddressLast)
+{
+    size_t l = strlen(pHref);
+    char aText[512];
+    bool bCut = false;
+    char cLast = VisibleText(pLinkText, dest, aText, sizeof(aText), &bCut);
+
+    const char *pShown = FindAddress(aText, bCut, pHref);
+    if (pShown)
+    {
+        *pbAddressLast = *pShown == 0;
+        return dest;
+    }
+
+    char c = cLast ? cLast : cBefore;
+    if (c != 0 && !isspace(static_cast<unsigned char>(c)))
+    {
+        if (cLast != 0 && c != ':')
+        {
+            *dest++ = ':';
+        }
+        *dest++ = ' ';
+    }
+    memcpy(dest, pHref, l);
+    *pbAddressLast = true;
+
+    return dest + l;
+}
+
+// Whether the lowercased tag aTag is name, alone or followed by attributes
+// or a '/' (</a/> closes a link in a browser too)
+static bool IsTag(const char *aTag, const char *name)
+{
+    size_t l = strlen(name);
+
+    return strncmp(aTag, name, l) == 0 && (aTag[l] == 0 || aTag[l] == '/' || isspace(static_cast<unsigned char>(aTag[l])));
 }
 
 /*  Misleading name. Function changes HTML to TELNET
@@ -888,6 +1060,18 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
 
     const char *p = nullptr;
     const char *t = nullptr;
+    // The web address of the open <a> and where its text starts in dest. A
+    // link split over two outputs (the server splits text over 32 KB) loses
+    // its address.
+    char aHref[256] = "";
+    char *pLinkText = dest;
+    // The last visible char in dest up to pScanned, so each byte is looked at once
+    const char *pScanned = dest;
+    char cScanned = 0;
+    // After an address printed for a link: how far dest has been looked at
+    // for what follows it, and where the first visible char after it is
+    char *pAfterAddress = nullptr;
+    char *pFirstAfter = nullptr;
 
     p = src;
 
@@ -907,6 +1091,7 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
         if (*p == '<')
         {
             char aTag[256];
+            const char *pTagText = p + 1;
 
             p = getHTMLTag(p, aTag, sizeof(aTag));
 
@@ -942,6 +1127,32 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
                 // Separate table cells so "*Cypress Forest" and "Mainland" don't run together
                 *dest++ = ' ';
                 *dest++ = ' ';
+                continue;
+            }
+            if (IsTag(aTag, "a") || IsTag(aTag, "/a"))
+            {
+                // Telnet can't follow links, so a web address is printed after the
+                // link text: at its </a>, or where the next <a> closes it (as in a
+                // browser).
+                if (aHref[0])
+                {
+                    cScanned = LastVisibleChar(pScanned, pLinkText, cScanned);
+                    pScanned = pLinkText;
+                    bool bAddressLast = false;
+                    dest = AppendLinkAddress(dest, pLinkText, cScanned, aHref, &bAddressLast);
+                    if (bAddressLast)
+                    {
+                        pAfterAddress = dest;
+                        pFirstAfter = nullptr;
+                    }
+                }
+                aHref[0] = 0;
+
+                if (aTag[0] == 'a')
+                { // aTag is lowercased; the address is read as sent
+                    getHTMLLinkTarget(pTagText, aHref, sizeof(aHref));
+                    pLinkText = dest;
+                }
                 continue;
             }
             if (strcmp(aTag, "go-ahead/") == 0)
@@ -1047,7 +1258,8 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             }
             continue;
         }
-        else if (*p == '&')
+
+        if (*p == '&')
         {
             if (strncasecmp(p, "&gt;", 4) == 0)
             {
@@ -1083,11 +1295,8 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             {
                 *dest++ = *p++;
             }
-
-            continue;
         }
-
-        if (*p == '\n' && *(p + 1) != '\r')
+        else if (*p == '\n' && *(p + 1) != '\r')
         {
             *dest++ = '\n';
             *dest++ = '\r';
@@ -1096,6 +1305,44 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
         else
         {
             *dest++ = *p++;
+        }
+
+        // Text right after a printed address is kept apart from it by a
+        // blank, or it would read as part of the address. Punctuation right
+        // after it stays attached when a blank, a line break or the end of the
+        // output follows: the first visible char that isn't punctuation decides.
+        while (pAfterAddress && pAfterAddress < dest)
+        {
+            if (*pAfterAddress == CONTROL_CHAR)
+            {
+                pAfterAddress = const_cast<char *>(SkipColourCode(pAfterAddress, dest));
+                continue;
+            }
+            if (pFirstAfter == nullptr)
+            {
+                pFirstAfter = pAfterAddress;
+            }
+            if (strchr(g_pAddressPunctuation, *pAfterAddress))
+            {
+                pAfterAddress++;
+                continue;
+            }
+
+            if (!isspace(static_cast<unsigned char>(*pAfterAddress)))
+            {
+                memmove(pFirstAfter + 1, pFirstAfter, dest - pFirstAfter);
+                *pFirstAfter = ' ';
+                dest++;
+                if (pLinkText > pFirstAfter)
+                {
+                    pLinkText++; // A link opened after the address moved too
+                }
+                if (pScanned > pFirstAfter)
+                {
+                    pScanned++;
+                }
+            }
+            pAfterAddress = nullptr;
         }
     }
     *dest = 0;

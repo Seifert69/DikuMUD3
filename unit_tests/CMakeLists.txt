@@ -13,6 +13,7 @@ add_executable(vme_unit_tests
         combat_packet_tests.cpp
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
+        html_link_tests.cpp
         weather_cpp_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
@@ -80,6 +81,7 @@ add_test(NAME pp_unit_tests
 add_executable(mplex_unit_tests
         mplex_main.cpp
         ClientConnector_bounds_tests.cpp
+        ClientConnector_tests.cpp
         mplex_striphtml_tests.cpp
         )
 target_compile_definitions(mplex_unit_tests PUBLIC
