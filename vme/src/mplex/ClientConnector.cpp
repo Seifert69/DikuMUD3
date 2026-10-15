@@ -1044,7 +1044,8 @@ static bool IsTag(const char *aTag, const char *name)
 }
 
 /*  Misleading name. Function changes HTML to TELNET
- *  <br/> becomes \n\r except if it is <br/>\n\r then it is ignored. Thus
+ *  <br/> becomes \n\r except when only blanks or tabs are left before the
+ *  end of the line (\n or \r\n): then it is ignored. Thus
  *  <br/><br/>\n\r becomes \n\r\n\r.
  *  That's by design to support both telnet and HTML reasonably.
  */
@@ -1088,6 +1089,16 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             break;
         }
 
+        // Data for the web client, not text. The server drops it for telnet
+        // before splitting text over 32 KB (send_to_descriptor()); this
+        // catches what reaches mplex some other way, one output at a time.
+        const char *pAfterData = skipHTMLData(p);
+        if (pAfterData != p)
+        {
+            p = pAfterData;
+            continue;
+        }
+
         if (*p == '<')
         {
             char aTag[256];
@@ -1101,7 +1112,7 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
             }
 
             // We got a HTML tag
-            if (strcmp(aTag, "br") == 0 || strcmp(aTag, "br/") == 0)
+            if (IsTag(aTag, "br"))
             {
                 const char *q = p;
                 while (*q == ' ' || *q == '\t')
@@ -1261,35 +1272,9 @@ void cConHook::StripHTML(char *dest, size_t nDestMax, const char *src)
 
         if (*p == '&')
         {
-            if (strncasecmp(p, "&gt;", 4) == 0)
+            if (int nChars = decodeHTMLEntity(p, dest))
             {
-                *dest++ = '>';
-                p += 4;
-            }
-            else if (strncasecmp(p, "&lt;", 4) == 0)
-            {
-                *dest++ = '<';
-                p += 4;
-            }
-            else if (strncasecmp(p, "&amp;", 5) == 0)
-            {
-                *dest++ = '&';
-                p += 5;
-            }
-            else if (strncasecmp(p, "&apos;", 6) == 0)
-            {
-                *dest++ = '\'';
-                p += 6;
-            }
-            else if (strncasecmp(p, "&nbsp;", 6) == 0)
-            {
-                *dest++ = ' ';
-                p += 6;
-            }
-            else if (strncasecmp(p, "&quot;", 6) == 0)
-            {
-                *dest++ = '\"';
-                p += 6;
+                dest += nChars;
             }
             else
             {

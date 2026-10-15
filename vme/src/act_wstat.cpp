@@ -1239,6 +1239,12 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
+    if (!CHAR_DESCRIPTOR(ch)->getMultiHookPtr()->bWebsockets)
+    {
+        send_to_char("wedit needs the web client.<br/>", ch);
+        return;
+    }
+
     if (str_ccmp("room", argument) == 0)
     {
         u = ch->getUnitIn();
@@ -1269,12 +1275,7 @@ void do_wedit(unit_data *ch, char *argument, const command_info *cmd)
         }
     }
 
-    std::string t;
-
-    t = "<data type='$json'>";
-    t.append(u->json());
-    t.append("</data>");
-    send_to_char(t, ch);
+    send_to_char(json_packet(u->json(), true), ch);
 
     send_to_char("Sending json edit info to your browser.<br/>", ch);
 }

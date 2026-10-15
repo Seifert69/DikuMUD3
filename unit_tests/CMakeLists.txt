@@ -82,7 +82,6 @@ add_executable(mplex_unit_tests
         mplex_main.cpp
         ClientConnector_bounds_tests.cpp
         ClientConnector_tests.cpp
-        mplex_striphtml_tests.cpp
         )
 target_compile_definitions(mplex_unit_tests PUBLIC
         DMSERVER

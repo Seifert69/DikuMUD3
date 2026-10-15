@@ -1838,6 +1838,82 @@ int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax)
     return ce - c;
 }
 
+// Decodes the HTML entity that p starts with into out, for clients that
+// show text as it is: &amp; &lt; &gt; &quot; &apos; &nbsp; in any case, and
+// numeric ones (&#39; &#xA0;). Characters past ASCII are written as UTF-8,
+// and a no-break space as a plain blank. Returns how many bytes it wrote
+// (at most 4, the size out must have) and moves p past the entity, or
+// returns 0 and leaves p alone if p doesn't start one (or it would decode
+// to a control character).
+int decodeHTMLEntity(const char *&p, char *out)
+{
+    static const struct
+    {
+        const char *entity;
+        char c;
+    } named[] = {{"&amp;", '&'}, {"&lt;", '<'}, {"&gt;", '>'}, {"&quot;", '"'}, {"&apos;", '\''}, {"&nbsp;", ' '}};
+
+    if (p[0] != '&')
+    {
+        return 0;
+    }
+
+    if (p[1] != '#')
+    {
+        for (const auto &e : named)
+        {
+            size_t l = strlen(e.entity);
+            if (strncasecmp(p, e.entity, l) == 0)
+            {
+                out[0] = e.c;
+                p += l;
+                return 1;
+            }
+        }
+        return 0;
+    }
+
+    bool bHex = p[2] == 'x' || p[2] == 'X';
+    const char *digits = p + (bHex ? 3 : 2);
+    const char *d = digits;
+    unsigned long cp = 0;
+    for (; bHex ? isxdigit(static_cast<unsigned char>(*d)) : isdigit(static_cast<unsigned char>(*d)); d++)
+    {
+        cp = cp * (bHex ? 16 : 10) + (isdigit(static_cast<unsigned char>(*d)) ? *d - '0' : tolower(*d) - 'a' + 10);
+        if (cp > 0x10ffff)
+        {
+            return 0; // Past any character (checked each digit, so cp can't overflow)
+        }
+    }
+    if (d == digits || *d != ';')
+    {
+        return 0;
+    }
+
+    // Control characters would go to the terminal as they are (C1 ones too)
+    if (cp < ' ' || (cp >= 0x7f && cp < 0xa0) || (cp >= 0xd800 && cp <= 0xdfff))
+    {
+        return 0;
+    }
+    if (cp == 0xa0)
+    {
+        cp = ' ';
+    }
+
+    // UTF-8: the lead byte, then 6 bits in each continuation byte
+    static const unsigned char lead[] = {0, 0, 0xc0, 0xe0, 0xf0};
+    int n = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+    for (int i = n - 1; i > 0; i--)
+    {
+        out[i] = static_cast<char>(0x80 | (cp & 0x3f));
+        cp >>= 6;
+    }
+    out[0] = static_cast<char>(lead[n] | cp);
+
+    p = d + 1;
+    return n;
+}
+
 // True if s starts with an http:// or https:// address
 static bool isWebAddress(const char *s)
 {
@@ -1851,19 +1927,13 @@ static bool isWebAddress(const char *s)
 // case-sensitive. Unlike getHTMLValue(), this walks the attributes one by
 // one, so "href" must be a whole attribute name (any case, not part of
 // data-href or of another attribute's value), and the value may use either
-// quote, or none. Entities in the value (&amp; etc.) are decoded and control
-// characters dropped.
+// quote, or none. Entities in the value (&amp; etc.) are decoded, a blank
+// from one (&nbsp;) written as %20 as it would split the printed address,
+// and control characters dropped.
 // Only http:// and https:// addresses count, so command links
 // (<a cmd='...'>) give nothing: pHref is then empty.
 void getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax)
 {
-    static const struct
-    {
-        const char *entity;
-        int len;
-        char c;
-    } entities[] = {{"&amp;", 5, '&'}, {"&lt;", 4, '<'}, {"&gt;", 4, '>'}, {"&quot;", 6, '"'}, {"&apos;", 6, '\''}, {"&#39;", 5, '\''}};
-
     const char *c = tagText;
     const char *val = nullptr;
     const char *valEnd = nullptr;
@@ -1928,49 +1998,109 @@ void getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax)
         valEnd--;
     }
 
-    // Checked before decoding: no entity decodes to a character of "https://",
-    // and the quote, blank or '>' after the value can't extend a match.
-    if (!isWebAddress(val))
-    {
-        return;
-    }
-
     int n = 0;
     for (const char *v = val; v < valEnd;)
     {
-        char ch = *v;
-        int step = 1;
-        if (ch == '&')
+        // An entity can't run past valEnd: the quote, blank or '>' there
+        // can't be part of one. What it decodes to is never a control char.
+        char aChars[4];
+        int nChars = decodeHTMLEntity(v, aChars);
+        if (nChars == 1 && aChars[0] == ' ')
         {
-            for (const auto &e : entities)
+            memcpy(aChars, "%20", 3); // Shorter than the entity: see AppendLinkAddress() in mplex
+            nChars = 3;
+        }
+        else if (nChars == 0)
+        {
+            // Control characters (newline, ESC, ...) would go to the terminal as
+            // they are, and 0xFF starts a telnet command (IAC); browsers drop tabs
+            // and newlines from addresses too
+            auto uch = static_cast<unsigned char>(*v++);
+            if (uch < ' ' || uch == 0x7f || uch == 0xff)
             {
-                if (valEnd - v >= e.len && strncasecmp(v, e.entity, e.len) == 0)
-                {
-                    ch = e.c;
-                    step = e.len;
-                    break;
-                }
+                continue;
             }
-        }
-        v += step;
-
-        // Control characters (newline, ESC, ...) would go to the terminal as
-        // they are, and 0xFF starts a telnet command (IAC); browsers drop tabs
-        // and newlines from addresses too
-        auto uch = static_cast<unsigned char>(ch);
-        if (uch < ' ' || uch == 0x7f || uch == 0xff)
-        {
-            continue;
+            aChars[0] = static_cast<char>(uch);
+            nChars = 1;
         }
 
-        if (n >= nHrefMax - 1)
+        if (n + nChars > nHrefMax - 1)
         {
             *pHref = 0;
             return; // Not enough space
         }
-        pHref[n++] = ch;
+        memcpy(pHref + n, aChars, nChars);
+        n += nChars;
     }
     pHref[n] = 0;
+
+    // Checked after decoding, as entities can spell the scheme too
+    if (!isWebAddress(pHref))
+    {
+        *pHref = 0;
+    }
+}
+
+// Whether c ends the name in a tag, as in <data>, <data/> or <data type=...>
+static bool isTagNameEnd(char c)
+{
+    return c == '>' || c == '/' || isspace(static_cast<unsigned char>(c));
+}
+
+// If p starts a <data> tag (any case), returns where the text after its
+// packet starts: past its </data>, or past the tag itself if it is
+// self-closed (<data/>). Without a '>' or a </data> the rest of the text is
+// data, so the end of it is returned. Returns p if p doesn't start one.
+const char *skipHTMLData(const char *p)
+{
+    if (p[0] != '<' || strncasecmp(p + 1, "data", 4) != 0 || !isTagNameEnd(p[5]))
+    {
+        return p;
+    }
+
+    const char *pEnd = p + strlen(p);
+    const char *gt = strchr(p + 5, '>');
+    if (gt == nullptr)
+    {
+        return pEnd;
+    }
+
+    const char *last = gt; // Just past the last char before the '>', blanks aside
+    while (isspace(static_cast<unsigned char>(last[-1])))
+    {
+        last--;
+    }
+    if (last[-1] == '/')
+    {
+        return gt + 1;
+    }
+
+    for (const char *c = strchr(gt, '<'); c; c = strchr(c + 1, '<'))
+    {
+        if (c[1] == '/' && strncasecmp(c + 2, "data", 4) == 0 && isTagNameEnd(c[6]))
+        {
+            gt = strchr(c + 6, '>');
+            return gt ? gt + 1 : pEnd;
+        }
+    }
+    return pEnd;
+}
+
+std::string str_remove_html_data(const char *src)
+{
+    std::string dest;
+
+    for (const char *p = src; *p;)
+    {
+        const char *pAfter = skipHTMLData(p);
+        if (pAfter != p)
+        {
+            p = pAfter;
+            continue;
+        }
+        dest.push_back(*p++);
+    }
+    return dest;
 }
 
 /*
