@@ -1375,7 +1375,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         bread_func_free(u->getFunctionPointer());
         u->setFunctionPointer(nullptr);
 #endif
-        delete u;
+        DELETE(unit_data, u);
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {
