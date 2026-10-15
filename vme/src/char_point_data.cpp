@@ -466,10 +466,10 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
         if (unit->isPC())
         {
-            ubit8 level = buf.ReadU8(&error);
+            ubit8 abil_level = buf.ReadU8(&error);
             if (i < ABIL_TREE_MAX)
             {
-                UPC(unit)->setAbilityLevelAtIndexTo(i, level);
+                UPC(unit)->setAbilityLevelAtIndexTo(i, abil_level);
             }
             if (unit_version < 72)
             {
