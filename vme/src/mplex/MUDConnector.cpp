@@ -103,7 +103,9 @@ void test_mud_up()
     g_CaptainHook.Hook(fd, &g_MudHook);
     // assert(g_MudHook.IsHooked());
 
-    protocol_send_mplex_info(&g_MudHook, g_mplex_arg.bWebSockets);
+    // Clients forced to ASCII (-y) get text as telnet does, so the server
+    // must treat them as telnet: no <data> packets, the players' colours
+    protocol_send_mplex_info(&g_MudHook, g_mplex_arg.bWebSockets && !g_mplex_arg.bForceAscii);
 
     for (con = g_connection_list; con; con = nextcon)
     {

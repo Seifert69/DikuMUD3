@@ -1,6 +1,7 @@
 #include "ClientConnector.h"
 #include "MUDConnector.h"
 #include "mplex.h"
+#include "textutil.h"
 #include "translate.h"
 
 #include <cctype>
@@ -15,6 +16,9 @@
  *
  * cConHook::ParseOutput() turns the server's HTML into telnet text:
  * StripHTML() removes the tags and IndentText() wraps the lines.
+ *
+ * StripHTML_Suite (at the end) tests StripHTML() on its own: entities,
+ * <br/>, <data> and colours.
  */
 namespace
 {
@@ -41,6 +45,13 @@ struct TelnetHook
     }
 
     std::string Parse(const char *text) { return hook.ParseOutput(text); }
+
+    std::string Strip(const char *html)
+    {
+        char out[4096];
+        hook.StripHTML(out, sizeof(out), html);
+        return out;
+    }
 
     // In websocket mode cConHook() needs no listening socket. The hook has no
     // websocket sender, so ParseOutput() takes the telnet path (width 80).
@@ -356,8 +367,8 @@ BOOST_AUTO_TEST_CASE(punctuation_judged_on_the_output)
 {
     BOOST_TEST(Parse("<a href='https://x.org/'>Wiki</a>.<b>&nbsp;</b>more") == "Wiki: https://x.org/. more");
     BOOST_TEST(Visible(Parse("<a href='https://x.org/'>Wiki</a>.<script>PasswordOn()</script>")).find("https://x.org/.") != std::string::npos);
-    BOOST_TEST(Parse("<a href='https://x.org/'>Wiki</a>.<br />Next") == "Wiki: https://x.org/ .Next");
     BOOST_TEST(Parse("<a href='https://x.org/'>Wiki</a>.<br/>Next") == "Wiki: https://x.org/.\n\rNext");
+    BOOST_TEST(Parse("<a href='https://x.org/'>Wiki</a>.<br />Next") == "Wiki: https://x.org/.\n\rNext");
     BOOST_TEST(Parse("<a href='https://x.org/'>Wiki</a>.<a href='https://y.org/'>Two</a>") ==
                "Wiki: https://x.org/ .Two: https://y.org/");
 }
@@ -372,6 +383,198 @@ BOOST_AUTO_TEST_CASE(fixture_puts_globals_back)
     }
     BOOST_TEST(mplex::g_nConnectionsLeft == left);
     BOOST_TEST(mplex::g_mplex_arg.bWebSockets == TRUE); // Still the fixture's
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/**********************************************************************************
+ * StripHTML_Suite
+ */
+BOOST_FIXTURE_TEST_SUITE(StripHTML_Suite, TelnetHook)
+
+/* ----- Entities ----- */
+
+// &apos; is 6 characters. Skipping only 5 left the ';' behind, so an
+// engraving of 'DawnAngel' showed as ';DawnAngel'; on telnet.
+BOOST_AUTO_TEST_CASE(apos_has_no_trailing_semicolon)
+{
+    BOOST_TEST(Strip("&apos;") == "'");
+    BOOST_TEST(Strip("(engraved: &apos;DawnAngel&apos;)") == "(engraved: 'DawnAngel')");
+    BOOST_TEST(Strip("You can&apos;t do that.") == "You can't do that.");
+}
+
+BOOST_AUTO_TEST_CASE(other_entities_unchanged)
+{
+    BOOST_TEST(Strip("&lt;&gt;&amp;&quot;&nbsp;") == "<>&\" ");
+    BOOST_TEST(Strip("&LT;&Amp;") == "<&");
+    BOOST_TEST(Strip("&unknown;") == "&unknown;");
+    BOOST_TEST(Strip("a & b") == "a & b");
+}
+
+// The help pages from the wiki use &#160; and the server escapes ' in
+// names as &#39;; both showed as they were
+BOOST_AUTO_TEST_CASE(numeric_entities_decoded)
+{
+    BOOST_TEST(Strip("&lt;value&gt;&#160;: a value") == "<value> : a value");
+    BOOST_TEST(Strip("It&#39;s") == "It's");
+    BOOST_TEST(Strip("It&#x27;s &#X27;") == "It's '");
+    BOOST_TEST(Strip("&#xa0;&#xA0;") == "  ");
+}
+
+// Past ASCII the character is sent as UTF-8, like the rest of the text
+BOOST_AUTO_TEST_CASE(numeric_entities_past_ascii_become_utf8)
+{
+    BOOST_TEST(Strip("&#233;") == "\xc3\xa9");            // é
+    BOOST_TEST(Strip("&#8217;") == "\xe2\x80\x99");       // ’
+    BOOST_TEST(Strip("&#x1F600;") == "\xf0\x9f\x98\x80"); // 😀
+}
+
+// Control characters would reach the terminal as they are, and what isn't a
+// character at all can't be decoded: these stay as they were sent
+BOOST_AUTO_TEST_CASE(numeric_entities_that_are_not_text_kept)
+{
+    BOOST_TEST(Strip("&#27;[2J") == "&#27;[2J");   // ESC
+    BOOST_TEST(Strip("&#0;&#10;") == "&#0;&#10;"); // NUL, newline
+    BOOST_TEST(Strip("&#127;&#155;") == "&#127;&#155;");
+    BOOST_TEST(Strip("&#xD800;") == "&#xD800;");     // Half a UTF-16 pair
+    BOOST_TEST(Strip("&#x110000;") == "&#x110000;"); // Past Unicode
+    BOOST_TEST(Strip("&#99999999;") == "&#99999999;");
+    BOOST_TEST(Strip("&#39") == "&#39"); // No ';'
+    BOOST_TEST(Strip("&#;&#x;") == "&#;&#x;");
+}
+
+/* ----- <br/> ----- */
+
+// The help pages from the wiki use <br />, which was dropped
+BOOST_AUTO_TEST_CASE(br_becomes_newline)
+{
+    BOOST_TEST(Strip("a<br/>b") == "a\n\rb");
+    BOOST_TEST(Strip("a<br>b") == "a\n\rb");
+    BOOST_TEST(Strip("a<br />b") == "a\n\rb");
+    BOOST_TEST(Strip("a<BR />b") == "a\n\rb");
+    BOOST_TEST(Strip("a<brick>b") == "ab"); // Not a <br>
+}
+
+// <br/> right before a real newline is dropped so lines aren't doubled
+BOOST_AUTO_TEST_CASE(br_before_newline_not_doubled)
+{
+    BOOST_TEST(Strip("a<br/>\n\rb") == "a\n\rb");
+    BOOST_TEST(Strip("<p><br />\nb") == "\n\rb");
+}
+
+// The check looked at the character after the next one, even when the next
+// one was the end of the string. Here the byte past the terminator is '\n',
+// so the old code read it and dropped the line break.
+BOOST_AUTO_TEST_CASE(br_at_end_does_not_read_past_string)
+{
+    const char text[] = "a<br/>\0\n";
+    BOOST_TEST(Strip(text) == "a\n\r");
+}
+
+// The same check dropped a <br/> whenever the line after it was one character
+// long, e.g. a single "." line between two breaks.
+BOOST_AUTO_TEST_CASE(br_before_one_character_line_kept)
+{
+    BOOST_TEST(Strip("a<br/>.\nb") == "a\n\r.\n\rb");
+}
+
+// Zone text often has a blank or tab after <br/> before the line ends, e.g.
+// the newspaper articles in offices.zon. That is still the end of the line.
+BOOST_AUTO_TEST_CASE(br_before_trailing_blanks_and_newline_not_doubled)
+{
+    BOOST_TEST(Strip("a<br/> \nb") == "a \n\rb");
+    BOOST_TEST(Strip("a<br/>\t\nb") == "a\t\n\rb");
+    BOOST_TEST(Strip("a<br/>   \nb") == "a   \n\rb");
+}
+
+// Blanks followed by more text are not a line end, so the break stays
+BOOST_AUTO_TEST_CASE(br_before_blanks_and_text_kept)
+{
+    BOOST_TEST(Strip("a<br/> b") == "a\n\r b");
+}
+
+/* ----- <data> ----- */
+
+// <data> carries data for the web client. The server drops it for telnet;
+// what reaches mplex anyway must not show either. Telnet used to drop the
+// tags but show what was between them.
+BOOST_AUTO_TEST_CASE(data_not_shown)
+{
+    BOOST_TEST(Strip("<data type='$json'>{\"name\":\"bob\"}</data>Sending json edit info to your browser.<br/>") ==
+               "Sending json edit info to your browser.\n\r");
+    BOOST_TEST(Strip("a<data type='$alias'><li>n north</li><li>s &amp; south<br/></li></data>b"
+                     "<data type='$combat'>{\"round\":17,\"list\":[]}</data>c") == "abc");
+    BOOST_TEST(Parse("a<data type='$json'>{\"name\":\"bob\"}</data>b") == "ab"); // All of the telnet path
+}
+
+// Without a </data> everything after <data> is data: it can't be told apart
+BOOST_AUTO_TEST_CASE(unclosed_data_not_shown)
+{
+    BOOST_TEST(Strip("a<data type='$json'>{\"name\":\"bob\"") == "a");
+}
+
+// A self-closed <data/> holds nothing, and <database> is not <data>
+BOOST_AUTO_TEST_CASE(only_data_with_contents_hidden)
+{
+    BOOST_TEST(Strip("a<data type='$json'/>b") == "ab");
+    BOOST_TEST(Strip("a<database>b</database>c") == "abc");
+}
+
+// Tags are read as a browser reads them. Before, these left the rest of the
+// text hidden, or showed the data.
+BOOST_AUTO_TEST_CASE(data_tags_in_any_form)
+{
+    BOOST_TEST(Strip("a<DATA type='$json'>{}</DATA>b") == "ab");
+    BOOST_TEST(Strip("a<data type='$json'>{}</data >b") == "ab");
+    BOOST_TEST(Strip("a<data type='$json'>{}</Data\t>b") == "ab");
+    BOOST_TEST(Strip("a<data\ttype='$json'>{}</data>b") == "ab");
+    BOOST_TEST(Strip("a<data>{}</data>b") == "ab");
+}
+
+BOOST_AUTO_TEST_CASE(self_closed_data_in_any_form)
+{
+    BOOST_TEST(Strip("a<data type='$json' / >b") == "ab");
+    BOOST_TEST(Strip("a<data/>b") == "ab");
+    std::string html = "a<data type='" + std::string(300, 'x') + "'/>b"; // Longer than getHTMLTag() reads
+    BOOST_TEST(Strip(html.c_str()) == "ab");
+}
+
+BOOST_AUTO_TEST_CASE(data_edge_cases)
+{
+    BOOST_TEST(Strip("a<datum>b</datum><datalist>c</datalist>") == "abc");
+    BOOST_TEST(Strip("a<data type='$json'") == "a");
+    BOOST_TEST(Strip("a<data>{}</datum>b") == "a");
+    BOOST_TEST(Strip("a<data>1</data>b<data>2</data>c") == "abc");
+}
+
+// The server splits text over 32 KB into pieces that mplex reads one by
+// one, but drops <data> for telnet before that. A piece here can't be told
+// from the rest of the output, so the next output is shown.
+BOOST_AUTO_TEST_CASE(unclosed_data_hides_only_the_rest_of_its_output)
+{
+    BOOST_TEST(Strip("a<data type='$json'>{\"name\":") == "a");
+    BOOST_TEST(Strip("Hello there") == "Hello there");
+}
+
+// jstat sends telnet its JSON escaped, which shows as it was
+BOOST_AUTO_TEST_CASE(escaped_json_shows_as_it_was)
+{
+    const char *json = "{\"title\":\"Dain's <b>\\\"axe\\\"</b> &amp; co<br/>\",\"n\":1}";
+    BOOST_TEST(Strip(str_html_attr_escape(json).c_str()) == json);
+}
+
+/* ----- </div> and colours ----- */
+
+// New characters use the TTY emulation. </div> must still reset the
+// background to black there, or text after a coloured block keeps the
+// terminal's own background (white on white on a light terminal).
+BOOST_AUTO_TEST_CASE(close_div_sends_black_background_in_tty_mode)
+{
+    hook.m_sSetup.emulation = TERM_TTY;
+    std::string out = Strip("<div class='cg bb'>x</div>y");
+
+    auto close = out.find('x');
+    BOOST_TEST(out.find("\033[40m", close) != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

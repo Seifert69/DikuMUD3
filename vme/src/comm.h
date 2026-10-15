@@ -60,6 +60,9 @@ void send_to_outdoor(const char *messg);
 void send_to_zone_outdoor(const zone_type *z, const char *messg);
 void send_to_descriptor(const char *messg, descriptor_data *d);
 void send_to_descriptor(const std::string &messg, descriptor_data *d);
+// The text that sends json to a client: a $json packet for the web client,
+// or for telnet the json itself, escaped so it shows as it is
+std::string json_packet(const std::string &json, bool bWebClient);
 void send_to_all(const char *messg);
 void send_to_all(const std::string &messg);
 void send_to_char(const char *messg, const unit_data *ch);

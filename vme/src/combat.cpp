@@ -325,8 +325,7 @@ void cCombatList::status(const unit_data *ch)
 /* ======================================================================= */
 
 /// ch's descriptor if it is a web client (websocket mplex), else nullptr.
-/// Telnet clients must never get the packets: StripHTML() would drop the
-/// <data> tag but print the JSON inside it.
+/// Telnet clients have no use for the packets (StripHTML() drops them).
 static descriptor_data *web_descriptor(unit_data *ch)
 {
     if (ch == nullptr || !ch->isChar() || ch->is_destructed())
