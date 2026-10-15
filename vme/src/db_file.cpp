@@ -68,6 +68,7 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     {
         if (pBuf->SkipString(&c))
         {
+            cExtra.m_pList = first; // what was read is freed with the unit
             return 1;
         }
 
@@ -110,6 +111,25 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
 /**
  * This function reads a DIL template
  */
+/*
+ * A count read from the data can't be larger than the data left, as each
+ * entry takes at least min_bytes. A larger count means the data is corrupt:
+ * mark it, and read nothing rather than loop on reading past the end.
+ */
+static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
+{
+    ubit32 left = pBuf->GetLength() - pBuf->GetReadPosition();
+
+    if (count <= left / min_bytes)
+    {
+        return count;
+    }
+
+    g_nCorrupt++;
+    slog(LOG_ALL, 0, "Corrupt DIL data: count %u, but only %u bytes left.", count, left);
+    return 0;
+}
+
 diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
     int i = 0;
@@ -150,7 +170,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     tmpl->varcrc = pBuf->ReadU16();
     tmpl->corecrc = pBuf->ReadU16();
     tmpl->rtnt = pBuf->ReadU8();
-    tmpl->argc = pBuf->ReadU8();
+    tmpl->argc = dil_count_fits(pBuf, pBuf->ReadU8(), 1);
 
     if (tmpl->argc)
     {
@@ -166,9 +186,9 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->argt = nullptr;
     }
 
-    pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
+    g_nCorrupt += pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
 
-    tmpl->varc = pBuf->ReadU16(); /* number of variables */
+    tmpl->varc = dil_count_fits(pBuf, pBuf->ReadU16(), 1); /* number of variables */
 
     if (tmpl->varc)
     {
@@ -189,7 +209,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->vart = nullptr;
     }
 
-    tmpl->xrefcount = pBuf->ReadU16();
+    tmpl->xrefcount = dil_count_fits(pBuf, pBuf->ReadU16(), 3); /* name, rtnt, argc */
 
     if (tmpl->xrefcount)
     {
@@ -200,7 +220,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
             tmpl->xrefs[i].rtnt = DilVarTypeIntToEnum(pBuf->ReadU8());
-            tmpl->xrefs[i].argc = pBuf->ReadU8();
+            tmpl->xrefs[i].argc = dil_count_fits(pBuf, pBuf->ReadU8(), 1);
 
             if (tmpl->xrefs[i].argc)
             {
@@ -252,11 +272,14 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
                 {
                     valid = 0;
                 }
-                for (j = 0; j < tmpl->xrefs[i].argc; j++)
+                else // only compare the types when both have the same number (else reads past argt)
                 {
-                    if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+                    for (j = 0; j < tmpl->xrefs[i].argc; j++)
                     {
-                        valid = 0;
+                        if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+                        {
+                            valid = 0;
+                        }
                     }
                 }
             }
@@ -486,7 +509,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->link(tmpl);
     }
 
-    novar = pBuf->ReadU16(); /* the SAVED #vars             */
+    novar = dil_count_fits(pBuf, pBuf->ReadU16(), 1); /* the SAVED #vars */
 
     if (novar)
     {
@@ -705,6 +728,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int stspec)
 {
     unit_fptr *fptr = nullptr;
+    unit_fptr *prev = nullptr;
     unit_fptr *head = nullptr;
     int i = 0;
 
@@ -719,6 +743,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
     for (; i > 0; i--)
     {
+        prev = fptr;
         if (fptr)
         {
             fptr->setNext(new EMPLACE(unit_fptr) unit_fptr);
@@ -736,7 +761,18 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
-            return nullptr;
+            // Drop only this entry. Those before it may hold DIL programs already
+            // linked to their templates: they go back with the unit to be freed.
+            if (prev)
+            {
+                prev->setNext(nullptr);
+            }
+            else
+            {
+                head = nullptr;
+            }
+            DELETE(unit_fptr, fptr);
+            return head;
         }
 
         if (version >= 70)
@@ -764,41 +800,51 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             CREATE(dilargs, dilargstype, 1);
 
-            pBuf->ReadStringCopy(name, sizeof(name));
-            strcat(name, "/");
-            pBuf->SkipString(&c);
-            strcat(name, c);
+            // Saved as two strings (AppendDoubleString), joined by '/'. Both come from
+            // the file, so the joined name must be bounded (strcat overran the stack).
+            char first[256];
+            g_nCorrupt += pBuf->ReadStringCopy(first, sizeof(first));
+            g_nCorrupt += pBuf->SkipString(&c);
+            if (snprintf(name, sizeof(name), "%s/%s", first, c) >= (int)sizeof(name))
+            {
+                g_nCorrupt++;
+            }
 
             dilargs->name = str_dup(name);
 
-            dilargs->no = pBuf->ReadU8();
+            int nArgError = 0;
+            dilargs->no = pBuf->ReadU8(&nArgError);
 
-            for (int j = 0; j < dilargs->no; j++)
+            // Stop at the first argument that can't be read: the rest of the data is
+            // no longer in step. Arguments not read keep type 0 and hold nothing to free.
+            for (int j = 0; j < dilargs->no && nArgError == 0; j++)
             {
-                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8());
+                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8(&nArgError));
 
                 switch (dilargs->dilarg[j].type)
                 {
                     case DilVarType_e::DILV_SLP:
-                        pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
+                        nArgError += pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
                         break;
 
                     case DilVarType_e::DILV_SP:
-                        pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
+                        nArgError += pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
                         break;
 
                     case DilVarType_e::DILV_INT:
-                        dilargs->dilarg[j].data.num = pBuf->ReadS32();
+                        dilargs->dilarg[j].data.num = pBuf->ReadS32(&nArgError);
                         break;
 
                     case DilVarType_e::DILV_ILP:
-                        pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
+                        nArgError += pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
                         break;
 
                     default:
-                        error(HERE, "Uhadada");
+                        // A type from corrupt data: error() here terminated the server
+                        nArgError++;
                 }
             }
+            g_nCorrupt += nArgError;
 
             fptr->setData(dilargs);
         }

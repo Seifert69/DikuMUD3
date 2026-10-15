@@ -454,20 +454,23 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     int j = buf.ReadU8(&error);
 
+    // The count comes from the file: read every entry, but only keep those that
+    // fit (a corrupt count, up to 255, would write past both arrays)
     for (int i = 0; i < j; i++)
     {
-        if (unit_version < 69)
+        sbit16 ability = (unit_version < 69) ? buf.ReadU8(&error) : buf.ReadS16(&error);
+        if (i < ABIL_TREE_MAX)
         {
-            abilities[i] = buf.ReadU8(&error);
-        }
-        else
-        {
-            abilities[i] = buf.ReadS16(&error);
+            abilities[i] = ability;
         }
 
         if (unit->isPC())
         {
-            UPC(unit)->setAbilityLevelAtIndexTo(i, buf.ReadU8(&error));
+            ubit8 level = buf.ReadU8(&error);
+            if (i < ABIL_TREE_MAX)
+            {
+                UPC(unit)->setAbilityLevelAtIndexTo(i, level);
+            }
             if (unit_version < 72)
             {
                 error += buf.Skip8();

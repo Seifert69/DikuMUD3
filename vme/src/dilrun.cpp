@@ -1775,7 +1775,7 @@ int dil_init(spec_arg *sarg)
     return SFR_SHARE;
 }
 
-static void dil_free_dilargs(dilargstype *dilargs)
+void dil_free_dilargs(dilargstype *dilargs)
 {
     if (dilargs->name)
         FREE(dilargs->name);

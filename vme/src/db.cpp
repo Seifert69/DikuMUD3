@@ -622,6 +622,65 @@ void post_read_unit(unit_data *u)
     }
 }
 
+#ifdef DMSERVER
+/**
+ * Frees function pointers read by bread_func() for a unit that turned out to
+ * be corrupt, before they were ever started. No special routine is called: a
+ * corrupt index can name one that would free its data as some other type, and
+ * the data is always what bread_func() made it - a DIL program, a DIL copy's
+ * arguments, or the string read for any other routine. Deleting a DIL program
+ * also unlinks it from its template's program list.
+ *
+ * Kept here, not in db_file.cpp: vmc links the server objects with -zmuldefs,
+ * and a server-only symbol in db_file.cpp would pull the server's db_file.o
+ * into vmc next to its own (two g_FileBuffer constructors: double free).
+ */
+static void bread_func_free(unit_fptr *head)
+{
+    while (head)
+    {
+        unit_fptr *next = head->getNext();
+
+        if (head->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
+        {
+            dilprg *prg = (dilprg *)head->getData();
+            if (prg)
+            {
+                // A template that no longer exists got a placeholder from bread_dil()
+                // with its own copy of the name, which dil_free_template() leaves
+                // behind. Freed after the program: its destructor still logs the name.
+                char *placeholder_name = nullptr;
+                if (prg->frame[0].tmpl && prg->frame[0].tmpl->flags == DILFL_FREEME)
+                {
+                    placeholder_name = prg->frame[0].tmpl->prgname;
+                }
+                DELETE(dilprg, prg);
+                if (placeholder_name)
+                {
+                    FREE(placeholder_name);
+                }
+            }
+        }
+        else if (head->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
+        {
+            if (head->getData())
+            {
+                dil_free_dilargs((dilargstype *)head->getData());
+            }
+        }
+        else if (head->getData())
+        {
+            void *data = head->getData();
+            FREE(data);
+        }
+
+        head->setData(nullptr);
+        DELETE(unit_fptr, head);
+        head = next;
+    }
+}
+#endif
+
 /**
  * Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
@@ -655,7 +714,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
-    assert(unit_version >= 37);
+    // No file is older than version 37: anything below is corrupt data, which
+    // must be rejected rather than abort the whole server
+    if (g_nCorrupt || unit_version < 37)
+    {
+        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
+        g_nCorrupt = TRUE;
+        delete u; // nothing read into it yet, and in no list
+        return nullptr;
+    }
 
     if (unit_version > UNIT_VERSION)
     {
@@ -1002,17 +1069,17 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     j = pBuf->ReadU16(&g_nCorrupt);
                 }
 
+                // The count comes from the file: read every entry, but only keep
+                // those that fit (a corrupt count would write past the arrays)
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SPL_TREE_MAX)
                     {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSpellSKillAtIndexTo(i, skill);
+                        UPC(u)->setSpellLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-                    UPC(u)->setSpellLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
 
                     if (unit_version < 72)
                     {
@@ -1039,16 +1106,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SKI_TREE_MAX)
                     {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSkillAtIndexTo(i, skill);
+                        UPC(u)->setSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1059,16 +1123,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < WPN_TREE_MAX)
                     {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setWeaponSkillAtIndexTo(i, skill);
+                        UPC(u)->setWeaponSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setWeaponSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1094,7 +1155,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    UPC(u)->setConditionAtIndexTo(i, pBuf->ReadS8(&g_nCorrupt));
+                    sbit8 condition = pBuf->ReadS8(&g_nCorrupt);
+                    if (i < 3) // DRUNK, FULL, THIRST: m_conditions[3]
+                    {
+                        UPC(u)->setConditionAtIndexTo(i, condition);
+                    }
                 }
 
                 if (unit_version >= 56)
@@ -1310,6 +1375,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     else
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->getNames().Name());
+
+        // The unit isn't in any unit list yet, so free it here, or it leaks. Its DIL
+        // programs are already linked into their templates' program lists and its
+        // affects into the global affect list, so neither can just be dropped:
+        // bread_func_free() frees the function pointers (unlinking the programs)
+        // without calling any special routine, and the destructor unlinks the affects
+        // (unlink_affect() runs no affect code).
+#ifdef DMSERVER
+        bread_func_free(u->getFunctionPointer());
+        u->setFunctionPointer(nullptr);
+#endif
+        delete u;
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {

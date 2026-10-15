@@ -85,6 +85,7 @@ cmdload_struct cmdload[] = {{"north", do_move, 0, 0},
                             {"switch", do_switch, 0, 0},
 
                             {"users", do_users, 0, 0},
+                            {"when", do_when, 0, 0},
                             {"where", do_where, 0, 0},
 
                             {"wizlock", do_wizlock, 0, 0},

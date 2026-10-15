@@ -109,9 +109,14 @@ int cNamelist::ReadBuffer(CByteBuffer *pBuf, int unit_version)
             return 1;
         }
 
+        // Stop at the end of the data, as the pre-v65 branch above does: a
+        // corrupt count can be up to 2^32, and every name is appended (realloc).
         for (i = 0; i < len; i++)
         {
-            pBuf->SkipString(&c);
+            if (pBuf->SkipString(&c))
+            {
+                return 1;
+            }
             AppendName(c);
         }
         return 0;

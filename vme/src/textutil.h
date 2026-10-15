@@ -9,6 +9,7 @@
 #include "essential.h"
 
 #include <cstring>
+#include <ctime>
 #include <string>
 #define isaspace(c) ((c) == ' ')
 
@@ -93,5 +94,6 @@ class color_type;
 // lost its ESC P
 char *fix_old_codes_to_html(const std::string &c, const color_type *colours = nullptr);
 char *fix_old_codes_to_html(const char *c, const color_type *colours = nullptr);
+std::string time_ago_string(time_t then, time_t now);
 
 extern const char *g_fillwords[];
