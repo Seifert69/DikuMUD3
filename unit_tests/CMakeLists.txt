@@ -13,7 +13,10 @@ add_executable(vme_unit_tests
         cintlist_tests.cpp
         cNamelist_tests.cpp
         color_type_tests.cpp
+        combat_packet_tests.cpp
         fix_old_codes_tests.cpp
+        html_attr_tests.cpp
+        html_link_tests.cpp
         textutil_cpp_tests.cpp
         weather_cpp_tests.cpp
         )
@@ -81,6 +84,8 @@ add_test(NAME pp_unit_tests
 ############################### MPLEX ####################################
 add_executable(mplex_unit_tests
         mplex_main.cpp
+        ClientConnector_bounds_tests.cpp
+        ClientConnector_tests.cpp
         )
 target_compile_definitions(mplex_unit_tests PUBLIC
         DMSERVER
@@ -88,8 +93,13 @@ target_compile_definitions(mplex_unit_tests PUBLIC
         )
 target_link_libraries(mplex_unit_tests
         mplex_objs
+        crypt
         ${Boost_LIBRARIES}
+        OpenSSL::SSL
+        OpenSSL::Crypto
+        pthread
         )
+target_include_directories(mplex_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/vme/src ${CMAKE_SOURCE_DIR}/vme/src/mplex)
 # Add the test for cmake
 add_test(NAME mplex_unit_tests
         COMMAND mplex_unit_tests --log_level=all

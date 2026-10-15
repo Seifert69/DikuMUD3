@@ -11,7 +11,7 @@ https://discord.gg/vmha2rGRA2
 
 Documentation goes here:
 
-https://wiki.dikumud.net/wiki/DikuMUD
+https://wiki.dikumud.com/wiki/DikuMUD
 
 The Wiki docs are sync'ed into this GitHUB repo daily. Many thanks to @Damien Davison. 
 

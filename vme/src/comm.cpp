@@ -105,6 +105,8 @@ int cActParameter::isNull()
  *  Given HTML string src find all <div and all <h1 and replace class='default' with
  *  user's color preferences.  You probably only want to do this for telnet users.
  *  web users can rely on the styles defined in the CSS
+ *  <data> packets (e.g. the $json of wstat) are for the web client only, so
+ *  they are dropped: telnet would show what is inside them.
  */
 void substHTMLcolor(std::string &dest, const char *src, color_type &color)
 {
@@ -115,6 +117,12 @@ void substHTMLcolor(std::string &dest, const char *src, color_type &color)
 
     while (*p)
     {
+        const char *pAfterData = skipHTMLData(p);
+        if (pAfterData != p)
+        {
+            p = pAfterData;
+            continue;
+        }
         if ((p[0] == '<') && ((p[1] == 'd' && p[2] == 'i' && p[3] == 'v' && p[4] == ' ') || (p[1] == 'h' && p[2] == '1' && p[3] == ' ')))
         {
             char aTag[256];
@@ -164,17 +172,10 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
 {
     if (d && messg && *messg)
     {
-        if (d->getPromptMode() == PROMPT_IGNORE)
-        {
-            d->setPromptMode(PROMPT_EXPECT);
-            send_to_descriptor("<br/>", d);
-        }
+        bool bWeb = d->getMultiHookPtr()->bWebsockets;
+        std::string dest; // The text for a telnet client
 
-        if (d->getMultiHookPtr()->bWebsockets)
-        {
-            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), messg, MULTI_TEXT_CHAR);
-        }
-        else
+        if (!bWeb)
         {
             const unit_data *u = d->cgetCharacter();
 
@@ -184,18 +185,34 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             }
 
             assert(u->isPC());
-            std::string dest;
             dest.reserve(strlen(messg) * 1.1);
             // char buf[strlen(messg) + 10000];
 
             substHTMLcolor(dest, messg, UPC(u)->getColor());
-            protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), dest.c_str(), MULTI_TEXT_CHAR);
+            if (dest.empty())
+            {
+                return; // Only <data> packets, which telnet doesn't get
+            }
         }
+
+        if (d->getPromptMode() == PROMPT_IGNORE)
+        {
+            d->setPromptMode(PROMPT_EXPECT);
+            send_to_descriptor("<br/>", d);
+        }
+
+        protocol_send_text(d->getMultiHookPtr(), d->getMultiHookID(), bWeb ? messg : dest.c_str(), MULTI_TEXT_CHAR);
 
         if (d->getSnoopData().getSnoopBy())
         {
-            send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
-            send_to_descriptor(messg, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
+            // A web client would take the packets (an $alias list, ...) as
+            // its own
+            std::string snooped = str_remove_html_data(messg);
+            if (!snooped.empty())
+            {
+                send_to_descriptor(SNOOP_PROMPT, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
+                send_to_descriptor(snooped, CHAR_DESCRIPTOR(d->getSnoopData().getSnoopBy()));
+            }
         }
     }
 }
@@ -208,6 +225,15 @@ void send_to_descriptor(const std::string &messg, descriptor_data *d)
 void send_to_descriptor(const std::string &messg, const descriptor_data *d)
 {
     send_to_descriptor(messg.c_str(), const_cast<descriptor_data *>(d));
+}
+
+std::string json_packet(const std::string &json, bool bWebClient)
+{
+    if (bWebClient)
+    {
+        return "<data type='$json'>" + json + "</data>";
+    }
+    return str_html_attr_escape(json.c_str()) + "<br/>";
 }
 
 void page_string(descriptor_data *d, const char *messg)
@@ -374,6 +400,11 @@ void act_generate(char *buf,
         }
     }
 
+    // A $-code used inside an HTML tag of str, e.g. <div class='say_other' from='$1n'>,
+    // is an attribute value: escape it so a ' or > in a name can't break the tag
+    bool bInTag = false;
+    std::string sEscaped;
+
     for (strp = str, point = buf;;)
     {
         if (*strp == '$')
@@ -532,6 +563,12 @@ void act_generate(char *buf,
                 i = "NULL";
             }
 
+            if (bInTag)
+            {
+                sEscaped = str_html_attr_escape(i);
+                i = sEscaped.c_str();
+            }
+
             /*	  if (uppercase && *i)
                   {
                     *point++ = toupper(*i);
@@ -548,9 +585,21 @@ void act_generate(char *buf,
 
             ++strp;
         }
-        else if (!(*(point++) = *(strp++)))
+        else
         {
-            break;
+            if (*strp == '<')
+            {
+                bInTag = true;
+            }
+            else if (*strp == '>')
+            {
+                bInTag = false;
+            }
+
+            if (!(*(point++) = *(strp++)))
+            {
+                break;
+            }
         }
     }
 

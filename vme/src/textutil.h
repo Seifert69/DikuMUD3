@@ -18,6 +18,7 @@ char *str_escape_format(const char *src, int formatting = TRUE);
 void str_correct_utf8(std::string &src);
 char *html_encode_utf8(const char *src);
 std::string scriptwrap(const std::string &str);
+std::string str_html_attr_escape(const char *src);
 void str_cescape_format(const char *src, char *dest);
 void str_cescape_transform(char *src);
 
@@ -79,7 +80,13 @@ void strip_trailing_blanks(char *str);
 const char *divcolor(const char *colorstr);
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);
 int getHTMLValue(const char *name, const char *p, char *pTag, int nTagMax);
+int decodeHTMLEntity(const char *&p, char *out);
+void getHTMLLinkTarget(const char *tagText, char *pHref, int nHrefMax);
 const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
+// <data> packets carry data for the web client. Where text is shown as it
+// is (telnet) they are dropped, or what is inside them would show.
+const char *skipHTMLData(const char *p);
+std::string str_remove_html_data(const char *src);
 
 std::string str_json(const char *lbl, ubit64 nInt);
 std::string str_json(const char *lbl, const char *str);

@@ -7,7 +7,7 @@ import re
 
 # ------------------------------------------------------------------
 # getwikidilpage.py
-# Retrieves a DIL manual page from wiki.dikumud.net and saves it as .hlp
+# Retrieves a DIL manual page from wiki.dikumud.com and saves it as .hlp
 # Automatically tries both "func()" and "func" titles – whichever exists.
 # ------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ print(f"Looking up DIL manual page for: {func}")
 def fetch_wikitext(title: str) -> str | None:
     """Fetch raw wikitext for an exact page title. Returns text or None if missing."""
     url = (
-        "https://wiki.dikumud.net/api.php"
+        "https://wiki.dikumud.com/api.php"
         "?action=query"
         "&prop=revisions"
         "&rvprop=content"

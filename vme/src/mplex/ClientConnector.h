@@ -67,7 +67,7 @@ public:
     void MenuSelect(const char *cmd);
     void SequenceCompare(ubit8 *pBuf, int *pnLen);
     void SetWebsocket(WebsocketSender sender, websocketpp::connection_hdl hdl);
-    void StripHTML(char *dest, const char *src);
+    void StripHTML(char *dest, size_t nDestMax, const char *src);
 
     void Input(int nFlags);
     void getLine(ubit8 buf[], int *size);
@@ -138,6 +138,7 @@ public:
     ubit8 m_nNawsWidth{0};   ///< Last clamped NAWS width, 0 = never received
     ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
     char m_aLastBars[64]{};  ///< Last bars value sent as Char.Vitals (dedupe)
+    bool m_bTakesConnection{false}; ///< Took one of g_nConnectionsLeft (telnet; websockets don't count)
 
 private:
     void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);

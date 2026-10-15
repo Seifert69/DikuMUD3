@@ -45,13 +45,13 @@
 #include <string>
 
 /**
- * Controls wrapping the JSON response in <data> tags or not basically
+ * Sends the JSON response: in a <data> packet to the web client, and as
+ * text to telnet, which doesn't get the packets
  *
  * @param json
  * @param d
- * @param send_in_html_tag
  */
-static void send_json_to_client(std::string json, descriptor_data *d, bool send_in_html_tag = true);
+static void send_json_to_client(const std::string &json, descriptor_data *d);
 
 static void stat_world_count(const unit_data *ch, char *arg)
 {
@@ -1454,19 +1454,10 @@ void do_jstat(unit_data *ch, char *argument, const command_info *cmd)
     }
 }
 
-static void send_json_to_client(std::string json, descriptor_data *d, bool send_in_html_tag)
+static void send_json_to_client(const std::string &json, descriptor_data *d)
 {
-    std::string data;
-    if (send_in_html_tag)
+    if (d)
     {
-        data = "<data type='$json'>";
-        data += json;
-        data += "</data>";
+        send_to_descriptor(json_packet(json, d->getMultiHookPtr()->bWebsockets), d);
     }
-    else
-    {
-        data = std::move(json);
-    }
-
-    send_to_descriptor(data, d);
 }

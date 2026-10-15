@@ -19,7 +19,7 @@ class MediaWikiUploader:
         Initialize the MediaWiki uploader.
         
         Args:
-            base_url: Base URL of the wiki (e.g., "https://wiki.dikumud.net")
+            base_url: Base URL of the wiki (e.g., "https://wiki.dikumud.com")
             username: Wiki username
             password: Wiki password
         """
@@ -194,7 +194,7 @@ def main():
     print("=" * 40)
     
     # Configuration - UPDATE THESE VALUES
-    WIKI_URL = "https://wiki.dikumud.net"
+    WIKI_URL = "https://wiki.dikumud.com"
     USERNAME = input("Enter wiki username: ").strip()
     PASSWORD = input("Enter wiki password: ").strip()
     

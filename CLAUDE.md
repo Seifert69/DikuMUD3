@@ -96,7 +96,7 @@ cd vme/zone
 ## Conventions
 
 - DIL is the MUD's scripting language; language docs live at
-  <https://wiki.dikumud.net/wiki/DikuMUD>, and `DIL_UNIT_TESTING.md` covers
+  <https://wiki.dikumud.com/wiki/DikuMUD>, and `DIL_UNIT_TESTING.md` covers
   in-game DIL test zones.
 - Unit tests: one `*_tests.cpp` per class in `unit_tests/`; class-level
   changes (e.g. to `cNamelist`) should come with test cases.
