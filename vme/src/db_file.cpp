@@ -548,6 +548,9 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     {
         /* read local program, and convert to global template */
         tmpl = bread_diltemplate(pBuf, version);
+        // Only a placeholder made at run time is DILFL_FREEME: dil_free_template()
+        // would free just the name of a template read with that flag (corrupt data)
+        REMOVE_BIT(tmpl->flags, DILFL_FREEME);
         snprintf(name, sizeof(name), "%s", tmpl->prgname);
         dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
         SET_BIT(prg->flags, DILFL_COPY);
