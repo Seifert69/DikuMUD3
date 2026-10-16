@@ -1663,11 +1663,80 @@ char *fix_old_codes_to_html(const std::string &c, const color_type *colours)
     return fix_old_codes_to_html(c.c_str(), colours);
 }
 
+/*
+ * The longest text fix_old_codes_to_html() can make of s, s being what is left
+ * after str_rem_old_codes(), counting the closing </pre> and the 0. Each code is
+ * counted as what it becomes, in the order fix_old_codes_to_html() replaces them:
+ * && and a lone & become &amp; (5), colour codes and &h &p &f &bb &bn go (0),
+ * &n and &l become &lt;br/&gt; and &lt;pre&gt; (11), &x a newline (counted as
+ * one with a \r after it), ' becomes &apos; (6), < and > &lt; and &gt; (4), and
+ * \n\r becomes <br/>\n\r (6 for the \n, 1 for the \r). No step makes anything
+ * longer than that, and no step joins the text around a code into a new code: an
+ * & just before a code forms && with it, which is replaced first.
+ */
+static size_t old_codes_html_bound(const char *s)
+{
+    size_t n = 8;
+
+    while (*s)
+    {
+        size_t skip = 1;
+        if (s[0] == '&')
+        {
+            const char *k = (s[1] == 'c' && s[2] == '+') ? s + 3 : s + 2;
+            n += 5; // && or a lone &
+            if (s[1] == '&')
+            {
+                skip = 2;
+            }
+            else if (s[1] == 'c' && *k && strchr("wrygbmn", *k))
+            {
+                n -= 5;
+                skip = k + 1 - s;
+            }
+            else if (s[1] == 'x')
+            {
+                n += 1;
+                skip = 2;
+            }
+            else if (s[1] == 'n' || s[1] == 'l')
+            {
+                n += 6;
+                skip = 2;
+            }
+            else if (s[1] == 'h' || s[1] == 'p' || s[1] == 'f')
+            {
+                n -= 5;
+                skip = 2;
+            }
+            else if (s[1] == 'b' && (s[2] == 'b' || s[2] == 'n'))
+            {
+                n -= 5;
+                skip = 3;
+            }
+        }
+        else if (s[0] == '\'' || s[0] == '\n')
+        {
+            n += 6;
+        }
+        else if (s[0] == '<' || s[0] == '>')
+        {
+            n += 4;
+        }
+        else
+        {
+            n += 1;
+        }
+        s += skip;
+    }
+    return n;
+}
+
 /**
  * fix_old_codes_to_html() for text read from a unit file, as a std::string: the
  * converted copy is freed here (callers used to leak it on every load of an old
- * unit). Text too long for fix_old_codes_to_html() is left unchanged, with its
- * old codes, and logged.
+ * unit). Text too long for fix_old_codes_to_html() is logged and left with its
+ * &-codes, but without the control codes str_rem_old_codes() removes.
  */
 std::string old_codes_to_html(const char *c, const color_type *colours)
 {
@@ -1676,36 +1745,18 @@ std::string old_codes_to_html(const char *c, const color_type *colours)
         return {};
     }
 
+    // str_rem_old_codes() only removes, so it is safe on text of any length
+    std::string stripped(c);
+    str_rem_old_codes(&stripped[0], colours);
+    stripped.resize(strlen(stripped.c_str()));
+
     // fix_old_codes_to_html() asserts on text of MAX_STRING_LENGTH or more, and
-    // converts in buffers of 2 * MAX_STRING_LENGTH. At no step is what a character
-    // has become longer than: 11 for &n or &l (&lt;br/&gt;, &lt;pre&gt;), so 10
-    // for & and 1 for the letter; 6 for ' (&apos;); 4 for < or >; 7 for \n\r
-    // (<br/>\n\r); 1 for anything else. Plus the closing </pre> and the 0.
-    size_t len = 0;
-    size_t bound = 8;
-    for (const char *p = c; *p; p++, len++)
-    {
-        switch (*p)
-        {
-            case '&':
-                bound += 10;
-                break;
-            case '\'':
-            case '\n':
-                bound += 6;
-                break;
-            case '<':
-            case '>':
-                bound += 4;
-                break;
-            default:
-                bound += 1;
-        }
-    }
-    if (len >= MAX_STRING_LENGTH || bound > 2 * MAX_STRING_LENGTH)
+    // converts in buffers of 2 * MAX_STRING_LENGTH
+    const size_t len = strlen(c);
+    if (len >= MAX_STRING_LENGTH || old_codes_html_bound(stripped.c_str()) > 2 * MAX_STRING_LENGTH)
     {
         slog(LOG_ALL, 0, "Old colour codes left unconverted in a text of %zu characters.", len);
-        return c;
+        return stripped;
     }
 
     char *html = fix_old_codes_to_html(c, colours);

@@ -124,9 +124,10 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_matches_fix_old_codes_to_html)
 // must not abort the server, so it is left as it is
 BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_long_text_alone)
 {
+    // too long: the &-codes stay, the control codes still go
     std::string text(MAX_STRING_LENGTH, 'a');
-    text.replace(0, 3, "\033pX");
-    BOOST_TEST(old_codes_to_html(text.c_str()) == text);
+    text.replace(0, 6, "\033pX&cr");
+    BOOST_TEST(old_codes_to_html(text.c_str()) == "X&cr" + std::string(MAX_STRING_LENGTH - 6, 'a'));
 
     std::string fits(MAX_STRING_LENGTH - 1, 'a');
     fits.replace(0, 3, "\033pX");
@@ -189,6 +190,20 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_bound_counts_newlines_and_amp_codes)
         lines += "\n\r";
     }
     BOOST_TEST(old_codes_to_html(lines.c_str()) == lines);
+}
+
+// Colour codes are removed, so they don't count towards the bound: a long text
+// with many of them converts (a bound of 10 for every & counted 1600 * 12 + 6200,
+// more than 2 * MAX_STRING_LENGTH)
+BOOST_AUTO_TEST_CASE(old_codes_to_html_colour_codes_count_nothing)
+{
+    std::string text;
+    for (int i = 0; i < 1600; i++)
+    {
+        text += "&cr";
+    }
+    text += std::string(6200, 'a');
+    BOOST_TEST(old_codes_to_html(text.c_str()) == std::string(6200, 'a'));
 }
 
 BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
