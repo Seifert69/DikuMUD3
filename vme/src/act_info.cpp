@@ -165,18 +165,22 @@ static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;  ///< Such lookups by all mort
  * and players read from their file, so the answer doesn't change when they log
  * on or off: wizard invisibility above ch's level, or invisibility that ch can't
  * detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where they are.
+ * An immortal switched into a monster asks as themselves, as for the limit.
  */
-static bool when_hides(const unit_data *ch, const unit_data *pc)
+static bool when_hides(unit_data *ch, const unit_data *pc)
 {
-    if (ch == pc)
+    const unit_data *asker = CHAR_ORIGINAL(ch);
+
+    if (asker == pc)
     {
         return false;
     }
-    if (CHAR_LEVEL(ch) < pc->getLevelOfWizardInvisibility())
+    if (CHAR_LEVEL(asker) < pc->getLevelOfWizardInvisibility())
     {
         return true;
     }
-    return CHAR_LEVEL(ch) < CREATOR_LEVEL && IS_SET(pc->getUnitFlags(), UNIT_FL_INVISIBLE) && !CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE);
+    return CHAR_LEVEL(asker) < CREATOR_LEVEL && IS_SET(pc->getUnitFlags(), UNIT_FL_INVISIBLE) &&
+           !CHAR_HAS_FLAG(asker, CHAR_DETECT_INVISIBLE);
 }
 
 /**
