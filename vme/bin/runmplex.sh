@@ -3,13 +3,14 @@
 # runmplex.sh
 #
 # $1 is the port number.
-# $2 are any other optional parameters to pass to mplex
+# $2 and on are any other optional parameters to pass to mplex (e.g. -w -t)
 #
 # $VME_ROOT needs to be set to the vme/ folder of your installation
 #
 
 EXECUTABLE="mplex"
 PORT=$1
+OPTIONS="${*:2}"
 
 if [ -z ${PORT} ]; then
    echo "Port number not set, defaulting to 4242."
@@ -85,9 +86,9 @@ fi
 
 PARAMS="-p $PORT -s $MOTHER_PORT -l $VME_ROOT/log/mplex-$PORT.log"
 
-if [ ! -z $2 ]; then
-    echo "PARAMS = [$PARAMS]; dollar2=[$2]" >> $VME_ROOT/log/mplex-$PORT.log
-    PARAMS="$PARAMS $2"
+if [ -n "$OPTIONS" ]; then
+    echo "PARAMS = [$PARAMS]; options=[$OPTIONS]" >> $VME_ROOT/log/mplex-$PORT.log
+    PARAMS="$PARAMS $OPTIONS"
     echo "PARAMS=[$PARAMS]" >> $VME_ROOT/log/mplex-$PORT.log
 fi
 
@@ -131,4 +132,4 @@ echo "*** $EXECUTABLE exited with code [$res] ***" >> $VME_ROOT/log/mplex-$PORT.
 
 script_name=$(basename -- "$0")
 #echo "exec $VME_ROOT/bin/$script_name"
-exec $VME_ROOT/bin/$script_name $1 $2 >/dev/null 2>&1
+exec $VME_ROOT/bin/$script_name $PORT $OPTIONS >/dev/null 2>&1
