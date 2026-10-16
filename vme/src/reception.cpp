@@ -20,6 +20,7 @@
 #include "utils.h"
 #include "zon_basis.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -498,6 +499,9 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         {
             break;
         }
+        // The names come from the file: end them, or strcmp() and strcpy() read past them
+        ho.zone[sizeof(ho.zone) - 1] = 0;
+        ho.unit[sizeof(ho.unit) - 1] = 0;
 
         // It's the new version if both are equal to "obsoleted"
         if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
@@ -507,6 +511,8 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             {
                 break;
             }
+            hn.zone[sizeof(hn.zone) - 1] = 0;
+            hn.unit[sizeof(hn.unit) - 1] = 0;
         }
         else
         {
@@ -524,6 +530,19 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         fi = find_file_index(hn.zone, hn.unit);
 
         pnew = nullptr;
+
+        // The level is the item's depth: 1 for an item carried, one more inside each
+        // container, and never more than one deeper than the item before it (see
+        // add_units()). pstack has one container per level, so any other level would
+        // index past it or use an entry never set: place the item at the nearest
+        // level the file could have had.
+        if (hn.level < 1 || hn.level > frame + 1 || hn.level >= (int)(sizeof(pstack) / sizeof(pstack[0])))
+        {
+            const int deepest = std::min(frame + 1, (int)(sizeof(pstack) / sizeof(pstack[0])) - 1);
+            const int level = std::max(1, std::min((int)hn.level, deepest));
+            slog(LOG_ALL, 0, "Corrupted inventory %s: %s@%s at level %d after level %d, placed at level %d.", pFileName, hn.unit, hn.zone, hn.level, frame, level);
+            hn.level = level;
+        }
 
         // The header gives the item's length, so an item that can't be read can be
         // skipped, and a slime takes its place, rather than losing all the items
