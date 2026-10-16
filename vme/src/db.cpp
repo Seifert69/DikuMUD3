@@ -1410,7 +1410,7 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
         // can't read means the zones and the server don't match.
         slog(LOG_OFF,
              0,
-             "FATAL: Can't read %s@%s from the zone data (wrong unit version?). Aborting server.",
+             "FATAL: Can't read %s@%s from the zone data: corrupt, or compiled for another unit version. Aborting server.",
              org_fi->getName(),
              org_fi->getZone()->getName().c_str());
         exit(0);

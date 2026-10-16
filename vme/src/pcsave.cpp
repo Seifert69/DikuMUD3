@@ -414,7 +414,6 @@ void save_player(unit_data *pc)
 /* String is allocated                              */
 unit_data *load_player_file(FILE *pFile)
 {
-    unit_data *pc = nullptr;
     ubit32 nPlyLen = 0;
     ubit32 n = 0;
     sbit32 id = 0;
@@ -462,19 +461,9 @@ unit_data *load_player_file(FILE *pFile)
         return nullptr;
     }
 
-    pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
-
-    if (pc == nullptr)
-    {
-        return nullptr;
-    }
-
-    if (g_nCorrupt)
-    {
-        return nullptr;
-    }
-
-    return pc;
+    // nullptr if the player is corrupt: read_unit_string() frees a corrupt unit
+    // and returns nothing else for a player
+    return read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 }
 
 /* Read player from file, starting at index "index"   */
