@@ -130,6 +130,23 @@ static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
     return 0;
 }
 
+/*
+ * Reads a DIL variable type. One out of range is counted in bad instead of
+ * logged as DilVarTypeIntToEnum() does: corrupt data can hold hundreds of them,
+ * and a log line each could fill the log.
+ */
+static DilVarType_e bread_dil_type(CByteBuffer *pBuf, int &bad)
+{
+    ubit8 n = pBuf->ReadU8();
+
+    if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
+    {
+        return (DilVarType_e)n;
+    }
+    bad++;
+    return DilVarType_e::DILV_INVALID;
+}
+
 /**
  * This function reads a DIL template
  */
@@ -137,6 +154,10 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
     int i = 0;
     int j = 0;
+    int bad_types = 0;
+#ifdef DMSERVER
+    const int corrupt_before = g_nCorrupt;
+#endif
     diltemplate *tmpl = nullptr;
 
     /* read a template */
@@ -181,7 +202,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->argc; i++)
         {
-            tmpl->argt[i] = DilVarTypeIntToEnum(pBuf->ReadU8()); /* argument types */
+            tmpl->argt[i] = bread_dil_type(pBuf, bad_types); /* argument types */
         }
     }
     else
@@ -210,7 +231,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->varc; i++)
         {
-            tmpl->vart[i] = DilVarTypeIntToEnum(pBuf->ReadU8());
+            tmpl->vart[i] = bread_dil_type(pBuf, bad_types);
             if (version >= 76)
             {
                 g_nCorrupt += pBuf->ReadStringAlloc(&tmpl->varg[i]);
@@ -232,7 +253,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         for (i = 0; i < tmpl->xrefcount; i++)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
-            tmpl->xrefs[i].rtnt = DilVarTypeIntToEnum(pBuf->ReadU8());
+            tmpl->xrefs[i].rtnt = bread_dil_type(pBuf, bad_types);
             tmpl->xrefs[i].argc = dil_count_fits(pBuf, pBuf->ReadU8(), 1);
 
             if (tmpl->xrefs[i].argc)
@@ -240,7 +261,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
                 CREATE(tmpl->xrefs[i].argt, DilVarType_e, tmpl->xrefs[i].argc);
                 for (j = 0; j < tmpl->xrefs[i].argc; j++)
                 {
-                    tmpl->xrefs[i].argt[j] = DilVarTypeIntToEnum(pBuf->ReadU8());
+                    tmpl->xrefs[i].argt[j] = bread_dil_type(pBuf, bad_types);
                 }
             }
             else
@@ -252,6 +273,11 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     else
     {
         tmpl->xrefs = nullptr;
+    }
+
+    if (bad_types)
+    {
+        slog(LOG_ALL, 0, "DIL template %s: %d variable types out of range.", tmpl->prgname ? tmpl->prgname : "", bad_types);
     }
 
 #ifdef DMSERVER
@@ -267,7 +293,12 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->extprg = nullptr;
     }
 
-    if (!g_mud_bootzone)
+    if (!g_mud_bootzone && (bad_types || g_nCorrupt != corrupt_before || pBuf->IsCorrupt()))
+    {
+        // Its references would be garbage, two log lines each
+        slog(LOG_ALL, 0, "DIL template %s is corrupt: its external references aren't resolved.", tmpl->prgname ? tmpl->prgname : "");
+    }
+    else if (!g_mud_bootzone)
     {
         /*
          * This template not loaded boottime, so resolve
@@ -593,9 +624,10 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->fp->vars = nullptr;
     }
 
+    int bad_types = 0;
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = DilVarTypeIntToEnum(pBuf->ReadU8());
+        prg->fp->vars[i].type = bread_dil_type(pBuf, bad_types);
         prg->fp->vars[i].itype = DilIType_e::Regular;
 
         bool globalVar = false;
@@ -678,6 +710,10 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
             default:
                 prg->fp->vars[i].val.string = nullptr;
         }
+    }
+    if (bad_types)
+    {
+        slog(LOG_ALL, 0, "DIL program %s: %d variable types out of range.", name, bad_types);
     }
 
     /* read interrupt array */
