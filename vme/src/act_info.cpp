@@ -272,7 +272,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         if (!str_ccmp(PC_FILENAME(u), name))
         {
             // Not the file: it may still hold the visibility from before they went invisible
-            if (!when_hides(ch, u))
+            if (!when_hides(ch, u) && u->getNames().Name())
             {
                 send_to_char(diku::format_to_str("%s is playing right now.<br/>", u->getNames().Name()), ch);
                 return;
@@ -304,12 +304,14 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
+    // A file can hold no names at all (a DIL script can remove them all)
     const time_t last = PC_TIME(pc).getPlayerLastConnectTime();
     const bool hidden = when_hides(ch, pc);
-    const std::string pc_name = pc->getNames().Name();
+    const char *names = pc->getNames().Name();
+    const std::string pc_name = names ? names : "";
     extract_unit(pc);
 
-    if (hidden || last == 0)
+    if (hidden || last == 0 || pc_name.empty())
     {
         send_to_char(no_one, ch);
         return;
