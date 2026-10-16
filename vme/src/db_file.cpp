@@ -207,7 +207,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->argt = nullptr;
     }
 
-    g_nCorrupt += pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
+    pBuf->ReadBlock(&tmpl->core, &tmpl->coresz); // a failed read marks the buffer corrupt
 
     // Each interrupt is set by an instruction in the code, so a template can't
     // have more interrupts than bytes of code. A corrupt count (up to 65535)

@@ -412,23 +412,16 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     natural_armour = buf.ReadU8(&error);
 
-    if (unit_version <= 74)
+    if (unit_version <= 74) // read_unit_string() refuses versions below 48
     {
-        if (unit_version >= 39)
+        ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
+        speed = spd;
+        if (unit->isPC())
         {
-            ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
-            speed = spd;
-            if (unit->isPC())
+            if (speed < SPEED_MIN)
             {
-                if (speed < SPEED_MIN)
-                {
-                    speed = SPEED_DEFAULT;
-                }
+                speed = SPEED_DEFAULT;
             }
-        }
-        else
-        {
-            speed = SPEED_DEFAULT;
         }
     }
     else // Speed for version 75 and up
