@@ -834,16 +834,23 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 u->setUnitIn(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
-            else
+            else if (tmpfi->Empty())
             {
-                if (u->isPC())
+                // Front() of an empty list is undefined: a corrupt file can name an
+                // index with nothing loaded (an object, or an offline player)
+                slog(LOG_ALL, 0, "'%s' is in %s@%s, of which nothing is loaded; ignored.", whom, name, zone);
+            }
+            else if (u->isPC())
+            {
+                // Saved from unit_room(), so always a room
+                if (tmpfi->getType() == UNIT_ST_ROOM)
                 {
                     UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
-                else
-                {
-                    u->setUnitIn(tmpfi->Front());
-                }
+            }
+            else
+            {
+                u->setUnitIn(tmpfi->Front());
             }
         }
     }
@@ -950,7 +957,8 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     file_index_type *fi = nullptr;
 
-                    if ((fi = find_file_index(zone, name)))
+                    // As above: only a room with something loaded has a Front()
+                    if ((fi = find_file_index(zone, name)) && fi->getType() == UNIT_ST_ROOM && !fi->Empty())
                     {
                         UCHAR(u)->setLastLocation(fi->Front());
                     }
