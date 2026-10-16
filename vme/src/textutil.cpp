@@ -2321,11 +2321,11 @@ std::string time_ago_string(time_t then, time_t now)
     {
         long long seconds;
         const char *name;
-    } units[] = {{365LL * 24 * 60 * 60, "year"}, {24 * 60 * 60, "day"}, {60 * 60, "hour"}, {60, "minute"}};
+    } units[] = {{SECS_PER_REAL_YEAR, "year"}, {SECS_PER_REAL_DAY, "day"}, {SECS_PER_REAL_HOUR, "hour"}, {SECS_PER_REAL_MIN, "minute"}};
 
     long long left = (long long)now - (long long)then;
 
-    if (left < 60)
+    if (left < SECS_PER_REAL_MIN)
     {
         return "less than a minute ago";
     }
