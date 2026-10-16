@@ -716,14 +716,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
     g_nCorrupt += u->getNames().ReadBuffer(pBuf, unit_version);
 
-    if (unit_version < 47 && type == UNIT_ST_PC)
-    {
-        char buf[256];
-
-        strcpy(buf, u->getNames().Name());
-        CAP(buf);
-        u->getNames().Substitute(0, buf);
-    }
     char *c = nullptr;
     if (pBuf->SkipString(&c))
     {
@@ -771,14 +763,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         u->setKey(nullptr);
     }
 
-    if (unit_version < 46)
-    {
-        u->setManipulateFlag(pBuf->ReadU16(&g_nCorrupt));
-    }
-    else
-    {
-        u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
-    }
+    u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
 
     u->setAllUnitFlags(pBuf->ReadU16(&g_nCorrupt));
     u->setBaseWeight(pBuf->ReadS16(&g_nCorrupt));
@@ -874,28 +859,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);
 
-                if (unit_version >= 48)
-                {
-                    UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
-                }
-                else
-                {
-                    /// @todo worse than spooky - why decrement a race?? Also could be really bad if race==0
-                    UCHAR(u)->setRace(UCHAR(u)->getRace() - 1);
-
-                    base_race_info_type *sex_race = nullptr;
-
-                    if (u->getSex() == SEX_MALE)
-                    {
-                        sex_race = &g_race_info[CHAR_RACE(u)].male;
-                    }
-                    else
-                    {
-                        sex_race = &g_race_info[CHAR_RACE(u)].female;
-                    }
-
-                    UPC(u)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
-                }
+                UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version < 50)
                 {
@@ -964,18 +928,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     }
                 }
 
-                if (unit_version >= 42)
-                {
-                    g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
-                }
-                else
-                {
-                    char temp[pc_data::PC_MAX_NAME];
-                    memcpy(temp, u->getNames().Name(), pc_data::PC_MAX_NAME);
-                    temp[pc_data::PC_MAX_NAME - 1] = 0;
-                    str_lower(temp);
-                    UPC(u)->setFilename(temp);
-                }
+                g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
 
                 g_nCorrupt += UPC(u)->readPasswordFrom(*pBuf);
 
@@ -1001,24 +954,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 UPC(u)->setPlayerUID(pBuf->ReadS32(&g_nCorrupt));
 
-                if (unit_version >= 40)
-                {
-                    UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
-                }
+                UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
 
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getHometownPtr());
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getGuildPtr());
 
                 g_nCorrupt += pBuf->Skip32(); // skip value, was: PC_GUILD_TIME(u) obsolete
 
-                if (unit_version >= 38)
-                {
-                    UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
-                }
-                else
-                {
-                    UPC(u)->setVirtualPlayerLevel(CHAR_LEVEL(u));
-                }
+                UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version <= 72)
                 {
@@ -1033,11 +976,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
 
                 PC_TIME(u).readFrom(*pBuf, g_nCorrupt);
-
-                if (unit_version < 44)
-                {
-                    race_adjust(u);
-                }
 
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getBankPtr());
 
@@ -1072,13 +1010,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                         g_nCorrupt += pBuf->Skip8();
                     }
 
-                    if (unit_version < 46)
-                    {
-                        if ((i < SPL_GROUP_MAX) && (PC_SPL_SKILL(u, i) == 0))
-                        {
-                            UPC(u)->setSpellSKillAtIndexTo(i, 1);
-                        }
-                    }
                 }
 
                 if (unit_version < 61)
@@ -1120,19 +1051,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     {
                         g_nCorrupt += pBuf->Skip8();
                     }
-                    if (unit_version < 46)
-                    {
-                        if ((i < WPN_GROUP_MAX) && (PC_WPN_SKILL(u, i) == 0))
-                        {
-                            UPC(u)->setWeaponSkillAtIndexTo(i, 1);
-                        }
-                    }
-                }
-
-                if (unit_version < 47)
-                {
-                    UPC(u)->setWeaponSkillAtIndexTo(WPN_KICK, PC_SKI_SKILL(u, SKI_KICK));
-                    UPC(u)->setSkillAtIndexTo(SKI_KICK, 0);
                 }
 
                 UPC(u)->setNumberOfCrimesCommitted(pBuf->ReadU16(&g_nCorrupt));
