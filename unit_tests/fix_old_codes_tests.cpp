@@ -119,91 +119,45 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_matches_fix_old_codes_to_html)
     }
 }
 
-// fix_old_codes_to_html() asserts on text of MAX_STRING_LENGTH or more (its
-// buffer); a long old text, e.g. in a dormant player's file read by "when",
-// must not abort the server, so it is left as it is
-BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_long_text_alone)
+// The conversion used two stack buffers of 2 * MAX_STRING_LENGTH and asserted on
+// text of MAX_STRING_LENGTH or more. A long old text, e.g. in a dormant player's
+// file read by "when", converts like any other.
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_text_of_any_length)
 {
-    // too long: the &-codes stay, the control codes still go
-    std::string text(MAX_STRING_LENGTH, 'a');
-    text.replace(0, 6, "\033pX&cr");
-    BOOST_TEST(old_codes_to_html(text.c_str()) == "X&cr" + std::string(MAX_STRING_LENGTH - 6, 'a'));
-
-    std::string fits(MAX_STRING_LENGTH - 1, 'a');
-    fits.replace(0, 3, "\033pX");
-    BOOST_TEST(old_codes_to_html(fits.c_str()) == "X" + std::string(MAX_STRING_LENGTH - 4, 'a'));
+    std::string text(3 * MAX_STRING_LENGTH, 'a');
+    text.replace(0, 9, "\033pX&cr<b>");
+    BOOST_TEST(old_codes_to_html(text.c_str()) == "X&lt;b&gt;" + std::string(3 * MAX_STRING_LENGTH - 9, 'a'));
 }
 
-// A long description with a few codes converts: the bound counts what each
-// character can become, not the worst case for all of them
-BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_long_text_with_few_codes)
-{
-    std::string text = "It's &crred&cw" + std::string(6000, 'a');
-    BOOST_TEST(old_codes_to_html(text.c_str()) == "It&apos;s red" + std::string(6000, 'a'));
-}
-
-// Shorter text can still outgrow fix_old_codes_to_html()'s buffers of
-// 2 * MAX_STRING_LENGTH as it is converted: each ' becomes &apos; (6 characters).
-// Such text is left as it is too, instead of overflowing.
-BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_text_that_would_grow_too_much_alone)
+// Text that grows past the old buffers as it converts: each ' becomes &apos;, &n
+// &lt;br/&gt; and \n\r <br/>\n\r
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_text_that_grows)
 {
     std::string quotes(5000, '\'');
-    BOOST_TEST(old_codes_to_html(quotes.c_str()) == quotes);
-
-    // A text that fits once converted still is
-    std::string fits(4000, '\'');
-    std::string converted;
-    for (int i = 0; i < 4000; i++)
-    {
-        converted += "&apos;";
-    }
-    BOOST_TEST(old_codes_to_html(fits.c_str()) == converted);
-}
-
-// &n becomes &lt;br/&gt; (11 characters for 2), and \n\r becomes <br/>\n\r (7 for 2)
-BOOST_AUTO_TEST_CASE(old_codes_to_html_bound_counts_newlines_and_amp_codes)
-{
     std::string breaks;
-    std::string converted;
-    for (int i = 0; i < 2200; i++)
-    {
-        breaks += "&n";
-        converted += "&lt;br/&gt;";
-    }
-    BOOST_TEST(old_codes_to_html(breaks.c_str()) == converted);
-    for (int i = 0; i < 100; i++)
-    {
-        breaks += "&n";
-    }
-    BOOST_TEST(old_codes_to_html(breaks.c_str()) == breaks);
-
     std::string lines;
-    converted.clear();
-    for (int i = 0; i < 3500; i++)
+    std::string quotes_html;
+    std::string breaks_html;
+    std::string lines_html;
+    for (int i = 0; i < 5000; i++)
     {
+        quotes_html += "&apos;";
+        breaks += "&n";
+        breaks_html += "&lt;br/&gt;";
         lines += "\n\r";
-        converted += "<br/>\n\r";
+        lines_html += "<br/>\n\r";
     }
-    BOOST_TEST(old_codes_to_html(lines.c_str()) == converted);
-    for (int i = 0; i < 100; i++)
-    {
-        lines += "\n\r";
-    }
-    BOOST_TEST(old_codes_to_html(lines.c_str()) == lines);
+    BOOST_TEST(old_codes_to_html(quotes.c_str()) == quotes_html);
+    BOOST_TEST(old_codes_to_html(breaks.c_str()) == breaks_html);
+    BOOST_TEST(old_codes_to_html(lines.c_str()) == lines_html);
 }
 
-// Colour codes are removed, so they don't count towards the bound: a long text
-// with many of them converts (a bound of 10 for every & counted 1600 * 12 + 6200,
-// more than 2 * MAX_STRING_LENGTH)
-BOOST_AUTO_TEST_CASE(old_codes_to_html_colour_codes_count_nothing)
+// After each replacement the conversion looks again from the start, as
+// str_substitute() does: a colour code that a removal joins together goes too
+BOOST_AUTO_TEST_CASE(old_codes_to_html_codes_joined_by_a_removal_go)
 {
-    std::string text;
-    for (int i = 0; i < 1600; i++)
-    {
-        text += "&cr";
-    }
-    text += std::string(6200, 'a');
-    BOOST_TEST(old_codes_to_html(text.c_str()) == std::string(6200, 'a'));
+    BOOST_TEST(old_codes_to_html("&c&cwwx") == "x");
+    BOOST_TEST(old_codes_to_html("&&&n") == "&amp;&lt;br/&gt;");
 }
 
 BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
