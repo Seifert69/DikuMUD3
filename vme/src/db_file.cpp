@@ -760,8 +760,9 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         // code or assert in dil_intr_insert().
         slog(LOG_ALL,
              0,
-             "DIL program %s: %d labels outside the code, %d interrupts (template %d), program counter %u of %u; reset.",
+             "DIL program %s on %s: %d labels outside the code, %d interrupts (template %d), program counter %u of %u; reset.",
              tmpl->prgname,
+             owner->getNames().Name(),
              labels_outside,
              prg->fp->intrcount,
              tmpl->intrcount,
