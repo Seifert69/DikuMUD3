@@ -504,6 +504,8 @@ int CByteBuffer::SkipString(char **ppStr)
     return Skip(nLen);
 }
 
+// Like ReadNames(): a count that can't be read, or names that run out before it,
+// are corrupt data (this used to assert, or loop up to 2^32 times past the end)
 int CByteBuffer::SkipNames()
 {
     char *c = nullptr;
@@ -515,12 +517,15 @@ int CByteBuffer::SkipNames()
 
     if (corrupt)
     {
-        assert(FALSE);
+        return 1;
     }
 
     for (i = 0; i < len; i++)
     {
-        SkipString(&c);
+        if (SkipString(&c))
+        {
+            return 1;
+        }
     }
 
     return 0;
@@ -536,7 +541,7 @@ int CByteBuffer::SkipVals()
 
     if (corrupt)
     {
-        assert(FALSE);
+        return 1;
     }
 
     for (i = 0; i < len; i++)

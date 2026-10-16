@@ -268,6 +268,63 @@ BOOST_AUTO_TEST_CASE(each_failing_reader_sets_corrupt)
     }
 }
 
+BOOST_AUTO_TEST_CASE(SkipNames_skips_a_valid_list)
+{
+    CByteBuffer buf;
+    buf.Append32(2);
+    buf.AppendString("north");
+    buf.AppendString("n");
+    buf.Append8(0x5a);
+    BOOST_TEST(buf.SkipNames() == 0);
+    BOOST_TEST(buf.ReadU8() == 0x5a);
+    BOOST_TEST(!buf.IsCorrupt());
+}
+
+BOOST_AUTO_TEST_CASE(SkipVals_skips_a_valid_list)
+{
+    CByteBuffer buf;
+    buf.Append32(3);
+    buf.Append32(10);
+    buf.Append32(20);
+    buf.Append32(30);
+    buf.Append8(0x5a);
+    BOOST_TEST(buf.SkipVals() == 0);
+    BOOST_TEST(buf.ReadU8() == 0x5a);
+    BOOST_TEST(!buf.IsCorrupt());
+}
+
+BOOST_AUTO_TEST_CASE(SkipNames_corrupt_without_asserting)
+{
+    {
+        CByteBuffer buf; // no count at all: used to assert(FALSE)
+        BOOST_TEST(buf.SkipNames() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf; // a huge count: used to loop 2^32 times past the end
+        buf.Append32(0xFFFFFFFF);
+        buf.AppendString("only one");
+        BOOST_TEST(buf.SkipNames() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+}
+
+BOOST_AUTO_TEST_CASE(SkipVals_corrupt_without_asserting)
+{
+    {
+        CByteBuffer buf;
+        BOOST_TEST(buf.SkipVals() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+    {
+        CByteBuffer buf;
+        buf.Append32(3);
+        buf.Append32(1);
+        BOOST_TEST(buf.SkipVals() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+    }
+}
+
 BOOST_AUTO_TEST_CASE(clear_resets_corrupt)
 {
     CByteBuffer buf;
