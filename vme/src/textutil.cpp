@@ -1663,6 +1663,30 @@ char *fix_old_codes_to_html(const std::string &c, const color_type *colours)
     return fix_old_codes_to_html(c.c_str(), colours);
 }
 
+/**
+ * fix_old_codes_to_html() for text read from a unit file, as a std::string: the
+ * converted copy is freed here (callers used to leak it on every load of an old
+ * unit). Text too long for fix_old_codes_to_html(), which asserts on it, is left
+ * unchanged, with its old codes, and logged.
+ */
+std::string old_codes_to_html(const char *c, const color_type *colours)
+{
+    if (c == nullptr)
+    {
+        return {};
+    }
+    if (strlen(c) >= MAX_STRING_LENGTH)
+    {
+        slog(LOG_ALL, 0, "Old colour codes left unconverted in a text of %zu characters.", strlen(c));
+        return c;
+    }
+
+    char *html = fix_old_codes_to_html(c, colours);
+    std::string result(html);
+    FREE(html);
+    return result;
+}
+
 char *fix_old_codes_to_html(const char *c, const color_type *colours)
 {
     char buf[2 * MAX_STRING_LENGTH];

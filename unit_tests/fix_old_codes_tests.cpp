@@ -107,4 +107,34 @@ BOOST_AUTO_TEST_CASE(amp_codes_and_escaping_unchanged)
     BOOST_TEST(convert("fish && chips") == "fish &amp; chips");
 }
 
+// old_codes_to_html(): what read_unit_string() and bread_extra() use for units
+// saved before v70, so the converted copy isn't leaked on every load
+BOOST_AUTO_TEST_CASE(old_codes_to_html_matches_fix_old_codes_to_html)
+{
+    color_type colours;
+    colours.create("default:cw bn:say_self:cw bn:time:cw bn");
+    for (const char *old : {"\033pHoly Symbol\033h", "fish && chips", "\033bIt's red\033h", "plain", ""})
+    {
+        BOOST_TEST(old_codes_to_html(old, &colours) == convert(old));
+    }
+}
+
+// fix_old_codes_to_html() asserts on text of MAX_STRING_LENGTH or more (its
+// buffer); a long old text, e.g. in a dormant player's file read by "when",
+// must not abort the server, so it is left as it is
+BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_long_text_alone)
+{
+    std::string text(MAX_STRING_LENGTH, 'a');
+    text.replace(0, 3, "\033pX");
+    BOOST_TEST(old_codes_to_html(text.c_str()) == text);
+
+    std::string fits(MAX_STRING_LENGTH - 1, 'a');
+    BOOST_TEST(old_codes_to_html(fits.c_str()) == fits);
+}
+
+BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
+{
+    BOOST_TEST(old_codes_to_html(nullptr).empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

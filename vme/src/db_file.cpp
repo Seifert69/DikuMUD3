@@ -72,16 +72,19 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
             return 1;
         }
 
+        e = new (extra_descr_data);
         if (unit_version < 70)
         {
 #ifdef DMSERVER
-            c = fix_old_codes_to_html(c, &g_cServerConfig.getColorType());
+            e->descr = old_codes_to_html(c, &g_cServerConfig.getColorType());
 #else
-            c = fix_old_codes_to_html(c); // vmc doesn't load old units
+            e->descr = old_codes_to_html(c); // vmc doesn't load old units
 #endif
         }
-        e = new (extra_descr_data);
-        e->descr = c;
+        else
+        {
+            e->descr = c;
+        }
         e->names.ReadBuffer(pBuf, unit_version);
         if (unit_version > 61)
         {
