@@ -285,13 +285,14 @@ int shall_exclude(const char *name)
 
 /**
  * A player file this server can't read because of its unit version is kept, not
- * erased as corrupt: newer files are what an older server finds after a rollback
- * (master stopped here), and the oldest (37-47) were read until versions below 48
- * were refused. Says so and returns true for such a file.
+ * erased as corrupt: newer files are what an older server finds after a rollback,
+ * versions 37-47 were read until versions below 48 were refused, and master
+ * stopped on the others rather than erase them. Says so and returns true for such
+ * a file.
  */
 static bool kept_unreadable_version()
 {
-    if (!g_nUnreadableVersion)
+    if (g_nUnreadableVersion < 0)
     {
         return false;
     }
@@ -310,7 +311,7 @@ unit_data *convert_load_player(const char *name)
         return nullptr;
     }
 
-    g_nUnreadableVersion = 0;
+    g_nUnreadableVersion = -1;
     ch = load_player(name);
 
     if (ch == nullptr)

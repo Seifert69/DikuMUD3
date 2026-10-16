@@ -676,7 +676,7 @@ static void bread_func_free(unit_fptr *head)
  *
  * whom is an error message to be printed when something goes wrong.
  */
-int g_nUnreadableVersion = 0;
+int g_nUnreadableVersion = -1;
 
 unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec)
 {
@@ -691,7 +691,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     char tmpbuf[2 * MAX_STRING_LENGTH];
 
     g_nCorrupt = 0;
-    g_nUnreadableVersion = 0;
+    g_nUnreadableVersion = -1;
 
     if (type != UNIT_ST_NPC && type != UNIT_ST_PC && type != UNIT_ST_ROOM && type != UNIT_ST_OBJ)
     {
