@@ -317,25 +317,37 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     return tmpl;
 }
 
-/** Reads DIL interrupt list */
-void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
+#ifdef DMSERVER // only bread_dil() uses these, and only in the server
+/**
+ * Reads DIL interrupt list. Returns how many labels lie outside the template's
+ * code: bread_dil() decides what to do with them once it knows whether the saved
+ * program still matches its template.
+ */
+static int bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
 {
     int i = 0;
     ubit32 lab = 0;
+    int outside = 0;
 
     /* read interrupts: flags, label and (from version 65) end label each */
     prg->frame[0].intrcount = dil_count_fits(pBuf, pBuf->ReadU16(), version > 64 ? 10 : 6);
 
     // Labels are offsets into the template's code, which a running program may
-    // reach the end of but not go past (as asserted in dilrun.cpp). A placeholder
-    // for a missing template has no code; its labels are only kept for saving.
+    // reach the end of but not go past (as asserted in dilrun.cpp). A label of a
+    // template that has changed since the save can be past the end; it is never
+    // used, as bread_dil() then clears the interrupts. A placeholder for a missing
+    // template has no code: its labels keep the offset itself, only to be saved
+    // again (bwrite_dilintr() subtracts the null core).
     const diltemplate *tmpl = prg->frame[0].tmpl;
     auto label = [&](ubit32 offset) -> ubit8 * {
-        if (tmpl->core && offset > tmpl->coresz)
+        if (tmpl->core == nullptr)
         {
-            g_nCorrupt++;
-            slog(LOG_ALL, 0, "Corrupt DIL data: interrupt label %u, but %s has only %u bytes of code.", offset, tmpl->prgname, tmpl->coresz);
-            offset = 0;
+            return reinterpret_cast<ubit8 *>(static_cast<uintptr_t>(offset));
+        }
+        if (offset > tmpl->coresz)
+        {
+            outside++;
+            return nullptr;
         }
         return &(tmpl->core[offset]);
     };
@@ -360,7 +372,41 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
     {
         prg->frame[0].intr = nullptr;
     }
+
+    return outside;
 }
+
+/*
+ * Gives a program a fresh set of interrupts for its template and starts it from
+ * the beginning, as when the template has changed since the program was saved.
+ */
+static void dil_reset_interrupts(dilprg *prg, diltemplate *tmpl, ubit32 *recallpc)
+{
+    if (prg->fp->intr)
+    {
+        FREE(prg->fp->intr);
+    }
+
+    if (tmpl->intrcount)
+    {
+        CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
+    }
+    else
+    {
+        prg->fp->intr = nullptr;
+    }
+    prg->fp->intrcount = tmpl->intrcount;
+
+    /* clear interrupts */
+    for (int i = 0; i < prg->fp->intrcount; i++)
+    {
+        prg->fp->intr[i].flags = 0;
+        prg->fp->intr[i].lab = nullptr;
+    }
+
+    *recallpc = 0;
+}
+#endif
 
 void bwrite_dilintr(CByteBuffer *pBuf, dilprg *prg)
 {
@@ -632,7 +678,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     }
 
     /* read interrupt array */
-    bread_dilintr(pBuf, prg, version);
+    const int labels_outside = bread_dilintr(pBuf, prg, version);
 
     prg->frame[0].securecount = 0;  /* number of secures */
     prg->frame[0].secure = nullptr; /* secured vars */
@@ -645,6 +691,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         return prg;
     }
 
+    bool reset = false;
     if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc))
     {
         /* state of variables have changed */
@@ -689,56 +736,35 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         }
         prg->varcrc = tmpl->varcrc; /* variables updated! */
 
-        /* free interrupts */
-        if (prg->fp->intr)
-            FREE(prg->fp->intr);
-
-        if (tmpl->intrcount)
-        {
-            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
-        }
-        else
-        {
-            prg->fp->intr = nullptr;
-        }
-        prg->fp->intrcount = tmpl->intrcount;
-
-        /* clear interrupts */
-        for (i = 0; i < prg->fp->intrcount; i++)
-        {
-            prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = nullptr;
-        }
-
-        recallpc = 0;
+        dil_reset_interrupts(prg, tmpl, &recallpc);
+        reset = true;
     }
 
     if ((prg->corecrc) != (tmpl->corecrc))
     {
         // slog(LOG_ALL, 0, "Core CRC mismatch. prg:%d, tmpl:%d", prg->corecrc, tmpl->corecrc);
-        recallpc = 0;
         prg->corecrc = tmpl->corecrc;
 
-        /* free interrupts */
-        if (prg->fp->intr)
-            FREE(prg->fp->intr);
+        dil_reset_interrupts(prg, tmpl, &recallpc);
+        reset = true;
+    }
 
-        if (tmpl->intrcount)
-        {
-            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
-        }
-        else
-        {
-            prg->fp->intr = nullptr;
-        }
-        prg->fp->intrcount = tmpl->intrcount;
-
-        /* clear interrupts */
-        for (i = 0; i < prg->fp->intrcount; i++)
-        {
-            prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = nullptr;
-        }
+    if (!reset && (labels_outside || prg->fp->intrcount != tmpl->intrcount || recallpc > tmpl->coresz))
+    {
+        // The program matches its template, yet its interrupts or program counter
+        // don't fit the code (a corrupt file): every program has exactly its
+        // template's interrupts, so start it afresh rather than let it run off the
+        // code or assert in dil_intr_insert().
+        slog(LOG_ALL,
+             0,
+             "DIL program %s: %d labels outside the code, %d interrupts (template %d), program counter %u of %u; reset.",
+             tmpl->prgname,
+             labels_outside,
+             prg->fp->intrcount,
+             tmpl->intrcount,
+             recallpc,
+             tmpl->coresz);
+        dil_reset_interrupts(prg, tmpl, &recallpc);
     }
 
     prg->frame[0].pc = &(tmpl->core[recallpc]); /* program counter */
