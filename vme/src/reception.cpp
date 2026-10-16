@@ -439,6 +439,40 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 /* and place them inside 'unit' by unit_to_unit and possibly equip */
 /* Return the top level unit loaded                                */
 
+/*
+ * After an item that was corrupt, moves the read position to where the next item
+ * starts: where reading the item stopped, or else its end by its header length,
+ * as either may be what is corrupt. Returns false, and leaves the position, if
+ * neither is the end of the data or a header in the current format.
+ */
+static bool next_item_at(CByteBuffer &buf, ubit32 nItemStart, ubit32 nLength)
+{
+    auto starts_item = [&buf](ubit32 pos) {
+        if (pos == buf.GetLength())
+        {
+            return true;
+        }
+        objheaderold ho;
+        if (pos > buf.GetLength() || buf.GetLength() - pos < sizeof(ho))
+        {
+            return false;
+        }
+        memcpy(&ho, buf.GetData() + pos, sizeof(ho));
+        return memcmp(ho.zone, "_obsoleted", 11) == 0 && memcmp(ho.unit, "_obsoleted", 11) == 0;
+    };
+
+    if (starts_item(buf.GetReadPosition()))
+    {
+        return true;
+    }
+    if (nLength <= buf.GetLength() - nItemStart && starts_item(nItemStart + nLength))
+    {
+        buf.SetReadPosition(nItemStart + nLength);
+        return true;
+    }
+    return false;
+}
+
 unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 {
     objheaderold ho;
@@ -446,7 +480,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
     file_index_type *fi = nullptr;
     unit_data *pnew = nullptr;
     unit_data *pnew_tmp = nullptr;
-    unit_data *pstack[25];
+    unit_data *pstack[25] = {};
     int len = 0;
     int init = 0;
     int frame = 0;
@@ -532,23 +566,18 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         pnew = nullptr;
 
         // The level is the item's depth: 1 for an item carried, one more inside each
-        // container, and never more than one deeper than the item before it (see
-        // add_units()). pstack has one container per level, so any other level would
-        // index past it or use an entry never set: place the item at the nearest
-        // level the file could have had.
-        if (hn.level < 1 || hn.level > frame + 1 || hn.level >= (int)(sizeof(pstack) / sizeof(pstack[0])))
+        // container (see add_units()). pstack has one container per level, so a level
+        // past it, or 0, is corrupt: placed at the nearest one there is. A level can
+        // skip some: the contents of a container that isn't saved (UNIT_FL_NOSAVE)
+        // come one level deeper than the item before them.
+        if (hn.level < 1 || hn.level >= (int)(sizeof(pstack) / sizeof(pstack[0])))
         {
-            const int deepest = std::min(frame + 1, (int)(sizeof(pstack) / sizeof(pstack[0])) - 1);
-            const int level = std::max(1, std::min((int)hn.level, deepest));
-            slog(LOG_ALL, 0, "Corrupted inventory %s: %s@%s at level %d after level %d, placed at level %d.", pFileName, hn.unit, hn.zone, hn.level, frame, level);
+            const int level = std::max(1, std::min((int)hn.level, (int)(sizeof(pstack) / sizeof(pstack[0])) - 1));
+            slog(LOG_ALL, 0, "Corrupted inventory %s: %s@%s at level %d, placed at level %d.", pFileName, hn.unit, hn.zone, hn.level, level);
             hn.level = level;
         }
 
-        // The header gives the item's length, so an item that can't be read can be
-        // skipped, and a slime takes its place, rather than losing all the items
-        // after it when the inventory is saved again
         const ubit32 nItemStart = InvBuf.GetReadPosition();
-        const bool bLengthFits = hn.length <= InvBuf.GetLength() - nItemStart;
 
         equip_ok = TRUE;
 
@@ -571,7 +600,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
-                if (g_nCorrupt && !bLengthFits)
+                if (g_nCorrupt && !next_item_at(InvBuf, nItemStart, hn.length))
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     extract_unit(pnew); // the slime, already in the unit list
@@ -580,6 +609,10 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 if (g_nCorrupt)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT %s@%s corrupt: skipped, a slime in its place.", hn.unit, hn.zone);
+                }
+                else if (pnew_tmp->getFileIndex() == g_slime_fi)
+                {
+                    next_item_at(InvBuf, nItemStart, hn.length);
                 }
 
                 if (pnew->getFileIndex() == nullptr)
@@ -591,7 +624,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             {
                 pnew_tmp = nullptr;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->getName().c_str()));
-                if (g_nCorrupt && !bLengthFits)
+                if (g_nCorrupt && !next_item_at(InvBuf, nItemStart, hn.length))
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
@@ -602,6 +635,10 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     slog(LOG_ALL, 0, "Inventory UNIT %s@%s corrupt: skipped, a slime in its place.", hn.unit, hn.zone);
                     pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 }
+                else if (pnew->getFileIndex() == g_slime_fi)
+                {
+                    next_item_at(InvBuf, nItemStart, hn.length);
+                }
                 // A corrupt unit comes back as a slime from read_unit(), which has
                 // already put it in the unit list
                 if (pnew->getFileIndex() != g_slime_fi)
@@ -609,12 +646,6 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     pnew->setFileIndex(fi);
                     insert_in_unit_list(pnew);
                 }
-            }
-
-            // A unit read in part (corrupt) may stop short of its end or run past it
-            if (bLengthFits && InvBuf.GetReadPosition() != nItemStart + hn.length)
-            {
-                InvBuf.SetReadPosition(nItemStart + hn.length);
             }
 
             if (pnew_tmp && pnew)
@@ -665,6 +696,12 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             if (hn.level > frame)
             {
                 unit_to_unit(pnew, pstack[frame]);
+                // Levels skipped (see above): an item later at one of them goes beside
+                // this one, so its container is this one's
+                for (int i = frame + 1; i < hn.level; i++)
+                {
+                    pstack[i] = pnew;
+                }
                 frame = hn.level;
             }
             else
