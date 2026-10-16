@@ -132,6 +132,24 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_long_text_alone)
     BOOST_TEST(old_codes_to_html(fits.c_str()) == fits);
 }
 
+// Shorter text can still outgrow fix_old_codes_to_html()'s buffers of
+// 2 * MAX_STRING_LENGTH as it is converted: each ' becomes &apos; (6 characters).
+// Such text is left as it is too, instead of overflowing.
+BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_text_that_would_grow_too_much_alone)
+{
+    std::string quotes(5000, '\'');
+    BOOST_TEST(old_codes_to_html(quotes.c_str()) == quotes);
+
+    // A text that fits once converted still is
+    std::string fits(4000, '\'');
+    std::string converted;
+    for (int i = 0; i < 4000; i++)
+    {
+        converted += "&apos;";
+    }
+    BOOST_TEST(old_codes_to_html(fits.c_str()) == converted);
+}
+
 BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
 {
     BOOST_TEST(old_codes_to_html(nullptr).empty());
