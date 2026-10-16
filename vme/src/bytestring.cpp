@@ -366,10 +366,14 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
     else // New xxx
     {
         int l = 0;
-        int Corrupt = 0;
+        int nError = 0;
         char buf[MAX_STRING_LENGTH];
 
-        l = ReadS32(&Corrupt);
+        l = ReadS32(&nError);
+        if (!nError && l < 0)
+        {
+            return Corrupt();
+        }
 
         int i = 0;
 
@@ -384,7 +388,7 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
             *pppStr = add_name(buf, *pppStr);
         }
 
-        return Corrupt;
+        return nError;
     }
     return 0;
 }
@@ -509,18 +513,20 @@ int CByteBuffer::SkipString(char **ppStr)
 int CByteBuffer::SkipNames()
 {
     char *c = nullptr;
-    unsigned int len = 0;
-    unsigned int i = 0;
     int corrupt = 0;
 
-    len = ReadS32(&corrupt);
+    const sbit32 len = ReadS32(&corrupt);
 
     if (corrupt)
     {
         return 1;
     }
+    if (len < 0)
+    {
+        return Corrupt();
+    }
 
-    for (i = 0; i < len; i++)
+    for (sbit32 i = 0; i < len; i++)
     {
         if (SkipString(&c))
         {
@@ -533,18 +539,20 @@ int CByteBuffer::SkipNames()
 
 int CByteBuffer::SkipVals()
 {
-    unsigned int len = 0;
-    unsigned int i = 0;
     int corrupt = 0;
 
-    len = ReadS32(&corrupt);
+    const sbit32 len = ReadS32(&corrupt);
 
     if (corrupt)
     {
         return 1;
     }
+    if (len < 0)
+    {
+        return Corrupt();
+    }
 
-    for (i = 0; i < len; i++)
+    for (sbit32 i = 0; i < len; i++)
     {
         if (Skip32())
         {

@@ -171,6 +171,19 @@ BOOST_AUTO_TEST_CASE(ReadNames_huge_count_stops_at_the_end_of_the_data)
     free_namelist(list);
 }
 
+BOOST_AUTO_TEST_CASE(ReadNames_negative_count_is_corrupt)
+{
+    CByteBuffer buf;
+    buf.Append32(static_cast<ubit32>(-1));
+    buf.AppendString("one");
+
+    char **list = nullptr;
+    BOOST_TEST(buf.ReadNames(&list, 0) == 1);
+    BOOST_TEST(list[0] == nullptr); // an empty list
+    BOOST_TEST(buf.IsCorrupt());    // for callers that ignore the return value
+    free_namelist(list);
+}
+
 BOOST_AUTO_TEST_CASE(ReadIntList_reads_a_valid_list)
 {
     CByteBuffer buf;
@@ -301,8 +314,8 @@ BOOST_AUTO_TEST_CASE(SkipNames_corrupt_without_asserting)
         BOOST_TEST(buf.IsCorrupt());
     }
     {
-        CByteBuffer buf; // a huge count: used to loop 2^32 times past the end
-        buf.Append32(0xFFFFFFFF);
+        CByteBuffer buf; // a huge count: used to loop 2^31 times past the end
+        buf.Append32(0x7FFFFFFF);
         buf.AppendString("only one");
         BOOST_TEST(buf.SkipNames() == 1);
         BOOST_TEST(buf.IsCorrupt());
@@ -322,6 +335,30 @@ BOOST_AUTO_TEST_CASE(SkipVals_corrupt_without_asserting)
         buf.Append32(1);
         BOOST_TEST(buf.SkipVals() == 1);
         BOOST_TEST(buf.IsCorrupt());
+    }
+}
+
+// A negative count is corrupt at once, as in ReadNames() and cintlist::ReadBuffer(),
+// not taken as 4 billion and skipped through the rest of the buffer
+BOOST_AUTO_TEST_CASE(SkipNames_SkipVals_negative_count_corrupt_at_once)
+{
+    {
+        CByteBuffer buf;
+        buf.Append32(0xFFFFFFFF);
+        buf.AppendString("a");
+        buf.AppendString("b");
+        BOOST_TEST(buf.SkipNames() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+        BOOST_TEST(buf.GetReadPosition() == 4u);
+    }
+    {
+        CByteBuffer buf;
+        buf.Append32(0x80000000);
+        buf.Append32(1);
+        buf.Append32(2);
+        BOOST_TEST(buf.SkipVals() == 1);
+        BOOST_TEST(buf.IsCorrupt());
+        BOOST_TEST(buf.GetReadPosition() == 4u);
     }
 }
 

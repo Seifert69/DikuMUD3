@@ -98,20 +98,22 @@ int cNamelist::ReadBuffer(CByteBuffer *pBuf, int unit_version)
     }
     else
     {
-        ubit32 len = 0;
-        ubit32 i = 0;
         int corrupt = 0;
 
-        len = pBuf->ReadU32(&corrupt);
+        const sbit32 len = pBuf->ReadS32(&corrupt);
 
         if (corrupt)
         {
             return 1;
         }
+        if (len < 0)
+        {
+            return pBuf->Corrupt();
+        }
 
         // Stop at the end of the data, as the pre-v65 branch above does: a
-        // corrupt count can be up to 2^32, and every name is appended (realloc).
-        for (i = 0; i < len; i++)
+        // corrupt count can be up to 2^31, and every name is appended (realloc).
+        for (sbit32 i = 0; i < len; i++)
         {
             if (pBuf->SkipString(&c))
             {

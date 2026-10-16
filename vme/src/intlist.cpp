@@ -51,9 +51,13 @@ int cintlist::ReadBuffer(CByteBuffer *pBuf)
     int corrupt = 0;
 
     len = pBuf->ReadS32(&corrupt);
-    if (corrupt || len < 0)
+    if (corrupt)
     {
         return 1;
+    }
+    if (len < 0)
+    {
+        return pBuf->Corrupt();
     }
 
     // Stop at the end of the data: a corrupt count can be up to 2^31, and

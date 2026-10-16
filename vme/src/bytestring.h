@@ -26,6 +26,13 @@ public:
     /// Callers that ignore a read's return value still get caught by this.
     inline bool IsCorrupt() const { return m_bCorrupt; }
     inline void ClearCorrupt() { m_bCorrupt = false; }
+    /// Marks the data corrupt and returns 1: for a reader outside this class that
+    /// finds a value which can't be right, e.g. a negative count.
+    inline int Corrupt()
+    {
+        m_bCorrupt = true;
+        return 1;
+    }
 
     void SetReadPosition(ubit32 nReadPosition);
     void SetLength(ubit32 nLen);
@@ -102,11 +109,6 @@ protected:
     void SetSize(ubit32 nSize);
     void IncreaseSize(ubit32 nSize);
     int StringLengthAtReadPos(ubit32 *pnLen);
-    inline int Corrupt()
-    {
-        m_bCorrupt = true;
-        return 1;
-    }
 
 private:
     ubit32 m_nReadPos;

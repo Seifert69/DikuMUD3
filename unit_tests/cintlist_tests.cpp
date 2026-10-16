@@ -48,6 +48,7 @@ BOOST_AUTO_TEST_CASE(negative_count_is_corrupt)
     cintlist l;
     BOOST_TEST(l.ReadBuffer(&buf) == 1);
     BOOST_TEST(l.Length() == 0);
+    BOOST_TEST(buf.IsCorrupt()); // for callers that ignore the return value
 }
 
 BOOST_AUTO_TEST_CASE(missing_count_is_corrupt)
