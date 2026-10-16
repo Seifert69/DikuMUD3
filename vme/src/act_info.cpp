@@ -18,6 +18,7 @@
 #include "utils.h"
 
 #include <cctype>
+#include <chrono>
 #include <ctime>
 #include <iterator>
 #include <unordered_map>
@@ -157,7 +158,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
     }
 }
 
-static constexpr double WHEN_LOOKUP_SECONDS = 5; ///< Between lookups by one mortal that aren't answered from the game
+static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between lookups by one mortal that aren't answered from the game
 static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;  ///< Such lookups by all mortals together
 
 /**
@@ -182,7 +183,7 @@ static bool when_hides(const unit_data *ch, const unit_data *pc)
 /**
  * Whether ch may make a "when" lookup that isn't answered from the game (a player
  * file read, or a hidden player), and if so counts it. A mortal waits
- * WHEN_LOOKUP_SECONDS between them, kept per character so that reconnecting
+ * WHEN_LOOKUP_WAIT between them, kept per character so that reconnecting
  * doesn't start over, and all mortals together get WHEN_LOOKUPS_PER_SECOND, so
  * more characters or connections don't add up. Immortals aren't limited.
  */
@@ -193,19 +194,22 @@ static bool when_lookup_allowed(unit_data *ch)
         return true;
     }
 
-    static std::unordered_map<sbit32, time_t> last_lookup; // by player id; NPCs (switched, DIL) share -1
-    static time_t this_second = 0;
+    // A monotonic clock with sub-second resolution: whole seconds from time() made
+    // the wait anything between 4 and 5 seconds
+    using clock = std::chrono::steady_clock;
+    static std::unordered_map<sbit32, clock::time_point> last_lookup; // by player id; NPCs (switched, DIL) share -1
+    static clock::time_point this_second{};
     static int in_this_second = 0;
 
-    const time_t now = time(nullptr);
+    const clock::time_point now = clock::now();
     const sbit32 id = ch->isPC() ? PC_ID(ch) : -1;
 
     auto it = last_lookup.find(id);
-    if (it != last_lookup.end() && difftime(now, it->second) < WHEN_LOOKUP_SECONDS)
+    if (it != last_lookup.end() && now - it->second < WHEN_LOOKUP_WAIT)
     {
         return false;
     }
-    if (now != this_second)
+    if (now - this_second >= std::chrono::seconds(1))
     {
         this_second = now;
         in_this_second = 0;
@@ -220,7 +224,7 @@ static bool when_lookup_allowed(unit_data *ch)
     {
         for (auto i = last_lookup.begin(); i != last_lookup.end();)
         {
-            i = difftime(now, i->second) >= WHEN_LOOKUP_SECONDS ? last_lookup.erase(i) : std::next(i);
+            i = now - i->second >= WHEN_LOOKUP_WAIT ? last_lookup.erase(i) : std::next(i);
         }
     }
     last_lookup[id] = now;
