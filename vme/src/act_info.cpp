@@ -19,6 +19,8 @@
 
 #include <cctype>
 #include <ctime>
+#include <iterator>
+#include <unordered_map>
 
 /**
  * @note also used in "corpses" wizard-command
@@ -155,14 +157,15 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
     }
 }
 
+static constexpr double WHEN_LOOKUP_SECONDS = 5; ///< Between lookups by one mortal that aren't answered from the game
+static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;  ///< Such lookups by all mortals together
+
 /**
  * Whether "when" hides player pc from ch. The same rule for players in the game
  * and players read from their file, so the answer doesn't change when they log
  * on or off: wizard invisibility above ch's level, or invisibility that ch can't
  * detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where they are.
  */
-static constexpr double WHEN_LOOKUP_SECONDS = 5; ///< Between player file reads by a mortal
-
 static bool when_hides(const unit_data *ch, const unit_data *pc)
 {
     if (ch == pc)
@@ -174,6 +177,54 @@ static bool when_hides(const unit_data *ch, const unit_data *pc)
         return true;
     }
     return CHAR_LEVEL(ch) < CREATOR_LEVEL && IS_SET(pc->getUnitFlags(), UNIT_FL_INVISIBLE) && !CHAR_HAS_FLAG(ch, CHAR_DETECT_INVISIBLE);
+}
+
+/**
+ * Whether ch may make a "when" lookup that isn't answered from the game (a player
+ * file read, or a hidden player), and if so counts it. A mortal waits
+ * WHEN_LOOKUP_SECONDS between them, kept per character so that reconnecting
+ * doesn't start over, and all mortals together get WHEN_LOOKUPS_PER_SECOND, so
+ * more characters or connections don't add up. Immortals aren't limited.
+ */
+static bool when_lookup_allowed(unit_data *ch)
+{
+    if (CHAR_LEVEL(ch) >= IMMORTAL_LEVEL)
+    {
+        return true;
+    }
+
+    static std::unordered_map<sbit32, time_t> last_lookup; // by player id; NPCs (switched, DIL) share -1
+    static time_t this_second = 0;
+    static int in_this_second = 0;
+
+    const time_t now = time(nullptr);
+    const sbit32 id = ch->isPC() ? PC_ID(ch) : -1;
+
+    auto it = last_lookup.find(id);
+    if (it != last_lookup.end() && difftime(now, it->second) < WHEN_LOOKUP_SECONDS)
+    {
+        return false;
+    }
+    if (now != this_second)
+    {
+        this_second = now;
+        in_this_second = 0;
+    }
+    if (in_this_second >= WHEN_LOOKUPS_PER_SECOND)
+    {
+        return false;
+    }
+
+    in_this_second++;
+    if (last_lookup.size() > 1000) // only recent ones matter
+    {
+        for (auto i = last_lookup.begin(); i != last_lookup.end();)
+        {
+            i = difftime(now, i->second) >= WHEN_LOOKUP_SECONDS ? last_lookup.erase(i) : std::next(i);
+        }
+    }
+    last_lookup[id] = now;
+    return true;
 }
 
 /**
@@ -211,33 +262,34 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
     }
 
     // Players are at the head of the unit list, as in "who"
+    bool hidden_here = false;
     for (unit_data *u = g_unit_list; u && u->isPC(); u = u->getGlobalNext())
     {
         if (!str_ccmp(PC_FILENAME(u), name))
         {
             // Not the file: it may still hold the visibility from before they went invisible
-            if (when_hides(ch, u))
+            if (!when_hides(ch, u))
             {
-                send_to_char(no_one, ch);
+                send_to_char(diku::format_to_str("%s is playing right now.<br/>", u->getNames().Name()), ch);
                 return;
             }
-            send_to_char(diku::format_to_str("%s is playing right now.<br/>", u->getNames().Name()), ch);
-            return;
+            hidden_here = true;
+            break;
         }
     }
 
-    // Reading a player file is the expensive part, so mortals may do it once every
-    // few seconds (as "save" limits saves). Players in the game cost nothing.
-    descriptor_data *d = CHAR_DESCRIPTOR(ch);
-    if (d && CHAR_LEVEL(ch) < IMMORTAL_LEVEL)
+    // Reading a player file is the expensive part, so it is limited for mortals (as
+    // "save" limits saves). A hidden player in the game goes through the same limit
+    // and answer as a player who isn't here, or the limit would show which it is.
+    if (!when_lookup_allowed(ch))
     {
-        const time_t now = time(nullptr);
-        if (difftime(now, d->getLastWhenLookupTime()) < WHEN_LOOKUP_SECONDS)
-        {
-            send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
-            return;
-        }
-        d->setLastWhenLookupTime(now);
+        send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
+        return;
+    }
+    if (hidden_here)
+    {
+        send_to_char(no_one, ch);
+        return;
     }
 
     // Only the player file is read (not the inventory), and it is never saved

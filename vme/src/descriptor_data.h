@@ -21,9 +21,6 @@ public:
     time_t getLastLogonTime() const;
     void setLastLogonTime(time_t value);
 
-    time_t getLastWhenLookupTime() const;
-    void setLastWhenLookupTime(time_t value);
-
     cMultiHook *getMultiHookPtr();
 
     ubit16 getMultiHookID() const;
@@ -99,7 +96,6 @@ public:
 
 private:
     time_t logon{0};                        ///< Time of last connect
-    time_t last_when_lookup{0};             ///< Time "when" last read a player file
     cMultiHook *multi{nullptr};             ///< Multi element pointer
     ubit16 id{0};                           ///< The ID for the multi
     FunctionPtr fptr{nullptr};              ///<

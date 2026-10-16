@@ -119,16 +119,6 @@ void descriptor_data::setLastLogonTime(time_t value)
     logon = value;
 }
 
-time_t descriptor_data::getLastWhenLookupTime() const
-{
-    return last_when_lookup;
-}
-
-void descriptor_data::setLastWhenLookupTime(time_t value)
-{
-    last_when_lookup = value;
-}
-
 cMultiHook *descriptor_data::getMultiHookPtr()
 {
     return multi;
