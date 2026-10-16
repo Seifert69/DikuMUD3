@@ -16,12 +16,11 @@
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
+#include "when_limit.h"
 
 #include <cctype>
 #include <chrono>
 #include <ctime>
-#include <iterator>
-#include <unordered_map>
 
 /**
  * @note also used in "corpses" wizard-command
@@ -185,50 +184,22 @@ static bool when_hides(const unit_data *ch, const unit_data *pc)
  * file read, or a hidden player), and if so counts it. A mortal waits
  * WHEN_LOOKUP_WAIT between them, kept per character so that reconnecting
  * doesn't start over, and all mortals together get WHEN_LOOKUPS_PER_SECOND, so
- * more characters or connections don't add up. Immortals aren't limited.
+ * more characters or connections don't add up. Immortals aren't limited, also
+ * when switched into a monster.
  */
 static bool when_lookup_allowed(unit_data *ch)
 {
-    if (CHAR_LEVEL(ch) >= IMMORTAL_LEVEL)
+    static cWhenLimit limit(WHEN_LOOKUP_WAIT, WHEN_LOOKUPS_PER_SECOND);
+
+    unit_data *who = CHAR_ORIGINAL(ch);
+    if (CHAR_LEVEL(who) >= IMMORTAL_LEVEL)
     {
         return true;
     }
 
     // A monotonic clock with sub-second resolution: whole seconds from time() made
-    // the wait anything between 4 and 5 seconds
-    using clock = std::chrono::steady_clock;
-    static std::unordered_map<sbit32, clock::time_point> last_lookup; // by player id; NPCs (switched, DIL) share -1
-    static clock::time_point this_second{};
-    static int in_this_second = 0;
-
-    const clock::time_point now = clock::now();
-    const sbit32 id = ch->isPC() ? PC_ID(ch) : -1;
-
-    auto it = last_lookup.find(id);
-    if (it != last_lookup.end() && now - it->second < WHEN_LOOKUP_WAIT)
-    {
-        return false;
-    }
-    if (now - this_second >= std::chrono::seconds(1))
-    {
-        this_second = now;
-        in_this_second = 0;
-    }
-    if (in_this_second >= WHEN_LOOKUPS_PER_SECOND)
-    {
-        return false;
-    }
-
-    in_this_second++;
-    if (last_lookup.size() > 1000) // only recent ones matter
-    {
-        for (auto i = last_lookup.begin(); i != last_lookup.end();)
-        {
-            i = now - i->second >= WHEN_LOOKUP_WAIT ? last_lookup.erase(i) : std::next(i);
-        }
-    }
-    last_lookup[id] = now;
-    return true;
+    // the wait anything between 4 and 5 seconds. Monsters (DIL) share one key.
+    return limit.Allow(who->isPC() ? PC_ID(who) : -1, cWhenLimit::clock::now());
 }
 
 /**

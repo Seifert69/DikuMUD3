@@ -8,7 +8,8 @@ when gandalf
 Gandalf last logged on 3 days, 4 hours ago (Sat 10 Oct 2026 01:43).
 </pre>
 If the player is in the game right now, you are told so instead.<br/>
-You can ask about a player who is not in the game once every 5 seconds.<br/>
+You can ask about a player who is not in the game once every 5 seconds. When
+many players ask at the same moment, you may be told to wait a few seconds.<br/>
 Times are the server's time.<br/>
 <br/><br/>
 <br/>See Also:<br/><br/>
