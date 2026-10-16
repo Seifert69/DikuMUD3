@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <deque>
 #include <iterator>
 #include <unordered_map>
@@ -52,6 +53,9 @@ public:
         m_last[key] = now;
         return true;
     }
+
+    /// How many keys it remembers a lookup for
+    std::size_t Size() const { return m_last.size(); }
 
 private:
     const clock::duration m_wait;

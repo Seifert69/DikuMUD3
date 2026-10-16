@@ -69,7 +69,7 @@ BOOST_AUTO_TEST_CASE(refused_lookup_does_not_start_the_wait)
     BOOST_TEST(limit.Allow(2, t0 + 1s));
 }
 
-BOOST_AUTO_TEST_CASE(old_entries_are_dropped_and_still_limit_nothing)
+BOOST_AUTO_TEST_CASE(many_keys_may_ask_again_after_the_wait)
 {
     cWhenLimit limit(5s, 2000);
     const clock_type::time_point t0{};
@@ -83,6 +83,44 @@ BOOST_AUTO_TEST_CASE(old_entries_are_dropped_and_still_limit_nothing)
     {
         BOOST_TEST(limit.Allow(key, t0 + 10s + key * 1ms));
     }
+}
+
+// Over 1000 keys, those whose wait is over are forgotten; the others are kept,
+// and still wait
+BOOST_AUTO_TEST_CASE(over_1000_keys_old_ones_are_dropped_recent_ones_kept)
+{
+    cWhenLimit limit(5s, 2000);
+    const clock_type::time_point t0{};
+
+    for (long key = 0; key < 600; key++)
+    {
+        BOOST_TEST(limit.Allow(key, t0));
+    }
+    for (long key = 600; key < 1001; key++)
+    {
+        BOOST_TEST(limit.Allow(key, t0 + 5s));
+    }
+    BOOST_TEST(limit.Size() == 1001u);
+
+    // At 6 s the first 600 have waited long enough, the other 401 haven't
+    BOOST_TEST(limit.Allow(5000, t0 + 6s));
+    BOOST_TEST(limit.Size() == 402u);
+    BOOST_TEST(!limit.Allow(1000, t0 + 6s));
+    BOOST_TEST(limit.Allow(0, t0 + 6s));
+}
+
+// At 1000 keys or fewer nothing is dropped
+BOOST_AUTO_TEST_CASE(up_to_1000_keys_nothing_is_dropped)
+{
+    cWhenLimit limit(5s, 2000);
+    const clock_type::time_point t0{};
+
+    for (long key = 0; key < 1000; key++)
+    {
+        BOOST_TEST(limit.Allow(key, t0));
+    }
+    BOOST_TEST(limit.Allow(5000, t0 + 10s));
+    BOOST_TEST(limit.Size() == 1001u);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
