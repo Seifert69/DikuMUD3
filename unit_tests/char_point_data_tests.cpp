@@ -110,4 +110,39 @@ BOOST_AUTO_TEST_CASE(count_past_the_end_of_the_data_is_an_error)
     BOOST_TEST(buf.IsCorrupt());
 }
 
+// Up to version 74 the speed is one byte, and a player's below SPEED_MIN becomes
+// SPEED_DEFAULT (the branch for versions below 39 is gone: read_unit_string()
+// refuses versions below 48)
+BOOST_AUTO_TEST_CASE(version_74_speed_is_one_byte)
+{
+    for (const ubit8 stored : {ubit8(9), ubit8(SPEED_MIN - 1)})
+    {
+        CByteBuffer buf;
+        buf.Append32(1234); // exp
+        buf.Append32(0);    // flags
+        buf.Append16(100);  // mana
+        buf.Append16(200);  // endurance
+        buf.Append8(0);     // natural armour
+        buf.Append8(stored); // speed, one byte
+        buf.Append16(0);    // attack type
+        buf.Append16(1);    // race
+        buf.Append16(0);    // offensive
+        buf.Append16(0);    // defensive
+        buf.Append8(1);     // sex
+        buf.Append8(5);     // level
+        buf.Append8(8);     // position
+        append_abilities(buf, 2);
+
+        auto pc = new_pc();
+        char_point_data points;
+        int error = 0;
+        points.readFrom(buf, 74, pc.get(), error);
+
+        BOOST_TEST(error == 0);
+        BOOST_TEST(buf.GetReadPosition() == buf.GetLength());
+        BOOST_TEST(points.getSpeed() == (stored < SPEED_MIN ? SPEED_DEFAULT : stored));
+        BOOST_TEST(points.getAbilitiesArray()[1] == 11);
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
