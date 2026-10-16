@@ -700,10 +700,26 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
-    // No file is older than version 48, and none is newer than this server: any
-    // other version is corrupt data (often a single flipped bit), which must be
-    // rejected rather than parsed in an old format or shut the server down.
-    // read_unit() still stops the server for zone data it can't read.
+    // A newer unit than this server can read, in an inventory or a DIL store, most
+    // likely means the server was rolled back: stop rather than lose it, as the
+    // inventory would be saved again without it. read_unit() also stops the server
+    // for zone data it can't read.
+    if (!g_nCorrupt && unit_version > UNIT_VERSION && type != UNIT_ST_PC)
+    {
+        slog(LOG_EXTENSIVE,
+             0,
+             "FATAL: Attempted to read '%s' but found "
+             "version number %d which was NEWER than this implementation "
+             "can handle! Aborting server.",
+             whom,
+             unit_version);
+        exit(0);
+    }
+
+    // No file is older than version 48: such a version, or a newer one in a player
+    // file, is corrupt data (often a single flipped bit), which must be rejected
+    // rather than parsed in an old format or shut the server down. A player with a
+    // corrupt file can't log on, so nothing is saved over it.
     if (g_nCorrupt || unit_version < 48 || unit_version > UNIT_VERSION)
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
