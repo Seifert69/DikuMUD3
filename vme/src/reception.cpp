@@ -566,8 +566,13 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
                 }
-                pnew->setFileIndex(fi);
-                insert_in_unit_list(pnew);
+                // A corrupt unit comes back as a slime from read_unit(), which has
+                // already put it in the unit list
+                if (pnew->getFileIndex() != g_slime_fi)
+                {
+                    pnew->setFileIndex(fi);
+                    insert_in_unit_list(pnew);
+                }
             }
 
             if (pnew_tmp && pnew)
@@ -576,7 +581,16 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 pnew->setDescriptionOfOutside(str);
                 pnew->setTitle(str);
                 pnew->getNames().PrependName(str_cc("slime of ", pnew_tmp->getNames().Name() ? pnew_tmp->getNames().Name() : "void"));
-                delete pnew_tmp;
+                if (pnew_tmp->getFileIndex() == g_slime_fi)
+                {
+                    // Corrupt, so read_unit() made it a slime in the unit list
+                    extract_unit(pnew_tmp);
+                }
+                else
+                {
+                    DELETE(unit_data, pnew_tmp);
+                }
+                pnew_tmp = nullptr;
             }
         }
 
