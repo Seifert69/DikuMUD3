@@ -125,7 +125,7 @@ static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
         return count;
     }
 
-    g_nCorrupt++;
+    pBuf->Corrupt();
     slog(LOG_ALL, 0, "Corrupt DIL data: count %u, but only %u bytes left.", count, left);
     return 0;
 }
@@ -155,9 +155,6 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     int i = 0;
     int j = 0;
     int bad_types = 0;
-#ifdef DMSERVER
-    const int corrupt_before = g_nCorrupt;
-#endif
     diltemplate *tmpl = nullptr;
 
     /* read a template */
@@ -217,7 +214,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     // made every program copied from it allocate that many interrupts.
     if (tmpl->intrcount > tmpl->coresz)
     {
-        g_nCorrupt++;
+        pBuf->Corrupt();
         slog(LOG_ALL, 0, "Corrupt DIL data: %u interrupts, but only %u bytes of code.", tmpl->intrcount, tmpl->coresz);
         tmpl->intrcount = 0;
     }
@@ -293,7 +290,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->extprg = nullptr;
     }
 
-    if (!g_mud_bootzone && (bad_types || g_nCorrupt != corrupt_before || pBuf->IsCorrupt()))
+    if (!g_mud_bootzone && (bad_types || pBuf->IsCorrupt()))
     {
         // Its references would be garbage, two log lines each
         slog(LOG_ALL, 0, "DIL template %s is corrupt: its external references aren't resolved.", tmpl->prgname ? tmpl->prgname : "");

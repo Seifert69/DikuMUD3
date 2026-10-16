@@ -1263,10 +1263,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     }
 
     // Catches the reads whose errors aren't counted above (e.g. the DIL variable
-    // lists in bread_dil(), the extra descriptions in bread_extra())
+    // lists in bread_dil(), the extra descriptions in bread_extra()) and the counts
+    // that can't be right (see dil_count_fits())
     if (pBuf->IsCorrupt())
     {
-        slog(LOG_ALL, 0, "FATAL: Read past the end of the data for '%s'.", whom);
+        slog(LOG_ALL, 0, "FATAL: Corrupt data for '%s': a read past its end, or a count that can't fit.", whom);
         g_nCorrupt++;
     }
 
