@@ -525,6 +525,12 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 
         pnew = nullptr;
 
+        // The header gives the item's length, so an item that can't be read can be
+        // skipped, and a slime takes its place, rather than losing all the items
+        // after it when the inventory is saved again
+        const ubit32 nItemStart = InvBuf.GetReadPosition();
+        const bool bLengthFits = hn.length <= InvBuf.GetLength() - nItemStart;
+
         equip_ok = TRUE;
 
         if (hn.compressed)
@@ -546,10 +552,15 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
-                if (g_nCorrupt)
+                if (g_nCorrupt && !bLengthFits)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
+                    extract_unit(pnew); // the slime, already in the unit list
                     break;
+                }
+                if (g_nCorrupt)
+                {
+                    slog(LOG_ALL, 0, "Inventory UNIT %s@%s corrupt: skipped, a slime in its place.", hn.unit, hn.zone);
                 }
 
                 if (pnew->getFileIndex() == nullptr)
@@ -561,10 +572,16 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             {
                 pnew_tmp = nullptr;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->getName().c_str()));
-                if (g_nCorrupt)
+                if (g_nCorrupt && !bLengthFits)
                 {
                     slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
                     break;
+                }
+                if (g_nCorrupt)
+                {
+                    // Rejected outright (its version or type): nothing was made of it
+                    slog(LOG_ALL, 0, "Inventory UNIT %s@%s corrupt: skipped, a slime in its place.", hn.unit, hn.zone);
+                    pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 }
                 // A corrupt unit comes back as a slime from read_unit(), which has
                 // already put it in the unit list
@@ -573,6 +590,12 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                     pnew->setFileIndex(fi);
                     insert_in_unit_list(pnew);
                 }
+            }
+
+            // A unit read in part (corrupt) may stop short of its end or run past it
+            if (bLengthFits && InvBuf.GetReadPosition() != nItemStart + hn.length)
+            {
+                InvBuf.SetReadPosition(nItemStart + hn.length);
             }
 
             if (pnew_tmp && pnew)
