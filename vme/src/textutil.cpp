@@ -1671,18 +1671,40 @@ char *fix_old_codes_to_html(const std::string &c, const color_type *colours)
  */
 std::string old_codes_to_html(const char *c, const color_type *colours)
 {
-    // fix_old_codes_to_html() converts in place in buffers of 2 * MAX_STRING_LENGTH,
-    // and a character can grow to 6 (' to &apos;; &n becomes &lt;br/&gt;), plus
-    // the closing </pre>. Its own assert only stops text of MAX_STRING_LENGTH.
-    static constexpr size_t max_len = (2 * MAX_STRING_LENGTH - 16) / 6;
-
     if (c == nullptr)
     {
         return {};
     }
-    if (strlen(c) > max_len)
+
+    // fix_old_codes_to_html() asserts on text of MAX_STRING_LENGTH or more, and
+    // converts in buffers of 2 * MAX_STRING_LENGTH. At no step is what a character
+    // has become longer than: 11 for &n or &l (&lt;br/&gt;, &lt;pre&gt;), so 10
+    // for & and 1 for the letter; 6 for ' (&apos;); 4 for < or >; 7 for \n\r
+    // (<br/>\n\r); 1 for anything else. Plus the closing </pre> and the 0.
+    size_t len = 0;
+    size_t bound = 8;
+    for (const char *p = c; *p; p++, len++)
     {
-        slog(LOG_ALL, 0, "Old colour codes left unconverted in a text of %zu characters.", strlen(c));
+        switch (*p)
+        {
+            case '&':
+                bound += 10;
+                break;
+            case '\'':
+            case '\n':
+                bound += 6;
+                break;
+            case '<':
+            case '>':
+                bound += 4;
+                break;
+            default:
+                bound += 1;
+        }
+    }
+    if (len >= MAX_STRING_LENGTH || bound > 2 * MAX_STRING_LENGTH)
+    {
+        slog(LOG_ALL, 0, "Old colour codes left unconverted in a text of %zu characters.", len);
         return c;
     }
 

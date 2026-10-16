@@ -129,7 +129,16 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_long_text_alone)
     BOOST_TEST(old_codes_to_html(text.c_str()) == text);
 
     std::string fits(MAX_STRING_LENGTH - 1, 'a');
-    BOOST_TEST(old_codes_to_html(fits.c_str()) == fits);
+    fits.replace(0, 3, "\033pX");
+    BOOST_TEST(old_codes_to_html(fits.c_str()) == "X" + std::string(MAX_STRING_LENGTH - 4, 'a'));
+}
+
+// A long description with a few codes converts: the bound counts what each
+// character can become, not the worst case for all of them
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_long_text_with_few_codes)
+{
+    std::string text = "It's &crred&cw" + std::string(6000, 'a');
+    BOOST_TEST(old_codes_to_html(text.c_str()) == "It&apos;s red" + std::string(6000, 'a'));
 }
 
 // Shorter text can still outgrow fix_old_codes_to_html()'s buffers of
@@ -148,6 +157,38 @@ BOOST_AUTO_TEST_CASE(old_codes_to_html_leaves_text_that_would_grow_too_much_alon
         converted += "&apos;";
     }
     BOOST_TEST(old_codes_to_html(fits.c_str()) == converted);
+}
+
+// &n becomes &lt;br/&gt; (11 characters for 2), and \n\r becomes <br/>\n\r (7 for 2)
+BOOST_AUTO_TEST_CASE(old_codes_to_html_bound_counts_newlines_and_amp_codes)
+{
+    std::string breaks;
+    std::string converted;
+    for (int i = 0; i < 2200; i++)
+    {
+        breaks += "&n";
+        converted += "&lt;br/&gt;";
+    }
+    BOOST_TEST(old_codes_to_html(breaks.c_str()) == converted);
+    for (int i = 0; i < 100; i++)
+    {
+        breaks += "&n";
+    }
+    BOOST_TEST(old_codes_to_html(breaks.c_str()) == breaks);
+
+    std::string lines;
+    converted.clear();
+    for (int i = 0; i < 3500; i++)
+    {
+        lines += "\n\r";
+        converted += "<br/>\n\r";
+    }
+    BOOST_TEST(old_codes_to_html(lines.c_str()) == converted);
+    for (int i = 0; i < 100; i++)
+    {
+        lines += "\n\r";
+    }
+    BOOST_TEST(old_codes_to_html(lines.c_str()) == lines);
 }
 
 BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
