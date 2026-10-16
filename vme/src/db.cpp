@@ -676,6 +676,8 @@ static void bread_func_free(unit_fptr *head)
  *
  * whom is an error message to be printed when something goes wrong.
  */
+int g_nUnreadableVersion = 0;
+
 unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec)
 {
     unit_data *u = nullptr;
@@ -689,6 +691,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     char tmpbuf[2 * MAX_STRING_LENGTH];
 
     g_nCorrupt = 0;
+    g_nUnreadableVersion = 0;
 
     if (type != UNIT_ST_NPC && type != UNIT_ST_PC && type != UNIT_ST_ROOM && type != UNIT_ST_OBJ)
     {
@@ -719,10 +722,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     // No file is older than version 48: such a version, or a newer one in a player
     // file, is corrupt data (often a single flipped bit), which must be rejected
     // rather than parsed in an old format or shut the server down. A player with a
-    // corrupt file can't log on, so nothing is saved over it.
+    // corrupt file can't log on, so nothing is saved over it, and vme -c / -C keep
+    // a file rejected for its version (g_nUnreadableVersion) instead of erasing it.
     if (g_nCorrupt || unit_version < 48 || unit_version > UNIT_VERSION)
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
+        if (!g_nCorrupt)
+        {
+            g_nUnreadableVersion = unit_version;
+        }
         g_nCorrupt = TRUE;
         return nullptr;
     }

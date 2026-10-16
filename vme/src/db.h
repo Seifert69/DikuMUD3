@@ -96,6 +96,7 @@ int bread_affect(CByteBuffer *pBuf, unit_data *u, ubit8 nVersion);
 
 extern int g_room_number;
 extern unit_data *g_unit_list;
+extern int g_nUnreadableVersion; ///< The unit version read_unit_string() last rejected a unit for, or 0
 extern unit_data *g_room_head;
 extern unit_data *g_npc_head;
 extern unit_data *g_obj_head;
