@@ -75,9 +75,14 @@ void dilval::free(dilval *v)
 #endif
 }
 
+bool DilVarTypeIsValid(int n)
+{
+    return (n >= 1) && (n <= DilVarType_e::DILV_MAX);
+}
+
 DilVarType_e DilVarTypeIntToEnum(int n)
 {
-    if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
+    if (DilVarTypeIsValid(n))
     {
         return (DilVarType_e) n;
     }

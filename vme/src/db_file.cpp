@@ -139,7 +139,7 @@ static DilVarType_e bread_dil_type(CByteBuffer *pBuf, int &bad)
 {
     ubit8 n = pBuf->ReadU8();
 
-    if ((n >= 1) && (n <= DilVarType_e::DILV_MAX))
+    if (DilVarTypeIsValid(n))
     {
         return (DilVarType_e)n;
     }
