@@ -142,7 +142,7 @@ void cintlist::Remove(int idx)
     {
         if (idx != length - 1)
         {
-            memmove(&intlist[idx], &intlist[idx + 1], sizeof(int) * (length - idx));
+            memmove(&intlist[idx], &intlist[idx + 1], sizeof(int) * (length - idx - 1));
         }
         length--;
         if (length == 0)

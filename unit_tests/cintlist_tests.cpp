@@ -59,4 +59,29 @@ BOOST_AUTO_TEST_CASE(missing_count_is_corrupt)
     BOOST_TEST(l.Length() == 0);
 }
 
+BOOST_AUTO_TEST_CASE(remove_keeps_the_order_and_reads_only_the_list)
+{
+    // Remove() moved one value too many: it read past the end of the list (ASan,
+    // seen when a DIL "remove" ran on an integer list during the live tests).
+    cintlist l;
+    for (int v : {1, 2, 3, 4})
+    {
+        l.Append(v);
+    }
+
+    l.Remove(1);
+    BOOST_TEST(l.Length() == 3);
+    BOOST_TEST(l.Value(0) == 1);
+    BOOST_TEST(l.Value(1) == 3);
+    BOOST_TEST(l.Value(2) == 4);
+
+    l.Remove(0);
+    l.Remove(1);
+    BOOST_TEST(l.Length() == 1);
+    BOOST_TEST(l.Value(0) == 3);
+
+    l.Remove(0);
+    BOOST_TEST(l.Length() == 0);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
