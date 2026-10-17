@@ -305,13 +305,15 @@ unit_data *convert_load_player(const char *name)
 {
     unit_data *ch = nullptr;
 
+    // Reset first: a return before load_player() must not leave the previous file's version
+    g_nUnreadableVersion = -1;
+
     if (!player_exists(name))
     {
         /* printf("No such player.\n"); */
         return nullptr;
     }
 
-    g_nUnreadableVersion = -1;
     ch = load_player(name);
 
     if (ch == nullptr)
