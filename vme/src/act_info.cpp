@@ -164,15 +164,30 @@ static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between lookups 
 static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;          ///< Such lookups by all mortals together
 
 /**
+ * Who asks "when", for what they may see and for the limit alike: an immortal
+ * switched into a monster asks as themselves, and a monster that follows a player
+ * (a script can make it run "when") as that player.
+ */
+static unit_data *when_asker(unit_data *ch)
+{
+    unit_data *who = CHAR_ORIGINAL(ch);
+    if (who->isNPC() && CHAR_MASTER(who) && CHAR_MASTER(who)->isPC())
+    {
+        who = CHAR_MASTER(who);
+    }
+    return who;
+}
+
+/**
  * Whether "when" hides player pc from ch. The same rule for players in the game
  * and players read from their file, so the answer doesn't change when they log
  * on or off: wizard invisibility above ch's level, or invisibility that ch can't
  * detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where they are.
- * An immortal switched into a monster asks as themselves, as for the limit.
+ * ch asks as when_asker() says, as for the limit.
  */
 static bool when_hides(unit_data *ch, const unit_data *pc)
 {
-    const unit_data *asker = CHAR_ORIGINAL(ch);
+    const unit_data *asker = when_asker(ch);
 
     if (asker == pc)
     {
@@ -198,13 +213,7 @@ static bool when_lookup_allowed(unit_data *ch)
 {
     static cWhenLimit limit(WHEN_LOOKUP_WAIT, WHEN_LOOKUPS_PER_SECOND);
 
-    unit_data *who = CHAR_ORIGINAL(ch);
-    // A monster that follows a player (a script can make it run "when") waits
-    // with that player
-    if (who->isNPC() && CHAR_MASTER(who) && CHAR_MASTER(who)->isPC())
-    {
-        who = CHAR_MASTER(who);
-    }
+    unit_data *who = when_asker(ch);
     if (CHAR_LEVEL(who) >= IMMORTAL_LEVEL)
     {
         return true;
