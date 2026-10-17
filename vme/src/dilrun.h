@@ -58,6 +58,7 @@ int dil_init(spec_arg *sarg);
 void dil_activate(dilprg *prg);
 void dil_activate_cmd(dilprg *prg, command_info *cmd_ptr);
 void dil_init_vars(int varc, dilframe *frm);
+bool dil_bind_global_var(dilvar *var, const char *name);
 void dil_free_var(dilvar *var);
 
 void dil_free_frame(dilframe *frame);

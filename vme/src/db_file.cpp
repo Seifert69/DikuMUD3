@@ -133,13 +133,14 @@ static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
 /*
  * Reads a DIL variable type. One out of range is counted in bad instead of
  * logged as DilVarTypeIntToEnum() does: corrupt data can hold hundreds of them,
- * and a log line each could fill the log.
+ * and a log line each could fill the log. With allow_invalid, DILV_INVALID is a
+ * type too (a saved global variable that lost a type conflict has it).
  */
-static DilVarType_e bread_dil_type(CByteBuffer *pBuf, int &bad)
+static DilVarType_e bread_dil_type(CByteBuffer *pBuf, int &bad, bool allow_invalid = false)
 {
     ubit8 n = pBuf->ReadU8();
 
-    if (DilVarTypeIsValid(n))
+    if (DilVarTypeIsValid(n) || (allow_invalid && n == DilVarType_e::DILV_INVALID))
     {
         return (DilVarType_e)n;
     }
@@ -360,6 +361,19 @@ static bool dil_template_global(const diltemplate *tmpl, int i)
 {
     const DilVarType_e type = tmpl->vart[i];
     return tmpl->varg[i] != nullptr && (type == DilVarType_e::DILV_SLP || type == DilVarType_e::DILV_ILP);
+}
+
+/**
+ * Binds a saved variable to the template's global (name and type), freeing what
+ * was read for it first: a value of its own if the file saved it as private.
+ */
+static void dil_bind_global(dilvar *var, const char *name, DilVarType_e type)
+{
+    var->itype = DilIType_e::Regular;
+    dil_free_var(var); // frees the name too
+    var->name = str_dup(name);
+    var->type = type;
+    dil_bind_global_var(var, name);
 }
 
 /**
@@ -637,96 +651,63 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->fp->vars = nullptr;
     }
 
-    int bad_types = 0;
+    int out_of_range = 0;
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = bread_dil_type(pBuf, bad_types);
-        prg->fp->vars[i].itype = DilIType_e::Regular;
-
-        bool globalVar = false;
-        prg->fp->vars[i].name = nullptr;
+        dilvar &var = prg->fp->vars[i];
+        var.type = bread_dil_type(pBuf, out_of_range, true);
+        var.itype = DilIType_e::Regular;
+        var.name = nullptr;
 
         if (version >= 76)
         {
             // Read the global variable name
-            g_nCorrupt += pBuf->ReadStringAlloc(&prg->fp->vars[i].name);
-            globalVar = (prg->fp->vars[i].name != nullptr);
+            g_nCorrupt += pBuf->ReadStringAlloc(&var.name);
         }
 
-        switch (prg->fp->vars[i].type)
+        // A global variable's value is the shared one in the global index, not in the
+        // file (bwrite_dil() saves an empty list): it is bound once the variables have
+        // been checked against the template, below
+        switch (var.type)
         {
             case DilVarType_e::DILV_SLP:
-                if (!globalVar)
+                if (!var.name)
                 {
-                    prg->fp->vars[i].val.namelist = new cNamelist;
-                    prg->fp->vars[i].val.namelist->ReadBuffer(pBuf, version);
+                    var.val.namelist = new cNamelist;
+                    var.val.namelist->ReadBuffer(pBuf, version);
                 }
                 else
                 {
-                    cNamelist nl;
-                    nl.ReadBuffer(pBuf, version); // We're missing a SkipBuffer
-
-                    // Create global var in the global index or find and reuse it
-                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
-
-                    if (v)
-                    {
-                        // Set the type so that we don't free it.
-                        // Global means it's a reference to a global var
-                        prg->fp->vars[i].itype = DilIType_e::Global;
-                        prg->fp->vars[i].val = v->val;
-                    }
-                    else
-                    {
-                        prg->fp->vars[i].itype = DilIType_e::Regular;
-                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
-                        prg->fp->vars[i].val.string = nullptr;
-                    }
+                    g_nCorrupt += pBuf->SkipNames();
+                    var.val.namelist = nullptr;
                 }
                 break;
             case DilVarType_e::DILV_ILP:
-                if (!globalVar)
+                if (!var.name)
                 {
-                    prg->fp->vars[i].val.intlist = new cintlist;
-                    prg->fp->vars[i].val.intlist->ReadBuffer(pBuf);
+                    var.val.intlist = new cintlist;
+                    var.val.intlist->ReadBuffer(pBuf);
                 }
                 else
                 {
-                    cintlist il;
-                    il.ReadBuffer(pBuf); // We're missing a SkipBuffer
-
-                    // Create global var in the global index or find and reuse it
-                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
-
-                    if (v)
-                    {
-                        // Set the type so that we don't free it.
-                        // Global means it's a reference to a global var
-                        prg->fp->vars[i].itype = DilIType_e::Global;
-                        prg->fp->vars[i].val = v->val;
-                    }
-                    else
-                    {
-                        prg->fp->vars[i].itype = DilIType_e::Regular;
-                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
-                        prg->fp->vars[i].val.string = nullptr;
-                    }
+                    g_nCorrupt += pBuf->SkipVals();
+                    var.val.intlist = nullptr;
                 }
                 break;
             case DilVarType_e::DILV_SP:
-                pBuf->ReadStringAlloc(&prg->fp->vars[i].val.string);
+                pBuf->ReadStringAlloc(&var.val.string);
                 break;
             case DilVarType_e::DILV_INT:
-                prg->fp->vars[i].val.integer = pBuf->ReadS32();
+                var.val.integer = pBuf->ReadS32();
                 break;
 
             default:
-                prg->fp->vars[i].val.string = nullptr;
+                var.val.string = nullptr;
         }
     }
-    if (bad_types)
+    if (out_of_range)
     {
-        slog(LOG_ALL, 0, "DIL program %s: %d variable types out of range.", name, bad_types);
+        slog(LOG_ALL, 0, "DIL program %s: %d variable types out of range.", name, out_of_range);
     }
 
     /* read interrupt array */
@@ -743,8 +724,35 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         return prg;
     }
 
+    // A shared global's value is in the global index, so whatever name or type the
+    // file saved for it, it is bound to the template's global below (a builder may
+    // have renamed the global or made a variable global: varcrc covers neither). Any
+    // other variable must have the template's type, else the variables are reset, as
+    // dilfe_var() asserts on a type it can't read. Only checked when varcrc matches:
+    // a changed template resets them anyway.
+    int differ = 0;
+    if (prg->varcrc == tmpl->varcrc && novar == tmpl->varc)
+    {
+        for (i = 0; i < novar; i++)
+        {
+            if (!dil_template_global(tmpl, i))
+            {
+                differ += prg->fp->vars[i].type != tmpl->vart[i];
+            }
+        }
+        if (differ)
+        {
+            slog(LOG_ALL,
+                 0,
+                 "DIL program %s on %s: %d variables don't match the template; reset.",
+                 tmpl->prgname,
+                 owner->getNames().Name(),
+                 differ);
+        }
+    }
+
     bool reset = false;
-    if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc))
+    if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc) || differ)
     {
         /* state of variables have changed */
         /* s printf(buf,"Var CRC mismatch. prg:%d, tmpl:%d",
@@ -790,6 +798,31 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 
         dil_reset_interrupts(prg, tmpl, &recallpc);
         reset = true;
+    }
+    else
+    {
+        for (i = 0; i < novar; i++)
+        {
+            dilvar &var = prg->fp->vars[i];
+            if (dil_template_global(tmpl, i))
+            {
+                dil_bind_global(&var, tmpl->varg[i], tmpl->vart[i]);
+            }
+            else if (var.name && !tmpl->varg[i])
+            {
+                // Saved as global, private now (a builder took "global" away): a list
+                // of its own, empty as the file holds no value for it
+                FREE(var.name);
+                if (var.type == DilVarType_e::DILV_SLP && !var.val.namelist)
+                {
+                    var.val.namelist = new cNamelist;
+                }
+                else if (var.type == DilVarType_e::DILV_ILP && !var.val.intlist)
+                {
+                    var.val.intlist = new cintlist;
+                }
+            }
+        }
     }
 
     if ((prg->corecrc) != (tmpl->corecrc))
