@@ -20,6 +20,7 @@
 
 #include <cctype>
 #include <chrono>
+#include <cstdint>
 #include <ctime>
 
 /**
@@ -158,7 +159,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 }
 
 static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between lookups by one mortal that aren't answered from the game
-static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;  ///< Such lookups by all mortals together
+static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;          ///< Such lookups by all mortals together
 
 /**
  * Whether "when" hides player pc from ch. The same rule for players in the game
@@ -196,14 +197,24 @@ static bool when_lookup_allowed(unit_data *ch)
     static cWhenLimit limit(WHEN_LOOKUP_WAIT, WHEN_LOOKUPS_PER_SECOND);
 
     unit_data *who = CHAR_ORIGINAL(ch);
+    // A monster that follows a player (a script can make it run "when") waits
+    // with that player
+    if (who->isNPC() && CHAR_MASTER(who) && CHAR_MASTER(who)->isPC())
+    {
+        who = CHAR_MASTER(who);
+    }
     if (CHAR_LEVEL(who) >= IMMORTAL_LEVEL)
     {
         return true;
     }
 
+    // By the player's id, and a monster (or a player without an id yet, -1) by
+    // the unit, so that monsters don't wait for each other. Negative, as no id is.
+    long key = who->isPC() && PC_ID(who) >= 0 ? PC_ID(who) : -static_cast<long>(reinterpret_cast<std::uintptr_t>(who) >> 1) - 1;
+
     // A monotonic clock with sub-second resolution: whole seconds from time() made
-    // the wait anything between 4 and 5 seconds. Monsters (DIL) share one key.
-    return limit.Allow(who->isPC() ? PC_ID(who) : -1, cWhenLimit::clock::now());
+    // the wait anything between 4 and 5 seconds
+    return limit.Allow(key, cWhenLimit::clock::now());
 }
 
 /**
