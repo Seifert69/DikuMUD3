@@ -355,16 +355,17 @@ int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
 void dil_free_var(dilvar *v)
 {
-    if (v->itype == DilIType_e::Global)
-    {
-        // It's a global variable, don't free it.
-        return;
-    }
-
+    // Every variable has its own copy of the name (the global index keeps another)
     if (v->name)
     {
         FREE(v->name);
         v->name = nullptr;
+    }
+
+    if (v->itype == DilIType_e::Global)
+    {
+        // It's a global variable, don't free its value.
+        return;
     }
 
     switch (v->type)
