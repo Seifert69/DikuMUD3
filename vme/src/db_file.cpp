@@ -377,7 +377,7 @@ static void dil_bind_global(dilvar *var, const char *name, DilVarType_e type)
 }
 
 /**
- * Reads DIL interrupt list. Returns how many labels lie outside the template's
+ * Reads DIL interrupt list. Returns how many labels don't fit the template's
  * code: bread_dil() decides what to do with them once it knows whether the saved
  * program still matches its template.
  */
@@ -391,7 +391,10 @@ static int bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
     prg->frame[0].intrcount = dil_count_fits(pBuf, pBuf->ReadU16(), version > 64 ? 10 : 6);
 
     // Labels are offsets into the template's code, which a running program may
-    // reach the end of but not go past (as asserted in dilrun.cpp). A label of a
+    // reach the end of but not go past (as asserted in dilrun.cpp). An interrupt
+    // that is set runs its condition from lab up to elab and then reads the 4-byte
+    // address at elab (check_interrupt()), so dilfe_intr() always gives it
+    // lab < elab and elab + 4 within the code; one that isn't is counted too. A label of a
     // template that has changed since the save can be past the end; it is never
     // used, as bread_dil() then clears the interrupts. A placeholder for a missing
     // template has no code: its labels keep the offset itself, only to be saved
@@ -417,13 +420,24 @@ static int bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
         for (i = 0; i < prg->frame[0].intrcount; i++)
         {
             prg->frame[0].intr[i].flags = pBuf->ReadU16();
-            lab = pBuf->ReadU32();
-            prg->frame[0].intr[i].lab = label(lab);
+            const ubit32 begin = pBuf->ReadU32();
+            prg->frame[0].intr[i].lab = label(begin);
+            lab = begin;
             if (version > 64)
             {
                 lab = pBuf->ReadU32();
             }
             prg->frame[0].intr[i].elab = label(lab);
+            if (version > 64 && tmpl->core != nullptr && prg->frame[0].intr[i].flags != 0 && prg->frame[0].intr[i].lab != nullptr &&
+                prg->frame[0].intr[i].elab != nullptr && (begin >= lab || static_cast<uint64_t>(lab) + 4 > tmpl->coresz))
+            {
+                outside++;
+            }
+            // Before version 65 no end label was saved, so elab is lab: a set interrupt can't run
+            if (version <= 64 && tmpl->core != nullptr && prg->frame[0].intr[i].flags != 0 && prg->frame[0].intr[i].lab != nullptr)
+            {
+                outside++;
+            }
         }
     }
     else
@@ -834,7 +848,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         reset = true;
     }
 
-    if (!reset && (labels_outside || prg->fp->intrcount != tmpl->intrcount || recallpc > tmpl->coresz))
+    if (!reset && (labels_outside || prg->fp->intrcount != tmpl->intrcount || recallpc >= tmpl->coresz))
     {
         // The program matches its template, yet its interrupts or program counter
         // don't fit the code (a corrupt file): every program has exactly its
@@ -842,7 +856,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         // code or assert in dil_intr_insert().
         slog(LOG_ALL,
              0,
-             "DIL program %s on %s: %d labels outside the code, %d interrupts (template %d), program counter %u of %u; reset.",
+             "DIL program %s on %s: %d labels that don't fit the code, %d interrupts (template %d), program counter %u of %u; reset.",
              tmpl->prgname,
              owner->getNames().Name(),
              labels_outside,
