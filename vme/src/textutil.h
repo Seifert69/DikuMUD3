@@ -99,8 +99,6 @@ int pwdcompare(const char *p1, const char *p2, int nMax);
 class color_type;
 // colours: the known colour names, to remove a name after ESC O that has
 // lost its ESC P
-char *fix_old_codes_to_html(const std::string &c, const color_type *colours = nullptr);
-char *fix_old_codes_to_html(const char *c, const color_type *colours = nullptr);
 std::string old_codes_to_html(const char *c, const color_type *colours = nullptr);
 std::string time_ago_string(time_t then, time_t now);
 

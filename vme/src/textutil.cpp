@@ -1574,26 +1574,34 @@ static void str_rem_old_codes(char *s, const color_type *colours)
     *d = 0;
 }
 
-//
-// Changes old codes such as &l &c to HTML
-// Only used in char conversion of units < v70
-// so no bother with mem leaks of strings
-char *fix_old_codes_to_html(const std::string &c, const color_type *colours)
-{
-    return fix_old_codes_to_html(c.c_str(), colours);
-}
-
-// str_substitute() on a std::string the way the char * one works: after each
-// replacement it looks again from the start, so text that a replacement joins
-// into a new match is replaced too
+// str_substitute() on a std::string, with the same result: it replaces the first
+// match and looks again from the start, so text that a replacement joins into a
+// new match is replaced too. Here the text is read once: a match can only end at
+// the character just read, and the replacement is read again in its place.
 static void substitute_all(std::string &s, const char *old, const char *replacement)
 {
     const size_t olen = strlen(old);
-
-    for (size_t pos = s.find(old); pos != std::string::npos; pos = s.find(old))
+    if (olen == 0 || s.find(old) == std::string::npos)
     {
-        s.replace(pos, olen, replacement);
+        return;
     }
+
+    const std::string replace(replacement);
+    const std::string rev_replacement(replace.rbegin(), replace.rend());
+    std::string unread(s.rbegin(), s.rend()); // last character first
+    std::string out;
+    out.reserve(s.size());
+    while (!unread.empty())
+    {
+        out += unread.back();
+        unread.pop_back();
+        if (out.size() >= olen && out.compare(out.size() - olen, olen, old) == 0)
+        {
+            out.resize(out.size() - olen);
+            unread += rev_replacement;
+        }
+    }
+    s = std::move(out);
 }
 
 /**
@@ -1683,12 +1691,6 @@ std::string old_codes_to_html(const char *c, const color_type *colours)
     }
     return result;
 }
-
-char *fix_old_codes_to_html(const char *c, const color_type *colours)
-{
-    return str_dup(old_codes_to_html(c, colours).c_str());
-}
-
 
 /* Get the contents between <htmltag> and convert it to lowercase
  *    p must point to first <.

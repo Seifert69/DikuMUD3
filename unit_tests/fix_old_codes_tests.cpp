@@ -1,13 +1,13 @@
 #include "color.h"
 #include "textutil.h"
 
-#include <cstdlib>
 #include <string>
+#include <utility>
 
 #include <boost/test/unit_test.hpp>
 
 /**********************************************************************************
- * Fix_Old_Codes_Suite - fix_old_codes_to_html(), for units saved before v70
+ * Fix_Old_Codes_Suite - old_codes_to_html(), for units saved before v70
  */
 BOOST_AUTO_TEST_SUITE(Fix_Old_Codes_Suite)
 
@@ -15,10 +15,7 @@ static std::string convert(const char *old)
 {
     color_type colours; // A few names from etc/color.dat
     colours.create("default:cw bn:say_self:cw bn:time:cw bn");
-    char *html = fix_old_codes_to_html(old, &colours);
-    std::string result(html);
-    free(html);
-    return result;
+    return old_codes_to_html(old, &colours);
 }
 
 // The item names from issue #433. Only the ESC used to be removed, so the
@@ -107,15 +104,27 @@ BOOST_AUTO_TEST_CASE(amp_codes_and_escaping_unchanged)
     BOOST_TEST(convert("fish && chips") == "fish &amp; chips");
 }
 
-// old_codes_to_html(): what read_unit_string() and bread_extra() use for units
-// saved before v70, so the converted copy isn't leaked on every load
-BOOST_AUTO_TEST_CASE(old_codes_to_html_matches_fix_old_codes_to_html)
+// What master's fix_old_codes_to_html(), which this replaces, gives for these:
+// codes that touch, the order the codes are removed in, && and &l
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_as_before)
 {
-    color_type colours;
-    colours.create("default:cw bn:say_self:cw bn:time:cw bn");
-    for (const char *old : {"\033pHoly Symbol\033h", "fish && chips", "\033bIt's red\033h", "plain", ""})
+    const std::pair<const char *, const char *> cases[] = {
+        {"&c&cwwx", "x"},
+        {"&&&n", "&amp;&lt;br/&gt;"},
+        {"&&cw", "&amp;cw"},
+        {"&c&c+ww&n", "&amp;cw&lt;br/&gt;"},
+        {"&l&&l", "&lt;pre&gt;&amp;l</pre>"},
+        {"a&&&&b", "a&amp;&amp;b"},
+        {"&[default]x&s9", "&amp;[default]x&amp;s9"},
+        {"\033Odefault\033P&c+&cwnx", "x"},
+        {"&x\n\r&n", "\n<br/>\n\r&lt;br/&gt;"},
+        {"it's <b>&h&p&f&bb&bn", "it&apos;s &lt;b&gt;"},
+        {"&b&bbn", ""},
+        {"&&&&&&", "&amp;&amp;&amp;"},
+    };
+    for (const auto &c : cases)
     {
-        BOOST_TEST(old_codes_to_html(old, &colours) == convert(old));
+        BOOST_TEST(convert(c.first) == c.second, c.first);
     }
 }
 
