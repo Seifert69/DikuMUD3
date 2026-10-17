@@ -13,6 +13,7 @@
 #include "interpreter.h"
 #include "main_functions.h"
 #include "pcsave.h"
+#include "slog.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
@@ -22,6 +23,7 @@
 #include <chrono>
 #include <cstdint>
 #include <ctime>
+#include <set>
 
 /**
  * @note also used in "corpses" wizard-command
@@ -282,8 +284,21 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         return;
     }
 
-    // Only the player file is read (not the inventory), and it is never saved
-    unit_data *pc = load_player(name);
+    // Only the player file is read (not the inventory), and it is never saved. A
+    // corrupt or old file logs as it is read, and it could be asked about again and
+    // again: its lines are left to when the player logs on, with a note once a boot.
+    unit_data *pc = nullptr;
+    unsigned nQuiet = 0;
+    {
+        cQuietLog quiet;
+        pc = load_player(name);
+        nQuiet = quiet.Count();
+    }
+    static std::set<std::string> noted; // only player files that exist
+    if (nQuiet > 0 && noted.insert(PlayerFileName(name)).second)
+    {
+        slog(LOG_ALL, 0, "when: reading the player file of %s logged %u line%s, not shown.", name, nQuiet, nQuiet == 1 ? "" : "s");
+    }
     if (pc == nullptr)
     {
         send_to_char(no_one, ch);
