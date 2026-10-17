@@ -350,6 +350,19 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
 #ifdef DMSERVER // only bread_dil() uses these, and only in the server
 /**
+ * Whether the template's variable i is a global that a program read from a file
+ * shares: a stringlist or integerlist. A string global keeps its own copy, as on
+ * master (bound, it would share a pointer that a string assignment frees), and vmc
+ * doesn't check the type of a global declaration: getDilGlobalDilVar() asserts on
+ * any other type.
+ */
+static bool dil_template_global(const diltemplate *tmpl, int i)
+{
+    const DilVarType_e type = tmpl->vart[i];
+    return tmpl->varg[i] != nullptr && (type == DilVarType_e::DILV_SLP || type == DilVarType_e::DILV_ILP);
+}
+
+/**
  * Reads DIL interrupt list. Returns how many labels lie outside the template's
  * code: bread_dil() decides what to do with them once it knows whether the saved
  * program still matches its template.
@@ -757,20 +770,20 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         {
             prg->fp->vars = nullptr;
         }
+        // As dil_copy_template() does: a global variable gets its name and the shared
+        // value, not a list of its own that the next save would make private for good
         for (i = 0; i < tmpl->varc; i++)
         {
             prg->fp->vars[i].type = tmpl->vart[i];
-            if (tmpl->vart[i] == DilVarType_e::DILV_SLP)
+            prg->fp->vars[i].name = dil_template_global(tmpl, i) ? str_dup(tmpl->varg[i]) : nullptr;
+        }
+        dil_init_vars(tmpl->varc, prg->fp);
+        for (i = 0; i < tmpl->varc; i++)
+        {
+            // A global that isn't shared keeps its name, as when read from a file
+            if (tmpl->varg[i] && !dil_template_global(tmpl, i))
             {
-                prg->fp->vars[i].val.namelist = new cNamelist;
-            }
-            else if (tmpl->vart[i] == DilVarType_e::DILV_ILP)
-            {
-                prg->fp->vars[i].val.intlist = new cintlist;
-            }
-            else
-            {
-                prg->fp->vars[i].val.string = nullptr;
+                prg->fp->vars[i].name = str_dup(tmpl->varg[i]);
             }
         }
         prg->varcrc = tmpl->varcrc; /* variables updated! */
