@@ -292,6 +292,8 @@ details.cgroup[open] summary::before { transform: rotate(90deg); }
 .connect { width: min(460px, 100%); padding: 26px 28px; box-shadow: var(--shadow); display: grid; gap: 16px; animation: rise .2s ease-out; }
 .connect h1 { font-family: var(--f-display); color: var(--accent); margin: 0; font-size: 1.9rem; }
 .connect p { margin: 0; color: var(--muted); line-height: 1.5; }
+.pwdlg .said { display: grid; gap: 4px; padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--raise); border-radius: 6px; }
+.pwdlg .said p { color: var(--fg); }
 .presets { display: grid; gap: 8px; }
 .preset { display: grid; gap: 2px; text-align: left; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--raise); }
 .preset:hover, .preset[aria-pressed="true"] { border-color: var(--accent); }
