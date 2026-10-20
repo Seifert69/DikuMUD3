@@ -477,7 +477,8 @@ int check_pwd(descriptor_data *d, char *pwd)
 
     if (bA == FALSE)
     {
-        send_to_descriptor("<br/>The chosen password only contains letters.<br/>"
+        send_to_descriptor("<br/>The chosen password only contains "
+                           "non-letters (digits).<br/>"
                            "Your password has to be at least 5 characters and "
                            "must contain both letters and digits.<br/>",
                            d);
@@ -486,8 +487,7 @@ int check_pwd(descriptor_data *d, char *pwd)
 
     if (bNA == FALSE)
     {
-        send_to_descriptor("<br/>The chosen password only contains "
-                           "non-letters (digits).<br/>"
+        send_to_descriptor("<br/>The chosen password only contains letters.<br/>"
                            "Your password has to be at least 5 characters and "
                            "must contain both letters and digits.<br/>",
                            d);
