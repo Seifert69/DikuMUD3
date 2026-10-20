@@ -1,7 +1,7 @@
 /*
  * The visual web client: wires the shared core (protocol, engine, connection) to the page.
  *
- * Panels: output log, combat dock, input bar, vitals, room + compass, map, conversations,
+ * Panels: output log, combat dock (Summary or Scroll view), input bar, vitals, room + compass, map, conversations,
  * reader (for <paged> text), connect screen and settings.
  */
 (function () {
@@ -38,7 +38,7 @@
     };
 
     /* ---------- Settings ---------- */
-    const settings = Object.assign({ skin: "auto", size: "m", fold: true, showPrompt: false, echo: true, stamps: true }, store.get("dk.settings", {}));
+    const settings = Object.assign({ skin: "auto", size: "m", combatView: "scroll", fold: true, showPrompt: false, echo: true, stamps: true }, store.get("dk.settings", {}));
 
     const prefersLight = window.matchMedia("(prefers-color-scheme: light)");
 
@@ -49,6 +49,9 @@
         $("#skin").value = settings.skin;
         $$("#sizes [data-size]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.size === settings.size)));
         $("#opt-fold").checked = settings.fold;
+        $("#combat").dataset.view = settings.combatView;
+        $("#opt-cbview").value = settings.combatView;
+        $$("[data-cbview]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.cbview === settings.combatView)));
         $("#opt-prompt").checked = settings.showPrompt;
         $("#opt-echo").checked = settings.echo;
         $("#opt-stamps").checked = settings.stamps;
@@ -406,10 +409,54 @@
     });
 
     /* ======================================================================
-     * Combat dock: one card per being in the fight
+     * Combat dock: your vitals in the header, then one card per being (Summary)
+     * or the fight's own scrolling log (Scroll). Alt+C switches between them.
      * ====================================================================== */
     const combat = { rows: new Map(), deadOrder: 0, hasData: false, active: false, round: 0, lines: [], hideTimer: null, idleTimer: null };
     const dock = $("#combat");
+
+    // Built once, so the Scroll log keeps its lines and scroll position between redraws.
+    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), flee: el("button", "btn warn", "Flee"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
+    {
+        const head = el("div", "cb-head");
+        const vit = el("div", "cb-vitals");
+        vit.append(vitalRow("hp", "HP"), vitalRow("ep", "End"), vitalRow("mp", "Mana"));
+        const sw = el("div", "cb-view");
+        sw.setAttribute("role", "group");
+        sw.setAttribute("aria-label", "Combat view");
+        for (const [v, label] of [["summary", "Summary"], ["scroll", "Scroll"]]) {
+            const b = el("button", null, label);
+            b.type = "button";
+            b.dataset.cbview = v;
+            b.title = "Alt+C switches view";
+            sw.append(b);
+        }
+        cb.flee.type = "button";
+        cb.flee.dataset.cmd = "flee";
+        head.append(cb.tag, cb.round, vit, sw, cb.flee);
+        cb.log.setAttribute("role", "log");
+        cb.log.setAttribute("aria-label", "Combat log");
+        dock.append(head, cb.body, cb.log);
+    }
+
+    function setCombatView(view) {
+        settings.combatView = view;
+        applySettings();
+        if (!dock.hidden) renderDock();
+        else sys(`Combat panel: ${view} view.`);
+    }
+    dock.addEventListener("click", e => {
+        const b = e.target.closest("[data-cbview]");
+        if (!b) return;
+        setCombatView(b.dataset.cbview);
+        focusInput();
+    });
+
+    // Only the player scrolls the combat log away from its end, as in the main log.
+    for (const t of ["wheel", "touchmove", "pointerdown"]) cb.log.addEventListener(t, () => (cb.userAt = Date.now()), { passive: true });
+    cb.log.addEventListener("scroll", () => {
+        if (Date.now() - cb.userAt < 500) cb.stick = cb.log.scrollHeight - cb.log.scrollTop - cb.log.clientHeight < 30;
+    });
 
     function condition(p) {
         return p >= 100 ? "unhurt" : p > 90 ? "scratched" : p > 70 ? "lightly wounded" : p > 50 ? "wounded" : p > 30 ? "badly wounded" : p > 10 ? "bleeding heavily" : p > 0 ? "near death" : "dead";
@@ -425,6 +472,8 @@
             dock.hidden = true;
             combat.rows.clear();
             combat.lines = [];
+            cb.log.replaceChildren();
+            cb.stick = true;
         }, delay);
     }
 
@@ -461,8 +510,10 @@
         scheduleDock();
     }
 
-    // Shows a combat line on the card of the being it is about (by name), or in the plain list.
+    // Every combat line goes into the Scroll log, and onto the card of the being it is about (by name).
     function combatLine(c) {
+        cb.log.append(el("div", c.cls, c.text));
+        while (cb.log.childElementCount > 300) cb.log.firstElementChild.remove();
         if (combat.hasData) {
             const t = c.text.toLowerCase();
             let best = null;
@@ -474,11 +525,11 @@
                 best.r.last = c.text;
                 best.r.lastCls = c.cls;
                 best.r.flash = Date.now();
-                scheduleDock();
             }
+            scheduleDock();
             return;
         }
-        // No $combat data from this server: show the latest lines, not a scrolling log.
+        // No $combat data from this server: Summary shows the latest lines, and the lines decide when the fight is over.
         clearTimeout(combat.hideTimer);
         combat.active = true;
         combat.lines.push(c);
@@ -501,28 +552,24 @@
     function renderDock() {
         dock.hidden = false;
         dock.classList.toggle("over", !combat.active);
-        const head = el("div", "cb-head");
-        const tag = el("span", "cb-tag");
-        tag.append(el("i"), combat.active ? "Fighting" : "Combat over");
-        head.append(tag, el("span", "cb-round", combat.hasData && combat.round ? `Round ${combat.round}` : ""));
-        if (combat.active) {
-            const flee = el("button", "btn warn", "Flee");
-            flee.type = "button";
-            flee.dataset.cmd = "flee";
-            head.append(flee);
-        }
-        const parts = [head];
+        cb.tag.replaceChildren(el("i"), combat.active ? "Fighting" : "Combat over");
+        cb.round.textContent = combat.hasData && combat.round ? `Round ${combat.round}` : "";
+        cb.flee.hidden = !combat.active;
+        const scroll = settings.combatView === "scroll";
+        cb.log.hidden = !scroll;
         if (combat.hasData) {
             const rows = [...combat.rows.values()].sort((a, b) => rank(a) - rank(b) || (a.deadAt || 0) - (b.deadAt || 0));
-            const grid = el("div", "cb-grid");
-            for (const r of rows) grid.append(card(r));
-            parts.push(grid);
+            const box = el("div", scroll ? "cb-strip" : "cb-grid");
+            for (const r of rows) box.append(scroll ? chip(r) : card(r));
+            cb.body.replaceChildren(box);
+        } else if (scroll) {
+            cb.body.replaceChildren();
         } else {
             const ls = el("div", "cb-lines");
             for (const c of combat.lines) ls.append(el("div", c.cls, c.text));
-            parts.push(ls);
+            cb.body.replaceChildren(ls);
         }
-        dock.replaceChildren(...parts);
+        if (scroll && cb.stick) cb.log.scrollTop = cb.log.scrollHeight;
     }
 
     // Attacking you first, then other foes, then allies, then the dead.
@@ -533,24 +580,40 @@
         return 2;
     }
 
-    function card(r) {
-        const c = el("div", "cb-row" + (r.foe ? "" : " ally") + (r.dead ? " dead" : "") + (!r.dead && r.foe && r.target === "you" ? " at-me" : ""));
-        const name = el("div", "cb-name");
-        name.append(el("b", null, cap(r.name)));
-        name.append(el("span", "cb-target", r.dead ? "dead" : r.target ? "→ " + r.target : ""));
-        const hp = el("div", "cb-hp");
+    function rowClass(r) {
+        return (r.foe ? "" : " ally") + (r.dead ? " dead" : "") + (!r.dead && r.foe && r.target === "you" ? " at-me" : "");
+    }
+
+    function condBar(r) {
         const cond = el("div", "cond");
         const ghost = el("i", "ghost"), fill = el("i", "fill");
         ghost.style.width = (r.prevHp ?? r.hp) + "%";
         fill.style.width = r.hp + "%";
         cond.append(ghost, fill);
-        hp.append(cond, el("span", null, `${r.hp}% · ${condition(r.hp)}`));
         requestAnimationFrame(() => {
             ghost.style.width = r.hp + "%";
         });
+        return cond;
+    }
+
+    function card(r) {
+        const c = el("div", "cb-row" + rowClass(r));
+        const name = el("div", "cb-name");
+        name.append(el("b", null, cap(r.name)));
+        name.append(el("span", "cb-target", r.dead ? "dead" : r.target ? "→ " + r.target : ""));
+        const hp = el("div", "cb-hp");
+        hp.append(condBar(r), el("span", null, `${r.hp}% · ${condition(r.hp)}`));
         const last = el("div", "cb-last" + (r.flash && Date.now() - r.flash < 1500 ? " flash" : ""));
         if (r.last) last.append(el("span", r.lastCls, r.last));
         c.append(name, hp, last);
+        return c;
+    }
+
+    // Scroll view: one small entry per being above the log.
+    function chip(r) {
+        const c = el("div", "cb-chip" + rowClass(r));
+        c.title = `${cap(r.name)}: ${condition(r.hp)}${!r.dead && r.target ? ", fighting " + r.target : ""}`;
+        c.append(el("b", null, cap(r.name)), condBar(r), el("span", null, r.dead ? "dead" : r.hp + "%"));
         return c;
     }
 
@@ -942,6 +1005,11 @@
     });
 
     document.addEventListener("keydown", e => {
+        if (e.altKey && e.code === "KeyC" && !e.ctrlKey && !e.metaKey) {
+            e.preventDefault();
+            setCombatView(settings.combatView === "scroll" ? "summary" : "scroll");
+            return;
+        }
         if (e.key === "Escape") {
             if (!$("#settings").hidden) toggleSettings(false);
             else closeScrim();
@@ -999,6 +1067,7 @@
         settings.skin = e.target.value;
         applySettings();
     });
+    $("#opt-cbview").addEventListener("change", e => setCombatView(e.target.value));
     $$("#sizes [data-size]").forEach(b => b.addEventListener("click", () => {
         settings.size = b.dataset.size;
         applySettings();
