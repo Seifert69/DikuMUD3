@@ -50,7 +50,8 @@
         $$("#sizes [data-size]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.size === settings.size)));
         $("#opt-fold").checked = settings.fold;
         $("#combat").dataset.view = settings.combatView;
-        $("#opt-cbview").value = settings.combatView;
+        const cbview = $("#opt-cbview"); // missing while a browser still has the previous page cached
+        if (cbview) cbview.value = settings.combatView;
         $$("[data-cbview]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.cbview === settings.combatView)));
         $("#opt-prompt").checked = settings.showPrompt;
         $("#opt-echo").checked = settings.echo;
@@ -1067,7 +1068,7 @@
         settings.skin = e.target.value;
         applySettings();
     });
-    $("#opt-cbview").addEventListener("change", e => setCombatView(e.target.value));
+    $("#opt-cbview")?.addEventListener("change", e => setCombatView(e.target.value));
     $$("#sizes [data-size]").forEach(b => b.addEventListener("click", () => {
         settings.size = b.dataset.size;
         applySettings();
