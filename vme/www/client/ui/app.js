@@ -72,7 +72,7 @@
     /* ======================================================================
      * Output log
      * ====================================================================== */
-    const out = { el: $("#output"), pill: $("#newlines"), stick: true, unseen: 0, gap: false, group: null, scrollQueued: false };
+    const out = { el: $("#output"), pill: $("#newlines"), stick: true, unseen: 0, gap: false, group: null, scrollQueued: false, mark: null };
     const MAX_ENTRIES = 3000;
 
     function atBottom() {
@@ -792,16 +792,31 @@
      * Passwords go in a dialog of their own. Turning the command field into a password field made
      * Firefox treat it as a login field for good, with a password manager popup on every click.
      * The dialog's form names the character, so a saved password belongs to that character.
+     * It covers the log, so it repeats what the server said since the last line was sent:
+     * a refused password is followed by the rules and a new prompt.
      */
-    function lastServerLine() {
-        const lines = (out.el.lastElementChild?.textContent || "").split("\n").map(l => l.trim()).filter(Boolean);
-        return lines[lines.length - 1] || "";
+    function serverLinesSinceSend() {
+        let node = out.mark?.isConnected ? out.mark.nextElementSibling : out.el.lastElementChild;
+        const lines = [];
+        for (; node; node = node.nextElementSibling) {
+            if (node.classList.contains("echo")) continue;
+            lines.push(...node.innerText.split("\n").map(l => l.trim()).filter(Boolean));
+        }
+        return lines.slice(-6);
     }
 
     function showPasswordDialog() {
-        const question = lastServerLine();
+        const lines = serverLinesSinceSend();
+        const question = lines.pop() || "";
         const form = el("form", "panel connect pwdlg");
-        form.append(el("h1", null, "Password"), el("p", null, question || "Enter your password."));
+        form.append(el("h1", null, "Password"));
+        if (lines.length) {
+            const said = el("div", "said");
+            said.setAttribute("role", "alert");
+            lines.forEach(l => said.append(el("p", null, l)));
+            form.append(said);
+        }
+        form.append(el("p", null, question || "Enter your password."));
         const user = el("input", "sr");
         Object.assign(user, { type: "text", name: "username", autocomplete: "username", readOnly: true, tabIndex: -1, value: S.lastLine });
         const label = el("label", "wide", "Password");
@@ -819,6 +834,7 @@
             e.preventDefault();
             if (S.conn && S.conn.isOpen) S.conn.send(pw.value);
             pw.value = "";
+            out.mark = out.el.lastElementChild;
         });
         openScrim(form);
         pw.focus();
@@ -860,6 +876,7 @@
             return false;
         }
         if (settings.echo && !S.password) echo(fromTrigger ? cmd + "  (trigger)" : cmd);
+        out.mark = out.el.lastElementChild;
         return S.conn.send(cmd);
     }
 
