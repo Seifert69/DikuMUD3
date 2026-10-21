@@ -115,7 +115,10 @@ m = wait_for(r"Wrong password|Throw the other copy out|you last visited", 30)
 if not m or "Wrong" in m.group(0):
     die("login refused")
 if "Throw" in m.group(0):
-    send("y")
+    # The character is playing already, maybe by its owner: only throw that copy out when told to
+    if os.environ.get("TN_THROW") != "1":
+        die("already playing; set TN_THROW=1 to throw the other copy out")
+    send("Yes")  # older servers want the whole word
 read(4)
 if re.search(r"Make your choice", new_text()):
     # The login menu: "3) Enter the game." for players, "1) Enter Valhalla" for gods

@@ -7,6 +7,7 @@
 #                                       (resume: the button was pressed already, just watch)
 #   deploy/valhalla.sh prod [resume]    production: adopt the test build, reboot when no mortals are on, check
 #
+# If Papi is logged in already they stop, unless TN_THROW=1 says to throw that copy out.
 # test and prod log in as Papi over telnet. The password is read from ~/.config/valhalla/papi_pw
 # (mode 600, outside the repository), or from $PAPI_PW when that is set.
 # SSH needs the valhalla.com entry in ~/.ssh/config (user seifert).
