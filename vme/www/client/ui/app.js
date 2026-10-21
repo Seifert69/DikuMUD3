@@ -67,6 +67,7 @@
         mud: "",
         lastLine: "",
         password: false,
+        quitting: false,
         vit: null,
     };
     const protocol = new D.protocol.Protocol();
@@ -827,6 +828,7 @@
                     combatLine(e);
                 }
             }
+            if (relogin.active || relogin.pending) loginText(D.html.textOf(ev.tree));
             if (!S.password && engine.triggers.length) runTriggers(D.html.textOf(ev.tree));
             break;
         case "paged":
@@ -896,6 +898,7 @@
         form.append(user, fields, row);
         form.addEventListener("submit", e => {
             e.preventDefault();
+            if (EXISTING_PWD.test(question)) relogin.pending = { name: S.lastLine, pw: pw.value };
             if (S.conn && S.conn.isOpen) S.conn.send(pw.value);
             pw.value = "";
             out.mark = out.el.lastElementChild;
@@ -912,6 +915,7 @@
 
     function setPassword(ev) {
         S.password = ev.on;
+        if (ev.on && reloginPassword()) return;
         if (ev.on) showPasswordDialog();
         else closePasswordDialog();
         if (!ev.on) {
@@ -929,6 +933,54 @@
         }
         updateTitle();
         focusInput();
+    }
+
+    /* ======================================================================
+     * Logging back in after a reconnect
+     *
+     * The name and password of the last successful login stay in this page's memory (never
+     * in storage), so a reconnect can answer the login questions itself. It stops at anything
+     * unexpected, and a refused password is forgotten so it is never tried twice.
+     * ====================================================================== */
+    const EXISTING_PWD = /please enter your password/i;
+    const relogin = { creds: null, pending: null, active: false, sentPw: false, timer: null };
+
+    function startRelogin() {
+        if (!relogin.creds) return;
+        Object.assign(relogin, { active: true, sentPw: false });
+        clearTimeout(relogin.timer);
+        relogin.timer = setTimeout(stopRelogin, 30000);
+    }
+
+    function stopRelogin() {
+        relogin.active = false;
+        clearTimeout(relogin.timer);
+    }
+
+    // The text of each server message while a login is under way.
+    function loginText(text) {
+        if (/Welcome back .*, you last visited/.test(text)) {
+            if (relogin.pending) relogin.creds = relogin.pending;
+            relogin.pending = null;
+            stopRelogin();
+        } else if (/Wrong password/.test(text)) {
+            relogin.creds = relogin.pending = null;
+            stopRelogin();
+        } else if (relogin.active) {
+            if (/By what name do they call you\?/.test(text)) send(relogin.creds.name);
+            else if (/Throw the other copy out\? \(Y\/N\)/.test(text)) send("y"); // that copy is this page's lost connection
+            else if (/Press \[enter\] and wait for the password prompt/.test(text)) send("");
+            else if (/Did I get that right/.test(text)) stopRelogin(); // the character is gone: leave it to the player
+        }
+    }
+
+    // Answers the password prompt of a relogin; false when the player should be asked.
+    function reloginPassword() {
+        if (!relogin.active || relogin.sentPw || !EXISTING_PWD.test(serverLinesSinceSend().pop() || "")) return false;
+        relogin.sentPw = true;
+        S.conn.send(relogin.creds.pw);
+        out.mark = out.el.lastElementChild;
+        return true;
     }
 
     /* ======================================================================
@@ -951,6 +1003,7 @@
             return;
         }
         if (line.trim()) S.lastLine = line.trim(); // before a password prompt, that's the character's name
+        if (/^\s*quit\s*$/i.test(line)) S.quitting = true; // a closed connection then is no surprise
         if (!line.trim()) {
             send("");
             return;
@@ -1172,49 +1225,78 @@
         b.hidden = false;
     }
 
+    // What a websocket close code means to a player.
+    function closeText(code, reason) {
+        const what = {
+            1000: "The server closed the connection",
+            1001: "The server or the browser went away",
+            1006: "The connection dropped without a goodbye (network trouble, the device sleeping, or the server)",
+            1011: "The server hit an error",
+            1015: "The secure (TLS) connection failed",
+        }[code] || "The connection closed";
+        return `${what}. Code ${code || "?"}${reason ? ": " + reason : ""}, at ${hhmm()}.`;
+    }
+
+    function showLostDialog(text, reconnect) {
+        const d = el("div", "panel connect lost");
+        d.setAttribute("role", "alertdialog");
+        d.setAttribute("aria-label", "Connection lost");
+        d.append(el("h1", null, "Connection lost"), el("p", null, text));
+        if (relogin.creds) d.append(el("p", null, `Reconnecting logs you back in as ${cap(relogin.creds.name)}.`));
+        const row = el("div", "row");
+        const change = el("button", "btn", "Change server");
+        const go = el("button", "btn primary", "Reconnect");
+        change.type = go.type = "button";
+        change.addEventListener("click", showConnect);
+        go.addEventListener("click", () => {
+            closeScrim();
+            reconnect();
+        });
+        row.append(change, go);
+        d.append(row);
+        openScrim(d);
+        go.focus();
+    }
+
     function connect(server) {
         if (S.conn) S.conn.close();
+        const url = D.connection.buildUrl(server);
+        if (S.server && D.connection.buildUrl(S.server) !== url) relogin.creds = null; // another MUD
         S.server = server;
         store.set("dk.server", server);
-        const url = D.connection.buildUrl(server);
         setConnState("connecting", server.host);
         banner("");
         sys(`Connecting to ${url}…`);
-        let retryTimer = null;
+        // No automatic retries: an unattended page would loop through the name prompt's idle kick.
         const conn = new D.connection.Connection(url, {
             onOpen() {
                 setConnState("open", server.host);
                 banner("");
                 sys(`Connected to ${server.host}.`);
+                S.quitting = false;
+                startRelogin();
                 focusInput();
             },
             onFrame,
-            onClose({ willRetry, retryIn }) {
+            onClose({ code, reason }) {
                 if (S.conn !== conn) return;
                 setConnState("closed", "Disconnected");
                 setPassword({ on: false });
+                stopRelogin();
                 combat.active = false;
-                if (willRetry) {
-                    let left = retryIn;
-                    const tick = () => banner(`The connection was lost. Reconnecting in ${left} s.`, [["Reconnect now", () => conn.connect()], ["Change server", showConnect]]);
-                    tick();
-                    clearInterval(retryTimer);
-                    retryTimer = setInterval(() => {
-                        left--;
-                        if (left <= 0) {
-                            clearInterval(retryTimer);
-                            setConnState("connecting", server.host);
-                            banner("Reconnecting…");
-                        } else {
-                            tick();
-                        }
-                    }, 1000);
-                } else {
-                    clearInterval(retryTimer);
-                    banner("Disconnected.", [["Reconnect", () => connect(server)], ["Change server", showConnect]]);
-                }
+                const again = () => {
+                    banner("");
+                    setConnState("connecting", server.host);
+                    sys("Reconnecting…");
+                    conn.connect();
+                };
+                const text = closeText(code, reason);
+                sys(text, !S.quitting && code !== 1000);
+                banner(S.quitting ? "You left the game." : "Disconnected.", [["Reconnect", again], ["Change server", showConnect]]);
+                if (S.quitting) relogin.creds = null;
+                else if (!conn.userClosed) showLostDialog(text, again);
             },
-        });
+        }, { autoReconnect: false });
         S.conn = conn;
         conn.connect();
     }
