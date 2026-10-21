@@ -78,6 +78,33 @@ cd vme/zone
 - Defining `MEMORY_DEBUG` routes allocations through the membug tracker
   (see `vme/src/membug.h`).
 
+## Deploying to valhalla.com
+
+`deploy/valhalla.sh` does each step; `deploy/tn.py` is the telnet driver it uses.
+Papi's password is in `~/.config/valhalla/papi_pw` (mode 600, outside the repository); never
+copy it anywhere else. While logged in, a player's tell gets one reply: "Right now I'm Papi's AI
+assistant."
+
+1. **Web client**: `deploy/valhalla.sh client <label>` copies the changed client files to
+   `/www/valhalla/v3` (served as https://www.valhalla.com/v3/) and keeps the old ones as
+   `*.bak-<label>`. When a script or style changes, bump `?v=` in `index.html` first.
+2. **Merge** the PR once its checks are green.
+3. **Test mud** (telnet 4442, `/home/mud/vme`): `deploy/valhalla.sh test` (`test resume` if the
+   button was pressed already).
+   - Logs in as Papi, `goto compiler`, `press button`.
+   - That runs `compile.sh` as user mud: git pull, `make all`, copy to the test runtime.
+   - `look screen` every minute (not "look at screen") until `*** END compile` (`ERROR running` = failed).
+   - `ruffle daemon` reboots the test mud. The script waits for the new vme process,
+     then logs in and runs `wstat world`.
+4. **Production** (telnet 4242, websocket 4280, `/home/val/vme`): `deploy/valhalla.sh prod`.
+   - Logs in as Papi, `goto compiler`, `adopt universe`.
+   - That runs `adopt.sh` → `toprod.sh`, which copies the test build over.
+   - `look symbols` every minute until `*** END adopt`.
+   - `ruffle daemon`: production reboots once no mortals are online (checked every
+     5 minutes), so this can take hours. The script waits, then logs in to check.
+
+Don't use public channels on the live muds: they relay to Discord.
+
 ## Repository layout
 
 | path | contents |
@@ -92,6 +119,7 @@ cd vme/zone
 | `vme/etc/` | `server.cfg`, money definitions, compile-time includes |
 | `vme/www/client/` | browser client |
 | `unit_tests/` | Boost.Test suites |
+| `deploy/` | deploy scripts for valhalla.com |
 
 ## Conventions
 
