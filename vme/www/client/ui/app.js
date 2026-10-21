@@ -38,7 +38,14 @@
     };
 
     /* ---------- Settings ---------- */
-    const settings = Object.assign({ skin: "auto", size: "m", combatView: "scroll", fold: true, showPrompt: false, echo: true, stamps: true }, store.get("dk.settings", {}));
+    // Before v2 every page stored skin "auto"; Valhalla Classic is the default now
+    function storedSettings() {
+        const st = store.get("dk.settings", {});
+        if (!st.v && st.skin === "auto") delete st.skin;
+        st.v = 2;
+        return st;
+    }
+    const settings = Object.assign({ v: 2, skin: "classic", size: "m", combatView: "scroll", fold: true, showPrompt: false, echo: true, stamps: true }, storedSettings());
 
     const prefersLight = window.matchMedia("(prefers-color-scheme: light)");
 
@@ -461,7 +468,7 @@
     const dock = $("#combat");
 
     // Built once, so the Scroll log keeps its lines and scroll position between redraws.
-    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), flee: el("button", "btn warn", "Flee"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
+    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), took: el("span", "cb-took"), flee: el("button", "btn warn", "Flee"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
     {
         const head = el("div", "cb-head");
         const vit = el("div", "cb-vitals");
@@ -478,7 +485,7 @@
         }
         cb.flee.type = "button";
         cb.flee.dataset.cmd = "flee";
-        head.append(cb.tag, cb.round, vit, sw, cb.flee);
+        head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee);
         cb.log.setAttribute("role", "log");
         cb.log.setAttribute("aria-label", "Combat log");
         dock.append(head, cb.body, cb.log);
@@ -503,9 +510,12 @@
         if (Date.now() - cb.userAt < 500) cb.stick = cb.log.scrollHeight - cb.log.scrollTop - cb.log.clientHeight < 30;
     });
 
-    function condition(p) {
-        return p >= 100 ? "unhurt" : p > 90 ? "scratched" : p > 70 ? "lightly wounded" : p > 50 ? "wounded" : p > 30 ? "badly wounded" : p > 10 ? "bleeding heavily" : p > 0 ? "near death" : "dead";
-    }
+    // Life in 5 boxes (the server sends no more than that), in the prompt's own words
+    const LIFE = ["dead", "gushing", "bleeding", "scraped", "bruised", "healthy"];
+    const lifeOf = c => (c.life ?? (c.hp > 0 ? Math.ceil(c.hp / 20) : 0)); // hp: a server from before "life"
+
+    // A blow of step 5-8 (of the 0-8 that choose the combat message's words) is a big one
+    const BIG = 5;
 
     // The fight is over: show that, then hide the dock and forget the fight after a while.
     function endCombat(delay) {
@@ -528,7 +538,7 @@
             const r = combat.rows.get(j.id);
             if (r) {
                 r.dead = true;
-                r.hp = 0;
+                r.life = 0;
                 r.deadAt = ++combat.deadOrder;
             }
             if (combat.active) scheduleDock();
@@ -543,14 +553,19 @@
         combat.active = true;
         combat.round = j.round || combat.round + 1;
         const seen = new Set();
+        combat.took = [];
         for (const c of j.list) {
-            if (c.me) continue;
+            if (c.me) {
+                combat.took = [...(c.byYou || []), ...(c.byOthers || [])];
+                continue;
+            }
             seen.add(c.id);
             const r = combat.rows.get(c.id) || { id: c.id, last: "", dead: false };
-            r.prevHp = r.hp ?? c.hp;
-            Object.assign(r, { name: c.name, hp: c.hp, target: c.target || "", foe: !!c.foe });
+            r.prevLife = r.life ?? lifeOf(c);
+            Object.assign(r, { name: c.name, life: lifeOf(c), target: c.target || "", foe: !!c.foe, byYou: c.byYou || [], byOthers: c.byOthers || [] });
             combat.rows.set(c.id, r);
         }
+        combat.blowsAt = Date.now();
         for (const [id, r] of combat.rows) if (!seen.has(id) && !r.dead) combat.rows.delete(id); // fled or left
         scheduleDock();
     }
@@ -599,6 +614,7 @@
         dock.classList.toggle("over", !combat.active);
         cb.tag.replaceChildren(el("i"), combat.active ? "Fighting" : "Combat over");
         cb.round.textContent = combat.hasData && combat.round ? `Round ${combat.round}` : "";
+        cb.took.replaceChildren(...(combat.active && combat.took?.length ? blows("✖", combat.took, "took-hits", "Hits you took this round") : []));
         cb.flee.hidden = !combat.active;
         const scroll = settings.combatView === "scroll";
         cb.log.hidden = !scroll;
@@ -629,16 +645,34 @@
         return (r.foe ? "" : " ally") + (r.dead ? " dead" : "") + (!r.dead && r.foe && r.target === "you" ? " at-me" : "");
     }
 
-    function condBar(r) {
-        const cond = el("div", "cond");
-        const ghost = el("i", "ghost"), fill = el("i", "fill");
-        ghost.style.width = (r.prevHp ?? r.hp) + "%";
-        fill.style.width = r.hp + "%";
-        cond.append(ghost, fill);
-        requestAnimationFrame(() => {
-            ghost.style.width = r.hp + "%";
-        });
-        return cond;
+    // Five boxes; one just lost blinks
+    function lifeBar(r) {
+        const bar = el("div", "life");
+        bar.title = LIFE[r.life];
+        for (let i = 1; i <= 5; i++) {
+            const box = el("i", i <= r.life ? "on" : i <= (r.prevLife ?? 0) && fresh() ? "lost" : null);
+            bar.append(box);
+        }
+        return bar;
+    }
+
+    const fresh = () => Date.now() - (combat.blowsAt || 0) < 900; // the round that just came in
+
+    // "⚔×3 💥": hits this round, and a 💥 for each big one
+    function blows(glyph, steps, cls, title) {
+        if (!steps.length) return [];
+        const b = el("span", "blows " + cls + (fresh() ? " pop" : ""));
+        b.title = title;
+        b.append(`${glyph}×${steps.length}`);
+        const big = steps.filter(s => s >= BIG).length;
+        if (big) b.append(el("span", "big", " " + "💥".repeat(Math.min(big, 3))));
+        return [b];
+    }
+
+    function hitsOn(r) {
+        const h = el("div", "cb-hits");
+        h.append(...blows("⚔", r.byYou || [], "by-you", "Your hits this round"), ...blows("⚔", r.byOthers || [], "by-others", "Others' hits this round"));
+        return h;
     }
 
     function card(r) {
@@ -647,7 +681,7 @@
         name.append(el("b", null, cap(r.name)));
         name.append(el("span", "cb-target", r.dead ? "dead" : r.target ? "→ " + r.target : ""));
         const hp = el("div", "cb-hp");
-        hp.append(condBar(r), el("span", null, `${r.hp}% · ${condition(r.hp)}`));
+        hp.append(lifeBar(r), el("span", null, LIFE[r.life]), hitsOn(r));
         const last = el("div", "cb-last" + (r.flash && Date.now() - r.flash < 1500 ? " flash" : ""));
         if (r.last) last.append(el("span", r.lastCls, r.last));
         c.append(name, hp, last);
@@ -657,8 +691,8 @@
     // Scroll view: one small entry per being above the log.
     function chip(r) {
         const c = el("div", "cb-chip" + rowClass(r));
-        c.title = `${cap(r.name)}: ${condition(r.hp)}${!r.dead && r.target ? ", fighting " + r.target : ""}`;
-        c.append(el("b", null, cap(r.name)), condBar(r), el("span", null, r.dead ? "dead" : r.hp + "%"));
+        c.title = `${cap(r.name)}: ${LIFE[r.life]}${!r.dead && r.target ? ", fighting " + r.target : ""}`;
+        c.append(el("b", null, cap(r.name)), lifeBar(r), hitsOn(r));
         return c;
     }
 

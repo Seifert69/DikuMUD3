@@ -308,6 +308,10 @@ void cCombatList::PerformViolence()
     {
         pElems[nIdx]->sendWebRound();
     }
+    for (nIdx = 0; nIdx < nTop; nIdx++)
+    {
+        pElems[nIdx]->clearRoundBlows();
+    }
 
     nIdx = -1;
 }
@@ -468,6 +472,12 @@ static combat_packet::Entry web_combat_entry(unit_data *viewer, unit_data *u, bo
     e.hp = combat_packet::hpPercent(u->getCurrentHitpoints(), u->getMaximumHitpoints());
     e.foe = bFoe;
 
+    if (CHAR_COMBAT(u))
+    {
+        e.byYou = CHAR_COMBAT(u)->roundBlowSteps(viewer, true);
+        e.byOthers = CHAR_COMBAT(u)->roundBlowSteps(viewer, false);
+    }
+
     unit_data *t = CHAR_FIGHTING(u);
 
     if (t == viewer)
@@ -480,6 +490,28 @@ static combat_packet::Entry web_combat_entry(unit_data *viewer, unit_data *u, bo
     }
 
     return e;
+}
+
+void cCombat::addRoundBlow(const unit_data *att, int step)
+{
+    if (vRoundBlows.size() < 32) // haste and a crowd, but no runaway list
+    {
+        vRoundBlows.emplace_back(att, step);
+    }
+}
+
+std::vector<int> cCombat::roundBlowSteps(const unit_data *viewer, bool byViewer) const
+{
+    std::vector<int> steps;
+
+    for (const auto &b : vRoundBlows)
+    {
+        if ((b.first == viewer) == byViewer)
+        {
+            steps.push_back(b.second);
+        }
+    }
+    return steps;
 }
 
 void cCombat::sendWebRound()

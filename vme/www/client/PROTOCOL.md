@@ -33,9 +33,9 @@ Any other script is ignored; the client never runs server code.
 
 ```
 {"round":17,"list":[
-  {"id":"9f3a0c1b22e4","name":"the fallow deer","hp":62,"target":"you","me":false,"foe":true},
-  {"id":"51c0de4a9b17","name":"Moira","hp":88,"target":"the fallow deer","me":false,"foe":false},
-  {"id":"0b7e2d55aa10","name":"you","hp":80,"target":"the fallow deer","me":true,"foe":false}]}
+  {"id":"9f3a0c1b22e4","name":"the fallow deer","life":4,"target":"you","me":false,"foe":true,"byYou":[3,6],"byOthers":[1]},
+  {"id":"51c0de4a9b17","name":"Moira","life":5,"target":"the fallow deer","me":false,"foe":false,"byYou":[],"byOthers":[]},
+  {"id":"0b7e2d55aa10","name":"you","life":4,"hp":80,"target":"the fallow deer","me":true,"foe":false,"byYou":[],"byOthers":[2,2]}]}
 {"round":18,"list":[],"end":true}
 {"event":"death","id":"9f3a0c1b22e4"}
 ```
@@ -43,7 +43,12 @@ Any other script is ignored; the client never runs server code.
 - `list`: everyone in the player's fight in the same room: their opponents, anyone
   attacking them, their allies (fighting the same opponents, or fighting group members)
   and whatever the allies fight. Foes first, then allies, then the player (`me`); at most 12.
-- `id`: opaque, stable for the unit while the server runs. `hp`: percent of max.
+- `life`: 0-5 boxes of health (0 only when dead), no finer than the game tells. The exact
+  `hp` percent is only in the player's own entry.
+- `byYou` / `byOthers`: this round's blows on that being, by the player and by anyone else.
+  Each is the 0-8 step that picks the combat message's words (`damage_index()` in fight.cpp:
+  under 5% of max hp is 0, 70% or more is 8). The client shows 💥 for steps 5-8.
+- `id`: opaque, stable for the unit while the server runs.
   `target`: who that being is hitting, as the player sees the name, or `"you"`.
 - `end` when the player's fight is over; `event: death` when a listed being dies.
 - Not sent when the fight ends within its first round (a one-hit kill).

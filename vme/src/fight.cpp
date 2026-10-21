@@ -1194,6 +1194,11 @@ void damage(unit_data *ch,
             create_affect(victim, &af);
         }
     }
+    if (dam > 0 && CHAR_COMBAT(victim))
+    {
+        // For the web client's '$combat' packet: who hit it this round, and how hard
+        CHAR_COMBAT(victim)->addRoundBlow(ch, damage_index(dam, victim->getMaximumHitpoints()));
+    }
     victim->changeCurrentHitpointsBy(-1 * dam);
 
     update_pos(victim);
