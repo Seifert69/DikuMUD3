@@ -79,6 +79,17 @@ def send(line):
     s.sendall((line + "\r\n").encode())
 
 
+def read_all_pages(t):
+    """Reads for t seconds, answering "*** Return for more ***" so long texts come out whole."""
+    read(t)
+    for _ in range(200):
+        # the marker may be followed by the prompt (e.g. "TEST>")
+        if not re.search(r"\*\*\* Return for more \*\*\*\s*([^\n]{0,40}>\s*)?$", buf[-200:]):
+            return
+        s.sendall(b"\r\n")
+        read(1.5)
+
+
 def die(msg):
     print("\n[FAILED] " + msg)
     sys.exit(1)
@@ -120,7 +131,7 @@ print("\n[logged in]")
 for st in steps:
     if "send" in st:
         send(st["send"])
-        read(st.get("after", 2))
+        read_all_pages(st.get("after", 2))
     elif "expect" in st:
         if not wait_for(st["expect"], st.get("timeout", 30)):
             die("timed out waiting for " + st["expect"])
@@ -130,7 +141,7 @@ for st in steps:
         end = time.time() + st.get("timeout", 3600)
         while True:
             send(st["poll"])
-            read(5)
+            read_all_pages(5)
             if st.get("fail") and re.search(st["fail"], new_text(), re.I):
                 die("poll matched failure: " + st["fail"])
             if re.search(st["until"], new_text(), re.I):
