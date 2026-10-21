@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src ws: wss:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'; base-uri 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self' ws: wss:; img-src 'self' data: https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; object-src 'none'; base-uri 'none'">
     <title>DikuMUD</title>
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=VT323&display=swap">
     <!-- ?v= makes browsers fetch new scripts and styles with a new page; change it whenever they change -->
-    <link rel="stylesheet" href="css/themes.css?v=20261021">
-    <link rel="stylesheet" href="css/client.css?v=20261021">
-    <script src="core/html.js?v=20261021" defer></script>
-    <script src="core/protocol.js?v=20261021" defer></script>
-    <script src="core/engine.js?v=20261021" defer></script>
-    <script src="core/connection.js?v=20261021" defer></script>
-    <script src="ui/sanitize.js?v=20261021" defer></script>
-    <script src="ui/app.js?v=20261021" defer></script>
+    <link rel="stylesheet" href="css/themes.css?v=20261021b">
+    <link rel="stylesheet" href="css/client.css?v=20261021b">
+    <script src="core/html.js?v=20261021b" defer></script>
+    <script src="core/protocol.js?v=20261021b" defer></script>
+    <script src="core/engine.js?v=20261021b" defer></script>
+    <script src="core/connection.js?v=20261021b" defer></script>
+    <script src="ui/sanitize.js?v=20261021b" defer></script>
+    <script src="ui/app.js?v=20261021b" defer></script>
 </head>
 <body>
 <div class="app" id="app" data-side="status" data-view="play">
@@ -79,6 +79,10 @@
             <div class="eyebrow"><span>Map</span><span>click to enlarge</span></div>
             <button class="mapview" id="mapview" type="button" aria-label="Enlarge map"><img id="mapimg" alt="" hidden><span class="you" id="mapyou" hidden></span><span class="nomap" id="nomap">The map appears when you walk somewhere that has one.</span></button>
             <div class="mapzone"><span id="mapzone"></span><span id="mapxy"></span></div>
+        </section>
+        <section class="panel card whocard" id="whocard" aria-label="Who's online" hidden>
+            <div class="eyebrow"><span>Who's online</span><span id="whocount"></span></div>
+            <ul class="wholist" id="wholist"></ul>
         </section>
     </aside>
 

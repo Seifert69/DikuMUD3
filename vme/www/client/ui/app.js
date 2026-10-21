@@ -411,6 +411,51 @@
     });
 
     /* ======================================================================
+     * Who's online, from who.json next to the page. The MUD's dispatcher.py writes it (see
+     * VME_WHO_JSON there); without it the card stays hidden. Clicking a name starts a tell.
+     * ====================================================================== */
+    const WHO_URL = "live/who.json";
+    const WHO_STALE_SECONDS = 15 * 60; // the MUD sends it at least every 10 minutes
+
+    async function loadWho() {
+        const card = $("#whocard"); // missing while a browser still has the previous page cached
+        if (!card || document.hidden) return;
+        let who;
+        try {
+            const r = await fetch(WHO_URL, { cache: "no-store" });
+            if (!r.ok) throw new Error(String(r.status));
+            who = await r.json();
+        } catch (e) {
+            card.hidden = true;
+            return;
+        }
+        const players = Array.isArray(who.players) ? who.players : [];
+        const stale = Date.now() / 1000 - (who.updated || 0) > WHO_STALE_SECONDS;
+        const list = $("#wholist");
+        list.replaceChildren();
+        if (stale) list.append(el("li", "empty", "No news from the MUD lately; it may be down."));
+        else if (!players.length) list.append(el("li", "empty", "Nobody visible right now."));
+        for (const p of stale ? [] : players) {
+            const name = String(p.name || "");
+            const b = el("button", null, name);
+            b.type = "button";
+            b.title = `Send ${name} a tell`;
+            for (const t of p.tags || []) b.append(el("small", null, String(t)));
+            b.addEventListener("click", () => {
+                input.value = `tell ${name.toLowerCase()} `;
+                input.focus();
+            });
+            const li = el("li");
+            li.append(b);
+            list.append(li);
+        }
+        $("#whocount").textContent = stale ? "" : String(players.length);
+        card.hidden = false;
+    }
+    setInterval(loadWho, 60000);
+    document.addEventListener("visibilitychange", loadWho);
+
+    /* ======================================================================
      * Combat dock: your vitals in the header, then one card per being (Summary)
      * or the fight's own scrolling log (Scroll). Alt+C switches between them.
      * ====================================================================== */
@@ -1309,6 +1354,7 @@
 
     prefersLight.addEventListener("change", applySettings);
     applySettings();
+    loadWho();
     renderThreads();
     updateTitle();
     const start = serverFromUrl() || store.get("dk.server", null);

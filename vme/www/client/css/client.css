@@ -263,6 +263,11 @@ details.cgroup[open] summary::before { transform: rotate(90deg); }
 .you { position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 30%, transparent); }
 .you::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--accent); animation: ping 2s infinite; }
 @keyframes ping { from { transform: scale(1); opacity: .8; } to { transform: scale(2.6); opacity: 0; } }
+.whocard { display: grid; gap: 8px; }
+.wholist { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.wholist button { border: 1px solid var(--line); background: var(--raise); border-radius: 999px; padding: 3px 10px; font-size: .84rem; color: var(--fg); display: flex; gap: 6px; align-items: baseline; }
+.wholist button:hover { border-color: var(--accent); }
+.wholist small { color: var(--accent); font-size: .7rem; letter-spacing: .04em; }
 .mapzone { padding: 8px 14px 12px; color: var(--muted); font-size: .82rem; display: flex; justify-content: space-between; gap: 8px; font-variant-numeric: tabular-nums; }
 
 /* ---------- Conversations ---------- */
