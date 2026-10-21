@@ -107,9 +107,14 @@ if "Throw" in m.group(0):
     send("y")
 read(4)
 if re.search(r"Make your choice", new_text()):
-    m = re.search(r"(\d)\) Enter the game", buf)
-    send(m.group(1) if m else "3")
+    # The login menu: "3) Enter the game." for players, "1) Enter Valhalla" for gods
+    m = re.search(r"(\w)\) Enter (the game|Valhalla)", new_text())
+    if not m:
+        die("no way into the game in the menu")
+    send(m.group(1))
     read(4)
+    if re.search(r"Invalid Selection|Make your choice", new_text()):
+        die("still in the menu")
 print("\n[logged in]")
 
 for st in steps:
