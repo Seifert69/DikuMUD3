@@ -31,9 +31,12 @@ BOOST_AUTO_TEST_CASE(list_json_format)
 
     BOOST_TEST(combat_packet::listJSON(17, list) ==
                "{\"round\":17,\"list\":["
-               "{\"id\":\"a1b2c3\",\"name\":\"the mangy mongrel\",\"hp\":62,\"target\":\"you\",\"me\":false,\"foe\":true},"
-               "{\"id\":\"x9\",\"name\":\"Moira\",\"hp\":88,\"target\":\"the mangy mongrel\",\"me\":false,\"foe\":false},"
-               "{\"id\":\"s1\",\"name\":\"you\",\"hp\":80,\"target\":\"the mangy mongrel\",\"me\":true,\"foe\":false}]}");
+               "{\"id\":\"a1b2c3\",\"name\":\"the mangy mongrel\",\"life\":4,\"target\":\"you\",\"me\":false,\"foe\":true,"
+               "\"byYou\":[],\"byOthers\":[]},"
+               "{\"id\":\"x9\",\"name\":\"Moira\",\"life\":5,\"target\":\"the mangy mongrel\",\"me\":false,\"foe\":false,"
+               "\"byYou\":[],\"byOthers\":[]},"
+               "{\"id\":\"s1\",\"name\":\"you\",\"life\":4,\"hp\":80,\"target\":\"the mangy mongrel\",\"me\":true,\"foe\":false,"
+               "\"byYou\":[],\"byOthers\":[]}]}");
 }
 
 BOOST_AUTO_TEST_CASE(empty_target_and_list)
@@ -41,7 +44,8 @@ BOOST_AUTO_TEST_CASE(empty_target_and_list)
     std::vector<combat_packet::Entry> list;
     list.push_back(entry("s1", "you", 100, "", true, false));
     BOOST_TEST(combat_packet::listJSON(1, list) ==
-               "{\"round\":1,\"list\":[{\"id\":\"s1\",\"name\":\"you\",\"hp\":100,\"target\":\"\",\"me\":true,\"foe\":false}]}");
+               "{\"round\":1,\"list\":[{\"id\":\"s1\",\"name\":\"you\",\"life\":5,\"hp\":100,\"target\":\"\",\"me\":true,\"foe\":false,"
+               "\"byYou\":[],\"byOthers\":[]}]}");
     BOOST_TEST(combat_packet::listJSON(2, {}) == "{\"round\":2,\"list\":[]}");
 }
 
@@ -51,8 +55,8 @@ BOOST_AUTO_TEST_CASE(names_are_json_escaped)
     list.push_back(entry("i", "Bob \"the\" \\Bad\\\n", 5, "Dain's ghost", false, true));
 
     BOOST_TEST(combat_packet::listJSON(3, list) ==
-               "{\"round\":3,\"list\":[{\"id\":\"i\",\"name\":\"Bob \\\"the\\\" \\\\Bad\\\\\\n\",\"hp\":5,"
-               "\"target\":\"Dain's ghost\",\"me\":false,\"foe\":true}]}");
+               "{\"round\":3,\"list\":[{\"id\":\"i\",\"name\":\"Bob \\\"the\\\" \\\\Bad\\\\\\n\",\"life\":1,"
+               "\"target\":\"Dain's ghost\",\"me\":false,\"foe\":true,\"byYou\":[],\"byOthers\":[]}]}");
 }
 
 BOOST_AUTO_TEST_CASE(control_characters_are_json_escaped)
@@ -83,10 +87,46 @@ BOOST_AUTO_TEST_CASE(wrap_keeps_html_out_of_the_payload)
 
     BOOST_TEST(packet ==
                "<data type='$combat'>{\"round\":1,\"list\":[{\"id\":\"i\","
-               "\"name\":\"\\u003c/data\\u003e\\u003cb\\u003e\\u0026amp;\",\"hp\":5,\"target\":\"\",\"me\":false,\"foe\":true}]}</data>");
+               "\"name\":\"\\u003c/data\\u003e\\u003cb\\u003e\\u0026amp;\",\"life\":1,\"target\":\"\",\"me\":false,\"foe\":true,"
+               "\"byYou\":[],\"byOthers\":[]}]}</data>");
 
     auto payload = packet.substr(21, packet.size() - 21 - 7);
     BOOST_TEST(payload.find_first_of("<>&") == std::string::npos);
+}
+
+// Others get 5 boxes of life, not their hit points; the player gets both
+BOOST_AUTO_TEST_CASE(life_instead_of_hp_for_others)
+{
+    std::vector<combat_packet::Entry> list;
+    list.push_back(entry("f", "the troll", 37, "you", false, true));
+    auto json = combat_packet::listJSON(4, list);
+    BOOST_TEST(json.find("\"life\":2") != std::string::npos);
+    BOOST_TEST(json.find("\"hp\"") == std::string::npos);
+}
+
+BOOST_AUTO_TEST_CASE(life_boxes)
+{
+    BOOST_TEST(combat_packet::lifeBoxes(100) == 5);
+    BOOST_TEST(combat_packet::lifeBoxes(81) == 5);
+    BOOST_TEST(combat_packet::lifeBoxes(80) == 4);
+    BOOST_TEST(combat_packet::lifeBoxes(41) == 3);
+    BOOST_TEST(combat_packet::lifeBoxes(21) == 2);
+    BOOST_TEST(combat_packet::lifeBoxes(20) == 1);
+    BOOST_TEST(combat_packet::lifeBoxes(1) == 1);
+    BOOST_TEST(combat_packet::lifeBoxes(0) == 0);
+    BOOST_TEST(combat_packet::lifeBoxes(-5) == 0);
+    BOOST_TEST(combat_packet::lifeBoxes(150) == 5);
+}
+
+// This round's blows, split into the player's and everyone else's
+BOOST_AUTO_TEST_CASE(round_blows)
+{
+    auto e = entry("f", "the troll", 60, "you", false, true);
+    e.byYou = {2, 6, 8};
+    e.byOthers = {0};
+    std::vector<combat_packet::Entry> list{e};
+    auto json = combat_packet::listJSON(5, list);
+    BOOST_TEST(json.find("\"byYou\":[2,6,8],\"byOthers\":[0]}") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_CASE(hp_percent)

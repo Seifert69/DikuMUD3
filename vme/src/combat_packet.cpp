@@ -25,14 +25,29 @@ std::string listJSON(int round, const std::vector<Entry> &list, bool end)
         writer.String(e.id.c_str(), static_cast<rapidjson::SizeType>(e.id.size()));
         writer.Key("name");
         writer.String(e.name.c_str(), static_cast<rapidjson::SizeType>(e.name.size()));
-        writer.Key("hp");
-        writer.Int(e.hp);
+        writer.Key("life");
+        writer.Int(lifeBoxes(e.hp));
+        if (e.me)
+        {
+            writer.Key("hp");
+            writer.Int(e.hp);
+        }
         writer.Key("target");
         writer.String(e.target.c_str(), static_cast<rapidjson::SizeType>(e.target.size()));
         writer.Key("me");
         writer.Bool(e.me);
         writer.Key("foe");
         writer.Bool(e.foe);
+        for (const auto &blows : {std::make_pair("byYou", &e.byYou), std::make_pair("byOthers", &e.byOthers)})
+        {
+            writer.Key(blows.first);
+            writer.StartArray();
+            for (int step : *blows.second)
+            {
+                writer.Int(step);
+            }
+            writer.EndArray();
+        }
         writer.EndObject();
     }
     writer.EndArray();
@@ -91,6 +106,19 @@ std::string wrap(const std::string &json)
     }
     out.append("</data>");
     return out;
+}
+
+int lifeBoxes(int hpPercent)
+{
+    if (hpPercent <= 0)
+    {
+        return 0;
+    }
+    if (hpPercent >= 100)
+    {
+        return 5;
+    }
+    return (hpPercent + 19) / 20;
 }
 
 int hpPercent(long hp, long max)

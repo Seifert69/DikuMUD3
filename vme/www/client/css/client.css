@@ -94,7 +94,7 @@ button { cursor: pointer; }
    old client styled them; unclassed divs and the column classes stay blocks. */
 .srv div[class] { display: inline; }
 .srv div.twocol, .srv div.threecol, .srv div.threecolhor, .srv div.fourcol { display: block; }
-.room_title { font-family: var(--f-display); font-weight: 700; font-size: 1.32rem; color: var(--m-room); }
+.room_title { font-family: var(--f-out); font-weight: 700; font-size: 1.05em; color: var(--m-room); }
 .seg h1.room_title { margin: .2em 0 0; }
 .room_descr { opacity: .92; }
 .exit { color: var(--muted); }
@@ -184,7 +184,9 @@ details.cgroup[open] summary::before { transform: rotate(90deg); }
 .cb-view button[aria-pressed="true"] { background: var(--panel); color: var(--fg); box-shadow: 0 0 0 1px var(--line); }
 .cb-log { flex: 1 1 auto; min-height: 4em; overflow-y: auto; scrollbar-width: thin; border-top: 1px solid var(--line); padding-top: 6px; font-family: var(--f-out); font-size: var(--fs-out); line-height: var(--lh-out); text-shadow: var(--glowtext); }
 .cb-strip { display: flex; flex-wrap: wrap; gap: 6px 16px; }
-.cb-chip { display: grid; grid-template-columns: auto 64px auto; gap: 6px; align-items: center; font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 0; }
+.cb-chip { display: flex; gap: 6px; align-items: center; font-size: .8rem; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 0; }
+.cb-chip .life > i { width: 9px; height: 7px; }
+.cb-chip .cb-hits { margin-left: 0; }
 .cb-chip b { color: var(--fg); font-weight: 600; max-width: 12em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .cb-chip.at-me b { color: var(--m-hurt); }
 .cb-chip.dead { opacity: .45; }
@@ -199,12 +201,23 @@ details.cgroup[open] summary::before { transform: rotate(90deg); }
 .cb-name b { font-family: var(--f-display); font-weight: 700; font-size: 1.02rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .cb-target { font-size: .78rem; color: var(--muted); white-space: nowrap; }
 .cb-row.at-me .cb-target { color: var(--m-hurt); font-weight: 600; }
-.cb-hp { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
-.cond { height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--fg) 10%, transparent); overflow: hidden; position: relative; }
-.cond > i { position: absolute; inset: 0 auto 0 0; transition: width .5s ease; }
-.cond > .ghost { background: color-mix(in srgb, var(--fg) 35%, transparent); transition: width .9s .35s ease; }
-.cond > .fill { background: linear-gradient(90deg, var(--m-hurt), var(--m-hit)); }
-.ally .cond > .fill { background: var(--frost); }
+.cb-hp { display: flex; gap: 8px; align-items: center; font-size: .78rem; color: var(--muted); min-width: 0; }
+/* Life in 5 boxes: the server says no more than that */
+.life { display: flex; gap: 2px; flex: none; }
+.life > i { width: 14px; height: 8px; border-radius: 2px; background: color-mix(in srgb, var(--fg) 12%, transparent); }
+.life > i.on { background: var(--m-hurt); }
+.ally .life > i.on { background: var(--frost); }
+.life > i.lost { animation: lost .9s ease-out; }
+@keyframes lost { from { background: var(--m-hit); } to { background: color-mix(in srgb, var(--fg) 12%, transparent); } }
+/* This round's hits: ⚔×3, and 💥 for each big blow */
+.cb-hits { display: flex; gap: 8px; margin-left: auto; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.blows { font-weight: 600; display: inline-block; }
+.blows.by-you { color: var(--m-hit); }
+.blows.by-others { color: var(--muted); font-weight: 500; }
+.blows.took-hits { color: var(--m-hurt); }
+.blows.pop { animation: pop .45s ease-out; }
+@keyframes pop { from { transform: scale(1.5); } to { transform: none; } }
+.cb-took { font-size: .86rem; }
 .cb-last { font-family: var(--f-out); font-size: .8rem; line-height: 1.4; color: var(--muted); min-height: 1.4em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
 .cb-last.flash { color: var(--fg); }
 .cb-lines { font-family: var(--f-out); font-size: .86rem; line-height: 1.5; display: grid; gap: 2px; }

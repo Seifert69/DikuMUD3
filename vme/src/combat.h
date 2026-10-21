@@ -8,6 +8,9 @@
 
 #include "essential.h"
 
+#include <utility>
+#include <vector>
+
 class cCombat;
 class unit_data;
 
@@ -60,6 +63,12 @@ public:
     /// Send this round's '$combat' packet if the owner is on a web client
     void sendWebRound();
 
+    /// The owner took a blow from att this round; step is its 0-8 damage_index()
+    void addRoundBlow(const unit_data *att, int step);
+    void clearRoundBlows() { vRoundBlows.clear(); }
+    /// This round's blows on the owner: by viewer, or by anyone else
+    std::vector<int> roundBlowSteps(const unit_data *viewer, bool byViewer) const;
+
 private:
     void add(unit_data *victim);
     void sub(int idx);
@@ -74,6 +83,8 @@ private:
     char cmd[MAX_INPUT_LENGTH + 1]; ///< A combat command
     int nRound{0};                  ///< Combat rounds performed by this element
     bool bWebSent{false};           ///< A '$combat' packet was sent to the owner
+    /// Blows taken this round. The attacker is only compared, never followed: it may be gone.
+    std::vector<std::pair<const unit_data *, int>> vRoundBlows;
 };
 
 void set_fighting(unit_data *ch, unit_data *vict, int bMelee = FALSE);
