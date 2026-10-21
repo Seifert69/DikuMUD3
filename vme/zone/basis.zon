@@ -456,6 +456,38 @@ quit;
 dilend
 
 
+// The who list for Discord's pinned message and the web client's "who's online"
+// (dispatcher.py writes it to who.json). Logins send it at once (informer);
+// this sends it within a minute of any other change, such as someone leaving,
+// and every 10 minutes anyway so a stale list shows the MUD is down.
+dilbegin who_watch();
+external
+   string whostring@comm();
+var
+   w : string;
+   last : string;
+   n : integer;
+code
+{
+   heartbeat := PULSE_SEC * 60;
+   last := "";
+   n := 0;
+
+   :loop:
+   wait(SFB_TICK, TRUE);
+   w := whostring@comm();
+   n := n + 1;
+   if ((w != last) or (n >= 10))
+   {
+      last := w;
+      n := 0;
+      dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
+   }
+   goto loop;
+}
+dilend
+
+
 dilbegin informer();
 external
    string whostring@comm();
@@ -2947,6 +2979,7 @@ descr
 "   This room is the sender of the discord messages."
 flags {UNIT_FL_NO_WEATHER}
 light 5
+dilcopy who_watch@basis();
 end
 
                                        void
