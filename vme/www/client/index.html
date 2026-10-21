@@ -9,14 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+SC:wght@500;700&family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=VT323&display=swap">
-    <link rel="stylesheet" href="css/themes.css">
-    <link rel="stylesheet" href="css/client.css">
-    <script src="core/html.js" defer></script>
-    <script src="core/protocol.js" defer></script>
-    <script src="core/engine.js" defer></script>
-    <script src="core/connection.js" defer></script>
-    <script src="ui/sanitize.js" defer></script>
-    <script src="ui/app.js" defer></script>
+    <!-- ?v= makes browsers fetch new scripts and styles with a new page; change it whenever they change -->
+    <link rel="stylesheet" href="css/themes.css?v=20261020">
+    <link rel="stylesheet" href="css/client.css?v=20261020">
+    <script src="core/html.js?v=20261020" defer></script>
+    <script src="core/protocol.js?v=20261020" defer></script>
+    <script src="core/engine.js?v=20261020" defer></script>
+    <script src="core/connection.js?v=20261020" defer></script>
+    <script src="ui/sanitize.js?v=20261020" defer></script>
+    <script src="ui/app.js?v=20261020" defer></script>
 </head>
 <body>
 <div class="app" id="app" data-side="status" data-view="play">
@@ -120,6 +121,12 @@
             <button type="button" data-size="s">S</button><button type="button" data-size="m">M</button><button type="button" data-size="l">L</button><button type="button" data-size="xl">XL</button>
         </div>
     </div>
+    <label class="opt" for="opt-cbview">Combat panel
+        <select id="opt-cbview">
+            <option value="scroll">Scroll: the fight as it happens</option>
+            <option value="summary">Summary: one card per being</option>
+        </select>
+    </label>
     <label class="opt"><input type="checkbox" id="opt-fold"> Fold combat into one line per fight</label>
     <label class="opt"><input type="checkbox" id="opt-prompt"> Show the prompt in the log</label>
     <label class="opt"><input type="checkbox" id="opt-echo"> Show my commands in the log</label>
