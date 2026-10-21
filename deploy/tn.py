@@ -12,6 +12,7 @@ steps: {"send": "goto compiler"}                      send a line
         "fail": "regex", "every": 60, "timeout": 3600}   output matches until (ok) or fail
        {"sleep": 60}
 Prints everything the server says (colour codes and telnet negotiation removed).
+A player who sends a tell gets one answer per session: Papi is being driven by his AI assistant.
 """
 import json, os, re, socket, sys, time
 
@@ -23,6 +24,8 @@ s = socket.create_connection((host, port), timeout=15)
 s.settimeout(0.3)
 buf = ""
 seen = 0
+REPLY = "Right now I'm Papi's AI assistant."
+answered = set()
 
 
 def read(t):
@@ -41,7 +44,16 @@ def read(t):
         buf += txt
         sys.stdout.write(txt)
         sys.stdout.flush()
+        answer_tells(txt)
     return True
+
+
+def answer_tells(txt):
+    for who in re.findall(r"(?m)^\s*([A-Z][a-z]+) tells you ", txt):
+        if who != "Someone" and who.lower() != name.lower() and who not in answered:
+            answered.add(who)
+            s.sendall(("tell " + who.lower() + " " + REPLY + "\r\n").encode())
+            print("\n[answered a tell from " + who + "]")
 
 
 def new_text():

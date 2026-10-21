@@ -81,7 +81,9 @@ cd vme/zone
 ## Deploying to valhalla.com
 
 `deploy/valhalla.sh` does each step; `deploy/tn.py` is the telnet driver it uses.
-Papi's password is given per session as `PAPI_PW`, never written to a file.
+Papi's password is in `~/.config/valhalla/papi_pw` (mode 600, outside the repository); never
+copy it anywhere else. While logged in, a player's tell gets one reply: "Right now I'm Papi's AI
+assistant."
 
 1. **Web client**: `deploy/valhalla.sh client <label>` copies the changed client files to
    `/www/valhalla/v3` (served as https://www.valhalla.com/v3/) and keeps the old ones as

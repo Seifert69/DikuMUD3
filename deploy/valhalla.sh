@@ -6,7 +6,8 @@
 #   deploy/valhalla.sh test             test mud: compile master, reboot, check it runs
 #   deploy/valhalla.sh prod             production: adopt the test build, reboot when no mortals are on, check
 #
-# test and prod log in as Papi over telnet; the password comes from $PAPI_PW and is never written down.
+# test and prod log in as Papi over telnet. The password is read from ~/.config/valhalla/papi_pw
+# (mode 600, outside the repository), or from $PAPI_PW when that is set.
 # SSH needs the valhalla.com entry in ~/.ssh/config (user seifert).
 #
 #   test mud    /home/mud/vme   "Valhalla Test Mud"  telnet 4442  (has the build tree, compile.sh)
@@ -26,6 +27,11 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 TN="python3 -u $HERE/tn.py"
 
 say() { echo; echo "=== $* ($(date +%H:%M:%S))"; }
+
+PW_FILE=~/.config/valhalla/papi_pw
+if [[ -z "${PAPI_PW:-}" && -s $PW_FILE ]]; then
+    PAPI_PW=$(head -n1 "$PW_FILE")
+fi
 
 steps() { # writes a steps file for tn.py and prints its name
     local f
@@ -87,7 +93,7 @@ client() {
 }
 
 test_mud() {
-    : "${PAPI_PW:?set PAPI_PW}"
+    : "${PAPI_PW:?put the Papi password in $PW_FILE}"
     local old f
     old=$(vme_pid mud)
     say "test: compile master (test vme PID $old)"
@@ -103,7 +109,7 @@ test_mud() {
 }
 
 prod() {
-    : "${PAPI_PW:?set PAPI_PW}"
+    : "${PAPI_PW:?put the Papi password in $PW_FILE}"
     local old f
     old=$(vme_pid val)
     say "prod: adopt the universe (production vme PID $old)"
