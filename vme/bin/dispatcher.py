@@ -1,8 +1,6 @@
 import threading
 import os
 import errno
-import json
-import re
 import time
 
 # vme listens to pipeMUD for messages from e.g. muddiscord.py. 
@@ -23,13 +21,6 @@ import time
 # this shell command: printf "discord Papi says hi\n" > pipeDispatcher. 
 # This would trigger this script as if the MUD server had sent this message
 #
-# Who's online for the web client: set VME_WHO_JSON to a file the web server
-# serves, e.g. VME_WHO_JSON=/www/valhalla/v3/live/who.json, and every who list
-# the MUD sends to Discord is also written there as
-#     {"updated": <unix time>, "players": [{"name": "Papi", "tags": ["Admin", "Builder"]}]}
-# Unset, nothing is written.
-#
-WHO_JSON = os.environ.get('VME_WHO_JSON', '')
 
 class MyDispatcher():
     pipeDiscord = None
@@ -88,29 +79,6 @@ class MyDispatcher():
             print('Unexpected error writing to Discord pipe:', e)
 
 
-    # The MUD's who list: "Papi (Admin) * Builder *&&Dwili &&", or a
-    # "No (visible) players..." line when nobody is on.
-    def WriteWho(self, line):
-        if not WHO_JSON:
-            return
-        players = []
-        for entry in line.split('&&'):
-            entry = entry.strip()
-            if not entry or entry.startswith('No (visible) players'):
-                continue
-            name, _, rest = entry.partition(' ')
-            tags = [a or b for a, b in re.findall(r'\(([^)]+)\)|\* ([^*]+?) \*', rest)]
-            players.append({'name': name, 'tags': tags})
-        tmp = WHO_JSON + '.tmp'
-        try:
-            with open(tmp, 'w') as f:
-                json.dump({'updated': int(time.time()), 'players': players}, f)
-            os.chmod(tmp, 0o644)  # the web server reads it; this script runs with umask 007
-            os.replace(tmp, WHO_JSON)
-        except OSError as e:
-            print('Cannot write ' + WHO_JSON + ':', e)
-
-
     #
     def ProcessMUDMessage(self, txt):
         try:
@@ -118,10 +86,7 @@ class MyDispatcher():
             sDispatch = txt.partition(' ')[0]
             
             if (sDispatch == "discord"):
-                rest = txt.split(' ', 1)[1]
-                if rest.startswith('who '):
-                    self.WriteWho(rest[4:].rstrip('\n'))
-                self.DispatchDiscord("<discord> " + rest)
+                self.DispatchDiscord("<discord> " + txt.split(' ', 1)[1])
             else:
                 print('Unrecognized destination:' + sDispatch)
         except Exception as e:

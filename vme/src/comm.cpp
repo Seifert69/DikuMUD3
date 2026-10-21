@@ -195,7 +195,8 @@ void send_to_descriptor(const char *messg, descriptor_data *d)
             }
         }
 
-        if (d->getPromptMode() == PROMPT_IGNORE)
+        // Packets alone are nothing to read, so they don't call for a new prompt
+        if (d->getPromptMode() == PROMPT_IGNORE && !(bWeb && *messg == '<' && str_is_html_data(messg)))
         {
             d->setPromptMode(PROMPT_EXPECT);
             send_to_descriptor("<br/>", d);

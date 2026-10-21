@@ -23,6 +23,7 @@ uses the older `wsclient.js`.
 | `<data type='$alias'><li>name text</li>…</data>` | the player's aliases. Also `$trigger` (`<li>name /regexp/ commands</li>`) and `$var` (`<li>name value</li>`). Applied by `core/engine.js`. |
 | `<data type='$json'>{…}</data>` | wstat/jstat unit data. Not used by the client yet. |
 | `<data type='$combat'>{…}</data>` | the fight the player is in, once per combat round; see below. Websocket players only. |
+| `<data type='$who'><li>…</li></data>` | who's online, as changes; see below. Sent to every player; telnet drops `<data>`. |
 | `<script>PasswordOn()</script>` | the next input is a password: hide it, don't echo it, keep it out of history. |
 | `<script>PasswordOff('name', 'mud')</script>` | password done. `name` is the player once logged in (`''` before). |
 
@@ -46,6 +47,22 @@ Any other script is ignored; the client never runs server code.
   `target`: who that being is hitting, as the player sees the name, or `"you"`.
 - `end` when the player's fight is over; `event: death` when a listed being dies.
 - Not sent when the fight ends within its first round (a one-hit kill).
+
+### `$who`
+
+```
+<data type='$who'><li>*</li><li>+Brynja</li><li>+Papi Admin Builder</li></data>   to a player entering
+<data type='$who'><li>+Ylva</li></data>                                            someone entered
+<data type='$who'><li>-Ylva</li></data>                                            someone left
+```
+
+- `*`: the full list follows. `+Name tags…`: Name is in the game (tags: `Admin`,
+  `Creator`, `Immortal`, `Builder`, `Friend`, `Guide`). `-Name`: Name left the game.
+- Only players the receiver can see are listed or announced. Leaving goes to everyone.
+- Server side: `who_enter@basis` from `informer` on every login, and `who_leave@basis` on
+  `void@basis`, which hears `CMD_AUTO_LEAVE`. The server sends that from
+  `pc_data::gstate_tomenu()`, which every way out of the game passes through.
+- A message of nothing but `<data>` doesn't make the server send a new prompt.
 
 ## Classes in ordinary output
 

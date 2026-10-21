@@ -456,34 +456,87 @@ quit;
 dilend
 
 
-// The who list for Discord's pinned message and the web client's "who's online"
-// (dispatcher.py writes it to who.json). Logins send it at once (informer);
-// this sends it within a minute of any other change, such as someone leaving,
-// and every 10 minutes anyway so a stale list shows the MUD is down.
-dilbegin who_watch();
-external
-   string whostring@comm();
+// Who's online for the web client, as hidden <data type='$who'> packets
+// (telnet never gets <data>). Each <li> is one change:
+//    <li>*</li>              the full list follows (sent to a player entering)
+//    <li>+Name tag ...</li>  Name is in the game; tags: Admin, Creator,
+//                            Immortal, Builder, Friend, Guide
+//    <li>-Name</li>          Name left the game
+dilbegin string who_item(u : unitptr);
 var
-   w : string;
-   last : string;
-   n : integer;
+   s : string;
 code
 {
-   heartbeat := PULSE_SEC * 60;
-   last := "";
-   n := 0;
+   s := u.name;
+   if (u.level >= OVERSEER_LEVEL)
+      s := s + " Admin";
+   else if (u.level >= CREATOR_LEVEL)
+      s := s + " Creator";
+   else if (u.level > IMMORTAL_LEVEL)
+      s := s + " Immortal";
+   if ("valhalla builder" in u.quests)
+      s := s + " Builder";
+   if ("valhalla friend" in u.quests)
+      s := s + " Friend";
+   if ("New Player Helper" in u.quests)
+      s := s + " Guide";
+   return (s);
+}
+dilend
 
-   :loop:
-   wait(SFB_TICK, TRUE);
-   w := whostring@comm();
-   n := n + 1;
-   if ((w != last) or (n >= 10))
+
+// u entered the game: everyone who can see u is told, and u gets the full list.
+dilbegin who_enter(u : unitptr);
+external
+   string who_item(u : unitptr);
+var
+   tgt : unitptr;
+   s : string;
+   all : string;
+code
+{
+   s := "<data type='$who'><li>+" + who_item(u) + "</li></data>";
+   all := "<data type='$who'><li>*</li>";
+
+   tgt := ghead();
+   while (tgt.type == UNIT_ST_PC)
    {
-      last := w;
-      n := 0;
-      dispatch("discord who " + w); // Send to dispatcher.py via pipeDispatcher
+      if ((tgt != u) and visible(tgt, u))
+         sendtext(s, tgt);
+      if (visible(u, tgt))
+         all := all + "<li>+" + who_item(tgt) + "</li>";
+      tgt := tgt.gnext;
    }
-   goto loop;
+
+   sendtext(all + "</data>", u);
+   return;
+}
+dilend
+
+
+// On void@basis: hears CMD_AUTO_LEAVE, sent for every player leaving the game
+// (pc_data::gstate_tomenu), and tells everyone. A name someone could not see
+// is simply not on their list.
+dilbegin who_leave();
+var
+   tgt : unitptr;
+   s : string;
+code
+{
+   :start:
+   wait(SFB_DONE, command(CMD_AUTO_LEAVE));
+   if ((activator == null) or (activator.type != UNIT_ST_PC))
+      goto start;
+
+   s := "<data type='$who'><li>-" + activator.name + "</li></data>";
+   tgt := ghead();
+   while (tgt.type == UNIT_ST_PC)
+   {
+      if (tgt != activator)
+         sendtext(s, tgt);
+      tgt := tgt.gnext;
+   }
+   goto start;
 }
 dilend
 
@@ -491,6 +544,7 @@ dilend
 dilbegin informer();
 external
    string whostring@comm();
+   who_enter(u : unitptr);
 var
    tgt : unitptr;
    w : string;
@@ -516,6 +570,8 @@ code
 
       tgt := tgt.gnext;
    }
+
+   who_enter(self);
 
    if (self.minv < IMMORTAL_LEVEL)
    {
@@ -2979,7 +3035,6 @@ descr
 "   This room is the sender of the discord messages."
 flags {UNIT_FL_NO_WEATHER}
 light 5
-dilcopy who_watch@basis();
 end
 
                                        void
@@ -2991,6 +3046,7 @@ descr
 feeling, as everything around you is nothing, not even darkness."
 flags {UNIT_FL_NO_WEATHER}
 dilcopy reload_corpse@death();
+dilcopy who_leave@basis();
 light 5
 end
 
