@@ -159,6 +159,11 @@ test("blank segments", () => {
 
 /* ---------- data and script ---------- */
 
+test("$who items: full list marker, entering and leaving players", () => {
+    const ev = P.dataEvent("$who", "<li>*</li><li>+Papi Admin Builder</li><li>-Dwili</li>");
+    assert.deepEqual(ev.items, ["*", "+Papi Admin Builder", "-Dwili"]);
+});
+
 test("alias / trigger / var lists", () => {
     const ev = P.dataEvent("$alias", "<li>k kill $1</li><li>ga get all;look</li>");
     assert.deepEqual(ev.items, ["k kill $1", "ga get all;look"]);

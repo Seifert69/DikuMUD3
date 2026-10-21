@@ -168,6 +168,18 @@ BOOST_AUTO_TEST_CASE(skip_data_gives_the_text_after_the_packet)
     BOOST_TEST(std::string(skipHTMLData("")) == "");
 }
 
+// Only packets: no text for the player, so no new prompt either
+BOOST_AUTO_TEST_CASE(is_html_data_only_for_packets)
+{
+    BOOST_TEST(str_is_html_data("<data type='$who'><li>+Papi</li></data>"));
+    BOOST_TEST(str_is_html_data(" <data type='$a'>x</data>\n<data type='$b'/> "));
+    BOOST_TEST(!str_is_html_data("<data type='$a'>x</data>Hello<br/>"));
+    BOOST_TEST(!str_is_html_data("Hello<data type='$a'>x</data>"));
+    BOOST_TEST(!str_is_html_data("<div>x</div>"));
+    BOOST_TEST(!str_is_html_data(""));
+    BOOST_TEST(!str_is_html_data("   "));
+}
+
 // For a snooping god: the packets go, the HTML stays for the god's client
 BOOST_AUTO_TEST_CASE(remove_data_keeps_the_html)
 {

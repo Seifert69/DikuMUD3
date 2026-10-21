@@ -87,6 +87,14 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
 
     // slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
+    // Every way out of the game passes here (quit, link dead, an unsaved
+    // guest losing the link, purge): DIL on void@basis hears about it.
+    send_done(this, nullptr, getUnitIn(), 0, &g_cmd_auto_leave, "", nullptr, "void@basis");
+    if (is_destructed() || !char_is_playing(this))
+    {
+        return;
+    }
+
     if (!PC_IS_UNSAVED(this))
     {
         save_player(this);

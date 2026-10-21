@@ -220,7 +220,7 @@
     }
 
     function dataEvent(dtype, body) {
-        if (dtype === "$alias" || dtype === "$trigger" || dtype === "$var") {
+        if (dtype === "$alias" || dtype === "$trigger" || dtype === "$var" || dtype === "$who") {
             const items = [];
             (function walk(n) {
                 if (n.tag === "li") {

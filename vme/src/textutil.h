@@ -86,6 +86,7 @@ const char *getHTMLTag(const char *p, char *pTag, int nTagMax);
 // is (telnet) they are dropped, or what is inside them would show.
 const char *skipHTMLData(const char *p);
 std::string str_remove_html_data(const char *src);
+bool str_is_html_data(const char *p);
 
 std::string str_json(const char *lbl, ubit64 nInt);
 std::string str_json(const char *lbl, const char *str);

@@ -2086,6 +2086,32 @@ const char *skipHTMLData(const char *p)
     return pEnd;
 }
 
+// True when p is nothing but <data> packets (blanks around them aside).
+bool str_is_html_data(const char *p)
+{
+    bool bData = false;
+
+    for (;;)
+    {
+        while (isspace(static_cast<unsigned char>(*p)))
+        {
+            p++;
+        }
+        if (*p == '\0')
+        {
+            return bData;
+        }
+
+        const char *pAfter = skipHTMLData(p);
+        if (pAfter == p)
+        {
+            return false;
+        }
+        p = pAfter;
+        bData = true;
+    }
+}
+
 std::string str_remove_html_data(const char *src)
 {
     std::string dest;

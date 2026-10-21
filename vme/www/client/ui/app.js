@@ -411,36 +411,36 @@
     });
 
     /* ======================================================================
-     * Who's online, from who.json next to the page. The MUD's dispatcher.py writes it (see
-     * VME_WHO_JSON there); without it the card stays hidden. Clicking a name starts a tell.
+     * Who's online, from the server's hidden <data type='$who'> packets: the full list when
+     * you enter the game, then one change per player entering or leaving. Clicking a name
+     * starts a tell.
      * ====================================================================== */
-    const WHO_URL = "live/who.json";
-    const WHO_STALE_SECONDS = 15 * 60; // the MUD sends it at least every 10 minutes
+    const who = new Map(); // name -> tags
 
-    async function loadWho() {
-        const card = $("#whocard"); // missing while a browser still has the previous page cached
-        if (!card || document.hidden) return;
-        let who;
-        try {
-            const r = await fetch(WHO_URL, { cache: "no-store" });
-            if (!r.ok) throw new Error(String(r.status));
-            who = await r.json();
-        } catch (e) {
-            card.hidden = true;
-            return;
+    function whoData(items) {
+        for (const it of items) {
+            if (it === "*") {
+                who.clear();
+            } else if (it[0] === "+") {
+                const [name, ...tags] = it.slice(1).trim().split(/\s+/);
+                if (name) who.set(name, tags);
+            } else if (it[0] === "-") {
+                who.delete(it.slice(1).trim());
+            }
         }
-        const players = Array.isArray(who.players) ? who.players : [];
-        const stale = Date.now() / 1000 - (who.updated || 0) > WHO_STALE_SECONDS;
+        renderWho();
+    }
+
+    function renderWho() {
+        const card = $("#whocard"); // missing while a browser still has the previous page cached
+        if (!card) return;
         const list = $("#wholist");
         list.replaceChildren();
-        if (stale) list.append(el("li", "empty", "No news from the MUD lately; it may be down."));
-        else if (!players.length) list.append(el("li", "empty", "Nobody visible right now."));
-        for (const p of stale ? [] : players) {
-            const name = String(p.name || "");
+        for (const [name, tags] of [...who].sort((a, b) => a[0].localeCompare(b[0]))) {
             const b = el("button", null, name);
             b.type = "button";
             b.title = `Send ${name} a tell`;
-            for (const t of p.tags || []) b.append(el("small", null, String(t)));
+            for (const t of tags) b.append(el("small", null, t));
             b.addEventListener("click", () => {
                 input.value = `tell ${name.toLowerCase()} `;
                 input.focus();
@@ -449,11 +449,9 @@
             li.append(b);
             list.append(li);
         }
-        $("#whocount").textContent = stale ? "" : String(players.length);
-        card.hidden = false;
+        $("#whocount").textContent = String(who.size);
+        card.hidden = !who.size;
     }
-    setInterval(loadWho, 60000);
-    document.addEventListener("visibilitychange", loadWho);
 
     /* ======================================================================
      * Combat dock: your vitals in the header, then one card per being (Summary)
@@ -887,6 +885,7 @@
             else if (ev.dtype === "$var") engine.setVariables(ev.items).forEach(m => sys(m, true));
             else if (ev.dtype === "$trigger") engine.setTriggers(ev.items).forEach(m => sys(m, true));
             else if (ev.dtype === "$combat" && ev.json) combatData(ev.json);
+            else if (ev.dtype === "$who") whoData(ev.items);
             break;
         default:
             break; // other scripts are never run
@@ -1328,6 +1327,7 @@
                 setConnState("closed", "Disconnected");
                 setPassword({ on: false });
                 stopRelogin();
+                whoData(["*"]); // known again when the game sends the list
                 combat.active = false;
                 const again = () => {
                     banner("");
@@ -1354,7 +1354,6 @@
 
     prefersLight.addEventListener("change", applySettings);
     applySettings();
-    loadWho();
     renderThreads();
     updateTitle();
     const start = serverFromUrl() || store.get("dk.server", null);
