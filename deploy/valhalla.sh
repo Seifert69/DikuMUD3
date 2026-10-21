@@ -3,8 +3,9 @@
 # Deploys to valhalla.com. Run from the repository root:
 #
 #   deploy/valhalla.sh client <label>   web client files to /www/valhalla/v3 (old files kept as *.bak-<label>)
-#   deploy/valhalla.sh test             test mud: compile master, reboot, check it runs
-#   deploy/valhalla.sh prod             production: adopt the test build, reboot when no mortals are on, check
+#   deploy/valhalla.sh test [resume]    test mud: compile master, reboot, check it runs
+#                                       (resume: the button was pressed already, just watch)
+#   deploy/valhalla.sh prod [resume]    production: adopt the test build, reboot when no mortals are on, check
 #
 # test and prod log in as Papi over telnet. The password is read from ~/.config/valhalla/papi_pw
 # (mode 600, outside the repository), or from $PAPI_PW when that is set.
@@ -13,8 +14,8 @@
 #   test mud    /home/mud/vme   "Valhalla Test Mud"  telnet 4442  (has the build tree, compile.sh)
 #   production  /home/val/vme   "Valhalla"           telnet 4242, websocket 4280  (adopt.sh -> toprod.sh)
 #
-# In both muds Papi's cottage (goto compiler) holds the compiler (press button / look at screen:
-# compile.log), the parallel universe (adopt universe / look at symbols: adopt.log) and the
+# In both muds Papi's cottage (goto compiler) holds the compiler (press button / look screen:
+# compile.log), the parallel universe (adopt universe / look symbols: adopt.log) and the
 # reboot daemon (ruffle daemon: reboots as soon as no mortals are online, checked every 5 minutes).
 #
 set -euo pipefail
@@ -92,13 +93,15 @@ client() {
     echo "served files match"
 }
 
+# "look screen", not "look at screen": the compiler only answers to exactly that
 test_mud() {
     : "${PAPI_PW:?put the Papi password in $PW_FILE}"
-    local old f
+    local old f press='{"send": "press button", "after": 5},'
+    [[ "${1:-}" == resume ]] && press=""
     old=$(vme_pid mud)
     say "test: compile master (test vme PID $old)"
-    f=$(steps '[{"send": "goto compiler"}, {"send": "press button", "after": 5},
-        {"poll": "look at screen", "until": "\\*\\*\\* END compile", "fail": "ERROR running", "every": 60, "timeout": 5400},
+    f=$(steps '[{"send": "goto compiler"}, '"$press"'
+        {"poll": "look screen", "until": "\\*\\*\\* END compile", "fail": "ERROR running", "every": 60, "timeout": 5400},
         {"send": "ruffle daemon", "after": 5}, {"send": "quit"}]')
     TN_PW=$PAPI_PW $TN $HOST 4442 papi "$f"
     rm -f "$f"
@@ -110,11 +113,12 @@ test_mud() {
 
 prod() {
     : "${PAPI_PW:?put the Papi password in $PW_FILE}"
-    local old f
+    local old f adopt='{"send": "adopt universe", "after": 5},'
+    [[ "${1:-}" == resume ]] && adopt=""
     old=$(vme_pid val)
     say "prod: adopt the universe (production vme PID $old)"
-    f=$(steps '[{"send": "goto compiler"}, {"send": "adopt universe", "after": 5},
-        {"poll": "look at symbols", "until": "\\*\\*\\* END adopt", "fail": "ERROR running", "every": 60, "timeout": 3600},
+    f=$(steps '[{"send": "goto compiler"}, '"$adopt"'
+        {"poll": "look symbols", "until": "\\*\\*\\* END adopt", "fail": "ERROR running", "every": 60, "timeout": 3600},
         {"send": "ruffle daemon", "after": 5}, {"send": "quit"}]')
     TN_PW=$PAPI_PW $TN $HOST 4242 papi "$f"
     rm -f "$f"
@@ -126,7 +130,7 @@ prod() {
 
 case "${1:-}" in
 client) client "${2:-}" ;;
-test) test_mud ;;
-prod) prod ;;
+test) test_mud "${2:-}" ;;
+prod) prod "${2:-}" ;;
 *) sed -n '2,20p' "$0"; exit 2 ;;
 esac
