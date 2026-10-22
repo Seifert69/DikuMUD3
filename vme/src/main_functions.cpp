@@ -21,6 +21,7 @@
 #include "path.h"
 #include "pcsave.h"
 #include "pipe.h"
+#include "sessionlog.h"
 #include "signals.h"
 #include "slog.h"
 #include "system.h"
@@ -145,6 +146,7 @@ void run_the_game(char *srvcfg)
         exit(1);
     }
     g_mudboot = 0;
+    sessionlog_boot();
     g_events.process();
     /*
     #ifdef PROFILE
@@ -256,6 +258,9 @@ void game_loop()
         }
     }
     multi_close_all();
+    // Before waiting for the path thread, which can take a while: the closes above log
+    // their logouts first
+    sessionlog_shutdown();
 
     // pthread_cancel(g_dijkstra_thread);
     pthread_join(g_dijkstra_thread, nullptr);

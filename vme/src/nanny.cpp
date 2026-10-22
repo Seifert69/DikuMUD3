@@ -445,50 +445,60 @@ void nanny_pwd_confirm(descriptor_data *d, char *arg)
 
 int check_pwd(descriptor_data *d, char *pwd)
 {
-    int i = 0;
-    int bA = 0;
-    int bNA = 0;
+    // crypt() (DES) uses only the first 8 characters and only 7 bits of each, and fails on
+    // very long input: cut the input to what it uses
+    if (strlen(pwd) > pc_data::PC_PWD_USED)
+    {
+        pwd[pc_data::PC_PWD_USED] = 0;
+    }
 
     if (strlen(pwd) < 5)
     {
         send_to_descriptor("The chosen password is too short.<br/>"
-                           "Your password has to be at least 5 characters and "
+                           "Your password has to be at least 5 characters and its first 8 "
                            "must contain both letters and digits.<br/>",
                            d);
         return FALSE;
     }
 
-    pwd[pc_data::PC_MAX_PASSWORD - 1] = 0;
+    bool bA = false;
+    bool bNA = false;
 
-    bA = FALSE;
-    bNA = FALSE;
-
-    for (i = 0; pwd[i]; i++)
+    for (size_t i = 0; pwd[i]; i++)
     {
-        if (isalpha(pwd[i]))
+        // DES reads 7 bits of a byte, and a non-ASCII character is several bytes (é is C3 A9,
+        // which DES reads as "C)"), so only plain ASCII can be checked as the player typed it
+        if (static_cast<unsigned char>(pwd[i]) > 127)
         {
-            bA = TRUE;
+            send_to_descriptor("<br/>The first 8 characters of a password can only be plain letters, "
+                               "digits and symbols (no accented letters or other special characters).<br/>",
+                               d);
+            return FALSE;
+        }
+        if (isalpha(static_cast<unsigned char>(pwd[i])))
+        {
+            bA = true;
         }
         else
         {
-            bNA = TRUE;
+            bNA = true;
         }
     }
 
-    if (bA == FALSE)
+    if (!bA)
     {
-        send_to_descriptor("<br/>The chosen password only contains "
+        send_to_descriptor("<br/>The first 8 characters of the chosen password only contain "
                            "non-letters (digits).<br/>"
-                           "Your password has to be at least 5 characters and "
+                           "Your password has to be at least 5 characters and its first 8 "
                            "must contain both letters and digits.<br/>",
                            d);
         return FALSE;
     }
 
-    if (bNA == FALSE)
+    if (!bNA)
     {
-        send_to_descriptor("<br/>The chosen password only contains letters.<br/>"
-                           "Your password has to be at least 5 characters and "
+        send_to_descriptor("<br/>The first 8 characters of the chosen password only contain letters.<br/>"
+                           "Your password has to be at least 5 characters and its first 8 "
                            "must contain both letters and digits.<br/>",
                            d);
         return FALSE;
@@ -501,7 +511,8 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
 {
     if (d->postincrementState() == 0)
     {
-        auto msg = diku::format_to_str("Give me a new password for %s: ", d->cgetCharacter()->getNames().Name());
+        auto msg = diku::format_to_str("Give me a new password for %s (only the first 8 characters count): ",
+                                       d->cgetCharacter()->getNames().Name());
         send_to_descriptor(msg, d);
         send_to_descriptor(scriptwrap("PasswordOn()"), d);
         return;
@@ -516,7 +527,16 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    UPC(d->getCharacter())->setPassword(crypt(arg, PC_FILENAME(d->getCharacter())));
+    // NULL or a failure token ("*0") if crypt() can't hash it; not expected with at most 8
+    // characters and a salt of letters, but a failure must never be stored as the password
+    const char *hashed = crypt(arg, PC_FILENAME(d->getCharacter()));
+    if (hashed == nullptr || hashed[0] == '*')
+    {
+        send_to_descriptor("<br/>That password can't be used, please choose another.<br/>", d);
+        set_descriptor_fptr(d, nanny_new_pwd, TRUE);
+        return;
+    }
+    UPC(d->getCharacter())->setPassword(hashed);
 
     set_descriptor_fptr(d, nanny_pwd_confirm, TRUE);
 }

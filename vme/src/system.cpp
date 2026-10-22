@@ -18,6 +18,7 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "protocol.h"
+#include "sessionlog.h"
 #include "slog.h"
 #include "utils.h"
 #include "vmelimits.h"
@@ -191,8 +192,12 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
             {
                 UPC(d->cgetCharacter())->disconnect_game();
             }
-            if (!bReconnect)
+            if (!bReconnect) // A throw-out (bReconnect) hands the character to the new connection
             {
+                if (d->cgetCharacter()->isPC())
+                {
+                    sessionlog_linkdead(UPC(d->getCharacter()));
+                }
                 if (!PC_IS_UNSAVED(d->getCharacter()))
                 {
                     /* We need to save player to update his time status! */
