@@ -25,6 +25,7 @@ CByteBuffer::CByteBuffer(ubit32 nSize)
     m_nLength = 0;
     m_nReadPos = 0;
     m_nAllocated = nSize;
+    m_bCorrupt = false;
     CREATE(m_pData, ubit8, nSize);
 
     assert(m_pData != nullptr);
@@ -145,7 +146,7 @@ int CByteBuffer::Read(ubit8 *pBuf, ubit32 nLen)
 {
     if (m_nReadPos + nLen > m_nLength)
     {
-        return 1;
+        return Corrupt();
     }
 
     memcpy(pBuf, m_pData + m_nReadPos, nLen);
@@ -279,14 +280,36 @@ int CByteBuffer::ReadFloat(float *pFloat)
     return Read((ubit8 *)pFloat, sizeof(float));
 }
 
+// Length of the string at the read position, including its NUL. Returns 1
+// (corrupt) when the data ends before a NUL, where strlen() would read on
+// past the end of the data.
+int CByteBuffer::StringLengthAtReadPos(ubit32 *pnLen)
+{
+    if (m_nReadPos >= m_nLength)
+    {
+        return Corrupt();
+    }
+
+    const ubit8 *pStart = m_pData + m_nReadPos;
+    const ubit8 *pNul = static_cast<const ubit8 *>(memchr(pStart, 0, m_nLength - m_nReadPos));
+
+    if (pNul == nullptr)
+    {
+        return Corrupt();
+    }
+
+    *pnLen = pNul - pStart + 1;
+    return 0;
+}
+
 int CByteBuffer::ReadStringCopy(char *pStr, ubit32 nMaxSize)
 {
-    ubit32 nLen = 1 + strlen((char *)m_pData + m_nReadPos);
+    ubit32 nLen = 0;
 
-    if (nLen > nMaxSize)
+    if (StringLengthAtReadPos(&nLen) || nLen > nMaxSize)
     {
         pStr[0] = 0;
-        return 1;
+        return Corrupt();
     }
 
     return Read((ubit8 *)pStr, nLen);
@@ -294,7 +317,13 @@ int CByteBuffer::ReadStringCopy(char *pStr, ubit32 nMaxSize)
 
 int CByteBuffer::ReadStringAlloc(char **ppStr)
 {
-    int nLen = 1 + strlen((char *)m_pData + m_nReadPos);
+    ubit32 nLen = 0;
+
+    if (StringLengthAtReadPos(&nLen))
+    {
+        *ppStr = nullptr; // as for an empty string below
+        return 1;
+    }
 
     if (nLen == 1)
     {
@@ -337,20 +366,29 @@ int CByteBuffer::ReadNames(char ***pppStr, int bOld)
     else // New xxx
     {
         int l = 0;
-        int Corrupt = 0;
+        int nError = 0;
         char buf[MAX_STRING_LENGTH];
 
-        l = ReadS32(&Corrupt);
+        l = ReadS32(&nError);
+        if (!nError && l < 0)
+        {
+            return Corrupt();
+        }
 
         int i = 0;
 
+        // The count comes from the data: stop when the data runs out (a corrupt
+        // count, up to 2^31, kept adding empty names long after it had)
         for (i = 0; i < l; i++)
         {
-            Corrupt += ReadStringCopy(buf, sizeof(buf) - 1);
+            if (ReadStringCopy(buf, sizeof(buf) - 1))
+            {
+                return 1;
+            }
             *pppStr = add_name(buf, *pppStr);
         }
 
-        return Corrupt;
+        return nError;
     }
     return 0;
 }
@@ -366,9 +404,12 @@ int CByteBuffer::ReadIntList(int **ilist)
 
     len = ReadS32(&corrupt);
 
-    if (corrupt)
+    // The length comes from the data: the values (4 bytes each) must fit in what
+    // is left, or it is corrupt. A corrupt length used to be allocated, up to 8 GB,
+    // and the read past the end of the data then hit assert(FALSE).
+    if (corrupt || len < 0 || static_cast<ubit32>(len) > (m_nLength - m_nReadPos) / 4)
     {
-        return 1;
+        return Corrupt();
     }
 
     CREATE(intlist, int, len + 1);
@@ -378,7 +419,8 @@ int CByteBuffer::ReadIntList(int **ilist)
         c = ReadS32(&corrupt);
         if (corrupt)
         {
-            assert(FALSE);
+            FREE(intlist);
+            return 1;
         }
 
         intlist[i] = c;
@@ -393,15 +435,20 @@ int CByteBuffer::ReadBlock(ubit8 **ppData, ubit32 *pnLen)
     *ppData = nullptr;
 
     *pnLen = ReadS32(&corrupt);
-    if (corrupt)
+
+    // The length comes from the data: it must fit in what is left, or it is
+    // corrupt (and could ask for gigabytes before the read fails)
+    if (corrupt || *pnLen > m_nLength - m_nReadPos)
     {
-        return 1;
+        *pnLen = 0;
+        return Corrupt();
     }
 
     *ppData = (ubit8 *)malloc(*pnLen);
 
-    if (ppData == nullptr)
+    if (*ppData == nullptr)
     {
+        *pnLen = 0;
         return 1;
     }
 
@@ -412,7 +459,7 @@ int CByteBuffer::Skip(int nLen)
 {
     if (m_nReadPos + nLen > m_nLength)
     {
-        return 1;
+        return Corrupt();
     }
 
     m_nReadPos += nLen;
@@ -442,31 +489,49 @@ int CByteBuffer::SkipFloat()
 
 int CByteBuffer::SkipString(char **ppStr)
 {
+    ubit32 nLen = 0;
+
+    if (StringLengthAtReadPos(&nLen))
+    {
+        if (ppStr)
+        {
+            *ppStr = const_cast<char *>(""); // callers that ignore the error get an empty name
+        }
+        return 1;
+    }
+
     if (ppStr)
     {
         *ppStr = (char *)m_pData + m_nReadPos;
     }
 
-    return Skip(1 + strlen((char *)m_pData + m_nReadPos));
+    return Skip(nLen);
 }
 
+// Like ReadNames(): a count that can't be read, or names that run out before it,
+// are corrupt data (this used to assert, or loop up to 2^32 times past the end)
 int CByteBuffer::SkipNames()
 {
     char *c = nullptr;
-    unsigned int len = 0;
-    unsigned int i = 0;
     int corrupt = 0;
 
-    len = ReadS32(&corrupt);
+    const sbit32 len = ReadS32(&corrupt);
 
     if (corrupt)
     {
-        assert(FALSE);
+        return 1;
+    }
+    if (len < 0)
+    {
+        return Corrupt();
     }
 
-    for (i = 0; i < len; i++)
+    for (sbit32 i = 0; i < len; i++)
     {
-        SkipString(&c);
+        if (SkipString(&c))
+        {
+            return 1;
+        }
     }
 
     return 0;
@@ -474,18 +539,20 @@ int CByteBuffer::SkipNames()
 
 int CByteBuffer::SkipVals()
 {
-    unsigned int len = 0;
-    unsigned int i = 0;
     int corrupt = 0;
 
-    len = ReadS32(&corrupt);
+    const sbit32 len = ReadS32(&corrupt);
 
     if (corrupt)
     {
-        assert(FALSE);
+        return 1;
+    }
+    if (len < 0)
+    {
+        return Corrupt();
     }
 
-    for (i = 0; i < len; i++)
+    for (sbit32 i = 0; i < len; i++)
     {
         if (Skip32())
         {

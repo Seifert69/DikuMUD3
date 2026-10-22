@@ -68,19 +68,23 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     {
         if (pBuf->SkipString(&c))
         {
+            cExtra.m_pList = first; // what was read is freed with the unit
             return 1;
         }
 
+        e = new (extra_descr_data);
         if (unit_version < 70)
         {
 #ifdef DMSERVER
-            c = fix_old_codes_to_html(c, &g_cServerConfig.getColorType());
+            e->descr = old_codes_to_html(c, &g_cServerConfig.getColorType());
 #else
-            c = fix_old_codes_to_html(c); // vmc doesn't load old units
+            e->descr = old_codes_to_html(c); // vmc doesn't load old units
 #endif
         }
-        e = new (extra_descr_data);
-        e->descr = c;
+        else
+        {
+            e->descr = c;
+        }
         e->names.ReadBuffer(pBuf, unit_version);
         if (unit_version > 61)
         {
@@ -107,6 +111,43 @@ int bread_extra(CByteBuffer *pBuf, extra_list &cExtra, int unit_version)
     return 0;
 }
 
+/*
+ * A count read from the data can't be larger than the data left, as each
+ * entry takes at least min_bytes. A larger count means the data is corrupt:
+ * mark it, and read nothing rather than loop on reading past the end.
+ */
+static int dil_count_fits(CByteBuffer *pBuf, ubit32 count, ubit32 min_bytes)
+{
+    ubit32 left = pBuf->GetLength() - pBuf->GetReadPosition();
+
+    if (count <= left / min_bytes)
+    {
+        return count;
+    }
+
+    pBuf->Corrupt();
+    slog(LOG_ALL, 0, "Corrupt DIL data: count %u, but only %u bytes left.", count, left);
+    return 0;
+}
+
+/*
+ * Reads a DIL variable type. One out of range is counted in bad instead of
+ * logged as DilVarTypeIntToEnum() does: corrupt data can hold hundreds of them,
+ * and a log line each could fill the log. With allow_invalid, DILV_INVALID is a
+ * type too (a saved global variable that lost a type conflict has it).
+ */
+static DilVarType_e bread_dil_type(CByteBuffer *pBuf, int &bad, bool allow_invalid = false)
+{
+    ubit8 n = pBuf->ReadU8();
+
+    if (DilVarTypeIsValid(n) || (allow_invalid && n == DilVarType_e::DILV_INVALID))
+    {
+        return (DilVarType_e)n;
+    }
+    bad++;
+    return DilVarType_e::DILV_INVALID;
+}
+
 /**
  * This function reads a DIL template
  */
@@ -114,6 +155,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 {
     int i = 0;
     int j = 0;
+    int bad_types = 0;
     diltemplate *tmpl = nullptr;
 
     /* read a template */
@@ -150,7 +192,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     tmpl->varcrc = pBuf->ReadU16();
     tmpl->corecrc = pBuf->ReadU16();
     tmpl->rtnt = pBuf->ReadU8();
-    tmpl->argc = pBuf->ReadU8();
+    tmpl->argc = dil_count_fits(pBuf, pBuf->ReadU8(), 1);
 
     if (tmpl->argc)
     {
@@ -158,7 +200,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->argc; i++)
         {
-            tmpl->argt[i] = DilVarTypeIntToEnum(pBuf->ReadU8()); /* argument types */
+            tmpl->argt[i] = bread_dil_type(pBuf, bad_types); /* argument types */
         }
     }
     else
@@ -166,9 +208,19 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->argt = nullptr;
     }
 
-    pBuf->ReadBlock(&tmpl->core, &tmpl->coresz);
+    pBuf->ReadBlock(&tmpl->core, &tmpl->coresz); // a failed read marks the buffer corrupt
 
-    tmpl->varc = pBuf->ReadU16(); /* number of variables */
+    // Each interrupt is set by an instruction in the code, so a template can't
+    // have more interrupts than bytes of code. A corrupt count (up to 65535)
+    // made every program copied from it allocate that many interrupts.
+    if (tmpl->intrcount > tmpl->coresz)
+    {
+        pBuf->Corrupt();
+        slog(LOG_ALL, 0, "Corrupt DIL data: %u interrupts, but only %u bytes of code.", tmpl->intrcount, tmpl->coresz);
+        tmpl->intrcount = 0;
+    }
+
+    tmpl->varc = dil_count_fits(pBuf, pBuf->ReadU16(), 1); /* number of variables */
 
     if (tmpl->varc)
     {
@@ -177,7 +229,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
 
         for (i = 0; i < tmpl->varc; i++)
         {
-            tmpl->vart[i] = DilVarTypeIntToEnum(pBuf->ReadU8());
+            tmpl->vart[i] = bread_dil_type(pBuf, bad_types);
             if (version >= 76)
             {
                 g_nCorrupt += pBuf->ReadStringAlloc(&tmpl->varg[i]);
@@ -189,7 +241,7 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->vart = nullptr;
     }
 
-    tmpl->xrefcount = pBuf->ReadU16();
+    tmpl->xrefcount = dil_count_fits(pBuf, pBuf->ReadU16(), 3); /* name, rtnt, argc */
 
     if (tmpl->xrefcount)
     {
@@ -199,15 +251,15 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         for (i = 0; i < tmpl->xrefcount; i++)
         {
             pBuf->ReadStringAlloc(&tmpl->xrefs[i].name);
-            tmpl->xrefs[i].rtnt = DilVarTypeIntToEnum(pBuf->ReadU8());
-            tmpl->xrefs[i].argc = pBuf->ReadU8();
+            tmpl->xrefs[i].rtnt = bread_dil_type(pBuf, bad_types);
+            tmpl->xrefs[i].argc = dil_count_fits(pBuf, pBuf->ReadU8(), 1);
 
             if (tmpl->xrefs[i].argc)
             {
                 CREATE(tmpl->xrefs[i].argt, DilVarType_e, tmpl->xrefs[i].argc);
                 for (j = 0; j < tmpl->xrefs[i].argc; j++)
                 {
-                    tmpl->xrefs[i].argt[j] = DilVarTypeIntToEnum(pBuf->ReadU8());
+                    tmpl->xrefs[i].argt[j] = bread_dil_type(pBuf, bad_types);
                 }
             }
             else
@@ -219,6 +271,11 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     else
     {
         tmpl->xrefs = nullptr;
+    }
+
+    if (bad_types)
+    {
+        slog(LOG_ALL, 0, "DIL template %s: %d variable types out of range.", tmpl->prgname ? tmpl->prgname : "", bad_types);
     }
 
 #ifdef DMSERVER
@@ -234,7 +291,12 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
         tmpl->extprg = nullptr;
     }
 
-    if (!g_mud_bootzone)
+    if (!g_mud_bootzone && (bad_types || pBuf->IsCorrupt()))
+    {
+        // Its references would be garbage, two log lines each
+        slog(LOG_ALL, 0, "DIL template %s is corrupt: its external references aren't resolved.", tmpl->prgname ? tmpl->prgname : "");
+    }
+    else if (!g_mud_bootzone)
     {
         /*
          * This template not loaded boottime, so resolve
@@ -252,11 +314,14 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
                 {
                     valid = 0;
                 }
-                for (j = 0; j < tmpl->xrefs[i].argc; j++)
+                else // only compare the types when both have the same number (else reads past argt)
                 {
-                    if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+                    for (j = 0; j < tmpl->xrefs[i].argc; j++)
                     {
-                        valid = 0;
+                        if (tmpl->xrefs[i].argt[j] != tmpl->extprg[i]->argt[j])
+                        {
+                            valid = 0;
+                        }
                     }
                 }
             }
@@ -284,14 +349,69 @@ diltemplate *bread_diltemplate(CByteBuffer *pBuf, int version)
     return tmpl;
 }
 
-/** Reads DIL interrupt list */
-void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
+#ifdef DMSERVER // only bread_dil() uses these, and only in the server
+/**
+ * Whether the template's variable i is a global that a program read from a file
+ * shares: a stringlist or integerlist. A string global keeps its own copy, as on
+ * master (bound, it would share a pointer that a string assignment frees), and vmc
+ * doesn't check the type of a global declaration: getDilGlobalDilVar() asserts on
+ * any other type.
+ */
+static bool dil_template_global(const diltemplate *tmpl, int i)
+{
+    const DilVarType_e type = tmpl->vart[i];
+    return tmpl->varg[i] != nullptr && (type == DilVarType_e::DILV_SLP || type == DilVarType_e::DILV_ILP);
+}
+
+/**
+ * Binds a saved variable to the template's global (name and type), freeing what
+ * was read for it first: a value of its own if the file saved it as private.
+ */
+static void dil_bind_global(dilvar *var, const char *name, DilVarType_e type)
+{
+    var->itype = DilIType_e::Regular;
+    dil_free_var(var); // frees the name too
+    var->name = str_dup(name);
+    var->type = type;
+    dil_bind_global_var(var, name);
+}
+
+/**
+ * Reads DIL interrupt list. Returns how many labels don't fit the template's
+ * code: bread_dil() decides what to do with them once it knows whether the saved
+ * program still matches its template.
+ */
+static int bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
 {
     int i = 0;
     ubit32 lab = 0;
+    int outside = 0;
 
-    /* read interrupts */
-    prg->frame[0].intrcount = pBuf->ReadU16();
+    /* read interrupts: flags, label and (from version 65) end label each */
+    prg->frame[0].intrcount = dil_count_fits(pBuf, pBuf->ReadU16(), version > 64 ? 10 : 6);
+
+    // Labels are offsets into the template's code, which a running program may
+    // reach the end of but not go past (as asserted in dilrun.cpp). An interrupt
+    // that is set runs its condition from lab up to elab and then reads the 4-byte
+    // address at elab (check_interrupt()), so dilfe_intr() always gives it
+    // lab < elab and elab + 4 within the code; one that isn't is counted too. A label of a
+    // template that has changed since the save can be past the end; it is never
+    // used, as bread_dil() then clears the interrupts. A placeholder for a missing
+    // template has no code: its labels keep the offset itself, only to be saved
+    // again (bwrite_dilintr() subtracts the null core).
+    const diltemplate *tmpl = prg->frame[0].tmpl;
+    auto label = [&](ubit32 offset) -> ubit8 * {
+        if (tmpl->core == nullptr)
+        {
+            return reinterpret_cast<ubit8 *>(static_cast<uintptr_t>(offset));
+        }
+        if (offset > tmpl->coresz)
+        {
+            outside++;
+            return nullptr;
+        }
+        return &(tmpl->core[offset]);
+    };
 
     if (prg->frame[0].intrcount)
     {
@@ -300,20 +420,65 @@ void bread_dilintr(CByteBuffer *pBuf, dilprg *prg, int version)
         for (i = 0; i < prg->frame[0].intrcount; i++)
         {
             prg->frame[0].intr[i].flags = pBuf->ReadU16();
-            lab = pBuf->ReadU32();
-            prg->frame[0].intr[i].lab = &(prg->frame[0].tmpl->core[lab]);
+            const ubit32 begin = pBuf->ReadU32();
+            prg->frame[0].intr[i].lab = label(begin);
+            lab = begin;
             if (version > 64)
             {
                 lab = pBuf->ReadU32();
             }
-            prg->frame[0].intr[i].elab = &(prg->frame[0].tmpl->core[lab]);
+            prg->frame[0].intr[i].elab = label(lab);
+            if (version > 64 && tmpl->core != nullptr && prg->frame[0].intr[i].flags != 0 && prg->frame[0].intr[i].lab != nullptr &&
+                prg->frame[0].intr[i].elab != nullptr && (begin >= lab || static_cast<uint64_t>(lab) + 4 > tmpl->coresz))
+            {
+                outside++;
+            }
+            // Before version 65 no end label was saved, so elab is lab: a set interrupt can't run
+            if (version <= 64 && tmpl->core != nullptr && prg->frame[0].intr[i].flags != 0 && prg->frame[0].intr[i].lab != nullptr)
+            {
+                outside++;
+            }
         }
     }
     else
     {
         prg->frame[0].intr = nullptr;
     }
+
+    return outside;
 }
+
+/*
+ * Gives a program a fresh set of interrupts for its template and starts it from
+ * the beginning, as when the template has changed since the program was saved.
+ */
+static void dil_reset_interrupts(dilprg *prg, diltemplate *tmpl, ubit32 *recallpc)
+{
+    if (prg->fp->intr)
+    {
+        FREE(prg->fp->intr);
+    }
+
+    if (tmpl->intrcount)
+    {
+        CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
+    }
+    else
+    {
+        prg->fp->intr = nullptr;
+    }
+    prg->fp->intrcount = tmpl->intrcount;
+
+    /* clear interrupts */
+    for (int i = 0; i < prg->fp->intrcount; i++)
+    {
+        prg->fp->intr[i].flags = 0;
+        prg->fp->intr[i].lab = nullptr;
+    }
+
+    *recallpc = 0;
+}
+#endif
 
 void bwrite_dilintr(CByteBuffer *pBuf, dilprg *prg)
 {
@@ -421,6 +586,9 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
     {
         /* read local program, and convert to global template */
         tmpl = bread_diltemplate(pBuf, version);
+        // Only a placeholder made at run time is DILFL_FREEME: dil_free_template()
+        // would free just the name of a template read with that flag (corrupt data)
+        REMOVE_BIT(tmpl->flags, DILFL_FREEME);
         snprintf(name, sizeof(name), "%s", tmpl->prgname);
         dil_free_template(tmpl, IS_SET(prg->flags, DILFL_COPY));
         SET_BIT(prg->flags, DILFL_COPY);
@@ -486,7 +654,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->link(tmpl);
     }
 
-    novar = pBuf->ReadU16(); /* the SAVED #vars             */
+    novar = dil_count_fits(pBuf, pBuf->ReadU16(), 1); /* the SAVED #vars */
 
     if (novar)
     {
@@ -497,95 +665,67 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         prg->fp->vars = nullptr;
     }
 
+    int out_of_range = 0;
     for (i = 0; i < novar; i++)
     {
-        prg->fp->vars[i].type = DilVarTypeIntToEnum(pBuf->ReadU8());
-        prg->fp->vars[i].itype = DilIType_e::Regular;
-
-        bool globalVar = false;
-        prg->fp->vars[i].name = nullptr;
+        dilvar &var = prg->fp->vars[i];
+        var.type = bread_dil_type(pBuf, out_of_range, true);
+        var.itype = DilIType_e::Regular;
+        var.name = nullptr;
 
         if (version >= 76)
         {
             // Read the global variable name
-            g_nCorrupt += pBuf->ReadStringAlloc(&prg->fp->vars[i].name);
-            globalVar = (prg->fp->vars[i].name != nullptr);
+            g_nCorrupt += pBuf->ReadStringAlloc(&var.name);
         }
 
-        switch (prg->fp->vars[i].type)
+        // A global variable's value is the shared one in the global index, not in the
+        // file (bwrite_dil() saves an empty list): it is bound once the variables have
+        // been checked against the template, below
+        switch (var.type)
         {
             case DilVarType_e::DILV_SLP:
-                if (!globalVar)
+                if (!var.name)
                 {
-                    prg->fp->vars[i].val.namelist = new cNamelist;
-                    prg->fp->vars[i].val.namelist->ReadBuffer(pBuf, version);
+                    var.val.namelist = new cNamelist;
+                    var.val.namelist->ReadBuffer(pBuf, version);
                 }
                 else
                 {
-                    cNamelist nl;
-                    nl.ReadBuffer(pBuf, version); // We're missing a SkipBuffer
-
-                    // Create global var in the global index or find and reuse it
-                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
-
-                    if (v)
-                    {
-                        // Set the type so that we don't free it.
-                        // Global means it's a reference to a global var
-                        prg->fp->vars[i].itype = DilIType_e::Global;
-                        prg->fp->vars[i].val = v->val;
-                    }
-                    else
-                    {
-                        prg->fp->vars[i].itype = DilIType_e::Regular;
-                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
-                        prg->fp->vars[i].val.string = nullptr;
-                    }
+                    g_nCorrupt += pBuf->SkipNames();
+                    var.val.namelist = nullptr;
                 }
                 break;
             case DilVarType_e::DILV_ILP:
-                if (!globalVar)
+                if (!var.name)
                 {
-                    prg->fp->vars[i].val.intlist = new cintlist;
-                    prg->fp->vars[i].val.intlist->ReadBuffer(pBuf);
+                    var.val.intlist = new cintlist;
+                    var.val.intlist->ReadBuffer(pBuf);
                 }
                 else
                 {
-                    cintlist il;
-                    il.ReadBuffer(pBuf); // We're missing a SkipBuffer
-
-                    // Create global var in the global index or find and reuse it
-                    dilvar *v = getDilGlobalDilVar(prg->fp->vars[i].name, prg->fp->vars[i].type);
-
-                    if (v)
-                    {
-                        // Set the type so that we don't free it.
-                        // Global means it's a reference to a global var
-                        prg->fp->vars[i].itype = DilIType_e::Global;
-                        prg->fp->vars[i].val = v->val;
-                    }
-                    else
-                    {
-                        prg->fp->vars[i].itype = DilIType_e::Regular;
-                        prg->fp->vars[i].type = DilVarType_e::DILV_INVALID;
-                        prg->fp->vars[i].val.string = nullptr;
-                    }
+                    g_nCorrupt += pBuf->SkipVals();
+                    var.val.intlist = nullptr;
                 }
                 break;
             case DilVarType_e::DILV_SP:
-                pBuf->ReadStringAlloc(&prg->fp->vars[i].val.string);
+                pBuf->ReadStringAlloc(&var.val.string);
                 break;
             case DilVarType_e::DILV_INT:
-                prg->fp->vars[i].val.integer = pBuf->ReadS32();
+                var.val.integer = pBuf->ReadS32();
                 break;
 
             default:
-                prg->fp->vars[i].val.string = nullptr;
+                var.val.string = nullptr;
         }
+    }
+    if (out_of_range)
+    {
+        slog(LOG_ALL, 0, "DIL program %s: %d variable types out of range.", name, out_of_range);
     }
 
     /* read interrupt array */
-    bread_dilintr(pBuf, prg, version);
+    const int labels_outside = bread_dilintr(pBuf, prg, version);
 
     prg->frame[0].securecount = 0;  /* number of secures */
     prg->frame[0].secure = nullptr; /* secured vars */
@@ -598,7 +738,35 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         return prg;
     }
 
-    if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc))
+    // A shared global's value is in the global index, so whatever name or type the
+    // file saved for it, it is bound to the template's global below (a builder may
+    // have renamed the global or made a variable global: varcrc covers neither). Any
+    // other variable must have the template's type, else the variables are reset, as
+    // dilfe_var() asserts on a type it can't read. Only checked when varcrc matches:
+    // a changed template resets them anyway.
+    int differ = 0;
+    if (prg->varcrc == tmpl->varcrc && novar == tmpl->varc)
+    {
+        for (i = 0; i < novar; i++)
+        {
+            if (!dil_template_global(tmpl, i))
+            {
+                differ += prg->fp->vars[i].type != tmpl->vart[i];
+            }
+        }
+        if (differ)
+        {
+            slog(LOG_ALL,
+                 0,
+                 "DIL program %s on %s: %d variables don't match the template; reset.",
+                 tmpl->prgname,
+                 owner->getNames().Name(),
+                 differ);
+        }
+    }
+
+    bool reset = false;
+    if ((prg->varcrc != tmpl->varcrc) || (novar != tmpl->varc) || differ)
     {
         /* state of variables have changed */
         /* s printf(buf,"Var CRC mismatch. prg:%d, tmpl:%d",
@@ -624,74 +792,79 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
         {
             prg->fp->vars = nullptr;
         }
+        // As dil_copy_template() does: a global variable gets its name and the shared
+        // value, not a list of its own that the next save would make private for good
         for (i = 0; i < tmpl->varc; i++)
         {
             prg->fp->vars[i].type = tmpl->vart[i];
-            if (tmpl->vart[i] == DilVarType_e::DILV_SLP)
+            prg->fp->vars[i].name = dil_template_global(tmpl, i) ? str_dup(tmpl->varg[i]) : nullptr;
+        }
+        dil_init_vars(tmpl->varc, prg->fp);
+        for (i = 0; i < tmpl->varc; i++)
+        {
+            // A global that isn't shared keeps its name, as when read from a file
+            if (tmpl->varg[i] && !dil_template_global(tmpl, i))
             {
-                prg->fp->vars[i].val.namelist = new cNamelist;
-            }
-            else if (tmpl->vart[i] == DilVarType_e::DILV_ILP)
-            {
-                prg->fp->vars[i].val.intlist = new cintlist;
-            }
-            else
-            {
-                prg->fp->vars[i].val.string = nullptr;
+                prg->fp->vars[i].name = str_dup(tmpl->varg[i]);
             }
         }
         prg->varcrc = tmpl->varcrc; /* variables updated! */
 
-        /* free interrupts */
-        if (prg->fp->intr)
-            FREE(prg->fp->intr);
-
-        if (tmpl->intrcount)
+        dil_reset_interrupts(prg, tmpl, &recallpc);
+        reset = true;
+    }
+    else
+    {
+        for (i = 0; i < novar; i++)
         {
-            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
+            dilvar &var = prg->fp->vars[i];
+            if (dil_template_global(tmpl, i))
+            {
+                dil_bind_global(&var, tmpl->varg[i], tmpl->vart[i]);
+            }
+            else if (var.name && !tmpl->varg[i])
+            {
+                // Saved as global, private now (a builder took "global" away): a list
+                // of its own, empty as the file holds no value for it
+                FREE(var.name);
+                if (var.type == DilVarType_e::DILV_SLP && !var.val.namelist)
+                {
+                    var.val.namelist = new cNamelist;
+                }
+                else if (var.type == DilVarType_e::DILV_ILP && !var.val.intlist)
+                {
+                    var.val.intlist = new cintlist;
+                }
+            }
         }
-        else
-        {
-            prg->fp->intr = nullptr;
-        }
-        prg->fp->intrcount = tmpl->intrcount;
-
-        /* clear interrupts */
-        for (i = 0; i < prg->fp->intrcount; i++)
-        {
-            prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = nullptr;
-        }
-
-        recallpc = 0;
     }
 
     if ((prg->corecrc) != (tmpl->corecrc))
     {
         // slog(LOG_ALL, 0, "Core CRC mismatch. prg:%d, tmpl:%d", prg->corecrc, tmpl->corecrc);
-        recallpc = 0;
         prg->corecrc = tmpl->corecrc;
 
-        /* free interrupts */
-        if (prg->fp->intr)
-            FREE(prg->fp->intr);
+        dil_reset_interrupts(prg, tmpl, &recallpc);
+        reset = true;
+    }
 
-        if (tmpl->intrcount)
-        {
-            CREATE(prg->fp->intr, dilintr, tmpl->intrcount);
-        }
-        else
-        {
-            prg->fp->intr = nullptr;
-        }
-        prg->fp->intrcount = tmpl->intrcount;
-
-        /* clear interrupts */
-        for (i = 0; i < prg->fp->intrcount; i++)
-        {
-            prg->fp->intr[i].flags = 0;
-            prg->fp->intr[i].lab = nullptr;
-        }
+    if (!reset && (labels_outside || prg->fp->intrcount != tmpl->intrcount || recallpc >= tmpl->coresz))
+    {
+        // The program matches its template, yet its interrupts or program counter
+        // don't fit the code (a corrupt file): every program has exactly its
+        // template's interrupts, so start it afresh rather than let it run off the
+        // code or assert in dil_intr_insert().
+        slog(LOG_ALL,
+             0,
+             "DIL program %s on %s: %d labels that don't fit the code, %d interrupts (template %d), program counter %u of %u; reset.",
+             tmpl->prgname,
+             owner->getNames().Name(),
+             labels_outside,
+             prg->fp->intrcount,
+             tmpl->intrcount,
+             recallpc,
+             tmpl->coresz);
+        dil_reset_interrupts(prg, tmpl, &recallpc);
     }
 
     prg->frame[0].pc = &(tmpl->core[recallpc]); /* program counter */
@@ -705,6 +878,7 @@ void *bread_dil(CByteBuffer *pBuf, unit_data *owner, ubit8 version, unit_fptr *f
 unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int stspec)
 {
     unit_fptr *fptr = nullptr;
+    unit_fptr *prev = nullptr;
     unit_fptr *head = nullptr;
     int i = 0;
 
@@ -719,6 +893,7 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
     for (; i > 0; i--)
     {
+        prev = fptr;
         if (fptr)
         {
             fptr->setNext(new EMPLACE(unit_fptr) unit_fptr);
@@ -736,7 +911,18 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
         {
             slog(LOG_ALL, 0, "Illegal func index in bread_func index - corrupt.");
             g_nCorrupt = TRUE;
-            return nullptr;
+            // Drop only this entry. Those before it may hold DIL programs already
+            // linked to their templates: they go back with the unit to be freed.
+            if (prev)
+            {
+                prev->setNext(nullptr);
+            }
+            else
+            {
+                head = nullptr;
+            }
+            DELETE(unit_fptr, fptr);
+            return head;
         }
 
         if (version >= 70)
@@ -764,41 +950,51 @@ unit_fptr *bread_func(CByteBuffer *pBuf, ubit8 version, unit_data *owner, int st
 
             CREATE(dilargs, dilargstype, 1);
 
-            pBuf->ReadStringCopy(name, sizeof(name));
-            strcat(name, "/");
-            pBuf->SkipString(&c);
-            strcat(name, c);
+            // Saved as two strings (AppendDoubleString), joined by '/'. Both come from
+            // the file, so the joined name must be bounded (strcat overran the stack).
+            char first[256];
+            g_nCorrupt += pBuf->ReadStringCopy(first, sizeof(first));
+            g_nCorrupt += pBuf->SkipString(&c);
+            if (snprintf(name, sizeof(name), "%s/%s", first, c) >= (int)sizeof(name))
+            {
+                g_nCorrupt++;
+            }
 
             dilargs->name = str_dup(name);
 
-            dilargs->no = pBuf->ReadU8();
+            int nArgError = 0;
+            dilargs->no = pBuf->ReadU8(&nArgError);
 
-            for (int j = 0; j < dilargs->no; j++)
+            // Stop at the first argument that can't be read: the rest of the data is
+            // no longer in step. Arguments not read keep type 0 and hold nothing to free.
+            for (int j = 0; j < dilargs->no && nArgError == 0; j++)
             {
-                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8());
+                dilargs->dilarg[j].type = DilVarTypeIntToEnum(pBuf->ReadU8(&nArgError));
 
                 switch (dilargs->dilarg[j].type)
                 {
                     case DilVarType_e::DILV_SLP:
-                        pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
+                        nArgError += pBuf->ReadNames(&dilargs->dilarg[j].data.stringlist, version <= 73 ? 1 : 0);
                         break;
 
                     case DilVarType_e::DILV_SP:
-                        pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
+                        nArgError += pBuf->ReadStringAlloc(&dilargs->dilarg[j].data.string);
                         break;
 
                     case DilVarType_e::DILV_INT:
-                        dilargs->dilarg[j].data.num = pBuf->ReadS32();
+                        dilargs->dilarg[j].data.num = pBuf->ReadS32(&nArgError);
                         break;
 
                     case DilVarType_e::DILV_ILP:
-                        pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
+                        nArgError += pBuf->ReadIntList(&dilargs->dilarg[j].data.intlist);
                         break;
 
                     default:
-                        error(HERE, "Uhadada");
+                        // A type from corrupt data: error() here terminated the server
+                        nArgError++;
                 }
             }
+            g_nCorrupt += nArgError;
 
             fptr->setData(dilargs);
         }

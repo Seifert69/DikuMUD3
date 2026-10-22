@@ -8,13 +8,21 @@ add_executable(vme_unit_tests
         CServerConfiguration_tests.cpp
         FixtureBase.cpp FixtureBase.h
         account_cpp_tests.cpp
+        bytestring_tests.cpp
+        char_point_data_tests.cpp
+        cintlist_tests.cpp
         cNamelist_tests.cpp
         color_type_tests.cpp
         combat_packet_tests.cpp
+        dilrun_tests.cpp
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
+        textutil_cpp_tests.cpp
         weather_cpp_tests.cpp
+        pc_account_data_tests.cpp
+        slog_raw_tests.cpp
+        when_limit_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
 target_compile_definitions(vme_unit_tests PUBLIC

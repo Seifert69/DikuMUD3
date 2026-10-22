@@ -854,52 +854,6 @@ void str_rem(char *s, char c)
     }
 }
 
-/* Change all \n\r to <br/>\n\r */
-void str_amp_html(const char *s, char *d)
-{
-    for (; *s;)
-    {
-        if (*s == '&')
-        {
-            *d++ = '&';
-            *d++ = 'a';
-            *d++ = 'm';
-            *d++ = 'p';
-            *d++ = ';';
-            s++; // Skip &
-        }
-        else
-        {
-            *d++ = *s++;
-        }
-    }
-    *d = 0;
-}
-
-/* Change all \n\r to <br/>\n\r */
-void str_nr_brnr(const char *s, char *d)
-{
-    for (; *s;)
-    {
-        if ((*s == '\n') && (*(s + 1) == '\r'))
-        {
-            *d++ = '<';
-            *d++ = 'b';
-            *d++ = 'r';
-            *d++ = '/';
-            *d++ = '>';
-            *d++ = '\n';
-            *d++ = '\r';
-            s += 2;
-        }
-        else
-        {
-            *d++ = *s++;
-        }
-    }
-    *d = 0;
-}
-
 /* Replace all occurences of non alfa, digit with space in s */
 void str_blank_punct(char *s)
 {
@@ -1540,40 +1494,6 @@ std::string scriptwrap(const std::string &str)
     return mystr;
 }
 
-// return 1 as long as we substitute &s
-// Potential crash if string is full of many &s99, no OOB check
-int my_str_replace_space(char *sbuf)
-{
-    int i = 0;
-    int ln = strlen(sbuf);
-
-    while (i < ln)
-    {
-        if ((*sbuf == '&') && ((*(sbuf + 1) == 's') || (*(sbuf + 1) == 'S')))
-        {
-            char Buf[3];
-            int rep = 0;
-            char *src = sbuf + 2;
-
-            while (isdigit(*src) && rep < (int)sizeof(Buf) - 1)
-            {
-                Buf[rep++] = *src++;
-            }
-            Buf[rep] = 0;
-
-            char buf2[10];
-            strcpy(buf2, "&s");
-            strcat(buf2, Buf);
-            str_substitute(buf2, spc(atoi(Buf)), sbuf);
-            return 1;
-        }
-        sbuf++;
-        i++;
-    }
-
-    return 0;
-}
-
 // Removes control codes, keeping \n and \r. The old ESC + letter codes (see
 // mplex/translate.h) go whole, with the text the old protocol never showed:
 // ESC I .. ESC J, and ESC K..O name ESC P. Without a terminator only the code
@@ -1654,93 +1574,122 @@ static void str_rem_old_codes(char *s, const color_type *colours)
     *d = 0;
 }
 
-//
-// Changes old codes such as &l &c to HTML
-// Only used in char conversion of units < v70
-// so no bother with mem leaks of strings
-char *fix_old_codes_to_html(const std::string &c, const color_type *colours)
+// str_substitute() on a std::string, with the same result: it replaces the first
+// match and looks again from the start, so text that a replacement joins into a
+// new match is replaced too. Here the text is read once: a match can only end at
+// the character just read, and the replacement is read again in its place.
+static void substitute_all(std::string &s, const char *old, const char *replacement)
 {
-    return fix_old_codes_to_html(c.c_str(), colours);
+    const size_t olen = strlen(old);
+    if (olen == 0 || s.find(old) == std::string::npos)
+    {
+        return;
+    }
+
+    const std::string replace(replacement);
+    const std::string rev_replacement(replace.rbegin(), replace.rend());
+    std::string unread(s.rbegin(), s.rend()); // last character first
+    std::string out;
+    out.reserve(s.size());
+    while (!unread.empty())
+    {
+        out += unread.back();
+        unread.pop_back();
+        if (out.size() >= olen && out.compare(out.size() - olen, olen, old) == 0)
+        {
+            out.resize(out.size() - olen);
+            unread += rev_replacement;
+        }
+    }
+    s = std::move(out);
 }
 
-char *fix_old_codes_to_html(const char *c, const color_type *colours)
+/**
+ * Changes old codes such as &l &c to HTML, for units saved before v70. On a
+ * std::string, so text of any length converts: it used two buffers of
+ * 2 * MAX_STRING_LENGTH on the stack, which text with many codes could outgrow,
+ * and asserted on text of MAX_STRING_LENGTH or more.
+ */
+std::string old_codes_to_html(const char *c, const color_type *colours)
 {
-    char buf[2 * MAX_STRING_LENGTH];
-    int bPre = 0;
+    if (c == nullptr)
+    {
+        return {};
+    }
 
-    assert(strlen(c) < sizeof(buf) / 2);
-    strcpy(buf, c);
-
-    str_rem_old_codes(buf, colours);
+    std::string s(c);
+    str_rem_old_codes(&s[0], colours);
+    s.resize(strlen(s.c_str()));
 
     // Make sure && is unique by using ESC which we just removed
-    str_substitute("&&", "\x1B", buf);
+    substitute_all(s, "&&", "\x1B");
 
     // Colors
-    str_substitute("&cw", "", buf);
-    str_substitute("&cr", "", buf);
-    str_substitute("&cy", "", buf);
-    str_substitute("&cg", "", buf);
-    str_substitute("&cb", "", buf);
-    str_substitute("&cm", "", buf);
-    str_substitute("&cn", "", buf);
-    str_substitute("&c+w", "", buf);
-    str_substitute("&c+r", "", buf);
-    str_substitute("&c+y", "", buf);
-    str_substitute("&c+g", "", buf);
-    str_substitute("&c+b", "", buf);
-    str_substitute("&c+m", "", buf);
-    str_substitute("&c+n", "", buf);
+    for (const char *code : {"&cw", "&cr", "&cy", "&cg", "&cb", "&cm", "&cn", "&c+w", "&c+r", "&c+y", "&c+g", "&c+b", "&c+m", "&c+n"})
+    {
+        substitute_all(s, code, "");
+    }
 
     // Specials
-    str_substitute("&x", "\n", buf);
-    str_substitute("&n", "<br/>", buf);
-
-    if (str_str(buf, "&l"))
+    substitute_all(s, "&x", "\n");
+    substitute_all(s, "&n", "<br/>");
+    const bool bPre = s.find("&l") != std::string::npos;
+    substitute_all(s, "&l", "<pre>");
+    for (const char *code : {"&h", "&p", "&f", "&bb", "&bn"})
     {
-        str_substitute("&l", "<pre>", buf);
-        bPre = 1;
+        substitute_all(s, code, "");
     }
 
-    str_substitute("&h", "", buf);
-    str_substitute("&p", "", buf);
-    str_substitute("&f", "", buf);
-    str_substitute("&bb", "", buf);
-    str_substitute("&bn", "", buf);
-
-    char buf2[2 * MAX_STRING_LENGTH];
-    str_amp_html(buf, buf2);
-    strcpy(buf, buf2);
-
-    str_substitute("'", "&apos;", buf);
-    str_substitute("<", "&lt;", buf);
-    str_substitute(">", "&gt;", buf);
-
-    // replace &s[0-9] with spaces
-    // sed -i -- 's/&s[0-9][0-9]/ /g' *.zon
-    // replace &s[00-99] with spaces
-    // sed -i -- 's/&s[0-9]/ /g' *.zon
-
-    str_substitute("&[default]", "</div>", buf);
-
-    while (my_str_replace_space(buf))
+    // & first, then ' < >: their entities start with & but are not escaped again.
+    // After this every & starts an entity, so &[name] and &s99 can't match any more
+    // (nor could they before, when &[default] and the &s spaces were replaced here).
+    std::string html;
+    html.reserve(s.size());
+    for (const char ch : s)
     {
-        ;
+        switch (ch)
+        {
+            case '&':
+                html += "&amp;";
+                break;
+            case '\'':
+                html += "&apos;";
+                break;
+            case '<':
+                html += "&lt;";
+                break;
+            case '>':
+                html += "&gt;";
+                break;
+            case '\x1B': // && from above
+                html += "&amp;";
+                break;
+            default:
+                html += ch;
+        }
     }
-
-    // I'm hoping this is not necessary to change
-    // Replace &[name] with <div class='name'>
-    // sed -i -- 's/&\[\([^]]*\)\]/\<div class\=\x27\1\x27\>/g' *.zon
-
-    str_substitute("\x1B", "&amp;", buf);
 
     if (bPre)
     {
-        strcat(buf, "</pre>");
+        html += "</pre>";
     }
 
-    str_nr_brnr(buf, buf2);
-    return str_dup(buf2); // Dont worry about memory leaks it's a one time thing
+    // \n\r becomes <br/>\n\r
+    std::string result;
+    result.reserve(html.size());
+    for (size_t i = 0; i < html.size(); i++)
+    {
+        if (html[i] == '\n' && i + 1 < html.size() && html[i + 1] == '\r')
+        {
+            result += "<br/>\n\r";
+            i++;
+        }
+        else
+        {
+            result += html[i];
+        }
+    }
+    return result;
 }
 
 /* Get the contents between <htmltag> and convert it to lowercase
@@ -2313,4 +2262,53 @@ int pwdcompare(const char *p1, const char *p2, int nMax)
     }
 
     return 0;
+}
+
+// How long ago "then" was, in its two largest units, e.g. "3 days, 4 hours ago".
+// The second unit is only shown when it is the next unit down and isn't zero.
+std::string time_ago_string(time_t then, time_t now)
+{
+    static const struct
+    {
+        long long seconds;
+        const char *name;
+    } units[] = {{SECS_PER_REAL_YEAR, "year"}, {SECS_PER_REAL_DAY, "day"}, {SECS_PER_REAL_HOUR, "hour"}, {SECS_PER_REAL_MIN, "minute"}};
+
+    long long left = (long long)now - (long long)then;
+
+    if (left < SECS_PER_REAL_MIN)
+    {
+        return "less than a minute ago";
+    }
+
+    std::string result;
+    int parts = 0;
+
+    for (const auto &unit : units)
+    {
+        long long n = left / unit.seconds;
+
+        if (n == 0)
+        {
+            if (parts > 0)
+            {
+                break;
+            }
+            continue;
+        }
+
+        if (parts > 0)
+        {
+            result += ", ";
+        }
+        result += std::to_string(n) + " " + unit.name + (n == 1 ? "" : "s");
+        left -= n * unit.seconds;
+
+        if (++parts == 2)
+        {
+            break;
+        }
+    }
+
+    return result + " ago";
 }

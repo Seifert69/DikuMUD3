@@ -622,6 +622,53 @@ void post_read_unit(unit_data *u)
     }
 }
 
+#ifdef DMSERVER
+/**
+ * Frees function pointers read by bread_func() for a unit that turned out to
+ * be corrupt, before they were ever started. No special routine is called: a
+ * corrupt index can name one that would free its data as some other type, and
+ * the data is always what bread_func() made it - a DIL program, a DIL copy's
+ * arguments, or the string read for any other routine. Deleting a DIL program
+ * also unlinks it from its template's program list.
+ *
+ * Kept here, not in db_file.cpp: vmc links the server objects with -zmuldefs,
+ * and a server-only symbol in db_file.cpp would pull the server's db_file.o
+ * into vmc next to its own (two g_FileBuffer constructors: double free).
+ */
+static void bread_func_free(unit_fptr *head)
+{
+    while (head)
+    {
+        unit_fptr *next = head->getNext();
+
+        if (head->getFunctionPointerIndex() == SFUN_DIL_INTERNAL)
+        {
+            dilprg *prg = (dilprg *)head->getData();
+            if (prg)
+            {
+                DELETE(dilprg, prg);
+            }
+        }
+        else if (head->getFunctionPointerIndex() == SFUN_DILCOPY_INTERNAL)
+        {
+            if (head->getData())
+            {
+                dil_free_dilargs((dilargstype *)head->getData());
+            }
+        }
+        else if (head->getData())
+        {
+            void *data = head->getData();
+            FREE(data);
+        }
+
+        head->setData(nullptr);
+        DELETE(unit_fptr, head);
+        head = next;
+    }
+}
+#endif
+
 /**
  * Room directions points to file_indexes instead of units
  *  after a room has been read, due to initialization considerations
@@ -629,6 +676,8 @@ void post_read_unit(unit_data *u)
  *
  * whom is an error message to be printed when something goes wrong.
  */
+int g_nUnreadableVersion = -1;
+
 unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *whom, int stspec)
 {
     unit_data *u = nullptr;
@@ -642,6 +691,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     char tmpbuf[2 * MAX_STRING_LENGTH];
 
     g_nCorrupt = 0;
+    g_nUnreadableVersion = -1;
 
     if (type != UNIT_ST_NPC && type != UNIT_ST_PC && type != UNIT_ST_ROOM && type != UNIT_ST_OBJ)
     {
@@ -649,15 +699,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         return nullptr;
     }
 
-    // u = new EMPLACE(unit_data) unit_data(type);
-    u = new_unit_data(type, nullptr); // Would be preferable to have a file_index_type passed here 
-
+    pBuf->ClearCorrupt(); // any failed read from here on makes this unit corrupt
     nStart = pBuf->GetReadPosition();
     unit_version = pBuf->ReadU8(&g_nCorrupt);
 
-    assert(unit_version >= 37);
-
-    if (unit_version > UNIT_VERSION)
+    // A newer unit than this server can read, in an inventory or a DIL store, most
+    // likely means the server was rolled back: stop rather than lose it, as the
+    // inventory would be saved again without it. read_unit() also stops the server
+    // for zone data it can't read.
+    if (!g_nCorrupt && unit_version > UNIT_VERSION && type != UNIT_ST_PC)
     {
         slog(LOG_EXTENSIVE,
              0,
@@ -669,16 +719,27 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         exit(0);
     }
 
+    // No file is older than version 48: such a version, or a newer one in a player
+    // file, is corrupt data (often a single flipped bit), which must be rejected
+    // rather than parsed in an old format or shut the server down. A player with a
+    // corrupt file can't log on, so nothing is saved over it, and vme -c / -C keep
+    // a file rejected for its version (g_nUnreadableVersion) instead of erasing it.
+    if (g_nCorrupt || unit_version < 48 || unit_version > UNIT_VERSION)
+    {
+        slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: '%s' has unit version %d.", whom, unit_version);
+        if (!g_nCorrupt)
+        {
+            g_nUnreadableVersion = unit_version;
+        }
+        g_nCorrupt = TRUE;
+        return nullptr;
+    }
+
+    // u = new EMPLACE(unit_data) unit_data(type);
+    u = new_unit_data(type, nullptr); // Would be preferable to have a file_index_type passed here
+
     g_nCorrupt += u->getNames().ReadBuffer(pBuf, unit_version);
 
-    if (unit_version < 47 && type == UNIT_ST_PC)
-    {
-        char buf[256];
-
-        strcpy(buf, u->getNames().Name());
-        CAP(buf);
-        u->getNames().Substitute(0, buf);
-    }
     char *c = nullptr;
     if (pBuf->SkipString(&c))
     {
@@ -687,7 +748,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setTitle(c);
     if (unit_version < 70)
     {
-        u->setTitle(fix_old_codes_to_html(u->getTitle(), &g_cServerConfig.getColorType()));
+        u->setTitle(old_codes_to_html(u->getTitle().c_str(), &g_cServerConfig.getColorType()));
     }
 
     if (pBuf->SkipString(&c))
@@ -697,7 +758,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfOutside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfOutside(fix_old_codes_to_html(u->getDescriptionOfOutside(), &g_cServerConfig.getColorType()));
+        u->setDescriptionOfOutside(old_codes_to_html(u->getDescriptionOfOutside().c_str(), &g_cServerConfig.getColorType()));
     }
 
     if (pBuf->SkipString(&c))
@@ -707,7 +768,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     u->setDescriptionOfInside(c);
     if (unit_version < 70)
     {
-        u->setDescriptionOfInside(fix_old_codes_to_html(u->getDescriptionOfInside(), &g_cServerConfig.getColorType()));
+        u->setDescriptionOfInside(old_codes_to_html(u->getDescriptionOfInside().c_str(), &g_cServerConfig.getColorType()));
     }
 
     g_nCorrupt += bread_extra(pBuf, u->getExtraList(), unit_version);
@@ -726,14 +787,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         u->setKey(nullptr);
     }
 
-    if (unit_version < 46)
-    {
-        u->setManipulateFlag(pBuf->ReadU16(&g_nCorrupt));
-    }
-    else
-    {
-        u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
-    }
+    u->setManipulateFlag(pBuf->ReadU32(&g_nCorrupt));
 
     u->setAllUnitFlags(pBuf->ReadU16(&g_nCorrupt));
     u->setBaseWeight(pBuf->ReadS16(&g_nCorrupt));
@@ -789,16 +843,23 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
             {
                 u->setUnitIn(reinterpret_cast<unit_data *>(tmpfi)); // To be normalized!
             }
-            else
+            else if (tmpfi->Empty())
             {
-                if (u->isPC())
+                // Front() of an empty list is undefined: a corrupt file can name an
+                // index with nothing loaded (an object, or an offline player)
+                slog(LOG_ALL, 0, "'%s' is in %s@%s, of which nothing is loaded; ignored.", whom, name, zone);
+            }
+            else if (u->isPC())
+            {
+                // Saved from unit_room(), so always a room
+                if (tmpfi->getType() == UNIT_ST_ROOM)
                 {
                     UCHAR(u)->setLastLocation(tmpfi->Front());
                 }
-                else
-                {
-                    u->setUnitIn(tmpfi->Front());
-                }
+            }
+            else
+            {
+                u->setUnitIn(tmpfi->Front());
             }
         }
     }
@@ -822,28 +883,7 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 PC_ACCOUNT(u).readFrom(*pBuf, unit_version, g_nCorrupt);
 
-                if (unit_version >= 48)
-                {
-                    UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
-                }
-                else
-                {
-                    /// @todo worse than spooky - why decrement a race?? Also could be really bad if race==0
-                    UCHAR(u)->setRace(UCHAR(u)->getRace() - 1);
-
-                    base_race_info_type *sex_race = nullptr;
-
-                    if (u->getSex() == SEX_MALE)
-                    {
-                        sex_race = &g_race_info[CHAR_RACE(u)].male;
-                    }
-                    else
-                    {
-                        sex_race = &g_race_info[CHAR_RACE(u)].female;
-                    }
-
-                    UPC(u)->setLifespan(sex_race->lifespan + dice(sex_race->lifespan_dice.reps, sex_race->lifespan_dice.size));
-                }
+                UPC(u)->setLifespan(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version < 50)
                 {
@@ -905,24 +945,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                     file_index_type *fi = nullptr;
 
-                    if ((fi = find_file_index(zone, name)))
+                    // As above: only a room with something loaded has a Front()
+                    if ((fi = find_file_index(zone, name)) && fi->getType() == UNIT_ST_ROOM && !fi->Empty())
                     {
                         UCHAR(u)->setLastLocation(fi->Front());
                     }
                 }
 
-                if (unit_version >= 42)
-                {
-                    g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
-                }
-                else
-                {
-                    char temp[pc_data::PC_MAX_NAME];
-                    memcpy(temp, u->getNames().Name(), pc_data::PC_MAX_NAME);
-                    temp[pc_data::PC_MAX_NAME - 1] = 0;
-                    str_lower(temp);
-                    UPC(u)->setFilename(temp);
-                }
+                g_nCorrupt += UPC(u)->readFilenameFrom(*pBuf);
 
                 g_nCorrupt += UPC(u)->readPasswordFrom(*pBuf);
 
@@ -948,24 +978,14 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 UPC(u)->setPlayerUID(pBuf->ReadS32(&g_nCorrupt));
 
-                if (unit_version >= 40)
-                {
-                    UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
-                }
+                UPC(u)->setNumberOfCrackAttempts(pBuf->ReadU16(&g_nCorrupt));
 
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getHometownPtr());
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getGuildPtr());
 
                 g_nCorrupt += pBuf->Skip32(); // skip value, was: PC_GUILD_TIME(u) obsolete
 
-                if (unit_version >= 38)
-                {
-                    UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
-                }
-                else
-                {
-                    UPC(u)->setVirtualPlayerLevel(CHAR_LEVEL(u));
-                }
+                UPC(u)->setVirtualPlayerLevel(pBuf->ReadU16(&g_nCorrupt));
 
                 if (unit_version <= 72)
                 {
@@ -980,11 +1000,6 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                 }
 
                 PC_TIME(u).readFrom(*pBuf, g_nCorrupt);
-
-                if (unit_version < 44)
-                {
-                    race_adjust(u);
-                }
 
                 g_nCorrupt += pBuf->ReadStringAlloc(UPC(u)->getBankPtr());
 
@@ -1002,30 +1017,23 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
                     j = pBuf->ReadU16(&g_nCorrupt);
                 }
 
+                // The count comes from the file: read every entry, but only keep
+                // those that fit (a corrupt count would write past the arrays)
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SPL_TREE_MAX)
                     {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSpellSKillAtIndexTo(i, skill);
+                        UPC(u)->setSpellLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSpellSKillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-                    UPC(u)->setSpellLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
 
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
                     }
 
-                    if (unit_version < 46)
-                    {
-                        if ((i < SPL_GROUP_MAX) && (PC_SPL_SKILL(u, i) == 0))
-                        {
-                            UPC(u)->setSpellSKillAtIndexTo(i, 1);
-                        }
-                    }
                 }
 
                 if (unit_version < 61)
@@ -1039,16 +1047,13 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < SKI_TREE_MAX)
                     {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setSkillAtIndexTo(i, skill);
+                        UPC(u)->setSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
@@ -1059,33 +1064,17 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    if (unit_version < 69)
+                    sbit16 skill = (unit_version < 69) ? pBuf->ReadU8(&g_nCorrupt) : pBuf->ReadS16(&g_nCorrupt);
+                    ubit8 level = pBuf->ReadU8(&g_nCorrupt);
+                    if (i < WPN_TREE_MAX)
                     {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
+                        UPC(u)->setWeaponSkillAtIndexTo(i, skill);
+                        UPC(u)->setWeaponSkillLevelAtIndexTo(i, level);
                     }
-                    else
-                    {
-                        UPC(u)->setWeaponSkillAtIndexTo(i, pBuf->ReadS16(&g_nCorrupt));
-                    }
-
-                    UPC(u)->setWeaponSkillLevelAtIndexTo(i, pBuf->ReadU8(&g_nCorrupt));
                     if (unit_version < 72)
                     {
                         g_nCorrupt += pBuf->Skip8();
                     }
-                    if (unit_version < 46)
-                    {
-                        if ((i < WPN_GROUP_MAX) && (PC_WPN_SKILL(u, i) == 0))
-                        {
-                            UPC(u)->setWeaponSkillAtIndexTo(i, 1);
-                        }
-                    }
-                }
-
-                if (unit_version < 47)
-                {
-                    UPC(u)->setWeaponSkillAtIndexTo(WPN_KICK, PC_SKI_SKILL(u, SKI_KICK));
-                    UPC(u)->setSkillAtIndexTo(SKI_KICK, 0);
                 }
 
                 UPC(u)->setNumberOfCrimesCommitted(pBuf->ReadU16(&g_nCorrupt));
@@ -1094,7 +1083,11 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
 
                 for (i = 0; i < j; i++)
                 {
-                    UPC(u)->setConditionAtIndexTo(i, pBuf->ReadS8(&g_nCorrupt));
+                    sbit8 condition = pBuf->ReadS8(&g_nCorrupt);
+                    if (i < 3) // DRUNK, FULL, THIRST: m_conditions[3]
+                    {
+                        UPC(u)->setConditionAtIndexTo(i, condition);
+                    }
                 }
 
                 if (unit_version >= 56)
@@ -1277,6 +1270,15 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
         g_nCorrupt++;
     }
 
+    // Catches the reads whose errors aren't counted above (e.g. the DIL variable
+    // lists in bread_dil(), the extra descriptions in bread_extra()) and the counts
+    // that can't be right (see dil_count_fits())
+    if (pBuf->IsCorrupt())
+    {
+        slog(LOG_ALL, 0, "FATAL: Corrupt data for '%s': a read past its end, or a count that can't fit.", whom);
+        g_nCorrupt++;
+    }
+
     if (g_nCorrupt == 0)
     {
         if (u->isChar() && CHAR_MONEY(u) && stspec)
@@ -1310,6 +1312,18 @@ unit_data *read_unit_string(CByteBuffer *pBuf, int type, int len, const char *wh
     else
     {
         slog(LOG_ALL, 0, "FATAL: UNIT CORRUPT: %s", u->getNames().Name());
+
+        // The unit isn't in any unit list yet, so free it here, or it leaks. Its DIL
+        // programs are already linked into their templates' program lists and its
+        // affects into the global affect list, so neither can just be dropped:
+        // bread_func_free() frees the function pointers (unlinking the programs)
+        // without calling any special routine, and the destructor unlinks the affects
+        // (unlink_affect() runs no affect code).
+#ifdef DMSERVER
+        bread_func_free(u->getFunctionPointer());
+        u->setFunctionPointer(nullptr);
+#endif
+        DELETE(unit_data, u);
 
         if ((type != UNIT_ST_PC) && (type != UNIT_ST_ROOM) && g_slime_fi)
         {
@@ -1415,6 +1429,17 @@ unit_data *read_unit(file_index_type *org_fi, int ins_list)
                          org_fi->getLength(),
                          str_cc(org_fi->getName(), org_fi->getZone()->getName().c_str()),
                          ins_list);
+    if (u == nullptr)
+    {
+        // Zone data comes from vmc, never from a player: a unit version this server
+        // can't read means the zones and the server don't match.
+        slog(LOG_OFF,
+             0,
+             "FATAL: Can't read %s@%s from the zone data: corrupt, or compiled for another unit version. Aborting server.",
+             org_fi->getName(),
+             org_fi->getZone()->getName().c_str());
+        exit(0);
+    }
     u->setFileIndex(org_fi);
 
     bonus_setup(u);

@@ -6,40 +6,20 @@ void pc_account_data::readFrom(CByteBuffer &buf, ubit8 unit_version, int &error)
     credit_limit = buf.ReadU32(&error);
     total_credit = buf.ReadU32(&error);
 
-    if (unit_version >= 44)
-    {
-        last4 = buf.ReadS16(&error);
-    }
-    else
-    {
-        if (unit_version >= 41)
-        {
-            error += buf.Skip32(); /* cc_time */
-        }
-        last4 = -1;
-    }
+    // read_unit_string() refuses versions below 48
+    last4 = buf.ReadS16(&error);
+    discount = buf.ReadU8(&error);
 
-    if (unit_version >= 45)
+    if (unit_version >= 52)
     {
-        discount = buf.ReadU8(&error);
-
-        if (unit_version >= 52)
-        {
-            flatrate = buf.ReadU32(&error);
-        }
-        else
-        {
-            flatrate = 0;
-        }
-
-        cracks = buf.ReadU8(&error);
+        flatrate = buf.ReadU32(&error);
     }
     else
     {
         flatrate = 0;
-        discount = 0;
-        cracks = 0;
     }
+
+    cracks = buf.ReadU8(&error);
 }
 
 void pc_account_data::writeTo(CByteBuffer &buf)

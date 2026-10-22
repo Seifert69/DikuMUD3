@@ -1,13 +1,13 @@
 #include "color.h"
 #include "textutil.h"
 
-#include <cstdlib>
 #include <string>
+#include <utility>
 
 #include <boost/test/unit_test.hpp>
 
 /**********************************************************************************
- * Fix_Old_Codes_Suite - fix_old_codes_to_html(), for units saved before v70
+ * Fix_Old_Codes_Suite - old_codes_to_html(), for units saved before v70
  */
 BOOST_AUTO_TEST_SUITE(Fix_Old_Codes_Suite)
 
@@ -15,10 +15,7 @@ static std::string convert(const char *old)
 {
     color_type colours; // A few names from etc/color.dat
     colours.create("default:cw bn:say_self:cw bn:time:cw bn");
-    char *html = fix_old_codes_to_html(old, &colours);
-    std::string result(html);
-    free(html);
-    return result;
+    return old_codes_to_html(old, &colours);
 }
 
 // The item names from issue #433. Only the ESC used to be removed, so the
@@ -105,6 +102,76 @@ BOOST_AUTO_TEST_CASE(amp_codes_and_escaping_unchanged)
     BOOST_TEST(convert("&cra red&cw sword") == "a red sword");
     BOOST_TEST(convert("\033bIt's red\033h") == "It&apos;s red");
     BOOST_TEST(convert("fish && chips") == "fish &amp; chips");
+}
+
+// What master's fix_old_codes_to_html(), which this replaces, gives for these:
+// codes that touch, the order the codes are removed in, && and &l
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_as_before)
+{
+    const std::pair<const char *, const char *> cases[] = {
+        {"&c&cwwx", "x"},
+        {"&&&n", "&amp;&lt;br/&gt;"},
+        {"&&cw", "&amp;cw"},
+        {"&c&c+ww&n", "&amp;cw&lt;br/&gt;"},
+        {"&l&&l", "&lt;pre&gt;&amp;l</pre>"},
+        {"a&&&&b", "a&amp;&amp;b"},
+        {"&[default]x&s9", "&amp;[default]x&amp;s9"},
+        {"\033Odefault\033P&c+&cwnx", "x"},
+        {"&x\n\r&n", "\n<br/>\n\r&lt;br/&gt;"},
+        {"it's <b>&h&p&f&bb&bn", "it&apos;s &lt;b&gt;"},
+        {"&b&bbn", ""},
+        {"&&&&&&", "&amp;&amp;&amp;"},
+    };
+    for (const auto &c : cases)
+    {
+        BOOST_TEST(convert(c.first) == c.second, c.first);
+    }
+}
+
+// The conversion used two stack buffers of 2 * MAX_STRING_LENGTH and asserted on
+// text of MAX_STRING_LENGTH or more. A long old text, e.g. in a dormant player's
+// file read by "when", converts like any other.
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_text_of_any_length)
+{
+    std::string text(3 * MAX_STRING_LENGTH, 'a');
+    text.replace(0, 9, "\033pX&cr<b>");
+    BOOST_TEST(old_codes_to_html(text.c_str()) == "X&lt;b&gt;" + std::string(3 * MAX_STRING_LENGTH - 9, 'a'));
+}
+
+// Text that grows past the old buffers as it converts: each ' becomes &apos;, &n
+// &lt;br/&gt; and \n\r <br/>\n\r
+BOOST_AUTO_TEST_CASE(old_codes_to_html_converts_text_that_grows)
+{
+    std::string quotes(5000, '\'');
+    std::string breaks;
+    std::string lines;
+    std::string quotes_html;
+    std::string breaks_html;
+    std::string lines_html;
+    for (int i = 0; i < 5000; i++)
+    {
+        quotes_html += "&apos;";
+        breaks += "&n";
+        breaks_html += "&lt;br/&gt;";
+        lines += "\n\r";
+        lines_html += "<br/>\n\r";
+    }
+    BOOST_TEST(old_codes_to_html(quotes.c_str()) == quotes_html);
+    BOOST_TEST(old_codes_to_html(breaks.c_str()) == breaks_html);
+    BOOST_TEST(old_codes_to_html(lines.c_str()) == lines_html);
+}
+
+// After each replacement the conversion looks again from the start, as
+// str_substitute() does: a colour code that a removal joins together goes too
+BOOST_AUTO_TEST_CASE(old_codes_to_html_codes_joined_by_a_removal_go)
+{
+    BOOST_TEST(old_codes_to_html("&c&cwwx") == "x");
+    BOOST_TEST(old_codes_to_html("&&&n") == "&amp;&lt;br/&gt;");
+}
+
+BOOST_AUTO_TEST_CASE(old_codes_to_html_null_is_empty)
+{
+    BOOST_TEST(old_codes_to_html(nullptr).empty());
 }
 
 BOOST_AUTO_TEST_SUITE_END()

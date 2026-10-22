@@ -355,16 +355,17 @@ int dil_intr_insert(dilprg *p, ubit8 *lab, ubit8 *elab, ubit16 flags)
 
 void dil_free_var(dilvar *v)
 {
-    if (v->itype == DilIType_e::Global)
-    {
-        // It's a global variable, don't free it.
-        return;
-    }
-
+    // Every variable has its own copy of the name (the global index keeps another)
     if (v->name)
     {
         FREE(v->name);
         v->name = nullptr;
+    }
+
+    if (v->itype == DilIType_e::Global)
+    {
+        // It's a global variable, don't free its value.
+        return;
     }
 
     switch (v->type)
@@ -436,8 +437,8 @@ void dil_free_template(diltemplate *tmpl, int copy)
 
     if (tmpl->flags == DILFL_FREEME)
     {
-        /* free dummy template */
-        // FREE(tmpl->prgname); xxx
+        /* free dummy template, and the copy of the name bread_dil() gave it */
+        FREE(tmpl->prgname);
         tmpl->zone = nullptr;
         tmpl->argt = nullptr;
         tmpl->xrefs = nullptr;
@@ -1775,7 +1776,7 @@ int dil_init(spec_arg *sarg)
     return SFR_SHARE;
 }
 
-static void dil_free_dilargs(dilargstype *dilargs)
+void dil_free_dilargs(dilargstype *dilargs)
 {
     if (dilargs->name)
         FREE(dilargs->name);
@@ -1948,23 +1949,34 @@ int dil_destroy(const char *name, unit_data *u)
     return FALSE;
 }
 
+/**
+ * Binds var (of its own type) to the shared value of the global called name in the
+ * global index, creating it there if needed. If the index already has it with
+ * another type, var becomes an empty DILV_INVALID variable. Returns whether it was
+ * bound.
+ */
+bool dil_bind_global_var(dilvar *var, const char *name)
+{
+    dilvar *v = getDilGlobalDilVar(name, var->type);
+    if (v)
+    {
+        var->itype = DilIType_e::Global;
+        var->val = v->val;
+        return true;
+    }
+    var->itype = DilIType_e::Regular;
+    var->type = DilVarType_e::DILV_INVALID;
+    var->val.string = nullptr;
+    return false;
+}
+
 void dil_init_vars(int varc, dilframe *frm)
 {
     for (int i = 0; i < varc; i++)
     {
-        if (frm->vars[i].name)
+        if (frm->vars[i].name && dil_bind_global_var(&frm->vars[i], frm->vars[i].name))
         {
-            dilvar *v = getDilGlobalDilVar(frm->vars[i].name, frm->vars[i].type);
-
-            if (v)
-            {
-                frm->vars[i].itype = DilIType_e::Global;
-                frm->vars[i].val = v->val;
-                continue;
-            }
-            
-            // Error, set it as invalid and fall through
-            frm->vars[i].type = DilVarType_e::DILV_INVALID;
+            continue;
         }
 
         frm->vars[i].itype = DilIType_e::Regular;

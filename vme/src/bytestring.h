@@ -21,6 +21,19 @@ public:
     inline ubit32 GetReadPosition() { return m_nReadPos; }
     inline const ubit8 *GetData() { return m_pData; }
 
+    /// True once any read has failed since the last Clear()/ClearCorrupt(): a
+    /// read past the end of the data, or a length or count that can't fit in it.
+    /// Callers that ignore a read's return value still get caught by this.
+    inline bool IsCorrupt() const { return m_bCorrupt; }
+    inline void ClearCorrupt() { m_bCorrupt = false; }
+    /// Marks the data corrupt and returns 1: for a reader outside this class that
+    /// finds a value which can't be right, e.g. a negative count.
+    inline int Corrupt()
+    {
+        m_bCorrupt = true;
+        return 1;
+    }
+
     void SetReadPosition(ubit32 nReadPosition);
     void SetLength(ubit32 nLen);
     void SetData(ubit8 *pData, ubit32 nLength);
@@ -30,6 +43,7 @@ public:
     {
         m_nReadPos = 0;
         m_nLength = 0;
+        m_bCorrupt = false;
         assert(m_nAllocated > 0);
         *m_pData = 0;
     }
@@ -94,12 +108,14 @@ public:
 protected:
     void SetSize(ubit32 nSize);
     void IncreaseSize(ubit32 nSize);
+    int StringLengthAtReadPos(ubit32 *pnLen);
 
 private:
     ubit32 m_nReadPos;
     ubit32 m_nLength;
     ubit32 m_nAllocated;
     ubit8 *m_pData;
+    bool m_bCorrupt;
 };
 
 ubit8 bread_ubit8(ubit8 **buf);

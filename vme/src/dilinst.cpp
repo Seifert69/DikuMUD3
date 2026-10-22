@@ -1121,18 +1121,7 @@ void dil_push_frame(dilprg *p, diltemplate *rtmpl)
             frm->vars[i].type = rtmpl->vart[i];
             if (rtmpl->varg[i])
             {
-                frm->vars[i].itype = DilIType_e::Global;
-                dilvar *v = getDilGlobalDilVar(rtmpl->varg[i], frm->vars[i].type);
-                if (v)
-                {
-                    frm->vars[i].val = v->val;
-                }
-                else
-                {
-                    frm->vars[i].itype = DilIType_e::Regular;
-                    frm->vars[i].type = DilVarType_e::DILV_INVALID;
-                    frm->vars[i].val.string = nullptr;
-                }
+                dil_bind_global_var(&frm->vars[i], rtmpl->varg[i]);
                 continue;
             }
 

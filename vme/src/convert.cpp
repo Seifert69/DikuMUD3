@@ -283,9 +283,30 @@ int shall_exclude(const char *name)
     return FALSE;
 }
 
+/**
+ * A player file this server can't read because of its unit version is kept, not
+ * erased as corrupt: newer files are what an older server finds after a rollback,
+ * versions 37-47 were read until versions below 48 were refused, and master
+ * stopped on the others rather than erase them. Says so and returns true for such
+ * a file.
+ */
+static bool kept_unreadable_version()
+{
+    if (g_nUnreadableVersion < 0)
+    {
+        return false;
+    }
+    std::cout << "Unit version " << g_nUnreadableVersion << " can't be read by this server (version " << UNIT_VERSION
+              << "): player file KEPT." << std::endl;
+    return true;
+}
+
 unit_data *convert_load_player(const char *name)
 {
     unit_data *ch = nullptr;
+
+    // Reset first: a return before load_player() must not leave the previous file's version
+    g_nUnreadableVersion = -1;
 
     if (!player_exists(name))
     {
@@ -584,6 +605,10 @@ void convert_file()
                         temp = dir_itr->path().filename().string();
                         pc = convert_load_player(temp.c_str());
 
+                        if (pc == nullptr && kept_unreadable_version())
+                        {
+                            continue;
+                        }
                         if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
@@ -688,6 +713,10 @@ void cleanup()
                         std::cout << temp;
                         pc = convert_load_player(temp.c_str());
 
+                        if (pc == nullptr && kept_unreadable_version())
+                        {
+                            continue;
+                        }
                         if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;

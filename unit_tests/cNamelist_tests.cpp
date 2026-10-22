@@ -1,6 +1,8 @@
 #define BOOST_TEST_MODULE "cNamelists Unit Tests"
+#include "bytestring.h"
 #include "namelist.h"
 
+#include <string>
 #include <vector>
 
 #include <boost/test/unit_test.hpp>
@@ -1496,6 +1498,50 @@ BOOST_AUTO_TEST_CASE(insert_name_ordered_equal_length_is_stable)
     BOOST_REQUIRE(list.Length() == 2);
     BOOST_TEST(std::string(list.Name(0)) == "axe");
     BOOST_TEST(std::string(list.Name(1)) == "bow");
+}
+
+// ReadBuffer() reads a count and then that many names. A corrupt count (up to
+// 2^31) made it append, and realloc, that many times after the data had run
+// out, which hung the server.
+BOOST_AUTO_TEST_CASE(ReadBuffer_huge_count_stops_at_the_end_of_the_data)
+{
+    CByteBuffer buf;
+    buf.Append32(0x7FFFFFFF);
+    buf.AppendString("first");
+    buf.AppendString("second");
+
+    cNamelist names;
+    BOOST_TEST(names.ReadBuffer(&buf, 77) == 1);
+    BOOST_TEST(names.Length() == 2);
+    BOOST_TEST(std::string(names.Name(0)) == "first");
+    BOOST_TEST(std::string(names.Name(1)) == "second");
+}
+
+// A negative count is corrupt at once, as in cintlist::ReadBuffer(), not read
+// as 4 billion with a name appended for every string left in the buffer
+BOOST_AUTO_TEST_CASE(ReadBuffer_negative_count_corrupt_at_once)
+{
+    CByteBuffer buf;
+    buf.Append32(0xFFFFFFFF);
+    buf.AppendString("first");
+    buf.AppendString("second");
+
+    cNamelist names;
+    BOOST_TEST(names.ReadBuffer(&buf, 77) == 1);
+    BOOST_TEST(buf.IsCorrupt());
+    BOOST_TEST(names.Length() == 0);
+}
+
+BOOST_AUTO_TEST_CASE(ReadBuffer_reads_a_valid_list)
+{
+    CByteBuffer buf;
+    buf.Append32(2);
+    buf.AppendString("first");
+    buf.AppendString("second");
+
+    cNamelist names;
+    BOOST_TEST(names.ReadBuffer(&buf, 77) == 0);
+    BOOST_TEST(names.Length() == 2);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

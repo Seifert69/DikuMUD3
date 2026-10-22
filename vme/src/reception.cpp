@@ -20,6 +20,7 @@
 #include "utils.h"
 #include "zon_basis.h"
 
+#include <algorithm>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -438,6 +439,68 @@ int save_contents(const char *pFileName, unit_data *unit, int fast, int bContain
 /* and place them inside 'unit' by unit_to_unit and possibly equip */
 /* Return the top level unit loaded                                */
 
+// True for the header of the new version, the one written since: both names "_obsoleted"
+static bool is_marker_header(const objheaderold &ho)
+{
+    return memcmp(ho.zone, "_obsoleted", 11) == 0 && memcmp(ho.unit, "_obsoleted", 11) == 0;
+}
+
+/*
+ * After an item that was corrupt, moves the read position to where the next item
+ * starts: where reading the item stopped, or else its end by its header length,
+ * as either may be what is corrupt. Returns false, and leaves the position, if
+ * neither is the end of the data or a header in the current format.
+ */
+static bool next_item_at(CByteBuffer &buf, ubit32 nItemStart, ubit32 nLength)
+{
+    auto starts_item = [&buf](ubit32 pos)
+    {
+        if (pos == buf.GetLength())
+        {
+            return true;
+        }
+        objheaderold ho;
+        if (pos > buf.GetLength() || buf.GetLength() - pos < sizeof(ho))
+        {
+            return false;
+        }
+        memcpy(&ho, buf.GetData() + pos, sizeof(ho));
+        return is_marker_header(ho);
+    };
+
+    if (starts_item(buf.GetReadPosition()))
+    {
+        return true;
+    }
+    if (nLength <= buf.GetLength() - nItemStart && starts_item(nItemStart + nLength))
+    {
+        buf.SetReadPosition(nItemStart + nLength);
+        return true;
+    }
+    return false;
+}
+
+// After an item is read. A corrupt one, rejected (pRead is nullptr) or made a slime,
+// may have left the read anywhere in it: the read moves on to the next item. False
+// when the next item can't be found, and nothing more of the file can be read.
+static bool past_bad_item(CByteBuffer &buf, ubit32 nItemStart, const objheadernew &hn, const unit_data *pRead)
+{
+    if (!g_nCorrupt && pRead && pRead->getFileIndex() != g_slime_fi)
+    {
+        return true;
+    }
+    if (!next_item_at(buf, nItemStart, hn.length))
+    {
+        slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
+        return false;
+    }
+    if (g_nCorrupt)
+    {
+        slog(LOG_ALL, 0, "Inventory UNIT %s@%s corrupt: skipped, a slime in its place.", hn.unit, hn.zone);
+    }
+    return true;
+}
+
 unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
 {
     objheaderold ho;
@@ -445,7 +508,7 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
     file_index_type *fi = nullptr;
     unit_data *pnew = nullptr;
     unit_data *pnew_tmp = nullptr;
-    unit_data *pstack[25];
+    unit_data *pstack[25] = {};
     int len = 0;
     int init = 0;
     int frame = 0;
@@ -498,15 +561,19 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         {
             break;
         }
+        // The names come from the file: end them, or strcmp() and strcpy() read past them
+        ho.zone[sizeof(ho.zone) - 1] = 0;
+        ho.unit[sizeof(ho.unit) - 1] = 0;
 
-        // It's the new version if both are equal to "obsoleted"
-        if ((strcmp(ho.zone, "_obsoleted") == 0) && (strcmp(ho.unit, "_obsoleted") == 0))
+        if (is_marker_header(ho))
         {
             // It's a new version
             if (InvBuf.Read((ubit8 *)&hn, sizeof(hn)))
             {
                 break;
             }
+            hn.zone[sizeof(hn.zone) - 1] = 0;
+            hn.unit[sizeof(hn.unit) - 1] = 0;
         }
         else
         {
@@ -524,6 +591,27 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
         fi = find_file_index(hn.zone, hn.unit);
 
         pnew = nullptr;
+
+        // The level is the item's depth: 1 for an item carried, one more inside each
+        // container (see add_units()). pstack has one container per level, so a level
+        // past it, or 0, is corrupt: placed at the nearest one there is. A level can
+        // skip some: the contents of a container that isn't saved (UNIT_FL_NOSAVE)
+        // come one level deeper than the item before them.
+        if (hn.level < 1 || hn.level >= (int)(sizeof(pstack) / sizeof(pstack[0])))
+        {
+            const int level = std::max(1, std::min((int)hn.level, (int)(sizeof(pstack) / sizeof(pstack[0])) - 1));
+            slog(LOG_ALL,
+                 0,
+                 "Corrupted inventory %s: %s@%s at level %d, placed at level %d.",
+                 pFileName,
+                 hn.unit,
+                 hn.zone,
+                 hn.level,
+                 level);
+            hn.level = level;
+        }
+
+        const ubit32 nItemStart = InvBuf.GetReadPosition();
 
         equip_ok = TRUE;
 
@@ -546,9 +634,13 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 pnew = read_unit(g_slime_fi); // Inserts unit into glist
                 pnew_tmp = read_unit_string(&InvBuf, hn.type, hn.length, "preslime", FALSE);
 
-                if (g_nCorrupt)
+                if (!past_bad_item(InvBuf, nItemStart, hn, pnew_tmp))
                 {
-                    slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
+                    extract_unit(pnew); // the slime, already in the unit list
+                    if (pnew_tmp)
+                    {
+                        extract_unit(pnew_tmp); // made a slime by read_unit(), so in the list too
+                    }
                     break;
                 }
 
@@ -561,13 +653,26 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             {
                 pnew_tmp = nullptr;
                 pnew = read_unit_string(&InvBuf, hn.type, hn.length, str_cc(fi->getName(), fi->getZone()->getName().c_str()));
-                if (g_nCorrupt)
+                if (!past_bad_item(InvBuf, nItemStart, hn, pnew))
                 {
-                    slog(LOG_ALL, 0, "Inventory UNIT corrupt!");
+                    if (pnew)
+                    {
+                        extract_unit(pnew); // made a slime by read_unit(), so in the unit list
+                    }
                     break;
                 }
-                pnew->setFileIndex(fi);
-                insert_in_unit_list(pnew);
+                if (pnew == nullptr)
+                {
+                    // Rejected outright (its version or type): nothing was made of it
+                    pnew = read_unit(g_slime_fi); // Inserts unit into glist
+                }
+                // A corrupt unit comes back as a slime from read_unit(), which has
+                // already put it in the unit list
+                if (pnew->getFileIndex() != g_slime_fi)
+                {
+                    pnew->setFileIndex(fi);
+                    insert_in_unit_list(pnew);
+                }
             }
 
             if (pnew_tmp && pnew)
@@ -576,7 +681,16 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
                 pnew->setDescriptionOfOutside(str);
                 pnew->setTitle(str);
                 pnew->getNames().PrependName(str_cc("slime of ", pnew_tmp->getNames().Name() ? pnew_tmp->getNames().Name() : "void"));
-                delete pnew_tmp;
+                if (pnew_tmp->getFileIndex() == g_slime_fi)
+                {
+                    // Corrupt, so read_unit() made it a slime in the unit list
+                    extract_unit(pnew_tmp);
+                }
+                else
+                {
+                    DELETE(unit_data, pnew_tmp);
+                }
+                pnew_tmp = nullptr;
             }
         }
 
@@ -609,6 +723,12 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             if (hn.level > frame)
             {
                 unit_to_unit(pnew, pstack[frame]);
+                // Levels skipped (see above): an item later at one of them goes beside
+                // this one, so its container is this one's
+                for (int i = frame + 1; i < hn.level; i++)
+                {
+                    pstack[i] = pnew;
+                }
                 frame = hn.level;
             }
             else
@@ -618,7 +738,12 @@ unit_data *base_load_contents(const char *pFileName, const unit_data *unit)
             }
 
             /* IS_CHAR() needed, since a potential char may have been slimed! */
-            if (hn.equip && equip_ok && pnew->getUnitIn()->isChar())
+            if (hn.equip && equip_ok && pnew->getUnitIn()->isChar() && (!pnew->isObj() || hn.equip > WEAR_MAX))
+            {
+                // A corrupt file: equip_char() asserts on these, so it is carried
+                slog(LOG_ALL, 0, "Inventory UNIT %s@%s has bad equip position %d: carried.", hn.unit, hn.zone, hn.equip);
+            }
+            else if (hn.equip && equip_ok && pnew->getUnitIn()->isChar())
             {
                 if (!equipment(pnew->getUnitIn(), hn.equip)) // Saw a crash bug 2023-04-10. Suspect old prg33@hades DIL equipping
                 {

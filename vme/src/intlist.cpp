@@ -55,14 +55,24 @@ int cintlist::ReadBuffer(CByteBuffer *pBuf)
     {
         return 1;
     }
+    if (len < 0)
+    {
+        return pBuf->Corrupt();
+    }
 
+    // Stop at the end of the data: a corrupt count can be up to 2^31, and
+    // reading on would append (and realloc) that many times.
     for (i = 0; i < len; i++)
     {
         c = pBuf->ReadS32(&corrupt);
+        if (corrupt)
+        {
+            return 1;
+        }
         Append(c);
     }
 
-    return corrupt;
+    return 0;
 }
 
 void cintlist::bread(ubit8 **b)
@@ -132,7 +142,7 @@ void cintlist::Remove(int idx)
     {
         if (idx != length - 1)
         {
-            memmove(&intlist[idx], &intlist[idx + 1], sizeof(int) * (length - idx));
+            memmove(&intlist[idx], &intlist[idx + 1], sizeof(int) * (length - idx - 1));
         }
         length--;
         if (length == 0)

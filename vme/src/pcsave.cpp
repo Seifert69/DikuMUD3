@@ -414,7 +414,6 @@ void save_player(unit_data *pc)
 /* String is allocated                              */
 unit_data *load_player_file(FILE *pFile)
 {
-    unit_data *pc = nullptr;
     ubit32 nPlyLen = 0;
     ubit32 n = 0;
     sbit32 id = 0;
@@ -434,27 +433,28 @@ unit_data *load_player_file(FILE *pFile)
         return nullptr;
     }
 
+    // The length comes from the file: it must fit in what is left of it, or it
+    // is corrupt. A length near 2^32 used to wrap the buffer size in
+    // IncreaseSize() and fread() then wrote past the end of the buffer.
+    const long nLeft = fsize(pFile) - ftell(pFile);
+    if (nPlyLen == 0 || nLeft < 0 || nPlyLen > static_cast<unsigned long>(nLeft))
+    {
+        slog(LOG_ALL, 0, "ERROR: PC FILE RECORDED LENGTH %u, BUT ONLY %ld BYTES IN THE FILE!", nPlyLen, nLeft);
+        return nullptr;
+    }
+
     pBuf = &g_FileBuffer;
     n = pBuf->FileRead(pFile, nPlyLen);
 
     if (n != nPlyLen)
     {
         slog(LOG_ALL, 0, "ERROR: PC FILE LENGTH MISMATCHED RECORDED LENGTH!");
-    }
-
-    pc = read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
-
-    if (pc == nullptr)
-    {
         return nullptr;
     }
 
-    if (g_nCorrupt)
-    {
-        return nullptr;
-    }
-
-    return pc;
+    // nullptr if the player is corrupt: read_unit_string() frees a corrupt unit
+    // and returns nothing else for a player
+    return read_unit_string(pBuf, UNIT_ST_PC, nPlyLen, "Player");
 }
 
 /* Read player from file, starting at index "index"   */
@@ -477,7 +477,6 @@ unit_data *load_player(const char *pName)
     }
 
     pc = load_player_file(pFile);
-    assign_player_file_index(pc);
 
     fclose(pFile);
 
@@ -488,6 +487,7 @@ unit_data *load_player(const char *pName)
     }
     else
     {
+        assign_player_file_index(pc);
         stop_affect(pc);
         stop_all_special(pc);
         DeactivateDil(pc);

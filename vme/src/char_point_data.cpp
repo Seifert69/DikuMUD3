@@ -412,23 +412,16 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     natural_armour = buf.ReadU8(&error);
 
-    if (unit_version <= 74)
+    if (unit_version <= 74) // read_unit_string() refuses versions below 48
     {
-        if (unit_version >= 39)
+        ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
+        speed = spd;
+        if (unit->isPC())
         {
-            ubit8 spd = buf.ReadU8(&error); // Ensure correct conversion
-            speed = spd;
-            if (unit->isPC())
+            if (speed < SPEED_MIN)
             {
-                if (speed < SPEED_MIN)
-                {
-                    speed = SPEED_DEFAULT;
-                }
+                speed = SPEED_DEFAULT;
             }
-        }
-        else
-        {
-            speed = SPEED_DEFAULT;
         }
     }
     else // Speed for version 75 and up
@@ -454,20 +447,23 @@ void char_point_data::readFrom(CByteBuffer &buf, ubit8 unit_version, unit_data *
 
     int j = buf.ReadU8(&error);
 
+    // The count comes from the file: read every entry, but only keep those that
+    // fit (a corrupt count, up to 255, would write past both arrays)
     for (int i = 0; i < j; i++)
     {
-        if (unit_version < 69)
+        sbit16 ability = (unit_version < 69) ? buf.ReadU8(&error) : buf.ReadS16(&error);
+        if (i < ABIL_TREE_MAX)
         {
-            abilities[i] = buf.ReadU8(&error);
-        }
-        else
-        {
-            abilities[i] = buf.ReadS16(&error);
+            abilities[i] = ability;
         }
 
         if (unit->isPC())
         {
-            UPC(unit)->setAbilityLevelAtIndexTo(i, buf.ReadU8(&error));
+            ubit8 abil_level = buf.ReadU8(&error);
+            if (i < ABIL_TREE_MAX)
+            {
+                UPC(unit)->setAbilityLevelAtIndexTo(i, abil_level);
+            }
             if (unit_version < 72)
             {
                 error += buf.Skip8();
