@@ -11,6 +11,7 @@ class pc_data : public char_data
 {
 public:
     static constexpr auto PC_MAX_PASSWORD = 13; ///< Max length of any pc-password
+    static constexpr auto PC_PWD_USED = 8;      ///< Characters of a password that crypt() (DES) uses
     static constexpr auto PC_MAX_NAME = 15;     ///< 14 Characters + Null
     static size_t g_world_nopc;                 ///< number of chars in the world
 
