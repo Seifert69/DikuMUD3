@@ -176,6 +176,14 @@ public:
     /// @}
 
     /**
+     * @name Session log
+     * @{
+     */
+    bool isSessionLogged() const;
+    void setSessionLogged(bool value);
+    /// @}
+
+    /**
      * @name Lifespan
      * @{
      */
@@ -344,6 +352,7 @@ private:
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
+    bool m_session_logged{false};                        ///< A login is in the session log and no logout yet (not saved)
     ubit16 m_lifespan{0};                                ///< How many year to live....
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
     ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level

@@ -88,6 +88,7 @@ set(VME_SRCS
         room_data.cpp room_data.h
         room_direction_data.cpp room_direction_data.h
         sector.cpp sector.h
+        sessionlog.cpp sessionlog.h
         signals.cpp signals.h
         skills.cpp skills.h
         slime.cpp slime.h
