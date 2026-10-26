@@ -64,6 +64,28 @@ int eliza_booted = FALSE;
 
 static char words[400];
 
+/// The oracle's fixed buffers and the longest player text each step can take.
+
+/// buf in oracle()
+constexpr size_t ORACLE_BUF_SIZE = 2 * MAX_INPUT_LENGTH;
+
+/// What preprocess_string can take into ORACLE_BUF_SIZE. It pads punctuation (one byte becomes three, "!" becomes
+/// " ! ") and its rules then grow words ("id " becomes "i would "). The worst repeated text found by a search
+/// over units of up to four tokens ("!id") grows 10/3 times, so this allows 4 times and the two spaces at the ends.
+constexpr size_t ORACLE_MAX_RAW_LINE = ORACLE_BUF_SIZE / 4 - 1;
+static_assert(4 * ORACLE_MAX_RAW_LINE + 2 < ORACLE_BUF_SIZE, "preprocess_string grows a line up to 4 times");
+
+/// The preprocessed line the rest of the oracle works on: fix() can double it into words, and od->laststr holds it
+constexpr size_t ORACLE_MAX_LINE = (sizeof(words) - 1) / 2;
+static_assert(ORACLE_MAX_LINE < sizeof(oracle_data::laststr), "od->laststr holds a preprocessed line");
+static_assert(2 * ORACLE_MAX_LINE < sizeof(words), "fix() can double the words");
+
+/// resp in response()
+constexpr size_t ORACLE_RESP_SIZE = 400;
+
+/// What response() copies into resp: grammar() then grows " you am " by one byte per 7 (adjacent matches share a space)
+constexpr size_t ORACLE_RESP_COPY_MAX = ORACLE_RESP_SIZE - 1 - ORACLE_RESP_SIZE / 7;
+
 /* ============================================================= */
 
 void preprocess_string(char *str, oracle_data *od)
@@ -407,7 +429,7 @@ int eliza_retrieve_memory(oracle_data *od)
   */
 char *response(oracle_data *od, int subjno)
 {
-    static char resp[400];
+    static char resp[ORACLE_RESP_SIZE];
     char c1 = 0;
     char *cp = nullptr;
     int i = 0;
@@ -439,7 +461,7 @@ char *response(oracle_data *od, int subjno)
         switch (*cp)
         {
             case '%':
-                for (i = 0; words[i] != 0; i++)
+                for (i = 0; words[i] != 0 && k < (int)ORACLE_RESP_COPY_MAX; i++)
                 {
                     c1 = words[i] & 0177;
                     if (c1 != 0)
@@ -450,14 +472,17 @@ char *response(oracle_data *od, int subjno)
                 break;
 
             case '&':
-                for (i = 0; od->patient->getNames().Name()[i] != 0; i++)
+                for (i = 0; od->patient->getNames().Name()[i] != 0 && k < (int)ORACLE_RESP_COPY_MAX; i++)
                 {
                     resp[k++] = od->patient->getNames().Name()[i];
                 }
                 break;
 
             default:
-                resp[k++] = *cp;
+                if (k < (int)ORACLE_RESP_COPY_MAX)
+                {
+                    resp[k++] = *cp;
+                }
                 break;
         }
     }
@@ -512,6 +537,11 @@ char *eliza_process(oracle_data *od, char *s)
     }
 
     preprocess_string(s, od);
+
+    if (strlen(s) > ORACLE_MAX_LINE)
+    {
+        return nullptr;
+    }
 
     if (strcmp(s, od->laststr) == 0)
     {
@@ -633,7 +663,7 @@ void eliza_log(unit_data *who, const char *str, int comms)
 int oracle(spec_arg *sarg)
 {
     static int comms = 0;
-    char buf[2 * MAX_INPUT_LENGTH];
+    char buf[ORACLE_BUF_SIZE];
     char *response = nullptr;
     oracle_data *od = nullptr;
     int i = 0;
@@ -756,6 +786,11 @@ int oracle(spec_arg *sarg)
     }
 
     comms++;
+
+    if (strlen(sarg->arg) > ORACLE_MAX_RAW_LINE)
+    {
+        return SFR_SHARE; // Too long for preprocess_string's buffer, as for any line the oracle can't follow
+    }
 
     strcpy(buf, sarg->arg);
     response = eliza_process(od, buf);
