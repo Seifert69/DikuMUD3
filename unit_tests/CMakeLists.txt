@@ -9,11 +9,15 @@ add_executable(vme_unit_tests
         FixtureBase.cpp FixtureBase.h
         account_cpp_tests.cpp
         cNamelist_tests.cpp
+        cintlist_tests.cpp
         color_type_tests.cpp
         combat_packet_tests.cpp
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
+        pc_data_tests.cpp
+        sessionlog_tests.cpp
+        textutil_tests.cpp
         weather_cpp_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)

@@ -93,6 +93,7 @@ set(MPLEX_SRCS
         ../room_data.cpp ../room_data.h
         ../room_direction_data.cpp ../room_direction_data.h
         ../sector.cpp
+        ../sessionlog.cpp ../sessionlog.h
         ../signals.cpp
         ../skills.cpp ../skills.h
         ../slime.cpp ../slime.h

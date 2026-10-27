@@ -94,9 +94,13 @@
     const userScrolled = () => (out.userScrollAt = performance.now());
     for (const ev of ["wheel", "touchmove", "pointerdown"]) out.el.addEventListener(ev, userScrolled, { passive: true });
     out.el.addEventListener("scroll", () => {
-        // While new output waits for our scroll to the end (next frame), the browser can fire
-        // scroll events that are not the player scrolling up; only the player's own count then.
-        if (out.scrollQueued && performance.now() - (out.userScrollAt || 0) > 500) return;
+        // Only the player scrolls away from the end. The browser scrolls by itself too, e.g.
+        // while new output waits for the next frame, or when an image above (the logo) loads
+        // and the log grows: then keep following. 1 s covers a touch flick's glide.
+        if (performance.now() - (out.userScrollAt || 0) > 1000) {
+            if (out.stick && !atBottom()) scrollToEnd();
+            return;
+        }
         out.stick = atBottom();
         if (out.stick) {
             out.unseen = 0;
@@ -119,6 +123,11 @@
             out.pill.hidden = true;
         });
     }
+
+    // An image (the logo) that loads after the scroll to the end makes the log taller; follow it
+    out.el.addEventListener("load", e => {
+        if (e.target.tagName === "IMG" && out.stick) scrollToEnd();
+    }, true);
 
     function push(node) {
         if (out.gap && out.el.lastElementChild && !out.el.lastElementChild.classList.contains("gap")) out.el.append(el("div", "gap"));
@@ -282,7 +291,9 @@
         const x = el("button", "btn close", "Close");
         x.type = "button";
         x.dataset.close = "";
-        r.append(x, serverHtml(html));
+        const bar = el("div", "reader-bar"); // sticky: Close stays in view, above the text
+        bar.append(x);
+        r.append(bar, serverHtml(html));
         openScrim(r);
         x.focus();
     }
@@ -468,7 +479,7 @@
     const dock = $("#combat");
 
     // Built once, so the Scroll log keeps its lines and scroll position between redraws.
-    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), took: el("span", "cb-took"), flee: el("button", "btn warn", "Flee"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
+    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), took: el("span", "cb-took"), flee: el("button", "btn warn", "Flee"), hide: el("button", "iconbtn cb-hide", "✕"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
     {
         const head = el("div", "cb-head");
         const vit = el("div", "cb-vitals");
@@ -485,7 +496,10 @@
         }
         cb.flee.type = "button";
         cb.flee.dataset.cmd = "flee";
-        head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee);
+        cb.hide.type = "button";
+        cb.hide.title = "Hide until this fight is over";
+        cb.hide.setAttribute("aria-label", cb.hide.title);
+        head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee, cb.hide);
         cb.log.setAttribute("role", "log");
         cb.log.setAttribute("aria-label", "Combat log");
         dock.append(head, cb.body, cb.log);
@@ -497,6 +511,11 @@
         if (!dock.hidden) renderDock();
         else sys(`Combat panel: ${view} view.`);
     }
+    cb.hide.addEventListener("click", () => {
+        combat.dismissed = true; // until the fight is over, see endCombat
+        dock.hidden = true;
+        focusInput();
+    });
     dock.addEventListener("click", e => {
         const b = e.target.closest("[data-cbview]");
         if (!b) return;
@@ -520,10 +539,15 @@
     // The fight is over: show that, then hide the dock and forget the fight after a while.
     function endCombat(delay) {
         combat.active = false;
+        clearTimeout(combat.staleTimer);
         closeCombatGroup();
-        scheduleDock();
         clearTimeout(combat.hideTimer);
+        if (combat.dismissed) delay = 0; // put away by the player: just forget the fight
+        else scheduleDock();
+        combat.dismissed = false; // the next fight shows again
         combat.hideTimer = setTimeout(() => {
+            cancelAnimationFrame(combat.drawFrame); // a redraw queued by endCombat would show it again
+            combat.drawQueued = false;
             dock.hidden = true;
             combat.rows.clear();
             combat.lines = [];
@@ -545,8 +569,9 @@
             else endCombat(6000); // the death can follow the end of the fight
             return;
         }
-        if (j.end || !Array.isArray(j.list) || !j.list.length) {
-            endCombat(6000);
+        // Nobody hostile left in the list (e.g. moved to another room by force): the fight is over
+        if (j.end || !Array.isArray(j.list) || !j.list.some(c => c.foe)) {
+            endCombat(j.end ? 6000 : 3000);
             return;
         }
         clearTimeout(combat.hideTimer);
@@ -566,6 +591,9 @@
             combat.rows.set(c.id, r);
         }
         combat.blowsAt = Date.now();
+        // A packet comes every round (3 s); without one for 4 rounds the fight is gone
+        clearTimeout(combat.staleTimer);
+        combat.staleTimer = setTimeout(() => endCombat(2000), 12000);
         for (const [id, r] of combat.rows) if (!seen.has(id) && !r.dead) combat.rows.delete(id); // fled or left
         scheduleDock();
     }
@@ -603,14 +631,15 @@
     function scheduleDock() {
         if (combat.drawQueued) return;
         combat.drawQueued = true;
-        requestAnimationFrame(() => {
+        combat.drawFrame = requestAnimationFrame(() => {
             combat.drawQueued = false;
             renderDock();
         });
     }
 
     function renderDock() {
-        dock.hidden = false;
+        dock.hidden = !!combat.dismissed;
+        if (combat.dismissed) return;
         dock.classList.toggle("over", !combat.active);
         cb.tag.replaceChildren(el("i"), combat.active ? "Fighting" : "Combat over");
         cb.round.textContent = combat.hasData && combat.round ? `Round ${combat.round}` : "";
@@ -895,6 +924,7 @@
             showHtml(ev);
             for (const e of ev.events) {
                 if (e.type === "prompt") {
+                    if (relogin.active && relogin.inMenu) stopRelogin();
                     if (e.bars) renderVitals(e.bars);
                     $("#ptext").textContent = e.text || "›";
                 } else if (e.type === "room") {
@@ -939,14 +969,14 @@
      * It covers the log, so it repeats what the server said since the last line was sent:
      * a refused password is followed by the rules and a new prompt.
      */
-    function serverLinesSinceSend() {
+    function serverLinesSinceSend(max = 6) {
         let node = out.mark?.isConnected ? out.mark.nextElementSibling : out.el.lastElementChild;
         const lines = [];
         for (; node; node = node.nextElementSibling) {
             if (node.classList.contains("echo")) continue;
             lines.push(...node.innerText.split("\n").map(l => l.trim()).filter(Boolean));
         }
-        return lines.slice(-6);
+        return lines.slice(-max);
     }
 
     function showPasswordDialog() {
@@ -1025,7 +1055,7 @@
 
     function startRelogin() {
         if (!relogin.creds) return;
-        Object.assign(relogin, { active: true, sentPw: false });
+        Object.assign(relogin, { active: true, sentPw: false, inMenu: false });
         clearTimeout(relogin.timer);
         relogin.timer = setTimeout(stopRelogin, 30000);
     }
@@ -1040,15 +1070,23 @@
         if (/Welcome back .*, you last visited/.test(text)) {
             if (relogin.pending) relogin.creds = relogin.pending;
             relogin.pending = null;
-            stopRelogin();
+            if (relogin.active) relogin.inMenu = true; // a relogin goes on into the game
+            else stopRelogin();
         } else if (/Wrong password/.test(text)) {
             relogin.creds = relogin.pending = null;
             stopRelogin();
-        } else if (relogin.active) {
+        } else if (relogin.active && /Throw the other copy out\?/.test(text)) {
+            send("Yes"); // that copy is this page's lost connection (comes after "Welcome back"); some servers want the whole word
+        } else if (relogin.active && !relogin.inMenu) {
             if (/By what name do they call you\?/.test(text)) send(relogin.creds.name);
-            else if (/Throw the other copy out\? \(Y\/N\)/.test(text)) send("y"); // that copy is this page's lost connection
             else if (/Press \[enter\] and wait for the password prompt/.test(text)) send("");
             else if (/Did I get that right/.test(text)) stopRelogin(); // the character is gone: leave it to the player
+        }
+        // The login menu, maybe in the same message: "1) Enter Valhalla" (gods), "3) Enter the game." (players)
+        if (relogin.active && relogin.inMenu && /Make your choice/.test(text)) {
+            const m = /(\w)\)\s*Enter (the game|Valhalla)/i.exec(serverLinesSinceSend(40).join("\n"));
+            if (m) send(m[1]);
+            stopRelogin();
         }
     }
 
@@ -1383,8 +1421,9 @@
     /* ======================================================================
      * Start
      * ====================================================================== */
-    // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>")
-    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame, out };
+    // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>"),
+    // and drop the connection as the network would: DikuDebug.drop()
+    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame, out, drop: () => S.conn?.ws?.close() };
 
     prefersLight.addEventListener("change", applySettings);
     applySettings();

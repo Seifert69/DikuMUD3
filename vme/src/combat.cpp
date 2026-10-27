@@ -525,6 +525,18 @@ void cCombat::sendWebRound()
     std::vector<unit_data *> allies;
     web_combat_members(pOwner, foes, allies);
 
+    // Nobody to fight here (e.g. the owner was moved to another room while its
+    // combat goes on): to the web client the fight is over.
+    if (foes.empty())
+    {
+        if (bWebSent)
+        {
+            web_send(pOwner, combat_packet::endJSON(nRound));
+            bWebSent = false;
+        }
+        return;
+    }
+
     std::vector<combat_packet::Entry> list;
     list.reserve(foes.size() + allies.size() + 1);
 

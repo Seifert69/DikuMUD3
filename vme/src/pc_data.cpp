@@ -1,5 +1,11 @@
 #include "pc_data.h"
 
+#if defined __APPLE__ && __MACH__
+    #include <unistd.h>
+#elif defined LINUX
+    #include <crypt.h>
+#endif
+
 #include "act_other.h"
 #include "affect.h"
 #include "comm.h"
@@ -14,6 +20,7 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "reception.h"
+#include "sessionlog.h"
 #include "slog.h"
 #include "utils.h"
 
@@ -191,7 +198,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     }
 
     /* New player stats. Level can be zero after reroll while ID is not. */
-    if ((CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this))
+    const bool new_player = (CHAR_LEVEL(this) == 0) && PC_IS_UNSAVED(this);
+    if (new_player)
     {
         slog(LOG_BRIEF, 0, "%s[%s] (GUEST) has entered the game.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
 
@@ -226,6 +234,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     {
         save_player(this);
     }
+
+    sessionlog_login(this, new_player);
 
     start_affect(this); /* Activate affect ticks */
     // start_all_special(this); /* Activate fptr ticks   */
@@ -319,6 +329,7 @@ void pc_data::reconnect_game(descriptor_data *d)
     }
     act("$1n has reconnected.", eA_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), eTO_ROOM);
     slog(LOG_BRIEF, getLevelOfWizardInvisibility(), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
+    sessionlog_reconnect(this);
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     m_time.setPlayerLastConnectTime(time(nullptr));
     //      stop_affect(ch);
@@ -600,6 +611,16 @@ void pc_data::incrementNumberOfCrackAttempts()
     m_crack_attempts++;
 }
 
+bool pc_data::isSessionLogged() const
+{
+    return m_session_logged;
+}
+
+void pc_data::setSessionLogged(bool value)
+{
+    m_session_logged = value;
+}
+
 ubit16 pc_data::getLifespan() const
 {
     return m_lifespan;
@@ -829,6 +850,20 @@ void pc_data::setPassword(const char *value)
 {
     strncpy(m_pwd, value, PC_MAX_PASSWORD);
     m_pwd[PC_MAX_PASSWORD - 1] = 0;
+}
+
+bool pc_data::setNewPassword(const char *plain)
+{
+    // The name is the salt. crypt() returns NULL or a failure token ("*0") for input it
+    // can't hash, which must never be stored as the password.
+    const char *hashed = crypt(plain, m_filename);
+    if (hashed == nullptr || hashed[0] == '*')
+    {
+        slog(LOG_ALL, 0, "crypt() failed for a new password of %s; the password is unchanged.", m_filename);
+        return false;
+    }
+    setPassword(hashed);
+    return true;
 }
 
 int pc_data::readPasswordFrom(CByteBuffer &buf)
