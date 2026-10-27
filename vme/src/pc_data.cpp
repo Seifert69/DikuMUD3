@@ -840,10 +840,17 @@ const char *pc_data::getPassword() const
     return m_pwd;
 }
 
-void pc_data::setPassword(const char *value)
+bool pc_data::setPassword(const char *value)
 {
+    // crypt() returns NULL or a failure token ("*0") for input it can't hash, which must
+    // never be stored as the password
+    if (value == nullptr || value[0] == '*')
+    {
+        return false;
+    }
     strncpy(m_pwd, value, PC_MAX_PASSWORD);
     m_pwd[PC_MAX_PASSWORD - 1] = 0;
+    return true;
 }
 
 int pc_data::readPasswordFrom(CByteBuffer &buf)

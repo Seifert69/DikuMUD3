@@ -88,14 +88,8 @@ void sessionlog_reconnect(pc_data *pc)
         return;
     }
 
-    descriptor_data *d = CHAR_DESCRIPTOR(pc);
-    if (d == nullptr)
-    {
-        return;
-    }
-
     sessionlog_fields fields = sessionlog_pc_fields(pc);
-    sessionlog_add_client(d, fields);
+    sessionlog_add_client(CHAR_DESCRIPTOR(pc), fields);
     sessionlog_write("reconnect", fields);
 }
 

@@ -527,16 +527,12 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    // NULL or a failure token ("*0") if crypt() can't hash it; not expected with at most 8
-    // characters and a salt of letters, but a failure must never be stored as the password
-    const char *hashed = crypt(arg, PC_FILENAME(d->getCharacter()));
-    if (hashed == nullptr || hashed[0] == '*')
+    if (!UPC(d->getCharacter())->setPassword(crypt(arg, PC_FILENAME(d->getCharacter()))))
     {
         send_to_descriptor("<br/>That password can't be used, please choose another.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);
         return;
     }
-    UPC(d->getCharacter())->setPassword(hashed);
 
     set_descriptor_fptr(d, nanny_pwd_confirm, TRUE);
 }

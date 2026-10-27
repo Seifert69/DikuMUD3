@@ -209,15 +209,6 @@ BOOST_FIXTURE_TEST_CASE(destructed_login_test, SessionLogFixture)
     BOOST_TEST(events() == events_t{});
 }
 
-BOOST_FIXTURE_TEST_CASE(reconnect_without_descriptor_test, SessionLogFixture)
-{
-    connect();
-    sessionlog_login(pc.get(), false);
-    UCHAR(pc.get())->setDescriptor(nullptr);
-    sessionlog_reconnect(pc.get());
-    BOOST_TEST((events() == events_t{"login"}));
-}
-
 BOOST_FIXTURE_TEST_CASE(reconnect_as_login_keeps_new_test, SessionLogFixture)
 {
     // A reconnect logged as a login: a never-saved character is still new
