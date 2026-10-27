@@ -94,9 +94,13 @@
     const userScrolled = () => (out.userScrollAt = performance.now());
     for (const ev of ["wheel", "touchmove", "pointerdown"]) out.el.addEventListener(ev, userScrolled, { passive: true });
     out.el.addEventListener("scroll", () => {
-        // While new output waits for our scroll to the end (next frame), the browser can fire
-        // scroll events that are not the player scrolling up; only the player's own count then.
-        if (out.scrollQueued && performance.now() - (out.userScrollAt || 0) > 500) return;
+        // Only the player scrolls away from the end. The browser scrolls by itself too, e.g.
+        // while new output waits for the next frame, or when an image above (the logo) loads
+        // and the log grows: then keep following. 1 s covers a touch flick's glide.
+        if (performance.now() - (out.userScrollAt || 0) > 1000) {
+            if (out.stick && !atBottom()) scrollToEnd();
+            return;
+        }
         out.stick = atBottom();
         if (out.stick) {
             out.unseen = 0;
@@ -119,6 +123,11 @@
             out.pill.hidden = true;
         });
     }
+
+    // An image (the logo) that loads after the scroll to the end makes the log taller; follow it
+    out.el.addEventListener("load", e => {
+        if (e.target.tagName === "IMG" && out.stick) scrollToEnd();
+    }, true);
 
     function push(node) {
         if (out.gap && out.el.lastElementChild && !out.el.lastElementChild.classList.contains("gap")) out.el.append(el("div", "gap"));
@@ -282,7 +291,9 @@
         const x = el("button", "btn close", "Close");
         x.type = "button";
         x.dataset.close = "";
-        r.append(x, serverHtml(html));
+        const bar = el("div", "reader-bar"); // sticky: Close stays in view, above the text
+        bar.append(x);
+        r.append(bar, serverHtml(html));
         openScrim(r);
         x.focus();
     }
@@ -468,7 +479,7 @@
     const dock = $("#combat");
 
     // Built once, so the Scroll log keeps its lines and scroll position between redraws.
-    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), took: el("span", "cb-took"), flee: el("button", "btn warn", "Flee"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
+    const cb = { tag: el("span", "cb-tag"), round: el("span", "cb-round"), took: el("span", "cb-took"), flee: el("button", "btn warn", "Flee"), hide: el("button", "iconbtn cb-hide", "✕"), body: el("div", "cb-body"), log: el("div", "cb-log"), stick: true, userAt: 0 };
     {
         const head = el("div", "cb-head");
         const vit = el("div", "cb-vitals");
@@ -485,7 +496,10 @@
         }
         cb.flee.type = "button";
         cb.flee.dataset.cmd = "flee";
-        head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee);
+        cb.hide.type = "button";
+        cb.hide.title = "Hide until this fight is over";
+        cb.hide.setAttribute("aria-label", cb.hide.title);
+        head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee, cb.hide);
         cb.log.setAttribute("role", "log");
         cb.log.setAttribute("aria-label", "Combat log");
         dock.append(head, cb.body, cb.log);
@@ -497,6 +511,11 @@
         if (!dock.hidden) renderDock();
         else sys(`Combat panel: ${view} view.`);
     }
+    cb.hide.addEventListener("click", () => {
+        combat.dismissed = true; // until the fight is over, see endCombat
+        dock.hidden = true;
+        focusInput();
+    });
     dock.addEventListener("click", e => {
         const b = e.target.closest("[data-cbview]");
         if (!b) return;
@@ -520,10 +539,15 @@
     // The fight is over: show that, then hide the dock and forget the fight after a while.
     function endCombat(delay) {
         combat.active = false;
+        clearTimeout(combat.staleTimer);
         closeCombatGroup();
-        scheduleDock();
         clearTimeout(combat.hideTimer);
+        if (combat.dismissed) delay = 0; // put away by the player: just forget the fight
+        else scheduleDock();
+        combat.dismissed = false; // the next fight shows again
         combat.hideTimer = setTimeout(() => {
+            cancelAnimationFrame(combat.drawFrame); // a redraw queued by endCombat would show it again
+            combat.drawQueued = false;
             dock.hidden = true;
             combat.rows.clear();
             combat.lines = [];
@@ -545,8 +569,9 @@
             else endCombat(6000); // the death can follow the end of the fight
             return;
         }
-        if (j.end || !Array.isArray(j.list) || !j.list.length) {
-            endCombat(6000);
+        // Nobody hostile left in the list (e.g. moved to another room by force): the fight is over
+        if (j.end || !Array.isArray(j.list) || !j.list.some(c => c.foe)) {
+            endCombat(j.end ? 6000 : 3000);
             return;
         }
         clearTimeout(combat.hideTimer);
@@ -566,6 +591,9 @@
             combat.rows.set(c.id, r);
         }
         combat.blowsAt = Date.now();
+        // A packet comes every round (3 s); without one for 4 rounds the fight is gone
+        clearTimeout(combat.staleTimer);
+        combat.staleTimer = setTimeout(() => endCombat(2000), 12000);
         for (const [id, r] of combat.rows) if (!seen.has(id) && !r.dead) combat.rows.delete(id); // fled or left
         scheduleDock();
     }
@@ -603,14 +631,15 @@
     function scheduleDock() {
         if (combat.drawQueued) return;
         combat.drawQueued = true;
-        requestAnimationFrame(() => {
+        combat.drawFrame = requestAnimationFrame(() => {
             combat.drawQueued = false;
             renderDock();
         });
     }
 
     function renderDock() {
-        dock.hidden = false;
+        dock.hidden = !!combat.dismissed;
+        if (combat.dismissed) return;
         dock.classList.toggle("over", !combat.active);
         cb.tag.replaceChildren(el("i"), combat.active ? "Fighting" : "Combat over");
         cb.round.textContent = combat.hasData && combat.round ? `Round ${combat.round}` : "";
