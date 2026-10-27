@@ -722,7 +722,9 @@ void str_insert(char *str, char *itxt)
 
 /*
    Scan the string 'str' for the string OLD and replace each
-   occurence with new. Does not handle memory overrun so str
+   occurence with new. An empty OLD changes nothing. The search starts again
+   from the beginning of str after every replacement, so it never ends when
+   new contains OLD. Does not handle memory overrun so str
    must be large enough to hold it.
    */
 void str_substitute(const char *old, const char *newstr, char *str)
@@ -752,26 +754,32 @@ void str_substitute(const char *old, const char *newstr, char *str)
     }
 
     olen = strlen(old);
+    if (olen == 0)
+    {
+        return;
+    }
+
     slen = strlen(str);
 
     while ((b = str_str(str, old)))
     {
+        // The tail after the match plus its NUL
+        const int tail = slen - (int)(b - str) - olen + 1;
+
         if (nlen <= olen)
         {
             if (nlen != 0)
             {
                 memcpy(b, newstr, nlen);
             }
-            memmove(b + nlen, b + olen, slen - (b - str + olen) + 1);
-            slen -= olen - nlen;
+            memmove(b + nlen, b + olen, tail);
         }
         else
         {
-            // The tail after the match plus its NUL: slen - (b - str) - olen + 1 bytes
-            memmove(b + nlen, b + olen, slen - (b - str) - olen + 1);
+            memmove(b + nlen, b + olen, tail);
             memcpy(b, newstr, nlen);
-            slen += nlen - olen;
         }
+        slen += nlen - olen;
     }
 }
 
