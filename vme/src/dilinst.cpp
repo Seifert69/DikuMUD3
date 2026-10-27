@@ -362,7 +362,7 @@ void dilfi_setpwd(dilprg *p)
         else if (v1->val.ptr && v2->val.ptr)
         {
             auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
-            pc->setPassword(crypt(reinterpret_cast<char *>(v2->val.ptr), PC_FILENAME(pc)));
+            pc->setNewPassword(reinterpret_cast<char *>(v2->val.ptr));
         }
     }
     dilval::free(v1);

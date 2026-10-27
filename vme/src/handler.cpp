@@ -17,6 +17,7 @@
 #include "mobact.h"
 #include "money.h"
 #include "nanny.h"
+#include "sessionlog.h"
 #include "slog.h"
 #include "spec_assign.h"
 #include "unit_affected_type.h"
@@ -1096,6 +1097,7 @@ void extract_unit(unit_data *unit)
     {
         // slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
         UPC(unit)->gstate_tomenu(nullptr);
+        sessionlog_logout(UPC(unit));
     }
 
     DeactivateDil(unit);

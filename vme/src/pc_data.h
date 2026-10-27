@@ -11,6 +11,7 @@ class pc_data : public char_data
 {
 public:
     static constexpr auto PC_MAX_PASSWORD = 13; ///< Max length of any pc-password
+    static constexpr auto PC_PWD_USED = 8;      ///< Characters of a password that crypt() (DES) uses
     static constexpr auto PC_MAX_NAME = 15;     ///< 14 Characters + Null
     static size_t g_world_nopc;                 ///< number of chars in the world
 
@@ -176,6 +177,14 @@ public:
     /// @}
 
     /**
+     * @name Session log
+     * @{
+     */
+    bool isSessionLogged() const;
+    void setSessionLogged(bool value);
+    /// @}
+
+    /**
      * @name Lifespan
      * @{
      */
@@ -293,6 +302,7 @@ public:
      */
     const char *getPassword() const;
     void setPassword(const char *value);
+    bool setNewPassword(const char *plain); ///< Stores crypt() of it; false (unchanged) if crypt() fails
     int readPasswordFrom(CByteBuffer &buf);
     void truncatePassword();
     /// @}
@@ -344,6 +354,7 @@ private:
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
+    bool m_session_logged{false};                        ///< A login is in the session log and no logout yet (not saved)
     ubit16 m_lifespan{0};                                ///< How many year to live....
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
     ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level
