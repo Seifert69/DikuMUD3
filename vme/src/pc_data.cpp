@@ -1,5 +1,11 @@
 #include "pc_data.h"
 
+#if defined __APPLE__ && __MACH__
+    #include <unistd.h>
+#elif defined LINUX
+    #include <crypt.h>
+#endif
+
 #include "act_other.h"
 #include "affect.h"
 #include "comm.h"
@@ -840,17 +846,23 @@ const char *pc_data::getPassword() const
     return m_pwd;
 }
 
-bool pc_data::setPassword(const char *value)
+void pc_data::setPassword(const char *value)
 {
-    // crypt() returns NULL or a failure token ("*0") for input it can't hash, which must
-    // never be stored as the password
-    if (value == nullptr || value[0] == '*')
-    {
-        slog(LOG_ALL, 0, "crypt() failed for a new password of %s; the password is unchanged.", PC_FILENAME(this));
-        return false;
-    }
     strncpy(m_pwd, value, PC_MAX_PASSWORD);
     m_pwd[PC_MAX_PASSWORD - 1] = 0;
+}
+
+bool pc_data::setNewPassword(const char *plain)
+{
+    // The name is the salt. crypt() returns NULL or a failure token ("*0") for input it
+    // can't hash, which must never be stored as the password.
+    const char *hashed = crypt(plain, m_filename);
+    if (hashed == nullptr || hashed[0] == '*')
+    {
+        slog(LOG_ALL, 0, "crypt() failed for a new password of %s; the password is unchanged.", m_filename);
+        return false;
+    }
+    setPassword(hashed);
     return true;
 }
 

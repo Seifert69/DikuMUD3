@@ -527,7 +527,7 @@ void nanny_new_pwd(descriptor_data *d, char *arg)
         return;
     }
 
-    if (!UPC(d->getCharacter())->setPassword(crypt(arg, PC_FILENAME(d->getCharacter()))))
+    if (!UPC(d->getCharacter())->setNewPassword(arg))
     {
         send_to_descriptor("<br/>That password can't be used, please choose another.<br/>", d);
         set_descriptor_fptr(d, nanny_new_pwd, TRUE);

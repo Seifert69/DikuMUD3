@@ -301,7 +301,8 @@ public:
      * @{
      */
     const char *getPassword() const;
-    bool setPassword(const char *value); ///< false (password unchanged) for a crypt() failure
+    void setPassword(const char *value);
+    bool setNewPassword(const char *plain); ///< Stores crypt() of it; false (unchanged) if crypt() fails
     int readPasswordFrom(CByteBuffer &buf);
     void truncatePassword();
     /// @}
