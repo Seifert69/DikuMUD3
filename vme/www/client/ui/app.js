@@ -924,6 +924,7 @@
             showHtml(ev);
             for (const e of ev.events) {
                 if (e.type === "prompt") {
+                    if (relogin.active && relogin.inMenu) stopRelogin();
                     if (e.bars) renderVitals(e.bars);
                     $("#ptext").textContent = e.text || "›";
                 } else if (e.type === "room") {
@@ -968,14 +969,14 @@
      * It covers the log, so it repeats what the server said since the last line was sent:
      * a refused password is followed by the rules and a new prompt.
      */
-    function serverLinesSinceSend() {
+    function serverLinesSinceSend(max = 6) {
         let node = out.mark?.isConnected ? out.mark.nextElementSibling : out.el.lastElementChild;
         const lines = [];
         for (; node; node = node.nextElementSibling) {
             if (node.classList.contains("echo")) continue;
             lines.push(...node.innerText.split("\n").map(l => l.trim()).filter(Boolean));
         }
-        return lines.slice(-6);
+        return lines.slice(-max);
     }
 
     function showPasswordDialog() {
@@ -1054,7 +1055,7 @@
 
     function startRelogin() {
         if (!relogin.creds) return;
-        Object.assign(relogin, { active: true, sentPw: false });
+        Object.assign(relogin, { active: true, sentPw: false, inMenu: false });
         clearTimeout(relogin.timer);
         relogin.timer = setTimeout(stopRelogin, 30000);
     }
@@ -1069,15 +1070,23 @@
         if (/Welcome back .*, you last visited/.test(text)) {
             if (relogin.pending) relogin.creds = relogin.pending;
             relogin.pending = null;
-            stopRelogin();
+            if (relogin.active) relogin.inMenu = true; // a relogin goes on into the game
+            else stopRelogin();
         } else if (/Wrong password/.test(text)) {
             relogin.creds = relogin.pending = null;
             stopRelogin();
-        } else if (relogin.active) {
+        } else if (relogin.active && /Throw the other copy out\?/.test(text)) {
+            send("Yes"); // that copy is this page's lost connection (comes after "Welcome back"); some servers want the whole word
+        } else if (relogin.active && !relogin.inMenu) {
             if (/By what name do they call you\?/.test(text)) send(relogin.creds.name);
-            else if (/Throw the other copy out\? \(Y\/N\)/.test(text)) send("y"); // that copy is this page's lost connection
             else if (/Press \[enter\] and wait for the password prompt/.test(text)) send("");
             else if (/Did I get that right/.test(text)) stopRelogin(); // the character is gone: leave it to the player
+        }
+        // The login menu, maybe in the same message: "1) Enter Valhalla" (gods), "3) Enter the game." (players)
+        if (relogin.active && relogin.inMenu && /Make your choice/.test(text)) {
+            const m = /(\w)\)\s*Enter (the game|Valhalla)/i.exec(serverLinesSinceSend(40).join("\n"));
+            if (m) send(m[1]);
+            stopRelogin();
         }
     }
 
@@ -1412,8 +1421,9 @@
     /* ======================================================================
      * Start
      * ====================================================================== */
-    // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>")
-    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame, out };
+    // ?debug=1 lets the developer console feed server frames: DikuDebug.feed("<div class='hit_me'>…</div>"),
+    // and drop the connection as the network would: DikuDebug.drop()
+    if (new URLSearchParams(location.search).get("debug") === "1") window.DikuDebug = { feed: onFrame, out, drop: () => S.conn?.ws?.close() };
 
     prefersLight.addEventListener("change", applySettings);
     applySettings();
