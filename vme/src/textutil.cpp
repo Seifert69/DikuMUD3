@@ -767,7 +767,8 @@ void str_substitute(const char *old, const char *newstr, char *str)
         }
         else
         {
-            memmove(b + nlen, b + olen, slen - (b - str));
+            // The tail after the match plus its NUL: slen - (b - str) - olen + 1 bytes
+            memmove(b + nlen, b + olen, slen - (b - str) - olen + 1);
             memcpy(b, newstr, nlen);
             slen += nlen - olen;
         }
