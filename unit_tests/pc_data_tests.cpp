@@ -131,4 +131,56 @@ BOOST_FIXTURE_TEST_CASE(new_password_then_login, PasswordFixture)
     BOOST_TEST(!logs_in("abcdefg2"));
 }
 
+// Golden vectors: crypt(password, name) as player files store it (traditional DES, the
+// salt is the first 2 letters of the name). Before #449 a new password was cut at 12
+// characters, now at 8; DES reads only 8, so both store the same hash, and existing
+// players keep logging in with what they typed before.
+struct GoldenVector
+{
+    const char *name;
+    const char *password;
+    const char *hash;
+};
+
+static const GoldenVector GOLDEN[] = {
+    {"papi", "abc123", "pap3Dci16rN.k"},
+    {"papi", "abcd1234", "paU/35aOpJ8OA"},
+    {"papi", "abcde12345", "paQUaYazyUhic"},
+    {"seifert", "abc123", "se9mMZZTbypbE"},
+    {"seifert", "abcd1234", "seaVPNbho1KR2"},
+    {"seifert", "abcde12345", "seGL5DbN3qxJc"},
+};
+
+BOOST_FIXTURE_TEST_CASE(golden_vectors_before_and_after, PasswordFixture)
+{
+    for (const auto &v : GOLDEN)
+    {
+        BOOST_TEST_CONTEXT(v.name << " / " << v.password)
+        {
+            // crypt() here is still the DES the stored hashes were made with
+            BOOST_TEST(std::string(crypt(v.password, v.name)) == v.hash);
+            const std::string stored = std::string(v.hash).substr(0, pc_data::PC_MAX_PASSWORD - 1);
+
+            // Before: nanny_new_pwd() stored crypt() of the input cut at 12
+            BOOST_TEST(pc->setPassword(crypt(std::string(v.password).substr(0, 12).c_str(), v.name)));
+            BOOST_TEST(std::string(pc->getPassword()) == stored);
+
+            // After: check_pwd() cuts at 8 and accepts it, and the same hash is stored
+            bool accepted = false;
+            const std::string cut = checked(v.password, accepted);
+            BOOST_TEST(accepted);
+            BOOST_TEST(pc->setPassword(crypt(cut.c_str(), v.name)));
+            BOOST_TEST(std::string(pc->getPassword()) == stored);
+
+            // A hash stored before logs in with the same password, from a newer player
+            // file (12 characters) and from one at version 72 or older (10)
+            BOOST_TEST(pc->setPassword(v.hash));
+            BOOST_TEST(logs_in(v.password));
+            pc->truncatePassword();
+            BOOST_TEST(logs_in(v.password));
+            BOOST_TEST(!logs_in("abcd1235"));
+        }
+    }
+}
+
 BOOST_AUTO_TEST_SUITE_END()
