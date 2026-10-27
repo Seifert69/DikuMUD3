@@ -846,6 +846,7 @@ bool pc_data::setPassword(const char *value)
     // never be stored as the password
     if (value == nullptr || value[0] == '*')
     {
+        slog(LOG_ALL, 0, "crypt() failed for a new password of %s; the password is unchanged.", PC_FILENAME(this));
         return false;
     }
     strncpy(m_pwd, value, PC_MAX_PASSWORD);

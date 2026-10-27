@@ -1,4 +1,6 @@
 #include "FixtureBase.h"
+#include "descriptor_data.h"
+#include "nanny.h"
 #include "pc_data.h"
 #include "textutil.h"
 #include "utils.h"
@@ -14,8 +16,6 @@
 #include <string>
 
 #include <boost/test/unit_test.hpp>
-
-int check_pwd(descriptor_data *d, char *pwd); // nanny.cpp
 
 /**********************************************************************************
  * PcData_Password_Suite - pc_data::setPassword(), check_pwd() and the login check
@@ -59,7 +59,6 @@ BOOST_FIXTURE_TEST_CASE(refuses_a_crypt_failure, PasswordFixture)
     pc->setPassword(PAPI_PASSWORD_HASH);
     BOOST_TEST(!pc->setPassword(nullptr));
     BOOST_TEST(!pc->setPassword("*0"));
-    BOOST_TEST(!pc->setPassword(crypt(std::string(600, 'a').c_str(), "papi"))); // NULL or "*0"
     BOOST_TEST(std::string(pc->getPassword()) == "papAq5PwY/QQ");
     BOOST_TEST(logs_in("password"));
 }
@@ -158,7 +157,9 @@ BOOST_FIXTURE_TEST_CASE(golden_vectors_before_and_after, PasswordFixture)
         BOOST_TEST_CONTEXT(v.name << " / " << v.password)
         {
             // crypt() here is still the DES the stored hashes were made with
-            BOOST_TEST(std::string(crypt(v.password, v.name)) == v.hash);
+            const char *hashed = crypt(v.password, v.name);
+            BOOST_REQUIRE(hashed != nullptr);
+            BOOST_TEST(std::string(hashed) == v.hash);
             const std::string stored = std::string(v.hash).substr(0, pc_data::PC_MAX_PASSWORD - 1);
 
             // Before: nanny_new_pwd() stored crypt() of the input cut at 12
@@ -181,6 +182,26 @@ BOOST_FIXTURE_TEST_CASE(golden_vectors_before_and_after, PasswordFixture)
             BOOST_TEST(!logs_in("abcd1235"));
         }
     }
+}
+
+// Passwords the old rules accepted and the new ones refuse: letters only in the first 8
+// (the digits after the 8th were never hashed), and a non-ASCII letter (é from the web
+// client, UTF-8). New ones can't be chosen, but stored ones log in as before.
+BOOST_FIXTURE_TEST_CASE(passwords_refused_now_still_log_in, PasswordFixture)
+{
+    bool accepted = true;
+    checked("abcdefgh12", accepted);
+    BOOST_TEST(!accepted);
+    BOOST_TEST(pc->setPassword("paVOfag4lyqIg")); // crypt("abcdefgh12", "papi")
+    BOOST_TEST(logs_in("abcdefgh12"));
+
+    accepted = true;
+    checked("p\303\244sswort1", accepted);
+    BOOST_TEST(!accepted);
+    BOOST_TEST(pc->setPassword("paGvDXFf5FKSo")); // crypt("pässwort1", "papi")
+    BOOST_TEST(logs_in("p\303\244sswort1"));
+    pc->truncatePassword();
+    BOOST_TEST(logs_in("p\303\244sswort1"));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

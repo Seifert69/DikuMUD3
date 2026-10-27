@@ -1095,9 +1095,9 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
             else
             {
-                slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", ch->getNames().Name(), unt->getNames().Name());
                 if (UPC(unt)->setPassword(crypt(strarg, PC_FILENAME(unt))))
                 {
+                    slog(LOG_ALL, 0, "PASSWORD: %s changed %s's password.", ch->getNames().Name(), unt->getNames().Name());
                     send_to_char("The password has been set.<br/>", ch);
                 }
                 else

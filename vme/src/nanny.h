@@ -4,6 +4,7 @@
 
 int _parse_name(const char *arg, char *name);
 void check_idle();
+int check_pwd(descriptor_data *d, char *pwd);
 void enter_game(unit_data *ch, int dilway = FALSE);
 void nanny_close(descriptor_data *d, char *arg);
 void nanny_get_name(descriptor_data *d, char *arg);
