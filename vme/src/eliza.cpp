@@ -62,14 +62,31 @@ int eliza_maxkeywords = 0;
 
 int eliza_booted = FALSE;
 
-static char words[400];
+/// The oracle's text limits all follow from MAX_INPUT_LENGTH, the longest command line. The player's line is
+/// preprocessed in a buffer that holds any command argument (ORACLE_BUF_SIZE in eliza.h), then cut to
+/// ORACLE_MAX_LINE; the reply is itself a command, so it must fit a command line.
+
+/// The preprocessed line the rest of the oracle works on; a longer one is cut, and the oracle answers the start
+constexpr size_t ORACLE_MAX_LINE = 199;
+static_assert(ORACLE_MAX_LINE < sizeof(oracle_data::laststr), "od->laststr holds the line");
+
+/// Words taken from the line: fix() can double them ("i i" becomes "you you")
+static char words[2 * ORACLE_MAX_LINE + 2];
+
+/// resp in response(): command_interpreter() refuses a command longer than MAX_INPUT_LENGTH
+constexpr size_t ORACLE_RESP_SIZE = MAX_INPUT_LENGTH;
+
+/// What response() copies into resp: grammar() then grows " you am " by one byte per 7 (adjacent matches share a space)
+constexpr size_t ORACLE_RESP_COPY_MAX = ORACLE_RESP_SIZE - 1 - ORACLE_RESP_SIZE / 7;
+static_assert(sizeof(words) < ORACLE_RESP_COPY_MAX, "the words fit a reply");
 
 /* ============================================================= */
 
-void preprocess_string(char *str, oracle_data *od)
+void preprocess_string(char *str, const char *own_name)
 {
     str_lower(str);
     str_rem(str, '\'');
+    str_rem(str, '@'); // A reply quotes the player, and set_delayed_action() runs each part between '@' as a command
     str_blank_punct(str);
     str_chraround(str, ' ');
 
@@ -82,7 +99,7 @@ void preprocess_string(char *str, oracle_data *od)
     str_substitute(" im ", " i am ", str);
     str_substitute(" id ", " i would ", str);
     str_substitute(" but ", " , ", str);
-    str_substitute(od->own_name, " ", str);
+    str_substitute(own_name, " ", str);
 
     str_remspc(str);
 }
@@ -407,7 +424,7 @@ int eliza_retrieve_memory(oracle_data *od)
   */
 char *response(oracle_data *od, int subjno)
 {
-    static char resp[400];
+    static char resp[ORACLE_RESP_SIZE];
     char c1 = 0;
     char *cp = nullptr;
     int i = 0;
@@ -439,7 +456,7 @@ char *response(oracle_data *od, int subjno)
         switch (*cp)
         {
             case '%':
-                for (i = 0; words[i] != 0; i++)
+                for (i = 0; words[i] != 0 && k < (int)ORACLE_RESP_COPY_MAX; i++)
                 {
                     c1 = words[i] & 0177;
                     if (c1 != 0)
@@ -450,14 +467,17 @@ char *response(oracle_data *od, int subjno)
                 break;
 
             case '&':
-                for (i = 0; od->patient->getNames().Name()[i] != 0; i++)
+                for (i = 0; od->patient->getNames().Name()[i] != 0 && k < (int)ORACLE_RESP_COPY_MAX; i++)
                 {
                     resp[k++] = od->patient->getNames().Name()[i];
                 }
                 break;
 
             default:
-                resp[k++] = *cp;
+                if (k < (int)ORACLE_RESP_COPY_MAX)
+                {
+                    resp[k++] = *cp;
+                }
                 break;
         }
     }
@@ -511,7 +531,12 @@ char *eliza_process(oracle_data *od, char *s)
         return nullptr;
     }
 
-    preprocess_string(s, od);
+    preprocess_string(s, od->own_name);
+
+    if (strlen(s) > ORACLE_MAX_LINE)
+    {
+        s[ORACLE_MAX_LINE] = 0;
+    }
 
     if (strcmp(s, od->laststr) == 0)
     {
@@ -633,7 +658,7 @@ void eliza_log(unit_data *who, const char *str, int comms)
 int oracle(spec_arg *sarg)
 {
     static int comms = 0;
-    char buf[2 * MAX_INPUT_LENGTH];
+    char buf[ORACLE_BUF_SIZE];
     char *response = nullptr;
     oracle_data *od = nullptr;
     int i = 0;
@@ -757,7 +782,7 @@ int oracle(spec_arg *sarg)
 
     comms++;
 
-    strcpy(buf, sarg->arg);
+    snprintf(buf, MAX_INPUT_LENGTH, "%s", sarg->arg); // A command argument is shorter already
     response = eliza_process(od, buf);
     if (response == nullptr)
     {

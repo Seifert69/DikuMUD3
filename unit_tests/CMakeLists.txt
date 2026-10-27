@@ -12,6 +12,7 @@ add_executable(vme_unit_tests
         cintlist_tests.cpp
         color_type_tests.cpp
         combat_packet_tests.cpp
+        eliza_tests.cpp
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
