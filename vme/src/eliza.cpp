@@ -86,6 +86,7 @@ void preprocess_string(char *str, const char *own_name)
 {
     str_lower(str);
     str_rem(str, '\'');
+    str_rem(str, '@'); // A reply quotes the player, and set_delayed_action() runs each part between '@' as a command
     str_blank_punct(str);
     str_chraround(str, ' ');
 

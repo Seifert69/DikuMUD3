@@ -85,4 +85,12 @@ BOOST_AUTO_TEST_CASE(worst_growth_is_below_four_times)
     BOOST_TEST(worst < 4.0);
 }
 
+// A reply quotes the player's words, and each '@' in it starts a command for the oracle to run
+BOOST_AUTO_TEST_CASE(no_commands_from_the_player)
+{
+    char line[ORACLE_BUF_SIZE] = "i @kill papi you@drop all";
+    preprocess_string(line, "eliza");
+    BOOST_TEST(std::string(line) == " i kill papi youdrop all ");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
