@@ -62,33 +62,27 @@ int eliza_maxkeywords = 0;
 
 int eliza_booted = FALSE;
 
-static char words[400];
+/// The oracle's text limits all follow from MAX_INPUT_LENGTH, the longest command line. The player's line is
+/// preprocessed in a buffer that holds any command argument (ORACLE_BUF_SIZE in eliza.h), then cut to
+/// ORACLE_MAX_LINE; the reply is itself a command, so it must fit a command line.
 
-/// The oracle's fixed buffers and the longest player text each step can take.
+/// The preprocessed line the rest of the oracle works on; a longer one is cut, and the oracle answers the start
+constexpr size_t ORACLE_MAX_LINE = 199;
+static_assert(ORACLE_MAX_LINE < sizeof(oracle_data::laststr), "od->laststr holds the line");
 
-/// buf in oracle()
-constexpr size_t ORACLE_BUF_SIZE = 2 * MAX_INPUT_LENGTH;
+/// Words taken from the line: fix() can double them ("i i" becomes "you you")
+static char words[2 * ORACLE_MAX_LINE + 2];
 
-/// What preprocess_string can take into ORACLE_BUF_SIZE. It pads punctuation (one byte becomes three, "!" becomes
-/// " ! ") and its rules then grow words ("id " becomes "i would "). The worst repeated text found by a search
-/// over units of up to four tokens ("!id") grows 10/3 times, so this allows 4 times and the two spaces at the ends.
-constexpr size_t ORACLE_MAX_RAW_LINE = ORACLE_BUF_SIZE / 4 - 1;
-static_assert(4 * ORACLE_MAX_RAW_LINE + 2 < ORACLE_BUF_SIZE, "preprocess_string grows a line up to 4 times");
-
-/// The preprocessed line the rest of the oracle works on: fix() can double it into words, and od->laststr holds it
-constexpr size_t ORACLE_MAX_LINE = (sizeof(words) - 1) / 2;
-static_assert(ORACLE_MAX_LINE < sizeof(oracle_data::laststr), "od->laststr holds a preprocessed line");
-static_assert(2 * ORACLE_MAX_LINE < sizeof(words), "fix() can double the words");
-
-/// resp in response()
-constexpr size_t ORACLE_RESP_SIZE = 400;
+/// resp in response(): command_interpreter() refuses a command longer than MAX_INPUT_LENGTH
+constexpr size_t ORACLE_RESP_SIZE = MAX_INPUT_LENGTH;
 
 /// What response() copies into resp: grammar() then grows " you am " by one byte per 7 (adjacent matches share a space)
 constexpr size_t ORACLE_RESP_COPY_MAX = ORACLE_RESP_SIZE - 1 - ORACLE_RESP_SIZE / 7;
+static_assert(sizeof(words) < ORACLE_RESP_COPY_MAX, "the words fit a reply");
 
 /* ============================================================= */
 
-void preprocess_string(char *str, oracle_data *od)
+void preprocess_string(char *str, const char *own_name)
 {
     str_lower(str);
     str_rem(str, '\'');
@@ -104,7 +98,7 @@ void preprocess_string(char *str, oracle_data *od)
     str_substitute(" im ", " i am ", str);
     str_substitute(" id ", " i would ", str);
     str_substitute(" but ", " , ", str);
-    str_substitute(od->own_name, " ", str);
+    str_substitute(own_name, " ", str);
 
     str_remspc(str);
 }
@@ -536,11 +530,11 @@ char *eliza_process(oracle_data *od, char *s)
         return nullptr;
     }
 
-    preprocess_string(s, od);
+    preprocess_string(s, od->own_name);
 
     if (strlen(s) > ORACLE_MAX_LINE)
     {
-        return nullptr;
+        s[ORACLE_MAX_LINE] = 0;
     }
 
     if (strcmp(s, od->laststr) == 0)
@@ -787,12 +781,7 @@ int oracle(spec_arg *sarg)
 
     comms++;
 
-    if (strlen(sarg->arg) > ORACLE_MAX_RAW_LINE)
-    {
-        return SFR_SHARE; // Too long for preprocess_string's buffer, as for any line the oracle can't follow
-    }
-
-    strcpy(buf, sarg->arg);
+    snprintf(buf, MAX_INPUT_LENGTH, "%s", sarg->arg); // A command argument is shorter already
     response = eliza_process(od, buf);
     if (response == nullptr)
     {
