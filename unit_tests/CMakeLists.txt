@@ -15,6 +15,7 @@ add_executable(vme_unit_tests
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
+        pc_data_tests.cpp
         sessionlog_tests.cpp
         textutil_tests.cpp
         weather_cpp_tests.cpp
