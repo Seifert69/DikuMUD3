@@ -258,8 +258,7 @@ void game_loop()
         }
     }
     multi_close_all();
-    // Before waiting for the path thread, which can take a while: the closes above log
-    // their logouts first
+    // Before waiting for the path thread, which can take a while
     sessionlog_shutdown();
 
     // pthread_cancel(g_dijkstra_thread);

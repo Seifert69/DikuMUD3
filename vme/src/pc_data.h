@@ -22,8 +22,27 @@ public:
     void gstate_tomenu(dilprg *pdontstop);
     void gstate_togame(dilprg *pdontstart);
 
-    void disconnect_game();
-    void connect_game();
+    /// Where the character is, for the session log and g_no_players (not saved)
+    enum class game_link_e
+    {
+        out,       ///< Not counted: at the menu, not in the game, or loaded by an admin and not connected yet
+        connected, ///< Counted: in the game with a connection (a switched immortal's is on its body; none for a moment in a throw-out)
+        link_dead, ///< Lost its connection while in the game
+    };
+    /// Why disconnect_game() is called
+    enum class leave_e
+    {
+        link_lost, ///< The connection is lost; the character stays in the game (an unsaved one is then extracted)
+        left,      ///< The character leaves the game
+    };
+
+    // The one pair that logs entering and leaving the game and counts the
+    // players. A character is counted once, and a call in the wrong state
+    // logs nothing, except connect_game() on a connected character: that
+    // logs reconnect (a new connection took it over, a throw-out)
+    void connect_game(bool new_player);
+    void disconnect_game(leave_e why);
+    game_link_e getGameLink() const;
     void reconnect_game(descriptor_data *d);
 
     /**
@@ -174,14 +193,6 @@ public:
     ubit16 getNumberOfCrackAttempts() const;
     void setNumberOfCrackAttempts(ubit16 value);
     void incrementNumberOfCrackAttempts();
-    /// @}
-
-    /**
-     * @name Session log
-     * @{
-     */
-    bool isSessionLogged() const;
-    void setSessionLogged(bool value);
     /// @}
 
     /**
@@ -354,7 +365,7 @@ private:
     ubit16 m_flags{0};                                   ///< flags for PC setup (brief, noshout...)
     ubit16 m_nr_of_crimes{0};                            ///< Number of crimes committed
     ubit16 m_crack_attempts{0};                          ///< Number of wrong passwords entered
-    bool m_session_logged{false};                        ///< A login is in the session log and no logout yet (not saved)
+    game_link_e m_game_link{game_link_e::out};           ///< Set only by connect_game() and disconnect_game() (not saved)
     ubit16 m_lifespan{0};                                ///< How many year to live....
     sbit16 m_spells[SPL_TREE_MAX]{0};                    ///< The spells learned
     ubit8 m_spell_lvl[SPL_TREE_MAX]{0};                  ///< Practiced within that level

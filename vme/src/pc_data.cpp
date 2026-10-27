@@ -92,6 +92,8 @@ void pc_data::gstate_tomenu(dilprg *pdontstop)
         return;
     }
 
+    disconnect_game(leave_e::left);
+
     // slog(LOG_ALL, 0, "DEBUG: To menu %s", UNIT_NAME(this));
 
     // Every way out of the game passes here (quit, link dead, an unsaved
@@ -160,8 +162,6 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         m_time.setPlayerLastConnectTime(time(nullptr));
         set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
         dil_destroy("link_dead@basis", this);
-
-        connect_game();
     }
 
     unit_data *load_room = nullptr;
@@ -235,7 +235,8 @@ void pc_data::gstate_togame(dilprg *pdontstop)
         save_player(this);
     }
 
-    sessionlog_login(this, new_player);
+    // After the new id and the level, which the login line shows
+    connect_game(new_player);
 
     start_affect(this); /* Activate affect ticks */
     // start_all_special(this); /* Activate fptr ticks   */
@@ -249,7 +250,7 @@ void pc_data::gstate_togame(dilprg *pdontstop)
     dil_start_special(this, pdontstop);
 }
 
-void pc_data::connect_game()
+void pc_data::connect_game(bool new_player)
 {
     //  assert (CHAR_DESCRIPTOR (pc));
 
@@ -258,28 +259,56 @@ void pc_data::connect_game()
         return;
     }
 
-    m_time.setPlayerLastConnectTime(time(nullptr));
-    CHAR_DESCRIPTOR(this)->setLastLogonTime(time(nullptr));
-
+    // The logon times and the interpreter are set by the callers, before
+    // anything the character does on entering
     CHAR_DESCRIPTOR(this)->CreateBBS();
 
-    set_descriptor_fptr(CHAR_DESCRIPTOR(this), descriptor_interpreter, FALSE);
-
-    g_no_players++;
-    if (g_no_players > g_max_no_players)
+    if (m_game_link == game_link_e::out)
     {
-        g_max_no_players = g_no_players;
+        sessionlog_login(this, new_player);
     }
+    else
+    {
+        sessionlog_reconnect(this);
+    }
+
+    if (m_game_link != game_link_e::connected)
+    {
+        g_no_players++;
+        if (g_no_players > g_max_no_players)
+        {
+            g_max_no_players = g_no_players;
+        }
+    }
+    m_game_link = game_link_e::connected;
 }
 
-void pc_data::disconnect_game()
+void pc_data::disconnect_game(leave_e why)
 {
-    if (CHAR_DESCRIPTOR(this))
+    const bool was_connected = (m_game_link == game_link_e::connected);
+
+    if (was_connected)
     {
-        CHAR_DESCRIPTOR(this)->RemoveBBS();
+        if (CHAR_DESCRIPTOR(this))
+        {
+            CHAR_DESCRIPTOR(this)->RemoveBBS();
+        }
+        g_no_players--;
     }
 
-    g_no_players--;
+    if (why == leave_e::left)
+    {
+        if (m_game_link != game_link_e::out)
+        {
+            sessionlog_logout(this);
+        }
+        m_game_link = game_link_e::out;
+    }
+    else if (was_connected)
+    {
+        sessionlog_linkdead(this);
+        m_game_link = game_link_e::link_dead;
+    }
 }
 
 void pc_data::reconnect_game(descriptor_data *d)
@@ -306,7 +335,7 @@ void pc_data::reconnect_game(descriptor_data *d)
         return;
     }
 
-    connect_game();
+    connect_game(PC_IS_UNSAVED(this));
     /* MS2020
      color = UPC (ch)->color.save_string ();
      s printf (tbuf, "%s%s%s", CONTROL_COLOR_CREATE, color, CONTROL_COLOR_END);
@@ -329,7 +358,6 @@ void pc_data::reconnect_game(descriptor_data *d)
     }
     act("$1n has reconnected.", eA_HIDEINV, cActParameter(this), cActParameter(), cActParameter(), eTO_ROOM);
     slog(LOG_BRIEF, getLevelOfWizardInvisibility(), "%s[%s] has reconnected.", PC_FILENAME(this), CHAR_DESCRIPTOR(this)->getHostname());
-    sessionlog_reconnect(this);
     CHAR_DESCRIPTOR(this)->setLastLogonTime(::time(nullptr));
     m_time.setPlayerLastConnectTime(time(nullptr));
     //      stop_affect(ch);
@@ -611,14 +639,9 @@ void pc_data::incrementNumberOfCrackAttempts()
     m_crack_attempts++;
 }
 
-bool pc_data::isSessionLogged() const
+pc_data::game_link_e pc_data::getGameLink() const
 {
-    return m_session_logged;
-}
-
-void pc_data::setSessionLogged(bool value)
-{
-    m_session_logged = value;
+    return m_game_link;
 }
 
 ubit16 pc_data::getLifespan() const

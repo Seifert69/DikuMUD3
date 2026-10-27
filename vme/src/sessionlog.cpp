@@ -58,36 +58,23 @@ void sessionlog_shutdown()
     sessionlog_write("shutdown", {});
 }
 
-// A connection has taken over the character. Not logged for a character
-// without a connection (e.g. an admin 'load'), one already extracted while
-// entering the game, or a session already logged (e.g. an immortal entering
-// the game again from the menu).
+// The four below are called only by pc_data::connect_game() and
+// disconnect_game(), which decide when each event happens.
+
+// A connection has taken over a character that was not in the game, or one an
+// admin loaded
 void sessionlog_login(pc_data *pc, bool new_player)
 {
-    descriptor_data *d = CHAR_DESCRIPTOR(pc);
-    if (d == nullptr || pc->is_destructed() || pc->isSessionLogged())
-    {
-        return;
-    }
-
     sessionlog_fields fields = sessionlog_pc_fields(pc);
     fields.emplace_back("new", new_player ? 1 : 0);
-    sessionlog_add_client(d, fields);
+    sessionlog_add_client(CHAR_DESCRIPTOR(pc), fields);
     fields.emplace_back("played", pc->getPCTimeInformation().getTotalTimePlayedInSeconds());
     sessionlog_write("login", fields);
-    pc->setSessionLogged(true);
 }
 
-// A new connection has taken over a character already in the game. That is a
-// login if no session was logged for it (e.g. it was loaded by an admin).
+// A new connection has taken over a character already in the game
 void sessionlog_reconnect(pc_data *pc)
 {
-    if (!pc->isSessionLogged())
-    {
-        sessionlog_login(pc, PC_IS_UNSAVED(pc));
-        return;
-    }
-
     sessionlog_fields fields = sessionlog_pc_fields(pc);
     sessionlog_add_client(CHAR_DESCRIPTOR(pc), fields);
     sessionlog_write("reconnect", fields);
@@ -98,7 +85,7 @@ void sessionlog_reconnect(pc_data *pc)
 // ends those sessions.
 void sessionlog_linkdead(pc_data *pc)
 {
-    if (!pc->isSessionLogged() || g_mud_shutdown)
+    if (g_mud_shutdown)
     {
         return;
     }
@@ -106,16 +93,10 @@ void sessionlog_linkdead(pc_data *pc)
     sessionlog_write("linkdead", sessionlog_pc_fields(pc));
 }
 
-// The character leaves the game for good (quit, removed while link dead, ...).
-// No "played": a character never saved (a new one) still has the time from its
-// player file here; others are saved just before.
+// The character leaves the game (quit, the immortal menu, removed while link
+// dead, ...). No "played": for a character never saved (a new one) it is
+// still 0 here; others are saved just after.
 void sessionlog_logout(pc_data *pc)
 {
-    if (!pc->isSessionLogged())
-    {
-        return;
-    }
-
     sessionlog_write("logout", sessionlog_pc_fields(pc));
-    pc->setSessionLogged(false);
 }
