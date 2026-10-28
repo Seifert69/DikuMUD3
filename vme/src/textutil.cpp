@@ -722,14 +722,14 @@ void str_insert(char *str, char *itxt)
 
 /*
    Scan the string 'str' for the string OLD and replace each
-   occurence with new. An empty OLD changes nothing. The search starts again
-   from the beginning of str after every replacement, so it never ends when
-   new contains OLD. Does not handle memory overrun so str
-   must be large enough to hold it.
+   occurence with new. An empty OLD changes nothing. The search resumes after each replacement, so text
+   that new brings in is not searched again (as in the std::string overload).
+   Does not handle memory overrun so str must be large enough to hold it.
    */
 void str_substitute(const char *old, const char *newstr, char *str)
 {
     char *b = nullptr;
+    char *from = str;
     int olen = 0;
     int nlen = 0;
     int slen = 0;
@@ -761,7 +761,7 @@ void str_substitute(const char *old, const char *newstr, char *str)
 
     slen = strlen(str);
 
-    while ((b = str_str(str, old)))
+    while ((b = str_str(from, old)))
     {
         // The tail after the match plus its NUL
         const int tail = slen - (int)(b - str) - olen + 1;
@@ -779,7 +779,9 @@ void str_substitute(const char *old, const char *newstr, char *str)
             memmove(b + nlen, b + olen, tail);
             memcpy(b, newstr, nlen);
         }
+
         slen += nlen - olen;
+        from = b + nlen;
     }
 }
 
