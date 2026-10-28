@@ -17,7 +17,6 @@
 #include "mobact.h"
 #include "money.h"
 #include "nanny.h"
-#include "sessionlog.h"
 #include "slog.h"
 #include "spec_assign.h"
 #include "unit_affected_type.h"
@@ -1097,7 +1096,6 @@ void extract_unit(unit_data *unit)
     {
         // slog(LOG_ALL, 0, "DEBUG: Extracting player %s", UNIT_NAME(unit));
         UPC(unit)->gstate_tomenu(nullptr);
-        sessionlog_logout(UPC(unit));
     }
 
     DeactivateDil(unit);
@@ -1132,11 +1130,6 @@ void extract_unit(unit_data *unit)
 
     stop_fightfollow(unit);
     stop_snoopwrite(unit);
-
-    if (unit->isPC() && CHAR_DESCRIPTOR(unit))
-    {
-        UPC(unit)->disconnect_game();
-    }
 
     /*if (!IS_PC(unit) || UNIT_IN(unit))
     {

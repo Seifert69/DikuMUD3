@@ -18,7 +18,6 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "protocol.h"
-#include "sessionlog.h"
 #include "slog.h"
 #include "utils.h"
 #include "vmelimits.h"
@@ -188,15 +187,11 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
 
         if (!d->getCharacter()->is_destructed())
         {
-            if (d->cgetCharacter()->isPC())
-            {
-                UPC(d->cgetCharacter())->disconnect_game();
-            }
             if (!bReconnect) // A throw-out (bReconnect) hands the character to the new connection
             {
                 if (d->cgetCharacter()->isPC())
                 {
-                    sessionlog_linkdead(UPC(d->getCharacter()));
+                    UPC(d->getCharacter())->disconnect_game(pc_data::leave_e::link_lost);
                 }
                 if (!PC_IS_UNSAVED(d->getCharacter()))
                 {
@@ -214,7 +209,7 @@ void descriptor_close(descriptor_data *d, int bSendClose, int bReconnect)
                 }
                 else
                 {
-                    UCHAR(d->cgetCharacter())->setDescriptor(nullptr); // Prevent counting down players, we did above
+                    UCHAR(d->cgetCharacter())->setDescriptor(nullptr); // So extracting doesn't use d, which is closing
                     extract_unit(d->getCharacter());                   /* We extract guests */
                     g_possible_saves--;
                 }

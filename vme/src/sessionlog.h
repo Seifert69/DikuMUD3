@@ -35,15 +35,17 @@ class pc_data;
  * Events: boot, shutdown, login, reconnect, linkdead, logout.
  * "played" (login only) is the time played saved in the player file before
  * this session; the length of a session is the logout "t" minus the login "t"
- * (time in the game, link-dead, idle or at the immortal menu included).
- * A session starts with login (a connection takes over the character) and ends
- * with logout (the character leaves the game for good). Quitting to the
- * immortal menu does not end it. Players still in the game when the server
- * stops get no logout: their sessions end at the shutdown event, or after a
- * crash at the next boot event (the last event before it is the best guess of
- * when the server went down). Shutdown saves every connected player in the
- * game (new characters too) and then closes every connection; an immortal at
- * the menu is removed then, so it does log logout.
+ * (time in the game, link-dead or idle included).
+ * A session starts with login (a connection takes over a character that was
+ * not in the game, or one an admin loaded) and ends with logout (the character leaves the game: quit,
+ * removed while link dead, or an immortal going to the menu; entering the game
+ * again from the menu is a new login). Players still in the game when the
+ * server stops get no logout: their sessions end at the shutdown event, or
+ * after a crash at the next boot event (the last event before it is the best
+ * guess of when the server went down). Shutdown saves every connected player
+ * in the game (new characters too) and then closes every connection.
+ * The events come from pc_data::connect_game() and disconnect_game(), which
+ * also count the players (g_no_players).
  */
 
 using sessionlog_fields = std::vector<std::pair<const char *, long long>>;
@@ -53,6 +55,8 @@ std::string sessionlog_line(time_t when, const char *event, const sessionlog_fie
 
 void sessionlog_boot();
 void sessionlog_shutdown();
+// Called only by pc_data::connect_game() and disconnect_game(); login and
+// reconnect need the character's connection (CHAR_DESCRIPTOR)
 void sessionlog_login(pc_data *pc, bool new_player);
 void sessionlog_reconnect(pc_data *pc);
 void sessionlog_linkdead(pc_data *pc);

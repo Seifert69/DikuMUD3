@@ -40,8 +40,8 @@ BOOST_AUTO_TEST_CASE(extreme_values_test)
 
 /**
  * Gives a PC a connection through an (unhooked) web multiplexer and puts back
- * the globals the descriptor constructor changes. The events come from the
- * captured slog() calls.
+ * the globals the descriptor constructor and the player count change. The
+ * events come from the captured slog() calls.
  */
 struct SessionLogFixture : public unit_tests::FixtureBase
 {
@@ -51,6 +51,8 @@ struct SessionLogFixture : public unit_tests::FixtureBase
         saved_connections = g_no_connections;
         saved_max_connections = g_max_no_connections;
         saved_shutdown = g_mud_shutdown;
+        saved_players = g_no_players;
+        saved_max_players = g_max_no_players;
         hook.bWebsockets = 1;
         desc = std::make_unique<descriptor_data>(&hook);
         DELETE(unit_data, desc->getCharacter()); // the constructor makes its own PC; use ours
@@ -68,6 +70,8 @@ struct SessionLogFixture : public unit_tests::FixtureBase
         UCHAR(pc.get())->setDescriptor(nullptr);
         desc->setCharacter(nullptr);
         g_mud_shutdown = saved_shutdown;
+        g_no_players = saved_players;
+        g_max_no_players = saved_max_players;
     }
 
     void connect() { UCHAR(pc.get())->setDescriptor(desc.get()); }
@@ -105,32 +109,103 @@ struct SessionLogFixture : public unit_tests::FixtureBase
     int saved_connections{0};
     int saved_max_connections{0};
     int saved_shutdown{0};
+    int saved_players{0};
+    int saved_max_players{0};
     std::unique_ptr<descriptor_data> desc;
     std::unique_ptr<pc_data> pc;
 };
 
 using events_t = std::vector<std::string>;
+using link_e = pc_data::game_link_e;
+using leave_e = pc_data::leave_e;
 
-BOOST_FIXTURE_TEST_CASE(session_pairs_test, SessionLogFixture)
+BOOST_FIXTURE_TEST_CASE(pair_test, SessionLogFixture)
 {
-    BOOST_TEST(!pc->isSessionLogged());
+    g_no_players = 3;
+    BOOST_TEST((pc->getGameLink() == link_e::out));
 
-    // No connection (an admin 'load'): nothing
-    sessionlog_login(pc.get(), false);
-    sessionlog_logout(pc.get());
-    BOOST_TEST(events() == events_t{});
+    // No connection (an admin 'load'): not counted, nothing logged
+    pc->connect_game(false);
+    BOOST_TEST((pc->getGameLink() == link_e::out));
+    BOOST_TEST(g_no_players == 3);
 
     connect();
-    sessionlog_login(pc.get(), true);
-    BOOST_TEST(pc->isSessionLogged());
-    sessionlog_login(pc.get(), false); // e.g. back from the immortal menu: same session
-    sessionlog_reconnect(pc.get());
-    sessionlog_linkdead(pc.get());
-    sessionlog_logout(pc.get());
-    BOOST_TEST(!pc->isSessionLogged());
-    sessionlog_logout(pc.get()); // already ended
-    sessionlog_linkdead(pc.get());
-    BOOST_TEST((events() == events_t{"login", "reconnect", "linkdead", "logout"}));
+    pc->connect_game(true);
+    BOOST_TEST((pc->getGameLink() == link_e::connected));
+    BOOST_TEST(g_no_players == 4);
+    pc->disconnect_game(leave_e::link_lost);
+    BOOST_TEST((pc->getGameLink() == link_e::link_dead));
+    BOOST_TEST(g_no_players == 3);
+    pc->disconnect_game(leave_e::link_lost); // already link dead
+    BOOST_TEST((pc->getGameLink() == link_e::link_dead));
+    BOOST_TEST(g_no_players == 3);
+    pc->connect_game(false);
+    BOOST_TEST(g_no_players == 4);
+    pc->connect_game(false); // thrown out: the new connection takes over
+    BOOST_TEST((pc->getGameLink() == link_e::connected));
+    BOOST_TEST(g_no_players == 4);
+    pc->disconnect_game(leave_e::left);
+    BOOST_TEST((pc->getGameLink() == link_e::out));
+    BOOST_TEST(g_no_players == 3);
+    pc->disconnect_game(leave_e::left); // already out
+    pc->disconnect_game(leave_e::link_lost);
+    BOOST_TEST((pc->getGameLink() == link_e::out));
+    BOOST_TEST(g_no_players == 3);
+    BOOST_TEST((events() == events_t{"login", "linkdead", "reconnect", "reconnect", "logout"}));
+}
+
+BOOST_FIXTURE_TEST_CASE(connect_twice_counts_once_test, SessionLogFixture)
+{
+    g_no_players = 0;
+    g_max_no_players = 0;
+    connect();
+    pc->connect_game(false);
+    pc->connect_game(false);
+    BOOST_TEST(g_no_players == 1);
+    BOOST_TEST(g_max_no_players == 1);
+    pc->disconnect_game(leave_e::left);
+    pc->disconnect_game(leave_e::left);
+    BOOST_TEST(g_no_players == 0);
+    BOOST_TEST(g_max_no_players == 1);
+    BOOST_TEST((events() == events_t{"login", "reconnect", "logout"}));
+}
+
+BOOST_FIXTURE_TEST_CASE(never_below_zero_test, SessionLogFixture)
+{
+    g_no_players = 0;
+    pc->disconnect_game(leave_e::link_lost);
+    pc->disconnect_game(leave_e::left);
+    BOOST_TEST(g_no_players == 0);
+    BOOST_TEST(events() == events_t{});
+}
+
+BOOST_FIXTURE_TEST_CASE(menu_round_trip_test, SessionLogFixture)
+{
+    // An immortal going to the menu and back: each time one count and a new session
+    g_no_players = 0;
+    connect();
+    for (int i = 0; i < 3; i++)
+    {
+        pc->connect_game(false);
+        BOOST_TEST(g_no_players == 1);
+        pc->disconnect_game(leave_e::left);
+        BOOST_TEST(g_no_players == 0);
+    }
+    BOOST_TEST((events() == events_t{"login", "logout", "login", "logout", "login", "logout"}));
+}
+
+BOOST_FIXTURE_TEST_CASE(link_dead_then_removed_test, SessionLogFixture)
+{
+    // Lost the link, then removed (link_dead@basis, purge): logout, counted down once
+    g_no_players = 0;
+    connect();
+    pc->connect_game(false);
+    pc->disconnect_game(leave_e::link_lost);
+    UCHAR(pc.get())->setDescriptor(nullptr);
+    pc->disconnect_game(leave_e::left);
+    BOOST_TEST(g_no_players == 0);
+    BOOST_TEST((pc->getGameLink() == link_e::out));
+    BOOST_TEST((events() == events_t{"login", "linkdead", "logout"}));
 }
 
 BOOST_FIXTURE_TEST_CASE(fields_test, SessionLogFixture)
@@ -138,18 +213,28 @@ BOOST_FIXTURE_TEST_CASE(fields_test, SessionLogFixture)
     connect();
     pc->setPlayerUID(42);
     pc->getPCTimeInformation().setTotalTimePlayedInSeconds(5400);
-    sessionlog_login(pc.get(), false);
+    pc->connect_game(false);
+    pc->disconnect_game(leave_e::link_lost);
     hook.bWebsockets = 0;
-    sessionlog_reconnect(pc.get());
-    sessionlog_linkdead(pc.get());
-    sessionlog_logout(pc.get());
+    pc->connect_game(false);
+    pc->disconnect_game(leave_e::left);
     const auto got = lines();
     BOOST_REQUIRE(got.size() == 4U);
     BOOST_TEST(got[0].find(R"("ev":"login","id":42,"lvl":0,"new":0,"web":1,"played":5400})") != std::string::npos);
-    BOOST_TEST(got[1].find(R"("ev":"reconnect","id":42,"lvl":0,"web":0})") != std::string::npos);
-    BOOST_TEST(got[2].find(R"("ev":"linkdead","id":42,"lvl":0})") != std::string::npos);
-    // No played at logout: an unsaved character still has the time from its player file
+    BOOST_TEST(got[1].find(R"("ev":"linkdead","id":42,"lvl":0})") != std::string::npos);
+    BOOST_TEST(got[2].find(R"("ev":"reconnect","id":42,"lvl":0,"web":0})") != std::string::npos);
+    // No played at logout (see sessionlog_logout())
     BOOST_TEST(got[3].find(R"("ev":"logout","id":42,"lvl":0})") != std::string::npos);
+}
+
+BOOST_FIXTURE_TEST_CASE(new_player_field_test, SessionLogFixture)
+{
+    connect();
+    pc->connect_game(true);
+    const auto got = lines();
+    BOOST_REQUIRE(got.size() == 1U);
+    BOOST_TEST(got[0].find(R"("ev":"login")") != std::string::npos);
+    BOOST_TEST(got[0].find(R"("new":1)") != std::string::npos);
 }
 
 BOOST_FIXTURE_TEST_CASE(vme_log_line_test, SessionLogFixture)
@@ -177,47 +262,32 @@ BOOST_FIXTURE_TEST_CASE(vme_log_line_test, SessionLogFixture)
     BOOST_TEST(json.find(R"("ev":"boot"})") != std::string::npos);
 }
 
-BOOST_FIXTURE_TEST_CASE(reconnect_without_session_is_login_test, SessionLogFixture)
-{
-    connect();
-    sessionlog_reconnect(pc.get()); // connecting to a character an admin loaded
-    BOOST_TEST(pc->isSessionLogged());
-    BOOST_TEST((events() == events_t{"login"}));
-}
-
 BOOST_FIXTURE_TEST_CASE(no_linkdead_at_shutdown_test, SessionLogFixture)
 {
+    g_no_players = 0;
     connect();
-    sessionlog_login(pc.get(), false);
+    pc->connect_game(false);
     g_mud_shutdown = 1;
-    sessionlog_linkdead(pc.get());
+    pc->disconnect_game(leave_e::link_lost);
     sessionlog_shutdown();
+    BOOST_TEST(g_no_players == 0);
     BOOST_TEST((events() == events_t{"login", "shutdown"}));
 }
 
-BOOST_FIXTURE_TEST_CASE(destructed_login_test, SessionLogFixture)
+BOOST_FIXTURE_TEST_CASE(destructed_connect_test, SessionLogFixture)
 {
-    // A character extracted while entering the game is not logged
+    // A character extracted while entering the game is not counted or logged
+    g_no_players = 0;
     connect();
     // register_destruct() appends the unit to the global destructed list: take that entry
     // out again afterwards, as the fixture deletes the unit
     pc->register_destruct();
-    sessionlog_login(pc.get(), true);
+    pc->connect_game(true);
     destructed_idx[DR_UNIT]--;
     pc->undo_destruct();
-    BOOST_TEST(!pc->isSessionLogged());
+    BOOST_TEST((pc->getGameLink() == link_e::out));
+    BOOST_TEST(g_no_players == 0);
     BOOST_TEST(events() == events_t{});
-}
-
-BOOST_FIXTURE_TEST_CASE(reconnect_as_login_keeps_new_test, SessionLogFixture)
-{
-    // A reconnect logged as a login: a never-saved character is still new
-    connect();
-    sessionlog_reconnect(pc.get());
-    const auto got = lines();
-    BOOST_REQUIRE(got.size() == 1U);
-    BOOST_TEST(got[0].find(R"("ev":"login")") != std::string::npos);
-    BOOST_TEST(got[0].find(R"("new":1)") != std::string::npos);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
