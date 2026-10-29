@@ -3116,6 +3116,13 @@ minlevel = 200
 loglevel = 0
 type     = 0
 
+command  = when
+internal = when
+minpos   = POSITION_DEAD
+minlevel = 0
+loglevel = 0
+type     = 0
+
 command  = wiz
 func     = do_wiz@commands
 minpos   = POSITION_RESTING

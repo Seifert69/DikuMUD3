@@ -237,4 +237,56 @@ BOOST_AUTO_TEST_CASE(mud_date_test)
 
 BOOST_AUTO_TEST_SUITE_END()
 
+/**********************************************************************************
+ * Time_Ago_Suite - time_ago_string(), for "when"
+ */
+BOOST_AUTO_TEST_SUITE(Time_Ago_Suite)
+
+const time_t then_base = 2000000000;
+const time_t minute = 60;
+const time_t hour = 60 * minute;
+const time_t day = 24 * hour;
+const time_t year = 365 * day;
+
+BOOST_AUTO_TEST_CASE(time_ago_under_a_minute)
+{
+    BOOST_TEST(time_ago_string(then_base, then_base) == "less than a minute ago");
+    BOOST_TEST(time_ago_string(then_base - 59, then_base) == "less than a minute ago");
+    // A time in the future (clock set back) doesn't give a negative age
+    BOOST_TEST(time_ago_string(then_base + hour, then_base) == "less than a minute ago");
+}
+
+BOOST_AUTO_TEST_CASE(time_ago_singular_and_plural)
+{
+    BOOST_TEST(time_ago_string(then_base - minute, then_base) == "1 minute ago");
+    BOOST_TEST(time_ago_string(then_base - 2 * minute, then_base) == "2 minutes ago");
+    BOOST_TEST(time_ago_string(then_base - hour, then_base) == "1 hour ago");
+    BOOST_TEST(time_ago_string(then_base - day, then_base) == "1 day ago");
+    BOOST_TEST(time_ago_string(then_base - year, then_base) == "1 year ago");
+}
+
+BOOST_AUTO_TEST_CASE(time_ago_two_largest_units)
+{
+    BOOST_TEST(time_ago_string(then_base - (3 * day + 4 * hour + 5 * minute), then_base) == "3 days, 4 hours ago");
+    BOOST_TEST(time_ago_string(then_base - (hour + 30 * minute + 59), then_base) == "1 hour, 30 minutes ago");
+    BOOST_TEST(time_ago_string(then_base - (2 * year + 10 * day), then_base) == "2 years, 10 days ago");
+    BOOST_TEST(time_ago_string(then_base - (23 * hour + 59 * minute), then_base) == "23 hours, 59 minutes ago");
+    BOOST_TEST(time_ago_string(then_base - (364 * day + 23 * hour), then_base) == "364 days, 23 hours ago");
+}
+
+// The second unit is left out when it is zero, rather than skipping down to a smaller one
+BOOST_AUTO_TEST_CASE(time_ago_zero_second_unit_left_out)
+{
+    BOOST_TEST(time_ago_string(then_base - (2 * day + 5 * minute), then_base) == "2 days ago");
+    BOOST_TEST(time_ago_string(then_base - (year + 3 * hour), then_base) == "1 year ago");
+}
+
+// Large gaps still give two units: a player who last played in 1970
+BOOST_AUTO_TEST_CASE(time_ago_long_ago)
+{
+    BOOST_TEST(time_ago_string(0, then_base) == "63 years, 153 days ago");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
 #pragma clang diagnostic pop
