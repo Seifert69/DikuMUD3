@@ -477,7 +477,6 @@ unit_data *load_player(const char *pName)
     }
 
     pc = load_player_file(pFile);
-    assign_player_file_index(pc);
 
     fclose(pFile);
 
@@ -488,6 +487,7 @@ unit_data *load_player(const char *pName)
     }
     else
     {
+        assign_player_file_index(pc);
         stop_affect(pc);
         stop_all_special(pc);
         DeactivateDil(pc);
