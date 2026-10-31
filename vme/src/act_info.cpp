@@ -22,7 +22,6 @@
 #include "when_limit.h"
 
 #include <chrono>
-#include <cstdint>
 #include <ctime>
 
 /**
@@ -161,12 +160,12 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 }
 
 static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between one mortal's lookups that miss the cache
-static constexpr int WHEN_LOOKUPS_PER_SECOND = 5;          ///< Such lookups by all mortals and monsters together
 
 /**
  * Who asks "when", for what they may see and for the limit alike: an immortal
  * switched into a monster asks as themselves, and a monster that follows a player
- * (a script can make it run "when") as that player.
+ * (ordered to, or made to by a script) as that player. Anyone else is a monster,
+ * and may not ask.
  */
 static unit_data *when_asker(unit_data *ch)
 {
@@ -199,14 +198,14 @@ static bool when_hides(unit_data *ch, const cWhenEntry &entry)
 /**
  * Whether ch may make a "when" lookup that misses the cache (a file read, or a
  * name with no file), and if so counts it. A mortal waits WHEN_LOOKUP_WAIT
- * between them, kept per player id so that reconnecting doesn't start over, and
- * all mortals and monsters together get WHEN_LOOKUPS_PER_SECOND, so more
- * characters or connections don't add up. Immortals aren't limited, also when
- * switched into a monster.
+ * between them, kept per player id so that reconnecting doesn't start over.
+ * There is no limit for all players together: each player file is read at most
+ * once per boot, and a name with no file reads nothing.
+ * Immortals aren't limited, also when switched into a monster.
  */
 static bool when_lookup_allowed(unit_data *ch)
 {
-    static cWhenLimit limit(WHEN_LOOKUP_WAIT, WHEN_LOOKUPS_PER_SECOND);
+    static cWhenLimit limit(WHEN_LOOKUP_WAIT);
 
     unit_data *who = when_asker(ch);
     if (CHAR_LEVEL(who) >= IMMORTAL_LEVEL)
@@ -214,9 +213,8 @@ static bool when_lookup_allowed(unit_data *ch)
         return true;
     }
 
-    // By the player's id, and a monster (or a player without an id yet, -1) by
-    // the unit, so that monsters don't wait for each other. Negative, as no id is.
-    long key = who->isPC() && PC_ID(who) >= 0 ? PC_ID(who) : -static_cast<long>(reinterpret_cast<std::uintptr_t>(who) >> 1) - 1;
+    // Players without an id yet (-1) share one wait
+    long key = PC_ID(who);
 
     // A monotonic clock with sub-second resolution: whole seconds from time() made
     // the wait anything between 4 and 5 seconds
@@ -224,9 +222,9 @@ static bool when_lookup_allowed(unit_data *ch)
 }
 
 /**
- * when <player>: when a player last logged on. Players in the game, link dead
- * included, are "playing right now". Players hidden by when_hides() are treated
- * as unknown.
+ * when <player>: when a player last logged on. Only players ask (see
+ * when_asker()). Players in the game, link dead included, are "playing right now".
+ * Players hidden by when_hides() are treated as unknown.
  *
  * Other players come from when_cache(): a player file is read the first time
  * someone asks about it, at most once per boot, and the server's saves and
@@ -239,6 +237,11 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
 {
     static const char *no_one = "No one by that name here.<br/>";
     char name[MAX_INPUT_LENGTH];
+
+    if (!when_asker(ch)->isPC())
+    {
+        return;
+    }
 
     if (str_is_empty(arg))
     {
