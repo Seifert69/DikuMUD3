@@ -219,8 +219,6 @@ void save_player_file(unit_data *pc)
     descriptor_data *tmp_descr = nullptr;
     CByteBuffer *pBuf = &g_FileBuffer;
 
-    pBuf->Clear();
-
     assert(pc->isPC());
     assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
     assert(!pc->is_destructed());
@@ -272,6 +270,10 @@ void save_player_file(unit_data *pc)
     }
 
     send_save_to(pc, pc); // Tell funcs on PC he is saved now...
+
+    // Only now: the save handlers run DIL, which may load a unit or a player file
+    // through g_FileBuffer, and that must not be written as this player
+    pBuf->Clear();
 
     /* Player is now clean (empty and unequipped) */
     nPlyLen = write_unit_string(pBuf, pc);
