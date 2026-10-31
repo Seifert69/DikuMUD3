@@ -47,6 +47,53 @@ time_info_data real_time_passed(time_t t2, time_t t1)
     return now;
 }
 
+/// How long ago then was, in its two largest units: "3 days, 4 hours ago"
+std::string time_ago_string(time_t then, time_t now)
+{
+    const long secs = (long)difftime(now, then);
+
+    // Also a time in the future (the clock was set back), which has no age
+    if (secs < SECS_PER_REAL_MIN)
+    {
+        return "less than a minute ago";
+    }
+
+    const time_info_data passed = real_time_passed(now, then);
+    const struct
+    {
+        long count;
+        const char *name;
+    } units[] = {{passed.getYear(), "year"},
+                 {passed.getDay(), "day"},
+                 {passed.getHours(), "hour"},
+                 {(secs / SECS_PER_REAL_MIN) % 60, "minute"}};
+
+    std::string result;
+    int shown = 0;
+    for (const auto &unit : units)
+    {
+        if (unit.count == 0)
+        {
+            // A zero second unit is left out, not replaced by a smaller one
+            if (shown > 0)
+            {
+                break;
+            }
+            continue;
+        }
+        if (shown > 0)
+        {
+            result += ", ";
+        }
+        result += std::to_string(unit.count) + " " + unit.name + (unit.count == 1 ? "" : "s");
+        if (++shown == 2)
+        {
+            break;
+        }
+    }
+    return result + " ago";
+}
+
 /* Calculate the MUD date */
 time_info_data mud_date(time_t t)
 {
