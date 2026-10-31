@@ -85,6 +85,7 @@
         ask_self: ["ask", true], ask_other: ["ask", false],
         shout_self: ["shout", true], shout_other: ["shout", false],
         whisper: ["whisper", null],
+        emote_self: ["emote", true], emote_other: ["emote", false],
         comm_say: ["channel", null], comm_emote: ["channel", null],
         comm_join: ["channel", null], comm_leave: ["channel", null],
     };
@@ -124,6 +125,11 @@
                 const m = /^(.+?) (?:tells|responds to) you/.exec(t);
                 if (m) ev.from = m[1];
             }
+        } else if (kind === "emote") {
+            // "Papi grins and points at the fountain.": the action, without the name
+            const who = ev.from || t.split(/\s+/)[0] || "";
+            if (!ev.self) ev.from = who;
+            ev.body = t.startsWith(who) ? t.slice(who.length).trim() : t;
         } else if (!ev.self && !ev.from) {
             const m = /^(.+?) (?:says|asks|shouts|exclaims|whispers|yells|emotes|tells)\b/.exec(t);
             if (m) ev.from = m[1];

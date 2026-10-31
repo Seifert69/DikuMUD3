@@ -743,7 +743,7 @@
         } else if (ev.kind === "shout") {
             base = { id: "shout", kind: "shout", name: "Shouts", sub: "heard far and wide", cmd: "shout" };
         } else {
-            base = { id: "room", kind: "room", name: "Room", sub: "say, ask and whisper", cmd: "say" };
+            base = { id: "room", kind: "room", name: "Room", sub: "say, ask, whisper and emote", cmd: "say" };
         }
         return chat.threads.get(base.id) || { ...base, msgs: [], unread: 0 };
     }

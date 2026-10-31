@@ -83,6 +83,13 @@ code
    else
       act_s:=s+" "+act_s;*/
 
+   // Who does it and to whom, for clients: <div class='social_other' from='$1n' to='$3n'>
+   if (act_3 == null)
+      vt := " from='$1n'>";
+   else
+      vt := " from='$1n' to='$3n'>";
+   act_s := replace("<div class='social_other'>", "<div class='social_other'" + vt, act_s);
+
    if ((SOCIAL_FIND==FIND_UNIT_SURRO) or (act_3==null) or
 	(act_3.outside==act_1.outside))
    {

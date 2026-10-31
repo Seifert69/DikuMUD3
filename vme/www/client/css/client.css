@@ -105,7 +105,7 @@ button { cursor: pointer; }
 .say_self, .ask_self, .shout_self, .tell_self, .social_self { color: var(--m-self); }
 .tell_other, .whisper { color: var(--m-tell); }
 .comm_say, .comm_emote, .comm_join, .comm_leave, .clan, .wiz { color: var(--m-chan); }
-.social_other { color: var(--fg); }
+.social_other, .emote_other { color: var(--fg); }
 .hit_me { color: var(--m-hit); }
 .hit_opponent { color: var(--m-hurt); font-weight: 600; }
 .hit_other { color: var(--muted); }
