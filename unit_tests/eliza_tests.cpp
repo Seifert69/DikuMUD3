@@ -85,6 +85,15 @@ BOOST_AUTO_TEST_CASE(worst_growth_is_below_four_times)
     BOOST_TEST(worst < 4.0);
 }
 
+// Each match is rewritten once and neighbouring matches no longer share their spaces: of "id id" only
+// the first " id " is found, because the second one has lost its leading space
+BOOST_AUTO_TEST_CASE(neighbouring_words_do_not_share_a_space)
+{
+    char line[ORACLE_BUF_SIZE] = "id id like tea";
+    preprocess_string(line, "eliza");
+    BOOST_TEST(std::string(line) == " i would id like tea ");
+}
+
 // A reply quotes the player's words, and each '@' in it starts a command for the oracle to run
 BOOST_AUTO_TEST_CASE(no_commands_from_the_player)
 {

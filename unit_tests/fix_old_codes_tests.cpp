@@ -107,4 +107,11 @@ BOOST_AUTO_TEST_CASE(amp_codes_and_escaping_unchanged)
     BOOST_TEST(convert("fish && chips") == "fish &amp; chips");
 }
 
+// Removing a code is not repeated on the text around it: in "&c&cww" taking out the inner "&cw" leaves
+// "&cw", which used to be taken out as well and is now left as text
+BOOST_AUTO_TEST_CASE(code_inside_a_code_is_removed_once)
+{
+    BOOST_TEST(convert("x&c&cwwy") == "x&amp;cwy");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
