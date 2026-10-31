@@ -217,9 +217,8 @@ void save_player_file(unit_data *pc)
     unit_data *tmp_u = nullptr;
     unit_data *list = nullptr;
     descriptor_data *tmp_descr = nullptr;
-    CByteBuffer *pBuf = &g_FileBuffer;
-
-    pBuf->Clear();
+    CByteBuffer Buf; // Not g_FileBuffer: the save handlers' DIL may load into that
+    CByteBuffer *pBuf = &Buf;
 
     assert(pc->isPC());
     assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
