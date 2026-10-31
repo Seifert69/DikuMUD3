@@ -370,7 +370,8 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         UCHAR(unit)->setDescriptor(nullptr);
     }
 
-    CByteBuffer *pBuf = &g_FileBuffer;
+    CByteBuffer Buf; // Not g_FileBuffer: the save handlers' DIL may load into that
+    CByteBuffer *pBuf = &Buf;
 
     if (bContainer)
     {
@@ -378,10 +379,6 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
     }
 
     send_saves(unit, unit->getUnitContains());
-
-    // Only now: the save handlers above run DIL, which may load a unit or a player
-    // file through g_FileBuffer, and that must not be written as this inventory
-    pBuf->Clear();
 
     add_units(pBuf, unit, unit, bContainer ? 1 : 0, fast);
 

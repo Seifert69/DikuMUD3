@@ -56,7 +56,7 @@ struct PlayerDirFixture : public unit_tests::FixtureBase
     }
 
     // What a player file (or with ".inv", its inventory) holds
-    std::string player_file(const std::string &name) const
+    std::string read_player_file(const std::string &name) const
     {
         std::ifstream in(dir + "ply/b/" + name, std::ios::binary);
         return {std::istreambuf_iterator<char>(in), std::istreambuf_iterator<char>()};
@@ -112,14 +112,16 @@ BOOST_AUTO_TEST_SUITE_END()
  * PcSave_SaveHandler_Suite - what a save handler leaves in g_FileBuffer is not saved.
  * A save runs the SFB_SAVE handlers, whose DIL can fill g_FileBuffer: a load() of a unit
  * reads its zone data there, and loading a player file reads that file there. The save
- * used to clear the buffer before the handlers and write it after them, so their bytes
- * were saved as the player or the inventory. Each case saves twice, the second time
- * with a handler that fills the buffer, and the two files must be the same.
+ * used to clear that buffer before the handlers and write it after them, so their bytes
+ * were saved as the player or the inventory; now each save has a buffer of its own. Each
+ * case saves without and then with a handler that fills the buffer, and the two files
+ * must be the same.
  */
 BOOST_AUTO_TEST_SUITE(PcSave_SaveHandler_Suite)
 
 const char *const FOREIGN = "the bytes of some other unit";
 bool g_fill_on_save = false;
+int g_fills = 0; // So a case can't pass because the handler never ran
 
 // Stands in for DIL that loads a unit while it is told of the save
 int fill_file_buffer(spec_arg *sarg)
@@ -128,6 +130,7 @@ int fill_file_buffer(spec_arg *sarg)
     {
         g_FileBuffer.Clear();
         g_FileBuffer.AppendString(FOREIGN);
+        g_fills++;
     }
     return SFR_SHARE;
 }
@@ -146,6 +149,7 @@ struct SaveHandlerFixture : public PlayerDirFixture
         BOOST_REQUIRE(g_unit_function_array[SPECIAL].save_w_d == SD_NEVER);
         g_unit_function_array[SPECIAL].func = fill_file_buffer;
         g_fill_on_save = false;
+        g_fills = 0;
         pc->setFilename("bsaved");
         pc->getNames().AppendName("Bsaved");
         pc->setPlayerUID(1);
@@ -153,6 +157,10 @@ struct SaveHandlerFixture : public PlayerDirFixture
 
     ~SaveHandlerFixture() override
     {
+        if (obj->getUnitIn())
+        {
+            unit_from_unit(obj.get());
+        }
         for (unit_data *u : {static_cast<unit_data *>(pc.get()), obj.get()})
         {
             delete u->getFunctionPointer();
@@ -183,12 +191,14 @@ BOOST_FIXTURE_TEST_CASE(player_file_is_the_player, SaveHandlerFixture)
 
     save_player_file(pc.get()); // the first save also counts a second played
     save_player_file(pc.get());
-    const std::string clean = player_file("bsaved");
+    const std::string clean = read_player_file("bsaved");
 
     g_fill_on_save = true;
     save_player_file(pc.get());
-    const std::string saved = player_file("bsaved");
+    const std::string saved = read_player_file("bsaved");
 
+    BOOST_TEST(g_fills == 1);
+    BOOST_TEST(!clean.empty());
     BOOST_TEST(saved.find(FOREIGN) == std::string::npos);
     BOOST_TEST(saved == clean);
 }
@@ -200,13 +210,13 @@ BOOST_FIXTURE_TEST_CASE(inventory_file_is_the_inventory, SaveHandlerFixture)
     unit_to_unit(obj.get(), pc.get());
 
     save_contents("bsaved", pc.get(), TRUE, FALSE);
-    const std::string clean = player_file("bsaved.inv");
+    const std::string clean = read_player_file("bsaved.inv");
 
     g_fill_on_save = true;
     save_contents("bsaved", pc.get(), TRUE, FALSE);
-    const std::string saved = player_file("bsaved.inv");
+    const std::string saved = read_player_file("bsaved.inv");
 
-    unit_from_unit(obj.get());
+    BOOST_TEST(g_fills == 1);
     BOOST_TEST(!clean.empty());
     BOOST_TEST(saved.find(FOREIGN) == std::string::npos);
     BOOST_TEST(saved == clean);
