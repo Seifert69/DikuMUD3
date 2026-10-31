@@ -196,11 +196,11 @@ static bool when_hides(unit_data *ch, const cWhenEntry &entry)
 }
 
 /**
- * Whether ch may make a "when" lookup that misses the cache (a file read, or a
- * name with no file), and if so counts it. A mortal waits WHEN_LOOKUP_WAIT
- * between them, kept per player id so that reconnecting doesn't start over.
- * There is no limit for all players together: each player file is read at most
- * once per boot, and a name with no file reads nothing.
+ * Whether ch may make a "when" lookup that misses the cache, and if so counts
+ * it: checking the name reads the two ban files, then the player file if there
+ * is one. A mortal waits WHEN_LOOKUP_WAIT between them, kept per player id so
+ * that reconnecting doesn't start over. There is no limit for all players
+ * together: each player file is read at most once per boot.
  * Immortals aren't limited, also when switched into a monster.
  */
 static bool when_lookup_allowed(unit_data *ch)
@@ -272,21 +272,20 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
     const cWhenEntry *entry = when_cache().Find(name);
     if (entry == nullptr)
     {
+        // Reading files is the expensive part, so it is limited for mortals (as "save"
+        // limits saves). Before the name check too, as that reads the two ban files.
+        if (!when_lookup_allowed(ch))
+        {
+            send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
+            return;
+        }
+
         // The name becomes part of the player file path, so the login prompt's rules
-        // for a player name (3 to 14 letters, nothing it bans). Only here, before a file
-        // read: they read the ban files.
+        // for a player name (3 to 14 letters, nothing it bans)
         char file_name[MAX_INPUT_LENGTH];
         if (_parse_name(name, file_name))
         {
             send_to_char(no_one, ch);
-            return;
-        }
-
-        // Reading a player file is the expensive part, so it is limited for mortals (as
-        // "save" limits saves)
-        if (!when_lookup_allowed(ch))
-        {
-            send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
             return;
         }
 
