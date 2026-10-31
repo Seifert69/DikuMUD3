@@ -81,6 +81,8 @@ reacts to some of them:
 | `tell_self` `tell_other` (`from=` `to=`) | conversation per person |
 | `say_*` `ask_*` `whisper` (`from=`) | the Room conversation |
 | `shout_*` (`from=`) | Shouts |
+| `emote_self` `emote_other` (`from=`) | the Room conversation: a player's `emote`, the action without the name |
+| `social_self` `social_other` (`from=`, `to=` when aimed at someone) | shown as is (socials such as smile and nod, monsters' too) |
 | `comm_say` `comm_emote` `comm_join` `comm_leave` (`chan=` `from=`) | conversation per channel |
 | `hit_*` `miss_*` `nodam_*` `shield_*` with `_me` (you attack), `_opponent` (you are attacked), `_other` | combat dock and the folded combat line in the log |
 | `death`, `xpgain` | shown as is |
