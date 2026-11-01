@@ -71,14 +71,14 @@ private:
     std::unordered_map<std::string, cWhenEntry> m_entries;
 };
 
-class unit_data;
+class pc_data;
 
 /// What "when" read from player files since boot
 cWhenCache &when_cache();
 
 /// What "when" needs from pc. A player with no names (a DIL script can remove them all) or no logon time is no one.
-cWhenEntry when_entry_of(unit_data *pc);
+cWhenEntry when_entry_of(pc_data *pc);
 
 /// Keep what "when" remembers of a player file up to date: called by save_player_file() and delete_player()
-void when_player_saved(unit_data *pc);
+void when_player_saved(pc_data *pc);
 void when_player_deleted(const char *name);

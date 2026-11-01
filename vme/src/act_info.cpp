@@ -162,32 +162,30 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
 static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between one mortal's lookups that miss the cache
 
 /**
- * Who asks "when", for what they may see and for the limit alike: an immortal
- * switched into a monster asks as themselves, and a monster that follows a player
- * (ordered to, or made to by a script) as that player. Anyone else is a monster,
- * and may not ask.
+ * The player who asks "when" when ch types it, for what they may see and for the
+ * limit alike: an immortal switched into a monster asks as themselves, and a
+ * monster that follows a player (ordered to, or made to by a script) as that
+ * player. nullptr for any other monster, which may not ask.
  */
-static unit_data *when_asker(unit_data *ch)
+static pc_data *when_asker(unit_data *ch)
 {
     unit_data *who = CHAR_ORIGINAL(ch);
     if (who->isNPC() && CHAR_MASTER(who) && CHAR_MASTER(who)->isPC())
     {
         who = CHAR_MASTER(who);
     }
-    return who;
+    return who->isPC() ? UPC(who) : nullptr;
 }
 
 /**
- * Whether "when" hides the player in entry from ch. The same rule for players in
- * the game and players read from their file, so the answer doesn't change when
- * they log on or off: wizard invisibility above ch's level, or invisibility that
- * ch can't detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and where
- * they are. ch asks as when_asker() says, as for the limit.
+ * Whether "when" hides the player in entry from asker. The same rule for players
+ * in the game and players read from their file, so the answer doesn't change when
+ * they log on or off: wizard invisibility above asker's level, or invisibility
+ * that asker can't detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and
+ * where they are.
  */
-static bool when_hides(unit_data *ch, const cWhenEntry &entry)
+static bool when_hides(const pc_data *asker, const cWhenEntry &entry)
 {
-    const unit_data *asker = when_asker(ch);
-
     if (CHAR_LEVEL(asker) < entry.wizinv)
     {
         return true;
@@ -196,25 +194,24 @@ static bool when_hides(unit_data *ch, const cWhenEntry &entry)
 }
 
 /**
- * Whether ch may make a "when" lookup that misses the cache, and if so counts
+ * Whether asker may make a "when" lookup that misses the cache, and if so counts
  * it: checking the name reads the two ban files, then the player file if there
  * is one. A mortal waits WHEN_LOOKUP_WAIT between them, kept per player id so
  * that reconnecting doesn't start over. There is no limit for all players
  * together: each player file is read at most once per boot.
  * Immortals aren't limited, also when switched into a monster.
  */
-static bool when_lookup_allowed(unit_data *ch)
+static bool when_lookup_allowed(const pc_data *asker)
 {
     static cWhenLimit limit(WHEN_LOOKUP_WAIT);
 
-    unit_data *who = when_asker(ch);
-    if (CHAR_LEVEL(who) >= IMMORTAL_LEVEL)
+    if (CHAR_LEVEL(asker) >= IMMORTAL_LEVEL)
     {
         return true;
     }
 
     // Players without an id yet (-1) share one wait
-    long key = PC_ID(who);
+    long key = asker->getPlayerUID();
 
     // A monotonic clock with sub-second resolution: whole seconds from time() made
     // the wait anything between 4 and 5 seconds
@@ -238,7 +235,8 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
     static const char *no_one = "No one by that name here.<br/>";
     char name[MAX_INPUT_LENGTH];
 
-    if (!when_asker(ch)->isPC())
+    pc_data *asker = when_asker(ch);
+    if (asker == nullptr)
     {
         return;
     }
@@ -259,7 +257,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         {
             // Not the file: it may still hold the visibility from before they went invisible
             const char *here = u->getNames().Name();
-            if (!str_is_empty(here) && (when_asker(ch) == u || !when_hides(ch, when_entry_of(u))))
+            if (!str_is_empty(here) && (asker == u || !when_hides(asker, when_entry_of(UPC(u)))))
             {
                 send_to_char(diku::format_to_str("%s is playing right now.<br/>", here), ch);
                 return;
@@ -274,7 +272,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
     {
         // Reading files is the expensive part, so it is limited for mortals (as "save"
         // limits saves). Before the name check too, as that reads the two ban files.
-        if (!when_lookup_allowed(ch))
+        if (!when_lookup_allowed(asker))
         {
             send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
             return;
@@ -296,7 +294,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         unit_data *pc = load_player(file_name);
         if (pc)
         {
-            when_cache().Store(file_name, when_entry_of(pc));
+            when_cache().Store(file_name, when_entry_of(UPC(pc)));
             extract_unit(pc);
         }
         else if (player_exists(file_name))
@@ -306,7 +304,7 @@ void do_when(unit_data *ch, char *arg, const command_info *cmd)
         entry = when_cache().Find(file_name);
     }
 
-    if (hidden_here || entry == nullptr || !entry->found || when_hides(ch, *entry))
+    if (hidden_here || entry == nullptr || !entry->found || when_hides(asker, *entry))
     {
         send_to_char(no_one, ch);
         return;

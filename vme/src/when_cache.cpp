@@ -8,7 +8,7 @@ cWhenCache &when_cache()
     return cache;
 }
 
-cWhenEntry when_entry_of(unit_data *pc)
+cWhenEntry when_entry_of(pc_data *pc)
 {
     cWhenEntry entry;
     const char *name = pc->getNames().Name();
@@ -21,7 +21,7 @@ cWhenEntry when_entry_of(unit_data *pc)
     return entry;
 }
 
-void when_player_saved(unit_data *pc)
+void when_player_saved(pc_data *pc)
 {
     // Most saves are of players no one asked about
     if (when_cache().Find(PC_FILENAME(pc)))
