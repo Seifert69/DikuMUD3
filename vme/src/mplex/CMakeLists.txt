@@ -117,6 +117,8 @@ set(MPLEX_SRCS
         ../utility.cpp ../utility.h
         ../vmelimits.cpp ../vmelimits.h
         ../weather.cpp ../weather.h
+        ../when_cache.cpp ../when_cache.h
+        ../when_limit.h
         ../zon_basis.cpp ../zon_basis.h
         ../zon_wiz.cpp
         ../zone_reset.cpp ../zone_reset.h
