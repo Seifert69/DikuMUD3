@@ -48,14 +48,7 @@ public:
     }
 
     /// Makes the entry for name, if there is one, say no one: the player file was deleted
-    void Deleted(const std::string &name)
-    {
-        auto it = m_entries.find(Key(name));
-        if (it != m_entries.end())
-        {
-            it->second = cWhenEntry{};
-        }
-    }
+    void Deleted(const std::string &name) { Saved(name, cWhenEntry{}); }
 
     /// How many names it holds
     std::size_t Size() const { return m_entries.size(); }

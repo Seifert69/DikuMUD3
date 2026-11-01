@@ -103,7 +103,9 @@ BOOST_AUTO_TEST_CASE(deleted_makes_a_known_name_no_one)
     BOOST_TEST_REQUIRE(entry != nullptr);
     BOOST_TEST(!entry->found);
     BOOST_TEST(entry->name.empty());
-    BOOST_TEST(cache.Find("ann")->found);
+    const cWhenEntry *other = cache.Find("ann");
+    BOOST_TEST_REQUIRE(other != nullptr);
+    BOOST_TEST(other->found);
     BOOST_TEST(cache.Size() == 2u);
 }
 
