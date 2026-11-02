@@ -57,7 +57,7 @@
 #define AT_DIRUNT 12 /* A direction then a unit-path is expected */
 #define AT_DIRDES 13 /* A direction then a description is expected */
 
-#define MAX_SET_FIELDS 70
+#define MAX_SET_FIELDS 71
 
 struct field_type
 {
@@ -78,7 +78,7 @@ static const char *unit_field_names[MAX_SET_FIELDS + 1] = {
     "full",      "thirsty",      "default-pos",    "npc-flags",     "hometown",  "exp",          "char-flags",   "mana",
     "endurance", "attack-type",  "hand-quality",   "size",          "race",      "sex",          "level",        "position",
     "ability",   "skill-points", "ability-points", "remove-affect", "add-quest", "del-quest",    "speed",        "add-info",
-    "del-info",  "access",       "promptstr",      "age",           "lifespan",  "profession",   nullptr};
+    "del-info",  "access",       "promptstr",      "age",           "lifespan",  "profession",   "dir-to",       nullptr};
 
 // These are oddly placed here because they need to initialize before used below
 skill_collection g_AbiColl(ABIL_TREE_MAX + 1, TEACH_ABILITIES);
@@ -157,6 +157,7 @@ field_type unit_field_data[MAX_SET_FIELDS + 1] = {
     {UT_PC, AT_VAL, nullptr, 230, 230, 230},                  /* age             */
     {UT_PC, AT_VAL, nullptr, 254, 255, 255},                  /* lifespan        */
     {UT_PC, AT_VAL, nullptr, 254, 255, 255},                  /* profession      */
+    {UT_ROOM, AT_DIRSTR, nullptr, 200, 200, 200},             /* dir-to          */
 };
 
 // Post-porcessing of adding-extra descriptions.
@@ -1395,6 +1396,43 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Value must be in 0..PROFESION MAX<br/>", ch);
             }
             return;
+
+        case 70: /* "dir-to": make the exit lead to a room, or remove it with "none" */
+        {
+            argument = str_next_word(argument, strarg);
+
+            if (str_ccmp(strarg, "none") == 0)
+            {
+                if (!ROOM_EXIT(unt, typarg))
+                {
+                    send_to_char("No such exit.<br/>", ch);
+                    return;
+                }
+                delete ROOM_EXIT(unt, typarg);
+                UROOM(unt)->setRoomDirectionDataForExitTo(typarg, nullptr);
+                send_to_char("Exit removed.<br/>", ch);
+                return;
+            }
+
+            char name[MAX_INPUT_LENGTH + 1];
+            char zone[MAX_INPUT_LENGTH + 1];
+            split_fi_ref(strarg, zone, name);
+            unit_data *to = find_symbolic(zone, name);
+
+            if (to == nullptr || !to->isRoom())
+            {
+                send_to_char("No such room (room@zone, or none to remove the exit).<br/>", ch);
+                return;
+            }
+
+            if (!ROOM_EXIT(unt, typarg))
+            {
+                UROOM(unt)->setRoomDirectionDataForExitTo(typarg, new room_direction_data());
+            }
+            ROOM_EXIT(unt, typarg)->setToRoom(to);
+            send_to_char("Exit set.<br/>", ch);
+            return;
+        }
 
         default: /* undefined field type */
             send_to_char("Field-type is undefined, please contact implementor<br/>", ch);

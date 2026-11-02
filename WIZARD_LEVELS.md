@@ -12,9 +12,9 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
-| **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `transfer`, `force`, `switch`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
+| **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
 | **253–255** | **The server** | `nset` (the DIL `set`), `execute` (runs a shell command), `plog`, `crash`, `wtimewarp`, `shutdown`, and the `set` fields `add-info`, `del-info`, `access`, `profession`, `lifespan`, `lights`, `exp` |
 
@@ -32,6 +32,8 @@ Some commands do world things at one level and player things at a higher one:
   any god. Any other object or an NPC: `CREATOR_LEVEL`, like `purge`. A player:
   `PLAYER_ADMIN_LEVEL` and a level above theirs. Below that: "Your stomach refuses to eat
   that!?!".
+- **`force`** (`force`, `vme/zone/commands.zon`): an NPC needs `CREATOR_LEVEL`; a player, or
+  `force all`, needs `PLAYER_ADMIN_LEVEL`. `switch` only ever goes into NPCs.
 - **`load`** (`do_load`, `vme/src/act_wizard.cpp`): loading a player needs
   `PLAYER_ADMIN_LEVEL`. Loading from a zone also needs that zone's load level (the 5th column
   of `etc/zonelist`), unless you're one of its creators.
@@ -41,7 +43,8 @@ Some commands do world things at one level and player things at a higher one:
 The in-game agents (`agents/`) are ordinary characters. An agent that runs events as a game
 master is meant to sit at 230: it can watch, go anywhere unseen, narrate, heal, load and dress
 NPCs, objects and rooms, and clean up, but it can't change a player beyond their health, and
-it has none of the tools for disruptive players.
+it has none of the tools for disruptive players. Exits made with `set … dir-to` don't enter
+the path finder's map (`wpath`, auto paths) until the next reboot.
 
 ## Changing a level
 

@@ -3194,7 +3194,9 @@ if (all_arg=="all")
   }
 
   :force_one:
-if (self.level < u.level)
+// NPCs are part of the world (CREATOR_LEVEL, the command's level); players need more
+if ((self.level < u.level) or
+    ((u.type == UNIT_ST_PC) and (self.level < PLAYER_ADMIN_LEVEL)))
 {
 if (visible(self,u))
 act("You can't force $3n to do that.",
@@ -3214,6 +3216,11 @@ sendtext("Done<br/>",self);
 quit;
 
 :force_all:
+if (self.level < PLAYER_ADMIN_LEVEL)
+{
+   sendtext("Forcing all players takes a higher level.<br/>",self);
+   quit;
+}
 u:=pc_head();
 while (u.type==UNIT_ST_PC)
 {
