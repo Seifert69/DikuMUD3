@@ -3144,6 +3144,13 @@ minlevel = 230
 loglevel = 230
 type     = 0
 
+command  = gmmem
+func     = gmmem@commands
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 0
+type     = 0
+
 command  = wizlock
 internal = wizlock
 minpos   = POSITION_DEAD

@@ -11213,6 +11213,248 @@ code
 }
 dilend
 
+
+//
+// Game master memory (WIZARD_LEVELS.md, agents/lokee.md)
+//
+// A unit a game master uses (an NPC, an object, a room) can carry up to four extras:
+//    $gm_brief  who or what it is, what it knows and may reveal (gmmem ... brief)
+//    $gm_comms  what was said and done with it, the last GM_COMMS_MAX lines (gm_comms)
+//    $gm_told   what it has revealed, and to whom (gmmem ... told)
+//    $gm_event  the event it belongs to (gmmem ... event)
+// gm_comms, copied onto an NPC (gmmem <npc> watch), fills $gm_comms and tells every game
+// master online at once: a god with $gm in its info.
+//
+
+#define GM_COMMS_MAX 40
+
+// Adds txt to the list kept in the extra called xname on u, keeping the last GM_COMMS_MAX
+dilbegin gm_note(u : unitptr, xname : string, txt : string);
+var
+   exd : extraptr;
+   sl : stringlist;
+code
+{
+   exd := xname in u.extra;
+   if (exd == null)
+   {
+      addstring(sl, xname);  // a {...} list may only hold constants
+      addextra(u.extra, sl, "");
+      exd := xname in u.extra;
+   }
+   addstring(exd.names, txt);
+   while (length(exd.names) > GM_COMMS_MAX + 1)
+      remove(exd.names, 1);
+   return;
+}
+dilend
+
+// Tells every game master online what happened to u
+dilbegin gm_alert(u : unitptr, txt : string);
+var
+   pc : unitptr;
+code
+{
+   pc := ghead();
+   while (pc.type == UNIT_ST_PC)
+   {
+      if ("$gm" in pc.info)
+         sendtext("[gm " + u.name + "] " + txt + "<br/>", pc);
+      pc := pc.gnext;
+   }
+   return;
+}
+dilend
+
+// Copied onto an NPC: what players say and do to it, its fights and its death
+dilbegin aware gm_comms();
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+   gm_alert(u : unitptr, txt : string);
+var
+   line : string;
+   foe : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 3;
+   interrupt(SFB_DEAD, activator == self, died);
+
+   :start:
+   wait(SFB_DONE | SFB_COM | SFB_DEAD,
+        ((self.fighting != null) and (self.fighting != foe)) or
+        ((activator.type == UNIT_ST_PC) and
+         ((target == self) or
+          ((command("say") or command("ask") or command("emote")) and
+           (activator.outside == self.outside)))));
+
+   if ((self.fighting != null) and (self.fighting != foe))
+   {
+      foe := self.fighting;
+      line := "fighting " + foe.name;
+   }
+   else if (command("give"))
+      line := activator.name + " gives you " + medium.title;
+   else if (command("say"))
+      line := activator.name + " says '" + argument + "'";
+   else if (command("ask"))
+      line := activator.name + " asks '" + argument + "'";
+   else if (command("emote"))
+      line := activator.name + " " + argument;
+   else
+      line := activator.name + " " + cmdstr + ": " + argument;
+
+   line := mid(asctime(realtime), 12, 16) + " " + line;
+   gm_note(self, "$gm_comms", line);
+   gm_alert(self, line);
+   goto start;
+
+   :died:
+   line := mid(asctime(realtime), 12, 16) + " died";
+   if (self.fighting != null)
+      line := line + ", fighting " + self.fighting.name;
+   gm_alert(self, line);
+   quit;
+}
+dilend
+
+// gmmem <unit> [brief|brief+|told|event|clear|watch] [text]: a game master's memory of a unit
+dilbegin gmmem(arg : string);
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+var
+   u : unitptr;
+   word : string;
+   what : string;
+   exd : extraptr;
+   i : integer;
+   s : string;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   word := getword(arg);
+   if (word == "")
+   {
+      sendtext("Usage: gmmem &lt;npc, object, room@zone or 'room'&gt; " +
+               "[brief|brief+|told|event|clear|watch] [text]<br/>", self);
+      quit;
+   }
+
+   if (word == "room")
+   {
+      u := self.outside;
+      while ((u != null) and (u.type != UNIT_ST_ROOM))
+         u := u.outside;
+   }
+   else if ("@" in word)
+      u := findsymbolic(word);
+   else
+      u := findunit(self, word, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+
+   if (u == null)
+   {
+      sendtext("No such thing: " + word + "<br/>", self);
+      quit;
+   }
+   if (u.type == UNIT_ST_PC)
+   {
+      sendtext("Players aren't the game master's to remember.<br/>", self);
+      quit;
+   }
+
+   what := getword(arg);
+
+   if (what == "")
+   {
+      s := "";
+      exd := "$gm_brief" in u.extra;
+      if (exd != null)
+         s := s + "BRIEF: " + exd.descr + "<br/>";
+      exd := "$gm_event" in u.extra;
+      if (exd != null)
+         s := s + "EVENT: " + exd.descr + "<br/>";
+      exd := "$gm_told" in u.extra;
+      if (exd != null)
+      {
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "TOLD: " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
+      exd := "$gm_comms" in u.extra;
+      if (exd != null)
+      {
+         s := s + "COMMS:<br/>";
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "  " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
+      if (dilfind("gm_comms@commands", u))
+         s := s + "(recording)<br/>";
+      if (s == "")
+         s := "No game-master memory on " + u.name + ".<br/>";
+      pagestring(u.name + " [" + u.nameidx + "@" + u.zoneidx + "]<br/>" + s, self);
+      quit;
+   }
+
+   if (what == "brief")
+   {
+      subextra(u.extra, "$gm_brief");
+      addextra(u.extra, {"$gm_brief"}, arg);
+   }
+   else if (what == "brief+")
+   {
+      exd := "$gm_brief" in u.extra;
+      if (exd == null)
+         addextra(u.extra, {"$gm_brief"}, arg);
+      else
+         exd.descr := exd.descr + " " + arg;
+   }
+   else if (what == "told")
+      gm_note(u, "$gm_told", mid(asctime(realtime), 12, 16) + " " + arg);
+   else if (what == "event")
+   {
+      subextra(u.extra, "$gm_event");
+      addextra(u.extra, {"$gm_event"}, arg);
+   }
+   else if (what == "clear")
+   {
+      if ((arg == "") or (arg == "all"))
+      {
+         subextra(u.extra, "$gm_brief");
+         subextra(u.extra, "$gm_comms");
+         subextra(u.extra, "$gm_told");
+         subextra(u.extra, "$gm_event");
+      }
+      else
+         subextra(u.extra, "$gm_" + arg);
+   }
+   else if (what == "watch")
+   {
+      if (u.type != UNIT_ST_NPC)
+      {
+         sendtext("Only NPCs can be watched.<br/>", self);
+         quit;
+      }
+      if (not dilfind("gm_comms@commands", u))
+         dilcopy("gm_comms@commands", u);
+   }
+   else
+   {
+      sendtext("gmmem: brief, brief+, told, event, clear or watch.<br/>", self);
+      quit;
+   }
+   sendtext("Ok.<br/>", self);
+   quit;
+}
+dilend
+
 %rooms
 
 hold_room
