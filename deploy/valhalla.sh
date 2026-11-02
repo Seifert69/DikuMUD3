@@ -101,7 +101,7 @@ test_mud() {
     [[ "${1:-}" == resume ]] && press=""
     old=$(vme_pid mud)
     say "test: compile master (test vme PID $old)"
-    f=$(steps '[{"send": "goto compiler"}, '"$press"'
+    f=$(steps '[{"send": "goto compiler", "again": true}, '"$press"'
         {"poll": "look screen", "until": "\\*\\*\\* END compile", "fail": "ERROR running", "every": 60, "timeout": 5400},
         {"send": "ruffle daemon", "after": 5}, {"send": "quit"}]')
     TN_PW=$PAPI_PW $TN $HOST 4442 papi "$f"
@@ -118,7 +118,7 @@ prod() {
     [[ "${1:-}" == resume ]] && adopt=""
     old=$(vme_pid val)
     say "prod: adopt the universe (production vme PID $old)"
-    f=$(steps '[{"send": "goto compiler"}, '"$adopt"'
+    f=$(steps '[{"send": "goto compiler", "again": true}, '"$adopt"'
         {"poll": "look symbols", "until": "\\*\\*\\* END adopt", "fail": "ERROR running", "every": 60, "timeout": 3600},
         {"send": "ruffle daemon", "after": 5}, {"send": "quit"}]')
     TN_PW=$PAPI_PW $TN $HOST 4242 papi "$f"
