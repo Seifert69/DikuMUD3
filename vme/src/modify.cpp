@@ -487,8 +487,14 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
         return;
     }
 
-    /* check if level of users is ok */
-    if (CHAR_LEVEL(ch) < unit_field_data[type].minplayer && unt != ch && unt->isPC())
+    /* Another player, and anything they carry or wear, needs PLAYER_ADMIN_LEVEL */
+    const unit_data *owner = unt;
+    while (owner && !(owner->isPC() && owner != ch))
+    {
+        owner = owner->getUnitIn();
+    }
+
+    if (owner && CHAR_LEVEL(ch) < MAX(PLAYER_ADMIN_LEVEL, unit_field_data[type].minplayer))
     {
         send_to_char("Authority to set field for OTHER PLAYERS denied!<br/>", ch);
         return;

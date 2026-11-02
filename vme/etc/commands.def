@@ -2850,15 +2850,15 @@ type     = 0
 command  = advance
 func=do_advance@commands
 minpos   = POSITION_DEAD
-minlevel = OVERSEER_LEVEL
+minlevel = 250
 loglevel = 0
 type     = 0
 
 command  = at
 internal = at
 minpos   = POSITION_DEAD
-minlevel = 220
-loglevel = 220
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = ban
@@ -2885,15 +2885,15 @@ type     = 0
 command  = copy
 func     = cmd_copy@commands
 minpos   = POSITION_SLEEPING
-minlevel = 253
-loglevel = 253
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = corpses
 func = gcrps@death
 minpos   = POSITION_DEAD
-minlevel = 219
-loglevel = 219
+minlevel = 200
+loglevel = 200
 type     = 0
 
 command  = crash
@@ -2906,8 +2906,8 @@ type     = 0
 command  = echo
 func = wiz_echo@comm
 minpos   = POSITION_SLEEPING
-minlevel = 213
-loglevel = 213
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = execute
@@ -2920,8 +2920,8 @@ type     = 0
 command  = force
 func = force@commands
 minpos   = POSITION_SLEEPING
-minlevel = 239
-loglevel = 239
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = plog
@@ -2935,15 +2935,15 @@ type     = 0
 command  = freeze
 func = do_freeze@commands
 minpos   = POSITION_DEAD
-minlevel = 250
-loglevel = 250
+minlevel = 240
+loglevel = 240
 type     = 0
 
 command  = goto
 func     = do_goto@commands
 minpos   = POSITION_SLEEPING
-minlevel = 219
-loglevel = 219
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = load
@@ -2956,47 +2956,47 @@ type     = 0
 command  = makemoney
 func     = do_makemoney@baseget
 minpos   = POSITION_DEAD
-minlevel = 239
-loglevel = 239
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = mash
 func     = mash@socials
 minpos   = POSITION_RESTING
-minlevel = 220
+minlevel = 200
 type     = TYPE_SOCIAL
 
 command  = flick
 func     = flick@socials
 minpos   = POSITION_RESTING
-minlevel = 220
+minlevel = 200
 type     = TYPE_SOCIAL
 
 command = rock
 func = rock@socials
 minpos = POSITION_RESTING
-minlevel = 220
+minlevel = 200
 type = TYPE_SOCIAL
 
 command  = message
 func     = wiz_message@comm
 minpos   = POSITION_DEAD
-minlevel = 220
-loglevel = 220
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = notell
 func = do_notell@commands
 minpos   = POSITION_SLEEPING
-minlevel = 200
-loglevel = 200
+minlevel = 240
+loglevel = 240
 type     = 0
 
 command  = nocomm
 func = do_nocomm@commands
 minpos   = POSITION_SLEEPING
-minlevel = 200
-loglevel = 200
+minlevel = 240
+loglevel = 240
 type     = 0
 
 command  = nset
@@ -3022,8 +3022,8 @@ type     = 0
 command  = petrify
 func     = petrify@commands
 minpos   = POSITION_RESTING
-minlevel = 204
-loglevel = 204
+minlevel = 240
+loglevel = 240
 
 command  = purge
 func = do_purge@commands
@@ -3035,8 +3035,8 @@ type     = 0
 command  = reboot
 func     = cmd_reboot@commands
 minpos   = POSITION_DEAD
-minlevel = 240
-loglevel = 240
+minlevel = 250
+loglevel = 250
 type     = 0
 
 command  = reset
@@ -3049,8 +3049,8 @@ type     = 0
 command  = restore
 func     = do_restore@commands
 minpos   = POSITION_DEAD
-minlevel = 210
-loglevel = 210
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = set
@@ -3063,8 +3063,8 @@ type     = 0
 command  = setskill
 func     = do_setskill@commands
 minpos   = POSITION_SLEEPING
-minlevel = 239
-loglevel = 239
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = shutdown
@@ -3077,36 +3077,36 @@ type     = 0
 command  = snoop
 internal = snoop
 minpos   = POSITION_DEAD
-minlevel = 239
-loglevel = 239
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = switch
 internal = switch
 minpos   = POSITION_DEAD
-minlevel = 239
-loglevel = 239
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = title
 func     = gtitle@commands
 minpos   = POSITION_RESTING
-minlevel = 204
-loglevel = 204
+minlevel = 210
+loglevel = 210
 type     = 0
 
 command  = transfer
 func     = transfer@commands
 minpos   = POSITION_RESTING
-minlevel = 235
-loglevel = 235
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = users
 internal = users
 minpos   = POSITION_DEAD
-minlevel = 202
-loglevel = 202
+minlevel = 200
+loglevel = 200
 type     = 0
 
 command  = where
@@ -3126,7 +3126,7 @@ type     = 0
 command  = wiz
 func     = do_wiz@commands
 minpos   = POSITION_RESTING
-minlevel = 210
+minlevel = 200
 loglevel = 0
 type     = 0
 
@@ -3147,8 +3147,8 @@ type     = 0
 command  = wizlock
 internal = wizlock
 minpos   = POSITION_DEAD
-minlevel = 230
-loglevel = 230
+minlevel = 250
+loglevel = 250
 type     = 0
 
 command  = wizsocials
@@ -3161,15 +3161,15 @@ type     = 0
 command  = wstat
 internal = wstat
 minpos   = POSITION_DEAD
-minlevel = 215
-loglevel = 215
+minlevel = 200
+loglevel = 200
 type     = 0
 
 command  = jstat
 internal = jstat
 minpos   = POSITION_DEAD
-minlevel = 215
-loglevel = 215
+minlevel = 200
+loglevel = 200
 type     = 0
 
 command  = wedit
@@ -3182,15 +3182,15 @@ type     = 0
 command  = competition
 func = cmd_comp@competition
 minpos   = POSITION_DEAD
-minlevel = 215
-loglevel = 215
+minlevel = 220
+loglevel = 220
 type     = 0
 
 command  = zap
 func     = cmd_zap@commands
 minpos   = POSITION_SLEEPING
-minlevel = 253
-loglevel = 253
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = wizlist
@@ -4825,13 +4825,13 @@ minpos        = POSITION_RESTING
 command  = cdelete
 func     = cdelete@clans
 minpos   = POSITION_DEAD
-minlevel = 215
-loglevel = 215
+minlevel = 245
+loglevel = 245
 type     = 0
 
 command  = cstat
 func     = cstat@clans
 minpos   = POSITION_DEAD
-minlevel = 215
-loglevel = 215
+minlevel = 200
+loglevel = 200
 type     = 0

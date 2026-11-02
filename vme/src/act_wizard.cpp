@@ -365,6 +365,12 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
         if (player_exists(buf))
         {
+            if (CHAR_LEVEL(ch) < PLAYER_ADMIN_LEVEL)
+            {
+                send_to_char("Loading a player takes a higher level.<br/>", ch);
+                return;
+            }
+
             if ((u = load_player(buf)) == nullptr)
             {
                 send_to_char("Load error<br/>", ch);
