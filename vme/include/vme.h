@@ -27,9 +27,12 @@
 
 #define START_LEVEL           1
 #define MORTAL_MAX_LEVEL     50	/* Maximum level for mortal players */
-#define IMMORTAL_LEVEL      200	/* At 200 you can't really die      */
-#define GOD_LEVEL           220	/* Here are the *real* gods         */
-#define CREATOR_LEVEL       230
+/* The god command ladder (WIZARD_LEVELS.md): each rung adds commands to the ones below */
+#define IMMORTAL_LEVEL      200	/* At 200 you can't really die; watch the game */
+#define GOD_LEVEL           220	/* Here are the *real* gods; sport and competition */
+#define CREATOR_LEVEL       230	/* Game master: stage the world, look after players' health */
+#define MODERATOR_LEVEL     240	/* Disruptive players: nocomm, notell, petrify, freeze, ban */
+#define PLAYER_ADMIN_LEVEL  245	/* Change a player or what they carry: set, purge, eat, transfer */
 #define OVERSEER_LEVEL      253
 #define ADMINISTRATOR_LEVEL 254
 #define ULTIMATE_LEVEL      255

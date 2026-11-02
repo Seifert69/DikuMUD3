@@ -3131,7 +3131,7 @@ if (u==null)
 
    if (u.type == UNIT_ST_PC)
    {
-      if (u.level>=self.level)
+      if ((u.level>=self.level) or (self.level < PLAYER_ADMIN_LEVEL))
       {
          act("$3n would not like that.", A_SOMEONE,self,null,u,TO_CHAR);
          quit;
@@ -8197,7 +8197,13 @@ code
 		apply_poison(self,pois,amount);
 		food.value[0]:=food.value[0]-amount;
 	}
-	else if ((self.level<200) or (food.type==UNIT_ST_ROOM))
+	// A god eating something destroys it: food for any god, other things only for those who
+	// may purge them (CREATOR_LEVEL), players only for PLAYER_ADMIN_LEVEL
+	else if ((self.level<200) or (food.type==UNIT_ST_ROOM) or
+	         ((self.level < CREATOR_LEVEL) and
+	          ((food.type != UNIT_ST_OBJ) or (food.objecttype != ITEM_FOOD))) or
+	         ((food.type == UNIT_ST_PC) and
+	          ((self.level < PLAYER_ADMIN_LEVEL) or (food.level >= self.level))))
 	{
 		act("Your stomach refuses to eat that!?!",
 			A_SOMEONE, self, null, null, TO_CHAR);
