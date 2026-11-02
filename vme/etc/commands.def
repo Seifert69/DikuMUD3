@@ -2920,8 +2920,8 @@ type     = 0
 command  = force
 func = force@commands
 minpos   = POSITION_SLEEPING
-minlevel = 245
-loglevel = 245
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = plog
@@ -3084,8 +3084,8 @@ type     = 0
 command  = switch
 internal = switch
 minpos   = POSITION_DEAD
-minlevel = 245
-loglevel = 245
+minlevel = 230
+loglevel = 230
 type     = 0
 
 command  = title
