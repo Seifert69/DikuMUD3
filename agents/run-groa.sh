@@ -12,7 +12,7 @@
 # (the mud), expert-<date>.log (her expert, bin/ask-expert).
 #
 # ~/groa holds her CLAUDE.md, knowledge/ (mechanics.md, teachers.txt), answers/ (written by the
-# expert), memory/, .claude/settings.json (her model and permissions) and bin, a link to
+# expert), review/ (her coach, run-review-groa.sh, once a day), memory/, .claude/settings.json (her model and permissions) and bin, a link to
 # ~/bin; ~/.config/valhalla/groa is her character.
 #
 cd ~/groa || exit 1
@@ -26,6 +26,7 @@ rm -f ~/.groa-stop
 # What wakes her: a player talking (mud.py marks it), hunger and thirst, a lost connection
 WAKE='^\[(tell|say|ask|whisper|emote) [A-Z][a-z]+\]|You are (very )?(hungry|thirsty)|the mud closed the connection|logging in again failed'
 TURN=3600  # the longest one turn may take
+REVIEW_HOUR=6  # her coach reviews the day before after this hour, while nothing needs her
 
 while [ ! -e ~/.groa-stop ]; do
     log=$LOGDIR/claude-$(date +%F).log
@@ -33,12 +34,16 @@ while [ ! -e ~/.groa-stop ]; do
         echo "=== $(date '+%F %T') not logged in: mud.py start" >> "$log"
         bin/mud.py start >> "$log" 2>&1 || { sleep 300; continue; }
     fi
+    if ((10#$(date +%H) >= REVIEW_HOUR)) && [ ! -e review/"$(date -d yesterday +%F)" ]; then
+        echo "=== $(date '+%F %T') daily review" >> "$log"
+        bin/run-review-groa.sh >> "$log" 2>&1
+    fi
     text=$(bin/mud.py read 300 2>&1)
     if ! grep -qE "$WAKE" <<< "$text"; then
         continue
     fi
     echo "=== $(date '+%F %T') woken" >> "$log"
-    timeout $TURN claude -p "It's $(date '+%A %F, %H:%M'). Read knowledge/mechanics.md, then deal with this, which just happened where you are:
+    timeout $TURN claude -p "It's $(date '+%A %F, %H:%M'). Read knowledge/mechanics.md, knowledge/faq.md and memory/lessons.txt, then deal with this, which just happened where you are:
 
 $text
 
