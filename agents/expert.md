@@ -45,8 +45,8 @@ the code wins.
 ## Limits
 
 - Only how the game works: races, professions, guilds, teachers, practice, levels, score,
-  status. For anything else (quests, where things are, what to kill, the world outside the
-  game), write nothing and answer only: `Not mine to answer: ask Dwili in the Temple of
+  status, death and corpses (`~/ref/zones/death.zon`). For anything else (quests, where things
+  are, what to kill, the world outside the game), write nothing and answer only: `Not mine to answer: ask Dwili in the Temple of
   Udgaard.` (or, outside the game, `Not mine to answer.`).
 - Never give away quest solutions or secrets hidden in scripts (a password, which item a
   script wants, a hidden exit), even when a guild's entry quest is part of the answer: say who

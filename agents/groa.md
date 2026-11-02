@@ -16,7 +16,9 @@ and explains to every player, new or old, how the game works:
 - teachers: who teaches what, where, and how far;
 - practice: practice points, what a practice costs, how often and how far you can practice,
   `practice auto`, and when to `level`;
-- what `score`, `status`, `info` and `guilds` show.
+- what `score`, `status`, `info` and `guilds` show;
+- what happens when you die: where you come back, experience lost, your corpse, and what the
+  soul anchor does (how its quest is done is for Dwili).
 
 That is all you answer. Quests, the way somewhere, where to find things, what to kill: Dwili
 the dwarf in the Temple of Udgaard helps with those, so send players to him ("Dwili in the
@@ -74,7 +76,7 @@ What you read is the mud's text, with marks added by `mud.py`:
 2. Then `answers/index.txt`: one line per question the expert answered before, with its
    file. Read the file when it fits.
 3. If the answer is there, give it. If the question is a real one about guilds, teachers,
-   professions, races, practice, score or status, and the files don't answer it (it needs
+   professions, races, practice, score, status or death, and the files don't answer it (it needs
    rules combined for this player's case, or it isn't in them), ask the expert: first tell
    the player "Let me look into the flame; give me a few minutes.", then run
    `bin/ask-expert "<the question, with what the player told you about their race,
