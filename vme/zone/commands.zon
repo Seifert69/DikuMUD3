@@ -11253,13 +11253,18 @@ dilend
 dilbegin gm_alert(u : unitptr, txt : string);
 var
    pc : unitptr;
+   s : string;
 code
 {
+   if (u.type == UNIT_ST_ROOM)
+      s := u.nameidx + "@" + u.zoneidx;
+   else
+      s := u.name;
    pc := ghead();
    while (pc.type == UNIT_ST_PC)
    {
       if ("$gm" in pc.info)
-         sendtext("[gm " + u.name + "] " + txt + "<br/>", pc);
+         sendtext("[gm " + s + "] " + txt + "<br/>", pc);
       pc := pc.gnext;
    }
    return;
@@ -11317,11 +11322,312 @@ code
 }
 dilend
 
-// gmmem <unit> [brief|brief+|told|event|clear|watch] [text]: a game master's memory of a unit
+// Copied onto an object (gmmem <obj> watch): what players do with it. Given or sold, it ends up
+// in someone else's inventory, where it hears nothing more, so those are told as the player
+// types them (while it is still theirs), not once done.
+dilbegin aware gm_objwatch();
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+   gm_alert(u : unitptr, txt : string);
+var
+   line : string;
+   arg : string;
+code
+{
+   :start:
+   wait(SFB_DONE | SFB_CMD, (activator.type == UNIT_ST_PC) and
+        (((medium == self) or (target == self)) or
+         ((command("give") or command("sell")) and (self.outside == activator))));
+
+   if (command("give") or command("sell"))
+   {
+      arg := argument;
+      if (not (getword(arg) in self.names))
+         goto start;
+      line := activator.name + " " + cmdstr + " " + argument;
+   }
+   else if (command("put") and (target != null))
+      line := activator.name + " puts it in " + target.title;
+   else
+      line := activator.name + " " + cmdstr + "s it";
+
+   line := mid(asctime(realtime), 12, 16) + " " + line;
+   gm_note(self, "$gm_comms", line);
+   gm_alert(self, line);
+   goto start;
+}
+dilend
+
+// Copied onto an NPC or a room (gmmem <unit> greet): tells the game masters when a player walks
+// in, and plays the unit's $gm_greet line once for each player: an NPC does it as a command
+// (say ..., emote ...), a room shows it to everyone there; $1n is the player. With a $gm_for
+// list (gmmem <unit> for), only those players count. It hears CMD_AUTO_ENTER, sent once the
+// player has arrived by walking, enter, leave or exit; arriving by magic (goto, teleport,
+// recall, summon) sends none, so it goes unnoticed.
+dilbegin aware gm_greet();
+external
+   gm_alert(u : unitptr, txt : string);
+var
+   pc : unitptr;
+   exd : extraptr;
+   seen : stringlist;
+code
+{
+   // (no unitptr variable for the room: wait() clears one that points outside the
+   // local environment, and a room's own pointer counts as outside)
+   :start:
+   wait(SFB_DONE, command(CMD_AUTO_ENTER) and (activator.type == UNIT_ST_PC) and
+        ((activator.outside == self) or (activator.outside == self.outside)));
+
+   pc := activator;
+   exd := "$gm_for" in self.extra;
+   if ((exd != null) and (not (pc.name in exd.names)))
+      goto start;
+
+   gm_alert(self, mid(asctime(realtime), 12, 16) + " " + pc.name + " walks in");
+   if (pc.name in seen)
+      goto start;
+   addstring(seen, pc.name);
+
+   exd := "$gm_greet" in self.extra;
+   if ((exd != null) and (exd.descr != ""))
+   {
+      if (self.type == UNIT_ST_NPC)
+         exec(replace("$1n", pc.name, exd.descr), self);
+      else
+         act(exd.descr, A_ALWAYS, pc, null, null, TO_ALL);
+   }
+   goto start;
+}
+dilend
+
+// The room u is in
+dilbegin unitptr gm_room(u : unitptr);
+code
+{
+   u := u.outside;
+   while ((u != null) and (u.type != UNIT_ST_ROOM))
+      u := u.outside;
+   return (u);
+}
+dilend
+
+// The zone u is in: that of the outermost room, so a room made inside another counts as the
+// outer room's zone
+dilbegin string gm_zone(u : unitptr);
+code
+{
+   while (u.outside != null)
+      u := u.outside;
+   return (u.zoneidx);
+}
+dilend
+
+// Copied onto a player (gmtrack): tells the game masters when the player crosses into or out of
+// the zones in zones ("any": every change of zone), dies, falls below a third of their hit
+// points, gets followers, or is idle for 10 minutes. Nothing about the player changes. It
+// removes itself at until (realtime), and void@basis removes it when the player leaves the
+// game; if it was saved with the player all the same, it finds itself expired at the next login.
+dilbegin aware gm_track(zones : string, until : integer);
+external
+   gm_alert(u : unitptr, txt : string);
+   unitptr gm_room(u : unitptr);
+   string gm_zone(u : unitptr);
+var
+   zl : stringlist;
+   zn : string;
+   was : string;
+   here : string;
+   s : string;
+   room : unitptr;
+   u : unitptr;
+   hurt : integer;
+   idle : integer;
+   lastact : integer;
+   nfol : integer;
+   i : integer;
+code
+{
+   if (realtime >= until)
+      quit;
+   heartbeat := PULSE_SEC * 60;
+   interrupt(SFB_DEAD, activator == self, died);
+   zl := split(zones, " ");
+   was := gm_zone(self);
+   nfol := self.followercount;
+   lastact := realtime;
+
+   :start:
+   wait(SFB_DONE | SFB_CMD | SFB_COM | SFB_TICK, (activator == self) or (activator == null));
+
+   if (realtime >= until)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer tracked (time is up)");
+      quit;
+   }
+   room := gm_room(self);
+   here := room.nameidx + "@" + room.zoneidx;
+
+   if (activator == self)
+   {
+      lastact := realtime;
+      if (idle)
+      {
+         idle := FALSE;
+         gm_alert(self, mid(asctime(realtime), 12, 16) + " is back, in " + here);
+      }
+   }
+   else if ((not idle) and (realtime - lastact >= 600))
+   {
+      idle := TRUE;
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " has been idle 10 minutes, in " + here);
+   }
+
+   zn := gm_zone(self);
+   if (zn != was)
+   {
+      s := "";
+      if (zones == "any")
+         s := "goes from " + was + " to " + zn;
+      else if ((zn in zl) and (not (was in zl)))
+         s := "enters " + zn;
+      else if ((was in zl) and (not (zn in zl)))
+         s := "leaves " + was + " for " + zn;
+      was := zn;
+      if (s != "")
+         gm_alert(self, mid(asctime(realtime), 12, 16) + " " + s + " (" + here + ")");
+   }
+
+   if ((not hurt) and (self.hp * 3 < self.max_hp))
+   {
+      hurt := TRUE;
+      s := " is down to " + itoa(self.hp) + " of " + itoa(self.max_hp) + " hit points";
+      if (self.fighting != null)
+         s := s + ", fighting " + self.fighting.name;
+      gm_alert(self, mid(asctime(realtime), 12, 16) + s + ", in " + here);
+   }
+   else if (hurt and (self.hp * 2 > self.max_hp))
+      hurt := FALSE;
+
+   if (self.followercount > nfol)
+   {
+      s := "";
+      i := 0;
+      while (i < self.followercount)
+      {
+         u := getfollower(self, i);
+         if (s != "")
+            s := s + ", ";
+         s := s + u.name;
+         i := i + 1;
+      }
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " is followed by " + s);
+   }
+   nfol := self.followercount;
+   goto start;
+
+   :died:
+   room := gm_room(self);
+   s := " died in " + room.nameidx + "@" + room.zoneidx;
+   if (self.fighting != null)
+      s := s + ", fighting " + self.fighting.name;
+   gm_alert(self, mid(asctime(realtime), 12, 16) + s);
+   goto start;
+}
+dilend
+
+// gmtrack [<player> <zone ...|any> [hours]] [<player> off]: tells the game masters where a
+// player goes (gm_track), for up to 6 hours (2 by default); alone, lists who is tracked
+dilbegin gmtrack(arg : string);
+var
+   pc : unitptr;
+   pname : string;
+   w : string;
+   zones : string;
+   s : string;
+   hours : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   pname := getword(arg);
+   if (pname == "")
+   {
+      s := "";
+      pc := ghead();
+      while (pc.type == UNIT_ST_PC)
+      {
+         if (dilfind("gm_track@commands", pc))
+            s := s + " " + pc.name;
+         pc := pc.gnext;
+      }
+      if (s == "")
+         sendtext("No one is tracked.<br/>", self);
+      else
+         sendtext("Tracked:" + s + "<br/>", self);
+      quit;
+   }
+
+   pc := findunit(self, pname, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + pname + " is in the game.<br/>", self);
+      quit;
+   }
+
+   if (arg == "off")
+   {
+      if (dilfind("gm_track@commands", pc))
+      {
+         i := dildestroy("gm_track@commands", pc);
+         sendtext("No longer tracking " + pc.name + ".<br/>", self);
+      }
+      else
+         sendtext(pc.name + " isn't tracked.<br/>", self);
+      quit;
+   }
+
+   hours := 2;
+   zones := "";
+   w := getword(arg);
+   while (w != "")
+   {
+      if (itoa(atoi(w)) == w)
+         hours := atoi(w);
+      else if (zones == "")
+         zones := w;
+      else
+         zones := zones + " " + w;
+      w := getword(arg);
+   }
+   if (zones == "")
+   {
+      sendtext("Usage: gmtrack &lt;player&gt; &lt;zone ...|any&gt; [hours], " +
+               "gmtrack &lt;player&gt; off, or gmtrack alone to list.<br/>", self);
+      quit;
+   }
+   if (hours < 1)
+      hours := 1;
+   if (hours > 6)
+      hours := 6;
+
+   if (dilfind("gm_track@commands", pc))
+      i := dildestroy("gm_track@commands", pc);
+   dilcopy("gm_track@commands(" + zones + "," + itoa(realtime + hours * 3600) + ")", pc);
+   sendtext("Tracking " + pc.name + " (" + zones + ") for " + itoa(hours) + " hours.<br/>", self);
+   quit;
+}
+dilend
+
+// gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for] [text]: a game master's memory
+// of a unit
 dilbegin gmmem(arg : string);
 external
    gm_note(u : unitptr, xname : string, txt : string);
 var
+   sl : stringlist;
    u : unitptr;
    word : string;
    what : string;
@@ -11337,7 +11643,7 @@ code
    if (word == "")
    {
       sendtext("Usage: gmmem &lt;npc, object, room@zone or 'room'&gt; " +
-               "[brief|brief+|told|event|clear|watch] [text]<br/>", self);
+               "[brief|brief+|told|event|clear|watch|greet|for] [text]<br/>", self);
       quit;
    }
 
@@ -11395,8 +11701,25 @@ code
             i := i + 1;
          }
       }
-      if (dilfind("gm_comms@commands", u))
+      exd := "$gm_greet" in u.extra;
+      if (exd != null)
+         s := s + "GREET: " + exd.descr + "<br/>";
+      exd := "$gm_for" in u.extra;
+      if (exd != null)
+      {
+         s := s + "FOR:";
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + " " + exd.names.[i];
+            i := i + 1;
+         }
+         s := s + "<br/>";
+      }
+      if (dilfind("gm_comms@commands", u) or dilfind("gm_objwatch@commands", u))
          s := s + "(recording)<br/>";
+      if (dilfind("gm_greet@commands", u))
+         s := s + "(greeting)<br/>";
       if (s == "")
          s := "No game-master memory on " + u.name + ".<br/>";
       pagestring(u.name + " [" + u.nameidx + "@" + u.zoneidx + "]<br/>" + s, self);
@@ -11431,23 +11754,56 @@ code
          subextra(u.extra, "$gm_comms");
          subextra(u.extra, "$gm_told");
          subextra(u.extra, "$gm_event");
+         subextra(u.extra, "$gm_greet");
+         subextra(u.extra, "$gm_for");
       }
       else
          subextra(u.extra, "$gm_" + arg);
+      if (((arg == "") or (arg == "all") or (arg == "greet")) and dilfind("gm_greet@commands", u))
+         i := dildestroy("gm_greet@commands", u);
    }
    else if (what == "watch")
    {
-      if (u.type != UNIT_ST_NPC)
+      if (u.type == UNIT_ST_NPC)
       {
-         sendtext("Only NPCs can be watched.<br/>", self);
+         if (not dilfind("gm_comms@commands", u))
+            dilcopy("gm_comms@commands", u);
+      }
+      else if (u.type == UNIT_ST_OBJ)
+      {
+         if (not dilfind("gm_objwatch@commands", u))
+            dilcopy("gm_objwatch@commands", u);
+      }
+      else
+      {
+         sendtext("Only NPCs and objects can be watched; a room can greet.<br/>", self);
          quit;
       }
-      if (not dilfind("gm_comms@commands", u))
-         dilcopy("gm_comms@commands", u);
+   }
+   else if (what == "greet")
+   {
+      if ((u.type != UNIT_ST_NPC) and (u.type != UNIT_ST_ROOM))
+      {
+         sendtext("Only NPCs and rooms can greet.<br/>", self);
+         quit;
+      }
+      subextra(u.extra, "$gm_greet");
+      addextra(u.extra, {"$gm_greet"}, arg);
+      if (not dilfind("gm_greet@commands", u))
+         dilcopy("gm_greet@commands", u);
+   }
+   else if (what == "for")
+   {
+      subextra(u.extra, "$gm_for");
+      if (arg != "")
+      {
+         sl := split("$gm_for " + arg, " ");
+         addextra(u.extra, sl, "");
+      }
    }
    else
    {
-      sendtext("gmmem: brief, brief+, told, event, clear or watch.<br/>", self);
+      sendtext("gmmem: brief, brief+, told, event, clear, watch, greet or for.<br/>", self);
       quit;
    }
    sendtext("Ok.<br/>", self);
