@@ -73,12 +73,19 @@ has no files and exists from boot:
   twice before the reboot). With `in`, the room stands inside that room, like the barrel to the
   thieves' guild: players see "A <keyword> is here." and `enter <keyword>` and `leave` it, and a
   room may stand inside another made one. Without `in`, give it exits with `set room dir-to`.
+  It's an indoor room, lit, with room for players to enter (capacity 30000, as vmc gives rooms).
+- Only add exits in directions a room doesn't use yet: `set room dir-to` replaces an existing
+  exit (the temple's stairs down to the crypt, say), and freeing the made room then removes it,
+  so the old way is gone until the next reboot.
 - `gmroom title|descr|outside <gm1|here> <text>` sets, in one line, its title, what players see
-  inside it, and how it shows in the room around it ("A striped tent stands here.").
+  inside it, and how it shows in the room around it ("A striped tent stands here."). It only
+  changes made rooms. (`set` has no field for a room's inside description: `set … descr` edits
+  the outside one, in the line editor, ended with `@`.)
 - `gmroom free <gm1|gm1@_gm|here>` moves everyone and everything inside (players, their corpses
   and belongings, NPCs) to the room it stands in, else to where its first exit leads, else to
   the crypt in Udgaard, removes every exit that leads to it, and deletes it. A room with a made
-  room inside is freed after that one.
+  room inside is freed after that one. It moves an event's own NPCs and objects out too:
+  purge those first.
 - `gmroom list` shows them, with where each stands and how many players are inside.
 - At most 100 at a time. They're gone at the next reboot: a player saved in one comes back in
   their hometown, and a stored player corpse whose room is gone comes back in the crypt in
