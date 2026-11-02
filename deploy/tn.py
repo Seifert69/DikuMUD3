@@ -114,7 +114,8 @@ send(pw)
 m = wait_for(r"Wrong password|Throw the other copy out|you last visited", 30)
 if not m or "Wrong" in m.group(0):
     die("login refused")
-if "Throw" in m.group(0):
+# Production says "you last visited" before "Already playing!", so look on for the question
+if "Throw" in m.group(0) or wait_for(r"Throw the other copy out", 3):
     # The character is playing already, maybe by its owner: only throw that copy out when told to
     if os.environ.get("TN_THROW") != "1":
         die("already playing; set TN_THROW=1 to throw the other copy out")
