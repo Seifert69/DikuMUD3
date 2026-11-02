@@ -12,7 +12,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
@@ -45,6 +45,24 @@ master is meant to sit at 230: it can watch, go anywhere unseen, narrate, heal, 
 NPCs, objects and rooms, and clean up, but it can't change a player beyond their health, and
 it has none of the tools for disruptive players. Exits made with `set … dir-to` don't enter
 the path finder's map (`wpath`, auto paths) until the next reboot.
+
+## The game master's memory
+
+`gmmem` (in `vme/zone/commands.zon`) keeps what a game master needs to remember about the NPCs,
+objects and rooms of its events, in extras on the unit:
+
+- `$gm_brief`: who or what it is, what it knows and may reveal (`gmmem <unit> brief <text>`,
+  `brief+` to add to it);
+- `$gm_comms`: what players said and did with an NPC: says, asks, emotes, tells, gifts, fights,
+  the last 40 lines. `gmmem <npc> watch` copies `gm_comms@commands` onto the NPC to record
+  them; it also sends each line at once to every game master online (a god with `$gm` in its
+  info), as `[gm <npc>] <time> <what happened>`, and reports the NPC's death;
+- `$gm_told`: what it has revealed, and to whom (`gmmem <unit> told <text>`);
+- `$gm_event`: the event it belongs to (`gmmem <unit> event <id>`).
+
+`gmmem <unit>` shows them all; `gmmem <unit> clear [brief|comms|told|event]` removes them. A
+unit is an NPC or object by name, `room` for the room you're in, or `sym@zone`. Players are
+never a game master's to remember.
 
 ## Changing a level
 
