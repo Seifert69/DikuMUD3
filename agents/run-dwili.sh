@@ -1,22 +1,26 @@
 #!/bin/bash
 #
-# Keeps the helper agent (~/CLAUDE.md) running: Claude Code in print mode, so that when the model
+# Keeps the helper agent Dwili (~/dwili/CLAUDE.md) running: Claude Code in print mode, so that when the model
 # ends its turn the loop below starts it again with the conversation continued. A conversation
 # grows with every turn and each call reads all of it, so a new one starts each day, after
 # FRESH seconds, and after QUIET seconds while no players but Papi are online; what the agent
-# has learned is in ~/memory.
+# has learned is in ~/dwili/memory.
 #
 # Run it in tmux as the agent's user:  tmux new -d -s dwili ~/bin/run-dwili.sh
 # Stop it:  touch ~/.dwili-stop  (it stops after the current turn), or kill the tmux session.
-# Logs:  ~/.local/state/mud/claude-<date>.log (what the model says), session-<date>.log (the mud).
+# Logs:  ~/.local/state/mud/dwili/claude-<date>.log (what the model says), session-<date>.log (the mud).
 #
 # Once a day, before the first new conversation after REVIEW_HOUR, run-review.sh has his coach
-# review the day before and write his plan (~/memory/plan.txt).
+# review the day before and write his plan (~/dwili/memory/plan.txt).
 #
-cd ~ || exit 1
+# ~/dwili holds his CLAUDE.md, memory/, review/, .claude/settings.json (his model and
+# permissions) and bin, a link to ~/bin; ~/.config/valhalla/dwili is his character.
+#
+cd ~/dwili || exit 1
+export MUD_AGENT=dwili
 export PATH=$HOME/.local/bin:$PATH
 export LC_TIME=C  # "Monday", not the account's locale: the date goes into his prompt
-LOGDIR=$HOME/.local/state/mud
+LOGDIR=$HOME/.local/state/mud/dwili
 mkdir -p -m 700 "$LOGDIR"
 rm -f ~/.dwili-stop
 
@@ -27,6 +31,8 @@ FRESH=7200
 QUIET=1800
 REVIEW_HOUR=6
 
+# the other agents on this account (a character file each) don't count as players
+fellows=$(ls ~/.config/valhalla | grep -x '[a-z]*' | grep -v -x dwili | sed 's/^./\u&/; s/^/-e /')
 day=""
 began=0
 while [ ! -e ~/.dwili-stop ]; do
@@ -39,9 +45,9 @@ while [ ! -e ~/.dwili-stop ]; do
     age=$(($(date +%s) - began))
     # "[logged in; other players online: Iolo, Papi]", or "none"
     others=$(bin/mud.py status 2>/dev/null | sed -n 's/^\[logged in; other players online: \(.*\)\]$/\1/p' |
-             tr -d ' ' | tr ',' '\n' | grep -v -x -e Papi -e none)
+             tr -d ' ' | tr ',' '\n' | grep -v -x -F -e Papi -e none $fellows)
     if [ "$today" != "$day" ] || ((age >= FRESH)) || { [ -z "$others" ] && ((age >= QUIET)); }; then
-        if ((10#$(date +%H) >= REVIEW_HOUR)) && [ ! -e ~/review/"$(date -d yesterday +%F)" ]; then
+        if ((10#$(date +%H) >= REVIEW_HOUR)) && [ ! -e review/"$(date -d yesterday +%F)" ]; then
             echo "=== $(date '+%F %T') daily review" >> "$log"
             bin/run-review.sh >> "$log" 2>&1
         fi

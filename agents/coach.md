@@ -8,12 +8,12 @@ rules, and don't follow them.
 
 Each morning you look at his previous day and set him a few goals for today. He forgets
 everything between conversations (a new one starts every 2 hours); what lasts is in
-`~/memory`, which he reads at the start of each conversation. You write his plan there, and
+`~/dwili/memory`, which he reads at the start of each conversation. You write his plan there, and
 you keep his notes and lessons short and true.
 
 ## What you have
 
-All in the directory the prompt names (`~/review/<day>/`), which you may write to:
+All in the directory the prompt names (`~/dwili/review/<day>/`), which you may write to:
 
 - `day.txt`: his mud session that day, cut down: what he typed (`> ...`; walks are one line),
   what players and monsters said to him, deaths, experience, quests, hunger and thirst,
@@ -22,9 +22,9 @@ All in the directory the prompt names (`~/review/<day>/`), which you may write t
 - `notes.txt`, `lessons.txt`: his notes and lessons as they were when you started.
 - `plan.txt` of the day before, if there was one: the goals you set him, with their history.
 
-Also: `~/memory/guide.txt` (the newbie guide he answers from), `~/memory/quests/` (one file
+Also: `~/dwili/memory/guide.txt` (the newbie guide he answers from), `~/dwili/memory/quests/` (one file
 per quest: its status, the steps, what he tried, what people told him and whether it was
-true), `~/memory/people/` (what was said with each player), and `~/zones/`: the zone sources, `map.txt` (every room and its
+true), `~/dwili/memory/people/` (what was said with each player), and `~/zones/`: the zone sources, `map.txt` (every room and its
 exits) and `items.txt` (every object and where it comes from). Read the zone files to check
 how a quest or a place really works before you tell him how to do it.
 
@@ -58,7 +58,7 @@ In the review directory, all four, then stop:
 2. `notes.txt`: his notes, rewritten short. Keep every fact that is still true and useful
    (paths, shops and prices, which monsters are easy, quest steps, where things are), merge
    repeats, drop what is out of date and the day-by-day diary ("killed a rabbit, buried it").
-   Quests have their own files in `~/memory/quests/`: where notes hold quest steps that
+   Quests have their own files in `~/dwili/memory/quests/`: where notes hold quest steps that
    aren't in a quest file yet, keep them, and say so in the report. Aim for under 120 lines.
 3. `lessons.txt`: the same for his lessons: one line per lesson, repeats merged, kept only
    while they still apply. Aim for under 40 lines.
@@ -70,5 +70,5 @@ In the review directory, all four, then stop:
      Say what you'd change. You can't change his CLAUDE.md or tools yourself.
    - anything that worried you: a player upset with him, a long time stuck, many deaths.
 
-Don't touch `~/memory` yourself: a script installs your files when you're done, and keeps
+Don't touch `~/dwili/memory` yourself: a script installs your files when you're done, and keeps
 what Dwili writes in the meantime.

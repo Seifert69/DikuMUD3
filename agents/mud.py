@@ -11,12 +11,20 @@ usage: mud.py start [--throw]   log in; the session stays in the background
        mud.py stop [MINUTES]    quit the game and end the session; with MINUTES, start refuses
                                 until they have passed, and read waits them out
 
-The character is in ~/.config/valhalla/mud (mode 600, never in a repository):
+Several agents can play from one account, each in a directory of its own (~/dwili): run from
+there, or with MUD_AGENT=dwili, mud.py uses that agent's character, ~/.config/valhalla/dwili,
+its own session and logs (~/.local/state/mud/dwili/), and keeps its conversations in
+~/dwili/memory/people/. Otherwise the character is in ~/.config/valhalla/mud, the logs in
+~/.local/state/mud/ and the conversations in ~/memory/people/.
+
+The character's file (mode 600, never in a repository):
        name=Dwili
        password=...
        url=wss://valhalla.com:4280/echo   (the websocket, as the web client uses; or ws:// locally)
    or  host=valhalla.com                  (telnet instead, when there is no url=)
        port=4242                          (4242 is the real mud, 4442 the test mud)
+       hunt=no                            (no "time to go hunting" when no players are on)
+       hints=no                           (none of the [Hungry: ...] and other reminders)
 
 --throw: when the character is playing already, throw that copy out. Without it start stops, since
 the other copy may be the character's owner.
@@ -44,12 +52,40 @@ them earlier that day and they haven't spoken since: that would be a second gree
 import base64, codecs, fcntl, hashlib, html.parser, json, os, re, selectors, socket, ssl, sys, time
 import urllib.parse
 
-CONFIG = os.path.expanduser("~/.config/valhalla/mud")
-STATE = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or os.path.expanduser("~/.local/state"), "mud")
+
+
+def agent():
+    """The agent whose directory this is (~/dwili, with ~/.config/valhalla/dwili), or None."""
+    name = os.environ.get("MUD_AGENT")
+    if name:
+        return name
+    cwd, home = os.getcwd(), os.path.expanduser("~")
+    name = os.path.basename(cwd)
+    if os.path.dirname(cwd) == home and os.path.exists(os.path.join(home, ".config/valhalla", name)):
+        return name
+    return None
+
+
+AGENT = agent()
+
+
+def fellows():
+    """The other agents playing from this account: each has a character file in ~/.config/valhalla."""
+    try:
+        names = os.listdir(os.path.expanduser("~/.config/valhalla"))
+    except OSError:
+        return set()
+    return {n.capitalize() for n in names if re.fullmatch(r"[a-z]+", n) and n not in ("mud", AGENT)}
+
+
+FELLOWS = fellows()
+CONFIG = os.path.expanduser("~/.config/valhalla/" + (AGENT or "mud"))
+STATE = os.path.join(os.environ.get("XDG_RUNTIME_DIR") or os.path.expanduser("~/.local/state"), "mud",
+                     *([AGENT] if AGENT else []))
 SOCK = os.path.join(STATE, "mud.sock")
 PAUSE = os.path.join(STATE, "paused")  # until when (epoch seconds) the character stays off, after stop MINUTES
-LOGDIR = os.path.expanduser("~/.local/state/mud")  # on disk, unlike STATE: kept across reboots
-PEOPLE = os.path.expanduser("~/memory/people")
+LOGDIR = os.path.expanduser(os.path.join("~/.local/state/mud", AGENT or ""))  # on disk, unlike STATE: kept across reboots
+PEOPLE = os.path.expanduser(os.path.join("~", AGENT or "", "memory/people"))
 MAP = os.path.expanduser("~/zones/map.txt")  # from zonemap.py
 
 QUIET = 1.0         # the answer to a command is complete when nothing came for this long
@@ -446,7 +482,7 @@ class Session:
                 if "You are dead." in p and self.room:
                     self.add("\n[You died in %s (%s). Your corpse is there: mud.py way %s]\n"
                              % (self.room_title, self.room, self.room))
-                for pat, key, hint in REFLEXES:
+                for pat, key, hint in (REFLEXES if self.conf.get("hints") != "no" else []):
                     if pat.search(p) and time.time() - self.reflexes.get(key, 0) >= REFLEX:
                         self.reflexes[key] = time.time()
                         self.add("\n" + hint + "\n")
@@ -511,14 +547,17 @@ class Session:
                 if item[:1] == "+":
                     name = item[1:].split()[0] if item[1:].split() else ""
                     self.online.add(name)
-                    if not full and name != self.me:
+                    if not full and name in FELLOWS:
+                        self.add("\n[%s logged on: a helper agent like you, no greeting.]\n" % name)
+                    elif not full and name != self.me:
                         self.recap(name, "%s logged on. " % name)
                 elif item[:1] == "-":
                     self.online.discard(item[1:].strip())
             others = sorted(self.online - {self.me})
             if others != self.others:
                 self.others = others
-                self.add("\n[Players online: %s]\n" % ", ".join(others) if others
+                self.add("\n[Players online: %s]\n" % ", ".join(
+                    n + (" (a helper agent)" if n in FELLOWS else "") for n in others) if others
                          else "\n[No other players online]\n")
         elif ev["type"] == "script" and "PasswordOn" in text:
             self.login_text += "[password]"
@@ -697,7 +736,7 @@ def serve(mud, ready):
         now = time.time()
         if mud.connected and now - mud.last_sent >= KEEPALIVE:
             mud.raw("")
-        if mud.others is not None and not set(mud.others) - ADMINS \
+        if mud.others is not None and mud.conf.get("hunt") != "no" and not set(mud.others) - ADMINS - FELLOWS \
                 and now - mud.reflexes.get("alone", 0) >= ALONE:
             mud.reflexes["alone"] = now
             mud.add("\n[No players but Papi online: time to go hunting, see Growing stronger.]\n")
