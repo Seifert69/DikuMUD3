@@ -52,6 +52,8 @@ In the review directory, all three, then stop:
    - answered something outside her scope, or turned away something within it;
    - worked out a player's costs or limits when showing them `info` at their teacher (and
      `change expert`) would have taught them more and cost nothing;
+   - answered what the game allows when the player asked what's best (the best long-term
+     result: once per level, by hand, points spent before levelling);
    - wrote too much, too little, or lost the player.
 3. `report.md`, for the people who run her (Papi and his assistant), a few lines each on:
    - what she was asked, how many questions, and how many expert calls (needed or not);
