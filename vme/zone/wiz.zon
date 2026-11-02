@@ -1012,10 +1012,11 @@ code
    no := 0;
    u := ghead();
 
+   // Helper agents ($agent in their info) don't hold up a reboot; the shutdown saves them
    while (u.type == UNIT_ST_PC)
    {
       no := no + 1;
-      if (u.level < 200)
+      if ((u.level < 200) and (not ("$agent" in u.info)))
          i := i + 1;
       u := u.gnext;
    }
