@@ -11,3 +11,4 @@ void do_switch(unit_data *, char *, const command_info *);
 void do_timewarp(unit_data *, char *, const command_info *);
 void do_crash(unit_data *, char *, const command_info *);
 void do_wizlock(unit_data *, char *, const command_info *);
+void do_gmroom(unit_data *, char *, const command_info *);

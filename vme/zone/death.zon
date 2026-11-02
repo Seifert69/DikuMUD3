@@ -679,6 +679,7 @@ dilbegin aware reload_corpse();
 var
 	corpselist:stringlist;
 	u:unitptr;
+	rm:unitptr;
 	ln:integer;
 	i:integer;
 	x:extraptr;
@@ -692,12 +693,16 @@ i:=0;
 while (i<ln)
 	{
 	u:=restore(corpselist.[i],null);
-	x:=CORPSE_EXTRA in u.extra;
 	if (u!=null)
+	{
+		rm:=null;
+		x:=CORPSE_EXTRA in u.extra;
 		if (x!=null)
-			link (u,findroom(x.descr));
-		else
-			link (u,findroom("temple@udgaard"));
+			rm:=findroom(x.descr);
+		if (rm==null) // a room that's gone, such as a game master's (gmroom)
+			rm:=findroom("crypt@udgaard");
+		link (u,rm);
+	}
 	i:=i+1;
 	}
 

@@ -101,4 +101,5 @@ extern unit_data *g_npc_head;
 extern unit_data *g_obj_head;
 extern zone_info_type g_zone_info;
 extern const char *g_player_zone;
+extern const char *g_gm_zone;
 extern cSector g_sector_dat;

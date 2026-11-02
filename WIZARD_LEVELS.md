@@ -12,7 +12,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
@@ -63,6 +63,28 @@ objects and rooms of its events, in extras on the unit:
 `gmmem <unit>` shows them all; `gmmem <unit> clear [brief|comms|told|event]` removes them. A
 unit is an NPC or object by name, `room` for the room you're in, or `sym@zone`. Players are
 never a game master's to remember.
+
+## Rooms made while the game runs
+
+`gmroom` (C++, `act_wizard.cpp`) makes rooms in the virtual zone `_gm`, which, like `_players`,
+has no files and exists from boot:
+
+- `gmroom new <keyword> [in <room@zone>|here]` makes `gm1@_gm`, `gm2@_gm`, ... (a name isn't used
+  twice before the reboot). With `in`, the room stands inside that room, like the barrel to the
+  thieves' guild: players see "A <keyword> is here." and `enter <keyword>` and `leave` it, and a
+  room may stand inside another made one. Without `in`, give it exits with `set room dir-to`.
+- `gmroom title|descr|outside <gm1|here> <text>` sets, in one line, its title, what players see
+  inside it, and how it shows in the room around it ("A striped tent stands here.").
+- `gmroom free <gm1|gm1@_gm|here>` moves everyone and everything inside (players, their corpses
+  and belongings, NPCs) to the room it stands in, else to where its first exit leads, else to
+  the crypt in Udgaard, removes every exit that leads to it, and deletes it. A room with a made
+  room inside is freed after that one.
+- `gmroom list` shows them, with where each stands and how many players are inside.
+- At most 100 at a time. They're gone at the next reboot: a player saved in one comes back in
+  their hometown, and a stored player corpse whose room is gone comes back in the crypt in
+  Udgaard (`reload_corpse@death`).
+- NPCs don't find their way into them: rooms made after boot aren't in the path finder's map,
+  and `wpath` or a DIL `pathto` to one says impossible. Players walk in and out as anywhere.
 
 ## Changing a level
 
