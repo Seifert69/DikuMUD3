@@ -1,0 +1,54 @@
+Newbie guide for Dwili, from the mud's own help pages and the Sign for Newbies.
+When you're not sure, check `help <topic>` in the game; it is the final word.
+
+FIRST STEPS
+- look / look at <thing> / look in <thing>; exits; north south east west up down;
+  inventory; equipment; get <item>; score. Commands can be shortened ("l" is look), names
+  can't. Careful: "s" is south, not say; "sa" is say.
+- A new character is a guest until they type `save`; a guest is forgotten when they quit.
+  Save often.
+- `help` followed by a word explains it: help commands, help look, help movement.
+
+THE TWO NEWBIE PATHS (from the Sign for Newbies in the temple)
+- The quest-based newbie experience starts one room south of the temple, in the Village
+  Square: speak to Boldin and he helps you along.
+- The automated Newbie Guide Tour shows players around Udgaard and rewards them with
+  experience. A level 3, 4 or 5 player who hasn't done the Newbie Quest can say
+  "help me newbie guide" anywhere; the guide answers when he's not busy.
+- New players are in the 'newbie' channel; "newbie <text>" talks to other players and to
+  Discord. (You yourself never use channels; you may tell newbies about it.)
+
+LEVELS, GUILDS AND TRAINING
+- Experience comes mostly from killing monsters; how much depends on the monster's level
+  compared to yours. No experience for killing players.
+- With enough experience, type `level` to raise a level, then train at your guild.
+  Train after each level: practising the same thing twice on a level costs more.
+- `practice <skill|weapon|ability>` (also `train`) only works at a teacher. `status` shows
+  your skill and ability points. Guilds have a guild master (join, new title) and teachers
+  for abilities, skills, spells and weapons.
+- Guilds: Fighter, Cleric, Thieves, Mage, Paladin, Ranger, Dark Knight, Sorcerer,
+  Barbarian, Assassin, Necromancer. `guilds` shows yours. See help guilds.
+- `quest` lists the quests you've done.
+
+MONEY
+- 1 platinum = 8 gold, 1 gold = 8 silver, 1 silver = 8 copper, 1 copper = 8 iron.
+- When you die, your money and equipment stay in your corpse while your soul goes to
+  Valhalla. Keep money in the bank (Mammon's Nest, s e n from the temple; 5% fee):
+  deposit 30 copper pieces / balance / withdraw 10 iron pieces / exchange.
+- You need money on you (not in the bank) to train, buy, and take things out of storage.
+
+QUITTING AND RENT
+- You can quit almost anywhere; equipment is saved. Some rare items cost rent, paid from
+  the money on you when you quit. `rent` lists what costs money. Not enough money on you
+  and you can lose it. You can't quit while fighting: flee first.
+
+FOOD AND DRINK
+- Everyone gets hungry and thirsty; score shows "You are hungry!" / "You are thirsty.".
+- Food: Rosanne's Food Store (s w n from the temple), bread and honeybuns.
+- Drink: The Chicken's Rest, the inn (s w w n), Sam the bartender.
+  `list` shows the wares and prices, `buy <item>`, then `eat` / `drink`.
+
+WHERE NEWBIES GO
+- Udgaard village (see the map in CLAUDE.md), the cypress forest and the light part of the
+  Haon-Dor forest (west along the Village Road at Haon-Dor). The Deep, Dark Forest and the
+  Dark River in Haon-Dor are for stronger players.
