@@ -47,6 +47,7 @@
 #include <memory>
 
 const char *g_player_zone = "_players";
+const char *g_gm_zone = "_gm";
 
 unit_data *g_unit_list = nullptr; ///< The global unit_list
 unit_data *g_npc_head = nullptr;
@@ -428,6 +429,12 @@ void generate_zone_indexes()
     z->setTitle("Reserved zone for player file_indexes");
     z->setNotes("This zone is only here to allow us to use playername@_plaeyrs as with all other indexes such as mayor@midgaard. It's not "
                 "actually a zone, and it's not a representation of player files on disk\n");
+    g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
+
+    // And a virtual zone _gm for the rooms game masters make while the game runs (gmroom)
+    z = new zone_type{g_gm_zone};
+    z->setTitle("Reserved zone for rooms made while the game runs");
+    z->setNotes("The rooms in this zone are made with the gmroom command and are gone at the next reboot.\n");
     g_zone_info.mmp.insert(std::make_pair(z->getName(), z));
     z = nullptr;
 
@@ -1685,7 +1692,7 @@ void read_all_zones_reset()
     {
         read_zone_error = zone->second;
 
-        if (zone->second->getName() == "_players")
+        if (zone->second->getName()[0] == '_') // _players and _gm are virtual: no files
         {
             continue;
         }

@@ -126,7 +126,7 @@ private:
     ubit8 m_resistance{0};                                                 ///< Magic resistance of the room
     sbit16 m_mapx{-1};                                                     ///< Graphical map coordinates
     sbit16 m_mapy{-1};                                                     ///< Graphical map coordinates
-    int m_sc{0};                                                           ///< strong component, used for shortest path
+    int m_sc{-1};                                                          ///< strong component, used for shortest path; -1 for rooms made after boot
     int m_num{0};                                                          ///< room number, used for shortest path
 
 public:

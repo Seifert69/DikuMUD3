@@ -192,9 +192,9 @@ void destruct_unit(unit_data *unit)
         assert(!CHAR_MASTER(unit));
         assert(!CHAR_COMBAT(unit));
     }
-    else if (!unit->isObj())
+    else if (!unit->isObj() && !unit->isRoom()) // the only rooms destructed are game masters' (gmroom free)
     {
-        slog(LOG_OFF, 0, "Extract on something not a char or an obj.");
+        slog(LOG_OFF, 0, "Extract on something not a char, an obj or a room.");
         assert(FALSE);
     }
 

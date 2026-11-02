@@ -2946,6 +2946,13 @@ minlevel = 230
 loglevel = 230
 type     = 0
 
+command  = gmroom
+internal = gmroom
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
 command  = load
 internal = load
 minpos   = POSITION_DEAD
