@@ -516,8 +516,8 @@ dilend
 
 // On void@basis: hears CMD_AUTO_LEAVE, sent for every player leaving the game
 // (pc_data::gstate_tomenu), and tells everyone. A name someone could not see
-// is simply not on their list. A player a game master tracks (gmtrack) stops
-// being tracked.
+// is simply not on their list. A player a game master tracks or lures (gmtrack,
+// gmlure) no longer is.
 dilbegin who_leave();
 external
    gm_alert@commands(u : unitptr, txt : string);
@@ -532,9 +532,12 @@ code
    if ((activator == null) or (activator.type != UNIT_ST_PC))
       goto start;
 
-   if (dilfind("gm_track@commands", activator))
+   if (dilfind("gm_track@commands", activator) or dilfind("gm_lure@commands", activator))
    {
-      i := dildestroy("gm_track@commands", activator);
+      if (dilfind("gm_track@commands", activator))
+         i := dildestroy("gm_track@commands", activator);
+      if (dilfind("gm_lure@commands", activator))
+         i := dildestroy("gm_lure@commands", activator);
       gm_alert@commands(activator, mid(asctime(realtime), 12, 16) + " left the game");
    }
 

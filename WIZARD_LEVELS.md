@@ -12,7 +12,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
@@ -94,6 +94,29 @@ at the player's next command or within the minute. The tracker removes itself af
 (2 by default, at most 6), when the player leaves the game (`who_leave@basis`), or with
 `gmtrack <player> off`; saved with a player all the same, it finds itself expired at the next
 login. `gmtrack` alone lists who is tracked.
+
+## Drawing a player in
+
+`gmlure <player> <room@zone|room> [zone] [hours]` copies `gm_lure@commands` onto a player, which plays
+the room's lure steps (`gmmem <room> lure <step>`, one per call, kept as the room's `$gm_lure`
+list) one at a time, at the player's quiet moments: not fighting, above half their hit points,
+not moved for 20 seconds, and resting, sitting, asleep, talking, shopping or training, or
+standing still for 90 seconds; at least four minutes apart. A step is parts joined by ` | `:
+
+- `<text>`: the player sees it; `room <text>`: everyone in the room sees it;
+- `bring <name>`: that NPC or object comes into the player's room (it remembers where from, in
+  a `$gm_home` extra); `away <name>`: it goes back there;
+- `do <name> <command>`: the NPC does the command;
+- `lead <name>`: the NPC comes and leads the player toward the room, one room each time the
+  player has caught up with it, and goes home if the player hasn't followed for five minutes;
+- a step starting `dream ` plays only while the player sleeps, the others only while awake.
+
+`$1n` is the player and `$dir` the next step toward the room (`pathto`; a room made inside
+another counts as that room). With `zone`, the player has arrived as soon as they're anywhere in
+the room's zone. The game masters hear each step, and when the player arrives;
+the lure ends then, after `hours` (2 by default, at most 6), when the player leaves the game
+(`who_leave@basis`), or with `gmlure <player> off`. `gmlure` alone lists who is lured. Nothing
+about the player changes. `gmmem <room> clear lure` removes the steps.
 
 ## Rooms made while the game runs
 
