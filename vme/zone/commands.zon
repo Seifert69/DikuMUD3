@@ -11423,6 +11423,16 @@ code
 }
 dilend
 
+// The outermost room u is in: a room made inside another counts as the room around it
+dilbegin unitptr gm_outer(u : unitptr);
+code
+{
+   while (u.outside != null)
+      u := u.outside;
+   return (u);
+}
+dilend
+
 // Copied onto a player (gmtrack): tells the game masters when the player crosses into or out of
 // the zones in zones ("any": every change of zone), dies, falls below a third of their hit
 // points, gets followers, or is idle for 10 minutes. Nothing about the player changes. It
@@ -11621,7 +11631,436 @@ code
 }
 dilend
 
-// gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for] [text]: a game master's memory
+// u goes back to the room it was brought from (gm_lure: bring, lead, away)
+dilbegin gm_away(u : unitptr);
+var
+   exd : extraptr;
+   home : unitptr;
+code
+{
+   exd := "$gm_home" in u.extra;
+   if (exd == null)
+      return;
+   home := findsymbolic(exd.descr);
+   subextra(u.extra, "$gm_home");
+   if (home == null)
+      return;
+   if (u.type == UNIT_ST_NPC)
+      act("$1n leaves.", A_SOMEONE, u, null, null, TO_ROOM);
+   link(u, home);
+   return;
+}
+dilend
+
+#define GM_LURE_GAP    240  // seconds at least between two lure steps
+#define GM_LURE_STILL  20   // a player who moved more recently than this is on the go
+#define GM_LURE_LINGER 90   // standing this long in one room is a quiet moment too
+#define GM_LURE_LEAD   6    // a guide waits this long with the player before it goes on
+#define GM_LURE_LOST   300  // a guide the player hasn't followed for this long goes home
+
+// Copied onto a player (gmlure): draws them to the room sym, one lure step at a time, at
+// the player's quiet moments. The steps are the room's $gm_lure lines (gmmem <room> lure), so
+// every player lured there gets the same ones, each at their own pace; a step added later is
+// played too. A quiet moment: not fighting, above half their hit points, not moved for
+// GM_LURE_STILL seconds, and resting, sitting, asleep, talking, shopping or training, or
+// standing still for GM_LURE_LINGER; and GM_LURE_GAP since the last step. A step that starts
+// "dream " only plays while the player sleeps, the others only while awake. A step is parts
+// joined by " | ", played together:
+//    <text>               the player sees it
+//    room <text>          everyone in the room sees it
+//    bring <name>         the NPC or object comes into the player's room
+//    away <name>          it goes back to where it was brought from
+//    do <name> <command>  the NPC does it (say ..., emote ..., give note $1n)
+//    lead <name>          the NPC comes and leads the player there, a room at a time
+// $1n is the player, $dir the way to go from where they are. With inzone, the player has arrived
+// as soon as they're anywhere in the room's zone. The game masters hear each step (as
+// [gm <player>]), and when the player arrives. It ends then, at until (realtime), when the
+// player leaves the game (who_leave@basis), or with gmlure <player> off. Nothing about the
+// player changes.
+dilbegin aware gm_lure(sym : string, until : integer, inzone : integer);
+external
+   gm_alert(u : unitptr, txt : string);
+   unitptr gm_room(u : unitptr);
+   string gm_zone(u : unitptr);
+   unitptr gm_outer(u : unitptr);
+   gm_away(u : unitptr);
+var
+   goal : unitptr;  // found again after every wait, which clears pointers to other rooms
+   room : unitptr;
+   u : unitptr;
+   from : unitptr;
+   to : unitptr;
+   exd : extraptr;
+   talk : stringlist;
+   shop : stringlist;
+   train : stringlist;
+   ways : stringlist;
+   done : stringlist;
+   parts : stringlist;
+   here : string;
+   was : string;
+   why : string;
+   doing : string;
+   busywhy : string;
+   way : string;
+   leader : string;
+   step : string;
+   p : string;
+   w : string;
+   nm : string;     // findunit() takes the name out of the string it's given: it gets a copy
+   moved : integer;
+   busy : integer;
+   last : integer;
+   since : integer;
+   apart : integer;
+   dream : integer;
+   d : integer;
+   i : integer;
+   j : integer;
+   n : integer;
+code
+{
+   if (realtime >= until)
+      quit;
+   heartbeat := PULSE_SEC * 5;
+   talk := {"say", "ask", "tell", "emote", "whisper", "reply"};
+   shop := {"buy", "sell", "list", "value", "offer", "appraise"};
+   train := {"practice", "train", "info"};
+   ways := {"north", "east", "south", "west", "up", "down", "northeast", "northwest",
+            "southeast", "southwest", "inside", "outside"};
+   last := realtime - GM_LURE_GAP;
+   moved := realtime;
+
+   :start:
+   wait(SFB_DONE | SFB_CMD | SFB_TICK, (activator == self) or (activator == null));
+
+   if (realtime >= until)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer lured (time is up)");
+      quit;
+   }
+   goal := findsymbolic(sym);
+   if ((goal == null) or (goal.type != UNIT_ST_ROOM))
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer lured: " + sym + " is gone");
+      quit;
+   }
+   room := gm_room(self);
+   here := room.nameidx + "@" + room.zoneidx;
+   if (here != was)
+   {
+      was := here;
+      moved := realtime;
+   }
+   if (activator == self)
+   {
+      if (cmdstr in talk)
+         doing := "talking";
+      else if (cmdstr in shop)
+         doing := "shopping";
+      else if (cmdstr in train)
+         doing := "training";
+      else
+         doing := "";
+      if (doing != "")
+      {
+         busy := realtime;
+         busywhy := doing;
+      }
+      goto start;  // the moment comes at the next tick, after what they did
+   }
+
+   to := gm_outer(goal);
+   if (gm_outer(self) == to)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " arrives at " + sym + " (lured)");
+      quit;
+   }
+   if (inzone and (gm_zone(self) == to.zoneidx))
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " arrives in " + to.zoneidx + ", at " +
+               here + " (lured)");
+      quit;
+   }
+
+   // a guide goes on once the player has caught up with it and is up and about (not fighting,
+   // resting or asleep)
+   if (leader != "")
+   {
+      nm := leader;
+      u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC);
+      if (u == null)
+         leader := "";
+      else if (u.outside == room)
+      {
+         apart := 0;
+         if (since == 0)
+            since := realtime;
+         else if ((realtime - since >= GM_LURE_LEAD) and (self.position == POSITION_STANDING))
+         {
+            d := DIR_IMPOSSIBLE;
+            from := gm_outer(u);
+            if ((from.zoneidx != "_gm") and (to.zoneidx != "_gm"))
+               d := pathto(from, to);
+            if (d <= DIR_SOUTHWEST)
+            {
+               since := 0;
+               exec(ways.[d], u);
+               if ((u.outside == room) and (room.exit_to[d] != null))
+               {  // a closed door, say: it slips through all the same
+                  act("$1n slips away " + ways.[d] + ".", A_SOMEONE, u, null, null, TO_ROOM);
+                  link(u, room.exit_to[d]);
+                  act("$1n arrives.", A_SOMEONE, u, null, null, TO_ROOM);
+               }
+            }
+            else if (d != DIR_TRYAGAIN)  // there, or no way on: it stays
+               leader := "";
+         }
+      }
+      else
+      {
+         since := 0;
+         if (apart == 0)
+            apart := realtime;
+         else if (realtime - apart >= GM_LURE_LOST)
+         {
+            gm_alert(self, mid(asctime(realtime), 12, 16) + " didn't follow " + leader +
+                     ", who goes home");
+            leader := "";
+            gm_away(u);
+         }
+      }
+   }
+
+   // a quiet moment?
+   if ((self.fighting != null) or (self.hp * 2 <= self.max_hp) or
+       (realtime - last < GM_LURE_GAP) or (realtime - moved < GM_LURE_STILL))
+      goto start;
+   if (self.position == POSITION_SLEEPING)
+      why := "asleep";
+   else if (self.position == POSITION_RESTING)
+      why := "resting";
+   else if (self.position == POSITION_SITTING)
+      why := "sitting";
+   else if (realtime - busy <= 60)
+      why := busywhy;
+   else if (realtime - moved >= GM_LURE_LINGER)
+      why := "standing still";
+   else
+      goto start;
+
+   // the next step that suits the moment: a dream while asleep, any other step while awake
+   exd := "$gm_lure" in goal.extra;
+   if (exd == null)
+      goto start;
+   n := length(exd.names);
+   i := 1;
+   while (i < n)
+   {
+      if (not (itoa(i) in done))
+      {
+         dream := (left(exd.names.[i], 6) == "dream ");
+         if (dream == (self.position == POSITION_SLEEPING))
+            break;
+      }
+      i := i + 1;
+   }
+   if (i >= n)
+      goto start;
+   step := exd.names.[i];
+
+   way := "far away";
+   if ("$dir" in step)
+   {
+      d := DIR_IMPOSSIBLE;
+      from := gm_outer(self);
+      if ((from.zoneidx != "_gm") and (to.zoneidx != "_gm"))
+         d := pathto(from, to);
+      if (d == DIR_TRYAGAIN)
+         goto start;  // the way is being worked out: next tick
+      if (d <= DIR_EXIT)
+         way := ways.[d];
+   }
+   addstring(done, itoa(i));
+   last := realtime;
+   step := replace("$dir", way, replace("$1n", self.name, step));
+   gm_alert(self, mid(asctime(realtime), 12, 16) + " lure step " + itoa(i) + " of " +
+            itoa(n - 1) + " (" + why + ", in " + here + ")");
+
+   if (dream)
+   {
+      act(mid(step, 7, length(step)), A_ALWAYS, self, null, null, TO_CHAR);
+      goto start;
+   }
+   parts := split(step, " | ");
+   j := 0;
+   while (j < length(parts))
+   {
+      p := parts.[j];
+      j := j + 1;
+      w := getword(p);
+      if (w == "room")
+         act(p, A_SOMEONE, self, null, null, TO_ALL);
+      else if ((w == "bring") or (w == "lead"))
+      {
+         nm := p;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+         if (u == null)
+            gm_alert(self, "lure: no " + p + " to " + w);
+         else
+         {
+            from := gm_room(u);
+            if (from != room)
+            {
+               if (not ("$gm_home" in u.extra))
+                  addextra(u.extra, {"$gm_home"}, from.nameidx + "@" + from.zoneidx);
+               link(u, room);
+               if (u.type == UNIT_ST_NPC)
+                  act("$1n arrives.", A_SOMEONE, u, null, null, TO_ROOM);
+            }
+            if ((w == "lead") and (u.type == UNIT_ST_NPC))
+            {
+               leader := p;
+               since := realtime;
+               apart := 0;
+            }
+         }
+      }
+      else if (w == "away")
+      {
+         nm := p;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+         if (u != null)
+            gm_away(u);
+         if (leader == p)
+            leader := "";
+      }
+      else if (w == "do")
+      {
+         w := getword(p);
+         nm := w;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC);
+         if (u == null)
+            gm_alert(self, "lure: no " + w + " to do " + p);
+         else
+            exec(p, u);
+      }
+      else
+         act(parts.[j - 1], A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   goto start;
+}
+dilend
+
+// gmlure [<player> <room@zone|room> [zone] [hours]] [<player> off]: draws a player to a room
+// (with zone: into its zone) with the room's lure steps (gm_lure, gmmem <room> lure), for up to
+// 6 hours (2 by default); alone, lists who is lured
+dilbegin gmlure(arg : string);
+var
+   pc : unitptr;
+   goal : unitptr;
+   pname : string;
+   dest : string;
+   s : string;
+   w : string;
+   exd : extraptr;
+   hours : integer;
+   inzone : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   pname := getword(arg);
+   if (pname == "")
+   {
+      s := "";
+      pc := ghead();
+      while (pc.type == UNIT_ST_PC)
+      {
+         if (dilfind("gm_lure@commands", pc))
+            s := s + " " + pc.name;
+         pc := pc.gnext;
+      }
+      if (s == "")
+         sendtext("No one is lured.<br/>", self);
+      else
+         sendtext("Lured:" + s + "<br/>", self);
+      quit;
+   }
+
+   pc := findunit(self, pname, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + pname + " is in the game.<br/>", self);
+      quit;
+   }
+
+   dest := getword(arg);
+   if (dest == "off")
+   {
+      if (dilfind("gm_lure@commands", pc))
+      {
+         i := dildestroy("gm_lure@commands", pc);
+         sendtext("No longer luring " + pc.name + ".<br/>", self);
+      }
+      else
+         sendtext(pc.name + " isn't lured.<br/>", self);
+      quit;
+   }
+
+   if (dest == "room")
+   {
+      goal := self.outside;
+      while ((goal != null) and (goal.type != UNIT_ST_ROOM))
+         goal := goal.outside;
+   }
+   else if ("@" in dest)
+      goal := findsymbolic(dest);
+   if ((goal == null) or (goal.type != UNIT_ST_ROOM))
+   {
+      sendtext("Usage: gmlure &lt;player&gt; &lt;room@zone|room&gt; [zone] [hours], " +
+               "gmlure &lt;player&gt; off, or gmlure alone to list.<br/>", self);
+      quit;
+   }
+   dest := goal.nameidx + "@" + goal.zoneidx;
+
+   hours := 2;
+   inzone := FALSE;
+   w := getword(arg);
+   while (w != "")
+   {
+      if (w == "zone")
+         inzone := TRUE;
+      else
+         hours := atoi(w);
+      w := getword(arg);
+   }
+   if (hours < 1)
+      hours := 1;
+   if (hours > 6)
+      hours := 6;
+
+   if (dilfind("gm_lure@commands", pc))
+      i := dildestroy("gm_lure@commands", pc);
+   dilcopy("gm_lure@commands(" + dest + "," + itoa(realtime + hours * 3600) + "," +
+           itoa(inzone) + ")", pc);
+   s := "Luring " + pc.name + " to " + dest;
+   if (inzone)
+      s := s + " (or anywhere in " + goal.zoneidx + ")";
+   s := s + " for " + itoa(hours) + " hours";
+   exd := "$gm_lure" in goal.extra;
+   if (exd == null)
+      s := s + "; it has no lure steps yet (gmmem " + dest + " lure &lt;step&gt;)";
+   else
+      s := s + ", with " + itoa(length(exd.names) - 1) + " steps";
+   sendtext(s + ".<br/>", self);
+   quit;
+}
+dilend
+
+// gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for|lure] [text]: a game master's memory
 // of a unit
 dilbegin gmmem(arg : string);
 external
@@ -11643,7 +12082,7 @@ code
    if (word == "")
    {
       sendtext("Usage: gmmem &lt;npc, object, room@zone or 'room'&gt; " +
-               "[brief|brief+|told|event|clear|watch|greet|for] [text]<br/>", self);
+               "[brief|brief+|told|event|clear|watch|greet|for|lure] [text]<br/>", self);
       quit;
    }
 
@@ -11716,6 +12155,16 @@ code
          }
          s := s + "<br/>";
       }
+      exd := "$gm_lure" in u.extra;
+      if (exd != null)
+      {
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "LURE " + itoa(i) + ": " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
       if (dilfind("gm_comms@commands", u) or dilfind("gm_objwatch@commands", u))
          s := s + "(recording)<br/>";
       if (dilfind("gm_greet@commands", u))
@@ -11756,6 +12205,7 @@ code
          subextra(u.extra, "$gm_event");
          subextra(u.extra, "$gm_greet");
          subextra(u.extra, "$gm_for");
+         subextra(u.extra, "$gm_lure");
       }
       else
          subextra(u.extra, "$gm_" + arg);
@@ -11801,9 +12251,23 @@ code
          addextra(u.extra, sl, "");
       }
    }
+   else if (what == "lure")
+   {
+      if (u.type != UNIT_ST_ROOM)
+      {
+         sendtext("Lure steps go on the room the players are drawn to.<br/>", self);
+         quit;
+      }
+      if (arg == "")
+      {
+         sendtext("Usage: gmmem &lt;room&gt; lure &lt;step&gt;<br/>", self);
+         quit;
+      }
+      gm_note(u, "$gm_lure", arg);
+   }
    else
    {
-      sendtext("gmmem: brief, brief+, told, event, clear, watch, greet or for.<br/>", self);
+      sendtext("gmmem: brief, brief+, told, event, clear, watch, greet, for or lure.<br/>", self);
       quit;
    }
    sendtext("Ok.<br/>", self);
