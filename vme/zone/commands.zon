@@ -12060,6 +12060,40 @@ code
 }
 dilend
 
+// gmtreasure <quality 0-7> [what]: random treasure (Treasure@randomt) in the game master's
+// inventory; what is in words ("plate boots", "dagger", "ring", "armour"), or nothing for any
+dilbegin gmtreasure(arg : string);
+var
+   u : unitptr;
+   w : string;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   w := getword(arg);
+   if ((w == "") or (itoa(atoi(w)) != w) or (atoi(w) < BONUS_AVERAGE) or (atoi(w) > BONUS_ARTIFACT))
+   {
+      sendtext("Usage: gmtreasure &lt;quality 0-7&gt; [what: weapon, dagger, jewelry, ring, " +
+               "armour, plate boots, shield, ...]<br/>", self);
+      quit;
+   }
+
+   u := load("treasure@randomt");
+   if (u == null)
+   {
+      sendtext("There is no treasure@randomt to make treasure from.<br/>", self);
+      quit;
+   }
+   link(u, self);
+   if (arg == "")
+      arg := "any";  // dilcopy() can't pass an empty string
+   dilcopy("Treasure@randomt(" + w + "," + replace(",", " ", arg) + ")", u);
+   sendtext("Ok.<br/>", self);
+   quit;
+}
+dilend
+
 // gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for|lure] [text]: a game master's memory
 // of a unit
 dilbegin gmmem(arg : string);
