@@ -120,14 +120,33 @@ about the player changes. `gmmem <room> clear lure` removes the steps.
 
 ## Treasure made to order
 
-`gmtreasure <quality 0-7> [what]` loads a `treasure@randomt` shell into the game master's
-inventory and copies `Treasure@randomt(quality, what)` onto it, which rolls a random magic item
-as `RndTreasure` does (material, craftsmanship, enchantments; from quality 2 up a level
-restriction of 10, 20, 40, 60, 80 or 100) and tells the holder what it became. What is in words:
-`weapon` or a weapon (`dagger`, `long sword`; `sword` is any of the swords), `jewelry` or a
-piece (`ring`, `crown`), `armour`, an armour type (`cloth`, `leather`, `hard leather`, `chain`
-or `mail`, `plate`), a piece (`feet`/`boots`, `hands`/`gloves`, `head`/`helmet`, `arms`,
-`legs`, `shield`, `body`) or both (`plate boots`); nothing for any kind.
+`gmtreasure [what] for <player>` (or `level <n>`, or both: the lower counts) loads a
+`treasure@randomt` shell into the game master's inventory and copies `Treasure@randomt(quality,
+what)` onto it, which rolls a random magic item as `RndTreasure` does and tells the holder what
+it became. The quality comes from the level (`gm_trquality@commands`), one rung for each level
+restriction randomt puts on its items, so the player can use what they get:
+
+| level | quality | restricted to level |
+|---|---|---|
+| 1–4 | 0 average | – |
+| 5–9 | 1 average plus | – |
+| 10–19 | 2 good | 10 |
+| 20–39 | 3 good plus | 20 |
+| 40–59 | 4 excellent | 40 |
+| 60–79 | 5 excellent plus | 60 |
+| 80 and up | 6 superior | 80 |
+
+An artifact (7, restricted to level 100) is never earned by level: only an administrator (level
+250 and up) picks the quality outright, `gmtreasure [what] quality <0-7>`. With `for <player>`
+the item is made to their height. What is in words: `weapon` or a weapon (`dagger`, `long
+sword`; `sword` is any of the swords), `jewelry` or a piece (`ring`, `crown`), `armour`, an
+armour type (`cloth`, `leather`, `hard leather`, `chain` or `mail`, `plate`), a piece
+(`feet`/`boots`, `hands`/`gloves`, `head`/`helmet`, `arms`, `legs`, `shield`, `body`) or both
+(`plate boots`); nothing for any kind.
+
+The main material decides the weight and how hard the item is to break, against an everyday
+material of its kind (iron, teak, granite, leather): mithril weighs half as much as iron and
+lasts four times as long; gold and copper are soft.
 
 ## Rooms made while the game runs
 

@@ -2566,15 +2566,42 @@ external
 var
     ana : string;
     mat : string;
+    cat : integer;
+    ref : integer;
+    w : integer;
     slMatNames  : stringlist global slMatNames@randomt;
     ilMatValues : intlist    global ilMatValues@randomt;
 code
 {
-    // Adjust for material hitpoints - applies to ALL weapons
+    // The tables' weights and the hit points from treasureroll are for an everyday material of
+    // its kind: iron, teak, granite, leather (cloth for cloth). The main material changes both:
+    // mithril is half the weight of iron and four times as hard to break, gold is soft.
     //
-    // TODO --> here
-    // u.max_hp := (u.max_hp * ilMatValues.[ilMatIndex(mat1Index, 4)]) / 1000;
-    // u.hp := u.max_hp;
+    cat := ilMatValues.[ilMatIndex(mat1Index, 1)];
+    if (cat == 1)
+        ref := MAT_IRON;
+    else if (cat == 2)
+        ref := MAT_TEAK;
+    else if (cat == 3)
+        ref := MAT_GRANITE;
+    else
+        ref := MAT_LEATHER;
+    w := ilMatValues.[ilMatIndex(ref, 2)];
+    if (mat1Index == MAT_CLOTH)
+        w := ilMatValues.[ilMatIndex(MAT_CLOTH, 2)];
+    if (u.baseweight > 0)
+    {
+        w := (u.baseweight * ilMatValues.[ilMatIndex(mat1Index, 2)] + w / 2) / w;
+        if (w < 1)
+            w := 1;
+        set_weight_base(u, w);
+    }
+    // in thousands, so 8000 hit points times mithril's 400000 stays within an integer
+    u.max_hp := (u.max_hp * (ilMatValues.[ilMatIndex(mat1Index, 3)] / 1000)) /
+                (ilMatValues.[ilMatIndex(ref, 3)] / 1000);
+    if (u.max_hp < 50)
+        u.max_hp := 50;
+    u.hp := u.max_hp;
 
     // Set the name title & outside_descr
     //
@@ -3262,9 +3289,20 @@ var
     enc3 : integer;
     w : integer;
     il : intlist;
+    exd : extraptr;
+    hgt : integer;
 
 code
 {
+    // Made for someone (gmtreasure ... for <player>): their height. Taken off first, because
+    // the rolls are kept in the item's first extra.
+    exd := "$treasure_height" in u.extra;
+    if (exd != null)
+    {
+        hgt := atoi(exd.descr);
+        subextra(u.extra, "$treasure_height");
+    }
+
     if (u.extra == null)
         addextra(u.extra, {""}, "");
 
@@ -3288,9 +3326,14 @@ code
     rollenc := minmax7(rollenc);
 
 
-    // Set the height to the initially wielding NPC or pick a random race
+    // Set the height to the one it's made for (gmtreasure ... for <player>), the initially
+    // wielding NPC, or pick a random race
     //
-    if ((u.outside.type == UNIT_ST_NPC) and (u.equip != 0))
+    if (hgt > 0)
+    {
+        u.height := hgt;
+    }
+    else if ((u.outside.type == UNIT_ST_NPC) and (u.equip != 0))
     {
         u.height := u.outside.height;
     }
@@ -3304,13 +3347,15 @@ code
         // Maybe add decription, sword for a dwarf
     }
 
-    // Adjust weight based on difference from default 170cm to actual height
+    // Adjust weight based on difference from default 170cm to actual height: bigger is heavier
     //
-    w := (u.weight * 170) / u.height;
+    w := (u.weight * u.height + 85) / 170;
 
     // For craftsmanship, rollmat +7 means 21% less weight, -7 +21% weight
     //
     w := w - ((w * rollmat*3) / 100);
+    if ((w < 1) and (u.weight > 0))
+        w := 1;  // a dagger for a halfling still weighs something
 
     set_weight_base(u, w);
 
