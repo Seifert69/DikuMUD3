@@ -12,7 +12,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmtreasure` (a random magic item made to order), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmtreasure` (a random magic item made to order), `gmquest` (an event made a quest, with experience), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
@@ -120,14 +120,41 @@ about the player changes. `gmmem <room> clear lure` removes the steps.
 
 ## Treasure made to order
 
-`gmtreasure <quality 0-7> [what]` loads a `treasure@randomt` shell into the game master's
-inventory and copies `Treasure@randomt(quality, what)` onto it, which rolls a random magic item
-as `RndTreasure` does (material, craftsmanship, enchantments; from quality 2 up a level
-restriction of 10, 20, 40, 60, 80 or 100) and tells the holder what it became. What is in words:
-`weapon` or a weapon (`dagger`, `long sword`; `sword` is any of the swords), `jewelry` or a
-piece (`ring`, `crown`), `armour`, an armour type (`cloth`, `leather`, `hard leather`, `chain`
-or `mail`, `plate`), a piece (`feet`/`boots`, `hands`/`gloves`, `head`/`helmet`, `arms`,
-`legs`, `shield`, `body`) or both (`plate boots`); nothing for any kind.
+`gmtreasure [what] for <player>` (or `level <n>`, or both: the lower counts) loads a
+`treasure@randomt` shell into the game master's inventory and copies `Treasure@randomt(quality,
+what)` onto it, which rolls a random magic item as `RndTreasure` does and tells the holder what
+it became. The quality comes from the level (`gm_trquality@commands`), one rung for each level
+restriction randomt puts on its items, so the player can use what they get:
+
+| level | quality | restricted to level |
+|---|---|---|
+| 1–4 | 0 average | – |
+| 5–9 | 1 average plus | – |
+| 10–19 | 2 good | 10 |
+| 20–39 | 3 good plus | 20 |
+| 40–59 | 4 excellent | 40 |
+| 60–79 | 5 excellent plus | 60 |
+| 80 and up | 6 superior | 80 |
+
+An artifact (7, restricted to level 100) is never earned by level: only an administrator (level
+250 and up) picks the quality outright, `gmtreasure [what] quality <0-7>`. With `for <player>`
+the item is made to their height. What is in words: `weapon` or a weapon (`dagger`, `long
+sword`; `sword` is any of the swords), `jewelry` or a piece (`ring`, `crown`), `armour`, an
+armour type (`cloth`, `leather`, `hard leather`, `chain` or `mail`, `plate`), a piece
+(`feet`/`boots`, `hands`/`gloves`, `head`/`helmet`, `arms`, `legs`, `shield`, `body`) or both
+(`plate boots`); nothing for any kind.
+
+The main material decides the weight and how hard the item is to break, against an everyday
+material of its kind (iron, teak, granite, leather): mithril weighs half as much as iron and
+lasts four times as long; gold and copper are soft.
+
+## Quests from a game master
+
+`gmquest <player> easy|fair|hard <quest name>[: what they did]` adds `<quest name> Complete` to
+the player's quests (what `quests` lists; the entry also carries `$gm`) and gives experience by
+level and difficulty: a tenth, a quarter or half of `level_xp` for the player's level, the
+experience between it and the next. Each name once per player, mortals only. `gmquest <player>`
+lists the game-master quests they have done.
 
 ## Rooms made while the game runs
 

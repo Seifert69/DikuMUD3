@@ -12060,24 +12060,108 @@ code
 }
 dilend
 
-// gmtreasure <quality 0-7> [what]: random treasure (Treasure@randomt) in the game master's
-// inventory; what is in words ("plate boots", "dagger", "ring", "armour"), or nothing for any
+// The treasure quality (BONUS_...) for a player of level lvl, as gmtreasure gives it: one rung
+// for each level restriction randomt puts on its items (vrestrict@randomt: 10, 20, 40, 60, 80),
+// so the player can use what they get. BONUS_ARTIFACT is never earned by level alone.
+dilbegin integer gm_trquality(lvl : integer);
+code
+{
+   if (lvl < 5)
+      return (BONUS_AVERAGE);
+   if (lvl < 10)
+      return (BONUS_AVERAGE_PLUS);
+   if (lvl < 20)
+      return (BONUS_GOOD);
+   if (lvl < 40)
+      return (BONUS_GOOD_PLUS);
+   if (lvl < 60)
+      return (BONUS_EXCELLENT);
+   if (lvl < 80)
+      return (BONUS_EXCELLENT_PLUS);
+   return (BONUS_SUPERIOR);
+}
+dilend
+
+// gmtreasure [what] [for <player>] [level <n>] [quality <0-7>]: random treasure
+// (Treasure@randomt) in the game master's inventory. What is in words ("plate boots", "dagger",
+// "ring", "armour"), or nothing for any. Its quality comes from a player's level
+// (gm_trquality): for <player> uses theirs and fits it to their height, level <n> a level
+// of your choosing, the lower of the two if both. quality <n> picks it outright, and only an
+// administrator may: an artifact (7) is for a quest beyond any level.
 dilbegin gmtreasure(arg : string);
+external
+   integer gm_trquality(lvl : integer);
 var
    u : unitptr;
+   pc : unitptr;
+   sl : stringlist;
    w : string;
+   what : string;
+   s : string;
+   q : integer;
+   lvl : integer;
+   i : integer;
 code
 {
    if (self.type != UNIT_ST_PC)
       quit;
 
-   w := getword(arg);
-   if ((w == "") or (itoa(atoi(w)) != w) or (atoi(w) < BONUS_AVERAGE) or (atoi(w) > BONUS_ARTIFACT))
+   sl := split(arg, " ");
+   what := "";
+   lvl := -1;
+   q := -1;
+   i := 0;
+   while (i < length(sl))
    {
-      sendtext("Usage: gmtreasure &lt;quality 0-7&gt; [what: weapon, dagger, jewelry, ring, " +
-               "armour, plate boots, shield, ...]<br/>", self);
-      quit;
+      w := sl.[i];
+      if (((w == "for") or (w == "level") or (w == "quality")) and (i + 1 < length(sl)))
+      {
+         i := i + 1;
+         if (w == "for")
+         {
+            pc := findunit(self, sl.[i], FIND_UNIT_WORLD, null, UNIT_ST_PC);
+            if (pc == null)
+            {
+               sendtext("No player called " + sl.[i] + " is in the game.<br/>", self);
+               quit;
+            }
+         }
+         else if (itoa(atoi(sl.[i])) != sl.[i])
+            goto usage;
+         else if (w == "level")
+            lvl := atoi(sl.[i]);
+         else
+            q := atoi(sl.[i]);
+      }
+      else if (w != "")
+         what := what + " " + w;
+      i := i + 1;
    }
+
+   if (q >= 0)
+   {
+      if (self.level < 250)
+      {
+         sendtext("Only an administrator picks the quality: use for &lt;player&gt; or level " +
+                  "&lt;n&gt;. An artifact is the reward of a quest beyond any level, and " +
+                  "Papi's to give.<br/>", self);
+         quit;
+      }
+      if (q > BONUS_ARTIFACT)
+         goto usage;
+      s := "quality " + itoa(q);
+   }
+   else if ((pc == null) and (lvl < 0))
+      goto usage;
+   else
+   {
+      if ((pc != null) and ((lvl < 0) or (pc.vlevel < lvl)))
+         lvl := pc.vlevel;
+      q := gm_trquality(lvl);
+      s := "quality " + itoa(q) + ", for level " + itoa(lvl);
+   }
+   if (pc != null)
+      s := s + ", made for " + pc.name;
 
    u := load("treasure@randomt");
    if (u == null)
@@ -12086,10 +12170,141 @@ code
       quit;
    }
    link(u, self);
-   if (arg == "")
-      arg := "any";  // dilcopy() can't pass an empty string
-   dilcopy("Treasure@randomt(" + w + "," + replace(",", " ", arg) + ")", u);
-   sendtext("Ok.<br/>", self);
+   if (pc != null)
+      addextra(u.extra, {"$treasure_height"}, itoa(pc.height));
+   if (what == "")
+      what := "any";  // dilcopy() can't pass an empty string
+   dilcopy("Treasure@randomt(" + itoa(q) + "," + replace(",", " ", what) + ")", u);
+   sendtext("Making" + what + " (" + s + ").<br/>", self);
+   quit;
+
+   :usage:
+   sendtext("Usage: gmtreasure [what: weapon, dagger, jewelry, ring, armour, plate boots, " +
+            "shield, ...] for &lt;player&gt; | level &lt;n&gt;<br/>", self);
+   quit;
+}
+dilend
+
+// gmquest <player> [easy|fair|hard <quest name>[: what they did]]: a game master's event
+// becomes one of the player's quests ("<name> Complete", as `quests` lists them), once per name,
+// with experience by level and difficulty: a tenth, a quarter or half of what the player's
+// level needs. The
+// player alone lists the game-master quests they have done ($gm on the entry).
+dilbegin gmquest(arg : string);
+var
+   pc : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   w : string;
+   qn : string;
+   txt : string;
+   s : string;
+   diff : string;
+   pct : integer;
+   xp : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   sl := split(arg, " ");
+   if (length(sl) < 1)
+      goto usage;
+   w := sl.[0];
+   pc := findunit(self, w, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + sl.[0] + " is in the game.<br/>", self);
+      quit;
+   }
+
+   if (length(sl) < 2)
+   {
+      s := "";
+      ex := pc.quests;
+      while (ex != null)
+      {
+         if ("$gm" in ex.names)
+            s := s + "  " + ex.names.[0] + ": " + ex.descr + "<br/>";
+         ex := ex.next;
+      }
+      if (s == "")
+         s := "  none<br/>";
+      sendtext(pc.name + " (level " + itoa(pc.vlevel) + ") has done these game-master quests:<br/>" +
+               s, self);
+      quit;
+   }
+
+   diff := sl.[1];
+   if (diff == "easy")
+      pct := 10;
+   else if (diff == "fair")
+      pct := 25;
+   else if (diff == "hard")
+      pct := 50;
+   else
+      goto usage;
+
+   // the name, and after a colon what they did
+   qn := "";
+   i := 2;
+   while (i < length(sl))
+   {
+      if (sl.[i] != "")
+         qn := qn + " " + sl.[i];
+      i := i + 1;
+   }
+   txt := "";
+   if (":" in qn)
+   {
+      sl := split(qn, ":");
+      qn := sl.[0];
+      txt := sl.[1];
+      i := 2;
+      while (i < length(sl))
+      {
+         txt := txt + ":" + sl.[i];
+         i := i + 1;
+      }
+      while (left(txt, 1) == " ")
+         txt := right(txt, length(txt) - 1);
+   }
+   while (left(qn, 1) == " ")
+      qn := right(qn, length(qn) - 1);
+   while (right(qn, 1) == " ")
+      qn := left(qn, length(qn) - 1);
+   if ((qn == "") or (length(qn) > 50))
+      goto usage;
+   qn := qn + " Complete";
+
+   if (qn in pc.quests)
+   {
+      sendtext(pc.name + " has done " + qn + " already.<br/>", self);
+      quit;
+   }
+   if (pc.level >= IMMORTAL_LEVEL)
+   {
+      sendtext(pc.name + " is immortal: quests and experience are for mortals.<br/>", self);
+      quit;
+   }
+
+   xp := (getinteger(DIL_GINT_LEVELXP, null, pc.vlevel) * pct) / 100;
+   sl := null;
+   addstring(sl, qn);
+   addstring(sl, "$gm");
+   addextra(pc.quests, sl, txt);
+   experience(xp, pc);
+   act("<br/>You have completed a quest: " + qn + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("<div class='xpgain'>You earned " + itoa(xp) + " experience.</div>", A_ALWAYS, pc, null,
+       null, TO_CHAR);
+   sendtext(pc.name + " (level " + itoa(pc.vlevel) + "): " + qn + ", " + diff + ", " +
+            itoa(xp) + " experience.<br/>", self);
+   quit;
+
+   :usage:
+   sendtext("Usage: gmquest &lt;player&gt; [easy|fair|hard &lt;quest name&gt;[: what they " +
+            "did]]<br/>", self);
    quit;
 }
 dilend
