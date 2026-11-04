@@ -60,7 +60,7 @@ while [ ! -e ~/.dwili-stop ]; do
     echo "=== $(date '+%F %T') claude ${args[*]:0:2}" >> "$log"
     started=$(date +%s)
     # A turn can last for hours; cut it off so the next one can start a fresh conversation
-    timeout $FRESH claude "${args[@]}" >> "$log" 2>&1
+    bin/claude-turn $FRESH "${args[@]}" >> "$log" 2>&1
     echo "=== $(date '+%F %T') claude exited with code $?" >> "$log"
     # A turn that ends at once (no login, a usage limit, an error) waits longer before the next
     if (($(date +%s) - started < 60)); then

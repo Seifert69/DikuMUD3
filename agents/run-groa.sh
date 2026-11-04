@@ -43,7 +43,7 @@ while [ ! -e ~/.groa-stop ]; do
         continue
     fi
     echo "=== $(date '+%F %T') woken" >> "$log"
-    timeout $TURN claude -p "It's $(date '+%A %F, %H:%M'). Read knowledge/mechanics.md, knowledge/faq.md and memory/lessons.txt, then deal with this, which just happened where you are:
+    bin/claude-turn $TURN -p "It's $(date '+%A %F, %H:%M'). Read knowledge/mechanics.md, knowledge/faq.md and memory/lessons.txt, then deal with this, which just happened where you are:
 
 $text
 
