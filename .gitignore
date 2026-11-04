@@ -22,3 +22,4 @@ CMakeDoxyfile.in
 CMakeDoxygenDefaults.cmake
 Doxyfile.*
 /vme/mplex.log
+__pycache__/

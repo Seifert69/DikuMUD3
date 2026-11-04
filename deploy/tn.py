@@ -159,7 +159,8 @@ def login():
         raise LoginFailed("no answer to the password", True)
     if "Wrong" in m.group(0):
         raise LoginFailed("login refused", False)
-    if "Throw" in m.group(0):
+    # Production says "you last visited" before "Already playing!", so look on for the question
+    if "Throw" in m.group(0) or wait_for(r"Throw the other copy out", 3):
         # The character is playing already, maybe by its owner: only throw that copy out when told to.
         # Logging in again, the other copy can be our own old connection the server hasn't dropped yet.
         if os.environ.get("TN_THROW") != "1":

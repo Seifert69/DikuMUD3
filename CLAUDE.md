@@ -120,6 +120,7 @@ Don't use public channels on the live muds: they relay to Discord.
 | `vme/www/client/` | browser client |
 | `unit_tests/` | Boost.Test suites |
 | `deploy/` | deploy scripts for valhalla.com |
+| `agents/` | tools for the in-game helper agents (`mud.py`: a telnet session kept open between commands) |
 
 ## Conventions
 
