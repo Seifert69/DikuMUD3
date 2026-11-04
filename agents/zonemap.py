@@ -2,8 +2,10 @@
 """
 A map of the world from the zone sources, for `mud.py way`: one line per room,
        room@zone<TAB>title<TAB>n=room@zone e=room@zone d=room@zone*<TAB>sector
-where * marks an exit with a door and sector is the room's movement type (city, forest,
-water_swim...). Rooms only: no monsters, objects or DIL.
+where * marks an exit with a door, ! a hidden door (search for it, then open it), and sector is the room's movement type (city, forest,
+water_swim...). A room inside another room (`in`, entered like the barrel to the thieves'
+guild) gets enter:barrel=room@zone in the room around it, and leave=room@zone itself.
+Rooms only: no monsters, objects or DIL.
 
 usage: zonemap.py ZONEDIR > map.txt
 """
@@ -62,8 +64,16 @@ def rooms(path):
         if room is None:
             m = ROOM.match(line)
             if m and m.group(1) not in ("end", "descr", "title", "names", "extra", "movement"):
-                room = {"id": m.group(1).lower(), "title": "", "exits": [], "sector": ""}
+                room = {"id": m.group(1).lower(), "title": "", "exits": [], "sector": "",
+                        "names": [], "in": None, "enter": False, "door": False}
+                exit_open = False
             continue
+        if exit_open:  # the exit's keyword, key and open lines, up to its ";"
+            if re.match(r"^\s*open\s*\{.*EX_OPEN_CLOSE", line) and room["exits"][-1][-1] not in "*!":
+                room["exits"][-1] += "!" if "EX_HIDDEN" in line else "*"
+            exit_open = ";" not in line and not re.match(r"^\s*end\s*$", line)
+            if exit_open or ";" in line:
+                continue
         if re.match(r"^\s*end\s*$", line):
             yield zone, room
             room = None
@@ -72,6 +82,18 @@ def rooms(path):
         if m:
             room["title"] = re.sub(r"<[^>]*>|&[a-zA-Z0-9]+", "", m.group(1)).strip()
             continue
+        m = re.match(r"^\s*names\s*\{(.*)\}", line)
+        if m:
+            room["names"] = re.findall(r'"([^"]+)"', m.group(1))
+            continue
+        m = re.match(r"^\s*in\s+([A-Za-z0-9_@/]+)\s*$", line)
+        if m:
+            room["in"] = m.group(1).lower()
+            continue
+        if re.match(r"^\s*manipulate\s*\{.*MANIPULATE_ENTER", line):
+            room["enter"] = True
+        if re.match(r"^\s*open\s*\{.*EX_OPEN_CLOSE", line):
+            room["door"] = True
         m = re.match(r"^\s*movement\s+SECT_(\w+)", line)
         if m:
             room["sector"] = m.group(1).lower()
@@ -83,16 +105,33 @@ def rooms(path):
                 to = "%s@%s" % tuple(reversed(to.split("/")))
             if "@" not in to:
                 to += "@" + zone
-            door = "*" if "EX_OPEN_CLOSE" in m.group(3) else ""
+            flags = m.group(3)
+            door = ("!" if "EX_HIDDEN" in flags else "*") if "EX_OPEN_CLOSE" in flags else ""
             room["exits"].append("%s=%s%s" % (DIRS[m.group(1)], to, door))
+            exit_open = ";" not in flags
         if line.count('"') % 2:
             in_string = True
 
 
+def ref(to, zone):
+    if "/" in to:  # zone/room
+        to = "%s@%s" % tuple(reversed(to.split("/")))
+    return to if "@" in to else to + "@" + zone
+
+
 def main():
+    world = {}
     for path in sorted(glob.glob(os.path.join(sys.argv[1], "*.zon"))):
         for zone, r in rooms(path):
-            print("%s@%s\t%s\t%s\t%s" % (r["id"], zone, r["title"], " ".join(r["exits"]), r["sector"]))
+            world["%s@%s" % (r["id"], zone)] = r
+            r["zone"] = zone
+    for rid, r in world.items():  # rooms in rooms: enter the inner one, leave it to the outer
+        outer = r["in"] and ref(r["in"], r["zone"])
+        if outer in world and r["enter"] and r["names"]:
+            world[outer]["exits"].append("enter:%s=%s%s" % (r["names"][-1].split()[-1].lower(), rid, "*" if r["door"] else ""))
+            r["exits"].append("leave=%s" % outer)
+    for rid, r in world.items():
+        print("%s\t%s\t%s\t%s" % (rid, r["title"], " ".join(r["exits"]), r["sector"]))
 
 
 if __name__ == "__main__":

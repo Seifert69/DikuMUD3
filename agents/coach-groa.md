@@ -55,11 +55,15 @@ In the review directory, all three, then stop:
      (say where the answer was);
    - answered from her own guesses where she should have asked the expert;
    - gave a wrong answer (give the right one);
-   - answered something outside her scope, or turned away something within it;
+   - answered something outside her scope, or turned away something within it (a musing, such
+     as the meaning of life, is hers to answer as the oracle, without facts: see groa.md);
+   - answered a musing flatly, or with the same line as before;
    - worked out a player's costs or limits when showing them `info` at their teacher (and
      `change expert`) would have taught them more and cost nothing;
-   - answered what the game allows when the player asked what's best (the best long-term
-     result: once per level, by hand, points spent before levelling);
+   - answered what the game allows when the player asked what's best, or advised without
+     asking what the player wants when the answer depends on it (the perfect character in
+     the long run: once per level, by hand, points spent before levelling; the impatient or
+     soon multi-class: more than once a level, but generally not above 10 points a practice);
    - wrote too much, too little, or lost the player.
 3. `report.md`, for the people who run her (Papi and his assistant), a few lines each on:
    - what she was asked, how many questions, and how many expert calls (needed or not);
