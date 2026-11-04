@@ -120,7 +120,7 @@ about the player changes. `gmmem <room> clear lure` removes the steps.
 
 ## Treasure made to order
 
-`gmtreasure [what] for <player>` (or `level <n>`, or both: the lower counts) loads a
+`gmtreasure [what] easy|fair|hard for <player>` (or `level <n>`, or both: the lower counts) loads a
 `treasure@randomt` shell into the game master's inventory and copies `Treasure@randomt(quality,
 what)` onto it, which rolls a random magic item as `RndTreasure` does and tells the holder what
 it became. The quality comes from the level (`gm_trquality@commands`), one rung for each level
@@ -135,6 +135,9 @@ restriction randomt puts on its items, so the player can use what they get:
 | 40–59 | 4 excellent | 40 |
 | 60–79 | 5 excellent plus | 60 |
 | 80 and up | 6 superior | 80 |
+
+That is the top of the rung, for a `hard` quest: `fair` is one quality lower and `easy` two (never
+below 0), so an easy errand for a level 88 player earns quality 4.
 
 An artifact (7, restricted to level 100) is never earned by level: only an administrator (level
 250 and up) picks the quality outright, `gmtreasure [what] quality <0-7>`. With `for <player>`

@@ -12082,12 +12082,13 @@ code
 }
 dilend
 
-// gmtreasure [what] [for <player>] [level <n>] [quality <0-7>]: random treasure
+// gmtreasure [what] easy|fair|hard [for <player>] [level <n>] [quality <0-7>]: random treasure
 // (Treasure@randomt) in the game master's inventory. What is in words ("plate boots", "dagger",
 // "ring", "armour"), or nothing for any. Its quality comes from a player's level
-// (gm_trquality): for <player> uses theirs and fits it to their height, level <n> a level
-// of your choosing, the lower of the two if both. quality <n> picks it outright, and only an
-// administrator may: an artifact (7) is for a quest beyond any level.
+// (gm_trquality) and how hard the quest was: hard earns the top of the level's rung, fair one
+// rung below, easy two. for <player> uses their level and fits the item to their height, level
+// <n> a level of your choosing, the lower of the two if both. quality <n> picks it outright,
+// and only an administrator may: an artifact (7) is for a quest beyond any level.
 dilbegin gmtreasure(arg : string);
 external
    integer gm_trquality(lvl : integer);
@@ -12100,6 +12101,8 @@ var
    s : string;
    q : integer;
    lvl : integer;
+   below : integer;
+   diff : string;
    i : integer;
 code
 {
@@ -12110,6 +12113,7 @@ code
    what := "";
    lvl := -1;
    q := -1;
+   below := -1;
    i := 0;
    while (i < length(sl))
    {
@@ -12133,6 +12137,16 @@ code
          else
             q := atoi(sl.[i]);
       }
+      else if ((w == "easy") or (w == "fair") or (w == "hard"))
+      {
+         diff := w;
+         if (w == "easy")
+            below := 2;
+         else if (w == "fair")
+            below := 1;
+         else
+            below := 0;
+      }
       else if (w != "")
          what := what + " " + w;
       i := i + 1;
@@ -12151,14 +12165,16 @@ code
          goto usage;
       s := "quality " + itoa(q);
    }
-   else if ((pc == null) and (lvl < 0))
+   else if (((pc == null) and (lvl < 0)) or (below < 0))
       goto usage;
    else
    {
       if ((pc != null) and ((lvl < 0) or (pc.vlevel < lvl)))
          lvl := pc.vlevel;
-      q := gm_trquality(lvl);
-      s := "quality " + itoa(q) + ", for level " + itoa(lvl);
+      q := gm_trquality(lvl) - below;
+      if (q < BONUS_AVERAGE)
+         q := BONUS_AVERAGE;
+      s := "quality " + itoa(q) + ", for level " + itoa(lvl) + ", " + diff;
    }
    if (pc != null)
       s := s + ", made for " + pc.name;
@@ -12180,7 +12196,9 @@ code
 
    :usage:
    sendtext("Usage: gmtreasure [what: weapon, dagger, jewelry, ring, armour, plate boots, " +
-            "shield, ...] for &lt;player&gt; | level &lt;n&gt;<br/>", self);
+            "shield, ...] easy|fair|hard for &lt;player&gt; | level &lt;n&gt;<br/>" +
+            "How hard the quest was sets the treasure with the level: hard the top of the " +
+            "level's rung, fair one below, easy two below.<br/>", self);
    quit;
 }
 dilend
@@ -12209,7 +12227,7 @@ code
       quit;
 
    sl := split(arg, " ");
-   if (length(sl) < 1)
+   if ((length(sl) < 1) or (sl.[0] == ""))
       goto usage;
    w := sl.[0];
    pc := findunit(self, w, FIND_UNIT_WORLD, null, UNIT_ST_PC);
