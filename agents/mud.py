@@ -25,6 +25,9 @@ The character's file (mode 600, never in a repository):
        port=4242                          (4242 is the real mud, 4442 the test mud)
        hunt=no                            (no "time to go hunting" when no players are on)
        hints=no                           (none of the [Hungry: ...] and other reminders)
+       role=gm                            (a game master: only the commands in GM_COMMANDS, set
+                                           only on GM_SET_FIELDS, load and makemoney within a
+                                           daily budget, no tells but to Papi)
 
 --throw: when the character is playing already, throw that copy out. Without it start stops, since
 the other copy may be the character's owner.
@@ -35,10 +38,10 @@ Everything the mud says (and every line sent, as "> line") is kept in
 instructions.
 
 Over the websocket the server marks what the text means, and the output says so:
-       [tell Korwen] Korwen tells you 'hi'      a tell, say, ask, whisper or shout from a player
+       [tell Asta] Asta tells you 'hi'          a tell, say, ask, whisper or shout from a player
        [newbie Iolo] <newbie> Iolo says '...'   a player on a channel
        [room temple@udgaard] Temple of Udgaard  where the character is (room@zone)
-       [You talked with Korwen before; ...]     the last lines of what was said with Korwen
+       [You talked with Asta before; ...]       the last lines of what was said with Asta
 The prompt is left out. Every tell, and every say between the character and a player in the same
 room, is appended to ~/memory/people/<name>.txt, so a conversation survives restarts; the first
 time a player logs on or speaks in a session, the last lines of that file follow.
@@ -86,7 +89,7 @@ SOCK = os.path.join(STATE, "mud.sock")
 PAUSE = os.path.join(STATE, "paused")  # until when (epoch seconds) the character stays off, after stop MINUTES
 LOGDIR = os.path.expanduser(os.path.join("~/.local/state/mud", AGENT or ""))  # on disk, unlike STATE: kept across reboots
 PEOPLE = os.path.expanduser(os.path.join("~", AGENT or "", "memory/people"))
-MAP = os.path.expanduser("~/zones/map.txt")  # from zonemap.py
+MAP = os.path.expanduser(os.environ.get("MUD_MAP", "~/zones/map.txt"))  # from zonemap.py
 
 QUIET = 1.0         # the answer to a command is complete when nothing came for this long
 SEND_WAIT = 10      # but wait no longer than this
@@ -94,7 +97,6 @@ MAX_UNREAD = 100000  # characters of unread output kept
 KEEPALIVE = 600     # the mud throws out a player idle for 20 minutes
 RECAP = 8           # lines of earlier conversation shown
 RECAP_AGAIN = 7200  # shown again when they speak this long after (the agent's conversation is new by then)
-GREETED = 600       # a tell this soon after someone logged on again is a greeting: refused if already spoken today
 SAY_TO = 300        # a say goes in the history of the players who spoke in the room this recently
 ALONE = 900         # while no players but the admins are online, a reminder to go hunting this often
 ADMINS = {"Papi"}
@@ -406,12 +408,122 @@ def who_spoke(ev):
     return name if re.fullmatch(r"[A-Z][a-z]{1,19}", name or "") else ""
 
 
+# A game master (role=gm) is a god: the server lets it change the world, so mud.py keeps it to
+# what running an event needs, whatever the model decides.
+GM_COMMANDS = {
+    "look", "l", "exits", "score", "who", "where", "users", "wstat", "jstat", "inventory", "i",
+    "equipment", "time", "weather", "help", "stand", "rest", "wizinv",
+    "goto", "at", "echo", "message", "restore", "force", "makemoney", "load", "purge", "set",
+    "give", "get", "drop", "put", "open", "close", "lock", "unlock", "tell", "gmmem", "gmroom", "gmtrack",
+    "gmlure", "gmtreasure", "gmquest",
+    "enter", "leave", "north", "east", "south", "west", "up", "down", "n", "e", "s", "w", "u", "d",
+}
+GM_SET_FIELDS = {"title", "descr", "add-name", "del-name", "add-extra", "del-extra",
+                 "dir-to", "add-dir-name", "del-dir-name", "dir-flags"}
+GM_LOADS = 30  # units loaded a day
+GM_QUESTS = 10  # quests given a day (gmquest; each gives experience)
+GM_COINS = {"iron": 1000, "copper": 500, "silver": 100, "gold": 20, "platinum": 0}  # made a day
+GM_FORBIDDEN = os.path.expanduser("~/%s/forbidden.txt" % (AGENT or "."))  # sym@zone it may not load
+
+
+def gm_budget(kind, amount=0):
+    """What the game master has used of kind today, adding amount."""
+    path = os.path.join(LOGDIR, "gm-budget-%s.json" % time.strftime("%Y-%m-%d"))
+    try:
+        used = json.load(open(path))
+    except (OSError, ValueError):
+        used = {}
+    used[kind] = used.get(kind, 0) + amount
+    if amount:
+        os.makedirs(LOGDIR, mode=0o700, exist_ok=True)
+        with open(path, "w") as f:
+            json.dump(used, f)
+    return used[kind]
+
+
+def gm_refused(line):
+    """Why a game master may not send line, or None."""
+    words = line.split()
+    word = words[0].lower()
+    if word in DIRECTIONS or word == "@":  # @ closes the game's text editor
+        return None
+    if word not in GM_COMMANDS:
+        return "%s is not a game-master command (mud.py GM_COMMANDS)" % word
+    if word == "at":
+        return gm_refused(" ".join(words[2:])) if len(words) > 2 else "at <room> <command>"
+    if word == "tell" and (len(words) < 2 or words[1].lower() not in [a.lower() for a in ADMINS]):
+        return "a game master only tells Papi; players hear your NPCs (force <npc> say ...), echo and message"
+    if word == "force" and len(words) > 2:
+        inner = words[2].lower()
+        if inner in CHANNELS or "shout".startswith(inner) and len(inner) > 1:
+            return "%s is a channel (they relay to Discord): your NPCs say, tell or emote" % inner
+    if word == "purge" and len(words) < 2:
+        return "purge one thing by name, never the whole room"
+    if word == "set" and (len(words) < 3 or words[2].lower() not in GM_SET_FIELDS):
+        return "set only %s" % ", ".join(sorted(GM_SET_FIELDS))
+    if word == "set" and words[2].lower() == "add-extra" and not EDITOR.match(line):
+        return ("set <unit> add-extra <keyword,keyword>: <text> (the text after a colon, on the same"
+                " line; mud.py types it into the game's editor)")
+    if word == "set" and words[2].lower() == "descr" and len(words) < 4:
+        return "set <unit> descr <text> (the text on the same line; mud.py types it into the editor)"
+    if word == "load":
+        if len(words) < 2:
+            return "load <sym@zone>"
+        try:
+            forbidden = {l.split()[0].lower() for l in open(GM_FORBIDDEN) if l.strip() and not l.startswith("#")}
+        except OSError:
+            forbidden = set()
+        if words[1].lower() in forbidden:
+            return "%s is on the forbidden list (%s)" % (words[1], GM_FORBIDDEN)
+        if gm_budget("load") >= GM_LOADS:
+            return "the day's %d loads are used up" % GM_LOADS
+        gm_budget("load", 1)
+    if word == "gmquest" and len(words) > 2:  # a quest given, not the list
+        if gm_budget("quest") >= GM_QUESTS:
+            return "the day's %d quests are given" % GM_QUESTS
+        gm_budget("quest", 1)
+    if word == "gmtreasure":  # it loads one item
+        if gm_budget("load") >= GM_LOADS:
+            return "the day's %d loads are used up" % GM_LOADS
+        gm_budget("load", 1)
+    if word == "makemoney":
+        try:
+            amount, kind = int(words[1]), words[2].lower()
+        except (IndexError, ValueError):
+            return "makemoney <amount> <iron|copper|silver|gold|platinum>"
+        coin = next((c for c in GM_COINS if c.startswith(kind)), None)
+        if not coin:
+            return "makemoney <amount> <iron|copper|silver|gold|platinum>"
+        if gm_budget(coin) + amount > GM_COINS[coin]:
+            return "that's over the day's %d %s coins (%d made)" % (GM_COINS[coin], coin, gm_budget(coin))
+        gm_budget(coin, amount)
+    return None
+
+
+# `set <unit> descr <text>` and `set <unit> add-extra <keywords>: <text>`, after `at <room>` too
+EDITOR = re.compile(r"\s*((?:at\s+\S+\s+)?set\s+\S+\s+(?:descr|add-extra\s+([^:]+?)\s*:))\s*(\S.*)", re.I)
+
+
+def editor_lines(mud, line):
+    """The lines to send for line. These set commands open the game's editor, which takes the
+    text on the next line and closes on a line ending in @; anything else is one line."""
+    m = EDITOR.match(line)
+    if m and mud.conf.get("role") == "gm":
+        first = m.group(1)[:-1].rstrip() if m.group(2) else m.group(1)
+        return [first, m.group(3).rstrip().rstrip("@") + "@"]
+    return [line]
+
+
 def refused(mud, line):
     """Why a line must not go to the mud, or None."""
     words = line.split()
     word = (words or [""])[0].lower()
     if not word or word in DIRECTIONS:
         return None
+    if mud.conf.get("role") == "gm":
+        why = gm_refused(line)
+        if why:
+            return why
     cmd = word if word in CHANNELS else next((c for c in COMMANDS if c.startswith(word)), None)
     if cmd in CHANNELS + ("shout",):
         return ("%s is a channel, and channels relay to Discord. To answer someone who asked there,"
@@ -425,11 +537,11 @@ def refused(mud, line):
     # the recap says "no greeting", and the agent greeted anyway
     if word in ("tell", "tel", "te") and len(words) > 1:
         name = words[1].capitalize()
-        since = time.time() - mud.greet_quiet.get(name, 0)
-        if since < GREETED:
-            return ("you spoke to %s today already, and they logged on again %d seconds ago without"
-                    " saying anything to you. Don't greet them again; answer when they speak to you"
-                    % (name, since))
+        since = mud.greet_quiet.get(name)
+        if since and time.strftime("%Y-%m-%d", time.localtime(since)) == time.strftime("%Y-%m-%d"):
+            return ("you spoke to %s today already, and they logged on again at %s and haven't said"
+                    " anything to you since. Don't greet them again; answer when they speak to you"
+                    % (name, time.strftime("%H:%M", time.localtime(since))))
     return None
 
 
@@ -519,7 +631,8 @@ class Session:
             if kind == "channel":  # "<newbie> Iolo says '...'": the mark is the channel's name
                 kind = a.get("chan") or (re.match(r"<([^>]+)>", text.strip()) or [None, "channel"])[1]
                 mine = name == self.me
-            if name and self.online is not None and name not in self.online and name != self.me:
+            if (name and self.online is not None and name not in self.online and name != self.me
+                    and name not in ADMINS):  # Papi may be invisible, and isn't on the who list then
                 name = ""  # not on the who list: a monster with a one-word name
             if name and not mine:
                 self.greet_quiet.pop(name, None)
@@ -550,6 +663,8 @@ class Session:
                     if not full and name in FELLOWS:
                         self.add("\n[%s logged on: a helper agent like you, no greeting.]\n" % name)
                     elif not full and name != self.me:
+                        if self.conf.get("role") == "gm":  # the game master's loop wakes on this
+                            self.add("\n[%s logged on]\n" % name)
                         self.recap(name, "%s logged on. " % name)
                 elif item[:1] == "-":
                     self.online.discard(item[1:].strip())
@@ -775,7 +890,8 @@ def serve(mud, ready):
                 if why:
                     reply(c, mud, "[Not sent: %s.]\n" % why)
                 elif op == "send" and mud.connected:
-                    mud.send(req["line"])
+                    for line in editor_lines(mud, req["line"]):
+                        mud.send(line)
                     waiting.append([c, op, now, now + req.get("wait", SEND_WAIT)])
                 elif op == "read":
                     waiting.append([c, op, now, now + req.get("wait", 0)])
@@ -854,28 +970,36 @@ def way(args):
     def match(rid):
         return rid == want if "@" in want else all(w in rooms[rid][0].lower() for w in want.split())
 
-    prev = {start: None}
-    queue = [start]
-    for rid in queue:
-        if match(rid):
-            target, steps = rid, []
-            while prev[rid]:
-                rid0, d = prev[rid]
-                steps.append(d)
-                rid = rid0
-            steps.reverse()
-            break
-        for d, to in rooms[rid][1]:
-            door = to.endswith("*")
-            to = to.rstrip("*")
-            if to in rooms and to not in prev and (not rooms[to][2] or match(to)):
-                prev[to] = (rid, d + ("*" if door else ""))
-                queue.append(to)
-    else:
+    def search(hidden):
+        prev = {start: None}
+        queue = [start]
+        for rid in queue:
+            if match(rid):
+                target, steps = rid, []
+                while prev[rid]:
+                    rid0, d = prev[rid]
+                    steps.append(d)
+                    rid = rid0
+                return target, steps[::-1]
+            for d, to in rooms[rid][1]:
+                door = to[-1:] if to[-1:] in ("*", "!") else ""
+                to = to.rstrip("*!")
+                if (to in rooms and to not in prev and (not rooms[to][2] or match(to))
+                        and (hidden or door != "!")):
+                    prev[to] = (rid, d + door)
+                    queue.append(to)
+        return None, None
+
+    # a hidden door only when there is no other way: it has to be found first
+    target, steps = search(False)
+    if target is None:
+        target, steps = search(True)
+    if target is None:
         die("no way from %s to %s on the map" % (start, want))
     print("From %s (%s) to %s (%s): %s (%d steps)%s" % (
-        rooms[start][0], start, rooms[target][0], target, " ".join(steps) or "you are there", len(steps),
-        "; * is a door: open it first" if any(s.endswith("*") for s in steps) else ""))
+        rooms[start][0], start, rooms[target][0], target, " ".join(steps).replace(":", " ") or "you are there", len(steps),
+        ("; * is a door: open it first" if any(s.endswith("*") for s in steps) else "") +
+        ("; ! is a hidden door: search <its name> there until you find it, then open it" if any(s.endswith("!") for s in steps) else "")))
 
 
 def paused():
