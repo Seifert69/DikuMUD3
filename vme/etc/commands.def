@@ -3158,6 +3158,13 @@ minlevel = 230
 loglevel = 0
 type     = 0
 
+command  = gmquest
+func     = gmquest@commands
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
 command  = gmtreasure
 func     = gmtreasure@commands
 minpos   = POSITION_DEAD

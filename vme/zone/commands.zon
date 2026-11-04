@@ -12185,6 +12185,130 @@ code
 }
 dilend
 
+// gmquest <player> [easy|fair|hard <quest name>[: what they did]]: a game master's event
+// becomes one of the player's quests ("<name> Complete", as `quests` lists them), once per name,
+// with experience by level and difficulty: a tenth, a quarter or half of what the player's
+// level needs. The
+// player alone lists the game-master quests they have done ($gm on the entry).
+dilbegin gmquest(arg : string);
+var
+   pc : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   w : string;
+   qn : string;
+   txt : string;
+   s : string;
+   diff : string;
+   pct : integer;
+   xp : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   sl := split(arg, " ");
+   if (length(sl) < 1)
+      goto usage;
+   w := sl.[0];
+   pc := findunit(self, w, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + sl.[0] + " is in the game.<br/>", self);
+      quit;
+   }
+
+   if (length(sl) < 2)
+   {
+      s := "";
+      ex := pc.quests;
+      while (ex != null)
+      {
+         if ("$gm" in ex.names)
+            s := s + "  " + ex.names.[0] + ": " + ex.descr + "<br/>";
+         ex := ex.next;
+      }
+      if (s == "")
+         s := "  none<br/>";
+      sendtext(pc.name + " (level " + itoa(pc.vlevel) + ") has done these game-master quests:<br/>" +
+               s, self);
+      quit;
+   }
+
+   diff := sl.[1];
+   if (diff == "easy")
+      pct := 10;
+   else if (diff == "fair")
+      pct := 25;
+   else if (diff == "hard")
+      pct := 50;
+   else
+      goto usage;
+
+   // the name, and after a colon what they did
+   qn := "";
+   i := 2;
+   while (i < length(sl))
+   {
+      if (sl.[i] != "")
+         qn := qn + " " + sl.[i];
+      i := i + 1;
+   }
+   txt := "";
+   if (":" in qn)
+   {
+      sl := split(qn, ":");
+      qn := sl.[0];
+      txt := sl.[1];
+      i := 2;
+      while (i < length(sl))
+      {
+         txt := txt + ":" + sl.[i];
+         i := i + 1;
+      }
+      while (left(txt, 1) == " ")
+         txt := right(txt, length(txt) - 1);
+   }
+   while (left(qn, 1) == " ")
+      qn := right(qn, length(qn) - 1);
+   while (right(qn, 1) == " ")
+      qn := left(qn, length(qn) - 1);
+   if ((qn == "") or (length(qn) > 50))
+      goto usage;
+   qn := qn + " Complete";
+
+   if (qn in pc.quests)
+   {
+      sendtext(pc.name + " has done " + qn + " already.<br/>", self);
+      quit;
+   }
+   if (pc.level >= IMMORTAL_LEVEL)
+   {
+      sendtext(pc.name + " is immortal: quests and experience are for mortals.<br/>", self);
+      quit;
+   }
+
+   xp := (getinteger(DIL_GINT_LEVELXP, null, pc.vlevel) * pct) / 100;
+   sl := null;
+   addstring(sl, qn);
+   addstring(sl, "$gm");
+   addextra(pc.quests, sl, txt);
+   experience(xp, pc);
+   act("<br/>You have completed a quest: " + qn + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("<div class='xpgain'>You earned " + itoa(xp) + " experience.</div>", A_ALWAYS, pc, null,
+       null, TO_CHAR);
+   sendtext(pc.name + " (level " + itoa(pc.vlevel) + "): " + qn + ", " + diff + ", " +
+            itoa(xp) + " experience.<br/>", self);
+   quit;
+
+   :usage:
+   sendtext("Usage: gmquest &lt;player&gt; [easy|fair|hard &lt;quest name&gt;[: what they " +
+            "did]]<br/>", self);
+   quit;
+}
+dilend
+
 // gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for|lure] [text]: a game master's memory
 // of a unit
 dilbegin gmmem(arg : string);
