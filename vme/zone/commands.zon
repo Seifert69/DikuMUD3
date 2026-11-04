@@ -3131,7 +3131,7 @@ if (u==null)
 
    if (u.type == UNIT_ST_PC)
    {
-      if (u.level>=self.level)
+      if ((u.level>=self.level) or (self.level < PLAYER_ADMIN_LEVEL))
       {
          act("$3n would not like that.", A_SOMEONE,self,null,u,TO_CHAR);
          quit;
@@ -3194,7 +3194,9 @@ if (all_arg=="all")
   }
 
   :force_one:
-if (self.level < u.level)
+// NPCs are part of the world (CREATOR_LEVEL, the command's level); players need more
+if ((self.level < u.level) or
+    ((u.type == UNIT_ST_PC) and (self.level < PLAYER_ADMIN_LEVEL)))
 {
 if (visible(self,u))
 act("You can't force $3n to do that.",
@@ -3214,6 +3216,11 @@ sendtext("Done<br/>",self);
 quit;
 
 :force_all:
+if (self.level < PLAYER_ADMIN_LEVEL)
+{
+   sendtext("Forcing all players takes a higher level.<br/>",self);
+   quit;
+}
 u:=pc_head();
 while (u.type==UNIT_ST_PC)
 {
@@ -8197,7 +8204,13 @@ code
 		apply_poison(self,pois,amount);
 		food.value[0]:=food.value[0]-amount;
 	}
-	else if ((self.level<200) or (food.type==UNIT_ST_ROOM))
+	// A god eating something destroys it: food for any god, other things only for those who
+	// may purge them (CREATOR_LEVEL), players only for PLAYER_ADMIN_LEVEL
+	else if ((self.level<200) or (food.type==UNIT_ST_ROOM) or
+	         ((self.level < CREATOR_LEVEL) and
+	          ((food.type != UNIT_ST_OBJ) or (food.objecttype != ITEM_FOOD))) or
+	         ((food.type == UNIT_ST_PC) and
+	          ((self.level < PLAYER_ADMIN_LEVEL) or (food.level >= self.level))))
 	{
 		act("Your stomach refuses to eat that!?!",
 			A_SOMEONE, self, null, null, TO_CHAR);
@@ -11197,6 +11210,1335 @@ code
 		quit;
 	}
 	 /////quit;
+}
+dilend
+
+
+//
+// Game master memory (WIZARD_LEVELS.md, agents/lokee.md)
+//
+// A unit a game master uses (an NPC, an object, a room) can carry up to four extras:
+//    $gm_brief  who or what it is, what it knows and may reveal (gmmem ... brief)
+//    $gm_comms  what was said and done with it, the last GM_COMMS_MAX lines (gm_comms)
+//    $gm_told   what it has revealed, and to whom (gmmem ... told)
+//    $gm_event  the event it belongs to (gmmem ... event)
+// gm_comms, copied onto an NPC (gmmem <npc> watch), fills $gm_comms and tells every game
+// master online at once: a god with $gm in its info.
+//
+
+#define GM_COMMS_MAX 40
+
+// Adds txt to the list kept in the extra called xname on u, keeping the last GM_COMMS_MAX
+dilbegin gm_note(u : unitptr, xname : string, txt : string);
+var
+   exd : extraptr;
+   sl : stringlist;
+code
+{
+   exd := xname in u.extra;
+   if (exd == null)
+   {
+      addstring(sl, xname);  // a {...} list may only hold constants
+      addextra(u.extra, sl, "");
+      exd := xname in u.extra;
+   }
+   addstring(exd.names, txt);
+   while (length(exd.names) > GM_COMMS_MAX + 1)
+      remove(exd.names, 1);
+   return;
+}
+dilend
+
+// Tells every game master online what happened to u
+dilbegin gm_alert(u : unitptr, txt : string);
+var
+   pc : unitptr;
+   s : string;
+code
+{
+   if (u.type == UNIT_ST_ROOM)
+      s := u.nameidx + "@" + u.zoneidx;
+   else
+      s := u.name;
+   pc := ghead();
+   while (pc.type == UNIT_ST_PC)
+   {
+      if ("$gm" in pc.info)
+         sendtext("[gm " + s + "] " + txt + "<br/>", pc);
+      pc := pc.gnext;
+   }
+   return;
+}
+dilend
+
+// Copied onto an NPC: what players say and do to it, its fights and its death
+dilbegin aware gm_comms();
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+   gm_alert(u : unitptr, txt : string);
+var
+   line : string;
+   foe : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 3;
+   interrupt(SFB_DEAD, activator == self, died);
+
+   :start:
+   wait(SFB_DONE | SFB_COM | SFB_DEAD,
+        ((self.fighting != null) and (self.fighting != foe)) or
+        ((activator.type == UNIT_ST_PC) and
+         ((target == self) or
+          ((command("say") or command("ask") or command("emote")) and
+           (activator.outside == self.outside)))));
+
+   if ((self.fighting != null) and (self.fighting != foe))
+   {
+      foe := self.fighting;
+      line := "fighting " + foe.name;
+   }
+   else if (command("give"))
+      line := activator.name + " gives you " + medium.title;
+   else if (command("say"))
+      line := activator.name + " says '" + argument + "'";
+   else if (command("ask"))
+      line := activator.name + " asks '" + argument + "'";
+   else if (command("emote"))
+      line := activator.name + " " + argument;
+   else
+      line := activator.name + " " + cmdstr + ": " + argument;
+
+   line := mid(asctime(realtime), 12, 16) + " " + line;
+   gm_note(self, "$gm_comms", line);
+   gm_alert(self, line);
+   goto start;
+
+   :died:
+   line := mid(asctime(realtime), 12, 16) + " died";
+   if (self.fighting != null)
+      line := line + ", fighting " + self.fighting.name;
+   gm_alert(self, line);
+   quit;
+}
+dilend
+
+// Copied onto an object (gmmem <obj> watch): what players do with it. Given or sold, it ends up
+// in someone else's inventory, where it hears nothing more, so those are told as the player
+// types them (while it is still theirs), not once done.
+dilbegin aware gm_objwatch();
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+   gm_alert(u : unitptr, txt : string);
+var
+   line : string;
+   arg : string;
+code
+{
+   :start:
+   wait(SFB_DONE | SFB_CMD, (activator.type == UNIT_ST_PC) and
+        (((medium == self) or (target == self)) or
+         ((command("give") or command("sell")) and (self.outside == activator))));
+
+   if (command("give") or command("sell"))
+   {
+      arg := argument;
+      if (not (getword(arg) in self.names))
+         goto start;
+      line := activator.name + " " + cmdstr + " " + argument;
+   }
+   else if (command("put") and (target != null))
+      line := activator.name + " puts it in " + target.title;
+   else
+      line := activator.name + " " + cmdstr + "s it";
+
+   line := mid(asctime(realtime), 12, 16) + " " + line;
+   gm_note(self, "$gm_comms", line);
+   gm_alert(self, line);
+   goto start;
+}
+dilend
+
+// Copied onto an NPC or a room (gmmem <unit> greet): tells the game masters when a player walks
+// in, and plays the unit's $gm_greet line once for each player: an NPC does it as a command
+// (say ..., emote ...), a room shows it to everyone there; $1n is the player. With a $gm_for
+// list (gmmem <unit> for), only those players count. It hears CMD_AUTO_ENTER, sent once the
+// player has arrived by walking, enter, leave or exit; arriving by magic (goto, teleport,
+// recall, summon) sends none, so it goes unnoticed.
+dilbegin aware gm_greet();
+external
+   gm_alert(u : unitptr, txt : string);
+var
+   pc : unitptr;
+   exd : extraptr;
+   seen : stringlist;
+code
+{
+   // (no unitptr variable for the room: wait() clears one that points outside the
+   // local environment, and a room's own pointer counts as outside)
+   :start:
+   wait(SFB_DONE, command(CMD_AUTO_ENTER) and (activator.type == UNIT_ST_PC) and
+        ((activator.outside == self) or (activator.outside == self.outside)));
+
+   pc := activator;
+   exd := "$gm_for" in self.extra;
+   if ((exd != null) and (not (pc.name in exd.names)))
+      goto start;
+
+   gm_alert(self, mid(asctime(realtime), 12, 16) + " " + pc.name + " walks in");
+   if (pc.name in seen)
+      goto start;
+   addstring(seen, pc.name);
+
+   exd := "$gm_greet" in self.extra;
+   if ((exd != null) and (exd.descr != ""))
+   {
+      if (self.type == UNIT_ST_NPC)
+         exec(replace("$1n", pc.name, exd.descr), self);
+      else
+         act(exd.descr, A_ALWAYS, pc, null, null, TO_ALL);
+   }
+   goto start;
+}
+dilend
+
+// The room u is in
+dilbegin unitptr gm_room(u : unitptr);
+code
+{
+   u := u.outside;
+   while ((u != null) and (u.type != UNIT_ST_ROOM))
+      u := u.outside;
+   return (u);
+}
+dilend
+
+// The zone u is in: that of the outermost room, so a room made inside another counts as the
+// outer room's zone
+dilbegin string gm_zone(u : unitptr);
+code
+{
+   while (u.outside != null)
+      u := u.outside;
+   return (u.zoneidx);
+}
+dilend
+
+// The outermost room u is in: a room made inside another counts as the room around it
+dilbegin unitptr gm_outer(u : unitptr);
+code
+{
+   while (u.outside != null)
+      u := u.outside;
+   return (u);
+}
+dilend
+
+// Copied onto a player (gmtrack): tells the game masters when the player crosses into or out of
+// the zones in zones ("any": every change of zone), dies, falls below a third of their hit
+// points, gets followers, or is idle for 10 minutes. Nothing about the player changes. It
+// removes itself at until (realtime), and void@basis removes it when the player leaves the
+// game; if it was saved with the player all the same, it finds itself expired at the next login.
+dilbegin aware gm_track(zones : string, until : integer);
+external
+   gm_alert(u : unitptr, txt : string);
+   unitptr gm_room(u : unitptr);
+   string gm_zone(u : unitptr);
+var
+   zl : stringlist;
+   zn : string;
+   was : string;
+   here : string;
+   s : string;
+   room : unitptr;
+   u : unitptr;
+   hurt : integer;
+   idle : integer;
+   lastact : integer;
+   nfol : integer;
+   i : integer;
+code
+{
+   if (realtime >= until)
+      quit;
+   heartbeat := PULSE_SEC * 60;
+   interrupt(SFB_DEAD, activator == self, died);
+   zl := split(zones, " ");
+   was := gm_zone(self);
+   nfol := self.followercount;
+   lastact := realtime;
+
+   :start:
+   wait(SFB_DONE | SFB_CMD | SFB_COM | SFB_TICK, (activator == self) or (activator == null));
+
+   if (realtime >= until)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer tracked (time is up)");
+      quit;
+   }
+   room := gm_room(self);
+   here := room.nameidx + "@" + room.zoneidx;
+
+   if (activator == self)
+   {
+      lastact := realtime;
+      if (idle)
+      {
+         idle := FALSE;
+         gm_alert(self, mid(asctime(realtime), 12, 16) + " is back, in " + here);
+      }
+   }
+   else if ((not idle) and (realtime - lastact >= 600))
+   {
+      idle := TRUE;
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " has been idle 10 minutes, in " + here);
+   }
+
+   zn := gm_zone(self);
+   if (zn != was)
+   {
+      s := "";
+      if (zones == "any")
+         s := "goes from " + was + " to " + zn;
+      else if ((zn in zl) and (not (was in zl)))
+         s := "enters " + zn;
+      else if ((was in zl) and (not (zn in zl)))
+         s := "leaves " + was + " for " + zn;
+      was := zn;
+      if (s != "")
+         gm_alert(self, mid(asctime(realtime), 12, 16) + " " + s + " (" + here + ")");
+   }
+
+   if ((not hurt) and (self.hp * 3 < self.max_hp))
+   {
+      hurt := TRUE;
+      s := " is down to " + itoa(self.hp) + " of " + itoa(self.max_hp) + " hit points";
+      if (self.fighting != null)
+         s := s + ", fighting " + self.fighting.name;
+      gm_alert(self, mid(asctime(realtime), 12, 16) + s + ", in " + here);
+   }
+   else if (hurt and (self.hp * 2 > self.max_hp))
+      hurt := FALSE;
+
+   if (self.followercount > nfol)
+   {
+      s := "";
+      i := 0;
+      while (i < self.followercount)
+      {
+         u := getfollower(self, i);
+         if (s != "")
+            s := s + ", ";
+         s := s + u.name;
+         i := i + 1;
+      }
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " is followed by " + s);
+   }
+   nfol := self.followercount;
+   goto start;
+
+   :died:
+   room := gm_room(self);
+   s := " died in " + room.nameidx + "@" + room.zoneidx;
+   if (self.fighting != null)
+      s := s + ", fighting " + self.fighting.name;
+   gm_alert(self, mid(asctime(realtime), 12, 16) + s);
+   goto start;
+}
+dilend
+
+// gmtrack [<player> <zone ...|any> [hours]] [<player> off]: tells the game masters where a
+// player goes (gm_track), for up to 6 hours (2 by default); alone, lists who is tracked
+dilbegin gmtrack(arg : string);
+var
+   pc : unitptr;
+   pname : string;
+   w : string;
+   zones : string;
+   s : string;
+   hours : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   pname := getword(arg);
+   if (pname == "")
+   {
+      s := "";
+      pc := ghead();
+      while (pc.type == UNIT_ST_PC)
+      {
+         if (dilfind("gm_track@commands", pc))
+            s := s + " " + pc.name;
+         pc := pc.gnext;
+      }
+      if (s == "")
+         sendtext("No one is tracked.<br/>", self);
+      else
+         sendtext("Tracked:" + s + "<br/>", self);
+      quit;
+   }
+
+   pc := findunit(self, pname, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + pname + " is in the game.<br/>", self);
+      quit;
+   }
+
+   if (arg == "off")
+   {
+      if (dilfind("gm_track@commands", pc))
+      {
+         i := dildestroy("gm_track@commands", pc);
+         sendtext("No longer tracking " + pc.name + ".<br/>", self);
+      }
+      else
+         sendtext(pc.name + " isn't tracked.<br/>", self);
+      quit;
+   }
+
+   hours := 2;
+   zones := "";
+   w := getword(arg);
+   while (w != "")
+   {
+      if (itoa(atoi(w)) == w)
+         hours := atoi(w);
+      else if (zones == "")
+         zones := w;
+      else
+         zones := zones + " " + w;
+      w := getword(arg);
+   }
+   if (zones == "")
+   {
+      sendtext("Usage: gmtrack &lt;player&gt; &lt;zone ...|any&gt; [hours], " +
+               "gmtrack &lt;player&gt; off, or gmtrack alone to list.<br/>", self);
+      quit;
+   }
+   if (hours < 1)
+      hours := 1;
+   if (hours > 6)
+      hours := 6;
+
+   if (dilfind("gm_track@commands", pc))
+      i := dildestroy("gm_track@commands", pc);
+   dilcopy("gm_track@commands(" + zones + "," + itoa(realtime + hours * 3600) + ")", pc);
+   sendtext("Tracking " + pc.name + " (" + zones + ") for " + itoa(hours) + " hours.<br/>", self);
+   quit;
+}
+dilend
+
+// u goes back to the room it was brought from (gm_lure: bring, lead, away)
+dilbegin gm_away(u : unitptr);
+var
+   exd : extraptr;
+   home : unitptr;
+code
+{
+   exd := "$gm_home" in u.extra;
+   if (exd == null)
+      return;
+   home := findsymbolic(exd.descr);
+   subextra(u.extra, "$gm_home");
+   if (home == null)
+      return;
+   if (u.type == UNIT_ST_NPC)
+      act("$1n leaves.", A_SOMEONE, u, null, null, TO_ROOM);
+   link(u, home);
+   return;
+}
+dilend
+
+#define GM_LURE_GAP    240  // seconds at least between two lure steps
+#define GM_LURE_STILL  20   // a player who moved more recently than this is on the go
+#define GM_LURE_LINGER 90   // standing this long in one room is a quiet moment too
+#define GM_LURE_LEAD   6    // a guide waits this long with the player before it goes on
+#define GM_LURE_LOST   300  // a guide the player hasn't followed for this long goes home
+
+// Copied onto a player (gmlure): draws them to the room sym, one lure step at a time, at
+// the player's quiet moments. The steps are the room's $gm_lure lines (gmmem <room> lure), so
+// every player lured there gets the same ones, each at their own pace; a step added later is
+// played too. A quiet moment: not fighting, above half their hit points, not moved for
+// GM_LURE_STILL seconds, and resting, sitting, asleep, talking, shopping or training, or
+// standing still for GM_LURE_LINGER; and GM_LURE_GAP since the last step. A step that starts
+// "dream " only plays while the player sleeps, the others only while awake. A step is parts
+// joined by " | ", played together:
+//    <text>               the player sees it
+//    room <text>          everyone in the room sees it
+//    bring <name>         the NPC or object comes into the player's room
+//    away <name>          it goes back to where it was brought from
+//    do <name> <command>  the NPC does it (say ..., emote ..., give note $1n)
+//    lead <name>          the NPC comes and leads the player there, a room at a time
+// $1n is the player, $dir the way to go from where they are. With inzone, the player has arrived
+// as soon as they're anywhere in the room's zone. The game masters hear each step (as
+// [gm <player>]), and when the player arrives. It ends then, at until (realtime), when the
+// player leaves the game (who_leave@basis), or with gmlure <player> off. Nothing about the
+// player changes.
+dilbegin aware gm_lure(sym : string, until : integer, inzone : integer);
+external
+   gm_alert(u : unitptr, txt : string);
+   unitptr gm_room(u : unitptr);
+   string gm_zone(u : unitptr);
+   unitptr gm_outer(u : unitptr);
+   gm_away(u : unitptr);
+var
+   goal : unitptr;  // found again after every wait, which clears pointers to other rooms
+   room : unitptr;
+   u : unitptr;
+   from : unitptr;
+   to : unitptr;
+   exd : extraptr;
+   talk : stringlist;
+   shop : stringlist;
+   train : stringlist;
+   ways : stringlist;
+   done : stringlist;
+   parts : stringlist;
+   here : string;
+   was : string;
+   why : string;
+   doing : string;
+   busywhy : string;
+   way : string;
+   leader : string;
+   step : string;
+   p : string;
+   w : string;
+   nm : string;     // findunit() takes the name out of the string it's given: it gets a copy
+   moved : integer;
+   busy : integer;
+   last : integer;
+   since : integer;
+   apart : integer;
+   dream : integer;
+   d : integer;
+   i : integer;
+   j : integer;
+   n : integer;
+code
+{
+   if (realtime >= until)
+      quit;
+   heartbeat := PULSE_SEC * 5;
+   talk := {"say", "ask", "tell", "emote", "whisper", "reply"};
+   shop := {"buy", "sell", "list", "value", "offer", "appraise"};
+   train := {"practice", "train", "info"};
+   ways := {"north", "east", "south", "west", "up", "down", "northeast", "northwest",
+            "southeast", "southwest", "inside", "outside"};
+   last := realtime - GM_LURE_GAP;
+   moved := realtime;
+
+   :start:
+   wait(SFB_DONE | SFB_CMD | SFB_TICK, (activator == self) or (activator == null));
+
+   if (realtime >= until)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer lured (time is up)");
+      quit;
+   }
+   goal := findsymbolic(sym);
+   if ((goal == null) or (goal.type != UNIT_ST_ROOM))
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " no longer lured: " + sym + " is gone");
+      quit;
+   }
+   room := gm_room(self);
+   here := room.nameidx + "@" + room.zoneidx;
+   if (here != was)
+   {
+      was := here;
+      moved := realtime;
+   }
+   if (activator == self)
+   {
+      if (cmdstr in talk)
+         doing := "talking";
+      else if (cmdstr in shop)
+         doing := "shopping";
+      else if (cmdstr in train)
+         doing := "training";
+      else
+         doing := "";
+      if (doing != "")
+      {
+         busy := realtime;
+         busywhy := doing;
+      }
+      goto start;  // the moment comes at the next tick, after what they did
+   }
+
+   to := gm_outer(goal);
+   if (gm_outer(self) == to)
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " arrives at " + sym + " (lured)");
+      quit;
+   }
+   if (inzone and (gm_zone(self) == to.zoneidx))
+   {
+      gm_alert(self, mid(asctime(realtime), 12, 16) + " arrives in " + to.zoneidx + ", at " +
+               here + " (lured)");
+      quit;
+   }
+
+   // a guide goes on once the player has caught up with it and is up and about (not fighting,
+   // resting or asleep)
+   if (leader != "")
+   {
+      nm := leader;
+      u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC);
+      if (u == null)
+         leader := "";
+      else if (u.outside == room)
+      {
+         apart := 0;
+         if (since == 0)
+            since := realtime;
+         else if ((realtime - since >= GM_LURE_LEAD) and (self.position == POSITION_STANDING))
+         {
+            d := DIR_IMPOSSIBLE;
+            from := gm_outer(u);
+            if ((from.zoneidx != "_gm") and (to.zoneidx != "_gm"))
+               d := pathto(from, to);
+            if (d <= DIR_SOUTHWEST)
+            {
+               since := 0;
+               exec(ways.[d], u);
+               if ((u.outside == room) and (room.exit_to[d] != null))
+               {  // a closed door, say: it slips through all the same
+                  act("$1n slips away " + ways.[d] + ".", A_SOMEONE, u, null, null, TO_ROOM);
+                  link(u, room.exit_to[d]);
+                  act("$1n arrives.", A_SOMEONE, u, null, null, TO_ROOM);
+               }
+            }
+            else if (d != DIR_TRYAGAIN)  // there, or no way on: it stays
+               leader := "";
+         }
+      }
+      else
+      {
+         since := 0;
+         if (apart == 0)
+            apart := realtime;
+         else if (realtime - apart >= GM_LURE_LOST)
+         {
+            gm_alert(self, mid(asctime(realtime), 12, 16) + " didn't follow " + leader +
+                     ", who goes home");
+            leader := "";
+            gm_away(u);
+         }
+      }
+   }
+
+   // a quiet moment?
+   if ((self.fighting != null) or (self.hp * 2 <= self.max_hp) or
+       (realtime - last < GM_LURE_GAP) or (realtime - moved < GM_LURE_STILL))
+      goto start;
+   if (self.position == POSITION_SLEEPING)
+      why := "asleep";
+   else if (self.position == POSITION_RESTING)
+      why := "resting";
+   else if (self.position == POSITION_SITTING)
+      why := "sitting";
+   else if (realtime - busy <= 60)
+      why := busywhy;
+   else if (realtime - moved >= GM_LURE_LINGER)
+      why := "standing still";
+   else
+      goto start;
+
+   // the next step that suits the moment: a dream while asleep, any other step while awake
+   exd := "$gm_lure" in goal.extra;
+   if (exd == null)
+      goto start;
+   n := length(exd.names);
+   i := 1;
+   while (i < n)
+   {
+      if (not (itoa(i) in done))
+      {
+         dream := (left(exd.names.[i], 6) == "dream ");
+         if (dream == (self.position == POSITION_SLEEPING))
+            break;
+      }
+      i := i + 1;
+   }
+   if (i >= n)
+      goto start;
+   step := exd.names.[i];
+
+   way := "far away";
+   if ("$dir" in step)
+   {
+      d := DIR_IMPOSSIBLE;
+      from := gm_outer(self);
+      if ((from.zoneidx != "_gm") and (to.zoneidx != "_gm"))
+         d := pathto(from, to);
+      if (d == DIR_TRYAGAIN)
+         goto start;  // the way is being worked out: next tick
+      if (d <= DIR_EXIT)
+         way := ways.[d];
+   }
+   addstring(done, itoa(i));
+   last := realtime;
+   step := replace("$dir", way, replace("$1n", self.name, step));
+   gm_alert(self, mid(asctime(realtime), 12, 16) + " lure step " + itoa(i) + " of " +
+            itoa(n - 1) + " (" + why + ", in " + here + ")");
+
+   if (dream)
+   {
+      act(mid(step, 7, length(step)), A_ALWAYS, self, null, null, TO_CHAR);
+      goto start;
+   }
+   parts := split(step, " | ");
+   j := 0;
+   while (j < length(parts))
+   {
+      p := parts.[j];
+      j := j + 1;
+      w := getword(p);
+      if (w == "room")
+         act(p, A_SOMEONE, self, null, null, TO_ALL);
+      else if ((w == "bring") or (w == "lead"))
+      {
+         nm := p;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+         if (u == null)
+            gm_alert(self, "lure: no " + p + " to " + w);
+         else
+         {
+            from := gm_room(u);
+            if (from != room)
+            {
+               if (not ("$gm_home" in u.extra))
+                  addextra(u.extra, {"$gm_home"}, from.nameidx + "@" + from.zoneidx);
+               link(u, room);
+               if (u.type == UNIT_ST_NPC)
+                  act("$1n arrives.", A_SOMEONE, u, null, null, TO_ROOM);
+            }
+            if ((w == "lead") and (u.type == UNIT_ST_NPC))
+            {
+               leader := p;
+               since := realtime;
+               apart := 0;
+            }
+         }
+      }
+      else if (w == "away")
+      {
+         nm := p;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+         if (u != null)
+            gm_away(u);
+         if (leader == p)
+            leader := "";
+      }
+      else if (w == "do")
+      {
+         w := getword(p);
+         nm := w;
+         u := findunit(self, nm, FIND_UNIT_WORLD, null, UNIT_ST_NPC);
+         if (u == null)
+            gm_alert(self, "lure: no " + w + " to do " + p);
+         else
+            exec(p, u);
+      }
+      else
+         act(parts.[j - 1], A_ALWAYS, self, null, null, TO_CHAR);
+   }
+   goto start;
+}
+dilend
+
+// gmlure [<player> <room@zone|room> [zone] [hours]] [<player> off]: draws a player to a room
+// (with zone: into its zone) with the room's lure steps (gm_lure, gmmem <room> lure), for up to
+// 6 hours (2 by default); alone, lists who is lured
+dilbegin gmlure(arg : string);
+var
+   pc : unitptr;
+   goal : unitptr;
+   pname : string;
+   dest : string;
+   s : string;
+   w : string;
+   exd : extraptr;
+   hours : integer;
+   inzone : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   pname := getword(arg);
+   if (pname == "")
+   {
+      s := "";
+      pc := ghead();
+      while (pc.type == UNIT_ST_PC)
+      {
+         if (dilfind("gm_lure@commands", pc))
+            s := s + " " + pc.name;
+         pc := pc.gnext;
+      }
+      if (s == "")
+         sendtext("No one is lured.<br/>", self);
+      else
+         sendtext("Lured:" + s + "<br/>", self);
+      quit;
+   }
+
+   pc := findunit(self, pname, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + pname + " is in the game.<br/>", self);
+      quit;
+   }
+
+   dest := getword(arg);
+   if (dest == "off")
+   {
+      if (dilfind("gm_lure@commands", pc))
+      {
+         i := dildestroy("gm_lure@commands", pc);
+         sendtext("No longer luring " + pc.name + ".<br/>", self);
+      }
+      else
+         sendtext(pc.name + " isn't lured.<br/>", self);
+      quit;
+   }
+
+   if (dest == "room")
+   {
+      goal := self.outside;
+      while ((goal != null) and (goal.type != UNIT_ST_ROOM))
+         goal := goal.outside;
+   }
+   else if ("@" in dest)
+      goal := findsymbolic(dest);
+   if ((goal == null) or (goal.type != UNIT_ST_ROOM))
+   {
+      sendtext("Usage: gmlure &lt;player&gt; &lt;room@zone|room&gt; [zone] [hours], " +
+               "gmlure &lt;player&gt; off, or gmlure alone to list.<br/>", self);
+      quit;
+   }
+   dest := goal.nameidx + "@" + goal.zoneidx;
+
+   hours := 2;
+   inzone := FALSE;
+   w := getword(arg);
+   while (w != "")
+   {
+      if (w == "zone")
+         inzone := TRUE;
+      else
+         hours := atoi(w);
+      w := getword(arg);
+   }
+   if (hours < 1)
+      hours := 1;
+   if (hours > 6)
+      hours := 6;
+
+   if (dilfind("gm_lure@commands", pc))
+      i := dildestroy("gm_lure@commands", pc);
+   dilcopy("gm_lure@commands(" + dest + "," + itoa(realtime + hours * 3600) + "," +
+           itoa(inzone) + ")", pc);
+   s := "Luring " + pc.name + " to " + dest;
+   if (inzone)
+      s := s + " (or anywhere in " + goal.zoneidx + ")";
+   s := s + " for " + itoa(hours) + " hours";
+   exd := "$gm_lure" in goal.extra;
+   if (exd == null)
+      s := s + "; it has no lure steps yet (gmmem " + dest + " lure &lt;step&gt;)";
+   else
+      s := s + ", with " + itoa(length(exd.names) - 1) + " steps";
+   sendtext(s + ".<br/>", self);
+   quit;
+}
+dilend
+
+// The treasure quality (BONUS_...) for a player of level lvl, as gmtreasure gives it: one rung
+// for each level restriction randomt puts on its items (vrestrict@randomt: 10, 20, 40, 60, 80),
+// so the player can use what they get. BONUS_ARTIFACT is never earned by level alone.
+dilbegin integer gm_trquality(lvl : integer);
+code
+{
+   if (lvl < 5)
+      return (BONUS_AVERAGE);
+   if (lvl < 10)
+      return (BONUS_AVERAGE_PLUS);
+   if (lvl < 20)
+      return (BONUS_GOOD);
+   if (lvl < 40)
+      return (BONUS_GOOD_PLUS);
+   if (lvl < 60)
+      return (BONUS_EXCELLENT);
+   if (lvl < 80)
+      return (BONUS_EXCELLENT_PLUS);
+   return (BONUS_SUPERIOR);
+}
+dilend
+
+// gmtreasure [what] easy|fair|hard [for <player>] [level <n>] [quality <0-7>]: random treasure
+// (Treasure@randomt) in the game master's inventory. What is in words ("plate boots", "dagger",
+// "ring", "armour"), or nothing for any. Its quality comes from a player's level
+// (gm_trquality) and how hard the quest was: hard earns the top of the level's rung, fair one
+// rung below, easy two. for <player> uses their level and fits the item to their height, level
+// <n> a level of your choosing, the lower of the two if both. quality <n> picks it outright,
+// and only an administrator may: an artifact (7) is for a quest beyond any level.
+dilbegin gmtreasure(arg : string);
+external
+   integer gm_trquality(lvl : integer);
+var
+   u : unitptr;
+   pc : unitptr;
+   sl : stringlist;
+   w : string;
+   what : string;
+   s : string;
+   q : integer;
+   lvl : integer;
+   below : integer;
+   diff : string;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   sl := split(arg, " ");
+   what := "";
+   lvl := -1;
+   q := -1;
+   below := -1;
+   i := 0;
+   while (i < length(sl))
+   {
+      w := sl.[i];
+      if (((w == "for") or (w == "level") or (w == "quality")) and (i + 1 < length(sl)))
+      {
+         i := i + 1;
+         if (w == "for")
+         {
+            pc := findunit(self, sl.[i], FIND_UNIT_WORLD, null, UNIT_ST_PC);
+            if (pc == null)
+            {
+               sendtext("No player called " + sl.[i] + " is in the game.<br/>", self);
+               quit;
+            }
+         }
+         else if (itoa(atoi(sl.[i])) != sl.[i])
+            goto usage;
+         else if (w == "level")
+            lvl := atoi(sl.[i]);
+         else
+            q := atoi(sl.[i]);
+      }
+      else if ((w == "easy") or (w == "fair") or (w == "hard"))
+      {
+         diff := w;
+         if (w == "easy")
+            below := 2;
+         else if (w == "fair")
+            below := 1;
+         else
+            below := 0;
+      }
+      else if (w != "")
+         what := what + " " + w;
+      i := i + 1;
+   }
+
+   if (q >= 0)
+   {
+      if (self.level < 250)
+      {
+         sendtext("Only an administrator picks the quality: use for &lt;player&gt; or level " +
+                  "&lt;n&gt;. An artifact is the reward of a quest beyond any level, and " +
+                  "Papi's to give.<br/>", self);
+         quit;
+      }
+      if (q > BONUS_ARTIFACT)
+         goto usage;
+      s := "quality " + itoa(q);
+   }
+   else if (((pc == null) and (lvl < 0)) or (below < 0))
+      goto usage;
+   else
+   {
+      if ((pc != null) and ((lvl < 0) or (pc.vlevel < lvl)))
+         lvl := pc.vlevel;
+      q := gm_trquality(lvl) - below;
+      if (q < BONUS_AVERAGE)
+         q := BONUS_AVERAGE;
+      s := "quality " + itoa(q) + ", for level " + itoa(lvl) + ", " + diff;
+   }
+   if (pc != null)
+      s := s + ", made for " + pc.name;
+
+   u := load("treasure@randomt");
+   if (u == null)
+   {
+      sendtext("There is no treasure@randomt to make treasure from.<br/>", self);
+      quit;
+   }
+   link(u, self);
+   if (pc != null)
+      addextra(u.extra, {"$treasure_height"}, itoa(pc.height));
+   if (what == "")
+      what := "any";  // dilcopy() can't pass an empty string
+   dilcopy("Treasure@randomt(" + itoa(q) + "," + replace(",", " ", what) + ")", u);
+   sendtext("Making" + what + " (" + s + ").<br/>", self);
+   quit;
+
+   :usage:
+   sendtext("Usage: gmtreasure [what: weapon, dagger, jewelry, ring, armour, plate boots, " +
+            "shield, ...] easy|fair|hard for &lt;player&gt; | level &lt;n&gt;<br/>" +
+            "How hard the quest was sets the treasure with the level: hard the top of the " +
+            "level's rung, fair one below, easy two below.<br/>", self);
+   quit;
+}
+dilend
+
+// gmquest <player> [easy|fair|hard <quest name>[: what they did]]: a game master's event
+// becomes one of the player's quests ("<name> Complete", as `quests` lists them), once per name,
+// with experience by level and difficulty: a tenth, a quarter or half of what the player's
+// level needs. The
+// player alone lists the game-master quests they have done ($gm on the entry).
+dilbegin gmquest(arg : string);
+var
+   pc : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   w : string;
+   qn : string;
+   txt : string;
+   s : string;
+   diff : string;
+   pct : integer;
+   xp : integer;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   sl := split(arg, " ");
+   if ((length(sl) < 1) or (sl.[0] == ""))
+      goto usage;
+   w := sl.[0];
+   pc := findunit(self, w, FIND_UNIT_WORLD, null, UNIT_ST_PC);
+   if (pc == null)
+   {
+      sendtext("No player called " + sl.[0] + " is in the game.<br/>", self);
+      quit;
+   }
+
+   if (length(sl) < 2)
+   {
+      s := "";
+      ex := pc.quests;
+      while (ex != null)
+      {
+         if ("$gm" in ex.names)
+            s := s + "  " + ex.names.[0] + ": " + ex.descr + "<br/>";
+         ex := ex.next;
+      }
+      if (s == "")
+         s := "  none<br/>";
+      sendtext(pc.name + " (level " + itoa(pc.vlevel) + ") has done these game-master quests:<br/>" +
+               s, self);
+      quit;
+   }
+
+   diff := sl.[1];
+   if (diff == "easy")
+      pct := 10;
+   else if (diff == "fair")
+      pct := 25;
+   else if (diff == "hard")
+      pct := 50;
+   else
+      goto usage;
+
+   // the name, and after a colon what they did
+   qn := "";
+   i := 2;
+   while (i < length(sl))
+   {
+      if (sl.[i] != "")
+         qn := qn + " " + sl.[i];
+      i := i + 1;
+   }
+   txt := "";
+   if (":" in qn)
+   {
+      sl := split(qn, ":");
+      qn := sl.[0];
+      txt := sl.[1];
+      i := 2;
+      while (i < length(sl))
+      {
+         txt := txt + ":" + sl.[i];
+         i := i + 1;
+      }
+      while (left(txt, 1) == " ")
+         txt := right(txt, length(txt) - 1);
+   }
+   while (left(qn, 1) == " ")
+      qn := right(qn, length(qn) - 1);
+   while (right(qn, 1) == " ")
+      qn := left(qn, length(qn) - 1);
+   if ((qn == "") or (length(qn) > 50))
+      goto usage;
+   qn := qn + " Complete";
+
+   if (qn in pc.quests)
+   {
+      sendtext(pc.name + " has done " + qn + " already.<br/>", self);
+      quit;
+   }
+   if (pc.level >= IMMORTAL_LEVEL)
+   {
+      sendtext(pc.name + " is immortal: quests and experience are for mortals.<br/>", self);
+      quit;
+   }
+
+   xp := (getinteger(DIL_GINT_LEVELXP, null, pc.vlevel) * pct) / 100;
+   sl := null;
+   addstring(sl, qn);
+   addstring(sl, "$gm");
+   addextra(pc.quests, sl, txt);
+   experience(xp, pc);
+   act("<br/>You have completed a quest: " + qn + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("<div class='xpgain'>You earned " + itoa(xp) + " experience.</div>", A_ALWAYS, pc, null,
+       null, TO_CHAR);
+   sendtext(pc.name + " (level " + itoa(pc.vlevel) + "): " + qn + ", " + diff + ", " +
+            itoa(xp) + " experience.<br/>", self);
+   quit;
+
+   :usage:
+   sendtext("Usage: gmquest &lt;player&gt; [easy|fair|hard &lt;quest name&gt;[: what they " +
+            "did]]<br/>", self);
+   quit;
+}
+dilend
+
+// gmmem <unit> [brief|brief+|told|event|clear|watch|greet|for|lure] [text]: a game master's memory
+// of a unit
+dilbegin gmmem(arg : string);
+external
+   gm_note(u : unitptr, xname : string, txt : string);
+var
+   sl : stringlist;
+   u : unitptr;
+   word : string;
+   what : string;
+   exd : extraptr;
+   i : integer;
+   s : string;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   word := getword(arg);
+   if (word == "")
+   {
+      sendtext("Usage: gmmem &lt;npc, object, room@zone or 'room'&gt; " +
+               "[brief|brief+|told|event|clear|watch|greet|for|lure] [text]<br/>", self);
+      quit;
+   }
+
+   if (word == "room")
+   {
+      u := self.outside;
+      while ((u != null) and (u.type != UNIT_ST_ROOM))
+         u := u.outside;
+   }
+   else if ("@" in word)
+      u := findsymbolic(word);
+   else
+      u := findunit(self, word, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+
+   if (u == null)
+   {
+      sendtext("No such thing: " + word + "<br/>", self);
+      quit;
+   }
+   if (u.type == UNIT_ST_PC)
+   {
+      sendtext("Players aren't the game master's to remember.<br/>", self);
+      quit;
+   }
+
+   what := getword(arg);
+
+   if (what == "")
+   {
+      s := "";
+      exd := "$gm_brief" in u.extra;
+      if (exd != null)
+         s := s + "BRIEF: " + exd.descr + "<br/>";
+      exd := "$gm_event" in u.extra;
+      if (exd != null)
+         s := s + "EVENT: " + exd.descr + "<br/>";
+      exd := "$gm_told" in u.extra;
+      if (exd != null)
+      {
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "TOLD: " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
+      exd := "$gm_comms" in u.extra;
+      if (exd != null)
+      {
+         s := s + "COMMS:<br/>";
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "  " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
+      exd := "$gm_greet" in u.extra;
+      if (exd != null)
+         s := s + "GREET: " + exd.descr + "<br/>";
+      exd := "$gm_for" in u.extra;
+      if (exd != null)
+      {
+         s := s + "FOR:";
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + " " + exd.names.[i];
+            i := i + 1;
+         }
+         s := s + "<br/>";
+      }
+      exd := "$gm_lure" in u.extra;
+      if (exd != null)
+      {
+         i := 1;
+         while (i < length(exd.names))
+         {
+            s := s + "LURE " + itoa(i) + ": " + exd.names.[i] + "<br/>";
+            i := i + 1;
+         }
+      }
+      if (dilfind("gm_comms@commands", u) or dilfind("gm_objwatch@commands", u))
+         s := s + "(recording)<br/>";
+      if (dilfind("gm_greet@commands", u))
+         s := s + "(greeting)<br/>";
+      if (s == "")
+         s := "No game-master memory on " + u.name + ".<br/>";
+      pagestring(u.name + " [" + u.nameidx + "@" + u.zoneidx + "]<br/>" + s, self);
+      quit;
+   }
+
+   if (what == "brief")
+   {
+      subextra(u.extra, "$gm_brief");
+      addextra(u.extra, {"$gm_brief"}, arg);
+   }
+   else if (what == "brief+")
+   {
+      exd := "$gm_brief" in u.extra;
+      if (exd == null)
+         addextra(u.extra, {"$gm_brief"}, arg);
+      else
+         exd.descr := exd.descr + " " + arg;
+   }
+   else if (what == "told")
+      gm_note(u, "$gm_told", mid(asctime(realtime), 12, 16) + " " + arg);
+   else if (what == "event")
+   {
+      subextra(u.extra, "$gm_event");
+      addextra(u.extra, {"$gm_event"}, arg);
+   }
+   else if (what == "clear")
+   {
+      if ((arg == "") or (arg == "all"))
+      {
+         subextra(u.extra, "$gm_brief");
+         subextra(u.extra, "$gm_comms");
+         subextra(u.extra, "$gm_told");
+         subextra(u.extra, "$gm_event");
+         subextra(u.extra, "$gm_greet");
+         subextra(u.extra, "$gm_for");
+         subextra(u.extra, "$gm_lure");
+      }
+      else
+         subextra(u.extra, "$gm_" + arg);
+      if (((arg == "") or (arg == "all") or (arg == "greet")) and dilfind("gm_greet@commands", u))
+         i := dildestroy("gm_greet@commands", u);
+   }
+   else if (what == "watch")
+   {
+      if (u.type == UNIT_ST_NPC)
+      {
+         if (not dilfind("gm_comms@commands", u))
+            dilcopy("gm_comms@commands", u);
+      }
+      else if (u.type == UNIT_ST_OBJ)
+      {
+         if (not dilfind("gm_objwatch@commands", u))
+            dilcopy("gm_objwatch@commands", u);
+      }
+      else
+      {
+         sendtext("Only NPCs and objects can be watched; a room can greet.<br/>", self);
+         quit;
+      }
+   }
+   else if (what == "greet")
+   {
+      if ((u.type != UNIT_ST_NPC) and (u.type != UNIT_ST_ROOM))
+      {
+         sendtext("Only NPCs and rooms can greet.<br/>", self);
+         quit;
+      }
+      subextra(u.extra, "$gm_greet");
+      addextra(u.extra, {"$gm_greet"}, arg);
+      if (not dilfind("gm_greet@commands", u))
+         dilcopy("gm_greet@commands", u);
+   }
+   else if (what == "for")
+   {
+      subextra(u.extra, "$gm_for");
+      if (arg != "")
+      {
+         sl := split("$gm_for " + arg, " ");
+         addextra(u.extra, sl, "");
+      }
+   }
+   else if (what == "lure")
+   {
+      if (u.type != UNIT_ST_ROOM)
+      {
+         sendtext("Lure steps go on the room the players are drawn to.<br/>", self);
+         quit;
+      }
+      if (arg == "")
+      {
+         sendtext("Usage: gmmem &lt;room&gt; lure &lt;step&gt;<br/>", self);
+         quit;
+      }
+      gm_note(u, "$gm_lure", arg);
+   }
+   else
+   {
+      sendtext("gmmem: brief, brief+, told, event, clear, watch, greet, for or lure.<br/>", self);
+      quit;
+   }
+   sendtext("Ok.<br/>", self);
+   quit;
 }
 dilend
 

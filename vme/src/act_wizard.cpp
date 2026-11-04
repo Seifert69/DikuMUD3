@@ -5,23 +5,30 @@
  $Revision: 2.9 $
  */
 #include "act_wizard.h"
-
+#include "affect.h"
+#include "combat.h"
 #include "comm.h"
 #include "common.h"
 #include "db.h"
+#include "dbfind.h"
+#include "descriptor_data.h"
 #include "dilrun.h"
+#include "file_index_type.h"
 #include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "mobact.h"
 #include "money.h"
 #include "nanny.h"
 #include "pcsave.h"
 #include "slog.h"
 #include "textutil.h"
+#include "unitfind.h"
 #include "utils.h"
 #include "zon_basis.h"
 #include "zone_reset.h"
+#include "zone_type.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -365,6 +372,12 @@ void do_load(unit_data *ch, char *arg, const command_info *cmd)
 
         if (player_exists(buf))
         {
+            if (CHAR_LEVEL(ch) < PLAYER_ADMIN_LEVEL)
+            {
+                send_to_char("Loading a player takes a higher level.<br/>", ch);
+                return;
+            }
+
             if ((u = load_player(buf)) == nullptr)
             {
                 send_to_char("Load error<br/>", ch);
@@ -488,5 +501,295 @@ void do_wizlock(unit_data *ch, char *arg, const command_info *cmd)
         auto msg = diku::format_to_str("Game is now wizlocked for level %d%s.<br/>", lvl - 1, lvl - 1 > 0 ? " and down" : "");
         send_to_char(msg, ch);
         g_wizlock = lvl;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* A game master's rooms: made while the game runs in the virtual      */
+/* zone _gm, placed inside another room or linked with exits (set ...  */
+/* dir-to), and gone at the next reboot.                               */
+
+#define GM_ROOMS_MAX 100
+
+static int g_gm_rooms_made = 0; // names gm1, gm2, ... are not reused before the reboot
+
+static bool is_gm_room(unit_data *u)
+{
+    return u && u->isRoom() && u->getFileIndex() && u->getFileIndex()->getZone() == find_zone(g_gm_zone);
+}
+
+// "gm3", "gm3@_gm" or "here"
+static unit_data *find_gm_room(unit_data *ch, const char *arg)
+{
+    if (str_ccmp(arg, "here") == 0)
+    {
+        return is_gm_room(unit_room(ch)) ? unit_room(ch) : nullptr;
+    }
+
+    char name[MAX_INPUT_LENGTH + 1];
+    char zone[MAX_INPUT_LENGTH + 1];
+    split_fi_ref(arg, zone, name);
+    unit_data *u = find_symbolic(strchr(arg, '@') ? zone : g_gm_zone, name);
+    return is_gm_room(u) ? u : nullptr;
+}
+
+// Where everything in a room goes when it's freed: the room it stands in, else where its first exit
+// leads, else the crypt in Udgaard
+static unit_data *gm_room_way_out(unit_data *room)
+{
+    if (room->getUnitIn())
+    {
+        return unit_room(room->getUnitIn());
+    }
+
+    for (int i = 0; i <= MAX_EXIT; i++)
+    {
+        if (ROOM_EXIT(room, i) && ROOM_EXIT(room, i)->getToRoom() && ROOM_EXIT(room, i)->getToRoom() != room)
+        {
+            return ROOM_EXIT(room, i)->getToRoom();
+        }
+    }
+
+    return world_room("udgaard", "crypt");
+}
+
+static void gm_room_new(unit_data *ch, char *arg)
+{
+    char keyword[MAX_INPUT_LENGTH + 1];
+    char word[MAX_INPUT_LENGTH + 1];
+
+    arg = str_next_word(arg, keyword);
+    arg = str_next_word(arg, word);
+
+    if (!*keyword || (*word && str_ccmp(word, "in") != 0))
+    {
+        send_to_char("Usage: gmroom new <keyword> [in <room@zone>|here]<br/>", ch);
+        return;
+    }
+
+    unit_data *in = nullptr;
+    if (*word)
+    {
+        arg = str_next_word(arg, word);
+        if (str_ccmp(word, "here") == 0)
+        {
+            in = unit_room(ch);
+        }
+        else
+        {
+            char name[MAX_INPUT_LENGTH + 1];
+            char zone[MAX_INPUT_LENGTH + 1];
+            split_fi_ref(word, zone, name);
+            in = find_symbolic(zone, name);
+        }
+
+        if (in == nullptr || !in->isRoom())
+        {
+            send_to_char("No such room (room@zone, or here).<br/>", ch);
+            return;
+        }
+    }
+
+    int n = 0;
+    for (unit_data *u = g_room_head; u && u->isRoom(); u = u->getGlobalNext())
+    {
+        n += is_gm_room(u);
+    }
+    if (n >= GM_ROOMS_MAX)
+    {
+        send_to_char(diku::format_to_str("There are %d rooms already; free some first.<br/>", n), ch);
+        return;
+    }
+
+    zone_type *z = find_zone(g_gm_zone);
+    auto name = diku::format_to_str("gm%d", ++g_gm_rooms_made);
+    z->insertFileIndex(std::make_unique<file_index_type>(z, name.c_str(), UNIT_ST_ROOM));
+
+    unit_data *room = new_unit_data(UNIT_ST_ROOM, find_file_index(g_gm_zone, name.c_str()));
+    room->getNames().AppendName(keyword);
+    room->setTitle(diku::format_to_str("Inside the %s", keyword));
+    room->setDescriptionOfOutside(diku::format_to_str("A %s is here.", keyword));
+    room->setUnitFlag(UNIT_FL_INDOORS);
+    room->setCapacity(30000); // what vmc gives a room, so players fit when it's inside another
+    room->setBaseWeight(10);
+    room->setWeight(10);
+    UROOM(room)->setLandscapeTerrain(SECT_INSIDE);
+    insert_in_unit_list(room);
+
+    if (in)
+    {
+        room->setManipulateFlag(MANIPULATE_ENTER);
+        unit_to_unit(room, in);
+        send_to_char(diku::format_to_str("%s@%s made, inside %s.<br/>", name, g_gm_zone, in->getFileIndexSymName()), ch);
+    }
+    else
+    {
+        send_to_char(diku::format_to_str("%s@%s made; give it exits with set room dir-to.<br/>", name, g_gm_zone), ch);
+    }
+}
+
+static void gm_room_free(unit_data *ch, unit_data *room)
+{
+    for (unit_data *u = room->getUnitContains(); u; u = u->getNext())
+    {
+        if (u->isRoom())
+        {
+            send_to_char(diku::format_to_str("Free %s first: it's inside.<br/>", u->getFileIndexSymName()), ch);
+            return;
+        }
+    }
+
+    unit_data *to = gm_room_way_out(room);
+    if (to == nullptr)
+    {
+        send_to_char("There's no way out to move its contents to.<br/>", ch);
+        return;
+    }
+
+    // Everyone and everything inside, players' corpses and belongings too, goes to the way out
+    while (room->getUnitContains())
+    {
+        unit_data *u = room->getUnitContains();
+
+        if (u->isChar())
+        {
+            stop_fighting(u);
+            act("The place fades around you, and you are elsewhere.", eA_ALWAYS, u, cActParameter(), cActParameter(), eTO_CHAR);
+        }
+        unit_from_unit(u);
+        unit_to_unit(u, to);
+        if (u->isChar())
+        {
+            act("$1n appears.", eA_HIDEINV, u, cActParameter(), cActParameter(), eTO_ROOM);
+            if (u->isPC())
+            {
+                command_interpreter(u, "look");
+            }
+        }
+    }
+
+    // Nothing may point to it any more: exits, and where characters (also in the menu) last were
+    for (unit_data *r = g_room_head; r && r->isRoom(); r = r->getGlobalNext())
+    {
+        for (int i = 0; i <= MAX_EXIT; i++)
+        {
+            if (ROOM_EXIT(r, i) && ROOM_EXIT(r, i)->getToRoom() == room)
+            {
+                delete ROOM_EXIT(r, i);
+                UROOM(r)->setRoomDirectionDataForExitTo(i, nullptr);
+            }
+        }
+    }
+    for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
+    {
+        if (u->isChar() && CHAR_LAST_ROOM(u) == room)
+        {
+            UCHAR(u)->setLastLocation(nullptr);
+        }
+    }
+    for (descriptor_data *d = g_descriptor_list; d; d = d->getNext())
+    {
+        if (d->getCharacter() && d->getCharacter()->isChar() && CHAR_LAST_ROOM(d->getCharacter()) == room)
+        {
+            UCHAR(d->getCharacter())->setLastLocation(nullptr);
+        }
+    }
+
+    send_to_char(diku::format_to_str("%s freed; what was inside is in %s.<br/>", room->getFileIndexSymName(), to->getFileIndexSymName()), ch);
+
+    DeactivateDil(room);
+    stop_all_special(room);
+    stop_affect(room);
+    room->register_destruct();
+    if (room->getUnitIn())
+    {
+        unit_from_unit(room);
+    }
+    remove_from_unit_list(room); // it's deleted at the end of this pulse (clear_destructed)
+}
+
+static void gm_room_list(unit_data *ch)
+{
+    std::string msg;
+
+    for (unit_data *r = g_room_head; r && r->isRoom(); r = r->getGlobalNext())
+    {
+        if (!is_gm_room(r))
+        {
+            continue;
+        }
+        int pcs = 0;
+        for (unit_data *u = r->getUnitContains(); u; u = u->getNext())
+        {
+            pcs += u->isPC();
+        }
+        msg += diku::format_to_str("%-8s %s, %s, %d player%s<br/>",
+                                   r->getFileIndexName(),
+                                   r->getTitle(),
+                                   r->getUnitIn() ? ("inside " + r->getUnitIn()->getFileIndexSymName()).c_str() : "not inside a room",
+                                   pcs,
+                                   pcs == 1 ? "" : "s");
+    }
+
+    send_to_char(msg.empty() ? "No rooms made.<br/>" : msg, ch);
+}
+
+void do_gmroom(unit_data *ch, char *arg, const command_info *cmd)
+{
+    char word[MAX_INPUT_LENGTH + 1];
+    arg = str_next_word(arg, word);
+
+    if (str_ccmp(word, "new") == 0)
+    {
+        gm_room_new(ch, arg);
+    }
+    else if (str_ccmp(word, "free") == 0)
+    {
+        str_next_word(arg, word);
+        unit_data *room = find_gm_room(ch, word);
+        if (room == nullptr)
+        {
+            send_to_char("No such room: gmroom free <gm3|gm3@_gm|here><br/>", ch);
+            return;
+        }
+        gm_room_free(ch, room);
+    }
+    else if (str_ccmp(word, "list") == 0)
+    {
+        gm_room_list(ch);
+    }
+    else if (str_ccmp(word, "title") == 0 || str_ccmp(word, "descr") == 0 || str_ccmp(word, "outside") == 0)
+    {
+        // One line each, no editor: the title and what you see inside it, and how it looks from the room around it
+        char which[MAX_INPUT_LENGTH + 1];
+        strcpy(which, word);
+        arg = str_next_word(arg, word);
+        unit_data *room = find_gm_room(ch, word);
+        if (room == nullptr || str_is_empty(arg))
+        {
+            send_to_char("Usage: gmroom title|descr|outside <gm3|here> <text><br/>", ch);
+            return;
+        }
+        if (str_ccmp(which, "title") == 0)
+        {
+            room->setTitle(arg);
+        }
+        else if (str_ccmp(which, "descr") == 0)
+        {
+            room->setDescriptionOfInside(arg);
+        }
+        else
+        {
+            room->setDescriptionOfOutside(arg);
+        }
+        send_to_char("Ok.<br/>", ch);
+    }
+    else
+    {
+        send_to_char("Usage: gmroom new <keyword> [in <room@zone>|here]<br/>"
+                     "       gmroom title|descr|outside <gm3|here> <text><br/>"
+                     "       gmroom free <gm3|here><br/>"
+                     "       gmroom list<br/>",
+                     ch);
     }
 }

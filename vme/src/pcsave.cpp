@@ -22,6 +22,7 @@
 #include "slog.h"
 #include "textutil.h"
 #include "utils.h"
+#include "when_cache.h"
 
 #include <cstdio>
 #include <cstring>
@@ -89,6 +90,7 @@ int delete_player(const char *pName)
         return FALSE;
     }
 
+    when_player_deleted(pName);
     delete_inventory(pName);
 
     return TRUE;
@@ -217,9 +219,8 @@ void save_player_file(unit_data *pc)
     unit_data *tmp_u = nullptr;
     unit_data *list = nullptr;
     descriptor_data *tmp_descr = nullptr;
-    CByteBuffer *pBuf = &g_FileBuffer;
-
-    pBuf->Clear();
+    CByteBuffer Buf; // Not g_FileBuffer: the save handlers' DIL may load into that
+    CByteBuffer *pBuf = &Buf;
 
     assert(pc->isPC());
     assert(strlen(PC_FILENAME(pc)) < pc_data::PC_MAX_NAME);
@@ -277,6 +278,7 @@ void save_player_file(unit_data *pc)
     nPlyLen = write_unit_string(pBuf, pc);
 
     save_player_disk(PC_FILENAME(pc), const_cast<char *>(PC_PWD(pc)), PC_ID(pc), nPlyLen, pBuf->GetData());
+    when_player_saved(UPC(pc)); // As written: unequipped, so without what equipment adds
 
     /* Restore all inventory and equipment */
     while ((tmp_u = list))
@@ -477,7 +479,6 @@ unit_data *load_player(const char *pName)
     }
 
     pc = load_player_file(pFile);
-    assign_player_file_index(pc);
 
     fclose(pFile);
 
@@ -488,6 +489,7 @@ unit_data *load_player(const char *pName)
     }
     else
     {
+        assign_player_file_index(pc);
         stop_affect(pc);
         stop_all_special(pc);
         DeactivateDil(pc);

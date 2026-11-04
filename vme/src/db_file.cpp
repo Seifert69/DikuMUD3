@@ -1274,7 +1274,8 @@ int write_unit_string(CByteBuffer *pBuf, unit_data *u)
 #endif
         }
 
-        if (inu && inu->getFileIndex())
+        // Rooms in a virtual zone (_gm) are gone after a reboot, so a player saved there starts in the hometown
+        if (inu && inu->getFileIndex() && *inu->getFileIndexZoneName() != '_')
         {
             pBuf->AppendString(inu->getFileIndexZoneName());
             pBuf->AppendString(inu->getFileIndexName());

@@ -1,7 +1,29 @@
-<h1>change expert</h1>
-<br/>
-This command changes what you see when you do an info at your teachers.<br/>
-<br/>
-See also:<br/>
-<a cmd='help #'>Change</a><br/>
-<br/>
+<div class="mw-parser-output"><h1>Expert</h1>
+<p>Usage:
+</p>
+<pre> change expert
+</pre>
+<p><b>change expert</b> switches <a cmd='help #'>info</a> at your teachers between the
+simple list and the expert list; type it again to switch back.
+</p>
+<p>The expert list shows everything the teacher teaches you, also what is expensive, and for
+each line:
+</p>
+<pre>  32% dagger               [ 32% of 105%, points  8, 12 cp] *
+</pre>
+<ul><li><b>32%</b>: how good you are now.</li>
+<li><b>of 105%</b>: your potential, the most you can ever reach in it. It comes from your race
+and profession; for some things it is 0, and you can't learn them at all.</li>
+<li><b>points 8</b>: what your next practice costs in practice points.</li>
+<li><b>12 cp</b>: what it costs in money. Practice is free up to level 25.</li>
+<li>Each <b>*</b>: once practiced already this level; the next practice costs half as much
+again.</li></ul>
+<p>Expensive lines (20 points or more) are shown greyed out.
+</p>
+<p><br />
+See also:
+</p>
+<pre>&gt; <a cmd='#'>Help Info</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Change</a>
+</pre></div>

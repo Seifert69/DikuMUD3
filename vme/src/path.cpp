@@ -283,7 +283,8 @@ int move_to(unit_data *from, unit_data *to)
         return DIR_HERE;
     }
 
-    if (ROOM_SC(from) != ROOM_SC(to))
+    // Rooms made after boot (gmroom) are in no component: NPCs don't find their way to them
+    if (ROOM_SC(from) < 0 || ROOM_SC(from) != ROOM_SC(to))
     {
         return DIR_IMPOSSIBLE;
     }

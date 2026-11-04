@@ -12,9 +12,17 @@
 #include "handler.h"
 #include "interpreter.h"
 #include "main_functions.h"
+#include "nanny.h"
+#include "pcsave.h"
 #include "textutil.h"
 #include "utility.h"
 #include "utils.h"
+#include "weather.h"
+#include "when_cache.h"
+#include "when_limit.h"
+
+#include <chrono>
+#include <ctime>
 
 /**
  * @note also used in "corpses" wizard-command
@@ -149,4 +157,167 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
         mystr += " matches<br/>";
         page_string(CHAR_DESCRIPTOR(ch), mystr.c_str());
     }
+}
+
+static constexpr std::chrono::seconds WHEN_LOOKUP_WAIT{5}; ///< Between one mortal's lookups that miss the cache
+
+/**
+ * The player who asks "when" when ch types it, for what they may see and for the
+ * limit alike: an immortal switched into a monster asks as themselves, and a
+ * monster that follows a player (ordered to, or made to by a script) as that
+ * player. nullptr for any other monster, which may not ask.
+ */
+static pc_data *when_asker(unit_data *ch)
+{
+    unit_data *who = CHAR_ORIGINAL(ch);
+    if (who->isNPC() && CHAR_MASTER(who) && CHAR_MASTER(who)->isPC())
+    {
+        who = CHAR_MASTER(who);
+    }
+    return who->isPC() ? UPC(who) : nullptr;
+}
+
+/**
+ * Whether "when" hides the player in entry from asker. The same rule for players
+ * in the game and players read from their file, so the answer doesn't change when
+ * they log on or off: wizard invisibility above asker's level, or invisibility
+ * that asker can't detect. Unlike CHAR_CAN_SEE() it ignores light, blindness and
+ * where they are.
+ */
+static bool when_hides(const pc_data *asker, const cWhenEntry &entry)
+{
+    if (CHAR_LEVEL(asker) < entry.wizinv)
+    {
+        return true;
+    }
+    return CHAR_LEVEL(asker) < CREATOR_LEVEL && entry.invisible && !CHAR_HAS_FLAG(asker, CHAR_DETECT_INVISIBLE);
+}
+
+/**
+ * Whether asker may make a "when" lookup that misses the cache, and if so counts
+ * it: checking the name reads the two ban files, then the player file if there
+ * is one. A mortal waits WHEN_LOOKUP_WAIT between them, kept per player id so
+ * that reconnecting doesn't start over. There is no limit for all players
+ * together: each player file is read at most once per boot.
+ * Immortals aren't limited, also when switched into a monster.
+ */
+static bool when_lookup_allowed(const pc_data *asker)
+{
+    static cWhenLimit limit(WHEN_LOOKUP_WAIT);
+
+    if (CHAR_LEVEL(asker) >= IMMORTAL_LEVEL)
+    {
+        return true;
+    }
+
+    // Players without an id yet (-1) share one wait
+    long key = asker->getPlayerUID();
+
+    // A monotonic clock with sub-second resolution: whole seconds from time() made
+    // the wait anything between 4 and 5 seconds
+    return limit.Allow(key, cWhenLimit::clock::now());
+}
+
+/**
+ * when <player>: when a player last logged on. Only players ask (see
+ * when_asker()). Players in the game, link dead included, are "playing right now".
+ * Players hidden by when_hides() are treated as unknown.
+ *
+ * Other players come from when_cache(): a player file is read the first time
+ * someone asks about it, at most once per boot, and the server's saves and
+ * deletions keep the entry up to date (a file changed by hand is not seen until
+ * that player is saved again, or the next boot). A hidden player in the game is
+ * looked up the same way, so the limit and the cache act the same whether they
+ * are here or not.
+ */
+void do_when(unit_data *ch, char *arg, const command_info *cmd)
+{
+    static const char *no_one = "No one by that name here.<br/>";
+    char name[MAX_INPUT_LENGTH];
+
+    pc_data *asker = when_asker(ch);
+    if (asker == nullptr)
+    {
+        return;
+    }
+
+    if (str_is_empty(arg))
+    {
+        send_to_char("Usage: when &lt;player name&gt;<br/>", ch);
+        return;
+    }
+
+    one_argument(arg, name);
+
+    // Players are at the head of the unit list, as in "who"
+    bool hidden_here = false;
+    for (unit_data *u = g_unit_list; u && u->isPC(); u = u->getGlobalNext())
+    {
+        if (!str_ccmp(PC_FILENAME(u), name))
+        {
+            // Not the file: it may still hold the visibility from before they went invisible
+            const char *here = u->getNames().Name();
+            if (!str_is_empty(here) && (asker == u || !when_hides(asker, when_entry_of(UPC(u)))))
+            {
+                send_to_char(diku::format_to_str("%s is playing right now.<br/>", here), ch);
+                return;
+            }
+            hidden_here = true;
+            break;
+        }
+    }
+
+    const cWhenEntry *entry = when_cache().Find(name);
+    if (entry == nullptr)
+    {
+        // Reading files is the expensive part, so it is limited for mortals (as "save"
+        // limits saves). Before the name check too, as that reads the two ban files.
+        if (!when_lookup_allowed(asker))
+        {
+            send_to_char("Wait a few seconds before asking about another player who is not here.<br/>", ch);
+            return;
+        }
+
+        // The name becomes part of the player file path, so the login prompt's rules
+        // for a player name (3 to 14 letters, nothing it bans)
+        char file_name[MAX_INPUT_LENGTH];
+        if (_parse_name(name, file_name))
+        {
+            send_to_char(no_one, ch);
+            return;
+        }
+
+        // Only the player file is read (not the inventory), and it is never saved. A
+        // file that load_player() rejects (another player's name in it) is remembered
+        // as no one. A name with no file isn't remembered, so made-up names don't fill
+        // the cache.
+        unit_data *pc = load_player(file_name);
+        if (pc)
+        {
+            when_cache().Store(file_name, when_entry_of(UPC(pc)));
+            extract_unit(pc);
+        }
+        else if (player_exists(file_name))
+        {
+            when_cache().Store(file_name, cWhenEntry{});
+        }
+        entry = when_cache().Find(file_name);
+    }
+
+    if (hidden_here || entry == nullptr || !entry->found || when_hides(asker, *entry))
+    {
+        send_to_char(no_one, ch);
+        return;
+    }
+
+    std::string msg = diku::format_to_str("%s last logged on %s", entry->name, time_ago_string(entry->last, time(nullptr)));
+
+    char date[64];
+    const tm *local = localtime(&entry->last);
+    if (local && strftime(date, sizeof(date), "%a %d %b %Y %H:%M", local))
+    {
+        msg += diku::format_to_str(" (%s)", date);
+    }
+
+    send_to_char(msg + ".<br/>", ch);
 }

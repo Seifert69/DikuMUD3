@@ -250,8 +250,8 @@
         .room_descr  { display: inline; font-style: italic; width: 600px; }
         .exit        { display: inline; }
         .score       { display: inline; color:black; }
-        .social_self { display: inline; color:black; }
-        .social_other { display: inline; color:black; }
+        .social_self, .emote_self { display: inline; color:black; }
+        .social_other, .emote_other { display: inline; color:black; }
         .score       { display: inline; color:black; }
         .spell       { display: inline; color:brown; }
         .worn        { display: inline; color:black; }

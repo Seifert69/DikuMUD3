@@ -17,9 +17,12 @@ add_executable(vme_unit_tests
         html_attr_tests.cpp
         html_link_tests.cpp
         pc_data_tests.cpp
+        pcsave_tests.cpp
         sessionlog_tests.cpp
         textutil_tests.cpp
         weather_cpp_tests.cpp
+        when_cache_tests.cpp
+        when_limit_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
 target_compile_definitions(vme_unit_tests PUBLIC

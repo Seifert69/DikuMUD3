@@ -143,6 +143,16 @@ test("say lines and nested whisper divs give one event", () => {
     assert.equal(ev[0].body, "psst");
 });
 
+test("emote lines are conversation, with the action as the body; socials are not", () => {
+    const [o] = P.classify("<div class='emote_other' from='Papi'>Papi grins and points at the fountain, 'there!'</div>").events;
+    assert.deepEqual([o.type, o.kind, o.from, o.self, o.body],
+        ["comm", "emote", "Papi", false, "grins and points at the fountain, 'there!'"]);
+    const [s] = P.classify("<div class='emote_self'>Dwili mutters.</div>").events;
+    assert.deepEqual([s.kind, s.from, s.self, s.body], ["emote", "You", true, "mutters."]);
+    const soc = P.classify("<div class='social_other' from='Papi' to='Dwili'>Papi smiles at you.</div>").events;
+    assert.equal(soc.some(e => e.type === "comm"), false);
+});
+
 test("a segment of only combat lines has the combat shape", () => {
     const html = "<div class='hit_me'>You cut the rat.</div><br/><div class='hit_opponent'>The rat bites your leg.</div><br/>";
     const { events, shape } = P.classify(html);

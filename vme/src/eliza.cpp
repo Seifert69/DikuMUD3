@@ -76,7 +76,8 @@ static char words[2 * ORACLE_MAX_LINE + 2];
 /// resp in response(): command_interpreter() refuses a command longer than MAX_INPUT_LENGTH
 constexpr size_t ORACLE_RESP_SIZE = MAX_INPUT_LENGTH;
 
-/// What response() copies into resp: grammar() then grows " you am " by one byte per 7 (adjacent matches share a space)
+/// What response() copies into resp: grammar() then grows " you am " by one byte per 7 (adjacent matches used to share
+/// a space; the search now resumes after each replacement, so they cannot, and this is an upper bound)
 constexpr size_t ORACLE_RESP_COPY_MAX = ORACLE_RESP_SIZE - 1 - ORACLE_RESP_SIZE / 7;
 static_assert(sizeof(words) < ORACLE_RESP_COPY_MAX, "the words fit a reply");
 

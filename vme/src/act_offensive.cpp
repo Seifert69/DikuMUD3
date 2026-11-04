@@ -96,7 +96,7 @@ void do_kill(unit_data *ch, char *argument, const command_info *cmd)
         set_fighting(ch, victim, TRUE); /* Point to the killer! */
         UCHAR(ch)->setCharacterFlag(CHAR_KILL_SELF);
 
-        send_death(ch);
+        send_death(victim); // the dying unit's DILs hear of it, as in die()
         dilprg *prg = dil_copy_template(g_dil_death, victim, nullptr);
 
         if (prg)

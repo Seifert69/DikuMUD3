@@ -370,8 +370,8 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
         UCHAR(unit)->setDescriptor(nullptr);
     }
 
-    CByteBuffer *pBuf = &g_FileBuffer;
-    pBuf->Clear();
+    CByteBuffer Buf; // Not g_FileBuffer: the save handlers' DIL may load into that
+    CByteBuffer *pBuf = &Buf;
 
     if (bContainer)
     {

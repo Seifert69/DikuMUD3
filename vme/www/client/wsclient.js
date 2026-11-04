@@ -642,6 +642,8 @@ function outputText(str, bParse) {
             setCommsText(item.firstChild.innerHTML + "<br/>");
         } else if (str.slice(0, 16) == "<div class='tell") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
+        } else if (str.slice(0, 18) == "<div class='emote_") {
+            setCommsText(item.firstChild.innerHTML + "<br/>");
         } else if (str.slice(0, 17) == "<div class='comm_") {
             setCommsText(item.firstChild.innerHTML + "<br/>");
         } else if (str.slice(0, 8) == "<script>") {
