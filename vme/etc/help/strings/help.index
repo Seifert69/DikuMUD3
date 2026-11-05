@@ -489,6 +489,7 @@ lightning breath=lightbreath.hlp
 lightning sphere=lightningsphere.hlp
 lightning storm=lightningstorm.hlp
 list=list.hlp
+listen=listen.hlp
 lit=lantern.hlp
 locate=locate.hlp
 locate animal=locateanimal.hlp

@@ -423,6 +423,7 @@ python3 getwikihelppage.py Lightningsphere
 python3 getwikihelppage.py Lightningstorm &
 python3 getwikihelppage.py Lightwounds &
 python3 getwikihelppage.py List &
+python3 getwikihelppage.py Listen &
 python3 getwikihelppage.py Locateanimal
 python3 getwikihelppage.py Locate &
 python3 getwikihelppage.py Locateobject &
