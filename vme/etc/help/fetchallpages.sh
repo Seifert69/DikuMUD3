@@ -95,7 +95,7 @@ python3 getwikihelppage.py Causepanic
 python3 getwikihelppage.py Causeseriouswounds &
 python3 getwikihelppage.py Cbalance &
 python3 getwikihelppage.py Cdefect &
-python3 getwikihelppage.py Cdemote &
+python3 getwikihelppage.py Cdepose &
 python3 getwikihelppage.py Cdeposit
 python3 getwikihelppage.py Cequipment &
 python3 getwikihelppage.py Change &
