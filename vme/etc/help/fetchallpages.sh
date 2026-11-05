@@ -161,6 +161,7 @@ python3 getwikihelppage.py Controlledteleport &
 python3 getwikihelppage.py Controlundead
 python3 getwikihelppage.py Cook &
 python3 getwikihelppage.py Copperpieces &
+python3 getwikihelppage.py Cpromote &
 python3 getwikihelppage.py Craftsmanship &
 python3 getwikihelppage.py Crank &
 python3 getwikihelppage.py Createfood

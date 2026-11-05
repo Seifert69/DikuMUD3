@@ -198,6 +198,7 @@ control undead=controlundead.hlp
 controlled teleport=controlledteleport.hlp
 cook=cook.hlp
 copper pieces=copperpieces.hlp
+cpromote=cpromote.hlp
 craftsmanship=craftsmanship.hlp
 crank=crank.hlp
 create food=createfood.hlp
