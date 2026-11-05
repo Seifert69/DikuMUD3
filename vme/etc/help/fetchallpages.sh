@@ -719,6 +719,7 @@ python3 getwikihelppage.py Sustain &
 python3 getwikihelppage.py Take
 python3 getwikihelppage.py Talwar &
 python3 getwikihelppage.py Taste &
+python3 getwikihelppage.py taunt &
 python3 getwikihelppage.py Teams &
 python3 getwikihelppage.py Tell &
 python3 getwikihelppage.py Telnet
