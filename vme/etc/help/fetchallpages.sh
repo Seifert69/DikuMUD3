@@ -600,6 +600,7 @@ python3 getwikihelppage.py Removecurse &
 python3 getwikihelppage.py Removedisease
 python3 getwikihelppage.py Remove &
 python3 getwikihelppage.py Removepoison &
+python3 getwikihelppage.py Rend &
 python3 getwikihelppage.py Rent &
 python3 getwikihelppage.py Repair &
 python3 getwikihelppage.py Repelgreaterundead
