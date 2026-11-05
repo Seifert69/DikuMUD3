@@ -45,6 +45,7 @@ python3 getwikihelppage.py Barbarian &
 python3 getwikihelppage.py Bardiche &
 python3 getwikihelppage.py Barkskin &
 python3 getwikihelppage.py Bash
+python3 getwikihelppage.py berserk &
 python3 getwikihelppage.py Bastard &
 python3 getwikihelppage.py Battleaxe &
 python3 getwikihelppage.py Becdecorbin &
