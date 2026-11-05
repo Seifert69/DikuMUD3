@@ -813,6 +813,8 @@ sun beam=sunbeam.hlp
 sun globe=sunglobe.hlp
 sun ray=sunray.hlp
 sustain=sustain.hlp
+swim=swimming.hlp
+swimming=swimming.hlp
 :end:s
 :start:t
 take=take.hlp
