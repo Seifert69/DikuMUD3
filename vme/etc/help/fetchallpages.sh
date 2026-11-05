@@ -470,6 +470,7 @@ python3 getwikihelppage.py Monster &
 python3 getwikihelppage.py Morningstar &
 python3 getwikihelppage.py Morph &
 python3 getwikihelppage.py Mortallywounded
+python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
 python3 getwikihelppage.py Movementpoints &

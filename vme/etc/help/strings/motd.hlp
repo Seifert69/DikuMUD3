@@ -1,0 +1,19 @@
+<div class="mw-parser-output"><h1>Motd</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>motd</a>
+</pre>
+<p>Shows the message of the day again: the message you see when you log on, 
+where the administrators tell everyone what's new or what's coming. Handy 
+when it scrolled past too quickly.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help News</a>
+&gt; <a cmd='#'>Help Boards</a>
+</pre>
+
+
+
+
+</div>
