@@ -1,17 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage mail (letter) (character)<br/><br/>
-<br/>
-<br/>
-The 'MAIL'  command is used to send letters to other players (online or<br/>
-offline). The command only works when inside post office at the postman.<br/>
-To erase a letter which you have received, you must 'eat' the letter. To<br/>
-get your mail from the post man you must  request your mail. <br/><br/>
-mail paper to quinn<br/><br/>
-eat letter<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Request<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Mail</h1>
+<p>Usage:
+</p>
+<pre>mail &lt;letter&gt; &lt;player&gt;
+request
+</pre>
+<p>Examples:
+</p>
+<pre>mail paper asta
+request
+eat letter
+</pre>
+<p>The mail command sends a letter to another player, in the game or not. It only 
+works at a post office, with the postman there: Jim in Midgaard, or Hansen in 
+Udgaard. Write your letter first (see <a cmd='#'>Help Write</a>), then give it to the postman 
+with mail, the paper and the player's name. He adds who it's from and the date.
+</p><p>When mail has come for you, you get "a sudden urge to visit the post office" 
+when you log on. Go to a postman and type <a cmd='#'>request</a> to get your letters. A 
+mailbox holds 100 letters; when it's full, nothing more can be sent to it. To 
+throw away a letter you have read, eat it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Write</a>
+&gt; <a cmd='#'>Help Request</a>
+</pre>
+
+
+
+
+</div>
