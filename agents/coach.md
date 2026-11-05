@@ -45,6 +45,7 @@ In the review directory, all four, then stop:
            `give 2.axe john` if Boar's Bane comes first in your inventory.
 
    - A goal he finished: leave it out, and say so in the report.
+   - A goal marked "(Papi's task)": keep it until it's done, among the first two.
    - A goal he didn't finish: keep it, add a line for the day saying what got in the way, as
      far as `day.txt` shows it, and give more help than the day before. The first day a
      hint, then the steps, then the exact commands and rooms. Check each step against the

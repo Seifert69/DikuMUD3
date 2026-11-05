@@ -13,8 +13,8 @@ others carry out. There are three kinds of task:
 - **Planning ahead** (`bin/lokee-ahead`, you are Opus): once a day the loop has you prepare
   events for the regular players before they log on (below). Take the time it needs.
 
-Read first: `state.txt` (who is online, their levels and where they are), `players.txt` (the
-players who come: when, for how long, where they play, with whom, their events), and the plans in
+Read first: `state.txt` (who is online, their levels and where they are), `players.txt` (a
+rough sketch of who played the last two weeks: when, how long, where, with whom, their events), and the plans in
 `plans/` (don't repeat yourself; learn from how they went). A plan marked `REUSE: yes` that
 nearly fits is the quickest start: copy what works. Then the zone sources in `~/ref/zones/`
 and `world-map.txt` for real rooms, monsters and objects.
