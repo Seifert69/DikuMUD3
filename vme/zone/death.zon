@@ -21,6 +21,9 @@ creators {"whistler"}
 #define CORPSE_FILE  "$CORPSE_FILE"
 #define CORPSE_TIME  "$CORPSE_TIME"
 #define CORPSE_HOMETOWN "$CORPSE_HOMETOWN"
+// Players up to this level have their corpse anchored to their soul without the Soul Anchor
+// quest (gremlin.zon), so a corpse the ants carry off comes home by itself
+#define CORPSE_ANCHOR_LEVEL 15
 
 %dil
 
@@ -993,7 +996,7 @@ code
 
    if (self.type==UNIT_ST_PC)
    {
-      if ("Soul Anchor Request Complete" in self.quests)
+      if (("Soul Anchor Request Complete" in self.quests) or (self.level <= CORPSE_ANCHOR_LEVEL))
       {
          addextra(crp.extra, {CORPSE_HOMETOWN}, self.hometown);
       }
