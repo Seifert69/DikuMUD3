@@ -174,6 +174,7 @@ python3 getwikihelppage.py Cremove &
 python3 getwikihelppage.py Crossbow &
 python3 getwikihelppage.py Crowbill &
 python3 getwikihelppage.py Csrank &
+python3 getwikihelppage.py Cstart &
 python3 getwikihelppage.py Cstore
 python3 getwikihelppage.py Ctitle &
 python3 getwikihelppage.py Cudgel &
