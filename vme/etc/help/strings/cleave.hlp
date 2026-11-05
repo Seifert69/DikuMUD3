@@ -1,0 +1,32 @@
+<div class="mw-parser-output"><h1>Cleave Skill</h1>
+<p>Class and level:
+</p>
+<pre> Barbarian Level 35
+</pre>
+<p>Usage:
+</p>
+<pre> cleave &lt;target&gt;
+ cleave             (in a fight: your opponent)
+</pre>
+<p>The Barbarian pulls back a great weapon and brings it down on the enemy in 
+one mighty blow. It only works with a cleaving weapon in your hand: a lucern 
+hammer, halberd, battle axe, great axe, war axe, lochaber axe, bill guisarme, 
+bec de corbin, great sword or claymore.
+</p><p>The blow starts the fight if there wasn't one, and it hits harder the higher 
+your level, and the better your constitution and strength are against your 
+enemy's constitution and dexterity. Each cleave takes 50 endurance, so you need 
+more than that to try. You can cleave another player only when both of you 
+have signed the book of blood.
+</p><p>Looking for the weapon? See <a cmd='#'>Help Pole Cleaver</a>.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Charge</a>
+ &gt; <a cmd='#'>Help Pole Cleaver</a>
+</pre>
+
+
+
+
+</div>

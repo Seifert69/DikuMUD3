@@ -123,6 +123,7 @@ python3 getwikihelppage.py Class &
 python3 getwikihelppage.py Claymore &
 python3 getwikihelppage.py Clear
 python3 getwikihelppage.py Clearskies &
+python3 getwikihelppage.py Cleave &
 python3 getwikihelppage.py Clenchedfist &
 python3 getwikihelppage.py Clerics &
 python3 getwikihelppage.py Climb &
