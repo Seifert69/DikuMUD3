@@ -1,0 +1,29 @@
+<div class="mw-parser-output"><h1>Leap Skill</h1>
+<p>Class and level:
+</p>
+<pre> Barbarian Level 15
+</pre>
+<p>Usage:
+</p>
+<pre> leap &lt;direction&gt;
+</pre>
+<p>A demonstration of the incredible fitness of the barbarian warrior, 
+they have the ability to leap from one area to another, even while 
+engaged in combat. By leaping a certain direction, if successful 
+the barbarian will move from one room to another adjacent room. If 
+this skill is executed during combat, the fight will come to an end 
+as the Barbarian departs the scene.
+</p><p>A leap takes 50 endurance, also when it fails, so you need more than 
+that to try. You can't leap through a closed door, out onto water 
+that needs a boat, or out of a place whose magic keeps you in.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Fleeing</a>
+</pre>
+
+
+
+
+</div>

@@ -408,6 +408,7 @@ python3 getwikihelppage.py Laws &
 python3 getwikihelppage.py Laytrap &
 python3 getwikihelppage.py Leadership &
 python3 getwikihelppage.py Leafshield
+python3 getwikihelppage.py leap &
 python3 getwikihelppage.py Leatherskin &
 python3 getwikihelppage.py Leave &
 python3 getwikihelppage.py Leaving &
