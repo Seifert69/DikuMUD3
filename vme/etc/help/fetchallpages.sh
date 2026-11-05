@@ -100,6 +100,7 @@ python3 getwikihelppage.py Cequipment &
 python3 getwikihelppage.py Change &
 python3 getwikihelppage.py Channeling &
 python3 getwikihelppage.py Channels &
+python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
 python3 getwikihelppage.py Chargewand &
 python3 getwikihelppage.py Charmanimal &
