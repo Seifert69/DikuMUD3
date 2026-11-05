@@ -1,0 +1,33 @@
+<div class="mw-parser-output"><h1>Storage</h1>
+<p>Usage:
+</p>
+<pre>rent
+store &lt;item&gt;
+unstore &lt;item&gt;
+storage
+</pre>
+<p>In the Storage Office in Udgaard and in Midgaard, a storage clerk will keep 
+your things safe for you.
+</p>
+<ul><li><b>rent</b>: rent storage space in that town, for one platinum piece. You</li></ul>
+<pre> only need to do it once in each town.
+</pre>
+<ul><li><b>store &lt;item&gt;</b>: leave something from your inventory in your storage.</li></ul>
+<pre> Containers aren't accepted, and a storage space holds only so much weight.
+</pre>
+<ul><li><b>storage</b>: see what you have stored there.</li>
+<li><b>unstore &lt;item&gt;</b>: take it back. You pay the clerk one gold piece for</li></ul>
+<pre> every year (of game time) it was stored, at least one and at most ten.
+</pre>
+<p>Your storage space in a town only holds what you stored in that town.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help Inventory</a>
+</pre>
+
+
+
+
+</div>

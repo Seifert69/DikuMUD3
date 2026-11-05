@@ -603,7 +603,6 @@ python3 getwikihelppage.py Removedisease
 python3 getwikihelppage.py Remove &
 python3 getwikihelppage.py Removepoison &
 python3 getwikihelppage.py Rend &
-python3 getwikihelppage.py Rent &
 python3 getwikihelppage.py Repair &
 python3 getwikihelppage.py Repelgreaterundead
 python3 getwikihelppage.py Repellesserundead &
@@ -701,6 +700,7 @@ python3 getwikihelppage.py Stiletto &
 python3 getwikihelppage.py Stinkingbreath &
 python3 getwikihelppage.py Stinkingcloud &
 python3 getwikihelppage.py Stoneskin
+python3 getwikihelppage.py Storage &
 python3 getwikihelppage.py Stormcall &
 python3 getwikihelppage.py Stormgate &
 python3 getwikihelppage.py Str &
