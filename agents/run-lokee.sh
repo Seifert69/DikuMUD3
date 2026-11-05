@@ -6,13 +6,18 @@
 # when Papi tells Lokee something, or now and then while an event runs. Haiku decides what to
 # do; it calls bin/lokee-sonnet to play the characters and bin/lokee-opus to plan.
 #
+# Every 10 minutes it notes who is online, their levels and rooms (bin/lokee-players sample,
+# into seen/), and once a day, when no event runs, it has Opus plan ahead in the background
+# (bin/lokee-ahead): from players.txt (bin/lokee-players profile), events made for the players
+# who come often, ready to start when they're online.
+#
 # Run it in tmux as the agent's user:  tmux new -d -s lokee ~/bin/run-lokee.sh
 # Stop it:  touch ~/.lokee-stop  (it stops after the current turn), or kill the tmux session.
 # Logs:  ~/.local/state/mud/lokee/claude-<date>.log (what the models say), session-<date>.log
 # (the mud).
 #
 # ~/lokee holds CLAUDE.md (lokee.md), lokee-haiku.md, lokee-sonnet.md, lokee-opus.md, orders.txt
-# (Papi's standing orders, if any), plans/, forbidden.txt (sym@zone it may not load), memory/,
+# (Papi's standing orders, if any), plans/, seen/ and players.txt (who plays, and how), forbidden.txt (sym@zone it may not load), memory/,
 # .claude/settings.json and bin, a link to ~/bin; ~/.config/valhalla/lokee is its character
 # (role=gm, so mud.py keeps it to the game-master commands).
 #
@@ -35,7 +40,10 @@ WAKE='^\[[A-Z][a-z]+ logged on\]|^\[gm |^\[tell Papi\]|the mud closed the connec
 QUIET='^\[(Dwili|Groa|Papi|Lokee) logged on\]|^\[gm [A-Za-z]+\] [0-9:]+ lure step '
 TURN=3600     # the longest one turn may take
 CHECK=900     # while an event runs, look in on it this often (seconds)
+SAMPLE=600    # note who is online this often (seconds)
+AHEAD_AT=10   # the hour (UTC) from which the day's planning ahead may start
 last=$(date +%s)
+sampled=0
 
 while [ ! -e ~/.lokee-stop ]; do
     log=$LOGDIR/claude-$(date +%F).log
@@ -46,6 +54,25 @@ while [ ! -e ~/.lokee-stop ]; do
     fi
     text=$(bin/mud.py read 300 2>&1)
     running=$(grep -l '^STATE: \(running\|approved\)' plans/*.md 2>/dev/null)
+    ahead=""
+    if ((10#$(date +%H) >= AHEAD_AT)) && [ -z "$running" ] && [ ! -e "$LOGDIR/ahead-$(date +%F)" ]; then
+        ahead=1
+    fi
+    if [ -n "$ahead" ] || (($(date +%s) - sampled >= SAMPLE)); then
+        sampled=$(date +%s)
+        # (a send also returns what came in since the read, so it goes on with the text)
+        seen=$({ bin/mud.py send "users" | sed -E 's/^(<[^>]*>.*[^ ]) *\[[^]]*\]$/\1/'; bin/mud.py send "where"; } 2>&1)
+        bin/lokee-players sample <<< "$seen"
+        text="$text
+$seen"
+    fi
+    if [ -n "$ahead" ]; then
+        touch "$LOGDIR/ahead-$(date +%F)"
+        bin/lokee-players profile
+        { date '+%F %H:%M'; echo "$seen"; } > state.txt
+        echo "=== $(date '+%F %T') planning ahead (bin/lokee-ahead, in the background)" >> "$log"
+        LOKEE_STATE=keep nohup bin/lokee-ahead "Plan ahead, as lokee-opus.md says under \"Planning ahead\"." >/dev/null 2>&1 &
+    fi
     if grep -E "$WAKE" <<< "$text" | grep -qvE "$QUIET"; then
         why="This just happened:"
     elif [ -n "$running" ] && (($(date +%s) - last >= CHECK)); then
@@ -59,11 +86,15 @@ while [ ! -e ~/.lokee-stop ]; do
     [ -n "$orders" ] && orders=" Papi's standing orders (orders.txt): $orders
 "
     plans=$(grep -m1 -H '^STATE:' plans/*.md 2>/dev/null)
+    ready=$(for f in $(grep -l '^STATE: ready' plans/*.md 2>/dev/null); do
+                echo "$f: $(grep -m1 -h '^WHEN:' "$f") $(grep -m1 -h '^FITS:' "$f")"
+            done)
     reuse=$(for f in $(grep -l '^REUSE: yes' plans/*.md 2>/dev/null); do
                 echo "$f: $(grep -m1 -h '^FITS:' "$f") $(grep -m1 -h '^PLAYED:' "$f")"
             done)
     orders="$orders
 Plans (file: first line): ${plans:-none}
+Plans ready for players who aren't all online yet: ${ready:-none}
 Plans to reuse: ${reuse:-none}
 "
     bin/claude-turn $TURN -p --append-system-prompt "$(cat lokee-haiku.md)" "It's $(date '+%A %F, %H:%M') UTC.$orders

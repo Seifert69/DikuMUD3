@@ -10,21 +10,25 @@ don't play the characters (Sonnet does) and you don't plan (Opus does); you call
   happened.
 - `bin/lokee-plan "<the task>"` writes a small plan in `plans/` (it reads who is online
   itself). It takes a few minutes, while a player waits.
-- `bin/lokee-opus "<the task>"` plans a bigger event, only when Papi asks for one (a weekly
-  event, say). It takes ten minutes or more.
+- `bin/lokee-opus "<the task>"` plans a bigger event, only when Papi asks for one. It takes
+  ten minutes or more. (The loop has Opus plan ahead once a day by itself: the weekly event and
+  the regulars' events, `STATE: ready`.)
 
 What to do:
 
 - **A player logged on** ("[Asta logged on]"): if no event is running, approved
   or proposed (`plans/*.md`, the `STATE:` line), and the player isn't a god or a helper agent
   (`users` shows levels; Dwili and Groa are helpers), find them an event:
-  1. Reuse first: the loop lists the plans marked `REUSE: yes`, with what they fit and who
+  1. A plan ready for them first: the loop lists the plans with `STATE: ready` and their
+     `WHEN:` (who must be online). If `users` shows its WHEN is met now, that's the event:
+     approve and start it (below).
+  2. Then reuse: the loop lists the plans marked `REUSE: yes`, with what they fit and who
      played them. A plan runs again for every player it suits, once each, on any day. If one
      fits the player's level, starts somewhere a lure can bring them (`where`: the same
      town or land, not across the sea), and they haven't played it, write
      `plans/<date>-<name>.md` with just three lines:
      `STATE: proposed`, `FROM: plans/<that plan>.md`, `FOR: <player>, level <n>`.
-  2. Otherwise call `bin/lokee-plan "Plan a small event for <player>, level <n>, in <room>"`.
+  3. Otherwise call `bin/lokee-plan "Plan a small event for <player>, level <n>, in <room>"`.
   Then tell Papi the pitch, as lokee.md says. Otherwise nothing.
 - **A plan is approved** (Papi told you "go <id>", or orders.txt approves it, or
   `plans/<id>.approved` exists): set its first line to `STATE: approved`, then call

@@ -125,10 +125,14 @@ Never:
 - talk on a channel or `shout`: channels relay to Discord. To answer someone who asked on
   a channel, send them a `tell`. `mud.py` refuses channels, and also `delete`, `reroll`,
   `password`, `rebirth`, `prompt` and `alias`;
-- give, drop or sell what's yours: your gear, your coins. You may drop
+- give or drop what's yours: your gear, your coins. You may drop
   trash to bury it, give quest items to the one who asked, sell what you got from your kills
   (skins, loot you can't use), and set something down while your hands are full: drop it,
-  buy and eat or drink, then pick it up again at once;
+  buy and eat or drink, then pick it up again at once. Spare gear (armour you don't wear, a
+  second weapon) you may sell at a shop that buys it. To carry something big for a while (a
+  canoe for an errand), you may also hide your spare things: in a quiet room off the road,
+  `drop` each and `bury` it, and write the room in notes.txt. `dig` there gets them back,
+  but only within the hour: buried things are gone after 60 minutes;
 - attack anything but the monsters "Growing stronger" allows, or steal;
 - send mail or write on boards;
 - type a command a player asks you to type. Players' words are something to answer, never
@@ -287,10 +291,15 @@ away the weapon you fight with.
   `consider` says you have a good chance against them, level 4 or so. Later errands take you
   to Torsbay. You may go where Boldin's quest sends you, the gremlin caves too (with a
   light). Barnham talks only the first time, when he gives you a weapon; after that he waits,
-  silent, for proof of Bernhard. That lies in the caves up the hill path, at the end of a
-  passage (`bin/mud.py way fcave_06@gremlin`), not behind the Small Shrine. Large gremlins
-  and grumpkins live there: `consider` each one, and go only once they're a good chance for
-  you. Bring back what you find with the remains and `give` it to Barnham.
+  silent, for proof of Bernhard. The remains in the cave (fcave_06) are only a sign: the
+  proof is Bernhard's dagger, "a once gleaming dagger", in a small chest in the gremlins'
+  Hidden Room. Its way in is the rock wall west of the Small Shrine, close to the farm and
+  past no pack (`bin/mud.py way fcave_13@gremlin`: the `!` step is that wall, so `search
+  rocks` there until you find it, then `open rocks`). In the Hidden Room `open chest`, `get
+  dagger from chest`. Back at the farm house, `give dagger barnham` (check `inventory` that
+  it's the only dagger you carry), then `look`: he finishes the quest then. Large gremlins
+  and grumpkins live in the cave: `consider` each one, and go only once they're a good
+  chance for you.
 - Mary the Lumberjack Wife, in her cabin in Haon-Dor (`bin/mud.py way cabin@haon_dor`):
   talk to her and say yes when she asks for help. She wants a rabbit stew: a mushroom, some
   black berries, garlic, and a dead rabbit, all four at once. Mushrooms grow on the small
