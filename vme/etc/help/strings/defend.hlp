@@ -2,6 +2,7 @@
 <p>Class and level:
 </p>
 <pre> Barbarian Level 40
+ Dark Knight Level 40
 </pre>
 <p>Usage:
 </p>
@@ -22,6 +23,7 @@ See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help taunt</a>
  &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Dark Knight</a>
 </pre>
 
 
