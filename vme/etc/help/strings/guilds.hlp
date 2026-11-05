@@ -1,12 +1,12 @@
 <div class="mw-parser-output"><h1>Guilds</h1>
 <p>This help topic describes both the 'guilds' command as well as the guild concept.
 </p>
-<h2><span class="mw-headline" id="Command">Command</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<h2><span class="mw-headline" id="Command">Command</span></h2>
 <pre> &gt; guilds
 </pre>
 <p>Use the guilds command to see which guilds you are a member of, and your level in each guild. Note, that when you level up you also level up in your primary guild. To change your primary guild, go to a guild master and request a new title - then your primary guild also changes.
 </p>
-<h2><span class="mw-headline" id="Concept">Concept</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a cmd='#'>edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<h2><span class="mw-headline" id="Concept">Concept</span></h2>
 <p>The following guilds are available in Valhalla:
 </p>
 <pre>     Fighter 
