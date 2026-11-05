@@ -38,7 +38,6 @@ python3 getwikihelppage.py Awaken
 python3 getwikihelppage.py Backstab &
 python3 getwikihelppage.py Baculus &
 python3 getwikihelppage.py Badbreath &
-python3 getwikihelppage.py Balance &
 python3 getwikihelppage.py Ballchain
 python3 getwikihelppage.py Banish &
 python3 getwikihelppage.py Bank &
@@ -200,7 +199,6 @@ python3 getwikihelppage.py Deathlygrasp &
 python3 getwikihelppage.py Decapitate &
 python3 getwikihelppage.py defend &
 python3 getwikihelppage.py Deleteme &
-python3 getwikihelppage.py Deposit &
 python3 getwikihelppage.py Describe
 python3 getwikihelppage.py Detectalignment &
 python3 getwikihelppage.py Detectcurse &
@@ -260,7 +258,6 @@ python3 getwikihelppage.py Estoc &
 python3 getwikihelppage.py Evaluate &
 python3 getwikihelppage.py Evil &
 python3 getwikihelppage.py Examine &
-python3 getwikihelppage.py Exchange
 python3 getwikihelppage.py Exit &
 python3 getwikihelppage.py Exits &
 python3 getwikihelppage.py Experience &
@@ -791,7 +788,6 @@ python3 getwikihelppage.py Who &
 python3 getwikihelppage.py Wield
 python3 getwikihelppage.py Wimpy &
 python3 getwikihelppage.py Windslash &
-python3 getwikihelppage.py Withdraw &
 python3 getwikihelppage.py Wizardeye &
 python3 getwikihelppage.py Wizardmark
 python3 getwikihelppage.py Wizards
