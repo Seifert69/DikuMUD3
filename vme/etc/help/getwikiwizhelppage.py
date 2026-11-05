@@ -25,7 +25,7 @@ if len(sys.argv) != 2:
 print("Getting Wiki page from wiki.dikumud.com: " + sys.argv[1])
 
 try: 
-    j = urllib2.urlopen('https://wiki.dikumud.com/api.php?action=parse&format=json&page=Wizhelp/'+sys.argv[1])
+    j = urllib2.urlopen('https://wiki.dikumud.com/api.php?action=parse&format=json&disableeditsection=1&page=Wizhelp/'+sys.argv[1])
 except urllib2.HTTPError, e:
     print('HTTPError = ' + str(e.code))
     sys.exit()
