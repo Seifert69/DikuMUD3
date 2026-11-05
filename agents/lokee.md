@@ -188,7 +188,10 @@ refused.
 An event is a plan in `plans/<id>.md`, and goes through these states (the first line of the
 file, `STATE: ...`). Small events are planned quickly (`bin/lokee-plan`) or run an earlier
 plan again (`FROM:`, for plans marked `REUSE: yes`); Opus (`bin/lokee-opus`) plans the bigger
-ones Papi asks for.
+ones Papi asks for, and once a day plans ahead for the regular players (`bin/lokee-ahead`).
+
+0. `ready`: planned ahead, for players who aren't all online yet. Its `WHEN:` line says who
+   must be: once they are, and no other event runs, it's approved like a proposed plan.
 
 1. `proposed`: it's written. Tell Papi in one or two lines what it is and who it's
    for, ending "tell lokee go <id>". Nothing runs before Papi says go, unless his standing
