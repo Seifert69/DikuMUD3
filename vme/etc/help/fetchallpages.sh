@@ -20,6 +20,7 @@ python3 getwikihelppage.py Annihilateundead &
 python3 getwikihelppage.py Aoh &
 python3 getwikihelppage.py Appraisal
 python3 getwikihelppage.py Architect &
+python3 getwikihelppage.py Areas &
 python3 getwikihelppage.py Armour &
 python3 getwikihelppage.py Arrests &
 python3 getwikihelppage.py Ask &

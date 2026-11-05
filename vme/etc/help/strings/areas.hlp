@@ -1,0 +1,31 @@
+<div class="mw-parser-output"><h1>Areas</h1>
+<p>Usage:
+</p>
+<pre>areas
+areas all
+areas all continent
+areas continent
+areas &lt;continent&gt;
+areas donation
+areas non donation
+</pre>
+<p>Lists the areas of Valhalla and the continent each lies on. An area marked * 
+is a donation area. <a cmd='#'>areas</a> alone shows the options:
+</p>
+<ul><li><b>areas all</b>: every area.</li>
+<li><b>areas all continent</b>: every area, by continent.</li>
+<li><b>areas continent</b>: the continents there are.</li>
+<li><b>areas &lt;continent&gt;</b>: the areas on that continent.</li>
+<li><b>areas donation</b> and <b>areas non donation</b>: only those that are, or aren't, donation areas.</li></ul>
+<p>The words can be shortened, as in <a cmd='#'>areas cont</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Map</a>
+&gt; <a cmd='#'>Help Donation</a>
+</pre>
+
+
+
+
+</div>
