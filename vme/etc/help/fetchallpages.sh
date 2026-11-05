@@ -234,7 +234,7 @@ python3 getwikihelppage.py Druids
 python3 getwikihelppage.py Druidskills &
 python3 getwikihelppage.py Druidspells &
 python3 getwikihelppage.py Druidweapons &
-python3 getwikihelppage.py Drunk &
+python3 getwikihelppage.py Drink &
 python3 getwikihelppage.py Dump
 python3 getwikihelppage.py Dustdevil &
 python3 getwikihelppage.py Dwarves &
@@ -734,7 +734,6 @@ python3 getwikihelppage.py Thiefrp &
 python3 getwikihelppage.py Thiefskills &
 python3 getwikihelppage.py Thiefspells
 python3 getwikihelppage.py Thiefweapons &
-python3 getwikihelppage.py Thirsty &
 python3 getwikihelppage.py Thornstrike &
 python3 getwikihelppage.py Throw &
 python3 getwikihelppage.py Tigerclaw

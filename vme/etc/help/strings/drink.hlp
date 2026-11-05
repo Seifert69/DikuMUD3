@@ -1,0 +1,33 @@
+<div class="mw-parser-output"><h1>Drink</h1>
+<p>Usage:
+</p>
+<pre>drink &lt;drink container&gt;
+</pre>
+<p>Example:
+</p>
+<pre>drink obelisk
+drink barrel
+</pre>
+<p>This is the way to drink liquid. You can buy various types of drink containers, 
+which hold different amounts of liquid. It is vitally important that you drink, 
+so you should always carry a drink container with you.
+</p><p>When you grow thirsty you start getting messages: you are thirsty, then very 
+thirsty, then dehydrated. Once you run dry you stop healing, and soon you start 
+losing hit points instead; thirst hurts even more than hunger. In the end, you 
+die.
+</p><p>Water is free in a few places: the golden obelisk in the Market Square of 
+Midgaard, the white fountain on Midgaard's palace square, and the water barrel 
+in Mary's cabin in the forest of Haon-Dor.
+</p><p>Note that drinks can be intoxicating, and that poisoning is possible.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Eat</a>
+&gt; <a cmd='#'>Help Sip</a>
+&gt; <a cmd='#'>Help Taste</a>
+</pre>
+
+
+
+
+</div>
