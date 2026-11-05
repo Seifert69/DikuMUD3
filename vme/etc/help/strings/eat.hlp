@@ -1,19 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage eat &lt;food&gt;<br/><br/>
-<br/>
-It is important that you eat food. Different types of food will fill your<br/>
-stomach for different time periods, thus making a cracker less filling than a<br/>
-big bread. If you begin to grow hungry, you will stop regaining your points.<br/>
-At this time you will start to get messages, indicating this. If you refuse<br/>
-to eat, you will start loosing hitpoints. In the end you will die. So<br/>
-remember to carry a little spare food around.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Regenerate<br/><br/>
-Drink<br/><br/>
-Sip<br/><br/>
-Taste<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Eat</h1>
+<p>Usage:
+</p>
+<pre>eat &lt;food&gt;
+</pre>
+<p>It is important that you eat food. Different types of food fill your stomach for 
+different time periods, so a cracker is less filling than a big bread, and when 
+you are too full to eat more, the game tells you so.
+</p><p>When your stomach is nearly empty you start to get messages: you are hungry, 
+then very hungry, then starving. Once it is empty you stop healing, and soon you 
+start losing hit points instead, more the longer you go hungry. In the end you 
+die. Thirst works the same way, so drink as well (see <a cmd='#'>Help Drinks</a>).
+</p><p>So remember to carry a little spare food around. In Udgaard, Rosanne's Food 
+Store sells bread.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Drinks</a>
+&gt; <a cmd='#'>Help Regenerate</a>
+&gt; <a cmd='#'>Help Sip</a>
+&gt; <a cmd='#'>Help Taste</a>
+</pre>
+
+
+
+
+</div>

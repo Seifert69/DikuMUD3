@@ -359,7 +359,7 @@ flashing grip=flashinggrip.hlp
 fleeing=fleeing.hlp
 focus=focus.hlp
 follow=follow.hlp
-food=food.hlp
+food=eat.hlp
 foot lance=footlance.hlp
 forage=forage.hlp
 friend=friend.hlp
@@ -433,7 +433,7 @@ horses=horses.hlp
 houses=homes2.hlp
 hpp=hits.hlp
 humans=humans.hlp
-hunger=hunger.hlp
+hunger=eat.hlp
 hunt=hunt.hlp
 :end:h
 :start:i

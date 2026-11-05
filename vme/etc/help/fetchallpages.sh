@@ -296,7 +296,6 @@ python3 getwikihelppage.py Flashinggrip &
 python3 getwikihelppage.py Fleeing &
 python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
-python3 getwikihelppage.py Food &
 python3 getwikihelppage.py Footlance &
 python3 getwikihelppage.py Forage &
 python3 getwikihelppage.py Friend &
@@ -371,7 +370,6 @@ python3 getwikihelppage.py Homes2 &
 python3 getwikihelppage.py Horses &
 python3 getwikihelppage.py Houses &
 python3 getwikihelppage.py Humans
-python3 getwikihelppage.py Hunger &
 python3 getwikihelppage.py Hunt &
 python3 getwikihelppage.py Iceball &
 python3 getwikihelppage.py Icestorm &
