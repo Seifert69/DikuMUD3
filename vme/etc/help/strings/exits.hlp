@@ -1,27 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage exits<br/><br/>
-<br/>
-Exits will give you a list of possible exits in a room. It will not<br/>
-show hidden or secret exits. An exit is how you leave a room. If a room<br/>
-has no exits you will have to find an alternate way to leave the room.<br/>
-<br/><br/><br/>
-If you use the 'change exits' command it will toggle on and off weather or<br/>
-not see automatically see exits by default as you walk around the game.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Change<br/><br/>
-Doors<br/><br/>
-Enter<br/><br/>
-Directions<br/><br/>
-Movement<br/><br/>
-North<br/><br/>
-West<br/><br/>
-East<br/><br/>
-South<br/><br/>
-Up<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Exits</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>exits</a>
+<a cmd='#'>directions</a>
+</pre>
+<p>Both list the obvious exits of the room you are in: each direction, and the 
+place it leads to, or the door that is closed that way. Click a direction to 
+walk there. Hidden and secret exits aren't shown; you have to find those 
+yourself. In the dark you see no exits at all, only that it is pitch black.
+</p><p><a cmd='#'>change exits</a> switches on and off whether you see the exits by themselves 
+every time you walk into a room.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+&gt; <a cmd='#'>Help Doors</a>
+&gt; <a cmd='#'>Help Enter</a>
+&gt; <a cmd='#'>Help Movement</a>
+</pre>
+
+
+
+
+</div>
