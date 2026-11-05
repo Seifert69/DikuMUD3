@@ -1,19 +1,27 @@
-<br/>
-<br/>
-<br/>
-A PI Bag is now available for purchase.<br/>
-This bag allows you to store your Power<br/>
-items without taking up an inventory space.<br/>
-<br/>
-The following commands can be used:<br/><br/>
-<br/>
-pistore &lt;item name&gt; to store an item <br/><br/>
-<br/>
-piunstore &lt;item name&gt; to unstore an item<br/><br/>
-<br/>
-pilist &lt;item name&gt; to list items in bag <br/><br/>
-<br/>
-You can only store power items in this bag. <br/><br/>
-<br/>
-Do not attempt to store others PI's as they will be destroyed.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>PI Bag</h1>
+<p>Usage:
+</p>
+<pre>pistore &lt;item&gt;
+piunstore &lt;item&gt;
+<a cmd='#'>pilist</a>
+</pre>
+<p>A PI bag stores your Power Items without taking up room in your inventory, and 
+keeps them when you're not carrying them. You can only use it once you have 
+one; ask an administrator about it.
+</p>
+<ul><li><b>pistore &lt;item&gt;</b>: put one of your Power Items in the bag.</li>
+<li><b>piunstore &lt;item&gt;</b>: take it out again.</li>
+<li><b>pilist</b>: see what's in the bag.</li></ul>
+<p>Only your own Power Items go in the bag. Don't try to store anything else: a 
+Power Item that isn't yours is destroyed, and the administrators are told. You 
+can't use the bag while you are dead.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Power Items</a>
+</pre>
+
+
+
+
+</div>
