@@ -194,6 +194,7 @@ python3 getwikihelppage.py Darkness &
 python3 getwikihelppage.py Date
 python3 getwikihelppage.py Deathlygrasp &
 python3 getwikihelppage.py Decapitate &
+python3 getwikihelppage.py defend &
 python3 getwikihelppage.py Deleteme &
 python3 getwikihelppage.py Deposit &
 python3 getwikihelppage.py Describe
