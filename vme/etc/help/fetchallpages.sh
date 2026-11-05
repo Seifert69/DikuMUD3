@@ -616,7 +616,6 @@ python3 getwikihelppage.py Respond &
 python3 getwikihelppage.py Ressurect &
 python3 getwikihelppage.py Rest &
 python3 getwikihelppage.py Reward &
-python3 getwikihelppage.py Ride
 python3 getwikihelppage.py Rows &
 python3 getwikihelppage.py Rules &
 python3 getwikihelppage.py Sacrificehead &

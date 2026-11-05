@@ -259,6 +259,7 @@ dig=dig.hlp
 direction=direction.hlp
 dirk=dirk.hlp
 disarming=disarming.hlp
+dismount=mount.hlp
 dispel evil=dispelgood.hlp
 dispel good=dispelgood.hlp
 dispel magic=dispelmagic.hlp
@@ -706,7 +707,7 @@ respond=respond.hlp
 ressurect=ressurect.hlp
 rest=rest.hlp
 reward=reward.hlp
-ride=ride.hlp
+ride=mount.hlp
 rows=rows.hlp
 rules=rules.hlp
 :end:r
