@@ -1,22 +1,35 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage open [direction] (item) | (door-name)<br/><br/>
-<br/>
-Example:<br/><br/>
-open east door<br/><br/>
-open barrel<br/><br/>
-<br/>
-If you want to open something unlocked and closed, just use this command.<br/>
-If it is not an item, but some sort of a door hatch etc. It will have a<br/>
-keyword, like 'open gate'. If what you want to open is  Closed  and<br/>
-locked, you need the key to unlock it first. <br/><br/>
-<br/>See Also:<br/><br/>
-Key<br/><br/>
-Close<br/><br/>
-Lock<br/><br/>
-Unlock<br/><br/>
-Spell lock<br/><br/>
-Spell unlock<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Open</h1>
+<p>Usage:
+</p>
+<pre>open &lt;item&gt;
+open &lt;door&gt;
+open &lt;direction&gt; &lt;door&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>open chest
+open door
+open east gate
+</pre>
+<p>Opens something that is closed: a chest, a bag, a coffin, or a door, gate 
+or hatch on the way out of a room. Doors are named by a keyword, such as 
+door or gate; if there are several, add the direction.
+</p><p>A locked thing won't open: unlock it first (see <a cmd='#'>Help Lock</a>). Opening a 
+door opens it on both sides, and those on the other side see it open.
+</p><p>You can also open something you are shut inside, such as a coffin, from 
+the inside, unless you have been buried in it: then call for help (see 
+<a cmd='#'>Help Knock</a>). You can open things while sitting or resting, but not 
+asleep.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Close</a>
+&gt; <a cmd='#'>Help Lock</a>
+&gt; <a cmd='#'>Help Knock</a>
+&gt; <a cmd='#'>Help Exits</a>
+</pre>
+
+
+
+
+</div>
