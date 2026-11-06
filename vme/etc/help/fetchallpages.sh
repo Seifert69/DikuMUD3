@@ -431,7 +431,6 @@ python3 getwikihelppage.py Magiccandle
 python3 getwikihelppage.py Magicians &
 python3 getwikihelppage.py Magicusers &
 python3 getwikihelppage.py Maidenname &
-python3 getwikihelppage.py Mail &
 python3 getwikihelppage.py Maingauche
 python3 getwikihelppage.py Male &
 python3 getwikihelppage.py Manaboost &
@@ -440,7 +439,6 @@ python3 getwikihelppage.py Map &
 python3 getwikihelppage.py Materialquality
 python3 getwikihelppage.py Mattock &
 python3 getwikihelppage.py Maul &
-python3 getwikihelppage.py Me &
 python3 getwikihelppage.py Mending &
 python3 getwikihelppage.py Mentor
 python3 getwikihelppage.py Meteorshower &
