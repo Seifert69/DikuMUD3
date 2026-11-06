@@ -1,33 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-    stand        -Makes you stand up.<br/>
-    sit          -Makes you sit up / down.<br/>
-    rest         -Makes you lie down and rest.<br/>
-    sleep        -Makes you go to sleep.<br/>
-    wake         -Makes you wake up from a sleep.<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-These commands enables you to alter your current position. To move around<br/>
-by yourself you must be standing. If you sit or rest, regeneration will<br/>
-speed up slightly, however, in those positions, you will be more<br/>
-vulnerable to attacks! In order to allow you to visit and do other things<br/>
-while regenerating from batter the rest position gives the same<br/>
-regeneration value as the sleep position, thus sleeping is of no added<br/>
-benifit to your healing. If however you need someone to carry you &lt;drag&gt;<br/>
-you must go to sleep.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Sleep<br/><br/>
-Rest<br/><br/>
-Stand<br/><br/>
-Sit<br/><br/>
-Wake<br/><br/>
-Drag<br/><br/>
-Gain<br/><br/>
-Spell Sleep<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Position</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>stand</a>   stand up
+<a cmd='#'>sit</a>     sit down
+<a cmd='#'>rest</a>    lie down and rest
+<a cmd='#'>sleep</a>   go to sleep
+<a cmd='#'>wake</a>    wake up; wake &lt;someone&gt; wakes them
+</pre>
+<p>These commands change your position. To move around by yourself you must be 
+standing.
+</p><p>You heal, and get your mana and endurance back, faster when you aren't on your 
+feet: half again as fast when you rest or sleep, a quarter faster when you sit. 
+Resting heals as fast as sleeping, so there is no benefit to sleeping, and you 
+can still see and talk while you rest. In a holy place, like the Temple of 
+Udgaard, you heal twice as fast. In a fight you don't heal at all.
+</p><p>But the further down you are, the more vulnerable you are to attacks. And 
+someone who needs to be carried away (see <a cmd='#'>Help Drag</a>) must be asleep.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Regenerate</a>
+&gt; <a cmd='#'>Help Drag</a>
+</pre>
+
+
+
+
+</div>

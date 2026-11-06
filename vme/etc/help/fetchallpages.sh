@@ -609,7 +609,6 @@ python3 getwikihelppage.py Rescue &
 python3 getwikihelppage.py Resize
 python3 getwikihelppage.py Respond &
 python3 getwikihelppage.py Ressurect &
-python3 getwikihelppage.py Rest &
 python3 getwikihelppage.py Reward &
 python3 getwikihelppage.py Rows &
 python3 getwikihelppage.py Rules &
@@ -642,10 +641,8 @@ python3 getwikihelppage.py Shouting &
 python3 getwikihelppage.py Sickle
 python3 getwikihelppage.py Silverpieces &
 python3 getwikihelppage.py Sip &
-python3 getwikihelppage.py Sit &
 python3 getwikihelppage.py Skills &
 python3 getwikihelppage.py Skin
-python3 getwikihelppage.py Sleep &
 python3 getwikihelppage.py Slip &
 python3 getwikihelppage.py Slow &
 python3 getwikihelppage.py Slowrot &
@@ -685,7 +682,6 @@ python3 getwikihelppage.py Sprayofacid &
 python3 getwikihelppage.py Staff &
 python3 getwikihelppage.py Staffuse &
 python3 getwikihelppage.py Stalk
-python3 getwikihelppage.py Stand &
 python3 getwikihelppage.py Stats &
 python3 getwikihelppage.py Statue &
 python3 getwikihelppage.py Status &
@@ -766,7 +762,6 @@ python3 getwikihelppage.py Valhalla &
 python3 getwikihelppage.py Variable &
 python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge
-python3 getwikihelppage.py Wake &
 python3 getwikihelppage.py Wanduse &
 python3 getwikihelppage.py Wanted &
 python3 getwikihelppage.py Waraxe &
