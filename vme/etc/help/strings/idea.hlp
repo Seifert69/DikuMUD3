@@ -1,14 +1,31 @@
-<h1>Idea</h1>
-Usage:<br/>
-idea (idea string)<br/><br/>
-This command is used to  give good ideas to the creators.<br/>
-<br/>
-Example:<br/>
-idea How about making DikuMUD HTML based?<br/>
-<br/>
-See Also:<br/>
-<br/>
-<a cmd='help #'>Immortal</a><br/>
-<a cmd='help #'>Typo</a><br/>
-<a cmd='help #'>Bug</a><br/>
-<br/>
+<div class="mw-parser-output"><h1>Idea</h1>
+<p>Usage:
+</p>
+<pre>idea
+</pre>
+<p>Got an idea to make the game better: a new area, a quest, a change to a 
+skill or a guild? Tell the admins. Type idea and press enter, and the 
+editor opens, as when you write a letter at the post office. Write your 
+idea, up to about 4000 characters, and close the editor with @ on a line 
+of its own. A single word or nothing at all is thrown away.
+</p><p>Your idea is saved for the admins to read, together with your name and 
+where you were, so if it is about a place, send it from there.
+</p><p>Example:
+</p>
+<pre>42h&gt; idea
+] The ferry to Udgaard could ring a bell before it leaves,
+] so passengers on deck know to get on board.
+] @
+Thank you for your comments.
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Bug</a>
+&gt; <a cmd='#'>Help Typo</a>
+</pre>
+
+
+
+
+</div>
