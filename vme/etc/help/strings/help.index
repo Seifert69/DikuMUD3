@@ -542,7 +542,6 @@ mana boost=manaboost.hlp
 mana palm orb=palmorb.hlp
 mana points=manapoints.hlp
 map=map.hlp
-master card=creditcardregistration.hlp
 material quality=materialquality.hlp
 mattock=mattock.hlp
 maul=maul.hlp
@@ -749,7 +748,6 @@ scripts=scripts.hlp
 scroll use=scrolluse.hlp
 scrolls=scrolluse.hlp
 search=search.hlp
-seize=seize.hlp
 sell=shops.hlp
 sending=sending.hlp
 sense life=senselife.hlp
@@ -913,7 +911,6 @@ valhalla history=history1.hlp
 value=shops.hlp
 variables=variable.hlp
 ventriloquate=ventriloquate.hlp
-visa mastercard =creditcardregistration.hlp
 voulge=voulge.hlp
 :end:v
 :start:w
