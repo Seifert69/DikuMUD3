@@ -259,8 +259,7 @@ python3 getwikihelppage.py Fighterrp
 python3 getwikihelppage.py Fighterskills &
 python3 getwikihelppage.py Fighterweapons &
 python3 getwikihelppage.py Fightingstaff &
-python3 getwikihelppage.py Filching &
-python3 getwikihelppage.py Fill
+python3 getwikihelppage.py Filching
 python3 getwikihelppage.py Finalrest &
 python3 getwikihelppage.py Findpath &
 python3 getwikihelppage.py Fireball &
