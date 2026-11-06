@@ -1,28 +1,34 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-kill (character)<br/><br/>
-hit (character)<br/><br/>
-<br/>
-The kill command starts combat between players and mobs or other players.<br/>
-The fight will go on until one is unconscious, dead or flees the scene.<br/><br/>
-IT MIGHT BE YOU!<br/><br/>
-When fighting you will use whatever weapon you have  wielded, or your bare<br/>
-hands.  If your victim falls and is only  stunned, incapacitated or mortally<br/>
-wounded, you must issue the command again if you wish to kill the victim.<br/>
-During the fight, you can issue other additional orders, thus giving your<br/>
-foe more damage. Attacking non-bob playing characters is considered a crime,<br/>
-but it is possible.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Flee<br/><br/>
-Groups<br/><br/>
-Skills<br/><br/>
-Spells<br/><br/>
-Weapons<br/><br/>
-PK<br/><br/>
-Kill<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Combat</h1>
+<p>Usage:
+</p>
+<pre>kill &lt;character&gt;
+hit &lt;character&gt;
+</pre>
+<p>kill or hit starts a fight. You strike with the weapon you wield, or your 
+bare hands, round after round, until one of you falls, dies or flees. While 
+you fight you can give other orders too: cast spells, use your skills, 
+rescue a friend.
+</p><p>Before you start, <a cmd='#'>consider</a> your foe to see how strong it is. During the 
+fight, <a cmd='#'>diagnose</a> shows how badly hurt it is. If the fight goes against 
+you, <a cmd='#'>flee</a>; wimpy mode makes you flee by yourself when you are badly hurt 
+(see <a cmd='#'>Help Wimpy Mode</a>).
+</p><p>When someone falls stunned, incapacitated or mortally wounded, the fight 
+stops: to finish them off, you must attack again.
+</p><p>You can only fight other players if both of you have signed the Book of 
+Blood (see <a cmd='#'>Help BoB</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Kill</a>
+&gt; <a cmd='#'>Help Consider</a>
+&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Wimpy Mode</a>
+&gt; <a cmd='#'>Help Rescue</a>
+&gt; <a cmd='#'>Help Assist</a>
+&gt; <a cmd='#'>Help Die</a>
+</pre>
+
+
+
+
+</div>
