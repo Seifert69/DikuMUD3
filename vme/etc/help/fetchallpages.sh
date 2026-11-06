@@ -599,8 +599,7 @@ python3 getwikihelppage.py Sunbeam &
 python3 getwikihelppage.py Sunglobe &
 python3 getwikihelppage.py Sunray &
 python3 getwikihelppage.py Sustain &
-python3 getwikihelppage.py Swimming &
-python3 getwikihelppage.py Take
+python3 getwikihelppage.py Swimming
 python3 getwikihelppage.py Talwar &
 python3 getwikihelppage.py Taste &
 python3 getwikihelppage.py taunt &

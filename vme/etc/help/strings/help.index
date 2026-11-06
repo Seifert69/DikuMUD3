@@ -852,7 +852,7 @@ swim=swimming.hlp
 swimming=swimming.hlp
 :end:s
 :start:t
-take=take.hlp
+take=get.hlp
 talwar=talwar.hlp
 taste=taste.hlp
 taunt=taunt.hlp
