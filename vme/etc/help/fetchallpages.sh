@@ -387,8 +387,7 @@ python3 getwikihelppage.py Letter &
 python3 getwikihelppage.py Level
 python3 getwikihelppage.py Levels &
 python3 getwikihelppage.py Lifeprotection &
-python3 getwikihelppage.py Lightningbolt &
-python3 getwikihelppage.py Lightningsphere
+python3 getwikihelppage.py Lightningbolt
 python3 getwikihelppage.py Lightningstorm &
 python3 getwikihelppage.py List &
 python3 getwikihelppage.py Listen &
