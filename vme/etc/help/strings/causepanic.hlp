@@ -1,22 +1,26 @@
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-Spell Tier: 4<br/><br/>
-<br/>
-Class: Necromancer, <br/> <br/>
-<br/>
-Guild Level: 42 <br/><br/>
-<br/><br/>
-Usage cast cause panic (target)<br/><br/>
-<br/><br/>
-This spell will affect the target, causing them to slowly become afraid. If<br/>
-the target does not effectively defend against this spell, they will <br/>
-eventually flee in panic. <br/><br/>
-<br/>
-<br/><br/>
-See Also:<br/><br/>
-<br/><br/>
-fear<br/><br/>
-mind sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Cause Panic</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 4
+Class: Necromancer
+Guild Level: 42
+</p><p>Usage:
+</p>
+<pre>cast cause panic &lt;target&gt;
+</pre>
+<p>This spell slowly fills the target with fear. For a while after it takes hold, 
+the target has to fight the fear again and again: each time their mind fails 
+them, they flee in panic. The stronger the spell, the longer it lasts, until 
+the target feels calm again. A strong mind resists it better.
+</p><p>Casting it is an attack, and starts a fight.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fear</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+&gt; <a cmd='#'>Help Necromancer</a>
+</pre>
+
+
+
+
+</div>
