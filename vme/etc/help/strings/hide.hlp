@@ -1,17 +1,28 @@
-<br/><br/>
-SKILL<br/><br/>
-Class and level:<br/><br/>
-<br/>
-Ranger  -  0<br/><br/>
-<br/>
-<br/>  <br/>
-<br/>
-<br/>
-Usage hide<br/><br/>
-<br/><br/>
-Hiding in the shadows, overhearing conversations no one is supposed to<br/>
-hear, or hiding from your furious foe. But he might find you if you're not<br/>
-good at it. Those who are good at hiding are also good at seeking those <br/>
-who hide.<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Hide</h1>
+<p>Skill
+Class: Thief, Assassin (guild level 0), Ranger (guild level 0, up to 75%)
+</p><p>Usage:
+</p>
+<pre>hide
+</pre>
+<p>You slip into the shadows. While you are hidden, others who come by or 
+look around don't see you in the room. Type hide again to come out.
+</p><p>Your skill decides how well it goes, with your dexterity and brain. You 
+can't always tell: you "try to hide yourself" either way, but if you 
+failed, you aren't hidden at all, and the messages you get while you wait 
+give a hint ("Maybe you should practice this hide-thing"). <a cmd='#'>score</a> tells 
+you for sure: it says "You are hiding" while you are.
+</p><p>Hiding wears off after a while. It ends at once if someone attacks you. 
+Those with sense life still feel that a hidden life form is in the room.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sneaking</a>
+&gt; <a cmd='#'>Help Sense Life</a>
+&gt; <a cmd='#'>Help Search</a>
+</pre>
+
+
+
+
+</div>
