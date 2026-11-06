@@ -431,7 +431,7 @@ hellfire=hellfire.hlp
 help=help.hlp
 herbs=herbs.hlp
 hide=hide.hlp
-hire=hire.hlp
+hire=contract.hlp
 history=history1.hlp
 hit=hit.hlp
 hitpoints=hits.hlp
@@ -603,7 +603,7 @@ obelisk=pillar.hlp
 odd weapon=oddweapon.hlp
 odin statue=odinstatue.hlp
 offensive acts=off.hlp
-offer=offer.hlp
+offer=contract.hlp
 open=open.hlp
 order=order.hlp
 :end:o

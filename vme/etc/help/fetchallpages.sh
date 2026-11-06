@@ -316,7 +316,6 @@ python3 getwikihelppage.py Hellfire &
 python3 getwikihelppage.py Help
 python3 getwikihelppage.py Herbs &
 python3 getwikihelppage.py Hide &
-python3 getwikihelppage.py Hire &
 python3 getwikihelppage.py History1 &
 python3 getwikihelppage.py Hit
 python3 getwikihelppage.py Hits &
@@ -447,7 +446,6 @@ python3 getwikihelppage.py Noshout &
 python3 getwikihelppage.py Npc
 python3 getwikihelppage.py Oddweapon &
 python3 getwikihelppage.py Odinstatue &
-python3 getwikihelppage.py Offer &
 python3 getwikihelppage.py Off &
 python3 getwikihelppage.py Open
 python3 getwikihelppage.py Order &
