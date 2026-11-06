@@ -1,20 +1,32 @@
-<br/>
-<br/>
-<br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Necromancer <br/><br/>
-Guild Level: 5 <br/><br/>
-<br/><br/>
-Usage cast detect poison (target)<br/><br/>
-<br/><br/>
-This spell enables a humanoid target to detect poison.  This will be<br/>
-revealed in the aura as (black).  The aura is revealed when examining any<br/>
-object. The spell requires no hands free to cast.<br/><br/>
-<br/>See Also:<br/><br/>
-detection sphere<br/><br/>
-toxicate<br/><br/>
-examine<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Detect Poison</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 2
+Class: Paladin (guild level 4), Necromancer (guild level 5), Healer (guild level 6), Druid (guild level 16)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast detect poison &lt;target&gt;
+<a cmd='#'>cast detect poison</a>   (on yourself)
+</pre>
+<p>For a while after this spell, the target sees poison as a (black) aura, 
+wherever it is listed:
+</p>
+<ul><li>food and drink that is poisoned,</li>
+<li>weapons coated with poison, such as curare,</li>
+<li>people and creatures who are poisoned.</li></ul>
+<p>The better your detection sphere, the longer it lasts: from a minute up to 
+several minutes. You must be standing, not fighting. It is also found on 
+potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Remove Poison</a>
+&gt; <a cmd='#'>Help Curare</a>
+&gt; <a cmd='#'>Help Toxicate</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>
