@@ -456,7 +456,6 @@ python3 getwikihelppage.py Pilum &
 python3 getwikihelppage.py Piset &
 python3 getwikihelppage.py Plague
 python3 getwikihelppage.py Plant
-python3 getwikihelppage.py Points &
 python3 getwikihelppage.py Poisonivy &
 python3 getwikihelppage.py Poisonresistance &
 python3 getwikihelppage.py Poisonsphere
