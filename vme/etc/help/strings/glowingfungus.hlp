@@ -1,11 +1,27 @@
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast glowing fungus (target)<br/><br/>
-<br/><br/>
-A nature spell that creates a sort of phosphorescent fungus on the ground in front of you. It will last for a moderate<br/>
-time, then cumble away. It is very useful for illuminating dark caves, or finding your way to the<br/>
-outhouse in the dark without skinning your shins.<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Glowing Fungus</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 5), Ranger (guild level 45, up to 50%)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast glowing fungus</a>
+</pre>
+<p>The caster holds out one hand and a glowing chunk of fungus sprouts on the 
+ground, shimmering like the moon on a winter's eve. It lights up the dark 
+around it, which is handy in caves, or for finding the outhouse at night 
+without skinning your shins.
+</p><p>It can be picked up and held. Left on the ground, it dissolves into slime 
+within about five minutes; carried, it lasts until you put it down. You 
+must be standing. It is also found on wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Magic Candle</a>
+&gt; <a cmd='#'>Help Spell Light</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
