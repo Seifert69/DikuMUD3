@@ -1,12 +1,40 @@
-<br/>
-<br/>
-Usage: forage<br/>
-This skill lets you find food in the wilderness. Your skill will affect the<br/>
-nutritional value. Remember to eat lots of vitamins and iron in your food<br/>
-(grubs are especially good food items).<br/>
-<br/>
-<br/>See Also:<br/><br/>
- Dowse<br/>
- Herbs<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Forage</h1>
+<p>Skill
+Class: Ranger (guild level 3, up to 75%), Druid (guild level 6)
+</p><p>Usage:
+</p>
+<pre>forage
+</pre>
+<p>You search the land around you for something to eat. It costs 20 
+endurance, and you must be standing. Whatever you find is left on the 
+ground at your feet, so pick it up. What you can find depends on the 
+land:
+</p>
+<pre>field, hills      roots, tubers, berries, grubs, a bird egg
+forest            all of those, and mushrooms, truffles, fruit and nuts
+mountains         berries, grubs, a bird egg
+desert            a lizard
+swamp             newts, algae, kelp, fish, bullfrogs, snails, slugs
+water             newts, algae, kelp, fish, bullfrogs
+snow, slush       roots, tubers
+city, indoors, ice   nothing at all
+</pre>
+<p>Your skill decides whether you find anything. Mountains and swamps are 
+the easiest places to forage, hills and water a little harder, fields and 
+forests harder still, and the desert and snow the hardest. Fail, and you 
+find nothing, or only dirt.
+</p><p>Beware: wild food is not always safe. Some of what you find is poisoned, 
+mushrooms, slugs and snails most often, and eggs, nuts and truffles 
+least.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dowse</a>
+&gt; <a cmd='#'>Help Herbs</a>
+&gt; <a cmd='#'>Help Hunger</a>
+</pre>
+
+
+
+
+</div>
