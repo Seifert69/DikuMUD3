@@ -1,25 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Spells are divided into different categories calls 'spheres'. Your ability<br/>
-in such a category decide both your skill of casting the spell, and your<br/>
-skill of avoiding being affected by a similar spell.<br/>
-If you have better ability to cast a specific spell, you will have<br/>
-protection from that spell as far as your ability goes.<br/>
-<br/><br/>
-These are the available spheres:<br/><br/>
-<br/><br/>
-<br/>
-    Divine             Protection        Detection        Summoning<br/>
-    Creation           Mind              Fire             Frost<br/>
-    Electricity        Poison            Acid<br/>
-<br/>
-<br/><br/>
-<br/><br/>
-Each category have several spells in them.<br/><br/>
-<br/>
-See also:<br/><br/>
-help (spell)<br/><br/>
-help (sphere)<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Spells</h1>
+<p>Spells are divided into categories called spheres. Your ability in a sphere 
+decides both how well you cast its spells, and how well you resist a similar 
+spell cast on you: as far as your ability goes, it protects you as well.
+</p><p>These are the spheres, each with its own help:
+</p>
+<pre><a cmd='#'>help divine sphere</a>, <a cmd='#'>help protection sphere</a>, <a cmd='#'>help detection sphere</a>,
+<a cmd='#'>help summoning sphere</a>, <a cmd='#'>help creation sphere</a>, <a cmd='#'>help mind sphere</a>,
+<a cmd='#'>help fire sphere</a>, <a cmd='#'>help frost sphere</a>, <a cmd='#'>help electricity sphere</a>,
+<a cmd='#'>help poison sphere</a>, <a cmd='#'>help acid sphere</a>
+</pre>
+<p>To cast a spell, see <a cmd='#'>Help Casting</a>. Which spells your guild teaches you is in 
+the list for your guild, for example <a cmd='#'>help healer spells</a> or 
+<a cmd='#'>help conjurer spells</a>, and each spell has its own help: help and the name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Casting</a>
+&gt; <a cmd='#'>Help Skills</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
