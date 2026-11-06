@@ -1,11 +1,28 @@
-<br/>
-<br/>
-<br/>
-Usage ignore (player)<br/><br/>
-&lt;p&gt;<br/>
-This command will allow you to refuse tells from a specific player. You<br/>
-will still be able to see the players shouts, channels, says.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-tell<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Ignore</h1>
+<p>Usage:
+</p>
+<pre>ignore &lt;player&gt;    stop hearing their tells
+ignore &lt;player&gt;    (again) hear them again
+ignore             list the players you ignore
+</pre>
+<p>Example:
+</p>
+<pre>ignore Spammer
+</pre>
+<p>Ignore stops a player's tells and replies from reaching you. They are 
+told that you ignore them. You still see everything else they do: what 
+they say in the room, and what they write on channels and shouts.
+</p><p>The player must be online when you add them, and only players can be 
+ignored, up to 100 at a time. Your list is kept with your character.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Reply</a>
+&gt; <a cmd='#'>Help Comm</a>
+</pre>
+
+
+
+
+</div>
