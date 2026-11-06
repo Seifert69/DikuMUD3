@@ -1,27 +1,33 @@
-<br/>
-<br/>
-Usage<br/><br/>
-say (words to speak)<br/><br/>
-' (words to speak)<br/><br/>
-<br/>
-Eventually while playing the game you will need to communicate with<br/>
-others. You can do this in a number of different ways. One is say. When<br/>
-you want to talk to someone in the same room as you use the say command<br/>
-and everyone in that room will hear what you are saying. This is by no<br/>
-means a private way to speak to someone and as in real life. If you say<br/>
-something out loud, anyone in the room or passing through the room will<br/>
-hear what is said.<br/>
-<br/><br/>
-Say can be abbreviated to a '. Be warned if you forget this unfortunate<br/>
-things can happen, for example:<br/>
-<br/><br/>
-' hi God<br/><br/>
-hi Papi<br/><br/>
-OOPS! you're now fighting Papi! surely not your intention, so watch out.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Tell<br/><br/>
-Shout<br/><br/>
-Yell<br/><br/>
-Whisper<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Say</h1>
+<p>Usage:
+</p>
+<pre>say &lt;words to speak&gt;
+' &lt;words to speak&gt;
+</pre>
+<p>Example:
+</p>
+<pre>say Hello, can anyone help me?
+' Hello!
+</pre>
+<p>Eventually while playing the game you will need to communicate with others. One 
+way is say: everyone in the room with you hears what you say. It is by no means 
+a private way to speak to someone: as in real life, anyone in the room hears it. 
+End with&#160;? and you ask, end with&#160;! and you exclaim.
+</p><p>Say can be abbreviated to a single '. Be warned: if you forget the ', the first 
+word is read as a command, and that may do something you didn't intend.
+</p><p>Two more such shortcuts: a , at the start is an emote (see <a cmd='#'>Help Emotes</a>), and&#160;! 
+alone repeats your last command.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Whisper</a>
+&gt; <a cmd='#'>Help Ask</a>
+&gt; <a cmd='#'>Help Shout</a>
+&gt; <a cmd='#'>Help Emotes</a>
+</pre>
+
+
+
+
+</div>
