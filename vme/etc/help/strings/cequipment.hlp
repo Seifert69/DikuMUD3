@@ -1,15 +1,22 @@
-<br/>
-Usage cequipment &lt;amount&gt;<br/>
-Example: cequipment<br/>
-<br/>
-<br/>
- This command allows all clan members to be able to check what is in the<br/>
-Clan secret equipment box.<br/>
-<br/>
-Note:<br/>
-You must be at the clan chest to use this command.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cunstore<br/>
-cstore<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cequipment</h1>
+<p>Usage:
+</p>
+<pre>cequipment
+</pre>
+<p>Lists the equipment in your clan's secret storage, the clan chest, and 
+how many items it holds. Any member of the clan can look, but only at the 
+clan chest in the clan house.
+</p><p>Any member can put things in with <a cmd='#'>Help Cstore</a>; only the clan Master and 
+the quartermasters can take them out again (see <a cmd='#'>Help Cunstore</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cstore</a>
+&gt; <a cmd='#'>Help Cunstore</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>
