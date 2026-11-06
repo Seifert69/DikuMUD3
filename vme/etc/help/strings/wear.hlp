@@ -1,14 +1,33 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage wear (item) [on (location)]<br/><br/>
-<br/>
-If you have an item, and wish to wear it, you use this command. If you leave<br/>
-out the location, the object is fitted in the most natural position it can<br/>
-be worn on.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Wield<br/><br/>
-Remove<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Wear</h1>
+<p>Usage:
+</p>
+<pre>wear &lt;item&gt; [&lt;location&gt;]
+wear all
+</pre>
+<p>Examples:
+</p>
+<pre>wear helmet
+wear ring finger
+wear all
+</pre>
+<p>If you have an item and wish to wear it, you use this command. If you leave out 
+the location, the item is fitted in the most natural position it can be worn 
+on. <a cmd='#'>wear all</a> puts on everything you carry that you can wear.
+</p><p>The locations are: finger, neck, body, head, legs, feet, hands, arms, about, 
+waist, wrist, shield, chest, back, ear and ankle. Where there are two (fingers, 
+ears), the free one is used.
+</p><p>Clothes and armour are made for a size: an item may be too big or too small to 
+fit you, and the game tells you so (see <a cmd='#'>Help Resize</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Equipment</a>
+&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Remove</a>
+&gt; <a cmd='#'>Help Resize</a>
+</pre>
+
+
+
+
+</div>
