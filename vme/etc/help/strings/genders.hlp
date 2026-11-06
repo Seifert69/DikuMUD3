@@ -1,19 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-You can choose to be either a male player or a female player. For most<br/>
-races males are somewhat taller than females<br/>
-whereas the females tend to have a longer lifespan. Your choice does not<br/>
-necessarily have to reflect your real gender, but most of the players play<br/>
-their own gender since they find it difficult to impersonate the opposite<br/>
-gender.<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Login Races<br/><br/>
-Races<br/><br/>
-Male<br/><br/>
-Female<br/><br/>
-Neutral<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Genders</h1>
+<p>When you create a character, you choose to play a male or a female. Your 
+choice doesn't have to match who you are in real life.
+</p><p>The difference in the game is small, and lies in the body: in most races 
+the males are somewhat heavier, and often a little taller, than the 
+females, while among humans, half-ogres and a few others the females tend 
+to live a little longer (see <a cmd='#'>Help Age</a>). Gnome women are the exception: 
+they stand a little taller than the men. Abilities, guilds and skills are 
+the same for both; only the titles a guild gives you as you rise are 
+masculine or feminine.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Races</a>
+&gt; <a cmd='#'>Help Age</a>
+</pre>
+
+
+
+
+</div>

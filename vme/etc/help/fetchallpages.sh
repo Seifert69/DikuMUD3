@@ -254,7 +254,6 @@ python3 getwikihelppage.py Fashionweapon &
 python3 getwikihelppage.py Fauchardfork
 python3 getwikihelppage.py Fauchard &
 python3 getwikihelppage.py Fear &
-python3 getwikihelppage.py Female &
 python3 getwikihelppage.py Fighter &
 python3 getwikihelppage.py Fighterrp
 python3 getwikihelppage.py Fighterskills &
@@ -409,7 +408,6 @@ python3 getwikihelppage.py Magicians &
 python3 getwikihelppage.py Magicusers &
 python3 getwikihelppage.py Maidenname &
 python3 getwikihelppage.py Maingauche
-python3 getwikihelppage.py Male &
 python3 getwikihelppage.py Manaboost &
 python3 getwikihelppage.py Manapoints &
 python3 getwikihelppage.py Map &
@@ -570,8 +568,7 @@ python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
 python3 getwikihelppage.py Sending &
 python3 getwikihelppage.py Senselife &
-python3 getwikihelppage.py Seual &
-python3 getwikihelppage.py Sex
+python3 getwikihelppage.py Seual
 python3 getwikihelppage.py Shamshir &
 python3 getwikihelppage.py Shelter &
 python3 getwikihelppage.py Shields &
