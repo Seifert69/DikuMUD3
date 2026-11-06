@@ -1,15 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage cast summon water<br/><br/>
-<br/>
-This spell will summon a water elemental to fight for you in combat. It can<br/>
-only remain on this plane for a short time, and when killed returns to its<br/>
-home plane of existence. Due to the difficulty in summoning these creatures,<br/>
-only one can be controlled at once and they cannot be commanded to cast<br/>
-spells.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Summon Water</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 24)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast summon water</a>
+</pre>
+<p>A column of water rises, and from it a small water elemental (level 35) 
+emerges to serve you. It follows you, fights beside you when you are in a 
+fight, and when your hit points drop below a third it tries to rescue you.
+</p><p>It can only stay on this plane a short time: from half a minute to a minute 
+and a half, longer the better your summoning sphere. Then it vanishes in a 
+puff of smoke, dropping whatever it carried. If it is killed first, it is 
+gone too. It doesn't take orders.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Earth</a>
+&gt; <a cmd='#'>Help Summon Air</a>
+&gt; <a cmd='#'>Help Summon Fire</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
