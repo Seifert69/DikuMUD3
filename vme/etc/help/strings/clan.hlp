@@ -1,18 +1,29 @@
-<br/>
-On the 3rd Day of the Month of the Ancient Darkness, Year 270.  The<br/>
-inhabitants of Valhalla realized they had been abandoned by the gods.  The<br/>
-strongest formed groups to protect each other and to set out to make a better<br/>
-life for their members.  These groups built homes and hired guards to protect<br/>
-themselves.  Now many years later they have a safe home, a place to store<br/>
-equipment, their own clan bank, and even a  messaging system.<br/>
-<br/>
-The clans over the years have grown by the input of the members and will grow<br/>
-even more as the years pass if members contribute ideas.  It is even written<br/>
-in the histories of clans that a few clans have begun to talk war with others.<br/>
-While there is no way these rumors could be true it is very possible in the future<br/>
-that clan wars could erupt.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Clan Commands<br/><br/>
-Clan startup<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Clans</h1>
+<p>On the 3rd Day of the Month of the Ancient Darkness, Year 270, the 
+inhabitants of Valhalla realized they had been abandoned by the gods. The 
+strongest formed groups to protect each other and to set out to make a 
+better life for their members. These groups built homes and hired guards 
+to protect themselves. Now, many years later, they have a safe home, a 
+place to store equipment, their own clan bank, and even a messaging system.
+</p><p>A clan is a group of players with a house of their own. As a member you 
+get:
+</p>
+<ul><li>the clan's tattoo, and the clan house as your hometown (word of recall takes you there);</li>
+<li>the clan chest, for the clan's money and its shared equipment;</li>
+<li>a place in the clan's ranks, from the newest member up to the Master who leads it.</li></ul>
+<p>To join, ask a clan's Master, one of its Lords, or a member of rank 10 or 
+higher to take you in (<a cmd='#'>Help Caccept</a>). <a cmd='#'>clist</a> lists the clans and their 
+Masters. You can be in only one clan, and you can leave again with 
+<a cmd='#'>Help Cdefect</a>. To found a new clan, see <a cmd='#'>Help Clan Startup</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clan Commands</a>
+&gt; <a cmd='#'>Help Clan Startup</a>
+&gt; <a cmd='#'>Help Clan History</a>
+</pre>
+
+
+
+
+</div>
