@@ -1,20 +1,29 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 29<br/><br/>
-<br/><br/>
-Usage cast harm (target)<br/><br/>
-<br/><br/>
-Through prayer to the divinity of the cleric a touch causes very <br/>
-serious wounds to appear on humanoids or mammals. This requires that the<br/>
-cleric have at least one hand free.<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cause light wounds<br/><br/>
-cause serious wounds<br/><br/>
-harm<br/><br/>
-deathly grasp<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Harm</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 3
+Class: Necromancer (guild level 29), Healer (guild level 37)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast harm &lt;target&gt;
+<a cmd='#'>cast harm</a>   (at whoever you are fighting)
+</pre>
+<p>The strongest of the wounding prayers: with a touch, very serious wounds open 
+on the target, worse than cause serious wounds. The better your divine power 
+and sphere, the deeper they go.
+</p><p>Being a touch, a shield can block it. It does a little more against clothes 
+than against armour. Casting it is an attack and starts a fight. It is also 
+found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cause Light Wounds</a>
+&gt; <a cmd='#'>Help Cause Serious Wounds</a>
+&gt; <a cmd='#'>Help Deathly Grasp</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
