@@ -288,8 +288,7 @@ python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
 python3 getwikihelppage.py Footlance &
 python3 getwikihelppage.py Forage &
-python3 getwikihelppage.py Friend &
-python3 getwikihelppage.py Friendly
+python3 getwikihelppage.py Friend
 python3 getwikihelppage.py Frostball &
 python3 getwikihelppage.py Frostsphere &
 python3 getwikihelppage.py Gaff &
@@ -612,6 +611,7 @@ python3 getwikihelppage.py Snoop &
 python3 getwikihelppage.py Snowball &
 python3 getwikihelppage.py Socials &
 python3 getwikihelppage.py Solarflare
+python3 getwikihelppage.py Soothe &
 python3 getwikihelppage.py Sorcerer &
 python3 getwikihelppage.py Sorcererskills &
 python3 getwikihelppage.py Sorcererspells &

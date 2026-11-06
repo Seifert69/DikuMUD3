@@ -1,0 +1,26 @@
+<div class="mw-parser-output"><h1>Soothe</h1>
+<p>Skill
+Class: Ranger (guild level 3, up to 75%), Druid (guild level 13, up to 75%)
+</p><p>Usage:
+</p>
+<pre>soothe &lt;monster&gt;
+</pre>
+<p>Calms an aggressive monster towards you. Once soothed, it warms to you and 
+won't attack you again, though it stays as aggressive as ever to everyone 
+else; it remembers you until it dies.
+</p><p>Only some aggressive monsters can be soothed; with the others, you sense 
+that they are immune. The monster must be awake and not fighting, and you 
+can't soothe while you are fighting yourself. Your skill and your charisma 
+against the monster's decide it: if you fail, nothing happens, but if you 
+fail badly, you provoke it into attacking you.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Ranger</a>
+&gt; <a cmd='#'>Help Druid</a>
+</pre>
+
+
+
+
+</div>
