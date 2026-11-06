@@ -20,7 +20,7 @@ get sword from 2.corpse
 there is an item in a container that you wish to get, name the container after 
 the word from: get all corpse doesn't work, get all from corpse does. If there 
 are several things with the same name, 2.corpse is the second one. get money 
-picks up only the coins.
+picks up only the coins. Take works just the same as get.
 </p><p>You can only take things from your own corpse, not from another player's.
 </p><p><br />
 See Also:
