@@ -1,13 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage cast summon devil<br/><br/>
-<br/>
-The ultimate in summoning, this spell will conjure up an extremely powerful<br/>
-devil for you to command. It cannot be commanded to cast spells, and failure<br/>
-when casting causes the summoned beast to be hostile.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Summon Devil</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 50)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast summon devil</a>
+</pre>
+<p>The ultimate in summoning: a portal of fire opens, and a greater devil (level 
+90) emerges to serve you. It follows you, fights beside you when you are in a 
+fight, and when your hit points drop below a third it tries to rescue you. 
+Like all summoned servants, it stays only a short time, from half a minute to 
+a minute and a half, and doesn't take orders.
+</p><p>Beware: if the spell fails, the devil steps through free, glad to be here 
+unbound, and attacks you. At level 90, that is a fight few can survive.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Demon</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
