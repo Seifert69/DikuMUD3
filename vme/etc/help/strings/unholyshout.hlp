@@ -1,21 +1,31 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-<br/>
-Spell Tier: 4 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level:160 <br/> <br/>
-<br/><br/>
-Usage cast unholy shout (target)<br/>
-<br/><br/>
-Unholy shout is a powerful prayer of the dark forces which inflicts injury<br/>
-upon good creatures. If sucessful it will cause a fair amount of damage to <br/>
-any GOOD creature. It requires both hands free to grasp the target.<br/> <br/>
-<br/>
-<br/>See Also:<br/><br/>
-Divine Sphere<br/><br/>
-Unholy Touch<br/><br/>
-Unholy Grasp<br/><br/>
-Unholy Word<br/><br/>
+<div class="mw-parser-output"><h1>Unholy Shout</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 4
+Class: Dark Knight (guild level 120), Necromancer (guild level 160)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast unholy shout &lt;target&gt;
+<a cmd='#'>cast unholy shout</a>   (at whoever you are fighting)
+</pre>
+<p>The strongest of the prayers to the dark forces against the good: the 
+caster shouts to evil and grasps the target. Any target whose alignment 
+is above neutral can be struck, and is hurt hard; on the evil and the 
+neutral, nothing happens. The better your divine power and sphere, the 
+more it hurts. It does about as well against any armour, and since the 
+caster grasps the target, a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Unholy Word</a>
+&gt; <a cmd='#'>Help Unholy Touch</a>
+&gt; <a cmd='#'>Help Unholy Grasp</a>
+&gt; <a cmd='#'>Help Dispel Good</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
