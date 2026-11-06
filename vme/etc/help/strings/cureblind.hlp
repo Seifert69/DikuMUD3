@@ -1,11 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast cure blind (target)<br/><br/>
-<br/><br/>
-This spell removes the effects of blindness.<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cure Blind</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 15), Druid (guild level 29)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast cure blind &lt;target&gt;
+<a cmd='#'>cast cure blind</a>   (on yourself)
+</pre>
+<p>Lifts the blindness of the blind spell, so the target can see again. It is 
+an easy spell: even a poor cast usually works.
+</p><p>Being blind, you can't see the room or who is in it, and you can't use a 
+wand. A healer friend, or a potion or scroll of cure blind, is the way out. 
+You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Blind</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+&gt; <a cmd='#'>Help Healers</a>
+</pre>
+
+
+
+
+</div>
