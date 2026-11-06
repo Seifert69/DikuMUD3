@@ -9,7 +9,7 @@ ignore             list the players you ignore
 </p>
 <pre>ignore Spammer
 </pre>
-<p>Ignore stops a player's tells and replies from reaching you. They are 
+<p>Ignore stops a player's tells and responses from reaching you. They are 
 told that you ignore them. You still see everything else they do: what 
 they say in the room, and what they write on channels and shouts.
 </p><p>The player must be online when you add them, and only players can be 
@@ -18,7 +18,7 @@ ignored, up to 100 at a time. Your list is kept with your character.
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Tell</a>
-&gt; <a cmd='#'>Help Reply</a>
+&gt; <a cmd='#'>Help Respond</a>
 &gt; <a cmd='#'>Help Comm</a>
 </pre>
 
