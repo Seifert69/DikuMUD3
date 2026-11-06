@@ -1,25 +1,30 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-<br/>
-Spell tier:1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level:60 <br/> <br/>
-<br/><br/>
-Usage: cast aid undead &lt;target&gt;<br/>
-Due to their not regenative nature, undead are prone to losing energy <br/>
-fast. This gift from the divine gives them some energy back to allow them<br/>
-to serve their master longer. No free hands are needed for this.<br/>
-<br/>
-<br/><br/>
-See Also:<br/><br/>
-divine sphere<br/><br/>
-repel lesser undead<br/><br/>
-repel greater undead<br/><br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Aid Undead</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 60)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast aid undead &lt;target&gt;
+<a cmd='#'>cast aid undead</a>   (on yourself)
+</pre>
+<p>The necromancer prays to all evil over one of the undead, and gives it 
+back some of its strength. The undead don't rest and recover as the living 
+do, so they tire and lose endurance quickly; this prayer restores 
+endurance, more the better your divine power and sphere, up to some 
+seventy points for a master. Demons and devils are aided too; on the 
+living, nothing happens.
+</p><p>It is a way to keep your undead servants going. You must be standing, and 
+no free hands are needed. It is also found on potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Animate Dead</a>
+&gt; <a cmd='#'>Help Repel Lesser Undead</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
