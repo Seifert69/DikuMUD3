@@ -182,8 +182,9 @@ Your corpse stays where you died, with everything you carried, your coins too. `
 tells you where: "[You died in ... (room@zone) ...]". As soon as you're back on your feet:
 
 1. `bin/mud.py way <room@zone>` and walk there.
-2. `get all corpse` (if there are several corpses, `look` and take the one of Dwili:
-   `get all 2.corpse` is the second one). Coins always fit. If "Your hands are full!",
+2. `get all from corpse` (always with from: `get all corpse` finds nothing). If there
+   are several corpses, `look` and take the one of Dwili: `get all from 2.corpse` is the
+   second one. Coins always fit. If "Your hands are full!",
    `wear all` first: what you wear doesn't fill your hands. Then get the rest.
 3. `wear all`, and walk back to the temple.
 
@@ -258,7 +259,7 @@ fight Gaflaw with them (see "Helping in a fight"); what you learned doing it you
 - Giant soldier ants guard the hive and attack after a little while. They're poisonous and far
   stronger than you. Keep moving, don't stop to look around, and never attack or touch an ant:
   hurting one brings the whole nest. In the storage room the player takes their things (`get
-  all corpse`), and you both leave the way you came.
+  all from corpse`), and you both leave the way you came.
 - If an ant attacks you or the player, `flee` at once and tell the player to flee too ("Flee!
   It's too strong for us. Out the way we came!"). Get out of the mound, then talk it over.
   It's fine to admit you aren't strong enough; that's better than two more corpses for the ants.
