@@ -1,8 +1,31 @@
-<br/>
-<br/>
-Usage: cast hedge wall &lt;direction&gt;<br/>
-This spell causes a dense wall of thickets and leaves to grow in the<br/>
-specified direction, preventing anyone but the caster from moving past it.<br/>
-All others must destroy the hedge wall in order to proceed.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Hedge Wall</h1>
+<p>Sphere: Summoning Sphere
+Class: Druid (guild level 21)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast hedge wall &lt;direction&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cast hedge wall north
+</pre>
+<p>The caster points at the ground and utters 'Sentire Floralis', and a thick 
+wall of vines and brambles grows up across one way out of the room. Write 
+the direction out in full: north, east, southwest, up, and so on.
+</p><p>Nobody but the caster can get past it that way. The others must cut the 
+wall down: it is a living plant of level 30, hard to the touch as chain 
+mail. Otherwise it withers away by itself after two minutes.
+</p><p>It can't grow indoors, on water or in a swamp, and you must be standing to 
+cast it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>
