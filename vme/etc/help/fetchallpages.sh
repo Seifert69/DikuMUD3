@@ -8,7 +8,6 @@ python3 getwikihelppage.py Advanced &
 python3 getwikihelppage.py Adze &
 python3 getwikihelppage.py Affect
 python3 getwikihelppage.py Age &
-python3 getwikihelppage.py Aggressive &
 python3 getwikihelppage.py Aidundead &
 python3 getwikihelppage.py Alias &
 python3 getwikihelppage.py Alignment
