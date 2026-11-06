@@ -379,7 +379,6 @@ python3 getwikihelppage.py Ironpieces &
 python3 getwikihelppage.py Jail &
 python3 getwikihelppage.py Javelin &
 python3 getwikihelppage.py Jeddart
-python3 getwikihelppage.py Joingroup &
 python3 getwikihelppage.py Join &
 python3 getwikihelppage.py Jolt &
 python3 getwikihelppage.py Junk &

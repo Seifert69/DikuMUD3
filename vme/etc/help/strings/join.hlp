@@ -1,20 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-join <br/><br/>
-<br/>
-This command is used to enter a guild.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Guild<br/><br/>
-Insult<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Since the mud currently runs under the guild paths system, players can<br/>
-neither join or leave their guilds. The insult command is also obsolete.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Join</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>join</a>   (at a guild master)
+</pre>
+<p>Type join at a guild master to become a member of that guild. You can belong to 
+more than one guild (see <a cmd='#'>Help Guilds</a>), but your profession, not the guild, 
+decides what training costs you (see <a cmd='#'>Help Professions</a>).
+</p><p>A guild master may first want something of you: many guilds have a quest you 
+must finish before they take you in, and the guild master tells you about it 
+when you type join. Some guilds won't take members of certain other guilds, 
+and a guild that has banished you won't take you back.
+</p><p>To leave a guild, insult its guild master (see <a cmd='#'>Help Insult</a>).
+</p><p>To join a group of players, see <a cmd='#'>Help Groups</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Professions</a>
+&gt; <a cmd='#'>Help Insult</a>
+&gt; <a cmd='#'>Help Groups</a>
+</pre>
+
+
+
+
+</div>
