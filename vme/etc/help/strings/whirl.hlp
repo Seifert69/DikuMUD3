@@ -1,0 +1,29 @@
+<div class="mw-parser-output"><h1>Whirl Skill</h1>
+<p>Class and level:
+</p>
+<pre> Barbarian Level 50
+</pre>
+<p>Usage:
+</p>
+<pre> whirl   (while fighting)
+</pre>
+<p>With a weapon in each hand, the Barbarian whirls them both for a deadly attack: 
+a flurry of blows on the one you are fighting. You must already be in a fight, 
+and you must fight with two weapons, one wielded and one held (see 
+<a cmd='#'>Help Hold</a>).
+</p><p>Winding up a whirl takes time, so you are slower to act again afterwards. Your 
+dexterity and constitution are tested against your opponent's: if the whirl 
+fails, you trip up and stumble. A whirl also takes some endurance, and you need 
+plenty left to try.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Hold</a>
+ &gt; <a cmd='#'>Help Two Weapon Style</a>
+</pre>
+
+
+
+
+</div>

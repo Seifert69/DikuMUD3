@@ -777,6 +777,7 @@ python3 getwikihelppage.py Weatherwatching
 python3 getwikihelppage.py West &
 python3 getwikihelppage.py Whip &
 python3 getwikihelppage.py Whisper &
+python3 getwikihelppage.py Whirl &
 python3 getwikihelppage.py When &
 python3 getwikihelppage.py Who &
 python3 getwikihelppage.py Wield
