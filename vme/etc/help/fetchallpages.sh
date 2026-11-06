@@ -629,7 +629,6 @@ python3 getwikihelppage.py Turnundead &
 python3 getwikihelppage.py TwoWeaponStyle &
 python3 getwikihelppage.py Typo
 python3 getwikihelppage.py Udgaard &
-python3 getwikihelppage.py Unalias &
 python3 getwikihelppage.py Undeaddoor &
 python3 getwikihelppage.py Unholygrasp
 python3 getwikihelppage.py Unholyshout
