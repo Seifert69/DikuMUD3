@@ -1,30 +1,37 @@
-<br/>
-Sphere: Poison<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 25<br/><br/>
-<br/><br/>
-Usage plague (target)<br/><br/>
-<br/>
-This powerful spell leaves a target humanoid sick with the plague.  Symptoms<br/>
-can be:<br/>
-<br/><br/>
-<br/>
-*  Cramp: Target cramps up, lying on the floor, losing all endurance.<br/><br/>
-*  Vomit: Target vomits, leaving them hungry and thirsty.<br/><br/>
-*  Cough: Target coughs up blood, losing 50 HP.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-poison sphere<br/><br/>
-madness<br/><br/>
-<br/><br/><br/>
- The world has many healers and miraculois cures, but the plague is still a<br/>
-very real threat. It may be contracted through contact with a carrier <br/>
-or an infected person. The plague is contagious, but seldom lasts for <br/>
-more than 2 Hrs (RT)  The effects of a plague can be removed with a remove <br/>
-disease spell. NOTE: Many people die of starvation or dehydration after the <br/>
-disease has been cured due to the stress placed upon the body during the <br/>
-illness.<br/>
- <br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Plague</h1>
+<p>Sphere: Poison Sphere
+Spell Tier: 1
+Class: Dark Knight (guild level 20), Necromancer (guild level 25)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast plague &lt;target&gt;
+<a cmd='#'>cast plague</a>   (at whoever you are fighting)
+</pre>
+<p>Leaves the target sick with the plague, a humanoid or mammal. Every three 
+minutes, for a little over an hour, the sickness strikes:
+</p>
+<ul><li><b>Sickness:</b> they feel sick, and are left hungry and thirsty.</li>
+<li><b>Cramps:</b> painful cramps throw them to the floor, and take all their</li></ul>
+<pre> endurance.
+</pre>
+<ul><li><b>Coughing blood</b>, more often as the plague goes on: it costs them a</li></ul>
+<pre> fifth of their hit points, and the blood may infect someone else in the 
+ room with a milder plague. A strong constitution helps to resist it.
+</pre>
+<p>Remove disease, or dispel magic, cures it if strong enough. Many die of 
+hunger or thirst after the plague is cured, so eat and drink. The target 
+resists the spell with their mind; either way, casting it starts a fight. It 
+is also found on potions, wands, scrolls and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Remove Disease</a>
+&gt; <a cmd='#'>Help Madness</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>
