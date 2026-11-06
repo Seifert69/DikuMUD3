@@ -4,7 +4,6 @@ python3 getwikihelppage.py Aciddrop &
 python3 getwikihelppage.py Acidresistance &
 python3 getwikihelppage.py Acidsphere
 python3 getwikihelppage.py Acidswirl &
-python3 getwikihelppage.py Admin &
 python3 getwikihelppage.py Advanced &
 python3 getwikihelppage.py Adze &
 python3 getwikihelppage.py Affect
