@@ -172,8 +172,7 @@ python3 getwikihelppage.py Cureblind
 python3 getwikihelppage.py Curelight &
 python3 getwikihelppage.py Cureserious &
 python3 getwikihelppage.py Curse &
-python3 getwikihelppage.py Curvesword &
-python3 getwikihelppage.py Cut
+python3 getwikihelppage.py Curvesword
 python3 getwikihelppage.py Cutlass &
 python3 getwikihelppage.py Cwithdraw &
 python3 getwikihelppage.py Dagger &

@@ -234,7 +234,7 @@ cure light wounds=curelight.hlp
 cure serious wounds=cureserious.hlp
 curse=curse.hlp
 curved sword=curvesword.hlp
-cut=cut.hlp
+cut=decapitate.hlp
 cutlass=cutlass.hlp
 cwithdraw=cwithdraw.hlp
 :end:c
