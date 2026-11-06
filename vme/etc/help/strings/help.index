@@ -789,6 +789,7 @@ soulfire=soulfire.hlp
 south=south.hlp
 spear=spear.hlp
 spear family=spearfam.hlp
+spell hold=casthold.hlp
 spetum=spetum.hlp
 spell aid=spellaid.hlp
 spell brain=spellbrain.hlp

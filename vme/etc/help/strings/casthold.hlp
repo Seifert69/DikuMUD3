@@ -1,10 +1,25 @@
-<br/>
-<br/>
-Sphere: Creation Sphere<br/><br/><br/>
-<br/>
-Usage cast hold (target)<br/><br/>
-<br/>
-The hold spell will magically prevent a humanoids or animal target from<br/>
-engaging in combat for five rounds.  This spell is very difficult to use,<br/>
-and may therefore fail quite often.<br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Hold (spell)</h1>
+<p>Sphere: Mind Sphere
+</p><p>Usage:
+</p>
+<pre>cast hold &lt;target&gt;
+</pre>
+<p>The hold spell magically keeps a humanoid or animal target from fighting for 
+five rounds, and from fleeing in that time. It has no effect on other creatures. 
+The spell is very difficult to use and may therefore fail quite often, and 
+casting it starts a fight with the target whether it works or not.
+</p><p>For the hold command, holding something in your hand, see <a cmd='#'>Help Hold</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Mind Sphere</a>
+&gt; <a cmd='#'>Help Hold Monster</a>
+&gt; <a cmd='#'>Help Hold Animal</a>
+&gt; <a cmd='#'>Help Hold Undead</a>
+&gt; <a cmd='#'>Help Casting</a>
+</pre>
+
+
+
+
+</div>
