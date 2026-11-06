@@ -565,7 +565,6 @@ money=money.hlp
 money orders=moneyorders.hlp
 monster=monster.hlp
 morning star=morningstar.hlp
-morphing=morph.hlp
 mortally wounded=mortallywounded.hlp
 motd=motd.hlp
 mount=mount.hlp
@@ -704,8 +703,6 @@ rank=rank.hlp
 ranseur=ranseur.hlp
 rapier=rapier.hlp
 read=read.hlp
-rebirth=sacrificehead.hlp
-rebirth command=rebirthcommand.hlp
 recite=recite.hlp
 reconstruct=reconstruct.hlp
 refit=refit.hlp
@@ -737,7 +734,6 @@ rows=rows.hlp
 rules=rules.hlp
 :end:r
 :start:s
-sacrifice head=sacrificehead.hlp
 sail=sail.hlp
 sanctuary=sanctuary.hlp
 sappara=sappara.hlp

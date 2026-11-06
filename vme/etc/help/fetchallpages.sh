@@ -450,7 +450,6 @@ python3 getwikihelppage.py Money &
 python3 getwikihelppage.py Moneyorders &
 python3 getwikihelppage.py Monster &
 python3 getwikihelppage.py Morningstar &
-python3 getwikihelppage.py Morph &
 python3 getwikihelppage.py Mortallywounded
 python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
@@ -553,7 +552,6 @@ python3 getwikihelppage.py Rank &
 python3 getwikihelppage.py Ranseur &
 python3 getwikihelppage.py Rapier &
 python3 getwikihelppage.py Read
-python3 getwikihelppage.py Rebirthcommand &
 python3 getwikihelppage.py Recite &
 python3 getwikihelppage.py Reconstruct &
 python3 getwikihelppage.py Refit &
@@ -579,7 +577,6 @@ python3 getwikihelppage.py Ressurect &
 python3 getwikihelppage.py Reward &
 python3 getwikihelppage.py Rows &
 python3 getwikihelppage.py Rules &
-python3 getwikihelppage.py Sacrificehead &
 python3 getwikihelppage.py Sail &
 python3 getwikihelppage.py Sanctuary
 python3 getwikihelppage.py Sappara &
