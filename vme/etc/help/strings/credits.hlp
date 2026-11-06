@@ -1,13 +1,19 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage credits<br/><br/>
-<br/>
-Special info on all the people who deserves credit for their work on the mud.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Wizlist<br/><br/>
-Past Gods<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Credits</h1>
+<p>Usage:
+</p>
+<pre>credits
+</pre>
+<p>Shows the credits of the game: the people who deserve thanks for their 
+work on the mud.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Creators</a>
+&gt; <a cmd='#'>Help Wizlist</a>
+&gt; <a cmd='#'>Help Contrib</a>
+</pre>
+
+
+
+
+</div>
