@@ -1,11 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage quest<br/><br/>
-<br/>
-This command shows you which quests you have completed. A quest is a<br/>
-special task that you may be asked to solve and usually brings great<br/>
-rewards after great dangers and hard puzzles.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Quests</h1>
+<p>Usage:
+</p>
+<pre>quests
+quests &lt;word&gt;
+</pre>
+<p>A quest is a special task someone in the world may ask of you: to find 
+something lost, deliver a message, slay a beast or solve a puzzle. Quests 
+bring rewards, often after great dangers and hard puzzles: gold, 
+experience, a fine item, or entry into a guild. Many guilds ask you to 
+finish their quest before you may join (see <a cmd='#'>Help Guilds</a>).
+</p><p>There is no list of quests to choose from: you find them by talking to the 
+people you meet, listening to what they say, and looking around. The 
+newbie guide in Udgaard starts new players on their first one.
+</p><p>The quests command lists the quests you have finished, and the ones you 
+are on, with a note on each where there is one. Add a word to see only the 
+quests with that word in their name: quests guild.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Experience</a>
+&gt; <a cmd='#'>Help Newbie</a>
+</pre>
+
+
+
+
+</div>
