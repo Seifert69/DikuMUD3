@@ -1,19 +1,28 @@
-<br/>
-Sphere: Divine<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 1<br/><br/>
-<br/><br/>
-Usage cast cause light wounds (target)<br/><br/>
-<br/>
-By praying to the divinity, the cleric causes small scratches to appear on <br/>
-humanoids or mammals. This requires no free hands to achieve.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-divine sphere<br/><br/>
-cause light wounds<br/><br/>
-cause serious wounds<br/><br/>
-harm<br/><br/>
-deathly grasp<br/><br/>
-<br/>f<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cause Light Wounds</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 1
+Class: Healer (guild level 1), Necromancer (guild level 1), Dark Knight (guild level 10)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast cause light wounds &lt;target&gt;
+<a cmd='#'>cast cause light wounds</a>   (at whoever you are fighting)
+</pre>
+<p>By praying to your god, you make wounds open on the target with a touch. The 
+better your divine power and sphere, the deeper they go.
+</p><p>Being a touch, it gets through heavy armour best: it does most against plate, 
+and least against clothes. A shield can block it. Casting it is an attack and 
+starts a fight. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cause Serious Wounds</a>
+&gt; <a cmd='#'>Help Harm</a>
+&gt; <a cmd='#'>Help Deathly Grasp</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
