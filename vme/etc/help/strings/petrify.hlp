@@ -1,9 +1,35 @@
-<br/>
-<br/>
-Usage: cast petrify &lt;target&gt;<br/>
-A spell to be reckoned with, Petrify allows the caster to turn flesh into<br/>
-stone by sheer will.  The pain inflicted by this spell is considerable,<br/>
-and anyone slain by it is instantly transformed to solid stone,<br/>
-rendering any attempt to resurrect the victim useless.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Petrify</h1>
+<p>Sphere: Mind Sphere
+Class: Druid (guild level 30)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast petrify &lt;target&gt;
+<a cmd='#'>cast petrify</a>   (at whoever you are fighting)
+</pre>
+<p>A spell to be reckoned with: the caster grasps their head in their hands 
+and wills the target's flesh to turn to stone. It hurts a great deal: the 
+better your divine power and your mind sphere, the more. It does best 
+against clothes and somewhat less against leather, chain and plate, and a 
+shield is no use against it.
+</p><p>Anyone it slays leaves no corpse but a life-like <b>statue</b>, with 
+everything they carried turned to stone with them. Nothing can be taken 
+from a statue until its stone is undone: a successful <a cmd='#'>Help Dispel Magic</a> 
+cast on it unmerges the equipment, and then it can be looted like a 
+corpse. Like a corpse, a statue cracks and crumbles away in time.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dispel Magic</a>
+&gt; <a cmd='#'>Help Corpse</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>
