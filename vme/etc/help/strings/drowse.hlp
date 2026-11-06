@@ -1,21 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 25<br/><br/>
-<br/> <br/>
-<br/><br/>
-Usage cast drowse (target)<br/><br/>
-<br/>
-This spell will affect an target's mind and cause their reflexes to<br/>
-slow. In battle the an opponent will fight more slowly.  Drowse is a more<br/>
-powerful version of the slow spell. It requires no hands free to cast and<br/>
-a small amount of mana.<br/><br/>
-<br/>See Also:<br/><br/>
-mind sphere<br/><br/>
-slow<br/><br/>
-sleep<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Drowse</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 25)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast drowse &lt;target&gt;
+</pre>
+<p>The caster waves a finger before the target's eyes and utters 'Shonashi', 
+and the target grows drowsy: their reflexes slow, and in a fight they 
+strike more slowly. It slows harder than the slow spell, but it doesn't 
+last long: from a quarter of a minute up to a little over a minute, the 
+better your spell.
+</p><p>It takes the place of any haste, quicken or slow already on the target. 
+The target resists with their mind, and the spell may fail; either way, 
+casting it makes the target attack you. It can be cast while fighting, and 
+no free hands are needed. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Slow</a>
+&gt; <a cmd='#'>Help Haste</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
