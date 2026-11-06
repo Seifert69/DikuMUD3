@@ -8,7 +8,8 @@ spell draws on one of them:
 a harmful spell hurts, the more a healing spell heals, and the more 
 easily you succeed. Your skill in the spell and in its sphere counts as 
 well. A target resists your spells with their brain, not their own magic 
-(see <a cmd='#'>Help Brain</a>).
+(see <a cmd='#'>Help Brain</a>), and with their own skill in that spell or its sphere: a 
+sorcerer who has mastered fire shrugs off a small fire spell.
 </p><p>You raise magic and divine like the other abilities, by training at your 
 guild (see <a cmd='#'>Help Abilities</a>). Your race and guild decide how easily they 
 grow: a sorcerer's magic, a healer's divine.
