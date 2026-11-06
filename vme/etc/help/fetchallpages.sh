@@ -78,7 +78,6 @@ python3 getwikihelppage.py Caccept &
 python3 getwikihelppage.py Calllightning &
 python3 getwikihelppage.py Calm &
 python3 getwikihelppage.py Cappoint
-python3 getwikihelppage.py Captain &
 python3 getwikihelppage.py Casthold &
 python3 getwikihelppage.py Casting &
 python3 getwikihelppage.py Causelightwounds &
