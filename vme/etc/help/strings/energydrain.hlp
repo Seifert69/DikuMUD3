@@ -1,16 +1,30 @@
-<br/>
-Sphere: Poison<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 38<br/><br/>
-<br/><br/>
-Usage energy drain (target)<br/><br/>
-<br/>
-When cast, this spell causes the player upon whom it is cast to lose 5 STR<br/>
-and 5 CON for a long duration, as well as 50 experience points permanently.<br/>
-The spell will fail if the victim has a life protection spell cast on<br/>
-them self. It requires no free hands to cast.<br/><br/>
-<br/>See Also:<br/><br/>
-poison sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Energy Drain</h1>
+<p>Sphere: Poison Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 38), Dark Knight (guild level 85)
+Mana: 12
+</p><p>Usage:
+</p>
+<pre>cast energy drain &lt;target&gt;
+<a cmd='#'>cast energy drain</a>   (at whoever you are fighting)
+</pre>
+<p>You lay hands on the target and drain their energy. For a while, from a 
+minute up to several minutes, they lose 5 points of strength and 5 of 
+constitution. Worse, they lose 500 experience points, and those don't come 
+back.
+</p><p>A life protection spell on the target stops the drain, once; the protection 
+is used up. Someone already drained can't be drained again until it wears 
+off. The target resists with their mind, and the spell may fail; either way, 
+casting it starts a fight. It is also found on wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Life Protection</a>
+&gt; <a cmd='#'>Help Experience</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>
