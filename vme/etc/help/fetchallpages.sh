@@ -280,8 +280,7 @@ python3 getwikihelppage.py Forage &
 python3 getwikihelppage.py Friend
 python3 getwikihelppage.py Frostball &
 python3 getwikihelppage.py Frostsphere &
-python3 getwikihelppage.py Gaff &
-python3 getwikihelppage.py Gain
+python3 getwikihelppage.py Gaff
 python3 getwikihelppage.py Gate &
 python3 getwikihelppage.py Genders &
 python3 getwikihelppage.py Get &
