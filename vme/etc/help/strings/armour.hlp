@@ -1,12 +1,25 @@
 <div class="mw-parser-output"><h1>Armor</h1>
-<p>Armors are used to protect yourself against damage. The basic kinds of armor are clothes, soft leather, hard leather, chain mail and plate armor. Armor tougher than clothes will hamper your dexterity, however if you practice your skill in moving in such armor, the penalty to dexterity will be reduced.  
-</p><p>Shields are an addition to armors which makes it possible to completely block certain types of attacks and spells like for example long sword attack and energy bolt. Some attacks are partially reduced by shields, such as the morning star, and fire storm. Finally, some attacks are unaffected by shields such as a whip and poisonous gas attacks.
-</p><p>See also:
+<p>Armors are used to protect yourself against damage. The basic kinds of armor are 
+clothes, soft leather, hard leather, chain mail and plate armor.
+</p><p>Armor tougher than clothes hampers your dexterity, the heavier the more: a 
+little for soft leather, more for hard leather and chain, and most for plate. 
+Each kind has a skill of its own, armor soft leather, armor hard leather, armor 
+chain and armor plate, for moving in that armor. The better your skill, the 
+less it hampers you, up to half the penalty gone; strength helps too, and 
+counts for more the heavier the armor. Many guilds teach them, usually soft 
+leather from the start, hard leather from guild level 7, chain from 15 and 
+plate from 20.
+</p><p>Shields are an addition to armors which makes it possible to completely block 
+certain types of attacks and spells, like for example a long sword attack and 
+energy bolt. Some attacks are partially reduced by shields, such as the morning 
+star and fire storm. Finally, some attacks are unaffected by shields, such as a 
+whip and poisonous gas attacks.
+</p><p><br />
+See also:
 </p>
-<pre>&gt; <a cmd='#'>Help armor soft leather</a>
-&gt; <a cmd='#'>Help armor hard leather</a>
-&gt; <a cmd='#'>Help armor chain mail</a>
-&gt; <a cmd='#'>Help armor plate</a>
+<pre>&gt; <a cmd='#'>Help Shields</a>
+&gt; <a cmd='#'>Help Wear</a>
+&gt; <a cmd='#'>Help Skills</a>
 </pre>
 
 
