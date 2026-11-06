@@ -1,10 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage backstab (character)<br/><br/>
-<br/>
-Backstabbing your foe is a fast way to survive, this skill enables you to<br/>
-inflict bad wounds to your enemy, at first blow, but only at first blow.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Backstab</h1>
+<p>Skill
+Class: Assassin (guild level 0), Thief (guild level 0, up to 50%)
+</p><p>Usage:
+</p>
+<pre>backstab &lt;character&gt;
+</pre>
+<p>You slip up behind someone who isn't expecting it and drive a blade into 
+their back. A backstab that lands strikes as if the victim wore no armour 
+at all, so it can do terrible damage, and it starts the fight on your 
+terms.
+</p><p>You must wield a dagger, a short sword or a stiletto; other weapons won't 
+do. You can't backstab someone who is already fighting. A sleeping victim 
+can't resist at all; an awake one resists with their dexterity and their 
+own skill against yours. Once stabbed, a victim stays wary: for about a 
+quarter of an hour, every backstab tried on them is much harder than the 
+last. A failed backstab misses, and the fight is on.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sneak</a>
+&gt; <a cmd='#'>Help Hide</a>
+&gt; <a cmd='#'>Help Dagger</a>
+&gt; <a cmd='#'>Help Assassin Skills</a>
+</pre>
+
+
+
+
+</div>
