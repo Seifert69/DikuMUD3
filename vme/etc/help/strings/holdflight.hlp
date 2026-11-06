@@ -1,12 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage cast hold flight (target)<br/><br/>
-<br/>
-This powerful spell will halt the target from fleeing in battle by making<br/>
-it believe it is always winning.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Hold Flight</h1>
+<p>Sphere: Mind Sphere
+Class: none (no guild teaches it)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast hold flight &lt;target&gt;
+<a cmd='#'>cast hold flight</a>   (at whoever you are fighting)
+</pre>
+<p>With a swift move of the left hand the caster sends a small jolt at 
+someone who is fighting, and a yellow aura settles around them. While the 
+aura lasts, every time they try to flee, a strange power holds them back. 
+It lasts until they stop fighting; then the aura fades.
+</p><p>It only works on someone in a fight, and not on yourself. The target 
+resists with their mind, and the spell may fail. It isn't an attack, so it 
+starts no fight of its own. No guild teaches it, but it turns up on 
+scrolls among random treasure.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
