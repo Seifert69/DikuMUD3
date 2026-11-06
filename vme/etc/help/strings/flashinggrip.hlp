@@ -1,14 +1,28 @@
-Sphere: Mind Sphere<br/><br/>
-<br/>
-This is a level 4 spell:<br/>
-<br/>
-Usage cast flashing grip (target)<br/><br/>
-<br/><br/>
-This spell will hurt the target with a flash of colors.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-flash<br/><br/>
-colourbeam<br/><br/>
-colourspray<br/><br/>
-flashing grip<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Flashing Grip</h1>
+<p>Sphere: Mind Sphere
+Class: Healer (guild level 115)
+Mana: 44
+</p><p>Usage:
+</p>
+<pre>cast flashing grip &lt;target&gt;
+<a cmd='#'>cast flashing grip</a>   (at whoever you are fighting)
+</pre>
+<p>The mightiest of the colour spells: a grip of flashing colours closes on the 
+target's mind. The better your power and mind sphere, the more it hurts. It 
+does about as well against any armour, plate a little more, and a shield 
+takes some of it, but can't stop it.
+</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Flash</a>
+&gt; <a cmd='#'>Help Colourbeam</a>
+&gt; <a cmd='#'>Help Colourspray</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
