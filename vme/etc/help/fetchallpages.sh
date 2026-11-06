@@ -97,7 +97,6 @@ python3 getwikihelppage.py Cdepose &
 python3 getwikihelppage.py Cdeposit
 python3 getwikihelppage.py Cequipment &
 python3 getwikihelppage.py Change &
-python3 getwikihelppage.py Channels &
 python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
 python3 getwikihelppage.py Chargewand &
@@ -134,7 +133,6 @@ python3 getwikihelppage.py Columns &
 python3 getwikihelppage.py Combat &
 python3 getwikihelppage.py Command &
 python3 getwikihelppage.py Commands
-python3 getwikihelppage.py Commchannels &
 python3 getwikihelppage.py Comm &
 python3 getwikihelppage.py Communicate &
 python3 getwikihelppage.py Compact &
