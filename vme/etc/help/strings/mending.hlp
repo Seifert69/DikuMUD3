@@ -1,22 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 14<br/><br/>
-<br/><br/>
-Usage cast mending (target)<br/><br/>
-<br/>
-Repairs a small amount of damage to any item.  Some items may be damaged<br/>
-beyond the spell's power to repair.  Each casting lowers the maximum total<br/>
-amount of damage the object can withstand before breaking. It requires no <br/>
-hands free to cast and a small amount of mana.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-repair<br/><br/>
-reconstruct<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Mending</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 14)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast mending &lt;item you carry&gt;
+</pre>
+<p>The caster runs a hand along the item and chants 'Riforj', and it glows 
+with a warm light: some of its wear is mended, up to a sixth of what it 
+can take.
+</p><p>It is a small spell for small damage. It only works on an item that is 
+still in fair shape, with more than half its strength left; for worse 
+damage, see repair and reconstruct. And every mending costs the item 
+something: each time, the most wear it can ever take shrinks by an 
+eighth, so an item mended again and again grows ever more fragile. 
+Indestructible items need no mending.
+</p><p>You must be standing, and carry the item. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Repair</a>
+&gt; <a cmd='#'>Help Reconstruct</a>
+&gt; <a cmd='#'>Help Craftsmanship</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
