@@ -1,20 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage peaceful<br/><br/>
-<br/>
-The command peaceful is used to switch between peaceful and aggressive mode.<br/>
-When you are aggressive you will automatically attack anyone who performs<br/>
-an offensive act like unsuccessfully stealing, commanding,<br/>
-and even summoning you. If you do not wish to attack a player who has<br/>
-summoned you, you must first enter peaceful mode, and then after you have<br/>
-been summoned, turn it back to aggressive mode.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Wimpy<br/><br/>
-Stealing<br/><br/>
-Commanding<br/><br/>
-Summoning<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Peaceful</h1>
+<p>Usage:
+</p>
+<pre>change peaceful
+</pre>
+<p>Switches you between peaceful and aggressive mode.
+</p><p>When you are <b>aggressive</b>, you strike back at once when someone 
+offends you: when someone attacks you, casts a harmful spell at you, or 
+is caught trying to steal from you, you start fighting them, if you are 
+awake. "They will come in peace and leave in pieces."
+</p><p>When you are <b>peaceful</b>, you mostly don't, and can decide for 
+yourself whether to fight: "You will no longer attack aggressors." You 
+don't strike back at spells cast on you, or at monsters. A player you 
+catch trying to steal from you or to bash you, though, still gets you 
+fighting.
+</p><p>New characters start out peaceful, unless they are evil. Peaceful mode 
+is handy when a friend casts a spell on you that counts as harmful, such 
+as summon: you won't turn on them for it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+&gt; <a cmd='#'>Help Wimpy</a>
+&gt; <a cmd='#'>Help Steal</a>
+&gt; <a cmd='#'>Help Summon</a>
+</pre>
+
+
+
+
+</div>
