@@ -1,39 +1,33 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-use (staff)<br/><br/>
-use (wand) (target)<br/><br/>
-<br/>
-Staves or wands is a way to carry magic with you. Staves affect everyone<br/>
-in the entire location, wands must be used at a single target. To use<br/>
-stavess or wands you must hold them. However to work them<br/>
-requires skill.<br/>
-<br/><br/>
-See Also:<br/><br/>
-Wands<br/><br/>
-Stavess<br/><br/>
-Magic<br/><br/>
-Hold<br/><br/>
-Practice<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-use (staff)<br/><br/>
-use (wand) (target)<br/><br/>
-<br/>
-Staves or wands is a way to carry magic with you.<br/>
-Staves affect everyone<br/>
-in the entire location, wands must be used at a single target. To use<br/>
-stavess or wands you must hold them. However to work them requires skill.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Hold<br/><br/>
-Practice<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Use</h1>
+<p>Usage:
+</p>
+<pre>use &lt;staff&gt;
+use &lt;wand&gt; &lt;target&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>hold wand
+use wand rat
+</pre>
+<p>Staves and wands are a way to carry magic with you. A staff affects everyone 
+where you are; a wand must be used at a single target. To use one you must hold 
+it in your hand (see <a cmd='#'>Help Hold</a>), and you must have practiced the skill wand 
+use: how well it works depends on that skill and your brain against the power 
+of the magic in it.
+</p><p>Each staff and wand holds only so many charges. When they are used up, it is 
+"drained of all power" until it is charged again (see <a cmd='#'>Help Charge Wand</a> and 
+<a cmd='#'>Help Charge Staff</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hold</a>
+&gt; <a cmd='#'>Help Wand Use</a>
+&gt; <a cmd='#'>Help Wands</a>
+&gt; <a cmd='#'>Help Staves</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
