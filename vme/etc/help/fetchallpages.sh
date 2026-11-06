@@ -72,8 +72,7 @@ python3 getwikihelppage.py Broadsword
 python3 getwikihelppage.py Brownies &
 python3 getwikihelppage.py Bug &
 python3 getwikihelppage.py Buildera &
-python3 getwikihelppage.py Builder &
-python3 getwikihelppage.py Buildterm
+python3 getwikihelppage.py Builder
 python3 getwikihelppage.py Burn &
 python3 getwikihelppage.py Bury &
 python3 getwikihelppage.py Bushido &
