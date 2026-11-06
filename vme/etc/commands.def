@@ -4782,18 +4782,6 @@ command       = moon
 func          = moon@valley3
 minpos        = POSITION_RESTING
 
-command       = morph
-func          = morph@rebirth
-minpos        = POSITION_RESTING
-
-command       = rebirth
-func          = rebirth_stat@rebirth
-minpos        = POSITION_RESTING
-
-command       = sacrifice
-func          = sacrifice@rebirth
-minpos        = POSITION_RESTING
-
 command       = crank
 func          = crank@clans
 minpos        = POSITION_RESTING
