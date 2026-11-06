@@ -1,19 +1,30 @@
-<br/>
-Sphere: Acid<br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer<br/> <br/>
-<br/>
-Guild Level: 120<br/> <br/>
-<br/><br/>
-Usagecast spray of acid (target)<br/>
-<br/>
-This spell causes acid to spray from the caster's finger. It is directed<br/>
-toward the named target or present target in battle to inflict damage <br/>
-by acid. The spell requires the caster to have one hand free. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-acid drop<br/><br/>
-acid ball<br/><br/>
-acid swirl<br/><br/>
-acid resistance<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Spray of Acid</h1>
+<p>Sphere: Acid Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 120)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast spray of acid &lt;target&gt;
+<a cmd='#'>cast spray of acid</a>   (at whoever you are fighting)
+</pre>
+<p>The caster points a finger at the target and hisses 'Oses causter', and a 
+spray of acid shoots from the fingertip. The better your magic and your 
+acid sphere, the more it burns. Acid eats through armour: it hurts nearly 
+as much through plate as through clothes. A shield can block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Acid Drop</a>
+&gt; <a cmd='#'>Help Acid Ball</a>
+&gt; <a cmd='#'>Help Acid Resistance</a>
+&gt; <a cmd='#'>Help Acid Sphere</a>
+</pre>
+
+
+
+
+</div>
