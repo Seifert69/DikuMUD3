@@ -615,7 +615,6 @@ python3 getwikihelppage.py Throw &
 python3 getwikihelppage.py Tigerclaw
 python3 getwikihelppage.py Time
 python3 getwikihelppage.py Title &
-python3 getwikihelppage.py Torch &
 python3 getwikihelppage.py Totalrecall &
 python3 getwikihelppage.py Toxicate &
 python3 getwikihelppage.py Track
