@@ -1,16 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-drop (item)<br/><br/>
-drop ALL<br/><br/>
-<br/>
-This is used to drop an item you have in your inventory. The item is put at<br/>
-the location which you are in. If the item is in a container you have to get<br/>
-it into your inventory first, using 'get'.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Get<br/><br/>
-Put<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Drop</h1>
+<p>Usage:
+</p>
+<pre>drop &lt;item&gt;
+drop all
+drop money
+drop &lt;amount&gt; &lt;coins&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>drop torch
+drop 17 iron pieces
+</pre>
+<p>This is used to drop an item you have in your inventory. The item is put where 
+you are. drop all drops everything you carry (not what you wear), and drop money 
+only your coins. If the item is in a container, you have to get it out into your 
+inventory first (see <a cmd='#'>Help Get</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Get</a>
+&gt; <a cmd='#'>Help Put</a>
+&gt; <a cmd='#'>Help Bury</a>
+</pre>
+
+
+
+
+</div>
