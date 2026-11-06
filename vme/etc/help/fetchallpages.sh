@@ -497,7 +497,6 @@ python3 getwikihelppage.py Ranger &
 python3 getwikihelppage.py Rangerskills &
 python3 getwikihelppage.py Rangerspells
 python3 getwikihelppage.py Rangerweapons &
-python3 getwikihelppage.py Rank &
 python3 getwikihelppage.py Ranseur &
 python3 getwikihelppage.py Rapier &
 python3 getwikihelppage.py Read
