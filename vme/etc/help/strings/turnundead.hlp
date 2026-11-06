@@ -1,11 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage turn (undead)<br/><br/>
-Example: turn zombie<br/><br/>
-<br/>
-Are you afraid of undeads? The turn-skill might be the answer. If you use it,<br/>
-undeads will flee from you. That is, if you succeed.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Turn Undead</h1>
+<p>Skill
+Class: Healer (guild level 2), Paladin and Knight (guild level 5, up to 70%)
+</p><p>Usage:
+</p>
+<pre>turn &lt;undead&gt;
+</pre>
+<p>Example:
+</p>
+<pre>turn zombie
+</pre>
+<p>Afraid of the undead? Hold up your faith against them: if you succeed, 
+the undead creature is terrified and flees from you. It works even in the 
+middle of a fight, a quick way to rid yourself of a ghoul that is too 
+much for you.
+</p><p>Your divine power and your skill decide it, against the undead's own. If 
+it fails, or if what you try to turn isn't undead at all, it ignores you 
+and attacks you. A successful turn costs 20 endurance; if you haven't got 
+that much left, you collapse, stunned, and the undead is not turned.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Healer Skills</a>
+&gt; <a cmd='#'>Help Paladin Skills</a>
+&gt; <a cmd='#'>Help Flee</a>
+</pre>
+
+
+
+
+</div>
