@@ -148,7 +148,6 @@ python3 getwikihelppage.py Contrib &
 python3 getwikihelppage.py Controlledteleport &
 python3 getwikihelppage.py Controlundead
 python3 getwikihelppage.py Cook &
-python3 getwikihelppage.py Copperpieces &
 python3 getwikihelppage.py Cpromote &
 python3 getwikihelppage.py Craftsmanship &
 python3 getwikihelppage.py Crank &
@@ -297,7 +296,6 @@ python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
 python3 getwikihelppage.py Glowingfungus &
 python3 getwikihelppage.py Gnomes &
-python3 getwikihelppage.py Goldpieces &
 python3 getwikihelppage.py Good
 python3 getwikihelppage.py Gossip &
 python3 getwikihelppage.py Grab &
@@ -364,7 +362,6 @@ python3 getwikihelppage.py Inform &
 python3 getwikihelppage.py Insult &
 python3 getwikihelppage.py Inventory
 python3 getwikihelppage.py Invisibility &
-python3 getwikihelppage.py Ironpieces &
 python3 getwikihelppage.py Jail &
 python3 getwikihelppage.py Javelin &
 python3 getwikihelppage.py Jeddart
@@ -495,7 +492,6 @@ python3 getwikihelppage.py Pilum &
 python3 getwikihelppage.py Piset &
 python3 getwikihelppage.py Plague
 python3 getwikihelppage.py Plant
-python3 getwikihelppage.py Platinumpieces &
 python3 getwikihelppage.py Points &
 python3 getwikihelppage.py Poisonivy &
 python3 getwikihelppage.py Poisonresistance &
@@ -595,7 +591,6 @@ python3 getwikihelppage.py Shortsword &
 python3 getwikihelppage.py Shout &
 python3 getwikihelppage.py Shouting &
 python3 getwikihelppage.py Sickle
-python3 getwikihelppage.py Silverpieces &
 python3 getwikihelppage.py Sip &
 python3 getwikihelppage.py Skills &
 python3 getwikihelppage.py Skin
