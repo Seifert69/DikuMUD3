@@ -1,17 +1,31 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 34<br/><br/>
-<br/><br/>
-Usage cast slow rot (target)<br/><br/>
-<br/><br/>
-By praying to the divinity and sprinkling with your own blood<br/>
-a cleric in good graces with the forces of death may slow the rate<br/>
-at which a corpse deteriorates. This requires no free hands to achieve. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-divine sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Slow Rot</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 34)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast slow rot &lt;corpse&gt;
+</pre>
+<p>The caster treats a corpse with their own blood while chanting, and a 
+black aura envelops it. The corpse then rots at its own slow pace: it 
+smells for about eight minutes before the maggots consume it, a little 
+longer than a monster's corpse would otherwise last, giving you time to 
+raise it or search it. A corpse can be treated only once.
+</p><p>Don't cast it on a player's corpse: theirs normally lasts much longer, 
+and the spell would make it rot away in eight minutes, with everything 
+on it.
+</p><p>You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Animate Dead</a>
+&gt; <a cmd='#'>Help Death</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+</pre>
+
+
+
+
+</div>
