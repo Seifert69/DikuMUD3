@@ -391,7 +391,6 @@ python3 getwikihelppage.py Mace &
 python3 getwikihelppage.py Madness &
 python3 getwikihelppage.py Magiccandle
 python3 getwikihelppage.py Magicians &
-python3 getwikihelppage.py Magicusers &
 python3 getwikihelppage.py Maidenname &
 python3 getwikihelppage.py Maingauche
 python3 getwikihelppage.py Manaboost &
@@ -700,7 +699,6 @@ python3 getwikihelppage.py Wimpy &
 python3 getwikihelppage.py Windslash &
 python3 getwikihelppage.py Wizardeye &
 python3 getwikihelppage.py Wizardmark
-python3 getwikihelppage.py Wizards
 python3 getwikihelppage.py Wizlist &
 python3 getwikihelppage.py Wordofrecall &
 python3 getwikihelppage.py Write &
