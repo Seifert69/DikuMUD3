@@ -351,7 +351,6 @@ python3 getwikihelppage.py Jeddart
 python3 getwikihelppage.py Join &
 python3 getwikihelppage.py Jolt &
 python3 getwikihelppage.py Just
-python3 getwikihelppage.py Key &
 python3 getwikihelppage.py Khorsabadassassin &
 python3 getwikihelppage.py Kick &
 python3 getwikihelppage.py Kill &
@@ -679,7 +678,6 @@ python3 getwikihelppage.py Unholygrasp
 python3 getwikihelppage.py Unholyshout
 python3 getwikihelppage.py Unholytouch &
 python3 getwikihelppage.py Unholyword &
-python3 getwikihelppage.py Unlock &
 python3 getwikihelppage.py Unseen
 python3 getwikihelppage.py Use &
 python3 getwikihelppage.py Valhalla &

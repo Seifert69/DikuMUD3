@@ -481,7 +481,7 @@ junk=dump.hlp
 justice council=just.hlp
 :end:j
 :start:k
-key=key.hlp
+key=lock.hlp
 khorsabad assassin=khorsabadassassin.hlp
 kick=kick.hlp
 kill=kill.hlp
@@ -900,7 +900,7 @@ unholy grasp=unholygrasp.hlp
 unholy touch=unholytouch.hlp
 unholy shout=unholyshout.hlp
 unholy word=unholyword.hlp
-unlock=unlock.hlp
+unlock=lock.hlp
 unseen=unseen.hlp
 unseen chaos=unseen.hlp
 unstore=storage.hlp
