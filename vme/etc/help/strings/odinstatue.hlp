@@ -1,12 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The statue in the starting temples will grant items to beginners if prayed<br/>
-to. These items are good for replacing lost items or to use while you go<br/>
-retrieve your corpse. They are by no means the best in the game nor are<br/>
-they ment to be.<br/>
-<br/><br/>
-pray statue<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Odin's Statue</h1>
+<p>Usage:
+</p>
+<pre>pray statue
+</pre>
+<p>A statue of Odin stands behind the altar in the temple of Udgaard, and in 
+the Cathedral of Midgaard. Kneel before it and pray, and if you are of 
+level 20 or below, Odin's eyes glow and he gives you a gift: the gear a 
+beginner needs.
+</p>
+<ul><li>For everyone: a beer, a torch, some bread, a small wooden shield and a guild medallion.</li>
+<li>For your profession: a book of your guild's lore, armour, boots, and a first weapon (a conjurer's robes and dagger, a healer's chainmail and mace, a fighter's plate and axe, a thief's leather and cloak). Only the four starting professions get one.</li>
+<li>For those who have finished the newbie quest: a silver ring as well.</li></ul>
+<p>You only get what you don't already carry, so pray again whenever you 
+have lost your things: when you die, for instance, and need something to 
+wear while you go back for your corpse. The gifts are made for beginners, 
+not the best in the game, and they are worth nothing in the shops.
+</p><p>Above level 20, praying only brings you peace of mind.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Pray</a>
+&gt; <a cmd='#'>Help Death</a>
+&gt; <a cmd='#'>Help Beginners</a>
+</pre>
+
+
+
+
+</div>
