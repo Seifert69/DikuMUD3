@@ -1,8 +1,30 @@
-<br/>
-<br/>
-Usage: shelter<br/>
-When used in the wilderness, this skill enabled the user to build a temporary<br/>
-shelter, big enough for one person to shelter in, safe from attack and<br/>
-wandering monsters.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Shelter</h1>
+<p>Skill
+Class: Ranger (guild level 8)
+</p><p>Usage:
+</p>
+<pre>shelter
+enter shelter
+</pre>
+<p>Builds a shelter out in the wilds, from what the land offers: a wooden 
+shack in a forest, a grass hut in a field or a swamp, an igloo on snow or 
+ice. It can't be built anywhere else, or indoors. Building one takes a 
+little while and a good deal of endurance, and you must be standing.
+</p><p>Enter it, and you are out of the weather, and out of sight of the room: 
+a snug place to rest. It holds a few people, so your friends can crawl in 
+with you.
+</p><p>The better your skill, the longer it stands: from a quarter of an hour 
+for a clumsy builder to forty minutes or so for a master. Then it rots, 
+or melts, and collapses, and anyone inside is left in the open.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Enter</a>
+&gt; <a cmd='#'>Help Regenerate</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>
