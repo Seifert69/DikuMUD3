@@ -514,7 +514,6 @@ python3 getwikihelppage.py Repair &
 python3 getwikihelppage.py Repelgreaterundead
 python3 getwikihelppage.py Repellesserundead &
 python3 getwikihelppage.py Reply &
-python3 getwikihelppage.py Request &
 python3 getwikihelppage.py Reroll &
 python3 getwikihelppage.py Rescue &
 python3 getwikihelppage.py Resize
