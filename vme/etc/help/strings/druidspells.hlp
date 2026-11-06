@@ -1,33 +1,55 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Spell                  Level         Spell                  Level<br/>
-<br/>
-Sense Life               1           Hedge Wall              21<br/>
-Thorn Strike             2           Sustain                 22<br/>
-Bark Skin                3           Remove Disease          25<br/>
-Glowing Fungus           5           Calm                    26<br/>
-Sense Invisible          6           Remove Poison           28<br/>
-Summer Rain              7           Cure Blind              29<br/>
-Mud Puddle               8           Petrify                 30<br/>
-Refresh                  8           Quicksand               31<br/>
-Poison Ivy               9           Find Path               34<br/>
-Wind Slash              10           Locate Object           35<br/>
-Detect Alignment        12           Locate Person           37<br/>
-Brambles                12           Sun Ray                 41<br/>
-Heal Animal             13           Clear Skies             43<br/>
-Life Protection         14           Leaf Shield             47<br/>
-Charm Animal            15           Tsunami                 52<br/>
-Detect Poison           16           Summon Lightning        60<br/>
-Ice Thorn               17           Earthquake              90<br/>
-Locate Animal           19           Polarity               120<br/>
-Entangle                21<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Druid<br/><br/>
- Druid Weapons<br/><br/>
- Druid Skills<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Druid Spells</h1>
+<p>The spells the Druids' guild teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name               Level   Up to
+Sense Life             1   100%
+Thorn Strike           2   100%
+Bark Skin              3   100%
+Glowing Fungus         5   100%
+Sense Invisible        6   100%
+Summer Rain            7   100%
+Mud Puddle             8   100%
+Refresh                8   100%
+Poison Ivy             9   100%
+Wind Slash            10   100%
+Brambles              12   100%
+Detect Alignment      12   100%
+Heal Animal           13   100%
+Life Protection       14   100%
+Charm Animal          15   100%
+Detect Poison         16   100%
+Ice Thorn             17   100%
+Locate Animal         19   100%
+Entangle              21   100%
+Hedge Wall            21   100%
+Sustain               22   80%
+Remove Disease        25   100%
+Calm                  26   80%
+Remove Poison         28   100%
+Cure Blind            29   80%
+Petrify               30   100%
+Quicksand             31   100%
+Find Path             34   100%
+Locate Object         35   100%
+Locate Person         37   100%
+Sun Ray               41   100%
+Clear Skies           43   100%
+Leaf Shield           47   100%
+Tsunami               52   100%
+Summon Lightning      60   100%
+Earthquake            90   100%
+Polarity             120   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Druid Skills</a>
+&gt; <a cmd='#'>Help Druid Weapons</a>
+&gt; <a cmd='#'>Help Druid</a>
+&gt; <a cmd='#'>Help Spheres</a>
+</pre>
+
+
+
+
+</div>
