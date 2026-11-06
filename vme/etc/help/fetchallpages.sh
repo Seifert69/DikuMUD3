@@ -395,8 +395,7 @@ python3 getwikihelppage.py Maidenname &
 python3 getwikihelppage.py Maingauche
 python3 getwikihelppage.py Manaboost &
 python3 getwikihelppage.py Manapoints &
-python3 getwikihelppage.py Map &
-python3 getwikihelppage.py Materialquality
+python3 getwikihelppage.py Map
 python3 getwikihelppage.py Mattock &
 python3 getwikihelppage.py Maul &
 python3 getwikihelppage.py Mending &
