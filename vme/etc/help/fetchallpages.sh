@@ -242,7 +242,6 @@ python3 getwikihelppage.py Enter &
 python3 getwikihelppage.py Equipment
 python3 getwikihelppage.py Estoc &
 python3 getwikihelppage.py Evaluate &
-python3 getwikihelppage.py Evil &
 python3 getwikihelppage.py Examine &
 python3 getwikihelppage.py Exits &
 python3 getwikihelppage.py Experience &
@@ -291,8 +290,7 @@ python3 getwikihelppage.py Get &
 python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
 python3 getwikihelppage.py Glowingfungus &
-python3 getwikihelppage.py Gnomes &
-python3 getwikihelppage.py Good
+python3 getwikihelppage.py Gnomes
 python3 getwikihelppage.py Gossip &
 python3 getwikihelppage.py Grab &
 python3 getwikihelppage.py Greatsword &
@@ -449,7 +447,6 @@ python3 getwikihelppage.py Necro &
 python3 getwikihelppage.py Necromancerskills
 python3 getwikihelppage.py Necromancerspells &
 python3 getwikihelppage.py Necromancerweapons &
-python3 getwikihelppage.py Neutral &
 python3 getwikihelppage.py Newbie &
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
