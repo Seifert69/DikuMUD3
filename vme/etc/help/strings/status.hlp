@@ -1,20 +1,34 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage status [skills|weapons|spells]<br/> <br/><br/>
-Example:<br/><br/>
-status<br/><br/>
-status weapons<br/><br/>
-<br/>
-This command is used to see your more permanent abilities<br/>
-and skills. It is used as a supplement to the score command.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Prompt<br/><br/>
-Weapons<br/><br/>
-Spells<br/><br/>
-Skills<br/><br/>
-Abilities<br/><br/>
-Score<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Status</h1>
+<p>Usage:
+</p>
+<pre>status
+status skills
+status weapons
+status spells
+</pre>
+<p>Shows your lasting qualities, where <a cmd='#'>score</a> shows how you are doing right 
+now.
+</p><p>Status alone shows:
+</p>
+<ul><li>your title, your guilds and your profession;</li>
+<li>your abilities: strength, dexterity, constitution, charisma, brain, magic, divine and hit points, with your hit points now and at most;</li>
+<li>your combat dexterity: your dexterity as your armour leaves it (heavy armour slows you down);</li>
+<li>the skill and ability points you have left to practice with (see <a cmd='#'>Help Practice</a>);</li>
+<li>whether you are brave or wimpy (see <a cmd='#'>Help Wimpy</a>), and your speed in a fight, when it isn't the normal one.</li></ul>
+<p>Status skills, status weapons and status spells list how well you know 
+each skill, weapon and spell you have learned; spells are split into those 
+of magic and those of divine power. You can shorten them: status sk, 
+status w, status sp.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Score</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Guilds</a>
+</pre>
+
+
+
+
+</div>
