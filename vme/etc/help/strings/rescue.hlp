@@ -1,11 +1,34 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage rescue (character)<br/><br/>
-<br/>
-To help a friend in trouble, use this command. You will then jump between<br/>
-your friend and his foe, letting your friend escape the battle, if you<br/>
-succeed, that is.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Rescue</h1>
+<p>SKILL
+</p><p>Class and level:
+</p>
+<pre> Dark Knight - 0
+ Fighter     - 1
+ Paladin     - 0
+ Ranger      - 0
+</pre>
+<p>Usage:
+</p>
+<pre>rescue &lt;character&gt;
+</pre>
+<p>Example:
+</p>
+<pre>rescue asta
+</pre>
+<p>To help a friend in trouble, use this command. You jump between your friend and 
+the one fighting them, so that the attacker fights you instead and your friend 
+gets out of the battle; if you succeed, that is. It is a test of your rescue 
+skill and dexterity against the attacker's dexterity.
+</p><p>You can only rescue someone who is being attacked, and not from yourself.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Assist</a>
+&gt; <a cmd='#'>Help Fleeing</a>
+</pre>
+
+
+
+
+</div>
