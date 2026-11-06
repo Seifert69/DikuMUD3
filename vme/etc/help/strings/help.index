@@ -32,7 +32,7 @@ armor hard leather=armour.hlp
 armor plate=armour.hlp
 armor soft leather=armour.hlp
 armour=armour.hlp
-arrests=arrests.hlp
+arrests=laws.hlp
 ask=ask.hlp
 assassins=assassin.hlp
 assassins guild=khorsabadassassin.hlp
@@ -471,14 +471,14 @@ invisibility=invisibility.hlp
 iron pieces=money.hlp
 :end:i
 :start:j
-jail=jail.hlp
+jail=laws.hlp
 javelin=javelin.hlp
 jeddart=jeddart.hlp
 join=join.hlp
 join group=groups.hlp
 jolt=jolt.hlp
 junk=dump.hlp
-justice council=just.hlp
+justice council=laws.hlp
 :end:j
 :start:k
 key=lock.hlp
@@ -919,7 +919,7 @@ voulge=voulge.hlp
 wake=position.hlp
 wand use=wanduse.hlp
 wands=wanduse.hlp
-wanted=wanted.hlp
+wanted=laws.hlp
 waraxe=waraxe.hlp
 war hammer=warhammer.hlp
 warrior=warrior.hlp

@@ -19,7 +19,6 @@ python3 getwikihelppage.py Appraisal
 python3 getwikihelppage.py Architect &
 python3 getwikihelppage.py Areas &
 python3 getwikihelppage.py Armour &
-python3 getwikihelppage.py Arrests &
 python3 getwikihelppage.py Ask &
 python3 getwikihelppage.py Assassinate
 python3 getwikihelppage.py Assassin &
@@ -345,12 +344,10 @@ python3 getwikihelppage.py Inform &
 python3 getwikihelppage.py Insult &
 python3 getwikihelppage.py Inventory
 python3 getwikihelppage.py Invisibility &
-python3 getwikihelppage.py Jail &
 python3 getwikihelppage.py Javelin &
 python3 getwikihelppage.py Jeddart
 python3 getwikihelppage.py Join &
-python3 getwikihelppage.py Jolt &
-python3 getwikihelppage.py Just
+python3 getwikihelppage.py Jolt
 python3 getwikihelppage.py Khorsabadassassin &
 python3 getwikihelppage.py Kick &
 python3 getwikihelppage.py Kill &
@@ -685,7 +682,6 @@ python3 getwikihelppage.py Variable &
 python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge
 python3 getwikihelppage.py Wanduse &
-python3 getwikihelppage.py Wanted &
 python3 getwikihelppage.py Waraxe &
 python3 getwikihelppage.py Warhammer
 python3 getwikihelppage.py Warrior &
