@@ -408,8 +408,7 @@ python3 getwikihelppage.py Militaryfork
 python3 getwikihelppage.py Mindshield &
 python3 getwikihelppage.py Mindsphere &
 python3 getwikihelppage.py Minorgate &
-python3 getwikihelppage.py Mire &
-python3 getwikihelppage.py Mode
+python3 getwikihelppage.py Mire
 python3 getwikihelppage.py Money &
 python3 getwikihelppage.py Moneyorders &
 python3 getwikihelppage.py Monster &
