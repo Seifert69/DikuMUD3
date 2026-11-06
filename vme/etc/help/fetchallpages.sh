@@ -505,7 +505,6 @@ python3 getwikihelppage.py Refit &
 python3 getwikihelppage.py Refresh
 python3 getwikihelppage.py Refundpolicy &
 python3 getwikihelppage.py Regenerate &
-python3 getwikihelppage.py Relax &
 python3 getwikihelppage.py Removecurse &
 python3 getwikihelppage.py Removedisease
 python3 getwikihelppage.py Remove &
