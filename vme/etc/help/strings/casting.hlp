@@ -1,16 +1,40 @@
-<br/>
-<br/>
-<br/>
-Usage cast (spell) (item)|(character)<br/><br/>
-<br/><br/>
-<br/>
-This is the command to use when you wish to cast spells of any kind, both<br/>
-magic and divine.<br/>
-The spell will be cast on the specified<br/>
-character or item.<br/>
-<br/><br/><br/>
-Notice how the spells can be abbreviated. Take care not to abbreviate too<br/>
-much...Do no confuse abbreviations such as 'cur' with 'cure', it can be<br/>
-can be quite a bad mistake.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Cast</h1>
+<p>Usage:
+</p>
+<pre>cast &lt;spell&gt; [&lt;target&gt;]
+</pre>
+<p>Examples:
+</p>
+<pre>cast magic missile orc
+cast cure light wounds Gnort
+cast mag mis           (at whoever you are fighting)
+cast bless             (on yourself)
+</pre>
+<p>Casts a spell you have learned, of magic or of divine power (see 
+<a cmd='#'>Help Magic</a>). Name the spell, then whom or what it is for. Leave out the 
+target, and an attack spell goes at whoever you are fighting, and a 
+helping spell mostly at yourself.
+</p><p>You can shorten each word of the spell's name: cast mag mis is magic 
+missile. Take care not to shorten too much: cur could be cure or curse, 
+and that can be quite a bad mistake.
+</p><p>Every spell costs mana (see <a cmd='#'>Help Mana Points</a>): without enough, you can't 
+summon enough energy to cast it. Most spells need you to stand; some can 
+be cast in a fight, and a few resting or even lying wounded. Those around you hear 
+the words you utter. In a fight, a spell takes time, like a blow.
+</p><p>How well it works depends on your skill in the spell, your magic or 
+divine ability and your skill in its sphere (see <a cmd='#'>Help Spheres</a>); and 
+many spells can be resisted. <a cmd='#'>status spells</a> shows the spells you know, and 
+each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Magic</a>
+&gt; <a cmd='#'>Help Mana Points</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
