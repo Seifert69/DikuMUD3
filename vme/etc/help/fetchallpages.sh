@@ -654,7 +654,6 @@ python3 getwikihelppage.py Soulshift &
 python3 getwikihelppage.py South &
 python3 getwikihelppage.py Spearfam &
 python3 getwikihelppage.py Spear
-python3 getwikihelppage.py Spectum &
 python3 getwikihelppage.py Spellaid &
 python3 getwikihelppage.py Spellbrain &
 python3 getwikihelppage.py Spellcasters &
