@@ -1,9 +1,29 @@
-<br/>
-<br/>
-Usage: cast mud puddle<br/>
-By using this magic, the caster creates a small, slippery puddle of mud<br/>
-on the ground which can easily cause someone to slip and fall.  The<br/>
-mud puddle loses its cohesion after its first victim is sent to the<br/>
-ground, however.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Mud Puddle</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 8)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast mud puddle
+</pre>
+<p>The caster calls upon the waters to soak the ground, and water wells up 
+from below into a slick puddle of mud. Anyone standing in the room who 
+does anything may slip and fall face-first into the muck, and is left 
+sitting: a good moment to strike, or to get away. Nimble feet 
+(dexterity) help to keep your balance. Careful: the caster can slip too.
+</p><p>The puddle dries up after its first victim falls, or by itself after a 
+minute or so, longer the better it was cast.
+</p><p>It can't be cast indoors, in the desert, on water or in a swamp, or on 
+snow, slush or ice. You must be standing. It is also found on scrolls, 
+wands and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Creation Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>
