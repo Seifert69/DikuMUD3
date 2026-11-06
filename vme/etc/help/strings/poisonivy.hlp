@@ -1,9 +1,29 @@
-<br/>
-<br/>
-Usage: cast poison ivy &lt;target&gt;<br/>
-By using this spell, the caster causes his target's skin to break out in<br/>
-a painful rash.  The duration of this rash is dependent on the caster's<br/>
-skill and the target's ability to resist.  Poison Ivy can be treated with<br/>
-Remove Poison.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Poison Ivy</h1>
+<p>Sphere: Poison Sphere
+Class: Druid (guild level 9)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast poison ivy &lt;target&gt;
+</pre>
+<p>The caster touches the target and growls 'Rasica Potio', and their skin 
+breaks out in an ugly red rash. Every half minute the rash torments 
+them: first an itch, then painful blisters, then several rounds of 
+scratching it bloody, each costing them 13 to 17 hit points, and at last 
+it subsides and heals. The better the casting, the more rounds of 
+scratching. Someone who already has the rash can't catch it again.
+</p><p>The target resists with their mind, and casting it is an attack: they 
+will fight you for it. A strong enough <a cmd='#'>Help Remove Disease</a> heals the 
+rash at once; remove poison does not. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Remove Disease</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>
