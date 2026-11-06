@@ -1,0 +1,25 @@
+<div class="mw-parser-output"><h1>Cuff</h1>
+<p>SKILL (hand cuffing), for members of the police guild
+</p><p>Usage:
+</p>
+<pre>cuff &lt;criminal&gt;
+</pre>
+<p>Members of the police guild learn hand cuffing at the police in Midgaard (see 
+<a cmd='#'>Help Police Guild</a>). With it, a deputy can put the handcuffs on a wanted 
+criminal and take them to jail. It only works on someone who is wanted, and 
+it can fail: the better your hand cuffing against theirs, the better your 
+chance. A criminal in cuffs can try to break them (see <a cmd='#'>Help Break</a>).
+</p><p>A deputy who breaks the law and is caught is thrown out of the police guild, 
+and loses the hand cuffing skill.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Police Guild</a>
+&gt; <a cmd='#'>Help Arrests</a>
+&gt; <a cmd='#'>Help Break</a>
+</pre>
+
+
+
+
+</div>

@@ -176,6 +176,7 @@ python3 getwikihelppage.py Cstart &
 python3 getwikihelppage.py Cstore
 python3 getwikihelppage.py Ctitle &
 python3 getwikihelppage.py Cudgel &
+python3 getwikihelppage.py Cuff &
 python3 getwikihelppage.py Cunstore &
 python3 getwikihelppage.py Curare &
 python3 getwikihelppage.py Cureblind
