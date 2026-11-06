@@ -15,7 +15,6 @@ python3 getwikihelppage.py Alias &
 python3 getwikihelppage.py Alignment
 python3 getwikihelppage.py Ambush &
 python3 getwikihelppage.py Animatedead &
-python3 getwikihelppage.py Annihilateundead &
 python3 getwikihelppage.py Aoh &
 python3 getwikihelppage.py Appraisal
 python3 getwikihelppage.py Architect &
