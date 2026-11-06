@@ -1,16 +1,27 @@
-<br/>
-<br/>
-Usage <br/><br/>
-bury &lt;item&gt;     this will bury one item<br/>
-bury all        this will bury all in the room<br/>
-bury all.&lt;item&gt; this will bury all item by that name in the<br/>
-                       room and inventory. use at own risk :)<br/>
-<br/>
-Bury an item, you were carrying in the dust. When an item is buried,<br/>
-you cannot see it directly, but have to dig to find it.<br/>
-<br/>
-<br/><br/>
-See Also:<br/><br/>
-Dig<br/><br/>
-Donate<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Bury</h1>
+<p>Usage:
+</p>
+<pre>bury &lt;item&gt;          bury one item, from the ground or from your inventory
+bury 2.&lt;item&gt;        bury the second item by that name
+bury all.&lt;item&gt;      bury every item by that name, on the ground and in your inventory
+bury all             bury everything lying on the ground here
+</pre>
+<p>Buries an item in the ground, out of sight. A buried item can't be seen or 
+picked up; to get it back, <a cmd='#'>dig</a> for it: each dig turns up one buried 
+thing in the room, and anyone can dig, not only the one who buried it.
+</p><p>Buried things don't keep: an item that stays buried for an hour of real 
+time rots away and is gone for good. Corpses keep their own clock: a buried corpse rots as any 
+corpse does.
+</p><p>You can only bury things you could pick up, out in a room (not inside a 
+boat or the like), and not while you are fighting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dig</a>
+&gt; <a cmd='#'>Help Drop</a>
+</pre>
+
+
+
+
+</div>
