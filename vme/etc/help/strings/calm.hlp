@@ -1,11 +1,24 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage calm (target)<br/><br/>
-<br/><br/>
-This spell cancels the effect of fear or confusion.<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Calm</h1>
+<p>Sphere: Mind Sphere
+Class: Healer (guild level 12), Druid (guild level 26), Paladin (guild level 28)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast calm &lt;target&gt;
+</pre>
+<p>Soothes a frightened mind. It ends the fear spell on the target, and stops 
+cause panic, so they no longer flee in terror. On someone who isn't afraid, 
+nothing happens. It doesn't help against confusion.
+</p><p>You must be standing. It is also found on potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fear</a>
+&gt; <a cmd='#'>Help Cause Panic</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
