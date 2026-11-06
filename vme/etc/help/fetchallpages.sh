@@ -340,7 +340,6 @@ python3 getwikihelppage.py Identify &
 python3 getwikihelppage.py Ignore &
 python3 getwikihelppage.py Immortal &
 python3 getwikihelppage.py Improvedidentify
-python3 getwikihelppage.py Incapacitated &
 python3 getwikihelppage.py Info &
 python3 getwikihelppage.py Inform &
 python3 getwikihelppage.py Insult &
@@ -420,8 +419,7 @@ python3 getwikihelppage.py Mode
 python3 getwikihelppage.py Money &
 python3 getwikihelppage.py Moneyorders &
 python3 getwikihelppage.py Monster &
-python3 getwikihelppage.py Morningstar &
-python3 getwikihelppage.py Mortallywounded
+python3 getwikihelppage.py Morningstar
 python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
