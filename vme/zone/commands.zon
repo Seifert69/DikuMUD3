@@ -9238,7 +9238,7 @@ var
 
 code
 {
-   if (self.level < 240)
+   if (self.level < PLAYER_ADMIN_LEVEL)
    {
       act("Arglebargle, glop-glyf!?!",A_ALWAYS, self, null, null, TO_CHAR);
       quit;

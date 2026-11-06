@@ -1988,6 +1988,8 @@ type     = 0
 command       = seize
 func          = seize@commands
 minpos        = POSITION_RESTING
+minlevel      = 245
+loglevel      = 245
 
 command       = noshout
 func          = no_shout@commands
