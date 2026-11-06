@@ -526,7 +526,6 @@ python3 getwikihelppage.py Say &
 python3 getwikihelppage.py Scan &
 python3 getwikihelppage.py Scimitar
 python3 getwikihelppage.py Score &
-python3 getwikihelppage.py Scripts &
 python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
 python3 getwikihelppage.py Sending &
