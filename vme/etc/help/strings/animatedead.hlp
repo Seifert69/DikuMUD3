@@ -1,30 +1,38 @@
-<br/>
-<br/><br/>
-Sphere: Creation<br/><br/>
-<br/>
-Spell Tier:1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 4 <br/> <br/>
-<br/><br/>
-Usage cast animate dead (corpse)<br/><br/>
-<br/><br/>
-By means of a chant and a little blood from the cleric, the supplicant<br/>
-may raise a corpse, thus creating an undead such as a zombie. It requires <br/>
-no free hands to create an animated corpse.<br/><br/>
-<br/><br/>
-NOTE: This may be performed only upon corpses of mobiles (also known as<br/>
-NPCs). Animating a player's corpse is in violation of the PK rules and<br/>
-is subject to severe punishment.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-control undead<br/><br/>
-raise skeletal champion<br/><br/>
-raise skeleton<br/><br/>
-raise horde<br/><br/>
-PK<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Animate Dead</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 4)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast animate dead &lt;corpse&gt;
+tell zombie &lt;command&gt;
+tell horde &lt;command&gt;     (all your zombies and skeletons at once)
+</pre>
+<p>The necromancer cuts their own skin, bleeds on a corpse and chants 'Muera 
+aneme', and the corpse rises as a zombie that follows its maker. The 
+zombie carries whatever the corpse held. Command it with tell: it can walk, 
+fight (<a cmd='#'>tell zombie kill rat</a>), get, drop, give and put things, follow, 
+flee, dig, bury, climb, enter, rest, sit, sleep, wake and stand. Anything 
+else, it only moans.
+</p><p>The zombie lasts a few minutes, up to a quarter of an hour for a master, 
+then crumbles to dust, leaving behind what it carried. A strong dispel 
+magic ends it sooner. It never attacks players, unless both you and they 
+have signed the Book of Blood.
+</p><p>Only corpses of monsters will rise: a player's corpse won't. Corpses of 
+insects and other crawling things, of the undead, demons and devils, 
+elementals, golems, gargoyles and the like crumble to dust instead. You must 
+be standing, and no free hands are needed. It is also found on wands, 
+staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Control Undead</a>
+&gt; <a cmd='#'>Help Aid Undead</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
