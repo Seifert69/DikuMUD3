@@ -573,8 +573,6 @@ python3 getwikihelppage.py Splitm &
 python3 getwikihelppage.py Sprayofacid &
 python3 getwikihelppage.py Staff &
 python3 getwikihelppage.py Stalk
-python3 getwikihelppage.py Stats &
-python3 getwikihelppage.py Statue &
 python3 getwikihelppage.py Status &
 python3 getwikihelppage.py Stealing
 python3 getwikihelppage.py Steed &
