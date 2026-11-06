@@ -210,8 +210,7 @@ python3 getwikihelppage.py Ditch &
 python3 getwikihelppage.py Divinationsphere
 python3 getwikihelppage.py Divineresistance &
 python3 getwikihelppage.py Donate &
-python3 getwikihelppage.py Donation &
-python3 getwikihelppage.py Down
+python3 getwikihelppage.py Donation
 python3 getwikihelppage.py Dowse &
 python3 getwikihelppage.py Drag &
 python3 getwikihelppage.py Drop &
@@ -225,8 +224,7 @@ python3 getwikihelppage.py Dump
 python3 getwikihelppage.py Dustdevil &
 python3 getwikihelppage.py Dwarves &
 python3 getwikihelppage.py Eaglecry &
-python3 getwikihelppage.py Earthquake &
-python3 getwikihelppage.py East
+python3 getwikihelppage.py Earthquake
 python3 getwikihelppage.py Eat &
 python3 getwikihelppage.py Echo &
 python3 getwikihelppage.py Elbow &
@@ -457,7 +455,6 @@ python3 getwikihelppage.py Newbie &
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
 python3 getwikihelppage.py Nightglobe &
-python3 getwikihelppage.py North &
 python3 getwikihelppage.py Noshout &
 python3 getwikihelppage.py Npc
 python3 getwikihelppage.py Oddweapon &
@@ -608,7 +605,6 @@ python3 getwikihelppage.py Sorcererspells &
 python3 getwikihelppage.py Sorcererweapons &
 python3 getwikihelppage.py Soulfire
 python3 getwikihelppage.py Soulshift &
-python3 getwikihelppage.py South &
 python3 getwikihelppage.py Spearfam &
 python3 getwikihelppage.py Spear
 python3 getwikihelppage.py Spellaid &
@@ -703,8 +699,7 @@ python3 getwikihelppage.py Unholyshout
 python3 getwikihelppage.py Unholytouch &
 python3 getwikihelppage.py Unholyword &
 python3 getwikihelppage.py Unlock &
-python3 getwikihelppage.py Unseen &
-python3 getwikihelppage.py Up
+python3 getwikihelppage.py Unseen
 python3 getwikihelppage.py Use &
 python3 getwikihelppage.py Valhalla &
 python3 getwikihelppage.py Variable &
@@ -720,7 +715,6 @@ python3 getwikihelppage.py Weapons &
 python3 getwikihelppage.py Wear &
 python3 getwikihelppage.py Weather
 python3 getwikihelppage.py Weatherwatching
-python3 getwikihelppage.py West &
 python3 getwikihelppage.py Whip &
 python3 getwikihelppage.py Whisper &
 python3 getwikihelppage.py Whirl &
