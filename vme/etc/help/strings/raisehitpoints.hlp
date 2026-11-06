@@ -1,7 +1,26 @@
-<br/>
-<br/>
-<br/>
-Usage: cast raise hitpoints &lt;person&gt;<br/>
-This spell will temporarily increase &lt;person&gt;'s max hitpoints.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Raise Hitpoints</h1>
+<p>Sphere: Protection Sphere
+Class: Healer (guild level 75), Paladin (guild level 85)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast raise hitpoints &lt;target&gt;
+<a cmd='#'>cast raise hitpoints</a>   (on yourself)
+</pre>
+<p>Raises the target's hit point ability for ten minutes, so they can take more 
+before they fall: a point at first, up to ten points for a master.
+</p><p>It doesn't add up: cast on someone who already has it, the magic just 
+dissipates. You must have practiced the spell to use it, even from a potion, 
+wand or scroll. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hitpoints</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>
