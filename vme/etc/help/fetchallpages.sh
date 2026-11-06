@@ -642,7 +642,6 @@ python3 getwikihelppage.py Slam &
 python3 getwikihelppage.py Slip &
 python3 getwikihelppage.py Slow &
 python3 getwikihelppage.py Slowrot &
-python3 getwikihelppage.py Smash
 python3 getwikihelppage.py Sneaking &
 python3 getwikihelppage.py Snoop &
 python3 getwikihelppage.py Snowball &
