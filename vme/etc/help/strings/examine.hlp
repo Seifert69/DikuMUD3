@@ -1,15 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Syntax: examine (unit)<br/><br/>
-<br/><br/>
-Example: examine fireplace<br/><br/>
-<br/><br/>
-Same as both the look at (unit) and look in<br/>
-(unit).<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Look<br/><br/>
-Search<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Examine</h1>
+<p>Usage:
+</p>
+<pre>examine &lt;thing or person&gt;
+</pre>
+<p>Example:
+</p>
+<pre>examine chest
+</pre>
+<p>Looks closely at something or someone: it works like look at and look in 
+together. You see the description, and:
+</p>
+<ul><li>for a container, what is inside it; for a bottle or other drink container, what is in it;</li>
+<li>for a weapon, which fighting style it needs;</li>
+<li>whether it gives off light or darkness, and any auras your detect spells let you see, such as good or evil, magic or poison;</li>
+<li>for a person or a monster, what they wear and wield, whether there is a reward on their head, whether they are a protected citizen or an outlaw wanted by the law, and whether they carry the scar of the Book of Blood.</li></ul>
+<p>You can examine things while sitting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Look</a>
+&gt; <a cmd='#'>Help Search</a>
+&gt; <a cmd='#'>Help Wanted</a>
+</pre>
+
+
+
+
+</div>
