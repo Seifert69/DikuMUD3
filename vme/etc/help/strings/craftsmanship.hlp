@@ -1,8 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Is how well a smithy has created a weapon,<br/>
-shield or armor.<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Craftsmanship</h1>
+<p>Craftsmanship is how well a weapon, a shield or a piece of armour was 
+made. It ranges from worthless to godly; average is ordinary work. The 
+identify spells tell you an item's craftsmanship, in words such as poor, 
+good, superior or godly (see <a cmd='#'>Help Identify</a>).
+</p><p>Craftsmanship counts in every fight, much like an item's magic:
+</p>
+<ul><li>a well made <b>weapon</b> hits more easily and harder;</li>
+<li>well made <b>armour</b> turns blows better;</li>
+<li>a well made <b>shield</b> blocks better.</li></ul>
+<p>It also decides how much wear an item can take before it breaks: fine 
+work lasts several times longer than average work, and poor work wears out 
+fast.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Identify</a>
+&gt; <a cmd='#'>Help Weapons</a>
+&gt; <a cmd='#'>Help Shields</a>
+</pre>
+
+
+
+
+</div>
