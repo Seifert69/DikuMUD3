@@ -1,27 +1,26 @@
-<div class="mw-parser-output"><h1>Protected Characters</h1>
-<p>Players that are 'protected' citizens may join the police guild in
-addition to their own guild path (you remain in both guilds) by going to the
-chief of police (Captain) in Midgaard and typing 'join' (you may have to
-type it two times). Once you are a member of the 'police guild' you will have
-the ability to arrest wanted criminals and take them to jail. You will
-also be allowed to practice special skills and spells that no one else can
-practice. Beware however, if for whatever reason you lose your status as
-a protected citizen (break the law and get caught) you will be kicked out
-of the police guild and you will lose any spells/skills you learned while
-in the guild.
+<div class="mw-parser-output"><h1>Protected</h1>
+<p>Every new character is a <b>protected</b> citizen: the law looks after you. 
+If someone steals from you or kills you, it is a crime, and the law goes 
+after them. Most townsfolk are protected too: guards, shopkeepers, mayors and so on.
+</p><p>You lose your protection when you break the law and get caught: a few crimes 
+and the law no longer looks after you; more, and the guards are after you 
+(see <a cmd='#'>Help Crimes</a>). After you have served your time in jail, you are 
+protected again.
+</p><p><b>Deputies.</b> A protected citizen with a clean record can become a deputy: 
+go to the Captain in Midgaard and type <a cmd='#'>join</a>. Deputies can arrest wanted 
+criminals and take them to jail, and the police academy teaches them things 
+nobody else can learn, such as hand cuffing (see <a cmd='#'>Help Cuff</a>). You stay in your 
+own guild too. But if you are ever accused of a crime, the Captain throws you 
+out for good, and you lose what the academy taught you.
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Spells</a>
-&gt; <a cmd='#'>Help Skills</a>
-&gt; <a cmd='#'>Help Practice</a>
-&gt; <a cmd='#'>Help Guild</a>
-&gt; <a cmd='#'>Help Police Guild</a>
+<pre>&gt; <a cmd='#'>Help Crimes</a>
 &gt; <a cmd='#'>Help Accuse</a>
-&gt; <a cmd='#'>Help PK</a>
-&gt; <a cmd='#'>Help Contract</a>
-&gt; <a cmd='#'>Help Offer</a>
-&gt; <a cmd='#'>Help Break</a>
+&gt; <a cmd='#'>Help Jail</a>
+&gt; <a cmd='#'>Help Wanted</a>
+&gt; <a cmd='#'>Help Cuff</a>
+&gt; <a cmd='#'>Help Police Guild</a>
 </pre>
 
 
