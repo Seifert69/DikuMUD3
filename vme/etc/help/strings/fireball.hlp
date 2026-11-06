@@ -1,21 +1,31 @@
-<br/>
-Sphere: Fire<br/><br/>
-<br/>
-Spell Tier: 2<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 14 <br/><br/>
-<br/><br/>
-Usage cast fireball (target)<br/>
-<br/><br/>
-This spell causes a compact ball of fire to form before the caster. It then<br/>
-flies toward the named target or present target in battle to inflict damage <br/>
-by fire. The spell requires the caster to have one hand free. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-burn<br/><br/>
-fire resistance<br/><br/>
-firestorm<br/><br/>
-fire blast<br/><br/>
+<div class="mw-parser-output"><h1>Fireball</h1>
+<p>Sphere: Fire Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 14)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast fireball &lt;target&gt;
+<a cmd='#'>cast fireball</a>   (at whoever you are fighting)
+</pre>
+<p>A compact ball of fire forms before the caster and flies at the target. 
+The better your magic and your fire sphere, the more it burns. Fire does 
+best against clothes and light leather and much less against chain and 
+plate, and a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Burn</a>
+&gt; <a cmd='#'>Help Fire Blast</a>
+&gt; <a cmd='#'>Help Firestorm</a>
+&gt; <a cmd='#'>Help Heat Resistance</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>
