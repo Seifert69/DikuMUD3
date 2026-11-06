@@ -431,8 +431,7 @@ python3 getwikihelppage.py Newbie &
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
 python3 getwikihelppage.py Nightglobe &
-python3 getwikihelppage.py Noshout &
-python3 getwikihelppage.py Npc
+python3 getwikihelppage.py Noshout
 python3 getwikihelppage.py Oddweapon &
 python3 getwikihelppage.py Odinstatue &
 python3 getwikihelppage.py Off &

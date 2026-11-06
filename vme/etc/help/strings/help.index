@@ -597,7 +597,7 @@ nheal=naffect.hlp
 night globe=nightglobe.hlp
 north=movement.hlp
 noshout=noshout.hlp
-npc=npc.hlp
+npc=monster.hlp
 nsanctuary=naffect.hlp
 :end:n
 :start:o
