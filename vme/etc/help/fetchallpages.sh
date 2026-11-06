@@ -646,7 +646,6 @@ python3 getwikihelppage.py Weap &
 python3 getwikihelppage.py Weapons &
 python3 getwikihelppage.py Wear &
 python3 getwikihelppage.py Weather
-python3 getwikihelppage.py Weatherwatching
 python3 getwikihelppage.py Whip &
 python3 getwikihelppage.py Whisper &
 python3 getwikihelppage.py Whirl &
