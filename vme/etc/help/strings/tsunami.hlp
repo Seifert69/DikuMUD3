@@ -1,12 +1,27 @@
-<br/>
-Sphere: Summoning Sphere<br/>
-<br/>
-<br/>
-Usage cast tsunami<br/>
-<br/>
-When cast, this spell will cause immense masses of water to tip any boat near<br/>
-the druid who summoned the tsunami.  This will aid the caster in battle by<br/>
-throwing the enemy overboard.  For the spell to work you must be sailing or<br/>
-swimming this powerful spell summons a tidal wave before the caster which<br/>
-washes all people and small objects away. <br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Tsunami</h1>
+<p>Sphere: Summoning Sphere
+Class: Druid (guild level 52)
+Mana: 50
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast tsunami</a>
+</pre>
+<p>The druid raises both arms, screams 'Maelestra Aquaris!' and summons a 
+tidal wave that washes everything in the room away through one open exit, 
+chosen at random (never up or down). Everyone goes with it, the caster too, 
+and so do all the things that can be picked up. Those inside a boat go 
+with their boat.
+</p><p>It only works on water you swim or sail on; anywhere else, or when no exit 
+is open, nothing happens. It isn't an attack, so it starts no fight: a 
+druid can use it to sweep an enemy away, or to get away. You must be 
+standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
