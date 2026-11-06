@@ -1,10 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation Sphere<br/><br/><br/>
-<br/>
-Usage cast light (target)<br/><br/>
-<br/><br/>
-When cast on an object, it will light up for a while.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Light (spell)</h1>
+<p>Sphere: Creation Sphere
+Class: Healer (guild level 12), Paladin (guild level 12)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast light &lt;object&gt;
+<a cmd='#'>cast light</a>   (on the room you are in)
+</pre>
+<p>Makes an object, or the room you stand in, give off light for a while, so you 
+can see in the dark. Cast it on something you carry or wear, and the light 
+goes where you go.
+</p><p>The better your creation sphere, the longer it lasts: from a minute up to 
+several minutes. It doesn't add up: something already lit by the spell stays 
+as it is. You must be standing. It is also found on staffs, scrolls and 
+wands.
+</p><p>For lighting a torch or lantern, see <a cmd='#'>Help Light</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Light</a>
+&gt; <a cmd='#'>Help Magic Candle</a>
+&gt; <a cmd='#'>Help Continual Light</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
