@@ -1,11 +1,56 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Spells of this sphere enables you to conjure things and move about.<br/><br/>
-<br/>
-    Random Teleport        Clear Skies        Storm Call        Word Of Recall        Controlled Teleport        Minor Gate        Gate<br/>
-<br/><br/>
-<br/>
-Try help on the individual spells.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Summoning Sphere</h1>
+<p>The spells of the summoning sphere call things from elsewhere and send things away: the conjurers' elementals, demons and devils, the gates, portals and teleports that carry you across the world, the recalls that bring you home, and the druids' and rangers' forces of nature. Your ability in the sphere decides how well you cast them, and also how well you resist summoning spells cast on you (see <a cmd='#'>Help Spheres</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>dust devil            conjurer 9
+random teleport       conjurer 22
+clear skies           healer 33, druid 43
+storm call            conjurer 12
+word of recall        healer 10
+controlled teleport   conjurer 35
+minor gate            conjurer 27, sorcerer 30
+gate                  conjurer 35
+leaving               conjurer 8
+transport             conjurer 17, sorcerer 32
+shard breath          no guild teaches it
+cone of shards        conjurer 32
+meteor shower         no guild teaches it
+total recall          healer 20
+undead door           necromancer 25
+clenched fist         conjurer 13
+energy bolt           conjurer 0
+summon devil          conjurer 50
+summon demon          conjurer 40
+summon fire           conjurer 30
+summon water          conjurer 24
+summon air            conjurer 18
+summon earth          conjurer 14
+sending               sorcerer 15
+banish                no guild teaches it
+cause instability     no guild teaches it
+summon animal         ranger 40
+eagle cry             ranger 29
+tiger claw            ranger 21
+group teleport        conjurer 130
+soul shift            no guild teaches it
+portal                sorcerer 120
+travel                sorcerer 150
+tsunami               druid 52
+hedge wall            druid 21
+thorn strike          druid 2
+wind slash            druid 10
+summon lightning      druid 60
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Conjurer Spells</a>
+&gt; <a cmd='#'>Help Travel</a>
+</pre>
+
+
+
+
+</div>
