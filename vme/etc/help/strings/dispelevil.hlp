@@ -1,0 +1,29 @@
+<div class="mw-parser-output"><h1>Dispel Evil</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 29), Paladin (guild level 45)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast dispel evil &lt;target&gt;
+<a cmd='#'>cast dispel evil</a>   (at whoever you are fighting)
+</pre>
+<p>A powerful prayer that strikes at the life force of an evil being. The target 
+must be of evil alignment, and you must not be evil yourself; otherwise the 
+spell fails. The better your divine power and sphere, the harder it strikes.
+</p><p>If the target is warded by protection from good, the first cast only breaks 
+that ward. Casting it is an attack and starts a fight. It is also found on 
+staffs and scrolls. Its dark twin, for those of evil heart, is 
+<a cmd='#'>Help Dispel Good</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dispel Good</a>
+&gt; <a cmd='#'>Help Protection from Good</a>
+&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

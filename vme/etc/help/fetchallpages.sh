@@ -208,6 +208,7 @@ python3 getwikihelppage.py Die &
 python3 getwikihelppage.py Dig &
 python3 getwikihelppage.py Dirk &
 python3 getwikihelppage.py Disarming
+python3 getwikihelppage.py Dispelevil &
 python3 getwikihelppage.py Dispelgood &
 python3 getwikihelppage.py Dispelmagic &
 python3 getwikihelppage.py Displacemagic &
