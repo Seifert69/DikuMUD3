@@ -1,19 +1,31 @@
-<br/>
-Sphere: Frost<br/><br/>
-Spell Tier: 4<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 70<br/> <br/>
-<br/><br/>
-Usage blizzard <br/><br/>
-<br/><br/>
-This spell causes an area around the caster to be ravaged by<br/>
-a blizzard. It will inflict frost damage on all characters and mobs in<br/>
-the immediate area exceot the caster and those in her group. The caster<br/>
-must have both hands free to cast this spell.<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-snowball<br/><br/>
-frostball<br/><br/>
-iceball<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Blizzard</h1>
+<p>Sphere: Frost Sphere
+Spell Tier: 4
+Class: Sorcerer (guild level 70, up to 90%)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast blizzard</a>
+</pre>
+<p>The caster points to the north and screams 'borealis', and a blizzard 
+sweeps the room. It strikes everyone in it except the caster, the caster's 
+leader and everyone who follows that leader; other players only when both 
+you and they have signed the Book of Blood. Each one hit takes a modest 
+amount of frost damage, about the same whatever armour they wear; a shield 
+softens it.
+</p><p>Casting it is an attack and starts a fight with everyone it hits. It can be 
+cast while fighting, and no free hands are needed. It is also found on 
+wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Snowball</a>
+&gt; <a cmd='#'>Help Frostball</a>
+&gt; <a cmd='#'>Help Cold Resistance</a>
+&gt; <a cmd='#'>Help Frost Sphere</a>
+</pre>
+
+
+
+
+</div>
