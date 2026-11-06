@@ -1,15 +1,28 @@
-<br/>
-Usage cappoint &lt;member&gt; quartermaster<br/>
-Example: cappoint Fizban quartermaster<br/>
-<br/>
-<br/>
- The Clan Quartermaster is a trusted member of the clan who is allowed to<br/>
-remove from the Clans equipment stash.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cappoint<br/>
-clan demote<br/>
-clan treasurer<br/>
-clan lord<br/>
-clan master<br/>
-<br/>
+<div class="mw-parser-output"><h1>Clan Quartermaster</h1>
+<p>Usage (for the clan Master, or a member of rank 25):
+</p>
+<pre>cappoint &lt;member&gt; quartermaster
+</pre>
+<p>Example:
+</p>
+<pre>cappoint fizban quartermaster
+</pre>
+<p>A quartermaster is a trusted member of the clan who may take equipment out 
+of the clan's secret storage, the clan chest (<a cmd='#'>Help Cunstore</a>). Any member 
+can put things in (<a cmd='#'>Help Cstore</a>) and see what is there 
+(<a cmd='#'>Help Cequipment</a>); only the quartermasters and the clan Master can take 
+them out. A clan can have several quartermasters. To take the position 
+away again, see <a cmd='#'>Help Cdepose</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cunstore</a>
+&gt; <a cmd='#'>Help Cappoint</a>
+&gt; <a cmd='#'>Help Clan Treasurer</a>
+&gt; <a cmd='#'>Help Clan Master</a>
+</pre>
+
+
+
+
+</div>
