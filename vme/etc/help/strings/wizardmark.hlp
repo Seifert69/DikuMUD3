@@ -1,19 +1,36 @@
-<br/>
-<br/>
-<br/><br/>
-Sphere: Protection<br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 80<br/><br/>
-<br/> <br/>
-Usage cast wizard mark (object)<br/><br/>
-<br/>
-When cast upon an object, if successful, this spell instantly marks that item <br/>
-with the character's own personal rune. If anyone else should touch the object, <br/>
-the rune will glow and inflict considerable damage.  Once the object has been <br/>
-activated and the spell has done its damage, the spell is lifted and must be <br/>
-cast on the object again. This spell requires no hands free and a great deal <br/>
-of mana.w<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Wizard Mark</h1>
+<p>Sphere: Protection Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 80)
+Mana: 80
+</p><p>Usage:
+</p>
+<pre>cast wizard mark &lt;object you carry&gt;
+</pre>
+<p>The caster traces sigils on one of their own things and chants 'Proheba 
+ethe nau'; a silver rune glows on it and fades away. From then on, if 
+anyone else takes it, from your corpse, by stealing, filching or picking 
+your pocket, or wears, wields or holds it, a blue flame burns them and 
+the thing falls to the ground. The burn is fierce: tens of hit points, 
+more the better your magic and your skill in the spell. Then the rune is 
+spent, and must be cast again.
+</p><p>The mark guards a thing only while it is yours: drop it or give it away, 
+and the rune flickers and vanishes. Dispel magic removes it too, and those 
+who can detect magic see the mark when they look at the thing. Gods are 
+not burned.
+</p><p>It takes a strong casting; a poor one just fails. A thing can carry only 
+one mark at a time, and some treasures are already protected by the gods. 
+You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Detect Magic</a>
+&gt; <a cmd='#'>Help Dispel Magic</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>
