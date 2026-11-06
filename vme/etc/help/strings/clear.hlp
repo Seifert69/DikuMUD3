@@ -1,9 +1,18 @@
-The clear command can clear the screen or your tell history.  If you want to clear<br/>
-your tell history the following is the command<br/>
-<br/>
-clear tell<br/>
-<br/>
-To clear just the screen type clear with no arguments.<br/>
-This clears the screen for people that have terminals that support it.<br/>
-If it does something strange to your screen just don't use it.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Clear</h1>
+<p>Usage:
+</p>
+<pre>clear tell
+</pre>
+<p>Clears your tell history: the list of tells you have received, which 
+the game keeps for you (see <a cmd='#'>Help Tell</a>). clear on its own does nothing; 
+it doesn't clear the screen.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Tell</a>
+</pre>
+
+
+
+
+</div>
