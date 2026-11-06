@@ -433,7 +433,6 @@ python3 getwikihelppage.py Oddweapon &
 python3 getwikihelppage.py Odinstatue &
 python3 getwikihelppage.py Off &
 python3 getwikihelppage.py Open
-python3 getwikihelppage.py Order &
 python3 getwikihelppage.py Paladins &
 python3 getwikihelppage.py Paladinskills &
 python3 getwikihelppage.py Paladinspells &
