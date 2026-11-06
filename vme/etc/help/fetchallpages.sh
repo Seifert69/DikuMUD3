@@ -97,7 +97,6 @@ python3 getwikihelppage.py Cdepose &
 python3 getwikihelppage.py Cdeposit
 python3 getwikihelppage.py Cequipment &
 python3 getwikihelppage.py Change &
-python3 getwikihelppage.py Channeling &
 python3 getwikihelppage.py Channels &
 python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
