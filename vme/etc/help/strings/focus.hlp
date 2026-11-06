@@ -1,17 +1,26 @@
-<br/>
-Sphere: mind sphere<br/><br/>
-<br/>
-Spell level: 1<br/><br/>
-<br/>
-Class: Conjurer<br/> <br/>
-<br/>
-Guild Level: 12<br/> <br/>
-<br/>
-Usage cast focus (target)<br/><br/>
-<br/>
-This spell causes a rise in the target's magic and Charisma attributes<br/>
-for a maximum of 10. No free hands are required to use this spell. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-mind sphere<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Focus</h1>
+<p>Sphere: Mind Sphere
+Class: Conjurer (guild level 12)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast focus &lt;target&gt;
+<a cmd='#'>cast focus</a>   (on yourself)
+</pre>
+<p>The caster touches the target and utters the word 'Mentati', and the 
+target's mind comes into focus: their magic and their charisma both rise, 
+by up to 10 each, for about ten minutes. The better the casting, the 
+bigger the rise. Casting it on someone who is already focused does 
+nothing.
+</p><p>You must be standing to cast it, and no free hands are needed.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Charisma</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
