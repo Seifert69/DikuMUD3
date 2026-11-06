@@ -81,7 +81,6 @@ python3 getwikihelppage.py Bury &
 python3 getwikihelppage.py Bushido &
 python3 getwikihelppage.py Butcher &
 python3 getwikihelppage.py Butler
-python3 getwikihelppage.py Buy &
 python3 getwikihelppage.py Caccept &
 python3 getwikihelppage.py Calllightning &
 python3 getwikihelppage.py Calm &
@@ -626,7 +625,6 @@ python3 getwikihelppage.py Score &
 python3 getwikihelppage.py Scripts &
 python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
-python3 getwikihelppage.py Sell
 python3 getwikihelppage.py Sending &
 python3 getwikihelppage.py Senselife &
 python3 getwikihelppage.py Seriouswounds &
@@ -765,7 +763,6 @@ python3 getwikihelppage.py Unseen &
 python3 getwikihelppage.py Up
 python3 getwikihelppage.py Use &
 python3 getwikihelppage.py Valhalla &
-python3 getwikihelppage.py Value &
 python3 getwikihelppage.py Variable &
 python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge

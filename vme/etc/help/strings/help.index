@@ -102,7 +102,7 @@ bury=bury.hlp
 bushido=bushido.hlp
 butcher=butcher.hlp
 butler=butler.hlp
-buy=buy.hlp
+buy=shops.hlp
 :end:b
 :start:c
 caccept=caccept.hlp
@@ -735,7 +735,7 @@ scroll use=scrolluse.hlp
 scrolls=scrolluse.hlp
 search=search.hlp
 seize=seize.hlp
-sell=sell.hlp
+sell=shops.hlp
 sending=sending.hlp
 sense life=senselife.hlp
 serious wounds=seriouswounds.hlp
@@ -893,7 +893,7 @@ use=use.hlp
 :start:v
 valhalla=valhalla.hlp
 valhalla history=history1.hlp
-value=value.hlp
+value=shops.hlp
 variables=variable.hlp
 ventriloquate=ventriloquate.hlp
 visa mastercard =creditcardregistration.hlp
