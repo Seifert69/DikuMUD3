@@ -288,7 +288,6 @@ python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
 python3 getwikihelppage.py Glowingfungus &
 python3 getwikihelppage.py Gnomes
-python3 getwikihelppage.py Gossip &
 python3 getwikihelppage.py Grab &
 python3 getwikihelppage.py Greatsword &
 python3 getwikihelppage.py Grolls &
