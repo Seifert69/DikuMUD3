@@ -1,19 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-These spells gives you the ability so see things that are hidden from the normal <br/>
-eye. Detection spells can be either a spell based on faith or one gained through<br/>
-arcane knowledge.<br/><br/>
-<br/>
-    Detect Alignment         Detect Invisible<br/>
-    Detect Magic             Detect Poison<br/>
-    Detect Undead            Detect Curse<br/>
-    Sense Life               Identify<br/>
-    Improved Identify<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-Try help on the individual spells.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Detection Sphere</h1>
+<p>The spells of the detection sphere let you see what is hidden from the normal eye: the invisible, the living and the undead, magic, poison and alignment, and the nature of the things you find. Your ability in the sphere decides how well you cast them, and also how well you resist such spells cast on you (see <a cmd='#'>Help Spheres</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>detect alignment    paladin 0, healer 5, necromancer 6, druid 12
+detect invisible    conjurer 10, sorcerer 11, assassin 15
+detect magic        conjurer 0, sorcerer 0
+detect poison       paladin 4, necromancer 5, healer 6, druid 16
+detect undead       necromancer 0, healer 5, paladin 9
+detect curse        necromancer 1, healer 11
+sense life          druid 1, necromancer 2, ranger 6, dark knight 9, healer 14
+identify            conjurer 11, sorcerer 12
+improved identify   conjurer 21, sorcerer 28
+sense invisible     dark knight 0, druid 6, ranger 28
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
