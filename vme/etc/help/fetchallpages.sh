@@ -644,6 +644,7 @@ python3 getwikihelppage.py Silverpieces &
 python3 getwikihelppage.py Sip &
 python3 getwikihelppage.py Skills &
 python3 getwikihelppage.py Skin
+python3 getwikihelppage.py Slam &
 python3 getwikihelppage.py Slip &
 python3 getwikihelppage.py Slow &
 python3 getwikihelppage.py Slowrot &
