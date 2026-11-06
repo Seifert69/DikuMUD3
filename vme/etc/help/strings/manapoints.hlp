@@ -1,15 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Mana is the energy used by magic users and clerics. Mana has a maximum<br/>
-of 100 and each spell uses a certain amount of mana. When you have 0<br/>
-mana you can not cast any more spells.<br/>
-<br/><br/><br/>
-The magic user (and cleric) regains his mana points through his charisma.<br/>
-When the charisma matches the magic power<br/>
-(see above) the gain occurs at a steady rate. When charisma is above the<br/>
-power gaining is even faster and when below the gain rate slows down.<br/>
-<br/><br/>
-Power is a common term for both magic and Charisma<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Mana Points</h1>
+<p>Mana is the energy you spend to cast spells; each spell costs its own 
+amount (shown in its help). With too little mana left, you can't cast. 
+<a cmd='#'>score</a> shows how much you have of your most.
+</p><p><b>How much you can have.</b> 100, plus half the sum of your brain and 
+charisma, up to 200 at most. It also grows as your character ages, up to 
+two fifths more late in life, and it fades away when you grow too old 
+for your race (see <a cmd='#'>Help Age</a>).
+</p><p><b>Getting it back.</b> Mana comes back by itself every half minute, 
+except while you fight:
+</p>
+<ul><li>the more mana you can hold, the faster it comes;</li>
+<li>charisma matters most: when your charisma is higher than both your magic and your divine, it comes back faster, and when lower, more slowly;</li>
+<li>half again as fast when you rest or sleep, a quarter faster when you sit, and twice as fast in holy places (see <a cmd='#'>Help Regenerate</a>);</li>
+<li>hunger and thirst slow it down.</li></ul>
+<p>A sorcerer can give you mana with <a cmd='#'>Help Mana Boost</a>, and some potions 
+restore it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Regenerate</a>
+&gt; <a cmd='#'>Help Charisma</a>
+&gt; <a cmd='#'>Help Magic</a>
+&gt; <a cmd='#'>Help Mana Boost</a>
+</pre>
+
+
+
+
+</div>
