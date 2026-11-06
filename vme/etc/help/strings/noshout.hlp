@@ -1,18 +1,29 @@
-<br/>
-     Obscene or offensive language will not be tolerated in any of the<br/>
-	 public channels.  Public channels being shout and newbie.  What you<br/>
-	 do in the privacy of a room is up to you and others in the room.<br/>
-     Abusing the shout channels in anyway can and will result in your<br/>
-     character losing his abilities to use those public channels.  Do not<br/>
-     mail the administrator who No-shouts you begging to be un-no-shouted,<br/>
-	 doing so may cause your no-shout time to be extended or made permament.<br/>
-<br/>
-	  Noshout is set on your char either by Admin or by the auto no shouter.<br/>
-      To check time remaining type:<br/>
-  <br/>
-      noshouted<br/>
-	  <br/>
-	  <br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Noshout</h1>
+<p>A player who is noshouted has "a sore throat": they can't <a cmd='#'>shout</a> until 
+it wears off. Their channels, says and tells still work.
+</p><p>You get noshouted:
+</p>
+<ul><li>automatically, for one hour, when you use a swear word in a shout;</li>
+<li>by an immortal, for half an hour or as long as they choose, for spamming or abusing shout. A New Player Guide can do the same to players of level 20 or below.</li></ul>
+<p>Type <a cmd='#'>noshouted</a> to see how long you have done, and wait it out: don't 
+mail the admin who noshouted you begging to be let off, which may only 
+make it longer. Keep the public channels friendly (see <a cmd='#'>Help Rules</a>).
+</p><p>For immortals and guides:
+</p>
+<pre>noshout &lt;player&gt;                  for 30 minutes
+noshout &lt;player&gt; 25 min           for as long as you say
+noshout &lt;player&gt; 1 hour
+noshout &lt;player&gt;                  (again) lifts it
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Shout</a>
+&gt; <a cmd='#'>Help Comm</a>
+&gt; <a cmd='#'>Help Rules</a>
+</pre>
+
+
+
+
+</div>
