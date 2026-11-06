@@ -346,11 +346,6 @@ python3 getwikihelppage.py Herbs &
 python3 getwikihelppage.py Hide &
 python3 getwikihelppage.py Hire &
 python3 getwikihelppage.py History1 &
-python3 getwikihelppage.py History2
-python3 getwikihelppage.py History3 &
-python3 getwikihelppage.py History4 &
-python3 getwikihelppage.py History5 &
-python3 getwikihelppage.py History6 &
 python3 getwikihelppage.py Hit
 python3 getwikihelppage.py Hits &
 python3 getwikihelppage.py Holdanimal &
