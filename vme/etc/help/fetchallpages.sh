@@ -640,7 +640,6 @@ python3 getwikihelppage.py Valhalla &
 python3 getwikihelppage.py Variable &
 python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge
-python3 getwikihelppage.py Wanduse &
 python3 getwikihelppage.py Waraxe &
 python3 getwikihelppage.py Warhammer
 python3 getwikihelppage.py Warrior &

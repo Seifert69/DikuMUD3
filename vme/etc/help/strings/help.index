@@ -919,8 +919,8 @@ voulge=voulge.hlp
 :end:v
 :start:w
 wake=position.hlp
-wand use=wanduse.hlp
-wands=wanduse.hlp
+wand use=use.hlp
+wands=use.hlp
 wanted=laws.hlp
 waraxe=waraxe.hlp
 war hammer=warhammer.hlp
