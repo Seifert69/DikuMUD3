@@ -1,22 +1,32 @@
-<br/>
-Sphere: Fire<br/><br/>
-<br/>
-Spell Tier: 4<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 18<br/><br/>
-<br/> <br/>
-Usage cast lightning storm (target)<br/>
-<br/><br/>
-This spell causes a thunderhead to form near the named target or present <br/>
-target in battle. It then releases powerful bolts of lightning to inflict <br/>
-damage by electricity. The spell requires the caster to have <br/>
-both hands empty.<br/><br/>
-<br/>
-<br/>See Also:<br/>
-<br/><br/>
-Electricity Resistance&m<br/>
-Electrical Shock<br/><br/>
-Jolt<br/><br/>
-Lightning Bolt<br/><br/>
+<div class="mw-parser-output"><h1>Lightning Storm</h1>
+<p>Sphere: Electricity Sphere
+Spell Tier: 4
+Class: Sorcerer (guild level 160)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast lightning storm &lt;target&gt;
+<a cmd='#'>cast lightning storm</a>   (at whoever you are fighting)
+</pre>
+<p>The air crackles as the caster gestures and snarls 'Thudas electra!', and 
+a thunderhead forms over the target and strikes with bolts of lightning. 
+It is the strongest of the sorcerer's lightning spells: the better your 
+magic and your electricity sphere, the harder it strikes. It does best 
+against clothes and leather and less well against chain and plate, and a 
+shield is no use against it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Electrical Shock</a>
+&gt; <a cmd='#'>Help Jolt</a>
+&gt; <a cmd='#'>Help Lightning Bolt</a>
+&gt; <a cmd='#'>Help Electricity Resistance</a>
+&gt; <a cmd='#'>Help Electricity Sphere</a>
+</pre>
+
+
+
+
+</div>
