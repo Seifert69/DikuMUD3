@@ -1,8 +1,27 @@
-<br/>
-<br/>
-<br/>
-Usage: cast final rest &lt;target&gt;<br/>
-This spell is used to dispel undead creatures, where target is the creature<br/>
-you wish to destroy.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Final Rest</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 70), Paladin (guild level 80)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast final rest &lt;target&gt;
+<a cmd='#'>cast final rest</a>   (at whoever you are fighting)
+</pre>
+<p>A holy prayer, made with a touch, to grant the undead their final rest and 
+destroy them. The better your divine power and sphere, the harder it strikes. 
+It does the same against any armour, and a shield can block it.
+</p><p>Casting it is an attack and starts a fight. You must be standing. It is also 
+found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Turn Undead</a>
+&gt; <a cmd='#'>Help Detect Undead</a>
+&gt; <a cmd='#'>Help Hold Undead</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
