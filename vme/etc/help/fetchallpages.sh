@@ -575,7 +575,6 @@ python3 getwikihelppage.py Staff &
 python3 getwikihelppage.py Stalk
 python3 getwikihelppage.py Status &
 python3 getwikihelppage.py Stealing
-python3 getwikihelppage.py Steed &
 python3 getwikihelppage.py Stiletto &
 python3 getwikihelppage.py Stinkingbreath &
 python3 getwikihelppage.py Stinkingcloud &
