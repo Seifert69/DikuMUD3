@@ -1,19 +1,29 @@
-<br/>
-<br/>
-Sphere: Mind <br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 13<br/><br/>
-<br/><br/>
-Usage cast confusion (target)<br/><br/>
-<br/><br/>
-This spell will affect the target's mind, causing them to become confused<br/>
-over a period of time.  If fighting the character will stop fighting.  <br/>
-The target will suffer under the confusion from time to time until calmed <br/>
-or the spell runs out.  This spell requires no hands free to cast. But its<br/>
-success depends on the target's and the spell caster's comparative expertise<br/>
-and intelligence.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-mind sphere<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Confusion</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 13, up to 80%)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast confusion &lt;target&gt;
+</pre>
+<p>The caster thrusts a clawed hand at the target and screams 'Suino fanoc!', 
+and the target's mind is muddled. A confused monster that is hunting 
+someone, tracking them through the world, loses the trail and gives up the 
+hunt, and it keeps forgetting for as long as the confusion lasts: from a 
+minute up to several minutes, the better your spell. Use it to shake off a 
+monster that follows you after you have fled. It doesn't stop a fight.
+</p><p>The target resists with its mind; if the spell fails, it attacks you. You 
+must be standing. Confusion shows among the spells on you (<a cmd='#'>affect</a>). It 
+is also found on potions, wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
