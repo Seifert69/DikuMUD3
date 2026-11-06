@@ -473,7 +473,6 @@ python3 getwikihelppage.py Necromancerspells &
 python3 getwikihelppage.py Necromancerweapons &
 python3 getwikihelppage.py Neutral &
 python3 getwikihelppage.py Newbie &
-python3 getwikihelppage.py Newbies
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
 python3 getwikihelppage.py North &
