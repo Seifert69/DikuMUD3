@@ -1,23 +1,22 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Charisma determines:<br/><br/>
-<br/>
-*  How fast Mana points are regained.<br/>
-When the charisma equals the<br/>
-magic power gaining Mana points occurs at a<br/>
-steady rate (see help<br/>
-mana).<br/><br/>
-<br/><br/>
-*   Reduction/Increase on prices in standard shops.<br/><br/>
-<br/><br/>
-*  Maximum number of followers (Groups).<br/><br/>
-<br/><br/>
-*  Maximum spreading of group members levels.<br/><br/>
-<br/><br/>
-*  Who is hit by aggressive monsters.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Spell Charisma<br/>
-<br/>
+<div class="mw-parser-output"><h1>Charisma</h1>
+<p>Charisma (CHA) is one of your abilities. It determines:
+</p>
+<ul><li><b>Your mana.</b> Your maximum mana grows with your charisma and your brain together (see <a cmd='#'>Help Mana Points</a>).</li>
+<li><b>How fast your mana comes back.</b> When your charisma equals your magic or divine power, whichever is higher, mana returns at the normal rate; more charisma makes it faster, less makes it slower.</li>
+<li><b>Some skills</b> that work on others: soothing a monster and ventriloquism compare your charisma with your target's.</li>
+<li><b>Resisting plague</b>, together with your constitution.</li></ul>
+<p>Some aggressive monsters pick whom to attack by charisma among other 
+abilities. The spell charisma raises it for a while, and the curse spell 
+lowers it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Spell Charisma</a>
+&gt; <a cmd='#'>Help Mana Points</a>
+</pre>
+
+
+
+
+</div>
