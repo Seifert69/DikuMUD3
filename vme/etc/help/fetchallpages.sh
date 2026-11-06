@@ -642,7 +642,6 @@ python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge
 python3 getwikihelppage.py Waraxe &
 python3 getwikihelppage.py Warhammer
-python3 getwikihelppage.py Warrior &
 python3 getwikihelppage.py Weap &
 python3 getwikihelppage.py Weapons &
 python3 getwikihelppage.py Wear &
