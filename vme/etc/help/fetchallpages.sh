@@ -590,7 +590,6 @@ python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
 python3 getwikihelppage.py Sending &
 python3 getwikihelppage.py Senselife &
-python3 getwikihelppage.py Seriouswounds &
 python3 getwikihelppage.py Seual &
 python3 getwikihelppage.py Sex
 python3 getwikihelppage.py Shamshir &
