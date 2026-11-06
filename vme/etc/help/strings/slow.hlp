@@ -1,21 +1,30 @@
-<br/>
-<br/>
-Sphere: Mind <br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 9<br/><br/>
-<br/><br/>
-Usage cast slow (target)<br/><br/>
-<br/><br/>
-This spell affects the target's mind and causes an opponent to fight more <br/>
-slowly.  Slow is a less powerful version of the drowse spell. This spell <br/>
-requires no hands free.<br/><br/>
-<br/>See Also:<br/><br/>
-mind sphere<br/><br/>
-drowse<br/><br/>
-sleep<br/><br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Slow</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 9), Conjurer (guild level 15)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast slow &lt;target&gt;
+<a cmd='#'>cast slow</a>   (at whoever you are fighting)
+</pre>
+<p>Clouds the target's mind so they fight more slowly, striking less often. The 
+better your mind sphere, the longer it lasts: from half a minute to almost 
+two minutes.
+</p><p>The target resists with their mind, and the spell may fail. Either way, 
+casting it is an attack and starts a fight. Slow, haste and quicken replace 
+each other, so a slow also takes away the target's haste or quicken (and 
+either of those lifts the slow again). It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Haste</a>
+&gt; <a cmd='#'>Help Quicken</a>
+&gt; <a cmd='#'>Help Drowse</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>
