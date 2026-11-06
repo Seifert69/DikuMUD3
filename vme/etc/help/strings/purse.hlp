@@ -1,17 +1,20 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The purse command will show you how much<br/>
-money you are carrying around<br/>
-in your purse.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Bank<br/><br/>
-Platinum<br/><br/>
-Gold<br/><br/>
-Silver<br/><br/>
-Iron<br/><br/>
-Copper<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Purse</h1>
+<p>Usage:
+</p>
+<pre>purse
+</pre>
+<p>Shows the coins you carry, platinum first, down to iron: for example 
+"3 gold pieces" and "12 copper pieces". It shows only the money you carry, 
+not what is in the bank. It works at any time, even when you are stunned 
+or asleep.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help Bank</a>
+</pre>
+
+
+
+
+</div>
