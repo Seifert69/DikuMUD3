@@ -1,8 +1,33 @@
-<br/>
-<br/>
-Usage: curare &lt;weapon&gt;<br/>
-A very powerful skill, curare is a method of manufacturing poison which is<br/>
-then smeared on a weapon (sword, arrow, etc). This poison severely handicap<br/>
-a victim, and often results in death.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Curare</h1>
+<p>Skill
+Class: Druid (guild level 20), Ranger (guild level 40)
+</p><p>Usage:
+</p>
+<pre>curare &lt;weapon&gt;
+</pre>
+<p>You search the wild for poisonous plants, mix their saps into a poison, 
+and smear it on a bladed weapon you wield or hold: a sword, a dagger, an 
+axe, a spear, a bow and the like. The better your skill and your brain, the 
+stronger the poison: weak, mild, strong or powerful. A weapon carries one 
+poison at a time.
+</p><p>When the poisoned weapon strikes your foe in a fight, the poison may enter 
+their blood; they resist with their dexterity and their knowledge of herbs. 
+A backstab with a poisoned blade is far more deadly. The poison on the 
+blade weakens with time and wears off within an hour or so. It never 
+poisons a player unless both of you have signed the Book of Blood.
+</p><p>The right plants grow only in forests, fields, hills and swamps. If your 
+search finds nothing, you may have picked the place clean, and no more 
+will be found there. You need some endurance, and you can't do it while 
+fighting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Toxicate</a>
+&gt; <a cmd='#'>Help Backstab</a>
+&gt; <a cmd='#'>Help Herbs</a>
+</pre>
+
+
+
+
+</div>
