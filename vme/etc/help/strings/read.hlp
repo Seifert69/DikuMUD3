@@ -1,16 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage read (item)<br/><br/>
-<br/>
-If the specified item is a note, this will show you what is written on the<br/>
-note. If it is not a note, the command will be treated as a 'look at'<br/>
-command.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Board<br/>
-Note<br/>
-Look<br/><br/>
-Write<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Read</h1>
+<p>Usage:
+</p>
+<pre>read &lt;number&gt;
+read &lt;thing&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>read 42
+read note
+</pre>
+<p>With a number, read shows that message on the board in the room (see 
+<a cmd='#'>Help Boards</a>); look at the board first to see its list of messages. On a 
+competition board, it shows that competition instead.
+</p><p>With anything else, read works like look at: read a note, a sign, a book 
+or a scroll's writing just by naming it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Boards</a>
+&gt; <a cmd='#'>Help Look</a>
+&gt; <a cmd='#'>Help Write</a>
+</pre>
+
+
+
+
+</div>
