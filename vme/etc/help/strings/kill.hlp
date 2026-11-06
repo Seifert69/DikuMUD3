@@ -8,21 +8,26 @@ unconscious, dead or flees the scene. When fighting you will use whatever
 weapon wielded, or use your bare hands. If your victim falls and is only
 stunned, incapacitated or mortally wounded, you must issue the command
 again if you wish to kill the victim. During the fight, you can issue
-other additional orders, thus giving your foe more damage. Attacking
-playing characters is considered a crime, but it is possible.
+other additional orders, thus giving your foe more damage. You can
+only attack another player if both of you have signed the Book of
+Blood (see <a cmd='#'>Help BoB</a>). Killing those protected by the law, such as
+the people of the cities, is a crime (see <a cmd='#'>Help Crimes</a>).
+</p><p>Before you start a fight, <a cmd='#'>consider</a> your foe. See <a cmd='#'>Help Combat</a> for
+more.
 </p><p>See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Mortally Wounded</a>
  &gt; <a cmd='#'>Help Death</a>
  &gt; <a cmd='#'>Help Incapacitated</a>
- &gt; <a cmd='#'>Help Flee</a>
+ &gt; <a cmd='#'>Help Combat</a>
+ &gt; <a cmd='#'>Help Fleeing</a>
  &gt; <a cmd='#'>Help Groups</a>
  &gt; <a cmd='#'>Help Skills</a>
  &gt; <a cmd='#'>Help Spells</a>
  &gt; <a cmd='#'>Help Wield</a>
  &gt; <a cmd='#'>Help Weapons</a>
  &gt; <a cmd='#'>Help PK</a>
- &gt; <a cmd='#'>Help Crime</a>
+ &gt; <a cmd='#'>Help Crimes</a>
 </pre>
 
 
