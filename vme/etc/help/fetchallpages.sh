@@ -31,7 +31,6 @@ python3 getwikihelppage.py Assist
 python3 getwikihelppage.py Assrp &
 python3 getwikihelppage.py Attackswitch &
 python3 getwikihelppage.py Attributes &
-python3 getwikihelppage.py Auction &
 python3 getwikihelppage.py Awaken
 python3 getwikihelppage.py Backstab &
 python3 getwikihelppage.py Baculus &
