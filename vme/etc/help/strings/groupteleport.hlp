@@ -1,5 +1,29 @@
-Group Teleport<br/>
-<br/>
-per group member.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Group Teleport</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 130)
+Mana: 25, and about 10 more for each group member
+</p><p>Usage:
+</p>
+<pre>cast group teleport &lt;someone, something or a place&gt;
+</pre>
+<p>Takes you and your whole group, everyone grouped with you who stands in the 
+room, to a person, a creature, an object or a place anywhere in the world. 
+Each member costs you about 10 mana more, a little less the stronger your 
+spell; if you haven't enough mana for all of them, only you go.
+</p><p>It can't take you out of a place magic can't leave, nor into one magic can't 
+reach, and it won't set you down in water. And beware the rift: about one 
+cast in twenty tears a hole in the powers of magic, and all your mana is gone.
+</p><p>You must be standing. It is also found on scrolls and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Controlled Teleport</a>
+&gt; <a cmd='#'>Help Total Recall</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
