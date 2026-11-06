@@ -1,15 +1,28 @@
-Sphere: Heat Sphere<br/><br/>
-<br/>
-This is a level 2 spell:<br/>
-<br/>
-<br/>
-Usagecast hellfire (target)<br/><br/>
-<br/><br/>
-This spell inflicts damage by releasing hellfire and brimstone<br/>
-(heat) on a target.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-Lava Flow<br/><br/>
-Brimstone<br/><br/>
-Soulfire<br/><br/>
+<div class="mw-parser-output"><h1>Hellfire</h1>
+<p>Sphere: Fire Sphere
+Class: Dark Knight (guild level 32)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast hellfire &lt;target&gt;
+<a cmd='#'>cast hellfire</a>   (at whoever you are fighting)
+</pre>
+<p>The second of the dark knight's fires: flames from below engulf the target. 
+The better your power and fire sphere, the more it burns. Unlike lava flow, 
+it is fierce against those in clothes or leather, and weak against plate. A 
+shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Lava Flow</a>
+&gt; <a cmd='#'>Help Brimstone</a>
+&gt; <a cmd='#'>Help Soulfire</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>
