@@ -1,20 +1,24 @@
-<br/>
-<br/>
-<br/>
-<br/>
-  Weapon    Level<br/>
-  Dagger      1<br/>
-  Fist      2<br/>
-  Stab      1<br/>
-  Whip      5<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Conjurer<br/><br/>
- Conjurer Skills<br/><br/>
- Conjurer Spells<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Conjurer Weapons</h1>
+<p>The weapon skills the Conjurers' guild of Udgaard teaches. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name           Level   Up to
+Dagger             0   80%
+Fist               4   60%
+Quarterstaff       8   90%
+Short Sword        8   80%
+Main Gauche       12   60%
+Stiletto          20   60%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Conjurer Skills</a>
+&gt; <a cmd='#'>Help Conjurer Spells</a>
+&gt; <a cmd='#'>Help Conjurer Guild</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>
