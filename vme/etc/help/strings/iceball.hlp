@@ -1,17 +1,32 @@
-<br/>
-Sphere: Frost<br/><br/>
- Spell Tier: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 100<br/> <br/>
-Usage iceball (target)<br/><br/>
-<br/><br/>
-When cast this spell draws upon the moisture in the air surrounding<br/>
-the cast to form a ball of ice that is then furled at the target. It<br/>
-causes a moderate amount of damage. THe caster must have at least one hand<br/>
-free to cast this spell<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-snowball<br/><br/>
-frostball<br/><br/>
-icestorm<br/><br/>
+<div class="mw-parser-output"><h1>Iceball</h1>
+<p>Sphere: Frost Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 100)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast iceball &lt;target&gt;
+<a cmd='#'>cast iceball</a>   (at whoever you are fighting)
+</pre>
+<p>The caster's body trembles with the words 'Bolat fesfroq', and the 
+moisture in the air gathers into a ball of ice that is hurled at the 
+target. The better your magic and your frost sphere, the harder it hits. 
+Like all cold, it cares little for armour: it strikes plate nearly as 
+hard as clothes. A shield can block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Snowball</a>
+&gt; <a cmd='#'>Help Frostball</a>
+&gt; <a cmd='#'>Help Icestorm</a>
+&gt; <a cmd='#'>Help Cold Resistance</a>
+&gt; <a cmd='#'>Help Frost Sphere</a>
+</pre>
+
+
+
+
+</div>
