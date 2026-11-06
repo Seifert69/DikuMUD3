@@ -416,7 +416,6 @@ python3 getwikihelppage.py Morningstar
 python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
-python3 getwikihelppage.py Movementpoints &
 python3 getwikihelppage.py Mudpuddle &
 python3 getwikihelppage.py Multiclasses &
 python3 getwikihelppage.py Multiplecharacters
