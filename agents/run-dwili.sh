@@ -10,8 +10,9 @@
 # Stop it:  touch ~/.dwili-stop  (it stops after the current turn), or kill the tmux session.
 # Logs:  ~/.local/state/mud/dwili/claude-<date>.log (what the model says), session-<date>.log (the mud).
 #
-# Once a day, before the first new conversation after REVIEW_HOUR, run-review.sh has his coach
-# review the day before and write his plan (~/dwili/memory/plan.txt).
+# Once a day, at the first turn after REVIEW_HOUR, run-review.sh has his coach review the day
+# before and write his plan (~/dwili/memory/plan.txt). It runs in the background, so Dwili goes on
+# answering players meanwhile; his next new conversation reads the new plan.
 #
 # ~/dwili holds his CLAUDE.md, memory/, review/, .claude/settings.json (his model and
 # permissions) and bin, a link to ~/bin; ~/.config/valhalla/dwili is his character.
@@ -35,9 +36,16 @@ REVIEW_HOUR=6
 fellows=$(ls ~/.config/valhalla | grep -x '[a-z]*' | grep -v -x dwili | sed 's/^./\u&/; s/^/-e /')
 day=""
 began=0
+review=0
 while [ ! -e ~/.dwili-stop ]; do
     today=$(date +%F)
     log=$LOGDIR/claude-$today.log
+    if ((10#$(date +%H) >= REVIEW_HOUR)) && [ ! -e review/"$(date -d yesterday +%F)" ] &&
+       ! kill -0 "$review" 2>/dev/null; then
+        echo "=== $(date '+%F %T') daily review, in the background" >> "$log"
+        bin/run-review.sh >> "$log" 2>&1 &
+        review=$!
+    fi
     if ! bin/mud.py status >/dev/null 2>&1; then
         echo "=== $(date '+%F %T') not logged in: mud.py start" >> "$log"
         bin/mud.py start >> "$log" 2>&1
@@ -47,10 +55,6 @@ while [ ! -e ~/.dwili-stop ]; do
     others=$(bin/mud.py status 2>/dev/null | sed -n 's/^\[logged in; other players online: \(.*\)\]$/\1/p' |
              tr -d ' ' | tr ',' '\n' | grep -v -x -F -e Papi -e none $fellows)
     if [ "$today" != "$day" ] || ((age >= FRESH)) || { [ -z "$others" ] && ((age >= QUIET)); }; then
-        if ((10#$(date +%H) >= REVIEW_HOUR)) && [ ! -e review/"$(date -d yesterday +%F)" ]; then
-            echo "=== $(date '+%F %T') daily review" >> "$log"
-            bin/run-review.sh >> "$log" 2>&1
-        fi
         args=(-p "It's $(date '+%A %F, %H:%M'). $FIRST")
         day=$today
         began=$(date +%s)
