@@ -330,7 +330,6 @@ python3 getwikihelppage.py Holytouch &
 python3 getwikihelppage.py Holyword
 python3 getwikihelppage.py Home &
 python3 getwikihelppage.py Homes2 &
-python3 getwikihelppage.py Horses &
 python3 getwikihelppage.py Houses &
 python3 getwikihelppage.py Humans
 python3 getwikihelppage.py Hunt &
