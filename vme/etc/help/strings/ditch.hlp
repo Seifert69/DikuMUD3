@@ -1,14 +1,20 @@
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-Ditch (character)<br/><br/>
-<br/>
-The ditch command will allow you to stop a player from following you. It<br/>
-will not work on monsters.<br/>
-<br/><br/>
-See Also:<br/><br/>
- Following <br/><br/>
- Group<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Ditch</h1>
+<p>Usage:
+</p>
+<pre>ditch &lt;player&gt;
+</pre>
+<p>Stops a player from following you; they are told that you ditched them. 
+They don't need to be in the same room: you can ditch a follower anywhere 
+in the world. It works only on players. A monster that follows you, such 
+as a charmed animal or one of your undead, can't be ditched this way.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Follow</a>
+&gt; <a cmd='#'>Help Group</a>
+</pre>
+
+
+
+
+</div>
