@@ -1,11 +1,32 @@
-<br/>
-<br/>
-Usage: hunt &lt;player/monster&gt;<br/>
-This is a powerful skill which, like track, enables the user to find his prey.<br/>
-However, hunt will allow you to quickly follow the person automatically, and<br/>
-should you find him/her, it will make you engage him/her in combat.<br/>
-<br/>
-See Also:<br/><br/>
- Track<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Hunt</h1>
+<p>Skill
+Class: Ranger (guild level 14)
+</p><p>Usage:
+</p>
+<pre>hunt &lt;player or monster&gt;
+hunt               (again, to stop hunting)
+</pre>
+<p>Hunt is tracking that does the walking for you. You study the ground for 
+your prey's tracks, and if you can read them, you set off after them by 
+yourself, step after step, wherever they lead in the world: you search 
+for hidden exits and open doors on the way. When you catch up, you attack.
+</p><p>Your track and hunt skills together decide whether you can read the 
+trail, with your brain and level against your prey's. You read it again 
+at every step, so you may lose it on the way. Each step costs endurance, 
+more in cities, indoors and on ice than in the open, and when you are too 
+tired you stop. You must be standing, and you can't hunt on water. The 
+trail ends where your prey enters something, such as a ship or a cart.
+</p><p>To attack a player you find, both of you must have signed the Book of 
+Blood.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Track</a>
+&gt; <a cmd='#'>Help Book of Blood</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>
