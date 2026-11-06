@@ -1,12 +1,23 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage where (unit)<br/><br/>
-<br/>
-This command tells you where a given character is when he is in the same<br/>
-zone as yourself.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Where<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Locate</h1>
+<p>There is no command to ask where someone is, but there are spells and 
+skills that tell you:
+</p>
+<ul><li><a cmd='#'>Help Locate Person</a>: where a person is, anywhere in the world;</li>
+<li><a cmd='#'>Help Locate Object</a>: where an object lies, or who carries it;</li>
+<li><a cmd='#'>Help Locate Animal</a>: where an animal is;</li>
+<li><a cmd='#'>Help Find Path</a>: the way to someone;</li>
+<li><a cmd='#'>Help Track</a> and <a cmd='#'>Help Hunt</a>: follow someone's trail;</li>
+<li><a cmd='#'>Help Sense Life</a>: who is in the room, even hidden.</li></ul>
+<p><a cmd='#'>who</a> shows who is playing, but not where.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Locate Person</a>
+&gt; <a cmd='#'>Help Locate Object</a>
+&gt; <a cmd='#'>Help Who</a>
+</pre>
+
+
+
+
+</div>
