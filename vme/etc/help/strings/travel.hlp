@@ -1,27 +1,43 @@
-<br/>
-<br/>
-Sphere: Summoning<br/><br/>
-Spell level: 4<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 150<br/> <br/>
-<br/><br/>
-<br/>
-<br/>
-Usage: cast travel &lt;destination&gt;<br/><br/>
-<br/><br/>
-Possibly the most powerful spell in the world, travel cuts a hole through space<br/>
-and time which lasts according to the caster's brain, magic and skill in the<br/>
-spell. It can only be closed by the caster using the command 'untie'.<br/>
-At skill level 100+ in this spell, the caster may also 'deny' the use of the<br/>
-gate to others, so that only he/she may use the gate, and all others bounce<br/>
-off and are shocked. The command 'grant' will again allow others to use the<br/>
-gate. 'Grant group' will allow only your followers to use the travel gate.<br/>
-This spell requires a lot of magical power to maintain, and changing the<br/>
-weaves (deny/grant) will cost further mana. As a result, you must be level<br/>
-150+ to begin practicing this spell in the Sorcerer guild. This spell <br/>
-requires no free hands.<br/>
-<br/>
-See also:<br/>
- Portal<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Travel</h1>
+<p>Sphere: Summoning Sphere
+Spell Tier: 4
+Class: Sorcerer (guild level 150)
+Mana: 60
+</p><p>Usage:
+</p>
+<pre>cast travel &lt;someone or something&gt;
+enter gate
+untie        (close your gate)
+</pre>
+<p>Possibly the most powerful spell in the world: the caster clears their 
+mind, focuses on the flame within, and cuts a hole through space to the 
+person or thing named, anywhere in the world. A gate opens beside you and 
+another at the far end. Unlike a portal (see <a cmd='#'>Help Portal</a>), a travel 
+gate isn't used up: anyone can step through it, either way, as often as 
+they like, for as long as it lasts. Look in it first to glimpse the far 
+side.
+</p><p>The gates last for some minutes, longer the better your magic, brain and 
+skill in the spell, unless you close them sooner by typing untie. You can 
+keep only one gate at a time: cast travel again, and your first gate 
+closes.
+</p><p>A master of the spell is meant to be able to deny others the use of the 
+gate, and grant it again (grant, or grant group for your followers only), 
+at 10 mana each. At present, because of a known bug, the gate refuses: 
+"You must practice further in order to do that."
+</p><p>The far end resists: a player's own skill in the spell, a monster's in 
+summoning, makes it harder to reach them. A poor casting does nothing; a 
+very bad one opens a rift that sweeps you away. Some places can't be 
+reached. You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Portal</a>
+&gt; <a cmd='#'>Help Gate</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>
