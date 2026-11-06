@@ -1,16 +1,35 @@
-<br/>
-<br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Sorcerer <br/><br/>
-Guild Level: 12 <br/><br/>
-<br/>  <br/>
-Usage: cast detect identify (object)<br/><br/>
-<br/>
-This spell enables the caster to gather further information about <br/>
-an object, if that information is available from the object's maker.<br/>
-The spell requires no hands free and a small amount of mana.<br/><br/>
-<br/><br/>
-See also:<br/>
-Improved Identify<br/><br/>
-Detection Sphere<br/><br/>
+<div class="mw-parser-output"><h1>Identify</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 3
+Class: Conjurer (guild level 11), Sorcerer (guild level 12)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast identify &lt;object&gt;
+</pre>
+<p>Tells you what an object is and what it does. It works on things in the room, 
+in your inventory, or that you wear. You learn, depending on the object:
+</p>
+<ul><li>a weapon's fighting style, and how good its craftsmanship and magic are,</li>
+<li>an armour's kind, and how good its craftsmanship and magic are,</li>
+<li>a light's hours left and how bright it is,</li>
+<li>the power of a potion, scroll, wand or staff, and its charges left,</li>
+<li>whether food or drink is poisoned,</li>
+<li>every bonus the object gives you while you wear it: abilities, spells,</li></ul>
+<pre> skills, light or sanctuary.
+</pre>
+<p>For the exact numbers, the spells stored in potions, scrolls, wands and 
+staffs, and which race a weapon slays, see <a cmd='#'>Help Improved Identify</a>.
+</p><p>You must be standing. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Improved Identify</a>
+&gt; <a cmd='#'>Help Evaluate</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>
