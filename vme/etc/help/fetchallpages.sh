@@ -627,10 +627,8 @@ python3 getwikihelppage.py Tsunami &
 python3 getwikihelppage.py Tuborg &
 python3 getwikihelppage.py Turnundead &
 python3 getwikihelppage.py TwoWeaponStyle &
-python3 getwikihelppage.py Typo &
-python3 getwikihelppage.py Udgaardconjurer
+python3 getwikihelppage.py Typo
 python3 getwikihelppage.py Udgaard &
-python3 getwikihelppage.py Udgaardthieves &
 python3 getwikihelppage.py Unalias &
 python3 getwikihelppage.py Undeaddoor &
 python3 getwikihelppage.py Unholygrasp
