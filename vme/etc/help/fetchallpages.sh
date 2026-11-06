@@ -303,8 +303,7 @@ python3 getwikihelppage.py Halforcs
 python3 getwikihelppage.py Hammerofkai &
 python3 getwikihelppage.py Handaxe &
 python3 getwikihelppage.py Harm &
-python3 getwikihelppage.py Haste &
-python3 getwikihelppage.py Heads
+python3 getwikihelppage.py Haste
 python3 getwikihelppage.py Healanimal &
 python3 getwikihelppage.py Healers &
 python3 getwikihelppage.py Healerskills &
