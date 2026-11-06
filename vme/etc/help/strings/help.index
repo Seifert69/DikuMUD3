@@ -129,6 +129,7 @@ cequipment=cequipment.hlp
 cexit=clanexit.hlp
 cha=chr.hlp
 change=change.hlp
+change columns=columns.hlp
 change rows=columns.hlp
 channels=comm.hlp
 chaos=unseen.hlp
