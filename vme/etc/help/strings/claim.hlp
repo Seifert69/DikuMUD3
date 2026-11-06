@@ -1,11 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-claim (dictionary)<br/><br/>
-&lt;p&gt;<br/>
-Claim is used for initializing a dictionary, but you will only have to type<br/>
-this once when you first start using it.  It will then remember its owner.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Claim</h1>
+<p>Usage:
+</p>
+<pre>claim dictionary
+</pre>
+<p>Makes a dictionary yours. A dictionary holds the old kind of aliases, the 
+ones that work in any telnet client (see <a cmd='#'>Help Dictionary</a>). You type claim 
+once, when you first start using a dictionary; after that it remembers its 
+owner. The aliases in a dictionary only work for its owner: anyone else 
+who picks it up is told to claim it first.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dictionary</a>
+&gt; <a cmd='#'>Help Alias</a>
+</pre>
+
+
+
+
+</div>
