@@ -1,7 +1,28 @@
-<br/>
-<br/>
-Usage: cast tiger claw &lt;target&gt;<br/>
-A powerful damage spell, rangers use this spell to summon up the power of the<br/>
-tiger to smite their opponents.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Tiger Claw</h1>
+<p>Sphere: Summoning Sphere
+Class: Ranger (guild level 21)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast tiger claw &lt;target&gt;
+<a cmd='#'>cast tiger claw</a>   (at whoever you are fighting)
+</pre>
+<p>The caster swipes a hand at the target and mutters 'tagum felis', and 
+the power of the tiger rakes them like claws. It is the ranger's attack 
+spell: the better your divine power and your summoning sphere, the more it 
+hurts. The claws care little what armour the target wears, and a shield 
+only softens them.
+</p><p>Casting it is an attack and starts a fight. It can be cast while 
+fighting, and no free hands are needed.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Eagle Cry</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Ranger Spells</a>
+</pre>
+
+
+
+
+</div>
