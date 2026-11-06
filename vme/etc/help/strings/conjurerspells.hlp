@@ -1,75 +1,63 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-      Spell                Level          Spell                       Level<br/>
-    Acid Resistance          19         Brain                           2<br/>
-    Clenched Fist            15         Cold Resistance                 16<br/>
-    Constitution             8          Controlled Teleport             35<br/>
-    Dexterity                6          Detect Invisible                10<br/>
-    Detect Magic             1          Dispel Magic                    30<br/>
-    Dust Devil               9          Electricity Resistance          17<br/>
-    Energy Bolt              1          Gate                            35<br/>
-    Haste                    30         Heat Resistance                 15<br/>
-    Identify                 11         Improved identify               21<br/>
-    Invisibility             20         Leaving                         8<br/>
-    Lock                     14         Magic Candle                    9<br/>
-    Cone Of Shards           30         Mind Shield                     14<br/>
-    Minor Gate               27         Poison Resistance               18<br/>
-    Raise Magic              1          Quicken                         15<br/>
-    Random Teleport          22         Slow                            15<br/>
-    Storm call               12         Strength                        10<br/>
-    Summon Earth             14         Summon Air                      18<br/>
-    Summon Water             24         Summon Fire                     30<br/>
-    Summon Demon             40         Summon Devil                    50<br/>
-    Meteor Shower            70         Sun Globe                       18<br/>
-    Unlock                   27         Transport                       17<br/>
-    Wizard Eye               23<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Conjurer<br/><br/>
- Conjurer Skills<br/><br/>
- Conjurer Weapons<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-      Spell                Level          Spell                       Level<br/>
-    Acid Resistance          19         Brain                           2<br/>
-    Clenched Fist            15         Cold Resistance                 16<br/>
-    Constitution             8          Controlled Teleport             35<br/>
-    Dexterity                6          Detect Invisible                10<br/>
-    Detect Magic             1          Dispel Magic                    30<br/>
-    Dust Devil               9          Electricity Resistance          17<br/>
-    Energy Bolt              1          Gate                            35<br/>
-    Haste                    30         Heat Resistance                 15<br/>
-    Identify                 11         Improved identify               21<br/>
-    Invisibility             20         Leaving                         8<br/>
-    Lock                     14         Magic Candle                    9<br/>
-    Cone Of Shards           30         Mind Shield                     14<br/>
-    Minor Gate               27         Poison Resistance               18<br/>
-    Raise Magic              1          Quicken                         15<br/>
-    Random Teleport          22         Slow                            15<br/>
-    Storm call               12         Strength                        10<br/>
-    Summon Earth             14         Summon Air                      18<br/>
-    Summon Water             24         Summon Fire                     30<br/>
-    Summon Demon             40         Summon Devil                    50<br/>
-    Meteor Shower            70         Sun Globe                       18<br/>
-    Unlock                   27         Transport                       17<br/>
-    Wizard Eye               23<br/>
-<br/>
-    Group teleport          130<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Conjurer<br/><br/>
- Conjurer Skills<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Conjurer Spells</h1>
+<p>The spells the Conjurers' guild of Udgaard teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name                     Level   Up to
+Detect Magic                 0   100%
+Energy Bolt                  0   100%
+Raise Magic                  0   100%
+Brain                        2   100%
+Magic Candle                 3   100%
+Dexterity                    6   100%
+Constitution                 8   100%
+Leaving                      8   100%
+Dust Devil                   9   100%
+Detect Invisible            10   100%
+Strength                    10   100%
+Identify                    11   100%
+Focus                       12   100%
+Storm Call                  12   100%
+Clenched Fist               13   100%
+Lock                        14   100%
+Mind Shield                 14   80%
+Summon Earth                14   100%
+Heat Resistance             15   80%
+Quicken                     15   100%
+Slow                        15   80%
+Cold Resistance             16   80%
+Electricity Resistance      17   80%
+Transport                   17   100%
+Night Globe                 18   100%
+Poison Resistance           18   80%
+Summon Air                  18   100%
+Sun Globe                   18   100%
+Acid Resistance             19   80%
+Invisibility                20   100%
+Improved Identify           21   100%
+Random Teleport             22   100%
+Wizard Eye                  23   100%
+Summon Water                24   100%
+Minor Gate                  27   100%
+Unlock                      27   100%
+Dispel Magic                30   100%
+Haste                       30   100%
+Summon Fire                 30   100%
+Cone Of Shards              32   100%
+Controlled Teleport         35   100%
+Gate                        35   100%
+Summon Demon                40   100%
+Summon Devil                50   100%
+Group Teleport             130   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Conjurer Skills</a>
+&gt; <a cmd='#'>Help Conjurer Weapons</a>
+&gt; <a cmd='#'>Help Conjurer Guild</a>
+&gt; <a cmd='#'>Help Spheres</a>
+</pre>
+
+
+
+
+</div>
