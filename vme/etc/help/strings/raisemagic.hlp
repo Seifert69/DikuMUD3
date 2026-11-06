@@ -1,18 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level:0<br/> <br/>
-<br/>
-<br/><br/>
-Usage<br/><br/>
-cast raise magic (target)<br/>
-<br/>
-This spell enhances the will raise magical protection of the target in all <br/>
-respective spheres.  It requires no free hands to cast and a small amount of <br/>
-mana.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Raise Magic</h1>
+<p>Sphere: Protection Sphere
+Spell Tier: 1
+Class: Conjurer (guild level 0), Sorcerer (guild level 0)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast raise magic &lt;target&gt;
+<a cmd='#'>cast raise magic</a>   (on yourself)
+</pre>
+<p>Raises the target's magic ability for about ten minutes, so their magic 
+spells strike harder. The better your protection sphere, the bigger the raise: 
+a point or two at first, up to ten points and a little more for a master.
+</p><p>It doesn't add up: cast on someone who is already raised, the magic just 
+dissipates. You must be standing, not fighting. It is also found on potions, 
+wands and scrolls. For divine power, see <a cmd='#'>Help Raise Divine</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Raise Divine</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>
