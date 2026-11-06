@@ -1,6 +1,5 @@
 python3 getwikihelppage.py Accuse
 python3 getwikihelppage.py Acidball &
-python3 getwikihelppage.py Acidbreath &
 python3 getwikihelppage.py Aciddrop &
 python3 getwikihelppage.py Acidresistance &
 python3 getwikihelppage.py Acidsphere
@@ -67,6 +66,7 @@ python3 getwikihelppage.py Brain &
 python3 getwikihelppage.py Brambles &
 python3 getwikihelppage.py Bravemode
 python3 getwikihelppage.py Break &
+python3 getwikihelppage.py Breath &
 python3 getwikihelppage.py Bribe &
 python3 getwikihelppage.py Brief &
 python3 getwikihelppage.py Brimstone &
@@ -292,11 +292,9 @@ python3 getwikihelppage.py Forage &
 python3 getwikihelppage.py Friend &
 python3 getwikihelppage.py Friendly
 python3 getwikihelppage.py Frostball &
-python3 getwikihelppage.py Frostbreath &
 python3 getwikihelppage.py Frostsphere &
 python3 getwikihelppage.py Gaff &
 python3 getwikihelppage.py Gain
-python3 getwikihelppage.py Gasbreath &
 python3 getwikihelppage.py Gate &
 python3 getwikihelppage.py Genders &
 python3 getwikihelppage.py Get &
@@ -401,7 +399,6 @@ python3 getwikihelppage.py Letter &
 python3 getwikihelppage.py Level
 python3 getwikihelppage.py Levels &
 python3 getwikihelppage.py Lifeprotection &
-python3 getwikihelppage.py Lightbreath &
 python3 getwikihelppage.py Lightningbolt &
 python3 getwikihelppage.py Lightningsphere
 python3 getwikihelppage.py Lightningstorm &
