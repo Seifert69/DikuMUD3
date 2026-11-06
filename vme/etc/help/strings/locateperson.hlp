@@ -1,11 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast locate person (target)<br/><br/>
-<br/><br/>
-This spell will give you a sense of where a person is located.<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Locate Person</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 20), Druid (guild level 37)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast locate person &lt;someone&gt;
+</pre>
+<p>Gives you a sense of where someone is: you see them, and the room they are 
+in. It looks in your own area first, and then in the whole world. It only 
+finds people and other humanoids, not animals or monsters of other kinds.
+</p><p>If the spell fails, you feel confused; if it fails badly, the one you looked 
+for realizes that you tried to locate them. To find the way there, see 
+<a cmd='#'>Help Find Path</a>. You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Find Path</a>
+&gt; <a cmd='#'>Help Locate Object</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
