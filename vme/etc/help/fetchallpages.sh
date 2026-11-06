@@ -417,7 +417,6 @@ python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
 python3 getwikihelppage.py Mudpuddle &
-python3 getwikihelppage.py Multiclasses &
 python3 getwikihelppage.py Multiplecharacters
 python3 getwikihelppage.py Naffect &
 python3 getwikihelppage.py Naginata &

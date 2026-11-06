@@ -574,7 +574,7 @@ mount=mount.hlp
 movement=movement.hlp
 movement points=endurancepoints.hlp
 mud puddle=mudpuddle.hlp
-multi classes=multiclasses.hlp
+multi classes=guilds.hlp
 multiple characters=multiplecharacters.hlp
 :end:m
 :start:n
