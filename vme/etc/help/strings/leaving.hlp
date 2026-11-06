@@ -1,13 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage leaving (direction)<br/><br/>
-<br/>
-This spell will magically transport you out of a combat, taking you to an<br/>
-adjoining room in the direction specified.  If the room you are in does not<br/>
-link to another room in the direction which you specify the spell will fail.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Leaving</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 8)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast leaving &lt;direction&gt;
+cast leaving north    (or n, e, sw, up, ...)
+</pre>
+<p>The caster utters 'Quis pesat' and vanishes, to appear in the next room in 
+the direction given. It can be cast in the middle of a fight, so it is a 
+way out when fleeing would be too slow or too risky: you go where you 
+choose, not where you stumble.
+</p><p>The way must be open: a closed door stops it, and so does water that only a 
+boat can cross. Some clan halls are guarded against it. If the spell fails, 
+nothing happens, and you are still where you were. It is also found on 
+wands, scrolls and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Word of Recall</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
