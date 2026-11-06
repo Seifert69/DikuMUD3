@@ -1,10 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere <br/><br/>
-<br/><br/>
-Usage cast storm call<br/><br/>
-<br/><br/>
-This spell calls upon the forces of nature to summon a storm.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Storm Call</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 12)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast storm call</a>
+</pre>
+<p>You spread your arms and beckon the gods to send a violent storm. A cold wind 
+chills everyone to the bone, and the weather of the whole area turns towards 
+the worse: clouds, rain, and in time lightning. The stronger your spell, the 
+faster it turns.
+</p><p>It only works under the open sky: indoors, or anywhere without weather, 
+nothing happens. Some spells need bad weather, call lightning above all. 
+Clear skies does the opposite. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Call Lightning</a>
+&gt; <a cmd='#'>Help Clear Skies</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
