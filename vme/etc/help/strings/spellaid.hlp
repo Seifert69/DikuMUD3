@@ -1,14 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation Sphere<br/><br/><br/>
-<br/><br/>
-Usage cast aid (target)<br/><br/>
-<br/>
-The aid spell is a healing spell that has the advantage of being able to<br/>
-be cast on one's self when mortally wounded.  In such a situation your<br/>
-hitpoints would go from a negative value to zero.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Aid</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 2)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast aid &lt;target&gt;
+<a cmd='#'>cast aid</a>   (on yourself)
+</pre>
+<p>Closes the bleeding wounds of someone who is dying: a target below zero hit 
+points comes back to a few hit points and stops bleeding to death. The better 
+your spell, the more they get back. On anyone who isn't dying, nothing 
+happens.
+</p><p>Its great advantage is that you can cast it on yourself even when you are 
+mortally wounded and can do nothing else. It is also found on scrolls and 
+potions.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Mortally Wounded</a>
+&gt; <a cmd='#'>Help Incapacitated</a>
+&gt; <a cmd='#'>Help First Aid</a>
+&gt; <a cmd='#'>Help Cure Light Wounds</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
