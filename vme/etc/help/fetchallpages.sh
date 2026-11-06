@@ -603,7 +603,6 @@ python3 getwikihelppage.py Swimming
 python3 getwikihelppage.py Talwar &
 python3 getwikihelppage.py Taste &
 python3 getwikihelppage.py taunt &
-python3 getwikihelppage.py Teams &
 python3 getwikihelppage.py Tell &
 python3 getwikihelppage.py Telnet
 python3 getwikihelppage.py Terminal &
