@@ -1,21 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Spell                 Level<br/>
-    Detect Invisible          15<br/>
-    Dexterity                 30<br/>
-    Invisibility              25<br/>
-    Quicken                   35<br/>
-    Toxicate                  20<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Assassin Weapons<br/><br/>
- Assassin Skills<br/><br/>
- Assassin<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Assassin Spells</h1>
+<p>The spells the Assassins' guild teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name               Level   Up to
+Find Wanted            0   100%
+Locate Wanted          0   100%
+Detect Invisible      15   50%
+Toxicate              20   80%
+Invisibility          25   50%
+Dexterity             30   50%
+Quicken               35   50%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Assassin Skills</a>
+&gt; <a cmd='#'>Help Assassin Weapons</a>
+&gt; <a cmd='#'>Help Assassins</a>
+&gt; <a cmd='#'>Help Spheres</a>
+</pre>
+
+
+
+
+</div>
