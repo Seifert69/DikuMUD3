@@ -1,22 +1,31 @@
-<br/>
-Sphere: Frost<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer, <br/> <br/>
-Guild Level: 19 <br/><br/>
-<br/> <br/>
-Usage cast frostball (target)<br/><br/>
-<br/><br/>
-This spell causes a small magical ball of crystalized air to apparate at <br/>
-before the caster. It is hurled toward the named target or present target <br/>
-in battle to inflict damage by cold. The spell requires the caster <br/>
-to have at least one free hand.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-cold resistance<br/><br/>
-iceball<br/><br/>
-ice storm<br/><br/>
-blizzard<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Frostball</h1>
+<p>Sphere: Frost Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 19)
+Mana: 24
+</p><p>Usage:
+</p>
+<pre>cast frostball &lt;target&gt;
+<a cmd='#'>cast frostball</a>   (at whoever you are fighting)
+</pre>
+<p>The caster's hand shakes with the words 'Bolat snellok', and a small ball 
+of frozen air forms and is hurled at the target. The better your magic and 
+your frost sphere, the more it chills. Cold cares little for armour: it 
+bites nearly as hard through plate as through clothes. A shield can block 
+it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Iceball</a>
+&gt; <a cmd='#'>Help Icestorm</a>
+&gt; <a cmd='#'>Help Cold Resistance</a>
+&gt; <a cmd='#'>Help Frost Sphere</a>
+</pre>
+
+
+
+
+</div>
