@@ -1,13 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage cast clenched fist (target)<br/><br/>
-<br/>
-With this powerful spell the conjurer is able to summon a huge, magical<br/>
-version of his or her own fist, and then use it to crush their opponent.<br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Clenched Fist</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 13)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast clenched fist &lt;target&gt;
+<a cmd='#'>cast clenched fist</a>   (at whoever you are fighting)
+</pre>
+<p>With this powerful spell you summon a huge, magical copy of your own fist, 
+and crush your opponent with it. The better your magic and your summoning 
+sphere, the harder it hits.
+</p><p>Being a crushing blow, it does most against plate and chain, and least 
+against clothes: the opposite of energy bolt. A shield takes some of the 
+blow, but can't stop it. Casting it is an attack and starts a fight, and it 
+can also be cast from wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Energy Bolt</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Conjurers</a>
+</pre>
+
+
+
+
+</div>
