@@ -538,7 +538,6 @@ python3 getwikihelppage.py Shoot
 python3 getwikihelppage.py Shops &
 python3 getwikihelppage.py Shortsword &
 python3 getwikihelppage.py Shout &
-python3 getwikihelppage.py Shouting &
 python3 getwikihelppage.py Sickle
 python3 getwikihelppage.py Sip &
 python3 getwikihelppage.py Skills &
