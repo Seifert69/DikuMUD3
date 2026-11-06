@@ -1,28 +1,36 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Example:<br/>
-search wall<br/><br/>
-search secret door<br/><br/>
-<br/>
-Used to search for a hidden exit / door. If you suspect the presence of<br/>
-a secret door in a room, you must use the search command with what you<br/>
-want to search for. Whether or not successful depends on your<br/>
-brain ability, your search skill and whether or<br/>
-not there is a hidden door. The examine and look commands are not a<br/>
-substitute for search.<br/>
-<br/><br/><br/>
-Please note that just because you do not find a hidden door on your first,<br/>
-second, or even twentieth try does not mean that there is no hidden door<br/>
-there.  The door may be too well hidden for you to find, or you may be<br/>
-trying the wrong search word. You must search for the correct keyword. For<br/>
-example, if I am using 'search chimney' and it is not working, 'search<br/>
-fireplace' might work instead.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Brain<br/><br/>
-Look<br/><br/>
-Exit<br/><br/>
-Door<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Search</h1>
+<p>Skill
+Class: Thief (guild level 0), Ranger (0, up to 90%), Assassin (2, up to 80%), Druid (7, up to 60%)
+</p><p>Usage:
+</p>
+<pre>search &lt;direction&gt;
+search &lt;name of the exit&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>search north
+search fireplace
+</pre>
+<p>Looks for a hidden exit: a secret door, a passage behind a curtain, a 
+way through the bushes. Such exits don't show in the list of exits, and 
+look and examine won't reveal them: you must search.
+</p><p>Search the way you suspect, or name what you think hides the way: 
+search fireplace, search wall. Your skill and your brain decide it, 
+against how well the exit is hidden. Once you have found it, it is found 
+for you, and you can go that way; others must find it themselves. Each 
+search costs a little endurance, and you can try again and again: not 
+finding a hidden exit on the first, or even the twentieth try doesn't mean 
+there isn't one.
+</p><p>You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Exits</a>
+&gt; <a cmd='#'>Help Brain</a>
+&gt; <a cmd='#'>Help Scan</a>
+</pre>
+
+
+
+
+</div>
