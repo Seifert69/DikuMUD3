@@ -1,29 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Weapon          Level                Weapon          Level<br/>
-	  <br/>
- Ball and Chain Mace 55  Battle Club         36<br/>
- Battle Mace         48  Bill Guisarme       28<br/>
- Club                 6  Fighting Staff      28<br/>
- Fist                 1  Hand Hammer         15<br/>
- Flail               34  Mace                 1<br/>
- Maul                50  Morning star        20<br/>
- Quarterstaff         8  War Axe             22 <br/>
- War Hammer           4<br/>
-<br/>
-<br/>
-<br/>
-   <br/>
-<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Healer<br/><br/>
- Healer Skills<br/><br/>
- Healer Spells<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Healer Weapons</h1>
+<p>The weapon skills the Healers' guild of Udgaard teaches. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name           Level   Up to
+Mace               0   100%
+Fist               1   80%
+War Hammer         4   90%
+Club               6   70%
+Quarterstaff       8   100%
+Morning Star      20   70%
+Flail             34   70%
+Battle Club       36   70%
+Battle Mace       48   90%
+Maul              50   90%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Healer Skills</a>
+&gt; <a cmd='#'>Help Healer Spells</a>
+&gt; <a cmd='#'>Help Healers</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>
