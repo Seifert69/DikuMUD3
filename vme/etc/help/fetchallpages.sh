@@ -381,7 +381,6 @@ python3 getwikihelppage.py Javelin &
 python3 getwikihelppage.py Jeddart
 python3 getwikihelppage.py Join &
 python3 getwikihelppage.py Jolt &
-python3 getwikihelppage.py Junk &
 python3 getwikihelppage.py Just
 python3 getwikihelppage.py Key &
 python3 getwikihelppage.py Khorsabadassassin &

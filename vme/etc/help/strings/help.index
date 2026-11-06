@@ -297,6 +297,7 @@ druid spells=druidspells.hlp
 druid weapons=druidweapons.hlp
 druids=druids.hlp
 drunk=drink.hlp
+dump=dump.hlp
 dust devil=dustdevil.hlp
 dwarves=dwarves.hlp
 :end:d
@@ -473,7 +474,7 @@ jeddart=jeddart.hlp
 join=join.hlp
 join group=groups.hlp
 jolt=jolt.hlp
-junk=junk.hlp
+junk=dump.hlp
 justice council=just.hlp
 :end:j
 :start:k
