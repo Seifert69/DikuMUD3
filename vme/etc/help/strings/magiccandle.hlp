@@ -1,21 +1,28 @@
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 7<br/><br/>
-<br/> <br/>
-Usage magic candle<br/><br/>
-<br/><br/>
-This spell uses the mana of the magic user to create a small a candle <br/>
-that can be held for a period of time to provide light. When the spell <br/>
-expires the candle will disappear. It requires no free hands to cast<br/>
-but one must hold the candle in order for it to provide light in a <br/>
-dark area.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-sun globe<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Magic Candle</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Conjurer (guild level 3), Sorcerer (guild level 7)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast magic candle</a>
+</pre>
+<p>Creates a bright magic candle out of your mana. Hold it (see <a cmd='#'>Help Hold</a>) to 
+light up dark places. It burns for about nine minutes: it dims after three, 
+fades to a faint glow after six, and then flickers out and is gone.
+</p><p>You must be standing, not fighting. The spell is also found on scrolls, 
+staffs and wands. For a light that doesn't burn out, see 
+<a cmd='#'>Help Sun Globe</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sun Globe</a>
+&gt; <a cmd='#'>Help Light</a>
+&gt; <a cmd='#'>Help Hold</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
