@@ -292,7 +292,6 @@ python3 getwikihelppage.py Greatsword &
 python3 getwikihelppage.py Grolls &
 python3 getwikihelppage.py Groups
 python3 getwikihelppage.py Groupteleport &
-python3 getwikihelppage.py Guardguild &
 python3 getwikihelppage.py Guests &
 python3 getwikihelppage.py Guilds &
 python3 getwikihelppage.py Guisarme
