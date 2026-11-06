@@ -1,11 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage sneak<br/><br/>
-<br/>
-Are you good at sneaking at all? If not, you should try to practice on it,<br/>
-it is really fun to sneak about, no one noticing you. But then again, maybe<br/>
-someone can see you, it all depends how good you are.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sneak</h1>
+<p>Skill
+Class: Assassin (guild level 0), Thief (guild level 1), Ranger (guild level 1, up to 75%)
+</p><p>Usage:
+</p>
+<pre>sneak
+sneak      (again, to stop)
+</pre>
+<p>You move silently: while you sneak, others in a room don't see you arrive 
+or leave, though anyone who looks around still sees you standing there. 
+To vanish from sight as well, hide (see <a cmd='#'>Help Hide</a>): a thief who both 
+sneaks and hides can come and go unseen.
+</p><p>Your skill decides it, with your dexterity and brain. If you fail, you 
+know it: you "make a feeble attempt to move silently", and so do those 
+who watch you. If you succeed, you sneak about unnoticed for a while, 
+longer the better you did. <a cmd='#'>score</a> tells you when you are sneaking.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hide</a>
+&gt; <a cmd='#'>Help Score</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>
