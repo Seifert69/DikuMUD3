@@ -211,7 +211,6 @@ python3 getwikihelppage.py Divinationsphere
 python3 getwikihelppage.py Divineresistance &
 python3 getwikihelppage.py Donate &
 python3 getwikihelppage.py Donation &
-python3 getwikihelppage.py Doors &
 python3 getwikihelppage.py Down
 python3 getwikihelppage.py Dowse &
 python3 getwikihelppage.py Drag &
