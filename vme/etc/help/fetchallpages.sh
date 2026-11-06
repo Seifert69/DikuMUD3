@@ -471,7 +471,6 @@ python3 getwikihelppage.py Pour &
 python3 getwikihelppage.py Poweritems
 python3 getwikihelppage.py Practice &
 python3 getwikihelppage.py Pray &
-python3 getwikihelppage.py Priests &
 python3 getwikihelppage.py Professions &
 python3 getwikihelppage.py Promptcolors
 python3 getwikihelppage.py Protected &
