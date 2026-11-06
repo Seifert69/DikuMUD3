@@ -1,6 +1,29 @@
-<h1>Midgaard</h1>
-Midgaard is the major capital in Valhalla. It has been a part of the game<br/>
-since the very first DikuMud. Midgaard is a name taken from Scandinavian<br/>
-Mythology.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Midgaard</h1>
+<p>Midgaard is the great capital of Valhalla. It has been part of the game 
+since the very first DikuMUD, and its name comes from Norse mythology. 
+New players begin in Udgaard, but sooner or later everyone comes to 
+Midgaard.
+</p><p>What you find there:
+</p>
+<ul><li>the Cathedral, in the north of the city;</li>
+<li>shops of every kind: magic, tailor, pets, leather, ironmonger, baker, greengrocer, butcher, boats, fish, armour, mortician, blacksmith, carpenter, weaponsmith and jeweller;</li>
+<li>the bank and the item storage;</li>
+<li>inns: the Grunting Boar, Filthy's and the Park Cafe;</li>
+<li>the guilds of the paladins, the sorcerers and the dark knights;</li>
+<li>the city guard and its Captain, who keeps the city's law (see <a cmd='#'>Help Laws</a>).</li></ul>
+<p>Roads lead out of the city to the King's Road, the Etz-Nab woods, the 
+palace, the Cypress Forest and the moor. Type <a cmd='#'>help area</a> while you are 
+in Midgaard to see a map of the city drawn in letters, with where 
+everything is; the web client also shows a map of it (see <a cmd='#'>Help Map</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Udgaard</a>
+&gt; <a cmd='#'>Help Map</a>
+&gt; <a cmd='#'>Help Laws</a>
+</pre>
+
+
+
+
+</div>
