@@ -1,7 +1,31 @@
-<br/>
-<br/>
-Usage: cast polarity &lt;target&gt;<br/>
-A spell to turn the tables if there ever was.  If successful, Polarity<br/>
-reverses the alignment of the target, turning Good to Evil and vice-versa.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Polarity</h1>
+<p>Sphere: Divine Sphere
+Class: Druid (guild level 120)
+Mana: 30, and more (see below)
+</p><p>Usage:
+</p>
+<pre>cast polarity &lt;target&gt;
+</pre>
+<p>A spell to turn the tables if there ever was. The caster grabs hold of 
+the target and meditates on changing them, and the target's alignment is 
+reversed: the good become just as evil, the evil just as good, and the 
+neutral stay about where they are (see <a cmd='#'>Help Alignment</a>). The target only 
+feels a bit disoriented.
+</p><p>Turning someone costs extra mana besides the spell's own: half the 
+target's level for a monster, and twice their level for a player. If you 
+don't have it, the spell fails. You can't cast it on yourself, and on 
+another player only if you have both signed the Book of Blood. Casting it 
+is an attack. You must be standing. It is also found on scrolls, wands 
+and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>
