@@ -1,17 +1,27 @@
-<br/>
-<br/>
-Sphere: Detection<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/><br/>
-Guild Level: 0 <br/><br/>
-<br/>  <br/>
-Usage cast detect undead (target)<br/><br/>
-<br/><br/>
-This spell enables a humanoid target to detect undead.  This will be<br/>
-revealed in the aura as (violet).  The aura is revealed when examining <br/>
-any object or mob. This spell requires no free hands.<br/><br/>
-<br/>See Also:<br/><br/>
-detection sphere<br/><br/>
-examine<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Detect Undead</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 0), Healer (guild level 5), Paladin (guild level 9)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast detect undead &lt;target&gt;
+<a cmd='#'>cast detect undead</a>   (on yourself)
+</pre>
+<p>For a while after this spell, the target sees which creatures are undead: 
+wherever an undead or spirit is listed, it shows a (violet) aura.
+</p><p>The better your detection sphere, the longer it lasts: from a minute up to 
+several minutes. You must be standing, not fighting. It is also found on 
+potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Turn Undead</a>
+&gt; <a cmd='#'>Help Detect Alignment</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>
