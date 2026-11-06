@@ -1,12 +1,29 @@
-<br/>
-<br/>
-Usage caccept &lt;member&gt;<br/>
-Example: caccept Fizban <br/>
-<br/>
-The Caccept command works for both the Clan master and the clan Lord if one<br/>
-is appointed.  Using this command you can enroll other members into the clan.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cremove<br/>
-cdefect<br/>
-<br/>
+<div class="mw-parser-output"><h1>Caccept</h1>
+<p>Usage:
+</p>
+<pre>caccept &lt;player&gt;
+</pre>
+<p>Example:
+</p>
+<pre>caccept fizban
+</pre>
+<p>Takes a player into your clan. They get the clan's tattoo, start at clan 
+rank 1, and the clan house becomes their hometown, where word of recall 
+takes them.
+</p><p>You must be the clan Master or Lord, or have clan rank 10 or higher, to use 
+caccept. The player must be in the game, and not already in a clan. They 
+are not asked first, so make sure they want to join. Gods can't be in 
+clans.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cremove</a>
+&gt; <a cmd='#'>Help Cdefect</a>
+&gt; <a cmd='#'>Help Cinfo</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>
