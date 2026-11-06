@@ -1,22 +1,30 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 31<br/><br/>
-<br/><br/>
-<br/><br/><br/>
-Usage cast repel greater undead (target)<br/><br/>
-<br/>
-The gods if they respond grant their cleric protection from undead such as<br/>
-zombies, skeletons and the like. This spell will affect all undead in the<br/>
-room with the cleric.  If successful, undead stop fighting and flee.  <br/>
-They are in agony for a period of time. If unsuccessful they will attack the <br/>
-cleric in retaliation for their attempt to control them. This requires no <br/>
-free hands to achieve.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-divine sphere<br/><br/>
-repel lesser undead<br/>
-aid undead<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Repel Greater Undead</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 2
+Class: Necromancer (guild level 31)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast repel greater undead</a>
+</pre>
+<p>The caster raises a hand and shouts 'Mes muert dislux', and every undead 
+creature in the room that the caster can see is filled with fear. While 
+the fear lasts, every half minute in a fight there is a chance it flees. 
+The better your spell, the longer it lasts: from a minute up to several 
+minutes. Nothing else in the room is touched.
+</p><p>An undead that resists is not afraid, and attacks the caster instead. It 
+can be cast while fighting, and no free hands are needed. It is also found 
+on wands, staffs and scrolls. Repel lesser undead does the same to one 
+undead.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Repel Lesser Undead</a>
+&gt; <a cmd='#'>Help Fear</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
