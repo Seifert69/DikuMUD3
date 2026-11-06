@@ -1,18 +1,33 @@
-<br/>
-Sphere: Poison<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 100<br/><br/>
-<br/><br/>
-Usage stinking breath (target)<br/><br/>
-<br/><br/>
-This caster of this spell causes a cloud of halitosis to be sent from his<br/>
-mouth and surround a living target. This inflicts damage by poison on the <br/>
-target. This requires both hands to be free to cast due to the complex gestures <br/>
-required.<br/><br/>
-<br/>See Also:<br/><br/>
-poison sphere<br/><br/>
-bad breath<br/><br/>
-stinking cloud<br/><br/>
-fart<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Stinking Breath</h1>
+<p>Sphere: Poison Sphere
+Spell Tier: 4
+Class: Necromancer (guild level 100)
+Mana: 38
+</p><p>Usage:
+</p>
+<pre>cast stinking breath &lt;target&gt;
+<a cmd='#'>cast stinking breath</a>   (at whoever you are fighting)
+</pre>
+<p>The caster cups their hands before their mouth and utters 'Schwepa cumei 
+entahc', and a foul cloud of breath engulfs the target. It is the 
+strongest of the necromancers' poison clouds: the better your divine 
+power and your poison sphere, the more it hurts. It is deadly against 
+those in clothes or leather, weaker against chain, and does nothing at 
+all to someone in plate. A shield is no use against it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fart</a>
+&gt; <a cmd='#'>Help Bad Breath</a>
+&gt; <a cmd='#'>Help Stinking Cloud</a>
+&gt; <a cmd='#'>Help Poison Resistance</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>
