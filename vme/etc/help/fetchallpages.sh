@@ -500,7 +500,6 @@ python3 getwikihelppage.py Rangerweapons &
 python3 getwikihelppage.py Ranseur &
 python3 getwikihelppage.py Rapier &
 python3 getwikihelppage.py Read
-python3 getwikihelppage.py Recite &
 python3 getwikihelppage.py Reconstruct &
 python3 getwikihelppage.py Refit &
 python3 getwikihelppage.py Refresh
