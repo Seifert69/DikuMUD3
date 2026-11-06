@@ -1,12 +1,31 @@
-<br/>
-<br/>
-<br/>
-Usagechange terminal (type)<br/><br/>
-<br/>
-You must enter a terminal type: 'dumb', 'tty' or 'ansi'.<br/>
-If you have the incorrect terminal setting you may get garbage characters<br/>
-instead of words and letters.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Change<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Terminal</h1>
+<p>Usage:
+</p>
+<pre>change terminal dumb
+change terminal tty
+change terminal ansi
+change telnet
+</pre>
+<p>These settings matter only when you play over telnet or with a mud 
+client such as Mudlet or TinTin++; the web client looks after them for 
+you.
+</p><p><b>change terminal</b> tells the game what your screen understands: 
+<b>ansi</b> for colours, which nearly every client and terminal can show; 
+<b>tty</b> for a plain terminal; <b>dumb</b> for no special codes at all. 
+If you see garbage characters instead of words, or no colours, try 
+another setting.
+</p><p><b>change telnet</b> switches whether the game assumes you use a telnet 
+program, which lets it, for example, hide your password as you type it. 
+Turn it off only if your client prints odd characters after each line.
+</p><p>Your settings are kept with your character.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+&gt; <a cmd='#'>Help Columns</a>
+</pre>
+
+
+
+
+</div>
