@@ -1,21 +1,40 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-Spell level: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 10<br/> <br/>
-<br/>
-<br/><br/>
-Usage cast strength (target)<br/><br/>
-<br/><br/>
-This spell will enhance and raise the target in the strength ability.<br/>
-It requires no hands free to cast and a small amount of mana.<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/><br/>
-Strength<br/><br/>
-Protection Sphere<br/><br/>
+<div class="mw-parser-output"><h1>Ability Spells</h1>
+<p>Sphere: Protection Sphere
+Mana: 20 each
+</p><p>Usage:
+</p>
+<pre>cast strength &lt;target&gt;
+cast dexterity &lt;target&gt;
+cast constitution &lt;target&gt;
+cast brain &lt;target&gt;
+cast charisma &lt;target&gt;
+(leave out the target to cast it on yourself)
+</pre>
+<p>Five spells that each raise one of the target's abilities for a while 
+(see <a cmd='#'>Help Abilities</a>):
+</p>
+<pre>strength       conjurer 10, sorcerer 10
+dexterity      sorcerer 4, conjurer 6, assassin 30
+constitution   sorcerer 6, conjurer 8
+brain          conjurer 2, sorcerer 2
+charisma       healer 6
+</pre>
+<p>(the guilds that teach each, with the guild level). Charisma draws on 
+divine power, the other four on magic.
+</p><p>The better the casting, the bigger the rise: about +10 for a good 
+casting, a little more for a master's. It lasts at least ten minutes, and 
+longer the better the casting. Each works once at a time: cast it again 
+on someone who already has it, and the magic just dissipates. They are 
+also found on potions, wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Focus</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>
