@@ -1,12 +1,28 @@
-Sphere: Mind Sphere<br/><br/>
-<br/>
-Usagecast brimstone (target)<br/><br/>
-<br/><br/>
-This spell inflicts damage by releasing hellfire and brimstone<br/>
-(heat) on a target.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-Lava Flow<br/><br/>
-Hellfire<br/><br/>
-Soulfire<br/><br/>
+<div class="mw-parser-output"><h1>Brimstone</h1>
+<p>Sphere: Fire Sphere
+Class: Dark Knight (guild level 80)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast brimstone &lt;target&gt;
+<a cmd='#'>cast brimstone</a>   (at whoever you are fighting)
+</pre>
+<p>The third of the dark knight's fires: burning brimstone rains down on the 
+target. The better your power and fire sphere, the more it burns. It does a 
+little better against clothes than against armour. A shield takes some of 
+it, but can't stop it.
+</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Lava Flow</a>
+&gt; <a cmd='#'>Help Hellfire</a>
+&gt; <a cmd='#'>Help Soulfire</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>
