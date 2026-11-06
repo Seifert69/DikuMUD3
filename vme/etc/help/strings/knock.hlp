@@ -1,17 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage knock (thing)<br/><br/>
-<br/><br/>
-Where thing can be any object, door or person.<br/>
-<br/><br/>
-Example:<br/><br/>
-knock gandalf<br/><br/>
-knock wooden door<br/><br/>
-knock coffin<br/><br/>
-<br/>
-Knock can be useful if you are trapped inside rooms, boxes (coffins), etc.<br/>
-It allows people on the other side to hear the knocking.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Knock</h1>
+<p>Usage:
+</p>
+<pre>knock &lt;door, thing or person&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>knock door
+knock north door
+knock coffin
+knock Gandalf
+</pre>
+<p>Knocks on a door, a box, or someone's shoulder. Knock on a closed door, 
+and those in the room on the other side hear the knocking. Knock on the 
+lid of a chest or coffin you are shut inside, and those outside hear it, 
+even if you have been buried. That makes it the way to call for help 
+when you are trapped. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Open</a>
+&gt; <a cmd='#'>Help Lock</a>
+&gt; <a cmd='#'>Help Exits</a>
+</pre>
+
+
+
+
+</div>
