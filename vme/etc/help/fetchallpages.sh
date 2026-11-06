@@ -468,6 +468,7 @@ python3 getwikihelppage.py Neutral &
 python3 getwikihelppage.py Newbie &
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
+python3 getwikihelppage.py Nightglobe &
 python3 getwikihelppage.py North &
 python3 getwikihelppage.py Noshout &
 python3 getwikihelppage.py Npc

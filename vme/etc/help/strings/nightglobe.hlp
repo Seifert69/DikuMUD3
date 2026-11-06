@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Night Globe</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 2
+Class: Conjurer (guild level 18), Sorcerer (guild level 25)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast night globe</a>
+</pre>
+<p>Creates an orb of darkness that sucks the light out of the place around it: 
+it darkens as much as two sun globes light up. Use it to hide in the dark, or 
+to take the light from those who rely on it.
+</p><p>After five minutes the orb winks out of existence, and the light returns. You 
+must be standing. The spell is also found on staffs, scrolls and wands. For 
+light instead, see <a cmd='#'>Help Sun Globe</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sun Globe</a>
+&gt; <a cmd='#'>Help Darkness</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>
