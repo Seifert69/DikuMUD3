@@ -1,16 +1,27 @@
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/>
-This is a level 4 spell:<br/>
-<br/>
-Usage cast deathly grasp (target)<br/><br/>
-<br/><br/>
-Causes extremely serious wounds to appear on humanoids or mammals.<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cause light wounds<br/><br/>
-cause serious wounds<br/><br/>
-harm<br/><br/>
-deathly grasp<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Deathly Grasp</h1>
+<p>Sphere: Divine Sphere
+Class: Necromancer (guild level 60), Healer (guild level 120)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast deathly grasp &lt;target&gt;
+<a cmd='#'>cast deathly grasp</a>   (at whoever you are fighting)
+</pre>
+<p>The last and deadliest of the wounding prayers, beyond harm: a grasp that 
+opens grievous wounds on the target. The better your divine power and 
+sphere, the deeper they go. It does about as well against any armour, and 
+being a touch, a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cause Light Wounds</a>
+&gt; <a cmd='#'>Help Cause Serious Wounds</a>
+&gt; <a cmd='#'>Help Harm</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>
