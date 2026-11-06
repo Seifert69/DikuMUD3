@@ -660,4 +660,3 @@ python3 getwikihelppage.py Wizlist &
 python3 getwikihelppage.py Wordofrecall &
 python3 getwikihelppage.py Write
 python3 getwikihelppage.py Xrayvision
-python3 getwikihelppage.py Yell
