@@ -679,7 +679,7 @@ purse=purse.hlp
 put=put.hlp
 :end:p
 :start:q
-quaff=quaff.hlp
+quaff=potions.hlp
 quality=quality.hlp
 quartermaster=clanquartermaster.hlp
 quarterstaff=quarterstaff.hlp

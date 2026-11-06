@@ -480,7 +480,6 @@ python3 getwikihelppage.py Protectionfromgood &
 python3 getwikihelppage.py Protectionsphere &
 python3 getwikihelppage.py Purse
 python3 getwikihelppage.py Put &
-python3 getwikihelppage.py Quaff &
 python3 getwikihelppage.py Quality &
 python3 getwikihelppage.py Quarterstaff &
 python3 getwikihelppage.py Quests
