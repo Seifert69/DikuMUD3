@@ -1,15 +1,24 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The spells in this sphere enables you to conjure and control frost.<br/><br/>
-<br/><br/>
-<br/>
-    Snowball<br/>
-    Frostball<br/>
-    Icestorm<br/>
-<br/>
-<br/><br/>
-<br/>
-Try help on the individual spells.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Frost Sphere</h1>
+<p>The spells of the frost sphere freeze: the sorcerers' snowballs, frostballs, ice storms and blizzards. Cold cares little for armour, so these spells bite almost as hard through plate as through clothes. Your ability in the sphere decides how well you cast them, and also how well you resist frost spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist cold better, see <a cmd='#'>Help Cold Resistance</a>; dragons may also breathe frost (see <a cmd='#'>Help Breath</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>frost breath   no guild teaches it
+blizzard       sorcerer 70
+snowball       sorcerer 6
+frostball      sorcerer 19
+iceball        sorcerer 100
+icestorm       sorcerer 34
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Cold Resistance</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>
