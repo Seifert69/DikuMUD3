@@ -1,13 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-<br/><br/>
-Usage cast dust devil<br/><br/>
-<br/>
-This spell will summon a dust devil to guard you.  The dust devil can be<br/>
-controlled by telling it what you want it to do.  For example, typing<br/>
-'tell dust devil shout Hello' would cause the dust devil to shout 'Hello'.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Dust Devil</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 9)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast dust devil</a>
+</pre>
+<p>Summons a dust devil, a tiny whirling elemental, to guard you. It follows you 
+around, joins in when you fight, and when your hit points drop below a third 
+it tries to rescue you.
+</p><p>It doesn't stay long: from half a minute to a minute and a half, longer the 
+better your summoning sphere. Then it vanishes in a puff of smoke, dropping 
+whatever it carried. It doesn't take orders.
+</p><p>You must be standing. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Earth</a>
+&gt; <a cmd='#'>Help Rescue</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
