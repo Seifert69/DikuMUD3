@@ -257,7 +257,6 @@ python3 getwikihelppage.py Estoc &
 python3 getwikihelppage.py Evaluate &
 python3 getwikihelppage.py Evil &
 python3 getwikihelppage.py Examine &
-python3 getwikihelppage.py Exit &
 python3 getwikihelppage.py Exits &
 python3 getwikihelppage.py Experience &
 python3 getwikihelppage.py Expert &

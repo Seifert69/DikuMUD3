@@ -1,12 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-To move your character around in the world, you can just write the<br/>
-direction, this command will allow you to leave an object.<br/>
-<br/>
-<br/>See also:<br/><br/>
-Drag<br/><br/>
-Positions<br/><br/>
-Sleep <br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Leave</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>leave</a>
+<a cmd='#'>exit</a>
+</pre>
+<p>To move around in the world you just type the direction. But when you are 
+inside something, like a boat, a cart or a barrel you climbed into (see 
+<a cmd='#'>Help Enter</a>), leave or exit gets you out of it again, into the place around 
+it.
+</p><p>You must be standing, not fighting, and the thing must be open. On a steed, 
+dismount instead (see <a cmd='#'>Help Mount</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Enter</a>
+&gt; <a cmd='#'>Help Exits</a>
+&gt; <a cmd='#'>Help Boats</a>
+&gt; <a cmd='#'>Help Mount</a>
+</pre>
+
+
+
+
+</div>
