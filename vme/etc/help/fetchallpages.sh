@@ -617,7 +617,6 @@ python3 getwikihelppage.py Sorcererskills &
 python3 getwikihelppage.py Sorcererspells &
 python3 getwikihelppage.py Sorcererweapons &
 python3 getwikihelppage.py Soulfire
-python3 getwikihelppage.py Soulgate &
 python3 getwikihelppage.py Soulshift &
 python3 getwikihelppage.py South &
 python3 getwikihelppage.py Spearfam &
