@@ -534,7 +534,6 @@ python3 getwikihelppage.py Seual
 python3 getwikihelppage.py Shamshir &
 python3 getwikihelppage.py Shelter &
 python3 getwikihelppage.py Shields &
-python3 getwikihelppage.py Shielduse &
 python3 getwikihelppage.py Shoot
 python3 getwikihelppage.py Shops &
 python3 getwikihelppage.py Shortsword &
