@@ -1,12 +1,28 @@
-<br/>
-<br/>
-Usage: skin corpse<br/>
-Skin lets you take the hide from a corpse. You can then sell it for money<br/>
-or use it as a trophy. You will need a sharp weapon to skin something, and<br/>
-a dagger is ideal.<br/>
-<br/>
-<br/>See Also:<br/><br/>
- Butcher<br/>
- Cook<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Skin</h1>
+<p>Skill
+Class: Ranger (guild level 2), Druid (guild level 12, up to 80%)
+</p><p>Usage:
+</p>
+<pre>skin corpse
+</pre>
+<p>Takes the hide, fur or scales from a corpse. Sell it for money, or keep 
+it as a trophy. You need a dagger to do it, carried or wielded, and it 
+costs endurance, more for a big beast. You must be standing.
+</p><p>Your skill and dexterity decide how well it goes, against the creature's 
+level: the mightier the beast, the harder its skin is to take cleanly. A 
+fine skin from a rare creature is worth a good deal; a botched one, 
+mangled by your knife, is worth nothing. Either way, a corpse can only be 
+skinned once. Some creatures have no skin worth taking.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Butcher</a>
+&gt; <a cmd='#'>Help Cook</a>
+&gt; <a cmd='#'>Help Shops</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>
