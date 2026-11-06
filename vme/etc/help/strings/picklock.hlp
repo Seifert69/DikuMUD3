@@ -1,15 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage pick (item)|(keyword)<br/><br/>
-Example: pick door<br/><br/>
-<br/>
-Picking the lock is a fast way around a locked door, or box. Using this<br/>
-command enables you to unlock locked doors or containers... if you succeed.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Unlock<br/><br/>
-Lock<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Pick Lock</h1>
+<p>Skill
+Class: Thief (guild level 2)
+</p><p>Usage:
+</p>
+<pre>pick &lt;door or thing&gt;
+pick &lt;direction&gt; &lt;door&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>pick door
+pick chest
+</pre>
+<p>A fast way past a locked door or chest when you have no key: you work the 
+lock until it gives with a soft *click*. A picked door is unlocked on 
+both sides.
+</p><p>Your skill and your dexterity decide it, against how hard the lock is: 
+some locks are much harder than others, and some can't be picked at all 
+("This door seems to be pick proof"). A failed try costs you endurance, 
+more the worse you failed, and you can try again. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Lock</a>
+&gt; <a cmd='#'>Help Open</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>
