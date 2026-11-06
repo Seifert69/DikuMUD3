@@ -99,8 +99,7 @@ python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
 python3 getwikihelppage.py Chargewand &
 python3 getwikihelppage.py Charmanimal &
-python3 getwikihelppage.py Chr &
-python3 getwikihelppage.py Churchknights
+python3 getwikihelppage.py Chr
 python3 getwikihelppage.py Cinfo &
 python3 getwikihelppage.py Claim &
 python3 getwikihelppage.py Clancommands &
