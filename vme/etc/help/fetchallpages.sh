@@ -52,7 +52,6 @@ python3 getwikihelppage.py Blind &
 python3 getwikihelppage.py Blindingflash
 python3 getwikihelppage.py Blizzard &
 python3 getwikihelppage.py Boards &
-python3 getwikihelppage.py Boats &
 python3 getwikihelppage.py Bob &
 python3 getwikihelppage.py Boneskin
 python3 getwikihelppage.py Bot &
