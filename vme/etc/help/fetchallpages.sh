@@ -572,7 +572,6 @@ python3 getwikihelppage.py Spies
 python3 getwikihelppage.py Splitm &
 python3 getwikihelppage.py Sprayofacid &
 python3 getwikihelppage.py Staff &
-python3 getwikihelppage.py Staffuse &
 python3 getwikihelppage.py Stalk
 python3 getwikihelppage.py Stats &
 python3 getwikihelppage.py Statue &
