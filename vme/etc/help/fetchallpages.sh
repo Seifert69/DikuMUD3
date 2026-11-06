@@ -560,8 +560,7 @@ python3 getwikihelppage.py Soulfire
 python3 getwikihelppage.py Soulshift &
 python3 getwikihelppage.py Spearfam &
 python3 getwikihelppage.py Spear
-python3 getwikihelppage.py Spellaid &
-python3 getwikihelppage.py Spellcasters
+python3 getwikihelppage.py Spellaid
 python3 getwikihelppage.py Spelllight &
 python3 getwikihelppage.py Spelllock &
 python3 getwikihelppage.py Spellsleep
