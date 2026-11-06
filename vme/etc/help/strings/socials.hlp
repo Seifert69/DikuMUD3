@@ -1,12 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage socials<br/><br/>
-<br/><br/>
-As commands, this gives a complete listing of all the social commands.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Commands<br/><br/>
-Emote<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Socials</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>socials</a>
+&lt;social&gt;
+&lt;social&gt; &lt;someone&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>smile
+smile asta
+bow
+hug asta
+</pre>
+<p>Socials are short commands that show what you feel or do, like smile, nod, wave, 
+bow, laugh or hug: there are more than two hundred. <a cmd='#'>socials</a> gives a complete 
+listing of them. Most work on their own, or with the name of someone in the room 
+with you: smile shows everyone that you smile, smile asta that you smile at 
+Asta.
+</p><p>When no social fits, write your own with <a cmd='#'>Help Emotes</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Emotes</a>
+&gt; <a cmd='#'>Help Commands</a>
+</pre>
+
+
+
+
+</div>
