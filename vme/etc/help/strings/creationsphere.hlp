@@ -9,8 +9,8 @@ create food               healer 18
 create water              healer 16
 light                     healer 12, paladin 12
 continual light           healer 24, paladin 41
-darkness                  necromancer 5, knight 12
-continual darkness        necromancer 14, knight 41
+darkness                  necromancer 5, dark knight 12
+continual darkness        necromancer 14, dark knight 41
 animate dead              necromancer 4
 leather skin              healer 8
 bark skin                 druid 3, healer 16
