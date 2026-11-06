@@ -1,24 +1,35 @@
-<br/>
-<br/>
-<br/>
-Usage lock [direction] (item)|(keyword)<br/><br/>
-<br/>
-Example:<br/><br/>
-lock up iron grating<br/><br/>
-lock coffin<br/><br/>
-<br/>
-To lock something, you need a key. If you have the key in your<br/>
-equipment-list, you can lock locks, that<br/>
-require that key, just by using this command, like 'lock box'. If it is<br/>
-not an item, but some sort of a door hatch etc. It will have a keyword,<br/>
-like 'lock gate'.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Key<br/><br/>
-Close<br/><br/>
-Open<br/><br/>
-Unlock<br/><br/>
-Spell Lock<br/><br/>
-Spell Unlock<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Lock</h1>
+<p>Usage:
+</p>
+<pre>lock &lt;door or thing&gt;
+unlock &lt;door or thing&gt;
+lock &lt;direction&gt; &lt;door&gt;      (when there are several doors)
+</pre>
+<p>Examples:
+</p>
+<pre>unlock door
+lock up grating
+unlock chest
+</pre>
+<p>A locked door or chest won't open until it is unlocked. To lock or unlock 
+one you need its key: carry it, and the command finds it by itself. A 
+door or lid must be closed before you can lock it. Locking a door locks 
+it from the other side too.
+</p><p>Not every door has a keyhole: some can only be closed.
+</p><p>Without the key, there are other ways:
+</p>
+<ul><li>the skill pick lock (see <a cmd='#'>Help Pick Lock</a>), though some locks can't be picked;</li>
+<li>the spell unlock, which opens a lock with a *click*, and its twin lock, which locks one; conjurers learn them (lock at guild level 14, unlock at 27), and sorcerers and thieves learn them up to 50%. Name the direction or the thing: cast unlock north, cast unlock chest.</li></ul>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Open</a>
+&gt; <a cmd='#'>Help Close</a>
+&gt; <a cmd='#'>Help Pick Lock</a>
+&gt; <a cmd='#'>Help Exits</a>
+</pre>
+
+
+
+
+</div>
