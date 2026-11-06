@@ -1,30 +1,35 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Skill                 Level<br/>
-    Backstab                  0<br/>
-    Climb                     0<br/>
-    Consider                  0<br/>
-    Diagnostics               0<br/>
-    Disarming                 4<br/>
-    Fleeing                   0<br/>
-    Hide                      0<br/>
-    Scroll Use               13<br/>
-    Search                    2<br/>
-    Shield                    3<br/>
-    Sneak                     0<br/>
-    Swimming                  5<br/>
-    Two Weapon Style         10<br/>
-    Stalk                    22<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Assassin Weapons<br/><br/>
- Assassin Spells<br/><br/>
- Assassin<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Assassin Skills</h1>
+<p>The skills the Assassins' guild teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
+</p>
+<pre>Name                 Level   Up to
+Armor Soft Leather       0   100%
+Backstab                 0   100%
+Climb                    0   100%
+Consider                 0   100%
+Diagnostics              0   60%
+Fleeing                  0   100%
+Hand Cuffing             0   100%
+Hide                     0   100%
+Sneak                    0   100%
+Search                   2   80%
+Shield                   3   50%
+Disarming                4   90%
+Swimming                 5   50%
+Armor Hard Leather       7   100%
+Two Weapon Style        10   100%
+Scroll Use              13   70%
+Stalk                   22   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Assassin Weapons</a>
+&gt; <a cmd='#'>Help Assassin Spells</a>
+&gt; <a cmd='#'>Help Assassins</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
