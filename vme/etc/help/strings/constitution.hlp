@@ -1,15 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Constitution determines:<br/><br/>
-<br/>
-*  How fast hit points are regained.<br/><br/>
-<br/><br/>
-*  How fast Endurance is regained.<br/><br/>
-<br/><br/>
-*   The upper limit of endurance points.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Spell Constitution<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Constitution</h1>
+<p>Constitution (CON) is one of your abilities: how tough your body is. It 
+determines:
+</p>
+<ul><li><b>Your endurance.</b> Your maximum endurance grows with your constitution, and so does how fast it comes back (see <a cmd='#'>Help Endurance Points</a>).</li>
+<li><b>How fast your hit points come back</b> when you rest or sleep. Your maximum hit points come from your hit point ability (HP), not from constitution.</li>
+<li><b>Swimming.</b> Each time you swim, your swimming skill and your constitution decide whether you flounder and take in water (see <a cmd='#'>Help Swimming</a>).</li>
+<li><b>Resisting plague</b>, together with your charisma.</li></ul>
+<p>The spell constitution raises it for a while.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Spell Constitution</a>
+&gt; <a cmd='#'>Help Endurance Points</a>
+</pre>
+
+
+
+
+</div>
