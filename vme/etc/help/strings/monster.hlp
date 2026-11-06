@@ -1,8 +1,26 @@
-<br/>
-<br/>
-Mob, Mobile, Monster, NPC<br/>
-<br/><br/>
-<br/><br/>
-An NPC is an abbreviation for a Non Playing character. A mobile is the same<br/>
-as an NPC. Such characters are controlled by the computer. Examples of such<br/>
-characters include the monsters which you fight in the game.<br/>
+<div class="mw-parser-output"><h1>Monster</h1>
+<p>A monster, also called a mobile, a mob or an NPC (a non-player character), 
+is any character the game itself controls: the dragon in its lair, but 
+also the shopkeeper, the guard at the gate, the guild master and the 
+rabbit in the field.
+</p><p>Some monsters will attack you on sight; most leave you alone until you 
+attack them. Before you pick a fight, <a cmd='#'>consider</a> your foe, and remember 
+that some monsters call for help or flee. Killing monsters is how you 
+earn most of your experience (see <a cmd='#'>Help Experience</a>); what they carry is 
+left in their corpse.
+</p><p>Townsfolk such as shopkeepers and guards are often protected by the law: 
+killing one is a crime (see <a cmd='#'>Help Laws</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Consider</a>
+&gt; <a cmd='#'>Help Kill</a>
+&gt; <a cmd='#'>Help Experience</a>
+&gt; <a cmd='#'>Help Laws</a>
+&gt; <a cmd='#'>Help Shops</a>
+</pre>
+
+
+
+
+</div>
