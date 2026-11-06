@@ -1,17 +1,27 @@
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-whisper (character)(words to whisper)<br/><br/>
-<br/>
-A cute alternative to tell if the one you wish to communicate with is at the<br/>
-same location. Unlike tell others will notice that you whisper something (but<br/>
-they will not know what it is you're whispering).<br/>
-<br/><br/><br/>
-<br/>See Also:<br/><br/>
-Tell<br/><br/>
-Shout<br/><br/>
-Say<br/><br/>
-ask<br/><br/>
-yell<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Whisper</h1>
+<p>Usage:
+</p>
+<pre>whisper &lt;someone&gt; &lt;words&gt;
+</pre>
+<p>Example:
+</p>
+<pre>whisper Gnort Meet me at the fountain.
+</pre>
+<p>Says something for one person in the room alone. Only they hear your 
+words; the others see that you whisper something to them, but not what. 
+To speak to someone who isn't here, use <a cmd='#'>Help Tell</a>.
+</p><p>If they can't see you, they hear "someone" whisper. If you are drunk, it 
+shows in your words.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Say</a>
+&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Ask</a>
+&gt; <a cmd='#'>Help Communications</a>
+</pre>
+
+
+
+
+</div>
