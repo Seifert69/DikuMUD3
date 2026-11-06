@@ -102,7 +102,6 @@ python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
 python3 getwikihelppage.py Chargewand &
 python3 getwikihelppage.py Charmanimal &
-python3 getwikihelppage.py Checks &
 python3 getwikihelppage.py Chr &
 python3 getwikihelppage.py Churchknights
 python3 getwikihelppage.py Cinfo &
@@ -117,7 +116,6 @@ python3 getwikihelppage.py Clanquartermaster &
 python3 getwikihelppage.py Clanres
 python3 getwikihelppage.py Clans &
 python3 getwikihelppage.py Clanstartup &
-python3 getwikihelppage.py Class &
 python3 getwikihelppage.py Claymore &
 python3 getwikihelppage.py Clear
 python3 getwikihelppage.py Clearskies &
@@ -140,7 +138,6 @@ python3 getwikihelppage.py Commchannels &
 python3 getwikihelppage.py Comm &
 python3 getwikihelppage.py Communicate &
 python3 getwikihelppage.py Compact &
-python3 getwikihelppage.py Completepath
 python3 getwikihelppage.py Condemn &
 python3 getwikihelppage.py Coneofshards &
 python3 getwikihelppage.py Confusion &
@@ -493,23 +490,6 @@ python3 getwikihelppage.py Palrp &
 python3 getwikihelppage.py Partisan &
 python3 getwikihelppage.py Password &
 python3 getwikihelppage.py Pastgods
-python3 getwikihelppage.py Pathass &
-python3 getwikihelppage.py Pathcon &
-python3 getwikihelppage.py Pathdar &
-python3 getwikihelppage.py Pathdru &
-python3 getwikihelppage.py Pathfig
-python3 getwikihelppage.py Pathheal &
-python3 getwikihelppage.py Path &
-python3 getwikihelppage.py Pathlist2 &
-python3 getwikihelppage.py Pathlist3 &
-python3 getwikihelppage.py Pathlist
-python3 getwikihelppage.py Pathnec &
-python3 getwikihelppage.py Pathpal &
-python3 getwikihelppage.py Pathran &
-python3 getwikihelppage.py Paths &
-python3 getwikihelppage.py Pathsor
-python3 getwikihelppage.py Paththi
-python3 getwikihelppage.py Payment &
 python3 getwikihelppage.py Peace &
 python3 getwikihelppage.py Peeking &
 python3 getwikihelppage.py Pe &
