@@ -618,7 +618,6 @@ python3 getwikihelppage.py Title &
 python3 getwikihelppage.py Totalrecall &
 python3 getwikihelppage.py Toxicate &
 python3 getwikihelppage.py Track
-python3 getwikihelppage.py Train &
 python3 getwikihelppage.py Transport &
 python3 getwikihelppage.py Travel &
 python3 getwikihelppage.py Trident &
