@@ -1,25 +1,35 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning<br/><br/>
-Spell level: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 15<br/> <br/>
-<br/><br/>
-Usage cast sending (item) (character)<br/><br/>
-<br/><br/>
-This spell opens a small whirling vortex that allows the caster to send<br/>
-almost any object to any other character almost anywhere in the world.  <br/>
-The spell will not work in no-summon, no-teleport areas.  There is a <br/>
-slight chance that the spell will misfire, and the item will be lost forever.<br/>
-The spell requires no free hands.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-summoning sphere<br/><br/>
-gate<br/><br/>
-travel<br/><br/>
-transport<br/><br/>
-<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sending</h1>
+<p>Sphere: Summoning Sphere
+Class: Sorcerer (guild level 15)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast sending &lt;item&gt; &lt;person&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cast sending sword Gandalf
+</pre>
+<p>The caster raises an item from their inventory and utters 'Selaz', a 
+small swirling disk of grey opens above them, and the item rises into it 
+and vanishes, to fall from a rift at the feet of the person you named, 
+anywhere in the world. They need not be a player: it works for monsters 
+too. It lands on the floor beside them, not in their hands.
+</p><p>Beware: if the casting only just succeeds, the rift turns a violent red 
+and explodes, and the item is lost forever.
+</p><p>You can't send a container or a boat, and some places stop the spell: 
+you can't send from them, or to someone in them. You must be standing. It 
+is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Gate</a>
+&gt; <a cmd='#'>Help Portal</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>
