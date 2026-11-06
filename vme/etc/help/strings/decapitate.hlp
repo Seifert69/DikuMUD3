@@ -1,17 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage decapitate corpse<br/><br/>
-<br/>
-Use this command to cut the head off of your victims. Very useful if you<br/>
-must bring it back to the captain to collect an experience and or<br/>
-monetary reward.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
- Reward<br/><br/>
- Laws<br/><br/>
- Experience<br/><br/>
-Money<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Decapitate</h1>
+<p>Usage:
+</p>
+<pre>decapitate corpse
+</pre>
+<p>Cuts the head off a corpse. A head is the proof of a kill: bring the head 
+of a wanted criminal to the city guard Captain to collect the reward on 
+it (see <a cmd='#'>Help Wanted</a>), or the head of a bounty target to the Hunter of the 
+Bounty Hunters Guild (see <a cmd='#'>Help Bounty</a>). If there was a reward on the 
+corpse, it goes with the head.
+</p><p>A head keeps for half an hour of real time; then the maggots get it. A 
+corpse can lose its head only once, and some creatures have no head to 
+cut. You can do it sitting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Heads</a>
+&gt; <a cmd='#'>Help Wanted</a>
+&gt; <a cmd='#'>Help Bounty</a>
+</pre>
+
+
+
+
+</div>
