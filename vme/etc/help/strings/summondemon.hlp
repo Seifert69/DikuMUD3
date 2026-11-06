@@ -1,13 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage cast summon demon<br/><br/>
-<br/>
-This powerful spell will summon a demonic beast for you to control. It<br/>
-remains only a short period, and cannot be command to cast spells. Failure when<br/>
-casting this spell summons a hostile beast.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Summon Demon</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 40)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast summon demon</a>
+</pre>
+<p>A large portal of fire opens, and a lesser demon (level 60) steps through to 
+serve you, far stronger than any elemental. It follows you, fights beside you 
+when you are in a fight, and when your hit points drop below a third it tries 
+to rescue you. Like the elementals, it stays only a short time, from half a 
+minute to a minute and a half, and doesn't take orders.
+</p><p>Beware: if the spell fails, you lose control of the portal. The demon comes 
+through unbound, thanks you for bringing it here, and attacks you.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Devil</a>
+&gt; <a cmd='#'>Help Summon Fire</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>
