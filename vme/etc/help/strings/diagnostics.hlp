@@ -1,24 +1,25 @@
-<br/>
-SKILL<br/><br/>
-<br/><br/>
-Class and level:<br/><br/>
-Assassin    - 0<br/><br/>
-Dark Knight - 1<br/><br/>
-Druid       - 0<br/><br/>
-Fighter     - 0<br/><br/>
-Healer      - 0<br/><br/>
-Necromancer - 5<br/><br/>
-Paladin     - 1<br/><br/>
-Ranger      - 1<br/><br/>
-Thief       - 4<br/><br/>
-<br/>  <br/>
-Usage diagnose (unit)<br/>
-<br/><br/>
-This skill gives you the ability to check another's status. When using the<br/>
-command, you will be able to see the target's present condition as well as<br/>
-the weight and height. It may be used on both allies and opponents.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Consider<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Diagnose</h1>
+<p>Skill
+Class: Fighter, Healer, Druid, Conjurer, Assassin (guild level 0); Dark Knight, Paladin, Ranger (1); Thief (4); Necromancer (5)
+</p><p>Usage:
+</p>
+<pre>diagnose &lt;character&gt;
+diagnose                (whoever you are fighting)
+</pre>
+<p>Tells you how badly hurt someone is, from "in an excellent condition" to 
+"bleeding awfully from big wounds". It works on friends and foes alike, and 
+in the middle of a fight: with no name, you diagnose the one you are 
+fighting. Outside a fight you also see how heavy and how tall they are.
+</p><p>Your skill and your brain decide how true the answer is: when you misjudge, 
+they look healthier than they really are.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Consider</a>
+&gt; <a cmd='#'>Help Combat</a>
+</pre>
+
+
+
+
+</div>
