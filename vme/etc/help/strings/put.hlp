@@ -1,19 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-put (item) [in] (item)<br/><br/>
-<br/>
-This command makes it possible to relocate your things. Is you want an item<br/>
-put inside a container, you use  this command. The command only makes it<br/>
-possible to put into containers in one level, ie. the command<br/>
-<br/><br/><br/>
-put &lt;item1&gt; in &lt;item2&gt; in &lt;item3&gt;<br/>
-is not possible. In fact it will be treated as<br/>
-put &lt;item1&gt; in &lt;item2&gt;<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Get<br/><br/>
-Look<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Put</h1>
+<p>Usage:
+</p>
+<pre>put &lt;item&gt; in &lt;container&gt;
+put all in &lt;container&gt;
+put money in &lt;container&gt;
+put &lt;amount&gt; &lt;coins&gt; in &lt;container&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>put brass lantern in bag
+put all in chest
+put 20 gold in bag
+</pre>
+<p>This command puts your things inside a container, like a bag or a chest. The 
+word in is needed: put lantern bag doesn't work. The container must be open 
+(see <a cmd='#'>Help Open</a>), and it only holds so much.
+</p><p>You can only put into one container at a time: put &lt;item1&gt; in &lt;item2&gt; in 
+&lt;item3&gt; is the same as put &lt;item1&gt; in &lt;item2&gt;. To take things out again, see 
+<a cmd='#'>Help Get</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Get</a>
+&gt; <a cmd='#'>Help Open</a>
+&gt; <a cmd='#'>Help Look</a>
+</pre>
+
+
+
+
+</div>
