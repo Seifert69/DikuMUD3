@@ -1,21 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/><br/>
-SKILL<br/><br/>
-Class and level:<br/><br/>
-Necromancer - 0<br/><br/>
-Ranger      - 0<br/><br/>
-Sorcerer    - 0<br/><br/>
-<br/>
-<br/>  <br/>
-Usage flee (while fighting)<br/><br/>
-<br/><br/>
-If you're really in bad shape, if you really want to get out of a fight NOW,<br/>
-use the flee command. Beware, you will flee without any notion of direction,<br/>
-you might end up somewhere worse! The better the flee skill the better the<br/>
-chance of successfully fleeing.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Wimpy<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Fleeing</h1>
+<p>SKILL
+</p><p>Taught from the start of the guild by:
+</p>
+<pre> Thieves, Rangers, Assassins (up to 100%)
+ Druids (80%)
+ Fighters, Barbarians (70%)
+ Conjurers, Healers, Necromancers, Sorcerers (60%)
+</pre>
+<p>Usage:
+</p>
+<pre><a cmd='#'>flee</a>   (while fighting)
+</pre>
+<p>If you're really in bad shape, if you really want to get out of a fight NOW, use 
+the flee command. Beware, you flee in a direction you can't choose:
+you might end up somewhere worse!
+</p><p>Fleeing takes endurance, and you can't flee when you are too exhausted. The 
+better your flee skill, dexterity and wits against your enemy's, the better your 
+chance. A bad try can leave you in a panic and still in the fight, or let your 
+enemy strike you as you run.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Wimpy Mode</a>
+</pre>
+
+
+
+
+</div>

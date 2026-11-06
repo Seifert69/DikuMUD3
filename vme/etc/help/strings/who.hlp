@@ -1,18 +1,34 @@
-<br/>
-<br/>
-Usage who<br/><br/>
-<br/>
-This gives you a list of the playing characters currently logged on the mud.<br/>
-You can use this to see if you best friend/enemy is here ;)<br/>
-Other options of the who command are:<br/><br/>
-Usage who admin   shows admin currently online<br/><br/>
-Usage who builder shows Builders currently online<br/><br/>
-Usage who guide   shows New Player Helpers currently online<br/><br/>
-<br/>
-<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Clist<br/><br/>
-Look<br/><br/>
-Wizlist<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Who</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>who</a>
+who admin
+who builder
+who guide
+who clan
+who status
+</pre>
+<p>Gives you a list of the players currently in the game. You can use this to see if 
+your best friend (or enemy) is here.
+</p>
+<ul><li><b>who admin</b>: the administrators online.</li>
+<li><b>who builder</b>: the builders online.</li>
+<li><b>who guide</b>: the New Player Helpers online, who are glad to help you.</li>
+<li><b>who clan</b>: the members of clans online.</li>
+<li><b>who status</b>: the status players have set for themselves.</li></ul>
+<p>To set your own status, the few words shown behind your name, type change and 
+the words, for example change looking for a group. Words that start like one of 
+the settings of <a cmd='#'>Help Change</a> switch that setting instead.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help When</a>
+&gt; <a cmd='#'>Help Clist</a>
+&gt; <a cmd='#'>Help Wizlist</a>
+&gt; <a cmd='#'>Help Change</a>
+</pre>
+
+
+
+
+</div>

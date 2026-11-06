@@ -1,30 +1,44 @@
-<br/>
-<br/><br/>
-SKILL<br/><br/>
-Class and level:<br/><br/>
-Assassin    - 0<br/><br/>
-Conjurer    - 0<br/><br/>
-Dark Knight - 0<br/><br/>
-Druid       - 0<br/><br/>
-Fighter     - 0<br/> <br/>
-Healer      - 3<br/><br/>
-Paladin     - 0<br/><br/>
-Ranger      - 0<br/><br/>
-Sorcerer    - 3<br/><br/>
-Thief       - 0<br/><br/>
-<br/><br/>
-Usage consider (character)<br/><br/>
-Example: consider beast<br/><br/>
-<br/><br/>
-If you are wondering if an opponent is too strong for you, you might use this<br/>
-command to see if you would have even the slightest chance of fleeing. Some<br/>
-monsters are simply so strong that they may kill you in one hit and this<br/>
-command will help you know. Be aware that the command does not consider if<br/>
-any nearby monsters will assist the monster you are attacking and nor will<br/>
-it know if the monster has any special attacks like a breath weapon or<br/>
-spells. These are the risks you must run. The command assumes that you have <br/>
-full hit points when it replies with regard to the consider. It also <br/>
-does not take into account whether you have others that may assist you. The<br/>
-higher your ability in this skill the more accurate your judgement will be. <br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Consider</h1>
+<p>SKILL
+</p><p>Class and level:
+</p>
+<pre> Assassin    - 0
+ Barbarian   - 0
+ Conjurer    - 0
+ Dark Knight - 0
+ Druid       - 0
+ Fighter     - 0
+ Healer      - 3
+ Paladin     - 0
+ Ranger      - 0
+ Sorcerer    - 3
+ Thief       - 0
+</pre>
+<p>Usage:
+</p>
+<pre>consider &lt;character&gt;
+</pre>
+<p>Example:
+</p>
+<pre>consider beast
+</pre>
+<p>If you are wondering whether an opponent is too strong for you, use this command 
+to see if you would have even the slightest chance. Some monsters are simply so 
+strong that they may kill you in one hit, and this command will help you know.
+</p><p>Be aware that it doesn't consider whether nearby monsters will help the one you 
+attack, or whether it has special attacks like a breath weapon or spells: these 
+are the risks you must run. It assumes you have full hit points, and it doesn't 
+count others who may help you. The better your consider skill, the more accurate 
+your judgement.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Kill</a>
+&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Diagnostics</a>
+</pre>
+
+
+
+
+</div>

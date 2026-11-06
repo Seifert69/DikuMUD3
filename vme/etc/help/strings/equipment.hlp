@@ -1,12 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage equipment<br/><br/>
-<br/>
-The 'equipment' command list all objects currently used and what you use<br/>
-them for. Some objects can be used for several purposes.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Inventory<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Equipment</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>equipment</a>
+</pre>
+<p>Lists everything you are using, and what you use it for: what you wear, what 
+you wield and what you hold. A light you carry is marked (light) while it burns.
+</p><p>These are the places you can wear and hold things:
+</p>
+<pre>head, left ear, right ear, neck, body, about body, across chest, back,
+arms, wrist, hands, left finger, right finger, waist, legs, ankle, feet,
+shield, wielded, held, or a weapon or thing used with both hands
+</pre>
+<p>A thing can only go where it was made to go, and where it fits you. Wear things 
+with <a cmd='#'>Help Wear</a>, wield weapons with <a cmd='#'>Help Wield</a>, take them off with 
+<a cmd='#'>Help Remove</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Inventory</a>
+&gt; <a cmd='#'>Help Wear</a>
+&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Remove</a>
+</pre>
+
+
+
+
+</div>

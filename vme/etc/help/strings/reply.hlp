@@ -1,0 +1,22 @@
+<div class="mw-parser-output"><h1>Reply</h1>
+<p>Usage:
+</p>
+<pre>reply &lt;number&gt;
+</pre>
+<p>At a board (or with one in your hands), reply writes an answer to message 
+&lt;number&gt; on it. You get the editor as when you write a new message, and your 
+answer is posted as a new message titled "re" and the title of the one you 
+answered, so others can follow the thread.
+</p><p>Like writing, replying to most boards needs level 10, and you can't reply when 
+the board is full or the message is still being written.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Boards</a>
+&gt; <a cmd='#'>Help Read</a>
+</pre>
+
+
+
+
+</div>

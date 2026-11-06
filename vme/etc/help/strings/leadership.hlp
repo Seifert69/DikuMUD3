@@ -1,16 +1,28 @@
-<br/>
-<br/><br/>
-SKILL<br/><br/>
-<br/>
-Class and Level:<br/><br/>
-Necromancer -  3<br/><br/>
-Ranger      - 88<br/><br/>
-<br/><br/>
-Innate skill<br/><br/>
-<br/><br/>
-A born leader or one who has studied the skill is something of value<br/>
-to his group. People and creatures want to follow a real leader. What <br/>
-sort of value this is to the followers and the leader is yet to be determined.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Leadership</h1>
+<p>SKILL
+</p><p>Class and level:
+</p>
+<pre> Necromancer -  3
+ Dark Knight - 12
+ Paladin     - 12
+ Barbarian   - 15
+ Fighter     - 15
+ Ranger      - 16
+</pre>
+<p>A born leader, or one who has studied the skill, is something of value to their 
+group: people want to follow a real leader. Leadership is used by itself; there 
+is no command for it.
+</p><p>For now it does one thing: when you rescue someone who follows you (see 
+<a cmd='#'>Help Rescue</a>), your leadership adds to your chance of succeeding.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Rescue</a>
+&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Follow</a>
+</pre>
+
+
+
+
+</div>

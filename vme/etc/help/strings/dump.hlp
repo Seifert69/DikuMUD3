@@ -1,14 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-You are encouraged not to leave items laying around as it clutters up the<br/>
-game.  You are rewarded for disposing of items at the Udgaard dump with a<br/>
-small monetary and/or experience reward. You<br/>
-may also bury unwanted items.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
- Experience<br/><br/>
-Bury <br/><br/>
-Money<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Getting rid of things</h1>
+<p>You are encouraged not to leave things lying around, as it clutters up the 
+game. Some ways to get rid of what you don't want:
+</p>
+<ul><li><b>Donate it</b> to others who may need it (see <a cmd='#'>Help Donate</a>): the thing goes</li></ul>
+<pre> to a donation room where anyone can pick it up.
+</pre>
+<ul><li><b>Bury it</b> (see <a cmd='#'>Help Bury</a>): it is gone from sight, and in time gone for</li></ul>
+<pre> good.
+</pre>
+<ul><li><b>Drop it at the dump</b>, the Village Waste Heap south of Guild Road in</li></ul>
+<pre> Udgaard, by the boat bridge: what is dropped there isn't seen again.
+</pre>
+<ul><li><b>Sell it</b>, if a shop trades in that kind of thing (see <a cmd='#'>Help Shops</a>).</li></ul>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Donate</a>
+&gt; <a cmd='#'>Help Bury</a>
+&gt; <a cmd='#'>Help Shops</a>
+</pre>
+
+
+
+
+</div>

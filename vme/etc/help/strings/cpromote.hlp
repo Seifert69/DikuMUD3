@@ -1,0 +1,30 @@
+<div class="mw-parser-output"><h1>Cpromote</h1>
+<p>Usage:
+</p>
+<pre>cpromote &lt;member&gt; &lt;rank&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cpromote fizban 12
+cpromote fizban 0
+</pre>
+<p>Sets the clan rank of a member of your clan, a number from 1 to 25 (see 
+<a cmd='#'>Help Csrank</a> for the titles of your clan's ranks). Rank 0 takes their rank 
+away. The member must be in the game.
+</p><p>The clan Master and the clan lords can use cpromote, and so can members of 
+rank 16 or higher. Without being Master or lord, you can only set ranks below 
+your own, and only for members below you. Only the Master can give rank 25, and 
+a rank must have a title before anyone can be given it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Csrank</a>
+&gt; <a cmd='#'>Help Crank</a>
+&gt; <a cmd='#'>Help Cdepose</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

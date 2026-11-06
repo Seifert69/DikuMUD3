@@ -1,19 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage save<br/><br/>
-<br/>
-This command is useful, and should be used as often as you advance in the<br/>
-game in any way, picking up items, killing monsters etc. The command<br/>
-will save your character as is, updating your crash-restore if the game<br/>
-crashes, which we hope it will not. When you log in, you will be put in<br/>
-the same room you were in when last you saved, carrying all of the same<br/>
-equipment.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Equipment<br/><br/>
-Killing<br/><br/>
-Score<br/><br/>
-Rent<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Save</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>save</a>
+</pre>
+<p>Saves your character as it is, with everything you carry and wear. When you log 
+on again, you are put in the room you were in when you were last saved.
+</p><p>The game saves you by itself every 20 minutes, and when you quit, so you rarely 
+need to type save; it is good to do after something you wouldn't like to lose, 
+in case the game goes down. You must wait a minute between saves.
+</p><p>A new character is a guest until it is saved for the first time, and a guest is 
+forgotten when they quit. The first save, yours or the game's, makes you a real 
+player: "You are no longer a guest on this game."
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Quit</a>
+&gt; <a cmd='#'>Help Equipment</a>
+&gt; <a cmd='#'>Help Score</a>
+</pre>
+
+
+
+
+</div>

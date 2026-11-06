@@ -1,24 +1,33 @@
-<br/>
-<br/>
-Usage<br/><br/>
-tell (character)(words to tele-communicate)<br/><br/>
-<br/>
-You may speak to a player that is anywhere in the game with the use of the<br/>
-tell command.  Beware that immortals or<br/>
-gods can intercept any message you deliver or<br/>
-receive (although it is considered rude to do so!) Tell enables you to<br/>
-communicate via telepathy with a character who for one reason or another<br/>
-is not at the same location as you are. No other player will hear this. Be<br/>
-warned that a player can stop receiving tells by using the not (no tell)<br/>
-command.<br/><br/>
-<br/><br/>
-To read your tell history just type 'tell' with no argument.<br/>
-This will keep your last 20 tells.  To clear your tell history the command is<br/><br/>clear tell<br/><br/><br/>
-<br/>See Also:<br/><br/>
-Ignore<br/><br/>
-Say<br/><br/>
-Whisper<br/><br/>
-Yell<br/><br/>
-Ask<br/><br/>
-respond<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Tell</h1>
+<p>Usage:
+</p>
+<pre>tell &lt;character&gt; &lt;words&gt;
+tell group &lt;words&gt;
+<a cmd='#'>tell</a>
+</pre>
+<p>Example:
+</p>
+<pre>tell asta Meet me at the temple!
+</pre>
+<p>You may speak to a player who is anywhere in the game with the tell command. 
+No other player will hear it. tell group &lt;words&gt; tells everyone in your group.
+</p><p><a cmd='#'>tell</a> alone shows your last 20 tells; <a cmd='#'>clear tell</a> empties that list. To answer 
+the last one who told you something, use <a cmd='#'>Help Respond</a>.
+</p><p>A player who doesn't want to hear tells can turn them off with <a cmd='#'>change tell</a>, 
+and on again the same way; they can also ignore a single player (see 
+<a cmd='#'>Help Ignore</a>). Beware that gods can see the messages you send and receive, 
+though it is considered rude to look.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Respond</a>
+&gt; <a cmd='#'>Help Ignore</a>
+&gt; <a cmd='#'>Help Say</a>
+&gt; <a cmd='#'>Help Whisper</a>
+&gt; <a cmd='#'>Help Ask</a>
+</pre>
+
+
+
+
+</div>

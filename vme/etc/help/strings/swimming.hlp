@@ -1,0 +1,34 @@
+<div class="mw-parser-output"><h1>Swimming</h1>
+<p>Class and level:
+</p>
+<pre> Assassin Level 5
+ Thief Level 6
+ Ranger Level 6
+ (each up to 50%)
+</pre>
+<p>Usage:
+</p>
+<pre> swim &lt;direction&gt;
+ swim on
+ swim off
+</pre>
+<p>To go into water you have to swim, or the game tells you "You might want to 
+swim." Type <a cmd='#'>swim on</a> and you swim by yourself whenever your way leads into or 
+out of the water, or swim one move at a time with swim and a direction. 
+<a cmd='#'>swim off</a> stops it again.
+</p><p>Every move in the water tests your swimming skill and your constitution against 
+how hard the water there is. If you fail, you flounder and take in water: you 
+lose hit points and don't get anywhere, so watch your hit points, you can drown.
+</p><p>Deep water, like the open sea, needs a boat. Swimming from deep water back to 
+land is possible, but incredibly difficult.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Boats</a>
+ &gt; <a cmd='#'>Help Movement</a>
+</pre>
+
+
+
+
+</div>

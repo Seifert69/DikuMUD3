@@ -1,17 +1,19 @@
 <div class="mw-parser-output"><h1>Prompt</h1>
 <p>Usage:
 </p>
-<pre> prompt &lt;blank|default|string&gt;
+<pre> prompt &lt;blank|default|show|string&gt;
 </pre>
 <p>Examples:
 </p>
 <pre> <a cmd='#'>prompt blank</a>
  <a cmd='#'>prompt default</a>
+ <a cmd='#'>prompt show</a>
  <a cmd='#'>prompt %hp%&gt;</a>
 </pre>
 <p>To make a custom prompt simply type the word PROMPT and follow it with any
-of the following variables. Color may be added to the prompt, see the help
-at the end of the prompt variables for this.
+of the following variables. Color may be added to the prompt with the same
+codes as everywhere else, see <a cmd='#'>help colors</a>. <a cmd='#'>prompt show</a> shows the prompt
+you have now.
 </p><p><b>PROMPT VARIABLES</b>
 </p>
 <ul><li>%hp% - Your Current Hit Points</li>
@@ -34,8 +36,6 @@ at the end of the prompt variables for this.
 <li>%tankname% - Your tank's name</li>
 <li>%oppdiag% - Your opponent's condition (diagnoses)</li>
 <li>%tankdiag% - Your tank's condition (diagnoses)</li></ul>
-
-
 <p><b>IMMORTAL ONLY IDENTIFIERS</b>
 </p>
 <ul><li>%room% - The room idx you are in</li>
@@ -59,7 +59,7 @@ at the end of the prompt variables for this.
 </p>
 <pre> <a cmd='#'>prompt default</a>
 </pre>
-<p>TO have no prompt at all, which can be nice if you're
+<p>To have no prompt at all, which can be nice if you're
 visually impaired, try:
 </p>
 <pre> <a cmd='#'>prompt blank</a>
@@ -70,6 +70,7 @@ command.
 See Also:
 </p>
 <pre> &gt; <a cmd='#'>help score</a>
+ &gt; <a cmd='#'>help colors</a>
 </pre>
 
 

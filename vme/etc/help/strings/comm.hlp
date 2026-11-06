@@ -1,62 +1,37 @@
 <div class="mw-parser-output"><h1>Comm</h1>
-<p>Communication channels are, other then shout and newbie, controlled
-by the player(s). 
-You can either make your own channel or wait to be invited to join a
-channel that someone else has started. The following commands are
-available.
-</p><p><br />
-To add a channel:
+<p>Channels let you talk with players all over the world. Anyone can start a 
+channel: just add one with a name nobody uses, and tell your friends to add 
+it too. Your channels are saved with your character.
+</p><p>Usage:
 </p>
-<pre> &gt; comm add (channel name)
+<pre>comm add &lt;channel&gt;        start or join a channel
+comm delete &lt;channel&gt;     leave a channel
+<a cmd='#'>comm #</a>                  list the channels you are on
+&lt;channel&gt; &lt;message&gt;       talk on a channel
+&lt;channel&gt; @ &lt;action&gt;      an emote on a channel
+&lt;channel&gt; #               see who is on a channel
+comm inform on|off|join   see who joins and leaves your channels
+<a cmd='#'>comm echo</a>               turn on or off seeing your own messages
+<a cmd='#'>comm help</a>               a short list of these commands
 </pre>
-<p>To delete a channel type:
+<p>For example, to join the newbie channel and ask a question:
 </p>
-<pre> &gt; comm delete (channel name)
+<pre>comm add newbie
+newbie How do I get my corpse back?
 </pre>
-<p>To see all your active channels type:
-</p>
-<pre> &gt; comm #
-</pre>
-<p>To see who is on a specific channel type:
-</p>
-<pre> &gt; (channel name) #
-</pre>
-<p>For example to see who's on the newbie channel, type:
-</p>
-<pre> &gt; newbie #
-</pre>
-<p><br />
-To see who joins or departs a channel type:
-</p>
-<pre> &gt; comm inform (on|off|depart|join)
-</pre>
-<p>To toggle echoing of your message type:
-</p>
-<pre> &gt; comm echo
-</pre>
-<p><br />
-Shout / Newbies public Communications
-</p><p>We insist that the Public channels newbie and shout remain friendly.
-If you feel you have to be profane make sure you use some other channel
-than shout or newbie.
-</p><p>We also insist that there be no advertizing for other muds, games, or
-your own private favorite web page in the public channels or on the
-boards. If people want to advertize on Valhalla then they can pay for
-the right to do so with out your help.
-</p><p>Offenders of these rules will lose the ability to use their
-communication channels for a time determined by the crime and the person
-or program that catches them.
-</p><p>If you feel you need to have full freedom to speak then use say or a
-channel created by yourself or others.
+<p>Some channels are relayed to the game's Discord server, and what you write on 
+them is public there too: newbie, chat, mud, bugs, builder, accessibility and 
+diku3. <a cmd='#'>comm #</a> shows which of these you are on. The guild channel, gchat, 
+only reaches members of your own guild.
+</p><p>Keep the public channels friendly: no swearing, and no advertising other games 
+or web pages. Offenders lose the use of their channels for a while.
 </p><p><br />
 See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Ask</a>
- &gt; <a cmd='#'>Help Shout</a>
- &gt; <a cmd='#'>Help Say</a>
- &gt; <a cmd='#'>Help Tell</a>
- &gt; <a cmd='#'>Help Whisper</a>
- &gt; <a cmd='#'>Help Yell</a>
+<pre>&gt; <a cmd='#'>Help Shout</a>
+&gt; <a cmd='#'>Help Say</a>
+&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Newbie</a>
 </pre>
 
 

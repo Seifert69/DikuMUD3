@@ -1,20 +1,22 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage insult (character)<br/><br/>
-<br/>
-This command will come up with a fitting insult for the character you<br/>
-specify. Beware, some might get p*ssed off! This command will make you<br/>
-leave your guild if used against your guildmaster.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Social<br/><br/>
-Guild <br/><br/>
-<br/>
-<br/>
-<br/>
-Since the mud currently runs under the guild paths system, players can<br/>
-neither join or leave their guilds. The join command is also obsolete.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Insult</h1>
+<p>Usage:
+</p>
+<pre>insult &lt;character&gt;
+</pre>
+<p>Comes up with a fitting insult for the character you name. Beware, some might 
+get angry!
+</p><p>Insulting your own guild master is how you leave a guild: the guild master 
+takes it very personally, and you are no longer a member. Think twice before 
+you do it. To join a guild, see <a cmd='#'>Help Join</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Join</a>
+&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Socials</a>
+</pre>
+
+
+
+
+</div>

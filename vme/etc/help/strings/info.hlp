@@ -1,54 +1,43 @@
 <div class="mw-parser-output"><h1>Info</h1>
 <p>Usage:
 </p>
-<pre> info
- info roots
- info &lt;category&gt;
- info &lt;ability, skill, spell or weapon&gt;
+<pre>info
+info roots
+info &lt;category&gt;
+info &lt;ability, skill, spell or weapon&gt;
 </pre>
 <p>Examples:
 </p>
-<pre> info
- info roots
- info cat sword
- info dagger
- info strength
+<pre>info
+info roots
+info cat sword
+info dagger
+info strength
 </pre>
-<p>Use <b>info</b> at a teacher, before you <a cmd='help #'>practice</a>. It lists what that
-teacher teaches you, the cheapest first, and what your next practice of each costs you.
-Away from a teacher it doesn't work: <a cmd='#'>status</a> shows how good you are, but not
-the costs.
-</p>
-<p>A line looks like this:
+<p>Use <b>info</b> at a teacher, before you <b>practice</b>. It lists what that teacher teaches you, the cheapest first, and what your next practice of each costs you. Away from a teacher it doesn't work: <b>status</b> shows how good you are, but not the costs.
+</p><p>A line looks like this:
 </p>
 <pre>  32% dagger               [practice points   8] *
 </pre>
-<p>You have 32% in dagger, and practicing it once more now costs you 8 practice points.
-The * means you've practiced it once already this level; each * makes the next practice
-cost half as much again. What you pay depends on your own race and profession, so two
-players can see different prices for the same thing.
-</p>
-<p>Other things you may see instead of the price:
+<p>You have 32% in dagger, and practicing it once more now costs you 8 practice points. The * means you've practiced it once already this level; each * makes the next practice cost half as much again. What you pay depends on your own race and profession, so two players can see different prices for the same thing.
+</p><p>Other things you may see instead of the price:
 </p>
 <ul><li><b>[Practice next level]</b>: you can't practice it again this level.</li>
-<li><b>[Teacher at max (80%). You are at 80% of your potential 105%]</b>: this teacher can't
-take you further; find a teacher who can.</li>
-<li><b>[REQ: Guild level:12 ]</b>: you need that guild level (or the level, or ability, shown)
-first.</li>
-<li>A name with nothing after it is a category (such as sword or axe hammer): <b>info
-&lt;category&gt;</b> lists what's in it, <b>info roots</b> lists the categories.</li></ul>
-<p>The list leaves out anything that would cost you more than 25 points. To see everything,
-with your potential and the money a practice costs, use <a cmd='help #'>expert</a> mode.
-</p>
-<p>The best way to spend your points: practice each thing <b>once per level</b>, while it's
-at its cheapest, and practice before you raise a <a cmd='help #'>level</a>, because
-levelling starts the count again.
-</p>
-<p><br />
+<li><b>[Teacher at max (80%). You are at 80% of your potential 105%]</b>: this teacher can't take you further; find a teacher who can.</li>
+<li><b>[REQ: Guild level:12 ]</b>: you need that guild level (or the level, or ability, shown) first.</li>
+<li>A name with nothing after it is a category (such as sword or axe hammer): <b>info &lt;category&gt;</b> lists what's in it, <b>info roots</b> lists the categories.</li></ul>
+<p>The list leaves out anything that would cost you more than 25 points. To see everything, with your potential and the money a practice costs, use <b>expert</b> mode (change expert).
+</p><p>The best way to spend your points: practice each thing <b>once per level</b>, while it's at its cheapest, and practice before you raise a <b>level</b>, because levelling starts the count again.
+</p><p><br />
 See also:
 </p>
 <pre>&gt; <a cmd='#'>Help Practice</a>
 &gt; <a cmd='#'>Help Expert</a>
 &gt; <a cmd='#'>Help Level</a>
 &gt; <a cmd='#'>Help Status</a>
-</pre></div>
+</pre>
+
+
+
+
+</div>

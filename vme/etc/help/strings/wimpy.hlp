@@ -3,11 +3,16 @@
 </p>
 <pre> <a cmd='#'>change wimpy</a>
 </pre>
-<p>The command change wimpy is used to switch between brave and wimpy mode. When you are wimpy you will flee whenever death is near. There is no XP penalty for being wimpy because fleeing is a skill you can practice. 
+<p>The command change wimpy switches between brave and wimpy mode. When you are 
+wimpy, you flee by yourself whenever death is near: when one blow takes more 
+than a quarter of the hit points you have left, or once you are down to a 
+quarter of your hit points. Type it again to be brave.
+</p><p>There is no experience penalty for being wimpy, because fleeing is a skill you 
+can practice (see <a cmd='#'>help fleeing</a>), and like any flight it can fail.
 </p><p><br />
 See Also:
 </p>
-<pre> &gt; <a cmd='#'>help flee</a>
+<pre> &gt; <a cmd='#'>help fleeing</a>
  &gt; <a cmd='#'>help Experience</a>
  &gt; <a cmd='#'>help Peaceful</a>
  &gt; <a cmd='#'>help Change</a>

@@ -1,25 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-quit -Makes you leave the game.<br/><br/>
-<br/>
-This command makes you leave the game instantly and saves all your<br/>
-inventory. If you are carrying inventory you will be shown a message<br/>
-stating the cost per day in rent to keep your inventory and when it will<br/>
-be deleted. You may quit any where in the game unless it is a special<br/>
-no-quit room.<br/>
-<br/><br/><br/>
-Under certain circumstances you can't quit, for example if you are fighting<br/>
-you will not be able to quit; you must flee first.<br/>
-<br/><br/><br/>
-NOTE:<br/><br/>
-When you leave the game you MUST have enough money ON your character (not<br/>
-in the bank) to pay for your rent or you will lose your equipment.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Flee<br/><br/>
-Equipment<br/><br/>
-Rent<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Quit</h1>
+<p>Usage:
+</p>
+<pre>quit
+</pre>
+<p>Makes you leave the game. Your character is saved as you go, with everything 
+you carry and wear, and you come back to it the next time you log on. You must 
+type the whole word: quit, no less, so that you don't leave by accident.
+</p><p>You can't quit while you are fighting: flee first. And for ten minutes after a 
+fight with another player, you can't quit either; the game tells you how long 
+you have left to wait.
+</p><p>If your character has never been saved, you are still a guest, and a guest is 
+forgotten when they quit. See <a cmd='#'>Help Save</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Save</a>
+&gt; <a cmd='#'>Help Fleeing</a>
+&gt; <a cmd='#'>Help Equipment</a>
+</pre>
+
+
+
+
+</div>

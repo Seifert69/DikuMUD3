@@ -1,24 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-emote (emotestring)<br/><br/>
-, (emotestring)<br/><br/>
-<br/>
-This is a very useful command for inter-player-communication. Sure, the<br/>
-social commands are good, but they do not<br/>
-cover ALL the emotions you wish to express. Issuing this command lets the<br/>
-other characters see your name, followed by the &lt;emotestring&gt;<br/>
-<br/><br/>
-eg:<br/>
-<br/><br/>
-emote is very VERY happy!!!!<br/><br/>
-<br/><br/>
-gives everyone else at the same location:<br/><br/>
-Quinn is very VERY happy!!!!<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Communications<br/><br/>
-Social<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Emote</h1>
+<p>Usage:
+</p>
+<pre>emote &lt;what you do&gt;
+, &lt;what you do&gt;
+</pre>
+<p>Example:
+</p>
+<pre>emote is very VERY happy!
+, waves at everyone.
+</pre>
+<p>This is a very useful command for talking with other players. The social 
+commands (see <a cmd='#'>Help Socials</a>) are good, but they don't cover ALL the things you 
+wish to express. Emote shows everyone where you are your name, followed by your 
+words. So if Asta types emote is very VERY happy!, the others see:
+</p>
+<pre>Asta is very VERY happy!
+</pre>
+<p>A , at the start of a line is short for emote.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Socials</a>
+&gt; <a cmd='#'>Help Say</a>
+&gt; <a cmd='#'>Help Communications</a>
+</pre>
+
+
+
+
+</div>

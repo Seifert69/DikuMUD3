@@ -1,37 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-At short intervals you gain hitpoints, mana and endurance points (unless you're<br/>
-hungry or thirsty).<br/>
-In general, if you're sitting you gain faster than<br/>
-if you're standing. If you are resting you gain faster than when you're<br/>
-standing. Sleeping and resting make you gain at equal rates.<br/>
-<br/><br/><br/>
-You will gain Hitpoints back faster if your CON is higher then your HITS<br/>
-and you will gain MAG and DIV back faster if your CHA is higher then both<br/>
-of these.<br/>
-<br/><br/><br/>
-When you are in sacred places you gain at double the normal rate.<br/>
-Here are some of the sacred places in Midgaard:<br/>
-<br/><br/>
-The Chicken's Rest   in Udgaard<br/>
-The Temple           in Udgaard<br/>
-Park Circle          in the park (south-east part of Midgaard).<br/>
-Inner sanctum        in the Midgaard Cathedral.<br/>
-Infirmary            in the Udgaard Monastery.<br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Resting<br/><br/>
-Standing<br/><br/>
-Sleeping<br/><br/>
-Hitpoints<br/><br/>
-Mana<br/><br/>
-Endurance<br/><br/>
-Thirsty<br/><br/>
-Hungry <br/><br/>
-Constitution<br/><br/>
-Charisma<br/><br/>
-Mana<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Regenerate</h1>
+<p>At short intervals you get back hit points, mana and endurance, unless you are 
+hungry or thirsty: then you lose them instead (see <a cmd='#'>Help Eat</a> and 
+<a cmd='#'>Help Drink</a>). In a fight you get nothing back.
+</p><p>You get them back faster when you aren't on your feet: half again as fast when 
+you rest or sleep, a quarter faster when you sit (see <a cmd='#'>Help Position</a>). Your 
+constitution decides how fast your hit points come back, and you get mana back 
+faster when your charisma is higher than both your magic and divine. A very old 
+character, past the years of their race, hardly heals at all.
+</p><p>In holy places you get back twice as much. Some of them:
+</p>
+<ul><li>in Udgaard: the Temple, the Healing Center of the Temple, the Chicken's Rest, the Town Hall</li>
+<li>in Midgaard: the Cathedral Altar, the Inner Sanctum, the Stone Circle, the Grubby Inn</li></ul>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Position</a>
+&gt; <a cmd='#'>Help Eat</a>
+&gt; <a cmd='#'>Help Drink</a>
+&gt; <a cmd='#'>Help Hitpoints</a>
+&gt; <a cmd='#'>Help Mana Points</a>
+&gt; <a cmd='#'>Help Endurance Points</a>
+&gt; <a cmd='#'>Help Constitution</a>
+&gt; <a cmd='#'>Help Charisma</a>
+</pre>
+
+
+
+
+</div>

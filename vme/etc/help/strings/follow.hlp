@@ -1,16 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage follow (character)<br/><br/>
-<br/>
-You must be following someone or have someone following you in order to<br/>
-form a group. To start following someone,<br/>
-you use this command. Where ever the character you follow goes, you will<br/>
-go. To stop following someone around, just follow yourself. If someone<br/>
-does not want you to follow them they may ditch<br/>
-you.<br/><br/>
-<br/>See Also:<br/><br/>
-Group<br/><br/>
-Ditch<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Follow</h1>
+<p>Usage:
+</p>
+<pre>follow &lt;character&gt;
+follow self
+<a cmd='#'>follow</a>
+</pre>
+<p>Example:
+</p>
+<pre>follow asta
+</pre>
+<p>To start following someone, you use this command. Wherever the character you 
+follow goes, you go too. You must be following someone, or have someone 
+following you, to form a group (see <a cmd='#'>Help Groups</a>).
+</p><p>To stop following someone, follow yourself: follow self. follow alone tells you 
+who you are following. If someone doesn't want you to follow them, they may 
+ditch you (see <a cmd='#'>Help Ditch</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Ditch</a>
+</pre>
+
+
+
+
+</div>

@@ -1,17 +1,22 @@
 <div class="mw-parser-output"><h1>Hit / Punch</h1>
 <p>Usage:
 </p>
-<pre> hit (character)
- punch (character)
+<pre> hit &lt;character&gt;
+ punch &lt;character&gt;
 </pre>
-<p>You'll punch the character with your fists. This is a great way to start a fight with someone.
-It is more powerful when your hands are free.
+<p>You punch the character with your fists. This is a great way to start a fight 
+with someone.
+</p><p>To punch, your hands must be free: you can't while you wield a weapon. And you 
+must have practiced fist fighting, the weapon skill for your fists, which most 
+guilds teach. You can punch another player only when both of you have signed 
+the book of blood.
 </p><p><br />
 See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Knee</a>
  &gt; <a cmd='#'>Help Kick</a>
  &gt; <a cmd='#'>Help Elbow</a>
+ &gt; <a cmd='#'>Help Kill</a>
 </pre>
 
 

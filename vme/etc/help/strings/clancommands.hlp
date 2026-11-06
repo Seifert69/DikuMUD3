@@ -1,26 +1,44 @@
-<br/>
-The clan commands are split up into 4 groups.  The first group is only for the<br/>
-clan master.  The second group is for both the clan Master and the clan Lord<br/>
-which is the second in  charge of the clan.  The third group is commands for the<br/>
-members (some of the member commands only work if the member is appointed to an<br/>
-office of the clan).  Finally the fourth group is commands that can be used by<br/>
-anyone even if your not in a clan.<br/>
-<br/>
-<br/>Clan Master commands:<br/>
-cappoint         cdemote<br/>
-<br/>
-Clan Master and Lord commands:<br/>
-caccept          cremove          csrank              ctitle<br/>
-<br/>
-<br/>Clan Member commands:<br/>
-Normal Members:<br/>
-cinfo            cdeposit         cbalance            cstore<br/>
-cequipment       crank            cdefect             center<br/>
-cexit            clan donate<br/>
-<br/>
-Appointed members:<br/>
-cwithdraw        cunstore<br/>
-<br/>
-<br/>Anyone:<br/>
-clist<br/>
-<br/>
+<div class="mw-parser-output"><h1>Clan Commands</h1>
+<p>The clan commands are split up into groups: some only for the clan Master, some 
+for the Master and the clan lords (the second in charge of the clan), some for 
+all members (a few of them only for members appointed to an office of the 
+clan), and one that anyone can use, even when not in a clan. Each has its own 
+help page.
+</p><p><b>Clan Master:</b>
+</p>
+<pre><a cmd='#'>help cappoint</a>   appoint a lord, treasurer, quartermaster or new Master
+<a cmd='#'>help cdepose</a>    take a member out of a position (also rank 25)
+<a cmd='#'>help cstart</a>     take up a newly approved clan, once
+</pre>
+<p><b>Clan Master and lords:</b>
+</p>
+<pre><a cmd='#'>help caccept</a>    take in a new member
+<a cmd='#'>help cremove</a>    remove a member
+<a cmd='#'>help cpromote</a>   set a member's rank (also rank 16 and up)
+<a cmd='#'>help csrank</a>     the titles of the clan's ranks
+<a cmd='#'>help ctitle</a>     a member's title
+</pre>
+<p><b>Members:</b>
+</p>
+<pre><a cmd='#'>help cinfo</a>  <a cmd='#'>help cdeposit</a>  <a cmd='#'>help cbalance</a>  <a cmd='#'>help cstore</a>  <a cmd='#'>help cequipment</a>
+<a cmd='#'>help crank</a>  <a cmd='#'>help cdefect</a>  <a cmd='#'>help center</a>  <a cmd='#'>help cexit</a>  <a cmd='#'>help clan donate</a>
+</pre>
+<p><b>Appointed members</b> (treasurer, quartermaster):
+</p>
+<pre><a cmd='#'>help cwithdraw</a>  <a cmd='#'>help cunstore</a>
+</pre>
+<p><b>Anyone:</b>
+</p>
+<pre><a cmd='#'>help clist</a>
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clan</a>
+&gt; <a cmd='#'>Help Clan Startup</a>
+</pre>
+
+
+
+
+</div>

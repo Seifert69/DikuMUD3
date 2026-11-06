@@ -1,30 +1,38 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The skills can be used in all sorts of situations. Do you want a<br/>
-door open, rescue you friend, or just make all the evil<br/>
-skeletons go away? This is what your skills can do. However some<br/>
-skills require something of your abilities. If your a required<br/>
-ability isn't good enough, you have to get more to perform the skill.<br/>
-Following is a list of the skills (help available on each skill):<br/>
-<br/><br/>
-<br/>
-    Turn Undead          Scroll Use         Wand Use<br/>
-    Consider             Diagnostics        Appraisal<br/>
-    Ventriloquate        Shield             Fleeing<br/>
-    Sneak                Backstab           Hide<br/>
-    First Aid            Pick Lock          Steal<br/>
-    Rescue               Climb              Leadership<br/>
-    Kick                 Swimming           Bash<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/><br/><br/>
-Some skills are used with commands, others checked when issuing<br/>
-a command or in another situation.<br/>
-<br/><br/>
-<br/>See also:<br/><br/>
-Backstab<br/><br/>
-Turn Undead<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Skills</h1>
+<p>Skills are what you have learned to do: open a lock, rescue a friend, hide, 
+track, or make the evil skeletons go away. Your guild teaches them (see 
+<a cmd='#'>Help Practice</a> and <a cmd='#'>Help Info</a>), and how good you get depends on your race, 
+your profession and your abilities. Some skills are commands of their own, 
+like backstab or hide; others are used by themselves when you do something, 
+like climb or swimming.
+</p><p>These are the skills of Valhalla. Click one to read its help:
+</p><p><a cmd='#'>help ambush</a>, <a cmd='#'>help appraisal</a>, armor chain, armor hard leather, armor plate,
+armor soft leather, <a cmd='#'>help backstab</a>, <a cmd='#'>help bash</a>, <a cmd='#'>help berserk</a>,
+<a cmd='#'>help butcher</a>, <a cmd='#'>help charge</a>, <a cmd='#'>help cleave</a>, <a cmd='#'>help climb</a>, <a cmd='#'>help consider</a>,
+<a cmd='#'>help cook</a>, <a cmd='#'>help curare</a>, <a cmd='#'>help defend</a>, <a cmd='#'>help diagnostics</a>,
+<a cmd='#'>help disarming</a>, <a cmd='#'>help dowse</a>, <a cmd='#'>help elbow</a>, evaluating,
+<a cmd='#'>help fashion weapon</a>, <a cmd='#'>help filching</a>, <a cmd='#'>help first aid</a>, <a cmd='#'>help fleeing</a>,
+<a cmd='#'>help forage</a>, hand cuffing, <a cmd='#'>help herbs</a>, <a cmd='#'>help hide</a>, <a cmd='#'>help hit</a>,
+<a cmd='#'>help hunt</a>, <a cmd='#'>help kick</a>, <a cmd='#'>help knee</a>, <a cmd='#'>help lay trap</a>, leadership,
+<a cmd='#'>help leap</a>, <a cmd='#'>help palm</a>, <a cmd='#'>help peeking</a>, <a cmd='#'>help pick lock</a>,
+<a cmd='#'>help pick pockets</a>, <a cmd='#'>help plant</a>, punch, <a cmd='#'>help rend</a>, <a cmd='#'>help rescue</a>,
+<a cmd='#'>help resize</a>, <a cmd='#'>help scan</a>, <a cmd='#'>help scroll use</a>, <a cmd='#'>help search</a>, <a cmd='#'>help shelter</a>,
+<a cmd='#'>help shield</a>, <a cmd='#'>help shoot</a>, <a cmd='#'>help skin</a>, slam, <a cmd='#'>help slip</a>, <a cmd='#'>help sneak</a>,
+<a cmd='#'>help soothe</a>, <a cmd='#'>help stalk</a>, <a cmd='#'>help stealing</a>, <a cmd='#'>help swimming</a>, <a cmd='#'>help taunt</a>,
+<a cmd='#'>help throw</a>, <a cmd='#'>help track</a>, <a cmd='#'>help tripping</a>, <a cmd='#'>help turn undead</a>,
+<a cmd='#'>help two weapon style</a>, <a cmd='#'>help ventriloquate</a>, <a cmd='#'>help wand use</a>,
+<a cmd='#'>help weather watching</a>, whirl
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spells</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Info</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>

@@ -1,0 +1,32 @@
+<div class="mw-parser-output"><h1>Rend Skill</h1>
+<p>Class and level:
+</p>
+<pre> Barbarian Level 30
+</pre>
+<p>Usage:
+</p>
+<pre> rend &lt;target&gt;
+ rend               (in a fight: your opponent)
+</pre>
+<p>The Barbarian swings a heavy blade and tears a gaping wound in the enemy. It 
+only works with a cleaving weapon in your hand, the same ones as for 
+<a cmd='#'>Help Cleave</a>: a lucern hammer, halberd, battle axe, great axe, war axe, 
+lochaber axe, bill guisarme, bec de corbin, great sword or claymore.
+</p><p>The swing starts the fight if there wasn't one. If your constitution and 
+strength win over your enemy's constitution and dexterity, the wound keeps 
+bleeding for a while: they lose hit points and endurance with every few 
+moments, and they can bleed to death. The better the rend, the longer it 
+bleeds. A wound that bleeds already can't be opened again until it stops.
+</p><p>Each rend takes 75 endurance, so you need more than that to try. You can rend 
+another player only when both of you have signed the book of blood.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Cleave</a>
+</pre>
+
+
+
+
+</div>

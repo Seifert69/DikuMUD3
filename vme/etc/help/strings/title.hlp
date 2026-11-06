@@ -1,18 +1,28 @@
-<br/>
-Players like to have titles for there characters, and there are several<br/>
-ways to acquire one. The First is through your Guild. You may approach your <br/>
-guild master and type title to receive a new one.<br/>
-The second way is once you join a Clan. You may ask your Clan Master<br/>
-or Lord for a title and depending on the clan rules you will either be given<br/>
-one or asked to do a quest for one.<br/>
-<br/>
-There may be a way in the future to gain a title pertaining to a Rank in a <br/>
-town. <br/>
-<br/>
-Another way is by bribing an admin for a title.  <br/>
-<br/>
-See also<br/>
-Help Bribe<br/>
-Help Ctitle<br/>
-Help Clan<br/>
-<br/>
+<div class="mw-parser-output"><h1>Title</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>title</a>   (at your guild master)
+</pre>
+<p>Players like to have titles for their characters, and there are several ways to 
+get one.
+</p><p>The first is through your guild. Go to your guild master and type title: you get 
+the title of your rank in the guild, like "the dwarf Recruit". As you rise in the 
+guild there are new titles; when there is none yet for your level, the guild 
+master tells you to come back when you are higher.
+</p><p>The second is through a clan. Ask your clan Master or a lord for a title (see 
+<a cmd='#'>Help Ctitle</a>); depending on the clan's rules you are given one, or asked to do 
+a quest for it.
+</p><p>Another way is by bribing an administrator for a title (see <a cmd='#'>Help Bribe</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Ctitle</a>
+&gt; <a cmd='#'>Help Clan</a>
+&gt; <a cmd='#'>Help Bribe</a>
+</pre>
+
+
+
+
+</div>

@@ -1,28 +1,37 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-get (item)<br/><br/>
-get (item) in/from (item)<br/><br/>
-get all<br/><br/>
-get all from (item)<br/><br/>
-<br/><br/>
-Example:<br/><br/>
-get all from corpse<br/><br/>
-get butter bread from bag<br/><br/>
-put brass lantern in small bag<br/><br/>
-get all<br/><br/>
-<br/><br/>
-Notice the essential use of the IN and FROM keywords!<br/><br/>
-<br/>
-If you see an item lying around, you can pick it up, use this command.<br/>
-If there is an item in a container that you wish to get, you can pick it up,<br/>
-specifying the container to get it from. If you just want to get everything<br/>
-lying around, type 'get all'.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Drop<br/><br/>
-Put<br/><br/>
-Look<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Get</h1>
+<p>Usage:
+</p>
+<pre>get &lt;item&gt;
+get &lt;item&gt; from &lt;container&gt;
+get all
+get all from &lt;container&gt;
+get money
+get &lt;amount&gt; &lt;coins&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>get all from corpse
+get butter bread from bag
+get all
+get 10 gold
+get sword from 2.corpse
+</pre>
+<p>If you see an item lying around and want to pick it up, use this command. If 
+there is an item in a container that you wish to get, name the container after 
+the word from: get all corpse doesn't work, get all from corpse does. If there 
+are several things with the same name, 2.corpse is the second one. get money 
+picks up only the coins.
+</p><p>You can only take things from your own corpse, not from another player's.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Drop</a>
+&gt; <a cmd='#'>Help Put</a>
+&gt; <a cmd='#'>Help Look</a>
+&gt; <a cmd='#'>Help Inventory</a>
+</pre>
+
+
+
+
+</div>

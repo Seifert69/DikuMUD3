@@ -1,32 +1,33 @@
-<br/>
-<br/>
-Type General Command <br/>
-<br/><br/>
-Usage<br/>
-group (character)<br/><br/>
-<br/><br/>
-Groups of characters are good to have, if you want to go on a big adventure.<br/>
-Groups are often safer, as you are protected by other group members. When<br/>
-someone in a group and they get experience, the amount is shared among the <br/>
-group members according to the members levels.<br/><br/>
-<br/><br/>
-To form a group, you start by figuring out who is to be the leader. The leader <br/>
-is going to get beat up the most, so make a good choice. Then each character <br/>
-that wants to be in the group will have to follow the leader. This alone does <br/>
-not make a person part of the group. The leader will have to make each person <br/>
-which is following him member of the group, like 'group papi' which will make <br/>
-papi a member.<br/> <br/>
-<br/><br/>
-To kick a player out of the group, you just type the same thing. To stop the <br/>
-player you just kicked out of the group from following you, you may ditch them. <br/>
-If you would like to see who is in the group, you just type 'group' with no<br/>
-arguments.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Experience<br/><br/>
-Follow<br/><br/>
-Ditch<br/><br/>
-Assist<br/><br/>
-Split<br/><br/>
-Score<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Groups</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>group</a>
+group &lt;character&gt;
+</pre>
+<p>Groups are good to have if you want to go on a big adventure: they are often 
+safer, as you are protected by the other members.
+</p><p>To form a group, first decide who is to be the leader; the leader is going to 
+get beaten up the most, so make a good choice. Each one who wants to join must 
+follow the leader (see <a cmd='#'>Help Follow</a>). That alone doesn't make them part of the 
+group: the leader then makes each follower a member, like group asta. To put a 
+member out of the group, the leader types the same again; to stop them 
+following too, ditch them. group alone shows who is in your group.
+</p><p>When the group kills something, everyone in the group who is there gets a share 
+of the experience. Each share is smaller the more you are, but together you get 
+more than one player alone would. The shares are measured against the highest 
+level in the group, so a member far below the others gets less.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Follow</a>
+&gt; <a cmd='#'>Help Ditch</a>
+&gt; <a cmd='#'>Help Assist</a>
+&gt; <a cmd='#'>Help Split</a>
+&gt; <a cmd='#'>Help Experience</a>
+&gt; <a cmd='#'>Help Group Teleport</a>
+</pre>
+
+
+
+
+</div>

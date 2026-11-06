@@ -1,16 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-ride (direction)<br/><br/>
-mount (steed)<br/><br/>
-<br/><br/>
-Example:<br/><br/>
-mount horse<br/><br/>
-ride east<br/><br/>
-<br/>
-When you possess an animal capable of riding with you, you can mount it<br/>
-and ride. Thus you save your own endurance.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Mount</h1>
+<p>Usage:
+</p>
+<pre>mount &lt;steed&gt;
+ride &lt;direction&gt;
+dismount
+</pre>
+<p>Example:
+</p>
+<pre>mount horse
+ride east
+dismount
+</pre>
+<p>When there is an animal capable of carrying you, you can mount it and ride, 
+and so save your own endurance. You can't mount another player, and a steed 
+won't take you if you are too heavy for it. To get off again, dismount.
+</p><p>Steeds are rare in the lands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Movement</a>
+&gt; <a cmd='#'>Help Endurance Points</a>
+</pre>
+
+
+
+
+</div>

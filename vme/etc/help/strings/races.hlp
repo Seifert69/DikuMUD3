@@ -18,10 +18,10 @@ mana and hitpoints (these are not listed as the list is very long):
 </pre>
 <pre>            Mag Div Str Dex Con Cha Bra HP
  Human       0   0   0   0   0   0   0   0
- Elf        +2  -2   0   0  -1  -1   0   0
+ Elf        +2  -2   0   0  -1  +1   0   0
  Dwarf      -3   0  +3  -1  +1  -2   0  +2
  Halfling    0  -1   0  +3   0   0  -1  -1
- Gnome      +3  -3  -1   0   0   1   2  -2
+ Gnome      +3  -3  -1   0   0  +1  +2  -2
  Half-orc   -1  +1   0  -2  +2   0   0   0
  Half-ogres -3  -2  +3  -1  +1   0   0  +2
  Half-elf   -2  +3   0  +1  -3  +2   0  -1

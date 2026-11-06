@@ -1,14 +1,18 @@
-<br/>
-One of the types that can be used with the change command<br/>
-<br/><br/>
-syntax change information<br/>
-<br/><br/>
-This type controls receiving information about who has joined the game and <br/>
-not receiving this information.  When you first type change information you <br/>
-will receive a message every time a new player joins the game.  To stop <br/>
-receiving these messages, just type change information a second time.<br/>
-<br/><br/>
-See Also:<br/><br/>
-Change<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Inform</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>change inform</a>
+</pre>
+<p>One of the settings you can switch with the change command.
+</p><p>With inform on, you hear when a player joins the game: "Asta has entered the world." You only hear of players you can see. Inform is off when you start; type <a cmd='#'>change inform</a> to turn it on, and again to turn it off.
+</p><p><br />
+See also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+&gt; <a cmd='#'>Help Who</a>
+</pre>
+
+
+
+
+</div>

@@ -1,17 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage inventory<br/><br/>
-<br/>
-You often need to see what you are carrying around. This command will list<br/>
-your entire inventory, excluding contents of your containers, and the things<br/>
-you wear/use. To get a list of them, use 'look in &lt;container&gt;' and<br/>
-'equipment'.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Wear<br/><br/>
-Use<br/><br/>
-Look<br/><br/>
-Equipment<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Inventory</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>inventory</a>
+</pre>
+<p>You often need to see what you are carrying around. This command lists your 
+entire inventory, but not what is inside your containers, and not the things 
+you wear or use. To see those, use look in &lt;container&gt; and <a cmd='#'>equipment</a>.
+</p><p>You can only carry so many things: ten, and one more for every ten points of 
+dexterity. And you can only carry so much weight, more the stronger and bigger 
+you are. What you wear and your coins don't count towards the number of things in your
+hands, so wear what you can, and put small things in a bag or other container.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Equipment</a>
+&gt; <a cmd='#'>Help Wear</a>
+&gt; <a cmd='#'>Help Use</a>
+&gt; <a cmd='#'>Help Look</a>
+</pre>
+
+
+
+
+</div>

@@ -1,22 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage give (item) to (character)<br/><br/>
-<br/>
-This makes it possible to exchange items between characters without having<br/>
-to drop them on the ground. It is also possible to give money, by typing:<br/>
-<br/><br/>
-give 100 iron pieces to Papi<br/><br/>
-<br/><br/>
-Which will give Papi 100 pieces of your iron (if you have them).<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Steal<br/><br/>
-Hold <br/><br/>
-Wield <br/><br/>
-Wear <br/><br/>
-Remove <br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Give</h1>
+<p>Usage:
+</p>
+<pre>give &lt;item&gt; [to] &lt;character&gt;
+give &lt;amount&gt; &lt;coins&gt; [to] &lt;character&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>give bread to asta
+give 100 iron pieces to papi
+</pre>
+<p>This makes it possible to exchange items between characters without having to 
+drop them on the ground. You give one thing at a time, from your inventory, to 
+someone in the same room. The word to may be left out.
+</p><p>Many quests are finished by giving the right thing to the one who asked for it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Get</a>
+&gt; <a cmd='#'>Help Drop</a>
+&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help Quests</a>
+</pre>
+
+
+
+
+</div>

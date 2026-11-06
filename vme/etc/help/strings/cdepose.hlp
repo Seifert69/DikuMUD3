@@ -1,0 +1,31 @@
+<div class="mw-parser-output"><h1>Cdepose</h1>
+<p>Usage:
+</p>
+<pre>cdepose &lt;member&gt; &lt;position&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cdepose fizban treasurer
+</pre>
+<p>Takes a member of your clan out of a position they were appointed to (see 
+<a cmd='#'>Help Cappoint</a>). The positions are:
+</p>
+<ul><li><b>lord</b>: only the clan Master can depose a clan lord.</li>
+<li><b>treasurer</b>: they lose access to the clan treasury.</li>
+<li><b>quartermaster</b>: they lose access to the clan's equipment.</li></ul>
+<p>You must be the clan Master, or have clan rank 25, to use cdepose. The member 
+must be in the game.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cappoint</a>
+&gt; <a cmd='#'>Help Clan Lord</a>
+&gt; <a cmd='#'>Help Clan Treasurer</a>
+&gt; <a cmd='#'>Help Clan Quartermaster</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

@@ -1,15 +1,23 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage commands<br/><br/>
-<br/>
-This command gives a complete listing of all immediately available commands.<br/>
-There might however be specific commands not listed here that are usable<br/>
-elsewhere.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Socials<br/><br/>
-Communications<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Commands</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>commands</a>
+</pre>
+<p>Gives a complete listing of the commands you can use. Most have a help page of 
+their own: type help and the command, like <a cmd='#'>help look</a>.
+</p><p>Some commands are only there in certain places, or near certain people or 
+things: the postman takes mail, a storage clerk store and unstore, a shopkeeper 
+buy and sell, a teacher practice and info. They work where they make sense, and 
+the help for each tells you where.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Socials</a>
+&gt; <a cmd='#'>Help Communications</a>
+&gt; <a cmd='#'>Help Newbie</a>
+</pre>
+
+
+
+
+</div>

@@ -1,0 +1,34 @@
+<div class="mw-parser-output"><h1>Taunt Skill</h1>
+<p>Class and level:
+</p>
+<pre> Barbarian Level 30
+ Dark Knight Level 30
+</pre>
+<p>Usage:
+</p>
+<pre> taunt &lt;target&gt;
+ taunt              (in a fight: your opponent)
+</pre>
+<p>Confident - or perhaps overconfident - in their own combat prowess, the 
+Barbarian may (if successful) taunt their enemies. 
+If successfully executed during battle, the opponent loses focus for a 
+while and is slow to return attacks; taunting them again before they 
+recover has no effect. If successfully executed outside of combat, the 
+victim will initiate an attack in response to the ruthless taunting, 
+unless they are sitting, resting or stunned.
+</p><p>Each taunt takes 40 endurance. A badly failed taunt makes your target 
+attack you, and a failed taunt ends a defence (see <a cmd='#'>Help defend</a>). You 
+can't taunt someone much larger than yourself, and you can taunt another 
+player only when both of you have signed the book of blood.
+</p><p><br />
+See Also:
+</p>
+<pre> &gt; <a cmd='#'>Help defend</a>
+ &gt; <a cmd='#'>Help Barbarian</a>
+ &gt; <a cmd='#'>Help Dark Knight</a>
+</pre>
+
+
+
+
+</div>

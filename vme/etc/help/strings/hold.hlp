@@ -1,26 +1,30 @@
 <div class="mw-parser-output"><h1>Hold</h1>
 <p>Usage:
 </p>
-<pre> hold (item)
+<pre>hold &lt;item&gt;
 </pre>
-<p>Lets you hold an item in the hand. 
-</p><p>E.g. for wands wands and staves. To use such an item you must hold 
-it in your hand. It is possible to hold an item in one hand, and wield 
-a singlehanded weapon in another. It is also possible to wield two
-single-handed weapons by wielding one weapon and holding the other
-weapon in your hand.
+<p>Examples:
 </p>
-<pre> wield sword
- hold dagger
+<pre>hold wand
+wield sword
+hold dagger
 </pre>
-<p>See Also:
+<p>Lets you hold an item in your hand. To use a wand or a staff, for example, you 
+must hold it (see <a cmd='#'>Help Use</a>).
+</p><p>You can hold an item in one hand and wield a one-handed weapon in the other. You 
+can also fight with two one-handed weapons, by wielding one and holding the 
+other: then your attacks take turns with the two, and the skill two weapon style 
+makes you better at it. Some weapons are too large to be the second one, and a 
+two-handed weapon needs both hands free.
+</p><p><br />
+See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Weapons</a>
- &gt; <a cmd='#'>Help Wands</a>
- &gt; <a cmd='#'>Help Staves</a>
- &gt; <a cmd='#'>Help Wield</a>
- &gt; <a cmd='#'>Help Wear</a>
- &gt; <a cmd='#'>Help Remove</a>
+<pre>&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Use</a>
+&gt; <a cmd='#'>Help Two Weapon Style</a>
+&gt; <a cmd='#'>Help Wands</a>
+&gt; <a cmd='#'>Help Staves</a>
+&gt; <a cmd='#'>Help Remove</a>
 </pre>
 
 

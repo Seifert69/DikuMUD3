@@ -1,28 +1,37 @@
-<br/>
-<br/>
-<br/>
-<br/>
-When you die all your money and<br/>
-equipment remains in your corpse while<br/>
-your soul travels to Valhalla. You can<br/>
-however deposit money in a bank<br/>
-(with a 5% fee) to ensure that your hard earned cash is not lost by<br/>
-theft or death. REMEMBER!!!!!! You must have money on your character to<br/>
-train, remove items from storage,buy items, etc.<br/>
-<br/><br/>
-Examples:<br/><br/>
-deposit 30 copper pieces<br/><br/>
-balance<br/><br/>
-withdraw 10 iron pieces<br/><br/>
-exchange 1 gold piece to iron pieces<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Gold<br/><br/>
-Platinum<br/><br/>
-Copper<br/><br/>
-Silver<br/><br/>
-Iron<br/><br/>
-Purse<br/><br/>
-Balance<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Bank</h1>
+<p>Usage:
+</p>
+<pre>deposit &lt;amount&gt; &lt;coins&gt;
+withdraw &lt;amount&gt; &lt;coins&gt;
+<a cmd='#'>balance</a>
+exchange &lt;amount&gt; &lt;coins&gt; [to &lt;coins&gt;]
+</pre>
+<p>Examples:
+</p>
+<pre>deposit 30 copper pieces
+balance
+withdraw 10 iron pieces
+exchange 1 gold piece to iron pieces
+exchange 40 iron pieces
+</pre>
+<p>When you die all your money and equipment remains in your corpse while your soul 
+travels to Valhalla. You can however deposit money in a bank to ensure that your 
+hard earned cash is not lost by theft or death. The bankers are Smith in 
+Mammon's Nest in Udgaard, and Bob in Midgaard.
+</p><p>The banker takes 5% when you deposit money and when you exchange coins; taking 
+money out is free. Remember, you must have money on your character to train, 
+take things out of storage, buy items, and so on.
+</p><p>Exchange without "to" changes your coins into the largest coins they make, 
+with change in smaller ones.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help Purse</a>
+&gt; <a cmd='#'>Help Storage</a>
+</pre>
+
+
+
+
+</div>

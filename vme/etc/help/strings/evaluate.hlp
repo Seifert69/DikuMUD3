@@ -1,15 +1,33 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage evaluate (item)<br/><br/>
-<br/><br/>
-Example: evaluate long sword<br/><br/>
-<br/>
-This command is used to get information on objects. It will tell you the<br/>
-weight and when appropriate the size of objects.<br/>
-<br/><br/><br/>
-Evaluate can also be used at some blacksmiths to evaluate the quality of<br/>
-weapons, armors and shields. See sign at smithy's for further information.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Evaluate</h1>
+<p>Usage:
+</p>
+<pre>evaluate &lt;item&gt;
+</pre>
+<p>Example:
+</p>
+<pre>evaluate helmet
+</pre>
+<p>Have a close look at something you can wear or wield. You are told:
+</p>
+<ul><li>how much it weighs;</li>
+<li>what size of person it was made to fit, so you know before you try it on</li></ul>
+<pre> whether it will be too big or too small;
+</pre>
+<ul><li>what condition it is in, from like new to badly worn;</li>
+<li>what it would take to refit it to your size: tailoring for clothes, leather</li></ul>
+<pre> work for leather, metal work for metal armour, shields and weapons 
+ (see <a cmd='#'>Help Resize</a>).
+</pre>
+<p>Anyone can evaluate; you don't need to practice it. Some blacksmiths will also evaluate the quality of weapons, armour and shields for you: see the sign at the smithy.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Resize</a>
+&gt; <a cmd='#'>Help Wear</a>
+&gt; <a cmd='#'>Help Appraisal</a>
+</pre>
+
+
+
+
+</div>

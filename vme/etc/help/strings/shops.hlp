@@ -1,33 +1,45 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/><br/>
-list<br/><br/>
-buy (object)<br/><br/>
-sell (object)<br/><br/>
-value (object)<br/><br/>
-request (object)<br/><br/>
-<br/><br/>
-<br/>
-The list command is used inside shops to get a listing of the currently<br/>
-available products. The listing shows the objects along with prices<br/>
-and other information.<br/>
-<br/><br/><br/>
-The request command also shows how much an item costs, but the shop keeper<br/>
-may take into consideration other currencies than his default one.<br/>
-<br/><br/><br/>
-The value command is used when you want to know how much a shop keeper will<br/>
-pay for one of your items.<br/>
-<br/><br/><br/>
-The sell command is used to sell one of your items.<br/>
-<br/><br/><br/>
-The buy command is used to buy an item from the shop keeper.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Buy<br/><br/>
-Sell<br/><br/>
-Value<br/><br/>
-Request<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Shops</h1>
+<p>Usage:
+</p>
+<pre><a cmd='#'>list</a>
+buy &lt;item&gt;
+buy &lt;number&gt; &lt;item&gt;
+sell &lt;item&gt;
+value &lt;item&gt;
+request &lt;item&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>list
+buy bread
+buy 3 bread
+value sword
+sell sword
+</pre>
+<p>In a shop, the shopkeeper trades with you:
+</p>
+<ul><li><b>list</b> shows what is for sale, and the prices.</li>
+<li><b>buy</b> buys a thing, or several of it at once. Any coins will do: you get</li></ul>
+<pre> your change back.
+</pre>
+<ul><li><b>sell</b> sells one of your things to the shopkeeper.</li>
+<li><b>value</b> tells you what the shopkeeper would pay for one of your things,</li></ul>
+<pre> without selling it.
+</pre>
+<ul><li><b>request</b> asks the price of a thing for sale.</li></ul>
+<p>Shopkeepers only buy the kinds of things they trade in, and only while they have 
+money left. As in real life, some charge more and some pay more than others, so 
+it can pay to shop around. A shop's stock runs out, and is filled up again day 
+by day.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help List</a>
+&gt; <a cmd='#'>Help Request</a>
+</pre>
+
+
+
+
+</div>

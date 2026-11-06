@@ -1,13 +1,22 @@
 <div class="mw-parser-output"><h1>Experience (XP)</h1>
-<p>Experience is usually gained by killing monsters. The experience you gain is relative to your level compared to the monsters level.
+<p>Experience is usually gained by killing monsters, and by solving quests. The 
+experience you gain from a kill depends on the monster's level compared to 
+yours: more for a monster above you, less for one below, and next to nothing 
+for one far below.
 </p><p>You gain no experience when killing players.
-</p><p>If you are good and kill evil you get a bonus. Vice versa but not quite as large.
+</p><p>If you are good and kill evil you get a bonus. Vice versa, but not quite as 
+large.
+</p><p>In a group, everyone who is there shares the experience (see <a cmd='#'>Help Groups</a>). 
+When you die, you lose some experience (see <a cmd='#'>Help Die</a>). With enough experience 
+you can raise a level (see <a cmd='#'>Help Levels</a>).
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>kill</a>
-&gt; <a cmd='#'>Guilds</a>
-&gt; <a cmd='#'>Levels</a>
+<pre>&gt; <a cmd='#'>Help Kill</a>
+&gt; <a cmd='#'>Help Levels</a>
+&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Die</a>
+&gt; <a cmd='#'>Help Guilds</a>
 </pre>
 
 

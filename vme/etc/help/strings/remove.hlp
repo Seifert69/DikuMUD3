@@ -1,15 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage remove (item)<br/><br/>
-<br/>
-This command makes you stop using a given item, which must be in your<br/>
-equipment list.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Equipment<br/><br/>
-Hold<br/><br/>
-Wield<br/><br/>
-Wear<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Remove</h1>
+<p>Usage:
+</p>
+<pre>remove &lt;item&gt;
+remove all
+</pre>
+<p>This command makes you stop using a thing you wear, wield or hold, and puts it 
+back in your inventory. <a cmd='#'>remove all</a> takes off everything at once, for example 
+before a teacher trains you.
+</p><p>A cursed item can't be removed: "The ring is cursed, you can't remove it!" The 
+spell remove curse can help (see <a cmd='#'>Help Remove Curse</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Equipment</a>
+&gt; <a cmd='#'>Help Wear</a>
+&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Hold</a>
+&gt; <a cmd='#'>Help Remove Curse</a>
+</pre>
+
+
+
+
+</div>
