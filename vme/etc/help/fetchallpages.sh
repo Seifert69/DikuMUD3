@@ -518,7 +518,6 @@ python3 getwikihelppage.py Rescue &
 python3 getwikihelppage.py Resize
 python3 getwikihelppage.py Respond &
 python3 getwikihelppage.py Ressurect &
-python3 getwikihelppage.py Rows &
 python3 getwikihelppage.py Rules &
 python3 getwikihelppage.py Sail &
 python3 getwikihelppage.py Sanctuary
