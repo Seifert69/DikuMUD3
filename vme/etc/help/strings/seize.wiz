@@ -1,7 +1,26 @@
-<br/>
-<br/>
-Usage: Seize &lt;item&gt; from &lt;player&gt;<br/>
-<br/>
-You can take equipment from players using this command.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Seize (245)</h1>
+<p>Usage:
+</p>
+<pre>seize &lt;item&gt; from &lt;someone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>seize sword from Gnort
+</pre>
+<p>Takes something a player or a monster carries or wears, wherever they are 
+in the world, and puts it in your inventory. They are told that you have 
+taken it, and every seize is written to the log. Only from someone of a 
+lower level than yours.
+</p><p>Name the item with one word: because of a known bug, a name of two words 
+(seize long sword from Gnort) isn't found.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Purge</a>
+&gt; <a cmd='#'>Wizhelp Transfer</a>
+</pre>
+
+
+
+
+</div>
