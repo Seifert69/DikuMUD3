@@ -5618,6 +5618,9 @@ var
    nsteak  : integer; /* Number of steaks */
    nscraps : integer; /* Number of scraps */
    nfillet : integer; /* Number of fillets */
+   pct     : integer; /* How much of the meat a success yields */
+   limb    : integer; /* The weight of a leg or an arm */
+   meat    : integer; /* The weight of the meat cut off */
 skilla   : integer;
 skillb   : integer;
 skillc   : integer;
@@ -5753,7 +5756,7 @@ code
      nsteak := 0;
   }
 
-  if (hm <= 0)
+  if (hm < 0)  /* A failure: only scraps */
   {
      act("You make a mess of butchering the corpse!",
          A_ALWAYS, self, null, null, TO_CHAR);
@@ -5793,302 +5796,7 @@ code
      goto done;
   }
 
-  if ((hm <= -10) and (bw != -1))
-  {
-     act("You butcher the $3N and leave a small amount of meat.",
-         A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves a small amount of meat.",
-         A_ALWAYS, self, null, targ, TO_REST);
-
-     if (behead == 1)
-     {
-        targ.title := "a butchered beheaded carcass of " + typec;
-        targ.outside_descr := "A butchered beheaded carcass of " + typec +
-                              " is lying here rotting.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "headless carcass");
-        addstring(targ.names, "carcass");
-        addstring(targ.names, "corpse");
-     }
-     else
-     {
-        targ.title := "a butchered carcass of " + typec;
-        targ.outside_descr := "A butchered carcass of " + typec + " is " +
-                              "lying here rotting.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "carcass");
-        addstring(targ.names, "corpse");
-     }
-     addextra(targ.extra, {"$butchered"}, itoa(targ.value[4]));
-
-     if (nleg > 1)
-     {
-        nleg := nleg / 2;
-        while (nleg > 0)
-        {
-           unit1 := load("leg_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "leg of " + typec);
-           addstring(unit1.names, "leg");
-           unit1.title := "the leg of " + typec;
-           unit1.outside_descr := "A leg of " + typec + " has been " +
-                                  "discarded here.";
-           set_weight_base(unit1, targ.weight / 7);
-           unit1 := null;
-           nleg := nleg - 1;
-        }
-     }
-
-     if (narm > 1)
-     {
-        narm := narm / 2;
-        while (narm > 0)
-        {
-           unit1 := load("arm_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "arm of " + typec);
-           addstring(unit1.names, "arm");
-           unit1.title := "the arm of " + typec;
-           unit1.outside_descr := "An arm of " + typec + " has been " +
-                                  "left here.";
-           set_weight_base(unit1, targ.weight / 8);
-           unit1 := null;
-           narm := narm - 1;
-        }
-     }
-
-     if (nsteak > 1)
-     {
-        nsteak := nsteak / 2;
-        while (nsteak > 0)
-        {
-           unit1 := load("steak_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "steak of " + typec);
-           addstring(unit1.names, "steak");
-           unit1.title := "a juicy steak";
-           unit1.outside_descr := "A juicy steak from " + typec + " has been " +
-                                  "dropped here.";
-           unit1 := null;
-           nsteak := nsteak - 1;
-        }
-     }
-
-     if (nscraps > 1)
-     {
-        nscraps := nscraps / 2;
-        while (nscraps > 0)
-        {
-           unit1 := load("scraps_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "Some scraps of " + typec);
-           addstring(unit1.names, "meat");
-           addstring(unit1.names, "scraps");
-           addstring(unit1.names, "scrap");
-           unit1.title := "some scraps of " + typec + " meat";
-           unit1.outside_descr := "Some scraps of meat from " + typec +
-                                  " have been left here.";
-           unit1 := null;
-           nscraps := nscraps - 1;
-        }
-     }
-
-     if (nfillet > 1)
-     {
-        nfillet := nfillet / 2;
-        while (nfillet > 0)
-        {
-           unit1 := load("fillet_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "fillet of " + typec);
-           addstring(unit1.names, "fillet");
-           unit1.title := "a fillet of " + typec;
-           unit1.outside_descr := "A fillet of " + typec + " has been " +
-                                  "dropped on the ground here.";
-           unit1 := null;
-           nfillet := nfillet - 1;
-        }
-     }
-
-     set_weight_base(targ, targ.weight - (5 * bw));
-
-     if (bw > 0)
-        self.endurance := self.endurance - (bw * 2);
-     else
-        self.endurance := self.endurance - 2;
-
-     goto done;
-  }
-
-  if ((bw == -1) and (hm <= -10))
-  {
-     act("$3N is so small that you only get a small amount of meat " +
-         "from it.",
-         A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves a small amount of meat.",
-         A_ALWAYS, self, null, targ, TO_REST);
-
-     if (behead == 1)
-     {
-        targ.title := "a butchered beheaded carcass of " + typec;
-        targ.outside_descr := "A butchered beheaded carcass of " +
-                              typec + " is " + "lying here rotting.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "headless carcass");
-        addstring(targ.names, "carcass");
-        addstring(targ.names, "corpse");
-     }
-     else
-     {
-        targ.title := "a butchered carcass of " + typec;
-        targ.outside_descr := "A butchered carcass of " + typec + " is " +
-                              "lying here rotting.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "carcass");
-        addstring(targ.names, "corpse");
-     }
-     addextra(targ.extra, {"$butchered"}, itoa(targ.value[4]));
-
-     unit1 := load("scraps_template@skills");
-     link(unit1, self.outside);
-     set_weight_base(unit1, targ.weight - bw);
-
-     if (bw > 0)
-        self.endurance := self.endurance - (bw * 2);
-     else
-        self.endurance := self.endurance - 2;
-
-     goto done;
-  }
-
-
-  if ((hm > -10) and (bw != -1))
-  {
-     act("You butcher the $3N and leave a large amount of meat.",
-         A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves a large amount of meat.",
-         A_ALWAYS, self, null, targ, TO_REST);
-
-     if (behead == 1)
-     {
-        targ.title := "the headless bones of " + typec;
-        targ.outside_descr := "The headless bones of " + typec + " are lying " +
-                              "around on the ground here.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "headless bones");
-        addstring(targ.names, "bones");
-        addstring(targ.names, "skeleton");
-        addstring(targ.names, "corpse");
-     }
-     else
-     {
-        targ.title := "the bones of " + typec;
-        targ.outside_descr := "The bones of " + typec + " are " +
-                              "scattered around here.";
-        substring(targ.names, "corpse");
-        addstring(targ.names, "bones");
-        addstring(targ.names, "skeleton");
-        addstring(targ.names, "corpse");
-     }
-     addextra(targ.extra, {"$butchered"}, itoa(targ.value[4]));
-
-     if (nleg > 1)
-     {
-        while (nleg > 0)
-        {
-           unit1 := load("leg_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "leg of " + typec);
-           addstring(unit1.names, "leg");
-           unit1.title := "the leg of " + typec;
-           unit1.outside_descr := "A leg of " + typec + " has been " +
-                                  "discarded here.";
-           unit1 := null;
-           nleg := nleg - 1;
-        }
-     }
-
-     if (narm > 1)
-     {
-        while (narm > 0)
-        {
-           unit1 := load("arm_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "arm of " + typec);
-           addstring(unit1.names, "arm");
-           unit1.title := "the arm of " + typec;
-           unit1.outside_descr := "An arm of " + typec + " has been " +
-                                  "left here.";
-           unit1 := null;
-           narm := narm - 1;
-        }
-     }
-
-     if (nsteak > 1)
-     {
-        while (nsteak > 0)
-        {
-           unit1 := load("steak_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "steak of " + typec);
-           addstring(unit1.names, "steak");
-           unit1.title := "a juicy steak";
-           unit1.outside_descr := "A juicy steak from " + typec + " has been " +
-                                  "dropped here.";
-           unit1 := null;
-           nsteak := nsteak - 1;
-        }
-     }
-
-     if (nscraps > 1)
-     {
-        while (nscraps > 0)
-        {
-           unit1 := load("scraps_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "Some scraps of " + typec);
-           addstring(unit1.names, "meat");
-           addstring(unit1.names, "scraps");
-           addstring(unit1.names, "scrap");
-           unit1.title := "some scraps of " + typec + " meat";
-           unit1.outside_descr := "Some scraps of meat from " + typec +
-                                  " have been left here.";
-           unit1 := null;
-           nscraps := nscraps - 1;
-        }
-     }
-
-     if (nfillet > 1)
-     {
-        while (nfillet > 0)
-        {
-           unit1 := load("fillet_template@skills");
-           link(unit1, self.outside);
-           addstring(unit1.names, "fillet of " + typec);
-           addstring(unit1.names, "fillet");
-           unit1.title := "a fillet of " + typec;
-           unit1.outside_descr := "A fillet of " + typec + " has been " +
-                                  "dropped on the ground here.";
-           unit1 := null;
-           nfillet := nfillet - 1;
-        }
-     }
-
-     set_weight_base(targ, targ.weight - (5 * bw));
-
-     if (bw > 0)
-        self.endurance := self.endurance - (bw * 2);
-     else
-        self.endurance := self.endurance - 2;
-
-     if (legs == 5)
-     {
-        destroy (targ); /* Crabs don't have skeletons */
-     }
-     goto done;
-  }
-
-  if ((bw == -1) and (hm > -10))
+  if (bw == -1)  /* Too small for more than a scrap */
   {
      act("$3N is so small that you only get a small amount of meat " +
          "from it.",
@@ -6131,6 +5839,184 @@ code
      goto done;
   }
 
+  /* A success yields more the better it is: a quarter of the meat at a bare
+     success, all of it at 75 or more */
+  pct := 25 + hm;
+  if (pct > 100) pct := 100;
+  nleg := (nleg * pct) / 100;
+  narm := (narm * pct) / 100;
+  nsteak := (nsteak * pct) / 100;
+  nfillet := (nfillet * pct) / 100;
+  nscraps := (nscraps * pct) / 100;
+  if (nscraps < 1) nscraps := 1;
+  limb := targ.weight / 50;  /* A leg or arm is 2% of the carcass */
+  if (limb < 1) limb := 1;
+  meat := 0;
+
+  if (pct < 100)
+  {
+     act("You butcher the $3N, but much of the meat is left on the carcass.",
+         A_ALWAYS, self, null, targ, TO_CHAR);
+     act("$1n butchers the $3N and leaves some meat.",
+         A_ALWAYS, self, null, targ, TO_REST);
+  }
+  else
+  {
+     act("You butcher the $3N and leave a large amount of meat.",
+         A_ALWAYS, self, null, targ, TO_CHAR);
+     act("$1n butchers the $3N and leaves a large amount of meat.",
+         A_ALWAYS, self, null, targ, TO_REST);
+  }
+
+  if (pct < 100)
+  {
+     if (behead == 1)
+     {
+        targ.title := "a butchered beheaded carcass of " + typec;
+        targ.outside_descr := "A butchered beheaded carcass of " + typec +
+                              " is lying here rotting.";
+        substring(targ.names, "corpse");
+        addstring(targ.names, "headless carcass");
+        addstring(targ.names, "carcass");
+        addstring(targ.names, "corpse");
+     }
+     else
+     {
+        targ.title := "a butchered carcass of " + typec;
+        targ.outside_descr := "A butchered carcass of " + typec + " is " +
+                              "lying here rotting.";
+        substring(targ.names, "corpse");
+        addstring(targ.names, "carcass");
+        addstring(targ.names, "corpse");
+     }
+  }
+  else
+  {
+     if (behead == 1)
+     {
+        targ.title := "the headless bones of " + typec;
+        targ.outside_descr := "The headless bones of " + typec + " are lying " +
+                              "around on the ground here.";
+        substring(targ.names, "corpse");
+        addstring(targ.names, "headless bones");
+        addstring(targ.names, "bones");
+        addstring(targ.names, "skeleton");
+        addstring(targ.names, "corpse");
+     }
+     else
+     {
+        targ.title := "the bones of " + typec;
+        targ.outside_descr := "The bones of " + typec + " are " +
+                              "scattered around here.";
+        substring(targ.names, "corpse");
+        addstring(targ.names, "bones");
+        addstring(targ.names, "skeleton");
+        addstring(targ.names, "corpse");
+     }
+  }
+  addextra(targ.extra, {"$butchered"}, itoa(targ.value[4]));
+
+  if (nleg > 0)
+  {
+     while (nleg > 0)
+     {
+        unit1 := load("leg_template@skills");
+        link(unit1, self.outside);
+        set_weight_base(unit1, limb);
+        addstring(unit1.names, "leg of " + typec);
+        addstring(unit1.names, "leg");
+        unit1.title := "the leg of " + typec;
+        unit1.outside_descr := "A leg of " + typec + " has been " +
+                               "discarded here.";
+        meat := meat + unit1.weight;
+        unit1 := null;
+        nleg := nleg - 1;
+     }
+  }
+
+  if (narm > 0)
+  {
+     while (narm > 0)
+     {
+        unit1 := load("arm_template@skills");
+        link(unit1, self.outside);
+        set_weight_base(unit1, limb);
+        addstring(unit1.names, "arm of " + typec);
+        addstring(unit1.names, "arm");
+        unit1.title := "the arm of " + typec;
+        unit1.outside_descr := "An arm of " + typec + " has been " +
+                               "left here.";
+        meat := meat + unit1.weight;
+        unit1 := null;
+        narm := narm - 1;
+     }
+  }
+
+  if (nsteak > 0)
+  {
+     while (nsteak > 0)
+     {
+        unit1 := load("steak_template@skills");
+        link(unit1, self.outside);
+        addstring(unit1.names, "steak of " + typec);
+        addstring(unit1.names, "steak");
+        unit1.title := "a juicy steak";
+        unit1.outside_descr := "A juicy steak from " + typec + " has been " +
+                               "dropped here.";
+        meat := meat + unit1.weight;
+        unit1 := null;
+        nsteak := nsteak - 1;
+     }
+  }
+
+  if (nscraps > 0)
+  {
+     while (nscraps > 0)
+     {
+        unit1 := load("scraps_template@skills");
+        link(unit1, self.outside);
+        addstring(unit1.names, "Some scraps of " + typec);
+        addstring(unit1.names, "meat");
+        addstring(unit1.names, "scraps");
+        addstring(unit1.names, "scrap");
+        unit1.title := "some scraps of " + typec + " meat";
+        unit1.outside_descr := "Some scraps of meat from " + typec +
+                               " have been left here.";
+        meat := meat + unit1.weight;
+        unit1 := null;
+        nscraps := nscraps - 1;
+     }
+  }
+
+  if (nfillet > 0)
+  {
+     while (nfillet > 0)
+     {
+        unit1 := load("fillet_template@skills");
+        link(unit1, self.outside);
+        addstring(unit1.names, "fillet of " + typec);
+        addstring(unit1.names, "fillet");
+        unit1.title := "a fillet of " + typec;
+        unit1.outside_descr := "A fillet of " + typec + " has been " +
+                               "dropped on the ground here.";
+        meat := meat + unit1.weight;
+        unit1 := null;
+        nfillet := nfillet - 1;
+     }
+  }
+
+  set_weight_base(targ, targ.weight - meat);  /* The meat comes off the carcass */
+
+  if (bw > 0)
+     self.endurance := self.endurance - (bw * 2);
+  else
+     self.endurance := self.endurance - 2;
+
+  if (legs == 5)
+  {
+     destroy (targ); /* Crabs don't have skeletons */
+  }
+  goto done;
 
 :done:
 position_update (self);
