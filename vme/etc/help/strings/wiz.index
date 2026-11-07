@@ -31,6 +31,7 @@ freeze=freeze.wiz
 :start:g
 gmroom=gmroom.wiz
 gmtrack=gmtrack.wiz
+gmtreasure=gmtreasure.wiz
 goto=goto.wiz
 :end:g
 :start:h

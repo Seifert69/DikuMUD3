@@ -1,0 +1,48 @@
+<div class="mw-parser-output"><h1>Gmtreasure</h1>
+<p>Usage:
+</p>
+<pre>gmtreasure [what] easy|fair|hard for &lt;player&gt;      (230)
+gmtreasure [what] easy|fair|hard level &lt;n&gt;
+gmtreasure [what] quality &lt;0-7&gt;                    (250)
+</pre>
+<p>Makes a random magic item, a reward for a game master's event, in your 
+inventory, and tells you what it became.
+</p><p><b>What</b> is in words: weapon, or a weapon (dagger, long sword; sword 
+is any of the swords); jewelry, or a piece (ring, crown); armour, an 
+armour type (cloth, leather, hard leather, chain or mail, plate), a 
+piece (boots, gloves, helmet, sleeves, leggings, shield, body) or both (plate 
+boots). Nothing means any kind.
+</p><p>How good it is comes from the player's level (with <b>for</b>) or the 
+level you give (with <b>level</b>; with both, the lower counts), one rung 
+for each level restriction treasure carries, so the player can use it:
+</p>
+<pre>level  1-4    average
+level  5-9    average plus
+level 10-19   good            (restricted to level 10)
+level 20-39   good plus       (level 20)
+level 40-59   excellent       (level 40)
+level 60-79   excellent plus  (level 60)
+level 80 up   superior        (level 80)
+</pre>
+<p>That is for a <b>hard</b> quest; <b>fair</b> is one rung lower and 
+<b>easy</b> two (never below average). With <b>for</b>, the item is also 
+made to the player's height.
+</p><p><b>Quality</b> picks the rung outright, 0 for average up to 7 for an 
+artifact (restricted to level 100), and only administrators (250) may 
+use it.
+</p><p>Example:
+</p>
+<pre>gmtreasure plate boots fair for asta
+gmtreasure ring hard level 20
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmquest</a>
+&gt; <a cmd='#'>Wizhelp Load</a>
+</pre>
+
+
+
+
+</div>
