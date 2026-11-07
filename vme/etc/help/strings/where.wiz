@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Where (200)</h1>
+<p>Usage:
+</p>
+<pre>where
+where &lt;name&gt;
+</pre>
+<p><b>where</b> alone lists the players in the game: each one's name, the 
+title of the room they are in, and in brackets where that is (the room's 
+symbolic name, and what they are inside, such as a ship). A god switched 
+into a monster is shown "In body of" that monster. You don't see those who 
+are invisible to a higher level than yours.
+</p><p><b>where &lt;name&gt;</b> finds everything in the world by that name: players, 
+monsters and things, each with its room and where it is. Up to 100 are 
+listed, and a count follows. Players who are not yet playing show as 
+MENU.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Goto</a>
+&gt; <a cmd='#'>Wizhelp Wpath</a>
+&gt; <a cmd='#'>Wizhelp Users</a>
+</pre>
+
+
+
+
+</div>
