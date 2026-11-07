@@ -14474,10 +14474,27 @@ code
 dilend
 /* unlock and lock spells update */
 
+// How hard the lock on a door is to open by magic: the magic resistance of the room it is in, or
+// of the room on the other side, whichever is higher (room_power, as resisted spells meet it).
+dilbegin integer door_resistance(room : unitptr, dir : integer);
+var
+   r : integer;
+   other : unitptr;
+code
+{
+   r := room.spells[SPL_NONE];
+   other := room.exit_to[dir];
+   if ((other != null) and (other.spells[SPL_NONE] > r))
+      r := other.spells[SPL_NONE];
+   return (r);
+}
+dilend
+
 dilbegin spl_unlock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
+     integer door_resistance(room : unitptr, dir : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14515,7 +14532,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,1);
+  dir_locks(dir,arg,1,hm);
   quit;
 }
 
@@ -14543,7 +14560,8 @@ if((not(isset(room.exit_info[i], EX_OPEN_CLOSE))) or
     (not(isset(room.exit_info[i], EX_CLOSED))) or
     (not(isset(room.exit_info[i], EX_LOCKED))))
    goto failed;
-
+   if (hm < door_resistance(room, i))
+      goto resists;
    unset(room.exit_info[i], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14568,7 +14586,8 @@ if((not(isset(obj.openflags, EX_OPEN_CLOSE))) or
     (not(isset(obj.openflags, EX_CLOSED))) or
     (not(isset(obj.openflags, EX_LOCKED))))
    goto failed;
-
+if (hm < obj.spells[SPL_NONE])   // the object's magic resistance (object_power)
+   goto resists;
 unset(obj.openflags, EX_LOCKED);
 act("*click*",
      A_SOMEONE, self, null, null, TO_ALL);
@@ -14578,6 +14597,10 @@ act("*click*",
 quit;
 
 
+:resists:
+act("The lock resists your magic.",
+     A_ALWAYS, self, null, null, TO_CHAR);
+quit;
 :failed:
 act("The spell failed.",
      A_ALWAYS, self, null, null, TO_CHAR);
@@ -14592,8 +14615,9 @@ dilend
    same things */
 
                  /*  DIRECTION     ARGUMENT    0=LOCK/1=UNLOCK */
-dilbegin dir_locks(dir : integer, st : string, todo : integer);
+dilbegin dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
 external
+   integer door_resistance(room : unitptr, dir : integer);
    string dirstring@function(dr:integer);
    integer rev_dir@function(i : integer);
    integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
@@ -14663,6 +14687,11 @@ if(todo == 0)
 }
 else /* UNLOCK */
   {
+   if (pwr < door_resistance(room, dir))
+   {
+      act("The lock resists your magic.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
    unset(room.exit_info[dir], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14691,7 +14720,7 @@ dilend
 dilbegin spl_lock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14729,7 +14758,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,0);
+  dir_locks(dir,arg,0,hm);
   quit;
 }
 

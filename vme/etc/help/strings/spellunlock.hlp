@@ -12,6 +12,11 @@ cast unlock &lt;container&gt;
 <p>Unlocks a closed, locked door or container by magic, without a key: *click*. 
 A door is unlocked from both sides at once. Then you can open it (see 
 <a cmd='#'>Help Open</a>).
+</p><p>Magic opens even locks that can't be picked. But places and things 
+steeped in magic resist it: the stronger the magic resistance of the 
+room a door is in (or of the room beyond it, if that is stronger), or of 
+the container, the more power your spell needs. When it hasn't enough, 
+the lock resists your magic.
 </p><p>For locking by magic, see <a cmd='#'>Help Spell Lock</a>. For unlocking with a key, see 
 <a cmd='#'>Help Unlock</a>. You must be standing. It is also found on wands and scrolls.
 </p><p><br />
