@@ -1,8 +1,33 @@
-<br/>
-Usage:<br/>
-   &gt;transfer &lt;item&gt;|&lt;char&gt;|all<br/>
-<br/>
-This is a good tool for the wizard. If you need to get someone or something<br/>
-to the place you are located, you just use this command. All will get you all<br/>
-connected players, plus probably some hassle :)<br/>
-<br/>
+<div class="mw-parser-output"><h1>Transfer (245)</h1>
+<p>Usage:
+</p>
+<pre>transfer &lt;someone&gt;                 (to you)
+transfer &lt;someone&gt; &lt;room@zone&gt;
+transfer &lt;someone&gt; &lt;someone else&gt;  (to where they are)
+transfer all now                   (every player, to you)
+</pre>
+<p>Examples:
+</p>
+<pre>transfer Gnort
+transfer Gnort temple@udgaard
+transfer guard Papi
+</pre>
+<p>Moves a player or a monster from anywhere in the game: to you, to a room 
+by its symbolic name, or to wherever someone or something else is. They 
+disappear in a mushroom cloud, appear in a puff of smoke, are told who 
+transferred them, and look around. Things can't be transferred, only 
+players and monsters.
+</p><p>transfer all brings every player in the game to you; you must type 
+transfer all now, to be sure. Dead players (still spirits) can only be 
+transferred from level 250. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Goto</a>
+&gt; <a cmd='#'>Wizhelp At</a>
+</pre>
+
+
+
+
+</div>
