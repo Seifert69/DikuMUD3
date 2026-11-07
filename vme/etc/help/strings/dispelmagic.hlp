@@ -1,20 +1,33 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Protection<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer, Conjurer <br/> <br/>
-<br/><br/>
-Guild Level: 17 - Sorc, 30 - Conj  <br/> <br/>
-<br/><br/>
-Usage cast dispel magic (target)<br/><br/>
-<br/><br/>
-This spell will, if successful, dispel non-permanent spells on the target.<br/><br/>
-The spell drains 10MP and 10EP from the caster for each spell removed.  <br/>
-If MP or EP runs out, the caster will become unconscious. This spell requires<br/>
-no hands free.<br/>
-<br/>See Also:<br/><br/>
-Affect<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Dispel Magic</h1>
+<p>Sphere: Protection Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 17), Conjurer (guild level 30)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast dispel magic &lt;target&gt;
+cast dispel magic &lt;object&gt;
+</pre>
+<p>Tears spells off a person, a creature or an object, one after another. It 
+removes, among others: bless and unholy blessing, the detect spells, 
+invisibility, charm, hold, haste, quicken and slow, poison, rage and berserk, 
+magic light and darkness, enchanted weapons and armour, the raise spells, and 
+the resistances. The better your spell, the more it removes: up to fifteen 
+for a master.
+</p><p>It also breaks spells such as sleep, plague and madness, when your spell is 
+at least as strong as they were. It doesn't touch sanctuary, the skin spells, 
+protection from evil, life protection or sustain.
+</p><p>It is hard work: each spell removed costs you 20 endurance, and if your 
+endurance runs out you fall stunned. You need more than 20 endurance to begin. 
+You must be standing. It is also found on scrolls and wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Displace Magic</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>

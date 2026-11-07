@@ -1,12 +1,28 @@
-<br/>
-Usage crank &lt;member&gt;<br/>
-Example: crank Fizban<br/>
-<br/>
-This command is for the members and non-members of clans to see what each<br/>
-others rank is.<br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-clan rank<br/>
-csrank<br/>
-<br/>
+<div class="mw-parser-output"><h1>Crank</h1>
+<p>Usage:
+</p>
+<pre>crank              the ranks of your clan, from the lowest up
+crank &lt;player&gt;     the rank a player holds in their clan
+</pre>
+<p>Example:
+</p>
+<pre>crank fizban
+</pre>
+<p>With no name, crank lists the titles of your clan's ranks. With a name, it 
+tells you the rank that player holds, and in which clan. Anyone can look 
+up another player's rank, in a clan or not; the player must be in the 
+game. The clan Master and Lords choose the titles of the ranks (see 
+<a cmd='#'>Help Csrank</a>) and set members' ranks (see <a cmd='#'>Help Cpromote</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Csrank</a>
+&gt; <a cmd='#'>Help Cpromote</a>
+&gt; <a cmd='#'>Help Cinfo</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

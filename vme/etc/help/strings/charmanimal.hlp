@@ -1,9 +1,34 @@
-<br/>
-<br/>
-Usage: cast charm animal &lt;animal name&gt;<br/>
-The caster uses this spell to tame animals, which will then follow and obey<br/>
-the caster as their master (da casta is da masta).<br/>
-<br/>
-See Also:<br/><br/>
- Summon animal<br/>
-<br/>
+<div class="mw-parser-output"><h1>Charm Animal</h1>
+<p>Sphere: Mind Sphere
+Class: Druid (guild level 15), Ranger (guild level 25, up to 60%)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast charm animal &lt;animal&gt;
+tell &lt;animal&gt; &lt;command&gt;
+</pre>
+<p>The caster utters 'Voce sequi', and a wild animal is tamed: it wakes, 
+stands and follows the caster, and does what it is told. Command it with 
+tell, for example tell wolf kill rat. It fights, walks and does most 
+things you ask, but it won't talk, cast, steal, use or recite things, and 
+it won't attack another player unless both of you have signed the Book of 
+Blood.
+</p><p>It only works on animals; the animal resists with its mind, and animals of 
+a higher level than you are harder to charm. If the spell fails, the 
+animal growls and attacks you. You can have only one animal in your 
+service at a time.
+</p><p>The charm doesn't last: after a short while the animal longs for its 
+natural habitat, and it goes back there. A dispel magic strong enough ends 
+it at once. You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Animal</a>
+&gt; <a cmd='#'>Help Hold Animal</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

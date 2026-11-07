@@ -1,6 +1,18 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Type Contrib to view a list of donators.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Contrib</h1>
+<p>Usage:
+</p>
+<pre>contrib
+</pre>
+<p>Shows the list of the players who have supported Valhalla over the years: 
+its contributors and donators. Thank you all.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Credits</a>
+&gt; <a cmd='#'>Help Creators</a>
+</pre>
+
+
+
+
+</div>

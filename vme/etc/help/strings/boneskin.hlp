@@ -1,23 +1,31 @@
-}<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 24<br/><br/>
-<br/> <br/>
-Usage cast bone skin (target)<br/><br/>
-<br/><br/>
-This spell increases the target's natural armor to the equivalent of<br/>
-chain armor.  The spell wears off after a short time. This spell requires no<br/>
-free hands. This spell is especially useful when traveling to reclaim<br/>
-a corpse.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-bark skin<br/><br/>
-stone skin<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Bone Skin</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 24)
+Mana: 50
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast bone skin</a>   (on yourself only)
+</pre>
+<p>The caster utters 'Episa hues' and their skin hardens like bone, as good as 
+chain mail. Wherever a blow lands on a part of you that wears no armour, 
+your skin counts as chain. Where you do wear armour, the armour counts as 
+before.
+</p><p>It lasts a few minutes, longer the better your spell, and then wears off. It 
+is especially useful when you go to fetch your corpse with nothing on (see 
+<a cmd='#'>Help Die</a>). It doesn't add up with leather skin, bark skin or stone skin: 
+only one natural armour spell works at a time. You must be standing. It is 
+also found on potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Leather Skin</a>
+&gt; <a cmd='#'>Help Bark Skin</a>
+&gt; <a cmd='#'>Help Stone Skin</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,38 +1,73 @@
-<br/>
-Level   Spell               Level    Spell<br/>
-  0    cure light wounds      16    bark skin       <br/>
-  1    cause light wounds     17    life protection <br/>
-  2    aid                    18    find path       <br/>
-  4    summer rain            18    remove curse    <br/>
-  4    raise divine           18    create food     <br/>
-  4    divine resistance      19    locate object        <br/>
-  4    command                20    locate person        <br/>
-  5    detect alignment       20    total recall         <br/>
-  5    detect undead          22    protection from evil <br/>
-  6    detect poison          23    hold undead          <br/>
-  6    charisma               24    continual light      <br/>
-  6    sustain                27    raise dead           <br/>
-  7    awaken                 28    cause serious wounds<br/>
-  8    blind                  28    flash<br/>
-  8    leather skin           29    dispel evil          <br/>
-  9    bless                  30    heal                 <br/>
- 10    sanctuary              31    sun ray              <br/>
- 10    word of recall         33    clear skies          <br/>
- 11    remove disease         37    harm                 <br/>
- 11    detect curse           40    resurrection<br/>
- 12    calm                   45    colourbeam           <br/>
- 12    light                  70    final rest           <br/>
- 13    remove poison          75    raise hitpoints<br/>
- 14    cure serious wounds    75    colourspray<br/>
- 14    sense life             80    holy word<br/>
- 15    cure blind            115    flashing grip              <br/>
- 16    create water          120    deathly grasp        <br/>
-          <br/>
-              <br/>
-     <br/>
-<br/>See Also:<br/>      <br/>
-                          <br/>
- Healer<br/>                 <br/>
- Healer Skills<br/>          <br/>
- Healer Weapons<br/>    <br/>
-<br/>
+<div class="mw-parser-output"><h1>Healer Spells</h1>
+<p>The spells the Healers' guild of Midgaard teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name                   Level   Up to
+Cure Light Wounds          0   100%
+Cause Light Wounds         1   80%
+Aid                        2   100%
+Command                    4   75%
+Divine Resistance          4   100%
+Raise Divine               4   100%
+Summer Rain                4   100%
+Detect Alignment           5   100%
+Detect Undead              5   100%
+Charisma                   6   100%
+Detect Poison              6   100%
+Sustain                    6   100%
+Awaken                     7   100%
+Blind                      8   50%
+Leather Skin               8   100%
+Bless                      9   100%
+Sanctuary                 10   100%
+Word Of Recall            10   100%
+Detect Curse              11   100%
+Remove Disease            11   100%
+Calm                      12   100%
+Light                     12   100%
+Remove Poison             13   100%
+Cure Serious Wounds       14   100%
+Sense Life                14   100%
+Cure Blind                15   100%
+Bark Skin                 16   100%
+Create Water              16   100%
+Life Protection           17   100%
+Create Food               18   100%
+Find Path                 18   100%
+Remove Curse              18   100%
+Locate Object             19   100%
+Locate Person             20   100%
+Total Recall              20   100%
+Protection From Evil      22   100%
+Hold Undead               23   50%
+Continual Light           24   100%
+Raise Dead                27   100%
+Cause Serious Wounds      28   80%
+Flash                     28   100%
+Dispel Evil               29   100%
+Heal                      30   100%
+Sun Ray                   31   80%
+Clear Skies               33   100%
+Harm                      37   80%
+Resurrection              40   100%
+Colourbeam                45   100%
+Final Rest                70   100%
+Colourspray               75   100%
+Raise Hitpoints           75   100%
+Holy Word                 80   100%
+Flashing Grip            115   100%
+Deathly Grasp            120   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Healer Skills</a>
+&gt; <a cmd='#'>Help Healer Weapons</a>
+&gt; <a cmd='#'>Help Healers</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Spells</a>
+</pre>
+
+
+
+
+</div>

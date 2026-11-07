@@ -1,10 +1,43 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage contract (character)<br/><br/>
-<br/><br/>
-Example: contract mayor<br/><br/>
-<br/><br/>
-This command is used to hire one of the<br/>
-<br/>
+<div class="mw-parser-output"><h1>Bounty Hunters</h1>
+<p>The Bounty Hunters Guild lies north of the King's Road. In its Contracts 
+Room, west of the hall, the Hunter hands out contracts on monsters all over 
+the world. You must be level 50 or higher to take one.
+</p><p>Usage (in front of the Hunter):
+</p>
+<pre>say daily contract       a new target, to be killed today
+say monthly contract     a target for this month, for a bigger reward
+say bonus contract       an extra target, with no time limit
+say contract status      your open contracts
+say report               your totals and streaks
+</pre>
+<p>The target is a monster anywhere in the world. Kill it, <a cmd='#'>decapitate</a> the 
+corpse and give the head to the Hunter. A daily contract only counts on 
+the day it was given, a monthly one only in its month. You hold one 
+contract of each kind at a time.
+</p><p>Each contract closed pays experience and money, and bounty points (BP), 
+which you spend in the guild shop (<a cmd='#'>list</a>, <a cmd='#'>buy</a>). The reward grows with 
+your streak, the number of contracts of a kind you have closed in a row, 
+and doubles on milestones: a daily streak of 14, 30, 60, 90, 180 or 365, a 
+monthly streak of 6, 12, 18 or 24. Miss a day (or a month), or leave a 
+contract unfinished, and that streak starts over. Logging in on days in a 
+row also earns BP.
+</p><p>From the shop:
+</p>
+<ul><li>The <b>tablet</b> keeps all your contracts in one place (<a cmd='#'>look tablet</a>); with it, the Hunter updates the tablet instead of handing you papers.</li>
+<li>A <b>contract breaking note</b> lets you drop a daily or monthly contract without losing your streak: give it to the Hunter and say daily or monthly.</li>
+<li>A <b>hint</b> (<a cmd='#'>look hint</a>) tells you in which zone or land your target is.</li></ul>
+<p>Giving up a bonus contract costs 25,000 experience and 5 BP.
+</p><p>The guild has more for veterans: the Jeweler sends you to deliver packages, 
+the Blacksmith leads killing sprees for groups, and in time the Historian, 
+the Summoner and the Necromancer have their own tasks.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Heads</a>
+&gt; <a cmd='#'>Help Wanted</a>
+</pre>
+
+
+
+
+</div>

@@ -1,8 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Some zones provide you with basic maps. Try to type 'help' with no<br/>
-arguments and see if you are in a zone that does so.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Map</h1>
+<p>There is no map command, but there are two kinds of map. The web client draws a map for you. When you 
+walk somewhere that has a map, the map panel shows it with a mark where 
+you stand, and the mark follows you as you walk. Click the map to see it 
+large.
+</p><p>Maps exist so far for Midgaard, Udgaard, the Haon-Dor and Cypress 
+forests, and the guilds of the healers, fighters, conjurers and thieves. 
+Elsewhere the panel waits: "The map appears when you walk somewhere that 
+has one."
+</p><p>Many areas also tell you about themselves: type <a cmd='#'>help area</a> to learn 
+where you are and something about the place. In Midgaard, Udgaard, the 
+barbarians' lands, the gremlins' and the guilds of the healers, fighters, 
+conjurers and thieves, that includes a map drawn in letters, which works 
+in any client.
+</p><p>Everywhere, the compass beside the room name lights up the ways out (see 
+<a cmd='#'>Help Exits</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Exits</a>
+&gt; <a cmd='#'>Help Movement</a>
+</pre>
+
+
+
+
+</div>

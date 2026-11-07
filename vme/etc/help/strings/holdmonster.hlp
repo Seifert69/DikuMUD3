@@ -1,18 +1,37 @@
-<br/>
-<br/>
-Sphere: Mind <br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 27<br/><br/>
-<br/><br/>
-Usage cast hold monster (target)<br/><br/>
-<br/>
-The hold spell will magically prevent a monster from engaging in combat<br/>
-for five rounds.  This spell is very difficult to use, and may therefore<br/>
-fail quite often even cause the caster to hold herself. This spell requires <br/>
-no hands free to cast. But its success depends on the target's and the spell <br/>
-caster's comparative expertise and intelligence.<br/><br/>
-<br/>See Also:<br/><br/>
-mind sphere<br/><br/>
-stun<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Hold Monster</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 27)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast hold monster &lt;target&gt;
+</pre>
+<p>The caster spits upon the ground and utters 'Mag desi', and magic engulfs 
+the target, leaving it unable to fight: it misses two to five combat 
+rounds, more the better the casting goes, and it can't flee in panic 
+meanwhile.
+</p><p>It is a hard spell to master, and it can go wrong in ways that hurt:
+</p>
+<ul><li>cast very poorly, it misfires, and you hold yourself for three rounds;</li>
+<li>cast a little better, nothing happens;</li>
+<li>cast fairly well, it holds you both for three rounds;</li>
+<li>cast well, it holds the target only.</li></ul>
+<p>The target resists with its mind. Humans, elves, dwarves and other 
+humanoids are much harder to hold, and the undead can't be held at all 
+(see hold undead). Casting it is an attack, so the target will fight you 
+if it wasn't already. No free hands are needed, and it is also found on 
+wands, scrolls and potions.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hold Animal</a>
+&gt; <a cmd='#'>Help Hold Undead</a>
+&gt; <a cmd='#'>Help Stun</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

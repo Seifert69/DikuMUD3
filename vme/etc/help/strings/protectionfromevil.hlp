@@ -1,10 +1,27 @@
-<br/>
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-<br/>
-Usage cast protection from evil (target)<br/><br/>
-<br/><br/>
-The spell will protect a player from mobs that are of evil<br/>
-alignment.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Protection from Evil</h1>
+<p>Sphere: Protection Sphere
+Class: Healer (guild level 22), Paladin (guild level 32)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast protection from evil &lt;target&gt;
+<a cmd='#'>cast protection from evil</a>   (on yourself)
+</pre>
+<p>Wards the target against evil. Whenever someone of evil alignment attacks 
+them, monster or player, the target defends better: against blows, with their 
+shield, and against spells alike.
+</p><p>The better your protection sphere, the longer it lasts: from a minute up to 
+several minutes. It doesn't add up on someone who already has it. You must be 
+standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Protection from Good</a>
+&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>

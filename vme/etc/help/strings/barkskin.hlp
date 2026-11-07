@@ -1,20 +1,30 @@
-<br/>
-Sphere: Creation<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Druid <br/> <br/>
-Guild Level: 0<br/><br/>
-<br/> <br/>
-Usage cast bark skin (target)<br/><br/>
-<br/><br/>
-This spell increases the targets natural armor to the equivalent of<br/>
-hard leather armor.  The spell wears off after a short time. This spell <br/>
-requires no free hands. This spell is especially useful when traveling <br/>
-to reclaim a corpse.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-bone skin<br/><br/>
-stone skin<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Bark Skin</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Druid (guild level 3), Healer (guild level 16)
+Mana: 35
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast bark skin</a>   (on yourself only)
+</pre>
+<p>Your skin turns hard as bark, like hard leather armour. Wherever a blow lands 
+on a part of you that wears no armour, your skin counts as hard leather. 
+Where you do wear armour, the armour counts as before.
+</p><p>It lasts a few minutes, longer the better your spell, and then wears off. It 
+is especially useful when you go to fetch your corpse with nothing on (see 
+<a cmd='#'>Help Die</a>). It doesn't add up with leather skin, bone skin or stone skin: 
+only one natural armour spell works at a time. You must be standing. It is 
+also found on potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Leather Skin</a>
+&gt; <a cmd='#'>Help Stone Skin</a>
+&gt; <a cmd='#'>Help Die</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,12 +1,27 @@
-<br/>
-Usage cremove &lt;member&gt;<br/>
-Example: cremove Fizban <br/>
-<br/>
-The cremove command works for both the Clan master and the clan Lord if one<br/>
-is appointed.  Using this command you can remove other members from the clan.<br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-caccept<br/>
-cdefect<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cremove</h1>
+<p>Usage:
+</p>
+<pre>cremove &lt;member&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cremove fizban
+</pre>
+<p>Throws a member out of your clan. Only the clan Master and the Lords can 
+use it, and nobody can remove the Master. The member doesn't have to be in 
+the game: an absent member is struck off the clan's roster.
+</p><p>A member who is removed while in the game loses the clan at once: their 
+title becomes "Banished from" the clan, and their hometown goes back to the 
+temple of Udgaard. To leave a clan yourself, use <a cmd='#'>Help Cdefect</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Caccept</a>
+&gt; <a cmd='#'>Help Cdefect</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

@@ -1,12 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-<br/><br/>
-Usage cast sun ray (target)<br/><br/>
-<br/>
-This spell will call upon the forces of nature for an attack.  It only<br/>
-works outdoors when the sun is shining, and is most powerful at high noon.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sun Ray</h1>
+<p>Sphere: Fire Sphere
+Class: Healer (guild level 31), Druid (guild level 41)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast sun ray &lt;target&gt;
+</pre>
+<p>Calls down a ray of burning sunlight on the target. It needs the sun: you 
+must be outdoors, under a cloudless sky, in the daytime (from five in the 
+morning until nine at night). It is weak in the early morning and late 
+evening, and strongest at high noon.
+</p><p>A shield can block it, and it does a little more against clothes than 
+against armour. Casting it is an attack and starts a fight. To clear the sky 
+first, see <a cmd='#'>Help Clear Skies</a>. You must be standing. It is also found on 
+wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clear Skies</a>
+&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

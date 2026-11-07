@@ -1,32 +1,36 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Skill              Level<br/>
-<br/>
-Fleeing              0<br/>
-Consider             0<br/>
-Diagnostics          0<br/>
-Herbs                1<br/>
-Scan                 4<br/>
-First aid            5<br/>
-Forage               6<br/>
-Search               7<br/>
-Wand use             8<br/>
-Scroll use          10<br/>
-Shield              12<br/>
-Skin                12<br/>
-Soothe              13<br/>
-Dowse               15<br/>
-Cook                18<br/>
-Curare              20<br/>
-Bash                23<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Druid<br/><br/>
- Druid Weapons<br/><br/>
- Druid Spells<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Druid Skills</h1>
+<p>The skills the Druids' guild teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
+</p>
+<pre>Name                 Level   Up to
+Armor Soft Leather       0   75%
+Consider                 0   85%
+Diagnostics              0   85%
+Fleeing                  0   80%
+Herbs                    1   100%
+Scan                     4   50%
+First Aid                5   80%
+Forage                   6   100%
+Search                   7   60%
+Wand Use                 8   100%
+Scroll Use              10   100%
+Shield                  12   50%
+Skin                    12   80%
+Soothe                  13   75%
+Dowse                   15   75%
+Cook                    18   100%
+Curare                  20   100%
+Bash                    23   50%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Druid Spells</a>
+&gt; <a cmd='#'>Help Druid Weapons</a>
+&gt; <a cmd='#'>Help Druid</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>

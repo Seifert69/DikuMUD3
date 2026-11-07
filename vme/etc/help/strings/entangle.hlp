@@ -1,7 +1,30 @@
-<br/>
-<br/>
-Usage: cast entangle &lt;person/monster&gt;<br/>
-This spell causes massive vines to grow up from the ground and entangle an<br/>
-opponent.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Entangle</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 21), Ranger (guild level 35, up to 70%)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast entangle &lt;target&gt;
+</pre>
+<p>The caster raises both hands slowly and points, and thick, writhing vines 
+shoot from the ground and wrap the target. Held in the vines, they can do 
+little but look about, talk and check themselves; a player can't walk away, 
+and can cast no spell but dispel magic. The vines also shield them: nobody 
+can attack them while they are bound. The vines hold for about half a 
+minute, a little longer the better your spell, and a strong enough dispel 
+magic tears them away.
+</p><p>The target resists with their mind. The vines won't take hold of anyone 
+above level 50, and they can't grow indoors or out on the water. It can be 
+cast while fighting. It is also found on potions, wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spell Hold</a>
+&gt; <a cmd='#'>Help Hold Animal</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

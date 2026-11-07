@@ -1,20 +1,48 @@
-<br/>
-<br/>
-<br/>
-<br/>
-This sphere requires good brains to control. The spells<br/>
-enables you to control the minds of your targets.<br/>
-<br/><br/>
-<br/>
-    Flash              Colourbeam<br/>
-    Colourspray        Invisibility<br/>
-    Wizard Eye         Fear<br/>
-    Confusion          Sleep<br/>
-    Xray Vision        Calm<br/>
-    Summer Rain        Command<br/>
-    Leaving<br/>
-<br/>
-<br/><br/>
-<br/>
-Try help on the individual spells.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Mind Sphere</h1>
+<p>The spells of the mind sphere work on the mind and the senses: they put foes to sleep, slow, stun, hold, frighten or charm them, blind them with flashes of light, and also make you invisible, let you see through walls or sharpen your focus. Your ability in the sphere decides how well you cast them, and also how well you resist mind spells cast on you (see <a cmd='#'>Help Spheres</a>). Most of these spells are resisted by the target's brain. Storm gate does nothing at present, because of a known bug.
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>drowse                  sorcerer 25
+slow                    sorcerer 9, conjurer 15
+stun                    sorcerer 15
+hold                    no guild teaches it
+invisibility            conjurer 20, assassin 25
+wizard eye              conjurer 23
+fear                    necromancer 19, dark knight 28
+confusion               sorcerer 13
+sleep                   necromancer 14
+xray vision             sorcerer 17
+calm                    healer 12, druid 26, paladin 28
+command                 healer 4, necromancer 28
+light breath            no guild teaches it
+sonic breath            no guild teaches it
+hold monster            sorcerer 27
+hold undead             necromancer 14, healer 23
+storm gate              no guild teaches it
+cause cowardly flight   no guild teaches it
+cause panic             necromancer 42
+hold flight             no guild teaches it
+hold animal             ranger 17
+charm animal            druid 15, ranger 25
+locate animal           ranger 9, druid 19
+petrify                 druid 30
+focus                   conjurer 12
+flash                   healer 28
+colourbeam              healer 45
+colourspray             healer 75
+flashing grip           healer 115
+mire                    dark knight 18
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Brain</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>

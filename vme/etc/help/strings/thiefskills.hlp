@@ -1,27 +1,46 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Skill                 Level          Skill              Level<br/>
-    Appraisal                 0          Backstab               0<br/>
-    Consider                  0          Climb                  0<br/>
-    Diagnostics               4          Disarm                12<br/>
-    First Aid                 9          Fleeing                0<br/>
-    Filtching                 5          Hide                   0<br/>
-    Palm                     10          Peeking                8          <br/>
-    Pick Lock                 2          Pick Pockets           0          <br/>
-    Plant                    25          Scroll use            15          <br/>
-    Search                    0          Shield                 3          <br/>
-    Slip                     15          Sneak                  1          <br/>
-    Stealing                 10          Swimming               6          <br/>
-    Tripping                  7          Two weapon style      19          <br/>
-    Ventriloquate             0<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Thief<br/><br/>
- Thief Weapons<br/><br/>
- Thief Roleplay<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Thief Skills</h1>
+<p>The skills the Thieves' guild teaches, in its hall in Midgaard. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
+</p>
+<pre>Name                 Level   Up to
+Appraisal                0   100%
+Armor Soft Leather       0   100%
+Backstab                 0   50%
+Climb                    0   100%
+Consider                 0   80%
+Fleeing                  0   100%
+Hide                     0   100%
+Pick Pockets             0   100%
+Search                   0   100%
+Ventriloquate            0   100%
+Sneak                    1   100%
+Pick Lock                2   100%
+Shield                   3   70%
+Diagnostics              4   70%
+Filching                 5   100%
+Swimming                 6   50%
+Armor Hard Leather       7   75%
+Tripping                 7   100%
+Peeking                  8   100%
+First Aid                9   30%
+Palm                    10   100%
+Stealing                10   100%
+Disarming               12   70%
+Scroll Use              15   50%
+Slip                    15   100%
+Two Weapon Style        19   70%
+Plant                   25   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Thief Spells</a>
+&gt; <a cmd='#'>Help Thief Weapons</a>
+&gt; <a cmd='#'>Help Thief</a>
+&gt; <a cmd='#'>Help Thief Role Play</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>

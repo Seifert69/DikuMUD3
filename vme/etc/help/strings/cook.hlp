@@ -1,10 +1,28 @@
-<br/>
-<br/>
-Usage: cook &lt;food item&gt;<br/>
-Cooking often increases the food value of a piece of meat or plant.<br/>
-<br/>
-See Also:<br/><br/>
- Skin<br/>
- Butcher<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cook</h1>
+<p>Skill
+Class: Ranger (guild level 10), Druid (guild level 18)
+</p><p>Usage:
+</p>
+<pre>cook &lt;food&gt;
+</pre>
+<p>Builds a small campfire and cooks a piece of food on it: meat from 
+butchering, a fish, a plant. Cooked food fills you more, and cooking burns 
+away some of any poison in it; a weak poison is gone altogether. Food can 
+be cooked only once.
+</p><p>You need open ground for a fire: not in a city or indoors, and not on 
+water. Your skill and your dexterity decide whether you find enough to 
+start a fire, and some lands give less kindling than others. If a 
+campfire is already burning, you cook on it without building another. You 
+need some endurance left, and you can't cook while fighting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Butcher</a>
+&gt; <a cmd='#'>Help Skin</a>
+&gt; <a cmd='#'>Help Eat</a>
+</pre>
+
+
+
+
+</div>

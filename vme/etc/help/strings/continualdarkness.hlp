@@ -1,20 +1,30 @@
-<br/>
-<br/><br/>
-Sphere: Creation<br/><br/>
-<br/>
-Spell Tier: 2 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 14 <br/> <br/>
-<br/><br/>
-Usage cast continual darkness (target)<br/><br/>
-<br/><br/>
-When cast on a person or object, it will darken for a very long time.<br/>
-When cast upon a room (no argument), the room will plunge into darkness and<br/>
-remain so for a very long time. Tgis spell requires no free hands.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-darkness<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Continual Darkness</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 2
+Class: Necromancer (guild level 14), Dark Knight (guild level 41)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast continual darkness &lt;object&gt;
+<a cmd='#'>cast continual darkness</a>   (on the room you are in)
+</pre>
+<p>The opposite of continual light: an object, or the room you stand in, is 
+plunged into darkness, twice as deep as the darkness spell, and it doesn't 
+wear off: the darkness stays. Cast it on something you carry, and the shadow 
+goes where you go.
+</p><p>It doesn't add up with the darkness spell: something already darkened by 
+either one can't be darkened again. You must be standing. It is also found on 
+staffs, scrolls and wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Darkness</a>
+&gt; <a cmd='#'>Help Continual Light</a>
+&gt; <a cmd='#'>Help Night Globe</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

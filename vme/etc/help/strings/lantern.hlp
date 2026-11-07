@@ -17,6 +17,8 @@ won't ignite." Put it out with extinguish when you don't need it, to save it
 for later.
 </p><p>Some lights are not strong enough for the darkest places, like the deepest part 
 of the Haon-Dor forest: there you need a stronger one, like a lantern.
+</p><p>Magic gives light too: the light spell makes the room, or something you carry, give off light, and 
+magic candle, sun globe and glowing fungus make lights you can hold.
 </p><p><br />
 See Also:
 </p>
@@ -24,6 +26,9 @@ See Also:
 &gt; <a cmd='#'>Help Extinguish</a>
 &gt; <a cmd='#'>Help Torch</a>
 &gt; <a cmd='#'>Help Spell Light</a>
+&gt; <a cmd='#'>Help Magic Candle</a>
+&gt; <a cmd='#'>Help Sun Globe</a>
+&gt; <a cmd='#'>Help Glowing Fungus</a>
 </pre>
 
 

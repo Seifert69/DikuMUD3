@@ -1,23 +1,36 @@
-Sphere: Creation<br/><br/>
-<br/>
-Spell Tier: 2 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 36 <br/><br/>
-<br/> <br/>
-Usage cast control undead (target)<br/><br/>
-<br/>
-This spell will enable you to command an undead with a single word.  If<br/>
-the spell fails the undead will attack the caster.  Once a the undead is <br/>
-under your command, you can control it by using the tell command.  <br/>
-For example, to command a  ghoul to sit, use 'tell ghoul sit'. THis spell <br/>
-requires no hands free to cast.<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-animate dead<br/><br/>
-raise skeletal champion<br/><br/>
-raise skeleton<br/><br/>
-raise horde<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Control Undead</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 2
+Class: Necromancer (guild level 36)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast control undead &lt;undead&gt;
+tell &lt;undead&gt; &lt;command&gt;
+tell horde &lt;command&gt;     (all your undead at once)
+</pre>
+<p>The necromancer utters 'Muera reslox' and bends one of the undead to their 
+will: it follows you and obeys you. Command it with tell, for example 
+tell ghoul kill rat. Like an animated zombie, it walks, fights, gets, 
+drops, gives and follows; anything else, it only moans. It won't attack 
+another player unless both of you have signed the Book of Blood.
+</p><p>The undead resists, and undead above your level are much harder to 
+control; if the spell fails, it attacks you. Each casting also darkens your 
+soul: your alignment falls a little toward evil.
+</p><p>The control lasts from half a minute to several minutes, the better your 
+spell. When the undead begins to tremble, it is about to break free: it 
+rebels and attacks you if you are with it, and when it is beaten or you are 
+gone, it vanishes, leaving what it carried. You must be standing, and no 
+free hands are needed. It is also found on wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Animate Dead</a>
+&gt; <a cmd='#'>Help Aid Undead</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

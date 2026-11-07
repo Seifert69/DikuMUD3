@@ -1,11 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage trip (character)<br/><br/>
-<br/>
-Trip is a maneuver in combat to knock the opponent out of combat for a<br/>
-short while.  The opponent usually recovers briefly, so one must take<br/>
-advantage quickly.  Note that not all creatures are tripable.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Trip</h1>
+<p>Skill
+Class: Thief (guild level 7)
+</p><p>Usage:
+</p>
+<pre>trip &lt;someone&gt;
+trip            (whoever you are fighting)
+</pre>
+<p>Hooks your opponent's legs out from under them, so they lose their next 
+round of the fight: a moment to strike, or to get away. It costs 10 
+endurance, and it is an attack: they will fight you for it.
+</p><p>Your dexterity and skill against theirs decide it. Fumble, and you 
+stumble yourself, losing half a round or a whole one. Someone you have 
+just tripped watches for it, and leaps over your leg if you try again 
+too soon.
+</p><p>Only people and other mammals can be tripped; you can't trip a snake, a 
+spider or a ghost. Nor can you trip someone far heavier than you, or 
+someone already lying down. To trip another player, both of you must have 
+signed the Book of Blood.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Bash</a>
+&gt; <a cmd='#'>Help Kick</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>

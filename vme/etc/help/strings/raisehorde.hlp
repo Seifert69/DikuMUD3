@@ -1,30 +1,38 @@
-<br/>
-Spell Tier: 4 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 150 <br/> <br/>
-<br/><br/>
-<br/>Usage: cast raise horde<br/><br/>
-<br/><br/>
-This spell is the highest level spell in the necromancer guild. It allows the<br/>
-caster to raise a horde of undead (1/5 skeletal champions, 2/5 skeletal<br/>
-warriors, 2/5 zombies) from a room of corpses for 10 mana per undead. You can<br/>
-'tell horde do something' and all undead following you will 'do something'.<br/>
-The cleric needs no hands free to raise a horde.<br/><br/>
-<br/><br/>
-NOTE: This may be performed only upon corpses of mobiles (also known as<br/>
-NPCs). Animating a player's corpse is in violation of the PK rules and<br/>
-is subject to severe punishment.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-control undead<br/><br/>
-raise skeletal champion<br/><br/>
-raise skeleton<br/><br/>
-animate dead<br/><br/>
-PK<br/><br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Raise Horde</h1>
+<p>Sphere: Creation Sphere
+Class: Necromancer (guild level 150)
+Mana: 20, and 10 for each corpse
+</p><p>Usage:
+</p>
+<pre>cast raise horde
+tell horde &lt;command&gt;
+</pre>
+<p>The necromancer cuts themself, bleeds upon the ground and chants 
+'Multitudenem aneme', and every corpse in the room rises at once: about 
+four in ten as skeletons, four in ten as zombies, and the rest as skeletal 
+champions. Each follows its maker and carries what the corpse held.
+</p><p>You need at least 100 mana to begin, and each corpse raised costs you 10 
+more; when your mana runs low, the raising stops. Corpses of insects and 
+other crawling things, of the undead, demons and devils, elementals, 
+golems, gargoyles and the like crumble to dust instead.
+</p><p>Command your horde with tell, just as with <a cmd='#'>Help Animate Dead</a>: tell horde 
+kill rat. The undead last a few minutes, up to a quarter of an hour or 
+more for a master, then crumble to dust, leaving what they carried. A 
+strong dispel magic ends them sooner. They never attack players, unless 
+both you and they have signed the Book of Blood.
+</p><p>You must be standing, and no free hands are needed. It is also found on 
+wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Animate Dead</a>
+&gt; <a cmd='#'>Help Raise Skeleton</a>
+&gt; <a cmd='#'>Help Raise Skeletal Champion</a>
+&gt; <a cmd='#'>Help Control Undead</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+</pre>
+
+
+
+
+</div>

@@ -1,37 +1,35 @@
-<br/>
-<br/>
-Usage describe (location)<br/><br/>
-i.e. describe eyes<br/><br/>
-<br/>
-To change the default description, you now must do that online, with the<br/>
-"describe" command. You may choose to enter a description for any body parts, or<br/>
-for your general description, that which is seen when another character looks at<br/>
-you.<br/>
-<br/><br/>
-To describe a specific body part, use the describe command followed by the<br/>
-location you would like to describe. Body parts range from hair, head, and ears,<br/>
-to butt, legs, and feet. Color may be used in your description using the syntax<br/>
-described in "help color".<br/>
-<br/><br/>
-Once the command is entered, you will get a ']' prompt for your text. To<br/>
-end your description, type a '@' on a single line.<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/><br/>
-<br/>
-Description locations available are:<br/><br/>
-<br/>
-arms        butt        ears        eyes<br/>
-face        feet        general     hair<br/>
-hands       head        left arm    left leg<br/>
-left foot   left hand   left eye    left ear<br/>
-legs        mouth       neck        nose<br/>
-nostrils    right arm   right leg   right foot<br/>
-right hand  right eye   right ear   teeth<br/>
-toes        tounge<br/>
-<br/><br/>
-<br/>
-See also:<br/><br/>
-color<br/><br/>
-<br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Describe</h1>
+<p>Usage:
+</p>
+<pre>describe &lt;part&gt;
+describe general       what others see when they look at you
+describe help          the list of parts
+</pre>
+<p>Example:
+</p>
+<pre>describe left eye
+</pre>
+<p>Writes the description others see when they look at you, or at a part of 
+your body. The game shows what you have now, then opens a text box for the 
+new text; when you finish, it replaces the old one. Colors work in 
+descriptions (see <a cmd='#'>Help Colors</a>).
+</p><p>The parts you can describe:
+</p>
+<pre>general     arms        back        butt        chest       ears
+eyes        face        feet        hair        hands       head
+legs        mouth       neck        nose        nostrils    teeth
+left arm    left leg    left foot   left hand   left eye    left ear
+right arm   right leg   right foot  right hand  right eye   right ear
+</pre>
+<p>Write in the spirit of the game, and in good taste.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Colors</a>
+&gt; <a cmd='#'>Help Look</a>
+</pre>
+
+
+
+
+</div>

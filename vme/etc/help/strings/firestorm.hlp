@@ -1,24 +1,31 @@
-<br/>
-<br/>
-<br/>
-Sphere: Fire<br/><br/>
-<br/>
-Spell Tier: 3<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 28 <br/><br/>
-<br/><br/>
-Usage firestorm (target)<br/><br/>
-<br/><br/>
-This spell causes flaming droplets to fall around the target for a short <br/>
-duration. These inflict damage by fire to the named target or the present <br/>
-target in battle with the spellcaster. The spell requires the caster to <br/>
-have one hand empty.<br/>
-<br/>See Also:<br/><br/>
-<br/>
-fire resistance<br/><br/>
-burn<br/><br/>
-fireball<br/><br/>
-fire sphere<br/><br/>
-fire blast<br/><br/>
+<div class="mw-parser-output"><h1>Firestorm</h1>
+<p>Sphere: Fire Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 28)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast firestorm &lt;target&gt;
+<a cmd='#'>cast firestorm</a>   (at whoever you are fighting)
+</pre>
+<p>The caster utters 'Maelstra incerinata!' and points, and flaming droplets 
+rain down around the target. The better your magic and your fire sphere, 
+the more it burns. It does a little better against clothes and light 
+leather than against heavier armour, and a shield softens it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Burn</a>
+&gt; <a cmd='#'>Help Fireball</a>
+&gt; <a cmd='#'>Help Fire Blast</a>
+&gt; <a cmd='#'>Help Heat Resistance</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

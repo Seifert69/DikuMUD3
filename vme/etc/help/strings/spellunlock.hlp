@@ -1,19 +1,29 @@
-<br/>
-<br/>
-<br/>
-Sphere: Protection<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer<br/> <br/>
-<br/><br/>
-Guild Level: 18<br/> <br/>
-<br/><br/>
-<br/>
-Usage cast unlock (target)<br/><br/>
-<br/><br/>
-This spell will unlock any lock that is not defended against magical tampering. <br/>
-It requires no hands free to cast.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Lock<br/><br/>
-Unlock<br/><br/>
-Lock Spell<br/><br/>
+<div class="mw-parser-output"><h1>Unlock (spell)</h1>
+<p>Sphere: Protection Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 18), Conjurer (guild level 27), Thief (guild level 35)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast unlock &lt;door&gt;
+cast unlock &lt;direction&gt; &lt;door&gt;
+cast unlock &lt;container&gt;
+</pre>
+<p>Unlocks a closed, locked door or container by magic, without a key: *click*. 
+A door is unlocked from both sides at once. Then you can open it (see 
+<a cmd='#'>Help Open</a>).
+</p><p>For locking by magic, see <a cmd='#'>Help Spell Lock</a>. For unlocking with a key, see 
+<a cmd='#'>Help Unlock</a>. You must be standing. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spell Lock</a>
+&gt; <a cmd='#'>Help Unlock</a>
+&gt; <a cmd='#'>Help Pick Lock</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>

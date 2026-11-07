@@ -1,0 +1,56 @@
+<div class="mw-parser-output"><h1>Gmroom</h1>
+<p>Usage:
+</p>
+<pre>gmroom new &lt;keyword&gt;                        (230)
+gmroom new &lt;keyword&gt; in &lt;room@zone&gt;
+gmroom new &lt;keyword&gt; in here
+gmroom title &lt;gm3|here&gt; &lt;text&gt;
+gmroom descr &lt;gm3|here&gt; &lt;text&gt;
+gmroom outside &lt;gm3|here&gt; &lt;text&gt;
+gmroom list
+gmroom free &lt;gm3|here&gt;
+</pre>
+<p>A game master's rooms, made while the game runs, for an event: a tent 
+in a square, a hidden cellar, a backstage where you keep what the event 
+brings in. They are named gm1, gm2 and so on, in the zone _gm 
+(gm3@_gm), and they are gone at the next reboot. At most 100 can exist 
+at once.
+</p><p><b>new</b> makes a room called "Inside the &lt;keyword&gt;". With <b>in</b> it 
+stands inside that room (or the one you stand in), like a tent: players 
+see it there ("A &lt;keyword&gt; is here.") and enter and leave it. Without 
+it the room stands on its own; go there and give it exits with set room 
+dir-to (see <a cmd='#'>Wizhelp Set</a>). Exits go one way, so set one back from the 
+other room too, and only in a direction that room doesn't use yet: 
+dir-to replaces an exit.
+</p><p><b>title</b>, <b>descr</b> and <b>outside</b> set its title, what you see 
+inside it, and how it shows in the room around it, one line each.
+</p><p><b>list</b> shows the rooms, where each stands and how many players are 
+in it.
+</p><p><b>free</b> ends a room. Everyone and everything inside, players' 
+corpses too, goes to the room it stands in, or else where its first 
+exit leads, or else the crypt in Udgaard: the event's own NPCs and 
+things too, so purge those first. Exits that led to it are removed. A 
+room with another gm room inside must wait until that one is freed.
+</p><p>At a reboot, a player saved in a gm room comes back in their hometown. 
+NPCs don't find their way into these rooms (the path finder only knows 
+the rooms there were at boot), though players walk in and out as 
+anywhere.
+</p><p>Example:
+</p>
+<pre>gmroom new tent in here
+gmroom outside gm1 A patched red tent stands by the well.
+gmroom descr gm1 Rugs cover the floor; it smells of incense.
+gmroom free gm1
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Wizhelp Gmmem</a>
+&gt; <a cmd='#'>Wizhelp Gmlure</a>
+</pre>
+
+
+
+
+</div>

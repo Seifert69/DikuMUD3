@@ -1,21 +1,32 @@
-<br/>
-Sphere: acid sphere<br/><br/>
-<br/>
-Spell tier: 4<br/><br/>
-<br/>
-Class: Sorcerer<br/> <br/>
-<br/>
-Guild Level: 180<br/> <br/>
-<br/><br/>
-Usage acid swirl (target)<br/>
-<br/><br/>
-This spell causes a whirlpool of acid to form around the target for a short <br/>
-huration. This swirl inflicts damage by acid on any living target. <br/>
-The spell requires the caster to have both hands empty.<br/>
-<br/><br/>
-See Also:<br/><br/>
-acid drop<br/><br/>
-spray of acid<br/><br/>
-acid ball<br/><br/>
-acid resistance<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Acid Swirl</h1>
+<p>Sphere: Acid Sphere
+Spell Tier: 4
+Class: Sorcerer (guild level 180)
+Mana: 38
+</p><p>Usage:
+</p>
+<pre>cast acid swirl &lt;target&gt;
+<a cmd='#'>cast acid swirl</a>   (at whoever you are fighting)
+</pre>
+<p>The caster waves both hands at the target and screeches 'Bolat causter!', 
+and a whirlpool of acid swirls around them. It is the strongest of the 
+acid spells: the better your magic and your acid sphere, the more it 
+burns. It does best against clothes and light leather, less well against 
+heavier armour, and a shield softens it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Acid Drop</a>
+&gt; <a cmd='#'>Help Spray of Acid</a>
+&gt; <a cmd='#'>Help Acid Ball</a>
+&gt; <a cmd='#'>Help Acid Resistance</a>
+&gt; <a cmd='#'>Help Acid Sphere</a>
+</pre>
+
+
+
+
+</div>

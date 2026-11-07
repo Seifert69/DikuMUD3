@@ -1,19 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Strength determines:<br/><br/>
-<br/>
-*  Which shields and<br/>
-armors you can use.<br/><br/>
-<br/><br/>
-*   How hard a you hit with a weapon.<br/><br/>
-<br/><br/>
-*  How heavy armors and shields a you can carry without<br/>
-getting dexterity reduction.<br/><br/>
-<br/><br/>
-*  How much total weight you can carry.<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Spell Strength<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Strength</h1>
+<p>Strength (STR) is one of your abilities: how strong you are. It 
+determines:
+</p>
+<ul><li>How well you fight with most weapons. Each weapon draws on two of your abilities: nearly all, swords, axes, clubs, maces and even daggers, on two parts strength to one part dexterity; only the whip, the sickle and the bow, crossbow and sling lean on dexterity instead (see <a cmd='#'>Help Weapons</a>).</li>
+<li>How much weight you can carry: 50, plus half your own weight (at least 50), plus twice your strength.</li>
+<li>How well you move in armour. Heavy armour slows you down in a fight; strength, and practice in that kind of armour, make up for it, the more so the heavier the armour (see <a cmd='#'>Help Armor</a>).</li></ul>
+<p>The spell strength raises it for a while (see <a cmd='#'>Help Spell Strength</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Dexterity</a>
+&gt; <a cmd='#'>Help Spell Strength</a>
+&gt; <a cmd='#'>Help Armor</a>
+</pre>
+
+
+
+
+</div>

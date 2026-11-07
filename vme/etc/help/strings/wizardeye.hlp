@@ -1,12 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage cast wizard eye (target)<br/><br/>
-<br/>
-This spell will enable you to look where a character is, seeing the<br/>
-surrounding as if you where there yourself.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Wizard Eye</h1>
+<p>Sphere: Mind Sphere
+Class: Conjurer (guild level 23)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast wizard eye &lt;someone&gt;
+cast wizard eye &lt;object&gt;
+</pre>
+<p>An image forms in your mind of what surrounds someone or something, anywhere 
+in the world, as if you stood there yourself:
+</p>
+<ul><li>someone, or something lying in a room: you see that room, and who and what</li></ul>
+<pre> is in it,
+</pre>
+<ul><li>an object inside a bag or box: you see what else is in it,</li>
+<li>an object someone carries: you see what they carry.</li></ul>
+<p>You can't cast it on yourself. You can cast it while resting, and it is also 
+found on scrolls and wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Locate Person</a>
+&gt; <a cmd='#'>Help Locate Object</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

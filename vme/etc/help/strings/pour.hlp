@@ -1,19 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage<br/>
-pour (drinkcontainer1) (drinkcontainer2)<br/><br/>
-<br/>
-Example:<br/><br/>
-pour fountain into barrel<br/><br/>
-<br/>
-This enables you to pour the contents of drinkcontainer1 into<br/>
-drinkcontainer2.<br/>
-Beware, if drinkcontainer2 has another type of liquid that drinkcontainer1,<br/>
-the result will be SLIME! Also, if one container is poisoned, the liquid in<br/>
-drinkcontainer2 will be it too.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Drinks<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Pour</h1>
+<p>Usage:
+</p>
+<pre>pour &lt;container&gt; into &lt;container&gt;
+pour &lt;container&gt; out
+</pre>
+<p>Examples:
+</p>
+<pre>pour fountain into waterskin
+pour barrel into cup
+pour cup out
+</pre>
+<p>Pours a drink from one container into another: to fill your waterskin at 
+a fountain, say. It pours as much as the second container holds. Both 
+must be drink containers, and you can't pour one drink into another: the 
+second container must be empty, or hold the same drink.
+</p><p>Beware: poison goes with the drink. If the first container is poisoned, 
+what you pour into the second is too.
+</p><p>To empty a container you carry, pour it out. Some, such as a fountain, can 
+never be emptied.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Drink</a>
+&gt; <a cmd='#'>Help Taste</a>
+&gt; <a cmd='#'>Help Sip</a>
+</pre>
+
+
+
+
+</div>

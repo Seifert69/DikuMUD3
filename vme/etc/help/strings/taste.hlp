@@ -1,15 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage taste &lt;food&gt;<br/><br/>
-<br/>
-This command is almost similar to eat, it will tell you what the food<br/>
-tastes like. Beside that you will eat much less, than if you use the<br/>
-command eat.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Eat<br/><br/>
-Drink<br/><br/>
-Sip<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Taste</h1>
+<p>Usage:
+</p>
+<pre>taste &lt;food or drink&gt;
+</pre>
+<p>Example:
+</p>
+<pre>taste bread
+</pre>
+<p>Takes a small bite of food, instead of eating it all (see <a cmd='#'>Help Eat</a>): a 
+mouthful at a time, until it is gone. Tasting a drink does the same as 
+sipping it (see <a cmd='#'>Help Sip</a>).
+</p><p>Beware: a taste is still food. If the food is poisoned, even a bite 
+poisons you. You can't taste when you are too full to eat.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Eat</a>
+&gt; <a cmd='#'>Help Sip</a>
+&gt; <a cmd='#'>Help Drink</a>
+</pre>
+
+
+
+
+</div>

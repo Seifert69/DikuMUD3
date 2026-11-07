@@ -1,22 +1,32 @@
-<br/>
-Sphere: Electricity<br/><br/>
-<br/>
-Spell Tier: 1<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 3 <br/><br/>
-<br/><br/>
-Usage cast electrical shock (target)<br/>
-<br/><br/>
-This spell causes a spark of electricity arc from the spell caster toward the <br/>
-named target or present target in battle to inflict damage by electricity. <br/>
-The spell requires no free hands. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Jolt<br/><br/>
-Lightning Bolt<br/><br/>
-Lightning Storm<br/><br/>
-Electricity Resistance<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Electrical Shock</h1>
+<p>Sphere: Electricity Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 3)
+Mana: 12
+</p><p>Usage:
+</p>
+<pre>cast electrical shock &lt;target&gt;
+<a cmd='#'>cast electrical shock</a>   (at whoever you are fighting)
+</pre>
+<p>The air crackles as the caster snarls 'Thudas electra!', and a spark of 
+electricity arcs to the target. It is the first and weakest of the 
+lightning spells: the better your magic and your electricity sphere, the 
+more it hurts. It does best against clothes, less well against leather, 
+chain and plate, and a shield is no use against it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Jolt</a>
+&gt; <a cmd='#'>Help Lightning Bolt</a>
+&gt; <a cmd='#'>Help Lightning Storm</a>
+&gt; <a cmd='#'>Help Electricity Resistance</a>
+&gt; <a cmd='#'>Help Electricity Sphere</a>
+</pre>
+
+
+
+
+</div>

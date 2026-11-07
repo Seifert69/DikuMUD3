@@ -1,22 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning<br/><br/>
-Spell level: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 32<br/> <br/>
-<br/><br/>
-Usage transport (target)<br/><br/>
-<br/><br/>
-This spell will transport the caster to the target character or location. <br/>
-It only works between locations on the same continent.  It requires no free<br/>
-hands.<br/><br/>
-<br/>See Also:<br/><br/>
-summoning sphere<br/><br/>
-gate<br/><br/>
-travel<br/><br/>
-transport<br/><br/>
-<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Transport</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 17), Sorcerer (guild level 32)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast transport &lt;target&gt;
+</pre>
+<p>Takes you, in a puff of green smoke, to a person, a creature, an object or a 
+place anywhere in the world. It only works where you could also walk: within 
+the same land, not across the sea. You can't leave a place that magic can't 
+take you out of, nor arrive in one magic can't reach.
+</p><p>Beware the rift: about one cast in twenty tears a hole in the powers of 
+magic. All your mana is gone, and you may be thrown somewhere else, into the 
+void, or something may come through the rift at you.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Controlled Teleport</a>
+&gt; <a cmd='#'>Help Gate</a>
+&gt; <a cmd='#'>Help Word of Recall</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

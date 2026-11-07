@@ -1,47 +1,70 @@
-<div class="mw-parser-output"><h1>wstat</h1>
+<div class="mw-parser-output"><h1>Wstat (200)</h1>
 <p>Usage:
 </p>
 <pre> wstat &lt;unit&gt; [group]
  wstat room [group]
- wstat zone [zone name] [mobiles|objects|rooms|reset|error|info]
+ wstat zone [zone name] [mobiles|objects|rooms|reset|errors|info|path|dil]
  wstat world [zones]
+ wstat world dil [ms]
+ wstat memory
+ wstat account
+ wstat creators &lt;name&gt;|all
+ wstat count &lt;number&gt;
  wstat &lt;unit1&gt; combat &lt;unit2&gt;
  wstat &lt;unit1&gt; splcombat &lt;unit2&gt; [&lt;spell name&gt;]
 </pre>
 <p>Where [group] is:
 </p>
-<pre> &lt;no argumnet&gt;&#160;: The basis unit data
- data&#160;: The specific data for the type of unit
- contents&#160;: list of unit contents
- affect&#160;: list of affect-structures for unit
- descriptor&#160;: descriptor data for player
- func&#160;: special function for unit
- spell&#160;: spells leaned by char
- skill&#160;: skills learned by char
- weapon&#160;: weapons mastered by char
- extra&#160;: extra descriptions
- quest&#160;: Quest information (PC's only)
+<pre> (nothing)   : the basic unit data
+ data        : the data for the type of unit
+ contents    : what the unit contains
+ affects     : its affect structures
+ descriptor  : a player's connection data
+ functions   : its special functions and DIL programs
+ spells      : spells learned
+ skills      : skills learned
+ weapons     : weapons mastered
+ ability     : abilities
+ extras      : extra descriptions
+ quests      : quest information (players only)
+ info        : other extras: e-mail, maiden name, guilds, profession, ignore list
+ account     : a player's account
+ bank        : a player's bank
+ ip          : a player's addresses
+</pre>
+<p>A group can be shortened: wstat fido dat.
+</p><p>The others:
+</p>
+<pre> world             : the game as a whole; world zones lists all zones
+ world dil [ms]    : the DIL programs of all zones that have run longer than ms milliseconds (the place to start with a slow game)
+ memory            : the server's memory use
+ account           : account totals
+ creators &lt;name&gt;   : the zones a builder made; creators all lists every zone and its creators
+ count &lt;number&gt;    : the first 40 units that hold at least that many units
+ combat, splcombat&#160;: how a fight (or a spell) between two units would go
 </pre>
 <p>Examples:
 </p>
-<pre> &gt;wstat world
- &gt;wstat world zones
- &gt;wstat zone
- &gt;wstat zone rooms
- &gt;wstat fido
- &gt;wstat fido dat 
- &gt;wstat fido func
- &gt;wstat room aff
- &gt;wstat fido combat janitor
- &gt;wstat fido splcombat janitor fireball
+<pre> wstat world
+ wstat world zones
+ wstat world dil 50
+ wstat zone
+ wstat zone rooms
+ wstat fido
+ wstat fido dat
+ wstat fido func
+ wstat room aff
+ wstat fido combat janitor
+ wstat fido splcombat janitor fireball
 </pre>
-<p>Wstat displays everything about a unit. However all this info will confuse
-anyone (several screens of info per unit), so we had to split it up. The
-optional [group] determines which info you want.
-</p><p>See also:
+<p>Wstat displays everything about a unit. All of it at once would be several 
+screens per unit, so it is split into groups: the optional [group] chooses 
+what you see. It is logged.
+</p><p><br />
+See Also:
 </p>
-<pre> &gt;wizhelp set
- &gt;wizhelp setskill
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Wizhelp Setskill</a>
 </pre>
 
 

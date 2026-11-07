@@ -1,7 +1,24 @@
-<div class="mw-parser-output"><h1>Wedit</h1>
-<p>Is an experimental command that serializes world objects as JSON and sends them to the web-client.
-</p><p>The long term goal is to have an editing interface on the web-client allowing users to edit objects with a reasonably good content editor.
+<div class="mw-parser-output"><h1>Wedit (200)</h1>
+<p>Usage:
 </p>
+<pre>wedit &lt;someone or something&gt;
+wedit &lt;unit@zone&gt;
+wedit room
+</pre>
+<p>An experimental command: it sends a unit's data, as JSON, to your web 
+client ("Sending json edit info to your browser."). Name anyone or 
+anything in the world, a unit by its symbolic name (the name alone looks 
+in your own zone), or room for the room you are in. It only works in the 
+web client.
+</p><p>For now the client only writes the data to the browser's console (open 
+the browser's developer tools to see it). The long-term goal is an 
+editor in the web client, for editing units with a good content editor.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Wstat</a>
+&gt; <a cmd='#'>Wizhelp Set</a>
+</pre>
 
 
 

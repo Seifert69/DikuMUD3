@@ -1,8 +1,26 @@
-<br/>
-Usage:<br/>
-   &gt;echo &lt;string&gt;<br/>
-<br/>
-This is a fun toy for a wizard, running some sort of quest, making role playing<br/>
-fun for the players. The contents of the &lt;string&gt; will simply appear to<br/>
-everyone in the room.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Echo (230)</h1>
+<p>Usage:
+</p>
+<pre>echo &lt;text&gt;
+</pre>
+<p>Example:
+</p>
+<pre>echo The ground trembles, and a deep voice rumbles from below.
+</pre>
+<p>Shows your text, just as you write it, to everyone in the room who is 
+awake, yourself included. No name is added, so it reads like something 
+happening in the world: a fine toy for a god running a quest or setting a 
+scene.
+</p><p>It is logged. To reach the whole game, use <a cmd='#'>Wizhelp Broadcast</a>; to reach 
+one person, <a cmd='#'>Wizhelp Message</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Broadcast</a>
+&gt; <a cmd='#'>Wizhelp Message</a>
+</pre>
+
+
+
+
+</div>

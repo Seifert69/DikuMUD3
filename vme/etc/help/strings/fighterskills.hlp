@@ -1,22 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Skill            Level<br/>
-    Consider             0<br/>
-    Diagnostics          0<br/>
-    Disarm              10<br/>
-    Fleeing              0<br/>
-    Rescue               1<br/>
-    Bash                 0<br/>
-    Shield               0<br/>
-    Leadership          15<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Fighter<br/><br/>
- Fighter Roleplay<br/><br/>
- Fighter Weapons<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Fighter Skills</h1>
+<p>The skills the Fighters' guild of Midgaard teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
+</p>
+<pre>Name                 Level   Up to
+Armor Soft Leather       0   100%
+Bash                     0   100%
+Consider                 0   100%
+Diagnostics              0   100%
+Fleeing                  0   70%
+Shield                   0   100%
+Rescue                   1   70%
+Armor Hard Leather       7   100%
+Disarming               10   100%
+Armor Chain             15   100%
+Leadership              15   50%
+Armor Plate             20   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fighter Weapons</a>
+&gt; <a cmd='#'>Help Fighters</a>
+&gt; <a cmd='#'>Help Fighter Role Play</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>

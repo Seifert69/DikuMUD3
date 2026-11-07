@@ -1,17 +1,22 @@
-<br/>
-<br/>
-To delete your character forever type the following at the command line;<br/>
-<br/>
-delete me<br/>
-<br/>
-You will now see some information on the screen asking you to <br/>
-type the following and telling you to make sure this is what you want as<br/>
-its non reversible.<br/>
-<br/>
-say delete me forever.<br/>
-<br/>
- If you have followed the above directions you should not be reading<br/>
-this now!<br/>
-<br/>
- <br/>
-<br/>
+<div class="mw-parser-output"><h1>Delete</h1>
+<p>Usage:
+</p>
+<pre>delete self forever
+say delete me
+</pre>
+<p>Deletes your character, forever: it can't be undone, and the gods can't 
+bring it back. First type delete self forever. The game tells you what 
+deleting means and asks you to be sure; if you are, type say delete me. 
+Typing anything else instead aborts the deletion. If you are in a clan, 
+you leave it first.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Quit</a>
+&gt; <a cmd='#'>Help Cdefect</a>
+</pre>
+
+
+
+
+</div>

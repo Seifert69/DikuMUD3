@@ -1,18 +1,38 @@
-<br/>
-Sphere: Summoning<br/><br/>
-Spell level: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 120<br/> <br/>
-<br/><br/>
-Usage: cast portal &lt;destination&gt;<br/><br/>
-<br/><br/>
-Sorcerers can use this spell to open a temporary gateway to a far away place.<br/>
-Note that two gateways are created and that each may be entered only once<br/>
-before vanishing. The duration they exist is dependent on skill, brain and<br/>
-magic. This spell requires no free hands, but it may fail causing the spell <br/>
-caster to arrive in unexpected locales.<br/><br/>
-<br/>
-See also:<br/>
- Travel<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Portal</h1>
+<p>Sphere: Summoning Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 120)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast portal &lt;someone or something&gt;
+enter portal
+look in portal
+</pre>
+<p>The caster raises their hands and cries 'Per infinitum conjuncto', and a 
+glittering portal opens before them, with its twin beside the person or 
+thing named, anywhere in the world. Type enter portal to step through. 
+Each of the two portals takes one traveller and then vanishes, so the 
+caster can go, and one person can come back. Look in a portal to see a 
+blurred image of the far side first.
+</p><p>The portals last for some minutes, at least two, longer the better your 
+magic, brain and skill in the spell. Dispel magic closes one at once. 
+Only players can step through.
+</p><p>The far end resists: a player's own skill in the spell, a monster's in 
+summoning, makes it harder to reach them. A poor casting does nothing; a 
+very bad one opens a rift that flings you into the void and drains all 
+your mana. Some places can't be reached by portal, or left by one. You 
+must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Gate</a>
+&gt; <a cmd='#'>Help Travel</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>

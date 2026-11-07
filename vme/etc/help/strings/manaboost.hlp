@@ -1,16 +1,31 @@
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 4<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 100<br/><br/>
-<br/><br/>
-Usage: cast mana boost &lt;person&gt;<br/><br/>
-This spell will allow the caster to infuse another with the caster's<br/>
-magical energy. It requires no hands free and a great deal of mana.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Mana Boost</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 4
+Class: Sorcerer (guild level 100)
+Mana: 100
+</p><p>Usage:
+</p>
+<pre>cast mana boost &lt;person&gt;
+</pre>
+<p>The caster focuses on another and broadcasts their own power to them, 
+filling them with essence: the target gets back mana, about three 
+quarters of what the spell costs you with a good casting, more with a 
+better one, up to 100. It is a way for a sorcerer to share their mana 
+with a friend who needs it more: a healer in a long fight, say.
+</p><p>It works on people and other mammals. Cast on yourself, the essence only 
+circles your body and returns to you: you get back the 100 mana you 
+spent, and no more. A potion or scroll of mana boost, though, does give 
+its drinker or reader fresh mana.
+</p><p>You can cast it while resting or fighting, and no free hands are needed.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Mana Points</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+</pre>
+
+
+
+
+</div>

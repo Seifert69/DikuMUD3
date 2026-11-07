@@ -1,17 +1,28 @@
-<br/>
-Usage cunstore &lt;item&gt;<br/><br/>
-Example: cunstore  sword<br/>
-<br/>
-This Command is restricted to members of the clan that have been appointed as<br/>
-Quartermasters by the clan master.  It allows a member that has been appointed<br/>
-to unstore items in the clan secret equipment box.<br/>
-<br/>
-Note:<br/>
-You must be at the clan chest to use this command.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cstore<br/>
-cequipment<br/>
-cdeposit<br/>
-cwithdraw<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cunstore</h1>
+<p>Usage:
+</p>
+<pre>cunstore &lt;item&gt;
+cunstore 2.&lt;item&gt;      the second item by that name
+</pre>
+<p>Example:
+</p>
+<pre>cunstore sword
+</pre>
+<p>Takes an item out of your clan's secret storage, from under the false 
+bottom of the clan chest. Only the clan Master and the members appointed 
+quartermaster can do this (see <a cmd='#'>Help Clan Quartermaster</a>), and only at the 
+clan chest in the clan house. To see what is stored, use 
+<a cmd='#'>Help Cequipment</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cstore</a>
+&gt; <a cmd='#'>Help Cequipment</a>
+&gt; <a cmd='#'>Help Clan Quartermaster</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

@@ -1,12 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage cast storm gate (target)<br/><br/>
-<br/>
-This spell calls upon the forces of nature to open the storm gate it is<br/>
-cast on, granting access to the Ivory Paths.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Storm Gate</h1>
+<p>Sphere: Mind Sphere
+Class: none (no guild teaches it)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast storm gate &lt;gate&gt;
+</pre>
+<p>The caster raises a clenched fist, mumbles 'Oofquah' and calls on the 
+forces of nature to open a storm gate. It was made for the storm gates 
+that once led to the Ivory Paths; those gates are no longer in the world, 
+so today the spell opens nothing. Cast on anything else, you only pretend 
+that it is a storm gate.
+</p><p>No guild teaches it, but it can still turn up on wands and scrolls among 
+random treasure.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

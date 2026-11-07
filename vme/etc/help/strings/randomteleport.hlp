@@ -1,8 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere <br/><br/>
-<br/><br/>
-This spell will take the caster to a random spot in the world.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Random Teleport</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 22)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast random teleport</a>   (on yourself only)
+</pre>
+<p>Takes you to a random place somewhere in the world, any land at all. You can 
+cast it in the middle of a fight, which makes it a desperate way out: you'll 
+be gone, but you won't know where to. If the place it picks is one magic 
+can't reach, or you stand where magic can't take you away, it fails.
+</p><p>Beware the rift: about one cast in twenty tears a hole in the powers of 
+magic. All your mana is gone, and you may be thrown somewhere else, into the 
+void, or something may come through the rift at you.
+</p><p>It is also found on scrolls and wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Transport</a>
+&gt; <a cmd='#'>Help Controlled Teleport</a>
+&gt; <a cmd='#'>Help Word of Recall</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

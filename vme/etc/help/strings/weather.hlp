@@ -1,13 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage weather<br/><br/>
-<br/>
-This will inform you of the weather at your current position. If you are not<br/>
-in a position where weather is visible, the attempt will fail.<br/>
-<br/><br/><br/>
-<br/>See Also:<br/><br/>
-Skills<br/>
-Score<br/>
-<br/>
+<div class="mw-parser-output"><h1>Weather</h1>
+<p>Usage:
+</p>
+<pre>weather
+</pre>
+<p>Look at the sky: it is cloudless, cloudy, rainy, or lit by flashes of 
+lightning. You must be outdoors to see it; indoors, and in some places 
+under the earth or out of this world, "You can't see the sky from here."
+</p><p>The weather changes by itself, and from place to place. It matters: some 
+spells need the sky clear, others a storm (see <a cmd='#'>Help Clear Skies</a> and 
+<a cmd='#'>Help Storm Call</a>), and night and bad weather make it darker.
+</p><p><b>Weather watching</b> is a skill the sorcerers teach (from guild level 
+12, up to 35%). With it, weather also gives you a forecast: whether the 
+weather will probably become worse or better. Don't trust it too far: 
+for now it only says "better" while lightning flashes, and "worse" at 
+all other times.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Time</a>
+&gt; <a cmd='#'>Help Clear Skies</a>
+&gt; <a cmd='#'>Help Storm Call</a>
+&gt; <a cmd='#'>Help Sorcerer Skills</a>
+</pre>
+
+
+
+
+</div>

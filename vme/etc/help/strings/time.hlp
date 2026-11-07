@@ -1,39 +1,35 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Advanced info about Valhalla:<br/><br/>
-<br/>
-The time in the game runs 12 times faster than real time, thus each<br/>
-hour is 5 minutes long, and each day is 2 hours long. There are 14<br/>
-days per month and a total of nine months per year. Thus a Valhalla<br/>
-month passes in 28 hours, and a year passes in 252 hours (10 days<br/>
-and 12 hours).<br/>
-<br/><br/><br/>
-In one real year 35 Valhalla years pass.<br/>
-<br/><br/><br/>
-To change the way in which the game is personalized for YOU, try help on<br/>
-the following subjects:<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Inform<br/><br/>
-Change<br/><br/>
-Prompt<br/><br/>
-Peaceful<br/><br/>
-Brief<br/><br/>
-Compact<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Usage time<br/><br/>
-<br/>
-This command tells you what time of day it is in the world. This is useful<br/>
-when you want to see if your favorite shop is open or not, or if the city-gates<br/>
-will be locked at the time.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Score<br/><br/>
-Weather<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Time</h1>
+<p>Usage:
+</p>
+<pre>time
+</pre>
+<p>Tells you the time in the world: the hour, the day of the week, and the 
+date, for example:
+</p>
+<pre>It is 3 PM, on the Day of the Moon,
+   the 5th Day of the Month of the Sun, Year 281.
+</pre>
+<p>Time in Valhalla runs twelve times faster than real time. An hour lasts 
+five minutes, a day two hours, and a month of fourteen days 28 hours. A 
+year has nine months and passes in 252 hours, ten and a half real days, so 
+some 35 years go by in a real year. Your character ages with it (see 
+<a cmd='#'>Help Age</a>).
+</p><p>The seven days of the week are the Days of the Moon, the Bull, the 
+Deception, Thunder, Freedom, the Great Gods and the Sun. The nine months 
+run from winter to the dark of autumn: the Months of Winter, the Winter 
+Wolf, the Frost Giant, Spring, Futility, the Sun, the Heat, the Long 
+Shadows and the Ancient Darkness.
+</p><p>The time matters: shops keep hours, some city gates are locked at night, 
+and the light changes with the hour (see <a cmd='#'>Help Weather</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Age</a>
+&gt; <a cmd='#'>Help Score</a>
+</pre>
+
+
+
+
+</div>

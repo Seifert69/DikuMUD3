@@ -1,13 +1,33 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Fire Sphere<br/><br/>
-<br/><br/>
-Usage cast sun beam (target)<br/><br/>
-<br/>
-A more powerful version of the mystic spell sun ray, this spell is an<br/>
-effective attack weapon. Works only outdoors and in sunlight, and is<br/>
-extremely effective at high noon and against undead beasts.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sun Beam</h1>
+<p>Sphere: Fire Sphere
+Class: none (no guild teaches it)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast sun beam &lt;target&gt;
+<a cmd='#'>cast sun beam</a>   (at whoever you are fighting)
+use a wand or staff of sun beam
+</pre>
+<p>The caster calls to the shining rays of the sun for power, and a beam of 
+sunlight burns the target. It is meant to work only outdoors, in daylight, 
+under a clear or cloudy sky. It is strongest at noon and weaker towards 
+dawn and dusk, and it burns the undead far worse than the living.
+</p><p>It does about as well against any armour, and a shield softens it. Casting 
+it is an attack and starts a fight. No guild teaches it, but it turns up on 
+wands and staffs among random treasure.
+</p><p>Note: at present the spell always fails with "The heavy rain clouds block 
+any chance of casting the spell", whatever the weather. This is a known 
+bug.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sun Ray</a>
+&gt; <a cmd='#'>Help Solar Flare</a>
+&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

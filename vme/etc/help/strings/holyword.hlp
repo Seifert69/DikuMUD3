@@ -1,15 +1,29 @@
-<br/>
-Sphere: Divine sphere<br/><br/>
-<br/>
-This is a level 1 spell:<br/>
-<br/>
-Usagecast holy word (target)<br/>
-<br/>
-Holy word is a powerful healer/paladin spell which inflicts injury upon evil<br/>
-creatures.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Holy Touch<br/><br/>
-Holy Grasp<br/><br/>
-Holy Shout<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Holy Word</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 80), Paladin (guild level 90)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast holy word &lt;target&gt;
+<a cmd='#'>cast holy word</a>   (at whoever you are fighting)
+</pre>
+<p>A holy word, spoken with a touch, that wounds those who lean to evil. Any 
+target whose alignment is below neutral can be struck; the truly evil are 
+struck harder still. On the good and the neutral, nothing happens. The 
+better your divine power and sphere, the more it hurts.
+</p><p>Being a touch, it does most against plate and chain, and a shield can block 
+it. Casting it is an attack and starts a fight. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Holy Touch</a>
+&gt; <a cmd='#'>Help Holy Grasp</a>
+&gt; <a cmd='#'>Help Holy Shout</a>
+&gt; <a cmd='#'>Help Dispel Evil</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

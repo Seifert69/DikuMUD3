@@ -1,12 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage cast cone of shards (target)<br/><br/>
-<br/>
-This spell summons a cone of sharp shards that will puncture some of the<br/>
-toughest armor.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Cone of Shards</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 32)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast cone of shards &lt;target&gt;
+<a cmd='#'>cast cone of shards</a>   (at whoever you are fighting)
+</pre>
+<p>Summons a cone of sharp shards that tears into the target. The better your 
+magic and your summoning sphere, the harder it strikes. It does about as well 
+against any armour, plate and chain included, a little better against 
+clothes, and a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Energy Bolt</a>
+&gt; <a cmd='#'>Help Clenched Fist</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

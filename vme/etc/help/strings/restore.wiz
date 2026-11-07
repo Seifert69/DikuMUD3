@@ -1,7 +1,24 @@
-<br/>
-Usage:<br/>
-   &gt;restore &lt;char&gt;<br/>
-<br/>
-This is a wiz-command, that restores a characters endurance-, hit- and<br/>
-mana-points to maximum. Besides, it sets the full and thirst to max.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Restore (230)</h1>
+<p>Usage:
+</p>
+<pre>restore &lt;someone&gt;
+restore self
+restore all
+</pre>
+<p>Restores someone to full health: hit points, mana and endurance to their 
+maximum, and no longer hungry or thirsty. It works on a player or a 
+monster anywhere in the game; they are told "&lt;you&gt; has restored you to 
+health."
+</p><p>restore all does the same for every player in the game, who are told 
+that you "restored the world to health!". It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Help Hits</a>
+</pre>
+
+
+
+
+</div>

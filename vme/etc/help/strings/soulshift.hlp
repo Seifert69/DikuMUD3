@@ -1,13 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere <br/><br/>
-<br/><br/>
-Usage cast soul shift (target character) (destination character)<br/><br/>
-<br/>
-Opens a soul to soul portal through which the caster can send a living<br/>
-being.  The target of the spell must be following the caster to show that<br/>
-he/she/it is willing to be soul shifted.  The spell cannot be used on oneself.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Soul Shift</h1>
+<p>Sphere: Summoning Sphere
+Class: none (no guild teaches it)
+Mana: 50
+</p><p>Usage:
+</p>
+<pre>cast soul shift &lt;character&gt;
+</pre>
+<p>The caster utters 'Viva piort' and opens a portal from soul to soul: the 
+caster and the target swap places, wherever in the world the target is. 
+The target glows scarlet, the caster purple, and with a flash and a whoosh 
+of air each stands where the other stood.
+</p><p>It is a monster spell: no guild teaches it, and it isn't found among 
+random treasure. If the spell fails, nothing happens.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Transport</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

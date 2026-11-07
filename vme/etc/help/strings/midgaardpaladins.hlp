@@ -1,27 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Paladins are basically traveling fighters that have sworn fealty to a <br/>
-Good church and are granted in return by the gods basic divine powers <br/>
-that include some small healing and the ability to detect evil so that <br/>
-they may eliminate it from the world. Paladins are church knights, <br/>
-the soldiers of church. They do not back down or flee from a <br/>
-righteous battle. They protect the underdog and the weak, or so their <br/>
-tenets claim. Paladins must be of good alignment and obey the laws of the <br/>
-Church and land in order to remain a good member in standing of their order. <br/>
-They are also the keepers of History (or at least one version of it). <br/>
-Prime attributes are Strength and Hitpoints with  Constitution and <br/>
-Dexterity being secondary. <br/>
-<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Good<br/>
-Magic<br/><br/>
-Divine Sphere<br/><br/>
- Paladin Weapons<br/><br/>
- Paladin Skills<br/><br/>
- Paladin Spells <br/><br/>
- Paladin Role Play<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Paladin Guild</h1>
+<p>The holy order of the paladins keeps its guild hall in Midgaard, by the 
+Cathedral square: a monastery with its yard, barracks, armoury, stables, 
+the Shrine to Gehron and a holy meditation chamber. Its head is Reignier, 
+the Guild Master.
+</p><p>To join, stand before Reignier and type <a cmd='#'>join</a>. The order accepts only 
+the devoted and pure of heart: conjurers, sorcerers, dark knights, 
+assassins, thieves and necromancers are turned away. First you must 
+prove yourself worthy by finishing the Paladin's Guild quest; Reignier 
+sends you to Joan the Pure to begin it.
+</p><p>A paladin must stay good. The order's trainers won't teach anyone whose 
+alignment has fallen below good (+350), and a truly evil soul who walks 
+into the holy halls is drained and thrown out into the street. To leave 
+the guild, insult the Master; but a member who is banished can never come 
+back.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Paladins</a>
+&gt; <a cmd='#'>Help Paladin Skills</a>
+&gt; <a cmd='#'>Help Paladin Spells</a>
+&gt; <a cmd='#'>Help Paladin Weapons</a>
+&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Guilds</a>
+</pre>
+
+
+
+
+</div>

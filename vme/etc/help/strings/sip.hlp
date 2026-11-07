@@ -1,16 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage sip &lt;drinkcontainer&gt;<br/><br/>
-<br/>
-This command does the same as drink, except that you don't drink a lot of<br/>
-liquid. This is useful if you sit in a bar, drinking intoxicating drinks.<br/>
-It will also tell you what it taste like.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Drink<br/><br/>
-Eat<br/><br/>
-Taste<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Sip</h1>
+<p>Usage:
+</p>
+<pre>sip &lt;drink container&gt;
+</pre>
+<p>Example:
+</p>
+<pre>sip bottle
+</pre>
+<p>Takes a single sip from a bottle, waterskin or other drink container: it 
+works like <a cmd='#'>Help Drink</a>, but you swallow only a mouthful. The game tells 
+you what you sipped, so it is the careful way to find out what is in an 
+unknown bottle, and the way to make a strong drink last in a tavern.
+</p><p>Beware: a sip is still a drink. If the drink is poisoned, even a sip 
+poisons you, and strong drink still goes to your head. You can't sip when 
+you are too drunk to find your mouth, or when you can't hold any more.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Drink</a>
+&gt; <a cmd='#'>Help Taste</a>
+&gt; <a cmd='#'>Help Pour</a>
+</pre>
+
+
+
+
+</div>

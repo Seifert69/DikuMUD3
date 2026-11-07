@@ -1,13 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation Sphere<br/><br/><br/>
-<br/>
-Usage cast refit (item) &lt;person&gt;<br/><br/>
-<br/>
-This spell will resize an item to fit the person in question.<br/>
-The larger the degree of resizing needed, the more difficult the<br/>
-spell.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Refit</h1>
+<p>Sphere: Creation Sphere
+Class: none (no guild teaches it)
+Mana: 50
+</p><p>Usage:
+</p>
+<pre>cast refit &lt;item&gt; &lt;person&gt;
+cast refit boots eve
+</pre>
+<p>The caster grasps a piece of armour, clothing or a weapon, utters 
+'slarquveemzpe', and the item grows or shrinks to fit the person named, 
+who must be in the room with you. The bigger the 
+change in size, the harder the spell; well-made armour, shields and weapons 
+are harder to refit than poor ones.
+</p><p>Items that are already magical can't be refit, and an item can be refit 
+only once: it becomes magical itself. It keeps its new size until a dispel 
+magic strong enough undoes the spell; then it returns to its old size, and 
+falls off if it was worn. You must be standing. No guild teaches it, but it 
+turns up on scrolls among random treasure.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Resize</a>
+&gt; <a cmd='#'>Help Dispel Magic</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

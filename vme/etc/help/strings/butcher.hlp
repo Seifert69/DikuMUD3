@@ -1,11 +1,26 @@
-<br/>
-<br/>
-Usage: butcher corpse<br/>
-Once skinned, a corpse can be butchered (you will need a knife or sharp<br/>
-sword). The resulting meat can be sold, eaten, or cooked.<br/>
-<br/>
-See Also:<br/><br/>
- Cook<br/>
- Skin<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Butcher</h1>
+<p>Skill
+Class: Ranger (guild level 4)
+</p><p>Usage:
+</p>
+<pre>butcher corpse
+</pre>
+<p>Cuts a skinned corpse up into meat: legs and arms, steaks (fillets from a 
+fish), and scraps, more the bigger the beast. The meat can be eaten, sold 
+or cooked (see <a cmd='#'>Help Cook</a>).
+</p><p>The corpse must be skinned first (see <a cmd='#'>Help Skin</a>), and you need a dagger 
+with you. Corpses of monsters above your own level are harder to butcher. 
+If you make a mess of it, all you get is scraps. Butchering is hard work: 
+it costs endurance, more for a big carcass, and you can't do it while 
+fighting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Skin</a>
+&gt; <a cmd='#'>Help Cook</a>
+</pre>
+
+
+
+
+</div>

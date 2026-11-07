@@ -1,12 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation Sphere<br/><br/><br/>
-<br/><br/>
-Usage cast leather skin (target)<br/><br/>
-<br/>
-This spell increases the target's natural armor to the equivalent of<br/>
-leather armor.  The spell wears off after a short time.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Leather Skin</h1>
+<p>Sphere: Creation Sphere
+Class: Healer (guild level 8)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast leather skin</a>   (on yourself only)
+</pre>
+<p>Toughens your skin like soft leather armour. Wherever a blow lands on a part 
+of you that wears no armour, your skin counts as leather. Where you do wear 
+armour, the armour counts as before.
+</p><p>It lasts a few minutes, longer the better your spell, and then wears off. It 
+doesn't add up with bark skin or stone skin: only one natural armour spell 
+works at a time. You must be standing. It is also found on potions and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Bark Skin</a>
+&gt; <a cmd='#'>Help Stone Skin</a>
+&gt; <a cmd='#'>Help Armour</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

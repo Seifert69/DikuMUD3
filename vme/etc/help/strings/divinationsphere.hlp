@@ -1,21 +1,56 @@
-<br/>
-<br/>
-<br/>
-<br/><br/>
-You must be closely aligned to the divine to possess such spells:<br/><br/>
-<br/><br/>
-<br/>
-    Bless                       Dispel Evil<br/>
-    Blind                       Find Path<br/>
-    Call Lightning              Harm<br/>
-    Cause Light Wounds          Heal<br/>
-    Cause Serious Wounds        Locate Object<br/>
-    Cure Blind                  Locate Person<br/>
-    Cure Light Wounds           Remove Curse<br/>
-    Cure Serious Wounds         Repel Greater Undead<br/>
-    Curse                       Repel Lesser Undead<br/>
-<br/>
-<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Divine Sphere</h1>
+<p>The spells of the divine sphere are prayers, granted by the powers the caster serves: healing and blessing for the good, curses and wounds for the evil, the holy and unholy words against the other side, aid and repulsion for the undead, and the finding of people and things. They draw on your divine power rather than your magic. Your ability in the sphere decides how well you cast them, and also how well you resist such spells cast on you (see <a cmd='#'>Help Spheres</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>bless                  healer 9, paladin 35
+unholy blessing        no guild teaches it
+curse                  necromancer 18, dark knight 24
+remove curse           healer 18, necromancer 24, paladin 24
+cure light wounds      healer 0, paladin 10
+cure serious wounds    healer 14, paladin 40
+heal                   healer 30
+dispel evil            healer 29, paladin 45
+repel lesser undead    necromancer 2, dark knight 15, paladin 15
+repel greater undead   necromancer 31
+blind                  healer 8, necromancer 9
+cure blind             healer 15, druid 29
+locate object          healer 19, druid 35
+locate person          healer 20, druid 37
+aid                    healer 2
+summer rain            healer 4, druid 7
+find path              healer 18, druid 34
+dispel good            necromancer 39, dark knight 45
+raise dead             healer 27
+resurrection           healer 40
+find wanted            assassin 0
+locate wanted          assassin 0
+slow rot               necromancer 34
+aid undead             necromancer 60
+final rest             healer 70, paladin 80
+polarity               druid 120
+cause light wounds     healer 1, necromancer 1, dark knight 10
+cause serious wounds   necromancer 12, healer 28, dark knight 40
+harm                   necromancer 29, healer 37
+deathly grasp          necromancer 60, healer 120
+holy word              healer 80, paladin 90
+holy touch             paladin 100
+holy grasp             paladin 120
+holy shout             paladin 160
+unholy word            necromancer 40
+unholy touch           dark knight 34, necromancer 80
+unholy grasp           dark knight 50, necromancer 120
+unholy shout           dark knight 120, necromancer 160
+condemn                dark knight 35
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>

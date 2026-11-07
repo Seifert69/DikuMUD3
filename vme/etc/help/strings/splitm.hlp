@@ -1,17 +1,31 @@
-<br/>
-<br/>
-<br/>
-Group command<br/>
-<br/><br/>
-Usage split (type)<br/><br/>
-<br/><br/>
-Used to split money more or less evenly between group members. To split<br/>
-loot from a mob while in a group type split &lt;type&gt; Type may be platinum, gold, <br/>
-silver, copper or iron. This will split the type of coin indicated as evenly <br/>
-as possible between the group members.<br/>  <br/>
-<br/>
-<br/>See Also:<br/><br/>
-Groups<br/><br/>
-Follow<br/><br/>
-Money<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Split</h1>
+<p>Usage:
+</p>
+<pre>split &lt;coin&gt;
+split all
+</pre>
+<p>Examples:
+</p>
+<pre>split gold
+split all
+</pre>
+<p>Shares out the money you carry among the members of your group who are in 
+the room with you, as evenly as the coins allow (see <a cmd='#'>Help Groups</a>). Name 
+the kind of coin to share: iron, copper, silver, gold or platinum; or all, 
+to share every kind. Each member gets their part, and you keep yours and 
+whatever is left over.
+</p><p>You must be in a group: split alone, and you only play greedily with your 
+money. If there are fewer coins than people, they can't be shared out 
+evenly.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Help Follow</a>
+</pre>
+
+
+
+
+</div>

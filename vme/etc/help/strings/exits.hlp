@@ -3,8 +3,9 @@
 </p>
 <pre><a cmd='#'>exits</a>
 <a cmd='#'>directions</a>
+<a cmd='#'>doors</a>
 </pre>
-<p>Both list the obvious exits of the room you are in: each direction, and the 
+<p>All three list the obvious exits of the room you are in: each direction, and the 
 place it leads to, or the door that is closed that way. Click a direction to 
 walk there. Hidden and secret exits aren't shown; you have to find those 
 yourself. In the dark you see no exits at all, only that it is pitch black.

@@ -1,13 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast find path (target)<br/><br/>
-<br/>
-This spell will tell you which direction to go if you want to reach a<br/>
-certain location.  For example, if you want to find home, then 'cast find<br/>
-path mayor' would probably give good results.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Find Path</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 18), Druid (guild level 34)
+Mana: 12
+</p><p>Usage:
+</p>
+<pre>cast find path &lt;someone&gt;
+</pre>
+<p>Tells you which way to go to reach someone, anywhere in the world: "You 
+should leave north." It works on people and creatures, not on places or 
+things. To find your way home, name someone who lives there: for example, 
+'cast find path mayor'.
+</p><p>Each cast gives you the first step only: walk it, and cast again. The answer 
+may also be "This is the place", that you should enter or leave something 
+first, or that it's impossible from here.
+</p><p>If the spell fails, you feel confused, and the one you look for feels that 
+someone is trying to find them. You can cast it even while resting. It is 
+also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Locate Person</a>
+&gt; <a cmd='#'>Help Track</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

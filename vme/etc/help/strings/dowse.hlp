@@ -1,11 +1,30 @@
-<br/>
-<br/>
-Usage: dowse<br/>
-In places where water is seemingly unavailable, dowsing will enable the<br/>
-person using it to find water, or a source of refreshment.<br/>
-<br/>
-See Also<br/><br/>
- Forage<br/>
- Herbs<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Dowse</h1>
+<p>Skill
+Class: Ranger (guild level 5, up to 75%), Druid (guild level 15, up to 75%)
+</p><p>Usage:
+</p>
+<pre>dowse
+</pre>
+<p>Searches the land around you for water. When you succeed, a hidden spring 
+bubbles up at your feet, and you can drink from it. Your skill and your 
+brain decide it, and so does the land:
+</p>
+<ul><li>in the mountains and swamps the chances are excellent, but water found in a swamp may be foul;</li>
+<li>in the hills they are very good;</li>
+<li>in fields and forests they are good;</li>
+<li>in the desert they are poor;</li>
+<li>in towns and indoors there is no chance at all;</li>
+<li>on or under water, you just fashion a cup from leaves and fill it;</li>
+<li>on snow and ice, you melt a small pool in your hand, and the cold hurts a little.</li></ul>
+<p>Each try takes 20 endurance.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Forage</a>
+&gt; <a cmd='#'>Help Drink</a>
+</pre>
+
+
+
+
+</div>

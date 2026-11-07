@@ -1,10 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Poison Sphere<br/><br/>
-<br/><br/>
-Usage rem disease (target)<br/><br/>
-<br/><br/>
-This spell removes the effect of madness and plague.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Remove Disease</h1>
+<p>Sphere: Poison Sphere
+Class: Healer (guild level 11), Paladin (guild level 20), Druid (guild level 25)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast remove disease &lt;target&gt;
+</pre>
+<p>Cures the target of plague, madness or poison ivy. Against a strong disease, 
+your spell must be strong too: it works if it has at least half the power of 
+the spell that caused the disease.
+</p><p>You must be standing. It is also found on potions, scrolls and staffs. For 
+poison, see <a cmd='#'>Help Remove Poison</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Plague</a>
+&gt; <a cmd='#'>Help Madness</a>
+&gt; <a cmd='#'>Help Poison Ivy</a>
+&gt; <a cmd='#'>Help Remove Poison</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>

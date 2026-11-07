@@ -1,21 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Type: Divine<br/><br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer, Paladin <br/><br/>
-Guild Level: Necro 6, Pali 0 <br/><br/>
-<br/>  <br/>
-Usage cast detect alignment (target)<br/><br/>
-<br/>
-This spell will enable a humanoid target to see an aura of an item or<br/><br/>
-humanoid, revealing its alignment.  (red) is evil, (blue) is<br/><br/>
-good, and (green) is neutral.  The aura is revealed when examining any<br/><br/>
-object or person. This spell does not require any hands free to cast.<br/><br/>
-<br/>See Also:<br/><br/>
-detection sphere<br/><br/>
-alignment<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Detect Alignment</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 1
+Class: Paladin (guild level 0), Healer (guild level 5), Necromancer (guild level 6), Druid (guild level 12)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast detect alignment &lt;target&gt;
+<a cmd='#'>cast detect alignment</a>   (on yourself)
+</pre>
+<p>For a while after this spell, the target sees the alignment of people and 
+things as an aura, wherever they are listed:
+</p>
+<ul><li>(blue): good</li>
+<li>(red): evil</li>
+<li>(green): neutral</li></ul>
+<p>The better your detection sphere, the longer it lasts: from a minute up to 
+several minutes. You must be standing, not fighting. It is also found on 
+potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Detect Magic</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>

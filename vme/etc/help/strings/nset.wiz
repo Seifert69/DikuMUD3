@@ -1,0 +1,23 @@
+<div class="mw-parser-output"><h1>Nset (254)</h1>
+<p>Usage:
+</p>
+<pre>nset &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;
+nset &lt;unit&gt;                        (shows the fields)
+</pre>
+<p>The DIL version of <a cmd='#'>Wizhelp Set</a>, kept in the set zone: it changes a 
+field of a unit, as set does. The unit is room (the room you are in), 
+self, or someone or something here. Give no field, or a wrong one, and 
+the fields you can set are listed.
+</p><p>Some fields need a higher level to change on other players, or on 
+yourself. Money can't be changed with it. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>

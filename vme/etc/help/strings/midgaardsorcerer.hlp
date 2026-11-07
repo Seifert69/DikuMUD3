@@ -1,15 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-These group of magic users bases its spells. They spend their whole life dedicated to learning<br/>
-how to control the magic of the world around them.<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Sorcerer Spells<br/><br/>
- Sorcerer Weapons<br/><br/>
- Sorcerer Skills<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Sorcerers Guild</h1>
+<p>The sorcerers, who give their whole lives to mastering the magic of the 
+world, keep their guild in a tower in Midgaard, behind a door on the 
+city's streets. Its head is Phoebius the Master Sorcerer.
+</p><p>To join, stand before Phoebius and type <a cmd='#'>join</a>. Followers of the faith 
+can't master the science of magic: healers, druids, necromancers, 
+paladins, dark knights and rangers are turned away. First you must prove 
+yourself worthy by finishing the Sorcerer's Guild quest; Phoebius sends 
+you to Master Forbin to begin it. To leave the guild, insult the Master; 
+but a member who is banished can never come back.
+</p><p>A conjurer who has joined, and has never specialized, can ask Phoebius to 
+become a sorcerer: say "specialize" to him, and drink the red ale he 
+gives you. The change is permanent (see <a cmd='#'>Help Sorcerer</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sorcerer</a>
+&gt; <a cmd='#'>Help Sorcerer Skills</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+&gt; <a cmd='#'>Help Sorcerer Weapons</a>
+&gt; <a cmd='#'>Help Guilds</a>
+</pre>
+
+
+
+
+</div>

@@ -1,12 +1,28 @@
-<br/>
-<br/>
-<br/>
-A dictionary is an item you may carry around with you that can be used to<br/>
-hold your aliases.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Alias<br/><br/>
-Unalias<br/><br/>
-Claim<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Dictionary</h1>
+<p>Usage (while you carry the dictionary):
+</p>
+<pre>claim dictionary              make it yours, once
+alias                         list your aliases
+alias &lt;name&gt; &lt;commands&gt;       make an alias
+unalias &lt;name&gt; [&lt;name&gt; ...]    remove one or more
+</pre>
+<p>A dictionary holds aliases: short words that stand for longer commands, or 
+for several commands at once. It is the old way to make aliases, and it 
+works in any telnet client; the web client has aliases of its own built in 
+(see <a cmd='#'>Help Alias</a>). Dictionaries are sold in shops in Udgaard, Midgaard and 
+elsewhere.
+</p><p>Before its aliases work, claim the dictionary (see <a cmd='#'>Help Claim</a>); after 
+that, its aliases work only for you. An alias name can be at most 10 
+letters long. Your aliases are kept in the dictionary itself: carry it with 
+you, and don't lose it.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Alias</a>
+&gt; <a cmd='#'>Help Claim</a>
+</pre>
+
+
+
+
+</div>

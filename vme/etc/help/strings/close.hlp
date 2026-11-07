@@ -1,19 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage close [direction] (item)|(keyword)<br/><br/>
-<br/>
-Example:<br/><br/>
-close south door<br/><br/>
-close coffin<br/><br/>
-<br/>
-If you want to close something close-able, and open, just use this command.<br/>
-If it is not an item, but some sort of a door hatch etc. It will have a<br/>
-keyword, like 'close gate'.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Open<br/><br/>
-Lock<br/><br/>
-Unlock<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Close</h1>
+<p>Usage:
+</p>
+<pre>close &lt;item&gt;
+close &lt;door&gt;
+close &lt;direction&gt; &lt;door&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>close coffin
+close door
+close south gate
+</pre>
+<p>Closes something that can be opened and closed: a chest, a bag, a coffin, 
+or a door, gate or hatch on the way out of a room. Doors are named by a 
+keyword, such as door or gate; if there are several, add the direction. 
+Closing a door closes it on both sides, and those on the other side see it 
+close.
+</p><p>You can also close something you are inside, such as a coffin, from the 
+inside. You can close things while sitting or resting, but not asleep.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Open</a>
+&gt; <a cmd='#'>Help Lock</a>
+&gt; <a cmd='#'>Help Unlock</a>
+</pre>
+
+
+
+
+</div>

@@ -1,10 +1,29 @@
-<br/>
-<br/>
-The Clan Master is the head of a clan not much else to say about him.  The Clan<br/>
-Lord is the second in command while having most of the powers of a Clan Master<br/>
-they can not appoint or demote members.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-clan commands<br/>
-clan startup<br/>
-<br/>
+<div class="mw-parser-output"><h1>Clan Master and Lords</h1>
+<p>The <b>Master</b> heads a clan. There is one Master; the Master can appoint 
+<b>Lords</b>, who are second in command.
+</p><p>Only the Master can:
+</p>
+<ul><li>appoint a Lord, or hand the clan over to a new Master (<a cmd='#'>Help Cappoint</a>);</li>
+<li>depose a Lord (<a cmd='#'>Help Cdepose</a>);</li>
+<li>take money out of the treasury and equipment out of the clan's secret storage without being appointed to it (<a cmd='#'>Help Cwithdraw</a>, <a cmd='#'>Help Cunstore</a>).</li></ul>
+<p>The Master and the Lords can:
+</p>
+<ul><li>take in new members, and remove them (<a cmd='#'>Help Caccept</a>, <a cmd='#'>Help Cremove</a>);</li>
+<li>set members' ranks, the titles of the ranks, and members' titles (<a cmd='#'>Help Cpromote</a>, <a cmd='#'>Help Csrank</a>, <a cmd='#'>Help Ctitle</a>).</li></ul>
+<p>Some of these are open to high ranks as well: caccept from rank 10, 
+cpromote from rank 16, ctitle from rank 21, and appointing treasurers and 
+quartermasters, or deposing them, from rank 25. A Master can't leave the 
+clan before handing it over (see <a cmd='#'>Help Cdefect</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clan Commands</a>
+&gt; <a cmd='#'>Help Clan Treasurer</a>
+&gt; <a cmd='#'>Help Clan Quartermaster</a>
+&gt; <a cmd='#'>Help Clan Startup</a>
+</pre>
+
+
+
+
+</div>

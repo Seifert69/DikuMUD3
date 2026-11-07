@@ -1,8 +1,30 @@
-<br/>
-<br/>
-Usage: cast leaf shield<br/>
-The Druid who masters this spell shall never be without defense.  Leaf<br/>
-Shield allows the caster to transmogrify a normal leaf into a simple<br/>
-shield.  The higher the caster's proficiency, the more durable the shield.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Leaf Shield</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 47)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast leaf shield
+</pre>
+<p>The druid who masters this spell shall never be without defence. The 
+caster cups their hands and chants 'Folius Magnum', and a nearby leaf 
+falls into them and grows into a large shield. Wear it like any shield.
+</p><p>The better your skill in the spell and your divine power, the finer the 
+shield: its craftsmanship and its magic both grow with them (see <a cmd='#'>Help 
+Craftsmanship</a>). It keeps as long as you carry or wear it; leave it on 
+the ground, and within ten minutes it shrinks back into a normal leaf.
+</p><p>It needs leaves: it can't be cast indoors, on or under water, or on snow, 
+slush or ice. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Shield</a>
+&gt; <a cmd='#'>Help Craftsmanship</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>

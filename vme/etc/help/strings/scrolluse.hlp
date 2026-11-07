@@ -1,23 +1,36 @@
-<br/>
-<br/>
-<br/><br/>
-SKILL<br/><br/>
-Class and level:<br/><br/>
-Assassin    - 13<br/><br/>
-Conjurer    - 0<br/><br/>
-Druid       - 8<br/><br/>
-Healer      - 3<br/> <br/>
-Necromancer - 2<br/><br/>
-Sorcerer    - 1 <br/><br/>
-Thief       - 15<br/><br/>
-<br/><br/>
-The 'scroll use' skill imparts the techniques for holding and reciting <br/>
-scrolls for those whose chosen classes have access to such powerful weapons.<br/>
-To use a scroll one must hold the scroll and use the recite command. The skill <br/>
-level of the caster as well as other factors determines the chance of success <br/>
-when reciting a scroll.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Hold<br/><br/>
-Recite<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Scroll Use</h1>
+<p>Skill
+Class: Conjurer (guild level 0), Sorcerer (1), Necromancer (2, up to 80%), Healer (3, up to 80%), Druid (10), Assassin (13, up to 70%), Thief (15, up to 50%)
+</p><p>Usage:
+</p>
+<pre>recite &lt;scroll&gt;
+recite &lt;scroll&gt; &lt;target&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>recite scroll
+recite yellow scroll goblin
+</pre>
+<p>A scroll holds up to three spells. Recite it, and it dissolves as its 
+spells are cast at the scroll's own power on the target you name, or on 
+yourself if you name none. Scrolls can do almost anything: heal, protect, 
+harm a foe, carry you away. To learn what a scroll holds before you 
+recite it, identify it (see <a cmd='#'>Help Identify</a>).
+</p><p>Reciting takes the scroll use skill: your skill and your brain against 
+the scroll's power, so strong scrolls are harder to read. Fail, and 
+nothing happens; fail badly, and the scroll crumbles to dust. You must 
+carry the scroll, and you can't read it while blind. You can recite while 
+resting.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Potions</a>
+&gt; <a cmd='#'>Help Wands</a>
+&gt; <a cmd='#'>Help Identify</a>
+&gt; <a cmd='#'>Help Spells</a>
+</pre>
+
+
+
+
+</div>

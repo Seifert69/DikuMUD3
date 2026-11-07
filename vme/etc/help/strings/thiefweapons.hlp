@@ -1,28 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-      Weapon           Level       Weapon           Level<br/>
-    Bill Guisarme       55       Brass Knuckles      15<br/>
-    Club                 4       Cudgel              62	<br/>
-    Cutlass             50       Dagger               0<br/>
-    Dirk                11       Fist                 5<br/>
-    Gaff                28       Guisarme            35       <br/>
-    Hand Hammer         27       Ice Pick            12       <br/>
-    Long Sword          12       Main Gauche         65<br/>
-    Ranseur             50       Rapier               8<br/>
-    Saber               40       Scimitar            12<br/>
-    Short sword          2       Stiletto            32<br/>
-    Talwar              40       Voulge              58<br/>
-    War Axe             60       Whip                 7<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Thief Skills<br/><br/>
- Thief<br/><br/>
- Thief Spells<br/><br/>
- Thief Roleplay<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Thief Weapons</h1>
+<p>The weapon skills the Thieves' guild teaches, in its hall in Midgaard. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name             Level   Up to
+Dagger               0   80%
+Short Sword          2   80%
+Club                 4   80%
+Fist                 4   80%
+Rapier               8   80%
+Whip                 8   80%
+Scimitar            12   80%
+Brass Knuckles      15   80%
+Long Sword          20   70%
+Stiletto            32   80%
+Main Gauche         65   80%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Thief Skills</a>
+&gt; <a cmd='#'>Help Thief Spells</a>
+&gt; <a cmd='#'>Help Thief</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>

@@ -1,26 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage disarm (character)<br/><br/>
-<br/>
-Disarm is a combat skill which is fairly self explanatory.  It is used to<br/>
-relieve your opponent of his/her/it's weapon.  Because of the tricky moves<br/>
-involved in disarming, you may find yourself without a weapon if you fail<br/>
-your attempt.<br/>
-<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-Usage disarm (character)<br/><br/>
-<br/>
-Disarm is a combat skill which is fairly self explanatory.  It is used to<br/>
-relieve your opponent of his/her/it's weapon.  Because of the tricky moves<br/>
-involved in disarming, you may find yourself without a weapon if you fail<br/>
-your attempt.<br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Disarm</h1>
+<p>Skill
+Class: Assassin (guild level 4, up to 90%), Fighter (guild level 10), Thief (guild level 12, up to 70%)
+</p><p>Usage:
+</p>
+<pre>disarm &lt;character&gt;
+disarm                  (whoever you are fighting)
+</pre>
+<p>A quick move that strips the weapon from your foe's hands; it falls to the 
+floor, and a monster will try to pick it up and wield it again. You must 
+wield a weapon yourself, and your foe must wield one too. Your skill, 
+dexterity and strength are matched against your foe's dexterity and 
+strength.
+</p><p>If you fail, nothing happens; but if you fail badly, your foe counters, and 
+it is your own weapon that drops to the floor. A foe you have just 
+disarmed is on guard for a few combat rounds and can't be disarmed again 
+until then; and if you have just been disarmed yourself, you are too 
+shaken to try. Disarming takes endurance, 
+and it starts a fight. You can disarm a sleeping foe without waking them. 
+Other players only when both of you have signed the Book of Blood.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Combat</a>
+&gt; <a cmd='#'>Help Wield</a>
+</pre>
+
+
+
+
+</div>

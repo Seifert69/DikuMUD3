@@ -1,21 +1,28 @@
-<br/>
-<br/><br/>
-Sphere: Mind<br/><br/>
-<br/>
-Spell Tier: 1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 14 <br/><br/>
-<br/> <br/>
-<br/>Usage cast hold undead (target)<br/><br/>
-<br/><br/>
-The hold spell will magically prevent an undead mob from engaging in<br/>
-combat for five rounds.  This spell is very difficult to use, and may<br/>
-therefore fail quite often. THis requires no free hands.<br/>
-<br/><br/>
-See Also:<br/><br/>
-mind sphere<br/><br/>
-command undead<br/><br/>
-control undead<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Hold Undead</h1>
+<p>Sphere: Mind Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 14), Healer (guild level 23)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast hold undead &lt;target&gt;
+</pre>
+<p>Holds an undead creature in place: for five rounds it can't fight, and it 
+can't flee. It has no effect on the living. The spell is very difficult to 
+use and may therefore fail quite often: it needs a good cast to work at all. 
+Casting it starts a fight with the target, whether it works or not.
+</p><p>It is also found on wands, scrolls and potions.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spell Hold</a>
+&gt; <a cmd='#'>Help Hold Monster</a>
+&gt; <a cmd='#'>Help Control Undead</a>
+&gt; <a cmd='#'>Help Turn Undead</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

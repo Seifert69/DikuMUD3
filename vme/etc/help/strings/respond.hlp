@@ -1,12 +1,28 @@
-<br/>
-Usage<br/>
-Respond &lt;words&gt;<br/><br/>
-<br/>
-To reply to the last tell you recieved you may use the respond command. Be<br/>
-very careful as another incoming tell could intercept your resond command.<br/>
-This allows you to respond to invisible players and immortals<br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-Tell<br/>
-<br/>
+<div class="mw-parser-output"><h1>Respond</h1>
+<p>Usage:
+</p>
+<pre>respond &lt;message&gt;
+</pre>
+<p>Example:
+</p>
+<pre>respond Thanks, see you at the bank!
+</pre>
+<p>Answers the last person who sent you a tell, without your having to type 
+their name. It works even when you can't see them: an invisible player or 
+an immortal. Be careful: if another tell arrives just before you answer, 
+your response goes to that person instead.
+</p><p>Like a tell, it can't reach someone who ignores you, or who is busy 
+writing a message. (Reply is something else: it answers a message on a 
+board; see <a cmd='#'>Help Reply</a>.)
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Tell</a>
+&gt; <a cmd='#'>Help Ignore</a>
+&gt; <a cmd='#'>Help Reply</a>
+</pre>
+
+
+
+
+</div>

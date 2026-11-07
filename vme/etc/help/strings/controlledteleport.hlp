@@ -1,12 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere <br/><br/>
-<br/><br/>
-Usage cast controlled teleport &lt;name of object/player&gt;<br/><br/>
-<br/>
-Teleport to any char, room or object that is not in a no teleport<br/>
-room.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Controlled Teleport</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 35)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast controlled teleport &lt;someone, something or a place&gt;
+</pre>
+<p>Takes you, in a puff of green smoke, to a person, a creature, an object or a 
+place anywhere in the world, any land at all, across the sea too: the 
+stronger brother of transport. It can't take you out of a place magic can't 
+leave, nor into one magic can't reach; then you get most of the mana back.
+</p><p>Beware the rift: about one cast in twenty tears a hole in the powers of 
+magic. All your mana is gone, and you may be thrown somewhere else, into the 
+void, or something may come through the rift at you.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Transport</a>
+&gt; <a cmd='#'>Help Random Teleport</a>
+&gt; <a cmd='#'>Help Gate</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

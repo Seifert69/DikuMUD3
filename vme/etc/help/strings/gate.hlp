@@ -1,13 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Summoning Sphere <br/><br/>
-<br/><br/>
-Usage cast gate (target)<br/><br/>
-<br/>
-This spell opens up a portal through which another character or mob may be<br/>
-summoned.  This spell may fail, in which case something other than the<br/>
-desired target may be summoned.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Gate</h1>
+<p>Sphere: Summoning Sphere
+Class: Conjurer (guild level 35)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast gate &lt;someone&gt;
+</pre>
+<p>Opens a portal and pulls a person or creature from anywhere in the world to 
+you, in a flash of light: the stronger brother of minor gate, for it can 
+summon someone of any level, even far above your own. It doesn't work when 
+one of you stands where magic can't reach. Arriving, the one you summon may 
+well attack you, and the effort leaves you slow for a couple of rounds.
+</p><p>The spell may fail. If it does, the one you tried to summon knows it. Someone 
+in a fight is harder to pull away. And it can tear a rift in the powers of 
+magic instead: about one cast in twenty, and more often the stronger the one 
+you summon is than you. Then all your mana is gone, and something else may 
+come through.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Minor Gate</a>
+&gt; <a cmd='#'>Help Controlled Teleport</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

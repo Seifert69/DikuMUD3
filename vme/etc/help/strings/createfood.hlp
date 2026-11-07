@@ -1,19 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Healer<br/> <br/>
-Guild Level: 18<br/> <br/>
-<br/>
-<br/><br/>
-Usage cast create food<br/><br/>
-<br/><br/>
-By praying to the gods the healer can usually receive a gift<br/>
-of food to stave off starvation. This spell creates nourishing <br/>
-food for the hungry in not particularly palatable or even<br/>
-varied. This spell requires no free hands.<br/>
-<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Create Food</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Healer (guild level 18)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast create food</a>
+</pre>
+<p>By praying to the gods, you receive a gift of food to stave off hunger: a 
+piece of salted beef. It is not particularly tasty, nor very varied, but it 
+is filling, and it is safe to eat (see <a cmd='#'>Help Eat</a>).
+</p><p>You must be standing. It is also found on staffs, scrolls and wands. For 
+something to drink, see <a cmd='#'>Help Create Water</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Eat</a>
+&gt; <a cmd='#'>Help Create Water</a>
+&gt; <a cmd='#'>Help Sustain</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

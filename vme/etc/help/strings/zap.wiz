@@ -1,0 +1,29 @@
+<div class="mw-parser-output"><h1>Zap (245)</h1>
+<p>Usage:
+</p>
+<pre>zap &lt;unit&gt; &lt;dil&gt;@&lt;zone&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>zap Papi send_prompt@update
+zap room aggressive@function
+</pre>
+<p>Removes a DIL program from a unit: the opposite of <a cmd='#'>Wizhelp Copy</a>. The 
+unit comes first, then the program's name. The unit can be self, room 
+(the room you are in), a room anywhere by its symbolic name (room@zone; 
+only rooms may be named that way), or someone or something here. Things 
+from the treasure zone are refused.
+</p><p>You are told "DIL successfully removed." or "Unable to remove the DIL in 
+question." See which programs a unit runs with wstat &lt;unit&gt; functions 
+(see <a cmd='#'>Wizhelp Wstat</a>). It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Copy</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>

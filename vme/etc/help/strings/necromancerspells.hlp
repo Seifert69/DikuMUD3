@@ -1,47 +1,63 @@
-<br/>
-<br/>
-  0     raise divine            25     undead door                 <br/>
-  0     detect undead           25     plague                      <br/>
-  1     fart                    28     command                     <br/>
-  1     cause light wounds      29     harm                        <br/>
-  1     detect curse            30     stinking cloud              <br/>
-  2     sense life              31     repel greater undead        <br/>
-  2     repel lesser undead     33     protection from good        <br/>
-  3     sustain                 34     slow rot                    <br/>
-  4     animate dead            36     control undead              <br/>
-  5     detect poison           38     energy drain                <br/>
-  5     darkness                39     dispel good                 <br/>
-  6     detect alignment        42     cause panic                 <br/>
-  7     madness                 50     raise skeleton              <br/>
-  9     blind                   60     aid undead                  <br/>
- 12     cause serious wounds    75     raise skeletal champion     <br/>
- 14     hold undead             40     unholy word                 <br/>
- 14     sleep                  150     raise horde                 <br/>
- 14     continual darkness      60     deathly grasp               <br/>
- 16     bad breath             100     stinking breath             <br/>
- 18     curse                   80     unholy touch                <br/>
- 19     fear                   120     unholy grasp                <br/>
- 24     remove curse           160     unholy shout                <br/>
-<br/>
-<br/>See Also:<br/>  <br/>
-                      <br/>
-Necromancer Weapons<br/> <br/>
-Necromancer<br/>         <br/>
-Necromancer Skills<br/>  <br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Necromancer Spells</h1>
+<p>The spells the Necromancers' guild teaches, in its hall by the cemetery. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name                      Level   Up to
+Detect Undead                 0   100%
+Raise Divine                  0   100%
+Cause Light Wounds            1   100%
+Detect Curse                  1   100%
+Fart                          1   100%
+Repel Lesser Undead           2   100%
+Sense Life                    2   100%
+Sustain                       3   50%
+Animate Dead                  4   100%
+Darkness                      5   100%
+Detect Poison                 5   100%
+Detect Alignment              6   100%
+Madness                       7   100%
+Blind                         9   100%
+Cause Serious Wounds         12   100%
+Continual Darkness           14   100%
+Hold Undead                  14   100%
+Sleep                        14   100%
+Bad Breath                   16   100%
+Curse                        18   100%
+Fear                         19   100%
+Remove Curse                 24   100%
+Plague                       25   100%
+Undead Door                  25   100%
+Command                      28   100%
+Harm                         29   100%
+Stinking Cloud               30   100%
+Repel Greater Undead         31   100%
+Protection From Good         33   100%
+Slow Rot                     34   100%
+Control Undead               36   100%
+Energy Drain                 38   100%
+Dispel Good                  39   100%
+Unholy Word                  40   100%
+Cause Panic                  42   100%
+Raise Skeleton               50   100%
+Aid Undead                   60   100%
+Deathly Grasp                60   100%
+Raise Skeletal Champion      75   100%
+Unholy Touch                 80   100%
+Stinking Breath             100   100%
+Unholy Grasp                120   100%
+Raise Horde                 150   100%
+Unholy Shout                160   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Necromancer Skills</a>
+&gt; <a cmd='#'>Help Necromancer Weapons</a>
+&gt; <a cmd='#'>Help Necromancer</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Spells</a>
+</pre>
+
+
+
+
+</div>

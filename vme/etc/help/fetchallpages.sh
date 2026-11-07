@@ -1,28 +1,23 @@
 python3 getwikihelppage.py Accuse
 python3 getwikihelppage.py Acidball &
-python3 getwikihelppage.py Acidbreath &
 python3 getwikihelppage.py Aciddrop &
 python3 getwikihelppage.py Acidresistance &
 python3 getwikihelppage.py Acidsphere
 python3 getwikihelppage.py Acidswirl &
-python3 getwikihelppage.py Admin &
 python3 getwikihelppage.py Advanced &
 python3 getwikihelppage.py Adze &
 python3 getwikihelppage.py Affect
 python3 getwikihelppage.py Age &
-python3 getwikihelppage.py Aggressive &
 python3 getwikihelppage.py Aidundead &
 python3 getwikihelppage.py Alias &
 python3 getwikihelppage.py Alignment
 python3 getwikihelppage.py Ambush &
 python3 getwikihelppage.py Animatedead &
-python3 getwikihelppage.py Annihilateundead &
 python3 getwikihelppage.py Aoh &
 python3 getwikihelppage.py Appraisal
 python3 getwikihelppage.py Architect &
 python3 getwikihelppage.py Areas &
 python3 getwikihelppage.py Armour &
-python3 getwikihelppage.py Arrests &
 python3 getwikihelppage.py Ask &
 python3 getwikihelppage.py Assassinate
 python3 getwikihelppage.py Assassin &
@@ -33,7 +28,6 @@ python3 getwikihelppage.py Assist
 python3 getwikihelppage.py Assrp &
 python3 getwikihelppage.py Attackswitch &
 python3 getwikihelppage.py Attributes &
-python3 getwikihelppage.py Auction &
 python3 getwikihelppage.py Awaken
 python3 getwikihelppage.py Backstab &
 python3 getwikihelppage.py Baculus &
@@ -58,7 +52,6 @@ python3 getwikihelppage.py Blind &
 python3 getwikihelppage.py Blindingflash
 python3 getwikihelppage.py Blizzard &
 python3 getwikihelppage.py Boards &
-python3 getwikihelppage.py Boats &
 python3 getwikihelppage.py Bob &
 python3 getwikihelppage.py Boneskin
 python3 getwikihelppage.py Bot &
@@ -67,6 +60,7 @@ python3 getwikihelppage.py Brain &
 python3 getwikihelppage.py Brambles &
 python3 getwikihelppage.py Bravemode
 python3 getwikihelppage.py Break &
+python3 getwikihelppage.py Breath &
 python3 getwikihelppage.py Bribe &
 python3 getwikihelppage.py Brief &
 python3 getwikihelppage.py Brimstone &
@@ -74,8 +68,7 @@ python3 getwikihelppage.py Broadsword
 python3 getwikihelppage.py Brownies &
 python3 getwikihelppage.py Bug &
 python3 getwikihelppage.py Buildera &
-python3 getwikihelppage.py Builder &
-python3 getwikihelppage.py Buildterm
+python3 getwikihelppage.py Builder
 python3 getwikihelppage.py Burn &
 python3 getwikihelppage.py Bury &
 python3 getwikihelppage.py Bushido &
@@ -85,7 +78,6 @@ python3 getwikihelppage.py Caccept &
 python3 getwikihelppage.py Calllightning &
 python3 getwikihelppage.py Calm &
 python3 getwikihelppage.py Cappoint
-python3 getwikihelppage.py Captain &
 python3 getwikihelppage.py Casthold &
 python3 getwikihelppage.py Casting &
 python3 getwikihelppage.py Causelightwounds &
@@ -101,8 +93,7 @@ python3 getwikihelppage.py charge &
 python3 getwikihelppage.py Chargestaff
 python3 getwikihelppage.py Chargewand &
 python3 getwikihelppage.py Charmanimal &
-python3 getwikihelppage.py Chr &
-python3 getwikihelppage.py Churchknights
+python3 getwikihelppage.py Chr
 python3 getwikihelppage.py Cinfo &
 python3 getwikihelppage.py Claim &
 python3 getwikihelppage.py Clancommands &
@@ -115,12 +106,12 @@ python3 getwikihelppage.py Clanquartermaster &
 python3 getwikihelppage.py Clanres
 python3 getwikihelppage.py Clans &
 python3 getwikihelppage.py Clanstartup &
+python3 getwikihelppage.py Clantreasurer &
 python3 getwikihelppage.py Claymore &
 python3 getwikihelppage.py Clear
 python3 getwikihelppage.py Clearskies &
 python3 getwikihelppage.py Cleave &
 python3 getwikihelppage.py Clenchedfist &
-python3 getwikihelppage.py Clerics &
 python3 getwikihelppage.py Climb &
 python3 getwikihelppage.py Clist
 python3 getwikihelppage.py Close &
@@ -152,7 +143,6 @@ python3 getwikihelppage.py Contrib &
 python3 getwikihelppage.py Controlledteleport &
 python3 getwikihelppage.py Controlundead
 python3 getwikihelppage.py Cook &
-python3 getwikihelppage.py Copperpieces &
 python3 getwikihelppage.py Cpromote &
 python3 getwikihelppage.py Craftsmanship &
 python3 getwikihelppage.py Crank &
@@ -177,8 +167,7 @@ python3 getwikihelppage.py Cureblind
 python3 getwikihelppage.py Curelight &
 python3 getwikihelppage.py Cureserious &
 python3 getwikihelppage.py Curse &
-python3 getwikihelppage.py Curvesword &
-python3 getwikihelppage.py Cut
+python3 getwikihelppage.py Curvesword
 python3 getwikihelppage.py Cutlass &
 python3 getwikihelppage.py Cwithdraw &
 python3 getwikihelppage.py Dagger &
@@ -208,6 +197,7 @@ python3 getwikihelppage.py Die &
 python3 getwikihelppage.py Dig &
 python3 getwikihelppage.py Dirk &
 python3 getwikihelppage.py Disarming
+python3 getwikihelppage.py Dispelevil &
 python3 getwikihelppage.py Dispelgood &
 python3 getwikihelppage.py Dispelmagic &
 python3 getwikihelppage.py Displacemagic &
@@ -215,9 +205,7 @@ python3 getwikihelppage.py Ditch &
 python3 getwikihelppage.py Divinationsphere
 python3 getwikihelppage.py Divineresistance &
 python3 getwikihelppage.py Donate &
-python3 getwikihelppage.py Donation &
-python3 getwikihelppage.py Doors &
-python3 getwikihelppage.py Down
+python3 getwikihelppage.py Donation
 python3 getwikihelppage.py Dowse &
 python3 getwikihelppage.py Drag &
 python3 getwikihelppage.py Drop &
@@ -231,8 +219,7 @@ python3 getwikihelppage.py Dump
 python3 getwikihelppage.py Dustdevil &
 python3 getwikihelppage.py Dwarves &
 python3 getwikihelppage.py Eaglecry &
-python3 getwikihelppage.py Earthquake &
-python3 getwikihelppage.py East
+python3 getwikihelppage.py Earthquake
 python3 getwikihelppage.py Eat &
 python3 getwikihelppage.py Echo &
 python3 getwikihelppage.py Elbow &
@@ -250,7 +237,6 @@ python3 getwikihelppage.py Enter &
 python3 getwikihelppage.py Equipment
 python3 getwikihelppage.py Estoc &
 python3 getwikihelppage.py Evaluate &
-python3 getwikihelppage.py Evil &
 python3 getwikihelppage.py Examine &
 python3 getwikihelppage.py Exits &
 python3 getwikihelppage.py Experience &
@@ -263,14 +249,12 @@ python3 getwikihelppage.py Fashionweapon &
 python3 getwikihelppage.py Fauchardfork
 python3 getwikihelppage.py Fauchard &
 python3 getwikihelppage.py Fear &
-python3 getwikihelppage.py Female &
 python3 getwikihelppage.py Fighter &
 python3 getwikihelppage.py Fighterrp
 python3 getwikihelppage.py Fighterskills &
 python3 getwikihelppage.py Fighterweapons &
 python3 getwikihelppage.py Fightingstaff &
-python3 getwikihelppage.py Filching &
-python3 getwikihelppage.py Fill
+python3 getwikihelppage.py Filching
 python3 getwikihelppage.py Finalrest &
 python3 getwikihelppage.py Findpath &
 python3 getwikihelppage.py Fireball &
@@ -288,30 +272,21 @@ python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
 python3 getwikihelppage.py Footlance &
 python3 getwikihelppage.py Forage &
-python3 getwikihelppage.py Friend &
-python3 getwikihelppage.py Friendly
+python3 getwikihelppage.py Friend
 python3 getwikihelppage.py Frostball &
-python3 getwikihelppage.py Frostbreath &
 python3 getwikihelppage.py Frostsphere &
-python3 getwikihelppage.py Gaff &
-python3 getwikihelppage.py Gain
-python3 getwikihelppage.py Gasbreath &
+python3 getwikihelppage.py Gaff
 python3 getwikihelppage.py Gate &
 python3 getwikihelppage.py Genders &
 python3 getwikihelppage.py Get &
 python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
 python3 getwikihelppage.py Glowingfungus &
-python3 getwikihelppage.py Gnomes &
-python3 getwikihelppage.py Goldpieces &
-python3 getwikihelppage.py Good
-python3 getwikihelppage.py Gossip &
-python3 getwikihelppage.py Grab &
+python3 getwikihelppage.py Gnomes
 python3 getwikihelppage.py Greatsword &
 python3 getwikihelppage.py Grolls &
 python3 getwikihelppage.py Groups
 python3 getwikihelppage.py Groupteleport &
-python3 getwikihelppage.py Guardguild &
 python3 getwikihelppage.py Guests &
 python3 getwikihelppage.py Guilds &
 python3 getwikihelppage.py Guisarme
@@ -323,8 +298,7 @@ python3 getwikihelppage.py Halforcs
 python3 getwikihelppage.py Hammerofkai &
 python3 getwikihelppage.py Handaxe &
 python3 getwikihelppage.py Harm &
-python3 getwikihelppage.py Haste &
-python3 getwikihelppage.py Heads
+python3 getwikihelppage.py Haste
 python3 getwikihelppage.py Healanimal &
 python3 getwikihelppage.py Healers &
 python3 getwikihelppage.py Healerskills &
@@ -337,7 +311,6 @@ python3 getwikihelppage.py Hellfire &
 python3 getwikihelppage.py Help
 python3 getwikihelppage.py Herbs &
 python3 getwikihelppage.py Hide &
-python3 getwikihelppage.py Hire &
 python3 getwikihelppage.py History1 &
 python3 getwikihelppage.py Hit
 python3 getwikihelppage.py Hits &
@@ -352,7 +325,6 @@ python3 getwikihelppage.py Holytouch &
 python3 getwikihelppage.py Holyword
 python3 getwikihelppage.py Home &
 python3 getwikihelppage.py Homes2 &
-python3 getwikihelppage.py Horses &
 python3 getwikihelppage.py Houses &
 python3 getwikihelppage.py Humans
 python3 getwikihelppage.py Hunt &
@@ -364,20 +336,15 @@ python3 getwikihelppage.py Identify &
 python3 getwikihelppage.py Ignore &
 python3 getwikihelppage.py Immortal &
 python3 getwikihelppage.py Improvedidentify
-python3 getwikihelppage.py Incapacitated &
 python3 getwikihelppage.py Info &
 python3 getwikihelppage.py Inform &
 python3 getwikihelppage.py Insult &
 python3 getwikihelppage.py Inventory
 python3 getwikihelppage.py Invisibility &
-python3 getwikihelppage.py Ironpieces &
-python3 getwikihelppage.py Jail &
 python3 getwikihelppage.py Javelin &
 python3 getwikihelppage.py Jeddart
 python3 getwikihelppage.py Join &
-python3 getwikihelppage.py Jolt &
-python3 getwikihelppage.py Just
-python3 getwikihelppage.py Key &
+python3 getwikihelppage.py Jolt
 python3 getwikihelppage.py Khorsabadassassin &
 python3 getwikihelppage.py Kick &
 python3 getwikihelppage.py Kill &
@@ -400,11 +367,8 @@ python3 getwikihelppage.py Letter &
 python3 getwikihelppage.py Level
 python3 getwikihelppage.py Levels &
 python3 getwikihelppage.py Lifeprotection &
-python3 getwikihelppage.py Lightbreath &
-python3 getwikihelppage.py Lightningbolt &
-python3 getwikihelppage.py Lightningsphere
+python3 getwikihelppage.py Lightningbolt
 python3 getwikihelppage.py Lightningstorm &
-python3 getwikihelppage.py Lightwounds &
 python3 getwikihelppage.py List &
 python3 getwikihelppage.py Listen &
 python3 getwikihelppage.py Locateanimal
@@ -424,14 +388,11 @@ python3 getwikihelppage.py Mace &
 python3 getwikihelppage.py Madness &
 python3 getwikihelppage.py Magiccandle
 python3 getwikihelppage.py Magicians &
-python3 getwikihelppage.py Magicusers &
 python3 getwikihelppage.py Maidenname &
 python3 getwikihelppage.py Maingauche
-python3 getwikihelppage.py Male &
 python3 getwikihelppage.py Manaboost &
 python3 getwikihelppage.py Manapoints &
-python3 getwikihelppage.py Map &
-python3 getwikihelppage.py Materialquality
+python3 getwikihelppage.py Map
 python3 getwikihelppage.py Mattock &
 python3 getwikihelppage.py Maul &
 python3 getwikihelppage.py Mending &
@@ -444,20 +405,15 @@ python3 getwikihelppage.py Militaryfork
 python3 getwikihelppage.py Mindshield &
 python3 getwikihelppage.py Mindsphere &
 python3 getwikihelppage.py Minorgate &
-python3 getwikihelppage.py Mire &
-python3 getwikihelppage.py Mode
+python3 getwikihelppage.py Mire
 python3 getwikihelppage.py Money &
 python3 getwikihelppage.py Moneyorders &
 python3 getwikihelppage.py Monster &
-python3 getwikihelppage.py Morningstar &
-python3 getwikihelppage.py Mortallywounded
+python3 getwikihelppage.py Morningstar
 python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
-python3 getwikihelppage.py Movementpoints &
-python3 getwikihelppage.py Mudpuddle &
-python3 getwikihelppage.py Multiclasses &
-python3 getwikihelppage.py Multiplecharacters
+python3 getwikihelppage.py Mudpuddle
 python3 getwikihelppage.py Naffect &
 python3 getwikihelppage.py Naginata &
 python3 getwikihelppage.py Names &
@@ -465,19 +421,15 @@ python3 getwikihelppage.py Necro &
 python3 getwikihelppage.py Necromancerskills
 python3 getwikihelppage.py Necromancerspells &
 python3 getwikihelppage.py Necromancerweapons &
-python3 getwikihelppage.py Neutral &
 python3 getwikihelppage.py Newbie &
 python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
-python3 getwikihelppage.py North &
-python3 getwikihelppage.py Noshout &
-python3 getwikihelppage.py Npc
+python3 getwikihelppage.py Nightglobe &
+python3 getwikihelppage.py Noshout
 python3 getwikihelppage.py Oddweapon &
 python3 getwikihelppage.py Odinstatue &
-python3 getwikihelppage.py Offer &
 python3 getwikihelppage.py Off &
 python3 getwikihelppage.py Open
-python3 getwikihelppage.py Order &
 python3 getwikihelppage.py Paladins &
 python3 getwikihelppage.py Paladinskills &
 python3 getwikihelppage.py Paladinspells &
@@ -502,8 +454,6 @@ python3 getwikihelppage.py Pilum &
 python3 getwikihelppage.py Piset &
 python3 getwikihelppage.py Plague
 python3 getwikihelppage.py Plant
-python3 getwikihelppage.py Platinumpieces &
-python3 getwikihelppage.py Points &
 python3 getwikihelppage.py Poisonivy &
 python3 getwikihelppage.py Poisonresistance &
 python3 getwikihelppage.py Poisonsphere
@@ -519,7 +469,6 @@ python3 getwikihelppage.py Pour &
 python3 getwikihelppage.py Poweritems
 python3 getwikihelppage.py Practice &
 python3 getwikihelppage.py Pray &
-python3 getwikihelppage.py Priests &
 python3 getwikihelppage.py Professions &
 python3 getwikihelppage.py Promptcolors
 python3 getwikihelppage.py Protected &
@@ -528,8 +477,6 @@ python3 getwikihelppage.py Protectionfromgood &
 python3 getwikihelppage.py Protectionsphere &
 python3 getwikihelppage.py Purse
 python3 getwikihelppage.py Put &
-python3 getwikihelppage.py Quaff &
-python3 getwikihelppage.py Quality &
 python3 getwikihelppage.py Quarterstaff &
 python3 getwikihelppage.py Quests
 python3 getwikihelppage.py Quicken &
@@ -548,17 +495,14 @@ python3 getwikihelppage.py Ranger &
 python3 getwikihelppage.py Rangerskills &
 python3 getwikihelppage.py Rangerspells
 python3 getwikihelppage.py Rangerweapons &
-python3 getwikihelppage.py Rank &
 python3 getwikihelppage.py Ranseur &
 python3 getwikihelppage.py Rapier &
 python3 getwikihelppage.py Read
-python3 getwikihelppage.py Recite &
 python3 getwikihelppage.py Reconstruct &
 python3 getwikihelppage.py Refit &
 python3 getwikihelppage.py Refresh
 python3 getwikihelppage.py Refundpolicy &
 python3 getwikihelppage.py Regenerate &
-python3 getwikihelppage.py Relax &
 python3 getwikihelppage.py Removecurse &
 python3 getwikihelppage.py Removedisease
 python3 getwikihelppage.py Remove &
@@ -568,14 +512,10 @@ python3 getwikihelppage.py Repair &
 python3 getwikihelppage.py Repelgreaterundead
 python3 getwikihelppage.py Repellesserundead &
 python3 getwikihelppage.py Reply &
-python3 getwikihelppage.py Request &
-python3 getwikihelppage.py Reroll &
 python3 getwikihelppage.py Rescue &
 python3 getwikihelppage.py Resize
 python3 getwikihelppage.py Respond &
 python3 getwikihelppage.py Ressurect &
-python3 getwikihelppage.py Reward &
-python3 getwikihelppage.py Rows &
 python3 getwikihelppage.py Rules &
 python3 getwikihelppage.py Sail &
 python3 getwikihelppage.py Sanctuary
@@ -585,25 +525,19 @@ python3 getwikihelppage.py Say &
 python3 getwikihelppage.py Scan &
 python3 getwikihelppage.py Scimitar
 python3 getwikihelppage.py Score &
-python3 getwikihelppage.py Scripts &
 python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
 python3 getwikihelppage.py Sending &
 python3 getwikihelppage.py Senselife &
-python3 getwikihelppage.py Seriouswounds &
-python3 getwikihelppage.py Seual &
-python3 getwikihelppage.py Sex
+python3 getwikihelppage.py Seual
 python3 getwikihelppage.py Shamshir &
 python3 getwikihelppage.py Shelter &
 python3 getwikihelppage.py Shields &
-python3 getwikihelppage.py Shielduse &
 python3 getwikihelppage.py Shoot
 python3 getwikihelppage.py Shops &
 python3 getwikihelppage.py Shortsword &
 python3 getwikihelppage.py Shout &
-python3 getwikihelppage.py Shouting &
 python3 getwikihelppage.py Sickle
-python3 getwikihelppage.py Silverpieces &
 python3 getwikihelppage.py Sip &
 python3 getwikihelppage.py Skills &
 python3 getwikihelppage.py Skin
@@ -616,22 +550,16 @@ python3 getwikihelppage.py Snoop &
 python3 getwikihelppage.py Snowball &
 python3 getwikihelppage.py Socials &
 python3 getwikihelppage.py Solarflare
+python3 getwikihelppage.py Soothe &
 python3 getwikihelppage.py Sorcerer &
 python3 getwikihelppage.py Sorcererskills &
 python3 getwikihelppage.py Sorcererspells &
 python3 getwikihelppage.py Sorcererweapons &
 python3 getwikihelppage.py Soulfire
-python3 getwikihelppage.py Soulgate &
 python3 getwikihelppage.py Soulshift &
-python3 getwikihelppage.py South &
 python3 getwikihelppage.py Spearfam &
 python3 getwikihelppage.py Spear
-python3 getwikihelppage.py Spellaid &
-python3 getwikihelppage.py Spellbrain &
-python3 getwikihelppage.py Spellcasters &
-python3 getwikihelppage.py Spellcharisma
-python3 getwikihelppage.py Spellconstitution &
-python3 getwikihelppage.py Spelldexterity &
+python3 getwikihelppage.py Spellaid
 python3 getwikihelppage.py Spelllight &
 python3 getwikihelppage.py Spelllock &
 python3 getwikihelppage.py Spellsleep
@@ -643,13 +571,9 @@ python3 getwikihelppage.py Spies
 python3 getwikihelppage.py Splitm &
 python3 getwikihelppage.py Sprayofacid &
 python3 getwikihelppage.py Staff &
-python3 getwikihelppage.py Staffuse &
 python3 getwikihelppage.py Stalk
-python3 getwikihelppage.py Stats &
-python3 getwikihelppage.py Statue &
 python3 getwikihelppage.py Status &
 python3 getwikihelppage.py Stealing
-python3 getwikihelppage.py Steed &
 python3 getwikihelppage.py Stiletto &
 python3 getwikihelppage.py Stinkingbreath &
 python3 getwikihelppage.py Stinkingcloud &
@@ -674,14 +598,11 @@ python3 getwikihelppage.py Sunbeam &
 python3 getwikihelppage.py Sunglobe &
 python3 getwikihelppage.py Sunray &
 python3 getwikihelppage.py Sustain &
-python3 getwikihelppage.py Swimming &
-python3 getwikihelppage.py Take
+python3 getwikihelppage.py Swimming
 python3 getwikihelppage.py Talwar &
 python3 getwikihelppage.py Taste &
 python3 getwikihelppage.py taunt &
-python3 getwikihelppage.py Teams &
-python3 getwikihelppage.py Tell &
-python3 getwikihelppage.py Telnet
+python3 getwikihelppage.py Tell
 python3 getwikihelppage.py Terminal &
 python3 getwikihelppage.py Thief &
 python3 getwikihelppage.py Thiefrp &
@@ -693,11 +614,9 @@ python3 getwikihelppage.py Throw &
 python3 getwikihelppage.py Tigerclaw
 python3 getwikihelppage.py Time
 python3 getwikihelppage.py Title &
-python3 getwikihelppage.py Torch &
 python3 getwikihelppage.py Totalrecall &
 python3 getwikihelppage.py Toxicate &
 python3 getwikihelppage.py Track
-python3 getwikihelppage.py Train &
 python3 getwikihelppage.py Transport &
 python3 getwikihelppage.py Travel &
 python3 getwikihelppage.py Trident &
@@ -707,35 +626,25 @@ python3 getwikihelppage.py Tsunami &
 python3 getwikihelppage.py Tuborg &
 python3 getwikihelppage.py Turnundead &
 python3 getwikihelppage.py TwoWeaponStyle &
-python3 getwikihelppage.py Typo &
-python3 getwikihelppage.py Udgaardconjurer
+python3 getwikihelppage.py Typo
 python3 getwikihelppage.py Udgaard &
-python3 getwikihelppage.py Udgaardthieves &
-python3 getwikihelppage.py Unalias &
 python3 getwikihelppage.py Undeaddoor &
 python3 getwikihelppage.py Unholygrasp
 python3 getwikihelppage.py Unholyshout
 python3 getwikihelppage.py Unholytouch &
 python3 getwikihelppage.py Unholyword &
-python3 getwikihelppage.py Unlock &
-python3 getwikihelppage.py Unseen &
-python3 getwikihelppage.py Up
+python3 getwikihelppage.py Unseen
 python3 getwikihelppage.py Use &
 python3 getwikihelppage.py Valhalla &
 python3 getwikihelppage.py Variable &
 python3 getwikihelppage.py Ventriloquate
 python3 getwikihelppage.py Voulge
-python3 getwikihelppage.py Wanduse &
-python3 getwikihelppage.py Wanted &
 python3 getwikihelppage.py Waraxe &
 python3 getwikihelppage.py Warhammer
-python3 getwikihelppage.py Warrior &
 python3 getwikihelppage.py Weap &
 python3 getwikihelppage.py Weapons &
 python3 getwikihelppage.py Wear &
 python3 getwikihelppage.py Weather
-python3 getwikihelppage.py Weatherwatching
-python3 getwikihelppage.py West &
 python3 getwikihelppage.py Whip &
 python3 getwikihelppage.py Whisper &
 python3 getwikihelppage.py Whirl &
@@ -746,10 +655,7 @@ python3 getwikihelppage.py Wimpy &
 python3 getwikihelppage.py Windslash &
 python3 getwikihelppage.py Wizardeye &
 python3 getwikihelppage.py Wizardmark
-python3 getwikihelppage.py Wizards
 python3 getwikihelppage.py Wizlist &
 python3 getwikihelppage.py Wordofrecall &
-python3 getwikihelppage.py Write &
-python3 getwikihelppage.py Xp
+python3 getwikihelppage.py Write
 python3 getwikihelppage.py Xrayvision
-python3 getwikihelppage.py Yell

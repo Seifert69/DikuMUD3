@@ -1,9 +1,36 @@
-<br/>
-<br/>
-Usage: fashion &lt;weapon&gt;<br/>
-Fashion weapon is used to make bows, arrows, traps, and staves (both quarter<br/>
-and fighting). Your skill level and dexterity will affect what you can make<br/>
-and how well you can make it. Note that you need to be in a forest or a wood<br/>
-in order to make something from wood.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Fashion Weapon</h1>
+<p>Skill
+Class: Ranger (guild level 1)
+</p><p>Usage:
+</p>
+<pre>fashion arrow
+fashion quarter staff
+fashion trap
+fashion bow
+fashion fighting staff
+</pre>
+<p>Carves a weapon from a fallen branch: arrows, a quarter staff, a trap, a 
+bow or a fighting staff. You need the wood of a forest, so you can only do 
+it in a forest, and it takes a little while and some endurance. What you 
+can make grows with your skill:
+</p>
+<pre>arrows            from the start
+quarter staff     from 25% skill
+trap              from 50%
+bow               from 75%
+fighting staff    at 100%
+</pre>
+<p>The better your skill, the finer the work: a master's weapons are well 
+crafted and even carry a little magic (see <a cmd='#'>Help Craftsmanship</a>). You can't 
+fashion while fighting, or make two things at once.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Craftsmanship</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>

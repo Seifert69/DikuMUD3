@@ -1,10 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage ventriloquate (unit) (string)<br/><br/>
-<br/>
-This skill gives you the power of ventriloquism. You just give the unit<br/>
-you'd like to speak your words. Beware, this does not always work!<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Ventriloquate</h1>
+<p>Skill
+Class: Thief (guild level 0)
+</p><p>Usage:
+</p>
+<pre>ventriloquate &lt;someone or something&gt; &lt;words&gt;
+</pre>
+<p>Example:
+</p>
+<pre>ventriloquate guard The thief went that way!
+ventriloquate statue Leave this place, mortal!
+</pre>
+<p>Throws your voice, so that someone or something in the room seems to 
+speak your words. If it works, everyone else hears the guard (or the 
+statue) say them, and the one you made speak hears only that someone 
+said something. If it fails, everyone hears you say it, "in a funny way", 
+and knows the trick was yours.
+</p><p>Your brain and charisma, and your skill, decide it against those of the 
+one you make speak; things that can't think are easy to speak through.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Say</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>

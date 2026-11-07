@@ -1,15 +1,36 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Hitpoints are your life energy. When they reach zero you are<br/>
-stunned. If<br/>
-your hitpoints go below zero you will slowly fade away and<br/>
-die unless you<br/>
-are rescued by someone. Hitpoints are<br/>
-lost through damage.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Constitution<br/><br/>
-HPP<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Hit Points</h1>
+<p>Your hit points are your life. Damage takes them away, and you get them 
+back slowly over time (see <a cmd='#'>Help Regenerate</a>), or faster with healing 
+spells, potions and first aid. <a cmd='#'>score</a> shows how many you have of your 
+most.
+</p><p>How many you can have depends on your hit point ability (HPP), one of the 
+abilities you raise as you train: your maximum is three times your HPP, 
+plus 20. Your race and guild decide how easily it grows, and the spell 
+raise hitpoints lifts it for a while. Your constitution decides how fast 
+they come back. A character too old for their race has only 1.
+</p><p>When your hit points run out, you go down and can't act:
+</p>
+<pre> 0 to -2     stunned: your hit points come back, and you get up
+-3 to -5     incapacitated: you bleed, a hit point every half minute
+-6 to -10    mortally wounded: you bleed faster, two every half minute
+-11          dead
+</pre>
+<p>So once you are incapacitated, you die within about three minutes unless 
+someone helps: first aid or a healing spell stops the bleeding by 
+bringing you back up to stunned or better. The fight stops when you go 
+down, but whoever was fighting you can still attack again and finish you 
+off.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Regenerate</a>
+&gt; <a cmd='#'>Help Constitution</a>
+&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help First Aid</a>
+&gt; <a cmd='#'>Help Death</a>
+</pre>
+
+
+
+
+</div>

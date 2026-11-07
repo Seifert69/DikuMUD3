@@ -1,21 +1,31 @@
-<br/>
-Sphere: Electricity<br/><br/>
-<br/>
-Spell Tier: 3<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 30 <br/><br/>
-<br/><br/>
-Usage cast lightning bolt (target)<br/>
-<br/><br/>
-This spell causes a bolt of lightning to arc from the spell caster's <br/>
-hand toward the named target or present target in battle to inflict damage <br/>
-by electricity. The spell requires one free hand. <br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Jolt<br/><br/>
-Electrical Shock<br/><br/>
-Lightning Storm<br/><br/>
-Electricity Resistance<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Lightning Bolt</h1>
+<p>Sphere: Electricity Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 30)
+Mana: 36
+</p><p>Usage:
+</p>
+<pre>cast lightning bolt &lt;target&gt;
+<a cmd='#'>cast lightning bolt</a>   (at whoever you are fighting)
+</pre>
+<p>The caster forks three fingers at the target and utters the words 
+'Ghoules electra', and a bolt of lightning leaps from their hand. The 
+better your magic and your electricity sphere, the harder it strikes. It 
+does best against clothes and light leather and less against heavier 
+armour, and a shield is no use against it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Jolt</a>
+&gt; <a cmd='#'>Help Electrical Shock</a>
+&gt; <a cmd='#'>Help Electricity Resistance</a>
+&gt; <a cmd='#'>Help Electricity Sphere</a>
+</pre>
+
+
+
+
+</div>

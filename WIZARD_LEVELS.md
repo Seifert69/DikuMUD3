@@ -9,7 +9,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 
 | level | rung | adds |
 |---|---|---|
-| **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock` |
+| **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock`, `noshout` (so any immortal can stop a new player spamming shout) |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
 | **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmtreasure` (a random magic item made to order), `gmquest` (an event made a quest, with experience), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |

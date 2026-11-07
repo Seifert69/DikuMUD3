@@ -1,10 +1,35 @@
-<br/>
-<br/>
-Usage: track &lt;player/monster&gt;<br/>
-The skill of tracking enables one to find the direction in which our target<br/>
-has travelled, in that zone.<br/>
-<br/>
-See Also:<br/><br/>
- Hunt<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Track</h1>
+<p>Skill
+Class: Ranger (guild level 6)
+</p><p>Usage:
+</p>
+<pre>track &lt;player or monster&gt;
+</pre>
+<p>Example:
+</p>
+<pre>track deer
+</pre>
+<p>You study the ground for your quarry's tracks and learn which way they 
+went: "You search and see some tracks to the north." Follow them a room 
+at a time, and track again. You may also find that the tracks lead to 
+this very place, or into something here, such as a ship or a cart. Your 
+quarry can be anywhere in the world, though tracks close by are the 
+easiest to find.
+</p><p>Your skill decides whether you can read the tracks, with your brain and 
+level against your quarry's. Each try costs endurance, more in cities, 
+indoors and on ice than in the open. You must be standing, and you can't 
+track on water.
+</p><p>To follow the tracks without stopping, and attack when you find your 
+quarry, use <a cmd='#'>Help Hunt</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hunt</a>
+&gt; <a cmd='#'>Help Locate</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>

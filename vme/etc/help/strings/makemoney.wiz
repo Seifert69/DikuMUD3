@@ -1,0 +1,25 @@
+<div class="mw-parser-output"><h1>Makemoney (230)</h1>
+<p>Usage:
+</p>
+<pre>makemoney &lt;amount&gt; &lt;coin&gt;
+</pre>
+<p>Example:
+</p>
+<pre>makemoney 100 gold
+</pre>
+<p>Creates coins out of nothing, in your purse: up to 1000 at a time. They 
+are added to any coins of that kind you already carry. Leave out the 
+coin, or name one that doesn't exist, and you are shown the list of 
+coins to choose from (see <a cmd='#'>Help Money</a>).
+</p><p>It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Money</a>
+&gt; <a cmd='#'>Wizhelp Load</a>
+</pre>
+
+
+
+
+</div>

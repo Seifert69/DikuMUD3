@@ -1,8 +1,29 @@
-<br/>
-<br/>
-Usage: cast earthquake<br/>
-This offensive spell calls the very earth herself to assist the caster.  A<br/>
-powerful tremor radiates from the caster, sending anyone in the immediate<br/>
-area crashing to the ground.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Earthquake</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 90)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast earthquake</a>
+</pre>
+<p>The druid kneels, hammers both fists on the ground and shouts 'Terra 
+Trembler!', and the earth shakes. Everyone in the room is struck, except 
+the druid, the druid's leader and everyone who follows that leader; other 
+players only when both you and they have signed the Book of Blood. The 
+tremor does about the same harm whatever armour one wears, and a shield is 
+no use against it; those it hits hard are knocked off their feet, and must 
+get up again before they can fight on.
+</p><p>Casting it is an attack and starts a fight with everyone it hits. It can be 
+cast while fighting, and no free hands are needed. It is also found on 
+wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Quicksand</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

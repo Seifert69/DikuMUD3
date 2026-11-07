@@ -1,19 +1,29 @@
-<br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 4<br/><br/>
-Class: Sorcerer <br/><br/>
-Guild Level: 28 <br/><br/>
-<br/>  <br/>
-Usage cast improved identify (target)<br/><br/>
-*n<br/>
-This spell will enable the caster to get a great deal of information about <br/>
-some items. The information they would get if they used the lower IDENTIFY<br/>
-spell and any further information available about the object upon which the <br/>
-spell is cast. This might include bonuses or special abilities that the item <br/>
-might have.<br/>
-<br/><br/>
-See Also:<br/><br/>
-Identify<br/><br/>
-Detection Sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Improved Identify</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 4
+Class: Conjurer (guild level 21), Sorcerer (guild level 28)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast improved identify &lt;object&gt;
+</pre>
+<p>Tells you everything identify does (see <a cmd='#'>Help Identify</a>), and more:
+</p>
+<ul><li>the exact craftsmanship and magic numbers of weapons and armour,</li>
+<li>which race a weapon is made to slay,</li>
+<li>the spells stored in potions, scrolls, wands and staffs,</li>
+<li>how strongly a light shines, or a darkness dims.</li></ul>
+<p>It works on things in the room, in your inventory, or that you wear. You 
+must be standing. It is also found on wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Identify</a>
+&gt; <a cmd='#'>Help Evaluate</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>

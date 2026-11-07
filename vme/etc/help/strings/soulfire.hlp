@@ -1,15 +1,28 @@
-Sphere: Heat Sphere<br/><br/>
-<br/>
-This is a level 4 spell:<br/>
-<br/>
-<br/>
-Usagecast soulfire (target)<br/><br/>
-<br/><br/>
-This spell inflicts damage by releasing hellfire and brimstone<br/>
-(heat) on a target.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-Lava Flow<br/><br/>
-Hellfire<br/><br/>
-Brimstone<br/><br/>
+<div class="mw-parser-output"><h1>Soulfire</h1>
+<p>Sphere: Fire Sphere
+Class: Dark Knight (guild level 100)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast soulfire &lt;target&gt;
+<a cmd='#'>cast soulfire</a>   (at whoever you are fighting)
+</pre>
+<p>The last and fiercest of the dark knight's fires: a fire that burns the very 
+soul of the target. The better your power and fire sphere, the more it burns. 
+It does better against clothes than against plate. A shield takes some of 
+it, but can't stop it.
+</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Lava Flow</a>
+&gt; <a cmd='#'>Help Hellfire</a>
+&gt; <a cmd='#'>Help Brimstone</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

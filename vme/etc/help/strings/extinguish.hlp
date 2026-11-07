@@ -1,12 +1,24 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage light (torch)|(lantern)<br/><br/>
-<br/>
-This command enables you to extinguish a torch or a lamp or whatever<br/>
-light source you are carrying.<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Light<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Extinguish</h1>
+<p>Usage:
+</p>
+<pre>extinguish &lt;torch or lantern&gt;
+</pre>
+<p>Example:
+</p>
+<pre>extinguish torch
+</pre>
+<p>Puts out a burning torch, lantern or other light, to save what is left of 
+it for later: a light burns for so many hours, and then it is used up. 
+Light it again with <a cmd='#'>Help Light</a>. It works on lights you carry and on 
+lights lying in the room.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Light</a>
+&gt; <a cmd='#'>Help Torch</a>
+</pre>
+
+
+
+
+</div>

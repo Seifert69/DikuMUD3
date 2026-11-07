@@ -1,14 +1,31 @@
-<br/>
-<br/>
-Usage <br/><br/>
-slip &lt;item&gt; to &lt;player/mob&gt;<br/>
-<br/>
-Thief skill<br/>
-Allows you to slip an item to a player or mob without being<br/>
-detected. only the player recieving it will see the act.<br/>
-<br/>
-<br/><br/>
-See Also:<br/><br/>
-plant<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Slip</h1>
+<p>Skill
+Class: Thief (guild level 15)
+</p><p>Usage:
+</p>
+<pre>slip &lt;item&gt; to &lt;someone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>slip note to Gandalf
+</pre>
+<p>Hands something to someone secretly: they know what you gave them, but 
+nobody else in the room should notice. It costs a little endurance, and 
+you must be standing.
+</p><p>Your skill and dexterity decide it. Fumble, and the item slips from your 
+hands to the floor, for all to see. Even when it works, other players 
+in the room may spot it: each of them gets a chance, against their own 
+dexterity and skill at slipping, and immortals always see. You can't slip 
+anything to someone whose hands are full, or who can carry no more.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Plant</a>
+&gt; <a cmd='#'>Help Give</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>

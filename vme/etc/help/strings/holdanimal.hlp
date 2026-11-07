@@ -1,6 +1,29 @@
-<br/>
-<br/>
-Usage: cast hold animal &lt;animal&gt;<br/>
-The caster uses this spell to freeze an animal during combat for a few rounds.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Hold Animal</h1>
+<p>Sphere: Mind Sphere
+Class: Ranger (guild level 17, up to 50%)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast hold animal &lt;animal&gt;
+</pre>
+<p>The caster spits upon the ground and utters 'Animalius desi', and magic 
+engulfs an animal (a beast, bird, reptile, amphibian, insect or worm), 
+leaving it unable to fight. It misses its next five combat rounds, and it 
+can't flee in panic meanwhile.
+</p><p>The animal resists with its mind, and the spell often fails. Casting it is 
+an attack, so the animal will fight you if it wasn't already. It works on 
+nothing but animals: for others, see hold monster and hold undead. It is 
+also found on wands, scrolls and potions.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hold Monster</a>
+&gt; <a cmd='#'>Help Hold Undead</a>
+&gt; <a cmd='#'>Help Charm Animal</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

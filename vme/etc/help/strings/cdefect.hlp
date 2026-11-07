@@ -1,15 +1,25 @@
-Usage cdefect<br/>
-Example: cdefect<br/>
-<br/>
- This gives the member the right and the ability to remove himself from<br/>
-the clan.<br/>
-<br/>
-Warning:<br/>
-<br/>
-If you are just trying this command you better have a Clan Master or Clan<br/>
-Lord around to take you back in the clan<br/>
-<br/>
-<br/>See Also:<br/><br/>
-caccept<br/>
-cremove<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cdefect</h1>
+<p>Usage:
+</p>
+<pre>cdefect now
+</pre>
+<p>Takes you out of your clan, of your own free will. To make sure you mean 
+it, you must type the word now after it: cdefect alone only tells you how.
+</p><p>When you leave, your title becomes "Clan Defector", and your hometown goes 
+back to the temple of Udgaard. The clan's tattoo stays on your skin. If you 
+change your mind, only a clan Master, Lord or member of rank 10 can take 
+you back in (see <a cmd='#'>Help Caccept</a>).
+</p><p>A clan Master can't defect: first hand the clan over to someone else, with 
+cappoint &lt;member&gt; master (see <a cmd='#'>Help Cappoint</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Caccept</a>
+&gt; <a cmd='#'>Help Cremove</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

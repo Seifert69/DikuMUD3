@@ -1,19 +1,39 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Weapons are divided into many different categories. Your ability in such a<br/>
-category decide how well you handle attacking with such a weapon type, but<br/>
-also how well you  defend against that weapon type. If you are good at<br/>
-handling a specific weapon, you will defend against such a weapon as well<br/>
-as your ability goes.<br/>
-<br/><br/><br/>
-To see which type your weapon is simply look at<br/>
-it (in shops, the type is listed on the right hand side of the 'list').<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Warrior<br/><br/>
-Status<br/><br/>
-Practice<br/><br/>
-Weapons list<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Weapons</h1>
+<p>Every weapon is of a type, and each type is a skill of its own: long 
+sword, dagger, battle axe, spear, and so on. Look at a weapon to see its 
+type ("The long sword clearly requires a long sword fighting style"); in 
+shops it is shown in brackets in the list.
+</p><p>Your skill in a type decides two things:
+</p>
+<ul><li><b>How well you attack with it.</b> A weapon you haven't practiced is clumsy in your hands.</li>
+<li><b>How well you defend against it.</b> Half your skill in the weapon your opponent swings helps you parry it, so knowing a weapon also guards you against it.</li></ul>
+<p>Practice weapon skills at your guild (see <a cmd='#'>Help Practice</a>); each guild 
+teaches its own weapons (see Help Fighter Weapons, Help Thief Weapons and 
+the like). <a cmd='#'>status weapons</a> shows what you know.
+</p><p>The types fall into six families:
+</p>
+<ul><li><b>Axes and hammers</b>: battle axe, hand axe, war mattock, adze mattock, maul, war hammer, brass knuckles.</li>
+<li><b>Swords</b>: great sword, claymore, long sword, broad sword, falchion, scimitar, short sword, rapier, main gauche, stiletto, dagger, sickle.</li>
+<li><b>Clubs and maces</b>: club, battle club, mace, battle mace, morning star, flail.</li>
+<li><b>Polearms</b>: quarterstaff, spear, javelin, lance, trident, halberd, bardiche, scythe.</li>
+<li><b>Natural</b>: fist, kick, elbow and knee, and the claws, bites and stings of beasts.</li>
+<li><b>Special</b>: whip, and the bow, crossbow and sling, which shoot (see <a cmd='#'>Help Shoot</a>).</li></ul>
+<p>Most weapons lean on strength, with some dexterity; the whip, the sickle 
+and the bows and slings lean on dexterity (see <a cmd='#'>Help Strength</a> and 
+<a cmd='#'>Help Dexterity</a>). Two-handed weapons are slower and leave no hand free 
+for a shield; light ones strike faster. Each weapon also has a help page 
+of its own: help and the weapon's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Practice</a>
+&gt; <a cmd='#'>Help Strength</a>
+&gt; <a cmd='#'>Help Dexterity</a>
+&gt; <a cmd='#'>Help Shoot</a>
+</pre>
+
+
+
+
+</div>

@@ -1,10 +1,19 @@
 <div class="mw-parser-output"><h1>Boards (230)</h1>
-<p>Usage: 
+<p>Usage:
 </p>
-<pre> boards
+<pre>boards
 </pre>
-<p>Displays name and room title for each board in the game.
+<p>Lists the boards in the game: each board's name, and the room it is in 
+(each line reads: the board, "in", the room). A board is added to the 
+list when it is loaded, so after a reboot only the boards that have been 
+loaded since appear.
+</p><p>It is logged. For how players use a board, see <a cmd='#'>Help Boards</a>.
+</p><p><br />
+See Also:
 </p>
+<pre>&gt; <a cmd='#'>Help Boards</a>
+&gt; <a cmd='#'>Help Write</a>
+</pre>
 
 
 

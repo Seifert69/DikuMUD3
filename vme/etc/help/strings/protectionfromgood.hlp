@@ -1,17 +1,30 @@
-<br/>
-Sphere: Protection <br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Necromancer<br/> <br/>
-Guild Level: 33<br/><br/>
-<br/><br/>
-Usage cast protection from good (target)<br/><br/>
-<br/><br/>
-When cast this spell will form an aura of protection around the target <br/>
-character. This divine aura will deter those mobs that are aligned with <br/>
-the gods of goodness from attacking, provided the aura is strong enough<br/>
-to repel them.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-protection sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Protection from Good</h1>
+<p>Sphere: Protection Sphere
+Spell Tier: 3
+Class: Dark Knight (guild level 32), Necromancer (guild level 33)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast protection from good &lt;target&gt;
+<a cmd='#'>cast protection from good</a>   (on yourself)
+</pre>
+<p>Wards the target against good. Whenever someone of good alignment attacks 
+them, monster or player, the target defends better: against blows, with their 
+shield, and against spells alike. It doesn't keep anyone from attacking.
+</p><p>The better your protection sphere, the longer it lasts: from a minute up to 
+several minutes. It doesn't add up on someone who already has it. A dispel 
+evil cast at the warded one breaks the ward first. You must be standing. It 
+is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Protection from Evil</a>
+&gt; <a cmd='#'>Help Dispel Evil</a>
+&gt; <a cmd='#'>Help Alignment</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>

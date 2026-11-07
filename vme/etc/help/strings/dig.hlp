@@ -1,12 +1,21 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage dig<br/><br/>
-<br/>
-Dig for items buried in the dust. With this command you can uncover buried<br/>
-items.<br/>
-<br/><br/>
-See Also:<br/><br/>
-Bury<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Dig</h1>
+<p>Usage:
+</p>
+<pre>dig
+</pre>
+<p>Digs in the ground where you stand. If anything is buried here, you dig it 
+up: one thing each time you dig, so dig again if more was buried. Anyone 
+can dig, not only the one who buried it. Sometimes what you find is not a 
+thing at all, but someone who was buried alive.
+</p><p>Things buried with <a cmd='#'>Help Bury</a> rot away after an hour of real time, so 
+don't leave them too long.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Bury</a>
+</pre>
+
+
+
+
+</div>

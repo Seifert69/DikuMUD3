@@ -1,13 +1,27 @@
-Usage cinfo<br/>
-Example: cinfo<br/>
-<br/>
-This command is the clans roster list.  It shows who the master is, who the lord<br/>
-is if there is one appointed, and a list of members.  The '*' denotes if a<br/>
-player is on line.  It also shows what positions the Clan members hold.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-clan quartermasters<br/>
-clan treasures<br/>
-clan lords<br/>
-clan master<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cinfo</h1>
+<p>Usage:
+</p>
+<pre>cinfo                  the whole roster of your clan
+cinfo master           who leads the clan
+cinfo lord             the clan's lords
+cinfo treasurer        who keeps the treasury
+cinfo quartermaster    who keeps the equipment
+</pre>
+<p>Shows the members of your clan, with each one's rank title and position 
+(Master, Lord, Treasurer, Quartermaster). A * marks the members who are in 
+the game right now. The words can be shortened, for example cinfo treas.
+</p><p>Any member of a clan can use cinfo. To see all the clans, see 
+<a cmd='#'>Help Clist</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clist</a>
+&gt; <a cmd='#'>Help Cappoint</a>
+&gt; <a cmd='#'>Help Crank</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

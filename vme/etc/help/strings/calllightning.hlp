@@ -1,14 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast spell call lightning (target)<br/><br/>
-<br/>
-This spell requires bad weather.  The caster summons lightning from the sky<br/>
-to the target.  This spell will inflict extreme damage on the target,<br/>
-however, if it fails there is a small chance the lightning might hit someone<br/>
-other than the specified target.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Call Lightning</h1>
+<p>Sphere: Electricity Sphere
+Class: none (no guild teaches it)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast call lightning &lt;target&gt;
+use a wand, staff or scroll of call lightning
+</pre>
+<p>The caster raises both arms to the heavens, shouts 'Sholua electra!' and 
+calls a bolt of lightning down on the target. It needs bad weather: under 
+the open sky, while it is at least raining. It is far stronger in a 
+thunderstorm, when lightning is already in the sky; in plain rain it is 
+much weaker. Indoors, or anywhere the weather doesn't reach, it can't be 
+cast at all.
+</p><p>It does best against clothes and leather and less well against chain and 
+plate, and a shield is no use against it. Casting it is an attack and 
+starts a fight. You must be standing. No guild teaches it, but it turns up 
+on wands, staffs and scrolls among random treasure.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Storm Call</a>
+&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Lightning Storm</a>
+&gt; <a cmd='#'>Help Electricity Sphere</a>
+</pre>
+
+
+
+
+</div>

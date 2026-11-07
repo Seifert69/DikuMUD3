@@ -1,31 +1,38 @@
-<br/>
-<br/><br/>
-Sphere: Creation<br/><br/>
-<br/>
-Spell Tier: 3 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 75 <br/> <br/>
-<br/><br/>
-Usage: cast raise skeletal champion corpse<br/>
-<br/><br/>
-More than twice as powerful as zombies or ordinary skeletal warriors, skeletal<br/>
-champions are a force to be reckoned with. A cleric can raise one from<br/>
-the corpse of their dead enemy. No free hands are needed to create this<br/>
-powerful servant.<br/><br/>
-<br/><br/>
-NOTE: This may be performed only upon corpses of mobiles (also known as<br/>
-NPCs). Animating a player's corpse is in violation of the PK rules and<br/>
-is subject to severe punishment.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-raise skeleton<br/><br/>
-animate dead<br/><br/>
-raise horde<br/><br/>
-control undead<br/><br/>
-PK<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Raise Skeletal Champion</h1>
+<p>Sphere: Creation Sphere
+Class: Necromancer (guild level 75)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast raise skeletal champion &lt;corpse&gt;
+tell champion &lt;command&gt;
+tell horde &lt;command&gt;     (all your undead at once)
+</pre>
+<p>The necromancer cuts themself, bleeds upon a corpse and chants 'Mae 
+muera aneme', and its flesh turns to dust as a skeletal champion rises 
+from the bones. The champion is far stronger than a zombie or a skeletal 
+warrior (see <a cmd='#'>Help Raise Skeleton</a>): a level 15 warrior of bone. It 
+follows its maker and carries what the corpse held.
+</p><p>Command it with tell, just as with <a cmd='#'>Help Animate Dead</a>. It lasts a few 
+minutes, up to a quarter of an hour or more for a master, then crumbles 
+to dust, leaving what it carried. A strong dispel magic ends it sooner. It 
+never attacks players, unless both you and they have signed the Book of 
+Blood.
+</p><p>Only corpses of monsters will rise: a player's corpse won't. Corpses of 
+insects and other crawling things, of the undead, demons and devils, 
+elementals, golems, gargoyles and the like crumble to dust instead. You 
+must be standing, and no free hands are needed. It is also found on 
+wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Raise Skeleton</a>
+&gt; <a cmd='#'>Help Animate Dead</a>
+&gt; <a cmd='#'>Help Raise Horde</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+</pre>
+
+
+
+
+</div>

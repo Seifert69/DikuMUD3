@@ -1,9 +1,34 @@
-<br/>
-<br/>
-Usage: cast summon animal &lt;animal name&gt;<br/>
-Mighty nature magic users can summon animals from the wilderness to aid them.<br/>
-The animal will then follow and obey the master.<br/>
-<br/>
-See Also:<br/><br/>
- Charm animal<br/>
-<br/>
+<div class="mw-parser-output"><h1>Summon Animal</h1>
+<p>Sphere: Summoning Sphere
+Class: Ranger (guild level 40, up to 70%)
+Mana: 40
+</p><p>Usage:
+</p>
+<pre>cast summon animal &lt;animal&gt;
+tell &lt;animal&gt; &lt;command&gt;
+</pre>
+<p>The caster utters 'Ad voce vene', and an animal from anywhere in the 
+world appears in answer to the call, wakes and follows its summoner. It 
+serves just as a charmed animal does (see <a cmd='#'>Help Charm Animal</a>): command it 
+with tell, for example tell bear kill orc. It won't attack another player 
+unless both of you have signed the Book of Blood, and after a while it 
+returns to the wild; a strong dispel magic ends the service at once.
+</p><p>Only animals answer: beasts, birds, reptiles, amphibians, insects and 
+worms. The animal resists with its brain against yours and your skill in 
+the spell. You must be alone (immortals aside), out in the open, and you 
+can have only one animal in your service at a time. Some places, at 
+either end, prevent the summoning. You must be standing. It is also found 
+on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Charm Animal</a>
+&gt; <a cmd='#'>Help Locate Animal</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Ranger Spells</a>
+</pre>
+
+
+
+
+</div>

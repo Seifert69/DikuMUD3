@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Clan Treasurer</h1>
+<p>Usage (for the clan Master, or a member of rank 25):
+</p>
+<pre>cappoint &lt;member&gt; treasurer
+</pre>
+<p>Example:
+</p>
+<pre>cappoint fizban treasurer
+</pre>
+<p>A treasurer is a trusted member of the clan who may take money out of the 
+clan's treasury (<a cmd='#'>Help Cwithdraw</a>). Any member can put money in 
+(<a cmd='#'>Help Cdeposit</a>) and see how much there is (<a cmd='#'>Help Cbalance</a>); only the 
+treasurers and the clan Master can take it out. A clan can have several 
+treasurers. To take the position away again, see <a cmd='#'>Help Cdepose</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cwithdraw</a>
+&gt; <a cmd='#'>Help Cappoint</a>
+&gt; <a cmd='#'>Help Clan Quartermaster</a>
+&gt; <a cmd='#'>Help Clan Master</a>
+</pre>
+
+
+
+
+</div>

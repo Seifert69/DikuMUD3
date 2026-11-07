@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Petrify (240)</h1>
+<p>Usage:
+</p>
+<pre>petrify &lt;player or monster&gt;
+</pre>
+<p>Turns someone to stone by your gaze: a punishment, or a scene. The room 
+sees you gaze into their eyes, and they turn to stone.
+</p><p><b>A player</b> is taken out of play: a statue of them stands where they 
+were, and they are held in a room apart until you petrify them again. 
+Then they return to flesh where the statue stands (or where they were, if 
+the statue is gone). A player who is dead at the moment can't be 
+petrified; wait until they are back.
+</p><p><b>A monster</b> is replaced by a statue, for good.
+</p><p>It works on anyone in the game of a lower level than yours, but not on 
+things. It is logged. Not to be confused with the druids' petrify spell 
+(see <a cmd='#'>Help Petrify</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Freeze</a>
+&gt; <a cmd='#'>Help Petrify</a>
+</pre>
+
+
+
+
+</div>

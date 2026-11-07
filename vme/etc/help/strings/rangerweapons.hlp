@@ -1,29 +1,32 @@
-<br/>
-<br/>
-Rangers are skilled in many weapons, including ranged weapons. Here are the<br/>
-weapons:<br/>
-<br/>
-                 Weapon                          Level<br/>
-                 -------------------             -----<br/>
-                 Fist                              0<br/>
-                 Sling                             1<br/>
-                 Rapier                            1<br/>
-                 Dagger                            3<br/>
-                 Club                              4<br/>
-                 Short sword                       5<br/>
-                 Quarter staff                     5<br/>
-                 Hand axe                          6<br/>
-                 Kick                              8<br/>
-                 Mace                              9<br/>
-                 Bow                              10<br/>
-                 Fighting staff                   12<br/>
-                 Spear                            14<br/>
-                 Long sword                       16<br/>
-                 Crossbow                         20<br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
- Ranger<br/>
- Ranger Skills<br/>
- Ranger Spells<br/>
-<br/>
+<div class="mw-parser-output"><h1>Ranger Weapons</h1>
+<p>The weapon skills the Rangers' guild teaches, in Alquenburg. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name           Level   Up to
+Fist               0   70%
+Rapier             1   100%
+Sling              1   100%
+Dagger             3   80%
+Club               4   100%
+Quarterstaff       5   100%
+Short Sword        5   85%
+Hand Axe           6   60%
+Kick Small         8   90%
+Mace               9   70%
+Bow               10   100%
+Spear             14   100%
+Long Sword        16   100%
+Crossbow          20   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Ranger Skills</a>
+&gt; <a cmd='#'>Help Ranger Spells</a>
+&gt; <a cmd='#'>Help Rangers</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>

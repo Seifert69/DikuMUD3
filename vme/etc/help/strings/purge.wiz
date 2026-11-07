@@ -1,9 +1,27 @@
-<br/>
-Usage:<br/>
-   &gt;purge [&lt;unit&gt;]<br/>
-<br/>
-This wiz-command enables you to completely remove any unit from the world. Even<br/>
-if a player is in the menu-system, you can remove him. The command is rather<br/>
-violent, and just kick any player off. Only one limit is set, you may not purge<br/>
-rooms. With no argument, you purge everything but players at the location.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Purge (230)</h1>
+<p>Usage:
+</p>
+<pre>purge
+purge &lt;someone or something&gt;
+</pre>
+<p><b>purge</b> alone cleans the room: every monster and every thing that can 
+be picked up is destroyed, in scorching flames. Players, things fixed in 
+place, and players' corpses are spared.
+</p><p><b>purge &lt;name&gt;</b> disintegrates one monster, thing or player in the room 
+(only here: name something you can see). A corpse is destroyed with 
+everything in it, and its saved copy deleted, so it won't come back after 
+a reboot. Purging a player takes level 245, and 
+only works on players of a lower level than yours: it removes them from 
+the game at once.
+</p><p>Rooms can't be purged. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Load</a>
+&gt; <a cmd='#'>Wizhelp Corpses</a>
+</pre>
+
+
+
+
+</div>

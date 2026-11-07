@@ -1,11 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage cast heal (target)<br/><br/>
-<br/><br/>
-Cures fatal wounds on humanoid or mammal targets.<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Heal</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 30)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast heal &lt;target&gt;
+<a cmd='#'>cast heal</a>   (on yourself)
+</pre>
+<p>The great healing spell: it gives back a large part of the target's lost hit 
+points, many times what the cure spells do, and even mortal wounds close. The 
+better your divine sphere, the more it heals.
+</p><p>It works on humanoids and mammals, and always on yourself. You can cast it 
+while fighting, and it is also found on scrolls, potions and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cure Light Wounds</a>
+&gt; <a cmd='#'>Help Cure Serious Wounds</a>
+&gt; <a cmd='#'>Help Aid</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

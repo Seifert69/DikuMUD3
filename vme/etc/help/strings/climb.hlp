@@ -1,12 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage climb (OBJECT)<br/><br/>
-OR<br/>
-climb (OBJECT) (DIRECTION)<br/><br/>
-Climb allows you to climb an object. Sometimes,<br/>
-if you do not have enough skill in climbing<br/>
-you may fall and take damage.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Climb</h1>
+<p>Skill
+Class: Thief (guild level 0), Assassin (guild level 0)
+</p><p>Usage:
+</p>
+<pre>climb &lt;direction&gt;
+climb up
+</pre>
+<p>Some ways can't be walked, only climbed: a cliff, a rope, a tree, a steep 
+wall. To go that way, climb in its direction; on an ordinary way, climb 
+tells you to just walk. Each climb takes 6 endurance, and you need at least 10 to try.
+</p><p>Your skill and your dexterity decide it, against how hard the climb is. If 
+you fail, you slip and fall, and the worse you fail, the more it hurts. 
+Climbing drunk is much harder. You can't climb while inside something, 
+such as a boat or a wagon, and a closed door stops you.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dexterity</a>
+&gt; <a cmd='#'>Help Thieves</a>
+</pre>
+
+
+
+
+</div>

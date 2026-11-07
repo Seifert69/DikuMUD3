@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Reset (230)</h1>
+<p>Usage:
+</p>
+<pre>reset
+reset &lt;zone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>reset udgaard
+</pre>
+<p>Resets a zone at once, instead of waiting for its next reset: the zone's 
+reset commands are carried out, loading the monsters and things that are 
+missing, up to the numbers its builder set. Without a name, it 
+resets the zone you are in. Nothing that is already there is removed: to 
+clear a room first, use <a cmd='#'>Wizhelp Purge</a>.
+</p><p>It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Purge</a>
+&gt; <a cmd='#'>Wizhelp Load</a>
+</pre>
+
+
+
+
+</div>

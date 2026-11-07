@@ -1,19 +1,35 @@
-Usage: donate &lt;item&gt; clan<br/><br/>
-Example: donate boots clan<br/>
-<br/>
-You can donate items to your clan chest from anywhere on the mud.  Remember that<br/>
-the chest will only store 25 items permanently.<br/>
-<br/>
-Note:<br/>
-You cannot donate or store containers such as bags that already contain items in<br/>
-the clan chest. Containers must be empty to be stored in the clan chest. Also<br/>
-items for quests should never be stored in clan chests.  Some of these may be<br/>
-world maxed items and if found in a clan chest, the chest may be purged of all<br/>
-contents on the first offense. If the problem continues it can lead to a clans <br/>
-removal.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cequipment<br/><br/>
-cstore<br/><br/>
-cunstore<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Clan Donate</h1>
+<p>Usage:
+</p>
+<pre>donate &lt;item&gt; clan
+</pre>
+<p>Example:
+</p>
+<pre>donate boots clan
+</pre>
+<p>Sends an item from your inventory straight into your clan chest, from 
+anywhere in the world. Any member of a clan can donate; the item lies in 
+the chest for anyone of the clan to take, and it is kept when the game 
+reboots. The chest takes up to 50 donated items; when it is full, you can't 
+donate more until someone takes something out.
+</p><p>A container must be empty to be donated. You can't donate while fighting, 
+or while standing in one of the town donation rooms. Trash can't be 
+donated.
+</p><p>Quest items don't belong in a clan chest: some of them are limited in 
+number in the world, and a chest found holding them may be emptied, and a 
+clan that keeps doing it may be removed.
+</p><p>For the clan's secret storage, where only the Master and the 
+quartermasters can take things out, see <a cmd='#'>Help Cstore</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Donate</a>
+&gt; <a cmd='#'>Help Cstore</a>
+&gt; <a cmd='#'>Help Cequipment</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

@@ -1,31 +1,25 @@
-<div class="mw-parser-output"><p>Initially you can choose to become a member of any four
-login guilds (there are many more, but they are not suited for novice
-players). The guild determines what skills you can learn
-and have a major impact on how you get yourself out of trouble.
-If you would like to start in a guild that is not listed in the initial
-log in screen simply pick a login guild that would compliment the guild
-you want to join. When you log into the game go to the guild you picked
-and quit it, you may then join the guild of your choice with no penalty.
+<div class="mw-parser-output"><h1>Login Guilds</h1>
+<p>A new character starts in one of four guilds, the four classic kinds of 
+adventurer. Each has its guild hall in Midgaard, and it sets your first profession:
+</p>
+<ul><li><b>Fighter</b>: weapons and armour, standing in the front line.</li>
+<li><b>Thief</b>: stealth, sneaking and quick fingers.</li>
+<li><b>Healer</b>: divine magic that heals and protects.</li>
+<li><b>Conjurer</b>: magic that strikes from afar.</li></ul>
+<p>Many more guilds are out in the world. You can join them later at their guild 
+masters, often after a quest (see <a cmd='#'>Help Join</a>), and stay in your first guild 
+too. Your profession can change as well, once you reach a high enough level 
+(see <a cmd='#'>Help Professions</a>).
 </p><p><br />
-</p><p>See Also:
+See Also:
 </p>
-<pre> <a cmd='#'>Help Join</a>
- <a cmd='#'>Help Learn</a>
- <a cmd='#'>Help Skills</a>
- <a cmd='#'>Help Guild</a>
- <a cmd='#'>Help Fighter</a>
- <a cmd='#'>Help Thief</a>
- <a cmd='#'>Help Conjurer</a>
- <a cmd='#'>Help Healer</a>
-</pre>
-<p>See Also:
-</p>
-<pre> <a cmd='#'>Help Guild paths</a>
- <a cmd='#'>Help Rebirth</a>
- <a cmd='#'>Help guilds</a>
- <a cmd='#'>Help skills</a>
- <a cmd='#'>Help spells</a>
- <a cmd='#'>Help weapons</a>
+<pre>&gt; <a cmd='#'>Help Guilds</a>
+&gt; <a cmd='#'>Help Professions</a>
+&gt; <a cmd='#'>Help Join</a>
+&gt; <a cmd='#'>Help Fighters</a>
+&gt; <a cmd='#'>Help Thief</a>
+&gt; <a cmd='#'>Help Healers</a>
+&gt; <a cmd='#'>Help Conjurer Guild</a>
 </pre>
 
 

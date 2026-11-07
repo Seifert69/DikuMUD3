@@ -1,17 +1,25 @@
-<br/>
-<br/>
-Please note that Valhalla likes to have UNIQUE zones.  If the zone is on another<br/>
-mud please do not submit it here.  When you create an area for use with<br/>
-Valhalla, you give to us the right to use it and modify it on a permanent basis,<br/>
-because of the large effort required by us to help you build the zone. We retain<br/>
-the right to use (or not use) any such area, you naturally retain the copyright.<br/>
-We will not give your area away without your permission first and we kindly ask<br/>
-that you do the same for us. If we find your zones on other muds we will reserve<br/>
-the right to remove your zone from our mud and demote you any levels you and or<br/>
-gratuities you may have received for them.<br/>
-<br/><br/><br/>
-If you wish to build on the mud contact an Administrator at admin@valhalla.com <br/>
-<br/>
-For a list of current creators type HELP BUILDERS or HELP CREATORS<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Building</h1>
+<p>Valhalla is built by its players. Every zone, monster, object and quest in 
+the game is written in the zone files of DikuMUD3, which are open source: 
+anyone can read them, change them, and send in a new zone or a fix.
+</p><p>To start building:
+</p>
+<ul><li>The source of the whole game, zones included, is on GitHub: <a rel="nofollow" class="external free" href="https://github.com/Seifert69/DikuMUD3">https://github.com/Seifert69/DikuMUD3</a></li>
+<li>The DikuMUD wiki explains the zone language and DIL, the scripting language of the zones: <a rel="nofollow" class="external free" href="https://wiki.dikumud.com/wiki/DikuMUD">https://wiki.dikumud.com/wiki/DikuMUD</a> (start with "Getting started - Step by Step").</li>
+<li>Talk with other builders on the builder channel (<a cmd='#'>comm add builder</a>; it is relayed to the game's Discord server).</li></ul>
+<p>Valhalla likes unique zones: please don't send in a zone that is already on 
+another mud. For a list of the builders who made the world, see 
+<a cmd='#'>Help Creators</a>. The agreement builders signed in the old days is kept in 
+<a cmd='#'>Help Builder Agreement</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Creators</a>
+&gt; <a cmd='#'>Help Builder Agreement</a>
+&gt; <a cmd='#'>Help Comm</a>
+</pre>
+
+
+
+
+</div>

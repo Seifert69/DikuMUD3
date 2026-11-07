@@ -1,0 +1,36 @@
+<div class="mw-parser-output"><h1>Wizinv (230)</h1>
+<p>Usage:
+</p>
+<pre>wizinv                     (on at level 219, or off)
+wizinv &lt;level&gt;             (0 for off)
+wizinv &lt;something&gt; [&lt;level&gt;]
+</pre>
+<p>Examples:
+</p>
+<pre>wizinv
+wizinv 240
+wizinv chest 230
+</pre>
+<p>Makes you wizard-invisible: no one below the level you choose can see 
+you, not even with see invisible. wizinv alone makes you invisible to 
+everyone below level 220 (your level is set to 219), or makes you 
+visible again if you were invisible. With a number, you choose the 
+level; 0 makes you visible.
+</p><p>You can do the same to something or someone else in the world: name it, 
+and give a level, or none to switch it between 219 and visible. You can't 
+choose a level above your own.
+</p><p>Gods see "(wizinv)" after invisible things in their inventory, and a * 
+in <a cmd='#'>Wizhelp Users</a>. While you are invisible above level 200, your words 
+on the wizline only reach gods of your level of invisibility and up (see 
+<a cmd='#'>Wizhelp Wiz</a>). It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Users</a>
+&gt; <a cmd='#'>Wizhelp Wiz</a>
+</pre>
+
+
+
+
+</div>

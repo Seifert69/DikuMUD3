@@ -1,35 +1,45 @@
-<div class="mw-parser-output"><h1>Law System</h1>
-<p>An entire law system is built into Valhalla. All players and all monsters
-belonging to any major cities, castles and villages are protected by the
-law. You are not allowed to kill or steal from people which are protected,
-unless they are caught in the act of stealing or killing PROTECTED characters.
-</p><p>If you witness a crime you can accuse the person which committed the crime
-at the city guard Captain. The Captain is usually located at the city guard
-headquarters. If a protected NPC witness a crime it will walk to the captain
-and accuse the offender.
-</p><p>If you have committed a certain number of crimes the guards may attempt to
-arrest you. Once they handcuff you it is possible to attempt an escape by
-typing 'break' to attempt breaking the handcuffs.
-</p><p>If you have committed several crimes after having been declared 'wanted'
-you will be 'wanted dead or alive'. This means that you are no longer
-protected by the law system. At this point there will be a reward on your
-head, offering both money and experience for your death. All guards attack
-on sight. Players are allowed to kill you.
-</p><p>Once in jail you have to wait for some pretty strong friends to free
-you or for a long time to pass.
-</p><p>Your misdeeds are forgotten if you get killed or when you have served
-your jail sentence. But beware *any* crime reported after being cleared
-will make you a criminal instantly.
+<div class="mw-parser-output"><h1>Laws</h1>
+<p>Midgaard and Udgaard keep the law, each in its own lands; everywhere 
+else, the King's Castle included, falls under Midgaard's law. The law 
+protects every player who is in good standing, and many townsfolk: 
+shopkeepers, guards and others marked as protected. Killing a protected 
+character, or being caught stealing from one, is a crime.
+</p><p><b>Self-defence.</b> Whoever attacks a protected character first, or 
+casts a harmful spell at one, may be killed without crime while they stay 
+in that room; so may a thief who is caught. Guards also treat evil 
+creatures as fair game.
+</p><p><b>Witnesses and accusing.</b> Everyone in the room who can see the deed 
+witnesses the crime, and is told so. A protected townsperson who saw it 
+walks to the captain and accuses you by themselves; a player must go to 
+the captain of the city guard and accuse you there (see <a cmd='#'>Help Accuse</a>). 
+A player's memory of a crime lasts two weeks.
+</p><p><b>Your record.</b> Each accusation adds to your record: 3 for stealing, 
+8 for murder. With any record at all you lose the protection of the law, 
+and on 32 or more you are <b>wanted</b> (an outlaw): guards who see you 
+arrest you. On 64 or more you are <b>wanted dead</b>: there is a reward on 
+your head, and guards attack you on sight. Any accusation also puts a 
+reward on your head, larger the higher your level and record. The board 
+in the captain's office lists who is wanted.
+</p><p><b>Arrest and jail.</b> A guard who arrests you puts you in handcuffs: you 
+can do nothing but look and talk while you are led to the captain. He 
+locks your belongings away and puts you in jail for about an hour of real 
+time. When you are released, you get your things back and that city's 
+record against you is cleared. Escape, and you are wanted dead.
+</p><p><b>Paying for it.</b> When you die, all is forgiven: your record is wiped, 
+the rewards on you are gone, and you are under the law's protection 
+again. Your killer can cut the head off your corpse (see <a cmd='#'>Help 
+Decapitate</a>) and bring it to the captain for the reward. But the 
+witnesses still remember, and may accuse you again.
+</p><p>Players may only kill one another if both have signed the Book of Blood, 
+wanted or not (see <a cmd='#'>Help Book of Blood</a>).
 </p><p><br />
 See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Police Guild</a>
- &gt; <a cmd='#'>Help Protected</a>
- &gt; <a cmd='#'>Help Accuse</a>
- &gt; <a cmd='#'>Help PK</a>
- &gt; <a cmd='#'>Help Contract</a>
- &gt; <a cmd='#'>Help Offer</a>
- &gt; <a cmd='#'>Help Break</a>
+<pre>&gt; <a cmd='#'>Help Accuse</a>
+&gt; <a cmd='#'>Help Protected</a>
+&gt; <a cmd='#'>Help Cuff</a>
+&gt; <a cmd='#'>Help Decapitate</a>
+&gt; <a cmd='#'>Help Police Guild</a>
 </pre>
 
 

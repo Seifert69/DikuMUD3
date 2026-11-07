@@ -1,8 +1,34 @@
-Sphere: Fire Sphere<br/><br/>
-<br/><br/>
-Usage cast solar flare (target)<br/><br/>
-<br/>
-The ultimate in mystic damage spells, this spell calls upon the sun to<br/>
-destroy its target. Works only outdoors and in sunlight, and is extremely<br/>
-effective at high noon and against undead beasts.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Solar Flare</h1>
+<p>Sphere: Fire Sphere
+Class: none (no guild teaches it)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast solar flare &lt;target&gt;
+<a cmd='#'>cast solar flare</a>   (at whoever you are fighting)
+use a wand or staff of solar flare
+</pre>
+<p>The caster raises a palm to the sun, shouts 'yarnolf', and the sun itself 
+flares down on the target. It is the strongest of the sun spells, and the 
+one that depends most on the hour: meant to work only outdoors, in 
+daylight, under a clear or cloudy sky, it is fearsome at noon, much weaker 
+towards dawn and dusk, and terrible against the undead.
+</p><p>It does about as well against any armour, and a shield softens it. Casting 
+it is an attack and starts a fight. No guild teaches it, but it turns up on 
+wands and staffs among random treasure.
+</p><p>Note: at present the spell always fails with "The heavy rain clouds block 
+any chance of casting the spell", whatever the weather. This is a known 
+bug.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Sun Ray</a>
+&gt; <a cmd='#'>Help Sun Beam</a>
+&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,12 +1,21 @@
-<br/>
-Thief Spells<br/>
-<br/>
-Thieves depend on their wits and speed and do not excel at all in the magical <br/>
-arts. The Thieves' Guild has no spell teachers as such.<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Thief Skills<br/><br/>
- Thief<br/><br/>
- Thief Weapons<br/><br/>
- Thief Roleplay<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Thief Spells</h1>
+<p>The few spells the Thieves' guild teaches, in its hall in Midgaard. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name      Level   Up to
+Quicken      35   50%
+Unlock       35   50%
+Lock         40   50%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Thief Skills</a>
+&gt; <a cmd='#'>Help Thief Weapons</a>
+&gt; <a cmd='#'>Help Thief</a>
+&gt; <a cmd='#'>Help Spells</a>
+</pre>
+
+
+
+
+</div>

@@ -1,20 +1,37 @@
-<br/>
-<br/>
-<br/>
-<br/>
-  Weapon    Level<br/>
-  Dagger      0<br/>
-  Fist      0<br/>
-  Scythe      10<br/>
-  Sickle      0<br/>
-  Staff      3<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
- Necromancer Spells<br/><br/>
- Necromancer<br/><br/>
- Necromancer Skills<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Necromancer Weapons</h1>
+<p>The weapon skills the Necromancers' guild teaches, in its hall by the cemetery. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name             Level   Up to
+Dagger               0   90%
+Fist                 1   50%
+Mace                 2   100%
+Quarterstaff         4   100%
+Short Sword          8   90%
+Brass Knuckles      10   90%
+Sickle              10   100%
+Club                12   80%
+Flail               14   70%
+Stiletto            15   90%
+Hand Axe            16   80%
+Scythe              20   100%
+Morning Star        22   90%
+Rapier              25   70%
+Spear               30   70%
+Battle Club         35   70%
+Battle Mace         40   80%
+Main Gauche         40   90%
+Maul                50   90%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Necromancer Skills</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+&gt; <a cmd='#'>Help Necromancer</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>

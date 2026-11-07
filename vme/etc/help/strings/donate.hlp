@@ -1,21 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-This command will take an item from your inventory and puts it into a<br/>
-central donation room in one of the three main 'cities' of Valhalla<br/>
-dependent upon the command you use. If you do not specify a city the item<br/>
-will be donated to Udgaard.<br/>
-<br/><br/>
-Usage<br/><br/>
-donate (item)<br/><br/>
-donate (item) Udgaard<br/><br/>
-donate (item) Midgaard<br/><br/>
-donate (item) nymgaard<br/><br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Inventory<br/><br/>
-On line type 'Help Payment'<br/><br/>
-On line type 'Help Donation'<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Donate</h1>
+<p>Usage:
+</p>
+<pre>donate &lt;item&gt;              to the donation room of Udgaard
+donate &lt;item&gt; midgaard     to the donation room of Midgaard
+donate &lt;item&gt; clan         to your clan chest (see <a cmd='#'>Help Clan Donate</a>)
+</pre>
+<p>Sends an item from your inventory to a town's donation room, from anywhere 
+in the world, for anyone in need to pick up. Donated items lose their shop 
+value, so they can't be sold again. A donation room keeps no more than five 
+of the same item; anything beyond that is lost. Now and then a generous 
+donation of something valuable earns you a little experience.
+</p><p>You can't donate while fighting, or while standing in a donation room, and 
+trash can't be donated.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clan Donate</a>
+&gt; <a cmd='#'>Help Inventory</a>
+</pre>
+
+
+
+
+</div>

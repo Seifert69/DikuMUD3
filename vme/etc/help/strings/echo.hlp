@@ -1,9 +1,22 @@
-<br/>
-<br/>
-<br/>
-Usage: change character echo<br/><br/>
-<br/>
-This toggles whether or not characters you type are echoed back to you.<br/>
-<br/>See also:<br/><br/>
-Change<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Echo</h1>
+<p>Usage:
+</p>
+<pre>change character echo
+change communications
+</pre>
+<p>Two settings decide what the game echoes back to you:
+</p>
+<ul><li><b>change character echo</b> turns on or off whether each character you type is sent back to your screen. It is for telnet clients that don't show what you type, or that show it twice; it can't be changed in some terminal modes.</li>
+<li><b>change communications</b> turns on or off whether you see your own words when you say, ask or tell something ("You say ..."). With it off, you only get "Ok.".</li></ul>
+<p>Both settings are kept with your character.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+&gt; <a cmd='#'>Help Communicate</a>
+</pre>
+
+
+
+
+</div>

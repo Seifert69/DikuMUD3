@@ -14,6 +14,9 @@ where you are; a wand must be used at a single target. To use one you must hold
 it in your hand (see <a cmd='#'>Help Hold</a>), and you must have practiced the skill wand 
 use: how well it works depends on that skill and your brain against the power 
 of the magic in it.
+</p><p>The skill wand use is taught by the conjurers and sorcerers from guild 
+level 0, the necromancers from level 1 (up to 80%) and the druids from 
+level 8.
 </p><p>Each staff and wand holds only so many charges. When they are used up, it is 
 "drained of all power" until it is charged again (see <a cmd='#'>Help Charge Wand</a> and 
 <a cmd='#'>Help Charge Staff</a>).
@@ -21,9 +24,6 @@ of the magic in it.
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Hold</a>
-&gt; <a cmd='#'>Help Wand Use</a>
-&gt; <a cmd='#'>Help Wands</a>
-&gt; <a cmd='#'>Help Staves</a>
 &gt; <a cmd='#'>Help Practice</a>
 </pre>
 

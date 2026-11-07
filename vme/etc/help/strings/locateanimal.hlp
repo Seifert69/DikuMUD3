@@ -1,6 +1,32 @@
-<br/>
-<br/>
-Usage: cast locate animal &lt;animal name&gt;<br/>
-The caster can locate food with this spell, or animals which can be tamed.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Locate Animal</h1>
+<p>Sphere: Mind Sphere
+Class: Ranger (guild level 9, up to 60%), Druid (guild level 19)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast locate animal &lt;animal&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cast locate animal deer
+</pre>
+<p>The caster prays for a vision from the gods and senses where an animal 
+is: the room it is in. It looks in your own area first, and then in the 
+whole world. It finds only animals (beasts, birds, reptiles, amphibians, 
+insects and worms); for anything else you only learn that it is not one.
+</p><p>The animal's mind may turn the vision aside, and then you just feel 
+slightly disoriented: the better your brain and your skill in the spell, 
+against the animal's brain, the better you do. You must be standing. It 
+is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Locate</a>
+&gt; <a cmd='#'>Help Charm Animal</a>
+&gt; <a cmd='#'>Help Mind Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,10 +1,28 @@
-<br/>
-<br/>
-Sphere: Summoning Sphere<br/><br/>
-<br/><br/>
-Usage total recall<br/><br/>
-<br/><br/>
-This spell will transport an entire group back to the casters home.<br/><br/>
-If Caster is not grouped will return him back to his/her home for<br/>
-instance your clan or the default temple in Udgaard.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Total Recall</h1>
+<p>Sphere: Summoning Sphere
+Class: Healer (guild level 20)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast total recall</a>
+</pre>
+<p>Like word of recall, but it takes your followers home with you: you and 
+everyone in the room who follows you (see <a cmd='#'>Help Follow</a>) are taken to your 
+hometown, or the temple of Udgaard if you have none. Everyone goes to your 
+home, not their own.
+</p><p>The magic builds up for about half a minute first. Anyone who dies before it 
+is done, or stands somewhere magic can't take them out of, stays behind. You 
+must be standing. It is also found on staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Word of Recall</a>
+&gt; <a cmd='#'>Help Follow</a>
+&gt; <a cmd='#'>Help Groups</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+</pre>
+
+
+
+
+</div>

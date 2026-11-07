@@ -1,15 +1,32 @@
-<br/>
-Sphere: Divine sphere<br/><br/>
-<br/>
-This is a level 2 spell:<br/>
-<br/>
-Usagecast holy touch (target)<br/>
-<br/>
-Holy word is a powerful Paladin spell which inflicts injury upon evil<br/>
-creatures.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Holy Word<br/><br/>
-Holy Grasp<br/><br/>
-Holy Shout<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Holy Touch</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 2
+Class: Paladin (guild level 100)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast holy touch &lt;target&gt;
+<a cmd='#'>cast holy touch</a>   (at whoever you are fighting)
+</pre>
+<p>The paladin speaks the liturgy of the gods and touches the target, which 
+wounds those who lean to evil. Any target whose alignment is below neutral 
+can be struck, and the truly evil are hurt more; on the good and the 
+neutral, nothing happens. The better your divine power and sphere, the 
+more it hurts. It does about as well against any armour, and being a 
+touch, a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls. 
+Stronger prayers follow: holy grasp and holy shout.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Holy Word</a>
+&gt; <a cmd='#'>Help Holy Grasp</a>
+&gt; <a cmd='#'>Help Holy Shout</a>
+&gt; <a cmd='#'>Help Dispel Evil</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

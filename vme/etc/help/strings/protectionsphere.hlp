@@ -1,23 +1,47 @@
-<br/>
-<br/>
-Spells from this sphere offer protection from spell and people as well as<br/>
-improvements on persons in various ways. Spells are of both divine and <br/>
-arcane origins.<br/>
-<br/><br/>
-<br/>
-    Raise Magic                   Raise Divine             Strength<br/>              <br/>
-	Dexterity                     Constitution             Charisma<br/> <br/>
-	Drain                         Sun Ray                  Divine Resistance<br/><br/>
-	Quicken                       Haste                    Summoning Resistance<br/><br/>
-	Awaken                        Mind Shield              Heat Resistance<br/> <br/>
-	Cold Resistance               Electricity Resistance   Poison Resistance<br/><br/>
-	Acid Resistance               Protection From Evil     Sanctuary  <br/>
-	Dispel Magic                  Protection From Good     Sustain<br/><br/>
-	Lock                          Unlock                   Drowse<br/><br/>
-	Slow                          Dust Devil               Life Protection<br/>
-<br/>
-<br/><br/>
-<br/><br/>
-Try help on the individual spells.<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Protection Sphere</h1>
+<p>The spells of the protection sphere guard and strengthen: they raise your abilities, shield you from fire, cold, lightning, poison and acid or from the mind, protect you from good or evil, keep you from hunger and thirst, lock and unlock, and break other magic. Your ability in the sphere decides how well you cast them, and also how well you resist protection spells cast on you (see <a cmd='#'>Help Spheres</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>raise magic              conjurer 0, sorcerer 0
+raise divine             necromancer 0, healer 4
+strength                 conjurer 10, sorcerer 10
+dexterity                sorcerer 4, conjurer 6, assassin 30
+constitution             sorcerer 6, conjurer 8
+charisma                 healer 6
+brain                    conjurer 2, sorcerer 2
+divine resistance        healer 4
+summoning resistance     no guild teaches it
+awaken                   healer 7
+mind shield              sorcerer 5, conjurer 14
+heat resistance          sorcerer 6, conjurer 15
+cold resistance          sorcerer 7, conjurer 16
+electricity resistance   sorcerer 8, conjurer 17
+poison resistance        sorcerer 9, conjurer 18
+acid resistance          sorcerer 10, conjurer 19
+protection from evil     healer 22, paladin 32
+sanctuary                healer 10, paladin 30
+dispel magic             sorcerer 17, conjurer 30
+sustain                  necromancer 3, healer 6, paladin 18, druid 22
+lock                     conjurer 14, sorcerer 16, thief 40
+unlock                   sorcerer 18, conjurer 27, thief 35
+protection from good     dark knight 32, necromancer 33
+life protection          druid 14, healer 17
+sacred                   no guild teaches it
+hammer hand              no guild teaches it
+raise hitpoints          healer 75, paladin 85
+wizard mark              sorcerer 80
+displace magic           dark knight 80
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Sorcerer Spells</a>
+&gt; <a cmd='#'>Help Healer Spells</a>
+</pre>
+
+
+
+
+</div>

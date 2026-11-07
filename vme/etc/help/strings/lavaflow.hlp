@@ -1,17 +1,28 @@
-<br/>
-Sphere: Heat Sphere<br/><br/>
-<br/>
-This is a level 1 spell:<br/>
-<br/>
-<br/>
-Usagecast lava flow (target)<br/><br/>
-<br/><br/>
-This spell inflicts damage by releasing hellfire and brimstone<br/>
-(heat) on a target.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-Lava Flow<br/><br/>
-Hellfire<br/><br/>
-Brimstone<br/><br/>
-Soulfire<br/><br/>
+<div class="mw-parser-output"><h1>Lava Flow</h1>
+<p>Sphere: Fire Sphere
+Class: Dark Knight (guild level 11)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast lava flow &lt;target&gt;
+<a cmd='#'>cast lava flow</a>   (at whoever you are fighting)
+</pre>
+<p>The first of the dark knight's fires: a flow of molten rock pours over the 
+target. The better your power and fire sphere, the more it burns. It does 
+most against plate and chain, which hold the heat, and least against clothes. 
+A shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+wands and scrolls. Stronger fires follow: hellfire, brimstone and soulfire.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hellfire</a>
+&gt; <a cmd='#'>Help Brimstone</a>
+&gt; <a cmd='#'>Help Soulfire</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,20 +1,30 @@
-<br/>
-<br/><br/>
-Sphere: Creation<br/><br/>
-<br/>
-Spell Tier:1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 5 <br/> <br/>
-<br/><br/>
-Usage cast create darkness (target)<br/><br/>
-<br/>
-When cast on a person or object, it will reduce its light for a while.<br/>
-When cast upon a room (no argument), the room will reduce it lights for<br/>
-a while. No free hands are needed for this spell.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-creation sphere<br/><br/>
-continual darkness<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Darkness</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 5), Dark Knight (guild level 12)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast darkness &lt;object&gt;
+<a cmd='#'>cast darkness</a>   (on the room you are in)
+</pre>
+<p>The opposite of the light spell: an object, or the room you stand in, gives 
+off less light for a while, as much less as a light spell would add. Cast it 
+on something you carry, and the shadow goes where you go.
+</p><p>The better your creation sphere, the longer it lasts: from a minute up to 
+several minutes. It doesn't add up: something already darkened by the spell 
+stays as it is. You must be standing. It is also found on staffs, scrolls and 
+wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Continual Darkness</a>
+&gt; <a cmd='#'>Help Night Globe</a>
+&gt; <a cmd='#'>Help Spell Light</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,11 +1,21 @@
-Usage center<br/>
-Example: center<br/>
-<br/>
-<br/>
-This command is used to enter your clan home.  You must be present in the room<br/>
-containing the entrance in order to use this command.  Type &lt;center&gt; and you<br/>
-will be teleported into the clan home.<br/>
-<br/>
-<br/>See Also:<br/>
-cexit<br/>
-<br/>
+<div class="mw-parser-output"><h1>Center</h1>
+<p>Usage:
+</p>
+<pre>center
+</pre>
+<p>Takes you into your clan house, past its locked door. Type it in the room 
+in front of your clan's door; it works only there, and only for members of 
+that clan. To others the door stays locked. To go out again, see 
+<a cmd='#'>Help Cexit</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cexit</a>
+&gt; <a cmd='#'>Help Clan</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

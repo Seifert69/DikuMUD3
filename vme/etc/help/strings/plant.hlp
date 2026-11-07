@@ -1,14 +1,31 @@
-<br/>
-<br/>
-Usage <br/><br/>
-plant &lt;item&gt; on &lt;player/mob&gt;<br/>
-<br/>
-Thief Skill<br/>
-Allows you to plant an item on a player or mob without being<br/>
-detected.<br/>
-<br/>
-<br/><br/>
-See Also:<br/><br/>
-slip<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Plant</h1>
+<p>Skill
+Class: Thief (guild level 25)
+</p><p>Usage:
+</p>
+<pre>plant &lt;item&gt; on &lt;someone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>plant dagger on guard
+</pre>
+<p>Slips something you carry onto someone else, without their noticing: a 
+stolen jewel onto an innocent, perhaps. It costs a little endurance, and 
+you must be standing.
+</p><p>Your skill and dexterity work against your mark's dexterity and wits. 
+Fail, and the item slips from your hands to the floor, in full view of 
+your mark. Succeed only just, and you plant it clumsily: it is theirs now, 
+but they notice. A clean plant goes unseen. You can't plant anything on 
+someone whose hands are full, or who can carry no more.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Slip</a>
+&gt; <a cmd='#'>Help Stealing</a>
+&gt; <a cmd='#'>Help Thief Skills</a>
+</pre>
+
+
+
+
+</div>

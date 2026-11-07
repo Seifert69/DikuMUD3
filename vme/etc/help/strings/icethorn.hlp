@@ -1,9 +1,31 @@
-<br/>
-<br/>
-Usage: cast ice thorn<br/>
-No true Druid need ever be without a weapon with this spell, which lets<br/>
-the caster focus the elements of ice into a magical dagger.  The dagger<br/>
-will be stronger and more durable depending on the skill of the caster.  As<br/>
-time passes, however, the dagger will eventually melt away.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Ice Thorn</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 17)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre>cast ice thorn
+</pre>
+<p>No true druid need ever be without a weapon. The caster whispers the word 
+'Gelidus', the air hisses with a burst of cold, and a dagger of ice takes 
+shape in your hands; you find it in your inventory. Wield it like any 
+dagger.
+</p><p>The better your skill in the spell and your divine power, the finer the 
+dagger: its craftsmanship and its magic both grow with them, up to +15 
+(see <a cmd='#'>Help Craftsmanship</a>). But it melts. It lasts about twenty minutes, 
+and it grows weaker as it goes: after seven minutes it begins to melt, 
+after fourteen it drips steadily, and then it is gone.
+</p><p>You must be standing to cast it. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dagger</a>
+&gt; <a cmd='#'>Help Craftsmanship</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>

@@ -1,17 +1,21 @@
-<br/>
-Usage clist<br/>
-Example: clist<br/>
-<br/>
-This command will allow you to see a list of clans that are now active on <br/>
-Valhalla. You will receive a screen that will list all current clans and their<br/>
-respective Masters.  <br/>
-<br/>
-Note; If you are interested in joining a clan you could use this to find the <br/>
-Master and then mud mail them requesting entry to there clan.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cappoint         cdemote          caccept          cremove<br/>
-csrank           ctitle           cinfo            cdeposit<br/>
-cbalance         cstore           cequipment       crank<br/>
-cdefect          center           cexit            clan donate<br/>
-cwithdraw        cunstore         <br/>
+<div class="mw-parser-output"><h1>Clist</h1>
+<p>Usage:
+</p>
+<pre>clist
+</pre>
+<p>Lists all the clans of Valhalla, with the name of each clan's Master. 
+Anyone can use it, in a clan or not; it is the place to start if you 
+want to join one: find the Master, and write or tell them to ask to join 
+(see <a cmd='#'>Help Clan</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Clan</a>
+&gt; <a cmd='#'>Help Cinfo</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

@@ -1,22 +1,31 @@
- <br/>
-Sphere: Electricity<br/><br/>
-<br/>
-Spell Tier: 2<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 16 <br/><br/>
-<br/> <br/>
-Usage cast jolt (target)<br/><br/>
-<br/><br/>
-This spell causes a charge of electrical current to arc from the spellcaster <br/>
-to the named target or present target in battle to inflict damage by <br/>
-electricity. The spell requires the caster to have one free hand.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Electrical Resistance<br/><br/>
-Electrical Shock<br/><br/>
-Lightning Bolt<br/><br/>
-Lightning Storm<br/><br/>
+<div class="mw-parser-output"><h1>Jolt</h1>
+<p>Sphere: Electricity Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 16)
+Mana: 24
+</p><p>Usage:
+</p>
+<pre>cast jolt &lt;target&gt;
+<a cmd='#'>cast jolt</a>   (at whoever you are fighting)
+</pre>
+<p>The caster forks two fingers at the target and utters the word 'Spaerx', 
+and a charge of lightning arcs across to strike them. The better your 
+magic and your electricity sphere, the harder it strikes. It does best 
+against clothes and light leather and much less against chain and plate, 
+and a shield is no use against it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Electrical Shock</a>
+&gt; <a cmd='#'>Help Lightning Bolt</a>
+&gt; <a cmd='#'>Help Electricity Resistance</a>
+&gt; <a cmd='#'>Help Electricity Sphere</a>
+</pre>
+
+
+
+
+</div>

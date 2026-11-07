@@ -1,25 +1,41 @@
-<br/>
-Level     Spell               Level      Spell<br/>
-  0     sense invisible         34     unholy touch         <br/>
-  9     sense life              35     condemn              <br/>
- 10     cause light wounds      40     cause serious wounds <br/>
- 11     lava flow               41     continual darkness   <br/>
- 12     darkness                45     dispel good          <br/>
- 15     repel lesser undead     50     unholy grasp         <br/>
- 18     mire                    80     displace magic       <br/>
- 20     plague                  80     brimstone            <br/>
- 24     curse                   85     energy drain         <br/>
- 28     fear                   100     soulfire             <br/>
- 32     hellfire               120     unholy shout         <br/>
- 32     protection from good<br/>
-<br/>
-<br/>
-<br/>See Also:<br/>  <br/>
-                      <br/>
- Dark Knight Skill<br/>    <br/>
- Dark Knight Weapons<br/>    <br/>
- Dark Knight<br/>           <br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Dark Knight Spells</h1>
+<p>The spells the Dark Knights' guild of Midgaard teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
+</p>
+<pre>Name                   Level   Up to
+Sense Invisible            0   100%
+Sense Life                 9   100%
+Cause Light Wounds        10   100%
+Lava Flow                 11   100%
+Darkness                  12   100%
+Repel Lesser Undead       15   100%
+Mire                      18   100%
+Plague                    20   100%
+Curse                     24   100%
+Fear                      28   100%
+Hellfire                  32   100%
+Protection From Good      32   100%
+Unholy Touch              34   100%
+Condemn                   35   100%
+Cause Serious Wounds      40   100%
+Continual Darkness        41   100%
+Dispel Good               45   100%
+Unholy Grasp              50   100%
+Brimstone                 80   100%
+Displace Magic            80   100%
+Energy Drain              85   100%
+Soulfire                 100   100%
+Unholy Shout             120   100%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dark Knight Skills</a>
+&gt; <a cmd='#'>Help Dark Knight Weapons</a>
+&gt; <a cmd='#'>Help Dark Knight</a>
+&gt; <a cmd='#'>Help Spheres</a>
+</pre>
+
+
+
+
+</div>

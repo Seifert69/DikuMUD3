@@ -1,14 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage: Stalk &lt;person&gt;<br/>
-<br/>
-This skill will allow a person to stalk another person. If successful<br/>
-the person stalking will follow the person stalked without them knowing.<br/>
-<br/>
-<br/>
-See Also:<br/>
-Assassin Skills<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Stalk</h1>
+<p>Skill
+Class: Assassin (guild level 22)
+</p><p>Usage:
+</p>
+<pre>stalk &lt;person&gt;
+</pre>
+<p>Follows someone without their knowing: wherever they go, you go after 
+them (see <a cmd='#'>Help Follow</a>). To stop, follow yourself.
+</p><p>If it goes well, you silently begin to stalk them, and they don't notice. 
+If it goes less well, you still follow them, but they notice you begin to 
+stalk them. If it goes badly, you fail miserably, in front of everyone, 
+and don't follow at all. Your dexterity and brain decide it, against your 
+quarry's watchfulness. You must be standing.
+</p><p>Stalking is best paired with sneaking (see <a cmd='#'>Help Sneak</a>), so that your 
+quarry doesn't see you arrive after them either.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Follow</a>
+&gt; <a cmd='#'>Help Sneak</a>
+&gt; <a cmd='#'>Help Assassin Skills</a>
+</pre>
+
+
+
+
+</div>

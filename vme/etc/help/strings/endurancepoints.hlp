@@ -1,12 +1,23 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Endurance (displayed in your score)<br/>
-determines, among other things,<br/>
-how far you can move. If for example you move a long way in a very<br/>
-short time you get too exhausted to move, you'll then have to<br/>
-rest<br/>
-for a while and wait for your endurance to be regained.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Endurance Points</h1>
+<p>Endurance is your stamina, shown in your <a cmd='#'>score</a> and your prompt. You 
+spend it walking, more in rough land than on a road, and on hard work: 
+climbing, swimming, many skills, shouting. When it runs low, you are too 
+exhausted to go on, and must rest until it comes back.
+</p><p>How much endurance you have depends on your constitution (see 
+<a cmd='#'>Help Constitution</a>) and your age: the young have the most, and it falls 
+as you grow old (see <a cmd='#'>Help Age</a>).
+</p><p>Endurance comes back by itself, but not while you fight. It comes back 
+faster when you sit, faster still when you rest or sleep, and twice as fast 
+in a sacred place, such as a temple. Hunger and thirst slow it down.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Constitution</a>
+&gt; <a cmd='#'>Help Rest</a>
+&gt; <a cmd='#'>Help Age</a>
+</pre>
+
+
+
+
+</div>

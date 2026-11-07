@@ -1,13 +1,31 @@
 <div class="mw-parser-output"><h1>Alignment</h1>
-<p>You can have a good, evil or neutral alignment.
-</p><p>Good alignments range from +350 to +1000, with +1000 being ultimately good.
-Evil alignments range from -350 to -1000, with -1000 being ultimately evil.
-Neutral alignments range from +349 to -349, with 0 being true neutral.
-</p><p>It is hard to uphold alignments of good and evil, while it is very easy to
-stay neutral. Killing bad guys makes you 'good' while
-killing good guys makes you more 'evil'. If your alignment should reach
--1000, it will stay there unless you perform a quest to have it changed.
+<p>Your alignment is how good or evil you are, from +1000 to -1000:
 </p>
+<pre>good       +350 to +1000
+neutral    +349 to -349   (0 is true neutral)
+evil       -350 to -1000
+</pre>
+<p>It changes mostly with what you kill:
+</p>
+<ul><li><b>Good</b> characters grow better by killing the evil, and lose much of their goodness by killing the good. Killing a neutral that leans to good costs them a little too.</li>
+<li><b>Evil</b> characters sink deeper by killing the good.</li>
+<li><b>Neutral</b> characters are pulled toward good when they kill something far more evil than themselves, and toward evil when they kill something far more good.</li></ul>
+<p>The higher your level above your victim's, the bigger the change. Good is 
+hard to keep and evil hard to leave, while staying neutral is easy. At -1000 
+nothing you kill can make you better again.
+</p><p>Alignment matters in many places. A good character earns a fifth more 
+experience for killing the evil, an evil one a tenth more for killing the 
+good. Some guilds take only good, or only evil, members (paladins must stay 
+good, for instance), and many spells only work on, or against, one side: 
+dispel evil, the holy and unholy words, protection from evil and good. The 
+detect alignment spell shows others' alignment.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Detect Alignment</a>
+&gt; <a cmd='#'>Help Paladins</a>
+&gt; <a cmd='#'>Help Score</a>
+</pre>
 
 
 

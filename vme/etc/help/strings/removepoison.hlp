@@ -1,11 +1,28 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Poison Sphere<br/><br/>
-<br/>
-<br/><br/>
-Usage rem poison (target)<br/><br/>
-<br/><br/>
-This spell removes the effects of poison from food, drinks or persons.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Remove Poison</h1>
+<p>Sphere: Poison Sphere
+Class: Healer (guild level 13), Druid (guild level 28)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast remove poison &lt;target&gt;
+cast remove poison &lt;food or drink&gt;
+</pre>
+<p>Cast on a poisoned person or creature, it drives the poison out. Your spell 
+needs at least a quarter of the poison's power, so even a weak one cures most 
+poisons. Cast on food or a drink, in the room, in your inventory or held, it 
+makes it safe to eat or drink.
+</p><p>It doesn't clean a poisoned weapon. You must be standing. It is also found on 
+potions, wands, scrolls and staffs. To find out what is poisoned, see 
+<a cmd='#'>Help Detect Poison</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Detect Poison</a>
+&gt; <a cmd='#'>Help Remove Disease</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>

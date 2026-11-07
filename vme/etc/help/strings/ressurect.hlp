@@ -1,13 +1,32 @@
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/>
-<br/><br/>
-Usage ressurect (target)<br/><br/>
-<br/>
-This spell will pull a soul from Valhalla and put them back into their<br/>
-corpse with full stats.  You must have the player's corpse for the spell to<br/>
-work.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Resurrection</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 40)
+Mana: 80
+</p><p>Usage:
+</p>
+<pre>cast resurrection &lt;player&gt;
+</pre>
+<p>The great prayer of life: it pulls a dead player's soul out of Valhalla and 
+back into their body, whole. Like raise dead, it only works in the short time 
+after their death while their spirit is still in Valhalla (see <a cmd='#'>Help Die</a>), 
+and only if you have their corpse: lying in the room with you, or carried.
+</p><p>Unlike raise dead, the player stands up with full hit points, mana and 
+endurance, and nobody loses experience. They arrive where you are, with 
+everything the corpse held.
+</p><p>A corpse whose head was cut off can't be resurrected without its head: carry 
+the head, and the spell takes it. The prayer leaves you queasy: you must wait 
+about two and a half minutes before you can cast it again, a little less the 
+stronger your spell. You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Raise Dead</a>
+&gt; <a cmd='#'>Help Die</a>
+&gt; <a cmd='#'>Help Decapitate</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

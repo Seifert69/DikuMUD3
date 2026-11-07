@@ -1,14 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage sail (direction)<br/><br/>
-<br/><br/>
-Example: sail east<br/><br/>
-<br/>
-When you are near water and have a boat in your possession, you can drop<br/>
-the boat, enter it, and then sail out on the water (a river for example).<br/>
-This command is thus used when you are inside a boat and want to sail in<br/>
-a given direction.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Sail</h1>
+<p>Usage:
+</p>
+<pre>sail &lt;direction&gt;
+</pre>
+<p>Example:
+</p>
+<pre>sail east
+</pre>
+<p>Deep water, a lake or the sea, can't be waded or swum: you need a boat. 
+Shallow water you can swim instead (see <a cmd='#'>Help Swimming</a>).
+</p><p>To sail, drop your boat by the water, enter it (see <a cmd='#'>Help Enter</a>), and 
+sail the way you want to go: the boat carries you, and anything aboard, 
+across the water. While you sit in the boat, sail east does the same as 
+just east. Leave the boat when you reach the far shore, and take it with 
+you if you will need it again.
+</p><p>Boats are sold at the boat shop in Midgaard (see <a cmd='#'>Help Midgaard</a>), among 
+other places.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Swimming</a>
+&gt; <a cmd='#'>Help Enter</a>
+&gt; <a cmd='#'>Help Movement</a>
+</pre>
+
+
+
+
+</div>

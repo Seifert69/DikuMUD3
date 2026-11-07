@@ -1,11 +1,28 @@
-<br/>
-<br/>
-Usage: herbs<br/>
-When used in the wilderness, this skill enables the user to find healing herbs<br/>
-which can mean the difference between survival and death.<br/>
-<br/>
-See Also:<br/><br/>
- Dowse<br/>
- Forage<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Herbs</h1>
+<p>Skill
+Class: Druid (guild level 1), Ranger (guild level 12, up to 75%)
+</p><p>Usage:
+</p>
+<pre>herbs              (heal yourself)
+herbs &lt;someone&gt;    (heal someone with you)
+</pre>
+<p>You search the land around you for healing herbs, and use them at once to 
+treat yourself or someone else in the room. It costs 20 endurance, and you 
+must be standing. The better your search goes, the more hit points it 
+heals.
+</p><p>Fields and forests are full of herbs, and easy to search. Hills, swamps 
+and water are harder, mountains harder still, and the desert hardest. In 
+cities, indoors, and on snow or ice, nothing grows that heals. Fail, and 
+you find nothing, or something you'd better not risk using.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Forage</a>
+&gt; <a cmd='#'>Help Dowse</a>
+&gt; <a cmd='#'>Help First Aid</a>
+</pre>
+
+
+
+
+</div>

@@ -1,13 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-You can use this command to change the way the mud outputs text to you.<br/><br/>
-<br/>
-Columns is how many characters there is put on a line (Default is 80).<br/>
-<br/><br/>
-<br/>See also:<br/><br/>
-Change<br/><br/>
-Rows<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Columns and Rows</h1>
+<p>Usage:
+</p>
+<pre>change columns &lt;number&gt;    how many characters on a line, 40 to 240
+change rows &lt;number&gt;       how many lines on a page, 15 to 60
+</pre>
+<p>Examples:
+</p>
+<pre>change columns 100
+change rows 40
+</pre>
+<p>Tell the game the size of your screen, so that long texts are wrapped and 
+paged to fit it. The default is 80 columns. Rows decide how much of a long 
+text you see before it stops and waits for you to read on. Your settings 
+are kept with your character.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Change</a>
+</pre>
+
+
+
+
+</div>

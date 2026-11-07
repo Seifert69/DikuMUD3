@@ -1,21 +1,29 @@
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 17<br/><br/>
-<br/>
-<br/><br/>
-Usage cast charge staff &lt;staff&gt;<br/><br/>
-<br/>
-Restores spent charges on magic staves,<br/>
-up to the maximum number of charges a particular stave may hold.  The<br/>
-number of charges is Dependant on the casters skill and magic ability.<br/>
-There is a slight chance of over charging, and as a result, destroying the<br/>
-staff. It requires no hands free to charge a staff.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-charge wand<br/><br/>
-<br/><br/>
+<div class="mw-parser-output"><h1>Charge Staff</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 2
+Class: Sorcerer (guild level 17)
+Mana: 60
+</p><p>Usage:
+</p>
+<pre>cast charge staff &lt;staff&gt;
+</pre>
+<p>Restores spent charges to a magic staff you carry, up to as many as the 
+staff can hold. The better your spell, the more charges come back: one 
+for a modest success, up to four or more for a master.
+</p><p>It is risky. If the spell fails, the staff only sputters and goes dim; but 
+if it fails badly, the staff explodes in a sphere of uncontrolled mana, 
+and is lost: a lightning bolt strikes everyone in the room, you included. 
+Charge staffs where no friend stands close. You must be standing, and no 
+free hands are needed. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Charge Wand</a>
+&gt; <a cmd='#'>Help Use</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

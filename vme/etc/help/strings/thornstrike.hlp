@@ -1,7 +1,28 @@
-<br/>
-<br/>
-Usage: cast thorn strike &lt;target&gt;<br/>
-The caster of this spell summons a hail of magical thorns at an<br/>
-opponent, causing moderate piercing damage.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Thorn Strike</h1>
+<p>Sphere: Summoning Sphere
+Class: Druid (guild level 2)
+Mana: 12
+</p><p>Usage:
+</p>
+<pre>cast thorn strike &lt;target&gt;
+<a cmd='#'>cast thorn strike</a>   (at whoever you are fighting)
+</pre>
+<p>The caster makes a stabbing gesture at the target, and a hail of magical 
+thorns pierces them. It is the druid's first attack spell: the better 
+your divine power and your summoning sphere, the more it hurts. The 
+thorns care little what armour the target wears, but a shield can block 
+them.
+</p><p>Casting it is an attack and starts a fight. It can be cast while 
+fighting, and no free hands are needed.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Wind Slash</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>

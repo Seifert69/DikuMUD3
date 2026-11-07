@@ -1,17 +1,29 @@
-<br/>
-<br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 2<br/><br/>
-Class: Sorcerer <br/><br/>
-Guild Level: 11 <br/><br/>
-<br/>  <br/>
-Usage: cast detect invisible (target)<br/><br/>
-<br/>
-This spell enables a humanoid target to see invisible beings and<br/>
-objects, provided they are not using additional forms of obscurement. <br/>
-To check if an object is invisible yourself or another. The aura of the <br/>
-object is revealed as (clear) when it is examined by the person with the spell. <br/>
-This spell lasts for a duration relative to the spellcaster's knowledge of <br/>
-the spell. It requires no hands free and a small amount of mana.<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Detect Invisible</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 2
+Class: Conjurer (guild level 10), Sorcerer (guild level 11), Assassin (guild level 15)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast detect invisible &lt;target&gt;
+<a cmd='#'>cast detect invisible</a>   (on yourself)
+</pre>
+<p>For a while after this spell, the target can see invisible people, creatures 
+and things. Wherever something invisible is listed, it shows a (clear) aura. 
+It doesn't find those who are hiding: that is another matter (see 
+<a cmd='#'>Help Hide</a>).
+</p><p>The better your detection sphere, the longer it lasts: from a minute up to 
+several minutes. You must be standing, not fighting. It is also found on 
+potions and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Invisibility</a>
+&gt; <a cmd='#'>Help Detect Magic</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,25 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Assassins are the hired killers of the land. Their profession requires that <br/>
-they know many weapons, but they actually master few. They share some skills<br/>
-with both fighters and thieves but unlike either, they dabble slightly in the <br/>
-magics to enhance their stealth. Their main attributes are dexterity and<br/>
-hitpoints with strength and constitution as secondary.  <br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-<br/>
- Assassin<br/><br/>
- Assassin Weapons<br/><br/>
- Assassin Spells<br/><br/>
- Assassin Skills<br/><br/>
- Assassin Role Play<br/><br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Assassins Guild</h1>
+<p>The guild of the Khorsabad Assassins, the masters of the quick and silent 
+kill, lies hidden in Khorsabad. Its head is Ja'afar, the Master Assassin, 
+in the Guild Master's Room, and its trainers teach the assassins' skills, 
+weapons and few spells.
+</p><p>To join, stand before the Master and type <a cmd='#'>join</a>. Healers, paladins and 
+druids are not welcome. First you must prove yourself worthy by finishing 
+the Assassin Guild quest: the Master sends you to Sharki to begin it. To 
+leave the guild, insult the Master; but a member who is banished can 
+never come back.
+</p><p>A thief who has joined, and has never specialized, can ask the Master to 
+become an assassin: say "specialize" to him, and drink the grey ale he 
+gives you. The change is permanent (see <a cmd='#'>Help Assassins</a>).
+</p><p>Members who <a cmd='#'>worship</a> the Master are given the Death Bringer, a weapon 
+for the work, and a dark talisman that shows they belong.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Assassins</a>
+&gt; <a cmd='#'>Help Assassin Skills</a>
+&gt; <a cmd='#'>Help Assassin Weapons</a>
+&gt; <a cmd='#'>Help Assassin Spells</a>
+&gt; <a cmd='#'>Help Guilds</a>
+</pre>
+
+
+
+
+</div>

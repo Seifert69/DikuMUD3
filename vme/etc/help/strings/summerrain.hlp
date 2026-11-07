@@ -1,13 +1,27 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Mind Sphere<br/><br/>
-<br/><br/>
-Usage summer rain<br/><br/>
-<br/>
-Casting summer rain will summon a healing rain from a cloudy sky that will<br/>
-provide healing to all who are in the room.  The spell will only work if it<br/>
-is either cloudy or raining.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Summer Rain</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 4), Druid (guild level 7)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast summer rain</a>
+</pre>
+<p>Calls down a warm summer rain on everyone in the room, players and monsters 
+alike. Each one who is hurt gets back 6 hit points: a little for each, but 
+it reaches the whole group at once.
+</p><p>It only works under the open sky: indoors, or anywhere without weather, there 
+is no possibility of rain. You must be standing. It is also found on wands 
+and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cure Light Wounds</a>
+&gt; <a cmd='#'>Help Healers</a>
+&gt; <a cmd='#'>Help Druids</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

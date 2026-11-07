@@ -1,16 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The spells in this sphere enable you to conjure and control poison.<br/><br/><br/>
-<br/>
-    Fart                  Bad Breath<br/>
-    Stinking Cloud        Toxicate<br/>
-    Remove Poison         Energy Drain<br/>
-    Madness               Plague<br/>
-    Remove Disease<br/>
-<br/>
-<br/><br/>
-<br/>
-Try help on the individual spells.<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Poison Sphere</h1>
+<p>The spells of the poison sphere work from inside the body: poisons and plagues, the necromancers' foul gases and clouds, madness and energy drain, and also the cures, remove poison and remove disease. Your ability in the sphere decides how well you cast them, and also how well you resist poison spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist poison better, see <a cmd='#'>Help Poison Resistance</a>; dragons may also breathe gas (see <a cmd='#'>Help Breath</a>).
+</p><p>The spells, and who teaches them (guild level):
+</p>
+<pre>toxicate          assassin 20, sorcerer 37
+remove poison     healer 13, druid 28
+energy drain      necromancer 38, dark knight 85
+madness           necromancer 7
+plague            dark knight 20, necromancer 25
+remove disease    healer 11, paladin 20, druid 25
+gas breath        no guild teaches it
+poison ivy        druid 9
+fart              necromancer 1
+bad breath        necromancer 16
+stinking cloud    necromancer 30
+stinking breath   necromancer 100
+</pre>
+<p>Each spell has its own help: help and the spell's name.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Poison Resistance</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+</pre>
+
+
+
+
+</div>

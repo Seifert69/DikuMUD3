@@ -1,22 +1,29 @@
-<br/>
-<br/>
-<br/>
-Sphere: Creation<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 14<br/><br/>
-<br/> <br/>
-<br/><br/>
-Usage cast quicken (target)<br/><br/>
-<br/><br/>
-This spell will increase the target character's speed by a small amount.<br/>
-It requires no free hands and a small amount of mana to cast. However the <br/>
-duration of the spell is variable dependant on the spell caster's power and<br/>
-knowledge.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-haste<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Quicken</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 14), Conjurer (guild level 15), Thief (guild level 35), Assassin (guild level 35)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast quicken &lt;target&gt;
+<a cmd='#'>cast quicken</a>   (on yourself)
+</pre>
+<p>Makes the target a little faster, so they strike more often in a fight. The 
+better your creation sphere, the longer it lasts: from half a minute to almost 
+two minutes.
+</p><p>Quicken, haste and slow replace each other: only the last one cast on someone 
+holds. Haste speeds them up twice as much as quicken, and slow slows them down 
+as much as haste speeds them up, so quicken is also a way to lift a slow. You 
+must be standing. It is also found on potions, wands and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Haste</a>
+&gt; <a cmd='#'>Help Slow</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

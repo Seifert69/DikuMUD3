@@ -1,0 +1,33 @@
+<div class="mw-parser-output"><h1>Gmquest</h1>
+<p>Usage:
+</p>
+<pre>gmquest &lt;player&gt; easy|fair|hard &lt;quest name&gt;[: what they did]     (230)
+gmquest &lt;player&gt;
+</pre>
+<p>Makes a game master's event one of the player's quests, once they've 
+played it through to its end. "&lt;quest name&gt; Complete" goes into the 
+list <a cmd='#'>Help Quests</a> shows them, with what they did, and they earn 
+experience by their level and how hard it was: a tenth (<b>easy</b>), a 
+quarter (<b>fair</b>) or half (<b>hard</b>) of the experience between 
+their level and the next. The player sees "You have completed a quest" 
+and what they earned, and you see how much it was.
+</p><p>Each quest name counts once per player, and is at most 50 letters. 
+Gods get neither quests nor experience this way.
+</p><p><b>gmquest &lt;player&gt;</b> alone lists the game-master quests they have 
+done, and their level.
+</p><p>Example:
+</p>
+<pre>gmquest asta fair The Lost Flint Box: found the old dwarf's flint box
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Quests</a>
+&gt; <a cmd='#'>Wizhelp Gmtreasure</a>
+&gt; <a cmd='#'>Help Experience</a>
+</pre>
+
+
+
+
+</div>

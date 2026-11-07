@@ -1,8 +1,30 @@
-<br/>
-Usage:<br/>
-   &gt;force &lt;char&gt;|all &lt;command&gt;<br/>
-<br/>
-This wiz-command forces a character or player to execute a command. This<br/>
-command should only be used to help players in a tight situation. All will<br/>
-make all connected players execute the command; also known as power abuse.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Force (230)</h1>
+<p>Usage:
+</p>
+<pre>force &lt;someone&gt; &lt;command&gt;
+force all &lt;command&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>force guard north
+force Gnort stand
+</pre>
+<p>Makes someone carry out a command, as if they had typed it.
+</p><p><b>Monsters</b> (level 230): the one named here, or else in this zone, or 
+else anywhere in the world.
+</p><p><b>Players</b> (level 245): anywhere in the game. Use it only to help a 
+player in a tight spot; they are told that you forced them, and what to.
+</p><p><b>force all</b> (level 245) forces every player in the game of a lower 
+level than yours; also known as power abuse.
+</p><p>You can't force anyone of a higher level than yours. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Switch</a>
+&gt; <a cmd='#'>Wizhelp At</a>
+</pre>
+
+
+
+
+</div>

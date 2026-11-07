@@ -1,22 +1,29 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 15<br/><br/>
-<br/> <br/>
-Usage cast charge wand &lt;wand&gt;<br/><br/>
-<br/>
-Restores spent charges on magic wands, up to the maximum number of charges <br/>
-a particular wand may hold.  The number of charges restored is dependant <br/>
-on the caster's skill and magical ability.  There is a slight chance of <br/>
-over charging, and as a result, destroying the wand. It requires no hands <br/>
-free to charge a wand.<br/><br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-charge staff<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Charge Wand</h1>
+<p>Sphere: Creation Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 15)
+Mana: 60
+</p><p>Usage:
+</p>
+<pre>cast charge wand &lt;wand&gt;
+</pre>
+<p>Restores spent charges to a magic wand you carry, up to as many as the 
+wand can hold. The better your spell, the more charges come back: one 
+for a modest success, up to four or more for a master.
+</p><p>It is risky. If the spell fails, the wand only sputters and goes dim; but 
+if it fails badly, the wand explodes in a sphere of uncontrolled mana, 
+and is lost: a lightning bolt strikes everyone in the room, you included. 
+Charge wands where no friend stands close. You must be standing, and no 
+free hands are needed. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Charge Staff</a>
+&gt; <a cmd='#'>Help Use</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

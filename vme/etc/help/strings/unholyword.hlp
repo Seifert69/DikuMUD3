@@ -1,24 +1,32 @@
-<br/>
-<br/><br/>
-Sphere: Divine<br/><br/>
-<br/>
-Spell tier:1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level:40 <br/> <br/>
-<br/><br/>
-<br/>
-Usagecast unholy word (target)<br/>
-<br/><br/>
-Unholy word is a powerful prayer of the dark forces which inflicts injury<br/>
-upon good creatures. If sucessful it will cause a fair amount of damage to <br/>
-any GOOD creature. It requires no free hands to accomplish.<br/> <br/>
-<br/>
-<br/>See Also:<br/><br/>
-Divine Sphere<br/><br/>
-Unholy Touch<br/><br/>
-Unholy Grasp<br/><br/>
-Unholy Shout<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Unholy Word</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 40)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast unholy word &lt;target&gt;
+<a cmd='#'>cast unholy word</a>   (at whoever you are fighting)
+</pre>
+<p>The first and weakest of the prayers to the dark forces against the good: 
+the caster calls on evil to wound the target. Any target whose alignment 
+is above neutral can be struck; on the evil and the neutral, nothing 
+happens. The better your divine power and sphere, the more it hurts. It 
+does better against heavy armour than against light, and a shield can 
+block it. No free hands are needed.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls. 
+Stronger prayers follow: unholy touch, unholy grasp and unholy shout.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Unholy Touch</a>
+&gt; <a cmd='#'>Help Unholy Grasp</a>
+&gt; <a cmd='#'>Help Unholy Shout</a>
+&gt; <a cmd='#'>Help Dispel Good</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

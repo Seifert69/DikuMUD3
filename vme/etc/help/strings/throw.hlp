@@ -1,9 +1,33 @@
-Throw<br/>
- option of hurling objects<br/>
-at his victims, and or people further away in the room which he cannot<br/>
-reach with his current weapon because he is fighting someone else.<br/>
-<br/>
-See Also:<br/><br/>
- Shoot<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Throw</h1>
+<p>Skill
+Class: Ranger (guild level 20)
+</p><p>Usage:
+</p>
+<pre>throw &lt;weapon&gt; at &lt;someone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>throw dagger at orc
+</pre>
+<p>Hurls a weapon you carry, or the one in your hand, at someone in the 
+room: even someone you can't reach because you are fighting another. It 
+hits like a blow from that weapon, and then it lies on the ground (or in 
+your victim), so go and pick it up.
+</p><p>Your throw skill, with your dexterity and strength, against your target's 
+dexterity, decides whether you hit. A heavier weapon costs more endurance 
+to throw, and a two-handed one needs both hands free. Only weapons can be 
+thrown, and not bows, crossbows or slings: use those to shoot (see 
+<a cmd='#'>Help Shoot</a>). To throw at a player, both of you must have signed the Book 
+of Blood. You must be standing.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Shoot</a>
+&gt; <a cmd='#'>Help Weapons</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>

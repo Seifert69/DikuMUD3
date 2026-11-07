@@ -1,23 +1,31 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Sphere: Creation <br/><br/>
-Spell Tier: 3<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 31<br/><br/>
-<br/><br/>
-Usage cast reconstruct (target)<br/><br/>
-<br/><br/>
-Repairs all but 2-10 points of damage to any item.  Broken items are<br/>
-beyond the spell's power to fix.  Each casting lowers the maximum total<br/>
-amount of damage the object can withstand before breaking. It requires no <br/>
-hands free to cast and a medium amount of mana.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-creation sphere<br/><br/>
-repair<br/><br/>
-mending<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Reconstruct</h1>
+<p>Sphere: Creation Sphere
+Class: Sorcerer (guild level 31)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast reconstruct &lt;item you carry&gt;
+</pre>
+<p>The caster runs a hand along the item and chants 'nuva riforj', and it 
+glows with a warm light as its wear is mended: between a sixth and a 
+third of what it can take. It works on items still holding more than a 
+quarter of their strength.
+</p><p>It is the finest of the three mending spells. Like <a cmd='#'>Help Mending</a> and 
+<a cmd='#'>Help Repair</a>, every casting costs the item something: the most wear it 
+can ever take shrinks a little each time. But reconstruct costs only a 
+sixteenth, half what mending and repair cost, and mends as much as repair: 
+far more than mending. Indestructible items need none.
+</p><p>You must be standing, and carry the item. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Mending</a>
+&gt; <a cmd='#'>Help Repair</a>
+&gt; <a cmd='#'>Help Craftsmanship</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,0 +1,34 @@
+<div class="mw-parser-output"><h1>Breath Weapons</h1>
+<p>Dragons and other great monsters breathe their attacks. Each breath strikes 
+everyone in the room at once, except the monster's own group, and gods 
+who are invisible. Beginners up to level 20 are never hit by a breath.
+</p>
+<ul><li><b>fire breath</b> (Fire sphere): a blast of flame; less against chain and plate</li>
+<li><b>frost breath</b> (Frost sphere): a freezing blast</li>
+<li><b>lightning breath</b> (Electricity sphere): bolts of lightning; a shield is no use</li>
+<li><b>acid breath</b> (Acid sphere): a spray of acid</li>
+<li><b>gas breath</b> (Poison sphere): a choking cloud; terrible against light armour, much weaker against plate; a shield is no use</li>
+<li><b>light breath</b> (Mind sphere): a blast of dazzling colours</li>
+<li><b>shard breath</b> (Summoning sphere): a storm of sharp shards</li>
+<li><b>sonic breath</b> (Mind sphere): a shattering roar, strongest against plate; a shield is no use</li></ul>
+<p>Except where the list says otherwise, a shield softens the blow. To 
+withstand a breath, raise the sphere it belongs to: the resistance spells 
+(see <a cmd='#'>Help Heat Resistance</a>) help against the matching breath, and so does 
+your own skill in that sphere (see <a cmd='#'>Help Spheres</a>).
+</p><p>No guild teaches the breaths, and they don't come in random treasure. 
+Only the greater monsters breathe the true breath: a lesser monster's 
+fire, frost, lightning, acid, gas or light breath comes out as the 
+matching spell instead (a fireball, frostball, lightning bolt, acid ball, 
+stinking cloud or colour spray), weaker the lower its level.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Heat Resistance</a>
+&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Bad Breath</a>
+</pre>
+
+
+
+
+</div>

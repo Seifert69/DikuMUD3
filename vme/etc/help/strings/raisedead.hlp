@@ -1,12 +1,29 @@
-<br/>
-<br/>
-<br/>
-Sphere: Divine Sphere<br/><br/>
-<br/><br/>
-Usage raise dead (target)<br/><br/>
-<br/>
-This spell will pull a soul from Valhalla and put them back into their<br/>
-corpse with 0 endurance, 0 mana, and 0 hitpoints.  You must have the<br/>
-player's corpse for the spell to work.<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Raise Dead</h1>
+<p>Sphere: Divine Sphere
+Class: Healer (guild level 27)
+Mana: 60
+</p><p>Usage:
+</p>
+<pre>cast raise dead &lt;player&gt;
+</pre>
+<p>Pulls a dead player's soul out of Valhalla and back into their body. It only 
+works in the short time after their death while their spirit is still in 
+Valhalla, before they come back to life in their temple by themselves (see 
+<a cmd='#'>Help Die</a>), and only if you have their corpse: lying in the room with you, 
+or carried.
+</p><p>The player arrives where you are, back in their body with everything the 
+corpse held, but stunned, with no hit points, no mana and no endurance left: 
+look after them. It costs you both 2,500 experience points.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Die</a>
+&gt; <a cmd='#'>Help Resurrection</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

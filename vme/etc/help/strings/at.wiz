@@ -1,12 +1,25 @@
-<div class="mw-parser-output"><h1>At (220)</h1>
-<p>Usage: 
+<div class="mw-parser-output"><h1>At (230)</h1>
+<p>Usage:
 </p>
-<pre> at &lt;room name|unit path&gt; &lt;command&gt;
+<pre>at &lt;room@zone&gt; &lt;command&gt;
+at &lt;someone or something&gt; &lt;command&gt;
 </pre>
-<p>Allows a wizard to execute commands as if they were in another location. Provide the unit-path to where the command should be executed, and the command itself, and it will be so.
-</p><p>See also:
+<p>Examples:
 </p>
-<pre> &gt; <a cmd='#'>wizhelp goto</a>
+<pre>at temple@udgaard look
+at Gnort say Hello there.
+</pre>
+<p>Does a command as if you stood somewhere else, and brings you straight 
+back. Name a room by its symbolic name (room@zone), or anyone or anything 
+in the world: then you are where they are. You are back where you were 
+afterwards, unless the command took you somewhere else, or your place 
+no longer exists.
+</p><p>It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Goto</a>
+&gt; <a cmd='#'>Wizhelp Transfer</a>
 </pre>
 
 

@@ -1,9 +1,29 @@
-<br/>
-<br/>
-Usage: cast brambles<br/>
-A lesser variant of Hedge Wall, this spell causes a thorny bramble bush<br/>
-to sprout from the ground.  Passerby are stuck by these thorns, causing<br/>
-light damage.  The bush will live longer depending on the casters skill,<br/>
-but will be crushed if run into too often or too hard.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Brambles</h1>
+<p>Sphere: Creation Sphere
+Class: Druid (guild level 12)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast brambles</a>
+</pre>
+<p>The druid holds out a hand and wiggles their fingers, and a large clump 
+of thorny bushes grows from the ground. Whoever moves or acts in the room 
+risks being stuck by the thorns, for 3 to 17 hit points each time; a nimble 
+character dodges them more often. The thorns don't spare anyone: the druid 
+and their friends get stuck as well.
+</p><p>The bush lives from half a minute to a couple of minutes, longer the better 
+your spell, then withers away. Every time the thorns stick someone, their 
+weight presses on it, and heavy creatures soon crush it flat.
+</p><p>It only grows outside on open ground: not indoors, not on water, snow or 
+ice. You must be standing. It is also found on wands, staffs and scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Hedge Wall</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

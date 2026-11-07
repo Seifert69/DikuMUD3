@@ -1,16 +1,35 @@
-<br/>
-<br/>
-<br/>
-Sphere: Poison<br/><br/>
-Spell level: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 100<br/> <br/>
-<br/><br/>
-Usage toxicate (target)<br/><br/>
-<br/>
-This spell poisons drink or food, or makes a humanoid target suffer under<br/>
-the effects of poison. THis spell does not require a free hand.<br/><br/>
-<br/>See Also:<br/><br/>
-poison sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Toxicate</h1>
+<p>Sphere: Poison Sphere
+Class: Assassin (guild level 20, up to 80%), Sorcerer (guild level 37)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast toxicate &lt;target&gt;
+cast toxicate &lt;food or drink&gt;
+<a cmd='#'>cast toxicate</a>   (at whoever you are fighting)
+</pre>
+<p>The caster curves a finger like a scorpion's tail, points and utters 
+'Entahc', and poison burns in the target's veins. Every 15 seconds the 
+victim loses hit points, and twice as much mana and endurance. The better 
+your spell, the longer the poison lasts and the harder it burns: a weak one 
+is over at once, a master's lasts nearly three minutes and takes over a 
+hundred hit points in all. A poisoned victim can die of it.
+</p><p>Cast on food or a drink that isn't poisoned already, it poisons it, and 
+whoever eats or drinks it falls ill.
+</p><p>The victim resists, and the spell may fail; either way, casting it on 
+someone starts a fight. It can be cast while fighting, and no free hands 
+are needed. It is also found on potions, wands and scrolls. Remove poison 
+drives the poison out, and so can dispel magic when it is strong enough.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Remove Poison</a>
+&gt; <a cmd='#'>Help Detect Poison</a>
+&gt; <a cmd='#'>Help Poison Resistance</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>

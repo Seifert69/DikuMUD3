@@ -1,0 +1,24 @@
+<div class="mw-parser-output"><h1>Shutdown (255)</h1>
+<p>Usage:
+</p>
+<pre>shutdown
+</pre>
+<p>Stops the game at once, without a countdown: every player is told 
+"Shutdown by &lt;your name&gt;.", is saved, and the server exits. Type the 
+command in full; an abbreviation is refused.
+</p><p>Note that the script that keeps the game running (runvme.sh) starts the 
+server again whenever it exits, so on a server run that way, shutdown 
+works like an unannounced reboot. To keep the game down, stop the 
+scripts on the server (bin/stopvme.sh). To restart with a warning to the 
+players, use <a cmd='#'>Wizhelp Reboot</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Reboot</a>
+&gt; <a cmd='#'>Wizhelp Crash</a>
+</pre>
+
+
+
+
+</div>

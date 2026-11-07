@@ -1,24 +1,24 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-The time in the game runs 12 times faster than real time, thus each<br/>
-hour is 5 minutes long, and each day is 2 hours long. There are 14<br/>
-days per month and a total of nine months per year. Thus a Valhalla<br/>
-month passes in 28 hours, and a year passes in 252 hours (10 days<br/>
-and 12 hours).<br/>
-<br/><br/><br/>
-In one real year 35 Valhalla years pass.<br/>
-<br/><br/><br/>
-To change the way in which the game is personalized for YOU, try help on<br/>
-the following subjects:<br/>
-<br/><br/>
-<br/>See Also:<br/><br/>
-Inform<br/><br/>
-Change<br/><br/>
-Prompt<br/><br/>
-Peaceful<br/><br/>
-Brief<br/><br/>
-Compact<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Date</h1>
+<p>Time in Valhalla runs 12 times faster than real time:
+</p>
+<pre>1 hour   =  5 real minutes
+1 day    =  24 hours  =  2 real hours
+1 month  =  14 days   =  28 real hours
+1 year   =  9 months  =  252 real hours (10 days and 12 hours)
+</pre>
+<p>So in one real year about 35 Valhalla years pass. The <a cmd='#'>time</a> command 
+tells you the hour, the day and the date in Valhalla. The hour of the day 
+matters: the sun rises and sets, some spells work only by day, and your 
+character ages with every year (see <a cmd='#'>Help Age</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Time</a>
+&gt; <a cmd='#'>Help Weather</a>
+&gt; <a cmd='#'>Help Age</a>
+</pre>
+
+
+
+
+</div>

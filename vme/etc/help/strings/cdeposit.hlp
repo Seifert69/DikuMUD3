@@ -1,16 +1,30 @@
-<br/>
-Usage cdeposit &lt;amount&gt;<br/>
-Example: cdeposit 5 gold<br/>
-Example: cdeposit 5 gp<br/>
-<br/>
-This command allows a Clan member to deposit money into the Clans safe box in<br/>
-their clan house.  All members can deposit.<br/>
-<br/>
-Note:<br/>
-You must be at the clan chest to use this command.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-cbalance<br/>
-cwithdraw<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cdeposit</h1>
+<p>Usage:
+</p>
+<pre>cdeposit &lt;amount&gt; &lt;money&gt;
+cdeposit all &lt;money&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>cdeposit 5 gold
+cdeposit 20 sp
+cdeposit all iron
+</pre>
+<p>Puts money from your purse into your clan's treasury. Name the coins: 
+iron, copper, silver, gold or platinum, or ip, cp, sp, gp, pp for short. 
+With all, every coin of that kind you carry goes in.
+</p><p>Any member of the clan can deposit, but only at the clan chest in the clan 
+house. Only the clan Master and the treasurers can take money out again (see 
+<a cmd='#'>Help Cwithdraw</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cbalance</a>
+&gt; <a cmd='#'>Help Cwithdraw</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

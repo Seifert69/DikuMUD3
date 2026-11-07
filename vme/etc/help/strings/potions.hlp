@@ -1,12 +1,30 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Usage quaff (potion)<br/><br/>
-<br/>
-This command enables you to quaff potions in your possession. The effects<br/>
-of the potion will then follow. Potions can have many effects. The ones you<br/>
-want are generally those that would have effects similar to the<br/>
-spells'heal' or 'cure light wounds'<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Potions</h1>
+<p>Usage:
+</p>
+<pre>quaff &lt;potion&gt;
+</pre>
+<p>Example:
+</p>
+<pre>quaff red potion
+</pre>
+<p>A potion holds up to three spells. Quaff it, and it is gone, and its 
+spells are cast on you at the potion's own power, whatever your own 
+skill. The most sought-after potions heal you, like the spells cure light 
+wounds and heal; others protect you, cure poison, restore mana, or worse. 
+To learn what a potion holds before you drink it, identify it (see 
+<a cmd='#'>Help Identify</a>).
+</p><p>You must carry the potion. You can quaff while resting, and in the middle 
+of a fight, but drinking there costs you two rounds of attacks.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Identify</a>
+&gt; <a cmd='#'>Help Scrolls</a>
+&gt; <a cmd='#'>Help Wands</a>
+&gt; <a cmd='#'>Help Spells</a>
+</pre>
+
+
+
+
+</div>

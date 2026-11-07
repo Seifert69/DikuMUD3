@@ -1,13 +1,21 @@
 <div class="mw-parser-output"><h1>Broadcast (240)</h1>
 <p>Usage:
 </p>
-<pre> broadcast &lt;string&gt;
+<pre>broadcast &lt;text&gt;
 </pre>
-<p>Displays a string for all connected characters. Similar to the echo command, but with a reach that spans the entire game rather than just a specific room.
-</p><p>See also:
+<p>Example:
 </p>
-<pre> &gt; <a cmd='#'>wizhelp echo</a>
- &gt; <a cmd='#'>wizhelp message</a>
+<pre>broadcast The game will reboot in five minutes.
+</pre>
+<p>Shows your text, just as you write it, to every player in the game, 
+asleep or awake. Your name isn't added: say who it is from if it matters. 
+Like echo, but for the whole world instead of one room.
+</p><p>It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Echo</a>
+&gt; <a cmd='#'>Wizhelp Message</a>
 </pre>
 
 

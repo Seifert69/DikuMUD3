@@ -1,6 +1,32 @@
-<br/>
-<br/>
-Usage: cast summon lightning<br/>
-This spell summons a powerful lightning elemental to serve the caster.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Summon Lightning</h1>
+<p>Sphere: Summoning Sphere
+Class: Druid (guild level 60)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast summon lightning
+tell elemental &lt;command&gt;
+</pre>
+<p>The caster chants 'Gea Thudas', their hair stands on end, and with a clap 
+of thunder a lightning elemental (level 90) is summoned to serve them. It 
+follows you and fights beside you, hurling jolts of lightning at your 
+foes, and you can give it orders with tell: to attack (tell elemental 
+kill orc), to walk, and the like. It won't attack another player unless 
+both of you have signed the Book of Blood.
+</p><p>It can stay on this plane only a short while: from half a minute to a 
+minute or two, longer the better the casting. Then it is gone, dropping 
+whatever it carried. If it is killed first, it is gone too.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Summon Air</a>
+&gt; <a cmd='#'>Help Jolt</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+</pre>
+
+
+
+
+</div>

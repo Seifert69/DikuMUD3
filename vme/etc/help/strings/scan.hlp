@@ -1,12 +1,36 @@
-<br/>
-<br/>
-Usage: scan [number of rooms] [direction]<br/>
-Scan lets you see surrounding rooms and what's in them. The parameters in<br/>
-[] mean that they are optional. Anyone can scan one room away. Typing 'scan 1'<br/>
-on its own will show you all rooms (if you can see into them) north, south,<br/>
-east, west, up, down, northwest, northeast, southwest, and southeast.<br/><br/>
-'Scan 1 north' will show you the north room. Those more skilled in scan can<br/>
-see further afield, to a maximum of 3 rooms away.<br/>
-Needless to say, this skill is a bit good.<br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Scan</h1>
+<p>Skill
+Class: Ranger (guild level 0), Druid (guild level 4, up to 50%)
+</p><p>Usage:
+</p>
+<pre>scan                  every way out, one room away
+scan &lt;number&gt;         every way out, that many rooms away
+scan &lt;direction&gt;      one way, as far as you can
+scan &lt;number&gt; &lt;direction&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>scan
+scan north
+scan 2 east
+</pre>
+<p>Looks out of the room to see who and what is in the rooms around you. 
+Anyone can scan one room away. With the skill you see further: two rooms 
+from 40%, and three, the most anyone can, at 100%. Name a direction alone, 
+and you look that way as far as your skill lets you.
+</p><p>You can't see through closed doors, and those who are hidden or invisible 
+stay unseen, though with sense life you feel that a hidden life form is 
+there. You must be standing; you can also scan from a boat.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Exits</a>
+&gt; <a cmd='#'>Help Look</a>
+&gt; <a cmd='#'>Help Sense Life</a>
+&gt; <a cmd='#'>Help Ranger Skills</a>
+</pre>
+
+
+
+
+</div>

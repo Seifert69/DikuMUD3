@@ -1,21 +1,32 @@
-<br/>
-Sphere: Fire<br/><br/>
-<br/>
-Spell Tier: 1<br/><br/>
-<br/>
-Class: Sorcerer, <br/> <br/>
-<br/>
-Guild Level: 0 <br/><br/>
-<br/> <br/>
-Usage cast burn (target)<br/>
-<br/><br/>
-This spell causes a small magical fire to apparate at the location of <br/>
-the named target or present target in battle to inflict damage by fire. <br/>
-The spell does not require the caster to have any free hands.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-fire resistance<br/><br/>
-fireball<br/><br/>
-firestorm<br/><br/>
-fire blast<br/><br/>
+<div class="mw-parser-output"><h1>Burn</h1>
+<p>Sphere: Fire Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 0)
+Mana: 10
+</p><p>Usage:
+</p>
+<pre>cast burn &lt;target&gt;
+<a cmd='#'>cast burn</a>   (at whoever you are fighting)
+</pre>
+<p>The caster utters the word 'Inceriti', and a small magical fire springs up 
+on the target. It is the first fire spell a sorcerer learns, and the 
+weakest: the better your magic and your fire sphere, the more it burns. It 
+does about as well against any armour, a little better against plate, and 
+a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fireball</a>
+&gt; <a cmd='#'>Help Fire Blast</a>
+&gt; <a cmd='#'>Help Firestorm</a>
+&gt; <a cmd='#'>Help Heat Resistance</a>
+&gt; <a cmd='#'>Help Fire Sphere</a>
+</pre>
+
+
+
+
+</div>

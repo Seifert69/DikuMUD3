@@ -1,22 +1,31 @@
-<br/>
-<br/>
-<br/>
-Sphere: Poison<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/> <br/>
-Guild Level: 7<br/><br/>
-<br/><br/>
-Usage madness (target)<br/><br/>
-<br/>
-When cast upon a human target it causes a brain fever and the target  <br/>
-slowly becomes mentally unstable.  At the end, the target might <br/>
-even become violent.  The effects of madness can be removed by a remove <br/>
-disease spell. This spell requires no hands to cast.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-poison sphere<br/><br/>
-plague<br/><br/>
-energy drain<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Madness</h1>
+<p>Sphere: Poison Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 7)
+Mana: 15
+</p><p>Usage:
+</p>
+<pre>cast madness &lt;target&gt;
+<a cmd='#'>cast madness</a>   (at whoever you are fighting)
+</pre>
+<p>Gives a humanoid or mammal a brain fever: a battle with their own mind 
+begins. For about half an hour, every half minute they do something mad: 
+sing, cry, drop their money or leave gold for the poor, run screaming from a 
+corpse that isn't there, cast spells for no reason, try to write a poem. As 
+the madness grows, it turns violent, and they may attack anyone near them, 
+sure they've been betrayed. Asleep, they only have nightmares.
+</p><p>Remove disease, or dispel magic, cures it if strong enough. The target 
+resists the spell with their mind; either way, casting it starts a fight. It 
+is also found on potions, wands, scrolls and staffs.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Remove Disease</a>
+&gt; <a cmd='#'>Help Plague</a>
+&gt; <a cmd='#'>Help Poison Sphere</a>
+</pre>
+
+
+
+
+</div>

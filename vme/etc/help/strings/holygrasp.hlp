@@ -1,15 +1,32 @@
-<br/>
-Sphere: Divine sphere<br/><br/>
-<br/>
-This is a level 3 spell:<br/>
-<br/>
-Usagecast holy grasp (target)<br/>
-<br/>
-Holy word is a powerful Paladin spell which inflicts injury upon evil<br/>
-creatures.<br/>
-<br/>
-<br/>See Also:<br/><br/>
-Holy Touch<br/><br/>
-Holy Word<br/><br/>
-Holy Shout<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Holy Grasp</h1>
+<p>Sphere: Divine Sphere
+Spell Tier: 3
+Class: Paladin (guild level 120)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast holy grasp &lt;target&gt;
+<a cmd='#'>cast holy grasp</a>   (at whoever you are fighting)
+</pre>
+<p>A stronger prayer than holy touch: the paladin speaks the liturgy of the 
+gods and grasps the target, and those who lean to evil are hurt badly. Any 
+target whose alignment is below neutral can be struck, and the truly evil 
+are hurt more; on the good and the neutral, nothing happens. The better 
+your divine power and sphere, the more it hurts. It does a little better 
+against light armour than against heavier armour, and a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It is also found on scrolls. 
+The strongest of these prayers is holy shout.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Holy Word</a>
+&gt; <a cmd='#'>Help Holy Touch</a>
+&gt; <a cmd='#'>Help Holy Shout</a>
+&gt; <a cmd='#'>Help Dispel Evil</a>
+&gt; <a cmd='#'>Help Divine Sphere</a>
+</pre>
+
+
+
+
+</div>

@@ -1,24 +1,26 @@
-<br/>
-<br/>
-<br/>
-<br/>
-Weapon                 Level<br/>
-<br/>
-Dagger                   0<br/>
-Quarterstaff             2<br/>
-Short sword              4<br/>
-Fist                     4<br/>
-Mace                     6<br/>
-Club                    10<br/>
-Sling                   10<br/>
-Rapier                  12<br/>
-Fighting staff          15<br/>
-<br/>
-<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
- Druid<br/><br/>
- Druid Skills<br/><br/>
- Druid Spells<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Druid Weapons</h1>
+<p>The weapon skills the Druids' guild teaches. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+</p>
+<pre>Name           Level   Up to
+Dagger             0   100%
+Quarterstaff       2   100%
+Fist               4   50%
+Short Sword        4   70%
+Mace               6   60%
+Club              10   70%
+Sling             10   70%
+Rapier            12   50%
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Druid Skills</a>
+&gt; <a cmd='#'>Help Druid Spells</a>
+&gt; <a cmd='#'>Help Druid</a>
+&gt; <a cmd='#'>Help Weapons</a>
+</pre>
+
+
+
+
+</div>

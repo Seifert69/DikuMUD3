@@ -1,19 +1,29 @@
-<br/>
-Sphere: Creation<br/><br/>
-Spell Tier: 4<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 45<br/> <br/>
-<br/><br/>
-<br/>
-Usage cast blinding flash (target)<br/><br/>
-<br/><br/>
-This spell will hurt the target with a flash of light.<br/>
-It requires no hands free to cast.<br/><br/>
-<br/>
-<br/>See Also:<br/><br/>
-Flash<br/><br/>
-Light<br/><br/>
-Continual Light<br/><br/>
-Magic Candle<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Blinding Flash</h1>
+<p>Sphere: Creation Sphere
+Class: Sorcerer (guild level 45)
+Mana: 30
+</p><p>Usage:
+</p>
+<pre><a cmd='#'>cast blinding flash</a>
+</pre>
+<p>The caster closes their eyes and chants, and a small ball of pure light 
+bursts with a blinding flash. Everyone in the room is caught in it, except 
+the caster, the caster's leader and everyone who follows that leader; other 
+players only when both you and they have signed the Book of Blood. It does 
+no harm: whoever is dazzled loses a combat round, their next blow coming 
+late.
+</p><p>Each one resists with their mind and their own skill in the spell against 
+yours; those who aren't dazzled growl and attack you. It can be cast while 
+fighting, and no free hands are needed. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Stun</a>
+&gt; <a cmd='#'>Help Flash</a>
+&gt; <a cmd='#'>Help Creation Sphere</a>
+</pre>
+
+
+
+
+</div>

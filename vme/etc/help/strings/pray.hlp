@@ -1,10 +1,25 @@
-<br/>
-<br/>
-<br/>
-<br/>
-The statue in the starting temples will grant items to beginners if prayed<br/>
-to. For example when inside a starting temple use:<br/>
-<br/><br/>
-pray statue<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Pray</h1>
+<p>Usage:
+</p>
+<pre>pray
+pray statue
+</pre>
+<p>There is no prayer that works everywhere: you pray where something is 
+listening.
+</p>
+<ul><li><b>Odin's statue</b>, in the temple of Udgaard and the Cathedral of Midgaard: pray statue, and if you are of level 20 or below, Odin gives you a beginner's gear (see <a cmd='#'>Help Odin Statue</a>).</li>
+<li><b>The healers' silver torc</b>, the guild item of the Healers: wear it at your neck and pray, and it forms a hammer of light in your hand, at the cost of some mana.</li>
+<li><b>The Bounty Hunters</b> have a chapel where their recruits pray (see <a cmd='#'>Help Bounty</a>).</li></ul>
+<p>Elsewhere the game won't understand you.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Odin Statue</a>
+&gt; <a cmd='#'>Help Healers</a>
+&gt; <a cmd='#'>Help Bounty</a>
+</pre>
+
+
+
+
+</div>

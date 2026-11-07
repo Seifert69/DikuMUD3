@@ -1,24 +1,31 @@
-<br/>
-<br/><br/>
-Sphere: Summoning<br/><br/>
-<br/>
-Spell Tier:1 <br/><br/>
-<br/>
-Class: Necromancer<br/> <br/>
-<br/>
-Guild Level: 25<br/> <br/>
-<br/><br/>
-Usage undead door (target)<br/><br/>
-<br/><br/>
-This spell will switch the locations of the caster and the undead being which <br/>
-is specified.  Thus if you were standing in Midgaard and cast the spell, an <br/>
-undead would be summoned to your location and you would go to the location <br/>
-of the undead. Some undead are more resistant to this than others, for example<br/>
-it is easier to perform this with a zombie than a skeletal champion or a <br/>
-vampire. This requires no free hands but it does require that both the caster <br/>
-and the target undead be in an area where teleportation is possible.<br/><br/>
-<br/><br/>
-See Also:<br/><br/>
-divine sphere<br/><br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Undead Door</h1>
+<p>Sphere: Summoning Sphere
+Class: Necromancer (guild level 25)
+Mana: 50
+</p><p>Usage:
+</p>
+<pre>cast undead door &lt;undead&gt;
+</pre>
+<p>The caster utters 'Muera piort', and trades places with an undead 
+creature anywhere in the world: you appear where it was, and it appears 
+where you stood. A way to travel far, if you know where a zombie, a 
+skeleton or a ghost is lingering.
+</p><p>It works only on the undead, and the undead resists: some, like a 
+skeletal champion or a vampire, are harder to switch with than a zombie. 
+Both you and the undead must be in places that allow teleporting. And 
+beware the rift: about one cast in twenty tears a hole in the powers of 
+magic instead, and you may be flung somewhere unknown, or something may 
+come through at you.
+</p><p>You must be standing. It is also found on scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Raise Skeleton</a>
+&gt; <a cmd='#'>Help Summoning Sphere</a>
+&gt; <a cmd='#'>Help Necromancer Spells</a>
+</pre>
+
+
+
+
+</div>

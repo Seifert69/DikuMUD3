@@ -1,9 +1,32 @@
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
-<br/>
- Spell level is the limitation for which spells can be learned.<br/>
-<br/>
- Try help on the individual spells and/or help for a particular guild.<br/>
+<div class="mw-parser-output"><h1>Magic and Divine</h1>
+<p>Magic (MAG) and divine (DIV) are the two powers behind every spell. Each 
+spell draws on one of them:
+</p>
+<ul><li><b>magic</b>: the spells of sorcerers and conjurers;</li>
+<li><b>divine</b>: the spells of healers, druids, paladins, necromancers, dark knights and rangers.</li></ul>
+<p>The higher the power a spell draws on, the better you cast it: the more 
+a harmful spell hurts, the more a healing spell heals, and the more 
+easily you succeed. Your skill in the spell and in its sphere counts as 
+well. A target resists your spells with their brain, not their own magic 
+(see <a cmd='#'>Help Brain</a>), and with their own skill in that spell or its sphere: a 
+sorcerer who has mastered fire shrugs off a small fire spell.
+</p><p>You raise magic and divine like the other abilities, by training at your 
+guild (see <a cmd='#'>Help Abilities</a>). Your race and guild decide how easily they 
+grow: a sorcerer's magic, a healer's divine.
+</p><p>When your charisma is higher than both your magic and your divine, your 
+mana comes back faster; when it is lower, more slowly (see <a cmd='#'>Help 
+Charisma</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Brain</a>
+&gt; <a cmd='#'>Help Charisma</a>
+&gt; <a cmd='#'>Help Spheres</a>
+&gt; <a cmd='#'>Help Mana Points</a>
+</pre>
+
+
+
+
+</div>

@@ -1,13 +1,35 @@
-<br/>
-<br/>
-Sphere: Protection Sphere<br/><br/>
-<br/><br/>
-Usage cast displace magic (target)<br/><br/>
-<br/><br/>
-This spell is the diviners equal to dispel magic and will if<br/>
-successful dispel non-permanent spells.<br/><br/>
-<br/>
-The spell drains 10MP and 10EP for each spell removed.  If MP<br/>
-or EP runs out, caster looses all HP (pass out).<br/>
-<br/><br/>
-<br/>
+<div class="mw-parser-output"><h1>Displace Magic</h1>
+<p>Sphere: Protection Sphere
+Class: Dark Knight (guild level 80)
+Mana: 25
+</p><p>Usage:
+</p>
+<pre>cast displace magic &lt;target&gt;
+cast displace magic &lt;object&gt;
+</pre>
+<p>The dark knights' answer to dispel magic: it tears spells off a person, a 
+creature or an object, one after another. It removes, among others: bless, 
+unholy blessing and condemn, the detect spells, invisibility, charm, hold, 
+haste, quicken and slow, poison, mire, rage, berserk and focus, absorption, 
+magic light and darkness, enchanted weapons and armour, and the raise 
+spells. The better your spell, the more it removes: up to fifteen for a 
+master.
+</p><p>Like dispel magic, it also breaks spells such as sleep, plague and madness, 
+when your spell is at least as strong as they were. It doesn't touch the 
+resistances, sanctuary, the skin spells, protection from evil, life 
+protection or sustain.
+</p><p>It is harder work than dispel magic: each spell removed costs you 30 
+endurance, and if your endurance runs out you fall stunned. You need more 
+than 20 endurance to begin. You must be standing. It is also found on 
+scrolls and wands.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Dispel Magic</a>
+&gt; <a cmd='#'>Help Protection Sphere</a>
+</pre>
+
+
+
+
+</div>

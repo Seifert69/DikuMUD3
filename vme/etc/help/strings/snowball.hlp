@@ -1,18 +1,33 @@
-<br/>
-Sphere: Frost<br/><br/>
-Spell level: 1<br/><br/>
-Class: Sorcerer<br/> <br/>
-Guild Level: 6<br/> <br/>
-<br/>
-Usage snowball (target)<br/><br/>
-<br/><br/>
-This causes the moisture in the air surrounding the caster to form into<br/>
-a ball of snow. It is then hurled at the target causing a <br/>
-small amount of cold damage upon impact. This spell requires no free hands<br/><br/>
-<br/>
-<br/>
-<br/>See Also:<br/><br/>
-<br/>
-frostball<br/><br/>
-iceball<br/><br/>
-icestorm<br/><br/>
+<div class="mw-parser-output"><h1>Snowball</h1>
+<p>Sphere: Frost Sphere
+Spell Tier: 1
+Class: Sorcerer (guild level 6)
+Mana: 12
+</p><p>Usage:
+</p>
+<pre>cast snowball &lt;target&gt;
+<a cmd='#'>cast snowball</a>   (at whoever you are fighting)
+</pre>
+<p>The caster's body shakes with the words 'Bolat snellok', and the moisture 
+in the air forms a ball of snow that is hurled at the target. It is the 
+first and weakest of the frost spells: the better your magic and your 
+frost sphere, the more it chills. Unlike most attacks, it hits harder 
+the heavier the armour: it does best of all against plate. A shield can 
+block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Frostball</a>
+&gt; <a cmd='#'>Help Iceball</a>
+&gt; <a cmd='#'>Help Icestorm</a>
+&gt; <a cmd='#'>Help Cold Resistance</a>
+&gt; <a cmd='#'>Help Frost Sphere</a>
+</pre>
+
+
+
+
+</div>

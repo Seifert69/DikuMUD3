@@ -1,13 +1,19 @@
-<br/>
-Usage cbalance<br/><br/>
-Example: cbalance<br/>
-<br/>
-This command allows all clan members to be able to check what is in the<br/>
-Clan deposit box.<br/>
-<br/>
-Note:<br/>
-You must be at the clan chest to use this command.<br/>
-<br/>See Also:<br/><br/>
-cwithdraw<br/>
-cdeposit<br/>
-<br/>
+<div class="mw-parser-output"><h1>Cbalance</h1>
+<p>Usage:
+</p>
+<pre>cbalance
+</pre>
+<p>Shows how much money is in your clan's treasury. Any member of the clan 
+can look, but only at the clan chest in the clan house.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Cdeposit</a>
+&gt; <a cmd='#'>Help Cwithdraw</a>
+&gt; <a cmd='#'>Help Clan Commands</a>
+</pre>
+
+
+
+
+</div>

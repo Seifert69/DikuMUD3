@@ -1,0 +1,44 @@
+<div class="mw-parser-output"><h1>Gmtrack</h1>
+<p>Usage:
+</p>
+<pre>gmtrack &lt;player&gt; &lt;zone ...&gt; [hours]       (230)
+gmtrack &lt;player&gt; any [hours]
+gmtrack &lt;player&gt; off
+gmtrack
+</pre>
+<p>Follows a player for a game master's event, so you needn't ask 
+<a cmd='#'>Wizhelp Where</a> again and again. Every game master online hears, as 
+"[gm Asta] 14:02 ...":
+</p>
+<ul><li>when the player enters or leaves one of the zones (with <b>any</b>,</li></ul>
+<p>every change of zone; a room standing inside another counts as the 
+outer room's zone),
+</p>
+<ul><li>when they die, or fall below a third of their hit points (once, until</li></ul>
+<p>they're above half again),
+</p>
+<ul><li>when someone starts following them,</li>
+<li>when they've been idle 10 minutes, and when they're back,</li>
+<li>when they leave the game.</li></ul>
+<p>A game master is a god with $gm in their info (set &lt;god&gt; add-info $gm). 
+Nothing about the player changes. A move by magic (goto, teleport, 
+recall, summon) is noticed at their next command, or within the minute.
+</p><p>Tracking ends by itself after the hours you give (2 if you give none, 6 
+at most), when the player leaves the game, or with <b>off</b>. Tracking a 
+player again starts over. <b>gmtrack</b> alone lists who is tracked.
+</p><p>Example:
+</p>
+<pre>gmtrack asta midgaard udgaard 3
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmlure</a>
+&gt; <a cmd='#'>Wizhelp Gmmem</a>
+&gt; <a cmd='#'>Wizhelp Where</a>
+</pre>
+
+
+
+
+</div>

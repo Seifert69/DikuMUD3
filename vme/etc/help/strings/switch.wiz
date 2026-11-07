@@ -1,8 +1,23 @@
-<br/>
-Usage:<br/>
-   &gt;switch &lt;char&gt;<br/>
-<br/>
-This wiz-command gives you the power to control another character. However it<br/>
-must be a non-playing character you switch with. Use the same command without<br/>
-arguments to return from a switch.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Switch (230)</h1>
+<p>Usage:
+</p>
+<pre>switch &lt;monster&gt;
+switch              (go back to your own body)
+</pre>
+<p>Takes over a monster's body: you see what it sees, and your commands are 
+its commands, until you switch back. The monster may be here or anywhere 
+in the world, but no other god may be in it already ("... body is already 
+in use!"). Only monsters can be switched into, never players. Your own 
+body stays where you left it meanwhile.
+</p><p>Fine for playing a part in a quest. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Force</a>
+&gt; <a cmd='#'>Wizhelp Snoop</a>
+</pre>
+
+
+
+
+</div>
