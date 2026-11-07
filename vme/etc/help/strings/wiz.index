@@ -30,6 +30,7 @@ freeze=freeze.wiz
 :end:f
 :start:g
 gmlure=gmlure.wiz
+gmmem=gmmem.wiz
 gmquest=gmquest.wiz
 gmroom=gmroom.wiz
 gmtrack=gmtrack.wiz

@@ -1,0 +1,54 @@
+<div class="mw-parser-output"><h1>Gmmem</h1>
+<p>Usage:
+</p>
+<pre>gmmem &lt;unit&gt;                          (230)
+gmmem &lt;unit&gt; brief &lt;text&gt;
+gmmem &lt;unit&gt; brief+ &lt;text&gt;
+gmmem &lt;unit&gt; event &lt;id&gt;
+gmmem &lt;unit&gt; told &lt;text&gt;
+gmmem &lt;unit&gt; watch
+gmmem &lt;unit&gt; greet [line]
+gmmem &lt;unit&gt; for &lt;player&gt; [player ...]
+gmmem &lt;room&gt; lure &lt;step&gt;
+gmmem &lt;unit&gt; clear [brief|comms|told|event|greet|for|lure]
+</pre>
+<p>A game master's memory of the NPCs, objects and rooms of an event, kept 
+on the unit itself. A unit is an NPC or object by name (the first one 
+found in the game, so give yours a name of their own with set &lt;npc&gt; 
+add-name), <b>room</b> for the room you stand in, or room@zone. Players 
+are not the game master's to remember.
+</p><p><b>gmmem &lt;unit&gt;</b> shows all of it.
+</p><p><b>brief</b> is who or what it is, what it knows and may reveal, and how 
+it speaks; <b>brief+</b> adds to it. <b>event</b> is the event it belongs 
+to. <b>told</b> notes what it has revealed, and to whom, with the time.
+</p><p><b>watch</b> records what players do with it, the last 40 lines, and 
+tells every game master online at once, as "[gm hrafn] 14:02 Asta asks 
+'where is the relic?'". On an NPC: what players say, ask and emote in 
+its room, what they tell or give it, its fights and its death. On an 
+object: who gets, drops, puts, gives or sells it. A game master is a 
+god with $gm in their info (set &lt;god&gt; add-info $gm).
+</p><p><b>greet</b> is a tripwire on an NPC or room. When a player walks in (by 
+a direction, enter, leave or exit; arriving by goto, teleport, recall 
+or summon goes unnoticed), the game masters hear "[gm hrafn] 14:05 Asta 
+walks in", and the line plays once for each player: an NPC does it as a 
+command (say Ah, $1n, you came!), a room shows it to everyone there (A 
+cold draught follows $1n in.). $1n is the player. Without a line it 
+only tells you. <b>for</b> keeps it to those players, so passers-by don't 
+set it off; <b>for</b> with no names lets everyone count again.
+</p><p><b>lure</b> adds a step to a room's lure, played to a player you draw 
+there with <a cmd='#'>Wizhelp Gmlure</a>.
+</p><p><b>clear</b> removes one part, or all of them; clearing greet also stops 
+the tripwire.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmlure</a>
+&gt; <a cmd='#'>Wizhelp Gmtrack</a>
+&gt; <a cmd='#'>Wizhelp Gmroom</a>
+&gt; <a cmd='#'>Wizhelp Set</a>
+</pre>
+
+
+
+
+</div>
