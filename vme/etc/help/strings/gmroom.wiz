@@ -28,9 +28,13 @@ inside it, and how it shows in the room around it, one line each.
 in it.
 </p><p><b>free</b> ends a room. Everyone and everything inside, players' 
 corpses too, goes to the room it stands in, or else where its first 
-exit leads, or else the crypt in Udgaard. Exits that led to it are 
-removed. A room with another gm room inside must wait until that one 
-is freed.
+exit leads, or else the crypt in Udgaard: the event's own NPCs and 
+things too, so purge those first. Exits that led to it are removed. A 
+room with another gm room inside must wait until that one is freed.
+</p><p>At a reboot, a player saved in a gm room comes back in their hometown. 
+NPCs don't find their way into these rooms (the path finder only knows 
+the rooms there were at boot), though players walk in and out as 
+anywhere.
 </p><p>Example:
 </p>
 <pre>gmroom new tent in here
