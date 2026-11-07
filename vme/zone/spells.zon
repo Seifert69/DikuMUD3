@@ -11650,7 +11650,7 @@ code
       quit;
    }
 
-   if (hm < -30)
+   if (hm < -90)
    {
       act("You cause a great disturbance in the powers of magic!",
           A_ALWAYS, self, null, null, TO_CHAR);
