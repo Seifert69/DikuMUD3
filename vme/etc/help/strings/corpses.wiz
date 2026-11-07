@@ -1,0 +1,23 @@
+<div class="mw-parser-output"><h1>Corpses (200)</h1>
+<p>Usage:
+</p>
+<pre>corpses
+</pre>
+<p>Lists every player's corpse in the game, and where it is: in a room, 
+with the room's symbolic name (room@zone) so you can goto it, or carried 
+by someone. Each line says whether the corpse is empty or still holds 
+things, and whether it is buried.
+</p><p>Handy when a player can't find their corpse (see <a cmd='#'>Help Die</a>). It is 
+logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Goto</a>
+&gt; <a cmd='#'>Wizhelp Transfer</a>
+&gt; <a cmd='#'>Help Die</a>
+</pre>
+
+
+
+
+</div>
