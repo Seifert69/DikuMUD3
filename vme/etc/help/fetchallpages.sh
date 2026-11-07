@@ -424,7 +424,6 @@ python3 getwikihelppage.py Paladins &
 python3 getwikihelppage.py Paladinskills &
 python3 getwikihelppage.py Paladinspells &
 python3 getwikihelppage.py Paladinweapons
-python3 getwikihelppage.py Palmorb &
 python3 getwikihelppage.py Palrp &
 python3 getwikihelppage.py Partisan &
 python3 getwikihelppage.py Password &
