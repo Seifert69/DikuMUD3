@@ -1,0 +1,22 @@
+<div class="mw-parser-output"><h1>Cstat (200)</h1>
+<p>Usage:
+</p>
+<pre>cstat
+</pre>
+<p>Lists the clans of Valhalla: for each, its name, its clan master, and how 
+many members it has. Players see the clans with <a cmd='#'>clist</a>, without the 
+number of members.
+</p><p>The clan ids that <a cmd='#'>Wizhelp Cdelete</a> needs aren't shown here; they are the 
+first line of each clan's entry in clanlist.data (in the clan zone's 
+strings directory, lib/clan/strings by default). It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Cdelete</a>
+&gt; <a cmd='#'>Help Clan</a>
+</pre>
+
+
+
+
+</div>
