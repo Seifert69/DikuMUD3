@@ -14411,13 +14411,13 @@ code
        else
         skillc:=self.abilities[ABIL_DIV];
 
-       if(tgt.type==UNIT_ST_PC)
-        skilld:=tgt.spells[SPL_REPEL_UNDEAD_2];
+       if(u.type==UNIT_ST_PC)
+        skilld:=u.spells[SPL_REPEL_UNDEAD_2];
        else
-        skilld:=tgt.abilities[ABIL_DIV];
+        skilld:=u.abilities[ABIL_DIV];
 
        skilla:=self.abilities[ABIL_BRA];
-       skillb:=tgt.abilities[ABIL_BRA];
+       skillb:=u.abilities[ABIL_BRA];
 
         hm:=spellresist(skilla,skillb,skillc,skilld);
 
