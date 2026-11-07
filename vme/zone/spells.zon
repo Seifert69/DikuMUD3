@@ -3471,13 +3471,14 @@ code
 	}
 	else
 	{
+	/* A dispel at least as strong as the control ends it; other messages don't */
 	dispel := getwords(argument);
 	if(dispel.[0] == "spl_dispel")
 	 {
 	 if (atoi(dispel.[1]) >= i)
-	 	goto loop;
+	 	goto byebye;
 	 }
-	else goto byebye;
+	goto loop;
 	}
     }
 
