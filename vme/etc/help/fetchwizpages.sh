@@ -13,13 +13,11 @@ python3 getwikiwizhelppage.py Delete
 python3 getwikiwizhelppage.py Echo
 python3 getwikiwizhelppage.py Execute
 python3 getwikiwizhelppage.py File
-python3 getwikiwizhelppage.py Flick
 python3 getwikiwizhelppage.py Force
 python3 getwikiwizhelppage.py Freeze
 python3 getwikiwizhelppage.py Goto
 python3 getwikiwizhelppage.py Gp
 python3 getwikiwizhelppage.py Load
-python3 getwikiwizhelppage.py Mash
 python3 getwikiwizhelppage.py Makemoney
 python3 getwikiwizhelppage.py Message
 python3 getwikiwizhelppage.py Noshout
@@ -33,12 +31,10 @@ python3 getwikiwizhelppage.py Purge
 python3 getwikiwizhelppage.py Reboot
 python3 getwikiwizhelppage.py Reset
 python3 getwikiwizhelppage.py Restore
-python3 getwikiwizhelppage.py Rock
 python3 getwikiwizhelppage.py Seize
 python3 getwikiwizhelppage.py Set
 python3 getwikiwizhelppage.py Setskill
 python3 getwikiwizhelppage.py Shutdown
-python3 getwikiwizhelppage.py Slime
 python3 getwikiwizhelppage.py Snoop
 python3 getwikiwizhelppage.py Switch
 python3 getwikiwizhelppage.py Title
