@@ -2,14 +2,18 @@
 <p>Usage:
 </p>
 <pre>cwithdraw &lt;amount&gt; &lt;money&gt;
+cwithdraw all &lt;money&gt;
 </pre>
 <p>Examples:
 </p>
 <pre>cwithdraw 5 gold
 cwithdraw 20 sp
+cwithdraw all gold
 </pre>
 <p>Takes money out of your clan's treasury into your purse. Name the coins: 
 iron, copper, silver, gold or platinum, or ip, cp, sp, gp, pp for short. 
+With all, you take as much of the treasury as comes out in whole coins of 
+that kind. 
 Only the clan Master and the members appointed treasurer can withdraw 
 (see <a cmd='#'>Help Clan Treasurer</a>), and only at the clan chest in the clan house. 
 To see how much there is, use <a cmd='#'>Help Cbalance</a>.
