@@ -5443,7 +5443,6 @@ dilbegin aware do_delete (arg:string);
 var
 	temp:string;
 	err:integer;
-	pc:unitptr;
 code
 {
 
@@ -5494,30 +5493,10 @@ quit;
 	:admin_delete:
 	if (arg=="self forever")
 		goto char_delete;
-if (arg==""){
-sendtext("You must supply a characters name to delete one.<br/>",self);
-quit;
-}
 
-if (arg==self.name){
-sendtext ("To delete self you need to type 'delete self forever'<br/>",self);
-quit;
-}
-pc:=pc_head();
-while (pc.type==UNIT_ST_PC)
-{
-if (pc.name==arg)
-goto deletem;
-pc:=pc.gnext;
-}
-
-if (not isplayer(arg))
-	{
-	sendtext (arg+" is not a character.<br/>",self);
-	quit;
-	}
-	:deletem:
-	sendtext (arg+" has been deleted.<br/>",self);
+/* Other players are deleted on the server, from the command prompt, not in the game */
+sendtext ("Another character can't be deleted from inside the game; do it on the server.<br/>",self);
+sendtext ("To delete yourself, type 'delete self forever'.<br/>",self);
 quit;
 }
 dilend
