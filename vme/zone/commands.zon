@@ -1229,7 +1229,10 @@ code
 
    if ((left(arg,1) == "@") and (length(arg) > 1))
    {
-   tmp := getword(arg);
+   // only the "@": "wiz @waves" and "wiz @ waves" both emote "waves"
+   arg := right(arg, length(arg) - 1);
+   while (left(arg,1) == " ")
+      arg := right(arg, length(arg) - 1);
    emote := TRUE;
    }
 
@@ -2876,7 +2879,7 @@ code
 
    if (self.level<targ.level)
    {
-      act ("$3n would not be pleased if you did that.", A_ALWAYS,self,null,targ,TO_VICT);
+      act ("$3n would not be pleased if you did that.", A_ALWAYS,self,null,targ,TO_CHAR);
       quit;
    }
 
@@ -5489,7 +5492,7 @@ quit;
 
 	:no_insure:
 		if (self.extra.[CLAN_RANK]!=null)
-		exec ("cdefect",self);
+		exec ("cdefect now",self);
 			delete_player(self.name);
 
 quit;
@@ -7159,7 +7162,7 @@ code
       goto morphed;
 
    :keep_on:
-   guild_string := "Your guild path is: " + GuildString@guilds(self) + "<br/>";
+   guild_string := "Your guilds: " + GuildString@guilds(self) + "<br/>";
 
    :cont:
    if ((self.profession >= 0) and (self.profession < PROFESSION_MAX))
@@ -7199,7 +7202,6 @@ code
        "<br/>" +
        "Your combat Dexterity is " + itoa(getinteger(DIL_GINT_EFFDEX, self, 0)) + " as a result of your armor.<br/>"+
        remain_str+
-       "You have " + itoa(self.skill_points) + " skill practice points.<br/>" +
        "You are in " + couragestring() + " mode.<br/>"+
        "More: '<a cmd='#'>status skills</a>', '<a cmd='#'>status weapons</a>' and '<a cmd='#'>status spells</a>'."
        , A_ALWAYS, self, null, null, TO_CHAR);
@@ -7759,7 +7761,7 @@ oneword:={"arms","butt","ears","eyes","face","feet","General","chest","hair","ha
 i:=0;
 ln:=length(args.[0]);
 temp:="ERROR";
-while (i<18)
+while (i<length(oneword))
  {
  if (args.[0]==left(oneword.[i],ln))
   {
@@ -9261,7 +9263,7 @@ code
    if ((pcname != "from") and (pcname != "f") and (pcname != "fr") and
        (pcname != "fro"))
    {
-      targname := targname + pcname;
+      targname := targname + " " + pcname;
       goto loop;
    }
 
@@ -10925,10 +10927,8 @@ code
       return;
    }
 
-   log("1");
    u := findunit(self, arg, FIND_UNIT_WORLD, null, UNIT_ST_PC|UNIT_ST_NPC|UNIT_ST_OBJ|UNIT_ST_ROOM);
 
-   log("2");
    if (not u)
    {
       u := findsymbolic(arg);
@@ -10946,14 +10946,10 @@ code
 
    dir := pathto(self, u);
 
-   log("3b");
    sl := DIR_SL_LONG;
 
-   log("4");
-   sendtext("Ola<br/>", self);
    sendtext("Found "+u.nameidx+"@"+u.zoneidx+" which is located in <a cmd='goto #'>" + uin.nameidx + "@" + uin.zoneidx + "</a><br/>", self);
    sendtext("Direction: " + sl.[dir] + "("+itoa(dir)+")<br/>", self);
-   log("5");
    quit;
 }
 dilend

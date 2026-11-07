@@ -1875,7 +1875,6 @@ if ((tgt==self) and (medi.type!=UNIT_ST_OBJ))
 	}
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -1971,13 +1970,6 @@ code
    if (not(visible(self, targ)))
    {
       act("Your power cannot find the destination.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-if (self.type==UNIT_ST_PC)
-   if (not(paycheck( self,targ)))
-   {
-      act("You do not have access to that location, type 'help donation'.",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -2186,21 +2178,6 @@ code
       goto start;
    }
 
-if (pc.type==UNIT_ST_PC)
-   if (not(paycheck(pc, findroom(destin))))
-   {
-      act("You attempt to step through but the gate shocks you and " +
-          "you bounce back!",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      act("$1n attempts to step through the gate but is shocked and " +
-          "bounces back!",
-          A_ALWAYS, pc, null, null, TO_REST);
-      act("You do not have access to that location, type 'help donation'.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      pc.hp := pc.hp - rnd(10, 50);
-      position_update(pc);
-      goto start;
-   }
    act("$1n steps through $2n...",
        A_SOMEONE, pc, self, null, TO_REST);
    act("You step through $2n...",
@@ -2492,14 +2469,6 @@ code
     quit;
   }
 
-if (self.type==UNIT_ST_PC)
-  if (not (paycheck(self,targ)))
-  {
-    act("You do not have access to open a portal to $3n, type 'help donation'",
-        A_ALWAYS, self, null, targ, TO_CHAR);
-    quit;
-  }
-
   if(targ.type & UNIT_ST_OBJ|UNIT_ST_ROOM) hm := hm - targ.spells[SPL_NONE];
   if(targ.type == UNIT_ST_NPC) hm := hm - targ.spells[SPL_SUMMONING];
   if(targ.type == UNIT_ST_PC) hm := hm - targ.spells[SPL_PORTAL];
@@ -2587,22 +2556,6 @@ code
    pc := activator;
 /*   secure(pc, lost_pc);*/
    block;
-
-if (pc.type==UNIT_ST_PC)
-   if (not(paycheck(pc, findroom(destin))))
-   {
-      act("You attempt to step through but the gate shocks you and " +
-          "you bounce back!",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      act("$1n attempts to step through the gate but is shocked and " +
-          "bounces back!",
-          A_ALWAYS, pc, null, null, TO_REST);
-      act("You do not have access to that location, type 'help donation'.",
-          A_ALWAYS, pc, null, null, TO_CHAR);
-      pc.hp := pc.hp - rnd(10, 50);
-      position_update(pc);
-      goto start;
-   }
 
    act("$1n steps into $2n and vanishes...",
        A_SOMEONE, pc, self, null, TO_REST);
@@ -3092,15 +3045,7 @@ code
       act("Something prevents the soul shift from happening at $3n.",
           A_ALWAYS, self, null, targ, TO_CHAR);
       quit;
-   }
-
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,room)))
-    {
-      act("You do not have access to where $3n is located, type 'help donation'.",
-          A_ALWAYS, self, null, targ, TO_CHAR);
-      quit;
-    }  */
+   }  */
 
 /*
   if (targ.master != self)
@@ -3261,13 +3206,6 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,targ)))
-   {
-      act("There is a disturbance in the powers of magic...",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
 
    act("$1n vanishes in a puff of blue smoke!",
        A_SOMEONE, self, null, null, TO_REST);
@@ -3379,15 +3317,6 @@ code
         goto end;
     }
 
-    if (self.type==UNIT_ST_PC)
-    {
-        if (not(paycheck(self,dest)))
-        {
-            act("You don't have access to that location, type 'help donation'.", A_SOMEONE, self, null, null, TO_CHAR);
-            goto end;
-        }
-    }
-
     if ((dest.movement == SECT_WATER_SWIM) or (dest.movement == SECT_WATER_SAIL))
     {
     act("You sense a watery grave for yourself should you appear " +
@@ -3451,7 +3380,6 @@ code
     }
 
     gtpcost := 10 - (hm/120); // benefit for good casters for group teleport
-    log(itoa(gtpcost));
 
     if (self.mana < (kids * gtpcost)) /* 10 mana per grouped char */
     {
@@ -4456,7 +4384,7 @@ code{
        skilla:=self.abilities[ABIL_BRA];
        skillb:=u.abilities[ABIL_BRA];
 
-       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MIN))
+       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MAX))
        {
         skilla:=skillb/2;
         skillb:=skilld/2;
@@ -8361,7 +8289,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8412,7 +8339,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8450,7 +8376,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8494,7 +8419,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't bless themselves and allows familiars to bless owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8550,7 +8474,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't cast unholy blessing on themselves and allows familiars to cast unholy blessing on owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -10478,15 +10401,6 @@ code
         quit;
     }
 
-    if (self.type==UNIT_ST_PC)
-    {
-        if (not (paycheck(self,u.exit_to[i])))
-        {
-            act("You don't have access to that location, type 'help donation'.", A_ALWAYS, self, null, null, TO_CHAR);
-            quit;
-        }
-    }
-
     if ("$no_leaving_clan" in self.outside.extra)
     {
         act ("Magical Clan powers stop you from succeeding in that spell.", A_ALWAYS, self, null,null,TO_CHAR);
@@ -10611,14 +10525,11 @@ return;
 
 
 :skiptimer:
-subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
 	  if ("headless" in u.outside_descr){
-	  log("head_of_" +tgt.name);
 	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
 	  	  if(uh != null){
 	  	  	destroy(uh);
@@ -10632,6 +10543,9 @@ addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level 
         quit;
         }
         :startres:
+         // the wait before the next cast starts once a resurrection happens, not when none can
+         subextra (self.extra,"$RES_TIME");
+         addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -11025,7 +10939,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((targ == self) or (ex_ptr.descr == targ.name))){ // fixes mobs that can't refres themselves and allows familiars to refresh owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(targ.race)) and (not RACE_IS_MAMMAL(targ.race)))
  	    hm := -1;
@@ -13299,10 +13212,6 @@ code
    defined so I coded this support anyway. Comment out if you want to
    be able to random tele to trans-continental zones
 */
-   if (not(paycheck( self,plce)))
-   {
-      goto start;
-   }
 
     act("$1n disappears in a puff of green smoke.",
          A_ALWAYS, self, null, null, TO_REST);
@@ -13376,13 +13285,6 @@ code
       quit;
      }
 
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,plce))){
-      act("You don't have access to that location, type 'help donation'.",
-           A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-     }
-
    walk := pathto(self,plce);
 
    if(walk == DIR_IMPOSSIBLE)
@@ -13448,13 +13350,6 @@ code
     }
     quit;
  }
-
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,room))){
-      act("You don't have access to that location, type 'help donation'.",
-           A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-     }
 
  if(hm < 0)
  {
@@ -13522,13 +13417,6 @@ code
     quit;
    }
 
-if (self.type==UNIT_ST_PC)
-if (not(paycheck(self,tgt))){
-      act("You don't have access to the location that the undead is in, type 'help donation'.",
-           A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-     }
-
   if(hm < 0)
    {
     act("You can't seem to clearly locate the target.",
@@ -13580,7 +13468,6 @@ teletgt: integer;
 room_me: unitptr;
 room_tgt: unitptr;
 check: integer;
-pay:unitptr;
 
 code
 {
@@ -13610,18 +13497,6 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
      quit;
     }
-
-pay:=self.outside;
-while (pay.type!=UNIT_ST_ROOM){
-pay:=pay.next;
-}
-
-if (tgt.type==UNIT_ST_PC)
-if (not (paycheck(tgt,pay))){
-      act("$3n doesn't have access to your location have $3m type, 'help donation'.",
-           A_ALWAYS, self, null, tgt, TO_CHAR);
-      quit;
-     }
 
   if(hm < 0)
    {
@@ -13690,7 +13565,6 @@ room_me: unitptr;
 room_tgt: unitptr;
 check: integer;
 num: integer;
-	pay:unitptr;
 code
 {
 
@@ -13723,18 +13597,6 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
      quit;
     }
-
-pay:=self.outside;
-while (pay.type!=UNIT_ST_ROOM){
-pay:=pay.next;
-}
-
-if (tgt.type==UNIT_ST_PC)
-if (not (paycheck(tgt,pay))){
-      act("$3n doesn't have access to your location have $3m type, 'help donation'.",
-           A_ALWAYS, self, null, tgt, TO_CHAR);
-      quit;
-     }
 
     if((tgt.position == POSITION_FIGHTING) and (rnd(0, 100) < 30))
     {
@@ -14239,7 +14101,7 @@ code
   if(out.type == UNIT_ST_OBJ)
   {
 
-   sendtext("An image forms in your mind of "+out.title+"</div>"+
+   sendtext("An image forms in your mind of "+out.title+
             " and you see:<br/>", self);
    see := unit_inside(out);
    goto show_it;
@@ -14249,7 +14111,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-             out.name+"'s </div>inventory:<br/>", self);
+             out.name+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
    }
@@ -14258,7 +14120,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-            out.title+"'s </div>inventory:<br/>", self);
+            out.title+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
   }
@@ -14608,10 +14470,27 @@ code
 dilend
 /* unlock and lock spells update */
 
+// How hard the lock on a door is to open by magic: the magic resistance of the room it is in, or
+// of the room on the other side, whichever is higher (room_power, as resisted spells meet it).
+dilbegin integer door_resistance(room : unitptr, dir : integer);
+var
+   r : integer;
+   other : unitptr;
+code
+{
+   r := room.spells[SPL_NONE];
+   other := room.exit_to[dir];
+   if ((other != null) and (other.spells[SPL_NONE] > r))
+      r := other.spells[SPL_NONE];
+   return (r);
+}
+dilend
+
 dilbegin spl_unlock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
+     integer door_resistance(room : unitptr, dir : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14649,7 +14528,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,1);
+  dir_locks(dir,arg,1,hm);
   quit;
 }
 
@@ -14677,7 +14556,8 @@ if((not(isset(room.exit_info[i], EX_OPEN_CLOSE))) or
     (not(isset(room.exit_info[i], EX_CLOSED))) or
     (not(isset(room.exit_info[i], EX_LOCKED))))
    goto failed;
-
+   if (hm < door_resistance(room, i))
+      goto resists;
    unset(room.exit_info[i], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14702,7 +14582,8 @@ if((not(isset(obj.openflags, EX_OPEN_CLOSE))) or
     (not(isset(obj.openflags, EX_CLOSED))) or
     (not(isset(obj.openflags, EX_LOCKED))))
    goto failed;
-
+if (hm < obj.spells[SPL_NONE])   // the object's magic resistance (object_power)
+   goto resists;
 unset(obj.openflags, EX_LOCKED);
 act("*click*",
      A_SOMEONE, self, null, null, TO_ALL);
@@ -14712,6 +14593,10 @@ act("*click*",
 quit;
 
 
+:resists:
+act("The lock resists your magic.",
+     A_ALWAYS, self, null, null, TO_CHAR);
+quit;
 :failed:
 act("The spell failed.",
      A_ALWAYS, self, null, null, TO_CHAR);
@@ -14726,8 +14611,9 @@ dilend
    same things */
 
                  /*  DIRECTION     ARGUMENT    0=LOCK/1=UNLOCK */
-dilbegin dir_locks(dir : integer, st : string, todo : integer);
+dilbegin dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
 external
+   integer door_resistance(room : unitptr, dir : integer);
    string dirstring@function(dr:integer);
    integer rev_dir@function(i : integer);
    integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
@@ -14797,6 +14683,11 @@ if(todo == 0)
 }
 else /* UNLOCK */
   {
+   if (pwr < door_resistance(room, dir))
+   {
+      act("The lock resists your magic.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
    unset(room.exit_info[dir], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14825,7 +14716,7 @@ dilend
 dilbegin spl_lock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14863,7 +14754,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,0);
+  dir_locks(dir,arg,0,hm);
   quit;
 }
 

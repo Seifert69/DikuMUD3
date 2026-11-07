@@ -6767,7 +6767,7 @@ code
    i := interrupt(SFB_TICK, TRUE, trap_over);
    j := interrupt(SFB_CMD, (command("search") and ("trap" in argument)),
                   search_test);
-   l := interrupt(SFB_CMD, (command("disarm") and ("argument" in
+   l := interrupt(SFB_CMD, (command("disarm") and (argument in
                             self.names)), disarm);
 
    goto start;
