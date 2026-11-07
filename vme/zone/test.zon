@@ -684,8 +684,7 @@ code
     secure(u1, failure);
     wait(SFB_TICK, TRUE); // test secure() triggers
     unsecure(u1);
-    unsecure(u1);
-   destroy(u1);
+    destroy(u1);
     goto cleanup;
 
 :failure:
@@ -792,8 +791,7 @@ code
         if (u.symname == "experiment@test")
         {
             unsecure(u);
-            unsecure(u);
-   destroy(u);
+            destroy(u);
             wait(SFB_TICK, TRUE);
             i := i + 1;
         }
@@ -887,8 +885,7 @@ code
     if (i != 7)
         goto failure;
     unsecure(u);
-    unsecure(u);
-   destroy(u);
+    destroy(u);
     // Naught
 
 :finished:
@@ -935,7 +932,6 @@ code
 
 :cleanup:
    unsecure(u);
-   unsecure(u);
    destroy(u);
    // Naught
 
@@ -978,7 +974,6 @@ code
 
 :cleanup:
    unsecure(u);
-   unsecure(u);
    destroy(u);
    // Naught
 
@@ -1015,7 +1010,6 @@ code
    return;
 
 :cleanup:
-   unsecure(u);
    unsecure(u);
    destroy(u);
    // Naught
@@ -1067,7 +1061,6 @@ code
 
 :cleanup:
    unsecure(u);
-   unsecure(u);
    destroy(u);
    // Naught
 
@@ -1095,7 +1088,6 @@ code
    if (u == null)
       goto failure;
    secure(u, cleanup);
-   unsecure(u);
    destroy(u);  // Destroy will trigger a secure test for the unit destroyed immediately
    goto failure;
 
@@ -1136,8 +1128,7 @@ code
     link(u2, u1);
 
     store(u1, "shazam.test", TRUE);
-    unsecure(u1);
-   destroy(u1);
+    destroy(u1);
     if (r.inside != null)
     {
         logtest(tstno, LOGT_ERROR, "Room not empty after destroy");
@@ -1170,11 +1161,9 @@ code
 
 :cleanup:
     u1 := findsymbolic("pbox@test");
-    unsecure(u1);
-   destroy(u1);
+    destroy(u1);
     u1 := findsymbolic("pbox@test");
-    unsecure(u1);
-   destroy(u1);
+    destroy(u1);
 
 :finished:
     logtest(tstno, LOGT_INFO, "Done");
@@ -1285,10 +1274,8 @@ code
 :cleanup:
    logtest(tstno, LOGT_INFO, "Cleaning up");
    u1 := findsymbolic("experiment@test");
-   unsecure(u1);
    destroy(u1);
    u1 := findsymbolic("follower@test");
-   unsecure(u1);
    destroy(u1);
 
 :finished:
@@ -1489,10 +1476,8 @@ code
 :cleanup:
    logtest(tstno, LOGT_INFO, "Cleaning up");
    u1 := findsymbolic("experiment@test");
-   unsecure(u1);
    destroy(u1);
    u1 := findsymbolic("follower@test");
-   unsecure(u1);
    destroy(u1);
    logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
