@@ -1,10 +1,29 @@
-<div class="mw-parser-output"><h1>Advance (253)</h1>
+<div class="mw-parser-output"><h1>Advance (250)</h1>
 <p>Usage:
 </p>
-<pre>advance &lt;admin|ply&gt; &lt;player&gt; &lt;level&gt;
+<pre>advance admin &lt;player&gt; &lt;level&gt;
+advance ply &lt;player&gt; &lt;level&gt;
 </pre>
-<p>Advances a player to a specific level. Primarily used to advance wizards through the immortal ranks.
+<p>Examples:
 </p>
+<pre>advance admin Gnort 210
+advance ply Gnort 25
+</pre>
+<p>Sets the level of a player who is online.
+</p><p><b>advance admin</b> gives an immortal level, from 200 to 255. It promotes 
+or demotes, with a fitting message to the player, but you can't touch 
+someone of a higher level than yours. Their experience is reset to 0, and 
+they are no longer hungry or thirsty.
+</p><p><b>advance ply</b> sets a mortal's level and gives them the experience that 
+level needs; you are shown their experience before and after. It only 
+works on mortals: to make an immortal mortal again, the character must be 
+deleted and made anew.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Help Level</a>
+</pre>
 
 
 
