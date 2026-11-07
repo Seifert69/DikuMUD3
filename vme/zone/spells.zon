@@ -11537,8 +11537,10 @@ code
       quit;
    }
 
-   if (not(self.outside.movement &
-   (SECT_FIELD|SECT_FOREST|SECT_HILLS|SECT_SWAMP|SECT_SNOW|SECT_SLUSH)))
+   /* Sector types are numbers, not flags */
+   i := self.outside.movement;
+   if (not((i == SECT_FIELD) or (i == SECT_FOREST) or (i == SECT_HILLS) or
+           (i == SECT_SWAMP) or (i == SECT_SNOW) or (i == SECT_SLUSH)))
    {
       act("Animals don't like these surroundings - a summoning " +
           "would be impossible.",
