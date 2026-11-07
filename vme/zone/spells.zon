@@ -7842,8 +7842,24 @@ code
 }
 dilend
 
+/* The sun spells' bonus for the hour: +30 at noon, 5 less for each hour
+   before or after (0 at 6 and 18, -10 at 20). */
+dilbegin integer sun_bonus();
+code
+{
+   if (mudhour < 12)
+     return (30 - 5*(12 - mudhour));
+   else
+     return (30 - 5*(mudhour - 12));
+}
+dilend
+
+
 dilbegin sun_beam(medi : unitptr, tgt : unitptr,
                  arg : string, hm : integer, effect : string);
+external
+   integer sun_bonus();
+
 var
    u : unitptr;
 
@@ -7862,15 +7878,7 @@ code
       }
       u := u.outside;
    }
-/* I changed this so maybe it will work until we fix weather Darg
-   if (weather != SKY_CLOUDLESS)
-   {
-      act("The skies are not clear.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-*/
-   if ((weather != SKY_CLOUDLESS) or (weather != SKY_CLOUDY))
+   if ((weather != SKY_CLOUDLESS) and (weather != SKY_CLOUDY))
    {
       act("The heavy rain clouds block any chance of casting the spell.",
           A_ALWAYS, self, null, null, TO_CHAR);
@@ -7884,10 +7892,7 @@ code
    }
 
    /* Most powerful at noon */
-   if (mudhour < 12)
-     hm := 18*(mudhour - 12);
-   else
-     hm := -15*(mudhour - 12);
+   hm := sun_bonus();
 
    if (RACE_IS_UNDEAD(tgt.race))
      hm := hm + 100;
@@ -7901,6 +7906,9 @@ dilend
 dilbegin solar_flare(medi : unitptr, tgt : unitptr,
                  arg : string,
                  hm : integer, effect : string);
+external
+   integer sun_bonus();
+
 var
    u : unitptr;
 
@@ -7920,15 +7928,7 @@ code
       u := u.outside;
    }
 
-/* I changed this so maybe it will work until we fix weather Darg
-   if (weather != SKY_CLOUDLESS)
-   {
-      act("The skies are not clear.",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-*/
-   if ((weather != SKY_CLOUDLESS) or (weather != SKY_CLOUDY))
+   if ((weather != SKY_CLOUDLESS) and (weather != SKY_CLOUDY))
    {
       act("The heavy rain clouds block any chance of casting the spell.",
           A_ALWAYS, self, null, null, TO_CHAR);
@@ -7943,15 +7943,10 @@ code
    }
 
    /* Most powerful at noon */
-   if (mudhour < 12)
-     hm := 18*(mudhour - 12);
-   else
-     hm := -15*(mudhour - 12);
+   hm := 2*sun_bonus();
 
    if (RACE_IS_UNDEAD(tgt.race))
      hm := hm + 100;
-
-   hm := hm*3;
    hm := attack_spell(SPL_SOLAR_FLARE, self, medi, tgt, hm, effect);
    quit;
 }
@@ -9944,6 +9939,9 @@ dilend
 dilbegin sun_ray(medi : unitptr, tgt : unitptr,
 		 arg : string,
 		 hm : integer, effect : string);
+external
+   integer sun_bonus();
+
 var
    u : unitptr;
 
@@ -9978,10 +9976,7 @@ code
    }
 
    /* Most powerful at noon */
-   if (mudhour < 12)
-     hm := 18*(mudhour - 12);
-   else
-     hm := -15*(mudhour - 12);
+   hm := sun_bonus();
 
    if (RACE_IS_UNDEAD(tgt.race))
      hm := hm + 100;
