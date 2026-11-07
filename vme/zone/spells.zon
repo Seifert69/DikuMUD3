@@ -11618,9 +11618,11 @@ code
                            self.spells[SPL_SUMMON_ANIMAL],
                            tgt.abilities[ABIL_MAG] + 25);
 */
+   /* The worse the miss, the worse it goes: a slight miss fizzles, a worse one
+      brings the animal unbound, and a bad one brings it angry */
    pow := hm/25;
 
-   if (hm <= -5)
+   if ((hm < 0) and (hm >= -10))
    {
       act("You fail to summon the animal.",
           A_ALWAYS, self, null, null, TO_CHAR);
@@ -11646,15 +11648,28 @@ code
       quit;
    }
 
-   if ((hm >5) and (hm <=0))
+   if (hm < -30)
    {
       act("You cause a great disturbance in the powers of magic!",
           A_ALWAYS, self, null, null, TO_CHAR);
-      act("$3n appears and attacks you!",
-          A_ALWAYS, self, null, null, TO_CHAR);
       link (tgt, self.outside);
+      act("$3n appears and attacks you!",
+          A_ALWAYS, self, null, tgt, TO_CHAR);
+      act("$3n appears and attacks $1n!",
+          A_SOMEONE, self, null, tgt, TO_REST);
       tgt.position := POSITION_STANDING;
       set_fighting(tgt, self);
+      quit;
+   }
+   if (hm < 0)
+   {
+      link (tgt, self.outside);
+      act("$3n appears in answer to your calling, but pays you no heed.",
+          A_ALWAYS, self, null, tgt, TO_CHAR);
+      act("$3n appears in answer to $1n's calling.",
+          A_SOMEONE, self, null, tgt, TO_REST);
+      exec("wake", tgt);
+      exec("stand", tgt);
       quit;
    }
 
@@ -11693,7 +11708,7 @@ var
 code
 {
 priority;
-heartbeat:= PULSE_SEC*(pow + 20);
+heartbeat:= PULSE_SEC*60*(pow + 20);  /* The animal serves 20 minutes and more */
 
 h:= interrupt(SFB_MSG, TRUE, dispel_check);
 i:= interrupt(SFB_TICK, TRUE, control_over);
@@ -11748,9 +11763,11 @@ i:= interrupt(SFB_TICK, TRUE, control_over);
 
 :dispel_check:
    if (getword(argument) == "spl_dispel")
+   {
       jpc := getword(argument);
       if (atoi(jpc) >= pow)
          goto stop;
+   }
    goto start;
 
 :control_over:
