@@ -185,6 +185,10 @@ code
             and (isset(item.flags,UNIT_FL_MAGIC)))
         temp := temp + " (yellow)";
 
+    // a cursed object (it can't be removed) or a character under the curse spell
+    if (isset(self.charflags, CHAR_DETECT_CURSE) and isaff(item, ID_CURSE))
+        temp := temp + " (orange)";
+
 
     if ((item.type == UNIT_ST_OBJ) and ((item.objecttype == ITEM_FOOD) or
             (item.objecttype == ITEM_DRINKCON)))

@@ -1733,21 +1733,21 @@ code
 
     if (res <= 0)
     {
-        act("You try and sneak a peak at $3n, but $3e slaps you in the face.", A_ALWAYS, self, null, tgt, TO_CHAR);
-        act("$1n tries to sneak a peak at $3n, but $3e slaps $1m in the face.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-        act("$1n tries to sneak a peak at you, but you slap $1m in the face.", A_SOMEONE, self, null, tgt, TO_VICT);
+        act("You try and sneak a peek at $3n, but $3e slaps you in the face.", A_ALWAYS, self, null, tgt, TO_CHAR);
+        act("$1n tries to sneak a peek at $3n, but $3e slaps $1m in the face.", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+        act("$1n tries to sneak a peek at you, but you slap $1m in the face.", A_SOMEONE, self, null, tgt, TO_VICT);
         self.hp := self.hp - rnd(5,30);
         position_update(self);
         quit;
     }
     else if(res <= 50)
     {
-        act("You glance at $3n briefly, but have to away before $1e catches you.", A_SOMEONE, self, null, tgt, TO_CHAR);
+        act("You glance at $3n briefly, but have to look away before $3e catches you.", A_SOMEONE, self, null, tgt, TO_CHAR);
         num := rnd(2,18);
     }
     else
     {
-        act("You stealthily sneak a peak at $3n out of the corner of your eye.", A_SOMEONE, self, null, tgt, TO_CHAR);
+        act("You stealthily sneak a peek at $3n out of the corner of your eye.", A_SOMEONE, self, null, tgt, TO_CHAR);
         num := 25; /* more than enough to see all positions */
     }
 
@@ -12317,6 +12317,11 @@ code
 			tgt.endurance := 1;
 		quit;
 	}
+	if (isaff(tgt, ID_RAGE))
+	{
+		act("You are raging already; there is no room for more fury.", A_ALWAYS, self, null, null, TO_CHAR);
+		quit;
+	}
 	if(isaff(tgt, ID_BERSERK))
 	{
 		act("<div class='spell'>You attempt to channel your energy, but nothing happens.</div>",
@@ -12363,40 +12368,172 @@ code
 }
 dilend // ski_berserk
 
+// Frenzy: in a fight, the barbarian works up a fury that grows every round they keep
+// fighting (frenzy_rounds), until the fight ends or their endurance gives out.
 dilbegin ski_frenzy(arg : string);
 external
-	provoked_attack(victim : unitptr, ch : unitptr);
-	integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer,
-                           opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
+    integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
+    integer bonusCalc(hm : integer);
 var
-	tgt : unitptr;
-	hm : integer;
+    hm : integer;
 code
 {
-	
-	// has some chance of auto-initiating combat on the next mob in the room
-	// gives haste, or some such?
-	// every round the effects become more intense?
-	tgt :=self;
-	act("You do a frenzy. Deadly!",A_HIDEINV, self, null, null, TO_CHAR);
-	send_done("frenzy",self,null,tgt,hm,arg,null, CMD_AUTO_NONE);
-	quit;
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_FRENZY] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (self.fighting == null)
+    {
+        act("You need a fight to work yourself into a frenzy.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (dilfind("frenzy_rounds@skills", self))
+    {
+        act("You are in a frenzy already.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (self.endurance < 100)
+    {
+        act("You are too tired to work yourself into a frenzy.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    hm := skillchecksa(SKI_FRENZY, ABIL_CON, 30);
+    if (hm <= 0)
+    {
+        act("<div class='spell'>You roar, but the frenzy won't take hold.</div>",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("<div class='spell'>$1n roars, but fights on as before.</div>",
+            A_SOMEONE, self, null, null, TO_REST);
+        self.endurance := self.endurance - 30;
+        send_done("frenzy", self, null, self, hm, arg, null, CMD_AUTO_NONE);
+        quit;
+    }
+
+    act("<div class='spell'>You throw yourself into a frenzy!</div>", A_ALWAYS, self, null, null, TO_CHAR);
+    act("<div class='spell'>$1n throws $1mself into a frenzy!</div>", A_SOMEONE, self, null, null, TO_REST);
+    self.endurance := self.endurance - 30;
+    // the better the roll, the higher the frenzy can climb: 5 to 10 rounds of growing strength
+    dilcopy("frenzy_rounds@skills(" + itoa(5 + bonusCalc(hm) / 2) + ")", self);
+    send_done("frenzy", self, null, self, hm, arg, null, CMD_AUTO_NONE);
+    quit;
 }
 dilend
 
-dilbegin ski_rage(arg : string);
+// Copied onto a frenzied character: each round they fight adds 2 strength, up to peak rounds,
+// and costs 10 endurance. It ends when the fight does, when their endurance runs low, or when
+// they die, and leaves them tired. Each affect also wears off by itself after 10 minutes, should
+// this program be lost.
+dilbegin aware frenzy_rounds(peak : integer);
 var
-	tgt : unitptr;
-	hm : integer;
+    n : integer;
 code
 {
-	// perhaps this should do what berserk does - add hp/con
-	// make it so berserk does this, which is, at cost of END
-	// for every hit, every hit is more powerful.
-	// every round the effects become more intense?
-	tgt :=self;
-	send_done("rage",self,null,tgt,hm,arg,null, CMD_AUTO_NONE);
-	quit;
+    heartbeat := PULSE_SEC * 4;
+    interrupt(SFB_DEAD, activator == self, done);
+    n := 0;
+
+    :start:
+    wait(SFB_COM | SFB_TICK, TRUE);
+    if (self.fighting == null)
+        goto done;
+    if (not (command(CMD_AUTO_COMBAT) and (activator == self)))
+        goto start;
+    if (self.endurance < 20)
+    {
+        act("<div class='spell'>You are too tired to keep up your frenzy.</div>",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        goto done;
+    }
+
+    self.endurance := self.endurance - 10;
+    if (n < peak)
+    {
+        addaff(self, ID_FRENZY, 20, WAIT_SEC*30, ABIL_STR, 2, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_ABILITY);
+        n := n + 1;
+        if (n == peak)
+            act("<div class='spell'>Your frenzy is at its height!</div>", A_ALWAYS, self, null, null, TO_CHAR);
+        else if (n % 2 == 0)
+            act("<div class='spell'>Your frenzy grows!</div>", A_ALWAYS, self, null, null, TO_CHAR);
+    }
+    goto start;
+
+    :done:
+    while (isaff(self, ID_FRENZY))
+        subaff(self, ID_FRENZY);
+    act("<div class='spell'>Your frenzy burns out, leaving you exhausted.</div>",
+        A_ALWAYS, self, null, null, TO_CHAR);
+    act("<div class='spell'>$1n's frenzy burns out.</div>", A_SOMEONE, self, null, null, TO_REST);
+    if (self.endurance > n * 5)
+        self.endurance := self.endurance - n * 5;
+    else
+        self.endurance := 1;
+    quit;
+}
+dilend
+
+// Rage: a short fury before a fight. For about a minute the barbarian hits harder (more
+// strength) and guards worse (less dexterity). Berserk is the other fury; the two don't mix.
+dilbegin ski_rage(arg : string);
+external
+    integer skillchecksa(skillidx : integer, abiidx : integer, difficulty : integer);
+    integer bonusCalc(hm : integer);
+    integer max@function(a:integer, b:integer);
+var
+    hm : integer;
+    b : integer;
+    dur : integer;
+    dex : integer;
+code
+{
+    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_RAGE] <= 0))
+    {
+        act("You must practice first.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (isaff(self, ID_RAGE))
+    {
+        act("You are raging already.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (isaff(self, ID_BERSERK))
+    {
+        act("You are berserk already; there is no room for more fury.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+    if (self.endurance < 50)
+    {
+        act("You are too tired to work up a rage.", A_ALWAYS, self, null, null, TO_CHAR);
+        quit;
+    }
+
+    hm := skillchecksa(SKI_RAGE, ABIL_STR, 20);
+    if (hm <= 0)
+    {
+        act("<div class='spell'>You snarl and growl, but the fury won't come.</div>",
+            A_ALWAYS, self, null, null, TO_CHAR);
+        act("<div class='spell'>$1n snarls and growls, then calms down again.</div>",
+            A_SOMEONE, self, null, null, TO_REST);
+        self.endurance := self.endurance - 25;
+        send_done("rage", self, null, self, hm, arg, null, CMD_AUTO_NONE);
+        quit;
+    }
+
+    b := bonusCalc(hm);  // 1 to 10, more for a very good roll
+    dur := 4 + b / 2;    // beats of 15 seconds: one to two and a half minutes
+    act("<div class='spell'>A red fury rises in you!</div>", A_ALWAYS, self, null, null, TO_CHAR);
+    act("<div class='spell'>$1n's eyes go red with fury!</div>", A_SOMEONE, self, null, null, TO_REST);
+    addaff(self, ID_RAGE, dur, WAIT_SEC*15, ABIL_STR, 5 + b, 0, TIF_STR_INC, TIF_NONE, TIF_STR_DEC, APF_ABILITY);
+    // abilities are unsigned: never take dexterity below 1
+    dex := 3 + b / 2;
+    if (dex >= self.abilities[ABIL_DEX])
+        dex := self.abilities[ABIL_DEX] - 1;
+    if (dex > 0)
+        addaff(self, ID_RAGE, dur, WAIT_SEC*15, ABIL_DEX, -dex, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_ABILITY);
+    self.endurance := self.endurance - max@function(20, 50 - 2 * b);
+    send_done("rage", self, null, self, hm, arg, null, CMD_AUTO_NONE);
+    quit;
 }
 dilend
 

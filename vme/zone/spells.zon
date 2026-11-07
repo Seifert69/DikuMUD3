@@ -157,6 +157,8 @@ code
      subaff(tgt, ID_BERSERK);
    else if (isaff(tgt, ID_RAGE))
      subaff(tgt, ID_RAGE);
+   else if (isaff(tgt, ID_FRENZY))
+     subaff(tgt, ID_FRENZY);
    else if (isaff(tgt, ID_FOCUS))
      subaff(tgt, ID_FOCUS);
    else if (isaff(tgt, ID_DETECT_ALIGN))
@@ -7431,6 +7433,8 @@ code
      subaff(tgt, ID_DETECT_ALIGN);
    else if (isaff(tgt, ID_RAGE))
      subaff(tgt, ID_RAGE);
+   else if (isaff(tgt, ID_FRENZY))
+     subaff(tgt, ID_FRENZY);
    else if (isaff(tgt, ID_BERSERK))
      subaff(tgt, ID_BERSERK);
    else if (isaff(tgt, ID_DETECT_INVISIBLE))
