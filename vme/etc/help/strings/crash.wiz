@@ -1,10 +1,26 @@
-<br/>
-Usage:<br/>
-   &gt;crash the entire game...<br/>
-<br/>
-This wiz-command is the only possible way of crashing the game.<br/><br/><br/>
-<br/>
-Um, hi, it's me, Kira... OK, I'm updating these files and came across this<br/>
-one.  Maaaybe I'm wrong, but I think there might be one or two other ways<br/>
-to crash the game *grin*.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Crash (255)</h1>
+<p>Usage:
+</p>
+<pre>crash the entire game...
+</pre>
+<p>Crashes the game on purpose, to test what happens when it goes down (the 
+core dump, the restart scripts). You must type the whole phrase exactly, 
+with the three dots, and the command itself in full: an abbreviation is 
+refused. You must be standing. It is logged.
+</p><p>It crashes the game by a failed assertion, so it only works in a build 
+with assertions, such as the Debug build. In a Release build, which is 
+compiled without them, nothing happens at all.
+</p><p><i>From the old help:</i> "This wiz-command is the only possible way of 
+crashing the game." Kira added: "Maaaybe I'm wrong, but I think there 
+might be one or two other ways to crash the game *grin*."
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Reboot</a>
+&gt; <a cmd='#'>Wizhelp Shutdown</a>
+</pre>
+
+
+
+
+</div>
