@@ -484,6 +484,7 @@ python3 getwikihelppage.py Quicken &
 python3 getwikihelppage.py Quicksand &
 python3 getwikihelppage.py Quit &
 python3 getwikihelppage.py Races &
+python3 getwikihelppage.py Rage &
 python3 getwikihelppage.py Raisedead
 python3 getwikihelppage.py Raisedivine &
 python3 getwikihelppage.py Raisehitpoints &

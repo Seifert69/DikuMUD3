@@ -694,6 +694,7 @@ quit=quit.hlp
 :end:q
 :start:r
 races=races.hlp
+rage=rage.hlp
 raise dead=raisedead.hlp
 raise divine=raisedivine.hlp
 raise hitpoints=raisehitpoints.hlp
