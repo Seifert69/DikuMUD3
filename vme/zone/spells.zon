@@ -7219,6 +7219,10 @@ code
       act("A large portal opens and a beast emerges!",
 	  A_HIDEINV, self, u, null, TO_ROOM);
       u := load("demon@spells");
+      link(u, self.outside);
+      /* Free, but still summoned: it goes back in a while (longer the worse
+         the miss), and banish works on it */
+      dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
       exec("follow "+self.name, u);
       exec("say Thank you "+self.name+", for bringing me here "+
 	   "unbonded!", u);
@@ -7261,6 +7265,9 @@ code
 	  A_SOMEONE, self, null, null, TO_ALL);
       u := load("devil@spells");
       link(u, self.outside);
+      /* Free, but still summoned: it goes back in a while (longer the worse
+         the miss), and banish works on it */
+      dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
       exec("follow "+self.name, u);
       exec("say Ahh, to be summoned here and free!", u);
       exec("kill "+self.name, u);
