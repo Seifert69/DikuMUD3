@@ -1,7 +1,26 @@
-<br/>
-Usage:<br/>
-   &gt;delete &lt;player&gt;<br/>
-<br/>
-With this wiz-command you can delete a player from the playerfiles.<br/>
-This is a fast delete and should only be used in emergencies.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Delete (254)</h1>
+<p>Usage:
+</p>
+<pre>delete &lt;player&gt;
+delete self forever
+</pre>
+<p>Meant to delete a player's character from the player files at once, 
+without asking: a fast delete for emergencies. Only gods of level 254 and 
+above may delete someone else.
+</p><p><b>At present it deletes nothing:</b> it checks that the character exists 
+and says "&lt;player&gt; has been deleted.", but the character is left as it 
+was (a known bug). Check with <a cmd='#'>Wizhelp Wstat</a> or the player files before 
+you rely on it.
+</p><p>delete self forever deletes your own character, as for any player (see 
+<a cmd='#'>Help Delete</a>).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Delete</a>
+&gt; <a cmd='#'>Wizhelp Ban</a>
+</pre>
+
+
+
+
+</div>
