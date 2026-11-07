@@ -10,7 +10,9 @@ comm delete &lt;channel&gt;     leave a channel
 &lt;channel&gt; &lt;message&gt;       talk on a channel
 &lt;channel&gt; @ &lt;action&gt;      an emote on a channel
 &lt;channel&gt; #               see who is on a channel
-comm inform on|off|join   see who joins and leaves your channels
+comm inform on|off|join|depart
+                         see who joins and leaves your channels
+                         (join or depart: only those)
 <a cmd='#'>comm echo</a>               turn on or off seeing your own messages
 <a cmd='#'>comm help</a>               a short list of these commands
 </pre>
