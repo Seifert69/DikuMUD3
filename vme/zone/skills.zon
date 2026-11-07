@@ -11928,10 +11928,10 @@ if(not tgt.type & (UNIT_ST_PC | UNIT_ST_NPC))
  quit;
 }
 skilla := self.abilities[ABIL_BRA];
-skillb := self.abilities[ABIL_BRA];
+skillb := tgt.abilities[ABIL_BRA];
 
 if(self.type == UNIT_ST_PC)
-        skillc := tgt.skills[SKI_STALK];
+        skillc := self.skills[SKI_STALK];
 else
         skillc := rnd(40,124);
  /*
