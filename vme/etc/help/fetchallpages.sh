@@ -220,7 +220,6 @@ python3 getwikihelppage.py Electricalshock &
 python3 getwikihelppage.py Electricityresistance
 python3 getwikihelppage.py Electricitysphere &
 python3 getwikihelppage.py Elves &
-python3 getwikihelppage.py Email &
 python3 getwikihelppage.py Emotes &
 python3 getwikihelppage.py Endurancepoints
 python3 getwikihelppage.py Energydrain &
@@ -378,7 +377,6 @@ python3 getwikihelppage.py Mace &
 python3 getwikihelppage.py Madness &
 python3 getwikihelppage.py Magiccandle
 python3 getwikihelppage.py Magicians &
-python3 getwikihelppage.py Maidenname &
 python3 getwikihelppage.py Maingauche
 python3 getwikihelppage.py Manaboost &
 python3 getwikihelppage.py Manapoints &
@@ -428,8 +426,7 @@ python3 getwikihelppage.py Password &
 python3 getwikihelppage.py Pastgods
 python3 getwikihelppage.py Peace &
 python3 getwikihelppage.py Peeking &
-python3 getwikihelppage.py Pe &
-python3 getwikihelppage.py Personalemail
+python3 getwikihelppage.py Pe
 python3 getwikihelppage.py Personality &
 python3 getwikihelppage.py Petrify &
 python3 getwikihelppage.py Pibag &
