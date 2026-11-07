@@ -1812,9 +1812,6 @@ code
 
    room_going := room_in.exit_to[direc];
 
-   if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
-      return;
-
   /* Swimming Code : We are finally going to allow players to use that 100% swimming skill.
      every movement will cost 50 points of endurance (unless the IS_FISH_NAME extra is found, then it is 1)
      and also there will be a skill check to determine if there is drowning damage. If
@@ -2166,9 +2163,6 @@ if ((isset(room_in.exit_info[direc], EX_CLOSED)) and (test))
 
 room_going := room_in.exit_to[direc];
 
-if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
-    return;
-
 
 
 if (room_going.movement == SECT_WATER_SAIL)
@@ -2218,12 +2212,6 @@ while (pc_fol != null)
                A_ALWAYS, mover, pc_fol, null, TO_CHAR);
            return;
           }
-
-       if ((not(paycheck(pc_fol, room_going))) and (pc_fol.level < IMMORTAL_LEVEL))
-           {act("You can not enter that part of the game unless $2n gives a donation.",
-	        A_ALWAYS, mover, pc_fol, null, TO_CHAR);
-            return;
-           }
 
     pc_fol := pc_fol.next;
    }
@@ -2549,9 +2537,6 @@ return;
 
 room_going := room_in.exit_to[direc];
 
-if ((not(paycheck(mover, room_going))) and (mover.level < IMMORTAL_LEVEL))
-    return;
-
 
 if ((room_going.movement == SECT_WATER_SAIL) and (mover.outside.objecttype != ITEM_BOAT))
    {act("You need a boat to go there.", A_SOMEONE, mover, null, null, TO_CHAR);
@@ -2608,14 +2593,6 @@ while (pc_fol != null)
           {act("$2n seems to be busy fighting, better not leave $2m here by $2mself!",
                A_ALWAYS, mover, pc_fol, null, TO_CHAR);
            return;
-          }
-if (pc_fol.type==UNIT_ST_PC)
-{
-       if ((not(paycheck(pc_fol, room_going))) and (pc_fol.level < IMMORTAL_LEVEL))
-          {act("You can not enter that part of the game unless $2n gives a donation.",
-               A_ALWAYS, mover, pc_fol, null, TO_CHAR);
-           return;
-          }
           }
 
 
