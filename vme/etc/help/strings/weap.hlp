@@ -1,31 +1,47 @@
-<br/>
- **********************************************************************<br/>
- * File   : vme.h                                Part of Valhalla MUD *<br/>
- * Version: 1                                                         *<br/>
- * Author : Darg (Mark Pringle)                                       *<br/>
- * Status : For sole use on Valhalla Mud not to be copied or          *<br/>
- * redistributed without the express consent of Blinksoft Consulting. *<br/>
- *                                                                    *<br/>
- * Copyright (C) 1994 - 2001 by Valhalla (This work is not published).*<br/>
- **********************************************************************<br/>
-<br/>
-  The follow contains a list of weapon help files, although<br/>
-  not yet completed, It is hopeful it will aid you to better<br/>
-  understand what some weapons looked like and how they were<br/>
-   <br/>
-  <br/>
-adze	      baculus	      ball and chain   bardiche    bastard sword	         <br/>
-battle axe    bec de corbin   bill guisarme    bill hook   broad sword	     <br/>
-claymore      club            crossbow         crowbill    cudgel<br/>
-curved sword  cutlass         dagger           dirk        estoc<br/>
-falchion      fauchard        fauchard fork    fish spine  flail<br/>
-flamberge     foot lance      gaff             glaive      greatsword<br/>
-guisarme      halberd         hammer of kai    hand axe    javelin<br/>
-jeddart axe   kopesh          lance            lochaber    long bow<br/>
-long sword    lucern          mace             main gauche mattock<br/>
-maul          military fork   morning star     naginata    odd weapons<br/>
-partisan      pike            pilum            pole arms   pole axe<br/>
-pole cleaver  quarterstaff    ranseur          rapier      sappara<br/>
-scimitar      shamshir        shortsword       sickle      spear<br/>
-spear family  spetum          staff            stiletto    talwar<br/>
-trident       voulge          waraxe           war hammer  whip      <br/>
+<div class="mw-parser-output"><h1>Weapons List</h1>
+<p>The weapons of the world, each with a help page of its own: what it 
+looked like, how it was used, and how it is fought in Valhalla. Those in 
+the first list are weapon skills of their own, which you can practice 
+(see <a cmd='#'>Help Weapons</a>); the others are fought with the skill of the kind of 
+weapon each one is.
+</p>
+<h2><span class="mw-headline" id="Weapon_skills">Weapon skills</span></h2>
+<p><b>Axes and hammers:</b> <a cmd='#'>Help Battle Axe</a>, <a cmd='#'>Help Hand Axe</a>, <a cmd='#'>Help Mattock</a>, 
+<a cmd='#'>Help Maul</a>, <a cmd='#'>Help War Hammer</a>, <a cmd='#'>Help Adze</a>
+</p><p><b>Swords:</b> <a cmd='#'>Help Great Sword</a>, <a cmd='#'>Help Claymore</a>, <a cmd='#'>Help Long Sword</a>, 
+<a cmd='#'>Help Broad Sword</a>, <a cmd='#'>Help Falchion</a>, <a cmd='#'>Help Scimitar</a>, <a cmd='#'>Help Short Sword</a>, 
+<a cmd='#'>Help Rapier</a>, <a cmd='#'>Help Main Gauche</a>, <a cmd='#'>Help Stiletto</a>, <a cmd='#'>Help Dagger</a>, 
+<a cmd='#'>Help Sickle</a>
+</p><p><b>Clubs and maces:</b> <a cmd='#'>Help Club</a>, <a cmd='#'>Help Mace</a>, <a cmd='#'>Help Morning Star</a>, 
+<a cmd='#'>Help Flail</a>, <a cmd='#'>Help Ball and Chain</a>
+</p><p><b>Polearms:</b> <a cmd='#'>Help Quarterstaff</a>, <a cmd='#'>Help Spear</a>, <a cmd='#'>Help Javelin</a>, 
+<a cmd='#'>Help Lance</a>, <a cmd='#'>Help Trident</a>, <a cmd='#'>Help Halberd</a>, <a cmd='#'>Help Bardiche</a>
+</p><p><b>Special:</b> <a cmd='#'>Help Whip</a>, <a cmd='#'>Help Long Bow</a>, <a cmd='#'>Help Crossbow</a>
+</p>
+<h2><span class="mw-headline" id="Other_weapons">Other weapons</span></h2>
+<p><b>Swords and knives:</b> <a cmd='#'>Help Bastard Sword</a>, <a cmd='#'>Help Curved Sword</a>, 
+<a cmd='#'>Help Cutlass</a>, <a cmd='#'>Help Dirk</a>, <a cmd='#'>Help Estoc</a>, <a cmd='#'>Help Fish Spine</a>, 
+<a cmd='#'>Help Flamberge</a>, <a cmd='#'>Help Kopesh</a>, <a cmd='#'>Help Sappara</a>, <a cmd='#'>Help Shamshir</a>, 
+<a cmd='#'>Help Talwar</a>
+</p><p><b>Clubs, hammers and axes:</b> <a cmd='#'>Help Baculus</a>, <a cmd='#'>Help Cudgel</a>, 
+<a cmd='#'>Help Crowbill</a>, <a cmd='#'>Help Bec de Corbin</a>, <a cmd='#'>Help Hammer of Kai</a>, 
+<a cmd='#'>Help Lucern</a>, <a cmd='#'>Help War Axe</a>, <a cmd='#'>Help Gaff</a>, <a cmd='#'>Help Staff</a>, 
+<a cmd='#'>Help Fighting Staff</a>
+</p><p><b>Pole arms:</b> <a cmd='#'>Help Pole Arms</a>, <a cmd='#'>Help Pole Axe</a>, <a cmd='#'>Help Pole Cleaver</a>, 
+<a cmd='#'>Help Spear Family</a>, <a cmd='#'>Help Pike</a>, <a cmd='#'>Help Foot Lance</a>, <a cmd='#'>Help Pilum</a>, 
+<a cmd='#'>Help Partisan</a>, <a cmd='#'>Help Ranseur</a>, <a cmd='#'>Help Spetum</a>, <a cmd='#'>Help Glaive</a>, 
+<a cmd='#'>Help Naginata</a>, <a cmd='#'>Help Guisarme</a>, <a cmd='#'>Help Bill Guisarme</a>, <a cmd='#'>Help Bill Hook</a>, 
+<a cmd='#'>Help Voulge</a>, <a cmd='#'>Help Lochaber</a>, <a cmd='#'>Help Jeddart</a>, <a cmd='#'>Help Fauchard</a>, 
+<a cmd='#'>Help Fauchard Fork</a>, <a cmd='#'>Help Military Fork</a>, <a cmd='#'>Help Odd Weapon</a>
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Weapons</a>
+&gt; <a cmd='#'>Help Wield</a>
+&gt; <a cmd='#'>Help Practice</a>
+</pre>
+
+
+
+
+</div>
