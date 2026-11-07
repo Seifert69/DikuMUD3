@@ -1,0 +1,24 @@
+<div class="mw-parser-output"><h1>Execute (254)</h1>
+<p>Usage:
+</p>
+<pre>execute &lt;shell command&gt;
+</pre>
+<p>Adds a line to the file execute.dat in the lib directory, as a command 
+for the server's operating system, and writes "EXECUTE(&lt;your name&gt;): 
+&lt;command&gt;" to the log. You are told "Executing &lt;command&gt;." The characters 
+` and&#160;; are refused, and the attempt is logged as a possible break-in.
+</p><p>The game itself runs nothing: the file was meant to be run by the scripts 
+that restart the game. No script in the repository reads execute.dat 
+today, so unless your server has one of its own, the line is only 
+stored.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Reboot</a>
+&gt; <a cmd='#'>Wizhelp Shutdown</a>
+</pre>
+
+
+
+
+</div>
