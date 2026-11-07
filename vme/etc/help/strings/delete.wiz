@@ -1,18 +1,14 @@
 <div class="mw-parser-output"><h1>Delete (254)</h1>
 <p>Usage:
 </p>
-<pre>delete &lt;player&gt;
-delete self forever
+<pre>delete self forever
 </pre>
-<p>Meant to delete a player's character from the player files at once, 
-without asking: a fast delete for emergencies. Only gods of level 254 and 
-above may delete someone else.
-</p><p><b>At present it deletes nothing:</b> it checks that the character exists 
-and says "&lt;player&gt; has been deleted.", but the character is left as it 
-was (a known bug). Check with <a cmd='#'>Wizhelp Wstat</a> or the player files before 
-you rely on it.
-</p><p>delete self forever deletes your own character, as for any player (see 
-<a cmd='#'>Help Delete</a>).
+<p>A god's own character is deleted like any player's: type delete self 
+forever, and the game warns you and asks you to say delete me (see <a cmd='#'>Help 
+Delete</a>).
+</p><p>Another player's character can't be deleted from inside the game: delete 
+&lt;player&gt; only says so. That is done on the server, from the command 
+prompt.
 </p><p><br />
 See Also:
 </p>
