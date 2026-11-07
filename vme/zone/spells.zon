@@ -11926,8 +11926,8 @@ dilend
 dilbegin quicksand(medi:unitptr, tgt : unitptr, arg : string,
 	      hm : integer, effect : string);
 var
-   spd : integer;
-   u   : unitptr;
+   u    : unitptr;
+   mast : unitptr;
 
 code
 {
@@ -11963,30 +11963,42 @@ code
       quit;
    }
 
-act("The ground becomes a mire of quicksand!",
-     A_ALWAYS, self, null, null, TO_ALL);
+   if (hm < 0)
+   {
+      act("The ground trembles for a moment, then holds firm.",
+          A_ALWAYS, self, null, null, TO_ALL);
+      if (effect != "") effect(tgt, medi, -1);
+      quit;
+   }
+
+   act("The ground becomes a mire of quicksand!",
+       A_ALWAYS, self, null, null, TO_ALL);
+
+   /* Everyone in the room but the caster's group, as meteor shower; players
+      only if both have signed the Book of Blood */
+   mast := self.master;
+   if (not(self.master))
+      mast := self;
 
    foreach(UNIT_ST_PC|UNIT_ST_NPC, u)
    {
-    if(u == self) continue;
-    if(u.minv > 200) continue;
-    if(u.level >= IMMORTAL_LEVEL) continue;
+      if (u == self) continue;
+      if (u.minv > 200) continue;
+      if (u.level >= IMMORTAL_LEVEL) continue;
+      if ((u.master == mast) or (u == mast)) continue;
+      if ((u.type == UNIT_ST_PC) and (self.type == UNIT_ST_PC) and
+          ((not(isset(u.pcflags, PC_PK_RELAXED))) or
+           (not(isset(self.pcflags, PC_PK_RELAXED)))))
+         continue;
 
-      if (hm < 0)
-       {
-        if (effect != "") effect(tgt, medi, -1);
-        quit;
-       }
-    act("The quicksand severely hampers your movement...",
-         A_ALWAYS, u, null, null, TO_CHAR);
+      act("The quicksand severely hampers your movement...",
+          A_ALWAYS, u, null, null, TO_CHAR);
 
-    if (spd > 16) spd := 16;
-
-    if (isaff(tgt, ID_SPEED)) 
-      subaff(tgt, ID_SPEED);
-    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
-           -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
-    if (effect != "") effect(tgt, medi, hm);
+      if (isaff(u, ID_SPEED))
+         subaff(u, ID_SPEED);
+      addaff(u, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
+             -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
+      if (effect != "") effect(u, medi, hm);
    }
   quit;
 }
