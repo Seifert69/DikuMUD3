@@ -20,7 +20,6 @@ python3 getwikiwizhelppage.py Load
 python3 getwikiwizhelppage.py Makemoney
 python3 getwikiwizhelppage.py Message
 python3 getwikiwizhelppage.py Noshout
-python3 getwikiwizhelppage.py Notell
 python3 getwikiwizhelppage.py Nset
 python3 getwikiwizhelppage.py Personal
 python3 getwikiwizhelppage.py Petrify
