@@ -2286,7 +2286,7 @@ if (argument=="lookin")
    }
    else
    {
-      if ((self.level < 250) and (self.spells[SPL_TRAVEL] < 100))
+      if ((pc.level < 250) and (pc.spells[SPL_TRAVEL] < 100))  // the weaver, not the gate
       {
          act("You must practice further in order to do that.",
          A_ALWAYS, pc, null, null, TO_CHAR);
@@ -2328,7 +2328,7 @@ if (argument=="lookin")
    }
    else
    {
-      if ((self.level < 250) and (self.spells[SPL_TRAVEL] < 100))
+      if ((pc.level < 250) and (pc.spells[SPL_TRAVEL] < 100))  // the weaver, not the gate
       {
          act("You must practice further in order to do that.",
          A_ALWAYS, pc, null, null, TO_CHAR);
