@@ -55,12 +55,6 @@ provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
 
-   if (self.spells[SPL_CONDEMN] <= 0)
-   {
-     act("You must practice first.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-     quit;
-   }
    if (tgt.type == UNIT_ST_PC)
       if ((not(isset(self.pcflags, PC_PK_RELAXED))) or
          (not(isset(tgt.pcflags, PC_PK_RELAXED))))
@@ -604,7 +598,7 @@ code
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
-  if (targ.alignment >= +350)
+  if (targ.alignment <= +350)  /* the bonus is against the truly good */
     hm := attack_spell(SPL_UNHOLY_WORD, self, med, targ, 0, effect);
   else
     hm := attack_spell(SPL_UNHOLY_WORD, self, med, targ, +10, effect);
@@ -651,7 +645,7 @@ code
 	 }
 */
 :castit:
-  if (targ.alignment >= +350)
+  if (targ.alignment <= +350)  /* the bonus is against the truly good */
     hm := attack_spell(SPL_UNHOLY_WORD_2, self, med, targ, 0, effect);
   else
     hm := attack_spell(SPL_UNHOLY_WORD_2, self, med, targ, +10, effect);
@@ -698,7 +692,7 @@ code
 	 }
 :castit:
 */
-  if (targ.alignment >= +350)
+  if (targ.alignment <= +350)  /* the bonus is against the truly good */
     hm := attack_spell(SPL_UNHOLY_WORD_3, self, med, targ, 0, effect);
   else
     hm := attack_spell(SPL_UNHOLY_WORD_3, self, med, targ, +10, effect);
@@ -736,7 +730,7 @@ code
 	}
 :castit:
 */
-  if (targ.alignment >= +350)
+  if (targ.alignment <= +350)  /* the bonus is against the truly good */
     hm := attack_spell(SPL_UNHOLY_WORD_4, self, med, targ, 0, effect);
   else
     hm := attack_spell(SPL_UNHOLY_WORD_4, self, med, targ, +10, effect);
@@ -1563,12 +1557,6 @@ dilbegin focus(medi:unitptr, tgt : unitptr, arg : string,
                    hm : integer, effect : string);
 code
 {
-   if (self.spells[SPL_FOCUS] <= 0)
-   {
-     act("You must practice first.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-     quit;
-   }
 
 if ((isaff(tgt,ID_FOCUS)) or (hm<0))
    {
@@ -2937,16 +2925,13 @@ dilbegin final_rest(med : unitptr, targ : unitptr, arg : string,
                    hm : integer, effect : string);
 code
 {
-  if ((not RACE_IS_UNDEAD(targ.race)))
-    hm := -1;
-/*
-  if (hm <= 0)
+  /* Only the undead are granted their final rest */
+  if (not RACE_IS_UNDEAD(targ.race))
   {
     act("Nothing happens.",
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
-*/
 
   hm := attack_spell(SPL_FINAL_REST, self, med, targ, 0, effect);
   quit;
@@ -3155,12 +3140,6 @@ dilbegin raise_hpp(medi:unitptr, tgt : unitptr, arg : string,
                    hm : integer, effect : string);
 code
 {
-   if (self.spells[SPL_RAISE_HPP] <= 0)
-   {
-     act("You must practice first.",
-         A_ALWAYS, self, null, null, TO_CHAR);
-     quit;
-   }
 
 if ((isaff(tgt,ID_SPL_RAISE_HPP)) or
 (hm<0))
@@ -7224,6 +7203,10 @@ code
       act("A large portal opens and a beast emerges!",
 	  A_HIDEINV, self, u, null, TO_ROOM);
       u := load("demon@spells");
+      link(u, self.outside);
+      /* Free, but still summoned: it goes back in a while (longer the worse
+         the miss), and banish works on it */
+      dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
       exec("follow "+self.name, u);
       exec("say Thank you "+self.name+", for bringing me here "+
 	   "unbonded!", u);
@@ -7266,6 +7249,9 @@ code
 	  A_SOMEONE, self, null, null, TO_ALL);
       u := load("devil@spells");
       link(u, self.outside);
+      /* Free, but still summoned: it goes back in a while (longer the worse
+         the miss), and banish works on it */
+      dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
       exec("follow "+self.name, u);
       exec("say Ahh, to be summoned here and free!", u);
       exec("kill "+self.name, u);
@@ -10146,7 +10132,6 @@ external
 provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
-   provoked_attack (tgt, self);
      if(dilfind("spl_sleep@spells",tgt))
      {
       act("Nothing happens.",
@@ -10167,6 +10152,9 @@ code
    :failure:
    act("$1n unsuccessfully tried to make you sleep.",
        A_SOMEONE, self, null, tgt, TO_VICT);
+   /* Only a failed spell starts a fight: provoked first, the target was always
+      fighting by the time the sleep took hold, and only "tried to sleep" */
+   provoked_attack (tgt, self);
 
    quit;
 }
@@ -14500,13 +14488,13 @@ code
        else
         skillc:=self.abilities[ABIL_DIV];
 
-       if(tgt.type==UNIT_ST_PC)
-        skilld:=tgt.spells[SPL_REPEL_UNDEAD_2];
+       if(u.type==UNIT_ST_PC)
+        skilld:=u.spells[SPL_REPEL_UNDEAD_2];
        else
-        skilld:=tgt.abilities[ABIL_DIV];
+        skilld:=u.abilities[ABIL_DIV];
 
        skilla:=self.abilities[ABIL_BRA];
-       skillb:=tgt.abilities[ABIL_BRA];
+       skillb:=u.abilities[ABIL_BRA];
 
         hm:=spellresist(skilla,skillb,skillc,skilld);
 
