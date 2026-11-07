@@ -281,6 +281,7 @@ python3 getwikihelppage.py Genders &
 python3 getwikihelppage.py Get &
 python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
+python3 getwikihelppage.py Glance &
 python3 getwikihelppage.py Glowingfungus &
 python3 getwikihelppage.py Gnomes
 python3 getwikihelppage.py Greatsword &
