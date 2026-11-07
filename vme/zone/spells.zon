@@ -2959,10 +2959,9 @@ var
    heal : integer;
 code
 {
+   /* Only the undead, demons and devils */
    if ((not(RACE_IS_UNDEAD(targ.race))) and
-        (not(targ.race == RACE_GREATER_DEMON)) and
-        (not(targ.race >= RACE_LESSER_DEMON)) and (hm <= RACE_LESSER_DEVIL))
-
+       ((targ.race < RACE_DEMON_MIN) or (targ.race > RACE_DEMON_MAX)))
      hm := -1;
 
    if (hm < 0)
@@ -2984,7 +2983,7 @@ code
       if (self != targ)
       {
         act("$3n appears to have regained some strength.",
-            A_SOMEONE, self, null, null, TO_REST);
+            A_SOMEONE, self, null, targ, TO_NOTVICT);
         act("You feel refreshed.",
             A_SOMEONE, self, null, targ, TO_VICT);
       }
