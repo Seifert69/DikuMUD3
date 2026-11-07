@@ -272,6 +272,7 @@ python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
 python3 getwikihelppage.py Footlance &
 python3 getwikihelppage.py Forage &
+python3 getwikihelppage.py Frenzy &
 python3 getwikihelppage.py Friend
 python3 getwikihelppage.py Frostball &
 python3 getwikihelppage.py Frostsphere &
