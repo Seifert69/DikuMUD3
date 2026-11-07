@@ -9,14 +9,15 @@ setskill &lt;someone&gt; weapon &lt;weapon&gt; &lt;value&gt;
 </p>
 <pre>setskill Gnort skill pick_lock 80
 setskill Gnort spell cure_light 50
-setskill guard weapon long_sword 75
+setskill guard weapon category_sword 75
 </pre>
 <p>Sets how well someone knows a skill, a spell or a weapon, anywhere in the 
 world. Write a name of two words with an underscore (pick_lock), and you 
 may shorten it from the end. You are told "New value: &lt;n&gt;".
 </p><p>Only players have the full tree of spells and weapons, and only players 
-have skills. Monsters have just the spheres and the weapon categories (see 
-<a cmd='#'>Help Weapons</a>): giving a monster a single spell or weapon is refused. It 
+have skills. Monsters have just the spheres and the weapon categories, such as 
+category_sword (see <a cmd='#'>Help Weapons</a>): giving a monster a single spell or 
+weapon is refused. It 
 is logged.
 </p><p><br />
 See Also:
