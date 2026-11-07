@@ -152,6 +152,7 @@ $1n tells you, 'You must remove all that you wear.';
  21;  100; entangle                      ;  14; 14000;  10; 20;      0;
  21;  100; hedge wall                    ;   9;  9000;   8;          0;
  22;   80; sustain                       ;   9;  9000;   8;          0;
+ 24;  100; sun beam                      ;  14; 14000;  10;          0;
  25;  100; remove disease                ;  23; 23000;  15;          0;
  26;   80; calm                          ;  18; 18000;  15;          0;
  28;  100; remove poison                 ;  18; 18000;  15;          0;
@@ -167,6 +168,7 @@ $1n tells you, 'You must remove all that you wear.';
  52;  100; tsunami                       ;  14; 14000;  15;          0;
  60;  100; summon lightning              ;  18; 18000;  16;          0;
  90;  100; earthquake                    ;  13; 13000;  12; 24;      0;
+110;  100; solar flare                   ;  18; 18000;  16;          0;
 120;  100; polarity                      ;  15; 15000;  14;          0;
 "
 #else
@@ -880,6 +882,7 @@ $1n tells you, 'Remove all equipment, please.';
  22;  100; protection from evil          ;  14; 14000;  10;          0;
  23;   50; hold undead                   ;  23; 23000;  20;          0;
  24;  100; continual light               ;  14; 14000;  10;          0;
+ 26;   80; sun beam                      ;  14; 14000;  10;          0;
  27;  100; raise dead                    ;  18; 18000;  15;          0;
  28;   80; cause serious wounds          ;  18; 18000;  15;          0;
  29;  100; dispel evil                   ;  14; 14000;  10;          0;
