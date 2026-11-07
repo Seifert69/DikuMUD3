@@ -1,14 +1,37 @@
-<br/>
-Usage:<br/>
-   &gt;load &lt;pc-name&gt;|&lt;unit-path&gt;<br/>
-<br/>
-This wiz-command enables you to load a player (YES! a player), if the player is<br/>
-not currently playing. The player will behave like a link-dead player once<br/>
-loaded, an if the player actually connects, he will reconnect into the<br/>
-character! You can also use the command to load units from the world database<br/>
-file into the game. You just have to give the unit-path (zone-name and<br/>
-unit-name).<br/>
-<br/>
-See also:<br/>
-   &gt;purge<br/>
-<br/>
+<div class="mw-parser-output"><h1>Load (230)</h1>
+<p>Usage:
+</p>
+<pre>load &lt;unit@zone&gt;
+load &lt;unit&gt;
+load &lt;player&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>load bread@midgaard
+load Gnort
+</pre>
+<p><b>Loading a monster or a thing</b> fetches a fresh one from the world's 
+zone files, by its symbolic name: unit@zone, or the name alone for one in 
+your own zone. A thing you can carry appears in your inventory ("You 
+secretly load ..."); anything else appears in the room, which sees you 
+open an interdimensional gate and fetch it, and it says "Hello World!". 
+Rooms can't be loaded. Money takes level 254. A zone may demand a 
+higher level to load from it (its load level); its creators may load 
+from it all the same.
+</p><p><b>Loading a player</b> (level 245) brings a player who is not in the game 
+into your room, with what they carry, as if they had lost their link: if 
+they connect, they step into the character. This is refused if they are 
+connected, or already in the game link-dead. Loading a player of a higher 
+level than yours is logged.
+</p><p>It is logged. To get rid of what you loaded, see <a cmd='#'>Wizhelp Purge</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Purge</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>
