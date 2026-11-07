@@ -1,0 +1,33 @@
+<div class="mw-parser-output"><h1>Privacy</h1>
+<p>What the game records, and who sees it.
+</p><p><b>Channels that reach Discord.</b> Seven channels are relayed to the 
+Valhalla Discord server: newbie, builder, mud, accessibility, bugs, diku3 
+and chat (see <a cmd='#'>Help Comm</a>). Anything you say on them can be read by 
+anyone there, so treat them as public. When a new player joins, their 
+name is announced in Discord's newbie channel.
+</p><p><b>Bug, typo and idea reports</b> (see <a cmd='#'>Help Bug</a>, <a cmd='#'>Help Typo</a> and 
+<a cmd='#'>Help Idea</a>) are read by the administrators; bug and typo reports also 
+go to Discord's bugs channel, with your name.
+</p><p><b>The server log</b> records when you log in and out, with your level 
+and whether you play in the web client or over telnet, so that we can 
+count players. It does not record what you say or type. The commands 
+the gods use are logged.
+</p><p><b>The helpers.</b> Dwili, Groa and Lokee are run by an AI (Claude, from 
+Anthropic), and they say so if you ask. What you say to them, near them 
+or in a tell to them is logged, and the AI and the administrators read 
+it to make them better helpers. Like anyone, they also remember the 
+people they meet and what they talked about.
+</p><p><b>Snooping.</b> An administrator can see what you see, as it happens. 
+When and why is in <a cmd='#'>Help Snoop</a>.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Snoop</a>
+&gt; <a cmd='#'>Help Rules</a>
+&gt; <a cmd='#'>Help Comm</a>
+</pre>
+
+
+
+
+</div>
