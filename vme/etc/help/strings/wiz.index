@@ -29,6 +29,7 @@ flick=wizsocials.wiz
 freeze=freeze.wiz
 :end:f
 :start:g
+gmquest=gmquest.wiz
 gmroom=gmroom.wiz
 gmtrack=gmtrack.wiz
 gmtreasure=gmtreasure.wiz
