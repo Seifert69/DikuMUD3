@@ -5468,12 +5468,12 @@ if (self.level>=254)
 
 err:=loadstr("delete.txt",temp);
 
-if (err<1)
-	goto no_insure;
+if (err<1)  // Without the warning file, still warn and ask
+	temp := "This will delete your character for good.<br/>";
 
 sendtext (temp,self);
 
-sendtext ("If your sure you still want to delete your character, 'say delete me'<br/>",self);
+sendtext ("If you're sure you still want to delete your character, 'say delete me'<br/>",self);
 sendtext ("Doing anything else will abort the deletion.<br/>",self);
 
 wait (SFB_CMD, self==activator);
@@ -5481,19 +5481,14 @@ if (command ("say"))
 
 	if (argument=="delete me")
 	{
+	block;
 	if (self.extra.[CLAN_RANK]!=null)
 		exec ("cdefect now",self);
-		delete_player(self.name);
-		}
+	delete_player(self.name);
+	quit;
+	}
 
 sendtext("Deletion aborted<br/>",self);
-
-quit;
-
-	:no_insure:
-		if (self.extra.[CLAN_RANK]!=null)
-		exec ("cdefect now",self);
-			delete_player(self.name);
 
 quit;
 	:admin_delete:
