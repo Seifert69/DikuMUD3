@@ -61,7 +61,6 @@ python3 getwikihelppage.py Brambles &
 python3 getwikihelppage.py Bravemode
 python3 getwikihelppage.py Break &
 python3 getwikihelppage.py Breath &
-python3 getwikihelppage.py Bribe &
 python3 getwikihelppage.py Brief &
 python3 getwikihelppage.py Brimstone &
 python3 getwikihelppage.py Broadsword
@@ -150,7 +149,6 @@ python3 getwikihelppage.py Createfood
 python3 getwikihelppage.py Createwater &
 python3 getwikihelppage.py Creationsphere &
 python3 getwikihelppage.py Creators &
-python3 getwikihelppage.py Credit &
 python3 getwikihelppage.py Credits
 python3 getwikihelppage.py Cremove &
 python3 getwikihelppage.py Crossbow &
@@ -204,8 +202,7 @@ python3 getwikihelppage.py Displacemagic &
 python3 getwikihelppage.py Ditch &
 python3 getwikihelppage.py Divinationsphere
 python3 getwikihelppage.py Divineresistance &
-python3 getwikihelppage.py Donate &
-python3 getwikihelppage.py Donation
+python3 getwikihelppage.py Donate
 python3 getwikihelppage.py Dowse &
 python3 getwikihelppage.py Drag &
 python3 getwikihelppage.py Drop &
@@ -271,8 +268,7 @@ python3 getwikihelppage.py Fleeing &
 python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
 python3 getwikihelppage.py Footlance &
-python3 getwikihelppage.py Forage &
-python3 getwikihelppage.py Friend
+python3 getwikihelppage.py Forage
 python3 getwikihelppage.py Frostball &
 python3 getwikihelppage.py Frostsphere &
 python3 getwikihelppage.py Gaff
@@ -395,8 +391,7 @@ python3 getwikihelppage.py Manapoints &
 python3 getwikihelppage.py Map
 python3 getwikihelppage.py Mattock &
 python3 getwikihelppage.py Maul &
-python3 getwikihelppage.py Mending &
-python3 getwikihelppage.py Mentor
+python3 getwikihelppage.py Mending
 python3 getwikihelppage.py Meteorshower &
 python3 getwikihelppage.py Midgaard &
 python3 getwikihelppage.py Midgaardpaladins &
@@ -407,7 +402,6 @@ python3 getwikihelppage.py Mindsphere &
 python3 getwikihelppage.py Minorgate &
 python3 getwikihelppage.py Mire
 python3 getwikihelppage.py Money &
-python3 getwikihelppage.py Moneyorders &
 python3 getwikihelppage.py Monster &
 python3 getwikihelppage.py Morningstar
 python3 getwikihelppage.py Motd &
@@ -449,7 +443,6 @@ python3 getwikihelppage.py Pibag &
 python3 getwikihelppage.py Picklock &
 python3 getwikihelppage.py Pickpockets
 python3 getwikihelppage.py Pike &
-python3 getwikihelppage.py Pillar &
 python3 getwikihelppage.py Pilum &
 python3 getwikihelppage.py Piset &
 python3 getwikihelppage.py Plague
@@ -501,7 +494,6 @@ python3 getwikihelppage.py Read
 python3 getwikihelppage.py Reconstruct &
 python3 getwikihelppage.py Refit &
 python3 getwikihelppage.py Refresh
-python3 getwikihelppage.py Refundpolicy &
 python3 getwikihelppage.py Regenerate &
 python3 getwikihelppage.py Removecurse &
 python3 getwikihelppage.py Removedisease
