@@ -14225,6 +14225,78 @@ code
 }
 dilend
 
+/* Confusion, while it lasts: a move may go out a random open exit instead, and a
+   spell may fizzle before it starts. spl_confusion copies this onto the target; it
+   only runs when the target gives a command, and quits once the confusion is gone. */
+dilbegin aware confused();
+external
+   string dirstring@function(dr : integer);
+var
+   rm  : unitptr;
+   i   : integer;
+   n   : integer;
+   dir : integer;
+code
+{
+:start:
+   wait(SFB_CMD, (activator == self) and
+        (command("north") or command("east") or command("south") or
+         command("west") or command("up") or command("down") or
+         command("northeast") or command("northwest") or
+         command("southeast") or command("southwest") or command("cast")));
+
+   if (not(isaff(self, ID_CONFUSION)))
+      quit;
+
+   if (command("cast"))
+   {
+      if (rnd(1, 4) == 1)
+      {
+         block;
+         act("You lose your train of thought.",
+             A_ALWAYS, self, null, null, TO_CHAR);
+         act("$1n starts a spell, but seems to forget the words.",
+             A_HIDEINV, self, null, null, TO_ROOM);
+      }
+      goto start;
+   }
+
+   if (rnd(1, 3) != 1)
+      goto start;
+
+   rm := self.outside;
+   if (rm.type != UNIT_ST_ROOM)
+      goto start;
+
+   /* A random open exit, each as likely */
+   n := 0;
+   dir := -1;
+   i := DIR_NORTH;
+   while (i <= DIR_SOUTHWEST)
+   {
+      if ((rm.exit_to[i] != null) and
+          (not(isset(rm.exit_info[i], EX_CLOSED))) and
+          (not(isset(rm.exit_info[i], EX_HIDDEN))))
+      {
+         n := n + 1;
+         if (rnd(1, n) == 1)
+            dir := i;
+      }
+      i := i + 1;
+   }
+
+   if ((dir == -1) or command(dirstring@function(dir)))
+      goto start;
+
+   block;
+   act("In your confusion you stumble the wrong way.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   exec(dirstring@function(dir), self);
+   goto start;
+}
+dilend
+
+
 dilbegin spl_confusion(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
@@ -14244,6 +14316,9 @@ code
  addaff(tgt, ID_CONFUSION, hm, WAIT_SEC * 15, 0, 0, 0,
              TIF_CONFUSION_ON, TIF_CONFUSION_TICK,
              TIF_CONFUSION_OFF, APF_NONE);
+
+ if (not(dilfind("confused@spells", tgt)))
+    dilcopy("confused@spells", tgt);
 
  if(effect != "")
   effect(tgt,medi,hm);
