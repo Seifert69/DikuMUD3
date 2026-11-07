@@ -15,7 +15,6 @@ python3 getwikihelppage.py Ambush &
 python3 getwikihelppage.py Animatedead &
 python3 getwikihelppage.py Aoh &
 python3 getwikihelppage.py Appraisal
-python3 getwikihelppage.py Architect &
 python3 getwikihelppage.py Areas &
 python3 getwikihelppage.py Armour &
 python3 getwikihelppage.py Ask &
@@ -71,8 +70,7 @@ python3 getwikihelppage.py Builder
 python3 getwikihelppage.py Burn &
 python3 getwikihelppage.py Bury &
 python3 getwikihelppage.py Bushido &
-python3 getwikihelppage.py Butcher &
-python3 getwikihelppage.py Butler
+python3 getwikihelppage.py Butcher
 python3 getwikihelppage.py Caccept &
 python3 getwikihelppage.py Calllightning &
 python3 getwikihelppage.py Calm &
@@ -319,8 +317,6 @@ python3 getwikihelppage.py Holygrasp &
 python3 getwikihelppage.py Holyshout &
 python3 getwikihelppage.py Holytouch &
 python3 getwikihelppage.py Holyword
-python3 getwikihelppage.py Home &
-python3 getwikihelppage.py Homes2 &
 python3 getwikihelppage.py Houses &
 python3 getwikihelppage.py Humans
 python3 getwikihelppage.py Hunt &
