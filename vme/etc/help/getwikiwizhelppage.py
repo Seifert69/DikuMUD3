@@ -1,7 +1,9 @@
-import pdb;
+import pdb
 import sys
 import json
-import urllib2
+import urllib.request
+import urllib.error
+    
 
 # MS2020
 # use this script to retrieve a help file from the Wiki.
@@ -25,14 +27,14 @@ if len(sys.argv) != 2:
 print("Getting Wiki page from wiki.dikumud.com: " + sys.argv[1])
 
 try: 
-    j = urllib2.urlopen('https://wiki.dikumud.com/api.php?action=parse&format=json&disableeditsection=1&page=Wizhelp/'+sys.argv[1])
-except urllib2.HTTPError, e:
+    j = urllib.request.urlopen('https://wiki.dikumud.com/api.php?action=parse&format=json&disableeditsection=1&page=Wizhelp/'+sys.argv[1])
+except urllib.error.HTTPError as e:
     print('HTTPError = ' + str(e.code))
     sys.exit()
-except urllib2.URLError, e:
+except urllib.error.URLError as e:
     print('URLError = ' + str(e.reason))
     sys.exit()
-except httplib.HTTPException, e:
+except httplib.HTTPException as e:
     print('HTTPException')
     sys.exit()
 except Exception:
@@ -114,7 +116,7 @@ if len(objs) > 1:
 
 
 #
-# Morph <a href="/index.php?title=Help/Idea&amp;action=edit&amp;redlink=1" class="new" title="Help/Idea (page does not exist)">idea</a>
+# Morph <a href="/index.php?title=Wizhelp/Idea&amp;action=edit&amp;redlink=1" class="new" title="Help/Idea (page does not exist)">idea</a>
 # to {idea}
 #
 objs = mystr.split('<a href="/index.php?title=Wizhelp/')
@@ -140,7 +142,7 @@ if len(objs) > 1:
         if len(o2) > 1:
             mystr += "<a cmd='#'>" + o2[0] + "</a>" + o2[1]
         else:
-            print "error: missing end curly bracket on string {"+objs[i]
+            print("error: missing end curly bracket on string {"+objs[i])
             mystr += objs[i]
 
 myfile = sys.argv[1].lower() + ".wiz"
