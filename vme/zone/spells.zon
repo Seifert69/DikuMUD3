@@ -55,7 +55,8 @@ provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
 
-   if (self.spells[SPL_CONDEMN] <= 0)
+   /* Casting it takes practice; a potion, wand or scroll works for anyone */
+   if ((medi.type != UNIT_ST_OBJ) and (self.spells[SPL_CONDEMN] <= 0))
    {
      act("You must practice first.",
          A_ALWAYS, self, null, null, TO_CHAR);
@@ -3153,7 +3154,8 @@ dilbegin raise_hpp(medi:unitptr, tgt : unitptr, arg : string,
                    hm : integer, effect : string);
 code
 {
-   if (self.spells[SPL_RAISE_HPP] <= 0)
+   /* Casting it takes practice; a potion, wand or scroll works for anyone */
+   if ((medi.type != UNIT_ST_OBJ) and (self.spells[SPL_RAISE_HPP] <= 0))
    {
      act("You must practice first.",
          A_ALWAYS, self, null, null, TO_CHAR);
