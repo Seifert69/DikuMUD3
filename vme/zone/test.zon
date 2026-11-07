@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 20  // T010, T009, ...
+#define TEST_MAXIMUM 21  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,55 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T021 =====================
+
+// Weather: getinteger(DIL_GINT_PRESSURE / DIL_GINT_PRESSURECHG) read the zone's air pressure
+// (950..1050 mb) and its last change (-12..12); with a null unit they read the DIL's own zone.
+//
+dilbegin T021(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   p : integer;
+   c : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T021 weather pressure running");
+
+   p := getinteger(DIL_GINT_PRESSURE, self, 0);
+   c := getinteger(DIL_GINT_PRESSURECHG, self, 0);
+   logtest(tstno, LOGT_INFO, "T021 pressure " + itoa(p) + ", change " + itoa(c));
+
+   if ((p < 950) or (p > 1050))
+   {
+      logtest(tstno, LOGT_ERROR, "T021 pressure out of range");
+      goto terminate;
+   }
+   if ((c < -12) or (c > 12))
+   {
+      logtest(tstno, LOGT_ERROR, "T021 change out of range");
+      goto terminate;
+   }
+   if (getinteger(DIL_GINT_PRESSURE, null, 0) != p)
+   {
+      logtest(tstno, LOGT_ERROR, "T021 a null unit doesn't read the own zone");
+      goto terminate;
+   }
+
+   logtest(tstno, LOGT_INFO, "T021 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T021 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
 }
 dilend
 

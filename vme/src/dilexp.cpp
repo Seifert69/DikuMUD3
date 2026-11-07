@@ -3557,6 +3557,14 @@ void dilfe_gint(dilprg *p)
                 v->val.num = timeInfo->tm_mday;
                 break;
 
+            case DIL_GINT_PRESSURE:
+                v->val.num = unit_zone(p_u != nullptr ? p_u : p->sarg->owner)->cgetWeather().getPressure();
+                break;
+
+            case DIL_GINT_PRESSURECHG:
+                v->val.num = unit_zone(p_u != nullptr ? p_u : p->sarg->owner)->cgetWeather().getChange();
+                break;
+
             default:
                 v->type = DILV_FAIL; /* failed */
                 slog(LOG_ALL, 0, "getinteger() was given incorrect index %d by DIL %s.", idx, p->sarg->owner->getFileIndexSymName());

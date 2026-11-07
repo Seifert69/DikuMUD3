@@ -11036,6 +11036,7 @@ chng : integer;
 list : stringlist;
 hm   : integer;
 room : unitptr;
+pres : integer;
 
 code
 {
@@ -11064,21 +11065,76 @@ code
     skia := self.abilities[ABIL_BRA];
 
 /*
-   This is really worthless at the moment without being able to
-   really predict weather.
+   The forecast comes from the zone's air pressure: low pressure brings
+   clouds, rain and storms, high pressure clears them (weather.cpp).
+   pres is where the pressure is heading at the next weather update.
 */
 
  if(skia > 0)
  {
+  hm := skillroll(self.abilities[ABIL_BRA], 50, skia, 0);
 
-  if(weather < 3)
-   act("The weather will probably become worse.",
-     A_ALWAYS, self, null,null, TO_CHAR);
-    else
-     act("The weather will probably be better.",
-       A_ALWAYS, self, null, null, TO_CHAR);
-
+  if(hm < -50)
+  {
+   /* A bad misreading: the forecast for the opposite pressure */
+   pres := 2000 - getinteger(DIL_GINT_PRESSURE, self, 0)
+                - getinteger(DIL_GINT_PRESSURECHG, self, 0);
   }
+  else if(hm < 0)
+  {
+   act("You can't tell which way the weather is going.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   goto done;
+  }
+  else
+   pres := getinteger(DIL_GINT_PRESSURE, self, 0) +
+           getinteger(DIL_GINT_PRESSURECHG, self, 0);
+
+  if(weather == SKY_CLOUDLESS)
+  {
+   if(pres < 990)
+    list := {"Clouds will gather soon."};
+   else if(pres < 1010)
+    list := {"Clouds may gather."};
+   else
+    list := {"The sky should stay clear."};
+  }
+  else if(weather == SKY_CLOUDY)
+  {
+   if(pres < 970)
+    list := {"It will rain soon."};
+   else if(pres < 990)
+    list := {"It may start to rain."};
+   else if(pres > 1030)
+    list := {"The clouds may clear."};
+   else
+    list := {"It should stay cloudy."};
+  }
+  else if(weather == SKY_RAINING)
+  {
+   if(pres < 970)
+    list := {"A thunderstorm may break."};
+   else if(pres > 1030)
+    list := {"The rain will stop soon."};
+   else if(pres > 1010)
+    list := {"The rain may stop."};
+   else
+    list := {"The rain will keep up."};
+  }
+  else
+  {
+   if(pres > 1010)
+    list := {"The storm will end soon."};
+   else if(pres > 990)
+    list := {"The storm may ease."};
+   else
+    list := {"The storm will go on."};
+  }
+
+  act(list.[0], A_ALWAYS, self, null, null, TO_CHAR);
+ }
+
+ :done:
     send_done("weather",self,null,null,0,arg,null, CMD_AUTO_NONE);
 
 quit;
