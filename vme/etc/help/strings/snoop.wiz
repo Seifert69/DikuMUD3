@@ -1,9 +1,26 @@
-<br/>
-Usage:<br/>
-   &gt;snoop [&lt;player&gt;]<br/>
-<br/>
-This wiz-command enables you to snoop on another player. You will get every<br/>
-message the player gets, marked by a '%' in front of each line. Snooping<br/>
-is not a nice thing to do, and should only be done to explain things or to<br/>
-guide another player. To stop snooping, just type snoop without an argument.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Snoop (245)</h1>
+<p>Usage:
+</p>
+<pre>snoop &lt;player&gt;
+snoop               (stop snooping)
+</pre>
+<p>Lets you see everything a player sees, as it happens to them. Only one 
+god can snoop a player at a time ("Busy already."), and only a player of 
+a lower level than yours, who is connected. The player isn't told. It is 
+logged.
+</p><p>Snooping intrudes on a player's privacy. The players' help sets out the 
+promises the administrators make about it (see <a cmd='#'>Help Snoop</a>): ask for 
+permission when you can, use it only for the rules, security and 
+debugging, and keep what you see confidential.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Snoop</a>
+&gt; <a cmd='#'>Wizhelp Plog</a>
+&gt; <a cmd='#'>Wizhelp Switch</a>
+</pre>
+
+
+
+
+</div>
