@@ -566,27 +566,20 @@ multi classes=guilds.hlp
 multiple characters=rules.hlp
 :end:m
 :start:n
-naffect=naffect.hlp
 naginata=naginata.hlp
 names=names.hlp
-nbless=naffect.hlp
-ncorpse=naffect.hlp
 necro=necro.hlp
 necromancer=necro.hlp
 necromancer skills=necromancerskills.hlp
 necromancer spells=necromancerspells.hlp
 necromancer weapons=necromancerweapons.hlp
 neutral=alignment.hlp
-new player guide=newplayercouncil.hlp
 newbie=newbie.hlp
 news=news.hlp
-ngoto=naffect.hlp
-nheal=naffect.hlp
 night globe=nightglobe.hlp
 north=movement.hlp
 noshout=noshout.hlp
 npc=monster.hlp
-nsanctuary=naffect.hlp
 :end:n
 :start:o
 odd weapon=oddweapon.hlp

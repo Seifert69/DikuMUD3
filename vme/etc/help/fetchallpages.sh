@@ -400,7 +400,6 @@ python3 getwikihelppage.py Motd &
 python3 getwikihelppage.py Mount
 python3 getwikihelppage.py Movement &
 python3 getwikihelppage.py Mudpuddle
-python3 getwikihelppage.py Naffect &
 python3 getwikihelppage.py Naginata &
 python3 getwikihelppage.py Names &
 python3 getwikihelppage.py Necro &
@@ -408,7 +407,6 @@ python3 getwikihelppage.py Necromancerskills
 python3 getwikihelppage.py Necromancerspells &
 python3 getwikihelppage.py Necromancerweapons &
 python3 getwikihelppage.py Newbie &
-python3 getwikihelppage.py Newplayercouncil &
 python3 getwikihelppage.py News &
 python3 getwikihelppage.py Nightglobe &
 python3 getwikihelppage.py Noshout
