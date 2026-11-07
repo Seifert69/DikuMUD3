@@ -1,10 +1,24 @@
-<br/>
-Usage:<br/>
-   &gt;message &lt;char&gt; &lt;string&gt;<br/>
-<br/>
-This wiz-command is just like echo, but only the character mentioned sees the<br/>
-string, as opposed to the entire room.<br/>
-<br/>
-See also:<br/>
-   &gt;wizhelp echo<br/>
-<br/>
+<div class="mw-parser-output"><h1>Message (230)</h1>
+<p>Usage:
+</p>
+<pre>message &lt;someone&gt; &lt;text&gt;
+</pre>
+<p>Example:
+</p>
+<pre>message Gnort A cold wind whispers your name.
+</pre>
+<p>Like echo, but for one person: shows your text, just as you write it, to 
+someone anywhere in the game, asleep or awake. No name is added, so it 
+reads like something happening to them; to speak to someone as yourself, 
+use <a cmd='#'>Help Tell</a>. You are told "Ok.". It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Echo</a>
+&gt; <a cmd='#'>Wizhelp Broadcast</a>
+</pre>
+
+
+
+
+</div>
