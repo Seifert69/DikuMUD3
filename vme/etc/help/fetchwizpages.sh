@@ -4,9 +4,9 @@ python3 getwikiwizhelppage.py Ban
 python3 getwikiwizhelppage.py Boards
 python3 getwikiwizhelppage.py Broadcast
 python3 getwikiwizhelppage.py Cdelete
+python3 getwikiwizhelppage.py Competition
 python3 getwikiwizhelppage.py Copy
 python3 getwikiwizhelppage.py Corpses
-python3 getwikiwizhelppage.py Competition
 python3 getwikiwizhelppage.py Crash
 python3 getwikiwizhelppage.py Cstat
 python3 getwikiwizhelppage.py Delete
@@ -15,6 +15,7 @@ python3 getwikiwizhelppage.py Execute
 python3 getwikiwizhelppage.py File
 python3 getwikiwizhelppage.py Force
 python3 getwikiwizhelppage.py Freeze
+python3 getwikiwizhelppage.py Gmroom
 python3 getwikiwizhelppage.py Goto
 python3 getwikiwizhelppage.py Load
 python3 getwikiwizhelppage.py Makemoney
