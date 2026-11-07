@@ -8,8 +8,9 @@ purge &lt;someone or something&gt;
 be picked up is destroyed, in scorching flames. Players, things fixed in 
 place, and players' corpses are spared.
 </p><p><b>purge &lt;name&gt;</b> disintegrates one monster, thing or player in the room 
-(only here: name something you can see). A corpse is emptied and cleared 
-away as at the end of its time. Purging a player takes level 245, and 
+(only here: name something you can see). A corpse is destroyed with 
+everything in it, and its saved copy deleted, so it won't come back after 
+a reboot. Purging a player takes level 245, and 
 only works on players of a lower level than yours: it removes them from 
 the game at once.
 </p><p>Rooms can't be purged. It is logged.
