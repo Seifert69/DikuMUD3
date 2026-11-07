@@ -13,7 +13,6 @@ END HEADER*/
 /* 
 DONE: Create spring of youth as a disk saved object
 DONE: Create rooms for the fountain
-TODO: Create a way for others to 'pay' for the life of some and a way for imms to assist.
 TODO: Method for determining how much life to give back from an extra on the spring so that it can be modified in game. 
 TODO: Logs and cleanup
 TODO: Test
@@ -195,8 +194,7 @@ spring
     names {"Eternal Spring", "spring eternal", "spring", "pool", "water"}
     title "the <div class='cpy'>Eternal Spring</div>"
     descr "A small pool of exceptionally clear water from a spring sparkles here."
-    extra {} "Sparkling, no matter the weather, you sense this naturally occuring spring does more than just hydrate your mortal body. The pool below the spring has a gentle current that provides just enough movement to catch the eye with sparks of gold, violet, and pink at the peaks of the ripples. This spring may just be the one of legends, taking an adventurer back in time. You can try to drink from it, for a price."
-    extra {"$price_per_drink"}  "10" // 10 gold ...
+    extra {} "Sparkling, no matter the weather, you sense this naturally occuring spring does more than just hydrate your mortal body. The pool below the spring has a gentle current that provides just enough movement to catch the eye with sparks of gold, violet, and pink at the peaks of the ripples. This spring may just be the one of legends, taking an adventurer back in time. You can try to drink from it."
     extra {"$years_to_restore"} "10"
     extra {"$interactions_1"} ""
     extra {"$interactions_2"} ""
@@ -208,14 +206,12 @@ spring
       integer Rejuvenate(pc : unitptr, years : integer);
 
    var
-      payer : unitptr;
       drinker : unitptr;
       s : string;
       u : unitptr;
       i : integer;
       j : integer;
       k : integer;
-      price : integer;
       years : integer;
       prevage : integer;
       
@@ -251,21 +247,14 @@ spring
           goto start;
       }
       
-      price := atoi(self.extra.["$price_per_drink"].descr);
       years := atoi(self.extra.["$years_to_restore"].descr);
       
-      if ( (not(price)) or (not(years)) )
+      if (not(years))
       {
-        log("Missing extra on eternal spring. Make sure $price_per_drink and $years_to_restore extra exist on spring@youth.");
+        log("Missing extra on eternal spring. Make sure the $years_to_restore extra exists on spring@youth.");
         act("You attempt to drink from the fountain and find that you just can't quite reach. Ask an immortal for help.", A_SOMEONE, activator, self, null, TO_CHAR);
         goto start;
       }
-      /* if ( ((price) * 100) > activator.acc_balance)
-      {
-          act("Your will to drink from the $2N is strong but you realize you can't afford it.", A_SOMEONE, activator, self, null, TO_CHAR);
-          goto start;
-      }*/
-
       if (not ((activator.name in self.extra.["$interactions_1"].names) or (activator.name in self.extra.["$interactions_2"].names)))
       {
           addstring(self.extra.["$interactions_1"].names, activator.name);
@@ -299,12 +288,9 @@ spring
       itoa((realtime - prevage) / (SECS_PER_MUD_YEAR)) + 
       " to " + 
       itoa((realtime-drinker.birth) / (SECS_PER_MUD_YEAR)) + 
-      " price: " + 
-      itoa(price) + 
       " lifespan: " + 
       itoa(drinker.lifespan) + "<br/>";
       k := savestr("youth.log", s, "a");
-      acc_modify(payer, -((price) * 100));
       goto start;    
   }
   dilend
