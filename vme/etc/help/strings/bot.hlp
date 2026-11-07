@@ -1,17 +1,21 @@
-<div class="mw-parser-output"><h1>Clients, Scripts, Triggers and Botting</h1>
-<p>Before we can explain what is and is not allowed on Valhalla, we must first define these terms:
+<div class="mw-parser-output"><h1>Clients, Scripts, Triggers and Bots</h1>
+<p>First, what the words mean:
 </p>
-<ul><li><b>Alias</b>: a short cut to one or more commands.</li>
-<li><b>Trigger</b>: an action that activates on output from the mud.</li>
-<li><b>Script</b>: a program that can control a character without human intervention.</li></ul>
-<p>Scripts are fully illegal on Valhalla, while triggers and aliases can be used, as long as they are used and not abused. Put simply: if your character doesn't have a human sitting at the screen controlling him or her, it is illegal. Group triggers are allowed, but if you are not sitting at the computer, it is illegal.
-</p><p>Many people have tried to explain our no botting policy by saying that scripts and bots cause lag. While a very well written script might cause lag this is not the reason. The game was created to be played not to be automated and thus we have to set down some rules to keep the game playable. There is no fun in setting your character online and then going to bed, so that kind of scripting has been made illegal. There is also no fun or pride in allowing some high level character to drag around a new character that is not theirs and getting them free levels while that characters owner is off having a beer or two. If you do not want to play your character please do not even keep a character on Valhalla.
-</p><p>Abuse of the botting rule can and will result in the deletion of any characters involved in the abuse of triggers, aliases, or scripts.
+<ul><li><b>Alias</b>: a short cut to one or more commands (see <a cmd='#'>Help Alias</a>).</li>
+<li><b>Trigger</b>: an action that activates on output from the mud (see <a cmd='#'>Help Triggers</a>).</li>
+<li><b>Script</b> or <b>bot</b>: a program that controls a character without anyone at the screen.</li></ul>
+<p>All of them are allowed on Valhalla: you may use aliases and triggers, 
+run a script or a bot, and play more than one character at a time. The 
+mud's own helpers, such as Dwili and Groa, are bots too.
+</p><p>The one rule is that you don't ruin the game for other players. When a 
+character, played by hand or by a program, spoils the game for others, 
+the gods will step in, as with any other rule (see <a cmd='#'>Help Rules</a>).
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Rules</a>
 &gt; <a cmd='#'>Help Alias</a>
+&gt; <a cmd='#'>Help Triggers</a>
 </pre>
 
 
