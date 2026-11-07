@@ -1,0 +1,23 @@
+<div class="mw-parser-output"><h1>Freeze (240)</h1>
+<p>Usage:
+</p>
+<pre>freeze &lt;player&gt;
+</pre>
+<p>Freezes a player, or thaws one who is frozen: the same command does both. 
+A frozen player can only look, say and see who is on; every other command 
+gets "You're totally frozen!" They are told "You totally freeze." when 
+frozen, and "You unfreeze." when thawed.
+</p><p>The player can be anywhere in the game, but must be of a lower level than 
+yours. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Noshout</a>
+&gt; <a cmd='#'>Wizhelp Wizlock</a>
+&gt; <a cmd='#'>Wizhelp Ban</a>
+</pre>
+
+
+
+
+</div>
