@@ -2622,7 +2622,7 @@ code
    if (hm < 0)
    {
    act ("You fail.",
-   A_ALWAYS,tgt,null,null,TO_ALL);
+   A_ALWAYS,self,null,null,TO_CHAR);
       quit;
    }
    if (self.mana < 100)
@@ -2643,7 +2643,7 @@ foreach(UNIT_ST_OBJ, can)
   if (can == self)
      continue;
 
-  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and tgt.value[2] == 1))
+  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and can.value[2] == 1))  // no player corpses
      continue;
 
   chk := (can.value[4]);
