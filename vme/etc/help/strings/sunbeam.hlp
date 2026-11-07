@@ -1,6 +1,6 @@
 <div class="mw-parser-output"><h1>Sun Beam</h1>
 <p>Sphere: Fire Sphere
-Class: none (no guild teaches it)
+Class: Druid (guild level 24), Healer (guild level 26, up to 80%)
 Mana: 15
 </p><p>Usage:
 </p>
@@ -9,15 +9,14 @@ Mana: 15
 use a wand or staff of sun beam
 </pre>
 <p>The caster calls to the shining rays of the sun for power, and a beam of 
-sunlight burns the target. It is meant to work only outdoors, in daylight, 
-under a clear or cloudy sky. It is strongest at noon and weaker towards 
-dawn and dusk, and it burns the undead far worse than the living.
+sunlight burns the target. It is quick to cast, quick enough to use in a 
+fight. It needs the sun: you must be outdoors, in the daytime (from five in 
+the morning until nine at night), under a clear or cloudy sky; rain and 
+storms block it. It is strongest at noon and weaker towards dawn and dusk, 
+and it burns the undead far worse than the living.
 </p><p>It does about as well against any armour, and a shield softens it. Casting 
-it is an attack and starts a fight. No guild teaches it, but it turns up on 
-wands and staffs among random treasure.
-</p><p>Note: at present the spell always fails with "The heavy rain clouds block 
-any chance of casting the spell", whatever the weather. This is a known 
-bug.
+it is an attack and starts a fight. You must be standing. It also turns up 
+on wands and staffs among random treasure.
 </p><p><br />
 See Also:
 </p>
