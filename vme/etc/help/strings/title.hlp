@@ -3,7 +3,7 @@
 </p>
 <pre><a cmd='#'>title</a>   (at your guild master)
 </pre>
-<p>Players like to have titles for their characters, and there are several ways to 
+<p>Players like to have titles for their characters, and there are two ways to 
 get one.
 </p><p>The first is through your guild. Go to your guild master and type title: you get 
 the title of your rank in the guild, like "the dwarf Recruit". As you rise in the 
@@ -12,14 +12,12 @@ master tells you to come back when you are higher.
 </p><p>The second is through a clan. Ask your clan Master or a lord for a title (see 
 <a cmd='#'>Help Ctitle</a>); depending on the clan's rules you are given one, or asked to do 
 a quest for it.
-</p><p>Another way is by bribing an administrator for a title (see <a cmd='#'>Help Bribe</a>).
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Guilds</a>
 &gt; <a cmd='#'>Help Ctitle</a>
 &gt; <a cmd='#'>Help Clan</a>
-&gt; <a cmd='#'>Help Bribe</a>
 </pre>
 
 
