@@ -13,8 +13,8 @@ and you must fight with two weapons, one wielded and one held (see
 <a cmd='#'>Help Hold</a>).
 </p><p>Winding up a whirl takes time, so you are slower to act again afterwards. Your 
 dexterity and constitution are tested against your opponent's: if the whirl 
-fails, you trip up and stumble. A whirl also takes some endurance, and you need 
-plenty left to try.
+fails, you trip up and stumble. A whirl costs 75 endurance, less the better your 
+skill (55 at full skill), and you need more than that left to try.
 </p><p><br />
 See Also:
 </p>
