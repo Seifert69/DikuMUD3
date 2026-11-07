@@ -22,7 +22,6 @@ python3 getwikiwizhelppage.py Message
 python3 getwikiwizhelppage.py Noshout
 python3 getwikiwizhelppage.py Notell
 python3 getwikiwizhelppage.py Nset
-python3 getwikiwizhelppage.py Path
 python3 getwikiwizhelppage.py Personal
 python3 getwikiwizhelppage.py Petrify
 python3 getwikiwizhelppage.py Plog

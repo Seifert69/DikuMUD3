@@ -55,7 +55,7 @@ nset=nset.wiz
 :start:o
 :end:o
 :start:p
-path=path.wiz
+path=wpath.wiz
 personal=personal.wiz
 petrify=petrify.wiz
 plog=plog.wiz
