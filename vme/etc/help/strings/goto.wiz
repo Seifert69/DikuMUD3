@@ -1,13 +1,41 @@
-<br/>
-Usage:<br/>
-   &gt;goto &lt;unit&gt;<br/>
-<br/>
-This is the wizards way of travelling. At an instant, you can move across<br/>
-the worlds. You will appear in the same room, as the unit you specify, thus<br/>
-making 'goto papi' take you to the same room as papi, 'goto cup' take<br/>
-you to the same room as a cup (but only if the cup is in a room!)and <br/>
-'goto inn@udgaard' will take you to that specific room.<br/><br/>
-<br/>
-See also:<br/>
-   &gt;help at<br/>
-<br/>
+<div class="mw-parser-output"><h1>Goto (230)</h1>
+<p>Usage:
+</p>
+<pre>goto &lt;room@zone&gt;
+goto &lt;zone&gt;
+goto &lt;someone or something&gt;
+goto &lt;room&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>goto inn@udgaard
+goto midgaard
+goto Papi
+goto corpse
+</pre>
+<p>The gods' way of travelling: at once, to anywhere in the world. You land 
+in the room of what you name, or inside it if it is something one can 
+enter, such as a ship. In order, goto tries:
+</p>
+<ol><li>a symbolic name, room@zone (or any unit@zone: you go to where it is);</li>
+<li>a corpse, when the word corpse is in the name;</li>
+<li>a zone's name: its first room;</li>
+<li>a player, then a room, a monster and a thing, anywhere, by name;</li>
+<li>a room of that symbolic name in your own zone.</li></ol>
+<p>You can't go into a private room where two players already are. You are 
+warned if the place doesn't allow teleporting, but go all the same. The 
+room sees you disappear into thin air and appear from thin air (or your 
+own $bamfout and $bamfin texts, if your character has those extra 
+descriptions), and you look around. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp At</a>
+&gt; <a cmd='#'>Wizhelp Transfer</a>
+&gt; <a cmd='#'>Wizhelp Corpses</a>
+</pre>
+
+
+
+
+</div>
