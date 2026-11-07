@@ -12790,7 +12790,7 @@ code
 
 	act("You begin whirling your $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
 	act("$1n begins whirling their $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
-	self.endurance := self.endurance - (75-endcost);
+	self.endurance := self.endurance - endcost;  // 75, down to 55 at full skill
 	heartbeat := PULSE_ROUND*4;
 	change_speed(self, PULSE_ROUND*4);
 
