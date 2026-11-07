@@ -3471,17 +3471,19 @@ code
 	}
 	else
 	{
-	/* A dispel at least as strong as the control ends it; other messages don't */
+	/* A dispel at least as strong breaks the control early, ending it as if it
+	   had run out; other messages don't touch it */
 	dispel := getwords(argument);
 	if(dispel.[0] == "spl_dispel")
 	 {
 	 if (atoi(dispel.[1]) >= i)
-	 	goto byebye;
+	 	goto released;
 	 }
 	goto loop;
 	}
     }
 
+	:released:
 	exq := "$undead control" in self.extra;
 
 	mast := findunit(self,exq.descr,FIND_UNIT_SURRO,null);
