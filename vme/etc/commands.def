@@ -1983,7 +1983,7 @@ loglevel      = 245
 command       = noshout
 func          = no_shout@commands
 minpos        = POSITION_RESTING
-minlevel = 0
+minlevel = 200
 loglevel = 200
 
 
