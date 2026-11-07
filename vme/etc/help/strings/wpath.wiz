@@ -1,0 +1,26 @@
+<div class="mw-parser-output"><h1>Wpath (230)</h1>
+<p>Usage:
+</p>
+<pre>wpath &lt;someone or something&gt;
+wpath &lt;unit@zone&gt;
+</pre>
+<p>Example:
+</p>
+<pre>wpath Gnort
+</pre>
+<p>Finds the way to someone or something: anyone or anything in the world 
+by name, or a unit by its symbolic name. You are told its symbolic name, 
+the room it is in (click it to goto there), and the first direction to 
+walk from where you stand to get there along the shortest path.
+</p><p>It replaces the old path command. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Goto</a>
+&gt; <a cmd='#'>Help Track</a>
+</pre>
+
+
+
+
+</div>
