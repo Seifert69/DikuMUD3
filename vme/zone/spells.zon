@@ -4740,6 +4740,13 @@ code{
       act("Nothing happens.",A_ALWAYS,self,null,null,TO_CHAR);
       quit;
      }
+     /* A player's corpse already keeps far longer than this spell's 8 minutes,
+        and has a way home; slowing it would destroy it, gear and all, sooner */
+     if (IS_CORPSE(tgt) and (tgt.value[2] == 1))
+     {
+      act("Nothing happens.",A_ALWAYS,self,null,null,TO_CHAR);
+      quit;
+     }
      if(dilfind("rot_corpse@death",tgt))
 	 /* if(isaff(tgt,ID_CORPSE)) */
      {
