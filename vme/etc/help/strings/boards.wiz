@@ -4,7 +4,7 @@
 <pre>boards
 </pre>
 <p>Lists the boards in the game: each board's name, and the room it is in 
-("the bulletin board in The Temple of Odin"). A board is added to the 
+(each line reads: the board, "in", the room). A board is added to the 
 list when it is loaded, so after a reboot only the boards that have been 
 loaded since appear.
 </p><p>It is logged. For how players use a board, see <a cmd='#'>Help Boards</a>.
