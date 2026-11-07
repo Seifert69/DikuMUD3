@@ -1,0 +1,30 @@
+<div class="mw-parser-output"><h1>Cdelete (245)</h1>
+<p>Usage:
+</p>
+<pre>cdelete &lt;clan id&gt;
+</pre>
+<p>Example:
+</p>
+<pre>cdelete clan_koh
+</pre>
+<p>Deletes a clan for good. Give its id, the first line of its entry in 
+clanlist.data (such as clan_koh), not its full name.
+</p><p>Every member is removed: those online at once, with the message that they 
+have been removed from the clan, a title saying they were banished from 
+it, and their home set back to the temple of Udgaard. Members who are 
+offline are put on a list and removed the next time they log in. Then the 
+clan's member list, ranks, money and stored equipment are deleted, and 
+the clan is taken out of clanlist.data.
+</p><p>There is no undo. The clan's zone stays; take it out of the game 
+separately if you want it gone. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Cstat</a>
+&gt; <a cmd='#'>Help Clan</a>
+</pre>
+
+
+
+
+</div>
