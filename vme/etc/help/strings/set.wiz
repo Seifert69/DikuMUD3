@@ -1,4 +1,4 @@
-<div class="mw-parser-output"><h1>Set</h1>
+<div class="mw-parser-output"><h1>Set (230)</h1>
 <p>Usage:
 </p>
 <pre> &gt; set &lt;unit&gt; &lt;field&gt; &lt;arguments&gt;
@@ -7,6 +7,12 @@
 unit. As there are a LOT of fields to set, i will not list them here. The
 command will list them, if you just give a unit name. However it is essential,
 that you understand the argument types.
+</p><p>The unit can be room (the room you are in), or anything you can name: in 
+your inventory or equipment, here, or anywhere in the world. Fields can be 
+shortened, as long as the start is clear. Some fields need a higher level 
+than 230; changing another player, or anything they carry or wear, needs 
+level 245 at least. Money can only be changed at level 255. The command is 
+logged.
 </p>
 <pre> &lt;value&gt;&#160;: a value. beware not to enter a number out of range.
  &lt;type&gt;&#160;: a type. to list possible types give it an 'X' as type
@@ -32,13 +38,15 @@ that you understand the argument types.
 </p>
 <pre> &gt; set rabbit add-name killer rabbit, carrot muncher
  &gt; set papi add-info $professions,barbarian,dark knight,necromancer;1,2,3
+ &gt; set john del-extra ,     // This example removes the an empty name, i.e. the default description
 </pre>
-<p>Combinations of the above occur.
-</p><p>See also:
+<p><br />
+Combinations of the above occur.
+</p><p>See Also:
 </p>
-<pre> &gt; wizhelp setskill
- &gt; wizhelp wstat
- &gt; wizhelp wstat
+<pre>&gt; <a cmd='#'>Wizhelp Setskill</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+&gt; <a cmd='#'>Wizhelp Nset</a>
 </pre>
 
 
