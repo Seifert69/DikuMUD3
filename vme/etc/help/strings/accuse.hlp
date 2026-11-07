@@ -1,20 +1,27 @@
 <div class="mw-parser-output"><h1>Accuse</h1>
-<p>When you see a player commit a crime the following text should be displayed:
+<p>Usage:
 </p>
-<pre> You have just witnessed a crime committed by &lt;playername&gt;
+<pre><a cmd='#'>accuse</a>                          the crimes you remember
+accuse &lt;name&gt; murder
+accuse &lt;name&gt; of stealing
 </pre>
-<p>At this point you may chose to ignore it or be an upstanding citizen
-and go to the local city guard office. Here you can accuse a player of any
-crime you may have witnessed him committing. There you would for example
-use:
+<p>When you see someone commit a crime, you are told: "You have just 
+witnessed a crime committed by &lt;name&gt;". You may let it go, or be an 
+upstanding citizen: go to the captain of the city guard where it 
+happened, and accuse them there. Type accuse alone to see the crimes you 
+remember; click one to accuse.
+</p><p>Name the crime you saw: murder or stealing. The captain only takes an 
+accusation for a crime you actually witnessed, and only for a crime done in 
+his own city's lands. If the criminal isn't in the realm right now, come 
+back when they are; your memory of it lasts two weeks. If the criminal was 
+a monster that has since died, justice has found them already.
+</p><p>An accusation goes on the criminal's record, and may put a reward on their 
+head (see <a cmd='#'>Help Laws</a>).
+</p><p><br />
+See Also:
 </p>
-<pre> accuse Quinn of murder
- accuse Zadran stealing
-</pre>
-<p>See Also:
-</p>
-<pre>&gt; <a cmd='#'>Help Law</a>
-&gt; <a cmd='#'>Help PK</a>
+<pre>&gt; <a cmd='#'>Help Laws</a>
+&gt; <a cmd='#'>Help Wanted</a>
 </pre>
 
 
