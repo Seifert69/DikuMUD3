@@ -5644,39 +5644,35 @@ code
 }
 dilend
 
+// Copied onto a refitted item: it keeps the new size until a dispel magic at least as
+// strong as the refit ends it (Help/Refit). It only waits for messages, no ticks. The
+// item's own height is kept in its $resized extra, so it comes back right after a reboot,
+// when this program starts over on the already resized item.
 dilbegin recall refit_aff(pwr :integer,size:integer);
 var
-   i : integer;
-   j : integer;
    oldheight:integer;
+   exd : extraptr;
    parse : stringlist;
-
 code
 {
-   addextra(self.extra, {"$resized"}, "");
-
-   interrupt(SFB_MSG, TRUE, check);
-
-   heartbeat := PULSE_SEC * 60;
-   j:=60;
-   oldheight:=self.height;
-   self.height:=size;
+   exd := "$resized" in self.extra;
+   if (exd == null)
+   {
+      oldheight := self.height;
+      addextra(self.extra, {"$resized"}, itoa(oldheight));
+      self.height := size;
+   }
+   else if (exd.descr != "")
+      oldheight := atoi(exd.descr);
+   else
+      oldheight := self.height;  // refitted before its height was kept: unknown
    set (self.flags,UNIT_FL_MAGIC);
-   i:=0;
-   while (i < j)
-   {
-      :loop:
-      wait(SFB_TICK , TRUE);
-      i := i + 1;
-   }
 
-   :check:
+   :loop:
+   wait(SFB_MSG, TRUE);
    parse := getwords(argument);
-   if (parse.[0] == "spl_dispel")
-   {
-      if (atoi(parse.[1]) >= pwr)
-	goto the_end;
-   }
+   if ((parse.[0] == "spl_dispel") and (atoi(parse.[1]) >= pwr))
+      goto the_end;
    goto loop;
 
    :the_end:
@@ -5694,8 +5690,6 @@ code
    self.height:=oldheight;
    unset (self.flags,UNIT_FL_MAGIC);
    unequip (self);
-
-   :stop:
    quit;
 }
 dilend
