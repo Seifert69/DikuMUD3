@@ -12,7 +12,7 @@ cdelete=cdelete.wiz
 copy=copy.wiz
 corpses=corpses.wiz
 cstat=cstat.wiz
-competition=compete.wiz
+competition=competition.wiz
 crash=crash.wiz
 :end:c
 :start:d
