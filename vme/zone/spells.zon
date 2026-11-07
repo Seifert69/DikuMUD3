@@ -5644,39 +5644,35 @@ code
 }
 dilend
 
+// Copied onto a refitted item: it keeps the new size until a dispel magic at least as
+// strong as the refit ends it (Help/Refit). It only waits for messages, no ticks. The
+// item's own height is kept in its $resized extra, so it comes back right after a reboot,
+// when this program starts over on the already resized item.
 dilbegin recall refit_aff(pwr :integer,size:integer);
 var
-   i : integer;
-   j : integer;
    oldheight:integer;
+   exd : extraptr;
    parse : stringlist;
-
 code
 {
-   addextra(self.extra, {"$resized"}, "");
-
-   interrupt(SFB_MSG, TRUE, check);
-
-   heartbeat := PULSE_SEC * 60;
-   j:=60;
-   oldheight:=self.height;
-   self.height:=size;
+   exd := "$resized" in self.extra;
+   if (exd == null)
+   {
+      oldheight := self.height;
+      addextra(self.extra, {"$resized"}, itoa(oldheight));
+      self.height := size;
+   }
+   else if (exd.descr != "")
+      oldheight := atoi(exd.descr);
+   else
+      oldheight := self.height;  // refitted before its height was kept: unknown
    set (self.flags,UNIT_FL_MAGIC);
-   i:=0;
-   while (i < j)
-   {
-      :loop:
-      wait(SFB_TICK , TRUE);
-      i := i + 1;
-   }
 
-   :check:
+   :loop:
+   wait(SFB_MSG, TRUE);
    parse := getwords(argument);
-   if (parse.[0] == "spl_dispel")
-   {
-      if (atoi(parse.[1]) >= pwr)
-	goto the_end;
-   }
+   if ((parse.[0] == "spl_dispel") and (atoi(parse.[1]) >= pwr))
+      goto the_end;
    goto loop;
 
    :the_end:
@@ -5694,8 +5690,6 @@ code
    self.height:=oldheight;
    unset (self.flags,UNIT_FL_MAGIC);
    unequip (self);
-
-   :stop:
    quit;
 }
 dilend
@@ -11802,10 +11796,46 @@ dilend
 
 /* Begin new Druid Guild spells */
 
+// A random open exit of room for the wave, never up or down; -1 when there is none
+dilbegin integer tsu_exit(room : unitptr);
+var
+   dir      : integer;
+   dircount : integer;
+   freedir  : stringlist;
+code
+{
+   dircount := 0;
+   freedir := null;
+   dir := 0;
+   while (dir < 10)
+   {
+      if ((room.exit_to[dir] != null) and
+          (not(isset(room.exit_info[dir], EX_CLOSED))) and
+          (not(isset(room.exit_info[dir], EX_LOCKED))) and
+          (not(isset(room.exit_info[dir], EX_HIDDEN))) and
+          (dir != 4) and (dir != 5))
+      {
+         addstring(freedir, itoa(dir));
+         dircount := dircount + 1;
+      }
+      dir := dir + 1;
+   }
+   if (dircount == 0)
+      return (-1);
+   dir := rnd(0, (dircount - 1));
+   return (atoi(freedir.[dir]));
+}
+dilend
+
 dilbegin tsunami(medi : unitptr, tgt : unitptr, arg : string,
                   hm : integer, effect : string);
+external
+   integer tsu_exit(room : unitptr);
+   string dirstring@function(dr : integer);
 var
    room       : unitptr;
+   u          : unitptr;
+   dir        : integer;
 
 code
 {
@@ -11821,6 +11851,29 @@ code
      quit;
     }
 
+   // a failed cast turns the wave on the caster alone (and their boat, if in one)
+   if (hm < 0)
+   {
+      dir := tsu_exit(room);
+      if (dir < 0)
+      {
+         act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
+         quit;
+      }
+      u := self;
+      if (self.outside != room)
+         u := self.outside;
+      act("Your tidal wave rears up and turns on you, washing you away to "+
+          "the "+dirstring@function(dir)+"!", A_ALWAYS, self, null, null, TO_CHAR);
+      act("$1n's tidal wave turns on $1m and washes $1m away!",
+          A_SOMEONE, self, null, null, TO_REST);
+      link(u, room.exit_to[dir]);
+      exec("look", self);
+      act("$1n is swept in by a sudden flood of water!",
+          A_SOMEONE, self, null, null, TO_REST);
+      quit;
+   }
+
 dilcopy ("tsu_eff@spells("+self.name+")", room);
 
 quit;
@@ -11831,12 +11884,11 @@ dilbegin tsu_eff(caster: string);
 
 external
    string dirstring@function(dr : integer);
+   integer tsu_exit(room : unitptr);
 
 var
    u          : unitptr;
    dir        : integer;
-   dircount   : integer;
-   freedir    : stringlist;
    x          : integer;
    room       : unitptr;
    dir_string : string;
@@ -11848,32 +11900,12 @@ code
 pc:= findunit(self, caster, FIND_UNIT_ZONE, null);
 
 x:= 0;
-:dircheck:
-   dircount := 0;
-   freedir := {""};
-   dir := 0;
-   while(dir < 10)
-    {
-     if((self.exit_to[dir] != null) and
-      (not(isset(self.exit_info[dir],EX_CLOSED))) and
-      (not(isset(self.exit_info[dir],EX_LOCKED))) and
-      (not(isset(self.exit_info[dir],EX_HIDDEN))) and
-      (dir != 4) and (dir != 5))
-       {
-        addstring(freedir, itoa(dir));
-        dircount := dircount + 1;
-       }
-     dir := dir + 1;
-    }
-
-:dirchoose:
- if(dircount == 0)
-     {
-     act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
-     quit;
-     }
- dir := rnd(0,(dircount - 1));
- dir := atoi(freedir.[dir]);
+   dir := tsu_exit(self);
+   if (dir < 0)
+   {
+      act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
+      quit;
+   }
 
     room := self.exit_to[dir];
     dir_string := dirstring@function(dir);
