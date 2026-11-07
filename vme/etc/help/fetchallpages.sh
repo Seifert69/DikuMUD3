@@ -99,10 +99,8 @@ python3 getwikihelppage.py Clanenter
 python3 getwikihelppage.py Clanexit &
 python3 getwikihelppage.py Clan &
 python3 getwikihelppage.py Clanmaster &
-python3 getwikihelppage.py Clanquartermaster &
-python3 getwikihelppage.py Clanres
+python3 getwikihelppage.py Clanquartermaster
 python3 getwikihelppage.py Clans &
-python3 getwikihelppage.py Clanstartup &
 python3 getwikihelppage.py Clantreasurer &
 python3 getwikihelppage.py Claymore &
 python3 getwikihelppage.py Clear

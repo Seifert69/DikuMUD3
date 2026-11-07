@@ -14,12 +14,12 @@ get:
 <p>To join, ask a clan's Master, one of its Lords, or a member of rank 10 or 
 higher to take you in (<a cmd='#'>Help Caccept</a>). <a cmd='#'>clist</a> lists the clans and their 
 Masters. You can be in only one clan, and you can leave again with 
-<a cmd='#'>Help Cdefect</a>. To found a new clan, see <a cmd='#'>Help Clan Startup</a>.
+<a cmd='#'>Help Cdefect</a>. To found a new clan, or bring an old one back, ask the 
+gods: once a god has set it up, its Master types <a cmd='#'>cstart</a>.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Clan Commands</a>
-&gt; <a cmd='#'>Help Clan Startup</a>
 &gt; <a cmd='#'>Help Clan History</a>
 </pre>
 
