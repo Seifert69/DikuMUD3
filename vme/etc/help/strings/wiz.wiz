@@ -1,12 +1,35 @@
-<br/>
-Usage: wiz &lt;text&gt;               (standard wiz-line, like shout to wiz's)<br/>
-       wiz #&lt;level&gt; &lt;text&gt;      (as above, but only to wiz's of level+)<br/>
-       wiz @&lt;emotetext&gt;         (emote on the wizline)<br/>
-       wiz @&lt;level&gt; &lt;emotetext&gt; (as above, but only to wiz's of level+)<br/>
-       wiz ?                    (what wizards are on- and offline)<br/>
-       wiz -                    (go offline)<br/>
-       wiz +                    (go online)<br/>
-<br/>
-This wiz-command will allow you to communicate with the others wizards in<br/>
-the usual ways. Consult the list above.<br/>
-<br/>
+<div class="mw-parser-output"><h1>Wiz (200)</h1>
+<p>Usage:
+</p>
+<pre>wiz &lt;text&gt;              (talk on the wizline)
+wiz #&lt;level&gt; &lt;text&gt;     (only to gods of that level and up)
+wiz @ &lt;action&gt;          (an emote on the wizline)
+wiz&#160;?                   (which gods are on)
+wiz -                   (stop hearing the wizline)
+wiz +                   (hear it again)
+</pre>
+<p>Examples:
+</p>
+<pre>wiz Anyone know why the ferry is stuck?
+wiz #245 The reboot is at midnight.
+wiz @ waves to everyone.
+</pre>
+<p>The gods' own channel: every god in the game hears it, unless they have 
+turned it off with wiz -. A line reads ":: Papi&#160;:: text"; with a level, 
+":245: Papi&#160;:: text". While you are wizard-invisible above level 200, your 
+lines go only to gods of your invisibility level and up. You can't limit 
+it to a level above your own, and you can't talk on it while you are 
+offline yourself.
+</p><p>wiz&#160;? lists the gods in the game you can see, with their level, a * for 
+those who are invisible, and a - for those who are offline.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Wizinvisible</a>
+&gt; <a cmd='#'>Help Comm</a>
+</pre>
+
+
+
+
+</div>
