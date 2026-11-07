@@ -1,0 +1,28 @@
+<div class="mw-parser-output"><h1>Wtimewarp (255)</h1>
+<p>Usage:
+</p>
+<pre>wtimewarp &lt;seconds&gt;
+</pre>
+<p>Example:
+</p>
+<pre>wtimewarp 600
+</pre>
+<p>Runs the game as fast as the server can for that many seconds of game 
+time: the pause between heartbeats is dropped, so ten minutes of the 
+game's life (resets, regeneration, weather, DIL programs waiting) may pass 
+in a few real seconds. Then the game goes back to its normal speed, and 
+"Ending time warp, back to normal game speed." is written to the log.
+</p><p>Meant for testing, for example to see what a zone does over hours. 
+Everyone in the game lives through the warp too. While it lasts, 
+<a cmd='#'>Wizhelp Wstat</a> world shows the game as time-warped. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Wstat</a>
+&gt; <a cmd='#'>Wizhelp Reset</a>
+</pre>
+
+
+
+
+</div>
