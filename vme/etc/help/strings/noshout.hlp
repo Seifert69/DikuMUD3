@@ -4,11 +4,11 @@ it wears off. Their channels, says and tells still work.
 </p><p>You get noshouted:
 </p>
 <ul><li>automatically, for one hour, when you use a swear word in a shout;</li>
-<li>by an immortal, for half an hour or as long as they choose, for spamming or abusing shout. A New Player Guide can do the same to players of level 20 or below.</li></ul>
+<li>by an immortal, for half an hour or as long as they choose, for spamming or abusing shout.</li></ul>
 <p>Type <a cmd='#'>noshouted</a> to see how long you have done, and wait it out: don't 
 mail the admin who noshouted you begging to be let off, which may only 
 make it longer. Keep the public channels friendly (see <a cmd='#'>Help Rules</a>).
-</p><p>For immortals and guides:
+</p><p>For immortals:
 </p>
 <pre>noshout &lt;player&gt;                  for 30 minutes
 noshout &lt;player&gt; 25 min           for as long as you say
