@@ -30,7 +30,6 @@ freeze=freeze.wiz
 :end:f
 :start:g
 goto=goto.wiz
-gp=gp.wiz
 :end:g
 :start:h
 :end:h
