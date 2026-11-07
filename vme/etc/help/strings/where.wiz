@@ -10,8 +10,9 @@ symbolic name, and what they are inside, such as a ship). A god switched
 into a monster is shown "In body of" that monster. You don't see those who 
 are invisible to a higher level than yours.
 </p><p><b>where &lt;name&gt;</b> finds everything in the world by that name: players, 
-monsters and things, each with its room and where it is. Up to 100 are 
-listed, and a count follows. Players who are not yet playing show as 
+monsters and things, each with its room and where it is. The list stops 
+after about 50, and the count that follows is twice the real number 
+(a known bug: every match is counted twice). Players who are not yet playing show as 
 MENU.
 </p><p><br />
 See Also:
