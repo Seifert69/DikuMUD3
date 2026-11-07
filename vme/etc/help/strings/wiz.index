@@ -90,7 +90,7 @@ users=users.wiz
 :start:w
 wiz=wiz.wiz
 wizhelp=wizhelp.wiz
-wizinvisible=wizinv.wiz
+wizinvisible=wizinvisible.wiz
 wizlock=wizlock.wiz
 wstat=wstat.wiz
 wedit=wedit.wiz
