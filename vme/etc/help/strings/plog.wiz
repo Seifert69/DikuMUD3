@@ -8,7 +8,7 @@ logged: the same command does both. Every command typed around them, by
 them and by anyone else whose commands reach them, goes into a file 
 named &lt;player&gt;watchdog in the server's log directory, one line each: who 
 typed it, the command and its arguments.
-</p><p>Use it to gather evidence of cheating or abuse. It works on players 
+</p><p>It works on players 
 anywhere in the game of a lower level than yours. The player isn't told. 
 It is logged.
 </p><p><br />
