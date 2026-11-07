@@ -11792,10 +11792,46 @@ dilend
 
 /* Begin new Druid Guild spells */
 
+// A random open exit of room for the wave, never up or down; -1 when there is none
+dilbegin integer tsu_exit(room : unitptr);
+var
+   dir      : integer;
+   dircount : integer;
+   freedir  : stringlist;
+code
+{
+   dircount := 0;
+   freedir := null;
+   dir := 0;
+   while (dir < 10)
+   {
+      if ((room.exit_to[dir] != null) and
+          (not(isset(room.exit_info[dir], EX_CLOSED))) and
+          (not(isset(room.exit_info[dir], EX_LOCKED))) and
+          (not(isset(room.exit_info[dir], EX_HIDDEN))) and
+          (dir != 4) and (dir != 5))
+      {
+         addstring(freedir, itoa(dir));
+         dircount := dircount + 1;
+      }
+      dir := dir + 1;
+   }
+   if (dircount == 0)
+      return (-1);
+   dir := rnd(0, (dircount - 1));
+   return (atoi(freedir.[dir]));
+}
+dilend
+
 dilbegin tsunami(medi : unitptr, tgt : unitptr, arg : string,
                   hm : integer, effect : string);
+external
+   integer tsu_exit(room : unitptr);
+   string dirstring@function(dr : integer);
 var
    room       : unitptr;
+   u          : unitptr;
+   dir        : integer;
 
 code
 {
@@ -11811,6 +11847,29 @@ code
      quit;
     }
 
+   // a failed cast turns the wave on the caster alone (and their boat, if in one)
+   if (hm < 0)
+   {
+      dir := tsu_exit(room);
+      if (dir < 0)
+      {
+         act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
+         quit;
+      }
+      u := self;
+      if (self.outside != room)
+         u := self.outside;
+      act("Your tidal wave rears up and turns on you, washing you away to "+
+          "the "+dirstring@function(dir)+"!", A_ALWAYS, self, null, null, TO_CHAR);
+      act("$1n's tidal wave turns on $1m and washes $1m away!",
+          A_SOMEONE, self, null, null, TO_REST);
+      link(u, room.exit_to[dir]);
+      exec("look", self);
+      act("$1n is swept in by a sudden flood of water!",
+          A_SOMEONE, self, null, null, TO_REST);
+      quit;
+   }
+
 dilcopy ("tsu_eff@spells("+self.name+")", room);
 
 quit;
@@ -11821,12 +11880,11 @@ dilbegin tsu_eff(caster: string);
 
 external
    string dirstring@function(dr : integer);
+   integer tsu_exit(room : unitptr);
 
 var
    u          : unitptr;
    dir        : integer;
-   dircount   : integer;
-   freedir    : stringlist;
    x          : integer;
    room       : unitptr;
    dir_string : string;
@@ -11838,32 +11896,12 @@ code
 pc:= findunit(self, caster, FIND_UNIT_ZONE, null);
 
 x:= 0;
-:dircheck:
-   dircount := 0;
-   freedir := {""};
-   dir := 0;
-   while(dir < 10)
-    {
-     if((self.exit_to[dir] != null) and
-      (not(isset(self.exit_info[dir],EX_CLOSED))) and
-      (not(isset(self.exit_info[dir],EX_LOCKED))) and
-      (not(isset(self.exit_info[dir],EX_HIDDEN))) and
-      (dir != 4) and (dir != 5))
-       {
-        addstring(freedir, itoa(dir));
-        dircount := dircount + 1;
-       }
-     dir := dir + 1;
-    }
-
-:dirchoose:
- if(dircount == 0)
-     {
-     act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
-     quit;
-     }
- dir := rnd(0,(dircount - 1));
- dir := atoi(freedir.[dir]);
+   dir := tsu_exit(self);
+   if (dir < 0)
+   {
+      act("<br/>Nothing happens.", A_ALWAYS, self, null, null, TO_ALL);
+      quit;
+   }
 
     room := self.exit_to[dir];
     dir_string := dirstring@function(dir);
