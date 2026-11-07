@@ -1,0 +1,56 @@
+<div class="mw-parser-output"><h1>Gmlure</h1>
+<p>Usage:
+</p>
+<pre>gmlure &lt;player&gt; &lt;room@zone|room&gt; [zone] [hours]      (230)
+gmlure &lt;player&gt; off
+gmlure
+</pre>
+<p>Draws a player to the room of a game master's event, with the room's 
+lure steps, one step at a time, at the player's quiet moments: when 
+they're not fighting, above half their hit points, haven't moved for 
+20 seconds, and are resting, sitting, asleep, talking, shopping or 
+training, or have stood in one room for 90 seconds. Steps are at least 
+four minutes apart. <b>room</b> is the room you stand in.
+</p><p>Write the steps on the room first, in order, one at a time, with 
+gmmem &lt;room&gt; lure &lt;step&gt; (see <a cmd='#'>Wizhelp Gmmem</a>). Every player lured to 
+the same room gets the same steps, each at their own pace. A step is 
+parts joined by " | ", played together:
+</p>
+<pre>&lt;text&gt;                the player sees it
+room &lt;text&gt;           everyone in the player's room sees it
+bring &lt;name&gt;          that NPC or object comes to the player
+away &lt;name&gt;           it goes back where it was brought from
+do &lt;name&gt; &lt;command&gt;   the NPC does it (say ..., give note $1n)
+lead &lt;name&gt;           the NPC comes and leads the player there
+</pre>
+<p>$1n is the player, and $dir the way to go from where they stand 
+(north, up, in...). A step that starts with "dream " plays only while 
+the player sleeps, the others only while they're awake. A guide that 
+<b>lead</b>s goes one room at a time, waiting for the player each time, 
+and goes home if they don't follow for five minutes.
+</p><p>With <b>zone</b>, the player has arrived as soon as they're anywhere in 
+the room's zone. Every game master online hears each step, and when the 
+player arrives (see <a cmd='#'>Wizhelp Gmtrack</a>). The lure ends then, after the 
+hours you give (2 if you give none, 6 at most), when the player leaves 
+the game, or with <b>off</b>. <b>gmlure</b> alone lists who is lured. 
+Nothing about the player changes.
+</p><p>The steps stay on the room until you remove them with gmmem &lt;room&gt; 
+clear lure.
+</p><p>Example:
+</p>
+<pre>gmmem watch_tower@udgaard lure A raven caws at $1n and flies off $dir.
+gmmem watch_tower@udgaard lure do boy say Are you $1n? Come, quickly! | lead boy
+gmlure asta watch_tower@udgaard 3
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmmem</a>
+&gt; <a cmd='#'>Wizhelp Gmroom</a>
+&gt; <a cmd='#'>Wizhelp Gmtrack</a>
+</pre>
+
+
+
+
+</div>

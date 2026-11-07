@@ -15,6 +15,7 @@ python3 getwikiwizhelppage.py Execute
 python3 getwikiwizhelppage.py File
 python3 getwikiwizhelppage.py Force
 python3 getwikiwizhelppage.py Freeze
+python3 getwikiwizhelppage.py Gmlure
 python3 getwikiwizhelppage.py Gmquest
 python3 getwikiwizhelppage.py Gmroom
 python3 getwikiwizhelppage.py Gmtrack
