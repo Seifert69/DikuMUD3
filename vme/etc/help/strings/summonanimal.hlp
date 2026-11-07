@@ -11,12 +11,17 @@ tell &lt;animal&gt; &lt;command&gt;
 world appears in answer to the call, wakes and follows its summoner. It 
 serves just as a charmed animal does (see <a cmd='#'>Help Charm Animal</a>): command it 
 with tell, for example tell bear kill orc. It won't attack another player 
-unless both of you have signed the Book of Blood, and after a while it 
-returns to the wild; a strong dispel magic ends the service at once.
+unless both of you have signed the Book of Blood, and after twenty minutes 
+or a little more it returns to the wild; a strong dispel magic ends the 
+service at once.
 </p><p>Only animals answer: beasts, birds, reptiles, amphibians, insects and 
 worms. The animal resists with its brain against yours and your skill in 
-the spell. You must be alone (immortals aside), out in the open, and you 
-can have only one animal in your service at a time. Some places, at 
+the spell, and the worse you miss, the worse it goes: a slight miss and 
+nothing comes; a worse one and the animal comes but pays you no heed; a 
+very bad one and it comes angry, and attacks you.
+</p><p>You must be alone (immortals aside), out in the wild (in a field, forest, 
+hills, swamp, snow or slush), and you can have only one animal in your 
+service at a time. Some places, at 
 either end, prevent the summoning. You must be standing. It is also found 
 on scrolls.
 </p><p><br />
