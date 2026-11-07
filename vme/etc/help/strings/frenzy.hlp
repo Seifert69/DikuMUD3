@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Frenzy</h1>
+<p>Usage:
+</p>
+<pre>frenzy          (in a fight)
+</pre>
+<p>In a fight, a barbarian can throw themselves into a frenzy that grows 
+every round they keep fighting: each round adds to their strength, for 
+5 to 10 rounds by how well it took hold, and costs 10 endurance.
+</p><p>The frenzy ends when the fight does, or when your endurance runs low, 
+and leaves you tired. You need at least 100 endurance to start one, and 
+starting it costs 30, even when it fails. A frenzy goes with rage and 
+berserk.
+</p><p>The Barbarians teach frenzy from guild level 70, to those with at least 
+50 strength and 50 constitution.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Rage</a>
+&gt; <a cmd='#'>Help Berserk</a>
+&gt; <a cmd='#'>Help Barbarian</a>
+&gt; <a cmd='#'>Help Endurance</a>
+</pre>
+
+
+
+
+</div>

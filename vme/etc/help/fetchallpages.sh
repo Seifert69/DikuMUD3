@@ -266,7 +266,8 @@ python3 getwikihelppage.py Fleeing &
 python3 getwikihelppage.py Focus &
 python3 getwikihelppage.py Follow
 python3 getwikihelppage.py Footlance &
-python3 getwikihelppage.py Forage
+python3 getwikihelppage.py Forage &
+python3 getwikihelppage.py Frenzy
 python3 getwikihelppage.py Frostball &
 python3 getwikihelppage.py Frostsphere &
 python3 getwikihelppage.py Gaff
@@ -275,6 +276,7 @@ python3 getwikihelppage.py Genders &
 python3 getwikihelppage.py Get &
 python3 getwikihelppage.py Give
 python3 getwikihelppage.py Glaive &
+python3 getwikihelppage.py Glance &
 python3 getwikihelppage.py Glowingfungus &
 python3 getwikihelppage.py Gnomes
 python3 getwikihelppage.py Greatsword &
@@ -471,6 +473,7 @@ python3 getwikihelppage.py Quicken &
 python3 getwikihelppage.py Quicksand &
 python3 getwikihelppage.py Quit &
 python3 getwikihelppage.py Races &
+python3 getwikihelppage.py Rage &
 python3 getwikihelppage.py Raisedead
 python3 getwikihelppage.py Raisedivine &
 python3 getwikihelppage.py Raisehitpoints &

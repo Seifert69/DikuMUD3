@@ -1,20 +1,28 @@
-<br/>
-<br/>
-<br/>
-Sphere: Detection Sphere<br/><br/>
-Spell Tier: 1<br/><br/>
-Class: Necromancer <br/><br/>
-Guild Level: 1 <br/><br/>
-<br/>  <br/>
-Usage cast detect curse (target)<br/><br/>
-<br/><br/>
-This spell enables the spell caster's target to detect a curse on an object<br/>
-or person.  This will be revealed in the aura appearing as (orange).  The <br/>
-aura is revealed when examining any object. The spell requires no free hands <br/>
-when cast.<br/><br/>
-<br/>See Also:<br/><br/>
-detection sphere<br/><br/>
-curse<br/><br/>
-<br/><br/>
-<br/>
-<br/>
+<div class="mw-parser-output"><h1>Detect Curse</h1>
+<p>Sphere: Detection Sphere
+Spell Tier: 1
+Class: Necromancer (guild level 1), Healer (guild level 11)
+Mana: 20
+</p><p>Usage:
+</p>
+<pre>cast detect curse &lt;target&gt;
+<a cmd='#'>cast detect curse</a>   (on yourself)
+</pre>
+<p>For a while after this spell, the target sees curses: when they look at 
+a cursed thing, or at someone under a curse, it shows an (orange) aura. 
+A cursed thing can't be taken off once worn; see <a cmd='#'>Help Remove Curse</a>.
+</p><p>The better your detection sphere, the longer it lasts. You must be 
+standing, not fighting. It is also found on scrolls and potions.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Curse</a>
+&gt; <a cmd='#'>Help Remove Curse</a>
+&gt; <a cmd='#'>Help Detect Magic</a>
+&gt; <a cmd='#'>Help Detection Sphere</a>
+</pre>
+
+
+
+
+</div>

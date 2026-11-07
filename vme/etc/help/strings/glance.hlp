@@ -1,0 +1,28 @@
+<div class="mw-parser-output"><h1>Glance</h1>
+<p>Usage:
+</p>
+<pre>glance &lt;someone&gt;
+</pre>
+<p>A thief's discreet look at someone: their description and what they 
+wear, without them seeing you look. A plain <a cmd='#'>Help Look</a> tells them you 
+looked at them; a glance doesn't, unless it fails.
+</p><p>You must be sneaking and hidden first (see <a cmd='#'>Help Sneak</a> and <a cmd='#'>Help 
+Hide</a>). Your dexterity and brains are set against theirs:
+</p>
+<ul><li>a good glance shows everything they wear, and whether they have signed the Book of Blood;</li>
+<li>a fair one shows only some of it;</li>
+<li>a failed one, and they catch you at it and slap you in the face.</li></ul>
+<p>The Thieves of Udgaard teach glance from guild level 9, and the 
+Assassins from guild level 5.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Peeking</a>
+&gt; <a cmd='#'>Help Sneak</a>
+&gt; <a cmd='#'>Help Hide</a>
+</pre>
+
+
+
+
+</div>

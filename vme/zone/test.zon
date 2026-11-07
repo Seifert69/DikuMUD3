@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 16  // T010, T009, ...
+#define TEST_MAXIMUM 19  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -81,6 +81,286 @@ code
 }
 dilend
 
+
+// ==================== T019 =====================
+
+// Detect curse: get_aura@baselook shows (orange) for a cursed object to someone with
+// CHAR_DETECT_CURSE, and nothing before it is cursed. auraprobe runs get_aura as that NPC
+// and leaves the answer in its $aura extra.
+dilbegin auraprobe();
+external
+   string get_aura@baselook(item : unitptr);
+var
+   o : unitptr;
+   s : string;
+code
+{
+   o := findunit(self, "box", FIND_UNIT_SURRO, null);  // cage@test is pandora's box
+   s := "no box";
+   if (o != null)
+      s := get_aura@baselook(o);
+   subextra(self.extra, "$aura");
+   addextra(self.extra, {"$aura"}, s);
+   quit;
+}
+dilend
+
+dilbegin T019(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   o : unitptr;
+   s : string;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T019 detect curse running");
+   o := load("cage@test");
+   link(o, self);
+   u := load("experiment@test");
+   link(u, self);
+   secure(o, lost);
+   secure(u, lost);
+   set(u.charflags, CHAR_DETECT_CURSE);
+
+   dilcopy("auraprobe@test", u);
+   i := 0;
+   while ((i < 5) and (not ("$aura" in u.extra)))
+   {
+      pause;
+      i := i + 1;
+   }
+   if (not ("$aura" in u.extra))
+   {
+      logtest(tstno, LOGT_ERROR, "T019 the aura probe didn't run");
+      goto terminate;
+   }
+   s := u.extra.["$aura"].descr;
+   if ("orange" in s)
+   {
+      logtest(tstno, LOGT_ERROR, "T019 orange aura before the curse: " + s);
+      goto terminate;
+   }
+
+   addaff(o, ID_CURSE, 10, WAIT_SEC*30, OBJ_NO_UNEQUIP, 0, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_MOD_OBJ_FLAGS);
+   subextra(u.extra, "$aura");
+   dilcopy("auraprobe@test", u);
+   i := 0;
+   while ((i < 5) and (not ("$aura" in u.extra)))
+   {
+      pause;
+      i := i + 1;
+   }
+   s := u.extra.["$aura"].descr;
+   if (not ("(orange)" in s))
+   {
+      logtest(tstno, LOGT_ERROR, "T019 no orange aura on the cursed cage: " + s);
+      goto terminate;
+   }
+
+   unsecure(u);
+   destroy(u);
+   unsecure(o);
+   destroy(o);
+   logtest(tstno, LOGT_INFO, "T019 Success: " + s);
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T019 a test unit was lost");
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T019 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
+}
+dilend
+
+
+// ==================== T018 =====================
+
+// Frenzy: an NPC in a fight throws itself into a frenzy (frenzy_rounds@skills); its strength
+// grows while it fights, and everything is gone again once the fight ends.
+dilbegin T018(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u1 : unitptr;
+   u2 : unitptr;
+   str : integer;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T018 frenzy running");
+   u1 := load("experiment@test");
+   link(u1, self);
+   u2 := load("experiment@test");
+   link(u2, self);
+   secure(u1, lost);
+   secure(u2, lost);
+   // sturdy, so the fight lasts: a level 1 zombie can die in one round
+   u1.max_hp := 5000;
+   u1.hp := 5000;
+   u2.max_hp := 5000;
+   u2.hp := 5000;
+   str := u1.abilities[ABIL_STR];
+
+   exec("frenzy", u1);
+   pause;
+   if (dilfind("frenzy_rounds@skills", u1))
+   {
+      logtest(tstno, LOGT_ERROR, "T018 a frenzy without a fight");
+      goto terminate;
+   }
+
+   set_fighting(u1, u2);
+   set_fighting(u2, u1);
+   i := 0;
+   while ((i < 40) and (not dilfind("frenzy_rounds@skills", u1)))
+   {
+      u1.endurance := 300;
+      u1.hp := u1.max_hp;
+      u2.hp := u2.max_hp;
+      if (u1.fighting == null)
+         set_fighting(u1, u2);
+      exec("frenzy", u1);
+      pause;
+      i := i + 1;
+   }
+   if (not dilfind("frenzy_rounds@skills", u1))
+   {
+      logtest(tstno, LOGT_ERROR, "T018 no frenzy after 40 tries");
+      goto terminate;
+   }
+   logtest(tstno, LOGT_INFO, "T018 frenzy after " + itoa(i) + " tries");
+
+   i := 0;
+   while ((i < 15) and (u1.abilities[ABIL_STR] < str + 4))
+   {
+      u1.hp := u1.max_hp;
+      u2.hp := u2.max_hp;
+      u1.endurance := 300;
+      pause;
+      i := i + 1;
+   }
+   if (u1.abilities[ABIL_STR] < str + 4)
+   {
+      logtest(tstno, LOGT_ERROR, "T018 strength didn't grow: " + itoa(str) + " -> " + itoa(u1.abilities[ABIL_STR]) +
+              ", fighting " + itoa(u1.fighting != null) + ", frenzy " + itoa(dilfind("frenzy_rounds@skills", u1)) +
+              ", hp " + itoa(u1.hp) + "/" + itoa(u2.hp));
+      goto terminate;
+   }
+   logtest(tstno, LOGT_INFO, "T018 strength " + itoa(str) + " -> " + itoa(u1.abilities[ABIL_STR]));
+
+   stop_fighting(u1, null);
+   stop_fighting(u2, null);
+   i := 0;
+   while ((i < 15) and dilfind("frenzy_rounds@skills", u1))
+   {
+      pause;
+      i := i + 1;
+   }
+   if (dilfind("frenzy_rounds@skills", u1) or isaff(u1, ID_FRENZY) or (u1.abilities[ABIL_STR] != str))
+   {
+      logtest(tstno, LOGT_ERROR, "T018 the frenzy didn't end cleanly, strength " + itoa(u1.abilities[ABIL_STR]));
+      goto terminate;
+   }
+
+   unsecure(u1);
+   destroy(u1);
+   unsecure(u2);
+   destroy(u2);
+   logtest(tstno, LOGT_INFO, "T018 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T018 a test unit was lost");
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T018 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
+}
+dilend
+
+
+// ==================== T017 =====================
+
+// Rage: an NPC works itself into a rage: ID_RAGE, more strength, less dexterity; a second
+// rage is refused while the first lasts.
+dilbegin T017(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   str : integer;
+   dex : integer;
+   str2 : integer;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T017 rage running");
+   u := load("experiment@test");
+   link(u, self);
+   secure(u, lost);
+   str := u.abilities[ABIL_STR];
+   dex := u.abilities[ABIL_DEX];
+
+   i := 0;
+   while ((i < 40) and (not isaff(u, ID_RAGE)))
+   {
+      u.endurance := 300;
+      exec("rage", u);
+      pause;
+      i := i + 1;
+   }
+   if (not isaff(u, ID_RAGE))
+   {
+      logtest(tstno, LOGT_ERROR, "T017 no rage after 40 tries");
+      goto terminate;
+   }
+   if ((u.abilities[ABIL_STR] <= str) or (u.abilities[ABIL_DEX] > dex) or (u.abilities[ABIL_DEX] < 1))
+   {
+      logtest(tstno, LOGT_ERROR, "T017 STR " + itoa(str) + " -> " + itoa(u.abilities[ABIL_STR]) +
+              ", DEX " + itoa(dex) + " -> " + itoa(u.abilities[ABIL_DEX]));
+      goto terminate;
+   }
+   logtest(tstno, LOGT_INFO, "T017 rage after " + itoa(i) + " tries: STR " + itoa(str) + " -> " +
+           itoa(u.abilities[ABIL_STR]) + ", DEX " + itoa(dex) + " -> " + itoa(u.abilities[ABIL_DEX]));
+
+   str2 := u.abilities[ABIL_STR];
+   u.endurance := 300;
+   exec("rage", u);
+   pause;
+   if (u.abilities[ABIL_STR] != str2)
+   {
+      logtest(tstno, LOGT_ERROR, "T017 a second rage stacked: STR " + itoa(u.abilities[ABIL_STR]));
+      goto terminate;
+   }
+
+   unsecure(u);
+   destroy(u);
+   logtest(tstno, LOGT_INFO, "T017 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T017 a test unit was lost");
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T017 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
+}
+dilend
 
 // ==================== T016 =====================
 

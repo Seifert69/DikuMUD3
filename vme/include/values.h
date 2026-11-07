@@ -1102,7 +1102,7 @@ END HEADER*/
 #define ID_CONDEMN               92
 #define ID_BERSERK			     93
 #define ID_RAGE                  94
-#define ID_BLANK6                95
+#define ID_FRENZY                95  /* frenzy_rounds@skills: the barbarian's growing strength */
 #define ID_BLANK7                96
 #define ID_BLANK8                97
 #define ID_BLANK9                98

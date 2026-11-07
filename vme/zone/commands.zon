@@ -9901,6 +9901,10 @@ code
  addstring(spl_aff,"Berserk<br/>");
    if (isaff(self, ID_RAGE))
  addstring(spl_aff,"Enraged<br/>");
+   if (isaff(self, ID_FRENZY))
+ addstring(spl_aff,"Frenzied<br/>");
+   if (isaff(self, ID_FRENZY))
+ addstring(spl_aff,"Frenzied<br/>");
 if (isaff(self, ID_DETECT_ALIGN))
  addstring(spl_aff,"Detect Alignment<br/>");
 if (isaff(self, ID_DETECT_INVISIBLE))
