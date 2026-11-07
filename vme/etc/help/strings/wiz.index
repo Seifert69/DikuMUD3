@@ -80,7 +80,7 @@ switch=switch.wiz
 :end:s
 :start:t
 title=title.wiz
-transfer=trans.wiz
+transfer=transfer.wiz
 :end:t
 :start:u
 users=users.wiz
