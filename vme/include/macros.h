@@ -28,9 +28,6 @@
 #define _MUD_MACROS_H
 
 #include <values.h>
-
-/* The barbarians' frenzy (frenzy_rounds@skills): values.h, shared with the server, keeps it blank */
-#define ID_FRENZY ID_BLANK6
 #include <wmacros.h>
 #include <liquid.h>
 #include <mhumanoid.h>
