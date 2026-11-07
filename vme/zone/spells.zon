@@ -10988,8 +10988,10 @@ skilld : integer;
 
 code
 {
-   if (not(self.outside.movement &
-   (SECT_FIELD|SECT_FOREST|SECT_HILLS|SECT_SWAMP|SECT_CITY)))
+   /* Sector types are numbers, not flags */
+   f := self.outside.movement;
+   if (not((f == SECT_FIELD) or (f == SECT_FOREST) or (f == SECT_HILLS) or
+           (f == SECT_SWAMP) or (f == SECT_CITY)))
    {
       act("This environment is not condusive to the art of horticulture.",
           A_ALWAYS, self, null, null, TO_CHAR);
@@ -11018,7 +11020,7 @@ code
         skilld:=targ.abilities[ABIL_BRA];
 
        skilla:=self.abilities[ABIL_BRA];
-       skillc:=targ.abilities[ABIL_BRA] + 20;
+       skillb:=targ.abilities[ABIL_BRA];
 /*
        if(((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MAX)) or
            (u.race==RACE_VAMPIRE))
@@ -11055,8 +11057,9 @@ code
    if ( (targ.type == UNIT_ST_PC) and not (dilfind ("entangled_2@spells", targ)) )
       dilcopy ("entangled_2@spells", targ);
 
-   if (targ.position &
-       (POSITION_RESTING | POSITION_SITTING | POSITION_SLEEPING))
+   if ((targ.position == POSITION_RESTING) or
+       (targ.position == POSITION_SITTING) or
+       (targ.position == POSITION_SLEEPING))
       {
       targ.position := POSITION_STANDING;
       position_update(targ);
