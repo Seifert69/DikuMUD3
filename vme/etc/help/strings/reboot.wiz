@@ -7,7 +7,9 @@ reboot now
 reboot cancel
 </pre>
 <p>Reboots the game: the server stops, and the script that keeps it running 
-(runvme.sh) starts it again. Players are saved and must log in again.
+(runvme.sh) starts it again. Players are saved and stay connected: they see 
+"... has begun rebooting... please wait.", and log in again when the game 
+is back.
 </p><p>The players are warned: when the reboot is set, if it is less than 20 
 minutes away; then at 10 and 5 minutes, at 30 and 10 seconds, and with 
 "Rebooting...". A reboot set further off than 20 minutes is announced 
