@@ -1,9 +1,6 @@
                                 WARNING
-								
-This will totally delete your character.  Make sure if you have power
-items or items you do not want to lose to move them to another character
-before answering 'yes'
 
-Failure to heed this warning can mean you will lose any items you forgot
-to move.
-           		/vme2.0/etc/strings/delete.txt
+This will delete your character for good. If you have power items, or
+anything else you don't want to lose, give them to another character first.
+
+Whatever you haven't moved is lost with the character.

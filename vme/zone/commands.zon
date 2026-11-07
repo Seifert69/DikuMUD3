@@ -5443,7 +5443,6 @@ dilbegin aware do_delete (arg:string);
 var
 	temp:string;
 	err:integer;
-	pc:unitptr;
 code
 {
 
@@ -5468,12 +5467,12 @@ if (self.level>=254)
 
 err:=loadstr("delete.txt",temp);
 
-if (err<1)
-	goto no_insure;
+if (err<1)  // Without the warning file, still warn and ask
+	temp := "This will delete your character for good.<br/>";
 
 sendtext (temp,self);
 
-sendtext ("If your sure you still want to delete your character, 'say delete me'<br/>",self);
+sendtext ("If you're sure you still want to delete your character, 'say delete me'<br/>",self);
 sendtext ("Doing anything else will abort the deletion.<br/>",self);
 
 wait (SFB_CMD, self==activator);
@@ -5481,48 +5480,23 @@ if (command ("say"))
 
 	if (argument=="delete me")
 	{
+	block;
 	if (self.extra.[CLAN_RANK]!=null)
 		exec ("cdefect now",self);
-		delete_player(self.name);
-		}
+	delete_player(self.name);
+	quit;
+	}
 
 sendtext("Deletion aborted<br/>",self);
-
-quit;
-
-	:no_insure:
-		if (self.extra.[CLAN_RANK]!=null)
-		exec ("cdefect now",self);
-			delete_player(self.name);
 
 quit;
 	:admin_delete:
 	if (arg=="self forever")
 		goto char_delete;
-if (arg==""){
-sendtext("You must supply a characters name to delete one.<br/>",self);
-quit;
-}
 
-if (arg==self.name){
-sendtext ("To delete self you need to type 'delete self forever'<br/>",self);
-quit;
-}
-pc:=pc_head();
-while (pc.type==UNIT_ST_PC)
-{
-if (pc.name==arg)
-goto deletem;
-pc:=pc.gnext;
-}
-
-if (not isplayer(arg))
-	{
-	sendtext (arg+" is not a character.<br/>",self);
-	quit;
-	}
-	:deletem:
-	sendtext (arg+" has been deleted.<br/>",self);
+/* Other players are deleted on the server, from the command prompt, not in the game */
+sendtext ("Another character can't be deleted from inside the game; do it on the server.<br/>",self);
+sendtext ("To delete yourself, type 'delete self forever'.<br/>",self);
 quit;
 }
 dilend
