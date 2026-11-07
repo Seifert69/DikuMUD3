@@ -1,27 +1,33 @@
-<br/>
-Usage title &lt;playername&gt; &lt;title&gt;<br/>
-Example: title Fizban &amp;<br/>wThe big red One<br/>
-<br/>
-This command allows am Admin to title a player.  It will<br/>
-also allows color titles using the same color codes that the prompts use.<br/>
-<br/>
-Note:<br/>
-No other tags should ever be inserted into titles. The only exception to <br/>
-this is the other automatically assigned Tags such as * Guide * , <br/>
-* Builder * , Admin, ect. Refrain from using and & in titles. Also, <br/>
-no special characters are allowed either examples !@#$%^&*() etc. <br/>
-The title must never exceed one line in length, causing it to wrap to <br/>
-the next line when doing who and/or standing in the same room with that <br/>
-character.  As usual vulgar, obscene terms, curses, flames, out of genre<br/>
-or any other inappropriate title is not permitted.  If you feel the title may<br/>
-not be appropriate, simply don't use it and allow the briber to select another.<br/>
-<br/>
-All titles will be in English.<br/>
-Example:<br/>
-Herdas - Master of The Under-dark  is allowed<br/>
-Herdas - Seeker of The Under-dark {Tag} * LORD *   NOT allowed<br/>
-<br/>
-<br/>See Also:<br/><br/>
-help title<br/>
-help bribe<br/>
-help ctitle<br/>
+<div class="mw-parser-output"><h1>Title (210)</h1>
+<p>Usage:
+</p>
+<pre>title &lt;player&gt; &lt;title&gt;
+</pre>
+<p>Example:
+</p>
+<pre>title Herdas Master of the Under-dark
+</pre>
+<p>Sets a player's title, the words after their name in <a cmd='#'>who</a> and when 
+others see them. The player, who can be anywhere in the game, is told 
+"Your title changed.", and the change is logged with who made it.
+</p><p>The guidelines for titles, from the old help:
+</p>
+<ul><li>keep it to one line, so that it doesn't wrap in who or in the room;</li>
+<li>no tags of your own: the game adds those like Guide, Builder or Admin itself;</li>
+<li>no special characters such as&#160;! @ # $&#160;% ^ &amp; * ( );</li>
+<li>nothing vulgar or obscene, no curses, flames or anything out of the game's world;</li>
+<li>in English.</li></ul>
+<p>For example, "Herdas - Master of The Under-dark" is fine; "Herdas - Seeker 
+of The Under-dark <a cmd='#'>Tag</a> * LORD *" is not. If a title may not be fitting, 
+don't set it, and let the player choose another.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Title</a>
+&gt; <a cmd='#'>Help Ctitle</a>
+</pre>
+
+
+
+
+</div>
