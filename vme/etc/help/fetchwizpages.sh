@@ -16,6 +16,7 @@ python3 getwikiwizhelppage.py File
 python3 getwikiwizhelppage.py Force
 python3 getwikiwizhelppage.py Freeze
 python3 getwikiwizhelppage.py Gmroom
+python3 getwikiwizhelppage.py Gmtrack
 python3 getwikiwizhelppage.py Goto
 python3 getwikiwizhelppage.py Load
 python3 getwikiwizhelppage.py Makemoney
