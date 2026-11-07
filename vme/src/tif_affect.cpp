@@ -43,8 +43,8 @@ void tif_confusion_on(unit_affected_type *af, unit_data *unit)
 
 void tif_confusion_off(unit_affected_type *af, unit_data *unit)
 {
-    send_to_char("You less confused.<br/>", unit);
-    act("$1n seem less confused.", eA_HIDEINV, unit, cActParameter(), cActParameter(), eTO_ROOM);
+    send_to_char("You feel less confused.<br/>", unit);
+    act("$1n seems less confused.", eA_HIDEINV, unit, cActParameter(), cActParameter(), eTO_ROOM);
 }
 
 void tif_invisibility_on(unit_affected_type *af, unit_data *unit)

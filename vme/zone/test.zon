@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 19  // T010, T009, ...
+#define TEST_MAXIMUM 20  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,136 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T020 =====================
+
+// Confusion: a confused NPC in testlabc (one exit, east) that tries to go west stumbles
+// out the east exit now and then (confused@spells); once the confusion is gone it stays,
+// and confused@spells has quit. confprobe tries "west" up to 20 times on the NPC and
+// leaves "moved" or "stayed" in its $probe extra.
+dilbegin confprobe();
+var
+   i : integer;
+   s : string;
+code
+{
+   s := "stayed";
+   i := 0;
+   while (i < 20)
+   {
+      exec("west", self);
+      if (self.outside.nameidx == "testlabe")
+      {
+         s := "moved";
+         break;
+      }
+      pause;
+      i := i + 1;
+   }
+   subextra(self.extra, "$probe");
+   addextra(self.extra, {"$probe"}, s);
+   quit;
+}
+dilend
+
+dilbegin unitptr findexp();
+var
+   u : unitptr;
+code
+{
+   u := findroom("testlabc@test");
+   u := u.inside;
+   while (u)
+   {
+      if (u.symname == "experiment@test")
+         return (u);
+      u := u.next;
+   }
+   u := findroom("testlabe@test");
+   u := u.inside;
+   while (u)
+   {
+      if (u.symname == "experiment@test")
+         return (u);
+      u := u.next;
+   }
+   return (u);  // null: not found
+}
+dilend
+
+dilbegin T020(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   unitptr findexp@test();
+var
+   u : unitptr;
+   r : unitptr;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T020 confusion running");
+   u := load("experiment@test");
+   link(u, findroom("testlabc@test"));
+   addaff(u, ID_CONFUSION, 10, WAIT_SEC*15, 0, 0, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_NONE);
+   dilcopy("confused@spells", u);
+   dilcopy("confprobe@test", u);
+
+   i := 0;
+:wait1:
+   pause;
+   u := findexp@test();
+   i := i + 1;
+   if ((u != null) and (not("$probe" in u.extra)) and (i < 60))
+      goto wait1;
+   if (u == null)
+   {
+      logtest(tstno, LOGT_ERROR, "T020 the experiment was lost");
+      goto terminate;
+   }
+   if (not("$probe" in u.extra) or (u.extra.["$probe"].descr != "moved"))
+   {
+      logtest(tstno, LOGT_ERROR, "T020 a confused NPC never stumbled east in 20 tries");
+      goto terminate;
+   }
+
+   subaff(u, ID_CONFUSION);
+   link(u, findroom("testlabc@test"));
+   subextra(u.extra, "$probe");
+   dilcopy("confprobe@test", u);
+   i := 0;
+:wait2:
+   pause;
+   u := findexp@test();
+   i := i + 1;
+   if ((u != null) and (not("$probe" in u.extra)) and (i < 60))
+      goto wait2;
+   if ((u == null) or (not("$probe" in u.extra)) or (u.extra.["$probe"].descr != "stayed"))
+   {
+      logtest(tstno, LOGT_ERROR, "T020 an NPC no longer confused still stumbled");
+      goto terminate;
+   }
+   if (dilfind("confused@spells", u))
+   {
+      logtest(tstno, LOGT_ERROR, "T020 confused@spells didn't quit with the confusion");
+      goto terminate;
+   }
+
+   destroy(u);
+   logtest(tstno, LOGT_INFO, "T020 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:terminate:
+   if (u != null)
+      destroy(u);
+   logtest(tstno, LOGT_INFO, "T020 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
 }
 dilend
 
