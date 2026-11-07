@@ -48,6 +48,7 @@ makemoney=makemoney.wiz
 message=message.wiz
 :end:m
 :start:n
+nocomm=noshout.wiz
 noshout=noshout.wiz
 notell=noshout.wiz
 nset=nset.wiz

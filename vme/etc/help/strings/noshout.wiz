@@ -1,10 +1,11 @@
-<div class="mw-parser-output"><h1>Noshout and Notell</h1>
+<div class="mw-parser-output"><h1>Noshout, Notell and Nocomm</h1>
 <p>Usage:
 </p>
 <pre>noshout &lt;player&gt;                 (200: for 30 minutes)
 noshout &lt;player&gt; 25 min          (for as long as you say)
 noshout &lt;player&gt; 1 hour
 notell &lt;player&gt;                  (240)
+nocomm &lt;player&gt;                  (240)
 </pre>
 <p><b>noshout</b> gives a player "a sore throat": they can't shout until it 
 wears off, or until you noshout them again, which lifts it. Their 
@@ -15,13 +16,20 @@ below.
 </p><p><b>notell</b> takes away a player's tells ("Your telepathic ability fades 
 away!") until you notell them again ("You regain your telepathic 
 ability."); there is no time limit. Use it on a player who harasses 
-someone with tells. Who did it, and when, is noted on the player.
-</p><p>Both work on players anywhere in the game, but not on players of your 
-level or higher. Both are logged.
+someone with tells.
+</p><p><b>nocomm</b> takes away a player's channels (see <a cmd='#'>Help Comm Channels</a>): they can't 
+talk on any of them ("You have lost the privilege to use communication 
+channels."), and they don't hear them either. It lasts until you nocomm 
+them again; there is no time limit. Their shouts, says and tells still 
+work.
+</p><p>Notell and nocomm note on the player who did it, and when. All three 
+work on players anywhere in the game, but not on players of your level 
+or higher. All three are logged.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Noshout</a>
+&gt; <a cmd='#'>Help Comm Channels</a>
 &gt; <a cmd='#'>Wizhelp Freeze</a>
 &gt; <a cmd='#'>Help Ignore</a>
 </pre>
