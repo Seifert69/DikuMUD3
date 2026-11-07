@@ -346,9 +346,22 @@ code
 }
 dilend
 
+/* The rooms of the final battle: a closed copy of the guild (zone names, no @bounty) */
+dilbegin stringlist battle_rooms();
+code
+{
+	return({"entry_room2","bounty_12","bounty_h2","shop2","smithy2","jewels2","contracts2",
+	"shrine2","sanctum2","sanctum_12","sanc_he2","library2","sanc_hw2","stairwell2",
+	"stairs2","bottom2","faces22","faces222","crypt2","cave2","circle2"});
+}
+dilend
+
+/* Clears the battle rooms of fighters, portals and corpses; other things go to the
+   chest. The caller stops qhistorian3 first, if it is running. */
 dilbegin cleanup();
 external 
 	stringlist allies@bounty();
+	stringlist battle_rooms@bounty();
 var
 	friends : stringlist;
 	basemobs : stringlist;
@@ -356,18 +369,15 @@ var
 	i : integer;
 	u : unitptr;
 	item : unitptr;
+	nxt : unitptr;
 code
 {
 :init:
 	friends := allies();
 	basemobs := {"historian2","shopkeep2","jeweler2","blacksmith2","hunter2","necromancer2","summoner2","guide2"};
-	roomlist := {"entry_room2","bounty_12","bounty_h2","shop2","smithy2","jewels2","contracts2",
-	"shrine2","sanctum2","sanctum_12","sanc_he2","library2","sanc_hw2","stairwell2",
-	"stairs2","bottom2","faces22","faces222","crypt2","cave2","circle2"};
+	roomlist := battle_rooms();
 :start:
 
-	if(dilfind("qhistorian3@bounty",findsymbolic("library2@bounty")))
-        i := dildestroy("qhistorian3@bounty",findsymbolic("library2@bounty"));
 	i := 0;
 	log("Cleanup on aisle 9!");
 	while(i < length(friends))
@@ -401,19 +411,23 @@ code
 		log("Cleaning up rooms! - "+roomlist.[i]);
 		u := findsymbolic(roomlist.[i]+"@bounty");
 		item := u.inside;
-		while((item) and (item.type == UNIT_ST_OBJ) and (item.symname != "tome2@bounty") and (item.symname != "shop_sign@bounty"))
+		while(item)
 		{
-			if((item.symname == "portal@bounty") or ("corpse" in item.outside_descr))
-			{	
-				log("destroying: "+item.name);
-				destroy(item);
-			}
-			else
+			nxt := item.next;
+			if((item.type == UNIT_ST_OBJ) and (item.symname != "tome2@bounty") and (item.symname != "shop_sign@bounty"))
 			{
-				log("storing: "+item.name);
-				link(item, findsymbolic("chest@bounty"));
+				if((item.symname == "portal@bounty") or ("corpse" in item.outside_descr))
+				{	
+					log("destroying: "+item.name);
+					destroy(item);
+				}
+				else
+				{
+					log("storing: "+item.name);
+					link(item, findsymbolic("chest@bounty"));
+				}
 			}
-			item := u.inside;
+			item := nxt;
 		}
 		i := i + 1;
 	}
@@ -425,6 +439,7 @@ dilbegin corpse_move(room_to : string);
 external
 	cleanup@bounty();
 var
+  i         :  integer;
 
   room_pt   :  unitptr;
   item      :  unitptr;
@@ -449,6 +464,8 @@ code{
 			act("A giant vortex opens up and sucks $1n into it!", A_SOMEONE, item, null, null, TO_ROOM);
 			link(item, room_pt);
 			act("A giant vortex opens up, dumping $1n into the room!", A_SOMEONE, item, null, null, TO_ROOM);
+			if(dilfind("qhistorian3@bounty",findsymbolic("library@bounty")))
+				i := dildestroy("qhistorian3@bounty",findsymbolic("library@bounty"));
 			cleanup();
 		}
 		item := item.next;
@@ -527,7 +544,7 @@ code
 	else if(atoi(pc.quests.[BLACKSMITH_COMPLETE].descr) >= i)
 	{
 		exec("say Just nod if you would like to perform the repair. Otherwise shake.",self);
-		wait(SFB_DONE, command("nod") or command("shake") and (activator == pc));
+		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("nod"))
 		{
 			if(item.hp >= 50)
@@ -809,7 +826,7 @@ code
 	if((buf in sl) or (buf in sl2))
 	{
 		exec("say Ah yes, a fine piece. If you would like to re-forge your "+item.title+" please nod. Otherwise shake.", self);
-		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
 			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
@@ -920,7 +937,7 @@ code
 	if((buf in sl) or (buf in sl2))
 	{
 		exec("say Ah yes, a fine piece. If you would like me to summon an upgraded "+item.title+" please nod. Otherwise shake.", self);
-		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
 			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
@@ -1029,7 +1046,7 @@ code
 	if((buf in sl) or (buf in sl2))
 	{
 		exec("say Ah yes, a fine piece. If you would like to upgrade your "+item.title+" please nod. Otherwise shake.", self);
-		wait(SFB_DONE, (command("nod")) or (command("shake")) and (activator == pc));
+		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
 			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
@@ -1382,7 +1399,8 @@ code
 	if(not("$package_max" in pc.extra))
 		addextra(pc.extra,{"$package_max"},"0");
 
-	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
+	if((JEWELER_ONGOING in pc.quests) and (atoi(pc.extra.["$package_max"].descr) >= 100))
+	if(not("packages" in pc.quests.[JEWELER_ONGOING].names))
 	{
 		addstring(pc.quests.[JEWELER_ONGOING].names, "packages");
 		if(("pearl" in pc.quests.[JEWELER_ONGOING].names) and ("ruby" in pc.quests.[JEWELER_ONGOING].names) and 
@@ -2092,8 +2110,14 @@ code
 dilend
 
 dilbegin qhistorian3(pcname : string);
+external
+	cleanup@bounty();
+	stringlist battle_rooms@bounty();
 var
-	i : integer;
+	i, n : integer;
+	brl : stringlist;
+	lib : unitptr;
+	nxt : unitptr;
 	u,pc,item : unitptr;
 	ml1, ml2, ml3 : stringlist;
 	rl1, rl2 : stringlist;
@@ -2262,19 +2286,76 @@ code
 		i := i + 1;
 	}
 	log("First round loading complete!");
+	// A second wave (ml2) was planned here; it was never finished.
+
+	/* The battle is won when no guard is left in the battle rooms. A death ends it
+	   too: corpse_move stops this program and cleans up. */
+	brl := battle_rooms();
+	heartbeat := PULSE_SEC * 5;
+:watch:
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	i := 0;/*
-	while (i < length(ml2))
+	/* Look for the player and count the guards; by name, not findunit(), which
+	   would lose an invisible player */
+	pc := null;
+	n := 0;
+	i := 0;
+	while (i < length(brl))
 	{
-		u := load(ml2.[i]);
-		link(u,findroom(rl1.[i]));
+		u := findroom(brl.[i]+"@bounty");
+		u := u.inside;
+		while (u)
+		{
+			if (u.symname == "guard@bounty")
+				n := n + 1;
+			else if ((u.type == UNIT_ST_PC) and (u.name == pcname))
+				pc := u;
+			u := u.next;
+		}
 		i := i + 1;
-	}*/
-	//heartbeat := PULSE_SEC*300;
-	//pause;
-	//goto start;
+	}
+	if (pc == null)
+		goto donezo;   // gone, or taken out by a god
+	if (n > 0)
+		goto watch;
+
+	log(pc.name+" won the final battle and is a Bounty Hunter.");
+	subextra(pc.quests, JOIN_ONGOING);
+	addextra(pc.quests, {JOIN_COMPLETE}, "");
+
+	u := findsymbolic("historian2@bounty");
+	if (u)
+	{
+		exec("say It is over. You have saved The Guild, "+pc.name+".", u);
+		exec("say Welcome, Bounty Hunter. Sign the tome, so the histories will speak of you.", u);
+	}
+	act("<div class='cpr'>The last of the invaders falls, and the flaming red portals flare up one last time...</div>",
+		A_ALWAYS, pc, null, null, TO_CHAR);
+
+	/* Everyone in the battle goes back to the library through the portals */
+	lib := findroom("library@bounty");
+	i := 0;
+	while (i < length(brl))
+	{
+		u := findroom(brl.[i]+"@bounty");
+		u := u.inside;
+		while (u)
+		{
+			nxt := u.next;
+			if (u.type == UNIT_ST_PC)
+			{
+				act("$1n is pulled into a flaming red portal!", A_SOMEONE, u, null, null, TO_ROOM);
+				link(u, lib);
+				act("A flaming red portal opens, and $1n steps out of it.", A_SOMEONE, u, null, null, TO_ROOM);
+				act("You are pulled through the portal, back to the library of The Guild, as it was.",
+					A_ALWAYS, u, null, null, TO_CHAR);
+			}
+			u := nxt;
+		}
+		i := i + 1;
+	}
+
 :donezo:
-	unsecure(pc);
+	cleanup();
 	quit;
 }
 dilend
@@ -2426,9 +2507,42 @@ code
 }
 dilend
 
+/* The Blacksmith's task is done once all four elements, the steel and a spree are in */
+dilbegin smith_done(pc : unitptr);
+external
+	integer add_bp@bounty(n : integer, u : unitptr);
+var
+	exdp : extraptr;
+	qty : integer;
+code
+{
+	exdp := BLACKSMITH_ONGOING in pc.quests;
+	if (exdp == null)
+		return;
+	if(("air1" in exdp.names) and ("water1" in exdp.names) and ("earth1" in exdp.names) and
+		("fire1" in exdp.names) and ("steel" in exdp.names) and ("spree" in exdp.names))
+	{
+		exec("say What you have done here is unprecedented, "+pc.name+"!" ,self);
+		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
+		exec("say Additionally, I have forged some items here which can be yours for a certain price. You may shop here any time.", self);
+		subextra(pc.quests, BLACKSMITH_ONGOING);
+		addextra(pc.quests, {BLACKSMITH_COMPLETE},"");
+		
+		experience(10000, pc);
+		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		qty := add_bp(200,pc);
+		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	
+	}
+	return;
+}
+dilend
+
 dilbegin qblacksmith2();
 external 
 	integer add_bp@bounty(n : integer, u : unitptr);
+	smith_done@bounty(pc : unitptr);
 var
 	pc : unitptr;
 	item : unitptr;
@@ -2513,23 +2627,7 @@ code
 	}
 :checkit:
 
-	exdp := BLACKSMITH_ONGOING in pc.quests;
-	if(("air1" in exdp.names) and ("water1" in exdp.names) and ("earth1" in exdp.names) and
-		("fire1" in exdp.names) and ("steel" in exdp.names) and ("spree" in exdp.names))
-	{
-		exec("say What you have done here is unprecedented, "+pc.name+"!" ,self);
-		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
-		exec("say Additionally, I have forged some items here which can be yours for a certain price. You may shop here any time.", self);
-		subextra(pc.quests, BLACKSMITH_ONGOING);
-		addextra(pc.quests, {BLACKSMITH_COMPLETE},"");
-		
-		experience(10000, pc);
-		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		qty := add_bp(200,pc);
-		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-	
-	}
+	smith_done(pc);
 :donezo:
 
 	unsecure(pc);
@@ -2593,7 +2691,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say They represent the purest concentrations available.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Five of each, reflecting Fire, Water, Earth, and Air will be necessary.", self);
+	exec("say Three of each, reflecting Fire, Water, Earth, and Air will be necessary.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Next, I will require pure energy to feed the spells.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -4194,6 +4292,7 @@ dilbegin end_spree();
 external
 	string stringdate@bounty(n : integer);
 	integer add_bp@bounty(n : integer, u : unitptr);
+	smith_done@bounty(pc : unitptr);
 var
 	pc : unitptr;
 	i : integer;
@@ -4283,7 +4382,7 @@ code
 					rwrd := rwrd * 3;
 					bp := bp * 3;
 				}
-				else if(i > 100)
+				else
 				{
 					rwrd := rwrd * 4;
 					bp := bp * 4;
@@ -4305,23 +4404,11 @@ code
 				
 				
 				exdp := BLACKSMITH_ONGOING in pc.quests;
-				if((atoi(pc.extra.["$spree_total"].descr) >= 10) and (not("$spree" in exdp.names)))
+				if(exdp != null)
+				if((atoi(pc.extra.["$spree_total"].descr) >= 10) and (not("spree" in exdp.names)))
 				{
 					addstring(exdp.names, "spree");
-				
-					if(("air1" in exdp.names) and ("air2" in exdp.names) and ("air3" in exdp.names) and ("air4" in exdp.names) and
-						("water1" in exdp.names) and ("water2" in exdp.names) and ("water3" in exdp.names) and ("water4" in exdp.names) and
-						("earth1" in exdp.names) and ("earth2" in exdp.names) and ("earth3" in exdp.names) and ("earth4" in exdp.names) and
-						("fire1" in exdp.names) and ("fire2" in exdp.names) and ("fire3" in exdp.names) and ("fire4" in exdp.names) and
-						("steel" in exdp.names) and ("spree" in exdp.names))
-					{
-						exec("say What you have done here is unprecedented, "+pc.name+"!" ,self);
-						exec("say You may go and let The Historian know that your tasks for me are complete.", self);
-						
-						subextra(pc.extra, "$blacksmith");
-						exdp := JOIN_ONGOING in pc.quests;
-						addstring(exdp.names, "blacksmith");
-					}
+					smith_done(pc);
 				}
 			}
 			else if ("CLOSED" == sl.[1])
