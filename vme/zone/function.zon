@@ -308,18 +308,17 @@ while (reward)
    destroy(medium);
    goto start; 
  }
- else
- {
-    act("$1n examines the bloody head with an approving grin.",
-      A_SOMEONE, self, null, activator, TO_ROOM);
-   act("$1n says, 'This person is not wanted in my jurisdiction.'",
-      A_SOMEONE, self, null, activator, TO_ROOM);
-       exec("give head "+activator.name, self);
+ // not this jurisdiction's: look at the head's next $reward
+ reward := "$reward" in reward.next;
+}
 
-   goto start;
-}
-reward := "$reward" in reward.next;
-}
+// no reward on the head is for this jurisdiction
+act("$1n examines the bloody head with an approving grin.",
+   A_SOMEONE, self, null, activator, TO_ROOM);
+act("$1n says, 'This person is not wanted in my jurisdiction.'",
+   A_SOMEONE, self, null, activator, TO_ROOM);
+exec("give head "+activator.name, self);
+goto start;
 }
 dilend
 
@@ -765,7 +764,6 @@ code
 
         /* cst := 500*victim.level*self.level*self.level; */
         cst := 819200 + (victim.level*229);
-        if (cst > 5000) cst := 5000;
         act("<div class='say_other'>$1n says, '$2t, and $3n is history.'</div>",
                 A_SOMEONE, self, moneystring(cst,TRUE), victim, TO_ROOM);
     }
@@ -7533,8 +7531,8 @@ code
    } else if (words.[1] == "depart" ){
    act("Channel inform Depart Only set.",
       A_SOMEONE, self, null, null, TO_CHAR);
-   jmode := 1;
-   dmode := 0;
+   jmode := 0;
+   dmode := 1;
    }
    goto start;
 

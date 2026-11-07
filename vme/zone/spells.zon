@@ -1873,7 +1873,6 @@ if ((tgt==self) and (medi.type!=UNIT_ST_OBJ))
 	}
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -3379,7 +3378,6 @@ code
     }
 
     gtpcost := 10 - (hm/120); // benefit for good casters for group teleport
-    log(itoa(gtpcost));
 
     if (self.mana < (kids * gtpcost)) /* 10 mana per grouped char */
     {
@@ -4384,7 +4382,7 @@ code{
        skilla:=self.abilities[ABIL_BRA];
        skillb:=u.abilities[ABIL_BRA];
 
-       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MIN))
+       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MAX))
        {
         skilla:=skillb/2;
         skillb:=skilld/2;
@@ -8287,7 +8285,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8338,7 +8335,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8376,7 +8372,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8420,7 +8415,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't bless themselves and allows familiars to bless owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8476,7 +8470,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't cast unholy blessing on themselves and allows familiars to cast unholy blessing on owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -10528,14 +10521,11 @@ return;
 
 
 :skiptimer:
-subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
 	  if ("headless" in u.outside_descr){
-	  log("head_of_" +tgt.name);
 	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
 	  	  if(uh != null){
 	  	  	destroy(uh);
@@ -10549,6 +10539,9 @@ addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level 
         quit;
         }
         :startres:
+         // the wait before the next cast starts once a resurrection happens, not when none can
+         subextra (self.extra,"$RES_TIME");
+         addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -10942,7 +10935,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((targ == self) or (ex_ptr.descr == targ.name))){ // fixes mobs that can't refres themselves and allows familiars to refresh owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(targ.race)) and (not RACE_IS_MAMMAL(targ.race)))
  	    hm := -1;
@@ -14105,7 +14097,7 @@ code
   if(out.type == UNIT_ST_OBJ)
   {
 
-   sendtext("An image forms in your mind of "+out.title+"</div>"+
+   sendtext("An image forms in your mind of "+out.title+
             " and you see:<br/>", self);
    see := unit_inside(out);
    goto show_it;
@@ -14115,7 +14107,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-             out.name+"'s </div>inventory:<br/>", self);
+             out.name+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
    }
@@ -14124,7 +14116,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-            out.title+"'s </div>inventory:<br/>", self);
+            out.title+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
   }

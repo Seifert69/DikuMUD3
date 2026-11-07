@@ -779,25 +779,25 @@ code
 {
    if (setting == "normal")
    {
-      if(isset(self.charflags, CHAR_OUTLAW))
+      if(isset(char.charflags, CHAR_OUTLAW))
          unset(char.charflags, CHAR_OUTLAW);
-      if(not(isset(self.charflags, CHAR_PROTECTED)))
+      if(not(isset(char.charflags, CHAR_PROTECTED)))
          set(char.charflags, CHAR_PROTECTED);
    }
    else if (setting == "wanted")
    {
-      if(isset(self.charflags, CHAR_PROTECTED))
+      if(isset(char.charflags, CHAR_PROTECTED))
          unset(char.charflags, CHAR_PROTECTED);
-      if(not(isset(self.charflags, CHAR_OUTLAW)))
+      if(not(isset(char.charflags, CHAR_OUTLAW)))
          set(char.charflags, CHAR_OUTLAW);
    }
    else if (setting == "arrest")
       set(char.charflags, CHAR_OUTLAW | CHAR_PROTECTED); //set protection flags
    else if (setting == "onnotice")
    {
-      if(isset(self.charflags, CHAR_OUTLAW))
+      if(isset(char.charflags, CHAR_OUTLAW))
          unset(char.charflags, CHAR_OUTLAW);
-      if(isset(self.charflags, CHAR_PROTECTED))
+      if(isset(char.charflags, CHAR_PROTECTED))
          unset(char.charflags, CHAR_PROTECTED);
    }
    else 

@@ -734,13 +734,6 @@ minlevel = 0
 loglevel = 0
 type     = 0
 
-command  = reroll
-func = do_reroll@commands
-minpos   = POSITION_DEAD
-minlevel = 0
-loglevel = 0
-type     = 0
-
 command  = account
 internal = account
 minpos   = POSITION_DEAD
@@ -846,10 +839,6 @@ minpos        = POSITION_RESTING
 command       = insult
 func          = insult_dil@guild_paths
 minpos        = POSITION_RESTING
-
-command       = gp
-func          = admin_gp@guild_paths
-minpos        = POSITION_SLEEPING
 
 command       = nbless
 func          = nbless@newbie

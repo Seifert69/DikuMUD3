@@ -960,14 +960,14 @@ code
 	}
 	else if (command ("8"))
 	{
-		sendtext("Enter a slash (/) delimited list of Competitions you don't want to participate in this <br> competition:  ",self);
+		sendtext("Enter a slash (/) delimited list of quests not allowed in this <br> competition:  ",self);
 		wait(SFB_CMD, TRUE);
 		ncname:=textformat("&nbsp;"+excmdstr+" "+argument);
 		goto comp_menu;
 	}
 	else if (command ("9"))
 	{
-		sendtext("Enter a slash (/) delimited list of Extra flags you don't want to participate in this <br> competition:  ",self);
+		sendtext("Enter a slash (/) delimited list of quests allowed in this <br> competition:  ",self);
 		wait(SFB_CMD, TRUE);
 		nename:=excmdstr+" "+argument;
 		goto comp_menu;
@@ -1237,6 +1237,7 @@ code
 				goto got_quest;
 			i:=i+1;
 		}
+		return;  // none of the allowed quests: not in this competition
 	}
 
 :got_quest:
