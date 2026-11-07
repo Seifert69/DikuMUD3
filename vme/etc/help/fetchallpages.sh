@@ -414,7 +414,6 @@ python3 getwikihelppage.py Nightglobe &
 python3 getwikihelppage.py Noshout
 python3 getwikihelppage.py Oddweapon &
 python3 getwikihelppage.py Odinstatue &
-python3 getwikihelppage.py Off &
 python3 getwikihelppage.py Open
 python3 getwikihelppage.py Paladins &
 python3 getwikihelppage.py Paladinskills &
@@ -510,8 +509,7 @@ python3 getwikihelppage.py Score &
 python3 getwikihelppage.py Scrolluse &
 python3 getwikihelppage.py Search &
 python3 getwikihelppage.py Sending &
-python3 getwikihelppage.py Senselife &
-python3 getwikihelppage.py Seual
+python3 getwikihelppage.py Senselife
 python3 getwikihelppage.py Shamshir &
 python3 getwikihelppage.py Shelter &
 python3 getwikihelppage.py Shields &
