@@ -4305,7 +4305,9 @@ code
     quit;
    }
 
-   if( not dilfind( "magic_summoned@spells", tgt ) ) {
+   /* Summoned creatures; eagle cry's eagle has its own timer */
+   if( not( dilfind( "magic_summoned@spells", tgt ) or
+            dilfind( "magic_eagle@spells", tgt ) ) ) {
     act( "Nothing happens.",A_ALWAYS,self,null,null,TO_CHAR);
     quit;
    }
@@ -4513,7 +4515,8 @@ room */
 
      foreach( UNIT_ST_NPC, u )
      {
-      if( dilfind( "magic_summoned@spells", u ) )
+      if( dilfind( "magic_summoned@spells", u ) or
+          dilfind( "magic_eagle@spells", u ) )
       {
        skilla := self.abilities[ABIL_BRA];
        skillb := u.abilities[ABIL_BRA];
