@@ -1287,7 +1287,7 @@ code
 
 :c_r_title:
 
-	err:=loadstr (pc.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".rank",buf);
 	if (err<1)
 		err:=loadstr ("default.rank",buf);
 		if (err<1)
@@ -1838,14 +1838,14 @@ code
 {
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Load, to use caccept.</div>",
+		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Lord, to use caccept.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
 
 	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord") and (atoi(self.extra.[CLAN_RANK].descr)<10))
 	{
-		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Load, to use caccept.</div>",
+		act ("<div class='clan'>You must be rank 10 or higher, or a clan Master or Lord, to use caccept.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -1891,7 +1891,7 @@ code
 
 	pc.hometown :="htown@"+self.extra.[CLAN_SYMBOLIC].descr;
 	addmember(self.extra.[CLAN_SYMBOLIC].descr,pc.name,
-	"0",{"$member","$none","$none"});
+	"1",{"$member","$none","$none"});
 
 	act ("<div class='clan'>$3n has been accepted into the clan.</div>",
 	A_ALWAYS,self,null,pc,TO_CHAR); act ("<div class='clan'>You have been accepted
@@ -2855,19 +2855,25 @@ code
 		sendtext ("<div class='clan'>You do not have access to withdraw from the clan treasury.</div><div class='default'><br/></div>",self);
 		quit;
 	}
+	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
+	if (err<1)
+		buf:="0";
+	balance:=atoi(buf);
+
 	args:=getwords(arg);
 	if (args.[0]=="all")
 	{
+		// as much of the chest's balance as comes out in whole coins of that kind
 		if((args.[1]=="iron") or (args.[1]=="ip"))
-			amount:=purse(self, IRON_PIECE)*IRON_MULT;
+			amount:=(balance/IRON_MULT)*IRON_MULT;
 		else if((args.[1]=="copper") or (args.[1]=="cp"))
-			amount:=purse(self, COPPER_PIECE)*COPPER_MULT;
+			amount:=(balance/COPPER_MULT)*COPPER_MULT;
 		else if((args.[1]=="silver") or (args.[1]=="sp"))
-			amount:=purse(self, SILVER_PIECE)*SILVER_MULT;
+			amount:=(balance/SILVER_MULT)*SILVER_MULT;
 		else if((args.[1]=="gold") or (args.[1]=="gp"))
-			amount:=purse(self, GOLD_PIECE)*GOLD_MULT;
+			amount:=(balance/GOLD_MULT)*GOLD_MULT;
 		else if((args.[1]=="platinum") or (args.[1]=="pp"))
-			amount:=purse(self, PLATINUM_PIECE)*PLATINUM_MULT;
+			amount:=(balance/PLATINUM_MULT)*PLATINUM_MULT;
 	}
 	else
 	{
@@ -2890,10 +2896,6 @@ code
 		quit;
 	}
 
-	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
-	if (err<1)
-		buf:="0";
-	balance:=atoi(buf);
 	if (amount>balance)
 	{
 		sendtext("<div class='clan'>The deposit box doesn't contain that much.</div><div class='default'><br/></div>",self);
