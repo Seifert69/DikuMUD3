@@ -1,16 +1,22 @@
 <div class="mw-parser-output"><h1>Break</h1>
 <p>Usage:
 </p>
-<pre> <a cmd='#'>break</a>
+<pre><a cmd='#'>break</a>
 </pre>
-<p>You can use this command when captured by a guard if you wish to attempt
-to break your handcuffs.
-</p><p>See Also:
+<p>When a guard has you in handcuffs, you can try to break them. It takes 
+strength: the stronger you are, the better your chances, but even the 
+strongest succeed only now and then (about one try in five at strength 
+100). You can try once a minute.
+</p><p>If you fail, the guard slaps you hard for trying: it costs you some hit 
+points and endurance. If you succeed, the cuffs snap and you are free, but 
+you are now a wanted outlaw, and the law wants you dead.
+</p><p><br />
+See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Law</a>
- &gt; <a cmd='#'>Help Wanted</a>
- &gt; <a cmd='#'>Help Protected</a>
- &gt; <a cmd='#'>Help Police Guild</a>
+<pre>&gt; <a cmd='#'>Help Laws</a>
+&gt; <a cmd='#'>Help Arrests</a>
+&gt; <a cmd='#'>Help Cuff</a>
+&gt; <a cmd='#'>Help Wanted</a>
 </pre>
 
 
