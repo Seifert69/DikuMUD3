@@ -1,0 +1,26 @@
+<div class="mw-parser-output"><h1>Jstat (200)</h1>
+<p><b>Work in progress: jstat isn't finished.</b>
+</p><p>Usage:
+</p>
+<pre>jstat room|zone|memory|account|creators|count|world
+jstat &lt;someone or something&gt; [data|contents|affects|descriptor|...]
+</pre>
+<p>The same as <a cmd='#'>Wizhelp Wstat</a>, with the same arguments, but the answer is 
+JSON, for tools rather than people: the web client gets it as a data 
+packet, telnet as plain text. Not every part answers in JSON yet: 
+functions still answer as text.
+</p><p>Example:
+</p>
+<pre>jstat world
+jstat papi affects
+</pre>
+<p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>

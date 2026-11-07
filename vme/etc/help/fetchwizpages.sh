@@ -21,6 +21,7 @@ python3 getwikiwizhelppage.py Gmroom
 python3 getwikiwizhelppage.py Gmtrack
 python3 getwikiwizhelppage.py Gmtreasure
 python3 getwikiwizhelppage.py Goto
+python3 getwikiwizhelppage.py Jstat
 python3 getwikiwizhelppage.py Load
 python3 getwikiwizhelppage.py Makemoney
 python3 getwikiwizhelppage.py Message

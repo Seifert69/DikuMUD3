@@ -41,6 +41,7 @@ goto=goto.wiz
 :start:i
 :end:i
 :start:j
+jstat=jstat.wiz
 :end:j
 :start:k
 :end:k
