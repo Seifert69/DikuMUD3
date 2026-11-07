@@ -1873,7 +1873,6 @@ if ((tgt==self) and (medi.type!=UNIT_ST_OBJ))
 	}
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -3379,7 +3378,6 @@ code
     }
 
     gtpcost := 10 - (hm/120); // benefit for good casters for group teleport
-    log(itoa(gtpcost));
 
     if (self.mana < (kids * gtpcost)) /* 10 mana per grouped char */
     {
@@ -4384,7 +4382,7 @@ code{
        skilla:=self.abilities[ABIL_BRA];
        skillb:=u.abilities[ABIL_BRA];
 
-       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MIN))
+       if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MAX))
        {
         skilla:=skillb/2;
         skillb:=skilld/2;
@@ -8281,7 +8279,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8332,7 +8329,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8370,7 +8366,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't heal themselves and allows familiars to heal owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8414,7 +8409,6 @@ code
 
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't bless themselves and allows familiars to bless owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -8470,7 +8464,6 @@ code
       */
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((tgt == self) or (ex_ptr.descr == tgt.name))){ // fixes mobs that can't cast unholy blessing on themselves and allows familiars to cast unholy blessing on owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(tgt.race)) and (not RACE_IS_MAMMAL(tgt.race)))
  	    hm := -1;
@@ -10522,14 +10515,11 @@ return;
 
 
 :skiptimer:
-subextra (self.extra,"$RES_TIME");
-addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
    foreach (UNIT_ST_OBJ, u)
    {
       if ((IS_CORPSE(u)) and ((" "+tgt.name+" ") in u.outside_descr))
       {
 	  if ("headless" in u.outside_descr){
-	  log("head_of_" +tgt.name);
 	  	  uh := findunit( self, "head_of_" +tgt.name, FIND_UNIT_INVEN, null );
 	  	  if(uh != null){
 	  	  	destroy(uh);
@@ -10543,6 +10533,9 @@ addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level 
         quit;
         }
         :startres:
+         // the wait before the next cast starts once a resurrection happens, not when none can
+         subextra (self.extra,"$RES_TIME");
+         addextra (self.extra,{"$RES_TIME"},itoa(realtime-(hm/3))); // allow power level to change time to next cast
 	 act("A vortex appears above you dragging your soul out of "+
 	     "Valhalla and back into your mutilated body.",
 	     A_ALWAYS, tgt, null, null, TO_CHAR);
@@ -10936,7 +10929,6 @@ code
 {
 
    ex_ptr:="$owner" in self.extra;
-   log(ex_ptr.descr);
    if (not((targ == self) or (ex_ptr.descr == targ.name))){ // fixes mobs that can't refres themselves and allows familiars to refresh owners in rare corner cases
    	if ((not RACE_IS_HUMANOID(targ.race)) and (not RACE_IS_MAMMAL(targ.race)))
  	    hm := -1;
@@ -14099,7 +14091,7 @@ code
   if(out.type == UNIT_ST_OBJ)
   {
 
-   sendtext("An image forms in your mind of "+out.title+"</div>"+
+   sendtext("An image forms in your mind of "+out.title+
             " and you see:<br/>", self);
    see := unit_inside(out);
    goto show_it;
@@ -14109,7 +14101,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-             out.name+"'s </div>inventory:<br/>", self);
+             out.name+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
    }
@@ -14118,7 +14110,7 @@ code
   {
 
    sendtext("An image forms in your mind and you see "+
-            out.title+"'s </div>inventory:<br/>", self);
+            out.title+"'s inventory:<br/>", self);
    see := unit_inside(out);
    goto show_it;
   }
@@ -14468,10 +14460,27 @@ code
 dilend
 /* unlock and lock spells update */
 
+// How hard the lock on a door is to open by magic: the magic resistance of the room it is in, or
+// of the room on the other side, whichever is higher (room_power, as resisted spells meet it).
+dilbegin integer door_resistance(room : unitptr, dir : integer);
+var
+   r : integer;
+   other : unitptr;
+code
+{
+   r := room.spells[SPL_NONE];
+   other := room.exit_to[dir];
+   if ((other != null) and (other.spells[SPL_NONE] > r))
+      r := other.spells[SPL_NONE];
+   return (r);
+}
+dilend
+
 dilbegin spl_unlock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
+     integer door_resistance(room : unitptr, dir : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14509,7 +14518,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,1);
+  dir_locks(dir,arg,1,hm);
   quit;
 }
 
@@ -14537,7 +14546,8 @@ if((not(isset(room.exit_info[i], EX_OPEN_CLOSE))) or
     (not(isset(room.exit_info[i], EX_CLOSED))) or
     (not(isset(room.exit_info[i], EX_LOCKED))))
    goto failed;
-
+   if (hm < door_resistance(room, i))
+      goto resists;
    unset(room.exit_info[i], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14562,7 +14572,8 @@ if((not(isset(obj.openflags, EX_OPEN_CLOSE))) or
     (not(isset(obj.openflags, EX_CLOSED))) or
     (not(isset(obj.openflags, EX_LOCKED))))
    goto failed;
-
+if (hm < obj.spells[SPL_NONE])   // the object's magic resistance (object_power)
+   goto resists;
 unset(obj.openflags, EX_LOCKED);
 act("*click*",
      A_SOMEONE, self, null, null, TO_ALL);
@@ -14572,6 +14583,10 @@ act("*click*",
 quit;
 
 
+:resists:
+act("The lock resists your magic.",
+     A_ALWAYS, self, null, null, TO_CHAR);
+quit;
 :failed:
 act("The spell failed.",
      A_ALWAYS, self, null, null, TO_CHAR);
@@ -14586,8 +14601,9 @@ dilend
    same things */
 
                  /*  DIRECTION     ARGUMENT    0=LOCK/1=UNLOCK */
-dilbegin dir_locks(dir : integer, st : string, todo : integer);
+dilbegin dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
 external
+   integer door_resistance(room : unitptr, dir : integer);
    string dirstring@function(dr:integer);
    integer rev_dir@function(i : integer);
    integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
@@ -14657,6 +14673,11 @@ if(todo == 0)
 }
 else /* UNLOCK */
   {
+   if (pwr < door_resistance(room, dir))
+   {
+      act("The lock resists your magic.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
    unset(room.exit_info[dir], EX_LOCKED);
    act("*click*", A_ALWAYS, room.inside, null, null, TO_ALL);
 
@@ -14685,7 +14706,7 @@ dilend
 dilbegin spl_lock(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 external
-     dir_locks(dir : integer, st : string, todo : integer);
+     dir_locks(dir : integer, st : string, todo : integer, pwr : integer);
      integer rev_dir@function(i : integer);
      integer is_hidden@basemove(u1 : unitptr, i1 : integer, u2 : unitptr);
 
@@ -14723,7 +14744,7 @@ else if(wrd in "southwest") dir := SOUTHWEST;
 
 if(dir != -1)
 {
-  dir_locks(dir,arg,0);
+  dir_locks(dir,arg,0,hm);
   quit;
 }
 

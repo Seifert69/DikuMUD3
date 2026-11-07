@@ -1913,7 +1913,7 @@ dilend
 
 dilcopy qstItemsWanted@quests(ROGUE_QUEST,
             {"sercutlass@midsewers", "rope@korandin", "whisky@hobgob", "$anyboat"}, {"", "", "", "boatcheck@quests 0"},
-            {"say say Ah-har, matey. That's the very thing!",
+            {"say Ah-har, matey. That's the very thing!",
  			 "say Ah-har, matey. A strong one at that!",
   		     "say Ah-har, matey. This smells like it could strip the paint off a hull!",
 			 "say Ah-har, matey. She aint pretty, but she looks to float." 
