@@ -1,7 +1,19 @@
-<br/>
-Usage: file wizlist | news | credits | motd | info<br/>
-<br/>
-This wiz-command will update the given text-string from the disk. This is<br/>
-particularly useful if you have some urgent info to give to the players and<br/>
-don't want to close down the mud just to change the motd.<br/>
-<br/>
+<div class="mw-parser-output"><h1>File</h1>
+<p>There is no file command any more, and none is needed. It used to reload 
+the wizlist, news, credits, message of the day and info texts from disk 
+after you changed them.
+</p><p>Today the game reads each of these texts from disk every time someone 
+asks for it: just edit the file in etc/strings (motd, news, wizlist, 
+credits), and the next player to type <a cmd='#'>motd</a>, <a cmd='#'>news</a>, <a cmd='#'>wizlist</a> or 
+<a cmd='#'>credits</a> sees the new text. No reboot is needed.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Wizlock</a>
+&gt; <a cmd='#'>Help News</a>
+</pre>
+
+
+
+
+</div>
