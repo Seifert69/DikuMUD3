@@ -1,5 +1,27 @@
-<br/>
-Special help for wizards:<br/>
-<br/>
-hum hum be gentle....<br/>
-<br/>
+<div class="mw-parser-output"><h1>Wizhelp (200)</h1>
+<p>Usage:
+</p>
+<pre>wizhelp                (or wizhelp topics)
+wizhelp &lt;command&gt;
+wizhelp notes
+</pre>
+<p>Help for the gods.
+</p><p><b>wizhelp</b> alone lists the god commands you can use: those of level 200 
+and up, as far as your own level reaches.
+</p><p><b>wizhelp &lt;command&gt;</b> shows the help on one of them, as <a cmd='#'>help</a> does for 
+players. You can shorten the name.
+</p><p><b>wizhelp notes</b> shows the notes the builders wrote for the zone you are 
+in, if they wrote any.
+</p><p>These pages are kept on the wiki, under Wizhelp/ (wiki.dikumud.com), and 
+fetched into the game's files.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Help</a>
+&gt; <a cmd='#'>Wizhelp Wiz</a>
+</pre>
+
+
+
+
+</div>
