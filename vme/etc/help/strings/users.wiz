@@ -1,9 +1,27 @@
-<br/>
-Usage:<br/>
-   &gt;users<br/>
-<br/>
-This wiz-command gives you a list of users currently in the game, their level<br/>
-and the site they connect from (if known).<br/>
-<br/>
-See also:<br/>
-   &gt;help who<br/>
+<div class="mw-parser-output"><h1>Users (200)</h1>
+<p>Usage:
+</p>
+<pre>users
+</pre>
+<p>Lists everyone connected to the game, one line each:
+</p>
+<pre>&lt;I230/  0&gt; Papi             Playing    [W 4280 --- 203.0.113.7]
+&lt;    25 &gt; Gnort            Menu       [W 4242 --- 198.51.100.20]
+</pre>
+<ul><li>for a god, I and their level, then their wizard-invisibility level; for a mortal, their level, with a * if they are invisible;</li>
+<li>the name, and Playing, or Menu while they log in or are between characters;</li>
+<li>in brackets: L if they come from the local network or W from outside, the port of the mplex they came through (for example 4242 for telnet, 4280 for the web client), the serial line if any, and the address they connect from.</li></ul>
+<p>You don't see those who are invisible to a higher level than yours. The 
+last line counts the players you see. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Who</a>
+&gt; <a cmd='#'>Wizhelp Wizinvisible</a>
+&gt; <a cmd='#'>Wizhelp Ban</a>
+</pre>
+
+
+
+
+</div>
