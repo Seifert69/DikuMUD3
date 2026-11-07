@@ -1,16 +1,29 @@
-<div class="mw-parser-output"><h1>Copy (253)</h1>
+<div class="mw-parser-output"><h1>Copy (245)</h1>
 <p>Usage:
 </p>
-<pre> copy &lt;dil&gt; &lt;unit&gt;
+<pre>copy &lt;unit&gt; &lt;dil&gt;@&lt;zone&gt;(&lt;arguments&gt;)
 </pre>
-<p>Copies a DIL program to a unit.
-</p><p>Example
+<p>Examples:
 </p>
-<pre> copy send_prompt@update papi
+<pre>copy Papi send_prompt@update()
+copy self obey@function()
 </pre>
-<p>See also:
+<p>Copies a DIL program onto a unit, which starts running it at once: the 
+unit comes first, then the program and its arguments, as DIL's dilcopy 
+takes them.
+</p><p>The unit can be:
 </p>
-<pre> &gt; <a cmd='#'>wizhelp zap</a>
+<ul><li><b>self</b> for yourself, or <b>room</b> for the room you are in;</li>
+<li>a room anywhere by its symbolic name, room@zone (only rooms may be named that way);</li>
+<li>someone or something here, by name.</li></ul>
+<p>Things from the treasure zone are refused. You are told it was 
+<i>attempted</i>: whether the program really runs depends on its name and 
+arguments being right; look in the log if nothing happens. It is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Zap</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
 </pre>
 
 
