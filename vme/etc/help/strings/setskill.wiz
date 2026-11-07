@@ -1,14 +1,31 @@
-<br/>
-Usage:<br/>
-   &gt;setskill  &lt;name&gt; skill|spell|weapon &lt;field&gt; &lt;value&gt;<br/>
-<br/>
-This wiz-command enables you to set the skill of a character. Remember, that<br/>
-only players have the full weapon-tree, while NPC's only have the basic<br/>
-categories. Likewise for spells; only players have the full spell-tree, while<br/>
-NPC's only have the basic categories. Skills are only for players, NPC's have<br/>
-none.<br/>
-<br/>
-See also:<br/>
-   &gt;help wstat<br/>
-   &gt;help set<br/>
-<br/>
+<div class="mw-parser-output"><h1>Setskill (245)</h1>
+<p>Usage:
+</p>
+<pre>setskill &lt;someone&gt; skill &lt;skill&gt; &lt;value&gt;
+setskill &lt;someone&gt; spell &lt;spell&gt; &lt;value&gt;
+setskill &lt;someone&gt; weapon &lt;weapon&gt; &lt;value&gt;
+</pre>
+<p>Examples:
+</p>
+<pre>setskill Gnort skill pick_lock 80
+setskill Gnort spell cure_light 50
+setskill guard weapon long_sword 75
+</pre>
+<p>Sets how well someone knows a skill, a spell or a weapon, anywhere in the 
+world. Write a name of two words with an underscore (pick_lock), and you 
+may shorten it from the end. You are told "New value: &lt;n&gt;".
+</p><p>Only players have the full tree of spells and weapons, and only players 
+have skills. Monsters have just the spheres and the weapon categories (see 
+<a cmd='#'>Help Weapons</a>): giving a monster a single spell or weapon is refused. It 
+is logged.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Set</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>
