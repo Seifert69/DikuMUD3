@@ -342,7 +342,7 @@ code
    if (victim.position <= POSITION_SLEEPING)
      return; /* FALSE */
 
-   if ((ch.type == UNIT_ST_NPC) and (isset(victim.charflags, CHAR_PEACEFUL)))
+   if (isset(victim.charflags, CHAR_PEACEFUL))  // as in the spells and function copies
      return; /* FALSE */
 
    if (opponent(victim, ch))
