@@ -2937,16 +2937,13 @@ dilbegin final_rest(med : unitptr, targ : unitptr, arg : string,
                    hm : integer, effect : string);
 code
 {
-  if ((not RACE_IS_UNDEAD(targ.race)))
-    hm := -1;
-/*
-  if (hm <= 0)
+  /* Only the undead are granted their final rest */
+  if (not RACE_IS_UNDEAD(targ.race))
   {
     act("Nothing happens.",
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
-*/
 
   hm := attack_spell(SPL_FINAL_REST, self, med, targ, 0, effect);
   quit;
