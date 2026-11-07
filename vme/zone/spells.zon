@@ -2959,10 +2959,9 @@ var
    heal : integer;
 code
 {
+   /* Only the undead, demons and devils */
    if ((not(RACE_IS_UNDEAD(targ.race))) and
-        (not(targ.race == RACE_GREATER_DEMON)) and
-        (not(targ.race >= RACE_LESSER_DEMON)) and (hm <= RACE_LESSER_DEVIL))
-
+       ((targ.race < RACE_DEMON_MIN) or (targ.race > RACE_DEMON_MAX)))
      hm := -1;
 
    if (hm < 0)
@@ -2984,7 +2983,7 @@ code
       if (self != targ)
       {
         act("$3n appears to have regained some strength.",
-            A_SOMEONE, self, null, null, TO_REST);
+            A_SOMEONE, self, null, targ, TO_NOTVICT);
         act("You feel refreshed.",
             A_SOMEONE, self, null, targ, TO_VICT);
       }
@@ -3472,16 +3471,19 @@ code
 	}
 	else
 	{
+	/* A dispel at least as strong breaks the control early, ending it as if it
+	   had run out; other messages don't touch it */
 	dispel := getwords(argument);
 	if(dispel.[0] == "spl_dispel")
 	 {
 	 if (atoi(dispel.[1]) >= i)
-	 	goto loop;
+	 	goto released;
 	 }
-	else goto byebye;
+	goto loop;
 	}
     }
 
+	:released:
 	exq := "$undead control" in self.extra;
 
 	mast := findunit(self,exq.descr,FIND_UNIT_SURRO,null);
@@ -4303,7 +4305,9 @@ code
     quit;
    }
 
-   if( not dilfind( "magic_summoned@spells", tgt ) ) {
+   /* Summoned creatures; eagle cry's eagle has its own timer */
+   if( not( dilfind( "magic_summoned@spells", tgt ) or
+            dilfind( "magic_eagle@spells", tgt ) ) ) {
     act( "Nothing happens.",A_ALWAYS,self,null,null,TO_CHAR);
     quit;
    }
@@ -4511,7 +4515,8 @@ room */
 
      foreach( UNIT_ST_NPC, u )
      {
-      if( dilfind( "magic_summoned@spells", u ) )
+      if( dilfind( "magic_summoned@spells", u ) or
+          dilfind( "magic_eagle@spells", u ) )
       {
        skilla := self.abilities[ABIL_BRA];
        skillb := u.abilities[ABIL_BRA];
