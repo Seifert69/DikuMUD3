@@ -13,6 +13,51 @@ Websocket support is enabled with the `-w` flag, and TLS on top of it with `-t`:
 The two are separate listeners, so a host that wants both runs two mplexers on
 two ports.
 
+## TLS on the telnet port (telnets)
+
+`-t` without `-w` wraps the ordinary telnet port in TLS, so a player's name
+and password no longer cross the internet in clear text. Clients that speak
+it:
+
+- TinTin++: `#ssl {valhalla} {valhalla.com} {4243}` in place of `#session`.
+- Mudlet: tick **Secure** in the profile's connection settings (Mudlet 3.17
+  and later). A `telnets://host:port` link does the same.
+- Anything that wraps a TCP stream in TLS, since this is plain TLS around
+  ordinary telnet: `openssl s_client -quiet -connect host:port`,
+  `ncat --ssl host port`, or the `telnet-ssl` package's `telnet -z ssl host port`.
+
+It is the same mplex with the same options, so run one for plain telnet and
+one with `-t` on another port:
+
+```
+mplex -p 4242 -s 4999            # plain telnet, as always
+mplex -p 4243 -s 4999 -t         # telnets, reads ./server.pem
+mplex -p 4280 -s 4999 -w -t      # wss:// for the browser client
+```
+
+Connecting to the example above from a shell, with nothing but what a Linux
+box already has:
+
+```
+openssl s_client -quiet -connect valhalla.com:4243
+ncat --ssl valhalla.com 4243
+telnet -z ssl valhalla.com 4243        # telnet-ssl package
+tt++  then  #ssl {val} {valhalla.com} {4243}
+```
+
+992 is the IANA "telnets" port and what Mudlet assumes for a `telnets://`
+link with no port, but it is privileged: an mplex running as an ordinary user
+cannot bind it unless its systemd unit grants
+`AmbientCapabilities=CAP_NET_BIND_SERVICE`. A high port needs nothing special,
+and every client above takes a port.
+
+Only `server.pem` is read for telnets; `dh.pem` is not needed. The handshake
+runs on the non-blocking socket as the client's bytes arrive, the telnet
+option negotiation is sent once it completes, and the mud is told about the
+connection on the first line of input as before. The mplex log notes the
+protocol version of each completed handshake (`TLS: TLSv1.3 handshake done
+with 203.0.113.9`). TLS 1.2 is the oldest version accepted.
+
 > For a while `-t` set a flag that nothing read, and `-w` alone listened for
 > TLS regardless. A browser pointed at `ws://` got "TLS handshake failed" while
 > the log said `TLS = false` on the line above. Fixed; the log now names the

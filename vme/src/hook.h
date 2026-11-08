@@ -42,7 +42,9 @@ public:
 
     int get_fd();
 
-    int write(const void *buf, int count);
+    // Virtual so a hook can put a transport under the buffering layer (the
+    // mplex telnets hook wraps the socket in TLS and overrides it).
+    virtual int write(const void *buf, int count);
     int read(void *buf, int count);
 
     int fd; ///< This should be private, but to not introduce bugs I'm just leaving it here for now

@@ -16,6 +16,8 @@
 #include <cstring>
 #include <functional>
 #include <mutex>
+#include <openssl/err.h>
+#include <openssl/ssl.h>
 #include <websocketpp/common/connection_hdl.hpp>
 
 namespace mplex
@@ -43,6 +45,16 @@ public:
     void Unhook();
     int IsHooked(); ///< At this level we also need to check for websockets
     void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
+
+    // Transport under the buffering layer: plain socket, or TLS when the
+    // mplex runs with -t and without -w (telnets). write() keeps the
+    // cHookNative contract; TlsRead() keeps the ::read() contract Input()
+    // was written against, so both transports go through the same code.
+    int write(const void *buf, int count) override;
+    int TlsRead(void *buf, int count);
+    bool TlsHandshake();
+    void TlsFree();
+    bool InputOnce();
 
     void Close(int bNotifyMud);
     void ResetSessionState();
@@ -139,6 +151,8 @@ public:
     ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
     char m_aLastBars[64]{};  ///< Last bars value sent as Char.Vitals (dedupe)
     bool m_bTakesConnection{false}; ///< Took one of g_nConnectionsLeft (telnet; websockets don't count)
+    SSL *m_pSSL{nullptr};          ///< TLS state of a telnets connection; nullptr on plain telnet and websockets
+    bool m_bTlsPending{false};     ///< Handshake not finished: nothing is written until it is
 
 private:
     void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);
@@ -161,5 +175,10 @@ void Idle(cConHook *con, const char *cmd);
 void ClearUnhooked();
 
 extern cConHook *g_connection_list;
+
+/// TLS context for telnets connections (mplex -t without -w); nullptr when the telnet port is plain.
+extern SSL_CTX *g_tls_ctx;
+/// Loads ./server.pem into g_tls_ctx. False (and logged) when the file is missing or unusable.
+bool tls_init_telnet();
 
 } // namespace mplex

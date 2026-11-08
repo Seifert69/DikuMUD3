@@ -24,6 +24,7 @@
     #include <time.h>
 #endif
 
+#include "ClientConnector.h"
 #include "MUDConnector.h"
 #include "compile_defines.h"
 #include "echo_server.h"
@@ -84,6 +85,12 @@ int main(int argc, char *argv[])
     }
     else
     {
+        if (mplex::g_mplex_arg.g_bUseTLS)
+        {
+            Assert(mplex::tls_init_telnet(), "TLS: cannot load ./server.pem, see the log.");
+            slog(LOG_OFF, 0, "Telnet port %d is TLS (telnets), certificate from ./server.pem", mplex::g_mplex_arg.nMotherPort);
+        }
+
         slog(LOG_OFF, 0, "Opening telnet mother connection on port %d.", mplex::g_mplex_arg.nMotherPort);
         fd = mplex::OpenMother(mplex::g_mplex_arg.nMotherPort);
         Assert(fd != -1, "NO MOTHER CONNECTION.");

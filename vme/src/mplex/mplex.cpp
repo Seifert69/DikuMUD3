@@ -74,7 +74,9 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
     fprintf(stderr, "  -y  Strip away the HTML on websockets.\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
-    fprintf(stderr, "  -t  Use TLS (can only be used with Websockets).\n");
+    fprintf(stderr, "  -t  Use TLS, reading ./server.pem. With -w: wss:// for browsers.\n");
+    fprintf(stderr, "      Without -w: TLS-wrapped telnet (telnets://), for TinTin++ '#ssl'\n");
+    fprintf(stderr, "      and Mudlet's 'Secure' box. Run a second mplex for plain telnet.\n");
     fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
     
     exit(0);

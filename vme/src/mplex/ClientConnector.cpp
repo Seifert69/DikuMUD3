@@ -235,10 +235,190 @@ void cConHook::Unhook()
         g_CaptainHook.Unhook(this);
     }
 
+    TlsFree(); // before the socket closes, so close_notify can still go out
+
     if (!this->m_fWebsSend)
     {
         cHook::Unhook();
     }
+}
+
+/* ================= TLS on the telnet port (telnets) ============================ */
+//
+// mplex -t without -w wraps every accepted telnet socket in TLS, for clients
+// such as TinTin++ (#ssl) and Mudlet (the "Secure" box). One SSL_CTX for the
+// process, loaded by tls_init_telnet() from the same server.pem the websocket
+// listener reads. Each accepted socket gets an SSL object in accept state; the
+// handshake is driven from Input() as bytes arrive, because the sockets are
+// non-blocking. Nothing is written before the handshake completes: the
+// initial telnet negotiation is sent when it does, and the mud is only asked
+// for an ID on the first line of input, which cannot arrive earlier. The
+// plain path is untouched: m_pSSL stays nullptr on a plain or websocket hook.
+
+SSL_CTX *g_tls_ctx = nullptr;
+
+bool tls_init_telnet()
+{
+    g_tls_ctx = SSL_CTX_new(TLS_server_method());
+    if (!g_tls_ctx)
+    {
+        slog(LOG_ALL, 0, "TLS: SSL_CTX_new failed");
+        return false;
+    }
+
+    SSL_CTX_set_min_proto_version(g_tls_ctx, TLS1_2_VERSION);
+
+    // cHook::PushWrite() treats a short write as progress and retries the
+    // rest from a new buffer address; tell OpenSSL both are fine.
+    SSL_CTX_set_mode(g_tls_ctx, SSL_MODE_ENABLE_PARTIAL_WRITE | SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER);
+
+#ifdef SSL_OP_IGNORE_UNEXPECTED_EOF
+    // Most mud clients just close the socket, without a TLS close_notify.
+    // Report that as the peer closing (SSL_ERROR_ZERO_RETURN), not an error.
+    SSL_CTX_set_options(g_tls_ctx, SSL_OP_IGNORE_UNEXPECTED_EOF);
+#endif
+
+    if (SSL_CTX_use_certificate_chain_file(g_tls_ctx, "server.pem") != 1 ||
+        SSL_CTX_use_PrivateKey_file(g_tls_ctx, "server.pem", SSL_FILETYPE_PEM) != 1 || SSL_CTX_check_private_key(g_tls_ctx) != 1)
+    {
+        slog(LOG_ALL, 0, "TLS: cannot load ./server.pem (certificate chain + private key): %s", ERR_reason_error_string(ERR_get_error()));
+        SSL_CTX_free(g_tls_ctx);
+        g_tls_ctx = nullptr;
+        return false;
+    }
+
+    return true;
+}
+
+// Drives the handshake. True when it is complete (now or earlier). False when
+// it needs more bytes from the peer (nothing to do yet) or has failed (the
+// connection is then closed).
+bool cConHook::TlsHandshake()
+{
+    if (!m_bTlsPending)
+    {
+        return true;
+    }
+
+    int r = SSL_do_handshake(m_pSSL);
+
+    if (r == 1)
+    {
+        m_bTlsPending = false;
+        slog(LOG_OFF, 0, "TLS: %s handshake done with %s", SSL_get_version(m_pSSL), m_aHost);
+
+        if (m_sSetup.telnet)
+        {
+            SendTelnetInitialNegotiation();
+        }
+        return true;
+    }
+
+    int e = SSL_get_error(m_pSSL, r);
+
+    if (e == SSL_ERROR_WANT_READ || e == SSL_ERROR_WANT_WRITE)
+    {
+        return false;
+    }
+
+    slog(LOG_ALL, 0, "TLS: handshake with %s failed (%d): %s", m_aHost, e, ERR_reason_error_string(ERR_get_error()));
+    Close(TRUE);
+    return false;
+}
+
+// Same contract as the ::read() call it stands in for in InputOnce():
+// > 0 bytes read, 0 the peer closed, -1 with errno EAGAIN when there is
+// nothing yet, -1 with another errno on a TLS error. InputOnce() then
+// treats a TLS connection exactly as it treats a plain one.
+int cConHook::TlsRead(void *buf, int count)
+{
+    int r = SSL_read(m_pSSL, buf, count);
+
+    if (r > 0)
+    {
+        return r;
+    }
+
+    int e = SSL_get_error(m_pSSL, r);
+
+    switch (e)
+    {
+        case SSL_ERROR_WANT_READ:
+        case SSL_ERROR_WANT_WRITE:
+            errno = EAGAIN;
+            return -1;
+
+        case SSL_ERROR_ZERO_RETURN: // close_notify, or a bare TCP close (SSL_OP_IGNORE_UNEXPECTED_EOF)
+            return 0;
+
+        default:
+            slog(LOG_ALL, 0, "TLS: read from %s failed (%d): %s", m_aHost, e, ERR_reason_error_string(ERR_get_error()));
+            errno = ECONNRESET;
+            return -1;
+    }
+}
+
+// Same contract as cHookNative::write(): bytes written (short means try the
+// rest later), -1 error and the hook is unhooked.
+int cConHook::write(const void *buf, int count)
+{
+    if (!m_pSSL)
+    {
+        return cHookNative::write(buf, count);
+    }
+
+    if (!IsHooked())
+    {
+        return -1;
+    }
+
+    if (m_bTlsPending)
+    {
+        return 0; // stays queued until the handshake is done
+    }
+
+    int sofar = 0;
+
+    while (sofar < count)
+    {
+        int r = SSL_write(m_pSSL, (const char *)buf + sofar, count - sofar);
+
+        if (r > 0)
+        {
+            sofar += r;
+            continue;
+        }
+
+        int e = SSL_get_error(m_pSSL, r);
+
+        if (e == SSL_ERROR_WANT_WRITE || e == SSL_ERROR_WANT_READ)
+        {
+            return sofar;
+        }
+
+        slog(LOG_ALL, 0, "TLS: write to %s failed (%d)", m_aHost, e);
+        Unhook();
+        return -1;
+    }
+
+    return sofar;
+}
+
+void cConHook::TlsFree()
+{
+    if (!m_pSSL)
+    {
+        return;
+    }
+
+    if (!m_bTlsPending)
+    {
+        SSL_shutdown(m_pSSL); // best effort close_notify; the socket closes right after
+    }
+
+    SSL_free(m_pSSL);
+    m_pSSL = nullptr;
+    m_bTlsPending = false;
 }
 
 void cConHook::Write(ubit8 *pData, ubit32 nLen, int bCopy)
@@ -490,92 +670,129 @@ void cConHook::Input(int nFlags)
     if (nFlags & SELECT_EXCEPT)
     {
         Close(TRUE);
+        return;
     }
-    else if (nFlags & SELECT_READ)
+
+    if (!(nFlags & SELECT_READ))
     {
-        char *c = nullptr;
-        ubit8 buf[1024];
+        return;
+    }
+
+    // One TLS record can hold more than one read()'s worth of bytes, and
+    // select() will not fire again for what OpenSSL already holds in its
+    // buffer, so drain it here. A plain socket goes round exactly once.
+    while (InputOnce())
+    {
+        if (!m_pSSL || !IsHooked() || SSL_pending(m_pSSL) <= 0)
+        {
+            break;
+        }
+    }
+}
+
+// One read and its processing. False when there is nothing more to do on
+// this wake-up (no bytes yet, or the connection closed); true when bytes
+// were consumed and the connection is still up.
+bool cConHook::InputOnce()
+{
+    char *c = nullptr;
+    ubit8 buf[1024];
 
 #if defined(_WINDOWS)
-        b = (char *)buf;
-        int n = recv(this->tfd(), b, sizeof(buf), 0);
-        strcpy((char *)buf, b);
+    b = (char *)buf;
+    int n = recv(this->tfd(), b, sizeof(buf), 0);
+    strcpy((char *)buf, b);
 #endif
 #if defined(LINUX)
-        int n = ::read(this->tfd(), buf, sizeof(buf) - 1);
+    int n = 0;
+
+    if (m_pSSL)
+    {
+        if (!TlsHandshake())
+        {
+            return false; // needs more bytes, or failed and closed
+        }
+
+        n = TlsRead(buf, sizeof(buf) - 1); // ::read() contract, handled below like the plain socket
+    }
+    else
+    {
+        n = ::read(this->tfd(), buf, sizeof(buf) - 1);
+    }
 #endif
 
-        if (n == -1)
-        {
+    if (n == -1)
+    {
 #if defined(_WINDOWS)
-            if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
-            {
-                return;
-            }
+        if (WSAGetLastError() == WSAEWOULDBLOCK || WSAGetLastError() == WSAEINTR)
+        {
+            return false;
+        }
 #else
-            if ((errno == EWOULDBLOCK) || (errno == EAGAIN))
-            {
-                return;
-            }
+        if ((errno == EWOULDBLOCK) || (errno == EAGAIN))
+        {
+            return false;
+        }
 #endif
 
-            Close(TRUE);
-            return;
-        }
-        else if (n == 0)
+        Close(TRUE);
+        return false;
+    }
+    else if (n == 0)
+    {
+        Close(TRUE);
+        return false;
+    }
+
+    if (m_nSequenceCompare != -1)
+    {
+        SequenceCompare(buf, &n);
+        if (n <= 0)
         {
-            Close(TRUE);
-            return;
-        }
-
-        if (m_nSequenceCompare != -1)
-        {
-            SequenceCompare(buf, &n);
-            if (n <= 0)
-            {
-                return;
-            }
-        }
-
-        if (m_nFirst >= 0)
-        {
-            getLine(buf, &n);
-            if (n <= 0)
-            {
-                return;
-            }
-        }
-
-        // Runs deliberately AFTER the two one-shot legacy filters above:
-        // the serial-line hack's signature IS telnet bytes (IAC WILL ECHO),
-        // and both filters self-disarm on the first non-matching byte
-        // without consuming anything, so a modern client's buffer reaches
-        // the parser intact. Skipped for TERM_INTERNAL (the W32 client sets
-        // telnet = FALSE) and 'set telnet off' users.
-        if (m_sSetup.telnet && n > 0)
-        {
-            TelnetParse(buf, &n);
-            if (n <= 0)
-            {
-                return;
-            }
-        }
-
-        buf[n] = 0;
-        AddString((char *)buf);
-
-        ParseInput();
-
-        cQueueElem *qe = nullptr;
-
-        while ((qe = m_qInput.GetHead()))
-        {
-            c = (char *)qe->Data();
-            assert(strlen(c) < MAX_INPUT_LENGTH);
-            m_pFptr(this, c);
-            delete qe;
+            return true;
         }
     }
+
+    if (m_nFirst >= 0)
+    {
+        getLine(buf, &n);
+        if (n <= 0)
+        {
+            return true;
+        }
+    }
+
+    // Runs deliberately AFTER the two one-shot legacy filters above:
+    // the serial-line hack's signature IS telnet bytes (IAC WILL ECHO),
+    // and both filters self-disarm on the first non-matching byte
+    // without consuming anything, so a modern client's buffer reaches
+    // the parser intact. Skipped for TERM_INTERNAL (the W32 client sets
+    // telnet = FALSE) and 'set telnet off' users.
+    if (m_sSetup.telnet && n > 0)
+    {
+        TelnetParse(buf, &n);
+        if (n <= 0)
+        {
+            return true;
+        }
+    }
+
+    buf[n] = 0;
+    AddString((char *)buf);
+
+    ParseInput();
+
+    cQueueElem *qe = nullptr;
+
+    while ((qe = m_qInput.GetHead()))
+    {
+        c = (char *)qe->Data();
+        assert(strlen(c) < MAX_INPUT_LENGTH);
+        m_pFptr(this, c);
+        delete qe;
+    }
+
+    return true;
 }
 
 /* ================= sending data to client output handling ====================== */
@@ -2397,7 +2614,25 @@ cConHook::cConHook()
 
     g_CaptainHook.Hook(fd, this);
 
-    if (m_sSetup.telnet)
+    if (g_tls_ctx)
+    {
+        // telnets: the handshake runs from Input() as the client's bytes
+        // arrive, and the telnet negotiation is sent once it completes.
+        m_pSSL = SSL_new(g_tls_ctx);
+
+        if (m_pSSL == nullptr)
+        {
+            slog(LOG_ALL, 0, "TLS: SSL_new failed for %s, dropping the connection", m_aHost);
+            Unhook();
+        }
+        else
+        {
+            SSL_set_fd(m_pSSL, fd);
+            SSL_set_accept_state(m_pSSL);
+            m_bTlsPending = true;
+        }
+    }
+    else if (m_sSetup.telnet)
     {
         SendTelnetInitialNegotiation();
     }
@@ -2409,6 +2644,8 @@ cConHook::cConHook()
 // cConHook Destructor
 cConHook::~cConHook()
 {
+    TlsFree();
+
     if (this == g_connection_list)
     {
         g_connection_list = this->m_pNext;
