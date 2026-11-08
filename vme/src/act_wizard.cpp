@@ -183,7 +183,7 @@ void do_crash(unit_data *ch, char *argument, const command_info *cmd)
     }
     else
     {
-        assert(FALSE); /* Bye bye */
+        abort(); /* Bye bye, in any build: assert() is compiled out with NDEBUG */
     }
 }
 
