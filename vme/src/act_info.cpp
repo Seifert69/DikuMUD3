@@ -128,8 +128,7 @@ void do_where(unit_data *ch, char *aaa, const command_info *cmd)
         {
             if (i->getUnitIn() && i->getNames().IsName(arg) && CHAR_LEVEL(ch) >= i->getLevelOfWizardInvisibility())
             {
-                nCount++;
-                if (nCount++ > 100)
+                if (nCount++ >= 100)
                 {
                     continue;
                 }
