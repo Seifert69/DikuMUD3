@@ -1159,6 +1159,43 @@ skill_collection *get_pc_train_values(unit_data *pupil, int type, pc_train_value
     return nullptr; // Can't happen
 }
 
+// TRUE if another teacher in the same room, able to teach now, teaches the skill named in
+// arg. A teacher that doesn't teach it then steps aside instead of answering for the room.
+static bool other_teacher_teaches(unit_data *teacher, const char *arg)
+{
+    if (teacher->getUnitIn() == nullptr)
+    {
+        return false;
+    }
+
+    for (unit_data *u = teacher->getUnitIn()->getUnitContains(); u; u = u->getNext())
+    {
+        if (u == teacher || !u->isChar() || !CHAR_IS_READY(u))
+        {
+            continue;
+        }
+
+        for (unit_fptr *f = u->getFunctionPointer(); f; f = f->getNext())
+        {
+            if (f->getFunctionPointerIndex() != SFUN_TEACHING || f->getData() == nullptr)
+            {
+                continue;
+            }
+
+            auto *other = (teach_packet *)f->getData();
+            const char *end = nullptr;
+            int index = search_block_abbrevs(arg, other->text, &end);
+
+            if (index != -1 && teaches_index(other->teaches, index) != -1)
+            {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
 int teach_basis(spec_arg *sarg, teach_packet *pckt)
 {
     int index = 0;
@@ -1282,10 +1319,15 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
         return SFR_BLOCK;
     }
 
+    const char *skill_arg = arg;
     index = search_block_abbrevs(arg, pckt->text, (const char **)&arg);
 
     if (index == -1)
     {
+        if (other_teacher_teaches(sarg->owner, skill_arg))
+        {
+            return SFR_SHARE;
+        }
         act(pckt->msgs.unknown_skill, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
         return SFR_BLOCK;
     }
@@ -1293,6 +1335,10 @@ int teach_basis(spec_arg *sarg, teach_packet *pckt)
     index = teaches_index(pckt->teaches, index);
     if (index == -1)
     {
+        if (other_teacher_teaches(sarg->owner, skill_arg))
+        {
+            return SFR_SHARE;
+        }
         act(pckt->msgs.no_teaching, eA_SOMEONE, sarg->owner, cActParameter(), sarg->activator, eTO_VICT);
         return SFR_BLOCK;
     }
