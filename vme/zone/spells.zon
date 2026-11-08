@@ -12720,13 +12720,19 @@ code
    if ((self == tgt) or ((tgt.type == UNIT_ST_OBJ) or
        (tgt.type == UNIT_ST_ROOM))) hm := -1;
 
-   if ((tgt.type == UNIT_ST_PC) and ((tgt.alignment == 1000) or
-       (tgt.alignment == -1000))) hm := 1;
-
    :nix:
    if (hm < 0)
    {
       act("The spell failed.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
+   /* The undead, demons and devils, and the gods are what they are */
+   if (((tgt.race >= RACE_UNDEAD_MIN) and (tgt.race <= RACE_UNDEAD_MAX)) or
+       ((tgt.race >= RACE_DEMON_MIN) and (tgt.race <= RACE_DEMON_MAX)) or
+       ((tgt.race >= RACE_NORSE_GOD_MIN) and (tgt.race <= RACE_NORSE_GOD_MAX)))
+   {
+      act("There is nothing in $3n to turn.", A_ALWAYS, self, null, tgt, TO_CHAR);
       quit;
    }
 
