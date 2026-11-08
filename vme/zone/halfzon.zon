@@ -782,8 +782,8 @@ names {"court yard"}
 descr
 "This court yard is well constructed and is made to withstand
 lots of traffic, since this is Tassel Groves main water supply.
-The fountain serves another purpose though it draws adventures to
-this Inn, where they can get a safe nights rest."
+The fountain serves another purpose though it draws adventurers to
+this Inn, where they can get a safe night's rest."
 
 extra {"stone","yard"}
 "The stones are placed so perfectly here it looks as if they were
@@ -847,7 +847,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_MOB}
 extra {"sign","writing","board"}
 "By Order of the Mayor
 A guard is to be placed in the inn to stop the more powerful
-adventures from slaughtering our happy guests. If necessary he is
+adventurers from slaughtering our happy guests. If necessary he is
 to use deadly force to accomplish this task.  We thank you for
 not killing our guests. Thanks,
 Mayor Spink"
@@ -1066,7 +1066,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 east to hall_one descr
@@ -1096,7 +1096,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 west to hall_one descr
@@ -1126,7 +1126,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 east to hall_two descr
@@ -1156,7 +1156,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 west to hall_two descr
@@ -1186,7 +1186,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 west to hall_four descr
@@ -1215,7 +1215,7 @@ extra {"bed"}
 it almost makes you want to lay down and take a nap."
 
 extra {"rack"}
-"This rack is designed for those fighters who prize there armor
+"This rack is designed for those fighters who prize their armor
 and weapons so much they do not want to just drop them on the
 floor."
 west to hall_five descr
@@ -3934,8 +3934,8 @@ inn_guard
 
 names {"inn guard", "guard"}
 title "the inn guard"
-descr "An inn guard is standing here protecting the adventures that
-pay for a safe nights sleep."
+descr "An inn guard is standing here protecting the adventurers that
+pay for a safe night's sleep."
 extra {}
 "Obviously he is not a halfling, he looks like a retired grand
 knight.  You notice that blood is dripping from his sword, and you
@@ -3985,7 +3985,7 @@ end
 bing
 names {"bing"}
 title "Bing"
-descr "Bing, half of the twin adventures is here."
+descr "Bing, half of the twin adventurers is here."
 extra {}
 "He is a handsome young adventurer.  Bong and him have teamed up
 to explore the country."
@@ -4004,7 +4004,7 @@ end
 bong
 names {"bong"}
 title "Bong"
-descr "Bong, half of the twin adventures is here."
+descr "Bong, half of the twin adventurers is here."
 extra {}
 "He is a handsome young adventurer.  Bing and him have teamed up
 to explore the country."

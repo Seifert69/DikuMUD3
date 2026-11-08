@@ -1345,7 +1345,7 @@ code
    if (state == 0)
    {
       s := listselector(sl);
-      sendtext("<br/><br/>Please choose your profession (many more avaialble later in the game):<br/>"
+      sendtext("<br/><br/>Please choose your profession (many more available later in the game):<br/>"
 	   +" &nbsp;&nbsp;&nbsp;&nbsp;<u>Profession</u><br/>" + s
 	   +"<br/>Please select the number above or Help: ",self);
 
@@ -3397,7 +3397,7 @@ titles, and names to players. With it, you can also execute any command (except 
 in <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div>. Please use restraint in your color schemes - we wish to avoid<br>
 gawdy titles/names. The syntax for its use follows HTML &ltdiv&gt tags, and<br>
 the CSS classes we've published. Static color codes are included in the CSS files<br>
-similar to previously avaialble ANSI colors. For example, the legacy &amp;c+r code<br>
+similar to previously available ANSI colors. For example, the legacy &amp;c+r code<br>
 for the color <div class='cpr'>bright red</div>, would now look like &ltdiv class='cpr'&gtcolor red&lt/div&gt.<br>
 <br><br>
 
