@@ -903,6 +903,39 @@ dilend
 // sl stringlist of explanations
 //
 //
+// Waits for the next player a quest giver should check: one who types a command near it, or
+// the one named in the "quest$done <player>" message qstItemsWanted sends when the last item
+// is handed over (a give is a command too, but it arrives before the item changes hands).
+dilbegin unitptr qstWaitPc();
+var
+   words : stringlist;
+   u     : unitptr;
+code
+{
+   :start:
+   wait(SFB_MSG|SFB_CMD, TRUE);
+
+   if (command(CMD_AUTO_MSG))
+   {
+      words := getwords(argument);
+      if (length(words) < 2)
+         goto start;
+      if (words.[0] != "quest$done")
+         goto start;
+      u := findsymbolic(words.[1]);
+      if (u == null)
+         goto start;
+      return (u);
+   }
+
+   u := activator;
+   if (u.type != UNIT_ST_PC)
+      goto start;
+   return (u);
+}
+dilend
+
+
 dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
@@ -938,8 +971,8 @@ code
 
    i := 0;
    ln := length(sl);
-	pause;
 	heartbeat := PULSE_SEC * 3;
+	pause;
 
    priority;
 

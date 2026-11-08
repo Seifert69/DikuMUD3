@@ -1873,6 +1873,7 @@ dilend // END rogue_request
 //
 dilbegin fnpri(FN_PRI_MISSION) CompleteCheck();
 external
+   unitptr qstWaitPc@quests();
 	extraptr qstSetDone@quests(qname : string, pc : unitptr);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
@@ -1887,9 +1888,9 @@ var
 code
 {
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   pc := qstWaitPc@quests();
 
-   pc := qstWaitDone@quests(ROGUE_QUEST, activator, 
+   pc := qstWaitDone@quests(ROGUE_QUEST, pc, 
             {"say That's the way, me hearty! And did you have to sell any of those fishing rods to pay for me dunnage?", 
  			 "say Even if you didn't this time, you should bear them in mind if you find yourself in a fix in future.",
 			 "say I'd have done the same already, only I'm not so handy without me trusty cutlass.",
