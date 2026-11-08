@@ -2901,13 +2901,6 @@ minlevel = 230
 loglevel = 230
 type     = 0
 
-command  = execute
-internal = execute
-minpos   = POSITION_DEAD
-minlevel = 254
-loglevel = 0
-type     = 0
-
 command  = force
 func = force@commands
 minpos   = POSITION_SLEEPING

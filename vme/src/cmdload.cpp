@@ -68,7 +68,6 @@ cmdload_struct cmdload[] = {{"north", do_move, 0, 0},
                             {"consider", do_consider, 0, 0},
                             {"crash", do_crash, 0, 0},
 
-                            {"execute", do_execute, 0, 0},
 
                             {"kill", do_kill, 0, 0},
 
