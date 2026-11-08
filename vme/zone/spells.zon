@@ -6059,6 +6059,10 @@ code
             {
                 s := s + "Protection from Evil<br/>";
             }
+            else if (i2 == ID_SANCTUARY)
+            {
+                s := s + "Sanctuary<br/>";
+            }
             else
             {
                 s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i];
