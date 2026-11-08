@@ -2622,6 +2622,7 @@ dilend
 //
 dilbegin compl_pot();
 external
+   unitptr qstWaitPc@quests();
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
@@ -2634,9 +2635,9 @@ var
 code
 {
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   pc := qstWaitPc@quests();
 
-   pc := qstWaitDone@quests(QUEST_POT, activator, 
+   pc := qstWaitDone@quests(QUEST_POT, pc, 
             {"hug $1N", 
             "hold pot", 
             "sing", 
@@ -2657,6 +2658,7 @@ dilend
 //
 dilbegin compl_stew();
 external
+   unitptr qstWaitPc@quests();
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
@@ -2669,9 +2671,9 @@ var
 code
 {
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   pc := qstWaitPc@quests();
 
-   pc := qstWaitDone@quests(QUEST_RABBIT, activator, 
+   pc := qstWaitDone@quests(QUEST_RABBIT, pc, 
             {"say Here $1N, I have made this special rabbit's foot just for you.",
             "thank $1N", 
             "emote makes some Rabbit Stew."}, 800, 2 * COPPER_MULT, {"rabbit_foot@haon_dor"});

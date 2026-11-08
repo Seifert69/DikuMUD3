@@ -8374,6 +8374,7 @@ dilend
 //
 dilbegin citizenDone();
 external
+   unitptr qstWaitPc@quests();
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 var
@@ -8386,9 +8387,9 @@ var
 code
 {
    :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC));
+   pc := qstWaitPc@quests();
 
-   pc := qstWaitDone@quests(QUEST_CITIZEN_MIDGAARD, activator, 
+   pc := qstWaitDone@quests(QUEST_CITIZEN_MIDGAARD, pc, 
             {"say Congratulations, $1N, and welcome to Midgaard.",
              "smile $1N"}, 0, 0, {""});
 
