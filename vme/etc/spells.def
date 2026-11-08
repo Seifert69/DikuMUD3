@@ -3430,6 +3430,7 @@ race brownie    = +1
 race groll      = -1
 race darkelf    = +1
 restrict level          = 45
+profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -4691,6 +4692,7 @@ race brownie    = -2
 race groll      = -3
 race darkelf    = -3
 restrict divine         = 80
+profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5373,6 +5375,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = 0
 auto teacher no add     =  1 // Don't add automatically
+profession assassin     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -5407,6 +5410,7 @@ race brownie    = 0
 race groll      = 0
 race darkelf    = 0
 auto teacher no add     =  1 // Don't add automatically
+profession assassin     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7248,6 +7252,7 @@ race brownie    = +1
 race groll      = -3
 race darkelf    = +2
 restrict level          = 150
+profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7414,6 +7419,8 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 60
+profession priest       = +0
+profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7575,6 +7582,7 @@ race brownie    = -1
 race groll      = -1
 race darkelf    = -1
 restrict level          = 100
+profession necromancer  = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7655,6 +7663,7 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 restrict level          = 20
+profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7695,6 +7704,7 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 restrict level          = 40
+profession priest       = +0
 
 index           = SPL_COLOURSPRAY_4
 name            = flashing grip
@@ -7733,6 +7743,7 @@ race brownie    = -1
 race groll      = -2
 race darkelf    = -2
 restrict level          = 115
+profession priest       = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -7895,6 +7906,7 @@ race brownie    =  0
 race groll      = -3
 race darkelf    = +1
 restrict level          = 180
+profession sorcerer     = +0
 
 
 index           = SPL_HOLY_WORD
@@ -8015,6 +8027,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 120
+profession paladin      = +0
 
 
 index           = SPL_HOLY_WORD_4
@@ -8054,6 +8067,7 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 160
+profession paladin      = +0
 
 
 index           = SPL_UNHOLY_WORD
@@ -8214,6 +8228,8 @@ race brownie    = 0
 race groll      = -1
 race darkelf    = -1
 restrict level          = 160
+profession knight       = +0
+profession necromancer  = +0
 
 
 /* - - - - Yet another definition of a spell - - - - */
@@ -8375,6 +8391,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +2
 restrict level          = 160
+profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
@@ -8495,6 +8512,7 @@ race brownie    = +1
 race groll      = -2
 race darkelf    = +1
 restrict level          = 100
+profession sorcerer     = +0
 
 /* - - - - Yet another definition of a spell - - - - */
 
