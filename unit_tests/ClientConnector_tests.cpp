@@ -4,7 +4,6 @@
 #include "mplex.h"
 #include "textutil.h"
 #include "translate.h"
-#include "utility.h"
 
 #include <arpa/inet.h>
 #include <fcntl.h>
@@ -19,6 +18,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <cctype>
 #include <cerrno>
 #include <chrono>
@@ -48,14 +48,24 @@ namespace
 // mode cConHook() doesn't take a connection, but ~cConHook() gives one back
 struct SavedGlobals
 {
+    // websockets mode (no listening socket needed) and telnet negotiation, as the test wants them
+    explicit SavedGlobals(int webSocketsMode = TRUE, int telnetMode = -1)
+        : webSockets(std::exchange(mplex::g_mplex_arg.bWebSockets, webSocketsMode)),
+          modeTelnet(telnetMode == -1 ? mplex::g_mplex_arg.g_bModeTelnet : std::exchange(mplex::g_mplex_arg.g_bModeTelnet, telnetMode)),
+          connectionsLeft(mplex::g_nConnectionsLeft)
+    {
+    }
+
     ~SavedGlobals()
     {
         mplex::g_mplex_arg.bWebSockets = webSockets;
+        mplex::g_mplex_arg.g_bModeTelnet = modeTelnet;
         mplex::g_nConnectionsLeft = connectionsLeft;
     }
 
-    int webSockets = std::exchange(mplex::g_mplex_arg.bWebSockets, TRUE);
-    int connectionsLeft = mplex::g_nConnectionsLeft;
+    int webSockets;
+    int modeTelnet;
+    int connectionsLeft;
 };
 
 struct TelnetHook
@@ -740,25 +750,16 @@ struct TlsClient
 
 struct TlsFixture
 {
-    std::string path; // the PEM file tls_init_telnet() reads
+    SavedGlobals saved{FALSE, TRUE}; // real sockets, telnet negotiation on; put back when the test is over
+    std::string path;                // the PEM file tls_init_telnet() reads
     int listenFd = -1;
     int port = 0;
     std::vector<mplex::cConHook *> hooks;
     std::vector<int> clients;
-    int savedWebSockets;
-    int savedTelnet;
-    int savedConnectionsLeft;
 
     TlsFixture()
     {
         mplex::translate_init(); // the colour codes, as mplex's main() sets them up
-        if (g_log_file_fd == nullptr)
-        {
-            g_log_file_fd = stderr; // slog() writes to it unconditionally
-        }
-        savedWebSockets = std::exchange(mplex::g_mplex_arg.bWebSockets, FALSE);
-        savedTelnet = std::exchange(mplex::g_mplex_arg.g_bModeTelnet, TRUE);
-        savedConnectionsLeft = mplex::g_nConnectionsLeft;
 
         char tmpl[] = "/tmp/mplex-tls-test-XXXXXX";
         int fd = mkstemp(tmpl);
@@ -800,9 +801,6 @@ struct TlsFixture
         mplex::tls_free_telnet();
         unlink(path.c_str());
         g_lastCommand.clear();
-        mplex::g_mplex_arg.bWebSockets = savedWebSockets;
-        mplex::g_mplex_arg.g_bModeTelnet = savedTelnet;
-        mplex::g_nConnectionsLeft = savedConnectionsLeft;
     }
 
     void WritePem(const SelfSigned &c, int mtimeOffset = 0)
@@ -903,9 +901,9 @@ BOOST_AUTO_TEST_SUITE(ClientConnector_TLS_Suite)
 BOOST_FIXTURE_TEST_CASE(a_missing_pem_file_is_a_failure_not_a_plain_port, TlsFixture)
 {
     BOOST_TEST(!mplex::tls_init_telnet("/nonexistent/server.pem"));
-    BOOST_TEST(mplex::g_tls_ctx == nullptr);
+    BOOST_TEST(mplex::tls_ctx_for_accept() == nullptr);
     BOOST_TEST(Init());
-    BOOST_TEST(mplex::g_tls_ctx != nullptr);
+    BOOST_TEST(mplex::tls_ctx_for_accept() != nullptr);
 }
 
 BOOST_FIXTURE_TEST_CASE(a_silent_client_costs_nothing_while_its_handshake_is_pending, TlsFixture)
@@ -977,22 +975,63 @@ BOOST_FIXTURE_TEST_CASE(negotiation_goes_first_then_what_was_queued_then_input_f
     BOOST_TEST(h->IsHooked());
 }
 
-BOOST_FIXTURE_TEST_CASE(a_write_error_in_the_flush_after_the_handshake_is_not_a_crash, TlsFixture)
+BOOST_FIXTURE_TEST_CASE(a_socket_error_while_sending_drops_the_connection, TlsFixture)
 {
     BOOST_REQUIRE(Init());
     int c = Connect();
     auto *h = Accept();
     TlsClient client(c);
+    std::string got;
+    Connected(client, h, got); // handshake done, queue flushed
 
-    // The client has sent its Finished; the server has not read it yet
-    BOOST_REQUIRE(Until([&] { return client.Handshake(); }));
-
-    // so the flush that follows the server's side of the handshake fails hard
+    // The next write to the socket fails hard (EPIPE), in the middle of an ordinary send
     BOOST_REQUIRE_EQUAL(shutdown(h->tfd(), SHUT_WR), 0);
-    Loop(20);
+    h->SendCon("one more line<br/>");
 
     BOOST_TEST(!h->IsHooked());
     BOOST_TEST(Loop(20) == 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(output_waits_while_the_client_is_not_reading, TlsFixture)
+{
+    BOOST_REQUIRE(Init());
+    int c = Connect();
+    auto *h = Accept();
+    TlsClient client(c);
+    std::string got;
+    Connected(client, h, got);
+
+    // Small buffers, so that a little output fills the pipe to a client that does not read
+    int size = 4096;
+    setsockopt(h->tfd(), SOL_SOCKET, SO_SNDBUF, &size, sizeof(size));
+    setsockopt(c, SOL_SOCKET, SO_RCVBUF, &size, sizeof(size));
+
+    std::string line(500, 'x');
+    line += "<br/>";
+    for (int i = 0; i < 400; i++)
+    {
+        h->SendCon(line.c_str()); // 200 KB, far more than the pipe takes
+    }
+    BOOST_TEST(h->IsHooked()); // back-pressure is not an error
+
+    // and the client keeps typing meanwhile: read and handled as usual
+    for (int i = 0; i < 50; i++)
+    {
+        client.Write("look\r\n");
+    }
+    BOOST_TEST(Until([&] { return g_lastCommand == "look"; }));
+    BOOST_TEST(h->IsHooked());
+
+    // when the client reads, everything arrives
+    auto xs = [&] { return std::count(got.begin(), got.end(), 'x'); };
+    BOOST_TEST(Until(
+        [&] {
+            client.Read(got);
+            return xs() >= 200000;
+        },
+        3000));
+    BOOST_TEST(xs() == 200000);
+    BOOST_TEST(h->IsHooked());
 }
 
 BOOST_FIXTURE_TEST_CASE(a_client_that_resets_after_the_handshake_is_dropped, TlsFixture)
@@ -1071,6 +1110,8 @@ BOOST_FIXTURE_TEST_CASE(a_plain_client_that_leaves_before_it_has_an_id_is_droppe
     int c = Connect();
     auto *h = Accept();
     Loop(20);
+    char buf[256];
+    BOOST_REQUIRE(recv(c, buf, sizeof(buf), MSG_DONTWAIT) > 0); // take what was sent, so that closing sends FIN, not RST
     close(c);
     Forget(c);
 

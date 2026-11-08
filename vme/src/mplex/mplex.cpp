@@ -14,7 +14,6 @@
     #include <time.h>
 #endif
 
-#include "ClientConnector.h"
 #include "MUDConnector.h"
 #include "essential.h"
 #include "hook.h"
@@ -24,6 +23,7 @@
 #include "textutil.h"
 
 #include <netdb.h>
+#include <unistd.h>
 
 #include <cassert>
 #include <cctype>
@@ -40,7 +40,6 @@ arg_type g_mplex_arg;
 
 void bye_signal(int signal)
 {
-    tls_exiting(); // OpenSSL is not async-signal-safe: Close() must not call it
     g_CaptainHook.Close();
 
     slog(LOG_OFF,
@@ -48,7 +47,7 @@ void bye_signal(int signal)
          "Received signal #%d (SIGQUIT, SIGHUP, SIGINT or SIGTERM)."
          "  Shutting down",
          signal);
-    exit(1);
+    _exit(1); // not exit(): the atexit handlers (OpenSSL's cleanup among them) are not for a signal handler
 }
 
 #ifndef _WINDOWS

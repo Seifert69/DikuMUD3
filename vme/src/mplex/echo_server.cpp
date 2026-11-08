@@ -10,6 +10,7 @@
 #include <websocketpp/server.hpp>
 
 #include <map>
+#include <stdexcept>
 #include <mutex>
 #include <type_traits>
 
@@ -158,7 +159,7 @@ context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
         // that server.pem holds both chain and key, and the password callback
         if (!mplex::tls_load_pem(ctx->native_handle(), "server.pem"))
         {
-            slog(LOG_OFF, 0, "TLS init failed - connection may be unstable");
+            throw std::runtime_error("server.pem did not load");
         }
         ctx->use_tmp_dh_file("dh.pem");
         

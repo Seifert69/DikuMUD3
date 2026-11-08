@@ -6,6 +6,7 @@ find_package(OpenSSL REQUIRED)
 set(MPLEX_SRCS
         ClientConnector.cpp ClientConnector.h
         MUDConnector.cpp MUDConnector.h
+        TlsLink.cpp TlsLink.h
         echo_server.cpp echo_server.h
         mplex.cpp mplex.h
         network.cpp network.h

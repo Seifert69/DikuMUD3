@@ -198,7 +198,11 @@ int cHookNative::read(void *buf, int count)
 
     for (;;)
     {
-        thisround = readfd(buf, count); // the transport, TLS or plain
+#if defined(_WINDOWS)
+        thisround = recv(fd, buf, count - 1, 0);
+#else
+        thisround = ::read(fd, buf, count);
+#endif
 
         if (thisround > 0)
         {
@@ -230,17 +234,6 @@ int cHookNative::read(void *buf, int count)
     }
 
     return -1;
-}
-
-// The ::read() contract, unlike read() above: the caller decides what EOF
-// and errors mean. Overridden by the TLS transport.
-int cHookNative::readfd(void *buf, int count)
-{
-#if defined(_WINDOWS)
-    return recv(fd, (char *)buf, count, 0);
-#else
-    return ::read(fd, buf, count);
-#endif
 }
 
 /* ------------------------------------------------------------------- */
@@ -287,11 +280,6 @@ void cHook::Unhook(void)
 /* ------------------------------------------------------------------- */
 /*                     NETWORK READ & WRITE                            */
 /* ------------------------------------------------------------------- */
-
-bool cHook::WantWrite()
-{
-    return !qTX.IsEmpty();
-}
 
 void cHook::PushWrite()
 {
@@ -552,7 +540,7 @@ int cCaptainHook::Wait(timeval *timeout)
 
         FD_SET(nTable[i], &read_set);
 
-        if (pfHook[nTable[i]]->WantWrite())
+        if (!pfHook[nTable[i]]->qTX.IsEmpty())
         {
             FD_SET(nTable[i], &write_set);
         }

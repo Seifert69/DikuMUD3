@@ -19,14 +19,10 @@ two ports.
 no longer cross the internet in clear text. It is a flag of its own, not a
 new meaning for `-t`: `-t` without `-w` has never done anything, and a
 launch line that passes it to a telnet mplex keeps working unchanged.
-Clients that speak telnets:
-
-- TinTin++: `#ssl {valhalla} {valhalla.com} {4243}` in place of `#session`.
-- Mudlet: tick **Secure** in the profile's connection settings (Mudlet 3.17
-  and later). A `telnets://host:port` link does the same.
-- Anything that wraps a TCP stream in TLS, since this is plain TLS around
-  ordinary telnet: `openssl s_client -quiet -connect host:port`,
-  `ncat --ssl host port`, or the `telnet-ssl` package's `telnet -z ssl host port`.
+Clients that speak telnets: TinTin++ (`#ssl` in place of `#session`), Mudlet
+(the **Secure** box in the profile's connection settings, 3.17 and later, or
+a `telnets://host:port` link), and anything that wraps a TCP stream in TLS,
+since this is plain TLS around ordinary telnet. The commands are below.
 
 It is the same mplex with the same options, so run one for plain telnet and
 one with `-z` on another port:
@@ -62,22 +58,23 @@ How it behaves:
   changed, so a renewed certificate (certbot and the like) takes effect
   without a restart. Connections already up keep the old one until they
   close.
-- The handshake runs on the non-blocking socket as the select loop finds it
-  readable or writable. Everything the mplex writes meanwhile (the telnet
-  negotiation, "Requesting an ID", the banner) is queued and goes out, in
-  that order, the moment the handshake completes. A client that never
-  completes one costs nothing: the socket is only watched for writing while
-  OpenSSL has something left to send.
+- OpenSSL works on memory buffers, not on the socket: what the client sends
+  is fed to it as it arrives, and what it wants sent (its handshake flight,
+  the records, close_notify) is queued like any other output. So the
+  handshake runs as the select loop finds the socket readable, everything the
+  mplex writes meanwhile (the telnet negotiation, "Requesting an ID", the
+  banner) is held and goes out, in that order, the moment it completes, and a
+  client that never completes one costs nothing.
 - A client that speaks plain telnet to the port gets a TLS alert and is
-  dropped, mud up or down (`TLS: handshake with 203.0.113.9 failed (1):
-  packet length too long` in the log). One that drops the socket without
+  dropped, mud up or down (`TLS: 203.0.113.9: handshake failed: packet
+  length too long` in the log). One that drops the socket without
   `close_notify`, as most mud clients do, is logged as `TLS: 203.0.113.9
   closed the connection`.
 - TLS 1.2 is the oldest version accepted; the log notes the version of each
   completed handshake (`TLS: TLSv1.3 handshake done with 203.0.113.9`).
-- Session tickets and renegotiation are off: nothing resumes a mud session,
-  and without them the handshake ends with the client's Finished and a
-  write never has to wait for a read.
+- Session tickets (TLS 1.2 and 1.3), the session cache and renegotiation are
+  off: nothing resumes a mud session, and the handshake ends with the
+  client's Finished.
 
 > For a while `-t` set a flag that nothing read, and `-w` alone listened for
 > TLS regardless. A browser pointed at `ws://` got "TLS handshake failed" while
