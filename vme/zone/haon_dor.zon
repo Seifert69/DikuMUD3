@@ -2565,6 +2565,7 @@ external
 var
    pc     : unitptr;
    pot    : unitptr;
+   u      : unitptr;
    exdp   : extraptr;
 
 code
@@ -2597,6 +2598,18 @@ code
    }
    else
    {
+      // The chief got the pot in a raid; if it's gone (he died and came back without it, or it
+      // was lost), nobody could finish this quest until the next reboot. Give him a new one.
+      if (findsymbolic("marys_pot@haon_dor") == null)
+      {
+         u := findsymbolic("orc_chief@haon_dor");
+         if (u != null)
+         {
+            pot := load("marys_pot@haon_dor");
+            link(pot, u);
+         }
+      }
+
       pc := qstWaitHero@quests(QUEST_POT, activator, 
          {"say $1N can you help me?",
          "say The hideous orc chief stole my best cooking pot.",
