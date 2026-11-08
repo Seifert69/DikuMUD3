@@ -55,7 +55,7 @@ public:
     int readfd(void *buf, int count) override;
     bool TlsHandshake();
     void TlsFail(const char *what, int err);
-    void TlsDrop();
+    void Drop();
     void TlsFree();
     bool InputOnce();
 

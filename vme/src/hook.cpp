@@ -198,11 +198,7 @@ int cHookNative::read(void *buf, int count)
 
     for (;;)
     {
-#if defined(_WINDOWS)
-        thisround = recv(fd, buf, count - 1, 0);
-#else
-        thisround = ::read(fd, buf, count);
-#endif
+        thisround = readfd(buf, count); // the transport, TLS or plain
 
         if (thisround > 0)
         {

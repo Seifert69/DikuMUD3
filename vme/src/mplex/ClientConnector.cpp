@@ -372,11 +372,6 @@ SSL_CTX *tls_new_ctx(const char *path)
 
     return ctx;
 }
-
-void tls_at_exit()
-{
-    g_tls_exiting = 1;
-}
 } // namespace
 
 bool tls_load_pem(SSL_CTX *ctx, const char *path)
@@ -406,9 +401,12 @@ bool tls_init_telnet(const char *path)
     {
         // Runs before the static destructors (g_CaptainHook's Close()) and
         // before OpenSSL's own atexit cleanup can pull the rug from under them
-        atexit(tls_at_exit);
+        atexit(tls_exiting);
         bRegistered = true;
     }
+
+    struct stat st = {};
+    stat(path, &st); // before the load, so a file rewritten in between still counts as changed
 
     SSL_CTX *ctx = tls_new_ctx(path);
 
@@ -420,7 +418,7 @@ bool tls_init_telnet(const char *path)
     tls_free_telnet();
     g_tls_ctx = ctx;
     g_tls_pem_path = path;
-    stat(path, &g_tls_pem_stat);
+    g_tls_pem_stat = st;
     return true;
 }
 
@@ -473,29 +471,58 @@ SSL_CTX *tls_ctx_for_accept()
     return g_tls_ctx;
 }
 
-// Whether select() should watch this socket for writing. While the handshake
-// runs, only when OpenSSL has part of its flight left to send; after it, as
-// for a plain hook, when output is queued. So output queued before the
-// handshake is done never makes select() return at once for a socket that
-// is writable but cannot be written to yet.
+// Whether select() should watch this socket for writing: when OpenSSL has
+// something of its own left to send (the rest of its handshake flight, or
+// the reply to a KeyUpdate that SSL_read() could not get out), and otherwise,
+// once the handshake is done, when output is queued, as for a plain hook.
+// Output queued during the handshake therefore never makes select() return
+// at once for a socket that is writable but cannot be written to yet.
 bool cConHook::WantWrite()
 {
-    if (m_pSSL && !SSL_is_init_finished(m_pSSL))
+    if (m_pSSL)
     {
-        return SSL_want_write(m_pSSL) != 0;
+        if (SSL_want_write(m_pSSL))
+        {
+            return true;
+        }
+
+        if (!SSL_is_init_finished(m_pSSL))
+        {
+            return false;
+        }
     }
 
     return cHook::WantWrite();
 }
 
-// The socket is writable, or something was just queued: step the handshake
-// while it runs, flush the queue as usual once it is done.
+// The socket is writable, or something was just queued. During the handshake
+// nothing is flushed, and the handshake itself is stepped only for the case
+// select() wakes this for: OpenSSL's flight did not fit the socket buffer.
+// Readable events step it from InputOnce(). After the handshake, a record
+// SSL_read() left half-sent is finished by calling it again, then the queue
+// is flushed as usual.
 void cConHook::PushWrite()
 {
-    if (m_pSSL && !SSL_is_init_finished(m_pSSL))
+    if (m_pSSL)
     {
-        TlsHandshake();
-        return;
+        if (!SSL_is_init_finished(m_pSSL))
+        {
+            if (SSL_want_write(m_pSSL))
+            {
+                TlsHandshake();
+            }
+            return;
+        }
+
+        if (SSL_want_write(m_pSSL))
+        {
+            Input(SELECT_READ);
+
+            if (m_pSSL == nullptr || !IsHooked())
+            {
+                return;
+            }
+        }
     }
 
     cHook::PushWrite();
@@ -534,12 +561,14 @@ bool cConHook::TlsHandshake()
     return false;
 }
 
-// The connection is over, from this side: tell the mud if it knows about it,
-// and drop the socket either way. Close() alone does nothing before the mud
-// has assigned an id, and the handshake runs before that, so a plain client
-// on the TLS port would otherwise stay hooked, readable, and in the log on
-// every pass of the select loop.
-void cConHook::TlsDrop()
+// The peer is gone or the connection is unusable: tell the mud if it knows
+// about this connection, and drop the socket either way. Close() alone does
+// nothing before the mud has assigned an id, which it has not during a TLS
+// handshake, and not for anyone while the mud is down (mud_went_down() zeroes
+// every id). A socket left hooked with EOF readable makes select() return at
+// once on every pass once the mud is back, so this is the same for plain
+// telnet and TLS.
+void cConHook::Drop()
 {
     Close(TRUE);
 
@@ -553,12 +582,12 @@ void cConHook::TlsFail(const char *what, int err)
 {
     slog(LOG_ALL, 0, "TLS: %s with %s failed (%d): %s", what, m_aHost, err, tls_errors(err).c_str());
     m_bTlsFatal = true; // SSL_shutdown() is not allowed after this
-    TlsDrop();
+    Drop();
 }
 
 // ::read() contract, see cHookNative::readfd(). A close or a fatal error
-// drops the connection here (TlsDrop()); InputOnce()'s own Close(TRUE) is
-// then a no-op, as it is for a plain socket that is gone already.
+// drops the connection here (Drop()), so that the log line is written once;
+// InputOnce()'s own Drop() is then a no-op.
 int cConHook::readfd(void *buf, int count)
 {
     if (m_pSSL == nullptr)
@@ -591,7 +620,7 @@ int cConHook::readfd(void *buf, int count)
         slog(LOG_OFF, 0, "TLS: %s closed the connection", m_aHost);
         m_bTlsFatal = (e != SSL_ERROR_ZERO_RETURN); // after close_notify our own may still go out
         ERR_clear_error();
-        TlsDrop();
+        Drop();
         return 0;
     }
 
@@ -616,7 +645,10 @@ int cConHook::write(const void *buf, int count)
 
     if (!SSL_is_init_finished(m_pSSL))
     {
-        return 0; // PushWrite() holds everything until the handshake is done
+        // Not reached: PushWrite() and TlsHandshake() only flush once the
+        // handshake is done. A guard for a future caller, so that SSL_write()
+        // never runs the handshake implicitly from an unexpected place.
+        return 0;
     }
 
     ERR_clear_error();
@@ -915,14 +947,7 @@ void cConHook::Input(int nFlags)
 {
     if (nFlags & SELECT_EXCEPT)
     {
-        if (m_pSSL)
-        {
-            TlsDrop();
-        }
-        else
-        {
-            Close(TRUE);
-        }
+        Drop();
         return;
     }
 
@@ -972,12 +997,12 @@ bool cConHook::InputOnce()
         }
 #endif
 
-        Close(TRUE);
+        Drop();
         return false;
     }
     else if (n == 0)
     {
-        Close(TRUE);
+        Drop();
         return false;
     }
 
