@@ -5,7 +5,7 @@ type ("The long sword clearly requires a long sword fighting style"); in
 shops it is shown in brackets in the list.
 </p><p>Your skill in a type decides two things:
 </p>
-<ul><li><b>How well you attack with it.</b> A weapon you haven't practiced is clumsy in your hands.</li>
+<ul><li><b>How well you attack with it.</b> Practicing a weapon also raises your skill in its family (below) to half as much, and a weapon you haven't practiced is used with that family skill: a long sword fighter can pick up a dagger and do half as well. A weapon from a family you have never practiced is clumsy in your hands, worse than not knowing it at all.</li>
 <li><b>How well you defend against it.</b> Half your skill in the weapon your opponent swings helps you parry it, so knowing a weapon also guards you against it.</li></ul>
 <p>Practice weapon skills at your guild (see <a cmd='#'>Help Practice</a>); each guild 
 teaches its own weapons (see Help Fighter Weapons, Help Thief Weapons and 
