@@ -736,7 +736,7 @@ code
       else  /* Look at temp's arg1 */
       {
          if (pc == looker)
-            act("You look at your $2n.", A_ALWAYS, looker, item, pc, TO_CHAR);
+            act("You look at your $2N.", A_ALWAYS, looker, item, pc, TO_CHAR);
          else if (item.equip)
             act("You look at $3n's $2n.", A_ALWAYS, looker, item, pc,TO_CHAR);
 		   else

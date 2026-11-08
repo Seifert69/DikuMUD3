@@ -184,7 +184,7 @@ code
 				act(" $3n, you are not a member of this clan! Leave NOW!",
 				A_SOMEONE,self,null,u,TO_NOTVICT);
 				act("$1n attacks $3n!",A_SOMEONE,self,null,u,TO_NOTVICT);
-				act("The $1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
+				act("$1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
 				set_fighting(self,u);
 			}
 			if (u.hp < 10)

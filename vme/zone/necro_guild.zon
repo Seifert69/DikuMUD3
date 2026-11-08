@@ -833,7 +833,7 @@ dilcopy shopkeeper@function(
 "   $1n says, 'I don't buy drinks' ",
 "$1n says, 'I don't seem to have that many in my stock'",
 "$1n says, 'I'm on my break, GET LOST!'",
-"$1n says, 'I have no use for a $2n'",
+"$1n says, 'I have no use for $2n'",
 "$1n says, 'Sorry, I can't afford it'"},
 {"4","12","13","23"},
 "",
@@ -1557,11 +1557,11 @@ The Scythe of Bone is of craftmanship 4 and magic bonus 8.<br/>"
 extra {"$no_engrave"}
 ""
 extra {"$wear_s"}
-"You wield your $2n and let the power surge through your body!"
+"You wield your $2N and let the power surge through your body!"
 extra {"$wear_o"}
-"$1n grips his $2n tightly, power crackles around $1s hands!"
+"$1n grips his $2N tightly, power crackles around $1s hands!"
 extra {"$rem_s"}
-"You let go of your $2n, the power fades away and dies out."
+"You let go of your $2N, the power fades away and dies out."
 extra {"$rem_o"}
 "$1n lets go of $1s $2n, you see the power of it fade away and die out."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
@@ -1606,7 +1606,7 @@ act ("An eerie howl fills the air, $1e sinks to $1s knees!",
 A_ALWAYS,self.outside,self,null,TO_REST);
 self.outside.hp:= 10;
 pause;
-act ("A single drop of blood slides down the edge of your $2n... the
+act ("A single drop of blood slides down the edge of your $2N... the
 ritual is complete!", A_ALWAYS,self.outside,self,null,TO_CHAR);
 act ("A single drop of blood slides down the edge of $1n's $2n...",
 A_ALWAYS,self.outside,self,null,TO_REST);
@@ -1653,7 +1653,7 @@ if (i < self.outside.abilities[ABIL_BRA])
 {
 if (flux < 25)
 {
-   act("Your $2n howls ghastly in response to your prayer!",
+   act("Your $2N howls ghastly in response to your prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
    act("$3n screams in terror and pain!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -1669,7 +1669,7 @@ pause;
 }
 if (flux < 50)
 {
-   act("Your $3n howls ghastly in response to your prayer!",
+   act("Your $3N howls ghastly in response to your prayer!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$2n's eyes bulge, $2e looks around wildly!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
@@ -1685,7 +1685,7 @@ pause;
 }
 if (flux < 50)
 {
-   act("Your $3n howls ghastly in response to your prayer!",
+   act("Your $3N howls ghastly in response to your prayer!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$2n grasps $2s head and screams wildly!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
@@ -1701,7 +1701,7 @@ pause;
 }
 else
 {
-   act("Your $3n howls ghastly in response to your prayer!",
+   act("Your $3N howls ghastly in response to your prayer!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$2n's eyes open wide, staring at something unseen beyond you!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);

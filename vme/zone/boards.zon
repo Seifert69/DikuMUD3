@@ -890,7 +890,7 @@ temp:=argument;
 	}
 else
 	{
-	act ("The $3n already has something written on it.",
+	act ("$3n already has something written on it.",
 		A_ALWAYS,self,null,u,TO_CHAR);
 	quit;
 	}

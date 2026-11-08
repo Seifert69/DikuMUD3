@@ -170,7 +170,7 @@ code
 
    if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
-   act ("Your $2n burns you and you drop it to the ground.",
+   act ("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
    act ("$1n's $2n burns $1m and $1s drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
@@ -1297,11 +1297,11 @@ extra {"$improved identify"}
 "The sword can offer you a blessing if you are pious enough.<br/>
 The blade is of good craftmanship and bears a magic bonus.<br/>"
 extra {"$wear_s"}
-"Your $2n starts to glow as you wrap your hands around its hilt."
+"Your $2N starts to glow as you wrap your hands around its hilt."
 extra {"$wear_o"}
 "$1n's $2n starts to glow as $1e wraps $1s hands around its hilt."
 extra {"$rem_s"}
-"You sheat your $2n... The glow from the blade subsides."
+"You sheat your $2N... The glow from the blade subsides."
 extra {"$rem_o"}
 "As $1n sheats $1s $2n, the glow from its blade subsides."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
@@ -1336,7 +1336,7 @@ enemy := self.outside.fighting;
 random := rnd(1,100);
 if ((enemy.hp < 10)and(enemy.alignment < 0))
 {
-act("Your $2n engulfs $3n in living flame!"
+act("Your $2N engulfs $3n in living flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams in agony as $3s body is devoured in the fury of the fire!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -1363,7 +1363,7 @@ act("$1n's slash leaves a fiery trail through the air!"
 }
 if (random < 20)
 {
-act("Your $2n flickers and burst into flames, burning $3n!"
+act("Your $2N flickers and burst into flames, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$1n's $2n flickers and bursts into flames, burning $3n!"
@@ -1374,7 +1374,7 @@ act("$1n's $2N flickers and bursts into flames, burning you!"
 }
 else if (random < 30)
 {
-act("Fire flickers along the edge of your $2n!"
+act("Fire flickers along the edge of your $2N!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("Fire flickers along the edge of $1n's $2n!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
@@ -1383,7 +1383,7 @@ act("Fire flickers along the edge of $1n's $2n!"
 }
 else if (random < 40)
 {
-act("Blade of your $2n flashes in a blinding flame!"
+act("Blade of your $2N flashes in a blinding flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -1396,7 +1396,7 @@ eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
 }
 if (random < 50)
 {
-act("The hilt of your $2n pulses, the dragon's eyes glow with a red light!"
+act("The hilt of your $2N pulses, the dragon's eyes glow with a red light!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n suddenly clutches $3s chest and screams in agony!",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -1411,7 +1411,7 @@ act("A searing PAIN drives through your chest!"
 }
 if (random < 60)
 {
-act("Fire erupts from your $2n, flames reach for $3n!"
+act("Fire erupts from your $2N, flames reach for $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams in agony!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -1472,7 +1472,7 @@ A_SOMEONE,self.outside,null,null,TO_REST);
         i := rnd (1,40);
 if (i < self.outside.abilities[ABIL_DIV])
 {
-   act("Your $2n glows brightly in response to your prayer!",
+   act("Your $2N glows brightly in response to your prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
    act("$1N's $2n glows brightly in response to $1n's prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_REST);
@@ -1525,13 +1525,13 @@ extra {"$improved identify"}
 "The bonus to Con is 1. Brain of 6 and Divine of 6 is required to use the
 Amulet.<br/>"
 extra {"$wear_s"}
-"Reverently, you slip your $2n around your neck."
+"Reverently, you slip your $2N around your neck."
 extra {"$wear_o"}
 "$1n reverently slips $1s $2n around $1s neck."
 extra {"$rem_s"}
-"You carefully remove the $2n."
+"You carefully remove $2n."
 extra {"$rem_o"}
-"$1n carefully removes the $2n."
+"$1n carefully removes $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silvery metal.")
 PROTECTION_FROM_EVIL

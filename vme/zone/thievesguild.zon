@@ -702,7 +702,7 @@ The dirk is of craftmanship 4 and magical bonus 3.<br/>"
 extra {"$wear_s"}
 "You flick the dirk in your hand and grab the hilt comfortably."
 extra {"$wear_o"}
-"$1n pulls out a $2n and flicks it in $1s hand."
+"$1n pulls out $2n and flicks it in $1s hand."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -763,9 +763,9 @@ button on the hilt.<br/>
 A fast look at the handle tells you there are "+itoa(pwr)+
 " doses of poison left.";
 flux := rnd (1,40);
-act ("You flick the $2n in your fingers and press the button on the handle."
+act ("You flick $2n in your fingers and press the button on the handle."
 , A_ALWAYS,self.outside,self,vict,TO_CHAR);
-act ("$1n flicks the $2n in $1s fingers, a drop of murky liquid appears at "+
+act ("$1n flicks $2n in $1s fingers, a drop of murky liquid appears at "+
 "the tip!", A_HIDEINV,self.outside,self,vict,TO_REST);
 if (flux <
 (self.outside.abilities[ABIL_DEX]+self.outside.weapons[WPN_DAGGER]))

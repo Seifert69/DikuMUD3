@@ -1632,7 +1632,7 @@ code{
  dilcopy ("wizardmark@spells(" + itoa(splpwr) + ")", targ);
  addextra(targ.extra,{"$Protected With a Wizard Mark"},self.name);
 
- act("A silver rune glows furiously on your $2n before it fades away.",
+ act("A silver rune glows furiously on your $2N before it fades away.",
      A_SOMEONE, self, targ, null, TO_CHAR);
  act("A silver rune glows furiously on $1n's $2n before it fades away.",
      A_SOMEONE, self, targ, null, TO_REST);
@@ -1696,9 +1696,9 @@ pc:=activator;
    }
 
 
-act("A blue flame burns you as a silver rune appears on the $2n!",
+act("A blue flame burns you as a silver rune appears on $2n!",
     A_SOMEONE, activator, self, null, TO_CHAR);
-act("A blue flame burns $1n as a silver rune appears on the $2n!",
+act("A blue flame burns $1n as a silver rune appears on $2n!",
     A_SOMEONE, activator, self, null, TO_REST);
 
 subextra(self.extra,"$Protected With a Wizard Mark");
@@ -1721,7 +1721,7 @@ quit;
   {
    power:=-1;
    block;
-   act("A silver rune appears on your $3n before it flickers and vanishes.",
+   act("A silver rune appears on your $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_CHAR);
    act("A silver rune appears on $1n's $3n before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_REST);
@@ -1745,7 +1745,7 @@ quit;
 
 :strip:
 
-  act("A silver rune appears on your $3n before it flickers and vanishes.",
+  act("A silver rune appears on your $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_CHAR);
    act("A silver rune appears on $1n's $3n before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_REST);
@@ -5619,7 +5619,7 @@ code
      size := "enlarges"
    else
      size := "shrinks";
-   act("Your $2n glows brightly as it $3t",
+   act("Your $2N glows brightly as it $3t",
        A_ALWAYS, self, tgt, size, TO_CHAR);
    act("$1n's $2n glows as it $3t",
        A_ALWAYS, self, tgt, size, TO_REST);
@@ -6359,7 +6359,7 @@ code
       {
 	 act("You despair, as you can't remember anything.",
 	     A_ALWAYS, self, null, null, TO_CHAR);
-	 act("$1n looks desperately at a $2n.",
+	 act("$1n looks desperately at $2n.",
 	     A_HIDEINV, self,u,null,TO_ROOM);
       }
       exec("drop letter", self);
@@ -6792,7 +6792,7 @@ code
     targ.hp := (targ.max_hp);
   else targ.hp := (targ.hp + fix_ran);
 
-  act("Your $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+  act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
       TO_CHAR);
 
   act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
@@ -6848,7 +6848,7 @@ code
    if ( (targ.hp + fix_ran) > (targ.max_hp) )
      targ.hp := (targ.max_hp);
    else targ.hp := (targ.hp + fix_ran);
-   act("Your $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+   act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_CHAR);
    act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_ROOM);
@@ -6907,7 +6907,7 @@ code
    if ( (targ.hp + fix_ran) > (targ.max_hp) )
      targ.hp := (targ.max_hp);
    else targ.hp := (targ.hp + fix_ran);
-   act("Your $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+   act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_CHAR);
    act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_ROOM);
@@ -7003,7 +7003,7 @@ code
 	  targ, null, TO_CHAR);
       act("A small swirling disk of gray forms above $1n.", A_SOMEONE, self,
 	  targ, null, TO_ROOM);
-      act("Slowly, your $2n rises toward the disk...", A_SOMEONE, self, targ,
+      act("Slowly, your $2N rises toward the disk...", A_SOMEONE, self, targ,
 	  null, TO_CHAR);
       act("Slowly, $1n's $2n rises toward the disk...", A_SOMEONE, self, targ,
 	  null, TO_ROOM);
@@ -7020,7 +7020,7 @@ code
        targ, null, TO_CHAR);
    act("A small swirling disk of gray forms above $1n.", A_SOMEONE, self,
        targ, null, TO_ROOM);
-   act("Slowly, your $2n rises toward the disk...", A_SOMEONE, self, targ,
+   act("Slowly, your $2N rises toward the disk...", A_SOMEONE, self, targ,
        null, TO_CHAR);
    act("Slowly, $1n's $2n rises toward the disk...", A_SOMEONE, self, targ,
        null, TO_ROOM);
@@ -9110,7 +9110,7 @@ code
       if (hm < -50)
       {
          u := unit_char (tgt);
-         act("You realize that $2n attempted to locate your $3n.",
+         act("You realize that $2n attempted to locate your $3N.",
              A_ALWAYS, u, self, tgt, TO_CHAR);
       }
    }

@@ -91,13 +91,13 @@ code
    PULSE_SEC*(rnd(30,60)+self.abilities[ABIL_DIV]+self.abilities[ABIL_CHA]);
    wait(SFB_TICK,TRUE);
    wait(SFB_TICK,TRUE);
-   act("Your $2n flickers and starts to fade..."
+   act("Your $2N flickers and starts to fade..."
    ,A_ALWAYS,self,ting,null,TO_CHAR);
    act("$1n's $2n flickers and starts to fade..."
    ,A_ALWAYS,self,ting,null,TO_REST);
    heartbeat := PULSE_SEC*10;
    pause;
-   act("Your $2n ceases its brief existence and merges with your soul."
+   act("Your $2N ceases its brief existence and merges with your soul."
    ,A_ALWAYS,self,ting,null,TO_CHAR);
    act("$1n's $2n ceases its brief existence and merges with $1n's soul."
    ,A_ALWAYS,self,ting,null,TO_REST);
@@ -1049,13 +1049,13 @@ extra {"$improved identify"}
 "Calling forth the hammer sharpens your combat senses, slightly improving
 your strength.<br/>"
 extra {"$wear_s"}
-"You wield a $2n.<br/>
+"You wield $2n.<br/>
 This is a bug, Spiritual Hammers should not be wielded in this way!
 Please report."
 extra {"$wear_o"}
-"A flare illuminates $1n's body for a second as $1e wields a $2n!"
+"A flare illuminates $1n's body for a second as $1e wields $2n!"
 extra {"$rem_s"}
-"As you let go of your $2n, it flickers and starts to fade..."
+"As you let go of your $2N, it flickers and starts to fade..."
 extra {"$rem_o"}
 "$1n lets go of $1s $2n, it flickers and fades away..."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
@@ -1094,7 +1094,7 @@ wait(SFB_DONE,(command("remove"))and(medium.nameidx == "sp_hammer")and
 
 pc := activator;
 secure(pc,gone);
-act("Your $2n fades from the reality and re-joins your soul.",
+act("Your $2N fades from the reality and re-joins your soul.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 :gone:
 blah := dildestroy("hammernosteal@clericguild",pc);
@@ -1128,10 +1128,10 @@ aid and your strength of faith is refelcted in your strength of arm.
 By praying while the torc is worn a spiritual weapon is called forth into
 your hand.<br/>"
 extra {"$wear_s"}
-"You put on the $2n.<br/>
+"You put on $2n.<br/>
 You feel proud.<br/>"
 extra {"$wear_s"}
-"$1n puts on a $2n."
+"$1n puts on $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")
 SKILL_TRANSFER(SKI_FIRST_AID, BONUS_GOOD)  // Xyzzy: +2
@@ -1163,7 +1163,7 @@ block;
 pc := activator;
 flux := rnd(0,3);
 secure(pc,gone);
-act("You touch your $2n and pray silently for aid."
+act("You touch your $2N and pray silently for aid."
 ,A_ALWAYS,pc,self,null,TO_CHAR);
 act("$1n touches $1s $2n, $1s lips moving in a silent prayer."
 ,A_ALWAYS,pc,self,null,TO_REST);

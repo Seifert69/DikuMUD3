@@ -460,7 +460,7 @@ code
          if (trash.value[3] > 0)
          {
             exec("say This "+trash.name+" is unfit for consumption!", self);
-            act("$1n heaves the $2n into the distance.", A_ALWAYS, self, trash, null, TO_ALL);
+            act("$1n heaves $2n into the distance.", A_ALWAYS, self, trash, null, TO_ALL);
             unsecure(trash);
             destroy(trash);
             goto no_food;
@@ -6352,7 +6352,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'You are really trying to sell me something you don't have, $3n?'",
  "$1n says, 'Would you like to buy some fish?",
  "$1n says, '$3n, you can't afford $2n'",
- "$1n says, 'Enjoy the $2n.",
+ "$1n says, 'Enjoy $2n.",
  "$1n says, 'I might be able to sell this.",
  "$1n says, 'I don't have that many $2n in my stock right now.",
  "$1n says, '."

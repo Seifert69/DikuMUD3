@@ -339,10 +339,10 @@ if (self.outside.zoneidx=="g_q")
       if ((self.outside.type == UNIT_ST_PC) and (self.outside.level>220))
 	goto loop;
 
-      act("Powerful energy from the $3n shocks you, "+
+      act("Powerful energy from $3n shocks you, "+
 	  "it falls to the ground.",
 	  A_ALWAYS, self.outside, null, self, TO_CHAR);
-      act("Powerful energy from the $3n shocks $1n, "+
+      act("Powerful energy from $3n shocks $1n, "+
 	  "it falls to the ground.",
 	  A_ALWAYS, self.outside, null, self, TO_ROOM);
 

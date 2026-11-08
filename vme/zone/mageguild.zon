@@ -1187,7 +1187,7 @@ code
 heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
 wait (SFB_TICK,(self.equip==WEAR_WIELD));
 heartbeat:=PULSE_SEC*5;
-act ("The jet on your $2n pulses with soft, blue light.",
+act ("The jet on your $2N pulses with soft, blue light.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 act ("The jet on $1n's $2n pulses with soft, blue light.",
 A_ALWAYS,self.outside,self,null,TO_REST);
@@ -1232,9 +1232,9 @@ light, a small black jet in the centre of it providing a sharp contrast
 to the bright metal. A runic inscription along the edge of the charm
 catches your attention. You recognise the number '"+itoa(pwr)+"' among
 the runes.";
-act ("You grip your $2n and concentrate on its power..."
+act ("You grip your $2N and concentrate on its power..."
 , A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n grips his $2n and concentrates..."
+act ("$1n grips his $2N and concentrates..."
 , A_HIDEINV,self.outside,self,null,TO_REST);
 if (pc.mana<10)
 {
@@ -1331,7 +1331,7 @@ act("The air beside you shimmers, a shape begins to take form."
 ,A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("The air shimmers and a shape begins to take form."
 ,A_ALWAYS,self.outside,self,null,TO_REST);
-act("Your $2n flares violently, you lose control of the apparition!"
+act("Your $2N flares violently, you lose control of the apparition!"
 ,A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n's $2n flares violently, $1e loses control of the apparition!"
 ,A_ALWAYS,self.outside,self,null,TO_REST);
@@ -1373,7 +1373,7 @@ goto init;
 goto start;
 }
         :no_person:
-act("You grip your $2n, but it senses no need to aid you outside combat."
+act("You grip your $2N, but it senses no need to aid you outside combat."
 , A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n grips $1s $2n and concentrates, but nothing happens."
 , A_ALWAYS,self.outside,self,null,TO_REST);
@@ -1412,7 +1412,7 @@ extra {}
 "This large ring bears the arms of Midgaard College of Arcane Arts and
 signifies its wearer as a student of magic."
 extra {"wear_s"}
-"You put your $2n on your finger.<br/>
+"You put your $2N on your finger.<br/>
 You feel a considerable pride."
 type ITEM_WORN
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FINGER}
