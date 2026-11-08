@@ -15,9 +15,11 @@ two ports.
 
 ## TLS on the telnet port (telnets)
 
-`-t` without `-w` wraps the ordinary telnet port in TLS, so a player's name
-and password no longer cross the internet in clear text. Clients that speak
-it:
+`-z` wraps the ordinary telnet port in TLS, so a player's name and password
+no longer cross the internet in clear text. It is a flag of its own, not a
+new meaning for `-t`: `-t` without `-w` has never done anything, and a
+launch line that passes it to a telnet mplex keeps working unchanged.
+Clients that speak telnets:
 
 - TinTin++: `#ssl {valhalla} {valhalla.com} {4243}` in place of `#session`.
 - Mudlet: tick **Secure** in the profile's connection settings (Mudlet 3.17
@@ -27,11 +29,11 @@ it:
   `ncat --ssl host port`, or the `telnet-ssl` package's `telnet -z ssl host port`.
 
 It is the same mplex with the same options, so run one for plain telnet and
-one with `-t` on another port:
+one with `-z` on another port:
 
 ```
 mplex -p 4242 -s 4999            # plain telnet, as always
-mplex -p 4243 -s 4999 -t         # telnets, reads ./server.pem
+mplex -p 4243 -s 4999 -z         # telnets, reads ./server.pem
 mplex -p 4280 -s 4999 -w -t      # wss:// for the browser client
 ```
 
@@ -51,12 +53,31 @@ cannot bind it unless its systemd unit grants
 `AmbientCapabilities=CAP_NET_BIND_SERVICE`. A high port needs nothing special,
 and every client above takes a port.
 
-Only `server.pem` is read for telnets; `dh.pem` is not needed. The handshake
-runs on the non-blocking socket as the client's bytes arrive, the telnet
-option negotiation is sent once it completes, and the mud is told about the
-connection on the first line of input as before. The mplex log notes the
-protocol version of each completed handshake (`TLS: TLSv1.3 handshake done
-with 203.0.113.9`). TLS 1.2 is the oldest version accepted.
+How it behaves:
+
+- Only `server.pem` is read, by the same loader the wss listener uses, so
+  one file serves both; `dh.pem` is not needed. If the file cannot be loaded
+  the mplex exits rather than serve clear text on a port meant to be TLS.
+- The file is checked on every accepted connection and reloaded when it has
+  changed, so a renewed certificate (certbot and the like) takes effect
+  without a restart. Connections already up keep the old one until they
+  close.
+- The handshake runs on the non-blocking socket as the select loop finds it
+  readable or writable. Everything the mplex writes meanwhile (the telnet
+  negotiation, "Requesting an ID", the banner) is queued and goes out, in
+  that order, the moment the handshake completes. A client that never
+  completes one costs nothing: the socket is only watched for writing while
+  OpenSSL has something left to send.
+- A client that speaks plain telnet to the port gets a TLS alert and is
+  dropped, mud up or down (`TLS: handshake with 203.0.113.9 failed (1):
+  packet length too long` in the log). One that drops the socket without
+  `close_notify`, as most mud clients do, is logged as `TLS: 203.0.113.9
+  closed the connection`.
+- TLS 1.2 is the oldest version accepted; the log notes the version of each
+  completed handshake (`TLS: TLSv1.3 handshake done with 203.0.113.9`).
+- Session tickets and renegotiation are off: nothing resumes a mud session,
+  and without them the handshake ends with the client's Finished and a
+  write never has to wait for a read.
 
 > For a while `-t` set a flag that nothing read, and `-w` alone listened for
 > TLS regardless. A browser pointed at `ws://` got "TLS handshake failed" while
@@ -140,6 +161,7 @@ cd ~/diku/DikuMUD3/vme/bin
 ### Flags:
 - `-w`: WebSocket mode. Without `-t` this is plain `ws://`
 - `-t`: Enable TLS/SSL support, making it `wss://`. Requires `-w`
+- `-z`: TLS on the telnet port (telnets). Not with `-w`; see above
 
 ## Testing TLS Connection
 

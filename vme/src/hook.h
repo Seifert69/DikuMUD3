@@ -42,9 +42,13 @@ public:
 
     int get_fd();
 
-    // Virtual so a hook can put a transport under the buffering layer (the
-    // mplex telnets hook wraps the socket in TLS and overrides it).
+    // The transport, virtual so a hook can put another one under the
+    // buffering layer (the mplex telnets hook wraps the socket in TLS and
+    // overrides both). readfd() has the ::read() contract: > 0 bytes read,
+    // 0 the peer closed, -1 with errno set (EAGAIN/EWOULDBLOCK: nothing yet).
+    // write() is documented at its definition.
     virtual int write(const void *buf, int count);
+    virtual int readfd(void *buf, int count);
     int read(void *buf, int count);
 
     int fd; ///< This should be private, but to not introduce bugs I'm just leaving it here for now
@@ -69,7 +73,15 @@ public:
     cQueue qRX;
 
 protected:
-    void PushWrite();
+    // Called when the descriptor is writable, and by Write(): sends what is
+    // queued. Virtual so a transport with writes of its own (a TLS handshake)
+    // can make them here instead.
+    virtual void PushWrite();
+    // Whether cCaptainHook::Wait() should watch the descriptor for writing.
+    // By default: output is queued. A transport overrides it when it needs to
+    // write for reasons of its own, and only then, so a hook that cannot make
+    // progress is never polled.
+    virtual bool WantWrite();
     virtual void Input(int nFlags) = 0;
 
     cQueue qTX;

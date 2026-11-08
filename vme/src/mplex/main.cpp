@@ -85,10 +85,20 @@ int main(int argc, char *argv[])
     }
     else
     {
-        if (mplex::g_mplex_arg.g_bUseTLS)
+        if (mplex::g_mplex_arg.bTelnetTLS)
         {
-            Assert(mplex::tls_init_telnet(), "TLS: cannot load ./server.pem, see the log.");
+            // Not Assert(): with NDEBUG that carries on, and the port would
+            // serve clear text while claiming to be TLS.
+            if (!mplex::tls_init_telnet("server.pem"))
+            {
+                fprintf(stderr, "TLS: cannot load ./server.pem, see the log.\n");
+                exit(1);
+            }
             slog(LOG_OFF, 0, "Telnet port %d is TLS (telnets), certificate from ./server.pem", mplex::g_mplex_arg.nMotherPort);
+        }
+        else if (mplex::g_mplex_arg.g_bUseTLS)
+        {
+            slog(LOG_OFF, 0, "-t without -w does nothing; port %d is plain telnet. -z makes it TLS (telnets).", mplex::g_mplex_arg.nMotherPort);
         }
 
         slog(LOG_OFF, 0, "Opening telnet mother connection on port %d.", mplex::g_mplex_arg.nMotherPort);

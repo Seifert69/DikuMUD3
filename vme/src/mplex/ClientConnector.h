@@ -46,13 +46,16 @@ public:
     int IsHooked(); ///< At this level we also need to check for websockets
     void Write(ubit8 *pData, ubit32 nLen, int bCopy = TRUE);
 
-    // Transport under the buffering layer: plain socket, or TLS when the
-    // mplex runs with -t and without -w (telnets). write() keeps the
-    // cHookNative contract; TlsRead() keeps the ::read() contract Input()
-    // was written against, so both transports go through the same code.
+    // The transport under cHook's buffering: the plain socket, or TLS when
+    // the mplex runs with -z (telnets). Both keep cHookNative's contracts, so
+    // everything above them treats a TLS connection exactly like a plain one.
+    // The select loop drives the handshake through WantWrite(), PushWrite()
+    // and InputOnce(); output queued before it completes waits in qTX.
     int write(const void *buf, int count) override;
-    int TlsRead(void *buf, int count);
+    int readfd(void *buf, int count) override;
     bool TlsHandshake();
+    void TlsFail(const char *what, int err);
+    void TlsDrop();
     void TlsFree();
     bool InputOnce();
 
@@ -151,8 +154,12 @@ public:
     ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
     char m_aLastBars[64]{};  ///< Last bars value sent as Char.Vitals (dedupe)
     bool m_bTakesConnection{false}; ///< Took one of g_nConnectionsLeft (telnet; websockets don't count)
-    SSL *m_pSSL{nullptr};          ///< TLS state of a telnets connection; nullptr on plain telnet and websockets
-    bool m_bTlsPending{false};     ///< Handshake not finished: nothing is written until it is
+    SSL *m_pSSL{nullptr};    ///< TLS state of a telnets connection; nullptr on plain telnet and websockets
+    bool m_bTlsFatal{false}; ///< A TLS read or write failed for good: no SSL_shutdown() on teardown
+
+protected:
+    bool WantWrite() override;
+    void PushWrite() override;
 
 private:
     void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);
@@ -176,9 +183,18 @@ void ClearUnhooked();
 
 extern cConHook *g_connection_list;
 
-/// TLS context for telnets connections (mplex -t without -w); nullptr when the telnet port is plain.
+/// TLS context of the telnet port (mplex -z); nullptr when the port is plain.
 extern SSL_CTX *g_tls_ctx;
-/// Loads ./server.pem into g_tls_ctx. False (and logged) when the file is missing or unusable.
-bool tls_init_telnet();
+/// Loads a certificate chain and its private key, both in one PEM file, into ctx.
+/// Shared by the telnets and the wss listener. False (and logged) when the file is missing or unusable.
+bool tls_load_pem(SSL_CTX *ctx, const char *path);
+/// Builds g_tls_ctx from the PEM file at path. False (and logged) on failure.
+bool tls_init_telnet(const char *path);
+/// Frees g_tls_ctx.
+void tls_free_telnet();
+/// g_tls_ctx for the next accepted connection, rebuilt first when the PEM file has changed.
+SSL_CTX *tls_ctx_for_accept();
+/// The process is on its way out: no OpenSSL call from here on (signal handler, static destructors).
+void tls_exiting();
 
 } // namespace mplex

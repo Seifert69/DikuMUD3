@@ -31,7 +31,8 @@ struct arg_type
     int bWebSockets;
     int bMudProtocol;
     int bForceAscii;
-    bool g_bUseTLS;
+    bool g_bUseTLS;  ///< -t: with -w, wss:// instead of ws://
+    bool bTelnetTLS; ///< -z: TLS on the telnet port (telnets)
 };
 
 #define Assert(a, b)                                                                                                                       \
