@@ -22,12 +22,21 @@ class MyClient(discord.Client):
     pipeDiscord = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        # discord.py 2.x: the intents are required. The default set plus
+        # message content, which is what lets the bridge read what people
+        # type in the channel (a privileged intent: it must also be switched
+        # on for the bot in the Discord developer portal).
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(*args, intents=intents, **kwargs)
         self.pipeMUD = self.OpenPipeWONB('pipeMUD')
         self.pipeDiscord = self.OpenPipeRONB('pipeDiscord')
 
-        # This is not a thread, it let's the loop of the library
-        # call this function. So we can't use blocking in the listener
+    async def setup_hook(self):
+        # discord.py 2.x runs this once logged in, the first point at which
+        # the event loop may be used (self.loop is not available in
+        # __init__ any more). Not a thread: the library's loop calls the
+        # listener, so it must not block.
         self.bg_task = self.loop.create_task(self.pipelistener())
 
 
