@@ -554,21 +554,36 @@ void info_show_leaves(unit_data *teacher,
         }
     }
 
+    // Abilities are only a handful, so the short list never hides any of them
+    bool bShowAll = IS_SET(PC_FLAGS(pupil), PC_EXPERT) || pColl == &g_AbiColl;
+    int nHidden = 0;
+
     std::sort(vect.begin(), vect.end(), pairISCompareAsc);
     std::string str;
     str = "<pre>";
     for (auto it = vect.begin(); it != vect.end(); ++it)
     {
-        if (IS_SET(PC_FLAGS(pupil), PC_EXPERT) || it->first <= 25)
+        if (bShowAll || it->first <= 25)
         { // Limit display
             str.append(it->second);
+        }
+        else
+        {
+            nHidden++;
         }
     }
     str.append("</pre>");
 
     if (str.length() <= 11)
     {
-        str = "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
+        str = nHidden > 0 ? "" : "Nothing to show (try <a cmd='#'>info roots</a>)<br/>";
+    }
+
+    if (nHidden > 0)
+    {
+        str += diku::format_to_str("%d more not shown (expensive, or not to practice now): "
+                                   "<a cmd='#'>change expert</a> shows them all.<br/>",
+                                   nHidden);
     }
 
     send_to_char(str.c_str(), pupil);

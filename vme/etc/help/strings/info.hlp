@@ -26,7 +26,7 @@ info strength
 <li><b>[Teacher at max (80%). You are at 80% of your potential 105%]</b>: this teacher can't take you further; find a teacher who can.</li>
 <li><b>[REQ: Guild level:12 ]</b>: you need that guild level (or the level, or ability, shown) first.</li>
 <li>A name with nothing after it is a category (such as sword or axe hammer): <b>info &lt;category&gt;</b> lists what's in it, <b>info roots</b> lists the categories.</li></ul>
-<p>The list leaves out anything that would cost you more than 25 points. To see everything, with your potential and the money a practice costs, use <b>expert</b> mode (change expert).
+<p>At an ability teacher you always see all your abilities. At other teachers the list leaves out what would cost you more than 25 points and what you can't practice now (the last three kinds above), and its last line says how many it left out. To see everything, with your potential and the money a practice costs, use <b>expert</b> mode (change expert).
 </p><p>The best way to spend your points: practice each thing <b>once per level</b>, while it's at its cheapest, and practice before you raise a <b>level</b>, because levelling starts the count again.
 </p><p><br />
 See also:
