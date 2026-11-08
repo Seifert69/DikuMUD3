@@ -187,19 +187,6 @@ void do_crash(unit_data *ch, char *argument, const command_info *cmd)
     }
 }
 
-void do_execute(unit_data *ch, char *argument, const command_info *cmd)
-{
-    argument = (char *) skip_spaces(argument);
-
-    if (!system_check(ch, argument))
-    {
-        return;
-    }
-
-    execute_append(ch, argument);
-    act("Executing $2t.", eA_ALWAYS, ch, argument, cActParameter(), eTO_CHAR);
-}
-
 void do_shutdown(unit_data *ch, char *argument, const command_info *cmd)
 {
     if (!ch->isPC())
