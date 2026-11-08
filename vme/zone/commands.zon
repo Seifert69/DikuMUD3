@@ -10650,6 +10650,7 @@ var
     town : string;
     iname: string;
     twei : integer;
+    u    : unitptr;
 
 code
 {
@@ -10708,7 +10709,16 @@ code
         return;
     }
 
-    // It used to say ... if ((item.weight + item.alignment) > cont.capacity) ... huh?
+    // The space used (alignment) is counted from what is stored now: a running total kept
+    // the weight of anything that left storage another way, until the space read as full.
+    cont.alignment := 0;
+    u := cont.inside;
+    while (u)
+    {
+        cont.alignment := cont.alignment + u.weight;
+        u := u.next;
+    }
+
     if ((item.weight + cont.alignment) > cont.capacity)
     {
         sendtext("You cannot store any more in this storage space.<br/>", self);
