@@ -443,25 +443,17 @@ code
 if (self.type!=UNIT_ST_PC)
 return;
 
-if ("New Player Helper" in self.quests) goto proceed;
-
 if (self.level<200)
  return;
 
-:proceed:
 	vict := findunit (self, arg, FIND_UNIT_WORLD,null,UNIT_ST_PC);
 	if ((vict == null) or (vict.minv > self.level))
     {
 		sendtext ("No such player around.<br/>",self);
 		return;
     }
-	if ((self.level < 200) and (vict.level > 20))
-	{
-		sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
-		return;
-	}
 
-	if ((self.level >= 200) and (vict.level >= self.level))
+	if (vict.level >= self.level)
     {
 		act ("$3e might object to that... better not.",
 		A_SOMEONE, self, null, vict, TO_CHAR);
@@ -495,25 +487,17 @@ code
     if (self.type!=UNIT_ST_PC)
         return;
 
-    if ("New Player Helper" in self.quests) goto proceed;
-
     if (self.level<200)
          return;
 
-    :proceed:
             vict := findunit (self, arg, FIND_UNIT_WORLD,null,UNIT_ST_PC);
             if ((vict == null) or (vict.minv > self.level))
             {
                     sendtext ("No such player around.<br/>",self);
                     return;
             }
-            if ((self.level < 200) and (vict.level > 20))
-            {
-                    sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
-                    return;
-            }
 
-            if ((self.level >= 200) and (vict.level >= self.level))
+            if (vict.level >= self.level)
             {
                     act ("$3e might object to that... better not.",
                     A_SOMEONE, self, null, vict, TO_CHAR);
@@ -9041,12 +9025,8 @@ code
 	if (self.type!=UNIT_ST_PC)
 	return;
 
-	if ("New Player Helper" in self.quests) goto proceed;
-
 	if (self.level < 200)
 	return;
-	
-:proceed:
 
 	vict := findunit(self, arg, FIND_UNIT_WORLD, null, UNIT_ST_PC);
 	if ((vict == null) or (vict.minv > self.level))
@@ -9054,13 +9034,8 @@ code
 		sendtext ("No such player around.<br/>",self);
 		return;
 	}
-	if ((self.level < 200) and (vict.level > 20))
-	{
-		sendtext ("That person is not a newbie. This only works for level 20 and below.<br/>",self);
-		return;
-	}
 
-	if ((self.level >= 200) and (vict.level >= self.level))
+	if (vict.level >= self.level)
 	{
 		act ("$3e might object to that... better not.",
 		A_SOMEONE, self, null, vict, TO_CHAR);
