@@ -569,9 +569,11 @@ int weapon_attack_skill(unit_data *ch, int skill)
 
         n = PC_WPN_SKILL(ch, skill);
 
+        // An unpractised weapon falls back on its category, which practice raises to half the
+        // best weapon practised in it (practice_base in teach.cpp)
         if (TREE_ISLEAF(g_WpnColl.tree, skill))
         {
-            n = MAX(TREE_PARENT(g_WpnColl.tree, skill), n);
+            n = MAX(PC_WPN_SKILL(ch, TREE_PARENT(g_WpnColl.tree, skill)), n);
         }
 
         if (n == 0)
