@@ -4118,6 +4118,52 @@ code
 dilend
 
 
+/* As teach_q_block, but only for practice of the teacher's own skills (taught), so that a
+   wandering teacher doesn't stop players practicing with another teacher in the room. The
+   teacher matches a skill by the abbreviation of its first word, so this does too. */
+dilbegin fnpri(FN_PRI_BLOCK) teach_q_skills(q : string, s : string, taught : stringlist);
+var
+   words : stringlist;
+   sw    : stringlist;
+   w     : string;
+   i     : integer;
+code
+{
+   :loop:
+   wait(SFB_CMD, command("practice"));
+
+   if (q in activator.quests)
+      goto loop;
+
+   words := getwords(tolower(argument));
+   if (length(words) == 0)
+      goto loop;
+   w := words.[0];
+   if ((w == "ability") or (w == "skill") or (w == "spell") or (w == "weapon"))
+   {
+      if (length(words) < 2)
+         goto loop;
+      w := words.[1];
+   }
+
+   i := 0;
+   while (i < length(taught))
+   {
+      sw := getwords(taught.[i]);
+      if (left(sw.[0], length(w)) == w)
+      {
+         exec(s, self);
+         block;
+         goto loop;
+      }
+      i := i + 1;
+   }
+
+   goto loop;
+}
+dilend
+
+
 
 
 /* This is an enhanced version of the Guard way SFUN. It will allow both
