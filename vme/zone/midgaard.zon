@@ -1240,13 +1240,19 @@ var
    jd : unitptr;
    id : string;
    juris : string; 
+   jzone : string;
    k : string;
    gold : integer;
    g : string;
 code
 {
    heartbeat := PULSE_SEC * SECS_PER_MUD_HOUR;
-   juris := self.outside.zoneidx;
+   // The record is kept under the jurisdiction (get_juris@justice: Udgaard, or
+   // Midgaard everywhere else); the jail itself may be in another town.
+   jzone := self.outside.zoneidx;
+   juris := "midgaard";
+   if (jzone == "udgaard")
+      juris := "udgaard";
    sname := self.outside.symname; // Get the jail symname
 
    jd := findsymbolic("database@justice");
@@ -1277,7 +1283,7 @@ code
       g := moneystring(gold,1); 
       jd.extra.[id].descr := "A reward of " + g + " has been offered for the head of "+self.name;
       set_char_flags@justice(self, "wanted");
-      log("Jailbreak: "+self.name+" has escaped from the "+ juris +" jail."); 
+      log("Jailbreak: "+self.name+" has escaped from the "+ jzone +" jail."); 
       quit;
    }
 
@@ -1318,9 +1324,9 @@ code
    act("Your term is over! You are thrown out of the jail and sent home.",
        A_ALWAYS, self, null, null, TO_CHAR);
    getfrom_safe(self);
-   link(self, findroom("accuse_room@" + juris));
+   link(self, findroom("accuse_room@" + jzone));
    rem_db_entry@justice(self, "$reward", juris);
-   set_char_flags@justice(self, "arrest");
+   set_char_flags@justice(self, "normal");  // the term is served: no longer an outlaw
    quit;
 }
 dilend
@@ -1671,13 +1677,14 @@ dilend
 
 
 dilbegin fnpri(FN_PRI_RESCUE-2) aware unique cuffed2(depname : string);
+external
+   set_char_flags@justice(char : unitptr, setting : string);
 var
-   i      : integer;
-   u      : unitptr;
+   i         : integer;
+   u         : unitptr;
+   nextbreak : integer;
 code
 {
-   interrupt(SFB_COM, activator == self, broken);
-
    :loop:
    wait(SFB_CMD, TRUE);
 
@@ -1708,6 +1715,11 @@ code
    }
    else if (activator == self)
    {
+      if (command("break"))
+      {
+        block;
+        goto breakcuffs;
+      }
       if (command("look") or command("say") or
           command("ask") or command("tell"))
         goto loop;
@@ -1719,6 +1731,51 @@ code
       }
    }
    goto loop;
+
+   /* break: one try a minute, a strength roll (one in five at strength 100); the
+      deputy slaps a prisoner who fails, and one who breaks free is wanted dead */
+   :breakcuffs:
+   if (realtime < nextbreak)
+   {
+      act("Your wrists are still sore from the last try.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      goto loop;
+   }
+   nextbreak := realtime + 60;
+   act("You strain against the hand cuffs with all your strength...",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   act("$1n strains against $1s hand cuffs.",
+       A_SOMEONE, self, null, null, TO_REST);
+
+   if (rnd(1, 100) > self.abilities[ABIL_STR] / 5)
+   {
+      act(depname + " slaps you hard for trying to break the cuffs!",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      act(depname + " slaps $1n hard for trying to break the cuffs.",
+          A_SOMEONE, self, null, null, TO_REST);
+      i := self.max_hp / 20;
+      if (i < 1)
+         i := 1;
+      self.hp := self.hp - i;
+      if (self.hp < 1)
+         self.hp := 1;
+      self.endurance := self.endurance - self.max_endurance / 10;
+      if (self.endurance < 0)
+         self.endurance := 0;
+      goto loop;
+   }
+
+   act("The hand cuffs snap! You are free, and now a wanted outlaw.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   act("$1n snaps $1s hand cuffs and breaks free!",
+       A_SOMEONE, self, null, null, TO_REST);
+   set_char_flags@justice(self, "wanted");
+   follow(self, null);
+   u := equipment(self, WEAR_WRIST_R);
+   i := dildestroy("cuffed@midgaard", self);
+   if (u)
+      destroy(u);
+   quit;
 
    :broken:
    i := dildestroy("cuffed@midgaard", self);

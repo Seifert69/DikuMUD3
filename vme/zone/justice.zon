@@ -1035,7 +1035,7 @@ code
        if (left(suspects.names.[0], 7) == "$reward") 
          {
           r_juris := getwords(suspects.names.[1]);
-          if ((atoi(suspects.names.[4]) >= 62) and (juris == r_juris.[3]))
+          if ((atoi(suspects.names.[4]) >= 64) and (juris == r_juris.[3]))
               wanted_dead := wanted_dead + suspects.descr+ "<BR>";
           else if ((atoi(suspects.names.[4]) >=32) and (juris == r_juris.[3]))
               wanted_alive := wanted_alive + suspects.descr+ "<br>";
@@ -1181,11 +1181,13 @@ code
    }
 
    // this is to deal with NPCs that have spaces in their names 
+   // ("accuse <name> [of] murder|stealing": an "of" before the crime is dropped)
    criminal := args.[0];
    arg_count := 1;
    while (arg_count < length(args) -1)
    {
-      criminal := criminal +" "+ args.[arg_count];
+      if (not((arg_count == length(args) - 2) and (args.[arg_count] == "of")))
+         criminal := criminal +" "+ args.[arg_count];
       arg_count := arg_count +1;
    }
   
@@ -1242,7 +1244,9 @@ code
             log("$witness inconsistency 2");
             goto skipit2;
          }
-         if (w_ptr.names.[1] == criminal)
+         // the crime must be the one you saw
+         if ((w_ptr.names.[1] == criminal) and (length(w_ptr.names) > 3) and
+             (atoi(w_ptr.names.[3]) == crime_type))
          {
             c_data := getwords(w_ptr.names.[0]);
             if (c_data.[1] != juris)
@@ -1269,21 +1273,18 @@ goto end;
    block; 
    goto start;  
 
-:goneaccuse: // Offline player or Dead monster
+:goneaccuse: // Offline player or Dead monster: nothing can be recorded
    found := 1;
    if ("@_players" in c_data.[2])
    {
-      act("$1n says, 'Thank you very much $3N, it seems $2t is in another dimension, but we'll deal with it later.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
-      // XXX Save a transfer reward on the board or load the player... MS TODO
+      // Keep the witness's memory, so they can accuse once the criminal is back
+      act("$1n says, 'Thank you $3N, but $2t isn't in the realm right now. Come back and accuse them when they are.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
    }
    else
    {
-      act("$1n says, 'Thank you very much $3N, but it seems $2t is no longer amoung us. Perhaps you can bring me the head?'", A_SOMEONE, self, criminal, activator, TO_ROOM);
+      act("$1n says, 'It seems $2t is no longer among us; justice has found them already. Perhaps you can bring me the head?'", A_SOMEONE, self, criminal, activator, TO_ROOM);
+      subextra(activator.extra, w_ptr.names.[0]);
    }
-   if (activator.alignment > -1000)
-      activator.alignment := activator.alignment + 100;
-   subextra(activator.extra, w_ptr.names.[0]);
-   add_reward@justice(c_data.[2], atoi(c_data.[3]), crime_type);
    block; 
    goto start;  
 
