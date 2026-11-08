@@ -19,8 +19,9 @@ already cursed can't be cursed more. You must be standing. It is also found
 on scrolls.
 </p>
 <h2><span class="mw-headline" id="Getting_rid_of_a_curse">Getting rid of a curse</span></h2>
-<p>A curse doesn't last: it wears off by itself after some minutes. To be rid 
-of it sooner:
+<p>A curse from the spell wears off by itself after some minutes. Some things, 
+though, are cursed when you find them, and they stay cursed until the curse 
+is lifted. To be rid of a curse:
 </p>
 <ul><li>ask a Healer, Necromancer or Paladin to cast remove curse on you (see <a cmd='#'>Help Remove Curse</a>): it lifts the curse on you and on everything you carry and wear, all at once. Healers learn it at guild level 18, Necromancers and Paladins at 24;</li>
 <li>or recite a scroll of remove curse, if you have one.</li></ul>

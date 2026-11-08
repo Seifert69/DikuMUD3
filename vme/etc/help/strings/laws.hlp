@@ -21,10 +21,13 @@ your head, and guards attack you on sight. Any accusation also puts a
 reward on your head, larger the higher your level and record. The board 
 in the captain's office lists who is wanted.
 </p><p><b>Arrest and jail.</b> A guard who arrests you puts you in handcuffs: you 
-can do nothing but look and talk while you are led to the captain. He 
+can do nothing but look and talk while you are led to the captain, unless 
+you manage to <a cmd='#'>break</a> the cuffs (see <a cmd='#'>Help Break</a>), which makes you wanted 
+dead. He 
 locks your belongings away and puts you in jail for about an hour of real 
-time. When you are released, you get your things back and that city's 
-record against you is cleared. Escape, and you are wanted dead.
+time. When you are released, you get your things back, that city's 
+record against you is cleared, and you are under the law's protection 
+again. Escape, and you are wanted dead.
 </p><p><b>Paying for it.</b> When you die, all is forgiven: your record is wiped, 
 the rewards on you are gone, and you are under the law's protection 
 again. Your killer can cut the head off your corpse (see <a cmd='#'>Help 
@@ -38,6 +41,7 @@ See Also:
 <pre>&gt; <a cmd='#'>Help Accuse</a>
 &gt; <a cmd='#'>Help Protected</a>
 &gt; <a cmd='#'>Help Cuff</a>
+&gt; <a cmd='#'>Help Break</a>
 &gt; <a cmd='#'>Help Decapitate</a>
 &gt; <a cmd='#'>Help Police Guild</a>
 </pre>

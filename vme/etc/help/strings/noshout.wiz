@@ -11,8 +11,7 @@ nocomm &lt;player&gt;                  (240)
 wears off, or until you noshout them again, which lifts it. Their 
 channels, says and tells still work. Use it when a player spams or abuses 
 shout. Players see how long they have left with noshouted (see 
-<a cmd='#'>Help Noshout</a>). New Player Guides may noshout players of level 20 and 
-below.
+<a cmd='#'>Help Noshout</a>).
 </p><p><b>notell</b> takes away a player's tells ("Your telepathic ability fades 
 away!") until you notell them again ("You regain your telepathic 
 ability."); there is no time limit. Use it on a player who harasses 

@@ -8,11 +8,14 @@ Mana: 20
 <pre>cast confusion &lt;target&gt;
 </pre>
 <p>The caster thrusts a clawed hand at the target and screams 'Suino fanoc!', 
-and the target's mind is muddled. A confused monster that is hunting 
-someone, tracking them through the world, loses the trail and gives up the 
-hunt, and it keeps forgetting for as long as the confusion lasts: from a 
-minute up to several minutes, the better your spell. Use it to shake off a 
-monster that follows you after you have fled. It doesn't stop a fight.
+and the target's mind is muddled for as long as the confusion lasts: from 
+a minute up to several minutes, the better your spell. While it lasts:
+</p>
+<ul><li>each move has a one in three chance to go out another open exit instead, chosen at random ("In your confusion you stumble the wrong way");</li>
+<li>each spell has a one in four chance to fizzle before it starts, costing no mana ("You lose your train of thought");</li>
+<li>a monster that is hunting someone, tracking them through the world, loses the trail and gives up the hunt.</li></ul>
+<p>Use it to shake off a monster that follows you after you have fled, or to 
+muddle a foe. It doesn't stop a fight.
 </p><p>The target resists with its mind; if the spell fails, it attacks you. You 
 must be standing. Confusion shows among the spells on you (<a cmd='#'>affect</a>). It 
 is also found on potions, wands, staffs and scrolls.

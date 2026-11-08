@@ -7,11 +7,11 @@ Mana: 40
 <pre>cast quicksand
 </pre>
 <p>The caster folds their hands and chants 'Liquidus Sub Terra', and the 
-ground of the whole room turns to a mire of quicksand. It is meant to slow 
-everyone in the room but the caster, making them slower in a fight for a 
-while, longer the better the casting.
-</p><p>At present, because of a known bug, the quicksand only tells everyone that 
-it hampers their movement: nobody is actually slowed.
+ground of the whole room turns to a mire of quicksand. It slows everyone in 
+the room but you and your group, making them slower in a fight for a 
+while, longer the better the casting. Other players are slowed only if you 
+both have signed the Book of Blood. If the spell fails, the ground holds 
+firm.
 </p><p>It can't be cast indoors, in the desert, on or under water, or on snow, 
 slush or ice. You must be standing.
 </p><p><br />

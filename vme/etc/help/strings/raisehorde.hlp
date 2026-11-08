@@ -14,7 +14,8 @@ champions. Each follows its maker and carries what the corpse held.
 </p><p>You need at least 100 mana to begin, and each corpse raised costs you 10 
 more; when your mana runs low, the raising stops. Corpses of insects and 
 other crawling things, of the undead, demons and devils, elementals, 
-golems, gargoyles and the like crumble to dust instead.
+golems, gargoyles and the like crumble to dust instead. Players' corpses 
+are left alone.
 </p><p>Command your horde with tell, just as with <a cmd='#'>Help Animate Dead</a>: tell horde 
 kill rat. The undead last a few minutes, up to a quarter of an hour or 
 more for a master, then crumble to dust, leaving what they carried. A 

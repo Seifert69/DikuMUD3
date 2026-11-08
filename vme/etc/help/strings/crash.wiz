@@ -7,9 +7,8 @@
 core dump, the restart scripts). You must type the whole phrase exactly, 
 with the three dots, and the command itself in full: an abbreviation is 
 refused. You must be standing. It is logged.
-</p><p>It crashes the game by a failed assertion, so it only works in a build 
-with assertions, such as the Debug build. In a Release build, which is 
-compiled without them, nothing happens at all.
+</p><p>It aborts the server, as a failed assertion would, in any build: the 
+core dump and the restart follow as after a real crash.
 </p><p><i>From the old help:</i> "This wiz-command is the only possible way of 
 crashing the game." Kira added: "Maaaybe I'm wrong, but I think there 
 might be one or two other ways to crash the game *grin*."

@@ -11,8 +11,8 @@
 in the world, and puts it in your inventory. They are told that you have 
 taken it, and every seize is written to the log. Only from someone of a 
 lower level than yours.
-</p><p>Name the item with one word: because of a known bug, a name of two words 
-(seize long sword from Gnort) isn't found.
+</p><p>The item may be named with more than one word: seize long sword from 
+Gnort.
 </p><p><br />
 See Also:
 </p>

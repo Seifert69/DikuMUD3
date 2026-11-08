@@ -3,7 +3,7 @@
 </p>
 <pre>wiz &lt;text&gt;              (talk on the wizline)
 wiz #&lt;level&gt; &lt;text&gt;     (only to gods of that level and up)
-wiz @ &lt;action&gt;          (an emote on the wizline)
+wiz @&lt;action&gt;           (an emote on the wizline; wiz @ &lt;action&gt; too)
 wiz&#160;?                   (which gods are on)
 wiz -                   (stop hearing the wizline)
 wiz +                   (hear it again)

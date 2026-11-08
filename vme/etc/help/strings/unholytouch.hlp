@@ -9,7 +9,7 @@ Mana: 20
 <a cmd='#'>cast unholy touch</a>   (at whoever you are fighting)
 </pre>
 <p>A prayer to the dark forces, made with a touch, that wounds those who lean to 
-good. Any target whose alignment is above neutral can be struck; on the evil 
+good. Any target whose alignment is above neutral can be struck, and the truly good are hurt more; on the evil 
 and the neutral, nothing happens. The better your divine power and sphere, 
 the more it hurts. It does about as well against any armour, and being a 
 touch, a shield can block it.

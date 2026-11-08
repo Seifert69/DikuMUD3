@@ -8,8 +8,8 @@ Mana: 20
 use a wand, staff or scroll of banish
 </pre>
 <p>The caster calls on the power of the vortex to take a summoned creature 
-back: an elemental, a demon or a devil called up by a summoning spell 
-twists in pain and dissolves. It is the answer to a conjurer's servants.
+back: an elemental, a demon or a devil called up by a summoning spell, or 
+a ranger's eagle, twists in pain and dissolves. It is the answer to a conjurer's servants.
 </p><p>It only works on creatures that were summoned by magic; on anything else, 
 nothing happens. The creature resists, and if the spell fails, it turns on 
 you. You must be standing. No guild teaches it, but it turns up on wands, 
@@ -19,6 +19,7 @@ See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Summon Earth</a>
 &gt; <a cmd='#'>Help Summon Demon</a>
+&gt; <a cmd='#'>Help Eagle Cry</a>
 &gt; <a cmd='#'>Help Summoning Sphere</a>
 </pre>
 
