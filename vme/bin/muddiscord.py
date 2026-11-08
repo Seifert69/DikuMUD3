@@ -132,7 +132,9 @@ class MyClient(discord.Client):
         # write the message received from Discord to pipeMUD so that
         # the MUD server receives it.
         #
-        str = "discord " + message.channel.name + " @ @" + message.author.name + " says, '" + mymsg + "'"
+        # display_name is the server nickname or global name players know;
+        # since Discord's 2023 username change, name is the unique handle
+        str = "discord " + message.channel.name + " @ @" + message.author.display_name + " says, '" + mymsg + "'"
 
         encmsg = str.encode()
 
