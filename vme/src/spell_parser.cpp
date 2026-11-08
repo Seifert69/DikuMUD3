@@ -395,7 +395,7 @@ void do_cast(unit_data *ch, char *argument, const command_info *cmd)
                 }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_OBJ))
                 {
-                    act("Nothing by the name '' here.", eA_ALWAYS, ch, orgarg, cActParameter(), eTO_CHAR);
+                    act("Nothing by the name '$2t' here.", eA_ALWAYS, ch, orgarg, cActParameter(), eTO_CHAR);
                 }
                 else if (IS_SET(g_spell_info[spl].targets, TAR_ROOM))
                 {
