@@ -264,6 +264,10 @@ code
 	}
 	addextra(item.extra, {FIXED_ITEM}, "");
 	item.height := pc.height;
+	// Some items keep their owner's name here (the Nidhogg tattoos); a fresh copy would
+	// belong to nobody
+	if (olditem.inside_descr != "")
+		item.inside_descr := olditem.inside_descr;
 	unsecure(olditem);
 	link(item, pc);
 	destroy(olditem);
