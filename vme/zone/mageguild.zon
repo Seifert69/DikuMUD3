@@ -252,7 +252,7 @@ extra {"chairs","chair"}
 "The chairs surrounding the podium are made of a dark, heavy wood.<br/>"
 extra {"ceiling of the hall","ceiling","chandelier"}
 "The huge chandelier in the middle of the ceiling is richly decorated
-and seem capable to containing a wast amount of candles.<br/>"
+and seems capable of containing a vast amount of candles.<br/>"
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 west to statue_walk descr "A pair of double doors lead to a long walk.<br/>";
