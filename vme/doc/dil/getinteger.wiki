@@ -47,6 +47,10 @@ The getinteger() function is a versatile utility that retrieves various game sys
 | DIL_GINT_REALMONTH || Current real-world month (1-12) || No || Ignored
 |-
 | DIL_GINT_REALDAY || Current real-world day of month || No || Ignored
+|-
+| DIL_GINT_PRESSURE || Air pressure in the unit's zone (950-1050 mb); null means the DIL's own zone || Optional || Ignored
+|-
+| DIL_GINT_PRESSURECHG || How much that pressure changed at the last weather update (-12 to 12) || Optional || Ignored
 |}
 
 == Examples ==

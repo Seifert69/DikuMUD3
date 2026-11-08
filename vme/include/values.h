@@ -1307,6 +1307,8 @@ ACTION
 #define DIL_GINT_REALYEAR   10  // The real year
 #define DIL_GINT_REALMONTH  11  // month
 #define DIL_GINT_REALDAY    12  // day
+#define DIL_GINT_PRESSURE   13  // weather pressure (mb) in the unit's zone (the DIL's own zone if null)
+#define DIL_GINT_PRESSURECHG 14 // how much that pressure changed at the last weather update
 
 #endif /* _MUD_VALUES_H */
 
