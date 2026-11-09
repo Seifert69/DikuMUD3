@@ -603,7 +603,7 @@ code
       {
          subaff(self, ID_INVISIBILITY);
       }
-      act("You catch $1n trying to steal your $2n!", A_SOMEONE, self, targ,
+      act("You catch $1n trying to steal your $2N!", A_SOMEONE, self, targ,
           vict, TO_VICT);
       act("You see $1n trying to steal something from $3n...$3e doesn't " +
           "seem amused!", A_SOMEONE, self, targ, vict, TO_NOTVICT);
@@ -627,7 +627,7 @@ code
       {
           subaff(self, ID_INVISIBILITY);
       }
-      act("Arrgh!  $1n just stole your $2n!", A_SOMEONE, self, targ, vict, TO_VICT);
+      act("Arrgh!  $1n just stole your $2N!", A_SOMEONE, self, targ, vict, TO_VICT);
       act("You see $1n steal something from $3n...$3e doesn't seem amused!",
           A_SOMEONE, self, targ, vict, TO_NOTVICT);
       link(targ, self);
@@ -889,7 +889,7 @@ code
         act("You are caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
         if (isaff(self, ID_INVISIBILITY))
             subaff(self, ID_INVISIBILITY);
-        act("You catch $1n trying to filch your $2n!", A_SOMEONE, self, targ,
+        act("You catch $1n trying to filch your $2N!", A_SOMEONE, self, targ,
             vict, TO_VICT);
         act("You see $1n trying to filch something from $3n...$3e doesn't " +
             "seem amused!", A_SOMEONE, self, targ, vict, TO_NOTVICT);
@@ -913,7 +913,7 @@ code
         if (isaff(self, ID_INVISIBILITY))
             subaff(self, ID_INVISIBILITY);
 
-        act("Arrgh!  $1n just stole your $2n!", A_SOMEONE, self, targ, vict, TO_VICT);
+        act("Arrgh!  $1n just stole your $2N!", A_SOMEONE, self, targ, vict, TO_VICT);
         act("You see $1n filch something from $3n...$3e doesn't seem amused!",
             A_SOMEONE, self, targ, vict, TO_NOTVICT);
         link(targ, self);
@@ -1592,7 +1592,7 @@ code
    }
 
    act("You successfully pick the $2N - *click*", A_ALWAYS, self, item, null,TO_CHAR);
-   act("$1n picks the $2n - *click*", A_ALWAYS, self, item, null, TO_REST);
+   act("$1n picks $2n - *click*", A_ALWAYS, self, item, null, TO_REST);
    unset(item.openflags, EX_LOCKED);
    quit;
 
@@ -2556,7 +2556,7 @@ code
 :workshop:
     if ("$resized" in tgt.extra)
     {
-        act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
+        act("You see that $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
         quit;
     }
 
@@ -2702,7 +2702,7 @@ code
    :workshop:
    if ("$resized" in tgt.extra)
    {
-      act("You see that the $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
+      act("You see that $2n has already been resized, you are unable to do more yourself.", A_ALWAYS,self,tgt,null,TO_CHAR);
       quit;
    }
 
@@ -2846,7 +2846,7 @@ code
    :workshop:
    if ("$resized" in tgt.extra)
    {
-      act("You see that the $2n have already been resized, you are unable "+
+      act("You see that $2n have already been resized, you are unable "+
           "to do more yourself.",
 	   A_ALWAYS,self,tgt,null,TO_CHAR);
       quit;
@@ -4957,7 +4957,7 @@ code
 
    if (hm <= 0)
    {
-      act("You sadly mangle the "+skin_name+" of $3n with your $2n.",
+      act("You sadly mangle the "+skin_name+" of $3n with your $2N.",
          A_SOMEONE, self, wpn, targ, TO_CHAR);
       act("$1n mangles the "+skin_name+"  of $3n with $1s $2n. What a mess!",
          A_SOMEONE, self, wpn, targ, TO_ROOM);
@@ -4975,7 +4975,7 @@ code
    }
 
    s := hm_adjective(hm);
-   act("Using your $2n you"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_CHAR);
+   act("Using your $2N you"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_CHAR);
    act("$1n uses $1s $2n to"+s+"skin $3n .", A_SOMEONE, self, wpn, targ, TO_REST);
 
    race_name := race_name(targ.value[4]);
@@ -8812,7 +8812,7 @@ code
    {
       slay_bon := 15;
 /*
-      act("Your $2n glows!",
+      act("Your $2N glows!",
           A_ALWAYS, self, missile, null, TO_CHAR);
       act("$1n's $2n glows!",
           A_ALWAYS, self, missile, null, TO_REST);
@@ -8822,7 +8822,7 @@ code
    if ((weapon.value[3] == targ.race) and (slay_bon == 0))
    {
       slay_bon := 30;
-      act("Your $2n glows!",
+      act("Your $2N glows!",
           A_ALWAYS, self, weapon, null, TO_CHAR);
       act("$1n's $2n glows!",
           A_ALWAYS, self, weapon, null, TO_REST);
@@ -9387,7 +9387,7 @@ code
       {
          act("You provoke it into attack!",
              A_ALWAYS, self, null, null, TO_CHAR);
-         act("$1n fails to soothe the $3n and provokes it into attack!",
+         act("$1n fails to soothe $3n and provokes it into attack!",
              A_SOMEONE, self, null, targ, TO_REST);
          set_fighting(targ, self);
          quit;
@@ -9395,15 +9395,15 @@ code
 
    if (hm < 0)
       {
-         act("You unsuccessfully attempt to soothe the $3n.",
+         act("You unsuccessfully attempt to soothe $3n.",
              A_ALWAYS, self, null, targ, TO_CHAR);
-         act("$1n fails to soothe the $3n.",
+         act("$1n fails to soothe $3n.",
              A_SOMEONE, self, null, targ, TO_REST);
          quit;
       }
 
 
-   act("You manage to soothe the $3n!<br/>It seems to warm to you.",
+   act("You manage to soothe $3n!<br/>It seems to warm to you.",
        A_ALWAYS, self, null, targ, TO_CHAR);
    act("$1n soothes $3n, and it seems to warm to $1m.",
        A_SOMEONE, self, null, targ, TO_REST);
@@ -12730,8 +12730,8 @@ code
 		quit;
 	}
 
-	act("You begin whirling your $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
-	act("$1n begins whirling their $2n and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
+	act("You begin whirling your $2N and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
+	act("$1n begins whirling their $2N and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
 	self.endurance := self.endurance - endcost;  // 75, down to 55 at full skill
 	heartbeat := PULSE_ROUND*4;
 	change_speed(self, PULSE_ROUND*4);
@@ -12845,9 +12845,9 @@ code
 	}
 
 	bonus := rnd(self.level-10,self.level+10);
-	act("You pull back your $2n and cleave $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
-	act("$1n pulls back their $2n and cleaves you!", A_ALWAYS, self, weap, targ, TO_VICT);
-	act("$1n pulls back their $2n and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	act("You pull back your $2N and cleave $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
+	act("$1n pulls back their $2N and cleaves you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n pulls back their $2N and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 50;
 	hm := skillbattle2(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
@@ -12930,9 +12930,9 @@ code
 		quit;
 	}
 
-	act("You swing your $2n and violently rend $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
-	act("$1n swings their $2n and violently rends you!", A_ALWAYS, self, weap, targ, TO_VICT);
-	act("$1n swings their $2n and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	act("You swing your $2N and violently rend $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
+	act("$1n swings their $2N and violently rends you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n swings their $2N and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 75;
 	hm := skillbattle2(SKI_REND, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
@@ -13058,8 +13058,8 @@ code
 	if (not(self.master))
 		mast := self;
  
-	act("You swing your $2n and do a violent slam!",A_SOMEONE, self, weap, null, TO_CHAR);
-	act("$1n swings their $2n and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
+	act("You swing your $2N and do a violent slam!",A_SOMEONE, self, weap, null, TO_CHAR);
+	act("$1n swings their $2N and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
 	self.endurance := self.endurance - 75;
 
 	foreach(UNIT_ST_PC|UNIT_ST_NPC, u)

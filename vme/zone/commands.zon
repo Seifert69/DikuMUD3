@@ -4106,7 +4106,7 @@ code
  if ((isset(obj.flags,OBJ_NO_UNEQUIP))or
  (isaff(obj, ID_CURSE)))
  {
-  act("The $3n is cursed, you can't remove it!",
+  act("$3n is cursed, you can't remove it!",
    A_SOMEONE, ch, null, obj, TO_CHAR);
   act("$1n tries to get rid of $3n, but in vain!",
    A_HIDEINV, ch, null, obj, TO_REST);

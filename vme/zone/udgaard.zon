@@ -10951,12 +10951,12 @@ extra {"$identify"}
 "Unless you are EXTREMELY nearsighted, those glasses will only worsen
 your vision."
 extra {"$wear_s"}
-"You put on the $2n.
+"You put on $2n.
 Everything gets blurred."
 extra {"$wear_o"}
 "$1n puts on some $2n, $1s eyes looks like huge fishes in a pair of bowls."
 extra {"$rem_s"}
-"You remove the $2n and rub your aching eyes.
+"You remove $2n and rub your aching eyes.
 Everything returns to normal shape."
 extra {"$rem_o"}
 "$1n removes $1s $2n and rubs $1s aching eyes."
@@ -11819,7 +11819,7 @@ dilcopy shopkeeper@function(
 {
  "$1n says, 'What does this look like a four star restaurant?!'",
  "$1n says, '$3n, don't try to sell air!'",
- "$1n says, 'Who would eat a $2n?'",
+ "$1n says, 'Who would eat $2n?'",
  "$1n says, '$3n, you can't afford $2n and you can't wash dishes here.'",
  "$1n says, 'Thank you, thank you very much.'",
  "$1n says, 'Nice $2n! thank you, thank you very much, man.'",

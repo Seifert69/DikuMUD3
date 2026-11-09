@@ -215,7 +215,7 @@ if (percent < 0) percent := -percent;
 
 if (act_dil=="")
   {
-act ("Your $2n burns you and you drop it to the ground.",
+act ("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self,u,null,TO_CHAR);
 act ("$1n's $2n burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self,u,null,TO_REST);

@@ -1874,9 +1874,9 @@ dilcopy shopkeepernew@function(
  "$1n says, 'I've got no such item.'",
  "$1n says, 'Why you haven't even got it, $3n?'",
  "$1n says, 'I don't trade in such things.'",
- "$1n says, 'This $2n is too expensive for you, $3n.'",
- "$1n says, 'Here you are, a $2n.'",
- "$1n says, 'I might be able to sell this $2n.'",
+ "$1n says, 'This $2N is too expensive for you, $3n.'",
+ "$1n says, 'Here you are, $2n.'",
+ "$1n says, 'I might be able to sell this $2N.'",
  "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
 {ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, FALSE);
 

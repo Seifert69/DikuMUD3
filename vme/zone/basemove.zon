@@ -3307,9 +3307,9 @@ code
     // Messages to the people
 
     if (pc)  // Opening from the inside
-        act("The $1n is opened from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+        act("$1n is opened from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
     else // opening from the outside
-        act("The $2n is opened from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+        act("$2n is opened from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
 
     act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
     act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
@@ -3508,9 +3508,9 @@ code
 
    // Messages to the people
    if (pc)  // Closing from the inside
-      act("The $1n is closed from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+      act("$1n is closed from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
    else // closing from the outside
-      act("The $2n is closed from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+      act("$2n is closed from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
 
    act("You close $2n.", A_ALWAYS, self, item, null, TO_CHAR);
    act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);

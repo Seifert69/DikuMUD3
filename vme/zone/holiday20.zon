@@ -226,7 +226,7 @@ dilend
 dilbegin holiday_burn();
 code
 {
-	act ("Your $2n sparkles and you drop it to the ground.",
+	act ("Your $2N sparkles and you drop it to the ground.",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act ("$1n's $2n sparkles and drops to the ground.",
 		A_SOMEONE,self.outside,self,null,TO_REST);
@@ -680,15 +680,15 @@ code
 	if(self.extra.[X_CHARGES].descr == "empty") 
 	{
 		wait(SFB_TICK, command(CMD_AUTO_TICK));
-		act("Your $2n seems to be drained of its holiday magic.",A_ALWAYS,self.outside,self,null,TO_CHAR);
+		act("Your $2N seems to be drained of its holiday magic.",A_ALWAYS,self.outside,self,null,TO_CHAR);
 		goto start;
 	}
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	self.extra.[X_CHARGES].descr := "empty";
 	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
 	
-	act("A burst of holiday magic erupts from your $2n!",A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act("Your $2n has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("A burst of holiday magic erupts from your $2N!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("Your $2N has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("A burst of holiday magic erupts from $1n's $2n!",A_ALWAYS,self.outside,self,null,TO_REST);
 	pc.hp := pc.max_hp;
 	pc.endurance := pc.max_endurance;
@@ -715,7 +715,7 @@ code
 	if(not(X_CHARGES in self.extra))
 		addextra(self.extra, {X_CHARGES}, "charged");
 	
-	act("Your $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
+	act("Your $2N twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
 	if(self.extra.[X_CHARGES].descr == "empty")
 	{

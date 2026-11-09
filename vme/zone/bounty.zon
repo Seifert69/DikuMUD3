@@ -3527,7 +3527,7 @@ code
 	}
 	else if((item.symname == "scythe@yamruins") and (not ("scythe" in pc.quests.[NECRO_ONGOING].names)))
 	{
-		act("$1n takes a swipe through the air with his $2n.",A_SOMEONE, self, item, null, TO_ALL);
+		act("$1n takes a swipe through the air with his $2N.",A_SOMEONE, self, item, null, TO_ALL);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("say This is trule a weapon a necromancer can be proud of!", self);
 		addstring(pc.quests.[NECRO_ONGOING].names, "scythe");
@@ -3536,7 +3536,7 @@ code
 	}
 	else if ((item.symname == "base_skin@skills") and (item.extra.["$living_sym"].descr == "shadow@soullake") and (not ("skin" in pc.quests.[NECRO_ONGOING].names)))
 	{
-		act("$1n carefully examines the $2n.",A_SOMEONE, self, item, null, TO_ALL);
+		act("$1n carefully examines $2n.",A_SOMEONE, self, item, null, TO_ALL);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("say Incredible to see this with... to see this.", self);
 		addstring(pc.quests.[NECRO_ONGOING].names, "skin");

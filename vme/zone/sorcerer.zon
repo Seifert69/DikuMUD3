@@ -211,7 +211,7 @@ if(fire < 20)
          num := rnd(10,130);
          if (mag_skill > num)
          {
-             act("Your $2n sends a surge of energy into your body!"
+             act("Your $2N sends a surge of energy into your body!"
                 ,A_ALWAYS, self.outside, self,self.outside.fighting,TO_CHAR);
              act("$3n pales visibly as $3s mana is drained away!"
                 ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
@@ -239,7 +239,7 @@ if(fire < 20)
          }
          else
 	 {
-          act("Your $2n glows as it drains mana from $3n!"
+          act("Your $2N glows as it drains mana from $3n!"
             ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
           act("$1n's $2n glows as it drains mana from $3n!"
           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
@@ -251,7 +251,7 @@ if(fire < 20)
       }
       else
       {
-        act("Your $2n glows slightly as it attempts to battle $3n's will!"
+        act("Your $2N glows slightly as it attempts to battle $3n's will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
         act("$1n's $2n glows slightly in an attempt to battle $3n will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
@@ -1465,11 +1465,11 @@ extra {"runes on the Pendant","runes","rune","metal","sign"}
 "The runes proclaim the wearer of the Pendant to be a Sorcerer of
 Midgaard.<br/>"
 extra {"$wear_s"}
-"You clasp your $2n around your neck."
+"You clasp your $2N around your neck."
 extra {"$wear_o"}
-"$1n clasps the $2n around $1s neck."
+"$1n clasps $2n around $1s neck."
 extra {"$rem_s"}
-"You open and remove your $2n."
+"You open and remove your $2N."
 extra {"$rem_o"}
 "$1n opens and removes $1s $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
@@ -1825,7 +1825,7 @@ goto start;
 }
 if (flux < 10)
 {
-act("The rune on your $2n glows with a violent light!"
+act("The rune on your $2N glows with a violent light!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("The rune on $1n's $2n glows with a violent light!",
 A_SOMEONE,self.outside,self,enemy,TO_REST);
@@ -1853,7 +1853,7 @@ goto start ;
 }
 if (flux < 40)
 {
-act("An eerie, bluish light bathes your $2n as you raise it to strike!"
+act("An eerie, bluish light bathes your $2N as you raise it to strike!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("$1n's $2n emits eerie, bluish light as $1n raises it to strike!",
 A_SOMEONE,self.outside,self,enemy,TO_REST);
@@ -1861,7 +1861,7 @@ goto start;
 }
 if (flux < 50)
 {
-act("Your $2n vibrates in your hand as you strike at $3n."
+act("Your $2N vibrates in your hand as you strike at $3n."
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("$1n's $2n vibrates rapidly as $1e strikes.",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
@@ -1893,11 +1893,11 @@ extra {"feathers and beads on the staff","feathers","beads"}
 "The feathers and beads make a nice finish to the overall arcane look of
 the staff.<br/>"
 extra {"$wear_s"}
-"You wield the $2n and raise it toward the heavens...<br/>
+"You wield $2n and raise it toward the heavens...<br/>
 Lightning crackles along the staff, drunk with power and exhilaration
 you scream in joy!"
 extra {"$wear_o"}
-"$1n wields a $2n and raises it toward the heavens...<br/>
+"$1n wields $2n and raises it toward the heavens...<br/>
 Lightning crackles along the staff, $1n howls in joy and
 exhilaration!"
 WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -2202,7 +2202,7 @@ code
 wait (SFB_DONE,(self.equip==WEAR_ABOUT));
 heartbeat:=PULSE_SEC*300;
 pause;
-act ("The runes on your $2n glow in pale light...",
+act ("The runes on your $2N glow in pale light...",
 A_SOMEONE,self.outside,self,null,TO_CHAR);
 act ("A strange shimmering in the air briefly outlines $1n near you!",
 A_SOMEONE,self.outside,self,null,TO_REST);

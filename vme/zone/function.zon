@@ -2617,7 +2617,7 @@ code
 
    if (action=="")
    {
-      act("Your $2n burns you and you drop it to the ground.",
+      act("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
       act("$1n's $2n burns $1m and $1e drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
@@ -2687,7 +2687,7 @@ code
 
 	if (action=="")
 	{
-		act("Your $2n burns you and you drop it to the ground.",
+		act("Your $2N burns you and you drop it to the ground.",
 			A_ALWAYS,self.outside,self,null,TO_CHAR);
 		act("$1n's $2n burns $1m and $1e drops it to the ground.",
 			A_SOMEONE,self.outside,self,null,TO_REST);
@@ -2751,7 +2751,7 @@ code
 
    if (action =="")
    {
-      act("Your $2n burns you and you drop it to the ground.",
+      act("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
       act("$1n's $2n burns $1m and $1e drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
@@ -2813,7 +2813,7 @@ code
     if (self.outside.level>=IMMORTAL_LEVEL) goto start;
     if (action=="")
     {
-    act("Your $2n burns you and you drop it to the ground.",
+    act("Your $2N burns you and you drop it to the ground.",
     A_ALWAYS,self.outside,self,null,TO_CHAR);
     act("$1n's $2n burns $1m and $1e drops it to the ground.",
     A_SOMEONE,self.outside,self,null,TO_REST);
@@ -2882,7 +2882,7 @@ if ((activator.type == UNIT_ST_NPC) and not ("$pc obey" in activator.extra)
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action=="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -2949,7 +2949,7 @@ while (i<length(qts))
   }
 if (action=="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3021,7 +3021,7 @@ if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
 if (action=="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3090,7 +3090,7 @@ if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
 if (action=="")
   {
-act("Your $2n burns you and you drop it to the ground.",
+act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n's $2n burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3162,7 +3162,7 @@ code
 
     if (action=="")
     {
-        act("Your $2n burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
+        act("Your $2N burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
         act("$1n's $2n burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
         act("You are not high enough level to use $3n. $2t levels needed to use it.", A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
     }
@@ -3224,7 +3224,7 @@ if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
 if (action=="")
   {
-act("Your $2n burns you and you drop it to the ground.",
+act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n's $2n burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3290,7 +3290,7 @@ if (activator.race!=rc) goto start;
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action=="")
   {
-act("Your $2n burns you and you drop it to the ground.",
+act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n's $2n burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3374,7 +3374,7 @@ code
 
     if (action =="")
     {
-        act("Your $2n burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
+        act("Your $2N burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
         act("$1n's $2n burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
 
         amount:=min_abi-activator.abilities[ab];
@@ -3443,7 +3443,7 @@ if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 
 if (action =="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3512,7 +3512,7 @@ if (activator.spells[ab]>=min_abi) goto start;
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action =="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3581,7 +3581,7 @@ if (activator.weapons[ab]>=min_abi) goto start;
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action =="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3648,7 +3648,7 @@ if (activator.sex==sx) goto start;
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action=="")
   {
-act("Your $2n burns you and you drop it to the ground.",
+act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 act("$1n's $2n burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3680,7 +3680,7 @@ dilend
 dilbegin burn_ply();
 code
 {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
@@ -3733,7 +3733,7 @@ if (person == activator.name) goto start;
 if (self.outside.level>=IMMORTAL_LEVEL) goto start;
 if (action=="")
   {
-  act("Your $2n burns you and you drop it to the ground.",
+  act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2n burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
