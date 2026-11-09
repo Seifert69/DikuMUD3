@@ -40,8 +40,11 @@ arg_type g_mplex_arg;
 
 void bye_signal(int signal)
 {
-    g_CaptainHook.Close();
-
+    // No g_CaptainHook.Close() here. Closing the hooks runs SSL_shutdown(),
+    // SSL_free() and malloc for every telnets connection, and this may be
+    // interrupting the main loop inside OpenSSL or malloc: a deadlock, and
+    // the mplex would hang instead of exiting. The kernel closes every
+    // socket when we exit; the clients see that as a close.
     slog(LOG_OFF,
          0,
          "Received signal #%d (SIGQUIT, SIGHUP, SIGINT or SIGTERM)."

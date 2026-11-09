@@ -575,6 +575,13 @@ void cConHook::Close(int bNotifyMud)
         Unhook();
     }
 
+    // What the client still had queued goes with it, whether or not it had
+    // an id: InputOnce() is in its dispatch loop when ParseInput() closes a
+    // flooder, and must not go on running the closed client's lines (each
+    // one through MudDown() is a sleep(1) while the mud is down).
+    m_qInput.Flush();
+    m_pFptr = Idle;
+
     if (m_nId == 0)
     {
         m_mtx.unlock();
@@ -590,7 +597,6 @@ void cConHook::Close(int bNotifyMud)
     m_aOutput[0] = 0;
     m_aInputBuf[0] = 0;
     m_nState = 0;
-    m_pFptr = Idle;
     m_nId = 0;
 
     m_fWebsSend = nullptr;

@@ -685,10 +685,12 @@ void LeaveAnErrorOnTheQueue()
 }
 
 std::string g_lastCommand; // what the hook handed its state function
+int g_commands = 0;         // how many lines it handed over
 
 void RecordCommand(mplex::cConHook *, const char *cmd)
 {
     g_lastCommand = cmd;
+    g_commands++;
 }
 
 // A non-blocking TLS client on an already connected socket
@@ -801,6 +803,7 @@ struct TlsFixture
         mplex::tls_free_telnet();
         unlink(path.c_str());
         g_lastCommand.clear();
+        g_commands = 0;
     }
 
     void WritePem(const SelfSigned &c, int mtimeOffset = 0)
@@ -1117,6 +1120,32 @@ BOOST_FIXTURE_TEST_CASE(a_plain_client_that_leaves_before_it_has_an_id_is_droppe
 
     BOOST_TEST(Until([&] { return !h->IsHooked(); }));
     BOOST_TEST(Loop(20) == 0);
+}
+
+BOOST_FIXTURE_TEST_CASE(a_closed_flooder_takes_its_queued_lines_with_it, TlsFixture)
+{
+    // 101 lines in one read: ParseInput() closes the client from inside
+    // InputOnce(), with every line still queued, and none of them may run
+    // after that. The connection has no id, as during a reboot, when each
+    // line would have been a MudDown() and its sleep(1): a closed flooder
+    // stalled every other connection for a minute or more. Plain port, so
+    // TLS has nothing to do with it.
+    int c = Connect();
+    auto *h = Accept();
+    Loop(20);
+    BOOST_REQUIRE_EQUAL(g_commands, 0);
+
+    std::string flood;
+    for (int i = 0; i < 101; i++)
+    {
+        flood += "x\n";
+    }
+    BOOST_REQUIRE_EQUAL(send(c, flood.data(), flood.size(), 0), (ssize_t)flood.size());
+
+    BOOST_TEST(Until([&] { return !h->IsHooked(); }));
+    BOOST_TEST(g_commands == 0);
+    BOOST_TEST(h->m_qInput.Size() == 0u);
+    BOOST_TEST(h->m_pFptr == mplex::Idle);
 }
 
 BOOST_FIXTURE_TEST_CASE(the_plain_port_behaves_as_before, TlsFixture)
