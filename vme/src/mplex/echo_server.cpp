@@ -10,6 +10,7 @@
 #include <websocketpp/server.hpp>
 
 #include <map>
+#include <stdexcept>
 #include <mutex>
 #include <type_traits>
 
@@ -142,10 +143,6 @@ void on_close(websocketpp::connection_hdl hdl)
     }
 }
 
-std::string get_password() {
-    return "test";
-}
-
 context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
     namespace asio = websocketpp::lib::asio;
 
@@ -158,9 +155,12 @@ context_ptr on_tls_init(websocketpp::connection_hdl hdl) {
                          asio::ssl::context::no_sslv2 |
                          asio::ssl::context::no_sslv3 |
                          asio::ssl::context::single_dh_use);
-        ctx->set_password_callback(bind(&get_password));
-        ctx->use_certificate_chain_file("server.pem");
-        ctx->use_private_key_file("server.pem", asio::ssl::context::pem);
+        // The same loader as the telnets port (mplex -z): one place knows
+        // that server.pem holds both chain and key, and the password callback
+        if (!mplex::tls_load_pem(ctx->native_handle(), "server.pem"))
+        {
+            throw std::runtime_error("server.pem did not load");
+        }
         ctx->use_tmp_dh_file("dh.pem");
         
         slog(LOG_OFF, 0, "TLS context initialized successfully");

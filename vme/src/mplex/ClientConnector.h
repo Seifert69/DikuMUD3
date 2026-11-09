@@ -12,9 +12,11 @@
 #include "network.h"
 #include "protocol.h"
 #include "queue.h"
+#include "TlsLink.h"
 
 #include <cstring>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <websocketpp/common/connection_hdl.hpp>
 
@@ -139,8 +141,12 @@ public:
     ubit8 m_nNawsHeight{0};  ///< Last clamped NAWS height
     char m_aLastBars[64]{};  ///< Last bars value sent as Char.Vitals (dedupe)
     bool m_bTakesConnection{false}; ///< Took one of g_nConnectionsLeft (telnet; websockets don't count)
+    std::unique_ptr<cTlsLink> m_pTls; ///< TLS of a telnets connection (mplex -z, see TlsLink.h); null on plain telnet and websockets
 
 private:
+    bool InputOnce();
+    int ReadInput(ubit8 *buf, int count);
+    void SendTlsOutput();
     void TelnetNegotiate(ubit8 cmd, ubit8 opt, ubit8 *pOut, int *pnOutLen);
     void TelnetSubneg(ubit8 *pOut, int *pnOutLen);
     void GmcpSend(const char *package, const char *json);
@@ -161,5 +167,15 @@ void Idle(cConHook *con, const char *cmd);
 void ClearUnhooked();
 
 extern cConHook *g_connection_list;
+
+/// Loads a certificate chain and its private key, both in one PEM file, into ctx.
+/// Shared by the telnets and the wss listener. False (and logged) when the file is missing or unusable.
+bool tls_load_pem(SSL_CTX *ctx, const char *path);
+/// The telnet port's TLS context (mplex -z), from the PEM file at path. False (and logged) on failure.
+bool tls_init_telnet(const char *path);
+/// Frees it again.
+void tls_free_telnet();
+/// The context for the next accepted connection, rebuilt first when the PEM file has changed; nullptr when the port is plain.
+SSL_CTX *tls_ctx_for_accept();
 
 } // namespace mplex

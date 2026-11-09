@@ -23,6 +23,7 @@
 #include "textutil.h"
 
 #include <netdb.h>
+#include <unistd.h>
 
 #include <cassert>
 #include <cctype>
@@ -39,14 +40,17 @@ arg_type g_mplex_arg;
 
 void bye_signal(int signal)
 {
-    g_CaptainHook.Close();
-
+    // No g_CaptainHook.Close() here. Closing the hooks runs SSL_shutdown(),
+    // SSL_free() and malloc for every telnets connection, and this may be
+    // interrupting the main loop inside OpenSSL or malloc: a deadlock, and
+    // the mplex would hang instead of exiting. The kernel closes every
+    // socket when we exit; the clients see that as a close.
     slog(LOG_OFF,
          0,
          "Received signal #%d (SIGQUIT, SIGHUP, SIGINT or SIGTERM)."
          "  Shutting down",
          signal);
-    exit(1);
+    _exit(1); // not exit(): the atexit handlers (OpenSSL's cleanup among them) are not for a signal handler
 }
 
 #ifndef _WINDOWS
@@ -61,7 +65,7 @@ void alarm_signal(int sig)
 void ShowUsage(const char *name)
 {
     fprintf(stderr,
-            "Usage: %s [-a] [-h] [-c] [-e] [-r] [-t] [-x] [-l <filename>] [-p <num>] [-d <path>] [-s <port>] [-a <address>]\n",
+            "Usage: %s [-a] [-h] [-c] [-e] [-r] [-t] [-w] [-x] [-z] [-l <filename>] [-p <num>] [-d <path>] [-s <port>] [-a <address>]\n",
             name);
     fprintf(stderr, "  -h  This help screen.\n");
     fprintf(stderr, "  -c  Deprecated. Always on. ANSI Colour when set, TTY when not.\n");
@@ -74,7 +78,10 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -x  Output raw HTML on telnet (nice for debugging).\n");
     fprintf(stderr, "  -y  Strip away the HTML on websockets.\n");
     fprintf(stderr, "  -w  Use Websockets.\n");
-    fprintf(stderr, "  -t  Use TLS (can only be used with Websockets).\n");
+    fprintf(stderr, "  -t  With -w: TLS, so wss:// for browsers. Reads ./server.pem and ./dh.pem.\n");
+    fprintf(stderr, "  -z  TLS on the telnet port (telnets://), for TinTin++ '#ssl', Mudlet's\n");
+    fprintf(stderr, "      'Secure' box and 'telnet -z ssl'. Reads ./server.pem. Not with -w.\n");
+    fprintf(stderr, "      Run a second mplex without -z for plain telnet.\n");
     fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
     
     exit(0);
@@ -93,6 +100,7 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
     arg->nMotherPort = 4242; /* Default port */
     arg->pAddress = str_dup(DEF_SERVER_ADDR);
     arg->g_bUseTLS = false;
+    arg->bTelnetTLS = false;
 
     arg->g_bModeANSI = TRUE;   // Beginning of deprecating support for TTY
     arg->g_bModeTelnet = TRUE; // Beginning of deprecating support for TTY
@@ -144,6 +152,10 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
 
             case 't':
                 arg->g_bUseTLS = true;
+                break;
+
+            case 'z':
+                arg->bTelnetTLS = true;
                 break;
 
             case 'm':
@@ -200,6 +212,12 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
                 exit(0);
         }
     }
+    if (arg->bTelnetTLS && arg->bWebSockets)
+    {
+        fprintf(stderr, "-z is for the telnet port; with -w use -t for wss://.\n");
+        exit(1);
+    }
+
     g_log_file_fd = fopen(log_name, "w");
 
     if (!g_log_file_fd)
