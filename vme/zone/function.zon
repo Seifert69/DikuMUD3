@@ -6817,9 +6817,11 @@ code
 
    :start:
 
+   // A closed door is left to the normal movement code ("The door is closed.")
    wait(SFB_CMD, ( (command(dir_string) or command("drag")) and
 		  (activator.type == UNIT_ST_PC) and
-		  (self.outside == findroom(g_room))));
+		  (self.outside == findroom(g_room)) and
+		  (not isset(self.outside.exit_info[dir], EX_CLOSED))));
 
    pc := activator;
    secure (pc, start);
