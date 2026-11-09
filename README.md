@@ -3,6 +3,11 @@ DikuMUD III using HTML, websockets and live Discord integrated.
 
 D-Day June 21, 2020
 
+DikuMUD III is the engine behind [Valhalla MUD](https://valhalla.com/), online
+since 1991 and the oldest DikuMUD still running. Play it in your browser at
+https://valhalla.com/ or read how it works with screen readers at
+https://valhalla.com/blind-players/.
+
 Look at the end of this file if you want to contribute.
 
 Join us on Discord (live integrated):
