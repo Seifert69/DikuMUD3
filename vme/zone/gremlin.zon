@@ -293,9 +293,9 @@ code
     {
         if (not (BOLDIN_ROGUE_ONGOING in pc.quests))
             goto rogue;
-        else
-            goto roguedone;
     }
+    else
+        goto alldone;
 
     unsecure(pc);
     goto start;
@@ -423,8 +423,14 @@ code
         unsecure(pc);
         goto start;
 
-:roguedone:
-    // Check if BOLDIN_ROGUE is done (qstWaitDone). For now I don't think you've compelted this part?
+:alldone:
+    // Every part is done: close Boldin's Request
+    exec("say There you are again, " + pc.name + "! The rogue sailed off, I hear.", self);
+    exec("whisper " + pc.name + " That was all an old man could ask for. Thank you, for everything.", self);
+    subextra(pc.quests, BOLDIN_ONGOING);
+    addextra(pc.quests, {BOLDIN_COMPLETE}, "");
+    act("<br><div class='hint'>Quest Completed!</div>", A_SOMEONE, pc, null, null, TO_CHAR);
+    unsecure(pc);
     goto start;
 
 
@@ -767,7 +773,7 @@ code
       exdp := qstSetDone@quests(BOLDIN_HANDOFF, pc);
 		experience(1000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
-		act("<br><div class='xpgain'>You recieve 1000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
+		act("<br><div class='xpgain'>You receive 1000 experience.</div><br>",A_SOMEONE, pc, null, null, TO_CHAR); 
 		item := load("tarn_dagger@gremlin");
         item.height := pc.height;
 		link(item, pc);
@@ -1649,6 +1655,11 @@ dilcopy qstOnComplete@quests(BOLDIN_WATER,
           "emote quite slips you some coins and gives you an empty barrel."},
           500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
 
+dilcopy qstOnComplete@quests(BOLDIN_ROGUE,
+         {"say So you found my rogue, $1N!",
+          "whisper $1N He'll have that boat provisioned and be off before the tide turns."},
+          500, 2 * COPPER_MULT, {""});
+
 dilcopy qstOnComplete@quests(BOLDIN_HANDOFF,
          {"say I see you have returned, $1N.",
           "say I am truly saddened by the news that has reached me.",
@@ -1896,7 +1907,7 @@ code
 			 "say I'd have done the same already, only I'm not so handy without me trusty cutlass.",
 			 "emote turns his attention to provisioning his boat, giving you a dismissive wave.",
 			 "::<br><div class='hint'>Quest Completed!</div>::", 
-			 "::<br><div class='xpgain'>You recieve 3000 experience.</div><br>::"
+			 "::<br><div class='xpgain'>You receive 3000 experience.</div><br>::"
              }, 3000, 0, {""});
 
 	if (pc == null)
