@@ -2774,7 +2774,8 @@ code
 
    if (test > item.capacity)
    {
-      act("There is no room for you in there.", A_ALWAYS, self, null, null, TO_CHAR);
+      // Body weight and everything carried count, coins too
+      act("There is no room for you and all you carry in $2n.", A_ALWAYS, self, item, null, TO_CHAR);
       return;
    }
 
