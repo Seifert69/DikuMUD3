@@ -320,7 +320,7 @@ code
    subextra (tgt.quests,"Brother Maynard's Quest Ongoing");
    subextra (tgt.quests,"Brother Maynard's Quest Complete");
    subextra (tgt.quests,"Sun Quest Ongoing");
-   subextra (tgt.quests,"Golem Quest Ongoing");
+   // not "Golem Quest Ongoing": that is the necromancers' golem quest now (necro_guild GOLEM_ONGOING)
    subextra (tgt.quests,"Golem Quest Complete");
    subextra (tgt.quests,"Sun Sword Quest Complete");
    subextra (tgt.extra,"$NO_DEC03");    
