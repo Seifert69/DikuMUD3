@@ -97,88 +97,79 @@ Zone by Papi and Quifael </pre>"
 
 dilbegin guardroutine(guardloc : string, dayguard : integer);
 external
-   DailyRoutine@quests(sl : stringlist, arg2 : string);
+   DailySchedule@quests(sched : stringlist, sarg2 : string, pace : integer);
 var
-   i  : integer;
-   sch : intlist;
+   onduty : string;
+   offduty : string;
+   sl : stringlist;
+   i : integer;
 code
 {
-   on_activation((self.position == POSITION_FIGHTING), skip);
-
+   // Each block runs once per shift, also when the guard is loaded mid-shift
    if (dayguard)
-      sch := {5, 18};  // Wake up at 5, go back at 6pm
-   else
-      sch := {17,6};   // Wake up at 17, go home at 6
-
-:start:
-   heartbeat := WAIT_SEC*5;
-   pause;
-   if (mudhour == sch.[0])
    {
-      DailyRoutine@quests({
-         "wake", 
-         "::descr::A $1N is here heading to work.",
-         "yawn",
-         "say Time to get going guys!", 
-         "::walkto::$2t",
-         "::descr::A $1N is here guarding the gate."
-      }, guardloc);
+      onduty := "@5-18";    // Wake up at 5, go back at 6pm
+      offduty := "@18-5";
+   }
+   else
+   {
+      onduty := "@17-6";    // Wake up at 17, go home at 6
+      offduty := "@6-17";
    }
 
-   if(mudhour == sch.[1])
+   // The break after work is one of the three bars, picked at random
+   sl := {
+      "@onduty",
+         "wake",
+         "::descr::A $1N is here heading to work.",
+         "yawn",
+         "say Time to get going guys!",
+         "::walkto::$2t",
+         "::descr::A $1N is here guarding the gate.",
+      "@offduty",
+         "::walkto::grunting_inn@midgaard",
+         "::descr::A $1N is here on $1s evening break.",
+         "buy beer",
+         "drink beer",
+         "stretch",
+         "::descr::A $1N is here heading home.",
+         "::walkto::guard_dorm@midgaard",
+         "yawn",
+         "::descr::A $1N is here resting.",
+         "sleep",
+      "@offduty",
+         "::walkto::grub_inn@midgaard",
+         "::descr::A $1N is here on $1s evening break.",
+         "buy firebreather",
+         "drink firebreather",
+         "::descr::A $1N is here heading home.",
+         "::walkto::guard_dorm@midgaard",
+         "::descr::A $1N is here resting.",
+         "yawn",
+         "sleep",
+      "@offduty",
+         "::walkto::park_cafe@midgaard",
+         "::descr::A $1N is here on $1s evening break.",
+         "buy coffee",
+         "drink coffee",
+         "::descr::A $1N is here heading home.",
+         "::walkto::guard_dorm@midgaard",
+         "::descr::A $1N is here resting.",
+         "yawn",
+         "sleep"
+   };
+
+   i := 0;
+   while (i < length(sl))
    {
-      i := rnd(1,3);
-      if (i == 1) goto bar1;
-      if (i == 2) goto bar2;
-      if (i == 3) goto bar3;
-      else goto start;
+      if (sl.[i] == "@onduty")
+         sl.[i] := onduty;
+      else if (sl.[i] == "@offduty")
+         sl.[i] := offduty;
+      i := i + 1;
+   }
 
-:bar1:
-      pause;
-      DailyRoutine@quests({
-      "::walkto::grunting_inn@midgaard",
-      "::descr::A $1N is here on $1s evening break.",
-      "buy beer", 
-      "drink beer",
-      "stretch", 
-      "::descr::A $1N is here heading home.",
-      "::walkto::guard_dorm@midgaard",
-      "yawn",
-      "::descr::A $1N is here resting.",
-      "sleep"
-   }, "");
-   goto start;
-
-   :bar2:
-   pause;
-   DailyRoutine@quests({
-      "::walkto::grub_inn@midgaard",
-      "::descr::A $1N is here on $1s evening break.",
-      "buy firebreather", 
-      "drink firebreather",
-      "::descr::A $1N is here heading home.",
-      "::walkto::guard_dorm@midgaard",
-      "::descr::A $1N is here resting.",
-      "yawn",
-      "sleep"}, "");
-
-   goto start;
-
-
-   :bar3:
-   pause;
-   DailyRoutine@quests({
-      "::walkto::park_cafe@midgaard",
-      "::descr::A $1N is here on $1s evening break.",
-      "buy coffee", 
-      "drink coffee",
-      "::descr::A $1N is here heading home.",
-      "::walkto::guard_dorm@midgaard",
-      "::descr::A $1N is here resting.",
-      "yawn",
-      "sleep"}, "");
-   goto start;
-  }
+   DailySchedule@quests(sl, guardloc, 5);
 }
 dilend
 
@@ -7885,51 +7876,13 @@ dilcopy blow_whistle@justice();
 dilcopy whistlisten@justice({"midgaard"});
 dilcopy protect_lawful@justice();
 dilcopy arrest_check@midgaard("accuse_room@midgaard");
-dilbegin temple_guard();
-external
- integer walk_room@function (s:string,i:integer);
-
-var
-tf:integer;
-i : integer;
-code
-{
-   on_activation((self.position == POSITION_FIGHTING), skip);
-   heartbeat := WAIT_SEC*5;
-   :start:
-   i := rnd(1,4);
-   if(i == 1) goto one;
-   if(i == 2) goto two;
-   if(i == 3) goto three;
-   if(i == 4) goto four;
-   else goto start;
-
-   :one:
-   tf:=walk_room@function("cth_sw_tower@midgaard",4);
-   pause;
-   exec("emote stands guard.", self);
-   goto start;
-
-   :two:
-   tf:=walk_room@function("cth_se_tower@midgaard",4);
-   pause;
-   exec("emote stands guard.", self);
-   goto start;
-
-   :three:
-   tf:=walk_room@function("cth_sanctum@midgaard",4);
-   pause;
-   exec("emote stands guard.", self);
-   goto start;
-
-   :four:
-   tf:=walk_room@function("cth_square1@midgaard",4);
-   pause;
-   exec("emote stands guard.", self);
-   goto start;
-
-}
-dilend
+/* Stands guard at one of four posts round the temple, picked at random each time */
+dilcopy DailySchedule@quests({
+   "@0-24 repeat", "::walkto::cth_sw_tower@midgaard", "emote stands guard.",
+   "@0-24 repeat", "::walkto::cth_se_tower@midgaard", "emote stands guard.",
+   "@0-24 repeat", "::walkto::cth_sanctum@midgaard", "emote stands guard.",
+   "@0-24 repeat", "::walkto::cth_square1@midgaard", "emote stands guard."},
+   "", 5);
 
 end
 
