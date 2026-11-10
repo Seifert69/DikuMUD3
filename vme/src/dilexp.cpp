@@ -3594,14 +3594,22 @@ void dilfe_ast(dilprg *p)
             break;
 
         case DILV_INT:
-            c = ctime((time_t *)&v1->val.num);
-            assert(strlen(c) >= 1);
+        {
+            // num is 32 bits: copy it, or ctime() reads the rest of the union as the high half
+            time_t t = (time_t)v1->val.num;
+            c = ctime(&t);
+            if (c == nullptr)
+            {
+                v->type = DILV_FAIL;
+                break;
+            }
 
             v->atyp = DILA_EXP;
             v->type = DILV_SP;
             c[strlen(c) - 1] = 0;
             v->val.ptr = str_dup(c);
             break;
+        }
 
         default:
             v->type = DILV_ERR; /* wrong type */

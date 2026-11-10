@@ -365,7 +365,8 @@ const char *trainrestricted(unit_data *pupil, profession_cost *cost_entry, int m
 
     for (int i = 0; i < ABIL_TREE_MAX; i++)
     {
-        if (CHAR_ABILITY(pupil, i) < cost_entry->min_abil[i])
+        // Only a real minimum: gear can push an ability below 0, and "charisma:0" then blocked everything
+        if ((cost_entry->min_abil[i] > 0) && (CHAR_ABILITY(pupil, i) < cost_entry->min_abil[i]))
         {
             sprintf(c, "%s:%d ", g_AbiColl.text[i], cost_entry->min_abil[i]);
             TAIL(c);
