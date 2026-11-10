@@ -1890,6 +1890,15 @@ code
 }
 dilend
 
+// Librarian Quest: 1 if the item's name contains s, as the librarian's old code checked
+// (the item list alone would take any book as "book of knowledge").
+dilbegin integer libNameCheck(u : unitptr, i : integer, s : string);
+code
+{
+   return (s in u.name);
+}
+dilend
+
 %rooms
 
 // Space lent to Dariya
@@ -7631,209 +7640,29 @@ money 5 IRON_PIECE
 #define LIB_COMPLETE "Librarian Quest Complete"
 #define SCRIBE_ONGOING "Scribe Quest Ongoing"
 
-dilbegin li1();
-var
-  pcname   : string;
-  item     : unitptr;
-  pc       : unitptr;
-  i        : integer;
-  exdp     : extraptr;
+dilcopy qstSimpleQuest@quests("Librarian Quest|"+LIB_ONGOING+"|"+LIB_COMPLETE,
+         {"say You look like one who is on a quest.",
+          "say I have a pair of spectacles that I could give you in return for some things I need.",
+          "say Would you like to help me?",
+          "say Please nod or shake."},
+         {"say I am looking for something to write with.",
+          "say A book containing unlimited knowledge.",
+          "say I also search for a little information relating to a group of people named the Sanctuarians.",
+          "say Bring me these things and I can give you the glasses I have.",
+          "say I also know what you seek, and can tell you that there are between six and eight scrolls containing the language of the ancients."},
+         "The Librarian in Midgaard will give you a pair of spectacles for something to write with, a book containing unlimited knowledge, and a little information about a group of people named the Sanctuarians.",
+         {"say Thank you $1n.",
+          "say You have helped me greatly.",
+          "say Here are the glasses."},
+         0, 0, {"obj_15@pit"}, "hasQuest@quests 0 "+SCRIBE_ONGOING);
 
-code
-{
-
-  :init:
-  heartbeat := PULSE_SEC*5;
-  on_activation((self.position <= POSITION_SLEEPING) or
-	       (self.position == POSITION_FIGHTING), skip);
-
-  :start:
-  wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (not
-      command("give")) and ((SCRIBE_ONGOING in
-		 activator.quests)));
-  if(LIB_COMPLETE in activator.quests)
-   goto waitawhile;
-
-  pc := activator;
-  secure(pc, lostpc);
-
-  if(not(LIB_ONGOING in pc.quests))
-    {
-     pause;
-     exec("say You look like one who is on a quest.", self);
-     pause;
-     exec("say I have a pair of spectacles that I could " +
-	  "give you in return for some things I need.", self);
-     pause;
-     exec("say would you like to help me?", self);
-     pause;
-     exec("say Please nod or shake.", self);
-
-     i := 0;
-     while (i < 5)
-     {
-	wait(SFB_CMD, activator #= pc);
-
-	if(command("nod"))
-	{
-	  goto quest_accepted;
-	}
-	else if(command("say"))
-	{
-	  pause;
-	  exec("say Nod if you want to continue, shake " +
-	       "if not.", self);
-	}
-	else if(command("shake"))
-	goto no_quest;
-	i := I + 1;
-     }
-
-  :no_quest:
-  pause;
-  exec("say Fine, good luck in your travels.", self);
-  unsecure(pc);
-  goto waitawhile;
-
-  :quest_accepted:
-  pause;
-  exec("say I am looking for something to write with.",
-	   self);
-  pause;
-  exec("say A book containing unlimited knowledge.", self);
-  pause;
-  exec("say I also search for a little information "+
-       "relating to a group of people named the "+
-	  "Sanctuarians.", self);
-  pause;
-  exec("say Bring me these things and I can give you the "+
-	  "glasses I have.", self);
-  pause;
-  exec("say I also know what you seek, and can tell you that there are "+
-       "between six and eight scrolls containing the language of "+
-       "the ancients", self);
-
-  addextra(pc.quests, {LIB_ONGOING}, "");
-  unsecure(pc);
-  goto start;
-  }
-  else
-  {
-    exdp := LIB_ONGOING in pc.quests;
-    if (("quill" in exdp.names)and
-	("book of knowledge" in exdp.names)and
-	   ("vellum scrap" in exdp.names))
-    {
-      pause;
-      subextra(pc.quests, LIB_ONGOING);
-      addextra(pc.quests, {LIB_COMPLETE}, "");
-      exec("say Thank you " +pc.name+ ".", self);
-      item := load("obj_15@pit");
-      link(item, pc);
-      pause;
-	 exec("say You have helped me greatly.", self);
-	 pause;
-	 exec("say here are the glasses.", self);
-	 pause;
-	 act("The librarian gives you a pair of glasses.",
-		A_SOMEONE, pc, null, null, TO_CHAR);
-
-	 act("The librarian give a pain of glasses to $1n.",
-		A_SOMEONE, self.outside, null, null, TO_ROOM);
-    }
-  }
-
-      unsecure(pc);
-      goto start;
-
-	:waitawhile:
-	heartbeat := PULSE_SEC*60;
-	pause;
-	goto init;
-
-	:lostpc:
-	exec("say I guess the quest wasn't so important.",
-	self);
-	pause;
-	exec("sigh", self);
-	goto start;
-}
-dilend
-
-dilbegin li2();
-var
-  pc     : unitptr;
-  item   : unitptr;
-  exdp   : extraptr;
-
-  code
-  {
-    heartbeat := PULSE_SEC*5;
-    on_activation((self.position <= POSITION_SLEEPING) or
-	       (self.position == POSITION_FIGHTING), skip);
-
-    :start:
-    wait(SFB_CMD, command("give") and
-	(activator.type == UNIT_ST_PC));
-
-    :give:
-    if (not(LIB_ONGOING in activator.quests))
-	goto start;
-
-    pc := activator;
-    item := self.inside;
-    secure(pc, labsecure);
-    secure(item, labsecure);
-
-    wait(SFB_CMD | SFB_TICK, TRUE);
-    if(not(item #= self.inside))
-    {
-      unsecure(item);
-      exdp := LIB_ONGOING in pc.quests;
-
-     if("quill" in self.inside.name)
-     {
-		addstring(exdp.names, "quill");
-		exec("say This will help me write.", self);
-		destroy(self.inside);
-     }
-     else if("book of knowledge" in self.inside.name)
-     {
-		addstring(exdp.names, "book of knowledge");
-		exec("say Ahh, the Book of Knowledge.", self);
-		destroy(self.inside);
-     }
-     else if("vellum scrap" in self.inside.name)
-     {
-		addstring(exdp.names, "vellum scrap");
-		exec("say The tales I search for...", self);
-		destroy(self.inside);
-     }
-     else
-     {
-		exec("say This is not what I am looking " +
-		     "for " +pc.name + ".", self);
-		pause;
-		exec("say Please have it back.", self);
-		link(self.inside, pc);
-     }
-    }
-    unsecure(pc);
-
-    if((command("give")) and
-       (activator.type == UNIT_ST_PC))
-    {
-      goto give;
-    }
-      else
-	goto start;
-
-    :labsecure:
-    exec("sigh", self);
-    goto start;
-
-}
-dilend
+dilcopy qstItemsWanted@quests("Librarian Quest|"+LIB_ONGOING+"|"+LIB_COMPLETE,
+         {"quill", "book of knowledge", "vellum scrap"},
+         {"", "libNameCheck@midgaard 0 book of knowledge", ""},
+         {"say This will help me write.",
+          "say Ahh, the Book of Knowledge.",
+          "say The tales I search for..."},
+         "say This is not what I am looking for, $1n. Please have it back.");
 
 
 end
