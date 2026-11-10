@@ -1006,7 +1006,7 @@ code
    item := self.inside;
    while(item)
    {
-      if ((item.hp<=-1) and (item.type==ITEM_TRASH))
+      if ((item.hp<=-1) and (item.objecttype==ITEM_TRASH))
       {
          item.manipulate:=0;
          item.manipulate:=MANIPULATE_TAKE;
