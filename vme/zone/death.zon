@@ -930,6 +930,9 @@ code
    // corpse.descr = "$1n's corpse is lying here."
    crp.names.[0] := sact(crp.names.[0], A_RAW, self, crp, null, TO_CHAR);
    crp.title := sact(crp.title, A_RAW, self, crp, null, TO_CHAR);
+   // sact capitalises the first letter; keep the NPC title's own ("the cute rabbit's corpse")
+   if (self.type != UNIT_ST_PC)
+      crp.title := left(self.title, 1) + mid(crp.title, 2, length(crp.title));
    crp.outside_descr := sact(crp.outside_descr, A_RAW, self, crp, null, TO_CHAR);
    exd := "$rot" in crp.extra;
    if (exd)
