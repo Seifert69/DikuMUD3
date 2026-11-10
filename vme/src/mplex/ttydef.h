@@ -29,7 +29,7 @@
 #define ANSI_FG_GREEN "\033[0;32m"
 #define ANSI_FG_YELLOW "\033[0;33m"
 #define ANSI_FG_BLUE "\033[0;34m"
-#define ANSI_FG_MAGENTA "\033[35;40m"
+#define ANSI_FG_MAGENTA "\033[0;35m"
 #define ANSI_FG_CYAN "\033[0;36m"
 #define ANSI_FG_WHITE "\033[0;37m"
 
