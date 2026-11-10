@@ -79,6 +79,15 @@ We appreciate any bug or typo reports.  Thanks again. "
 
 %dil
 
+// A step for Action@quests: "::call::fullheal@halfzon 0" heals u fully
+dilbegin integer fullheal(u : unitptr, i : integer, s : string);
+code
+{
+   u.hp := u.max_hp;
+   return (1);
+}
+dilend
+
 dilbegin pain_dil (i:integer,s:stringlist);
 var
  count:integer;
@@ -3107,115 +3116,85 @@ default POSITION_STANDING
 
 dilbegin fire_tender();
 external
- integer walk_room@function (s:string,i:integer);
-
+   integer Action@quests(msg : string, arg2 : string, arg3 : unitptr);
 var
-tf:integer;
+   sl : stringlist;
+   i : integer;
 code
 {
+   // The round of the fire pits. The steps run here one at a time (DailyRoutine@quests would
+   // run them in its own frame), so that the combat interrupt is heard between steps.
+   sl := {
+      "::descr::The fire tender is here.",
+      "yawn", "::wait::25",
+      "sigh", "::wait::25",
+      "say Well better go check on the fire.", "::wait::25",
+      "stand", "::wait::25",
+      "emote stretches his large body.", "::wait::25",
+      "::walkto::tender_hovel@halfzon",
+      "emote picks his belly button with his forefinger.",
+      "emote licks his fingers clean.",
+      "::walkto::ne_pit@halfzon",
+      "emote pokes the fire with his log.",
+      "::descr::The fire tender is here, staring into the fire",
+      "emote grabs a large log from the stack.",
+      "emote grunts loudly under the weight of the log.",
+      "emote throws the log into the fire pit.",
+      "::walkto::n_pit@halfzon",
+      "emote pokes the fire with his log.",
+      "::walkto::nw_pit@halfzon",
+      "emote stares into the fires, grinning.",
+      "::walkto::w_pit@halfzon",
+      "emote stirs the fire with his bare hands.",
+      "cackle",
+      "::walkto::sw_pit@halfzon",
+      "enter pit",
+      "exit",
+      "::call::fullheal@halfzon 0",
+      "grin",
+      "::walkto::s_pit@halfzon",
+      "emote studies the fire.",
+      "::walkto::se_pit@halfzon",
+      "emote pokes the fire with his log.",
+      "emote grabs a large log from the stack.",
+      "emote grunts loudly under the weight of the log.",
+      "emote throws the log into the fire pit.",
+      "::walkto::e_pit@halfzon",
+      "smile",
+      "::walkto::ne_pit@halfzon",
+      "yawn",
+      "::walkto::tender_hovel@halfzon",
+      "::descr::The fire tender is here.",
+      "sigh",
+      "::walkto::tender_room@halfzon",
+      "rest", "::wait::15"};
+
 :start:
-heartbeat:= PULSE_SEC * 30;
-interrupt(SFB_COM, self.position == POSITION_FIGHTING, ohno_combat);
-self.outside_descr:= "The fire tender is here.";
-exec("yawn", self);
-pause;
-exec("sigh", self);
-pause;
-exec("say Well better go check on the fire.", self);
-pause;
-exec("stand", self);
-pause;
-exec("emote stretches his large body.", self);
-pause;
-    tf:=walk_room@function("tender_hovel@halfzon",4);
-exec("emote picks his belly button with his for finger.", self);
-pause;
-exec("emote licks his fingers clean.", self);
-pause;
-    tf:=walk_room@function("ne_pit@halfzon",4);
-pause;
-exec("emote pokes the fire with his log.", self);
-self.outside_descr:= "The fire tender is here, staring into the fire";
-pause;
-exec("emote grabs a large log from the stack.", self);
-exec("emote grunts loudly under the weight of the log.", self);
-pause;
-exec("emote throws the log into the fire pit.", self);
-pause;
-    tf:=walk_room@function("n_pit@halfzon",4);
-pause;
-exec("emote pokes the fire with his log.", self);
-pause;
-    tf:=walk_room@function("nw_pit@halfzon",4);
-pause;
-exec("emote stares into the fires, grinning.", self);
-pause;
-    tf:=walk_room@function("w_pit@halfzon",4);
-pause;
-exec("emote stirs the fire with his bare hands.", self);
-exec("cackle.", self);
-pause;
-    tf:=walk_room@function("sw_pit@halfzon",4);
-pause;
-exec("enter pit", self);
-pause;
-exec("exit", self);
-self.hp:= self.max_hp;
-exec("grin", self);
-pause;
-    tf:=walk_room@function("s_pit@halfzon",4);
-pause;
-exec("emote studies the fire.", self);
-pause;
-    tf:=walk_room@function("se_pit@halfzon",4);
-pause;
-exec("emote pokes the fire with his log.", self);
-pause;
-exec("emote grabs a large log from the stack.", self);
-exec("emote grunts loudly under the weight of the log.", self);
-pause;
-exec("emote throws the log into the fire pit.", self);
-pause;
-    tf:=walk_room@function("e_pit@halfzon",4);
-pause;
-exec("smile", self);
-pause;
-    tf:=walk_room@function("ne_pit@halfzon",4);
-pause;
-exec("yawn", self);
-pause;
-    tf:=walk_room@function("tender_hovel@halfzon",4);
-self.outside_descr:= "The fire tender is here.";
-pause;
-exec("sigh", self);
-pause;
-    tf:=walk_room@function("tender_room@halfzon",4);
-pause;
-exec("rest", self);
-pause;
-pause;
-pause;
-pause;
-goto start;
+   interrupt(SFB_COM, self.position == POSITION_FIGHTING, ohno_combat);
+   i := 0;
+   while (i < length(sl))
+   {
+      heartbeat := PULSE_SEC*5;
+      pause;
+      if (Action@quests(sl.[i], "", null) == 0)
+         break;    // a walk that didn't get there: start the round again
+      i := i + 1;
+   }
+   goto start;
 
 :ohno_combat:
-
-heartbeat:= PULSE_SEC*3;
-while (self.position == POSITION_FIGHTING) pause;
-    tf:=walk_room@function("tender_room@halfzon",4);
-exec("rest", self);
-pause;
-exec("emote licks his wounds.", self);
-self.hp:= self.max_hp;
-exec("sigh", self);
-heartbeat:= PULSE_SEC*30;
-pause;
-pause;
-pause;
-pause;
-goto start;
-
-
+   heartbeat := PULSE_SEC*3;
+   while (self.position == POSITION_FIGHTING)
+      pause;
+   i := Action@quests("::walkto::tender_room@halfzon", "", null);
+   exec("rest", self);
+   pause;
+   exec("emote licks his wounds.", self);
+   self.hp := self.max_hp;
+   exec("sigh", self);
+   heartbeat := PULSE_SEC*120;
+   pause;
+   goto start;
 }
 dilend
 
