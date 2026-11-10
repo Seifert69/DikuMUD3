@@ -211,7 +211,7 @@ code
 {
 	act ("Your $2N sparkles and you drop it to the ground.",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act ("$1n's $2n sparkles and drops to the ground.",
+	act ("$1n's $2N sparkles and drops to the ground.",
 		A_SOMEONE,self.outside,self,null,TO_REST);
 	act ("You have been added to Santa's Naughty List for trying to use someone else's gift!",
 		A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -223,7 +223,7 @@ code
 {
 	act ("You $2n sparkles and you drop it to the ground.",
 		A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act ("$1n's $2n sparkles and drops to the ground.",
+	act ("$1n's $2N sparkles and drops to the ground.",
 		A_SOMEONE,self.outside,self,null,TO_REST);
 	act ("You have been added to Santa's Naughty List. You haven't done the holiday quest!",
 		A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -672,7 +672,7 @@ code
 	
 	act("A burst of holiday magic erupts from your $2N!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("Your $2N has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act("A burst of holiday magic erupts from $1n's $2n!",A_ALWAYS,self.outside,self,null,TO_REST);
+	act("A burst of holiday magic erupts from $1n's $2N!",A_ALWAYS,self.outside,self,null,TO_REST);
 	pc.hp := pc.max_hp;
 	pc.endurance := pc.max_endurance;
 	pc.mana := pc.max_mana;
@@ -699,7 +699,7 @@ code
 		addextra(self.extra, {X_CHARGES}, "charged");
 	
 	act("Your $2N twinkles magically!",A_ALWAYS,self.outside,self,null,TO_CHAR);
-	act("$1n's $2n twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
+	act("$1n's $2N twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
 	if(self.extra.[X_CHARGES].descr == "empty")
 	{
 		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";

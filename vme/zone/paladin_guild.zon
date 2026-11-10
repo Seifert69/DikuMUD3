@@ -172,7 +172,7 @@ code
 
    act ("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
-   act ("$1n's $2n burns $1m and $1s drops it to the ground.",
+   act ("$1n's $2N burns $1m and $1s drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
    act ("Being in the right guild might help.",
       A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -1299,11 +1299,11 @@ The blade is of good craftmanship and bears a magic bonus.<br/>"
 extra {"$wear_s"}
 "Your $2N starts to glow as you wrap your hands around its hilt."
 extra {"$wear_o"}
-"$1n's $2n starts to glow as $1e wraps $1s hands around its hilt."
+"$1n's $2N starts to glow as $1e wraps $1s hands around its hilt."
 extra {"$rem_s"}
 "You sheat your $2N... The glow from the blade subsides."
 extra {"$rem_o"}
-"As $1n sheats $1s $2n, the glow from its blade subsides."
+"As $1n sheats $1s $2N, the glow from its blade subsides."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -1340,11 +1340,11 @@ act("Your $2N engulfs $3n in living flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams in agony as $3s body is devoured in the fury of the fire!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("$1n's $2n engulfs $3n in living flame!"
+act("$1n's $2N engulfs $3n in living flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n screams in agony as $3s body is devoured in the fury of the fire!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("$1n's $2n flames violently, fire engulfs your body!"
+act("$1n's $2N flames violently, fire engulfs your body!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT);
 act("The holy fire devours you in unbearable pain!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT);
@@ -1366,7 +1366,7 @@ if (random < 20)
 act("Your $2N flickers and burst into flames, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("$1n's $2n flickers and bursts into flames, burning $3n!"
+act("$1n's $2N flickers and bursts into flames, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's $2N flickers and bursts into flames, burning you!"
@@ -1376,9 +1376,9 @@ else if (random < 30)
 {
 act("Fire flickers along the edge of your $2N!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("Fire flickers along the edge of $1n's $2n!"
+act("Fire flickers along the edge of $1n's $2N!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("Fire flickers along the edge of $1n's $2n!"
+act("Fire flickers along the edge of $1n's $2N!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
 }
 else if (random < 40)
@@ -1387,11 +1387,11 @@ act("Blade of your $2N flashes in a blinding flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("Blade of $1n's $2n flashes in a blinding flame!"
+act("Blade of $1n's $2N flashes in a blinding flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("A blinding flash of fire from $1n's $2n causes you to avert your
+act("A blinding flash of fire from $1n's $2N causes you to avert your
 eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
 }
 if (random < 50)
@@ -1400,11 +1400,11 @@ act("The hilt of your $2N pulses, the dragon's eyes glow with a red light!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n suddenly clutches $3s chest and screams in agony!",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("The eyes of the carved dragon on $1n's $2n glow with a red light!"
+act("The eyes of the carved dragon on $1n's $2N glow with a red light!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n suddenly clutches $3s chest and screams in agony!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("The eyes of the carved dragon on $1n's $2n glow with a red light!"
+act("The eyes of the carved dragon on $1n's $2N glow with a red light!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT);
 act("A searing PAIN drives through your chest!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
@@ -1415,11 +1415,11 @@ act("Fire erupts from your $2N, flames reach for $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams in agony!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("Fire erupts from $1n's $2n, the flames reach for $3n!"
+act("Fire erupts from $1n's $2N, the flames reach for $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n screams in agony!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("Fire erupts from $1n's $2n, the flames reach out for you!"
+act("Fire erupts from $1n's $2N, the flames reach out for you!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT);
 act("That REALLY hurt!"
 ,A_ALWAYS,self.outside,self,null,TO_VICT);
@@ -1474,7 +1474,7 @@ if (i < self.outside.abilities[ABIL_DIV])
 {
    act("Your $2N glows brightly in response to your prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-   act("$1N's $2n glows brightly in response to $1n's prayer!",
+   act("$1N's $2N glows brightly in response to $1n's prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_REST);
 n:=cast_spell(SPL_BLESS,self.outside,self,self.outside,"");
 pause;
@@ -1527,7 +1527,7 @@ Amulet.<br/>"
 extra {"$wear_s"}
 "Reverently, you slip your $2N around your neck."
 extra {"$wear_o"}
-"$1n reverently slips $1s $2n around $1s neck."
+"$1n reverently slips $1s $2N around $1s neck."
 extra {"$rem_s"}
 "You carefully remove $2n."
 extra {"$rem_o"}

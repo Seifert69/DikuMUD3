@@ -93,13 +93,13 @@ code
    wait(SFB_TICK,TRUE);
    act("Your $2N flickers and starts to fade..."
    ,A_ALWAYS,self,ting,null,TO_CHAR);
-   act("$1n's $2n flickers and starts to fade..."
+   act("$1n's $2N flickers and starts to fade..."
    ,A_ALWAYS,self,ting,null,TO_REST);
    heartbeat := PULSE_SEC*10;
    pause;
    act("Your $2N ceases its brief existence and merges with your soul."
    ,A_ALWAYS,self,ting,null,TO_CHAR);
-   act("$1n's $2n ceases its brief existence and merges with $1n's soul."
+   act("$1n's $2N ceases its brief existence and merges with $1n's soul."
    ,A_ALWAYS,self,ting,null,TO_REST);
 
 :gone:
@@ -1057,7 +1057,7 @@ extra {"$wear_o"}
 extra {"$rem_s"}
 "As you let go of your $2N, it flickers and starts to fade..."
 extra {"$rem_o"}
-"$1n lets go of $1s $2n, it flickers and fades away..."
+"$1n lets go of $1s $2N, it flickers and fades away..."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_WAR_HAMMER, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 STR_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
@@ -1165,7 +1165,7 @@ flux := rnd(0,3);
 secure(pc,gone);
 act("You touch your $2N and pray silently for aid."
 ,A_ALWAYS,pc,self,null,TO_CHAR);
-act("$1n touches $1s $2n, $1s lips moving in a silent prayer."
+act("$1n touches $1s $2N, $1s lips moving in a silent prayer."
 ,A_ALWAYS,pc,self,null,TO_REST);
 if (pc.mana < 6)
 {

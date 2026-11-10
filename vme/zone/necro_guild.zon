@@ -1563,7 +1563,7 @@ extra {"$wear_o"}
 extra {"$rem_s"}
 "You let go of your $2N, the power fades away and dies out."
 extra {"$rem_o"}
-"$1n lets go of $1s $2n, you see the power of it fade away and die out."
+"$1n lets go of $1s $2N, you see the power of it fade away and die out."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 MATERIAL_ORGANIC("This item is made of bone.")
 WEAPON_DEF(WPN_SCYTHE, BONUS_GOOD, BONUS_EXCELLENT_PLUS)  // Xyzzy: 4,8
@@ -1596,7 +1596,7 @@ A_ALWAYS,self.outside,self,null,TO_REST);
 pause;
 act ("Lightning crackles along the bone of your Scythe...",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("Lightning crackles along $1n's $2n!",
+act ("Lightning crackles along $1n's $2N!",
 A_ALWAYS,self.outside,self,null,TO_REST);
 self.outside.mana:= 0;
 pause;
@@ -1608,7 +1608,7 @@ self.outside.hp:= 10;
 pause;
 act ("A single drop of blood slides down the edge of your $2N... the
 ritual is complete!", A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("A single drop of blood slides down the edge of $1n's $2n...",
+act ("A single drop of blood slides down the edge of $1n's $2N...",
 A_ALWAYS,self.outside,self,null,TO_REST);
 if (self.outside.abilities[ABIL_BRA] < 35)
 {
@@ -1657,7 +1657,7 @@ if (flux < 25)
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
    act("$3n screams in terror and pain!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-   act("$1N's $2n emits a ghastly howl in response to $1s call!",
+   act("$1N's $2N emits a ghastly howl in response to $1s call!",
    A_ALWAYS,self.outside,self,enemy,TO_REST);
    act("$3n screams in terror and pain!",
    A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
@@ -1689,7 +1689,7 @@ if (flux < 50)
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$2n grasps $2s head and screams wildly!",
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
-   act("$1N's $3n emits a ghastly howl in response to $1s call!",
+   act("$1N's $3N emits a ghastly howl in response to $1s call!",
    A_ALWAYS,self.outside,enemy,self,TO_REST);
    act("$2n grasps $2s head and screams wildly!",
    A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);

@@ -494,9 +494,9 @@ code
 {
    act("The area grows darker as your $2N absorbs $3n's lifeforce!",
         A_SOMEONE, self, medium, target, TO_CHAR);
-   act("The area grows darker as $1n's $2n drains $3n of $3s lifeforce!",
+   act("The area grows darker as $1n's $2N drains $3n of $3s lifeforce!",
         A_SOMEONE, self, medium, target, TO_NOTVICT);
-   act("Your vision blurs and fades as $1n's $2n drains you!",
+   act("Your vision blurs and fades as $1n's $2N drains you!",
         A_SOMEONE, self, medium, target, TO_VICT);
    return;
 }
@@ -2704,7 +2704,7 @@ code
       enemy.hp := enemy.hp + i ;
       act("Your $2N shoots forth a burst of pure evil ",
       A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-      act("$1n's $2n emits  a force of pure evil",
+      act("$1n's $2N emits  a force of pure evil",
       A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 
    }
@@ -2754,7 +2754,7 @@ code
         act("As you wield your $2N, it reaches around and wraps its "+
         " talons about your wrist. ",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
-        act("$1n's wrist is grabbed by $1s $2n.",
+        act("$1n's wrist is grabbed by $1s $2N.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -2776,7 +2776,7 @@ code
         {
         act("$2n  reluctantly releases your wrist.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
-        act("$1n's wrist is released by $1s $2n.",
+        act("$1n's wrist is released by $1s $2N.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -3353,7 +3353,7 @@ code
       pc.hp := pc.hp + i ;
       act("Your $2N hits  $3n with a jolt of pure power.",
       A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-      act("$1n's $2n hits $3n with a jolt of pure power",
+      act("$1n's $2N hits $3n with a jolt of pure power",
       A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 
 
@@ -3998,7 +3998,7 @@ code
         act("A pulse of pure darkness flows up and down your $2N as you "+
             "wield it.", A_ALWAYS, self.outside, self, null,
             TO_CHAR);
-        act("$1n's $2n seems to draw in the very light itself as $1e "+
+        act("$1n's $2N seems to draw in the very light itself as $1e "+
             "wields it.", A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -4020,7 +4020,7 @@ code
         {
         act("Your $2N shudders and tries to keep itself wielded, but "+
             "to no avail.", A_ALWAYS, self.outside, self, null, TO_CHAR);
-        act("$1n's $2n darken slightly as it leeches a small bit of "+
+        act("$1n's $2N darken slightly as it leeches a small bit of "+
             "energy from $1m.", A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -4068,7 +4068,7 @@ code
         {
           act("Your $2N transforms itself into a battle axe!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a battle axe!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a battle axe!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 7;
           goto start;
@@ -4077,7 +4077,7 @@ code
         {
           act("Your $2N transforms itself into a hand axe!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a hand axe!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a hand axe!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 8;
           goto start;
@@ -4086,7 +4086,7 @@ code
         {
           act("Your $2N transforms itself into a war mattock!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a war mattock!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a war mattock!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 9;
           goto start;
@@ -4095,7 +4095,7 @@ code
         {
           act("Your $2N transforms itself into a war hammer!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a war hammer!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a war hammer!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 10;
           goto start;
@@ -4104,7 +4104,7 @@ code
         {
           act("Your $2N transforms itself into a great sword!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a great sword!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a great sword!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 11;
           goto start;
@@ -4113,7 +4113,7 @@ code
         {
           act("Your $2N transforms itself into a scimitar!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a scimitar!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a scimitar!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 12;
           goto start;
@@ -4122,7 +4122,7 @@ code
         {
           act("Your $2N transforms itself into a katana!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a katana!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a katana!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 13;
           goto start;
@@ -4131,7 +4131,7 @@ code
         {
           act("Your $2N transforms itself into a falchion!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a falchion!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a falchion!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 14;
           goto start;
@@ -4140,7 +4140,7 @@ code
         {
           act("Your $2N transforms itself into a kopesh!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a kopesh!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a kopesh!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 15;
           goto start;
@@ -4149,7 +4149,7 @@ code
         {
           act("Your $2N transforms itself into a broad sword!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a broad sword!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a broad sword!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 16;
           goto start;
@@ -4158,7 +4158,7 @@ code
         {
           act("Your $2N transforms itself into a long sword!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a long sword!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a long sword!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 17;
           goto start;
@@ -4167,7 +4167,7 @@ code
         {
           act("Your $2N transforms itself into a rapier!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a rapier!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a rapier!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 18;
           goto start;
@@ -4176,7 +4176,7 @@ code
         {
           act("Your $2N transforms itself into a short sword!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a short sword!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a short sword!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 19;
           goto start;
@@ -4185,7 +4185,7 @@ code
         {
           act("Your $2N transforms itself into a dagger!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a dagger!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a dagger!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 20;
           goto start;
@@ -4194,7 +4194,7 @@ code
         {
           act("Your $2N transforms itself into a battle mace!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a battle mace!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a battle mace!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 21;
           goto start;
@@ -4203,7 +4203,7 @@ code
         {
           act("Your $2N transforms itself into a mace!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a mace!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a mace!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 22;
           goto start;
@@ -4212,7 +4212,7 @@ code
         {
           act("Your $2N transforms itself into a battle club!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a battle club!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a battle club!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 23;
           goto start;
@@ -4221,7 +4221,7 @@ code
         {
           act("Your $2N transforms itself into a club!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a club!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a club!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 24;
           goto start;
@@ -4230,7 +4230,7 @@ code
         {
           act("Your $2N transforms itself into a morning star!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a morning star!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a morning star!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 25;
           goto start;
@@ -4239,7 +4239,7 @@ code
         {
           act("Your $2N transforms itself into a flail!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a flail!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a flail!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 26;
           goto start;
@@ -4248,7 +4248,7 @@ code
         {
           act("Your $2N transforms itself into a quarterstaff!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a quarterstaff!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a quarterstaff!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 27;
           goto start;
@@ -4257,7 +4257,7 @@ code
         {
           act("Your $2N transforms itself into a spear!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a spear!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a spear!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 28;
           goto start;
@@ -4266,7 +4266,7 @@ code
         {
           act("Your $2N transforms itself into a halberd!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a halberd!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a halberd!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 29;
           goto start;
@@ -4275,7 +4275,7 @@ code
         {
           act("Your $2N transforms itself into a bardiche!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a bardiche!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a bardiche!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 30;
           goto start;
@@ -4284,7 +4284,7 @@ code
         {
           act("Your $2N transforms itself into a sickle!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a sickle!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a sickle!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 31;
           goto start;
@@ -4293,7 +4293,7 @@ code
         {
           act("Your $2N transforms itself into a scythe!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a scythe!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a scythe!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 32;
           goto start;
@@ -4302,7 +4302,7 @@ code
         {
           act("Your $2N transforms itself into a trident!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a trident!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a trident!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 33;
           goto start;
@@ -4311,7 +4311,7 @@ code
         {
           act("Your $2N transforms itself into a clenched fist!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a clenched fist!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a clenched fist!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 34;
           goto start;
@@ -4320,7 +4320,7 @@ code
         {
           act("Your $2N transforms itself into a kicking hoof!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a kicking hoof!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a kicking hoof!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 35;
           goto start;
@@ -4329,7 +4329,7 @@ code
         {
           act("Your $2N transforms itself into a biting maw!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a biting maw!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a biting maw!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 36;
           goto start;
@@ -4338,7 +4338,7 @@ code
         {
           act("Your $2N transforms itself into a stinger!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a stinger!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a stinger!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 37;
           goto start;
@@ -4347,7 +4347,7 @@ code
         {
           act("Your $2N transforms itself into a vicious claw!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a vicious claw!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a vicious claw!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 38;
           goto start;
@@ -4356,7 +4356,7 @@ code
         {
           act("Your $2N transforms itself into a crushing vise!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a crushing vise!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a crushing vise!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 39;
           goto start;
@@ -4365,7 +4365,7 @@ code
         {
           act("Your $2N transforms itself into a whip!", A_SOMEONE,
               pc, self, null, TO_CHAR);
-          act("$1n's $2n transforms itself into a whip!", A_SOMEONE,
+          act("$1n's $2N transforms itself into a whip!", A_SOMEONE,
               pc, self, null, TO_REST);
           self.value[0] := 40;
           goto start;
@@ -4394,7 +4394,7 @@ code
        i := rnd(1, 100);
        if (i <= 5)
        {
-          act("$1n's $2n shimmmers and the light seems to slide off of it!",
+          act("$1n's $2N shimmmers and the light seems to slide off of it!",
               A_SOMEONE, pc, self, null, TO_REST);
           act("Your $2N shimmmers and the light seems to slide off of it!",
               A_SOMEONE, pc, self, null, TO_CHAR);
@@ -4410,7 +4410,7 @@ code
        }
        if (i > rnd(1, 100))
        {
-          act("$1n's $2n emits a flash of darkness!", A_SOMEONE, pc, self,
+          act("$1n's $2N emits a flash of darkness!", A_SOMEONE, pc, self,
               null, TO_REST);
           act("Your $2N emits a flash of darkness!", A_SOMEONE, pc, self,
               null, TO_CHAR);
@@ -4463,7 +4463,7 @@ code
         {
         act("$2n squirms as you wield it.", A_ALWAYS, self.outside,
             self, null, TO_CHAR);
-        act("$1n's $2n squirms as $1e wields it.", A_SOMEONE, self.outside,
+        act("$1n's $2N squirms as $1e wields it.", A_SOMEONE, self.outside,
             self, null, TO_REST);
         }
         }
@@ -4485,7 +4485,7 @@ code
         {
         act("Your $2N goes limp as you unwield it.", A_ALWAYS, self.outside,
             self, null, TO_CHAR);
-        act("$1n's $2n goes limp as $1e unwields it.", A_SOMEONE,
+        act("$1n's $2N goes limp as $1e unwields it.", A_SOMEONE,
             self.outside, self, null, TO_REST);
         }
         }
@@ -4513,12 +4513,12 @@ code
       {
          act("Your $2N senses your will and glows softly.", A_SOMEONE,
              self.outside, self, null, TO_CHAR);
-         act("$1n's $2n glows softly.", A_SOMEONE, self.outside, self,
+         act("$1n's $2N glows softly.", A_SOMEONE, self.outside, self,
              null, TO_REST);
          self.value[0] := 40;
          act("Your $2N is now a whip!", A_SOMEONE, self.outside, self,
              null, TO_CHAR);
-         act("$1n's $2n is now a whip!", A_SOMEONE, self.outside, self,
+         act("$1n's $2N is now a whip!", A_SOMEONE, self.outside, self,
              null, TO_REST);
          goto start;
       }
@@ -4526,12 +4526,12 @@ code
       {
          act("Your $2N senses your will and glows softly.", A_SOMEONE,
              self.outside, self, null, TO_CHAR);
-         act("$1n's $2n glows softly.", A_SOMEONE, self.outside, self,
+         act("$1n's $2N glows softly.", A_SOMEONE, self.outside, self,
              null, TO_REST);
          self.value[0] := 26;
          act("Your $2N is now a flail!", A_SOMEONE, self.outside, self,
              null, TO_CHAR);
-         act("$1n's $2n is now a flail!", A_SOMEONE, self.outside, self,
+         act("$1n's $2N is now a flail!", A_SOMEONE, self.outside, self,
              null, TO_REST);
          goto start;
       }
@@ -4557,7 +4557,7 @@ code
        pc := self.outside;
        enemy := self.outside.fighting;
        act("Your $2N strikes!", A_SOMEONE, pc, self, enemy, TO_CHAR);
-       act("$1n's $2n strikes!", A_SOMEONE, pc, self, enemy, TO_REST);
+       act("$1n's $2N strikes!", A_SOMEONE, pc, self, enemy, TO_REST);
        while (n > 0)
        {
          k := rnd(1, 100);
@@ -4569,11 +4569,11 @@ code
          }
          n := n - 1;
        }
-       act("You are struck "+itoa(d)+" times by $1n's $2n!", A_SOMEONE,
+       act("You are struck "+itoa(d)+" times by $1n's $2N!", A_SOMEONE,
            pc, self, enemy, TO_VICT);
        act("Your $2N strikes $3n "+itoa(d)+" times!", A_SOMEONE, pc, self,
            enemy, TO_CHAR);
-       act("$3n is struck "+itoa(d)+" times by $1n's $2n!", A_SOMEONE,
+       act("$3n is struck "+itoa(d)+" times by $1n's $2N!", A_SOMEONE,
            pc, self, enemy, TO_NOTVICT);
        goto start;
 }

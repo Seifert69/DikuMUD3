@@ -614,7 +614,7 @@ code
 
    if (hm <= 0)
    {
-      act("You fail to steal $3n's $2n, but at least no one was watching!",
+      act("You fail to steal $3n's $2N, but at least no one was watching!",
         A_SOMEONE, self, targ, vict, TO_CHAR);
       quit;
    }
@@ -637,7 +637,7 @@ code
       quit;
    }
 
-   act("You stealthily steal $3n's $2n and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
+   act("You stealthily steal $3n's $2N and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
    link(targ, self);
    awareness_check(self, vict, SKI_STEAL, "You notice $2n stealing something from $3n");
    send_done("steal",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
@@ -901,7 +901,7 @@ code
 
     if (hm <= 0)
     {
-        act("You fail to filch $3n's $2n, but at least no one was watching!",
+        act("You fail to filch $3n's $2N, but at least no one was watching!",
         A_SOMEONE, self, targ, vict, TO_CHAR);
         quit;
     }
@@ -923,7 +923,7 @@ code
         quit;
     }
 
-    act("You stealthily filch $3n's $2n and quickly tuck it out of " +
+    act("You stealthily filch $3n's $2N and quickly tuck it out of " +
             "sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
     link(targ, self);
     awareness_check(self, vict, SKI_FILCH, "You notice $2n stealing jewelry from $3n.");
@@ -4959,7 +4959,7 @@ code
    {
       act("You sadly mangle the "+skin_name+" of $3n with your $2N.",
          A_SOMEONE, self, wpn, targ, TO_CHAR);
-      act("$1n mangles the "+skin_name+"  of $3n with $1s $2n. What a mess!",
+      act("$1n mangles the "+skin_name+"  of $3n with $1s $2N. What a mess!",
          A_SOMEONE, self, wpn, targ, TO_ROOM);
 
       if (beheaded==0){
@@ -4976,7 +4976,7 @@ code
 
    s := hm_adjective(hm);
    act("Using your $2N you"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_CHAR);
-   act("$1n uses $1s $2n to"+s+"skin $3n .", A_SOMEONE, self, wpn, targ, TO_REST);
+   act("$1n uses $1s $2N to"+s+"skin $3n .", A_SOMEONE, self, wpn, targ, TO_REST);
 
    race_name := race_name(targ.value[4]);
    targ.title:="a skinned " + targ.names.[0];
@@ -8814,7 +8814,7 @@ code
 /*
       act("Your $2N glows!",
           A_ALWAYS, self, missile, null, TO_CHAR);
-      act("$1n's $2n glows!",
+      act("$1n's $2N glows!",
           A_ALWAYS, self, missile, null, TO_REST);
 */
    }
@@ -8824,7 +8824,7 @@ code
       slay_bon := 30;
       act("Your $2N glows!",
           A_ALWAYS, self, weapon, null, TO_CHAR);
-      act("$1n's $2n glows!",
+      act("$1n's $2N glows!",
           A_ALWAYS, self, weapon, null, TO_REST);
    }
 

@@ -1189,7 +1189,7 @@ wait (SFB_TICK,(self.equip==WEAR_WIELD));
 heartbeat:=PULSE_SEC*5;
 act ("The jet on your $2N pulses with soft, blue light.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("The jet on $1n's $2n pulses with soft, blue light.",
+act ("The jet on $1n's $2N pulses with soft, blue light.",
 A_ALWAYS,self.outside,self,null,TO_REST);
 sendto ("add charge",self);
 goto start;
@@ -1333,7 +1333,7 @@ act("The air shimmers and a shape begins to take form."
 ,A_ALWAYS,self.outside,self,null,TO_REST);
 act("Your $2N flares violently, you lose control of the apparition!"
 ,A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n flares violently, $1e loses control of the apparition!"
+act("$1n's $2N flares violently, $1e loses control of the apparition!"
 ,A_ALWAYS,self.outside,self,null,TO_REST);
 pc.mana := pc.mana-(rnd(5,20));
 pc.endurance := pc.endurance-(rnd(1,10));
@@ -1355,7 +1355,7 @@ goto start;
         :fail:
 act("Your charm is drained of power!"
 , A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n flickers briefly but nothing happens."
+act("$1n's $2N flickers briefly but nothing happens."
 , A_ALWAYS,self.outside,self,null,TO_REST);
 
 :charge:
@@ -1375,7 +1375,7 @@ goto start;
         :no_person:
 act("You grip your $2N, but it senses no need to aid you outside combat."
 , A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n grips $1s $2n and concentrates, but nothing happens."
+act("$1n grips $1s $2N and concentrates, but nothing happens."
 , A_ALWAYS,self.outside,self,null,TO_REST);
 goto start;
 }
