@@ -332,6 +332,9 @@ dilend
 //    "::linkto::temple@udgaard"     moves straight there, for places with no exit leading there
 //                                   (no messages: add an act pair before and after).
 //    "::wait::30"                   waits 30 seconds.
+//    "::ready::"                    gets the NPC on its feet: wakes it if asleep, stands it up if
+//                                   resting or sitting, a step per heartbeat, and tries again
+//                                   (magic sleep, a fight, stunned) up to 10 times before giving up.
 //    "::call::myfunc@myzone 0 text" calls integer myfunc(u : unitptr, i : integer, s : string)
 //                                   with the NPC, 0 and "text": for whatever the list can't do,
 //                                   e.g. loading an item or checking that someone is here.
@@ -357,7 +360,23 @@ code
    if ((msg.[0] == ":") and (msg.[1] == ":"))
    {
       tsl := split(msg, "::");
-      if ((length(tsl) == 4) and (tsl.[1] == "walkto"))
+      if ((length(tsl) >= 2) and (tsl.[1] == "ready"))
+      {
+         i := 0;
+         while (self.position != POSITION_STANDING)
+         {
+            i := i + 1;
+            if (i > 10)
+               return (0);
+            if (self.position == POSITION_SLEEPING)
+               exec("wake", self);
+            else if ((self.position == POSITION_RESTING) or (self.position == POSITION_SITTING))
+               exec("stand", self);
+            if (self.position != POSITION_STANDING)
+               pause;
+         }
+      }
+      else if ((length(tsl) == 4) and (tsl.[1] == "walkto"))
       {
          s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
          i := walk_room@function(s, atoi(tsl.[3]));
