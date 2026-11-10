@@ -16,8 +16,8 @@ ctest                                  # 5 Boost.Test suites, must all pass
 - The codebase builds **warning-free**; keep it that way (add `-DWERROR=1` to enforce).
 - `make all` also compiles all zones (`zone_files` target) and runs the unit
   tests as a post-build step.
-- Production servers should run a Release build; the Debug default is
-  noticeably slower (no optimization + libstdc++ assertions).
+- The live servers build with `cmake -DO2=1 .`: the Debug build type (`MUD_DEBUG`
+  checks, symbols) at -O2. Plain `cmake .` is -O0 and noticeably slower.
 
 ## Run locally
 
@@ -36,8 +36,8 @@ cd vme/bin
   `vme/etc/server.cfg`).
 - "Can't bind Mother Connection port 4999" means a stale server is still
   running: `pkill -x vme`.
-- `runvme.sh` / `runmplex.sh <port>` are the keep-alive wrapper scripts used
-  for real deployments.
+- The live servers run vme and the mplexers under systemd, which restarts vme
+  when it exits; the old `runvme.sh` / `runmplex.sh` wrappers aren't used there.
 
 ## Logs
 
@@ -122,11 +122,30 @@ Don't use public channels on the live muds: they relay to Discord.
 | `deploy/` | deploy scripts for valhalla.com |
 | `agents/` | tools for the in-game helper agents (`mud.py`: a telnet session kept open between commands) |
 
+### Proprietary zones
+
+Most of Valhalla's world is not in this repository: about 190 zones (nymgaard with the
+Nymgaard druid and ranger guilds, the clan zones, arabian, dwarves, elfdom and the rest) are
+proprietary, so that people can't simply clone Valhalla. They live in the private repository
+`Seifert69/Zones`, cloned at `~/diku/Zones`.
+
+- Before saying that nothing in the game uses, teaches, loads or curses something, grep
+  `~/diku/Zones` as well as `vme/zone/`.
+- Fix those zones in `Seifert69/Zones` (on a branch, with a PR there); never copy them into this
+  repository, and never quote them anywhere public (wiki, public PRs, Discord).
+- A local boot of this repository alone logs missing zones (elfdom, dwarves, ...); that's expected.
+
 ## Conventions
 
 - DIL is the MUD's scripting language; language docs live at
   <https://wiki.dikumud.com/wiki/DikuMUD>, and `DIL_UNIT_TESTING.md` covers
   in-game DIL test zones.
+- DIL that moves an NPC through a room's exit: use `exec("<dir>", self)` so it's an
+  ordinary move (position checks, leave/arrive messages, every DIL listening for
+  movement), then check `self.outside` to see whether it worked. Use `link()` only
+  where there is no exit. `walk_room`/`pathto` only route between rooms that can
+  reach each other both ways, so they fail across one-way exits; a single exec'd
+  step through the exit still works.
 - Unit tests: one `*_tests.cpp` per class in `unit_tests/`; class-level
   changes (e.g. to `cNamelist`) should come with test cases.
 - `vme/lib/` contains live player data on a real server — never assume it is
