@@ -2844,6 +2844,7 @@ The spirit of generosity and camaraderie fills the room, creating a sense of uni
 among the village's inhabitants."
 flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
+ALWAYS_LIGHT
 gmap(465,420)
 west to temple;
 /* Dil to restrict getting all */
