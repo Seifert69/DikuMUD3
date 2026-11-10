@@ -53,6 +53,16 @@ Zone by Beren. Suggestions mail to PAPI.
 lifespan 37
 reset RESET_ANYHOW
 
+%dil
+
+// A step for DailySchedule@quests: "::call::isawake@goblin_cave 0" ends the block while u sleeps
+dilbegin integer isawake(u : unitptr, i : integer, s : string);
+code
+{
+   return (u.position != POSITION_SLEEPING);
+}
+dilend
+
 /*==============================================================*/
 /*                           ROOMS                              */
 /*==============================================================*/
@@ -1437,7 +1447,7 @@ code
     tf:=walk_room@function("pt_d_fo@elfdom",4);
 
     pause;
-    link(self, load("mushroom@goblin_cave"));
+    item := load("mushroom@goblin_cave");   // load() puts it in his inventory
     exec("emote gets a mushroom.", self);
     pause;
     exec("say Dad wazz easy.", self);
@@ -1545,26 +1555,10 @@ default POSITION_SLEEPING
 
 dilcopy teamwork@function("officer");
 dilcopy rescue@function("officer");
-dilbegin sleeperprg();
-external
- integer walk_room@function (s:string,i:integer);
-
-var
-tf:integer;
-code
-{
-  heartbeat:=PULSE_SEC*250;
-  :start:
-   tf:=walk_room@function("bed_chamber@goblin_cave",4);
-
-  pause;
-  exec("yawn", self);
-  pause;
-  exec("sleep", self);
-  pause;
-  goto start;
-}
-dilend
+/* Woken, the goblin goes back to the bed chamber and to sleep */
+dilcopy DailySchedule@quests({"@0-24 repeat",
+   "::call::isawake@goblin_cave 0", "::walkto::bed_chamber@goblin_cave", "yawn", "sleep"},
+   "", 30);
 
 end
 
