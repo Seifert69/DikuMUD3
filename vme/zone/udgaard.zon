@@ -239,6 +239,14 @@ code
 	
 	item := load(namex + "@" + zonex);
 
+	if (dilfind("whipe_me@" + zonex, item))
+	{
+		// A holiday gift loses whipe_me when it is handed out; a fresh copy would delete itself
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a holiday gift. Do not fix.");
+		exec("say I'm afraid this item is created with a magic I dont understand, "+pc.name+"!", self);
+		goto return_old;
+	}
+
 	if (item.title == titlex)
 	{
 		// item doesnt need to be fixed
