@@ -1634,7 +1634,7 @@ code{
 
  act("A silver rune glows furiously on your $2N before it fades away.",
      A_SOMEONE, self, targ, null, TO_CHAR);
- act("A silver rune glows furiously on $1n's $2n before it fades away.",
+ act("A silver rune glows furiously on $1n's $2N before it fades away.",
      A_SOMEONE, self, targ, null, TO_REST);
  quit;
 
@@ -1723,7 +1723,7 @@ quit;
    block;
    act("A silver rune appears on your $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_CHAR);
-   act("A silver rune appears on $1n's $3n before it flickers and vanishes.",
+   act("A silver rune appears on $1n's $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_REST);
   subextra(self.extra,"$Protected With a Wizard Mark");
   quit;
@@ -1747,7 +1747,7 @@ quit;
 
   act("A silver rune appears on your $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_CHAR);
-   act("A silver rune appears on $1n's $3n before it flickers and vanishes.",
+   act("A silver rune appears on $1n's $3N before it flickers and vanishes.",
        A_SOMEONE,activator, null, self, TO_REST);
   subextra(self.extra,"$Protected With a Wizard Mark");
   quit;
@@ -5626,7 +5626,7 @@ code
      size := "shrinks";
    act("Your $2N glows brightly as it $3t",
        A_ALWAYS, self, tgt, size, TO_CHAR);
-   act("$1n's $2n glows as it $3t",
+   act("$1n's $2N glows as it $3t",
        A_ALWAYS, self, tgt, size, TO_REST);
    :lostpc:
    quit;
@@ -6800,7 +6800,7 @@ code
   act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
       TO_CHAR);
 
-  act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+  act("$1n's $2N glows with a warm light...", A_SOMEONE, self, targ, null,
       TO_ROOM);
   quit;
 }
@@ -6855,7 +6855,7 @@ code
    else targ.hp := (targ.hp + fix_ran);
    act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_CHAR);
-   act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+   act("$1n's $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_ROOM);
    quit;
 }
@@ -6914,7 +6914,7 @@ code
    else targ.hp := (targ.hp + fix_ran);
    act("Your $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_CHAR);
-   act("$1n's $2n glows with a warm light...", A_SOMEONE, self, targ, null,
+   act("$1n's $2N glows with a warm light...", A_SOMEONE, self, targ, null,
        TO_ROOM);
    quit;
 }
@@ -7010,7 +7010,7 @@ code
 	  targ, null, TO_ROOM);
       act("Slowly, your $2N rises toward the disk...", A_SOMEONE, self, targ,
 	  null, TO_CHAR);
-      act("Slowly, $1n's $2n rises toward the disk...", A_SOMEONE, self, targ,
+      act("Slowly, $1n's $2N rises toward the disk...", A_SOMEONE, self, targ,
 	  null, TO_ROOM);
       act("As it touches the disk, you feel something go wrong!", A_SOMEONE,
 	  self, targ, null, TO_CHAR);
@@ -7027,7 +7027,7 @@ code
        targ, null, TO_ROOM);
    act("Slowly, your $2N rises toward the disk...", A_SOMEONE, self, targ,
        null, TO_CHAR);
-   act("Slowly, $1n's $2n rises toward the disk...", A_SOMEONE, self, targ,
+   act("Slowly, $1n's $2N rises toward the disk...", A_SOMEONE, self, targ,
        null, TO_ROOM);
    act("$2n touches the swirling rift and vanishes in a flash of light!",
        A_SOMEONE, self, targ, null, TO_ALL);

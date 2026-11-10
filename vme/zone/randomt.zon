@@ -1262,7 +1262,7 @@ code
     }
 
     act("Your $2N makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_CHAR);
-    act("$1n's $2n makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_ROOM);
+    act("$1n's $2N makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_ROOM);
 
     u := activator;
     i := u.fighting.idx;
@@ -1293,8 +1293,8 @@ code
     // Maybe make other descriptions depending on slashing, piercing, crushing. 
     //
     act("You decapitate $3n's head with your $2N, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_CHAR);
-    act("$1n decapitates you with $1s $2n, killing you instantly.", A_SOMEONE, u, self, u.fighting, TO_VICT);
-    act("$1n decapitates $3n with $1s $2n, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_REST);
+    act("$1n decapitates you with $1s $2N, killing you instantly.", A_SOMEONE, u, self, u.fighting, TO_VICT);
+    act("$1n decapitates $3n with $1s $2N, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_REST);
 
     r := u.outside;
     while (r.type != UNIT_ST_ROOM)

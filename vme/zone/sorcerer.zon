@@ -215,7 +215,7 @@ if(fire < 20)
                 ,A_ALWAYS, self.outside, self,self.outside.fighting,TO_CHAR);
              act("$3n pales visibly as $3s mana is drained away!"
                 ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-             act("$1n's $2n glows, energy crackles along $1n's arm!"
+             act("$1n's $2N glows, energy crackles along $1n's arm!"
                ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
              act("$3n pales visibly as $3s mana is drained away!"
                ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
@@ -241,9 +241,9 @@ if(fire < 20)
 	 {
           act("Your $2N glows as it drains mana from $3n!"
             ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-          act("$1n's $2n glows as it drains mana from $3n!"
+          act("$1n's $2N glows as it drains mana from $3n!"
           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
-          act("$1n's $2n glows as it drains your mana!"
+          act("$1n's $2N glows as it drains your mana!"
           ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
               pause;
              goto wait_time;
@@ -253,9 +253,9 @@ if(fire < 20)
       {
         act("Your $2N glows slightly as it attempts to battle $3n's will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-        act("$1n's $2n glows slightly in an attempt to battle $3n will!"
+        act("$1n's $2N glows slightly in an attempt to battle $3n will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
-        act("You feel $1n's $2n intruding on your will, you push the assault back!"
+        act("You feel $1n's $2N intruding on your will, you push the assault back!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
         pause;
         goto wait_time;
@@ -273,7 +273,7 @@ if(fire < 20)
  position_update(self.outside);
  act("Your Vorous glows a little as it draws your energy to prepare for battle!"
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
- act("$1n's grimaces a bit as $1s $2n glows."
+ act("$1n's grimaces a bit as $1s $2N glows."
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
  goto start;
 
@@ -1471,7 +1471,7 @@ extra {"$wear_o"}
 extra {"$rem_s"}
 "You open and remove your $2N."
 extra {"$rem_o"}
-"$1n opens and removes $1s $2n."
+"$1n opens and removes $1s $2N."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")
 dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
@@ -1817,7 +1817,7 @@ act("You pierce $3n's eye and impale $3s brains!",
 A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("$1n pierces $3n's eye and impales $3s brains!"
 , A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
-act("$1n's $2n pierces your eye and impales your brains like a shish-kebab."
+act("$1n's $2N pierces your eye and impales your brains like a shish-kebab."
 ,A_SOMEONE,self.outside,self,enemy,TO_VICT);
 enemy.hp := -8;
 position_update(enemy);
@@ -1827,7 +1827,7 @@ if (flux < 10)
 {
 act("The rune on your $2N glows with a violent light!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-act("The rune on $1n's $2n glows with a violent light!",
+act("The rune on $1n's $2N glows with a violent light!",
 A_SOMEONE,self.outside,self,enemy,TO_REST);
 goto start ;
 }
@@ -1855,7 +1855,7 @@ if (flux < 40)
 {
 act("An eerie, bluish light bathes your $2N as you raise it to strike!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-act("$1n's $2n emits eerie, bluish light as $1n raises it to strike!",
+act("$1n's $2N emits eerie, bluish light as $1n raises it to strike!",
 A_SOMEONE,self.outside,self,enemy,TO_REST);
 goto start;
 }
@@ -1863,9 +1863,9 @@ if (flux < 50)
 {
 act("Your $2N vibrates in your hand as you strike at $3n."
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-act("$1n's $2n vibrates rapidly as $1e strikes.",
+act("$1n's $2N vibrates rapidly as $1e strikes.",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
-act("$1n's $2n vibrates rapidly as it bites into your flesh!"
+act("$1n's $2N vibrates rapidly as it bites into your flesh!"
 ,A_SOMEONE,self.outside,self,enemy,TO_VICT);
 goto start ;
 }

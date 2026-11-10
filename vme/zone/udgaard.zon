@@ -1199,7 +1199,7 @@ code
    {
       act("As you attempt to use $2n it suddenly dissolves.",
          A_ALWAYS, self.outside, self, null, TO_CHAR);
-      act("$1n's $2n suddenly dissolves as $1e attempts to use it,",
+      act("$1n's $2N suddenly dissolves as $1e attempts to use it,",
          A_ALWAYS, self.outside, self, null, TO_REST);
       destroy(self);
    }
@@ -1792,7 +1792,7 @@ if ((u)and(u.value[1]>0))
  u.value[1]:=u.value[1]-1;
  sendtext("You fill your pipe with some tobacco from your pouch.<br/>"
  ,pc);
- act("$1n fills $1s $2n with some tobacco from $1s tobacco pouch."
+ act("$1n fills $1s $2N with some tobacco from $1s tobacco pouch."
  ,A_HIDEINV,pc,self,u,TO_REST);
  goto start;
  }
@@ -1989,7 +1989,7 @@ pause;
 if (i==1)
 {
 sendtext("You inhale deeply the tobacco smoke.<br/>",self.outside);
-act("$1n inhales deeply the tobacco smoke from $1s $2n with every sign "+
+act("$1n inhales deeply the tobacco smoke from $1s $2N with every sign "+
 "of enjoyment.",A_HIDEINV,self.outside,self,null,TO_REST);
 }
 if (i==2)
@@ -2002,13 +2002,13 @@ if (i==3)
 {
 sendtext("Puffing energetically on your "+self.name+", you blow a cloud of "+
 "smoke in the air.<br/>", self.outside);
-act("Puffing energetically on $1s $2n, $1n blows a cloud of smoke.",
+act("Puffing energetically on $1s $2N, $1n blows a cloud of smoke.",
 A_HIDEINV,self.outside,self,null,TO_REST);
 }
 if (i==4)
 {
 sendtext("You take another puff on your "+self.name+".<br/>",self.outside);
-act("$1n takes another puff on $1s $2n.",
+act("$1n takes another puff on $1s $2N.",
 A_HIDEINV,self.outside,self,null,TO_REST);
 }
 if (i==5)
@@ -2062,7 +2062,7 @@ if (txt=="")
  goto start;
  }
  sendtext("You pulse on your "+self.name+".<br/>",self.outside);
- act("$1n pulses on $1s $2n.",
+ act("$1n pulses on $1s $2N.",
  A_SOMEONE,self.outside,self,null,TO_REST);
  goto start;
   }
@@ -10968,7 +10968,7 @@ extra {"$rem_s"}
 "You remove $2n and rub your aching eyes.
 Everything returns to normal shape."
 extra {"$rem_o"}
-"$1n removes $1s $2n and rubs $1s aching eyes."
+"$1n removes $1s $2N and rubs $1s aching eyes."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
 weight 1
 cost 2 GOLD_PIECE

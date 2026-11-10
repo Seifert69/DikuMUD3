@@ -738,7 +738,7 @@ code
          if (pc == looker)
             act("You look at your $2N.", A_ALWAYS, looker, item, pc, TO_CHAR);
          else if (item.equip)
-            act("You look at $3n's $2n.", A_ALWAYS, looker, item, pc,TO_CHAR);
+            act("You look at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_CHAR);
 		   else
 		   {
             act("$3n does not seem to have a $2t.", A_ALWAYS, looker, arg1,pc, TO_CHAR);   /* doesnt have anything name arg1 */

@@ -438,7 +438,7 @@ dilend
 /*
   *  Function designed for an item that can only be in a players inventory.
   * use:
-  *          dilcopy limit_number_to (3,"$2n blows up and you feel stupid","$1n's $2n blows up and $1e looks stupid.);
+  *          dilcopy limit_number_to (3,"$2n blows up and you feel stupid","$1n's $2N blows up and $1e looks stupid.);
   * acts as
   act.[0] char
   * act.[1] rest
@@ -2619,7 +2619,7 @@ code
    {
       act("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
-      act("$1n's $2n burns $1m and $1e drops it to the ground.",
+      act("$1n's $2N burns $1m and $1e drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
       act("Being in the right guild might help.",
       A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -2689,7 +2689,7 @@ code
 	{
 		act("Your $2N burns you and you drop it to the ground.",
 			A_ALWAYS,self.outside,self,null,TO_CHAR);
-		act("$1n's $2n burns $1m and $1e drops it to the ground.",
+		act("$1n's $2N burns $1m and $1e drops it to the ground.",
 			A_SOMEONE,self.outside,self,null,TO_REST);
 		act("Being of the right profession would help.",
 			A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -2753,7 +2753,7 @@ code
    {
       act("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
-      act("$1n's $2n burns $1m and $1e drops it to the ground.",
+      act("$1n's $2N burns $1m and $1e drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
       act("Not being in this guild might help.",
       A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -2815,7 +2815,7 @@ code
     {
     act("Your $2N burns you and you drop it to the ground.",
     A_ALWAYS,self.outside,self,null,TO_CHAR);
-    act("$1n's $2n burns $1m and $1e drops it to the ground.",
+    act("$1n's $2N burns $1m and $1e drops it to the ground.",
     A_SOMEONE,self.outside,self,null,TO_REST);
     act("Doing the right Quest might help.",
     A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -2884,7 +2884,7 @@ if (action=="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
   act("Doing the right Quest might help.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -2951,7 +2951,7 @@ if (action=="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
   act("Doing the right Quest might help.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -3023,7 +3023,7 @@ if (action=="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
 
   if (activator.alignment>max_ali)
@@ -3092,7 +3092,7 @@ if (action=="")
   {
 act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n burns $1m and $1e drops it to the ground.",
+act("$1n's $2N burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
   act("You are above the maximum level allowed to use $3n.",
   A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
@@ -3163,7 +3163,7 @@ code
     if (action=="")
     {
         act("Your $2N burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
-        act("$1n's $2n burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
+        act("$1n's $2N burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
         act("You are not high enough level to use $3n. $2t levels needed to use it.", A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
     }
     else
@@ -3226,7 +3226,7 @@ if (action=="")
   {
 act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n burns $1m and $1e drops it to the ground.",
+act("$1n's $2N burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
   act("You are not high enough level to use $3n.  $2t levels needed to use it.",
   A_ALWAYS,self.outside,itoa (amount),self,TO_CHAR);
@@ -3292,7 +3292,7 @@ if (action=="")
   {
 act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n burns $1m and $1e drops it to the ground.",
+act("$1n's $2N burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
 act("Being the right race might help.",
 A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -3375,7 +3375,7 @@ code
     if (action =="")
     {
         act("Your $2N burns you and you drop it to the ground.", A_ALWAYS,self.outside,self,null,TO_CHAR);
-        act("$1n's $2n burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
+        act("$1n's $2N burns $1m and $1e drops it to the ground.", A_SOMEONE,self.outside,self,null,TO_REST);
 
         amount:=min_abi-activator.abilities[ab];
         abl:=abistr (ab);
@@ -3445,7 +3445,7 @@ if (action =="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
 
     amount:=min_abi-activator.skills[ab];
@@ -3514,7 +3514,7 @@ if (action =="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
     abl:=      spellinfo(ab, amount, amount, amount, amount, amount, amount, amount);
     amount:=min_abi-activator.spells[ab];
@@ -3583,7 +3583,7 @@ if (action =="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
 
     amount:=min_abi-activator.weapons[ab];
@@ -3650,7 +3650,7 @@ if (action=="")
   {
 act("Your $2N burns you and you drop it to the ground.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act("$1n's $2n burns $1m and $1e drops it to the ground.",
+act("$1n's $2N burns $1m and $1e drops it to the ground.",
 A_SOMEONE,self.outside,self,null,TO_REST);
   act("You are not the right sex to use $3n.",
   A_ALWAYS,self.outside,null,self,TO_CHAR);
@@ -3682,7 +3682,7 @@ code
 {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
   act("You really shouldn't try to use someone else's personal item.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -3735,7 +3735,7 @@ if (action=="")
   {
   act("Your $2N burns you and you drop it to the ground.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
-  act("$1n's $2n burns $1m and $1e drops it to the ground.",
+  act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
   act("You really shouldn't try to use someone else's personal item.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
