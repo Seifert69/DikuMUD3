@@ -5485,7 +5485,7 @@ external
 var
    dir_string:string;
    i : integer;
-   first:integer;
+   tries:integer;
   
 code
 {
@@ -5497,12 +5497,21 @@ code
    }
 
    /* do the actual path to call and display results */
-   heartbeat:=1;
-   first:=0;
+   heartbeat:=PULSE_SEC;
+   tries:=0;
 
 :repeater:
    i := pathto(self, tgt);   
    
+   // The first path from a room is worked out in the background; wait for it
+   // (tgt is secured by the spell system for as long as this runs)
+   if ((i == DIR_TRYAGAIN) and (tries < 10))
+   {
+      tries := tries + 1;
+      pause;
+      goto repeater;
+   }
+
    if (i == DIR_TRYAGAIN)
    {
       act("The magic is illusive. Maybe you should try again.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -5522,10 +5531,6 @@ code
    else if (i == DIR_EXIT)
    {
       act ("You should exit this place.", A_ALWAYS,self,null,null,TO_CHAR);
-   }
-   else if (i == DIR_TRYAGAIN)
-   {
-      act("The magic is inconclusive, try again.", A_ALWAYS, self, null, null, TO_CHAR);
    }
    else
    {
