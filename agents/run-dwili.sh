@@ -36,7 +36,7 @@ REVIEW_HOUR=6
 fellows=$(ls ~/.config/valhalla | grep -x '[a-z]*' | grep -v -x dwili | sed 's/^./\u&/; s/^/-e /')
 day=""
 began=0
-review=0
+review=""  # not 0: kill -0 0 signals our own process group and always succeeds
 while [ ! -e ~/.dwili-stop ]; do
     today=$(date +%F)
     log=$LOGDIR/claude-$today.log

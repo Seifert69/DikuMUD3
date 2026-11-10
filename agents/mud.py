@@ -8,6 +8,8 @@ usage: mud.py start [--throw]   log in; the session stays in the background
        mud.py read [SECONDS]    print what came in since the last call (waits up to SECONDS for some)
        mud.py status            is the session logged in, and where
        mud.py way PLACE [from ROOM]   the shortest way to PLACE (room@zone, or words of its title)
+       mud.py find WORDS...     the objects in the item list whose line has all the words,
+                                and where each comes from
        mud.py message NAME TEXT...    something to tell a player when they're next online
        mud.py message           the messages not given yet
        mud.py stop [MINUTES]    quit the game and end the session; with MINUTES, start refuses
@@ -114,6 +116,8 @@ LOGDIR = os.path.expanduser(os.path.join("~/.local/state/mud", AGENT or ""))  # 
 PEOPLE = os.path.expanduser(os.path.join("~", AGENT or "", "memory/people"))
 MESSAGES = os.path.join(os.path.dirname(PEOPLE), "messages.txt")
 MAP = os.path.expanduser(os.environ.get("MUD_MAP", "~/zones/map.txt"))  # from zonemap.py
+ITEMS = os.path.expanduser(os.environ.get("MUD_ITEMS", "~/zones/items.txt"))  # from zoneitems.py
+FIND_MAX = 30       # lines find prints at most
 
 QUIET = 1.0         # the answer to a command is complete when nothing came for this long
 SEND_WAIT = 10      # but wait no longer than this
@@ -984,12 +988,31 @@ def show(r):
         die("not connected; mud.py start logs in again")
 
 
+def find(words):
+    """The item list's lines with all the words in them (any case): the agent's search, since
+    it may read only this file and not run grep."""
+    words = [w.lower() for w in words]
+    try:
+        with open(ITEMS, encoding="utf-8", errors="replace") as f:
+            hits = [line.rstrip("\n") for line in f if all(w in line.lower() for w in words)]
+    except OSError as e:
+        die("can't read %s: %s" % (ITEMS, e.strerror))
+    if not hits:
+        print("[Nothing in the item list has: %s]" % " ".join(words))
+        return
+    print("\n".join(hits[:FIND_MAX]))
+    if len(hits) > FIND_MAX:
+        print("[%d more: add a word to narrow it]" % (len(hits) - FIND_MAX))
+
+
 def way(args):
     """Breadth-first search over the map, around water a walker can't cross; prints the directions."""
     start = None
     if "from" in args:
         i = args.index("from")
         args, start = args[:i], " ".join(args[i + 1:])
+        if start in ("here", "this room"):
+            start = None  # where the character stands
     if not args:
         die("way where?")
     if not start:
@@ -1113,6 +1136,8 @@ def main():
         show(r)
     elif op == "way":
         way(args[1:])
+    elif op == "find" and len(args) > 1:
+        find(args[1:])
     elif op == "message" and len(args) == 1:
         print("\n".join(messages()) or "[No messages waiting]")
     elif op == "message" and len(args) > 2 and re.fullmatch(r"[A-Za-z]+", args[1]):
@@ -1143,6 +1168,11 @@ def main():
         sys.stdout.write(r["text"])
         print("\n[session ended%s]" % (", back at " + time.strftime("%H:%M", time.localtime(paused()))
                                         if paused() else ""))
+    elif op and op not in ("send", "find", "message"):
+        # an agent that tries a game command here (mud.py score) learns the way to send it
+        print('[%s is not a mud.py command. Game commands go through send: bin/mud.py send "%s"]'
+              % (op, " ".join(args)))
+        sys.exit(2)
     else:
         print(__doc__.strip())
         sys.exit(2)
