@@ -24,218 +24,142 @@ level 40-50."
 
 %dil
 
-/* MS2020: Simplifying patrol guards */
-dilbegin lunch(lunchplace : string);
-external
-    integer walk_room@function (s:string,i:integer);    
+// guardschedule's own steps, called with "::call::guardstep@midwalls <i>":
+//    i == 0: back to work: a sleeping guard wakes and stretches, a seated one stands up.
+//    i == 1: makes sure the guard has a coin for the kitchen.
+dilbegin integer guardstep(u : unitptr, i : integer, s : string);
 var
-    tf:integer;
-    i : integer;
+    j : integer;
 code
 {
-    heartbeat := PULSE_SEC * 5;
-    pause;
-    exec("say Gee... time for lunch.", self);
-
-    tf := walk_room@function(lunchplace, 9 * PULSE_SEC);
-    pause;
-
-    if (tf==TRUE) // We reached the destination
+    if (i == 1)
     {
-        if (not transfermoney(self, null, 1 * COPPER_MULT))
-          i := transfermoney(null, self, 2 * COPPER_MULT);
-
-        heartbeat := PULSE_SEC*15;
-        exec("buy beef", self);
-        exec("buy coffee", self);
-        pause;
-        exec("sit", self);
-        pause;
-        exec("eat beef", self);
-        pause;
-        exec("drink coffee", self);
-        pause;
-
-        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
-        wait(SFB_TICK, TRUE);
-
-        heartbeat := PULSE_SEC*10;
-        exec("stand", self);
-        pause;
-        exec("say Back to work.", self);
+        if (not transfermoney(u, null, 1 * COPPER_MULT))
+            j := transfermoney(null, u, 2 * COPPER_MULT);
     }
-    heartbeat := PULSE_SEC*10;
-    pause;
-    exec("sigh", self);
-    return;
+    else if (u.position == POSITION_SLEEPING)
+    {
+        exec("wake", u);
+        exec("stretch", u);
+    }
+    else if (u.position == POSITION_SITTING)
+    {
+        exec("stand", u);
+        exec("say Back to work.", u);
+        exec("sigh", u);
+    }
+    return (1);
 }
 dilend
 
 
-dilbegin dinner(dinnerplace : string);
-external
-    integer walk_room@function(s:string, i:integer);    
-var
-    tf:integer;
-    i : integer;
-code
-{
-    heartbeat := PULSE_SEC * 5;
-    pause;
-    exec("say Oh Good... time for dinner.", self);
-    pause;
-
-    tf := walk_room@function(dinnerplace, 9 * PULSE_SEC);
-
-    if (tf==TRUE)
-    {
-        if (not transfermoney (self, null, 1 * COPPER_MULT))
-          i := transfermoney(null, self, 2 * COPPER_MULT);
-        heartbeat := PULSE_SEC*30;
-        exec("buy beef", self);
-        exec("buy coffee", self);
-        pause;
-        exec("sit", self);
-        pause;
-        exec("eat beef", self);
-        pause;
-        exec("drink coffee", self);
-        pause;
-
-        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
-        wait(SFB_TICK, TRUE);
-        heartbeat := PULSE_SEC*30;
-        exec("stand", self);
-        exec("say Back to work.", self);
-    }
-
-    heartbeat := PULSE_SEC*10;
-    pause;
-    exec("sigh", self);
-    return;
-}
-dilend
-
-
-// E.g. if wakehour is 6 then it will keep sleeping until 6am.
-dilbegin bedtime(bedplace : string, wakehour : integer);
-external
-    integer walk_room@function(s:string,i:integer);
-var
-    tf:integer;
-code
-{
-    heartbeat := PULSE_SEC * 5;
-    pause;
-    exec("yawn", self);
-    pause;
-
-    tf := walk_room@function(bedplace, 9 * PULSE_SEC);
-
-    if (tf==TRUE)
-    {
-        :pre_sleep:
-        heartbeat := PULSE_SEC*30;
-        exec("sleep", self);
-        pause;
-
-        :sleeping:
-        exec("snore", self);
-        heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
-        wait(SFB_TICK, TRUE);
-        if(mudhour < wakehour)
-        {
-            goto sleeping;
-        }
-        heartbeat := PULSE_SEC*15;
-        exec("wake", self);
-    }
-
-    heartbeat := PULSE_SEC*10;
-    pause;
-    exec("stretch", self);
-    return;
-}
-dilend
-
-
-
-// locations is a list of places to visit on patrol
-dilbegin patrol(locations : stringlist);
-external
-    integer walk_room@function (s:string,i:integer);
-var
-    tf : integer;
-    i : integer;
-code
-{
-    heartbeat := PULSE_SEC*10;
-    pause;
-
-    i := 0;
-    while (i < length(locations))
-    {
-        tf := walk_room@function(locations.[i], PULSE_SEC * 8);
-        pause;
-        if (tf == TRUE)
-        {
-            exec("emote Speaks with the Guards.", self);
-        }
-        i:=i+1;
-    }
-
-    pause;
-    heartbeat := PULSE_SEC*10;
-
-    if (tf==TRUE)
-    {
-        pause;
-        exec("emote jots some notes on a piece of paper.", self);
-        pause;
-        exec("emote dispatches a runner to the captain.", self);
-    }
-    return;
-}
-dilend
-
-
-// Don't use any hour as 23 or it wont roll correctly (24 vs 0)
+// A wall guard's day on DailySchedule@quests: lunch and dinner in the kitchen at their hours,
+// bed from bedhour until wakehour, and the rest of the day the patrol: speak with the guards
+// at each room in patrollist, then send a report to the captain, over and over.
+// The hours wrap, so a night guard can sleep from 11 until 19.
 dilbegin guardschedule(lunchhour : integer, lunchplace : string,
                         dinnerhour:integer, dinnerplace : string,
                         bedhour:integer, bedroom : string,
                         wakehour:integer,
                         patrollist : stringlist);
 external
-    integer walk_room@function (s:string,i:integer);
-    lunch(lunchplace : string);
-    dinner(dinnerplace : string);
-    bedtime(bedplace : string, wakehour : integer);
-    patrol(locations : stringlist);
+    DailySchedule@quests(sched : stringlist, sarg2 : string, pace : integer);
+var
+    sl : stringlist;
+    patrol : stringlist;
+    hfrom : integer;
+    huntil : integer;
+    i : integer;
+    j : integer;
 code
 {
-    on_activation((self.position == POSITION_FIGHTING), skip);
+    // One round of the patrol, 8 seconds per room
+    insert(patrol, 0, "::call::guardstep@midwalls 0");
+    i := 0;
+    while (i < length(patrollist))
+    {
+        insert(patrol, length(patrol), "::walkto::" + patrollist.[i] + "::8");
+        insert(patrol, length(patrol), "emote Speaks with the Guards.");
+        i := i + 1;
+    }
+    insert(patrol, length(patrol), "emote jots some notes on a piece of paper.");
+    insert(patrol, length(patrol), "emote dispatches a runner to the captain.");
 
-    :start:
-    heartbeat := WAIT_SEC*5;
-    pause;
+    // Patrol from waking to lunch, from lunch to dinner and from dinner to bed
+    j := 0;
+    while (j < 3)
+    {
+        if (j == 0)
+        {
+            hfrom := wakehour;
+            huntil := lunchhour;
+        }
+        else if (j == 1)
+        {
+            hfrom := lunchhour + 1;
+            huntil := dinnerhour;
+        }
+        else
+        {
+            hfrom := dinnerhour + 1;
+            huntil := bedhour;
+        }
+        if (hfrom >= 24)
+            hfrom := hfrom - 24;
 
-    if((mudhour >= lunchhour) and (mudhour < lunchhour+1))
-    {
-        lunch(lunchplace);
+        if (hfrom != huntil)
+        {
+            insert(sl, length(sl), "@" + itoa(hfrom) + "-" + itoa(huntil) + " repeat");
+            i := 0;
+            while (i < length(patrol))
+            {
+                insert(sl, length(sl), patrol.[i]);
+                i := i + 1;
+            }
+        }
+        j := j + 1;
     }
-    if((mudhour >= dinnerhour) and (mudhour < dinnerhour+1))
+
+    // Lunch and dinner: the guard sits until the hour is over, then goes back to the patrol
+    insert(sl, length(sl), "@" + itoa(lunchhour));
+    insert(sl, length(sl), "say Gee... time for lunch.");
+    insert(sl, length(sl), "::walkto::" + lunchplace + "::9");
+    insert(sl, length(sl), "::call::guardstep@midwalls 1");
+    insert(sl, length(sl), "buy beef");
+    insert(sl, length(sl), "buy coffee");
+    insert(sl, length(sl), "sit");
+    insert(sl, length(sl), "eat beef");
+    insert(sl, length(sl), "drink coffee");
+
+    insert(sl, length(sl), "@" + itoa(dinnerhour));
+    insert(sl, length(sl), "say Oh Good... time for dinner.");
+    insert(sl, length(sl), "::walkto::" + dinnerplace + "::9");
+    insert(sl, length(sl), "::call::guardstep@midwalls 1");
+    insert(sl, length(sl), "buy beef");
+    insert(sl, length(sl), "buy coffee");
+    insert(sl, length(sl), "sit");
+    insert(sl, length(sl), "eat beef");
+    insert(sl, length(sl), "drink coffee");
+
+    // Bed, snoring once an hour; the patrol's first step wakes the guard at wakehour.
+    // "sleep" every hour puts a guard woken in the night (a whistle, a player) back to bed.
+    insert(sl, length(sl), "@" + itoa(bedhour) + "-" + itoa(wakehour));
+    insert(sl, length(sl), "yawn");
+    insert(sl, length(sl), "::walkto::" + bedroom + "::9");
+    insert(sl, length(sl), "sleep");
+    insert(sl, length(sl), "snore");
+    j := wakehour - bedhour;
+    if (j <= 0)
+        j := j + 24;
+    while (j > 2)
     {
-        dinner(dinnerplace);
+        insert(sl, length(sl), "::wait::300");
+        insert(sl, length(sl), "sleep");
+        insert(sl, length(sl), "snore");
+        j := j - 1;
     }
-    if((mudhour > bedhour) and (mudhour < bedhour+1))
-    {
-        bedtime("rn_026@midwalls", wakehour);
-    }
-    else
-    {
-        patrol(patrollist);
-    }
-    goto start;
+
+    DailySchedule@quests(sl, "", 10);
 }
 dilend
 
