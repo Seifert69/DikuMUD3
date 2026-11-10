@@ -120,7 +120,7 @@ code
    // The break after work is one of the three bars, picked at random
    sl := {
       "@onduty",
-         "wake",
+         "::ready::",
          "::descr::A $1N is here heading to work.",
          "yawn",
          "say Time to get going guys!",
