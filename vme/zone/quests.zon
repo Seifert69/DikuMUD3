@@ -325,8 +325,19 @@ dilend
 //Action() is the atomic form of DailyRoutine.
 //
 // Executes the msg, also interprets :: codes for acts(). See Explainer()
-// Additionally adds the ::descr:: which changes the outside description, e.g. "::descr::$1n is merrily skipping along.".
-//    returns 0 if not done.
+// Additionally:
+//    "::descr::$1n is merrily skipping along."  changes the outside description.
+//    "::walkto::temple@udgaard"     walks there, 5 seconds per room;
+//    "::walkto::temple@udgaard::9"  9 seconds per room.
+//    "::linkto::temple@udgaard"     moves straight there, for places with no exit leading there
+//                                   (no messages: add an act pair before and after).
+//    "::wait::30"                   waits 30 seconds.
+//    "::call::myfunc@myzone 0 text" calls integer myfunc(u : unitptr, i : integer, s : string)
+//                                   with the NPC, 0 and "text": for whatever the list can't do,
+//                                   e.g. loading an item or checking that someone is here.
+//                                   A pause in myfunc clears unitptr variables that aren't
+//                                   secured, u included: after one, use self.
+//    returns 0 if not done (a walk that didn't get there, a call that returned 0, a bad code).
 //    returns 1 if successful
 // 'self' is the mob unit (arg3, i.e. $1n)
 // 'arg2' is a string ($2t) which is passed to all act() as string argument 2.
@@ -338,24 +349,58 @@ external
 var
    tsl : stringlist;
    s : string;
+   t : string;
+   i : integer;
+   u : unitptr;
 code
 {
    if ((msg.[0] == ":") and (msg.[1] == ":"))
    {
       tsl := split(msg, "::");
-      if (length(tsl) == 3)
+      if ((length(tsl) == 4) and (tsl.[1] == "walkto"))
+      {
+         s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
+         i := walk_room@function(s, atoi(tsl.[3]));
+         return (i);
+      }
+      else if (length(tsl) == 3)
       {
          if (tsl.[1] == "walkto")
          {
             s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
             // log("walkto room = " + s);
-            walk_room@function(s, 5);
+            i := walk_room@function(s, 5);
+            return (i);
          }
          else if (tsl.[1] == "descr")
          {
             s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
             // log("outside descr = " + s);
             self.outside_descr := s;
+         }
+         else if (tsl.[1] == "linkto")
+         {
+            s := sact(tsl.[2], A_ALWAYS, self, arg2, arg3, TO_CHAR);
+            u := findroom(s);
+            if (u == null)
+            {
+               log("Action() linkto: no room " + s);
+               return (0);
+            }
+            link(self, u);
+         }
+         else if (tsl.[1] == "wait")
+         {
+            heartbeat := atoi(tsl.[2]) * PULSE_SEC;
+            pause;
+         }
+         else if (tsl.[1] == "call")
+         {
+            s := tsl.[2];
+            t := getword(s);       // the function
+            i := atoi(getword(s)); // the integer; the rest of s is the string
+            i := dilcall(t)(self, i, s);
+            return (i);
          }
          else
          {
@@ -365,13 +410,14 @@ code
       }
       else
       {
-         log("Found act code :: in Explain() but not the two expected strings = " + msg);
+         log("Found act code :: in Action() but not the expected strings = " + msg);
          return (0);
       }
    }
    else
    {
-      exec(sact(msg, A_SOMEONE, self, arg2, arg3, TO_CHAR), self);
+      // A_ALWAYS: sact to a sleeping NPC is otherwise empty, and "snore" after "sleep" vanishes
+      exec(sact(msg, A_ALWAYS, self, arg2, arg3, TO_CHAR), self);
    }  
    return (1);
 }
@@ -380,6 +426,7 @@ dilend
 
 
 // Same as Explainer() except it is a daily routine and doesn't pause on "sleeping", etc.
+// A step that fails (see Action) ends the list: the NPC doesn't eat at a table it never reached.
 //
 dilbegin DailyRoutine(sl : stringlist, sarg2 : string);
 external
@@ -405,12 +452,180 @@ code
    while (i < ln)
    {
       pause;
-      Action@quests(sl.[i], sarg2, null);
+      if (Action@quests(sl.[i], sarg2, null) == 0)
+         break;
    	heartbeat := phb;
       i := i + 1;
    }
- 
+
+   heartbeat := phb;
    return;
+}
+dilend
+
+
+// 1 if the mud hour is in [from, until); the hours wrap, so 20 to 6 is the night.
+//
+dilbegin integer inHours(from : integer, until : integer);
+code
+{
+   if (from < until)
+      return ((mudhour >= from) and (mudhour < until));
+   return ((mudhour >= from) or (mudhour < until));
+}
+dilend
+
+
+// An NPC's whole day: dilcopy DailySchedule@quests(...) onto the NPC, or call it last in its DIL.
+//
+// sched : time blocks, each a header line followed by its steps (the steps of Action()):
+//    "@13"           the steps run once when 13 o'clock comes (the hour 13 to 14)
+//    "@0-6"          the steps run once at the start of 0 to 6 (or when the NPC is loaded then)
+//    "@6-13 repeat"  the steps run over and over from 6 until 13. Between steps the NPC checks
+//                    the time, so a long round of work never makes it miss 13 o'clock.
+//    Hours wrap: "@20-6" is the night. When several blocks cover the hour, one of them is
+//    picked at random. A step that fails (a walk that didn't get there) ends its block.
+// sarg2 : $2t in the steps
+// pace  : seconds between steps (at least 3)
+//
+// e.g. dilcopy DailySchedule@quests({
+//         "@5", "wake", "::walkto::$2t", "::descr::$1n is guarding the gate.",
+//         "@18", "::walkto::grunting_inn@midgaard", "buy beer", "drink beer",
+//                "::walkto::guard_dorm@midgaard", "sleep",
+//         "@18", "::walkto::park_cafe@midgaard", "buy coffee", "drink coffee",
+//                "::walkto::guard_dorm@midgaard", "sleep"},
+//         "in_ngate@midgaard", 5);
+//
+dilbegin DailySchedule(sched : stringlist, sarg2 : string, pace : integer);
+external
+   integer Action@quests(msg : string, arg2 : string, arg3 : unitptr);
+   integer inHours@quests(from : integer, until : integer);
+
+var
+   hdr : intlist;     // index in sched of each block's header
+   froms : intlist;
+   untils : intlist;
+   reps : intlist;    // 1 for a repeat block
+   tsl : stringlist;
+   s : string;
+   i : integer;
+   j : integer;
+   n : integer;
+   b : integer;
+   ln : integer;
+   nb : integer;
+   phb : integer;
+   donefrom : integer;
+   doneuntil : integer;
+code
+{
+   on_activation((self.position < POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
+
+   phb := pace * PULSE_SEC;
+   if (phb < 3*PULSE_SEC)
+      phb := 3*PULSE_SEC;
+
+   // Read the block headers
+   ln := length(sched);
+   i := 0;
+   while (i < ln)
+   {
+      s := sched.[i];
+      if (s.[0] == "@")
+      {
+         tsl := split(s, " ");
+         n := 0;
+         if (length(tsl) > 1)
+            if (tsl.[1] == "repeat")
+               n := 1;
+         s := right(tsl.[0], length(tsl.[0]) - 1);
+         tsl := split(s, "-");
+         j := atoi(tsl.[0]);
+         insert(hdr, length(hdr), i);
+         insert(froms, length(froms), j);
+         if (length(tsl) > 1)
+            insert(untils, length(untils), atoi(tsl.[1]));
+         else
+            insert(untils, length(untils), j + 1);
+         insert(reps, length(reps), n);
+      }
+      else if (length(hdr) == 0)
+         log(self.symname + " DailySchedule: step before the first @hour header: " + s);
+      i := i + 1;
+   }
+   nb := length(hdr);
+   donefrom := -1;
+   doneuntil := -1;
+
+:start:
+   heartbeat := phb;
+   pause;
+
+   // A block that runs once has run: wait until its hours are over
+   if (donefrom >= 0)
+   {
+      if (inHours@quests(donefrom, doneuntil))
+         goto start;
+      donefrom := -1;
+   }
+
+   // Pick one of the blocks that cover this hour
+   n := 0;
+   i := 0;
+   while (i < nb)
+   {
+      if (inHours@quests(froms.[i], untils.[i]))
+         n := n + 1;
+      i := i + 1;
+   }
+   if (n == 0)
+      goto start;
+
+   n := rnd(1, n);
+   b := 0;
+   i := 0;
+   while (i < nb)
+   {
+      if (inHours@quests(froms.[i], untils.[i]))
+      {
+         n := n - 1;
+         if (n == 0)
+         {
+            b := i;
+            break;
+         }
+      }
+      i := i + 1;
+   }
+
+   // Run its steps
+   i := hdr.[b] + 1;
+   if (b + 1 < nb)
+      ln := hdr.[b + 1];
+   else
+      ln := length(sched);
+
+   while (i < ln)
+   {
+      if (Action@quests(sched.[i], sarg2, null) == 0)
+         break;
+      i := i + 1;
+      if (i < ln)
+      {
+         if (reps.[b])
+            if (not inHours@quests(froms.[b], untils.[b]))
+               break;
+         heartbeat := phb;
+         pause;
+      }
+   }
+
+   if (not reps.[b])
+   {
+      donefrom := froms.[b];
+      doneuntil := untils.[b];
+   }
+   goto start;
 }
 dilend
 
