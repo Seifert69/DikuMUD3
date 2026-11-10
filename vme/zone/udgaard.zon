@@ -12036,303 +12036,130 @@ position POSITION_STANDING
 dilcopy teamwork@function("bouncer/shopkeeper/skald");
 dilbegin sec_roun();
 external
- integer walk_room@function (s:string,i:integer);
+   DailySchedule@quests(sched : stringlist, sarg2 : string, pace : integer);
 var
- tf:integer;
+   pround : stringlist;
+   hours : stringlist;
+   sl : stringlist;
+   i : integer;
+   j : integer;
 code
 {
-  on_activation((self.position <= POSITION_SLEEPING) or
-  (self.position == POSITION_FIGHTING), skip);
+   // The groll's round of the moot, 15 seconds per room
+   pround := {
+      "mumble",
+      "say Wonder what Rath is up to.",
+      "::walkto::moot_weap@udgaard::15",
+      "emote watches Rathvith work.",
+      "::walkto::moot_cen@udgaard::15",
+      "mumble",
+      "say Need to check the ballots",
+      "::walkto::moot_vote@udgaard::15",
+      "emote makes sure no one is ballot stuffing.",
+      "::walkto::moot_cen@udgaard::15",
+      "say Better make sure those guys are on the job",
+      "::walkto::moot_sou@udgaard::15",
+      "emote supervises the bouncer.",
+      "::walkto::moot_cen@udgaard::15",
+      "say Better check the other slacker",
+      "::walkto::moot_nor@udgaard::15",
+      "emote supervises the bouncer.",
+      "::walkto::moot_cen@udgaard::15",
+      "say Should go say hey to Besri",
+      "::walkto::moot_bar@udgaard::15",
+      "emote chats with Besri",
+      "::walkto::moot_cen@udgaard::15",
+      "say Wonder what is cooking.",
+      "::walkto::moot_food@udgaard::15",
+      "emote listens to the cook sing",
+      "::walkto::moot_cen@udgaard::15",
+      "say Time to check the bookies out.",
+      "::walkto::moot_bet@udgaard::15",
+      "emote makes sure no one is cheating.",
+      "::walkto::moot_cen@udgaard::15",
+      "say Wonder how Dellinger is today.",
+      "::walkto::moot_sta1@udgaard::15",
+      "buy peach brandy",
+      "drink peach brandy",
+      "wink dellinger",
+      "::walkto::moot_cen@udgaard::15",
+      "say Back to work",
+      "::walkto::moot_sta2@udgaard::15",
+      "emote pulls out a book and reads it.",
+      "emote puts the book away.",
+      "::walkto::moot_cen@udgaard::13",
+      "emote chats with the guards"};
 
- :start:
- heartbeat := WAIT_SEC*7;
-pause;
- if((mudhour >= 5)and (mudhour < 6))
- {
-   goto morn;
- }
- if((mudhour >= 12)and (mudhour < 13))
- {
-   goto lunch;
- }
- if((mudhour >= 17)and (mudhour < 19))
- {
-   goto dinner;
- }
- if((mudhour >= 13)and (mudhour < 14))
- {
-   goto abreak;
- }
- if(mudhour == 0)
- {
-   goto bed;
- }
- else
-  {
-  goto pround;
-  }
-goto start;
+   sl := {
+      "@5",
+         "wake",
+         "yawn",
+         "say Four more years till I retire",
+         "::walkto::moot_cen@udgaard::15",
+      "@12",
+         "say Time for lunch.",
+         "::walkto::moot_food@udgaard::15",
+         "buy sandwich",
+         "eat sandwich",
+         "say Need to wash that down",
+         "::walkto::moot_bar@udgaard::15",
+         "buy mead",
+         "drink mead",
+         "say Back to work",
+         "::walkto::moot_cen@udgaard::15",
+      "@13",
+         "say Think I'll take a quick break",
+         "::walkto::moot_sta1@udgaard::15",
+         "buy peach brandy",
+         "drink peach brandy",
+         "drink peach brandy",
+         "drop peach brandy",
+         "wink dellinger",
+      "@17",
+         "say Dinnertime!",
+         "::walkto::moot_food@udgaard::15",
+         "buy rabbit",
+         "emote leans against the wall.",
+         "eat rabbit",
+         "emote licks his fingers.",
+         "emote loosens his belt.",
+         "emote leans back in his chair",
+         "::walkto::moot_bar@udgaard::15",
+         "buy mead",
+         "drink mead",
+         "say Back to work",
+         "::walkto::moot_cen@udgaard::15",
+      "@0-5",
+         "say Time for some shuteye",
+         "yawn",
+         "::walkto::moot_prac@udgaard::15",
+         "emote curls up in a corner",
+         "sleep",
+         "snore",
+         "::wait::300",
+         "snore",
+         "::wait::300",
+         "snore",
+         "::wait::300",
+         "snore"};
 
-  :morn:
-  heartbeat := PULSE_SEC*10;
-  pause;
-  exec("wake", self);
-  pause;
-  exec("yawn", self);
-  pause;
-  exec("say Four more years till I retire", self);
-  pause;
-  tf:=walk_room@function ("moot_cen@udgaard",15);
+   // The round fills the rest of the day
+   hours := {"@6-12 repeat", "@14-17 repeat", "@18-0 repeat"};
+   j := 0;
+   while (j < length(hours))
+   {
+      insert(sl, length(sl), hours.[j]);
+      i := 0;
+      while (i < length(pround))
+      {
+         insert(sl, length(sl), pround.[i]);
+         i := i + 1;
+      }
+      j := j + 1;
+   }
 
-  goto start;
-
- :lunch:
- heartbeat := PULSE_SEC*10;
-  pause;
-  exec("say Time for lunch.", self);
-  pause;
-  tf:=walk_room@function ("moot_food@udgaard",15);
-  if (tf==TRUE)
-  {
-    exec("buy sandwich", self);
-    pause;
-    exec("eat sandwich", self);
-	pause;
-    exec("say Need to wash that down", self);
-    pause;
-  }
-  tf:=walk_room@function ("moot_bar@udgaard",15);
-  if (tf==TRUE)
-  {
-  exec("buy mead", self);
-  pause;
-  exec("drink mead", self);
-  }
-  pause;
-  exec("say Back to work", self);
-  pause;
-  tf:=walk_room@function ("moot_cen@udgaard",15);
- goto start;
-
- :dinner:
- heartbeat := PULSE_SEC*10;
-  pause;
-  exec("say Dinnertime!", self);
-  pause;
-  tf:=walk_room@function ("moot_food@udgaard",15);
-  if (tf==TRUE)
-  {
-    exec("buy rabbit", self);
-    pause;
-    exec("emote leans against the wall.", self);
-    pause;
-    exec("eat rabbit", self);
-    pause;
-    exec("emote licks his fingers.", self);
-    pause;
-    exec("emote loosens his belt.", self);
-    pause;
-    exec("emote leans back in his chair",self);
-    pause;
-  }
-  tf:=walk_room@function ("moot_bar@udgaard",15);
-  if (tf==TRUE)
-  {
-  exec("buy mead", self);
-  pause;
-  exec("drink mead", self);
-  }
-  pause;
-  exec("say Back to work", self);
-  pause;
-  tf:=walk_room@function ("moot_cen@udgaard",15);
- goto start;
-
- :abreak:
- heartbeat := PULSE_SEC*10;
-  pause;
-  exec("Think I'll take a quick break", self);
-  pause;
-  tf:=walk_room@function ("moot_sta1@udgaard",15);
-  if (tf==TRUE)
- {
-  exec("buy peach brandy", self);
-  pause;
-  exec("drink peach brandy", self);
-  pause;
-  exec("drink peach brandy", self);
-  pause;
-  exec("drop peach brandy", self);
-  pause;
-  exec("wink dellinger",self);
-  pause;
- }
- goto start;
-
- :bed:
-  heartbeat := PULSE_SEC*10;
-  pause;
-  exec("Time for some shuteye", self);
-  pause;
-  exec("yawn", self);
-  tf:=walk_room@function ("moot_prac@udgaard",15);
-  if (tf==TRUE)
- {
-  exec("emote curls up in a corner", self);
-  pause;
-  exec("sleep", self);
-  :sleeping:
-  exec("snore", self);
-  heartbeat := PULSE_SEC*SECS_PER_MUD_HOUR;
-  wait(SFB_TICK, TRUE);
-  if (mudhour < 5)
-    {
-      goto sleeping;
-    }
-
-  }
-  goto start;
-
-  :pround:
-  heartbeat := PULSE_SEC*10;
-  pause;
-   exec("mumble", self);
-  pause;
-  exec("say Wonder what Rath is up to.", self);
-  pause;
-  tf:=walk_room@function ("moot_weap@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote watches Rathvith work.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
-  {
-  exec("mumble", self);
-  pause;
-  exec("say Need to check the ballots", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_vote@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote makes sure no one is ballot stuffing.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-   if (tf==TRUE)                                    
-  {
-  pause;
-  exec("say Better make sure those guys are on the job", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_sou@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote supervises the bouncer.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("say Better check the other slacker", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_nor@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote supervises the bouncer.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("say Should go say hey to Besri", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_bar@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote chats with Besri", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("say Wonder what is cooking.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_food@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("emote listens to the cook sing", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
-  {
-  pause;
-  exec("say Time to check the bookies out.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_bet@udgaard",15);
-  if (tf==TRUE)
- {
-  pause;
-  exec("emote makes sure no one is cheating.", self);
-  pause;
- }
-  tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
- {
-  pause;
-  exec("say Wonder how Dellinger is today.", self);
-  pause;
-  }
-  tf:=walk_room@function ("moot_sta1@udgaard",15);
-  if (tf==TRUE)
-  {
-  exec("buy peach brandy", self);
-  pause;
-  exec("drink peach brandy", self);
-  pause;
-  exec("wink dellinger",self);
- }
- tf:=walk_room@function ("moot_cen@udgaard",15);
-  if (tf==TRUE)
- {
-  pause;
-  exec("say Back to work", self);
-  pause;
- }
- tf:=walk_room@function ("moot_sta2@udgaard",15);
-  if (tf==TRUE)
- {
-  pause;
-  exec("emote pulls out a book and reads it.", self);
-  pause;
-  exec("emote puts the book away.", self);
- }
- tf:=walk_room@function ("moot_cen@udgaard",13);
-  if (tf==TRUE)
- {
-  pause;
-  exec("emote chats with the guards",self);
-  pause;
- }
-  goto start;
+   DailySchedule@quests(sl, "", 10);
 }
-
 dilend
 
 end
