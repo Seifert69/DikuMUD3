@@ -16,8 +16,8 @@ ctest                                  # 5 Boost.Test suites, must all pass
 - The codebase builds **warning-free**; keep it that way (add `-DWERROR=1` to enforce).
 - `make all` also compiles all zones (`zone_files` target) and runs the unit
   tests as a post-build step.
-- The live servers build with `cmake -DO2=1 .`: the Debug build type (`MUD_DEBUG`
-  checks, symbols) at -O2. Plain `cmake .` is -O0 and noticeably slower.
+- Plain `cmake .` is -O0 and noticeably slower; `cmake -DO2=1 .` keeps the
+  Debug build type (`MUD_DEBUG` checks, symbols) at -O2.
 
 ## Run locally
 
@@ -36,8 +36,6 @@ cd vme/bin
   `vme/etc/server.cfg`).
 - "Can't bind Mother Connection port 4999" means a stale server is still
   running: `pkill -x vme`.
-- The live servers run vme and the mplexers under systemd, which restarts vme
-  when it exits; the old `runvme.sh` / `runmplex.sh` wrappers aren't used there.
 
 ## Logs
 
@@ -78,33 +76,6 @@ cd vme/zone
 - Defining `MEMORY_DEBUG` routes allocations through the membug tracker
   (see `vme/src/membug.h`).
 
-## Deploying to valhalla.com
-
-`deploy/valhalla.sh` does each step; `deploy/tn.py` is the telnet driver it uses.
-Papi's password is in `~/.config/valhalla/papi_pw` (mode 600, outside the repository); never
-copy it anywhere else. While logged in, a player's tell gets one reply: "Right now I'm Papi's AI
-assistant."
-
-1. **Web client**: `deploy/valhalla.sh client <label>` copies the changed client files to
-   `/www/valhalla/v3` (served as https://www.valhalla.com/v3/) and keeps the old ones as
-   `*.bak-<label>`. When a script or style changes, bump `?v=` in `index.html` first.
-2. **Merge** the PR once its checks are green.
-3. **Test mud** (telnet 4442, `/home/mud/vme`): `deploy/valhalla.sh test` (`test resume` if the
-   button was pressed already).
-   - Logs in as Papi, `goto compiler`, `press button`.
-   - That runs `compile.sh` as user mud: git pull, `make all`, copy to the test runtime.
-   - `look screen` every minute (not "look at screen") until `*** END compile` (`ERROR running` = failed).
-   - `ruffle daemon` reboots the test mud. The script waits for the new vme process,
-     then logs in and runs `wstat world`.
-4. **Production** (telnet 4242, websocket 4280, `/home/val/vme`): `deploy/valhalla.sh prod`.
-   - Logs in as Papi, `goto compiler`, `adopt universe`.
-   - That runs `adopt.sh` → `toprod.sh`, which copies the test build over.
-   - `look symbols` every minute until `*** END adopt`.
-   - `ruffle daemon`: production reboots once no mortals are online (checked every
-     5 minutes), so this can take hours. The script waits, then logs in to check.
-
-Don't use public channels on the live muds: they relay to Discord.
-
 ## Repository layout
 
 | path | contents |
@@ -119,21 +90,8 @@ Don't use public channels on the live muds: they relay to Discord.
 | `vme/etc/` | `server.cfg`, money definitions, compile-time includes |
 | `vme/www/client/` | browser client |
 | `unit_tests/` | Boost.Test suites |
-| `deploy/` | deploy scripts for valhalla.com |
+| `deploy/` | deploy scripts |
 | `agents/` | tools for the in-game helper agents (`mud.py`: a telnet session kept open between commands) |
-
-### Proprietary zones
-
-Most of Valhalla's world is not in this repository: about 190 zones (nymgaard with the
-Nymgaard druid and ranger guilds, the clan zones, arabian, dwarves, elfdom and the rest) are
-proprietary, so that people can't simply clone Valhalla. They live in the private repository
-`Seifert69/Zones`, cloned at `~/diku/Zones`.
-
-- Before saying that nothing in the game uses, teaches, loads or curses something, grep
-  `~/diku/Zones` as well as `vme/zone/`.
-- Fix those zones in `Seifert69/Zones` (on a branch, with a PR there); never copy them into this
-  repository, and never quote them anywhere public (wiki, public PRs, Discord).
-- A local boot of this repository alone logs missing zones (elfdom, dwarves, ...); that's expected.
 
 ## Conventions
 
@@ -148,7 +106,7 @@ proprietary, so that people can't simply clone Valhalla. They live in the privat
   step through the exit still works.
 - Unit tests: one `*_tests.cpp` per class in `unit_tests/`; class-level
   changes (e.g. to `cNamelist`) should come with test cases.
-- `vme/lib/` contains live player data on a real server — never assume it is
+- `vme/lib/` holds player data, boards and saved state — never assume it is
   disposable.
 - Generated files (Doxygen configs, `compile_commands.json`, zone `.data`)
   are gitignored or build products — don't commit them.
