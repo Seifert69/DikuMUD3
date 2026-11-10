@@ -239,6 +239,14 @@ code
 	
 	item := load(namex + "@" + zonex);
 
+	if (dilfind("whipe_me@" + zonex, item))
+	{
+		// A holiday gift loses whipe_me when it is handed out; a fresh copy would delete itself
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - is a holiday gift. Do not fix.");
+		exec("say I'm afraid this item is created with a magic I dont understand, "+pc.name+"!", self);
+		goto return_old;
+	}
+
 	if (item.title == titlex)
 	{
 		// item doesnt need to be fixed
@@ -2836,6 +2844,7 @@ The spirit of generosity and camaraderie fills the room, creating a sense of uni
 among the village's inhabitants."
 flags {UNIT_FL_NO_MOB, UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
+ALWAYS_LIGHT
 gmap(465,420)
 west to temple;
 /* Dil to restrict getting all */
