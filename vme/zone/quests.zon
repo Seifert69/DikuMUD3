@@ -37,6 +37,20 @@ code
 }
 dilend
 
+// NotQuest() returns (1) if the character does NOT have the quest string s, otherwise (0).
+// For quests that mustn't be offered again once a later quest is done, e.g.
+// "AllOf@quests 0 hasQuest@quests 0 Guard Quest Complete && NotQuest@quests 0 Settler Complete"
+//
+dilbegin integer NotQuest(u : unitptr, i : integer, s : string);
+code
+{
+   if (s in u.quests)
+      return (0);
+   else
+      return (1);
+}
+dilend
+
 // NotInGuid() returns (1) if the character in NOT in the specified guild, otherwith (0)
 // quest string is in the string s. E.g. "notinguild@quests 0 "+GUILD_UDG_FIGHTER
 //
@@ -53,6 +67,145 @@ code
       return (0);
 }
 dilend
+
+// MinLevel() / MaxLevel() return (1) if the character's level is at least / at most i.
+// MinVLevel() / MaxVLevel() do the same with the virtual level (pc.vlevel).
+// E.g. "MinLevel@quests 30"
+//
+dilbegin integer MinLevel(u : unitptr, i : integer, s : string);
+code
+{
+   return (u.level >= i);
+}
+dilend
+
+dilbegin integer MaxLevel(u : unitptr, i : integer, s : string);
+code
+{
+   return (u.level <= i);
+}
+dilend
+
+dilbegin integer MinVLevel(u : unitptr, i : integer, s : string);
+code
+{
+   return (u.vlevel >= i);
+}
+dilend
+
+dilbegin integer MaxVLevel(u : unitptr, i : integer, s : string);
+code
+{
+   return (u.vlevel <= i);
+}
+dilend
+
+// InGuild() returns (1) if the character is in the guild s. E.g. "InGuild@quests 0 "+GUILD_UDG_FIGHTER
+//
+dilbegin integer InGuild(u : unitptr, i : integer, s : string);
+external
+   integer IsInGuild@guilds(pc : unitptr, sGuild : string);
+code
+{
+   if (IsInGuild@guilds(u, s))
+      return (1);
+   return (0);
+}
+dilend
+
+// AllOf() returns (1) if every check in s holds, AnyOf() if at least one does. The checks are
+// prereqfuncs separated by " && ", e.g.
+//    "AllOf@quests 0 MinLevel@quests 30 && hasQuest@quests 0 Reputation Finished"
+//    "AnyOf@quests 0 hasQuest@quests 0 Piers Mission Ongoing && hasQuest@quests 0 Steven Mission Ongoing"
+//
+dilbegin integer AllOf(u : unitptr, i : integer, s : string);
+var
+   sl : stringlist;
+   t : string;
+   f : string;
+   n : integer;
+code
+{
+   sl := split(s, " && ");
+   n := 0;
+   while (n < length(sl))
+   {
+      t := sl.[n];
+      f := getword(t);
+      i := atoi(getword(t));
+      if (dilcall(f)(u, i, t) == 0)
+         return (0);
+      n := n + 1;
+   }
+   return (1);
+}
+dilend
+
+dilbegin integer AnyOf(u : unitptr, i : integer, s : string);
+var
+   sl : stringlist;
+   t : string;
+   f : string;
+   n : integer;
+code
+{
+   sl := split(s, " && ");
+   n := 0;
+   while (n < length(sl))
+   {
+      t := sl.[n];
+      f := getword(t);
+      i := atoi(getword(t));
+      if (dilcall(f)(u, i, t))
+         return (1);
+      n := n + 1;
+   }
+   return (0);
+}
+dilend
+
+
+// ============ Quest names
+//
+// A quest name (qname) is either a base name, e.g. "Mary's Pot", which gives the flags
+// "Mary's Pot Ongoing" and "Mary's Pot Complete", or three parts "Title|Ongoing flag|Complete flag",
+// e.g. "Reputation|Reputation Continues|Reputation Finished", for a quest whose flags have other
+// names that players already carry or other code reads.
+//
+dilbegin string qstTitle(qname : string);
+var
+   sl : stringlist;
+code
+{
+   sl := split(qname, "|");
+   return (sl.[0]);
+}
+dilend
+
+dilbegin string qstOngoing(qname : string);
+var
+   sl : stringlist;
+code
+{
+   sl := split(qname, "|");
+   if (length(sl) == 3)
+      return (sl.[1]);
+   return (qname + " Ongoing");
+}
+dilend
+
+dilbegin string qstComplete(qname : string);
+var
+   sl : stringlist;
+code
+{
+   sl := split(qname, "|");
+   if (length(sl) == 3)
+      return (sl.[2]);
+   return (qname + " Complete");
+}
+dilend
+
 
 // ============ GENERIC qstItemsWait() Helper function
 
@@ -657,6 +810,7 @@ dilend
 // qName :
 //    The base name of the quest. E.g. "Mary's Pot". 
 //    The system will append " Ongoing" and " Complete" as needed.
+//    Or "Title|Ongoing flag|Complete flag" to use other flag names (see qstTitle).
 //
 // pc :
 //    The player that is the target of this quest request
@@ -682,6 +836,8 @@ dilbegin unitptr qstWaitHero(qname : string, pc : unitptr, sl : stringlist, acpt
 external
    integer default_accept@quests(pc : unitptr, ip : integer, s : string);
    Explainer@quests(pc : unitptr, sl : stringlist);
+   string qstOngoing@quests(qname : string);
+   string qstComplete@quests(qname : string);
 var
    i : integer;
    hb : integer;
@@ -693,7 +849,7 @@ code
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
    on_activation((pc.position <= POSITION_SLEEPING) or (pc.position == POSITION_FIGHTING), skip);
 
-   if (((qname+" Ongoing") in pc.quests) or ((qname+" Complete") in pc.quests))
+   if ((qstOngoing@quests(qname) in pc.quests) or (qstComplete@quests(qname) in pc.quests))
    {
       pc := null;
       return(pc);
@@ -774,17 +930,20 @@ dilend
 // Add quest to pc and set it to "ongoing"
 //
 dilbegin extraptr qstSetOngoing(qname : string, pc : unitptr, qdescr : string);
+external
+   string qstTitle@quests(qname : string);
+   string qstOngoing@quests(qname : string);
 var
    s : string;
    sl : stringlist;
    exd : extraptr;
 code
 {
-   s := qname + " Ongoing";
+   s := qstOngoing@quests(qname);
    addstring(sl, s);
    addextra(pc.quests, sl, qdescr);
    exd := s in pc.quests;
-   sendtext("<div class='cpy'>New Quest: " + qname +"</div><br/>", pc);
+   sendtext("<div class='cpy'>New Quest: " + qstTitle@quests(qname) +"</div><br/>", pc);
    return (exd);
 }
 dilend
@@ -793,11 +952,13 @@ dilend
 // Mark the pc's ongoing quest as 'done' (e.g. all items received)
 //
 dilbegin extraptr qstSetDone(qname : string, pc : unitptr);
+external
+   string qstOngoing@quests(qname : string);
 var
    exdp : extraptr;
 code
 {
-   exdp := (qname + " Ongoing") in pc.quests;
+   exdp := qstOngoing@quests(qname) in pc.quests;
 
    if (not ("$done" in exdp.names))
       addstring(exdp.names, "$done");
@@ -828,6 +989,7 @@ var
    s : string;
    exd : extraptr;
    tsl : stringlist;
+   u : unitptr;
 
 code
 {
@@ -859,7 +1021,21 @@ code
       if ((sl.[i].[0] == ":") and (sl.[i].[1] == ":"))
       {
          tsl := split(sl.[i], "::");
-         if (length(tsl) == 3)
+         if ((length(tsl) == 3) and (tsl.[1] == "give"))
+         {
+            // "::give::sym@zone": hand the player an item for the quest (a bag, a jar, a map)
+            u := load(tsl.[2]);
+            if (u == null)
+               log("qstAssign " + qname + " unable to load item " + tsl.[2]);
+            else
+            {
+               link(u, pc);
+               act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
+               act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
+               pause;
+            }
+         }
+         else if (length(tsl) == 3)
          {
             act(tsl.[1], A_SOMEONE, pc, null, self, TO_CHAR);
             act(tsl.[2], A_SOMEONE, pc, null, self, TO_REST);
@@ -890,11 +1066,13 @@ dilend
 // Return 1 if marked successfully, 0 otherwise
 //
 dilbegin integer qstMarkComplete(pc : unitptr, qname : string);
+external
+   string qstOngoing@quests(qname : string);
 var
    exdp : extraptr;
 code
 {
-   exdp := (qname + " Ongoing") in pc.quests;
+   exdp := qstOngoing@quests(qname) in pc.quests;
 
    if (exdp == null)
       return (0);
@@ -925,6 +1103,10 @@ dilend
 //           the list then it's a match. If the name begins with $ it will match ANY name.
 //           That's useful to e.g. accept any kind of drink container, and then check
 //           validity in the func call (see sventer@gremlin, $anyboat).
+//           What is recorded on the Ongoing flag is the entry itself, or, for "match=token",
+//           the token: "desh2@hades6=desh" takes the sword and records "desh", so a converted
+//           quest reads the progress its old code wrote. An item whose entry is recorded already
+//           doesn't match again (it goes to nothanks instead of being eaten).
 //   itemfunc:  String list of DIL functions that can validate something special. 
 //              Must match the itemsl. Not needed for normal items. Needed e.g. for 
 //              money or to check if e.g. a barrel is full of water.
@@ -945,8 +1127,13 @@ dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string,
                                                      thanksl : stringlist, nothanks : string);
 external
    integer qstMarkComplete@quests(pc : unitptr, qname : string);
+   string qstOngoing@quests(qname : string);
 
 var
+  qon    : string;
+  m      : string;
+  tok    : string;
+  tsl    : stringlist;
   pc     : unitptr;
   item   : unitptr;
   exdp   : extraptr;
@@ -959,21 +1146,24 @@ var
 
 code
 {
+   qon := qstOngoing@quests(qname);
+
    if (length(itemfunc) != length(itemsl))
    {
       log(self.symname + " length of itemsl and itemfunc differs." + itoa(length(itemsl)) + " vs func of " + itoa(length(itemfunc)));
       log(qname + " " + itemsl.[0]);
    }
 
-   // Must be added 
-   //
+   // The nothanks line is kept in a hidden extra on self, where qstItemNoThank looks it up.
+   // (It used to be sent as a message one tick after the dilcopy, which most copies weren't
+   // listening for yet, so players got "won't accept your item" instead.)
    if (nothanks != "")
    {
+      tsl := null;
+      addstring(tsl, "$nothanks " + qon);
+      addextra(self.extra, tsl, nothanks);
       s := "qstItemNoThank@quests()";
       dilcopy(s, self);
-      heartbeat := 1;
-      wait(SFB_TICK, TRUE); // Allow dil copied to activate
-      sendto("nothanks "+qname+"//"+nothanks, self);
    }
 
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
@@ -983,7 +1173,7 @@ code
 
    // log(medium.symname + " : " + medium.name);
 
-   exdp := (qname + " Ongoing") in activator.quests;
+   exdp := qon in activator.quests;
 
    if (not exdp)
       goto start;
@@ -996,7 +1186,13 @@ code
 
    while (i < ln)
    {
-      if ((itemsl.[i] == item.symname) or (itemsl.[i] in item.names) or (itemsl.[i].[0] == "$"))
+      tsl := split(itemsl.[i], "=");
+      m := tsl.[0];
+      tok := m;
+      if (length(tsl) == 2)
+         tok := tsl.[1];
+
+      if (((m == item.symname) or (m in item.names) or (m.[0] == "$")) and (not (tok in exdp.names)))
       {
          if (itemfunc.[i] != "")
          {
@@ -1010,7 +1206,7 @@ code
             j := 1;
          if (j == 1)
          {
-            addstring(exdp.names, itemsl.[i]);
+            addstring(exdp.names, tok);
             s := sact(thanksl.[i], A_SOMEONE, pc, item, self, TO_CHAR);
             exec(s, self);
             s := sact("<br/>You've given $3m $2n", A_SOMEONE, pc, item, self, TO_CHAR);
@@ -1037,7 +1233,11 @@ code
 
    while (i < ln)
    {
-      if (not (itemsl.[i] in exdp.names))
+      tsl := split(itemsl.[i], "=");
+      tok := tsl.[0];
+      if (length(tsl) == 2)
+         tok := tsl.[1];
+      if (not (tok in exdp.names))
          goto start;
       i := i + 1;
    }
@@ -1062,23 +1262,9 @@ var
    i : integer;
    t : integer;
    u : unitptr;
-   nothanksl : stringlist;
-   qstnamesl  : stringlist;
-   sl         : stringlist;
+   exd : extraptr;
 code
 {
-   interrupt(SFB_MSG, TRUE, getarg);
-   goto start;
-
-:getarg:
-   s := getword(argument);
-   if (s != "nothanks")
-      goto start;
-   
-   sl := split(argument, "//");
-   addstring(qstnamesl, sl.[0]+" Ongoing");
-   addstring(nothanksl, sl.[1]);
-
 :start:
    wait(SFB_DONE, command("give") and (target == self));
 
@@ -1116,18 +1302,24 @@ code
    }
 
 :sayit:
-   i := 0;
-   while (i < length(qstnamesl))
+   // qstItemsWanted left "$nothanks <ongoing flag>" extras on self, the line in their descr
+   exd := self.extra;
+   while (exd != null)
    {
-      if (qstnamesl.[i] in activator.quests)
-         goto sayit2;
-      i := i + 1;
+      s := exd.names.[0];
+      if (left(s, 10) == "$nothanks ")
+      {
+         s := right(s, length(s) - 10);
+         if (s in activator.quests)
+            goto sayit2;
+      }
+      exd := exd.next;
    }
    exec("emote won't accept your item.", self);
    goto start;
 
 :sayit2:
-   s := sact(nothanksl.[i], A_SOMEONE, activator, medium, self, TO_CHAR);
+   s := sact(exd.descr, A_SOMEONE, activator, medium, self, TO_CHAR);
    exec(s, self);
 
    goto start;
@@ -1170,9 +1362,65 @@ code
 dilend
 
 
+// Gives pc the reward items: each entry in itemsl is a symname, e.g. "ring@ego", or a symname
+// and "bound", e.g. "ring@ego bound", for an item only pc can use (ply_restrict, as quest rewards
+// have always been). Wearables are sized to fit pc. Called by qstWaitDone and qstOnComplete.
+//
+dilbegin qstGiveRewards(pc : unitptr, itemsl : stringlist);
+var
+   u : unitptr;
+   i : integer;
+   s : string;
+   sym : string;
+code
+{
+   i := 0;
+   while (i < length(itemsl))
+   {
+      s := itemsl.[i];
+      sym := getword(s);
+      if (sym != "")
+      {
+         u := load(sym);
+         if (u == null)
+            log("Quest reward: unable to load item " + sym);
+         else
+         {
+            if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
+                  MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
+                  MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
+                  MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
+                  MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
+                  MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
+                  MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
+                  MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
+                  MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
+               u.height := pc.height; // For wearable items, make them fit
+
+            if (s == "bound")
+               dilcopy("ply_restrict@function(" + pc.name + ",0,25,quest_act@gnome)", u);
+
+            link(u, pc);
+            act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
+            act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
+         }
+      }
+      i := i + 1;
+   }
+   return;
+}
+dilend
+
+
 dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
+external
+   string qstOngoing@quests(qname : string);
+   string qstComplete@quests(qname : string);
+   qstGiveRewards@quests(pc : unitptr, itemsl : stringlist);
 var
+   qon    : string;
+   qdone  : string;
    pcname : string;
    u      : unitptr;
    i      : integer;
@@ -1184,12 +1432,14 @@ code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
    u := null;
+   qon := qstOngoing@quests(qname);
+   qdone := qstComplete@quests(qname);
 
    :start:
-   if ((qname + " Complete") in pc.quests)
+   if (qdone in pc.quests)
      return(u);
 
-   exdp := (qname + " Ongoing") in pc.quests;
+   exdp := qon in pc.quests;
 
    if (not exdp)
       return(u);
@@ -1219,10 +1469,9 @@ code
       i := i + 1;
    }
 
-   subextra(pc.quests, qname + " Ongoing");
-   s := qname + " Complete";
+   subextra(pc.quests, qon);
    sl := null;
-   addstring(sl, s);
+   addstring(sl, qdone);
    addextra(pc.quests, sl, "");
    if (xp > 0)
    {
@@ -1235,34 +1484,7 @@ code
       sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
    }
 
-   i := 0;
-   while (i < length(itemsl))
-   {
-      if (itemsl.[i] != "")
-      {
-         u := load(itemsl.[i]);
-         if (u == null)
-            log("Quest " + qname + " unable to load item " + itemsl.[i]);
-         else
-         {
-            if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
-                  MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
-                  MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
-                  MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
-                  MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
-                  MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
-                  MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
-                  MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
-                  MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
-               u.height := pc.height; // For wearable items, make them fit
-
-            link(u, pc);
-            act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
-            act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
-         }
-      }
-      i := i + 1;
-   }
+   qstGiveRewards@quests(pc, itemsl);
 
    nopriority;
    return(pc);
@@ -1283,8 +1505,13 @@ dilbegin  aware fnpri(FN_PRI_MISSION+8) qstOnComplete(qname : string,
                        sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 external
    Explainer(pc : unitptr, sl : stringlist);
+   string qstOngoing@quests(qname : string);
+   string qstComplete@quests(qname : string);
+   qstGiveRewards@quests(pc : unitptr, itemsl : stringlist);
 
 var
+   qon    : string;
+   qdone  : string;
    pc     : unitptr;
    pcname : string;
    u      : unitptr;
@@ -1298,6 +1525,8 @@ code
 {
    on_activation((self.position <= POSITION_SLEEPING) or (self.position == POSITION_FIGHTING), skip);
    u := null;
+   qon := qstOngoing@quests(qname);
+   qdone := qstComplete@quests(qname);
 
    :start:
    unsecure(pc);
@@ -1336,12 +1565,11 @@ code
    // log("checking complete stuff..");
 
 :checkit:
-   if ((qname + " Complete") in pc.quests) {
-      // log(qname + " Complete in pc.quests");
+   if (qdone in pc.quests) {
      goto start;
    }
 
-   exdp := (qname + " Ongoing") in pc.quests;
+   exdp := qon in pc.quests;
 
    if (not exdp) {
       // log("not exdp");
@@ -1362,10 +1590,9 @@ code
    if (pc == null)
       goto start;
 
-   subextra(pc.quests, qname + " Ongoing");
-   s := qname + " Complete";
+   subextra(pc.quests, qon);
    sl := null;
-   addstring(sl, s);
+   addstring(sl, qdone);
    addextra(pc.quests, sl, "");
    if (xp > 0)
    {
@@ -1378,34 +1605,7 @@ code
       sendtext("You received " + moneystring(gold, TRUE) + "<br/>", pc);
    }
 
-   i := 0;
-   while (i < length(itemsl))
-   {
-      if (itemsl.[i] != "")
-      {
-         u := load(itemsl.[i]);
-         if (u == null)
-            log("Quest " + qname + " unable to load item " + itemsl.[i]);
-         else
-         {
-            if ((u.manipulate & (MANIPULATE_WEAR_FINGER | MANIPULATE_WEAR_NECK  |
-                  MANIPULATE_WEAR_BODY   | MANIPULATE_WEAR_HEAD  |
-                  MANIPULATE_WEAR_LEGS   | MANIPULATE_WEAR_FEET  |
-                  MANIPULATE_WEAR_HANDS  | MANIPULATE_WEAR_ARMS  |
-                  MANIPULATE_WEAR_SHIELD | MANIPULATE_WEAR_ABOUT |
-                  MANIPULATE_WEAR_WAIST  | MANIPULATE_WEAR_WRIST |
-                  MANIPULATE_WIELD       | MANIPULATE_WEAR_EAR   |
-                  MANIPULATE_WEAR_BACK   | MANIPULATE_WEAR_CHEST |
-                  MANIPULATE_WEAR_ANKLE)) or (u.objecttype == ITEM_WEAPON))
-               u.height := pc.height; // For wearable items, make them fit
-
-            link(u, pc);
-            act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
-            act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
-         }
-      }
-      i := i + 1;
-   }
+   qstGiveRewards@quests(pc, itemsl);
 
    nopriority;
    goto start;
