@@ -4833,8 +4833,8 @@ code
       act( acts.[5], A_SOMEONE, self, u, pc, TO_VICT );
 */
       tmps := moneystring( ( cc * buyprofit ) / 100, FALSE );
-      act( "$1n says, 'I paid you $2t for that $3n'",
-           A_SOMEONE, self, tmps, pc, TO_ALL );
+      act( "$1n says, 'I paid you $2t for $3n.'",
+           A_SOMEONE, self, tmps, u, TO_ALL );
 
       link( u, self );
 	     	  send_done ("sell",pc,u,self,0,"",null, CMD_AUTO_NONE);
@@ -5671,8 +5671,8 @@ pc, TO_VICT);
       act( acts.[5], A_SOMEONE, self, u, pc, TO_VICT );
 */
       tmps := moneystring( ( cc * buyprofit ) / 100, FALSE );
-      act( "$1n says, 'I paid you $2t for that $3n'",
-           A_SOMEONE, self, tmps, pc, TO_ALL );
+      act( "$1n says, 'I paid you $2t for $3n.'",
+           A_SOMEONE, self, tmps, u, TO_ALL );
 
       link( u, self );
 	     	  send_done ("sell",pc,u,self,0,"",null, CMD_AUTO_NONE);
