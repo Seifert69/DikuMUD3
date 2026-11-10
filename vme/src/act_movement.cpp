@@ -412,7 +412,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                     send_to_char("You are fighting for your life!<br/>", mover);
                     if (ch != mover)
                     {
-                        act("Your $3n is busy fighting!", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
+                        act("Your $3N is busy fighting!", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
                     }
                 }
                 else if (CHAR_POS(mover) >= POSITION_RESTING)
@@ -420,7 +420,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
                     send_to_char("Perhaps you should get on your feet first?<br/>", mover);
                     if (ch != mover)
                     {
-                        act("Your $3n needs to get up first.", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
+                        act("Your $3N needs to get up first.", eA_ALWAYS, ch, cActParameter(), mover, eTO_CHAR);
                     }
                 }
 
@@ -648,7 +648,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
 
             if (ch != mover)
             {
-                act("Your $2n is too exhausted to move.", eA_ALWAYS, ch, mover, cActParameter(), eTO_CHAR);
+                act("Your $2N is too exhausted to move.", eA_ALWAYS, ch, mover, cActParameter(), eTO_CHAR);
             }
             return 0;
         }
