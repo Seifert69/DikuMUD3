@@ -6345,7 +6345,7 @@ dilcopy shopkeepernew@function(
  "$1n says, '$3n, you can't afford $2n'",
  "$1n says, 'Enjoy $2n.",
  "$1n says, 'I might be able to sell this.",
- "$1n says, 'I don't have that many $2n in my stock right now.",
+ "$1n says, 'I don't have that many $2N in my stock right now.",
  "$1n says, '."
 }, {ITEM_FOOD}, 130, 10,2*PLATINUM_MULT, TRUE);
 end
@@ -6421,7 +6421,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'I don't trade with things such as $2n'",
  "$1n says, '$3n, you can't afford $2n'",
  "$1n says, 'Here you are.'",
- "$1n says, 'Thank you $3n, this is a nice $2n.'",
+ "$1n says, 'Thank you $3n, this is a nice $2N.'",
  "$1n says, ''"},
  {ITEM_LIGHT, ITEM_OTHER, ITEM_CONTAINER, ITEM_NOTE, ITEM_DRINKCON, ITEM_KEY, ITEM_PEN}, 120, 80,2*PLATINUM_MULT, TRUE);
 
@@ -6455,7 +6455,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'I don't trade with things such as $2n'",
  "$1n says, '$3n, you can't afford $2n'",
  "$1n says, 'Here you are.'",
- "$1n says, 'Thank you $3n, this is a nice $2n.'",
+ "$1n says, 'Thank you $3n, this is a nice $2N.'",
  "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
  {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT, TRUE);
 end
@@ -6498,7 +6498,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_WEAPON, ITEM_FIREWEAPON}, 110,60,286720, TRUE);
 end
@@ -6544,7 +6544,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_ARMOR, ITEM_SHIELD}, 110,60,286720, TRUE);
 end
@@ -6582,7 +6582,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
  {ITEM_WORN}, 110, 60, 286720, TRUE);
 
@@ -6648,7 +6648,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_ARMOR}, 110,60,286720, TRUE);
 
@@ -6705,7 +6705,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_SCROLL, ITEM_WAND, ITEM_POTION, ITEM_STAFF}, 110,60,286720, TRUE);
 
@@ -6744,7 +6744,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_TREASURE}, 110, 60, 286720, TRUE);
 
@@ -6785,7 +6785,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_BOAT}, 110, 60, 286720, TRUE);
 end
@@ -6829,7 +6829,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
@@ -6960,7 +6960,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
@@ -6995,7 +6995,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
@@ -7041,7 +7041,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
@@ -7071,7 +7071,7 @@ dilcopy shopkeepernew@function(
 "$1n says, 'I don't trade with things such as $2n'",
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
-"$1n says, 'Thank you $3n, this is a nice $2n.'",
+"$1n says, 'Thank you $3n, this is a nice $2N.'",
 "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end

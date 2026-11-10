@@ -359,7 +359,7 @@ dilcopy shopkeeper@function(
 "$1n says, '$3n, you can't afford $2n.'",
 "$1n says, 'Thank you %3n. That cost you $2n.'",
 "$1n says, 'Thank you %3n.'",
-"$1n says, 'I don't have that many $2ns.'",
+"$1n says, 'I don't have that many $2Ns.'",
 "$1n mumbles in his sleep, 'Buggar off, I'm sleeping...'",
 "$1n says, 'Why would i want that?'",
 "$1n says, 'Sorry, I can't afford that.'"}
@@ -385,7 +385,7 @@ dilcopy shopkeeper@function(
 "$1n says, '$3n, you can't afford $2n.'",
 "$1n says, 'Thank you %3n. That cost you $2n.'",
 "$1n says, 'Thank you %3n.'",
-"$1n says, 'I have that many $2ns in stock.'",
+"$1n says, 'I have that many $2Ns in stock.'",
 "$1n says, 'Please wait until the shop opens.'",
 "$1n says, 'I cannot sell that.'",
 "$1n says, 'Sorry, I can't afford that.'"}

@@ -4512,7 +4512,7 @@ code
    "$1n says, '$3n, you can't afford $2n'" ,
    "$1n says, 'Here is $2n'" ,
    "$1n says, 'Thank you for $2n'" ,
-   "$1n says, 'I don't seem to have that many $2ns in my stock'" ,
+   "$1n says, 'I don't seem to have that many $2Ns in my stock'" ,
    "$1n says, '$3n, I have no use for $2n.'" ,
    "$1n says, 'It looks like i don't have enough cash for it.'" };
 
@@ -5253,7 +5253,7 @@ code
    "$1n says, '$3n, you can't afford $2n'" ,
    "$1n says, 'Here is $2n'" ,
    "$1n says, 'Thank you for $2n'" ,
-   "$1n says, 'I don't seem to have that many $2ns in my stock'" ,
+   "$1n says, 'I don't seem to have that many $2Ns in my stock'" ,
    "$1n says, '$3n, I have no use for $2n.'" ,
    "$1n says, 'It looks like i don't have enough cash for it.'" };
 
