@@ -857,17 +857,16 @@ struct TlsFixture
     // before anything has come back from it (there: "Requesting an ID")
     mplex::cConHook *Accept(const char *greeting = "Welcome<br/>")
     {
-        // As mplex does: accept only once select() says the connection is
-        // there, on the socket cConHook() accepts from. It asserts when
-        // accept() fails, which would abort every suite, not just this test.
+        // As mplex does: accept only once select() says a connection is there. cConHook()
+        // can't take a failed accept(): it asserts, or with NDEBUG (CI) hooks fd -1.
         pollfd p{mplex::g_MotherHook.tfd(), POLLIN, 0};
         int n;
         do
         {
             n = poll(&p, 1, 1000);
         } while (n < 0 && errno == EINTR);
-        const char *why = n < 0 ? strerror(errno) : n == 0 ? "timed out" : "not readable";
-        BOOST_REQUIRE_MESSAGE(n == 1 && (p.revents & POLLIN), "no connection to accept: " << why << ", revents 0x" << std::hex << p.revents);
+        int e = n < 0 ? errno : 0; // before any logging can touch it
+        BOOST_REQUIRE_MESSAGE(p.revents & POLLIN, "no connection to accept: poll() " << n << ", errno " << e << ", revents " << p.revents);
         auto *h = new mplex::cConHook();
         hooks.push_back(h);
         h->m_pFptr = RecordCommand; // not MenuSelect(): there is no mud to ask
