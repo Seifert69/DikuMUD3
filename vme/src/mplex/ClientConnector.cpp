@@ -2616,6 +2616,26 @@ void cConHook::ResetSessionState()
     }
 }
 
+// Kept open for when accept() runs out of fds. The connection left waiting
+// would keep the listening socket readable, and select() returning at once,
+// for as long as that lasts: closing this makes room to take it and drop it.
+static int s_nSpareFd = open("/dev/null", O_RDONLY);
+
+static void DropWaitingConnection()
+{
+    if (s_nSpareFd < 0)
+    {
+        return;
+    }
+    close(s_nSpareFd);
+    int fd = accept(g_MotherHook.tfd(), nullptr, nullptr);
+    if (fd >= 0)
+    {
+        close(fd);
+    }
+    s_nSpareFd = open("/dev/null", O_RDONLY);
+}
+
 cConHook::cConHook()
 {
     ResetSessionState();
@@ -2662,7 +2682,18 @@ cConHook::cConHook()
     // slog(LOG_OFF, 0, "accept() before.");
     fd = accept(g_MotherHook.tfd(), (sockaddr *)&conaddr, &j);
     // slog(LOG_OFF, 0, "accept() after.");
-    Assert(fd >= 0, "ACCEPT");
+    if (fd < 0)
+    {
+        // Gone again before we got to it, out of fds, ...: this one stays
+        // unhooked and is deleted, the others carry on
+        int e = errno;
+        slog(LOG_ALL, 0, "accept() failed: %s", strerror(e));
+        if (e == EMFILE || e == ENFILE)
+        {
+            DropWaitingConnection();
+        }
+        return;
+    }
 
 #ifdef LINUX
     x = fcntl(fd, F_SETFL, FNDELAY);
@@ -2727,7 +2758,10 @@ cConHook::cConHook()
         slog(LOG_ALL, 0, "cConHook() called with a non -1 fd.");
     }
 
-    g_CaptainHook.Hook(fd, this);
+    if (!g_CaptainHook.Hook(fd, this))
+    {
+        return;
+    }
 
     if (SSL_CTX *ctx = tls_ctx_for_accept())
     {

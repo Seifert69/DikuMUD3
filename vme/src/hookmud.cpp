@@ -353,7 +353,10 @@ void cMotherHook::Input(int nFlags)
             return;
         }
 
-        g_CaptainHook.Hook(t, &g_Multi.Multi[i]);
+        if (!g_CaptainHook.Hook(t, &g_Multi.Multi[i]))
+        {
+            return;
+        }
 
         g_Multi.nCount++;
 
@@ -459,5 +462,9 @@ void init_mother(int nPort)
         exit(23);
     }
 
-    g_CaptainHook.Hook(fdMother, &g_MotherHook);
+    if (!g_CaptainHook.Hook(fdMother, &g_MotherHook))
+    {
+        slog(LOG_OFF, 0, "Can't watch the Mother Connection.");
+        exit(24);
+    }
 }

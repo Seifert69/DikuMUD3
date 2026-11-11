@@ -37,6 +37,7 @@
 
 #include <unistd.h>
 
+#include <algorithm>
 #include <cassert>
 #include <csignal>
 #include <cstdio>
@@ -110,14 +111,19 @@ int main(int argc, char *argv[])
             slog(LOG_ALL, 0, "Hook() in main called with a non -1 fd.");
         }
 
-        g_CaptainHook.Hook(fd, &mplex::g_MotherHook);
+        if (!g_CaptainHook.Hook(fd, &mplex::g_MotherHook))
+        {
+            fprintf(stderr, "Can't watch the mother connection, fd %d.\n", fd);
+            exit(1);
+        }
     }
 
-    /* Subtract stdout, stdin, stderr, fdmud, fdmother and 2 to be safe. */
+    /* Subtract stdout, stdin, stderr, fdmud, fdmother, the spare fd and 1 to be safe. */
 #if defined(_WINDOWS)
     g_nActiveConnections = 256 - 3 - 2 - 2;
 #else
-    mplex::g_nConnectionsLeft = getdtablesize() - 3 - 2 - 2;
+    // Not past FD_SETSIZE however high the fd limit: select() can't watch more
+    mplex::g_nConnectionsLeft = std::min(getdtablesize(), FD_SETSIZE) - 3 - 2 - 2;
 #endif
     mplex::Control();
 

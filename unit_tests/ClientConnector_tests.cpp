@@ -14,6 +14,7 @@
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
 #include <poll.h>
+#include <sys/resource.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -842,6 +843,34 @@ struct TlsFixture
         return c;
     }
 
+    // What the server sent the client until it closed; an error if it doesn't within 2 s
+    std::string ReadToEof(int c)
+    {
+        std::string got;
+        char buf[256];
+        for (int i = 0; i < 100; i++)
+        {
+            pollfd p{c, POLLIN, 0};
+            poll(&p, 1, 20);
+            int r;
+            while ((r = recv(c, buf, sizeof(buf), MSG_DONTWAIT)) > 0)
+            {
+                got.append(buf, r);
+            }
+            if (r == 0)
+            {
+                return got;
+            }
+            if (errno != EAGAIN)
+            {
+                BOOST_ERROR("recv: " << strerror(errno) << ", not EOF");
+                return got;
+            }
+        }
+        BOOST_ERROR("no EOF from the server");
+        return got;
+    }
+
     void Forget(int c) // the test closed it itself
     {
         for (int &x : clients)
@@ -853,12 +882,10 @@ struct TlsFixture
         }
     }
 
-    // What cMotherHook::Input() does: accept, then write to the client
-    // before anything has come back from it (there: "Requesting an ID")
-    mplex::cConHook *Accept(const char *greeting = "Welcome<br/>")
+    // As mplex does: accept only once select() says a connection is there.
+    // Without one, cConHook() comes back unhooked.
+    void WaitForConnection()
     {
-        // As mplex does: accept only once select() says a connection is there. cConHook()
-        // can't take a failed accept(): it asserts, or with NDEBUG (CI) hooks fd -1.
         pollfd p{mplex::g_MotherHook.tfd(), POLLIN, 0};
         int n;
         do
@@ -867,6 +894,13 @@ struct TlsFixture
         } while (n < 0 && errno == EINTR);
         int e = n < 0 ? errno : 0; // before any logging can touch it
         BOOST_REQUIRE_MESSAGE(p.revents & POLLIN, "no connection to accept: poll() " << n << ", errno " << e << ", revents " << p.revents);
+    }
+
+    // What cMotherHook::Input() does: accept, then write to the client
+    // before anything has come back from it (there: "Requesting an ID")
+    mplex::cConHook *Accept(const char *greeting = "Welcome<br/>")
+    {
+        WaitForConnection();
         auto *h = new mplex::cConHook();
         hooks.push_back(h);
         h->m_pFptr = RecordCommand; // not MenuSelect(): there is no mud to ask
@@ -954,16 +988,7 @@ BOOST_FIXTURE_TEST_CASE(a_plain_telnet_client_is_dropped_even_without_an_id, Tls
 
     // The client gets the alert and then EOF, and the socket is out of the
     // table: the loop has nothing left to do with it
-    char buf[256];
-    int r = -1;
-    for (int i = 0; i < 50 && (r = recv(c, buf, sizeof(buf), MSG_DONTWAIT)) != 0; i++)
-    {
-        if (r < 0)
-        {
-            usleep(1000);
-        }
-    }
-    BOOST_TEST(r == 0);
+    ReadToEof(c);
     BOOST_TEST(Loop(20) == 0);
 }
 
@@ -1173,6 +1198,53 @@ BOOST_FIXTURE_TEST_CASE(the_plain_port_behaves_as_before, TlsFixture)
     BOOST_TEST((unsigned char)buf[1] == 253);
     BOOST_TEST(std::string(buf, r).find("Welcome") != std::string::npos);
     BOOST_TEST(h->IsHooked());
+}
+
+BOOST_FIXTURE_TEST_CASE(a_failed_accept_leaves_the_connection_unhooked, TlsFixture)
+{
+    // Nobody connecting, so accept() fails. That was an Assert(), which
+    // took mplex down with every player on it.
+    int left = mplex::g_nConnectionsLeft;
+    auto *h = new mplex::cConHook();
+    hooks.push_back(h);
+    BOOST_TEST(!h->IsHooked());
+    BOOST_TEST(mplex::g_nConnectionsLeft == left); // took no connection
+}
+
+BOOST_FIXTURE_TEST_CASE(a_client_past_the_limit_is_told_and_closed, TlsFixture)
+{
+    // Kept open instead, each one held an fd, until accept() failed
+    mplex::g_nConnectionsLeft = 1; // the fixture puts it back
+    int c = Connect();
+    WaitForConnection();
+    mplex::g_MotherHook.Input(SELECT_READ);
+    hooks.push_back(mplex::g_connection_list); // the one Input() made
+    BOOST_TEST(!hooks.back()->IsHooked());
+    BOOST_TEST(ReadToEof(c).find("no more available connections") != std::string::npos);
+}
+
+BOOST_FIXTURE_TEST_CASE(out_of_fds_the_waiting_connection_is_dropped, TlsFixture)
+{
+    // Left waiting, it would keep the listening socket readable: select()
+    // returning at once, mplex spinning and logging, for as long as it lasts
+    int c = Connect();
+    WaitForConnection();
+
+    rlimit saved{};
+    BOOST_REQUIRE_EQUAL(getrlimit(RLIMIT_NOFILE, &saved), 0);
+    int next = dup(0); // the lowest free fd
+    close(next);
+    rlimit full = saved;
+    full.rlim_cur = next; // none free below the limit: accept() gets EMFILE
+    BOOST_REQUIRE_EQUAL(setrlimit(RLIMIT_NOFILE, &full), 0);
+    auto *h = new mplex::cConHook();
+    setrlimit(RLIMIT_NOFILE, &saved);
+    hooks.push_back(h);
+
+    BOOST_TEST(!h->IsHooked());
+    pollfd p{mplex::g_MotherHook.tfd(), POLLIN, 0};
+    BOOST_TEST(poll(&p, 1, 0) == 0); // nothing left waiting
+    ReadToEof(c);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

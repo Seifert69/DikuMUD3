@@ -86,16 +86,18 @@ public:
     ~cCaptainHook();
 
     void Close();
-    void Hook(int nHandle, cHook *hook);
+    /// Hooked, the fd is the hook's. One select() can't watch (< 0 or >= FD_SETSIZE)
+    /// is closed instead, nothing hooked, and the result is false.
+    [[nodiscard]] bool Hook(int nHandle, cHook *hook);
     int Wait(timeval *timeout);
     void Unhook(cHook *hook);
 
 private:
     fd_set read_set, write_set;
 
-    cHook *pfHook[256];
+    cHook *pfHook[FD_SETSIZE]; ///< by fd
 
-    int nIdx[256];
+    int nIdx[FD_SETSIZE]; ///< the hooked fds, nTop of them
     int nMax;
     int nTop;
 };
