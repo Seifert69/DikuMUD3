@@ -164,7 +164,9 @@ sbit32 new_player_id()
 
     fprintf(pFile, " %d ", g_player_id + 1);
 
-    // fflush(pFile);
+    // On disk at once: if the server crashed with it still buffered, the next character after the
+    // reboot would get the same id.
+    fflush(pFile);
     slog(LOG_ALL, 0, "new player id = %d", (g_player_id + 1));
     return g_player_id++;
 }

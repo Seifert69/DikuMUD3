@@ -19,7 +19,7 @@ NAMES = HEADER.split(";")
 
 sys.stdin.reconfigure(errors="replace")  # email and maiden name are whatever bytes the player typed
 ids = Counter()
-rejected = errors = unknown = above_top = below_zero = 0
+barred = rejected = errors = unknown = above_top = below_zero = 0
 next_id = None
 header_seen = False
 for line in sys.stdin:
@@ -33,8 +33,10 @@ for line in sys.stdin:
                           "last": int(r["last connect epoch"]), "played": int(r["played seconds"])},
                          separators=(",", ":")))
     elif line.startswith('"') and len(f) >= 2 and f[1].startswith("ERROR: "):
-        if f[1] == "ERROR: Corrupt":
-            rejected += 1   # unreadable, illegal name or failed sanity check
+        if f[1] == "ERROR: BARRED":
+            barred += 1     # name in badnames/badstrings or illegal; the file is fine
+        elif f[1] == "ERROR: Corrupt":
+            rejected += 1   # unreadable or failed sanity check
         else:
             errors += 1     # the loader threw
     elif line.startswith('"'):
@@ -49,8 +51,8 @@ for line in sys.stdin:
         next_id = int(m.group(1))
 
 shared = {i: n for i, n in ids.items() if n > 1}
-print(f"listed: {sum(ids.values())} characters; {rejected} rejected by vme -L (unreadable, illegal name "
-      f"or failed sanity check); {errors} failed to load", file=sys.stderr)
+print(f"listed: {sum(ids.values())} characters; {barred} barred (name in badnames or badstrings, or illegal); "
+      f"{rejected} rejected (unreadable or failed sanity check); {errors} failed to load", file=sys.stderr)
 print(f"player ids: {len(ids)} distinct; {len(shared)} shared by {sum(shared.values())} characters; "
       f"{below_zero + sum(n for i, n in ids.items() if i <= 0)} characters with id 0 or below", file=sys.stderr)
 if next_id is not None:

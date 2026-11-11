@@ -441,9 +441,18 @@ void clist()
                     {
                         ++file_count;
 
-                        // Loading prints its own complete lines (sanity check, excluded name), so the
-                        // character's line starts only after it.
+                        // A name in etc/badnames or etc/badstrings, or an illegal one: the file is fine,
+                        // but the game won't let the character log in.
                         temp = dir_itr->path().filename().string();
+                        char name_buf[256];
+                        if (_parse_name(temp.c_str(), name_buf) != 0)
+                        {
+                            std::cout << dir_itr->path() << ";ERROR: BARRED\n";
+                            continue;
+                        }
+
+                        // Loading prints its own complete lines (sanity check), so the character's line
+                        // starts only after it.
                         pc = convert_load_player(temp.c_str());
                         if (pc == nullptr)
                         {
