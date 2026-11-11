@@ -1,5 +1,6 @@
 file(GLOB VME_ZONES "*.zon")
-file(GLOB HEADER_DEPS "{CMAKE_SOURCE_DIR}/vme/include/*.h")
+# Every zone recompiles when a shared header or vmc itself changes, not only when its .zon does
+file(GLOB HEADER_DEPS "${CMAKE_SOURCE_DIR}/vme/include/*.h")
 
 # Create empty variable for outputs
 set(OUTPUT_FILES)
@@ -14,7 +15,7 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
             OUTPUT ${OUTPUT_DATA_FILE}
             COMMAND vmc -q -d ${CMAKE_SOURCE_DIR}/vme/etc/ -I${CMAKE_SOURCE_DIR}/vme/include/ ${SHORT}.zon
             WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/vme/zone
-            DEPENDS ${SHORT}.zon ${HEADER_DEPS}
+            DEPENDS ${SHORT}.zon ${HEADER_DEPS} vmc
             VERBATIM
     )
 
