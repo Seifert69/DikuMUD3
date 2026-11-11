@@ -13,6 +13,7 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
+#include <poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -856,6 +857,16 @@ struct TlsFixture
     // before anything has come back from it (there: "Requesting an ID")
     mplex::cConHook *Accept(const char *greeting = "Welcome<br/>")
     {
+        // As mplex does: accept only once select() says a connection is there. cConHook()
+        // can't take a failed accept(): it asserts, or with NDEBUG (CI) hooks fd -1.
+        pollfd p{mplex::g_MotherHook.tfd(), POLLIN, 0};
+        int n;
+        do
+        {
+            n = poll(&p, 1, 1000);
+        } while (n < 0 && errno == EINTR);
+        int e = n < 0 ? errno : 0; // before any logging can touch it
+        BOOST_REQUIRE_MESSAGE(p.revents & POLLIN, "no connection to accept: poll() " << n << ", errno " << e << ", revents " << p.revents);
         auto *h = new mplex::cConHook();
         hooks.push_back(h);
         h->m_pFptr = RecordCommand; // not MenuSelect(): there is no mud to ask
