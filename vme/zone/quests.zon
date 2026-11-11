@@ -1275,7 +1275,7 @@ code
 
    if (qstMarkComplete@quests(pc, qname))
    {
-      sendto("quest$done " + pc.symname, self);  // Trigger self, to recognize quest completion
+      sendto("quest$done " + pc.name, self);  // Trigger self, to recognize quest completion (see qstDonePc)
    }
 
    goto start;
@@ -1396,6 +1396,28 @@ code
 }
 dilend
 
+// The player named in a "quest$done <name>" message (sent by qstItemsWanted when the last item
+// is in), or null. They just gave the item, so they're in the room. (It used to send symname and
+// look it up with findsymbolic, which only finds units from zone files, never a player: the
+// thanks and rewards waited for the player's next command.)
+dilbegin unitptr qstDonePc(arg : string);
+var
+   words : stringlist;
+   u     : unitptr;
+code
+{
+   u := null;
+   words := getwords(arg);
+   if (length(words) < 2)
+      return (u);
+   if (words.[0] != "quest$done")
+      return (u);
+   u := findunit(self, words.[1], FIND_UNIT_SURRO, null, UNIT_ST_PC);
+   return (u);
+}
+dilend
+
+
 // sl stringlist of explanations
 //
 //
@@ -1403,6 +1425,9 @@ dilend
 // the one named in the "quest$done <player>" message qstItemsWanted sends when the last item
 // is handed over (a give is a command too, but it arrives before the item changes hands).
 dilbegin unitptr qstWaitPc();
+external
+   unitptr qstDonePc@quests(arg : string);
+
 var
    words : stringlist;
    u     : unitptr;
@@ -1413,12 +1438,7 @@ code
 
    if (command(CMD_AUTO_MSG))
    {
-      words := getwords(argument);
-      if (length(words) < 2)
-         goto start;
-      if (words.[0] != "quest$done")
-         goto start;
-      u := findsymbolic(words.[1]);
+      u := qstDonePc@quests(argument);
       if (u == null)
          goto start;
       return (u);
@@ -1583,6 +1603,7 @@ dilend
 dilbegin  aware fnpri(FN_PRI_MISSION+8) qstOnComplete(qname : string,
                        sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 external
+   unitptr qstDonePc@quests(arg : string);
    Explainer(pc : unitptr, sl : stringlist);
    string qstOngoing@quests(qname : string);
    string qstComplete@quests(qname : string);
@@ -1592,13 +1613,10 @@ var
    qon    : string;
    qdone  : string;
    pc     : unitptr;
-   pcname : string;
    u      : unitptr;
    i      : integer;
    ln     : integer;
    exdp   : extraptr;
-   words  : stringlist;
-   s      : string;
 
 code
 {
@@ -1624,17 +1642,7 @@ code
 
    // log("MSG : " + argument);
    
-   words := getwords(argument);
-   s := words.[0];
-   if (s != "quest$done")
-      goto start;
-   
-   pcname := words.[1];
-
-   // log("ARG: " + s);
-   // log("PC: " + pcname);
-
-   pc := findsymbolic(pcname); // The player activator
+   pc := qstDonePc@quests(argument); // The player activator
 
    if (pc == null) {
       // log("PC is null...");
@@ -1714,6 +1722,7 @@ dilbegin fnpri(FN_PRI_MISSION+7)
                         qstDone : stringlist,
                         xp : integer, gold : integer, itemsl : stringlist, prereqfunc : string);
 external
+   unitptr qstDonePc@quests(arg : string);
    unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
@@ -1745,11 +1754,9 @@ code
    {
       // log("MSG : " + argument);
 
-      s := getword(argument);
-
-      if (s != "quest$done")
+      pc := qstDonePc@quests(argument); // The player activator
+      if (pc == null)
          goto start;
-      pc := findsymbolic(argument); // The player activator
       pc := qstWaitDone@quests(qname, pc, qstDone, xp, gold, itemsl);
       goto start;
    }
