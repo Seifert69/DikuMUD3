@@ -126,15 +126,28 @@ void run_the_game(char *srvcfg)
     slog(LOG_ALL, 0, "VME Compiled with [%s]", get_compiled_hash_defines());
     slog(LOG_OFF, 0, "Read server configuration.");
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
+    // vme -L only reads the player files, so it opens no port or pipe and can run beside a live
+    // server. -c and -C rewrite and delete player files: they still open the port, which fails
+    // while a server is running.
+    const bool list_only = g_player_convert == 3;
 
-    init_mother(g_cServerConfig.getMotherPort());
+    if (!list_only)
+    {
+        slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
+        init_mother(g_cServerConfig.getMotherPort());
+    }
 
-    slog(LOG_OFF, 0, "Signal trapping.");
-    signal_setup();
+    if (!list_only) // vme -L keeps the default signals, so Ctrl-C and a closed pipe stop it
+    {
+        slog(LOG_OFF, 0, "Signal trapping.");
+        signal_setup();
+    }
 
-    slog(LOG_OFF, 0, "Named pipe setup.");
-    namedpipe_setup();
+    if (!list_only)
+    {
+        slog(LOG_OFF, 0, "Named pipe setup.");
+        namedpipe_setup();
+    }
 
     slog(LOG_OFF, 0, "Dil function table setup.");
     dil_function_table_setup();

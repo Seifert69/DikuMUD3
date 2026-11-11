@@ -16,6 +16,7 @@
 #include "formatter.h"
 #include "handler.h"
 #include "interpreter.h"
+#include "main_functions.h"
 #include "mobact.h"
 #include "money.h"
 #include "reception.h"
@@ -163,7 +164,9 @@ sbit32 new_player_id()
 
     fprintf(pFile, " %d ", g_player_id + 1);
 
-    // fflush(pFile);
+    // On disk at once: if the server crashed with it still buffered, the next character after the
+    // reboot would get the same id.
+    fflush(pFile);
     slog(LOG_ALL, 0, "new player id = %d", (g_player_id + 1));
     return g_player_id++;
 }
@@ -519,8 +522,9 @@ void player_file_index()
     int n = 0;
     std::string tmp_player_name = g_cServerConfig.getPlyDir() + "player.tmp";
 
-    /* Get rid of any temporary player save file */
-    while (file_exists(tmp_player_name))
+    /* Get rid of any temporary player save file. Not for vme -L: it can run beside a live
+       server, which may be saving into that file right now. */
+    while (g_player_convert != 3 && file_exists(tmp_player_name))
     {
         n = std::remove(tmp_player_name.c_str());
         if (n != 0)
