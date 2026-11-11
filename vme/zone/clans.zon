@@ -116,6 +116,70 @@ code
 }
 dilend //namepillar
 
+// The Bounty Hunters' tome of legends (tome@bounty), a copy of namepillar for the guild. It lives
+// here because loadstr/savestr need a zone with access level 10 or less; in bounty (250) the
+// server stopped it at the first loadstr and the tome never listed anyone.
+dilbegin tome_dil();
+var
+	err : integer;
+	buf : string;
+	nlist : stringlist;
+	i	: integer;
+	pc : unitptr;
+	targ : string;
+code
+{
+:start:
+	buf := "";
+	targ := self.outside.zoneidx+"_names.data";
+	err := loadstr (targ,buf);
+	if (err < 1)
+		err := savestr(targ,buf,"w");
+	nlist := split(buf,"\n");
+	i := 0;
+	buf := "";
+	while (i < length(nlist))
+	{
+		
+		buf := buf + nlist.[i] + "<br>";
+		i := i+1;
+	}
+	self.extra.[0].descr := "The tome lists the names Bounty Hunters who accomplished incredible works on behalf of The Guild.<br><br>" + buf;
+	
+:start_sign:	
+	wait(SFB_CMD, (command("sign")) and (argument == "tome"));
+	pc := activator;
+	block;
+	
+	if (not("Bounty Hunter" in pc.quests))
+	{
+		act ("<div class='clan'>You are not worthy of signing the tome!'</div> ",
+		A_ALWAYS,pc,null,self,TO_CHAR);
+		goto start_sign;
+	}
+	i := 0;
+	while (i < length(nlist))
+	{
+		if(pc.name in nlist.[i])
+		{
+			act ("<div class='clan'>You have already signed the tome!'</div>",
+			A_ALWAYS,pc,null,self,TO_CHAR);
+			goto start_sign;
+		}
+		i := i + 1;
+	}
+		act ("<div class='clan'>The tome flashes <div class='cpb'>brightly</div>!</div>",
+			A_ALWAYS,activator,null,self,TO_ALL);
+		act ("<div class='clan'>You magically sign the tome, adding your name to history.</div>",
+			A_ALWAYS,activator,null,self,TO_CHAR);
+		act ("<div class='clan'>$1n magically signs the tome, adding their name to history.</div>",
+			A_SOMEONE,activator,null,self,TO_REST);
+	
+	err := savestr(targ,pc.name+" "+pc.title+"\n","a");
+	goto start;
+}
+dilend //tome_dil
+
 dilbegin block_drag(dir:string);
 var
 	word:string;
