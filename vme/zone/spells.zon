@@ -11032,7 +11032,7 @@ code
 
 /*
 
-   hm := skillresist@skills(self.abilities[ABIL_DIV] + self.abilities[ABIL_BRA],
+   hm := skillresist@function(self.abilities[ABIL_DIV] + self.abilities[ABIL_BRA],
                            targ.abilities[ABIL_DIV] * 2,
                            self.spells[SPL_ENTANGLE],
                            targ.abilities[ABIL_BRA] + 20);
@@ -11356,7 +11356,7 @@ code
 
 
 /*
-   hm := skillresist@skills(self.abilities[ABIL_BRA],
+   hm := skillresist@function(self.abilities[ABIL_BRA],
                            targ.abilities[ABIL_BRA],
                            self.spells[SPL_CHARM_ANIMAL],
                            targ.abilities[ABIL_MAG] + 25);
@@ -11430,7 +11430,7 @@ code
 
 
 /*
-   hm := skillresist@skills(self.abilities[ABIL_MAG],
+   hm := skillresist@function(self.abilities[ABIL_MAG],
                            tgt.abilities[ABIL_BRA],
                            self.spells[SPL_HOLD_ANIMAL],
                            tgt.abilities[ABIL_MAG] + 25);
@@ -11615,7 +11615,7 @@ code
         hm:=spellresist(skilla,skillb,skillc,skilld);
 /*
 
-   hm := skillresist@skills(self.abilities[ABIL_BRA],
+   hm := skillresist@function(self.abilities[ABIL_BRA],
                            tgt.abilities[ABIL_BRA],
                            self.spells[SPL_SUMMON_ANIMAL],
                            tgt.abilities[ABIL_MAG] + 25);
@@ -12488,7 +12488,7 @@ code
 
 
 /*
-      i := skillresist@skills(pc.abilities[ABIL_DEX], 0,
+      i := skillresist@function(pc.abilities[ABIL_DEX], 0,
                               pc.abilities[ABIL_BRA], 100);
 */
        if(i > 50) goto loop;

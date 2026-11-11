@@ -4334,7 +4334,7 @@ dilbegin search_dil(arg : string);
 external
    search_item(u2 : unitptr, s1 : string);
    unitptr  unit_room@function(u1  :  unitptr);
-   integer  skillresist@skills(a1 : integer, a2 : integer, a3 : integer, a4 : integer);
+   integer  skillresist@function(a1 : integer, a2 : integer, a3 : integer, a4 : integer);
    string   dirstring@spells(i1 : integer);
    integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
 

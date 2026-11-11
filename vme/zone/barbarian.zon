@@ -205,7 +205,7 @@ dilend // END DIL nokill
 
 dilbegin aware recall blood(pwr : integer);
 external
-	integer skillresist@skills(aa:integer,ad:integer,sa:integer,sd:integer);
+	integer skillresist@function(aa:integer,ad:integer,sa:integer,sd:integer);
 var
 	origpwr : integer;
 	mypulse : integer;
@@ -260,7 +260,7 @@ code
 	skilld := rnd(40,124);
 	skilla := self.abilities[ABIL_CON];
 	skillb := self.outside.fighting.abilities[ABIL_CON];
-	hm := skillresist@skills(skilla,skillb,skillc,skilld);
+	hm := skillresist@function(skilla,skillb,skillc,skilld);
 	
 	if (hm >= 0)
 	{
