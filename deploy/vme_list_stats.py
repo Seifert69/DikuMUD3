@@ -7,8 +7,8 @@ stderr: a summary and a player id check, counts only.
 Exits 1 if the listing isn't a complete `vme -L` listing in the format this script knows.
 
 Pipe the listing straight in, so the names, emails and maiden names in it never reach a file.
-From vme/bin (-l keeps vme from truncating ./vme.log; -L opens no port, so a live server is fine):
-    ./vme -L -l /tmp/vme-list.log | python3 -I ../../deploy/vme_list_stats.py > players.jsonl 2> summary.txt
+From vme/bin; -L opens no port and, without -l, logs to the terminal, so a live server is fine:
+    ./vme -L | python3 -I ../../deploy/vme_list_stats.py > players.jsonl 2> summary.txt
 """
 import json, re, sys
 from collections import Counter
@@ -19,7 +19,7 @@ NAMES = HEADER.split(";")
 
 sys.stdin.reconfigure(errors="replace")  # email and maiden name are whatever bytes the player typed
 ids = Counter()
-rejected = errors = above_top = below_zero = 0
+rejected = errors = unknown = above_top = below_zero = 0
 next_id = None
 header_seen = False
 for line in sys.stdin:
@@ -37,6 +37,8 @@ for line in sys.stdin:
             rejected += 1   # unreadable, illegal name or failed sanity check
         else:
             errors += 1     # the loader threw
+    elif line.startswith('"'):
+        unknown += 1        # a character line with the wrong number of columns
     elif line == HEADER:
         header_seen = True
     elif line.startswith("Maximum ID exceeded"):  # sanity_check(), rejected
@@ -54,7 +56,9 @@ print(f"player ids: {len(ids)} distinct; {len(shared)} shared by {sum(shared.val
 if next_id is not None:
     print(f"next id (players.id): {next_id}; {above_top + sum(n for i, n in ids.items() if i >= next_id)} "
           f"characters with an id at or above it", file=sys.stderr)
-if not header_seen or next_id is None or not ids:
+if unknown:
+    print(f"ERROR: {unknown} character lines without {len(NAMES)} columns", file=sys.stderr)
+if unknown or not header_seen or next_id is None or not ids:
     print("ERROR: not a complete vme -L listing in the expected format (header, characters and the "
           "'Maximum ID was' line); vme -L and this script may be from different versions", file=sys.stderr)
     sys.exit(1)

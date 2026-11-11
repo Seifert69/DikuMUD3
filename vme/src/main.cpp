@@ -43,6 +43,7 @@ int main(int argc, char **argv)
         char srvcfg[512];
         char *tempcfg = nullptr;
         char *log_name = nullptr;
+        bool log_given = false;
         int pos = 1;
 
         tempcfg = getenv("VME_SERVER_CFG");
@@ -106,6 +107,7 @@ int main(int argc, char **argv)
                     break;
 
                 case 'l':
+                    log_given = true;
                     if (*(argv[pos] + 2))
                     {
                         FREE(log_name);
@@ -139,12 +141,17 @@ int main(int argc, char **argv)
             }
         }
 
-        g_log_file_fd = freopen(log_name, "w", stderr);
-        if (!g_log_file_fd)
+        // -c, -C and -L may be started in the bin directory of a running server: without -l they log
+        // to stderr instead of truncating the server's ./vme.log.
+        if (!g_player_convert || log_given)
         {
-            fprintf(stderr, "Error in opening the log:  '%s'", log_name);
-            FREE(log_name);
-            exit(7);
+            g_log_file_fd = freopen(log_name, "w", stderr);
+            if (!g_log_file_fd)
+            {
+                fprintf(stderr, "Error in opening the log:  '%s'", log_name);
+                FREE(log_name);
+                exit(7);
+            }
         }
 
         FREE(log_name);

@@ -344,8 +344,6 @@ const char *isodate(tm *t)
     return isodate.c_str();
 }
 
-/// The email and maiden name columns, empty when not set. ';' becomes ',' and line breaks
-/// become spaces, so that every character is one line with the same columns.
 /// names[i], or "UNDEFINED" when i is out of range or not defined (the race and profession
 /// tables can have gaps, so sprinttype()'s count up to the first nullptr is too short).
 static const char *table_name(int i, const char *names[], int max)
@@ -353,6 +351,8 @@ static const char *table_name(int i, const char *names[], int max)
     return (0 <= i && i < max && names[i]) ? names[i] : "UNDEFINED";
 }
 
+/// The email and maiden name columns, empty when not set. ';' becomes ',' and line breaks
+/// become spaces, so that every character is one line with the same columns.
 std::string GetInfo(unit_data *pc)
 {
     std::string s;
