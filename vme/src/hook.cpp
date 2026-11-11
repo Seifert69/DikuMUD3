@@ -409,7 +409,7 @@ cCaptainHook::cCaptainHook()
 #ifndef _WINDOWS
     signal(SIGPIPE, SIG_IGN); // Or else pipe fucks the whole thing up...
 #endif
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < FD_SETSIZE; i++)
     {
         pfHook[i] = nullptr;
     }
@@ -425,7 +425,7 @@ cCaptainHook::~cCaptainHook()
 
 void cCaptainHook::Close()
 {
-    for (int i = 0; i < 256; i++)
+    for (int i = 0; i < FD_SETSIZE; i++)
     {
         if (pfHook[i])
         {
@@ -438,11 +438,21 @@ void cCaptainHook::Close()
 }
 
 // Maybe Hook(*hook, int fd, *webs)
-void cCaptainHook::Hook(int nHandle, cHook *hook)
+bool cCaptainHook::Hook(int nHandle, cHook *hook)
 {
     static int newid = 0;
 
-    assert(nHandle < (int)sizeof(pfHook));
+    // pfHook is indexed by fd, and select() can't watch one past FD_SETSIZE
+    if (nHandle < 0 || nHandle >= FD_SETSIZE)
+    {
+        slog(LOG_ALL, 0, "Hook(): fd %d is out of select()'s range (0-%d), closed.", nHandle, FD_SETSIZE - 1);
+        if (nHandle >= 0)
+        {
+            close(nHandle);
+        }
+        return false;
+    }
+
     assert(pfHook[nHandle] == nullptr);
 
     if (hook->fd != -1)
@@ -470,6 +480,7 @@ void cCaptainHook::Hook(int nHandle, cHook *hook)
     }
 
     // DEBUG("HOOKED: Fd %d, Flags %d, Max %d\n", nHandle, nFlag, nMax);
+    return true;
 }
 
 void cCaptainHook::Unhook(cHook *hook)
@@ -521,8 +532,8 @@ int cCaptainHook::Wait(timeval *timeout)
     /* The following two are used in Wait() because the Input & Write
        can cause any descriptor to become unhooked. It is then the job
        of the Unhook to update this table of descriptors accordingly */
-    int nTable[256];
-    int nId[256];
+    int nTable[FD_SETSIZE];
+    int nId[FD_SETSIZE];
 
     int nTableTop = 0;
 

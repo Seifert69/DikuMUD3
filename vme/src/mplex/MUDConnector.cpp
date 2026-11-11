@@ -92,16 +92,18 @@ void test_mud_up()
         return;
     }
 
-    nRetries = 0;
-    slog(LOG_OFF, 0, "Stream to server was re-opened!");
-
     if (g_MudHook.tfd() != -1)
     {
         slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
     }
 
-    g_CaptainHook.Hook(fd, &g_MudHook);
-    // assert(g_MudHook.IsHooked());
+    if (!g_CaptainHook.Hook(fd, &g_MudHook))
+    {
+        return; // try again next time round
+    }
+
+    nRetries = 0;
+    slog(LOG_OFF, 0, "Stream to server was re-opened!");
 
     // Clients forced to ASCII (-y) get text as telnet does, so the server
     // must treat them as telnet: no <data> packets, the players' colours
@@ -253,11 +255,18 @@ void cMotherHook::Input(int nFlags)
     {
         cConHook *con = new cConHook();
 
+        if (!con->IsHooked())
+        {
+            return; // accept() failed: ClearUnhooked() deletes it
+        }
+
         if (g_nConnectionsLeft <= 1)
         {
             slog(LOG_OFF, 0, "Can't accept more connections.");
             con->SendCon("This server has no more available connections, try "
                          "another port.<br/>");
+            // Not kept open: each one would hold an fd until accept() fails
+            con->Close(FALSE);
         }
         else
         {
