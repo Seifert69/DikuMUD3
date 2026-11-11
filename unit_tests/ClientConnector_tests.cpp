@@ -13,6 +13,7 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/x509.h>
+#include <poll.h>
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/time.h>
@@ -856,6 +857,8 @@ struct TlsFixture
     // before anything has come back from it (there: "Requesting an ID")
     mplex::cConHook *Accept(const char *greeting = "Welcome<br/>")
     {
+        pollfd p{listenFd, POLLIN, 0};
+        BOOST_REQUIRE_EQUAL(poll(&p, 1, 1000), 1); // as mplex does: accept only once it's ready
         auto *h = new mplex::cConHook();
         hooks.push_back(h);
         h->m_pFptr = RecordCommand; // not MenuSelect(): there is no mud to ask
