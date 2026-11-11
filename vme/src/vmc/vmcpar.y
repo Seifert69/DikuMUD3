@@ -275,7 +275,7 @@ oroom_field : MOVEMENT PNUM
     }
     | FLAGS flags
     {
-        UROOM(cur)->setAllRoomFlags($2);
+        UROOM(cur)->setAllRoomFlags(UROOM(cur)->getRoomFlags() | $2); // adds: a macro's flags stay
     }
     | VIN reference
     {
@@ -433,7 +433,7 @@ oobject_field   : VALUE index flags
     }
     | FLAGS flags
     {
-        UOBJ(cur)->setAllObjectFlags($2);
+        UOBJ(cur)->setAllObjectFlags(UOBJ(cur)->getObjectFlags() | $2); // adds: a macro's flags stay
     }
     | SPELL number
     {
@@ -536,7 +536,7 @@ omobile_field   : MANA number
     }
     | FLAGS flags
     {
-        UCHAR(cur)->setAllCharacterFlags($2);
+        UCHAR(cur)->setAllCharacterFlags(UCHAR(cur)->getCharacterFlags() | $2); // adds: a macro's flags stay
     }
     | ARMOUR number
     {
