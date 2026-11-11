@@ -314,9 +314,6 @@ dilend
 // 
 
 dilbegin integer default_accept(pc : unitptr, ip : integer, s : string);
-external
-   integer qstBusyGive@quests(arg : string);
-
 var
    i : integer;
    t : string;
@@ -328,7 +325,6 @@ code
 
    i := 0;
    secure(pc, lostpc);
-   interrupt(SFB_CMD, command("give"), busygive);
 
 :loop:
    //log("Waiting for quest accept command.");
@@ -376,11 +372,6 @@ code
 
    :lostpc:
    return(0);
-
-:busygive:
-   if (qstBusyGive@quests(argument))
-      block;
-   goto loop;
 }
 dilend
 
@@ -454,7 +445,6 @@ dilend
 //
 dilbegin Explainer(pc : unitptr, sl : stringlist);
 external
-   integer qstBusyGive@quests(arg : string);
    integer Explain@quests(arg1 : unitptr, arg2 : unitptr, msg : string);
 
 var
@@ -473,12 +463,9 @@ code
    hb := heartbeat;
 	heartbeat := 1;
 
-   interrupt(SFB_CMD, command("give"), busygive);
-
    // Give the explanation
    while (i < ln)
    {
-:between:
       pause;
       Explain@quests(pc, null, sl.[i]);
    	heartbeat := PULSE_SEC * 3;
@@ -488,11 +475,6 @@ code
 :lostpc:
    heartbeat := hb;
    return;
-
-:busygive:
-   if (qstBusyGive@quests(argument))
-      block;
-   goto between;
 }
 dilend
 
@@ -1003,7 +985,6 @@ dilend
 //
 dilbegin extraptr qstAssign(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
 external
-   integer qstBusyGive@quests(arg : string);
    extraptr qstSetOngoing@quests(qname : string, pc : unitptr, qdescr : string);
 
 var
@@ -1037,8 +1018,6 @@ code
 	heartbeat := PULSE_SEC * 3;
 
    priority;
-
-   interrupt(SFB_CMD, command("give"), busygive);
 
    // Give the explanation
    while (i < ln)
@@ -1075,7 +1054,6 @@ code
          exec(s, self);
          pause;
       }
-:nextline:
       i := i + 1;
    }
 
@@ -1084,11 +1062,6 @@ code
 :lostpc:
    nopriority;
    return(exd);
-
-:busygive:
-   if (qstBusyGive@quests(argument))
-      block;
-   goto nextline;
 }
 dilend
 
@@ -1152,7 +1125,13 @@ dilend
 //             
 // thanksl : $1 = pc, $2 = item, $3 = self
 //
-dilbegin fnpri(FN_PRI_MISSION+5) integer qstItemsWanted(qname : string, 
+// Order: qstItemsWanted (FN_PRI_BLOCK) and qstItemNoThank (FN_PRI_BLOCK+4) run ahead of every
+// talking DIL (qstSimpleQuest, or one that calls qstWaitHero/qstAssign/qstWaitDone), whose
+// priority shuts out the DILs after it while the NPC talks: an item given then used to be kept.
+// A zone DIL of its own that takes other items from this NPC goes in between
+// (FN_PRI_BLOCK+1..+3) and blocks what it takes, or qstItemNoThank gives it back first.
+//
+dilbegin fnpri(FN_PRI_BLOCK) integer qstItemsWanted(qname : string, 
                                                      itemsl : stringlist,
                                                      itemfunc : stringlist,
                                                      thanksl : stringlist, nothanks : string);
@@ -1284,43 +1263,7 @@ dilend
 
 
 
-// While the NPC talks a player through a quest (offer, acceptance, completion) the library
-// runs with priority, which shuts out the NPC's DILs further down the list: qstItemsWanted
-// and qstItemNoThank (fnpri MISSION+5/+6) never saw an item given then, when the talking DIL
-// came first (e.g. MISSION), and the NPC simply kept it. So each part that talks under
-// priority refuses the give command itself, before anything changes hands:
-//
-//    interrupt(SFB_CMD, command("give"), busygive);
-//    ...
-// :busygive:
-//    if (qstBusyGive@quests(argument))
-//       block;
-//    goto <where it was>;
-//
-// The interrupt goes away with its frame, so nothing is left behind when the talk ends or
-// breaks off. qstBusyGive returns 1 (and tells the giver) when the give is to self.
-//
-dilbegin integer qstBusyGive(arg : string);
-var
-   sl : stringlist;
-   u : unitptr;
-code
-{
-   // give <item> <receiver>: the receiver is the last word
-   sl := getwords(arg);
-   if (length(sl) < 2)
-      return (0);
-   u := findunit(activator, sl.[length(sl) - 1], FIND_UNIT_SURRO, null);
-   if (u != self)
-      return (0);
-
-   act("$3n is busy talking and can't take your item right now.", A_SOMEONE, activator, null, self, TO_CHAR);
-   return (1);
-}
-dilend
-
-
-dilbegin aware unique fnpri(FN_PRI_MISSION+6) qstItemNoThank();
+dilbegin aware unique fnpri(FN_PRI_BLOCK+4) qstItemNoThank();
 external
    unitptr make_money@baseget(i1 : integer, i2 : integer);
 
@@ -1505,7 +1448,6 @@ dilend
 dilbegin unitptr qstWaitDone(qname : string, pc : unitptr,
                              sl : stringlist, xp : integer, gold : integer, itemsl : stringlist);
 external
-   integer qstBusyGive@quests(arg : string);
    string qstOngoing@quests(qname : string);
    string qstComplete@quests(qname : string);
    qstGiveRewards@quests(pc : unitptr, itemsl : stringlist);
@@ -1552,14 +1494,11 @@ code
 
    priority;
 
-   interrupt(SFB_CMD, command("give"), busygive);
-
    // Give the explanation (Explain: "::to player::to room" act pairs work here too)
    while (i < ln)
    {
       Explain@quests(pc, null, sl.[i]);
       pause;
-:nextline:
       i := i + 1;
    }
 
@@ -1588,11 +1527,6 @@ code
    exec("say How rude!", self);
    u := null;
    return(u);
-
-:busygive:
-   if (qstBusyGive@quests(argument))
-      block;
-   goto nextline;
 }
 dilend
 
