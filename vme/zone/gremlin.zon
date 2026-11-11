@@ -240,6 +240,7 @@ dilend
 
 dilbegin aware boldin_request();
 external
+   unitptr qstDonePc@quests(arg : string);
    unitptr qstWaitHero@quests(qname : string, pc : unitptr, sl : stringlist, acptfunc : string, prereqfunc : string);
    extraptr qstAssign@quests(qname : string, pc : unitptr, sl : stringlist, qdescr : string);
    unitptr qstWaitDone@quests(qname : string, pc : unitptr,
@@ -249,8 +250,6 @@ var
   pc: unitptr;
   exdp: extraptr;
   i : integer;
-  pcname : string;
-  words : stringlist;
   s : string;
 
 code
@@ -445,17 +444,7 @@ code
    goto start;
 
 :check_msg:
-	words := getwords(argument);
-
-    if (length(words) < 2)
-        goto start;
-
-	s := words.[0];
-	if (s != "quest$done")
-		goto start;
-
-	pcname := words.[1];
-	pc := findsymbolic(pcname); // The player activator
+	pc := qstDonePc@quests(argument); // The player activator
 
 	if (pc == null) {
 		// log("PC is null...");
