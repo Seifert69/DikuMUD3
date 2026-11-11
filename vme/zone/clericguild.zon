@@ -832,7 +832,10 @@ goto start;
 dilend   /*torc_repl*/
 
 /*DIL for quest items given */
-dilbegin torc_give();
+// Runs between the quest library's qstItemsWanted and qstItemNoThank (see quests.zon), which
+// Morenae also has for the guild entry quest: it takes the torc items and blocks them, and
+// leaves everything else to the library, which gives it back.
+dilbegin fnpri(FN_PRI_BLOCK+2) torc_give();
 var
 pc   : unitptr;
 item : unitptr;
@@ -850,13 +853,10 @@ if (target == self)
    secure(pc, start);
    pin := TORC_REPL in pc.quests;
 
-/* Pc doesn't have quest active but tries to give items anyway - no go 
-   return to start and wait then give quest */
+/* Pc doesn't have the torc quest, or gave coins: not ours, the quest library gives it back */
 
- if (not(TORC_REPL in pc.quests))
+ if ((not(TORC_REPL in pc.quests)) or (item.objecttype == ITEM_MONEY))
  {
-  exec("say I have no need for material objects to tie me to this place. ", self);
-  exec("drop "+item.name, self);
   unsecure(pc);
   goto start;
  } 
@@ -870,6 +870,7 @@ if (target == self)
     exec("say It shall recruit for its undead army again, "+
 	"but your valor shall delay its ultimate plan, "+pc.name+".", self);
     destroy(item);
+    block;
     goto check;
    }
 /* comfrey root potion from coffer in snake_pit@ratswarf*/
@@ -879,6 +880,7 @@ if (target == self)
    addstring(pin.names, "tonic");
    exec("say I see your faith is strong.", self);
    destroy(item);
+   block;
    goto check;
   }
 /*severed hand from a necromancer character */  
@@ -888,12 +890,15 @@ if (target == self)
   addstring(pin.names, "hand");
   exec("say I hope you saved him from his perversion of our healing path.", self);
   destroy(item);
+  block;
   goto check;
  }
 /* pc gave her wrong item */
 
 exec("say It seems you must add failure to listen to your sins.", self);
-exec("drop "+item.name, self);
+link(item, pc);
+act("$3n hands $2n back to you.", A_SOMEONE, pc, item, self, TO_CHAR);
+block;
 goto check;
 
 /* ok she has it all, now for the torc */
