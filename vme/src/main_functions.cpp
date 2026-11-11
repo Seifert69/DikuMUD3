@@ -126,15 +126,20 @@ void run_the_game(char *srvcfg)
     slog(LOG_ALL, 0, "VME Compiled with [%s]", get_compiled_hash_defines());
     slog(LOG_OFF, 0, "Read server configuration.");
 
-    slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
-
-    init_mother(g_cServerConfig.getMotherPort());
+    if (!g_player_convert) // -c/-C/-L only read the player files: no port, so they run beside a live server
+    {
+        slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
+        init_mother(g_cServerConfig.getMotherPort());
+    }
 
     slog(LOG_OFF, 0, "Signal trapping.");
     signal_setup();
 
-    slog(LOG_OFF, 0, "Named pipe setup.");
-    namedpipe_setup();
+    if (!g_player_convert)
+    {
+        slog(LOG_OFF, 0, "Named pipe setup.");
+        namedpipe_setup();
+    }
 
     slog(LOG_OFF, 0, "Dil function table setup.");
     dil_function_table_setup();

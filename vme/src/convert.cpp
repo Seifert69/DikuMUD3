@@ -5,6 +5,7 @@
  $Revision: 2.7 $
  */
 #include "affect.h"
+#include "constants.h"
 #include "db.h"
 #include "db_file.h"
 #include "extra.h"
@@ -13,7 +14,9 @@
 #include "nanny.h"
 #include "pcsave.h"
 #include "reception.h"
+#include "skills.h"
 #include "textutil.h"
+#include "utility.h"
 #include "utils.h"
 #include "zon_basis.h"
 
@@ -221,7 +224,7 @@ int sanity_check(unit_data *u)
 
     if (!u->getUnitContains() && (u->getWeight() != u->getBaseWeight()))
     {
-        printf("Fixed illegal weight.");
+        printf("Fixed illegal weight.\n");
         u->setWeight(u->getBaseWeight());
     }
 
@@ -341,18 +344,29 @@ const char *isodate(tm *t)
     return isodate.c_str();
 }
 
+/// The email and maiden name columns, empty when not set. ';' becomes ',' and line breaks
+/// become spaces, so that every character is one line with the same columns.
+/// names[i], or "UNDEFINED" when i is out of range or not defined (the race and profession
+/// tables can have gaps, so sprinttype()'s count up to the first nullptr is too short).
+static const char *table_name(int i, const char *names[], int max)
+{
+    return (0 <= i && i < max && names[i]) ? names[i] : "UNDEFINED";
+}
+
 std::string GetInfo(unit_data *pc)
 {
-    std::string s = "";
-    extra_descr_data *e1 = PC_INFO(pc).find_raw("$email");
-
-    if (e1)
-        s = "email: " + e1->descr + ";";
-
-    e1 = PC_INFO(pc).find_raw("$maiden");
-    if (e1)
-        s += "maiden: " + e1->descr + ";";
-
+    std::string s;
+    for (const char *key : {"$email", "$maiden"})
+    {
+        if (extra_descr_data *e = PC_INFO(pc).find_raw(key))
+        {
+            for (char ch : e->descr)
+            {
+                s += ch == ';' ? ',' : (ch == '\n' || ch == '\r') ? ' ' : ch;
+            }
+        }
+        s += ";";
+    }
     return s;
 }
 
@@ -378,7 +392,6 @@ void clist()
     time_info_data tid2;
 
     unit_data *pc = nullptr;
-    unit_data *void_char = new_unit_data(UNIT_ST_NPC, nullptr); // Would be preferable to have a file_index_type passed here
 
     if (!fs::exists(full_path))
     {
@@ -392,7 +405,10 @@ void clist()
         fs::directory_iterator end_iter;
         std::string path_end = "";
 
-        std::cout << "name;id;Level;Admin;days since login;created;birth;" << std::endl;
+        // Every character's line has these 18 columns (deploy/vme_list_stats.py reads them).
+        std::cout << "name;id;Level;Admin;days since login;email;maiden;created;birth;played;"
+                     "race;profession;sex;virtual level;created epoch;last connect epoch;played seconds;flags"
+                  << std::endl;
 
         boot_global_dil();
 
@@ -425,44 +441,33 @@ void clist()
                     {
                         ++file_count;
 
-                        std::cout << dir_itr->path() << ";";
-
+                        // Loading prints its own complete lines (sanity check, excluded name), so the
+                        // character's line starts only after it.
                         temp = dir_itr->path().filename().string();
                         pc = convert_load_player(temp.c_str());
                         if (pc == nullptr)
                         {
-                            std::cout << "ERROR: Corrupt\n";
+                            std::cout << dir_itr->path() << ";ERROR: Corrupt\n";
                             continue;
                         }
+                        shall_exclude(pc->getNames().Name()); // the name inside the file
+
+                        std::cout << dir_itr->path() << ";";
 
                         std::cout << PC_ID(pc) << ";" << (int)CHAR_LEVEL(pc) << ";" << (IS_MORTAL(pc) ? " PLY  " : "ADMIN") << ";"
                                   << days_old(PC_TIME(pc).getPlayerLastConnectTime()) << ";";
 
                         std::cout << GetInfo(pc);
 
+                        const char *flags = "";
                         if (ids[PC_ID(pc)])
                         {
-                            std::cout << "Duplicate ID! (" << (signed long)PC_ID(pc) << ")";
+                            flags = "Duplicate ID!";
                         }
                         else
                         {
                             ids[PC_ID(pc)] = 1;
                         }
-
-                        shall_exclude(pc->getNames().Name());
-                        // shall_delete(pc);
-
-                        void_char->setUnitContains(nullptr);
-                        load_contents(temp.c_str(), void_char);
-
-                        /*if (UNIT_CONTAINS(void_char))
-                        {
-                            std::cout << "  INV";
-                            convert_inventory(UNIT_CONTAINS(void_char), pc, TRUE);
-                            free_inventory(UNIT_CONTAINS(void_char));
-                        }
-
-                        std::cout << endl;*/
 
                         bool tmp = false;
 
@@ -475,8 +480,6 @@ void clist()
                         std::cout << isodate(t) << ";";
 
                         time_t secs = static_cast<time_t>(PC_TIME(pc).getTotalTimePlayedInSeconds());
-
-                        convert_free_unit(pc);
 
                         time_t val = 0;
                         val = secs / SECS_PER_REAL_HOUR;
@@ -509,13 +512,18 @@ void clist()
                             std::cout << " Less than an hour";
                         }
 
-                        std::cout << "; " << std::endl;
+                        std::cout << ";" << table_name(CHAR_RACE(pc), g_pc_races, PC_RACE_MAX) << ";"
+                                  << table_name(PC_PROFESSION(pc), g_professions, PROFESSION_MAX) << ";"
+                                  << sprinttype(nullptr, pc->getSex(), g_char_sex) << ";" << PC_VIRTUAL_LEVEL(pc) << ";" << creation_time
+                                  << ";" << PC_TIME(pc).getPlayerLastConnectTime() << ";" << secs << ";" << flags << "\n";
+
+                        convert_free_unit(pc);
                     }
                 }
                 catch (const std::exception &ex)
                 {
                     ++err_count;
-                    std::cout << dir_itr->path() << " " << ex.what() << std::endl;
+                    std::cout << dir_itr->path() << ";ERROR: " << ex.what() << std::endl;
                 }
             }
         }
