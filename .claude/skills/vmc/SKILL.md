@@ -1,6 +1,6 @@
 ---
 name: vmc
-description: Compiling zones with vmc, the zone compiler - vme/zone/*.zon (rooms, objects, NPCs, resets and their DIL) into .data/.reset files the server loads at boot. Use after changing a zone, when vmc reports an error, or when a change doesn't show up in the game.
+description: Compiling zones with vmc, the zone compiler - vme/zone/*.zon (rooms, objects, NPCs, resets and their DIL) into .data/.reset files the server loads at boot. Use after changing a zone, when vmc reports an error, or when a change doesn't show up in the game. Writing zones is the zone skill.
 ---
 
 # Compiling zones with vmc
@@ -36,12 +36,15 @@ into `vme/bin/` by `make all`.
   a word. Check that vmc exited with status 0 (or that the `.data` is newer than the `.zon`)
   before testing; otherwise you test the previous version.
 - **The server reads zones only at boot**: restart `vme` after compiling.
+- **A clean compile doesn't mean the zone works.** vmc checks no references (exits, keys,
+  `dilcopy`, resets) and lets a `%zone` name that differs from the file name through; the
+  server finds those at boot (zone skill, "Checking a zone").
 
 ## Errors
 
 Errors go to stderr, with line numbers of the `.zon` file, and vmc exits with status 1.
-Errors found after parsing (unknown units, bad values) also go to `<zone>.err`; a syntax
-error doesn't, so read stderr. A DIL error looks like:
+Errors found after parsing (bad values, sums, names) also go to `<zone>.err`; a syntax
+error doesn't, so read stderr. `-s` still writes the `.err` (and a `.dh` for zones with DIL). A DIL error looks like:
 
 ```
 718: syntax error
@@ -54,6 +57,6 @@ The first number is the line with the error; the second is where vmc gave up on 
 
 ## Zone files
 
-A zone is `#include <macros.h>`, then the sections `%zone`, `%dil`, `%rooms`, `%objects`,
-`%mobiles`, `%reset` and `%end`. Units are named `symbol@zone` from other zones. Leftovers
-of a compile (`.err`, `.dh`, `.dot`) and the output (`.data`, `.reset`) are not committed.
+How to write them (header, rooms, objects, monsters, resets, macros) is in the zone skill.
+Leftovers of a compile (`.err`, `.dh`, `.dot`) and the output (`.data`, `.reset`) are not
+committed.
