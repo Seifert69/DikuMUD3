@@ -48,7 +48,8 @@ What to do:
 - **The connection closed**: `bin/mud.py start`, then `bin/mud.py send "wizinv 230"`.
 
 Your last message only goes to a log that nobody reads in time: whatever Papi should hear, send
-it with `bin/mud.py send "tell papi <one line>"`, and answer every tell from Papi that way. While a plan is written, you hear nothing new for
+it with `bin/mud.py send "tell papi <one line>"`. Answer a tell from Papi with
+`bin/mud.py send "respond <one line>"`: it reaches him even when he's invisible. While a plan is written, you hear nothing new for
 minutes, so before you call `bin/lokee-plan` or `bin/lokee-opus`, tell Papi first what you're
 having planned and for whom.
 
