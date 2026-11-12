@@ -2055,6 +2055,7 @@ end
 samedi
 names {"man","stranger","baron","samedi"}
 title "a dark man"
+extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
 descr "A dark stranger stands wrapped in a cloak."
 extra {}
 "A tall stranger with a top hat stands here. His features are
