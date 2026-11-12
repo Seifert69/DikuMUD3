@@ -199,7 +199,7 @@ spring
     extra {"$interactions_1"} ""
     extra {"$interactions_2"} ""
     type ITEM_TREASURE
-    weight 40000
+    weight 32767  // the most a weight holds
 
    dilbegin restore_youth();
    external

@@ -96,4 +96,4 @@ door hall NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
   aggressive DIL).
 - `default` position doesn't decide whether `descr` is shown: `look` shows `descr` only for a
   standing monster, otherwise its title and position.
-- Too much money for the level and `alignment` over 1000 aren't caught.
+- Too much money for the level and `alignment` outside -1000..1000 are only warnings.
