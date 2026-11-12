@@ -3360,26 +3360,26 @@ code
         return;
     }
 
+    if (length(item.exit_names[dir]) < 1)
+    {
+        log("DIL error no exit_names[dir] for "+item.symname);
+        s := "thing";
+    }
+    else
+    {
+        s := item.exit_names[dir].[0];
+    }
+
     if (not isset(item.exit_info[dir], EX_CLOSED))
     {
-        act("But $2n is already opened!", A_ALWAYS, self, item, null, TO_CHAR);
+        act("But the $2t is already open!", A_ALWAYS, self, s, null, TO_CHAR);
         return;
     }
 
     if (isset(item.exit_info[dir], EX_LOCKED))
     {
-        act("$2n seems to be locked.", A_ALWAYS, self, item, null, TO_CHAR);
+        act("The $2t seems to be locked.", A_ALWAYS, self, s, null, TO_CHAR);
         return;
-    }
-
-    if (length(item.exit_names[dir]) < 1)
-    {
-        log("DIL error no exit_names[dir] for "+item.symname);
-        s := "thing"; 
-    }
-    else
-    {
-        s := item.exit_names[dir].[0];
     }
 
     act("You open the $2t.", A_ALWAYS, self, s, null, TO_CHAR);

@@ -4216,7 +4216,7 @@ code
 
    if (stopdil == "")
    {
-      act("$3n stops you from going "+direction+"!'", A_ALWAYS,activator,null,self,TO_CHAR);
+      act("$3n stops you from going "+direction+"!", A_ALWAYS,activator,null,self,TO_CHAR);
       act("$3n stops $1n from going "+direction+"!", A_SOMEONE,activator,null,self,TO_REST);
    }
    else
