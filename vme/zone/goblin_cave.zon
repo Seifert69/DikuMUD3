@@ -1482,6 +1482,7 @@ end
                                 prisoner
 names {"goblin prisoner", "prisoner", "goblin"}
 title "the goblin prisoner"
+extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
 descr "A prisoner is here, desperately looking for a way out"
 extra {}
 "   The creature in front of you is about 4 feet high. His eyes are shining

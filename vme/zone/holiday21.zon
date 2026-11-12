@@ -3275,6 +3275,7 @@ end
 elf
 names {"howard","elf"}
 title "Howard"
+extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
 descr "A busy little elf stands here making last minute gifts."
 extra {}
 "You notice this to be Howard, one of Santa's elves."
@@ -3296,6 +3297,7 @@ end
 norma
 names {"Mrs. Claus","norma","lady"}
 title "Mrs. Claus"
+extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
 descr "A jolly little lady with a heartwarming smile is here."
 extra {}
 "Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
