@@ -48,7 +48,11 @@ set must keep the template's split: `M_HUMAN_WARRIOR_SWORD` puts 15 in spells, s
 - Helpers: `NATURAL_DEF(attack, armour)`, `ATTACK_DEFENSE(off, def)`,
   `SETWEIGHT(level, min, max)`, `SETHEIGHT(level, min, max)`.
 - Old specials (`special SFUN_AGGRESSIVE`, `SFUN_COMBAT_MAGIC`...) are gone; use the
-  `dilcopy` functions in `function.zon` that real zones use.
+  `dilcopy` functions in `function.zon` that real zones use. Teachers are the exception:
+  they still use `special SFUN_TEACH_INIT "..."` (see a teacher in `haon_dor.zon` and
+  `guilddef.h`).
+- Wandering: `dilcopy wander_zones@function("@loadzone", seconds, doors, locked);` (at least
+  5 seconds; doors and locked 0 or 1).
 
 ## Resets
 
@@ -58,6 +62,7 @@ load guard into hall local 1
    equip short_sword position WEAR_WIELD
    equip leather_cap position WEAR_HEAD
    load vault_key                       // into the guard's inventory
+   load rnd0_avg@randomt local 1        // random treasure
 }
 load sack into vault local 1
 door hall NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
@@ -83,7 +88,13 @@ door hall NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
 - **`complete`**: if a command directly in its block fails, the unit is removed again. `door`,
   `purge` and `remove` always count as failing, and so does a nested `load` stopped by its
   limit: keep those out of a `complete` block.
-- `into` takes only a room. Inside `random`/`nop` blocks always give `into`.
+- `into` takes only a room. Inside `random`/`nop` blocks always give `into`. A `load ... into
+  ROOM` inside a monster's block puts it on the floor, not in the monster.
+- Random treasure: `load rnd0_avg@randomt local 1` in a monster's block; the grades go
+  `rnd0_avg`, `rnd1_avgplus`, `rnd2_good`, `rnd3_goodplus`, `rnd4_exel`, `rnd5_exelplus`,
+  `rnd6_superior`, `rnd7_artifact` (`randomt.zon`).
+- A group: `follow` lines (with their own `{ equip ... }`) in the leader's block. Several
+  copies of a monster: one `load ... zonemax n` line per copy.
 - `local` on `follow` counts the leader's inventory, so it never limits anything.
 - vmc doesn't check reset references; at boot a missing unit is loaded as a blob of slime and
   logged.

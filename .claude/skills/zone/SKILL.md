@@ -5,18 +5,22 @@ description: Writing or changing zone files (vme/zone/*.zon) - the %zone header,
 
 # Writing zone files
 
-`example.zon` next to this file is a complete zone (two rooms with a locked door, a key, a
-weapon, armour, a container, a guard who is loaded, equipped and given the key) that
-compiles with `vmc -l` and was tried in the game. Start from it. It also attaches DIL three
-ways: another zone's template with a string list made of macros (the sword's
-`guild_restrict@function`), another zone's template with a list and `null` (the guard's
-`guard_dir@function`), and the zone's own template from its `%dil` section, with a string
-list and a string (the guard's `answer`).
+`example.zon` next to this file is a complete zone that compiles with `vmc -l` and was
+played through in the game. Start from it. It has:
+- three rooms, a locked door with its key, a weapon, armour, a container, a lamp;
+- a steward with a whole quest from `quests.zon` (`qstSimpleQuest` and `qstItemsWanted`,
+  string lists, a reward item that isn't saved), its names in `#define`s;
+- a guard loaded and equipped by resets, carrying the key and random treasure, who blocks
+  the vault until the quest is done and answers questions: two of the zone's own templates
+  from `%dil`, with `fnpri`, `block`, `on_activation` and `secure`;
+- a sword with `guild_restrict@function` (a string list of guild macros) and a hidden
+  `$identify` extra.
 
 Details per part, read when you need them:
 - `rooms.md`: room fields, exits, doors, light, nested rooms.
 - `objects.md`: object fields and the macro for each kind of object.
 - `mobiles.md`: monster fields and templates, and the `%reset` commands.
+- `quests.md`: the quest helpers, quest state, gates and chains, hidden extras.
 
 The old manuals are `vme/doc/BasicZoneManual*` (sgml, pdf, html), `vme/doc/vmc.txt`,
 `rooms.txt`, `objects.txt` and `monsters.txt`. They are useful for what each field means,
@@ -86,13 +90,19 @@ end
   boot or when it runs. Read the template's `dilbegin` line (and the comment above it) in
   its zone before calling it; `function.zon` holds the common ones (restrictions, guards,
   aggression, death rooms).
+- A `dilbegin ... dilend` written inside a unit runs on that unit, without arguments. Its
+  name is also a template of the zone, so it must be unique there.
 - `wstat <sym>@<zone> func` in the game lists the DIL programs a unit runs.
-- Writing the template itself: the dil skill.
+- Writing the template itself, and what survives a `wait`: the dil skill.
 
 ## Strings and the preprocessor
 
 - A string is `"..."` and may span lines. **It can't contain `"`**, not even as `\"`; use
   `'`. An unclosed `"` swallows the rest of the file and the error appears at the end.
+- **Line breaks in a `descr` or `extra` are shown as written**; the game only wraps a line
+  that's too long. Break the text yourself, each line under about 72 characters (a room's
+  first line gets 3 spaces in front), as the real zones do; a longer line wraps and leaves a
+  stray word on a line of its own.
 - The preprocessor is cpp: `#include`, `#define` with arguments, `\` continuation, `#if`.
   No variadic macros. `vmc -p` shows what a macro became.
 - Commas inside `{}` split macro arguments: `NAMED({"a","b"})` breaks. Define the list as a
