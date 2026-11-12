@@ -8750,8 +8750,9 @@ return (TRUE);
 dilend
 
 // Destroys every copy in the game of each unit in syms ("sym@zone"), the way an event
-// takes away what it put out. A player carrying one is told it fades away. There's no
-// hurry: it pauses a second after each one, then gives the caller its heartbeat back.
+// takes away what it put out. The room sees a monster or a thing lying there fade away,
+// and a player carrying one is told. There's no hurry: it pauses a second after each one,
+// so they go one by one, then gives the caller its heartbeat back.
 dilbegin destroy_symbols(syms : stringlist);
 var
    u : unitptr;
@@ -8769,10 +8770,15 @@ code
       while (u != null) // destroy takes it out of findsymbolic's list at once
       {
          w := u.outside;
-         while ((w.type != UNIT_ST_PC) and (w.type != UNIT_ST_ROOM))
-            w := w.outside;
-         if (w.type == UNIT_ST_PC)
-            act("$2n fades away with the season.", A_ALWAYS, w, u, null, TO_CHAR);
+         if (w.type == UNIT_ST_ROOM)
+            act("$1n fades away with the season.", A_SOMEONE, u, null, null, TO_ROOM);
+         else
+         {
+            while ((w.type != UNIT_ST_PC) and (w.type != UNIT_ST_ROOM))
+               w := w.outside;
+            if (w.type == UNIT_ST_PC)
+               act("$2n fades away with the season.", A_ALWAYS, w, u, null, TO_CHAR);
+         }
          destroy(u);
          pause;
          u := findsymbolic(syms.[i]);
