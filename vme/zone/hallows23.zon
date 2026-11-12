@@ -12,7 +12,7 @@ END HEADER*/
 %zone	hallows23
 
 lifespan 25
-reset RESET_ANYHOW
+reset RESET_NEVER   // season@function on the study runs it each October
 
 creators {"Etna"}
 
@@ -25,14 +25,18 @@ Added bag drops and broke out into this file 10/23/10
 drops based on Dargs gift drop code.
 Implemented on production 10/28/2010
 Modified by Barron 2023
-"
+Since 2026 it runs itself every year from October 15 through November 1:
+season@function on the study resets it, then takes it away again. The
+quest is named for the year, so it can be done once a year."
 
 
 help
 "Player should never be in here. Thanks to darg for the gift_drop code"
 
-#define HALL23_ONGO "Halloween 2023 Ongoing"
-#define HALL23_COM  "Halloween 2023 Complete"
+// The quest is named for the year: "Halloween 2026 Ongoing", "Halloween 2026 Complete".
+#define HALL_YEAR itoa(getinteger(DIL_GINT_REALYEAR, self, 0))
+#define HALL23_ONGO ("Halloween " + HALL_YEAR + " Ongoing")
+#define HALL23_COM  ("Halloween " + HALL_YEAR + " Complete")
 
 %dil
 
@@ -356,6 +360,18 @@ dil."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 ALWAYS_LIGHT
 /* dilcopy load_gift@hallows23();*/
+// From October 15 through November 1 the zone resets every 25 minutes; then what
+// the resets put out is taken away (the organs go with the monsters carrying them).
+dilcopy season@function(10, 15, 11, 1, 25,
+   {"jackolant@hallows23", "qjackolant@hallows23", "jackolant2@hallows23",
+    "qblfount@hallows23", "blood@hallows23", "blfount@hallows23", "dtree@hallows23",
+    "branch@hallows23", "coffin@hallows23", "skeleton@hallows23", "qcat@hallows23",
+    "jack@hallows23", "samedi@hallows23", "armorg@hallows23", "qarmorg@hallows23",
+    "spider1@hallows23", "qspider1@hallows23", "spider2@hallows23", "cat@hallows23",
+    "warg@hallows23", "qwarg@hallows23", "hghost@hallows23", "qhghost@hallows23",
+    "zombie@hallows23", "qzombie@hallows23", "bat@hallows23", "qbat@hallows23",
+    "ghost@hallows23", "qghost@hallows23", "nightmare@hallows23",
+    "qnightmare@hallows23"}, "");
 end
 
 %objects
@@ -1342,7 +1358,7 @@ extra {"$identify"}
 "The razor is fairly well made and you think you could fight
 better than average with it."
 extra {"$improved identify"}
-"This is a unique weapon that is only available halloween 2023. It will add to
+"This is a unique weapon that is only available at Halloween. It will add to
 your short sword skill"
 
 end
@@ -1435,7 +1451,7 @@ extra {}
 "This thin belt, made of multi-colored gum and cand wrappers is a rare item
 that only those who are the best of the questers may wear."
 extra {"$identify"}
-"This is a one time reward not replacable for Halloween 2023."
+"This is a one time reward, not replaceable, for Halloween."
 extra {"$improved identify"}
 "The belt grants +2 dex and helps you search and consider"
 weight 5
@@ -1443,7 +1459,6 @@ ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 SKILL_TRANSFER(SKI_SEARCH, BONUS_GOOD_PLUS)  // Xyzzy: +3
 SKILL_TRANSFER(SKI_CONSIDER, BONUS_GOOD_PLUS)  // Xyzzy: +3
-dilcopy quest_restrict@function("Halloween 2023 Complete",0,5,"");
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WAIST}
 cost 6 COPPER_PIECE
 end
@@ -1454,7 +1469,7 @@ title "an orange <div class='cpy'>trick or treat bag</div><div class='default'><
 descr "A bright orange burlap bag lays in the dust."
 extra {}
 "This bag looks like it could hold quite a bit of candy or anything 
-else. It says Halloween 2023 in black letters."
+else. It says Halloween in black letters."
 extra {"$donotstore"}
 "This is to prevent excessive storage of items, mainly hard to get ones."
 flags {UNIT_FL_MAGIC}
@@ -2069,6 +2084,7 @@ position POSITION_STANDING
 
 dilbegin hall23();
 var
+ql : stringlist;
 pc	  :	unitptr;
 item1 : unitptr;
 item2 : unitptr;
@@ -2144,7 +2160,9 @@ heartbeat := PULSE_SEC*7;
          "internal organs and body parts. There are 13 pieces missing in all. " +
          "Bring them to me here as you find them. Knowing Jack they will be  " +
 		 "inside something else." , self);
-   addextra(pc.quests,{HALL23_ONGO},"");
+   ql := null;
+   addstring(ql, HALL23_ONGO);
+   addextra(pc.quests, ql, "");
    item2 := load("qlist@hallows23"); //  load the list
    item2.height := pc.height;
    link(item2, pc);
@@ -2183,6 +2201,7 @@ dilend   /*hall23*/
 /*DIL for quest items given */
 dilbegin hall23_give();
 var
+ql : stringlist;
  	pcname 	: string;
 	pc   	: unitptr;
 	item 	: unitptr;
@@ -2506,8 +2525,11 @@ if (("h" in pin.names) and ("t" in pin.names) and
 ("b" in pin.names))
 {
 subextra(pc.quests, HALL23_ONGO);
-addextra(pc.quests, {HALL23_COM}, "");
+ql := null;
+addstring(ql, HALL23_COM);
+addextra(pc.quests, ql, "");
 item := load("canbelt@hallows23");
+dilcopy("quest_restrict@function(" + HALL23_COM + ",0,5,)", item);
 dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 item.height := pc.height;
 link(item,pc);
@@ -2685,14 +2707,13 @@ end
 
 /* END HALLOWEEN MOBS */
 
-/* *******Halloween Loads **************
-%reset 
+%reset
+/******** Halloween Loads ***************/
   
 
 load jackolant into inn@udgaard          local 1
 load jackolant into side_alley@udgaard   local 1
 load jackolant into moot_cen@udgaard     local 1
-load jackolant into town_hall@udgaard    local 1
 load jackolant into mageshop@udgaard     local 1
 load jackolant into field_shop@udgaard   local 1
 load jackolant into postoffice@udgaard   local 1
@@ -2767,7 +2788,6 @@ load spider1 into cabal_1@nymgaard      max 20
 load spider1 into kings_way@fjord       max 20
 load spider1 into a26@arabian           max 20
 load spider1 into city_rd40@xiyang      max 20
-load spider1 into magic_way1@udgaard    max 20
 load spider1 into wall_rd6@midgaard     max 20
 load qspider1 into rn_6007@haon_dor     max 1
 {
@@ -2835,7 +2855,6 @@ load brain@hallows23
 
 				 
 load bat into village_rd4@udgaard       max 20
-load bat into healers_way1@udgaard      max 20
 load bat into a4@arabian                max 20
 load bat into gate@sands2               max 20
 load bat into pier_four@torsbay         max 20
@@ -2855,9 +2874,7 @@ load hand@hallows23
 load ghost into a10@arabian             max 20
 load ghost into glad_rd4@midgaard       max 20
 load ghost into market_3@torsbay        max 20
-load ghost into vil_path9@rland        max 20
 				
-load nightmare into healers_way2@udgaard     max 20         
 load nightmare into papi_3@nymgaard          max 20
 load nightmare into glad_rd3@midgaard        max 20
 load nightmare into pasture_ent@halfzon      max 20
@@ -2867,7 +2884,7 @@ load nightmare into pas2@urland              max 20
 load qnightmare into pas3@urland             max 1
 {
 load leg@hallows23  
-}   */
+}
 
 /*quest item loads */
 
