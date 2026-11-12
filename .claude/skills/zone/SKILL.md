@@ -7,7 +7,11 @@ description: Writing or changing zone files (vme/zone/*.zon) - the %zone header,
 
 `example.zon` next to this file is a complete zone (two rooms with a locked door, a key, a
 weapon, armour, a container, a guard who is loaded, equipped and given the key) that
-compiles with `vmc -l` and was tried in the game. Start from it.
+compiles with `vmc -l` and was tried in the game. Start from it. It also attaches DIL three
+ways: another zone's template with a string list made of macros (the sword's
+`guild_restrict@function`), another zone's template with a list and `null` (the guard's
+`guard_dir@function`), and the zone's own template from its `%dil` section, with a string
+list and a string (the guard's `answer`).
 
 Details per part, read when you need them:
 - `rooms.md`: room fields, exits, doors, light, nested rooms.
@@ -71,6 +75,19 @@ end
 - `names` lists: no name may start with an earlier one (case-insensitive), so put the longer
   first: `{"keep guard", "guard"}`, never `{"guard", "keep guard"}`. No `'s` at the end, no
   name starting with `self`. The same goes for `extra` names and door keywords.
+
+## DIL on units
+
+- `dilcopy tmpl@zone(args);` in a room, object or monster runs that template on it; a
+  template of the same zone needs no `@zone`. The `;` is required.
+- Arguments: numbers, strings, string lists `{"a", "b"}` (macros from the headers work
+  inside: `{GUILD_UDG_FIGHTER, GUILD_PALADIN}`), and `null` for an empty list.
+- vmc checks neither the template's name nor its arguments: a wrong one shows up only at
+  boot or when it runs. Read the template's `dilbegin` line (and the comment above it) in
+  its zone before calling it; `function.zon` holds the common ones (restrictions, guards,
+  aggression, death rooms).
+- `wstat <sym>@<zone> func` in the game lists the DIL programs a unit runs.
+- Writing the template itself: the dil skill.
 
 ## Strings and the preprocessor
 

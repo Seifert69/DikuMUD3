@@ -47,6 +47,10 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
 - **String `==` and `!=` ignore case**; `<` and `>` don't.
 - **Locals start empty**: null, 0 or "". No need to set them first.
+- **`argument`, `activator`, `medium` and the command belong to the event the program last
+  woke on.** After `pause` or another `wait` they're gone or someone else's: copy what you
+  need first (`said := argument;`), and `secure()` a unit you keep.
+- **`"word" in s`** is a substring test that ignores case ("key" is in "Do you have a KEY").
 - **`findunit(self, arg, FIND_UNIT_SURRO|FIND_UNIT_WORLD, null, UNIT_ST_PC)`** takes the word
   it matched out of `arg` (copy `arg` first if you need it afterwards), matches partial names
   ("bra" finds Brawla), and only finds what the searcher can see. To find a player by exact
