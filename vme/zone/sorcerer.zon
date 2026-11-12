@@ -1088,7 +1088,7 @@ being that they have an uncanny knack for detecting character personality.
 If you are an assassin there is little doubt you will be assaulted."
 M_MIST_DWELLER_LARGE(100,SEX_NEUTRAL)
 money 4 COPPER_PIECE
-flags {CHAR_SNEAK}
+romflags {CHAR_SNEAK}
 dilcopy wander_zones@function ("cypress", 40,0, 0);
 end
 
