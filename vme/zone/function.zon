@@ -8750,14 +8750,18 @@ return (TRUE);
 dilend
 
 // Destroys every copy in the game of each unit in syms ("sym@zone"), the way an event
-// takes away what it put out. A player carrying one is told it fades away.
+// takes away what it put out. A player carrying one is told it fades away. There's no
+// hurry: it pauses a second after each one, then gives the caller its heartbeat back.
 dilbegin destroy_symbols(syms : stringlist);
 var
    u : unitptr;
    w : unitptr;
    i : integer;
+   hb : integer;
 code
 {
+   hb := heartbeat;
+   heartbeat := PULSE_SEC;   // the shortest a heartbeat can be
    i := 0;
    while (i < length(syms))
    {
@@ -8770,10 +8774,12 @@ code
          if (w.type == UNIT_ST_PC)
             act("$2n fades away with the season.", A_ALWAYS, w, u, null, TO_CHAR);
          destroy(u);
+         pause;
          u := findsymbolic(syms.[i]);
       }
       i := i + 1;
    }
+   heartbeat := hb;
    return;
 }
 dilend
