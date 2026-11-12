@@ -6,7 +6,11 @@ description: Writing or changing DIL, the MUD's script language, in vme/zone/*.z
 # Writing DIL
 
 DIL lives in the `%dil` section of a zone (`vme/zone/<zone>.zon`) or inside a unit's
-definition. A template:
+definition. `example.zon` next to this file is a small zone whose DIL was played through in
+the game: a gatekeeper who blocks a way until a token is given (`fnpri`, `block`, a
+`SFB_DONE` give handler with `secure`, a hidden quest flag), a herald who hears of it by
+message (`sendto`, `interrupt`, `priority`, `heartbeat`) and announces it, and an `answer`
+template both use (`on_activation`, `secure`). Start from it. A template:
 
 ```
 dilbegin integer do_something(arg : string);   // type only for functions
@@ -47,6 +51,11 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
 - **String `==` and `!=` ignore case**; `<` and `>` don't.
 - **Locals start empty**: null, 0 or "". No need to set them first.
+- **`{...}` takes only constants**: `{"a", MACRO}` works, `{flag}` with a variable is a
+  syntax error. Build such a list with `addstring(sl, flag)`.
+- **`pause` lasts one heartbeat.** With `heartbeat := PULSE_SEC * 90` a `pause` is 90 seconds
+  (and under `priority` the unit's other programs wait all that time). Shorten the heartbeat
+  around the pauses.
 - **Units and extras in variables don't survive a wait**: see "Waking up and secure" below.
 - **`"word" in s`** is a substring test that ignores case ("key" is in "Do you have a KEY").
 - **`findunit(self, arg, FIND_UNIT_SURRO|FIND_UNIT_WORLD, null, UNIT_ST_PC)`** takes the word
@@ -111,6 +120,9 @@ rooms within it (unless they have `UNIT_FL_TRANS` and are open).
 - `unsecure(u)` ends it; `secure` on the same unit again only changes the label.
 - Secures belong to the call that made them and end when that template returns.
 - The label is where to give up gracefully: `:lost:` and go back to waiting.
+- **`destroy()` on a secured unit fires its secure**: the program jumps to the label at once
+  and skips the rest. `unsecure(u)` before `destroy(u)` (the gatekeeper in `example.zon`; seen
+  in the game).
 
 ## Several programs on one unit
 
@@ -124,8 +136,7 @@ rooms within it (unless they have `UNIT_FL_TRANS` and are open).
   `nopriority;` (so a talking NPC isn't walked off by `wander_zones`). Go back to waiting
   with `nopriority;` first, or the unit's other programs stay dead.
 - `on_activation(cond, skip);` at the start: while `cond` holds, events are ignored (lost, not
-  queued); the usual one is asleep or fighting (see `answer` in the zone skill's
-  `example.zon`). With a label instead of `skip`, the jump clears it; set it again after the
+  queued); the usual one is asleep or fighting (see `answer` in `example.zon`). With a label instead of `skip`, the jump clears it; set it again after the
   label.
 - `interrupt(SFB_MSG, cond, label)` catches an event while the program waits for another.
 

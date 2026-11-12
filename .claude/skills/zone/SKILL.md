@@ -10,11 +10,13 @@ played through in the game. Start from it. It has:
 - three rooms, a locked door with its key, a weapon, armour, a container, a lamp;
 - a steward with a whole quest from `quests.zon` (`qstSimpleQuest` and `qstItemsWanted`,
   string lists, a reward item that isn't saved), its names in `#define`s;
-- a guard loaded and equipped by resets, carrying the key and random treasure, who blocks
-  the vault until the quest is done and answers questions: two of the zone's own templates
-  from `%dil`, with `fnpri`, `block`, `on_activation` and `secure`;
+- a guard loaded and equipped by resets, carrying the key and random treasure, with
+  `guard_dir@function` (a string list and `null`);
 - a sword with `guild_restrict@function` (a string list of guild macros) and a hidden
   `$identify` extra.
+
+A zone with DIL of its own (a `%dil` section, a gate, a give handler, messages between
+NPCs) is the dil skill's `example.zon`.
 
 Details per part, read when you need them:
 - `rooms.md`: room fields, exits, doors, light, nested rooms.

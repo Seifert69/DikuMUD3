@@ -49,8 +49,8 @@ dilcopy qstItemsWanted@quests(QUEST_LAMP, {"lamp"}, {""},
 
 ## Gates and chains
 
-- A way blocked until a quest is done: `vault_gate` in `example.zon`
-  (`fnpri(FN_PRI_BLOCK)`, `wait(SFB_CMD, command(dir))`, `block` when the quest is missing).
+- A way blocked until a quest is done: `gate` in the dil skill's `example.zon`
+  (`fnpri(FN_PRI_BLOCK)`, `wait(SFB_CMD, command(dir))`, `block` when the flag is missing).
 - A teacher who teaches only after a quest:
   `dilcopy teach_q_block@function(QUEST_POT_COMPLETE, "say Not before you've helped Mary.");`
   next to the teacher's `special SFUN_TEACH_INIT ...` (teachers still use that special).

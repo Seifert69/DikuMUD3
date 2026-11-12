@@ -10,66 +10,9 @@ title "Example Keep@Mainland"
 lifespan 20
 reset RESET_ANYHOW
 creators {"papi"}
-notes "A small example: a hall, a storeroom and a locked vault; a steward with a quest, a
-guard who lets only those who did it pass, and their gear."
-
-%dil
-
-// The zone's own templates. Units run them with dilcopy (no @zone needed in this zone).
-
-// When a player says one of the words, the unit answers them by name.
-dilbegin answer(words : stringlist, reply : string);
-var
-   pc : unitptr;
-   said : string;
-   i : integer;
-code
-{
-   // Asleep or fighting: ignore it. With skip, those events are lost, not queued.
-   on_activation((self.position <= POSITION_SLEEPING) or
-                 (self.position == POSITION_FIGHTING), skip);
-
-:start:
-   wait(SFB_CMD, command("say") and (activator.type == UNIT_ST_PC));
-
-   // activator and argument describe this event only, and an unsecured unitptr is null
-   // after the next wake. Keep what's needed before waiting again.
-   pc := activator;
-   said := argument;
-   secure(pc, start);   // if pc leaves before the answer, go back to waiting
-   pause;               // let the player's words appear first
-
-   i := 0;
-   while (i < length(words))
-   {
-      if (words.[i] in said)
-      {
-         exec("say " + pc.name + ", " + reply, self);
-         break;
-      }
-      i := i + 1;
-   }
-   unsecure(pc);
-   goto start;
-}
-dilend
-
-// Blocks a way for players who haven't done a quest. fnpri(FN_PRI_BLOCK) runs it before the
-// unit's other programs, and block stops the command.
-dilbegin fnpri(FN_PRI_BLOCK) vault_gate(dir : string, quest : string, refusal : string);
-code
-{
-:start:
-   wait(SFB_CMD, command(dir) and (activator.type == UNIT_ST_PC));
-
-   if (not (quest in activator.quests))
-   {
-      exec(refusal, self);
-      block;
-   }
-   goto start;
-}
-dilend
+notes "A small example of the zone format: a hall, a storeroom and a locked vault, a
+steward with a quest, a guard, and their gear. DIL of a zone's own: the dil skill's
+example.zon."
 
 %rooms
 
@@ -191,10 +134,9 @@ extra {}
 M_HUMAN_WARRIOR_SWORD(5, SEX_MALE)
 alignment 200
 money 3 COPPER_PIECE
-// The zone's own templates, with a string and with a string list.
-dilcopy vault_gate("north", QUEST_LAMP_COMPLETE,
-                   "say Only those who have helped the steward go north.");
-dilcopy answer({"vault", "key"}, "the key stays on my belt, and the vault stays shut.");
+// Another zone's template, with a string list and null (an empty list): he blocks the
+// way north for every player but Papi, and for no NPC.
+dilcopy guard_dir@function("north", {"papi"}, null, "");
 end
 
 steward
@@ -210,7 +152,7 @@ dilcopy qstSimpleQuest@quests(QUEST_LAMP,
           "say Would you fetch me the oil lamp from the storeroom?"},
          {"say Thank you, $1n."},
          "The steward of the Example Keep wants the oil lamp from the storeroom.",
-         {"say Now I can see my crates. Take this badge, and the guard will let you pass."},
+         {"say Now I can see my crates. Take this badge."},
          100, 2 * COPPER_MULT, {"keep_badge@example"}, "");
 // Takes the lamp when it's given. Anything else is given back: with the last line while the
 // player is on the quest, otherwise with "won't accept your item".
