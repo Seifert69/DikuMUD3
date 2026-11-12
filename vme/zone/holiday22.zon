@@ -979,6 +979,53 @@ code
 }
 dilend
 
+// Christmas's own extras, run by season@function on the workshop: Mrs. Claus comes to
+// Udgaard's market on Christmas Day, and when December has ended anyone still in Santa's
+// rooms is sent back to the square.
+dilbegin xmas_season(inseason : integer);
+var
+    rml : stringlist;
+    u : unitptr;
+    nxt : unitptr;
+    rm : unitptr;
+    i : integer;
+code
+{
+    if (inseason)
+    {
+        if ((getinteger(DIL_GINT_REALDAY, self, 0) > 24) and
+            (findsymbolic("norma@holiday22") == null))
+        {
+            u := load("norma@holiday22");
+            link(u, findroom("market@udgaard"));
+            log(u.name + " was loaded and placed in market@udgaard.");
+        }
+        quit;
+    }
+
+    rml := {"study@holiday22", "workshop@holiday22"};
+    i := 0;
+    while (i < length(rml))
+    {
+        rm := findroom(rml.[i]);
+        u := rm.inside;
+        while (u != null)
+        {
+            nxt := u.next;
+            if (u.type == UNIT_ST_PC)
+            {
+                sendtext("Santa's workshop closes for the year, and you find yourself back in Udgaard.<br/>", u);
+                link(u, findroom("square@udgaard"));
+                exec("look", u);
+            }
+            u := nxt;
+        }
+        i := i + 1;
+    }
+    quit;
+}
+dilend
+
 %rooms
 
 study
@@ -1014,80 +1061,12 @@ code
 }
 dilend
 
-dilbegin wait_for_xmas();
-external
-   	xmas_initialize();
-var
-    xmas_quests  : stringlist global xmas_done@holiday22;
-	npc : unitptr;
-    m : integer;
-    mday : integer;
-code
-{
-    pause;
-    log("xmas hello world ");
-    xmas_initialize(); // JIC someone resets the zone
-    log("xmas debug: " + xmas_quests.[XMAS_SANTA_IDX] + "|" + xmas_quests.[XMAS_DONE_IDX] + "|" + xmas_quests.[XMAS_DAY_IDX] + "|" + xmas_quests.[XMAS_CHARGES_IDX] + "|" + xmas_quests.[XMAS_NO_DEC_IDX] + "|" + xmas_quests.[XMAS_EXP_IDX]);
-
-:loop:
-    
-    wait(SFB_TICK, TRUE);
-    m := getinteger(DIL_GINT_REALMONTH, self, 0);
-    log("xmas debug: month " + itoa(m));
-    if (m != 12) // Waiting for xmas
-    {
-        if (m < 11) // we're in October or earlier, so let's wait 14 days
-        {
-            heartbeat := PULSE_SEC * SECS_PER_REAL_DAY * 14;
-            goto loop;
-        }
-
-        // Month is november
-        mday := getinteger(DIL_GINT_REALDAY, self, 0);
-        if (mday < 30)
-        {
-            heartbeat := PULSE_SEC * SECS_PER_REAL_DAY;
-            goto loop;
-        }
-
-        // It's the 30th of november, let's check every 15 minutes
-        heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * 15;
-        goto loop;
-    }
-
-    // It is December - activate the quest
-    //
-    xmas_initialize(); // Be sure we have the right values
-
-    log("xmas debug: " + xmas_quests.[XMAS_SANTA_IDX] + "|" + xmas_quests.[XMAS_DONE_IDX] + "|" + xmas_quests.[XMAS_DAY_IDX] + "|" + xmas_quests.[XMAS_CHARGES_IDX] + "|" + xmas_quests.[XMAS_NO_DEC_IDX] + "|" + xmas_quests.[XMAS_EXP_IDX]);
-
-    // Send everyone a message about the xmas spirit arriving
-    heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * 25;  // Zone resets every 25 minutes
-
-:xmas:
-    m := getinteger(DIL_GINT_REALMONTH, self, 0);
-    if (m != 12)
-    {
-        // Xmas has ended
-        // Send everyone a message
-        goto loop;
-    }
-
-    zonereset(findzone(self.zone));
-	//added to make Norma (Mrs Santa) auto spawn on Christmas
-    mday := getinteger(DIL_GINT_REALDAY, self, 0);
-    if (mday > 24){
-		if(not(findsymbolic("norma@holiday22")))
-		{
-			npc:=load("norma@holiday22");
-			log(npc.name+" was loaded by "+self.name+" and placed in market@udgaard.");
-			link(npc,findsymbolic("market@udgaard"));
-		}
-	}
-    wait(SFB_TICK, TRUE);
-    goto xmas;
-}
-dilend
+// December: the zone resets every 25 minutes; when it ends, what it put out is taken away.
+dilcopy season@function(12, 1, 12, 31, 25,
+                        {"santa@holiday22", "elf@holiday22", "norma@holiday22",
+                         "graf_jan@holiday22", "northpole@holiday22", "xmas_tree@holiday22",
+                         "xmas_tree2@holiday22", "mistletoe@holiday22"},
+                        "xmas_season@holiday22");
 end
 
 %objects

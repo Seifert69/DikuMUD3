@@ -8747,7 +8747,100 @@ return (TRUE);
 
 }
 
-dilend 
+dilend
+
+// Destroys every copy in the game of each unit in syms ("sym@zone"), the way an event
+// takes away what it put out. The room sees a monster or a thing lying there fade away,
+// and a player carrying one is told. There's no hurry: it pauses a second after each one,
+// so they go one by one, then gives the caller its heartbeat back.
+dilbegin destroy_symbols(syms : stringlist);
+var
+   u : unitptr;
+   w : unitptr;
+   i : integer;
+   hb : integer;
+code
+{
+   hb := heartbeat;
+   heartbeat := PULSE_SEC;   // the shortest a heartbeat can be
+   i := 0;
+   while (i < length(syms))
+   {
+      u := findsymbolic(syms.[i]);
+      while (u != null) // destroy takes it out of findsymbolic's list at once
+      {
+         w := u.outside;
+         if (w.type == UNIT_ST_ROOM)
+            act("$1n fades away with the season.", A_SOMEONE, u, null, null, TO_ROOM);
+         else
+         {
+            while ((w.type != UNIT_ST_PC) and (w.type != UNIT_ST_ROOM))
+               w := w.outside;
+            if (w.type == UNIT_ST_PC)
+               act("$2n fades away with the season.", A_ALWAYS, w, u, null, TO_CHAR);
+         }
+         destroy(u);
+         pause;
+         u := findsymbolic(syms.[i]);
+      }
+      i := i + 1;
+   }
+   heartbeat := hb;
+   return;
+}
+dilend
+
+// Runs an event zone (Christmas, Halloween...) by the real date, in UTC. Put it on a room
+// of a zone with "reset RESET_NEVER" whose %reset puts out the event:
+//   dilcopy season@function(10, 15, 11, 1, 25, {"samedi@hallows23", ...}, "");
+// From day startd of month startm up to and including day endd of month endm (it may run
+// across new year) the zone resets every `minutes` minutes, at most 270 (the heartbeat
+// has 16 bits). When the season ends, every copy of the units in syms is destroyed: list
+// what the resets put out, not what players are given.
+// hook is "" or a template "tmpl@zone(inseason : integer)" for the event's own extras:
+// it runs on the room after each reset in the season with 1, and once with 0 when the
+// season has ended, and must quit.
+dilbegin season(startm : integer, startd : integer, endm : integer, endd : integer,
+                minutes : integer, syms : stringlist, hook : string);
+external
+   destroy_symbols(syms : stringlist);
+var
+   first : integer;
+   last : integer;
+   today : integer;
+   running : integer;
+code
+{
+   first := startm * 100 + startd;
+   last := endm * 100 + endd;
+   heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;   // the first look, a minute after boot
+
+:loop:
+   wait(SFB_TICK, TRUE);
+   heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * minutes;
+   today := getinteger(DIL_GINT_REALMONTH, self, 0) * 100 +
+            getinteger(DIL_GINT_REALDAY, self, 0);
+   if (((first <= last) and (first <= today) and (today <= last)) or
+       ((first > last) and ((today >= first) or (today <= last))))
+   {
+      if (not running)
+         log(self.zone + ": the season begins.");
+      running := TRUE;
+      zonereset(findzone(self.zone));
+      if (hook != "")
+         dilcopy(hook + "(1)", self);
+   }
+   else if (running)
+   {
+      running := FALSE;
+      destroy_symbols(syms);
+      if (hook != "")
+         dilcopy(hook + "(0)", self);
+      log(self.zone + ": the season is over.");
+   }
+   goto loop;
+}
+dilend
 
 %rooms
 
