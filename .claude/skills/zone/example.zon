@@ -1,0 +1,110 @@
+#include <macros.h>
+
+%zone example
+title "Example Keep@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+creators {"papi"}
+notes "A small example: two rooms with a locked door, a key, a guard and his gear."
+
+%rooms
+
+hall
+title "The Great Hall"
+names {"great hall", "hall"}
+descr "A long hall with a stone floor. A heavy oak door leads north, and the
+town lies to the east."
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+extra {"floor", "stone floor"}
+"The stones are worn smooth by many feet."
+north to vault open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+   key vault_key keyword {"oak door", "door"}
+   descr "A heavy oak door blocks the way north.";
+east to temple@udgaard;
+end
+
+vault
+title "The Vault"
+descr "A small stone vault."
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+IN_ALWAYS_DARK
+south to hall open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+   key vault_key keyword {"oak door", "door"};
+end
+
+%objects
+
+vault_key
+names {"iron key", "key"}
+title "an iron key"
+descr "An iron key lies here."
+type ITEM_KEY
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+weight 1
+end
+
+short_sword
+names {"short sword", "sword"}
+title "a short sword"
+descr "A short sword lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_AVERAGE)
+weight 5
+cost 2 SILVER_PIECE, 4 COPPER_PIECE
+rent 10 IRON_PIECE
+extra {}
+"A plain but well balanced iron blade."
+end
+
+leather_cap
+names {"leather cap", "cap"}
+title "a leather cap"
+descr "A leather cap lies here."
+ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
+weight 1
+cost 8 COPPER_PIECE
+end
+
+sack
+names {"canvas sack", "sack"}
+title "a canvas sack"
+descr "A canvas sack lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
+CONTAINER_DEF(30)
+open {EX_OPEN_CLOSE, EX_CLOSED}
+weight 1
+cost 3 COPPER_PIECE
+end
+
+%mobiles
+
+guard
+names {"keep guard", "guard"}
+title "a keep guard"
+descr "A keep guard stands here, watching the door."
+extra {}
+"He looks bored."
+M_HUMAN_WARRIOR_SWORD(5, SEX_MALE)
+alignment 200
+money 3 COPPER_PIECE
+end
+
+%reset
+
+door hall NORTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+door vault SOUTH {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
+
+load guard into hall local 1
+{
+   equip short_sword position WEAR_WIELD
+   equip leather_cap position WEAR_HEAD
+   load vault_key
+}
+
+load sack into vault local 1
+
+%end
