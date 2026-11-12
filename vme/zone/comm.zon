@@ -1068,6 +1068,7 @@ my_name: string;
 inv_name: string;
 tgt: unitptr;
 swear: integer;
+zonename: string;
 code
 {
 
@@ -1177,12 +1178,18 @@ sendtext("You realize that you can't hear people shouting back.<br/>", self);
 if(self.drunk)
 arg:= drunk_speech(arg,self.drunk);
 
+// An NPC is heard only in the zone it's in, unless its zone gives it a hidden
+// extra "$shout world" (for news such as a player finishing a quest).
+if((self.type == UNIT_ST_NPC) and (not("$shout world" in self.extra)))
+zonename:= self.zone;
+
 tgt:= ghead();
 
 while(tgt.type == UNIT_ST_PC)
 {
 if((tgt != self) and (tgt.editing != TRUE) and
-(not isset(tgt.pcflags, PC_NOSHOUT) and (tgt.position > POSITION_SLEEPING)))
+(not isset(tgt.pcflags, PC_NOSHOUT) and (tgt.position > POSITION_SLEEPING)) and
+((zonename == "") or (tgt.zone == zonename)))
 {
 if(visible(tgt, self))
 sendtext("<div class='shout_other' from='"+html_attr@function(my_name)+"'>"+my_name+" "+mode_other+" '"+arg+"'</div><br/>", tgt);

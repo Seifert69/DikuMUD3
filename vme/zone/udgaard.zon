@@ -11111,6 +11111,7 @@ end
 
 names {"Al Kazeem", "Al", "Kazeem"}
 title "Al Kazeem"
+extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
 descr "Al Kazeem the feared one is standing here."
 extra {}
 "Al Kazeem is from the southern parts of the world and has a distinct
