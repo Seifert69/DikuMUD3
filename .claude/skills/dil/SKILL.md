@@ -53,9 +53,11 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **Locals start empty**: null, 0 or "". No need to set them first.
 - **`{...}` takes only constants**: `{"a", MACRO}` works, `{flag}` with a variable is a
   syntax error. Build such a list with `addstring(sl, flag)`.
-- **`pause` lasts one heartbeat.** With `heartbeat := PULSE_SEC * 90` a `pause` is 90 seconds
-  (and under `priority` the unit's other programs wait all that time). Shorten the heartbeat
-  around the pauses.
+- **`pause` waits for the unit's next tick** (`wait(SFB_TICK | SFB_RANTIME, TRUE)` in
+  `wmacros.h`): up to one heartbeat, or 0.5 to 1.5 heartbeats when the heartbeat was just
+  changed (`SFB_RANTIME` spreads the new timer). With `heartbeat := PULSE_SEC * 90` a `pause`
+  can take 90 seconds, and under `priority` the unit's other programs wait all that time.
+  Shorten the heartbeat around the pauses, as the herald in `example.zon` does.
 - **Units and extras in variables don't survive a wait**: see "Waking up and secure" below.
 - **`"word" in s`** is a substring test that ignores case ("key" is in "Do you have a KEY").
 - **`findunit(self, arg, FIND_UNIT_SURRO|FIND_UNIT_WORLD, null, UNIT_ST_PC)`** takes the word
