@@ -524,7 +524,8 @@ extra {}
 "He looks exactly like any other thieving scoundrel, except he has a rather
 professional look about his moves. You never know where his hands are.
 Currently they are in your pockets."
-flags {UNIT_FL_NO_TELEPORT, CHAR_OUTLAW}
+flags {UNIT_FL_NO_TELEPORT}
+romflags {CHAR_OUTLAW}
 
 M_HUMAN_THIEF_CLUB(80, SEX_MALE)
 alignment 0
