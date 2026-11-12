@@ -706,13 +706,16 @@ external
    integer ProfCount@professions(pc : unitptr);
    integer GetGuildLevel@guilds(pc : unitptr, sGuild : string);
    integer ReadySpecialize@professions(pc : unitptr);
+   string racestring@commands(i : integer);
 
 var
+   pc : unitptr;
    exd : extraptr;
    sl : stringlist;
    i : integer;
    j : integer;
    s : string;
+   pname : string;
 
 code
 {
@@ -722,13 +725,31 @@ code
       quit;
    }
 
+   // A helper agent ("$agent" in its info) may look at a mortal's guilds, to advise them
+   // on their career: guilds <player>. Everyone else sees their own. The full name, and
+   // whether or not the agent can see them (findunit would also match a part of a name).
+   pc := self;
+   if ((arg != "") and ("$agent" in self.info))
+   {
+      pname := getword(arg);
+      pc := ghead();
+      while ((pc.type == UNIT_ST_PC) and (pc.name != pname))
+         pc := pc.gnext;
+      if ((pc.type != UNIT_ST_PC) or (pc.level >= IMMORTAL_LEVEL))
+      {
+         sendtext("No mortal player called '" + pname + "' in the game.<br/>", self);
+         quit;
+      }
+      sendtext(pc.name + ", " + racestring@commands(pc.race) + ", level " + itoa(pc.level) + ":<br/>", self);
+   }
+
    sendtext("You are a member of the following guilds:<br/>", self);
-   exd := GUILD_KEY in self.info;
+   exd := GUILD_KEY in pc.info;
    i := 0;
    while (exd)
    {
       sl := split(exd.names.[0], "/");
-      if (sl.[1] == self.guild)
+      if (sl.[1] == pc.guild)
          s := " - Main Guild";
       else
          s := "";
@@ -748,10 +769,10 @@ code
          sendtext("<br/>Request a guild title from a guild master to change your main guild.<br/>", self);
    }
 
-   if (GetGuildLevel(self, self.guild) == -1)
-      sendtext("Your default guild is [" + self.guild + "] and seems incorrectly setup. Please contact an administrator.<br/>", self);
+   if (GetGuildLevel(pc, pc.guild) == -1)
+      sendtext("Your default guild is [" + pc.guild + "] and seems incorrectly setup. Please contact an administrator.<br/>", self);
 
-   exd := GUILD_KEY_BANISHED in self.info;
+   exd := GUILD_KEY_BANISHED in pc.info;
    if (exd)
    {
       sendtext("<br/>You have been banished from the following guilds:<br/>", self);
@@ -765,7 +786,7 @@ code
    }
 
 
-   exd := GUILD_KEY_LEFT in self.info;
+   exd := GUILD_KEY_LEFT in pc.info;
    if (exd)
    {
       sendtext("<br/>You have left the following guilds:<br/>", self);
@@ -782,22 +803,22 @@ code
    // Show the character's profession
    //
    sendtext("<br/>You are initiated into the following professions:<br/>", self);
-   exd := "$profession" in self.info;
+   exd := "$profession" in pc.info;
    i := 1;
-   j := ProfCount@professions(self);
+   j := ProfCount@professions(pc);
    while (i <= j)
    { 
       
       sendtext(exd.names.[i] + "<br/>", self);
       i := i + 1;
    }
-   sendtext("<br/>Your active profession is: " + ProfessionName@professions(self.profession) + ".<br/>", self);
+   sendtext("<br/>Your active profession is: " + ProfessionName@professions(pc.profession) + ".<br/>", self);
 
    //
    // When the character has 25 guild levels in his main profession, he can 
    // choose a specialization (e.g. a fighter may become a barbarian)
    //
-   if (ReadySpecialize@professions(self))
+   if (ReadySpecialize@professions(pc))
    {
       sendtext("You are ready to specialize your profession.<br/>", self);
    }
