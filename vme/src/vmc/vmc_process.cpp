@@ -18,6 +18,7 @@
 #include <cstdarg> /* va_args in dmc_error() */
 #include <cstdio>
 #include <cstdlib>
+#include <limits>
 
 /* PS Algorithm 3                                                      */
 /* This algorithm returns the total amount of hitpoints possessed when */
@@ -44,7 +45,7 @@ void dmc_error(int fatal, const char *fmt, ...)
     buf[sizeof(buf) - 10] = 0;
     va_end(args);
 
-    if (!g_quiet_compile || fatal)
+    if (!g_quiet_compile || fatal == TRUE)
     {
         fprintf(stderr, "%s: %s\n", fatal && fatal != 2 ? "FATAL" : "WARNING", buf);
     }
@@ -120,7 +121,7 @@ amount_t convert_money(char *str)
             }
             else if (is_in(val2, DEF_CURRENCY, MAX_MONEY))
             {
-                res += val1 * val2;
+                res += val1 * g_money_types[val2].relative_value; // val2 is the coin type
             }
             else
             {
@@ -1009,23 +1010,17 @@ void process_unit(unit_data *u)
         }
     }
 
-    if (!is_in(u->getWeight(), 0, 2000))
+    // The .data file keeps weights in 16 bits
+    if (u->getBaseWeight() > std::numeric_limits<sbit16>::max())
     {
-        dmc_error(TRUE, "%s: Illegal weight %d (expected 0..2000).", UNIT_IDENT(u), u->getWeight());
-        u->setWeight(0);
+        dmc_error(TRUE, "%s: Illegal weight %d (expected at most %d).", UNIT_IDENT(u), u->getBaseWeight(), std::numeric_limits<sbit16>::max());
+    }
+    else if (u->getBaseWeight() < 0)
+    {
+        // An object would lighten whoever carries it
+        dmc_error(u->isObj() ? TRUE : 2, "%s: Negative weight %d.", UNIT_IDENT(u), u->getBaseWeight());
     }
     u->setWeight(u->getBaseWeight());
-
-    if (!is_in(u->getAlignment(), unit_data::MinAlignment, unit_data::MaxAlignment))
-    {
-        dmc_error(TRUE,
-                  "%s: Illegal alignment %d (expected %+d..%+d).",
-                  u->getNames().Name(),
-                  u->getAlignment(),
-                  unit_data::MinAlignment,
-                  unit_data::MaxAlignment);
-        u->setAlignment(0);
-    }
 
     if (!is_in(u->getNumberOfActiveLightSources(), -6, 6))
     {
@@ -1148,7 +1143,7 @@ void process_unit(unit_data *u)
                 char buf[512];
                 sprintf(buf, "%s", money_string(legal_amount(u), local_currency(u), TRUE));
 
-                dmc_error(FALSE,
+                dmc_error(2, // advice: the game doesn't limit it
                           "Too much money on %s.  (%s vs %s)",
                           UNIT_IDENT(u),
                           money_string(convert_money(CHAR_MONEY(u)), local_currency(u), TRUE),

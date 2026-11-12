@@ -21,7 +21,9 @@
 #include "utils.h"
 #include "vmc.h"
 
+#include <algorithm>
 #include <ctype.h>
+#include <limits>
 #include <stdio.h>
 
 void dilmain(int tplate, char *zname, int lnum, char *dilp);
@@ -77,6 +79,19 @@ void dumpdil(struct dilprg *prg);
 void syntax(const char *str);
 void fatal(const char *str);
 void warning(const char *str);
+
+/* True when i indexes an array of n; otherwise a fatal error naming the field. */
+static bool index_ok(int i, int n, const char *field)
+{
+    if ((i >= 0) && (i < n)) // a number too large for an int arrives negative
+    {
+        return true;
+    }
+    char buf[100];
+    snprintf(buf, sizeof(buf), "Illegal %s index %d (expected 0..%d).", field, i, n - 1);
+    fatal(buf);
+    return false;
+}
 %}
 
 
@@ -296,7 +311,9 @@ oroom_field : MOVEMENT PNUM
 
 exitindex   : EXIT index
     {
-        UROOM(cur)->setRoomDirectionDataForExitTo(cur_ex = $2,  mcreate_exit());
+        // On a bad index the compile has failed, but the exit's fields still need somewhere to go
+        cur_ex = index_ok($2, MAX_EXIT + 1, "exit") ? $2 : 0;
+        UROOM(cur)->setRoomDirectionDataForExitTo(cur_ex, mcreate_exit());
     }
     ;
 
@@ -417,7 +434,10 @@ object_field    : unit_field
 
 oobject_field   : VALUE index flags
     {
-        UOBJ(cur)->setValueAtIndexTo($2, $3);
+        if (index_ok($2, UOBJ(cur)->getValueArraySize(), "value"))
+        {
+            UOBJ(cur)->setValueAtIndexTo($2, $3);
+        }
     }
     | COST moneylist
     {
@@ -556,15 +576,24 @@ omobile_field   : MANA number
     }
     | ABILITY index number
     {
-        UCHAR(cur)->setAbilityAtIndexTo($2, $3);
+        if (index_ok($2, ABIL_TREE_MAX, "ability"))
+        {
+            UCHAR(cur)->setAbilityAtIndexTo($2, $3);
+        }
     }
     | WEAPON index number
     {
-        UNPC(cur)->setWeaponSkillAtIndexTo($2, $3);
+        if (index_ok($2, WPN_GROUP_MAX, "weapon"))
+        {
+            UNPC(cur)->setWeaponSkillAtIndexTo($2, $3);
+        }
     }
     | SPELL index number
     {
-        UNPC(cur)->setSpellSkillAtIndexTo($2, $3);
+        if (index_ok($2, SPL_GROUP_MAX, "spell"))
+        {
+            UNPC(cur)->setSpellSkillAtIndexTo($2, $3);
+        }
     }
     ;
 
@@ -701,7 +730,14 @@ unit_field  : NAMES stringlist
     }
     | ALIGNMENT number
     {
-        cur->setAlignment($2);
+        if (($2 < unit_data::MinAlignment) || ($2 > unit_data::MaxAlignment))
+        {
+            char buf[100];
+            snprintf(buf, sizeof(buf), "Alignment %d outside %d..%d, kept within.", $2, unit_data::MinAlignment, unit_data::MaxAlignment);
+            warning(buf);
+        }
+        // Clamped here: setAlignment() narrows to 16 bits before it clamps
+        cur->setAlignment(std::clamp<int>($2, unit_data::MinAlignment, unit_data::MaxAlignment));
     }
     | EXTRA stringlist intlist STRING
     {
@@ -822,6 +858,12 @@ unit_field  : NAMES stringlist
     }
     | CAPACITY number
     {
+        if (($2 < INFINITE_CAPACITY) || ($2 > std::numeric_limits<sbit16>::max()))
+        {
+            char buf[100];
+            snprintf(buf, sizeof(buf), "Illegal capacity %d (expected %d..%d).", $2, INFINITE_CAPACITY, std::numeric_limits<sbit16>::max());
+            fatal(buf);
+        }
         cur->setCapacity($2);
     }
     | HEIGHT number
@@ -949,7 +991,10 @@ affect_field    : ID number
     }
     | DATA index number
     {
-        cur_aff->setDataAtIndex($2, $3);
+        if (index_ok($2, 3, "data")) // unit_affected_type holds three
+        {
+            cur_aff->setDataAtIndex($2, $3);
+        }
     }
     | FIRSTF number
     {

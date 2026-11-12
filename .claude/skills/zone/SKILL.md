@@ -89,19 +89,22 @@ end
 
 - **The `%zone` name differs from the file name**, or a stray word in the header (it becomes
   the zone name): vmc accepts it, the server stops at boot.
-- **Object flags under `flags`**: `flags {OBJ_NO_DUAL}` sets UNIT_FL_BURIED (same bit), so
-  the item loads buried. Object flags go under `romflags`; `flags` takes `UNIT_FL_*` only.
-- **Macros overwrite earlier fields**: `value[]`, `type`, `title`, `weight` and `romflags`
-  keep the last value, so a field set before `WEAPON_DEF(...)` or `MONEY(...)` is lost. Put
-  the type macro first. `manipulate`, `flags` and `open` add up instead.
+- **The wrong kind of flags**: `flags` takes `UNIT_FL_*` only; an object's `OBJ_*` and a
+  monster's `CHAR_*` go under `romflags`. vmc sees only numbers, so `flags {OBJ_NO_DUAL}` sets
+  UNIT_FL_BURIED (same bit) and the item loads buried, and `flags {CHAR_SNEAK}` sets
+  UNIT_FL_NO_WEATHER. `vme/bin/zoneflags.py` finds these (all zones, or the files you name).
+- **Macros overwrite earlier fields**: `value[]`, `type`, `title` and `weight` keep the last
+  value, so a field set before `WEAPON_DEF(...)` or `MONEY(...)` is lost. Put the type macro
+  first. `manipulate`, `flags`, `romflags` and `open` add up instead.
 - **`CONTAINER_DEF` doesn't let anything in**: add `MANIPULATE_ENTER`. **`ARMOUR_*` can't be
   worn** until you add a `MANIPULATE_WEAR_*` flag.
 - **Doors are two exits**: give both sides their flags, keyword and key, and add a `door`
   reset per side, or a door opened once stays open forever.
 - **A monster defaults to `max 1` in the whole game**: two `load guard into ...` lines load
   only one guard. Use `local 1` (per room) or `zonemax`.
-- **`weight` over 2000, `alignment` over 1000 and too much money on a monster** aren't
-  caught (weight is checked before it's set). `value[5]` and `exit[10]` crash vmc.
+- **What vmc only warns about**: alignment outside -1000..1000 (kept within, and fatal with
+  `-l`), a negative weight on a monster, and more money on a monster than its level allows
+  (never fatal; shown unless `-q`).
 
 ## Checking a zone
 

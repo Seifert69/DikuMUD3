@@ -68,8 +68,8 @@ ignored. An item a monster is equipped with by a reset is resized to fit the mon
   OBJ_TWO_HANDS makes it invisible). Object flags go under `romflags`.
 - `WEAPON_SLAYER` before `WEAPON_DEF` is overwritten.
 - A bonus outside -7..+7 is fatal and turns the item into trash.
-- `value[5]` crashes vmc. `capacity` over 32767 wraps negative. `weight` over 2000 isn't
-  caught.
+- `value[0..4]`, `capacity` up to 32767 (-1 is endless) and `weight` 0..32767; vmc refuses
+  others. A drink container weighs its own weight plus what's inside.
 - `cost 25600`, `cost 5*GOLD_PIECE` and `money` on an object are syntax errors.
 - Old names that don't exist: `ARMOR_*`, `UNIT_FL_NO_SAVE` (it's `UNIT_FL_NOSAVE`),
   `MANIPULATE_WEAR_WIELD` (it's `MANIPULATE_WIELD`), `container_def` in lowercase.
