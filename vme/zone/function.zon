@@ -2489,8 +2489,9 @@ dilend
  *   shipname   "the longship": $2t in the messages
  *   ports      the port rooms in visiting order, each once: {"pier@town", "dock@isle"}
  *   portnames  $3t for each port: {"Town", "the isle"}; {} for the port rooms' titles
- *   departs    the departure hours in order round the day, starting anywhere: {"15", "21",
- *              "3", "9"}. Departure k leaves ports.[k % length(ports)], so give a multiple of
+ *   departs    the departure mud hours (0-23) in order round the day, starting anywhere:
+ *              {15, 21, 3, 9}.
+ *              Departure k leaves ports.[k % length(ports)], so give a multiple of
  *              length(ports) departures; at boot the ship lies at the port of the next one.
  *              {} to sail by the "dwell" option instead.
  *   sea        the ship's own room at sea: "ocean@zone". Give it no exits and
@@ -2503,26 +2504,30 @@ dilend
  *                 "leaving <text>"      aboard as it casts off   "leaving_port <text>" in port
  *                 "arrived <text>"      aboard on arrival        "arrived_port <text>" in port
  *                 "sea <text>"          aboard, one about every minute at sea; repeat it for more
- *              $2t in these is the ship, $3t the port it sails to or has reached.
+ *              $2t in these is the ship, $3t the port it sails to or has reached. One of these
+ *              given with no text ("boarding") silences that message.
  *                 "noexit <text>"       to someone trying to get off at sea. It is the $no_exit
  *                                       text of exit and leave: $1n is them, $2n the ship room,
  *                                       so write the ship's name in it.
  *
  * The ship tells the decks, the room it lies in (port or sea), and the NPCs in all of them of
  * each move, so a zone can keep its own crew, timetable criers or sea monsters in a DIL that
- * waits for these messages (rooms by symbolic name; hour -1 when sailing by dwell):
- *    "ship arrived <port> <next port> <next departure hour>"   (also at boot)
- *    "ship boarding <port> <next port>"
- *    "ship leaving <port> <next port>"
- *    "ship at sea <port> <next port>"
+ * waits for these messages: the ship room, the port, the next port (by symbolic name), then
+ * the next port's name from portnames; hour -1 when sailing by dwell. Several ships can share a
+ * port, so check the ship room. ship_captain below is such a crew member.
+ *    "ship arrived <ship> <port> <next port> <next departure hour> <next port's name>"
+ *                  (also at boot)
+ *    "ship boarding <ship> <port> <next port> <next port's name>"
+ *    "ship leaving <ship> <port> <next port> <next port's name>"
+ *    "ship at sea <ship> <port> <next port> <next port's name>"
  *
  * dilcopy ship@function("the longship", {"beach@isle", "dock@town"}, {"the isle", "town"},
- *                       {"0", "6", "12", "18"}, "ocean@isle", {"bow@isle", "mid@isle"},
+ *                       {0, 6, 12, 18}, "ocean@isle", {"bow@isle", "mid@isle"},
  *                       {"sail 180", "sea The longship glides through the mist."});
  */
 
 // For ship: the departure in departs that comes next at hour (one at that very hour included)
-dilbegin integer ship_next(departs : stringlist, hour : integer);
+dilbegin integer ship_next(departs : intlist, hour : integer);
 var
    k   : integer;
    t   : integer;
@@ -2534,7 +2539,7 @@ code
    k := 0;
    while (k < length(departs))
    {
-      t := (atoi(departs.[k]) - hour + 24) % 24;
+      t := (departs.[k] - hour + 24) % 24;
       if (t < gap)
       {
          gap := t;
@@ -2588,20 +2593,27 @@ code
 dilend
 
 
-// For ship: one text to everyone on the decks, another to those around the ship (port or sea)
+// For ship: one text to everyone on the decks, another to those around the ship (port or sea).
+// Each one aboard gets it on their own: said to the room, a transparent deck would pass it on
+// to the port as well.
 dilbegin ship_tell(decks : stringlist, aboard : string, around : string, shipname : string,
                    portname : string);
 var
    k : integer;
    r : unitptr;
+   u : unitptr;
 code
 {
    k := 0;
-   while (k < length(decks))
+   while ((k < length(decks)) and (aboard != ""))
    {
       r := findroom(decks.[k]);
-      if (r.inside != null)
-         act(aboard, A_SOMEONE, r.inside, shipname, portname, TO_ALL);
+      u := r.inside;
+      while (u)
+      {
+         act(aboard, A_SOMEONE, u, shipname, portname, TO_CHAR);
+         u := u.next;
+      }
       k := k + 1;
    }
    if (around != "")
@@ -2611,10 +2623,10 @@ code
 dilend
 
 
-dilbegin ship(shipname : string, ports : stringlist, portnames : stringlist, departs : stringlist,
+dilbegin ship(shipname : string, ports : stringlist, portnames : stringlist, departs : intlist,
               sea : string, decks : stringlist, opts : stringlist);
 external
-   integer ship_next@function(departs : stringlist, hour : integer);
+   integer ship_next@function(departs : intlist, hour : integer);
    ship_tell@function(decks : stringlist, aboard : string, around : string, shipname : string,
                       portname : string);
    ship_signal@function(decks : stringlist, ev : string);
@@ -2671,13 +2683,15 @@ code
       k := 0;
       while (k < nd)
       {
-         if (atoi(departs.[(k + 1) % nd]) <= atoi(departs.[k]))
+         if (departs.[(k + 1) % nd] <= departs.[k])
             t := t + 1;
+         if ((departs.[k] < 0) or (departs.[k] > 23))
+            t := 99;
          k := k + 1;
       }
       if ((t > 1) or ((nd % np) != 0))
-         log("ship@function on " + self.symname + ": departs should be in order round the day, " +
-             "a multiple of the ports in number.");
+         log("ship@function on " + self.symname + ": departs should be mud hours 0-23 in order " +
+             "round the day, a multiple of the ports in number.");
    }
 
    pnames := portnames;
@@ -2712,7 +2726,7 @@ code
          dwell := atoi(o);
       else if (kw == "sea")
          addstring(seamsg, o);
-      else if (t > 0)
+      else if ((t > 0) and ((t < 6) or (o != ""))) // the noexit text can't be silenced
          texts.[t - 1] := o;
       else
          log("ship@function on " + self.symname + ": unknown option " + kw + ".");
@@ -2732,7 +2746,7 @@ code
       i := ship_next@function(departs, mudhour);
       p := i % np;
       prev := mudhour;
-      gap := (atoi(departs.[i]) - prev + 24) % 24;
+      gap := (departs.[i] - prev + 24) % 24;
    }
 
    subextra(self.extra, "$no_exit");
@@ -2741,8 +2755,8 @@ code
    :port:
    q := (p + 1) % np;
    if (nd > 0)
-      hour := departs.[i];
-   ship_signal@function(dk, "ship arrived " + ports.[p] + " " + ports.[q] + " " + hour);
+      hour := itoa(departs.[i]);
+   ship_signal@function(dk, "ship arrived " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + hour + " " + pnames.[q]);
 
    if (nd > 0)
    {
@@ -2760,7 +2774,7 @@ code
          last := mudhour;
       }
       heartbeat := PULSE_SEC * 15;
-      prev := atoi(departs.[i]);
+      prev := departs.[i];
    }
    else
    {
@@ -2772,15 +2786,15 @@ code
       }
    }
 
-   ship_signal@function(dk, "ship boarding " + ports.[p] + " " + ports.[q]);
+   ship_signal@function(dk, "ship boarding " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + pnames.[q]);
    ship_tell@function(dk, texts.[0], texts.[0], shipname, pnames.[q]);
    pause;
 
-   ship_signal@function(dk, "ship leaving " + ports.[p] + " " + ports.[q]);
+   ship_signal@function(dk, "ship leaving " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + pnames.[q]);
    ship_tell@function(dk, texts.[1], texts.[2], shipname, pnames.[q]);
    addextra(self.extra, {"$no_exit"}, texts.[5]);
    link(self, findroom(sea));
-   ship_signal@function(dk, "ship at sea " + ports.[p] + " " + ports.[q]);
+   ship_signal@function(dk, "ship at sea " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + pnames.[q]);
 
    t := 0;
    while (t < sailsecs)
@@ -2799,11 +2813,116 @@ code
    if (nd > 0)
    {
       i := (i + 1) % nd;
-      gap := (atoi(departs.[i]) - prev + 24) % 24;
+      gap := (departs.[i] - prev + 24) % 24;
       if (gap == 0)
          gap := 24;
    }
    goto port;
+}
+dilend
+
+
+/*
+ * ship_captain: a captain for a ship@function ship, on an NPC loaded into the ship room (its
+ * symbolic name is the argument). In port the captain stands ashore and calls the next sailing
+ * once a minute; when the ship is about to leave, calls all aboard and boards; at sea says
+ * where the ship is bound. The ship sails without a captain who misses it (asleep, fighting,
+ * dead); the captain takes up the calls again when the ship next docks where they are.
+ *
+ *    dilcopy ship_captain@function("mid@isle");
+ */
+dilbegin ship_captain(ship : string);
+var
+   s     : string;
+   w     : string;
+   nextp : string;   // the next port's name
+   when  : string;   // the next sailing: "at 4 in the morning."
+   h     : integer;
+   inport : integer; // calling the next sailing
+   todo  : integer;  // 1 step ashore, 2 board: done on the next tick, not while the ship tells
+   r     : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 60;
+   interrupt(SFB_MSG, "ship " in argument, news);
+
+   :idle:
+   if ((inport == 0) and (todo == 0))
+      wait(SFB_MSG, FALSE); // nothing to say until the ship's next message
+   pause;
+   r := findroom(ship);
+   if (todo == 1)
+   {
+      if (self.outside == r)
+         exec("exit", self);
+   }
+   else if (todo == 2)
+   {
+      if ((self.outside == r.outside) and (self.position == POSITION_STANDING))
+      {
+         exec("say All aboard for " + nextp + "!", self);
+         exec("enter " + r.names.[0], self);
+         if (self.outside == r.outside)
+         {
+            // Still ashore: enter needs to see the ship, and a dock can be dark at night
+            act("$1n boards the ship.", A_HIDEINV, self, null, null, TO_ROOM);
+            link(self, r);
+         }
+      }
+   }
+   else if (inport and (self.outside == r.outside) and (self.position == POSITION_STANDING))
+      exec("say Next sailing to " + nextp + " " + when, self);
+   todo := 0;
+   heartbeat := PULSE_SEC * 60;
+   goto idle;
+
+   :news:
+   s := argument;
+   w := getword(s);  // "ship"
+   w := getword(s);
+   if (w == "at")
+      w := getword(s); // "at sea"
+   if (getword(s) != ship)
+      goto idle;       // another ship in the same port
+   if (w == "arrived")
+   {
+      w := getword(s); // this port
+      w := getword(s); // the next
+      h := atoi(getword(s));
+      nextp := s;
+      if (h < 0)
+         when := "soon.";
+      else if (h == 0)
+         when := "at midnight.";
+      else if (h == 12)
+         when := "at noon.";
+      else if (h < 12)
+         when := "at " + itoa(h) + " in the morning.";
+      else if (h < 18)
+         when := "at " + itoa(h - 12) + " in the afternoon.";
+      else
+         when := "at " + itoa(h - 12) + " in the evening.";
+      inport := 1;
+      todo := 1;
+      heartbeat := PULSE_SEC * 1;
+   }
+   else if (w == "boarding")
+   {
+      w := getword(s);
+      w := getword(s);
+      nextp := s;
+      inport := 0;
+      todo := 2;
+      heartbeat := PULSE_SEC * 1;
+   }
+   else if (w == "sea")
+   {
+      w := getword(s);
+      w := getword(s);
+      if ((self.outside == findroom(ship)) and (self.position == POSITION_STANDING))
+         exec("say We are on our way to " + s + ".", self);
+   }
+   goto idle;
 }
 dilend
 

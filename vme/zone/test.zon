@@ -88,7 +88,9 @@ dilend
 // shipport1 and shipport2 through shipsea. A passenger aboard can't "exit" or "leave" at sea
 // (the ship's $no_exit extra) and rides on; in port "exit" puts it on the quay. shipwatch keeps
 // the ship's last message to the deck. The ship runs from boot, so the test takes it wherever
-// it is: the first check is whichever state comes first.
+// it is: the first check is whichever state comes first. A captain (ship_captain@function)
+// starts on the quay when the ship is in port, is aboard at sea, and steps onto the quay when
+// the ship arrives.
 // On shipdeck: the last move ship@function announced, in the $shipev extra
 dilbegin shipwatch();
 code
@@ -105,10 +107,12 @@ dilend
 dilbegin T022(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
-   integer ship_next@function(departs : stringlist, hour : integer);
+   integer ship_next@function(departs : intlist, hour : integer);
 var
    ship  : unitptr;
    u     : unitptr;
+   c     : unitptr;
+   k     : integer;
    i     : integer;
    seaok : integer;  // the exit was refused at sea
    portok : integer; // the exit worked in port
@@ -121,11 +125,11 @@ code
 
    // The next departure: later the same day, at this very hour, past midnight, and in a list
    // that starts in the afternoon
-   if ((ship_next@function({"3", "9", "15", "21"}, 4) != 1) or
-       (ship_next@function({"3", "9", "15", "21"}, 9) != 1) or
-       (ship_next@function({"3", "9", "15", "21"}, 22) != 0) or
-       (ship_next@function({"16", "18", "20", "22", "0", "2"}, 23) != 4) or
-       (ship_next@function({"16", "18", "20", "22", "0", "2"}, 10) != 0))
+   if ((ship_next@function({3, 9, 15, 21}, 4) != 1) or
+       (ship_next@function({3, 9, 15, 21}, 9) != 1) or
+       (ship_next@function({3, 9, 15, 21}, 22) != 0) or
+       (ship_next@function({16, 18, 20, 22, 0, 2}, 23) != 4) or
+       (ship_next@function({16, 18, 20, 22, 0, 2}, 10) != 0))
    {
       logtest(tstno, LOGT_ERROR, "T022 ship_next picked the wrong departure");
       u := null;
@@ -134,6 +138,12 @@ code
    ship := findroom("shipdeck@test");
    u := load("passenger@test");
    link(u, ship);
+   // In port the captain starts ashore and has to board; at sea aboard
+   c := load("captain@test");
+   if (ship.outside.symname == "shipsea@test")
+      link(c, ship);
+   else
+      link(c, ship.outside);
 
    i := 0;
    while ((i < 100) and ((seaok == 0) or (portok == 0) or (arrived == 0)))
@@ -157,7 +167,7 @@ code
          }
          if (seaok == 0)
          {
-            if (not ("ship at sea shipport" in ship.extra.["$shipev"].descr))
+            if (not ("ship at sea shipdeck@test shipport" in ship.extra.["$shipev"].descr))
             {
                logtest(tstno, LOGT_ERROR, "T022 no 'ship at sea' message to the deck");
                goto terminate;
@@ -167,6 +177,17 @@ code
             if (u.outside != ship)
             {
                logtest(tstno, LOGT_ERROR, "T022 the passenger left the ship at sea");
+               goto terminate;
+            }
+            c := findsymbolic("captain@test");
+            if (c == null)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain was lost");
+               goto terminate;
+            }
+            if (c.outside != ship)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain isn't aboard at sea");
                goto terminate;
             }
             seaok := 1;
@@ -186,7 +207,7 @@ code
                logtest(tstno, LOGT_ERROR, "T022 the ship came back to " + last);
                goto terminate;
             }
-            if (not (("ship arrived " + ship.outside.symname) in ship.extra.["$shipev"].descr))
+            if (not (("ship arrived shipdeck@test " + ship.outside.symname) in ship.extra.["$shipev"].descr))
             {
                logtest(tstno, LOGT_ERROR, "T022 no 'ship arrived' message for " + ship.outside.symname);
                goto terminate;
@@ -194,6 +215,28 @@ code
             if (u.outside != ship)
             {
                logtest(tstno, LOGT_ERROR, "T022 the passenger didn't ride on");
+               goto terminate;
+            }
+            // The captain steps ashore on the next tick, not while the ship tells its arrival
+            k := 0;
+            c := findsymbolic("captain@test");
+            while ((k < 5) and (c != null) and (c.outside != ship.outside))
+            {
+               pause;
+               k := k + 1;
+               c := findsymbolic("captain@test");
+               ship := findroom("shipdeck@test");
+            }
+            ship := findroom("shipdeck@test");
+            u := findsymbolic("passenger@test");
+            if (c == null)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain was lost");
+               goto terminate;
+            }
+            if (c.outside != ship.outside)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain didn't step onto the quay");
                goto terminate;
             }
             arrived := 1;
@@ -231,6 +274,9 @@ code
    }
 
    destroy(u);
+   c := findsymbolic("captain@test");
+   if (c != null)
+      destroy(c);
    logtest(tstno, LOGT_INFO, "T022 Success");
    logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
@@ -239,6 +285,9 @@ code
 :terminate:
    if (u != null)
       destroy(u);
+   c := findsymbolic("captain@test");
+   if (c != null)
+      destroy(c);
    logtest(tstno, LOGT_INFO, "T022 failed");
    sendtoalldil("fail", "labdirector@test");
    quit;
@@ -2151,6 +2200,17 @@ code
    quit;
 }
 dilend
+end
+
+
+   captain
+
+names {"captain"}
+title "the captain"
+descr "The captain is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+dilcopy ship_captain@function("shipdeck@test");
 end
 
 

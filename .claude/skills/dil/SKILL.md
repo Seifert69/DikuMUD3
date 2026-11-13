@@ -39,8 +39,22 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 ## Traps
 
 - **Reserved words.** Every function, field and built-in variable in `diltok.h` is reserved,
-  so `name`, `target`, `length`, `title`, `level`... can't be variable names. vmc says
-  `718: syntax error` / `Token: 'name'` at the `var` line. Use `pname`, `namex`, `u`.
+  so `name`, `names`, `key`, `npcs`, `target`, `length`, `title`, `level`... can't be
+  variable names. vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
+  `pname`, `namex`, `kw`, `u`.
+- **Template names are 15 characters at most** (`Name of dilprogram ... was too long`).
+- **No field on a call's result**: `findroom(s).title` is a syntax error; put the unit in a
+  variable first. Likewise `getword(s);` alone is one: write `w := getword(s);` (it also takes
+  the word, and the spaces after it, off the variable `s`).
+- **No `\"` in a string**: vmc stops at it. Use single quotes inside the text.
+- **`addextra(u.extra, {"$x"}, "")` adds nothing**: an extra made in DIL needs some text.
+- **`"words" in a stringlist`** is the position plus one (0 when absent) of the first entry
+  that is the string or its first words, ignoring case: `"arrived"` doesn't match
+  `"arrived_port"`, but `"ship arrived"` matches `"ship"`.
+- **`dilcopy("tmpl@zone(...)", u)` from DIL takes only string and integer arguments**, cut at
+  every comma: no lists, and no commas inside a string. A template with list arguments can
+  only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
+  `{}` fits either kind of list.
 - **`and` / `or` evaluate both sides.** No short-circuit: `(u != null) and (u.level > 5)`
   still reads `u.level`.
 - **A field of null fails, and a failed value is false in every comparison**: `u.level > 5`
@@ -91,3 +105,9 @@ Compile the zone (vmc skill), restart `vme` (it reads zones, `commands.dat` and 
 `vme/etc/*.dat` only at boot), log in through an mplex and try it, including the cases that
 should be refused. DIL runtime errors go to `vme/bin/vme.log`. In-game DIL test zones:
 `DIL_UNIT_TESTING.md`.
+
+**Waiting for game time**: a god's `wtimewarp <seconds>` runs that many seconds of game ticks
+without pausing between them, and the mud clock (`mudhour`) follows the ticks. Something that
+waits for an hour of the day, a ship's timetable or a long `heartbeat`, can be tried in a minute
+instead of hours: a mud hour is 300 seconds (`SECS_PER_MUD_HOUR`), so `wtimewarp 3600` is 12 mud
+hours. Locally the god is the `immortal_name` from `vme/etc/server.cfg` (Papi).
