@@ -195,10 +195,12 @@ int main(int argc, char **argv)
     catch (const diku_exception &e)
     {
         std::cout << "DIKU EXCEPTION: " << e.what() << std::endl;
+        return (1); // a failure: the integration test and systemd must see it
     }
     catch (const std::exception &e)
     {
         std::cout << "EXCEPTION: " << e.what() << std::endl;
+        return (1);
     }
     return (0);
 }

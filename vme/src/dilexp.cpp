@@ -52,6 +52,7 @@ $Revision: 2.18 $
 #include <crypt.h>
 #include <sys/stat.h>
 
+#include <algorithm>
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
@@ -123,9 +124,10 @@ void dilfe_replace(dilprg *p)
                         case DILV_SP:
                             if (v->type == DILV_SP)
                             {
-                                std::string sch((char *)v1->val.ptr);
-                                std::string rpl((char *)v2->val.ptr);
-                                std::string mystr((char *)v3->val.ptr);
+                                // A string variable never set holds null: it is ""
+                                std::string sch(IF_STR((char *)v1->val.ptr));
+                                std::string rpl(IF_STR((char *)v2->val.ptr));
+                                std::string mystr(IF_STR((char *)v3->val.ptr));
 
                                 str_substitute(sch, rpl, mystr);
 
@@ -287,7 +289,7 @@ void dilfe_left(dilprg *p)
                         strl = v2->val.num;
                     }
 
-                    if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                    if (str_is_empty((char *)v1->val.ptr) || strl <= 0)
                     {
                         v->val.ptr = nullptr;
                     }
@@ -358,7 +360,7 @@ void dilfe_right(dilprg *p)
                         strl = v2->val.num;
                     }
 
-                    if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                    if (str_is_empty((char *)v1->val.ptr) || strl <= 0)
                     {
                         v->val.ptr = nullptr;
                     }
@@ -388,11 +390,6 @@ void dilfe_mid(dilprg *p)
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
-    int strl = 0;
-    int l = 0;
-    int r = 0;
-    int x = 0;
-
     v->type = DILV_SP;
 
     switch (dil_getval(v1))
@@ -426,26 +423,18 @@ void dilfe_mid(dilprg *p)
                             v->type = DILV_ERR;
                             break;
                         case DILV_INT:
-                            if ((v2->val.num >= 0) && ((int)strlen((char *)v1->val.ptr) < v2->val.num))
+                        {
+                            // Characters l..r, counting from 1, of what's there; a string never
+                            // set is ""
+                            const char *str = IF_STR((char *)v1->val.ptr);
+                            int len = strlen(str);
+
+                            if (v2->val.num > len)
                             {
-                                v1->val.ptr = nullptr;
+                                v->val.ptr = nullptr; // starts past the end: ""
                                 break;
                             }
-                            else
-                            {
-                                l = v2->val.num;
-                            }
-
-                            if ((v2->val.num >= 0) && ((int)strlen((char *)v1->val.ptr) < v3->val.num))
-                            {
-                                r = strlen((char *)v1->val.ptr);
-                            }
-                            else
-                            {
-                                r = v3->val.num;
-                            }
-
-                            if (r < l)
+                            if (v3->val.num < v2->val.num)
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s, Illegal: mid(1,2,3) 3 > 2 \n",
@@ -454,24 +443,23 @@ void dilfe_mid(dilprg *p)
                                 break;
                             }
 
-                            strl = (r - l) + 1;
-
-                            if (str_is_empty((char *)v1->val.ptr) || strl == 0)
+                            int l = std::max((int)v2->val.num, 1);
+                            int r = std::min((int)v3->val.num, len);
+                            if (r < l)
                             {
                                 v->val.ptr = nullptr;
                             }
                             else
                             {
+                                int strl = (r - l) + 1;
                                 v->atyp = DILA_EXP;
                                 v->val.ptr = malloc(strl + 1);
-                                for (x = 0; l <= r; l++, x++)
-                                {
-                                    ((char *)v->val.ptr)[x] = ((char *)v1->val.ptr)[l - 1];
-                                }
+                                memcpy(v->val.ptr, str + l - 1, strl);
                                 ((char *)v->val.ptr)[strl] = 0;
                             }
 
                             break;
+                        }
                     }
                     break;
             }
@@ -676,13 +664,16 @@ void dilfe_sendpre(dilprg *p)
                                                     {
                                                         case DILV_UP:
                                                         case DILV_NULL:
-                                                            cmd = ((command_info *)search_trie((char *)v1->val.ptr, g_intr_trie));
+                                                            // search_trie("") would give the first command
+                                                            cmd = str_is_empty((char *)v1->val.ptr)
+                                                                      ? nullptr
+                                                                      : (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie);
                                                             if (!cmd)
                                                             {
                                                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                                                          "DIL %s, : Can not send_preprocess. No such command %s\n",
                                                                          p->sarg->owner->getFileIndexSymName(),
-                                                                         (char *)v1->val.ptr);
+                                                                         IF_STR((char *)v1->val.ptr));
                                                                 v->type = DILV_FAIL;
                                                             }
                                                             else
@@ -744,13 +735,43 @@ void dilfe_sendpre(dilprg *p)
     dilval::free(v7);
 }
 
+// For addcolor, changecolor and delcolor: a key is 1 to 20 letters, digits or '_' (a string
+// never set is no key)
+static bool color_key_ok(dilprg *p, const char *key)
+{
+    if (str_is_empty(key))
+    {
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                 "DIL %s, Illegal: Color key is empty.\n",
+                 p->sarg->owner->getFileIndexSymName());
+        return false;
+    }
+    if (strlen(key) > 20)
+    {
+        szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                 "DIL %s, Illegal: Color key is greater than 20 characters.\n",
+                 p->sarg->owner->getFileIndexSymName());
+        return false;
+    }
+    for (const char *c = key; *c; c++)
+    {
+        if (!isalnum((unsigned char)*c) && (*c != '_'))
+        {
+            szonelog(p->sarg->owner->getFileIndex()->getZone(),
+                     "DIL %s, Illegal: Color key contains invalid characters.\n",
+                     p->sarg->owner->getFileIndexSymName());
+            return false;
+        }
+    }
+    return true;
+}
+
 void dilfe_clradd(dilprg *p)
 {
     dilval *v = dilval::alloc();
 
     char full_name[21];
     char *color = nullptr;
-    unsigned int x = 0;
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -784,7 +805,8 @@ void dilfe_clradd(dilprg *p)
                             break;
                         case DILV_SP:
 
-                            if (!((unit_data *)v1->val.ptr)->isPC())
+                            // Wrong argument types fall through to here, and a unit or string never set is null
+                            if ((v->type == DILV_ERR) || (v1->val.ptr == nullptr) || !((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s, Illegal: Tried to add a color to a non pc.\n",
@@ -792,26 +814,14 @@ void dilfe_clradd(dilprg *p)
                                 v->type = DILV_FAIL;
                             }
 
-                            if (strlen((char *)v2->val.ptr) > 20)
+                            if (!color_key_ok(p, (char *)v2->val.ptr))
                             {
-                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s, Illegal: Color key is greater than 20 characters.\n",
-                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
-                            x = 0;
-                            while (x < strlen((char *)v2->val.ptr))
+                            if (str_is_empty((char *)v3->val.ptr))
                             {
-                                if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
-                                {
-                                    szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                             "DIL %s, Illegal: Color key contains invalid characters.\n",
-                                             p->sarg->owner->getFileIndexSymName());
-                                    v->type = DILV_FAIL;
-                                    break;
-                                }
-                                x++;
+                                v->type = DILV_FAIL; // no colour: saved as "key::" it would cut the list short
                             }
 
                             if (v->type != DILV_FAIL)
@@ -852,7 +862,6 @@ void dilfe_clrchg(dilprg *p)
 
     char full_name[21];
     char *color = nullptr;
-    unsigned int x = 0;
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
@@ -884,8 +893,7 @@ void dilfe_clrchg(dilprg *p)
                             v->type = DILV_FAIL;
                             break;
                         case DILV_SP:
-
-                            if (!((unit_data *)v1->val.ptr)->isPC())
+                            if ((v->type == DILV_ERR) || (v1->val.ptr == nullptr) || !((unit_data *)v1->val.ptr)->isPC())
                             {
                                 szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                          "DIL %s, Illegal: Tried to change a color to a non pc.\n",
@@ -893,26 +901,14 @@ void dilfe_clrchg(dilprg *p)
                                 v->type = DILV_FAIL;
                             }
 
-                            if (strlen((char *)v2->val.ptr) > 20)
+                            if (!color_key_ok(p, (char *)v2->val.ptr))
                             {
-                                szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                         "DIL %s, Illegal: Color key is greater than 20 characters.\n",
-                                         p->sarg->owner->getFileIndexSymName());
                                 v->type = DILV_FAIL;
                             }
 
-                            x = 0;
-                            while (x < strlen((char *)v2->val.ptr))
+                            if (str_is_empty((char *)v3->val.ptr))
                             {
-                                if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
-                                {
-                                    szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                             "DIL %s, Illegal: Color key contains invalid characters.\n",
-                                             p->sarg->owner->getFileIndexSymName());
-                                    v->type = DILV_FAIL;
-                                    break;
-                                }
-                                x++;
+                                v->type = DILV_FAIL; // no colour: saved as "key::" it would cut the list short
                             }
 
                             if (v->type != DILV_FAIL)
@@ -921,7 +917,7 @@ void dilfe_clrchg(dilprg *p)
                                 if (UPC(pc)->getColor().get((char *)v2->val.ptr, full_name).empty() == false)
                                 {
                                     color = str_escape_format((char *)v3->val.ptr, FALSE);
-                                    auto unused = UPC(pc)->getColor().change((char *)v2->val.ptr, color);
+                                    auto unused = UPC(pc)->getColor().change(full_name, color);
                                     FREE(color);
                                     v->type = DILV_INT;
                                     v->val.num = TRUE;
@@ -952,7 +948,6 @@ void dilfe_clrdel(dilprg *p)
     dilval *v = dilval::alloc();
 
     char full_name[21];
-    unsigned int x = 0;
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
@@ -978,7 +973,7 @@ void dilfe_clrdel(dilprg *p)
                     v->type = DILV_FAIL;
                     break;
                 case DILV_SP:
-                    if (!((unit_data *)v1->val.ptr)->isPC())
+                    if ((v1->val.ptr == nullptr) || !((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s, Illegal: Tried to delete a color to a non pc.\n",
@@ -986,26 +981,9 @@ void dilfe_clrdel(dilprg *p)
                         v->type = DILV_FAIL;
                     }
 
-                    if (strlen((char *)v2->val.ptr) > 20)
+                    if (!color_key_ok(p, (char *)v2->val.ptr))
                     {
-                        szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                 "DIL %s, Illegal: Color key is greater than 20 characters.\n",
-                                 p->sarg->owner->getFileIndexSymName());
                         v->type = DILV_FAIL;
-                    }
-
-                    x = 0;
-                    while (x < strlen((char *)v2->val.ptr))
-                    {
-                        if ((!isalnum(*((char *)v2->val.ptr + x))) && (*((char *)v2->val.ptr + x) != '_'))
-                        {
-                            szonelog(p->sarg->owner->getFileIndex()->getZone(),
-                                     "DIL %s, Illegal: Color key contains invalid characters.\n",
-                                     p->sarg->owner->getFileIndexSymName());
-                            v->type = DILV_FAIL;
-                            break;
-                        }
-                        x++;
                     }
 
                     if (v->type != DILV_FAIL)
@@ -1706,11 +1684,19 @@ void dilfe_flog(dilprg *p)
                                 szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to access logs w/o access.", p->frame->tmpl->prgname);
                                 p->waitcmd = WAITCMD_QUIT;
                             }
+                            else if (str_is_empty((char *)v1->val.ptr) || str_is_empty((char *)v3->val.ptr) ||
+                                     strstr((char *)v1->val.ptr, "..") ||
+                                     (g_cServerConfig.getLogDir().length() + strlen((char *)v1->val.ptr) >= sizeof(filename)))
+                            {
+                                // No file name or mode (a string never set), or a name that would
+                                // leave the log directory or overrun filename
+                                v->val.num = FILE_ILEGAL_OPP;
+                            }
                             else
                             {
                                 strcpy(filename, g_cServerConfig.getLogDir().c_str());
                                 strcat(filename, (char *)v1->val.ptr);
-                                sstr = str_dup((char *)v2->val.ptr);
+                                sstr = str_dup(IF_STR((char *)v2->val.ptr));
                                 v->val.num = save_string(filename, &sstr, (char *)v3->val.ptr);
                                 FREE(sstr);
                             }
@@ -4256,14 +4242,16 @@ void dilfe_plus(dilprg *p)
     switch (v->type)
     {
         case DILV_SP:
+        {
             v->atyp = DILA_EXP;
-            CREATE(v->val.ptr, char, (strlen(STR((char *)v1->val.ptr)) + strlen(STR((char *)v2->val.ptr)) + 1));
-            strcpy((char *)v->val.ptr, STR((char *)v1->val.ptr));
-            strcat((char *)v->val.ptr, STR((char *)v2->val.ptr));
-            strcat((char *)v->val.ptr, "\0");
-            /*\\      v->val.ptr = str_dup(str_cc(STR((char *) v1->val.ptr),
-            \\				  STR((char *) v2->val.ptr))); */
+            // A string never set is "", not "(NIL POINTER)"
+            const char *a = IF_STR((char *)v1->val.ptr);
+            const char *b = IF_STR((char *)v2->val.ptr);
+            CREATE(v->val.ptr, char, (strlen(a) + strlen(b) + 1));
+            strcpy((char *)v->val.ptr, a);
+            strcat((char *)v->val.ptr, b);
             break;
+        }
 
         case DILV_INT:
             v->atyp = DILA_NONE;
@@ -6074,7 +6062,7 @@ void dilfe_strcmp(dilprg *p)
     {
         case DILV_INT:
             v->atyp = DILA_NONE;
-            v->val.num = strcmp((char *)v1->val.ptr, (char *)v2->val.ptr);
+            v->val.num = strcmp(IF_STR((char *)v1->val.ptr), IF_STR((char *)v2->val.ptr));
             break;
         case DILV_NULL:
             v->atyp = DILA_NONE;
@@ -6152,7 +6140,7 @@ void dilfe_strncmp(dilprg *p)
     {
         case DILV_INT:
             v->atyp = DILA_NONE;
-            v->val.num = strncmp((char *)v1->val.ptr, (char *)v2->val.ptr, (int)v3->val.num);
+            v->val.num = strncmp(IF_STR((char *)v1->val.ptr), IF_STR((char *)v2->val.ptr), (int)v3->val.num);
             break;
         case DILV_NULL:
             v->atyp = DILA_NONE;

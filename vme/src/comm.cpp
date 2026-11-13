@@ -370,6 +370,11 @@ void act_generate(char *buf,
 
     *buf = 0;
 
+    if (str == nullptr) // DIL's act() with a string never set
+    {
+        return;
+    }
+
     if (!to->isChar() || arg1.m_u == nullptr)
     {
         return;

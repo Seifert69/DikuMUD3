@@ -14,4 +14,9 @@ if [ ${result} -ne 0 ]; then
   fi
   exit 1
 fi
+# A clean exit before the tests are done (a caught exception, an early reboot) fails as well
+if ! grep -q 'Lab director finished running all tests' vme.log; then
+  cat vme.log
+  exit 1
+fi
 exit 0

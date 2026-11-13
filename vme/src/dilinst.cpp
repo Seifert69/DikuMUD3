@@ -294,7 +294,7 @@ void dilfi_send_done(dilprg *p)
                     break;
             }
         }
-        else if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
+        else if (!str_is_empty((char *)v1->val.ptr) && (cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
         {
             send_done((unit_data *)v2->val.ptr,
                       (unit_data *)v3->val.ptr,
@@ -309,7 +309,7 @@ void dilfi_send_done(dilprg *p)
             szonelog(p->frame->tmpl->zone,
                      "send_done: DIL '%s' attempted to send a non-existent command '%s'.",
                      p->frame->tmpl->prgname,
-                     (char *)v1->val.ptr);
+                     IF_STR((char *)v1->val.ptr));
         }
     }
     dilval::free(v1);
