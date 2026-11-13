@@ -96,16 +96,16 @@ The sact function processes a message template with formatters and returns the f
 == Usage Notes ==
 * Uses the same message formatters as the [[Manual:DIL_Manual/act|act]] function ($1n, $2n, $3n, etc.)
 * Visibility constants (A_SOMEONE, A_HIDEINV, A_ALWAYS) work the same as in act()
-* The to_whom parameter affects how visibility is processed but doesn't send messages
-* Returns an empty string if formatting fails or required parameters are invalid
+* The text is the one the act() would show one character: the victim for TO_VICT and TO_NOTVICT, char for the others. TO_CHAR and TO_ALL give char's text and TO_VICT the victim's; TO_ROOM, TO_REST and TO_NOTVICT leave that character out, so they give ""
+* Never adds a line break (an act() sends each line with one)
 * Useful for creating dynamic descriptions, logging systems, or message queuing
 * Can be used to build complex strings by combining multiple sact() calls
 
 == Error Handling ==
-* Returns empty string if message parameter is null or empty
-* Returns empty string if char parameter is null and formatters reference $1
+* Fails when char (the victim for TO_VICT and TO_NOTVICT) is null, or with an unknown to_whom
+* Returns "" when the message is empty or a string that was never set, when a string stands where char (or the victim) goes, and when that character is asleep (unless A_ALWAYS) or, with A_HIDEINV, can't see char
+* An illegal $-code ends the text there
 * Type checking occurs at runtime - invalid parameter types cause function failure
-* Always validate return value before using in critical operations
 
 == Formatters ==
 The function supports all standard act() formatters:

@@ -143,3 +143,12 @@ void dilfe_strncmp(dilprg *);
 void dilfe_wepinfo(dilprg *);
 void dilfe_gfol(dilprg *);
 void dilfe_getaffects(dilprg *);
+
+/// DIL's act(): the statement, sact() and act() as an expression (see dilexp.cpp)
+enum class DilAct
+{
+    send,
+    text,
+    text_br
+};
+void dil_act(dilprg *p, DilAct mode);

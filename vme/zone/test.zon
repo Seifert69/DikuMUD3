@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 22  // T010, T009, ...
+#define TEST_MAXIMUM 23  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,103 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T023 =====================
+
+// DIL built-ins and a string variable that was never set (it holds null, not ""): replace,
+// mid, strcmp, strncmp, addcolor, changecolor, delcolor, flog, send_pre, send_done and act()
+// as an expression passed the null on to C and crashed the whole server. A string never set
+// now counts as "". Also: mid outside the string, left/right with a count below 0 (wrote
+// before the buffer), + with an unset string ("(NIL POINTER)x"), and the act statement with
+// a string as the actor (crashed), with the texts act() and sact() give.
+dilbegin T023(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   notset : string;
+   nobody : unitptr;
+   i      : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T023 built-ins with a null string running");
+
+   if ((replace("$x", notset, "a $x b") != "a  b") or
+       (replace(notset, "y", "a b") != "a b") or
+       (replace("a", "y", notset) != ""))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 replace with a null string gave the wrong text");
+      goto terminate;
+   }
+   if ((mid(notset, 1, 2) != "") or (mid("abcdef", 0, 2) != "ab") or (mid("abcdef", -3, 2) != "ab") or
+       (mid("abc", 2, 9) != "bc") or (mid("abc", 5, 9) != "") or (mid("abcdef", 2, 4) != "bcd"))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 mid gave the wrong text");
+      goto terminate;
+   }
+   if ((left("abc", -1) != "") or (right("abc", -1) != "") or (left("abc", 2) != "ab") or
+       (right("abc", 2) != "bc"))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 left or right gave the wrong text");
+      goto terminate;
+   }
+   if ((strcmp(notset, "") != 0) or (strcmp("", notset) != 0) or (strncmp(notset, "a", 1) >= 0) or
+       (strcmp("b", "a") <= 0))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 strcmp or strncmp with a null string gave the wrong answer");
+      goto terminate;
+   }
+   if ((notset + "x" != "x") or ("x" + notset != "x"))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 + with a null string gave the wrong text");
+      goto terminate;
+   }
+
+   // These only have to come back: the old code crashed on each
+   i := addcolor(self, notset, "red");
+   i := addcolor(nobody, "key", notset);
+   i := changecolor(self, notset, "red");
+   i := delcolor(self, notset);
+   i := delcolor(nobody, "key");
+   i := flog(notset, "x", "a");
+   i := flog("t023.log", "x", notset);
+   i := flog("../t023.log", "x", "a");   // refused: outside the log directory
+   // An empty command fails: search_trie("") would have given the first command (north)
+   if ((send_pre(notset, self, null, null, 0, "", null) == SFR_SHARE) or
+       (send_pre(notset, self, null, null, 0, "", null) == SFR_BLOCK))
+   {
+      logtest(tstno, LOGT_ERROR, "T023 send_pre with an unset command ran a command");
+      goto terminate;
+   }
+   send_done(notset, self, null, null, 0, "", null, CMD_AUTO_NONE);
+   nobody := load("experiment@test");
+   notset := act(notset, A_ALWAYS, nobody, null, null, TO_CHAR); // act() as an expression
+   // A blank or empty text is a line too; sact() adds no <br/>, and gives "" for a string where
+   // the one it is about goes
+   if ((act(" ", A_ALWAYS, nobody, null, null, TO_CHAR) != " <br/>") or
+       (act("$2t", A_ALWAYS, nobody, "", null, TO_CHAR) != "<br/>") or
+       (sact("hi", A_ALWAYS, nobody, null, null, TO_CHAR) != "Hi") or
+       (sact("hi", A_ALWAYS, "str", null, null, TO_CHAR) != ""))
+   {
+      destroy(nobody);
+      logtest(tstno, LOGT_ERROR, "T023 act() or sact() gave the wrong text");
+      goto terminate;
+   }
+   destroy(nobody);
+   act("x", A_ALWAYS, "str", null, null, TO_CHAR); // a string as the actor crashed the server
+
+   logtest(tstno, LOGT_INFO, "T023 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T023 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
 }
 dilend
 

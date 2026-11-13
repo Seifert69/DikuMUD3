@@ -121,6 +121,10 @@ Note: The C implementation shows that this function:
 * Performs complex visibility calculations based on flags
 * Returns DILV_SP (string) for the generated message
 
+== Used as an expression ==
+ s := act("$1n waves.", A_ALWAYS, self, null, null, TO_CHAR);
+gives the line instead of sending it: the text the one character it is about would see (the victim for TO_VICT and TO_NOTVICT, char for the others) with its line break, as [[Manual:DIL_Manual/sact|sact]] gives it without one. It gives "" when there is nobody to see it, and never sends anything.
+
 == Usage Notes ==
 * This function is the primary method for sending messages to players
 * The message parameter supports formatters for dynamic content

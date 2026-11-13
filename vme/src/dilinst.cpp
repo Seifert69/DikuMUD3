@@ -23,6 +23,7 @@
 #include "comm.h"
 #include "db.h"
 #include "dil.h"
+#include "dilexp.h"
 #include "dilinst.h"
 #include "dilrun.h"
 #include "error.h"
@@ -294,7 +295,7 @@ void dilfi_send_done(dilprg *p)
                     break;
             }
         }
-        else if ((cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
+        else if (!str_is_empty((char *)v1->val.ptr) && (cmd_ptr = (command_info *)search_trie((char *)v1->val.ptr, g_intr_trie)))
         {
             send_done((unit_data *)v2->val.ptr,
                       (unit_data *)v3->val.ptr,
@@ -309,7 +310,7 @@ void dilfi_send_done(dilprg *p)
             szonelog(p->frame->tmpl->zone,
                      "send_done: DIL '%s' attempted to send a non-existent command '%s'.",
                      p->frame->tmpl->prgname,
-                     (char *)v1->val.ptr);
+                     IF_STR((char *)v1->val.ptr));
         }
     }
     dilval::free(v1);
@@ -2522,80 +2523,7 @@ void dilfi_wit(dilprg *p)
 /* Act call */
 void dilfi_act(dilprg *p)
 {
-    /* Act call */
-
-    dilval *v6 = p->stack.pop();
-    dilval *v5 = p->stack.pop();
-    dilval *v4 = p->stack.pop();
-    dilval *v3 = p->stack.pop();
-    dilval *v2 = p->stack.pop();
-    dilval *v1 = p->stack.pop();
-
-    /* 6 arguments */
-
-    p->waitcmd--;
-
-    if (dil_type_check("act",
-                       p,
-                       6,
-                       v1,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_SP,
-                       v2,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT,
-                       v3,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v4,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v5,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v6,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT))
-    {
-        switch (v6->val.num)
-        {
-            case TO_CHAR:
-            case TO_ROOM:
-            case TO_ALL:
-            case TO_REST:
-                /* these require 1st argument */
-                if (v3->val.ptr)
-                {
-                    act((char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
-                }
-                break;
-
-            case TO_VICT:
-            case TO_NOTVICT:
-                if (v5->val.ptr)
-                {
-                    act((char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
-                }
-        }
-    }
-    dilval::free(v1);
-    dilval::free(v2);
-    dilval::free(v3);
-    dilval::free(v4);
-    dilval::free(v5);
-    dilval::free(v6);
+    dil_act(p, DilAct::send);
 }
 
 /* Goto new command */
