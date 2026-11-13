@@ -786,8 +786,9 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
             if (x->getFunctionPointer() && (unit_function_scan(x, sarg)) != SFR_SHARE)
             {
                 blocked = true;
+                return true;
             }
-            return blocked;
+            return false;
         };
         // The specials of what a character wears
         auto worn_specials = [&](unit_data *x) {
@@ -817,9 +818,9 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                 {
                     return eWalk::skip;
                 }
-                if (!x->isTransparent() && x->isChar() && worn_specials(x))
+                if (!x->isTransparent() && x->isChar()) // its worn things, not what it carries
                 {
-                    return eWalk::stop;
+                    return worn_specials(x) ? eWalk::stop : eWalk::skip;
                 }
                 return eWalk::on;
             }))
@@ -856,9 +857,9 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     {
                         return eWalk::skip;
                     }
-                    if (!x->isTransparent() && x->isChar() && worn_specials(x))
+                    if (!x->isTransparent() && x->isChar()) // its worn things, not what it carries
                     {
-                        return eWalk::stop;
+                        return worn_specials(x) ? eWalk::stop : eWalk::skip;
                     }
                     return eWalk::on;
                 });

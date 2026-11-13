@@ -13,7 +13,9 @@ enum class eWalk
 /// The units in room and, for each transparent unit there that isn't skip, the units inside it,
 /// in list order. visit(u, inside) is called for each: inside is the transparent unit u was found
 /// in, nullptr at the room's own level (where its answer decides whether to look inside u; inside
-/// a unit only stop counts). The next unit is taken before u is visited, so a visit may move u.
+/// a unit only stop counts). The next unit is taken before u is visited, so a visit may move u
+/// out of the room without losing the walk's place (the walk still looks inside u afterwards if
+/// it is transparent, as the command scan always did); moving the unit after it is not safe.
 /// Returns the unit the walk stopped at, or nullptr when it went through.
 template<typename VISIT>
 unit_data *walk_contents(const unit_data *room, const unit_data *skip, VISIT &&visit)

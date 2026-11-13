@@ -379,18 +379,18 @@ void dilfi_setpwd(dilprg *p)
 
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (dil_no_unit(p, v1, "set_password"))
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (setpassword).", p->frame->tmpl->prgname);
+            p->waitcmd = WAITCMD_QUIT;
+        }
+        else if (dil_no_unit(p, v1, "set_password"))
         {
             // nothing to do: it is in the zone log
         }
         else if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "Not a pc unit");
-        }
-        else if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
-        {
-            szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (setpassword).", p->frame->tmpl->prgname);
-            p->waitcmd = WAITCMD_QUIT;
         }
         else if (v1->val.ptr && v2->val.ptr)
         {

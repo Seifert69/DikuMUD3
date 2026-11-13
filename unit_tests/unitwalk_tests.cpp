@@ -1,6 +1,7 @@
 #include "FixtureBase.h"
 #include "handler.h"
 #include "unit_data.h"
+#include "unitfind.h"
 #include "unitwalk.h"
 
 #include <map>
@@ -146,6 +147,43 @@ BOOST_FIXTURE_TEST_CASE(a_visit_may_move_the_unit_it_is_at, WalkFixture)
         return eWalk::on;
     });
     BOOST_TEST(s == "ABTCO");
+}
+
+BOOST_FIXTURE_TEST_CASE(skip_in_the_room_around, WalkFixture)
+{
+    u["R"]->setUnitFlag(UNIT_FL_TRANS);
+    std::string s;
+    walk_surroundings(u["A"].get(), [&](unit_data *x, unit_data *inside, bool outer) {
+        s += inside ? "(" + name(x) + ")" : name(x);
+        return (outer && (x == u["U"].get())) ? eWalk::skip : eWalk::on;
+    });
+    BOOST_TEST(s == "ABT(C)ORE" "U"); // not inside U, which said skip
+}
+
+// scan4_unit, which DIL's foreach and the justice code use: the units around ch, not ch itself,
+// of the types asked for, in walk order
+BOOST_FIXTURE_TEST_CASE(scan4_unit_lists_the_surroundings, WalkFixture)
+{
+    auto listed = [&]() {
+        std::string s;
+        for (int i = 0; i < UVITOP; i++)
+        {
+            s += name(UVI(i));
+        }
+        return s;
+    };
+
+    scan4_unit(u["A"].get(), UNIT_ST_NPC | UNIT_ST_OBJ);
+    BOOST_TEST(listed() == "BTCO");
+    scan4_unit(u["A"].get(), UNIT_ST_NPC);
+    BOOST_TEST(listed() == "BC");
+
+    u["R"]->setUnitFlag(UNIT_FL_TRANS);
+    scan4_unit(u["A"].get(), UNIT_ST_NPC | UNIT_ST_OBJ);
+    BOOST_TEST(listed() == "BTCORE" "UF"); // the room around too, R itself listed, not inside it again
+
+    scan4_unit(u["C"].get(), UNIT_ST_NPC); // from inside the box T
+    BOOST_TEST(listed() == "AB");
 }
 
 BOOST_AUTO_TEST_SUITE_END()
