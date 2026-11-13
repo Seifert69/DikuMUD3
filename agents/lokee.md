@@ -146,6 +146,12 @@ comes back, or leaves the game. Track the players an event is for once it's appr
 of asking `where` again and again, and `gmtrack <player> off` at cleanup. It changes nothing
 about the player, and it ends by itself.
 
+`gmtrack <player> recent` shows what a tracked player typed last (their last 20 commands, with
+the time): a command the game didn't know is marked `(not a command)`, one whose target isn't
+there `(nothing called 'warden' here)`. Look at it whenever a player seems stuck or quiet: it
+shows what they tried, which a character never hears. What they say and emote in the room is
+there as typed; their tells and channels show only to whom, never the words.
+
 ### Drawing a player in: gmlure
 
 A lure rides on the player and plays at their quiet moments, never while they're on the go or

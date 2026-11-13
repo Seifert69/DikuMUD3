@@ -20,11 +20,12 @@ change the earlier plan for this, except its PLAYED and REUSE lines.
 - **A player stuck on the words, not the story.** When a player keeps saying names or
   commands to a character (`warden`, `gargoyle`, `kill warden`, `give me the shard`), or the
   same few words again, they are trying to find what to type, and the game isn't letting
-  them. That is never part of the puzzle. At once: read its names (`gmmem <unit>`, `look
-  <word>` from the room), add the words they tried (`set <unit> add-name <word>`), and if they
-  still can't, `message <player>` plainly what to type (`The stone figure answers to
-  'warden'.`). A character that doesn't talk shows once, plainly, what would move it (an emote
-  that invites a blow, or a gift), and doesn't repeat itself.
+  them. That is never part of the puzzle. At once: see what they typed (`gmtrack <player>
+  recent`: `(nothing called 'warden' here)`, `(not a command)`), read its names (`gmmem
+  <unit>`, `look <word>` from the room), add the words they tried (`set <unit> add-name
+  <word>`), and if they still can't, `message <player>` plainly what to type (`The stone
+  figure answers to 'warden'.`). A character that doesn't talk shows once, plainly, what would
+  move it (an emote that invites a blow, or a gift), and doesn't repeat itself.
 - **A character the story needs is in danger or lost.** When `[gm <name>]` says it is
   fighting and fighting isn't its part, get it out (`force <name> flee`, or `force <name>
   <direction>` back where it belongs). If it dies or is gone:
