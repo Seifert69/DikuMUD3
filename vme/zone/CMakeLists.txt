@@ -24,6 +24,27 @@ foreach (VME_SRC_ZONE ${VME_ZONES})
     set(CLEAN_FILES ${CLEAN_FILES} "${SHORT}.dh;${SHORT}.err;${SHORT}.dot;")
 endforeach (VME_SRC_ZONE)
 
+# The example zones of the .claude/skills must keep compiling, warnings included. vmc writes
+# .err next to the source, so it compiles a copy in the build tree, and -s writes no .data.
+file(GLOB SKILL_ZONES "${CMAKE_SOURCE_DIR}/.claude/skills/*/example.zon")
+foreach (SKILL_ZONE ${SKILL_ZONES})
+    get_filename_component(SKILL_DIR "${SKILL_ZONE}" DIRECTORY)
+    get_filename_component(SKILL "${SKILL_DIR}" NAME)
+    set(SKILL_OUT "${CMAKE_CURRENT_BINARY_DIR}/skill_examples/${SKILL}")
+    file(MAKE_DIRECTORY ${SKILL_OUT})
+
+    add_custom_command(
+            OUTPUT ${SKILL_OUT}/example.ok
+            COMMAND ${CMAKE_COMMAND} -E copy ${SKILL_ZONE} ${SKILL_OUT}/example.zon
+            COMMAND vmc -q -s -l -d ${CMAKE_SOURCE_DIR}/vme/etc/ -I${CMAKE_SOURCE_DIR}/vme/include/ example.zon
+            COMMAND ${CMAKE_COMMAND} -E touch ${SKILL_OUT}/example.ok
+            WORKING_DIRECTORY ${SKILL_OUT}
+            DEPENDS ${SKILL_ZONE} ${HEADER_DEPS} vmc
+            VERBATIM
+    )
+    set(OUTPUT_FILES ${OUTPUT_FILES} ${SKILL_OUT}/example.ok)
+endforeach (SKILL_ZONE)
+
 add_custom_target(zone_files ALL DEPENDS ${CMAKE_SOURCE_DIR}/vme/bin/vmc ${OUTPUT_FILES})
 
 set_target_properties(zone_files

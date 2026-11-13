@@ -1,19 +1,26 @@
 #include <macros.h>
 
+// Quest names in macros, so the quest helpers, the gate and any check use the same text.
+// The quest helpers mark a quest "<name> Ongoing", then "<name> Complete", in pc.quests.
+#define QUEST_LAMP          "Steward's Lamp"
+#define QUEST_LAMP_COMPLETE "Steward's Lamp Complete"
+
 %zone example
 title "Example Keep@Mainland"
 lifespan 20
 reset RESET_ANYHOW
 creators {"papi"}
-notes "A small example: two rooms with a locked door, a key, a guard and his gear."
+notes "A small example of the zone format: a hall, a storeroom and a locked vault, a
+steward with a quest, a guard, and their gear. DIL of a zone's own: the dil skill's
+example.zon."
 
 %rooms
 
 hall
 title "The Great Hall"
 names {"great hall", "hall"}
-descr "A long hall with a stone floor. A heavy oak door leads north, and the
-town lies to the east."
+descr "A long hall with a stone floor. A heavy oak door leads north, a
+storeroom lies to the west, and the town lies to the east."
 movement SECT_INSIDE
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 ALWAYS_LIGHT
@@ -22,7 +29,17 @@ extra {"floor", "stone floor"}
 north to vault open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
    key vault_key keyword {"oak door", "door"}
    descr "A heavy oak door blocks the way north.";
+west to storeroom;
 east to temple@udgaard;
+end
+
+storeroom
+title "A Storeroom"
+descr "Shelves of old crates and sacks line the walls."
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+east to hall;
 end
 
 vault
@@ -57,6 +74,12 @@ cost 2 SILVER_PIECE, 4 COPPER_PIECE
 rent 10 IRON_PIECE
 extra {}
 "A plain but well balanced iron blade."
+// Extras whose name starts with $ aren't shown by look; this one is what identify shows.
+extra {"$identify"}
+"The keep's smith made this blade for its guards."
+// From another zone, with a string list built from macros (values.h): only members of
+// these guilds can use it; 0 damage, 25% chance, default message.
+dilcopy guild_restrict@function({GUILD_UDG_FIGHTER, GUILD_PALADIN}, 0, 25, "");
 end
 
 leather_cap
@@ -80,6 +103,26 @@ weight 1
 cost 3 COPPER_PIECE
 end
 
+oil_lamp
+names {"oil lamp", "lamp"}
+title "an oil lamp"
+descr "An oil lamp stands here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(24, 1)
+weight 2
+cost 5 COPPER_PIECE
+end
+
+// The quest's reward. NOSAVE: it's gone when the player quits.
+keep_badge
+names {"steward's badge", "badge"}
+title "a steward's badge"
+descr "A small copper badge lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+flags {UNIT_FL_NOSAVE}
+weight 1
+end
+
 %mobiles
 
 guard
@@ -91,6 +134,31 @@ extra {}
 M_HUMAN_WARRIOR_SWORD(5, SEX_MALE)
 alignment 200
 money 3 COPPER_PIECE
+// Another zone's template, with a string list and null (an empty list): he blocks the
+// way north for every player but Papi, and for no NPC.
+dilcopy guard_dir@function("north", {"papi"}, null, "");
+end
+
+steward
+names {"steward"}
+title "the steward"
+descr "The steward of the keep stands here, counting crates."
+M_AVG_HUMAN(4, SEX_FEMALE)
+alignment 300
+// A whole quest from quests.zon. In these string lists $1n is the player, $3n the steward.
+// The quest is offered when a player does something in the room; nod or say yes accepts.
+dilcopy qstSimpleQuest@quests(QUEST_LAMP,
+         {"say Oh, it's so dark in here.",
+          "say Would you fetch me the oil lamp from the storeroom?"},
+         {"say Thank you, $1n."},
+         "The steward of the Example Keep wants the oil lamp from the storeroom.",
+         {"say Now I can see my crates. Take this badge."},
+         100, 2 * COPPER_MULT, {"keep_badge@example"}, "");
+// Takes the lamp when it's given. Anything else is given back: with the last line while the
+// player is on the quest, otherwise with "won't accept your item".
+dilcopy qstItemsWanted@quests(QUEST_LAMP, {"lamp"}, {""},
+         {"say Ah, the lamp. Thank you, $1n."},
+         "say That's kind, $1n, but it's the oil lamp I need.");
 end
 
 %reset
@@ -102,9 +170,12 @@ load guard into hall local 1
 {
    equip short_sword position WEAR_WIELD
    equip leather_cap position WEAR_HEAD
-   load vault_key
+   load vault_key                   // into the guard's inventory
+   load rnd0_avg@randomt local 1    // random treasure of the lowest grade (randomt.zon)
 }
 
+load steward into hall local 1
+load oil_lamp into storeroom local 1
 load sack into vault local 1
 
 %end
