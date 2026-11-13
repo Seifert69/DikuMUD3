@@ -61,6 +61,13 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   every comma: no lists, and no commas inside a string. A template with list arguments can
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
   `{}` fits either kind of list.
+- **`x := {};` in code doesn't compile** (`Assigning incompatible types (C)`): an empty `{}`
+  only works as a zone-file argument. To start a list over, build a fresh one with
+  `addstring`, or keep a plain string and `split` it.
+- **Unit and extra variables are cleared at every activation**: after each `pause` or `wait`,
+  every `unitptr` and `extraptr` variable that isn't `secure`d is null (`dil_clear_non_secured`
+  in dilrun.cpp), wherever the unit is. Find the unit again after the pause
+  (`findroom`, `findsymbolic`), or `secure` it.
 - **`and` / `or` evaluate both sides.** No short-circuit: `(u != null) and (u.level > 5)`
   still reads `u.level`.
 - **A field of null fails, and a failed value is false in every comparison**: `u.level > 5`
