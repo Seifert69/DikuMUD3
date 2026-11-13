@@ -1,0 +1,218 @@
+#include <macros.h>
+
+// The zone skill's example.zon shows the zone format; this one shows DIL. A gatekeeper lets
+// players north once they give him the toll token, and tells the herald, who announces it.
+
+#define TOLL_PAID "$dilex toll paid"   // a hidden quest flag ($: `quests` doesn't list it)
+
+%zone dilex
+title "DIL Example@Mainland"
+lifespan 20
+reset RESET_ANYHOW
+creators {"papi"}
+notes "Example DIL: events, secure, block, priority, interrupt and messages."
+
+%dil
+
+// Answers players who say one of the words, by name.
+dilbegin answer(words : stringlist, reply : string);
+var
+   pc : unitptr;
+   said : string;
+   i : integer;
+code
+{
+   // Asleep or fighting: ignore it. With skip, those events are lost, not queued.
+   on_activation((self.position <= POSITION_SLEEPING) or
+                 (self.position == POSITION_FIGHTING), skip);
+
+:start:
+   wait(SFB_CMD, command("say") and (activator.type == UNIT_ST_PC));
+
+   // activator and argument describe this event only, and an unsecured unitptr is null
+   // after the next wake. Keep what's needed before waiting again.
+   pc := activator;
+   said := argument;
+   secure(pc, start);   // if pc leaves before the answer, go back to waiting
+   pause;               // let the player's words appear first
+
+   i := 0;
+   while (i < length(words))
+   {
+      if (words.[i] in said)
+      {
+         exec("say " + pc.name + ", " + reply, self);
+         break;
+      }
+      i := i + 1;
+   }
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+// Blocks a way for players without the flag. fnpri(FN_PRI_BLOCK) runs it before the unit's
+// other programs; block stops the command, so the player doesn't move.
+dilbegin fnpri(FN_PRI_BLOCK) gate(dir : string, flag : string, refusal : string);
+code
+{
+:start:
+   wait(SFB_CMD, command(dir) and (activator.type == UNIT_ST_PC));
+
+   if (not (flag in activator.quests))
+   {
+      exec(refusal, self);
+      block;
+   }
+   goto start;
+}
+dilend
+
+// Takes the toll: the right token sets the player's flag and tells the herald; anything
+// else goes back to the giver.
+dilbegin toll(token : string, flag : string, herald : string);
+var
+   pc : unitptr;
+   item : unitptr;
+   flagsl : stringlist;
+code
+{
+   addstring(flagsl, flag);   // {...} takes only constants, not a variable like flag
+
+:start:
+   // SFB_DONE: after the give worked, so the item is already ours. (SFB_CMD would wake
+   // before it, with only the typed words in argument.)
+   wait(SFB_DONE, command("give") and (target == self) and
+                  (activator.type == UNIT_ST_PC));
+   pc := activator;
+   item := medium;
+   secure(pc, start);     // both would be null after the pause without secure
+   secure(item, start);
+   pause;
+
+   if (item.symname != token)
+   {
+      link(item, pc);
+      act("$3n hands $2n back to you.", A_SOMEONE, pc, item, self, TO_CHAR);
+      exec("say That's not the toll, " + pc.name + ".", self);
+   }
+   else if (flag in pc.quests)
+   {
+      link(item, pc);
+      exec("say You've paid already, " + pc.name + ". Keep it.", self);
+   }
+   else
+   {
+      // Destroying a secured unit fires its secure: the program would jump to start and
+      // skip the rest. Unsecure it first.
+      unsecure(item);
+      destroy(item);
+      addextra(pc.quests, flagsl, "");
+      exec("say The toll is paid. Go north, " + pc.name + ".", self);
+      sendto("paid " + pc.name, findsymbolic(herald));   // to every program on the herald
+   }
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+// Cries now and then; when a message "paid <name>" arrives, announces it.
+dilbegin herald_cry(cry : string);
+var
+   said : string;
+   w : string;
+code
+{
+   heartbeat := PULSE_SEC * 90;   // SFB_TICK every 90 seconds
+
+   // Catches the message whatever the program is waiting for at the time.
+   interrupt(SFB_MSG, "paid " in argument, paid);
+
+:start:
+   wait(SFB_TICK, TRUE);
+   exec("say " + cry, self);
+   goto start;
+
+:paid:
+   said := argument;
+   w := getword(said);           // takes "paid" off; said is now the name
+   priority;                     // the herald's other programs (answer) wait meanwhile
+   heartbeat := PULSE_SEC * 3;   // a pause lasts one heartbeat: 90 seconds otherwise
+   exec("say Hear ye! " + said + " has paid the toll!", self);
+   pause;
+   exec("emote blows a small horn.", self);
+   heartbeat := PULSE_SEC * 90;
+   nopriority;                   // without it, answer would never run again
+   goto start;
+}
+dilend
+
+%rooms
+
+courtyard
+title "A Courtyard"
+descr "A small cobbled courtyard. A gate leads north, and the town lies to
+the south."
+movement SECT_CITY
+ALWAYS_LIGHT
+north to gatehouse;
+south to temple@udgaard;
+end
+
+gatehouse
+title "The Gatehouse"
+descr "A cold stone gatehouse."
+movement SECT_INSIDE
+flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
+ALWAYS_LIGHT
+south to courtyard;
+end
+
+%objects
+
+toll_token
+names {"brass token", "token"}
+title "a brass token"
+descr "A brass token lies here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+flags {UNIT_FL_NOSAVE}
+weight 1
+end
+
+pebble
+names {"pebble"}
+title "a pebble"
+descr "A pebble lies here."
+manipulate {MANIPULATE_TAKE}
+weight 1
+end
+
+%mobiles
+
+gatekeeper
+names {"gatekeeper"}
+title "the gatekeeper"
+descr "The gatekeeper stands by the gate, holding out his hand."
+M_AVG_HUMAN(10, SEX_MALE)
+dilcopy gate("north", TOLL_PAID, "say No one goes north before the toll is paid.");
+dilcopy toll("toll_token@dilex", TOLL_PAID, "herald@dilex");
+dilcopy answer({"toll", "gate"}, "the toll is a brass token. Give it to me.");
+end
+
+herald
+names {"herald"}
+title "the herald"
+descr "The herald stands here with a small horn."
+M_AVG_HUMAN(5, SEX_FEMALE)
+dilcopy herald_cry("The toll for the gate is one brass token!");
+dilcopy answer({"horn"}, "I blow it for everyone who pays the toll.");
+end
+
+%reset
+
+load gatekeeper into courtyard local 1
+load herald into courtyard local 1
+load toll_token into courtyard local 1
+load pebble into courtyard local 1
+
+%end
