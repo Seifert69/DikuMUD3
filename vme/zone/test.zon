@@ -2187,7 +2187,7 @@ code
    logtest(0, LOGT_INFO, "Lab director launching test " + s);
    dilcopy(s, self.outside);
    i := 0;
-   while (i < 4)
+   while (i < 6) // 2.5 to 3 minutes: a ship test may wait out a whole voyage
    {
       pause;
       i := i + 1;
