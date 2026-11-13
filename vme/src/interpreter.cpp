@@ -685,9 +685,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
 int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_target, const char *to)
 {
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
     unit_data *next = nullptr;
-    unit_data *nextt = nullptr;
     unit_data *tou = nullptr;
     file_index_type *fi = nullptr;
 
@@ -792,8 +790,9 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
             return blocked;
         };
         // The specials of what a character wears
-        auto equipment = [&](unit_data *x) {
-            for (uu = x->getUnitContains(); uu; uu = nextt)
+        auto worn_specials = [&](unit_data *x) {
+            unit_data *nextt = nullptr;
+            for (unit_data *uu = x->getUnitContains(); uu; uu = nextt)
             {
                 nextt = uu->getNext(); /* Next dude trick */
                 if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && special(uu))
@@ -805,22 +804,25 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
         };
 
         /* special in room present? Inside its transparent units, and in its characters' equipment */
-        walk_contents(ch->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
-            if (special(x))
-            {
-                return eWalk::stop;
-            }
-            if (inside || (x != ch))
-            {
-                if (!inside && !x->isTransparent() && x->isChar() && equipment(x))
+        if (walk_contents(ch->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
+                if (special(x))
+                {
+                    return eWalk::stop;
+                }
+                if (inside)
+                {
+                    return eWalk::on;
+                }
+                if (x == ch)
+                {
+                    return eWalk::skip;
+                }
+                if (!x->isTransparent() && x->isChar() && worn_specials(x))
                 {
                     return eWalk::stop;
                 }
                 return eWalk::on;
-            }
-            return eWalk::skip;
-        });
-        if (blocked)
+            }))
         {
             return SFR_BLOCK;
         }
@@ -854,7 +856,7 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
                     {
                         return eWalk::skip;
                     }
-                    if (!x->isTransparent() && x->isChar() && equipment(x))
+                    if (!x->isTransparent() && x->isChar() && worn_specials(x))
                     {
                         return eWalk::stop;
                     }

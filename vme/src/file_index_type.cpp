@@ -57,16 +57,13 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         }
 
         /* Run through units in local environment, and if upwards transparent the one around */
-        u = walk_surroundings(ref, [&](unit_data *x, unit_data *inside, bool outer) {
-            if (outer && !inside && (x == ref->getUnitIn()))
-            {
-                return eWalk::skip;
-            }
+        // (ref's room itself was checked above)
+        u = walk_surroundings(ref, [&](unit_data *x, unit_data *inside, bool) {
             if (x->getFileIndex() == this)
             {
                 return eWalk::stop;
             }
-            return x->getNumberOfCharactersInsideUnit() ? eWalk::on : eWalk::skip; /* check tranparancy */
+            return (inside || !x->getNumberOfCharactersInsideUnit()) ? eWalk::skip : eWalk::on; // look inside only where someone is
         });
         if (u)
         {

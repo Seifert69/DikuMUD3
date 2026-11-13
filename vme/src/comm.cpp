@@ -686,12 +686,12 @@ static void act_walk(cActParameter arg1, cActParameter arg3, actType_e type, SEN
         return;
     }
 
-    walk_surroundings(arg1.m_u, [&](unit_data *u, unit_data *, bool) {
+    walk_surroundings(arg1.m_u, [&](unit_data *u, unit_data *inside, bool) {
         if (u->isChar())
         {
             send(u);
         }
-        return u->getNumberOfCharactersInsideUnit() ? eWalk::on : eWalk::skip; // no one inside to tell
+        return (inside || !u->getNumberOfCharactersInsideUnit()) ? eWalk::skip : eWalk::on; // no one inside to tell
     });
 }
 
