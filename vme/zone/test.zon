@@ -118,6 +118,7 @@ var
    portok : integer; // the exit worked in port
    arrived : integer; // it reached a port after the sea
    last  : string;   // the port the ship lay at before the sea
+   back  : integer;  // the captain came back to the ship's dock
 code
 {
    heartbeat := PULSE_SEC * 1;
@@ -146,7 +147,7 @@ code
       link(c, ship.outside);
 
    i := 0;
-   while ((i < 100) and ((seaok == 0) or (portok == 0) or (arrived == 0)))
+   while ((i < 100) and ((seaok == 0) or (portok == 0) or (arrived == 0) or (back == 0)))
    {
       pause;
       i := i + 1;
@@ -240,6 +241,33 @@ code
                goto terminate;
             }
             arrived := 1;
+
+            // Carried off elsewhere in the zone, he hurries back to the dock when he hears his
+            // ship come in: its arrival again, sent to every captain as ship_signal sends it
+            link(c, findroom("labcontrol@test"));
+            sendtoalldil(ship.extra.["$ship_last"].descr, "ship_captain@function");
+            k := 0;
+            c := findsymbolic("captain@test");
+            while ((k < 5) and (c != null) and (c.outside != ship.outside))
+            {
+               pause;
+               k := k + 1;
+               c := findsymbolic("captain@test");
+               ship := findroom("shipdeck@test");
+            }
+            ship := findroom("shipdeck@test");
+            u := findsymbolic("passenger@test");
+            if (c == null)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain was lost");
+               goto terminate;
+            }
+            if (c.outside != ship.outside)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain didn't come back to the ship's dock");
+               goto terminate;
+            }
+            back := 1;
          }
          if (seaok == 0)
             last := ship.outside.symname;
@@ -267,7 +295,7 @@ code
       }
    }
 
-   if ((seaok == 0) or (portok == 0) or (arrived == 0))
+   if ((seaok == 0) or (portok == 0) or (arrived == 0) or (back == 0))
    {
       logtest(tstno, LOGT_ERROR, "T022 the ship didn't sail in 100 seconds");
       goto terminate;

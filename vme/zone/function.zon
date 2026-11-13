@@ -2567,7 +2567,8 @@ code
    while (u)
    {
       n := u.next; // the NPC may move on the message
-      if (u.type == UNIT_ST_NPC)
+      // A captain hears his ship wherever he is, from ship_signal
+      if ((u.type == UNIT_ST_NPC) and (not dilfind("ship_captain@function", u)))
          sendto(ev, u);
       u := n;
    }
@@ -2594,6 +2595,7 @@ code
       k := k + 1;
    }
    ship_sigroom@function(self.outside, ev);
+   sendtoalldil(ev, "ship_captain@function"); // every captain, wherever: each knows his ship
    return;
 }
 dilend
@@ -2852,7 +2854,10 @@ dilend
  * sailing once a minute; when the ship is about to leave, calls all aboard and boards; at sea
  * says where the ship is bound. The ship sails without a captain who misses it (asleep,
  * fighting, dead, away); the captain takes up the calls again when the ship next docks where
- * they are. A captain loaded later (a zone reset) picks up from the ship's last message.
+ * they are, or anywhere in the zone they are in: a captain who fled a fight into the next
+ * room, or was carried off, hurries back to the ship's dock when it comes in (from another
+ * continent he waits for his ship to come near). A captain loaded later (a zone reset) picks
+ * up from the ship's last message.
  *
  *    says   what the captain says, "<option> <text>" entries, one per option, replacing the
  *           defaults; an option with no text says nothing. In every text $2t is the port the
@@ -2917,6 +2922,14 @@ code
       wait(SFB_MSG, FALSE); // nothing to say until the ship's next message
    pause;
    r := findroom(ship);
+   // The ship came in while he was elsewhere in the zone: back to its dock
+   if ((todo == 1) and (self.outside != r) and (self.outside != r.outside) and
+       (self.position == POSITION_STANDING) and (self.outside.zoneidx == r.outside.zoneidx))
+   {
+      act("$1n hurries off toward the harbour.", A_HIDEINV, self, null, null, TO_ROOM);
+      link(self, r.outside);
+      act("$1n comes running down the pier.", A_HIDEINV, self, null, null, TO_ROOM);
+   }
    k := -1; // the line and what goes with it: 0 calls, 1 aboard (and board), 2 sea,
             // 3 ashore (and step ashore)
    if ((todo == 1) and (self.outside == r))
