@@ -3109,6 +3109,10 @@ code
    {
       horse := item;
       item := item.outside;
+
+      // Leaving would take the boat (or mount) along: its own $no_exit too
+      if (no_exit@basemove(self, horse))
+         return;
    }
 
    if (item.outside == null)
