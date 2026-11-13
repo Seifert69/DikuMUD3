@@ -3163,6 +3163,13 @@ minlevel = 230
 loglevel = 230
 type     = 0
 
+command  = gmzap
+func     = gmzap@commands
+minpos   = POSITION_DEAD
+minlevel = 230
+loglevel = 230
+type     = 0
+
 command  = gmlure
 func     = gmlure@commands
 minpos   = POSITION_DEAD

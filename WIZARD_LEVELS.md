@@ -12,7 +12,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **200** `IMMORTAL_LEVEL` | **Watch**: see the game, change nothing | `where`, `users`, `wstat`, `jstat`, `cstat`, `corpses`, `wedit` (view a unit in the web client), `wiz` (the immortals' channel), `wizhelp`, `wizsocials`, `flick`, `mash`, `rock`, `noshout` (so any immortal can stop a new player spamming shout) |
 | **210** | **Cosmetics** | `title` (another player's title) |
 | **220** `GOD_LEVEL` | **Sport and competition** | `competition` |
-| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmtreasure` (a random magic item made to order), `gmquest` (an event made a quest, with experience), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
+| **230** `CREATOR_LEVEL` | **Game master**: stage the world, look after players' health | `wizinv`, `goto`, `at`, `echo`, `message`, `restore`, `makemoney`, `load` (NPCs and objects), `purge` (NPCs and objects), `eat` (any NPC or object), `set` on the world (NPCs, objects, rooms; `set room dir-to <direction> <room@zone>` makes an exit, `none` removes it), `force` (an NPC), `switch` (into an NPC; `switch` alone returns), `gmmem` (the game master's memory of an NPC, object or room), `gmzap` (a DIL off an event's NPC or object), `gmtrack` (follow a player), `gmlure` (draw a player to a room), `gmtreasure` (a random magic item made to order), `gmquest` (an event made a quest, with experience), `gmroom` (rooms made while the game runs), `reset`, `wpath`, `boards` |
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `seize` (takes an item from a player or NPC), `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
@@ -76,6 +76,13 @@ objects and rooms of its events, in extras on the unit:
 them (`clear` alone, all of them; clearing `greet` also stops the tripwire). A unit is an NPC or
 object by name, `room` for the room you're in, or `sym@zone`. Players are never a game master's
 to remember.
+
+`gmzap <npc, object or sym@zone> <dil@zone>` removes a DIL from an NPC or object tagged with
+`gmmem … event`: the wandering DIL of a character that must stay put, say. `wstat <unit>
+functions` lists a unit's DILs by name. It never touches rooms, treasure, players or what is theirs
+(what they carry, their pets and followers). The tag marks the units of events but doesn't
+prove who loaded them, so it rests on the game master tagging only its own; `zap`, for any unit
+and with no tag, stays at 245.
 
 ## Following a player
 
