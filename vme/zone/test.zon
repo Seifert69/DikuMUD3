@@ -2132,7 +2132,7 @@ code
    heartbeat := PULSE_SEC*60*5; // After 5 minutes, abort
    wait(SFB_TICK, TRUE);
    log("Test/T000//ERROR Fail safe triggered");
-   rebooting@commands("0");
+   reboot(99); // a failed run: exit code 0 would pass in CI
    quit;
 }
 dilend
