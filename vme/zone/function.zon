@@ -3053,6 +3053,8 @@ dilend
  *                "dock <text>"      as the ship docks   ("The ship glides in and docks at $2t.")
  *                "sea <text>"       something that happens at sea; each "sea" adds one, and
  *                                   they replace the default four
+ *                "pass <quest>"     not a text: whoever of the party has done that quest
+ *                                   (pc.quests) sails free, a ticket for life
  *
  *    dilcopy hire_ship@function("harbour@port", {"Farport", "1000", "2", "pier@farport"},
  *       "ship@port", "captain@port", "sea@port", {"busy The ships are all at sea.", "land"});
@@ -3061,6 +3063,7 @@ dilbegin hire_ship(room : string, ports : stringlist, shipsym : string, captsym 
                    sea : string, says : stringlist);
 var
    pnames : stringlist;
+   pass   : string; // the quest that is a free pass, or ""
    keys   : stringlist;
    texts  : stringlist;
    seas   : stringlist; // the extra's names: "$hire_sea", then the things at sea
@@ -3071,6 +3074,7 @@ var
    capt   : unitptr;
    i      : integer;
    n      : integer;
+   npay   : integer;
    ownsea : integer;
    gcost  : integer;
    s      : string;
@@ -3130,6 +3134,8 @@ code
          if (s != "")
             addstring(seas, s);
       }
+      else if (w == "pass")
+         pass := s;
       else if ((w == "noexit") and (s == ""))
          log("hire_ship on " + self.symname + ": the noexit text can't be silenced.");
       else if ((w in keys) > 0)
@@ -3178,13 +3184,25 @@ code
    }
 
    n := 0;
+   npay := 0;
    foreach (UNIT_ST_PC | UNIT_ST_NPC, fol)
       if ((fol == buyer) or (fol.master == buyer))
+      {
          n := n + 1;
-   gcost := n * atoi(ports.[4 * i + 1]);
+         if ((pass == "") or (not (pass in fol.quests)))
+            npay := npay + 1;
+      }
+   gcost := npay * atoi(ports.[4 * i + 1]);
    scost := moneystring(gcost, FALSE);
-   act("Passage to $3t for " + itoa(n) + " comes to $2t. Nod to pay, or shake your head.", A_SOMEONE, buyer,
-       scost, pnames.[i], TO_CHAR);
+   if (gcost == 0)
+      act("Your pass takes " + itoa(n) + " to $3t. Nod to sail, or shake your head.", A_SOMEONE, buyer,
+          null, pnames.[i], TO_CHAR);
+   else if (npay < n)
+      act("Passage to $3t for " + itoa(npay) + " (" + itoa(n - npay) + " on a pass) comes to $2t. Nod to pay, or shake your head.",
+          A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
+   else
+      act("Passage to $3t for " + itoa(n) + " comes to $2t. Nod to pay, or shake your head.", A_SOMEONE, buyer,
+          scost, pnames.[i], TO_CHAR);
    secure(buyer, begin);
    heartbeat := PULSE_SEC * 60;
    wait(SFB_CMD | SFB_TICK, ((activator == buyer) and (command("nod") or command("shake"))) or
@@ -3212,14 +3230,22 @@ code
       act("Your party has changed since $2n named the price; hire again.", A_SOMEONE, buyer, self, null, TO_CHAR);
       goto begin;
    }
-   if (not transfermoney(buyer, null, gcost))
+   if (gcost == 0)
+   {
+      act("You show your pass for passage to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_CHAR);
+      act("$1n shows a pass for passage to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_REST);
+   }
+   else if (not transfermoney(buyer, null, gcost))
    {
       if (texts.[3] != "")
          act(texts.[3], A_SOMEONE, buyer, null, null, TO_CHAR);
       goto begin;
    }
-   act("You pay $2t for passage to $3t.", A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
-   act("$1n pays for passage to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_REST);
+   else
+   {
+      act("You pay $2t for passage to $3t.", A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
+      act("$1n pays for passage to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_REST);
+   }
 
    ship := load(shipsym);
    capt := load(captsym);
