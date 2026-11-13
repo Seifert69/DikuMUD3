@@ -11505,8 +11505,134 @@ code
 }
 dilend
 
-// gmtrack [<player> <zone ...|any> [hours]] [<player> off]: tells the game masters where a
-// player goes (gm_track), for up to 6 hours (2 by default); alone, lists who is tracked
+// Copied onto a player with gm_track (gmtrack): remembers the last GM_RECENT commands they
+// typed, for gmtrack <player> recent, which sends "gm_recent <god>" and gets them told. A
+// command the game doesn't know is marked "(not a command)", and one whose target isn't here
+// "(nothing called 'x' here)": a player who can't find the word to type. What they say and
+// emote in the room is kept as typed; private talk, shouts and channels only as to whom or on
+// which channel, the words hidden. The channel DIL blocks the commands it handles before this
+// sees them, so it tells this one which channel ("gm_recent channel <name>"). A command
+// blocked before it reaches the player (by the room, or someone there) isn't seen. It ends
+// with gm_track.
+#define GM_RECENT 20
+
+dilbegin aware fnpri(FN_PRI_SYS) gm_recent(until : integer);
+var
+   hist    : stringlist;
+   hidden  : stringlist;
+   targets : stringlist;
+   dirs    : stringlist;
+   chans   : extraptr;
+   u       : unitptr;
+   s       : string;
+   a       : string;
+   w       : string;
+   t       : string;
+   x       : string;
+   i       : integer;
+code
+{
+   if (realtime >= until)
+      quit;
+   hidden := {"tell", "whisper", "respond", "shout", "pray"};
+   targets := {"kill", "hit", "attack", "kick", "bash", "look", "examine", "read", "get", "take",
+               "give", "put", "drop", "consider", "poke", "enter", "open", "close", "unlock",
+               "wield", "wear", "hold", "eat", "drink", "buy", "sell"};
+   dirs := {"north", "south", "east", "west", "up", "down", "northeast", "northwest",
+            "southeast", "southwest", "n", "s", "e", "w", "u", "d", "ne", "nw", "se", "sw"};
+
+   :start:
+   wait(SFB_CMD | SFB_MSG, (activator == self) or
+                           (command(CMD_AUTO_MSG) and ("gm_recent " in argument)));
+   if (realtime >= until)
+      quit;
+
+   if (command(CMD_AUTO_MSG) and ("gm_recent channel " in argument))
+   {
+      a := argument;
+      w := getword(a); // "gm_recent"
+      w := getword(a); // "channel"
+      s := mid(asctime(realtime), 12, 16) + " " + a + " (on the channel, words hidden)";
+      goto keep;
+   }
+   if (command(CMD_AUTO_MSG))
+   {
+      a := argument;
+      w := getword(a); // "gm_recent"
+      u := ghead();
+      while ((u.type == UNIT_ST_PC) and (u.name != a))
+         u := u.gnext;
+      if (u.type != UNIT_ST_PC)
+         goto start;
+      if (length(hist) == 0)
+         sendtext(self.name + " hasn't typed anything since being tracked.<br/>", u);
+      else
+         sendtext("What " + self.name + " typed last, oldest first:<br/>", u);
+      i := 0;
+      while (i < length(hist))
+      {
+         sendtext("   " + hist.[i] + "<br/>", u);
+         i := i + 1;
+      }
+      goto start;
+   }
+
+   s := mid(asctime(realtime), 12, 16) + " " + excmdstr;
+   a := argument;
+   chans := "$channels" in self.info;
+   if (command(CMD_AUTO_UNKNOWN))
+   {
+      if ((chans != null) and (excmdstr in chans.names))
+         goto start; // a channel: its DIL tells us ("gm_recent channel")
+      s := s + " " + a + " (not a command)";
+   }
+   else if ((excmdstr in hidden) or command("tell") or command("whisper") or command("shout"))
+   {
+      w := getword(a);
+      if (command("tell") or command("whisper"))
+         s := s + " " + w;
+      s := s + " (words hidden)";
+   }
+   else
+   {
+      s := s + " " + a;
+      w := a;
+      if (command("look"))
+      {
+         t := w;
+         x := getword(t);
+         if ((x == "at") or (x == "in"))
+            w := t; // look at <thing>: the thing
+      }
+      if ((a != "") and (not (a in dirs)) and (a != "all") and (w != ""))
+      {
+         i := 0;
+         while (i < length(targets))
+         {
+            if (command(targets.[i]))
+               break;
+            i := i + 1;
+         }
+         if (i < length(targets))
+         {
+            u := findunit(self, w, FIND_UNIT_HERE, null);
+            if ((u == null) and (not (w in self.outside.extra)))
+               s := s + " (nothing called '" + w + "' here)";
+         }
+      }
+   }
+
+   :keep:
+   if (length(hist) >= GM_RECENT)
+      remove(hist, 0);
+   addstring(hist, s);
+   goto start;
+}
+dilend
+
+// gmtrack [<player> <zone ...|any> [hours]] [<player> off] [<player> recent]: tells the game
+// masters where a player goes (gm_track), for up to 6 hours (2 by default); recent: what the
+// player typed last (gm_recent); alone, lists who is tracked
 dilbegin gmtrack(arg : string);
 var
    pc : unitptr;
@@ -11551,10 +11677,20 @@ code
       if (dilfind("gm_track@commands", pc))
       {
          i := dildestroy("gm_track@commands", pc);
+         i := dildestroy("gm_recent@commands", pc);
          sendtext("No longer tracking " + pc.name + ".<br/>", self);
       }
       else
          sendtext(pc.name + " isn't tracked.<br/>", self);
+      quit;
+   }
+
+   if (arg == "recent")
+   {
+      if (dilfind("gm_recent@commands", pc))
+         sendto("gm_recent " + self.name, pc);
+      else
+         sendtext(pc.name + " isn't tracked: gmtrack " + pc.name + " &lt;zone ...|any&gt; first.<br/>", self);
       quit;
    }
 
@@ -11574,7 +11710,7 @@ code
    if (zones == "")
    {
       sendtext("Usage: gmtrack &lt;player&gt; &lt;zone ...|any&gt; [hours], " +
-               "gmtrack &lt;player&gt; off, or gmtrack alone to list.<br/>", self);
+               "gmtrack &lt;player&gt; recent, gmtrack &lt;player&gt; off, or gmtrack alone to list.<br/>", self);
       quit;
    }
    if (hours < 1)
@@ -11584,7 +11720,10 @@ code
 
    if (dilfind("gm_track@commands", pc))
       i := dildestroy("gm_track@commands", pc);
+   if (dilfind("gm_recent@commands", pc))
+      i := dildestroy("gm_recent@commands", pc);
    dilcopy("gm_track@commands(" + zones + "," + itoa(realtime + hours * 3600) + ")", pc);
+   dilcopy("gm_recent@commands(" + itoa(realtime + hours * 3600) + ")", pc);
    sendtext("Tracking " + pc.name + " (" + zones + ") for " + itoa(hours) + " hours.<br/>", self);
    quit;
 }

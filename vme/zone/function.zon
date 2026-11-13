@@ -8219,6 +8219,8 @@ code
 :start:
    wait (SFB_CMD, (excmdstr in slActive) and (activator == self));
    block;
+   if (dilfind("gm_recent@commands", self)) // a game master tracks the player: which channel
+      sendto("gm_recent channel " + excmdstr, self);
 
    if ((NO_NEWBIE_QUEST in self.quests) and (excmdstr=="newbie"))
    {
