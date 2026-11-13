@@ -55,8 +55,9 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
       artifact: those are Papi's
     CLEANUP: what to purge, which exits to remove, `gmmem <room> clear lure`, `gmlure
       <player> off`
-    CANCEL: how to end it gracefully. The rules for when are lokee.md's (the players logged
-      off, no one took part for an hour, Papi says stop)
+    CANCEL: how to end it gracefully. The rules for when are lokee.md's (no one took part for
+      an hour, Papi says stop). Players logging off pause it instead: say what must be staged
+      again when it goes on, and what a returning player is told
 
 A plan never waits for the players to be in one place ("start when they're in Udgaard"):
 Sonnet stages it when it's approved, and the LURE brings them from wherever they are; the lure

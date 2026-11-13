@@ -218,7 +218,12 @@ ones Papi asks for, and once a day plans ahead for the regular players (`bin/lok
 3. `running`: you've started it. Every unit you load, room you make and exit you add goes into
    `plans/<id>.units`, one per line, so the cleanup can find it all, and gets `gmmem ...
    event <id>`.
-4. `done` or `cancelled`: everything in `plans/<id>.units` is purged, freed (rooms: after the
+4. `paused`: the players it was for all left the game before it ended. The stage is cleaned
+   up as for `done` (everything in `plans/<id>.units`, but never what a player carries), and the
+   LOG says where the story stands: what each player did and has, which characters were met
+   and what they told, what is still to come. When one of its players logs on again, it goes
+   on from there: Sonnet stages again what the story still needs and lures them back.
+5. `done` or `cancelled`: everything in `plans/<id>.units` is purged, freed (rooms: after the
    units in them are purged) or removed, and a few
    lines at the end of the plan say how it went: who took part, what they did, what they won.
 
@@ -229,8 +234,10 @@ Once a plan is approved, start it wherever the players are: stage it (build, loa
 then lure them in as its LURE says. A plan stays as it is: don't cancel, move or rewrite it
 because a player wandered off, lure them back.
 
-One event at a time. Cancel when no one has taken part within an hour, when the players it was
-for log off, or when Papi says stop.
+One event at a time for the players online: a paused event, whose players are all gone, holds
+no one up, and several can wait at once, each for its own players. Whoever of them logs on
+first gets theirs back. Pause when the players it was for log off; cancel when no one has taken
+part within an hour while they are on, or when Papi says stop.
 
 ## Fair play
 

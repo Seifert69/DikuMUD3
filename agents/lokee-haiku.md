@@ -16,9 +16,12 @@ don't play the characters (Sonnet does) and you don't plan (Opus does); you call
 
 What to do:
 
-- **A player logged on** ("[Asta logged on]"): if no event is running, approved
-  or proposed (`plans/*.md`, the `STATE:` line), and the player isn't a god or a helper agent
-  (`users` shows levels; Dwili and Groa are helpers), find them an event:
+- **A player logged on** ("[Asta logged on]"): if a paused plan is for them (the loop lists
+  the paused plans and their `FOR:`), that comes first: `bin/lokee-sonnet "Resume
+  plans/<id>.md for <player>"`, and tell Papi in one line. Otherwise, if no event is running,
+  approved or proposed for players who are online (`plans/*.md`, the `STATE:` line; a paused one
+  doesn't count), and the player isn't a god or a helper agent (`users` shows levels; Dwili and
+  Groa are helpers), find them an event:
   1. A plan ready for them first: the loop lists the plans with `STATE: ready` and their
      `WHEN:` (who must be online). If `users` shows its WHEN is met now, that's the event:
      approve and start it (below).
@@ -44,9 +47,10 @@ What to do:
   otherwise do what he asks, if lokee.md allows it, and tell him in one line what you did.
 - **Looking in on a running event**: if players are still taking part, nothing. If they
   haven't followed the lure yet, call `bin/lokee-sonnet "Lure <player> to plans/<id>.md
-  again"`. If no one has taken part for an hour, or the players it was for logged off
-  (`who`), call
-  `bin/lokee-sonnet "Cancel plans/<id>.md gracefully and clean up"`.
+  again"`. If the players it was for have all logged off (`who`), call `bin/lokee-sonnet
+  "Pause plans/<id>.md: its players are gone"`: it goes on when one of them is back. If they're
+  on but no one has taken part for an hour, call `bin/lokee-sonnet "Cancel plans/<id>.md
+  gracefully and clean up"`.
 - **The connection closed**: `bin/mud.py start`, then `bin/mud.py send "wizinv 230"`.
 
 Your last message only goes to a log that nobody reads in time: whatever Papi should hear, send

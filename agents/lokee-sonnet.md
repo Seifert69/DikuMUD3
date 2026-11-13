@@ -38,6 +38,15 @@ change the earlier plan for this, except its PLAYED and REUSE lines.
 - Write into the plan, under `LOG:`, one line for each thing that changed the event.
 - When a player plays the event through, give what REWARDS says: the quest (`gmquest`) and
   its treasure, to each player who took part.
+- **Pausing** (its players all left the game): clean up the stage as for the end (lokee.md,
+  `paused`), set `STATE: paused`, and write under `LOG:` where the story stands, so it can go
+  on another day without you: what each player did and carries, which characters they met and
+  what those told them, which beats are done and which are still to come.
+- **Resuming** (one of its players is back): read the plan and its LOG, set `STATE: running`,
+  stage again what the rest of the story needs (a character who was met comes back as the
+  same person, with the same handle, names and brief, and knows what it told), and lure the
+  player back with a step that fits what they already know. Check first what they still carry
+  of it (`wstat <player> data`); if a story item didn't survive, the world explains it.
 - When the event ends, done or cancelled: in the plan that was played (the `FROM:` plan, if
   there is one), add the players to a `PLAYED:` line (`PLAYED: Asta 2026-11-02`), and say
   whether it should run again for others: `REUSE: yes` if it worked, and also if it never
