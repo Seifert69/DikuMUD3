@@ -822,7 +822,7 @@ void tif_bra_on(unit_affected_type *af, unit_data *unit)
                 act("You feel idiotic.", eA_ALWAYS, unit, cActParameter(), cActParameter(), eTO_CHAR);
                 break;
             case 3:
-                act("You feel more imbecillic.", eA_ALWAYS, unit, cActParameter(), cActParameter(), eTO_CHAR);
+                act("You feel more imbecilic.", eA_ALWAYS, unit, cActParameter(), cActParameter(), eTO_CHAR);
                 break;
             case 4:
                 act("A lesser medulla oblongata fills your grey matter.", eA_ALWAYS, unit, cActParameter(), cActParameter(), eTO_CHAR);
