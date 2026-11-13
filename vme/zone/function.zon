@@ -3008,9 +3008,14 @@ dilend
  * hire_ship: a harbour master who hires out ships. "list" shows the ports; "hire <port>"
  * books passage for the buyer and their followers, the price per person, once the buyer
  * nods. The party goes aboard a ship (shipsym) with its captain (captsym), which sails the
- * sea room (sea) for the trip's hours, five real minutes an hour, puts everyone ashore at
- * the port and is gone. A captain killed at sea leaves the ship adrift with everyone on it.
- * There is a ship for each port; when they are all out at sea, he has none to hire.
+ * sea room (sea) for the trip's hours (a mud hour is five real minutes), puts everyone
+ * ashore at the port and is gone. A captain lost at sea leaves the ship adrift with
+ * everyone on it, until the last of them gets off some other way; then it sinks.
+ * He has a ship for each port; when they are all out at sea, he has none to hire. They are
+ * counted by shipsym, so each harbour master needs a ship unit of his own. A buyer who
+ * doesn't nod or shake within a minute is let go, and a party that changes between the
+ * price and the nod is asked to hire again. The sea room should be UNIT_FL_NOSAVE, so
+ * that a player who quits at sea logs in where they were before.
  *
  *    room     the room the harbour master works in; anywhere else he doesn't sell
  *    ports    four entries a port: its name, the price per person (in iron pieces), the
@@ -3018,113 +3023,127 @@ dilend
  *    shipsym, captsym, sea   symbolic names of the ship (an ITEM_BOAT), its captain (an NPC)
  *             and the sea room the ship sails through (no exits)
  *    says     "<option> <text>" entries replacing the defaults:
+ *             An option with no text says nothing, except noexit, which can't be silenced.
  *                "unknown <text>"   said to a port not in the list
- *                   ("Eh? Where did you say you wanted to go? Don't think I have heard of that place.")
+ *                   ("I don't know of any port by that name.")
  *                "busy <text>"      said when every ship is out at sea
- *                   ("Sorry, all the ships are out to sea. One should be back in port anytime. Try again later.")
- *                "shake <text>"     said when the buyer shakes their head
- *                   ("Quit wasting my time then. Be off!")
- *                "poor <text>"      told the buyer who can't pay
- *                   ("What are you, a beggar? Get out of here!")
+ *                   ("All my ships are at sea just now. Come back later.")
+ *                "shake <text>"     said when the buyer shakes their head   ("As you wish.")
+ *                "poor <text>"      told the buyer who can't pay   ("You can't afford the passage.")
+ *                "noexit <text>"    told whoever tries to leave the ship at sea, an act()
+ *                                   text with $1n the one leaving
+ *                   ("You can't leave the ship in the middle of the sea.")
+ *                "depart <text>"    as the ship sets out; in it and the next two, $1n is the
+ *                                   captain and $2t the port
+ *                   ("$1n sets the sails, and the ship heads out to sea toward $2t.")
+ *                "land <text>"      as the port comes in sight   ("Land! The port of $2t lies ahead.")
+ *                "dock <text>"      as the ship docks   ("The ship glides in and docks at $2t.")
  *                "sea <text>"       something that happens at sea; each "sea" adds one, and
  *                                   they replace the default four
  *
- *    dilcopy hire_ship@function("harborm1@torsbay", {"Khorsabad", "1000", "2", "a61@arabian"},
- *       "ship@torsbay", "hire_captain@torsbay", "ocean@torsbay", {});
+ *    dilcopy hire_ship@function("harbour@port", {"Farport", "1000", "2", "pier@farport"},
+ *       "ship@port", "captain@port", "sea@port", {"busy The ships are all at sea.", "land"});
  */
 dilbegin hire_ship(room : string, ports : stringlist, shipsym : string, captsym : string,
                    sea : string, says : stringlist);
 var
-   pnames  : stringlist;
-   pcosts  : stringlist;
-   phours  : stringlist;
-   prooms  : stringlist;
+   pnames : stringlist;
    keys   : stringlist;
-   texts  : stringlist; // unknown, busy, shake, poor
-   seas   : stringlist;
-   myseas : stringlist;
+   texts  : stringlist;
+   seas   : stringlist; // the extra's names: "$hire_sea", then the things at sea
+   trip   : stringlist;
    buyer  : unitptr;
    fol    : unitptr;
    ship   : unitptr;
    capt   : unitptr;
    i      : integer;
    n      : integer;
-   out    : integer;  // ships at sea
+   ownsea : integer;
    gcost  : integer;
    s      : string;
    w      : string;
    scost  : string;
-   seastr : string;
 code
 {
    i := 0;
    while (i + 3 < length(ports))
    {
       addstring(pnames, ports.[i]);
-      addstring(pcosts, ports.[i + 1]);
-      addstring(phours, ports.[i + 2]);
-      addstring(prooms, ports.[i + 3]);
       i := i + 4;
    }
    if (i != length(ports))
       log("hire_ship on " + self.symname + ": ports come in fours (name, price, hours, room).");
+   if ((findroom(room) == null) or (findroom(sea) == null))
+   {
+      log("hire_ship on " + self.symname + ": no room " + room + " or " + sea + ".");
+      quit;
+   }
+   i := 0;
+   while (i < length(pnames))
+   {
+      if ((findroom(ports.[4 * i + 3]) == null) or (atoi(ports.[4 * i + 2]) < 1))
+      {
+         log("hire_ship on " + self.symname + ": port " + pnames.[i] + " has no room " +
+             ports.[4 * i + 3] + " or no hours.");
+         quit;
+      }
+      i := i + 1;
+   }
 
-   keys := {"unknown", "busy", "shake", "poor"};
-   texts := {"Eh? Where did you say you wanted to go? Don't think I have heard of that place.",
-             "Sorry, all the ships are out to sea. One should be back in port anytime. Try again later.",
-             "Quit wasting my time then. Be off!",
-             "What are you, a beggar? Get out of here!"};
-   seas := {"The ship rocks back and forth gently upon the waves.",
-            "You hear faint creaking sounds coming from the ship.",
-            "A seagull flying overhead delivers a nice package to the top of your head.",
-            "A wave crashes over the ship drenching you to the bone."};
+   keys := {"unknown", "busy", "shake", "poor", "noexit", "depart", "land", "dock"};
+   texts := {"I don't know of any port by that name.",
+             "All my ships are at sea just now. Come back later.",
+             "As you wish.",
+             "You can't afford the passage.",
+             "You can't leave the ship in the middle of the sea.",
+             "$1n sets the sails, and the ship heads out to sea toward $2t.",
+             "Land! The port of $2t lies ahead.",
+             "The ship glides in and docks at $2t."};
+   seas := {"$hire_sea",
+            "The ship rolls gently on the swell.",
+            "Spray breaks over the bow and wets your face.",
+            "Gulls wheel and cry above the masts.",
+            "The rigging creaks as the wind fills the sails."};
    i := 0;
    while (i < length(says))
    {
       s := says.[i];
       w := getword(s);
       if (w == "sea")
-         addstring(myseas, s);
+      {
+         if (not ownsea)
+            seas := {"$hire_sea"};
+         ownsea := TRUE;
+         if (s != "")
+            addstring(seas, s);
+      }
+      else if ((w == "noexit") and (s == ""))
+         log("hire_ship on " + self.symname + ": the noexit text can't be silenced.");
       else if ((w in keys) > 0)
          texts.[(w in keys) - 1] := s;
       else
          log("hire_ship on " + self.symname + ": unknown option " + w + ".");
       i := i + 1;
    }
-   if (length(myseas) > 0)
-      seas := myseas;
-   seastr := ""; // the sea texts for each ship, in one string
-   i := 0;
-   while (i < length(seas))
-   {
-      if (i > 0)
-         seastr := seastr + "|";
-      seastr := seastr + seas.[i];
-      i := i + 1;
-   }
 
    :begin:
-   wait(SFB_CMD | SFB_MSG,
-        ((command("list") or command("hire")) and (self.outside == findroom(room))) or
-        (command(CMD_AUTO_MSG) and (argument == "hire_ship back")));
-   if (command(CMD_AUTO_MSG) and (argument == "hire_ship back"))
-   {
-      if (out > 0)
-         out := out - 1;
+   wait(SFB_CMD, command("list") or command("hire"));
+   if (self.outside != findroom(room))
       goto begin;
-   }
    buyer := activator;
    block;
 
    if (command("list"))
    {
-      act("Ships are available for the following destinations:", A_SOMEONE, buyer, null, null, TO_CHAR);
-      act("---------------------------------------------------", A_SOMEONE, buyer, null, null, TO_CHAR);
+      act("Passage can be hired to these ports:", A_SOMEONE, buyer, null, null, TO_CHAR);
       i := 0;
       while (i < length(pnames))
       {
-         act("$2t : $3t per person : " + phours.[i] + " hour trip.", A_SOMEONE, buyer, pnames.[i],
-             moneystring(atoi(pcosts.[i]), FALSE), TO_CHAR);
+         w := " hours";
+         if (ports.[4 * i + 2] == "1")
+            w := " hour";
+         act("   $2t: $3t a person, " + ports.[4 * i + 2] + w + " at sea.", A_SOMEONE, buyer,
+             pnames.[i], moneystring(atoi(ports.[4 * i + 1]), FALSE), TO_CHAR);
          i := i + 1;
       }
       goto begin;
@@ -3133,169 +3152,210 @@ code
    i := (argument in pnames) - 1;
    if ((argument == "") or (i < 0))
    {
-      exec("say " + texts.[0], self);
+      if (texts.[0] != "")
+         exec("say " + texts.[0], self);
       goto begin;
    }
-   if (out >= length(pnames))
+   ship := findsymbolic(shipsym);
+   if (ship.loadcount >= length(pnames)) // none loaded: a field of null fails, and is false
    {
-      exec("say " + texts.[1], self);
+      if (texts.[1] != "")
+         exec("say " + texts.[1], self);
       goto begin;
    }
 
-   n := 1;
+   n := 0;
    foreach (UNIT_ST_PC | UNIT_ST_NPC, fol)
-      if ((fol != buyer) and (fol.master == buyer))
+      if ((fol == buyer) or (fol.master == buyer))
          n := n + 1;
-   gcost := n * atoi(pcosts.[i]);
+   gcost := n * atoi(ports.[4 * i + 1]);
    scost := moneystring(gcost, FALSE);
-   act("That will be $2t for your party of " + itoa(n) + " to $3t.", A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
-   act("To accept these charges please nod, otherwise shake.", A_SOMEONE, buyer, null, null, TO_CHAR);
-   secure(buyer, lost);
-
-   :answer:
-   wait(SFB_CMD | SFB_MSG, ((activator == buyer) and (command("nod") or command("shake"))) or
-                           (command(CMD_AUTO_MSG) and (argument == "hire_ship back")));
-   if (command(CMD_AUTO_MSG) and (argument == "hire_ship back"))
+   act("Passage to $3t for " + itoa(n) + " comes to $2t. Nod to pay, or shake your head.", A_SOMEONE, buyer,
+       scost, pnames.[i], TO_CHAR);
+   secure(buyer, begin);
+   heartbeat := PULSE_SEC * 60;
+   wait(SFB_CMD | SFB_TICK, ((activator == buyer) and (command("nod") or command("shake"))) or
+                            command(CMD_AUTO_TICK));
+   unsecure(buyer);
+   if (command(CMD_AUTO_TICK))
    {
-      if (out > 0)
-         out := out - 1;
-      goto answer;
+      act("$2n shrugs and turns to other business.", A_SOMEONE, buyer, self, null, TO_CHAR);
+      goto begin;
    }
    if (command("shake"))
    {
-      unsecure(buyer);
-      exec("say " + texts.[2], self);
+      if (texts.[2] != "")
+         exec("say " + texts.[2], self);
+      goto begin;
+   }
+   // The party that goes aboard is the one he priced
+   w := itoa(n);
+   n := 0;
+   foreach (UNIT_ST_PC | UNIT_ST_NPC, fol)
+      if ((fol == buyer) or (fol.master == buyer))
+         n := n + 1;
+   if (itoa(n) != w)
+   {
+      act("Your party has changed since $2n named the price; hire again.", A_SOMEONE, buyer, self, null, TO_CHAR);
       goto begin;
    }
    if (not transfermoney(buyer, null, gcost))
    {
-      unsecure(buyer);
-      act(texts.[3], A_SOMEONE, buyer, null, null, TO_CHAR);
+      if (texts.[3] != "")
+         act(texts.[3], A_SOMEONE, buyer, null, null, TO_CHAR);
       goto begin;
    }
-   act("Thank you for the $2t for your party of " + itoa(n) + " to $3t.", A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
-   act("$1n books passage for $1mself and $1s party to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_REST);
-   out := out + 1;
+   act("You pay $2t for passage to $3t.", A_SOMEONE, buyer, scost, pnames.[i], TO_CHAR);
+   act("$1n pays for passage to $3t.", A_SOMEONE, buyer, null, pnames.[i], TO_REST);
 
    ship := load(shipsym);
    capt := load(captsym);
+   if ((ship == null) or (capt == null))
+   {
+      log("hire_ship on " + self.symname + ": can't load " + shipsym + " or " + captsym + ".");
+      if (ship != null)
+         destroy(ship);
+      if (capt != null)
+         destroy(capt);
+      i := transfermoney(null, buyer, gcost);
+      goto begin;
+   }
    link(capt, ship);
-   addextra(ship.extra, {"$no_exit"}, "Don't be silly $1n, not while we're at sea!");
-   addextra(ship.extra, {"$hire_sea"}, seastr);
+   addextra(ship.extra, {"$no_exit"}, texts.[4]);
+   addextra(ship.extra, seas, "hire_ship");
+   // the voyage: the port's name, its room, the hours and the captain (not through dilcopy's
+   // arguments, which a comma in the name would break)
+   trip := {"$hire_port"};
+   addstring(trip, pnames.[i]);
+   addstring(trip, ports.[4 * i + 3]);
+   addstring(trip, ports.[4 * i + 2]);
+   addstring(trip, captsym);
+   addstring(trip, texts.[5]);
+   addstring(trip, texts.[6]);
+   addstring(trip, texts.[7]);
+   addextra(ship.extra, trip, "hire_ship");
    foreach (UNIT_ST_PC | UNIT_ST_NPC, fol)
    {
       if ((fol == buyer) or (fol.master == buyer))
       {
-         act("You follow $2n aboard $3n.", A_SOMEONE, fol, capt, ship, TO_CHAR);
-         act("$1n follows $2n aboard $3n.", A_SOMEONE, fol, capt, ship, TO_REST);
+         act("You go aboard with the captain.", A_ALWAYS, fol, null, null, TO_CHAR);
+         act("$1n goes aboard with the captain.", A_SOMEONE, fol, null, null, TO_REST);
          link(fol, ship);
       }
    }
-   unsecure(buyer);
-   dilcopy("hire_voyage@function(" + pnames.[i] + "," + prooms.[i] + "," + phours.[i] + "," +
-           captsym + "," + self.symname + ")", ship);
+   dilcopy("hire_voyage@function()", ship);
    link(ship, findroom(sea));
-   goto begin;
-
-   :lost:
    goto begin;
 }
 dilend
 
 
 /*
- * hire_voyage: a ship hired from hire_ship on its way to the port of pname (dropped at the
- * room), hours at sea, with its captain (captsym) and the harbour master (seller) told when
- * the ship is done. The things that happen at sea are in the ship's $hire_sea extra.
+ * hire_voyage: a ship hired from hire_ship (which copies it on), on its way to a port. The
+ * ship's $hire_port extra names the port, its room, the hours at sea, the captain, and what
+ * he says as the ship departs, as land comes in sight and as it docks; the things that
+ * happen at sea are the names of $hire_sea, after the first.
  */
-dilbegin hire_voyage(pname : string, port : string, hours : string, captsym : string,
-                     seller : string);
+dilbegin hire_voyage();
 var
-   capt : unitptr;
-   u    : unitptr;
-   seas : stringlist;
-   x    : integer;
-   pcs  : integer;
+   capt  : unitptr;
+   u     : unitptr;
+   v     : unitptr;
+   r     : unitptr;
+   trip  : stringlist; // "$hire_port", the port's name, its room, the hours, the captain,
+                       // and the depart, land and dock texts
+   seas  : stringlist;
+   n     : integer;
+   step  : integer;
 code
 {
-   seas := split(self.extra.["$hire_sea"].descr, "|");
+   trip := self.extra.["$hire_port"].names;
+   seas := self.extra.["$hire_sea"].names;
+   n := atoi(trip.[3]) * 5; // a step a minute
    heartbeat := PULSE_SEC * 4;
-   pause;
-   capt := findsymbolic(self, captsym, FIND_UNIT_INVEN);
-   if (capt == null)
-      goto adrift;
-   act("$1n utters a few arcane words and the ship is set adrift, speeding its way toward " +
-       "its destination of $2t.", A_SOMEONE, capt, pname, null, TO_ALL);
-
-   heartbeat := PULSE_SEC * 60;
-   x := atoi(hours) * 5;
-   while (x > 1)
+   while (TRUE)
    {
       pause;
-      capt := findsymbolic(self, captsym, FIND_UNIT_INVEN);
+      capt := findsymbolic(self, trip.[4], FIND_UNIT_INVEN); // unit variables are cleared at each activation
       if (capt == null)
          goto adrift;
-      act(seas.[rnd(0, length(seas) - 1)], A_SOMEONE, capt, null, null, TO_ALL);
-      x := x - 1;
+      if (step == 0)
+      {
+         if (trip.[5] != "")
+            act(trip.[5], A_SOMEONE, capt, trip.[1], null, TO_ALL);
+         heartbeat := PULSE_SEC * 60;
+      }
+      else if (step < n)
+         act(seas.[rnd(1, length(seas) - 1)], A_SOMEONE, capt, null, null, TO_ALL);
+      else if (step == n)
+      {
+         if (trip.[6] != "")
+            act(trip.[6], A_SOMEONE, capt, trip.[1], null, TO_ALL);
+         heartbeat := PULSE_SEC * 30;
+      }
+      else if (step == n + 1)
+      {
+         if (trip.[7] != "")
+            act(trip.[7], A_SOMEONE, capt, trip.[1], null, TO_ALL);
+         heartbeat := PULSE_SEC * 4;
+      }
+      else
+         break;
+      step := step + 1;
    }
 
-   heartbeat := PULSE_SEC * 30;
-   pause;
-   capt := findsymbolic(self, captsym, FIND_UNIT_INVEN);
-   if (capt == null)
-      goto adrift;
-   act("Land Ho! Off in the distance you can see the port of $2t.", A_SOMEONE, capt, pname, null, TO_ALL);
-   act("Your stomach relaxes as you realize you are going to again be on solid ground in a " +
-       "few minutes.", A_SOMEONE, capt, null, null, TO_ALL);
-   pause;
-   capt := findsymbolic(self, captsym, FIND_UNIT_INVEN);
-   if (capt == null)
-      goto adrift;
-   heartbeat := PULSE_SEC * 4;
-   act("You hear a solid thud as the ship docks at the port of $2t.", A_SOMEONE, capt, pname, null, TO_ALL);
-   pause;
-   capt := findsymbolic(self, captsym, FIND_UNIT_INVEN); // unit variables are cleared at each activation
-   if (capt == null)
-      goto adrift;
-   act("$1n ushers you off the ship.", A_SOMEONE, capt, null, null, TO_ALL);
+   // Everyone and everything aboard goes ashore; the ship and its captain are gone
+   act("$1n sees you ashore.", A_SOMEONE, capt, null, null, TO_ALL);
+   r := findroom(trip.[2]);
    u := self.inside;
    while (u != null)
    {
-      if ((u != capt) and ((u.type == UNIT_ST_PC) or (u.type == UNIT_ST_NPC)))
+      if (u == capt)
+         u := u.next;
+      else
       {
-         link(u, findroom(port));
-         act("$1n steps off $2n.", A_SOMEONE, u, self, null, TO_REST);
-         exec("look", u);
+         link(u, r);
+         if (u.type & (UNIT_ST_PC | UNIT_ST_NPC))
+         {
+            act("$1n comes ashore.", A_SOMEONE, u, null, null, TO_REST);
+            exec("look", u);
+         }
          u := self.inside; // the list changed
       }
-      else
-         u := u.next;
    }
-   sendtoall("hire_ship back", seller);
    destroy(self);
    quit;
 
-   // The captain is dead: the ship drifts until nobody is left aboard, then sinks
+   // Without its captain the ship drifts until no player is aboard (on a mount aboard
+   // counts), then what is left of it washes ashore at the port and it sinks
    :adrift:
    if (self.inside != null) // an act from the ship itself goes to the sea around it
       act("Without a captain, the ship drifts aimlessly on the open sea.", A_SOMEONE, self.inside, null, null, TO_ALL);
    heartbeat := PULSE_SEC * 60;
    while (TRUE)
    {
-      pcs := 0;
+      v := null;
       u := self.inside;
-      while (u != null)
+      while ((u != null) and (v == null))
       {
          if (u.type == UNIT_ST_PC)
-            pcs := pcs + 1;
+            v := u;
+         else
+         {
+            v := u.inside;
+            while ((v != null) and (v.type != UNIT_ST_PC))
+               v := v.next;
+         }
          u := u.next;
       }
-      if (pcs == 0)
+      if (v == null)
          break;
-      act("The ship drifts aimlessly on the open sea.", A_SOMEONE, self.inside, null, null, TO_ALL);
+      act("The ship drifts aimlessly on the open sea.", A_SOMEONE, v, null, null, TO_ALL);
       pause;
    }
-   sendtoall("hire_ship back", seller);
+   r := findroom(trip.[2]);
+   while (self.inside != null)
+      link(self.inside, r);
    destroy(self);
 }
 dilend
