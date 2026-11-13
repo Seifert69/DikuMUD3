@@ -21,7 +21,6 @@
 #include "utils.h"
 #include "vmc.h"
 
-#include <algorithm>
 #include <ctype.h>
 #include <limits>
 #include <stdio.h>
@@ -730,14 +729,12 @@ unit_field  : NAMES stringlist
     }
     | ALIGNMENT number
     {
-        if (($2 < unit_data::MinAlignment) || ($2 > unit_data::MaxAlignment))
+        if (!cur->setAlignment($2)) // it keeps the nearest value
         {
             char buf[100];
             snprintf(buf, sizeof(buf), "Alignment %d outside %d..%d, kept within.", $2, unit_data::MinAlignment, unit_data::MaxAlignment);
             warning(buf);
         }
-        // Clamped here: setAlignment() narrows to 16 bits before it clamps
-        cur->setAlignment(std::clamp<int>($2, unit_data::MinAlignment, unit_data::MaxAlignment));
     }
     | EXTRA stringlist intlist STRING
     {

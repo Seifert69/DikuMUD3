@@ -14,6 +14,8 @@
 #include "textutil.h"
 #include "utils.h"
 
+#include <algorithm>
+
 #ifdef VMC
     #include "vmc/vmc_process.h"
 #endif
@@ -812,22 +814,10 @@ void unit_data::changeAlignmentBy(int64_t value)
 
 bool unit_data::setAlignment(int64_t value)
 {
-    bool change_is_ok = true;
+    // Clamped before it's narrowed to 16 bits, or 65000 would wrap to -536
+    m_alignment = static_cast<sbit16>(std::clamp<int64_t>(value, MinAlignment, MaxAlignment));
 
-    m_alignment = static_cast<sbit16>(value);
-
-    if (m_alignment > MaxAlignment)
-    {
-        m_alignment = MaxAlignment;
-        change_is_ok = false;
-    }
-    else if (m_alignment < MinAlignment)
-    {
-        m_alignment = MinAlignment;
-        change_is_ok = false;
-    }
-
-    return change_is_ok;
+    return m_alignment == value;
 }
 
 const std::string &unit_data::getTitle() const
