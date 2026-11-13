@@ -104,6 +104,17 @@ void cleanup_sc_dijkstra(void *t)
     slog(LOG_ALL, 0, "Shutting Down Shortest Path VME thread");
 }
 
+/// The shortest paths from room u to every room of its component
+static void compute_paths(unit_data *u)
+{
+    ROOM_PATH(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
+    ROOM_DISTANCE(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
+
+    dijkstra_shortest_paths(g_sc_graphs[ROOM_SC(u)],
+                            ROOM_NUM(u),
+                            boost::predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
+}
+
 void *create_sc_dijkstra(void *thread)
 {
     //	typedef graph_traits < graph_t >::vertex_descriptor vertex_descriptor;
@@ -123,12 +134,7 @@ void *create_sc_dijkstra(void *thread)
             //					slog (LOG_ALL, 0, "Creating Dijkstra for room %s@%s",
             //								UNIT_FI_NAME (u), UNIT_FI_ZONENAME (u));
 
-            ROOM_PATH(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
-            ROOM_DISTANCE(u).resize(num_vertices(g_sc_graphs[ROOM_SC(u)]));
-
-            dijkstra_shortest_paths(g_sc_graphs[ROOM_SC(u)],
-                                    ROOM_NUM(u),
-                                    boost::predecessor_map(&ROOM_PATH(u)[0]).distance_map(&ROOM_DISTANCE(u)[0]));
+            compute_paths(u);
             pthread_mutex_lock(&dijkstra_queue_mutex);
             UROOM(u)->setWaitingDijkstra(false);
             pthread_mutex_unlock(&dijkstra_queue_mutex);
@@ -294,6 +300,11 @@ int move_to(unit_data *from, unit_data *to)
     if (is_waiting == true)
     {
         return DIR_TRYAGAIN;
+    }
+
+    if ((ROOM_PATH(from).size() != num_vertices(g_sc_graphs[ROOM_SC(from)])) && (g_nTickUsec < 1))
+    {
+        compute_paths(from); // time-warped: ticks don't wait for the path thread, so don't ask it
     }
 
     if (ROOM_PATH(from).size() != num_vertices(g_sc_graphs[ROOM_SC(from)]))

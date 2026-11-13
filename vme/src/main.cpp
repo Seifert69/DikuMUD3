@@ -102,6 +102,11 @@ int main(int argc, char **argv)
                     g_dumptables = true;
                     break;
 
+                case 'w':
+                    slog(LOG_OFF, 0, "Time-warped: no sleeping between ticks (as wtimewarp, for good).");
+                    g_nTickUsec = 0;
+                    break;
+
                 case 'j':
                     g_dump_json = true;
                     break;

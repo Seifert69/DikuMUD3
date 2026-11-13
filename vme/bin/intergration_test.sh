@@ -2,7 +2,8 @@
 set -x
 TIMEOUT=300s
 cp ../etc/zonelist.test ../etc/zonelist
-timeout --signal=KILL ${TIMEOUT} ./vme
+# -w: time-warped, the tests' waits pass without waiting for the clock
+timeout --signal=KILL ${TIMEOUT} ./vme -w
 result=$?
 #echo "RESULT:${result}"
 if [ ${result} -ne 0 ]; then

@@ -481,6 +481,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -s: Location of the server.cfg file\n");
     fprintf(stderr, "  -p: Persistant containers list\n");
     fprintf(stderr, "  -d: dump all profession tables.\n");
+    fprintf(stderr, "  -w: Time-warped: the game never sleeps between ticks (for the tests)\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
 }
 

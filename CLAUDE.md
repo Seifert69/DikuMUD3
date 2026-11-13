@@ -32,6 +32,10 @@ cd vme/bin
 - Web client: open `vme/www/client/index.html` in a browser, set host
   `localhost`, port `4280`.
 - Several mplexers (telnet and websocket) can run against one vme.
+- `./vme -w` runs time-warped: the game never sleeps between ticks, so heartbeats,
+  `pause`, the mud clock and timetables pass as fast as the CPU allows. The DIL
+  integration tests (`vme/bin/intergration_test.sh`) run this way. On a running game a
+  god's `wtimewarp <seconds>` does the same for that many seconds of game time.
 - First god character: log in as `Papi` (the `immortal_name` in
   `vme/etc/server.cfg`).
 - "Can't bind Mother Connection port 4999" means a stale server is still
