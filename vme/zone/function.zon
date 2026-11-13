@@ -2483,8 +2483,9 @@ dilend
 /*
  * ship: a ship sailing between ports. The room running it is the ship (its main deck): it is
  * linked into a port room while it lies there and into its own sea room while it sails. Players
- * board with "enter <ship>" and leave with "exit", and followers come along; at sea the ship
- * carries a $no_exit extra, so exit and leave refuse. Nobody has to steer it.
+ * board with "enter <ship>" and leave with "exit", and followers come along; at sea, unless
+ * the sea room has exits, the ship carries a $no_exit extra, so exit and leave refuse. Nobody
+ * has to steer it.
  *
  *   shipname   "the longship": $2t in the messages
  *   ports      the port rooms in visiting order, each once: {"pier@town", "dock@isle"}
@@ -2494,8 +2495,10 @@ dilend
  *              Departure k leaves ports.[k % length(ports)], so give a multiple of
  *              length(ports) departures; at boot the ship lies at the port of the next one.
  *              {} to sail by the "dwell" option instead.
- *   sea        the ship's own room at sea: "ocean@zone". Give it no exits and
- *              UNIT_FL_NO_TELEPORT: the only way out is the ship.
+ *   sea        the ship's own room at sea: "ocean@zone". Usually it has no exits and
+ *              UNIT_FL_NO_TELEPORT, the only way out being the ship, and then nobody can get
+ *              off at sea. If it has exits, getting off is allowed: overboard into the water,
+ *              to swim or wade on from there.
  *   decks      the rooms aboard that hear the ship; the ship room always does
  *   opts       "<option> <value>" entries, all optional:
  *                 "sail 300"   seconds at sea per leg (300, a mud hour; 30 at least)
@@ -2634,6 +2637,7 @@ var
    pnames : stringlist;
    dk     : stringlist;
    seamsg : stringlist;
+   sealed : integer;  // the sea room has no exits: nobody gets off at sea
    keys   : stringlist;
    texts  : stringlist;  // boarding, leaving, leaving_port, arrived, arrived_port, noexit
    np     : integer;
@@ -2692,6 +2696,16 @@ code
       if ((t > 1) or ((nd % np) != 0))
          log("ship@function on " + self.symname + ": departs should be mud hours 0-23 in order " +
              "round the day, a multiple of the ports in number.");
+   }
+
+   r := findroom(sea);
+   sealed := TRUE;
+   k := NORTH;
+   while (k <= SOUTHWEST)  // every direction, NORTH 0 to SOUTHWEST 9
+   {
+      if (r.exit_to[k] != null)
+         sealed := FALSE;
+      k := k + 1;
    }
 
    pnames := portnames;
@@ -2792,7 +2806,8 @@ code
 
    ship_signal@function(dk, "ship leaving " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + pnames.[q]);
    ship_tell@function(dk, texts.[1], texts.[2], shipname, pnames.[q]);
-   addextra(self.extra, {"$no_exit"}, texts.[5]);
+   if (sealed)
+      addextra(self.extra, {"$no_exit"}, texts.[5]);
    link(self, findroom(sea));
    ship_signal@function(dk, "ship at sea " + self.symname + " " + ports.[p] + " " + ports.[q] + " " + pnames.[q]);
 
