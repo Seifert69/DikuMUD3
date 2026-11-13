@@ -1840,7 +1840,12 @@ int dil_direct_init(spec_arg *sarg)
             int i = 0;
             for (i = 0; i < dilargs->no; i++)
             {
-                if (tmpl->argt[i] != dilargs->dilarg[i].type)
+                // vmc stores an empty {} as a stringlist (an empty intlist is {{}}); let it fit an
+                // intlist too
+                const dilargtype &arg = dilargs->dilarg[i];
+                bool empty_list = arg.type == DilVarType_e::DILV_SLP && (!arg.data.stringlist || !arg.data.stringlist[0]);
+
+                if (tmpl->argt[i] != arg.type && !(tmpl->argt[i] == DilVarType_e::DILV_ILP && empty_list))
                 {
                     break;
                 }
@@ -1884,7 +1889,8 @@ int dil_direct_init(spec_arg *sarg)
                             }
                             prg->fp->vars[i].val.intlist = new cintlist();
                             int m = 0;
-                            for (m = 1; m <= dilargs->dilarg[i].data.intlist[0]; m++)
+                            // An empty {} arrives as a stringlist and stays empty
+                            for (m = 1; dilargs->dilarg[i].type == DilVarType_e::DILV_ILP && m <= dilargs->dilarg[i].data.intlist[0]; m++)
                             {
                                 prg->fp->vars[i].val.intlist->Append((int)dilargs->dilarg[i].data.intlist[m]);
                             }

@@ -2917,9 +2917,27 @@ dilend
    movement complete. */
 // See do_leave for exiting something with your mount
 // do_exit
+// $no_exit on what pc is in (item) keeps pc there: a ship at sea (see ship@function), or
+// anything else that must keep its passengers for now. Its text is an act() string to pc, $1n
+// pc and $2n item; empty for the default. True when pc must stay.
+dilbegin integer no_exit(pc : unitptr, item : unitptr);
+code
+{
+   if (not ("$no_exit" in item.extra))
+      return (FALSE);
+   if (item.extra.["$no_exit"].descr == "")
+      act("You can't get out of $2n just now.", A_ALWAYS, pc, item, null, TO_CHAR);
+   else
+      act(item.extra.["$no_exit"].descr, A_ALWAYS, pc, item, null, TO_CHAR);
+   return (TRUE);
+}
+dilend
+
+
 dilbegin exit_dil(arg : string);
 external
    look_blank@baselook(l1 : unitptr, str12 : string);
+   integer no_exit@basemove(pc : unitptr, item : unitptr);
 var
    item        :  unitptr;
 code
@@ -2963,6 +2981,9 @@ code
       act("But there is nowhere to exit to.", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
+
+   if (no_exit@basemove(self, item))
+      return;
 
    if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
    {
@@ -3038,6 +3059,7 @@ dilend
 dilbegin leave_dil(arg : string);
 external
    look_blank@baselook(l1 : unitptr, str12 : string);
+   integer no_exit@basemove(pc : unitptr, item : unitptr);
 
 var
    item        :  unitptr;
@@ -3087,6 +3109,10 @@ code
    {
       horse := item;
       item := item.outside;
+
+      // Leaving would take the boat (or mount) along: its own $no_exit too
+      if (no_exit@basemove(self, horse))
+         return;
    }
 
    if (item.outside == null)
@@ -3094,6 +3120,9 @@ code
       act("But there is nowhere to leave to.", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
+
+   if (no_exit@basemove(self, item))
+      return;
 
    if ((item.type == UNIT_ST_NPC) or (item.type == UNIT_ST_PC))
    {

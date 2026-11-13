@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 21  // T010, T009, ...
+#define TEST_MAXIMUM 22  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,219 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T022 =====================
+
+// Ship: ship@function on the room shipdeck (dwell 30 s, 30 s at sea) moves it between
+// shipport1 and shipport2 through shipsea. A passenger aboard can't "exit" or "leave" at sea
+// (the ship's $no_exit extra) and rides on; in port "exit" puts it on the quay. shipwatch keeps
+// the ship's last message to the deck. The ship runs from boot, so the test takes it wherever
+// it is: the first check is whichever state comes first. A captain (ship_captain@function)
+// starts on the quay when the ship is in port, is aboard at sea, and steps onto the quay when
+// the ship arrives.
+// On shipdeck: the last move ship@function announced, in the $shipev extra
+dilbegin shipwatch();
+code
+{
+   addextra(self.extra, {"$shipev"}, "none"); // addextra adds nothing with "" text
+   :start:
+   wait(SFB_MSG, "ship " in argument);
+   subextra(self.extra, "$shipev");
+   addextra(self.extra, {"$shipev"}, argument);
+   goto start;
+}
+dilend
+
+dilbegin T022(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   integer ship_next@function(departs : intlist, hour : integer);
+var
+   ship  : unitptr;
+   u     : unitptr;
+   c     : unitptr;
+   k     : integer;
+   i     : integer;
+   seaok : integer;  // the exit was refused at sea
+   portok : integer; // the exit worked in port
+   arrived : integer; // it reached a port after the sea
+   last  : string;   // the port the ship lay at before the sea
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T022 ship running");
+
+   // The next departure: later the same day, at this very hour, past midnight, and in a list
+   // that starts in the afternoon
+   if ((ship_next@function({3, 9, 15, 21}, 4) != 1) or
+       (ship_next@function({3, 9, 15, 21}, 9) != 1) or
+       (ship_next@function({3, 9, 15, 21}, 22) != 0) or
+       (ship_next@function({16, 18, 20, 22, 0, 2}, 23) != 4) or
+       (ship_next@function({16, 18, 20, 22, 0, 2}, 10) != 0))
+   {
+      logtest(tstno, LOGT_ERROR, "T022 ship_next picked the wrong departure");
+      u := null;
+      goto terminate;
+   }
+   ship := findroom("shipdeck@test");
+   u := load("passenger@test");
+   link(u, ship);
+   // In port the captain starts ashore and has to board; at sea aboard
+   c := load("captain@test");
+   if (ship.outside.symname == "shipsea@test")
+      link(c, ship);
+   else
+      link(c, ship.outside);
+
+   i := 0;
+   while ((i < 100) and ((seaok == 0) or (portok == 0) or (arrived == 0)))
+   {
+      pause;
+      i := i + 1;
+      ship := findroom("shipdeck@test");
+      u := findsymbolic("passenger@test");
+      if (u == null)
+      {
+         logtest(tstno, LOGT_ERROR, "T022 the passenger was lost");
+         goto terminate;
+      }
+
+      if (ship.outside.symname == "shipsea@test")
+      {
+         if (not ("$no_exit" in ship.extra))
+         {
+            logtest(tstno, LOGT_ERROR, "T022 at sea without $no_exit");
+            goto terminate;
+         }
+         if (seaok == 0)
+         {
+            if (not ("ship at sea shipdeck@test shipport" in ship.extra.["$shipev"].descr))
+            {
+               logtest(tstno, LOGT_ERROR, "T022 no 'ship at sea' message to the deck");
+               goto terminate;
+            }
+            exec("exit", u);
+            exec("leave", u);
+            if (u.outside != ship)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the passenger left the ship at sea");
+               goto terminate;
+            }
+            c := findsymbolic("captain@test");
+            if (c == null)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain was lost");
+               goto terminate;
+            }
+            if (c.outside != ship)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain isn't aboard at sea");
+               goto terminate;
+            }
+            seaok := 1;
+         }
+      }
+      else if ((ship.outside.symname == "shipport1@test") or (ship.outside.symname == "shipport2@test"))
+      {
+         if ("$no_exit" in ship.extra)
+         {
+            logtest(tstno, LOGT_ERROR, "T022 in port with $no_exit");
+            goto terminate;
+         }
+         if ((seaok == 1) and (arrived == 0))
+         {
+            if (last == ship.outside.symname)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the ship came back to " + last);
+               goto terminate;
+            }
+            if (not (("ship arrived shipdeck@test " + ship.outside.symname) in ship.extra.["$shipev"].descr))
+            {
+               logtest(tstno, LOGT_ERROR, "T022 no 'ship arrived' message for " + ship.outside.symname);
+               goto terminate;
+            }
+            if (u.outside != ship)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the passenger didn't ride on");
+               goto terminate;
+            }
+            // The captain steps ashore on the next tick, not while the ship tells its arrival
+            k := 0;
+            c := findsymbolic("captain@test");
+            while ((k < 5) and (c != null) and (c.outside != ship.outside))
+            {
+               pause;
+               k := k + 1;
+               c := findsymbolic("captain@test");
+               ship := findroom("shipdeck@test");
+            }
+            ship := findroom("shipdeck@test");
+            u := findsymbolic("passenger@test");
+            if (c == null)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain was lost");
+               goto terminate;
+            }
+            if (c.outside != ship.outside)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the captain didn't step onto the quay");
+               goto terminate;
+            }
+            arrived := 1;
+         }
+         if (seaok == 0)
+            last := ship.outside.symname;
+         if (portok == 0)
+         {
+            exec("exit", u);
+            if (u.outside != ship.outside)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the passenger couldn't leave in port");
+               goto terminate;
+            }
+            portok := 1;
+            exec("enter ship", u); // aboard again (for the sea, when that's still to come)
+            if (u.outside != ship)
+            {
+               logtest(tstno, LOGT_ERROR, "T022 the passenger couldn't board");
+               goto terminate;
+            }
+         }
+      }
+      else if (ship.outside != null)
+      {
+         logtest(tstno, LOGT_ERROR, "T022 the ship is in " + ship.outside.symname);
+         goto terminate;
+      }
+   }
+
+   if ((seaok == 0) or (portok == 0) or (arrived == 0))
+   {
+      logtest(tstno, LOGT_ERROR, "T022 the ship didn't sail in 100 seconds");
+      goto terminate;
+   }
+
+   destroy(u);
+   c := findsymbolic("captain@test");
+   if (c != null)
+      destroy(c);
+   logtest(tstno, LOGT_INFO, "T022 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
+
+:terminate:
+   if (u != null)
+      destroy(u);
+   c := findsymbolic("captain@test");
+   if (c != null)
+      destroy(c);
+   logtest(tstno, LOGT_INFO, "T022 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
 }
 dilend
 
@@ -1738,6 +1951,49 @@ east to testlabc;
 end
 
 
+                                   shipport1
+
+title "Test Quay One"
+descr
+"   A quay for the test ship."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+end
+
+                                   shipport2
+
+title "Test Quay Two"
+descr
+"   Another quay for the test ship."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+end
+
+                                   shipsea
+
+title "Test Sea"
+descr
+"   The test ship's sea."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
+movement SECT_WATER_SAIL
+light 5
+end
+
+                                   shipdeck
+
+names {"test ship", "ship"}
+title "The Deck of the Test Ship"
+descr
+"   The deck of the test ship (T022)."
+outside_descr "The test ship lies here."
+flags {UNIT_FL_NO_WEATHER}
+light 5
+in shipport1
+dilcopy ship@function("the test ship", {"shipport1@test", "shipport2@test"}, {}, {},
+                      "shipsea@test", {}, {"dwell 30", "sail 30"});
+dilcopy shipwatch@test();
+end
+
                                    labcontrol
 
 title "Test Laboratory Control"
@@ -1944,6 +2200,27 @@ code
    quit;
 }
 dilend
+end
+
+
+   captain
+
+names {"captain"}
+title "the captain"
+descr "The captain is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
+dilcopy ship_captain@function("shipdeck@test", {});
+end
+
+
+   passenger
+
+names {"passenger"}
+title "a passenger"
+descr "A passenger is standing here."
+weight 1
+M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
 end
 
 
