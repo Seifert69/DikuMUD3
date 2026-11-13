@@ -12645,8 +12645,11 @@ dilend
 dilbegin gmzap(arg : string);
 var
    u : unitptr;
+   x : unitptr;
+   m : unitptr;
    word : string;
    prg : string;
+   n : integer;
 code
 {
    if (self.type != UNIT_ST_PC)
@@ -12679,14 +12682,35 @@ code
       sendtext("Treasure keeps its DILs.<br/>", self);
       quit;
    }
+   // a player's things, pets and followers are the player's: zap, at 245
+   x := u;
+   while (x != null)
+   {
+      m := null;
+      if (x.type == UNIT_ST_NPC)
+         m := x.master;
+      if (m == null)
+         m := x;
+      if (m.type == UNIT_ST_PC)
+      {
+         sendtext(u.name + " belongs to a player.<br/>", self);
+         quit;
+      }
+      x := x.outside;
+   }
    if (not ("$gm_event" in u.extra))
    {
       sendtext(u.name + " isn't tagged as part of an event (gmmem &lt;unit&gt; event &lt;id&gt;).<br/>", self);
       quit;
    }
 
-   if (dildestroy(prg, u))
+   n := 0;
+   while (dildestroy(prg, u)) // one copy at a time: a DIL may be on a unit twice
+      n := n + 1;
+   if (n == 1)
       sendtext("Removed " + prg + " from " + u.name + ".<br/>", self);
+   else if (n > 1)
+      sendtext("Removed " + itoa(n) + " copies of " + prg + " from " + u.name + ".<br/>", self);
    else
       sendtext(u.name + " runs no " + prg + " (wstat &lt;unit&gt; functions lists its DILs).<br/>", self);
    quit;

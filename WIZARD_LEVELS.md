@@ -79,8 +79,10 @@ to remember.
 
 `gmzap <npc, object or sym@zone> <dil@zone>` removes a DIL from an NPC or object tagged with
 `gmmem … event`: the wandering DIL of a character that must stay put, say. `wstat <unit>
-functions` lists a unit's DILs by name. The tag marks the units of events, it doesn't prove who
-loaded them; it never touches players, rooms or treasure. `zap`, for any unit, stays at 245.
+functions` lists a unit's DILs by name. It never touches rooms, treasure, players or what is theirs
+(what they carry, their pets and followers). The tag marks the units of events but doesn't
+prove who loaded them, so it rests on the game master tagging only its own; `zap`, for any unit
+and with no tag, stays at 245.
 
 ## Following a player
 
