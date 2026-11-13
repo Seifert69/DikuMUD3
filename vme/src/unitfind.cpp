@@ -14,6 +14,7 @@
 #include "handler.h"
 #include "slog.h"
 #include "textutil.h"
+#include "unitwalk.h"
 #include "utils.h"
 
 #include <cctype>
@@ -331,7 +332,6 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
     const char *ct = nullptr;
     char *c = nullptr;
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
 
     if (!viewer->isPC() || (type == 0))
     {
@@ -445,95 +445,54 @@ unit_data *find_unit_general_abbrev(const unit_data *viewer,
                 }
             }
 
-            /* Run through units in local environment */
-            for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitContains()); u; u = u->getNext())
-            {
-                if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+            // A unit whose names match c here: the longest match wins, the number-th of those
+            auto consider = [&](unit_data *x) {
+                if ((ct = x->getNames().IsNameRawAbbrev(c)) && (ct - c >= best_len))
                 {
-                    if ((ct = u->getNames().IsNameRawAbbrev(c)) && (ct - c >= best_len))
+                    if (ct - c > best_len)
                     {
-                        if (ct - c > best_len)
-                        {
-                            number = original_number;
-                            best_len = ct - c;
-                        }
-
-                        if (--number == 0)
-                        {
-                            best = u;
-                        }
+                        number = original_number;
+                        best_len = ct - c;
                     }
 
-                    /* check tranparancy */
-                    if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
+                    if (--number == 0)
                     {
-                        for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                        {
-                            if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
-                                CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                            {
-                                if (ct - c > best_len)
-                                {
-                                    number = original_number;
-                                    best_len = ct - c;
-                                }
-
-                                if (--number == 0)
-                                {
-                                    best = uu;
-                                }
-                            }
-                        }
+                        best = x;
                     }
                 }
+            };
 
-            } /* End for */
-
-            /* Run through units in local environment if upwards transparent */
-            if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && ch->getUnitIn()->isTransparent())
-            {
-                for (u = u->getUnitContains(); u; u = u->getNext())
+            /* Run through units in local environment, and if upwards transparent the one around */
+            walk_surroundings(ch, [&](unit_data *x, unit_data *inside, bool outer) {
+                if (inside)
                 {
-                    if (u != ch->getUnitIn() && CHAR_CAN_SEE(viewer, u))
+                    if (IS_SET(type, x->getUnitType()) && x->isChar() && CHAR_CAN_SEE(viewer, x))
                     {
-                        if (IS_SET(type, u->getUnitType()) && (ct = u->getNames().IsNameRawAbbrev(c)) && (ct - c >= best_len))
-                        {
-                            if (ct - c > best_len)
-                            {
-                                number = original_number;
-                                best_len = ct - c;
-                            }
-
-                            if (--number == 0)
-                            {
-                                best = u;
-                            }
-                        }
-
-                        /* check down into transparent unit */
-                        if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-                        {
-                            for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                            {
-                                if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRawAbbrev(c)) &&
-                                    CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                                {
-                                    if (ct - c > best_len)
-                                    {
-                                        number = original_number;
-                                        best_len = ct - c;
-                                    }
-
-                                    if (--number == 0)
-                                    {
-                                        best = uu;
-                                    }
-                                }
-                            }
-                        }
+                        consider(x);
+                    }
+                    return eWalk::on;
+                }
+                if (outer)
+                {
+                    if ((x == ch->getUnitIn()) || !CHAR_CAN_SEE(viewer, x))
+                    {
+                        return eWalk::skip;
+                    }
+                    if (IS_SET(type, x->getUnitType()))
+                    {
+                        consider(x);
                     }
                 }
-            }
+                else
+                {
+                    if (!IS_SET(type, x->getUnitType()) || !(x->isRoom() || CHAR_CAN_SEE(viewer, x))) /* Cansee room in dark */
+                    {
+                        return eWalk::skip;
+                    }
+                    consider(x);
+                }
+                return x->getNumberOfCharactersInsideUnit() ? eWalk::on : eWalk::skip; /* check tranparancy */
+            });
         }
     }
 
@@ -586,7 +545,6 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
     char *first_letter = nullptr;
     ubit1 is_fillword = TRUE;
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
 
     if (type == 0)
     {
@@ -731,95 +689,54 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
                     }
                 }
 
-                /* Run through units in local environment */
-                for (u = const_cast<unit_data *>(ch->getUnitIn()->getUnitContains()); u; u = u->getNext())
-                {
-                    if (IS_SET(type, u->getUnitType()) && (u->isRoom() || CHAR_CAN_SEE(viewer, u))) /* Cansee room in dark */
+                // A unit whose names match c here: the longest match wins, the number-th of those
+                auto consider = [&](unit_data *x) {
+                    if ((ct = x->getNames().IsNameRaw(c)) && (ct - c >= best_len))
                     {
-                        if ((ct = u->getNames().IsNameRaw(c)) && (ct - c >= best_len))
+                        if (ct - c > best_len)
                         {
-                            if (ct - c > best_len)
-                            {
-                                number = original_number;
-                                best_len = ct - c;
-                            }
-
-                            if (--number == 0)
-                            {
-                                best = u;
-                            }
+                            number = original_number;
+                            best_len = ct - c;
                         }
 
-                        /* check tranparancy */
-                        if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
+                        if (--number == 0)
                         {
-                            for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                            {
-                                if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRaw(c)) &&
-                                    CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                                {
-                                    if (ct - c > best_len)
-                                    {
-                                        number = original_number;
-                                        best_len = ct - c;
-                                    }
-
-                                    if (--number == 0)
-                                    {
-                                        best = uu;
-                                    }
-                                }
-                            }
+                            best = x;
                         }
                     }
+                };
 
-                } /* End for */
-
-                /* Run through units in local environment if upwards transparent */
-                if ((u = const_cast<unit_data *>(ch->getUnitIn()->getUnitIn())) && ch->getUnitIn()->isTransparent())
-                {
-                    for (u = u->getUnitContains(); u; u = u->getNext())
+                /* Run through units in local environment, and if upwards transparent the one around */
+                walk_surroundings(ch, [&](unit_data *x, unit_data *inside, bool outer) {
+                    if (inside)
                     {
-                        if (u != ch->getUnitIn() && CHAR_CAN_SEE(viewer, u))
+                        if (IS_SET(type, x->getUnitType()) && x->isChar() && CHAR_CAN_SEE(viewer, x))
                         {
-                            if (IS_SET(type, u->getUnitType()) && (ct = u->getNames().IsNameRaw(c)) && (ct - c >= best_len))
-                            {
-                                if (ct - c > best_len)
-                                {
-                                    number = original_number;
-                                    best_len = ct - c;
-                                }
-
-                                if (--number == 0)
-                                {
-                                    best = u;
-                                }
-                            }
-
-                            /* check down into transparent unit */
-                            if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-                            {
-                                for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                                {
-                                    if (IS_SET(type, uu->getUnitType()) && uu->isChar() && (ct = uu->getNames().IsNameRaw(c)) &&
-                                        CHAR_CAN_SEE(viewer, uu) && (ct - c >= best_len))
-                                    {
-                                        if (ct - c > best_len)
-                                        {
-                                            number = original_number;
-                                            best_len = ct - c;
-                                        }
-
-                                        if (--number == 0)
-                                        {
-                                            best = uu;
-                                        }
-                                    }
-                                }
-                            }
+                            consider(x);
+                        }
+                        return eWalk::on;
+                    }
+                    if (outer)
+                    {
+                        if ((x == ch->getUnitIn()) || !CHAR_CAN_SEE(viewer, x))
+                        {
+                            return eWalk::skip;
+                        }
+                        if (IS_SET(type, x->getUnitType()))
+                        {
+                            consider(x);
                         }
                     }
-                }
+                    else
+                    {
+                        if (!IS_SET(type, x->getUnitType()) || !(x->isRoom() || CHAR_CAN_SEE(viewer, x))) /* Cansee room in dark */
+                        {
+                            return eWalk::skip;
+                        }
+                        consider(x);
+                    }
+                    return x->getNumberOfCharactersInsideUnit() ? eWalk::on : eWalk::skip; /* check tranparancy */
+                });
             }
         }
 
@@ -1017,11 +934,18 @@ static void double_unit_vector()
 /* units of types which match 'flags' in the 'room' specified.           */
 /* Difference to scan4_unit is that a room is searched for contents,     */
 /* but not outside room.                                                 */
+// Adds u to g_unit_vector
+static void scan4_add(unit_data *u)
+{
+    g_unit_vector.units[g_unit_vector.top++] = u;
+    if (g_unit_vector.size == g_unit_vector.top)
+    {
+        double_unit_vector();
+    }
+}
+
 void scan4_unit_room(unit_data *room, ubit8 type)
 {
-    unit_data *u = nullptr;
-    unit_data *uu = nullptr;
-
     g_unit_vector.top = 0;
 
     if (g_unit_vector.size == 0)
@@ -1029,33 +953,13 @@ void scan4_unit_room(unit_data *room, ubit8 type)
         init_unit_vector();
     }
 
-    for (u = room->getUnitContains(); u; u = u->getNext())
-    {
+    walk_contents(room, nullptr, [&](unit_data *u, unit_data *) {
         if (IS_SET(u->getUnitType(), type))
         {
-            g_unit_vector.units[g_unit_vector.top++] = u;
-            if (g_unit_vector.size == g_unit_vector.top)
-            {
-                double_unit_vector();
-            }
+            scan4_add(u);
         }
-
-        /* down into transparent unit */
-        if (u->isTransparent())
-        {
-            for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-            {
-                if (IS_SET(uu->getUnitType(), type))
-                {
-                    g_unit_vector.units[g_unit_vector.top++] = uu;
-                    if (g_unit_vector.size == g_unit_vector.top)
-                    {
-                        double_unit_vector();
-                    }
-                }
-            }
-        }
-    }
+        return eWalk::on;
+    });
 }
 
 /* MS: Fixed bug in scan4_XXX, only assigned 'u' in last               */
@@ -1066,9 +970,6 @@ void scan4_unit_room(unit_data *room, ubit8 type)
 /* use in local routines.                                                */
 void scan4_unit(unit_data *ch, ubit8 type)
 {
-    unit_data *u = nullptr;
-    unit_data *uu = nullptr;
-
     if (!ch->getUnitIn())
     {
         scan4_unit_room(ch, type);
@@ -1082,65 +983,13 @@ void scan4_unit(unit_data *ch, ubit8 type)
         init_unit_vector();
     }
 
-    for (u = ch->getUnitIn()->getUnitContains(); u; u = u->getNext())
-    {
+    walk_surroundings(ch, [&](unit_data *u, unit_data *, bool) {
         if (u != ch && IS_SET(u->getUnitType(), type))
         {
-            g_unit_vector.units[g_unit_vector.top++] = u;
-            if (g_unit_vector.size == g_unit_vector.top)
-            {
-                double_unit_vector();
-            }
+            scan4_add(u);
         }
-
-        /* down into transparent unit */
-        if (u->isTransparent())
-        {
-            for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-            {
-                if (IS_SET(uu->getUnitType(), type))
-                {
-                    g_unit_vector.units[g_unit_vector.top++] = uu;
-                    if (g_unit_vector.size == g_unit_vector.top)
-                    {
-                        double_unit_vector();
-                    }
-                }
-            }
-        }
-    }
-
-    /* up through transparent unit */
-    if (ch->getUnitIn()->isTransparent() && ch->getUnitIn()->getUnitIn())
-    {
-        for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = u->getNext())
-        {
-            if (IS_SET(u->getUnitType(), type))
-            {
-                g_unit_vector.units[g_unit_vector.top++] = u;
-                if (g_unit_vector.size == g_unit_vector.top)
-                {
-                    double_unit_vector();
-                }
-            }
-
-            /* down into transparent unit */
-            if (u->isTransparent() && u != ch->getUnitIn())
-            {
-                for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                {
-                    if (IS_SET(uu->getUnitType(), type))
-                    {
-                        g_unit_vector.units[g_unit_vector.top++] = uu; /* MS FIX */
-                        if (g_unit_vector.size == g_unit_vector.top)
-                        {
-                            double_unit_vector();
-                        }
-                    }
-                }
-            }
-        }
-    }
+        return eWalk::on;
+    });
 }
 
 static unit_data *scan4_ref_room(unit_data *room, unit_data *fu)

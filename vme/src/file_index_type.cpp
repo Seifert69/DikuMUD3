@@ -2,6 +2,7 @@
 
 #include "json_helper.h"
 #include "textutil.h"
+#include "unitwalk.h"
 #include "utils.h"
 #include "vme.h"
 
@@ -20,7 +21,6 @@ file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
 
     if (ref == nullptr)
     {
@@ -56,52 +56,21 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             return ref->getUnitIn();
         }
 
-        /* Run through units in local environment */
-        for (u = ref->getUnitIn()->getUnitContains(); u; u = u->getNext())
+        /* Run through units in local environment, and if upwards transparent the one around */
+        u = walk_surroundings(ref, [&](unit_data *x, unit_data *inside, bool outer) {
+            if (outer && !inside && (x == ref->getUnitIn()))
+            {
+                return eWalk::skip;
+            }
+            if (x->getFileIndex() == this)
+            {
+                return eWalk::stop;
+            }
+            return x->getNumberOfCharactersInsideUnit() ? eWalk::on : eWalk::skip; /* check tranparancy */
+        });
+        if (u)
         {
-            if (u->getFileIndex() == this)
-            {
-                return u;
-            }
-
-            /* check tranparancy */
-            if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-            {
-                for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                {
-                    if (uu->getFileIndex() == this)
-                    {
-                        return uu;
-                    }
-                }
-            }
-        }
-
-        /* Run through units in local environment if upwards transparent */
-        if ((u = ref->getUnitIn()->getUnitIn()) && ref->getUnitIn()->isTransparent())
-        {
-            for (u = u->getUnitContains(); u; u = u->getNext())
-            {
-                if (u != ref->getUnitIn())
-                {
-                    if (this == u->getFileIndex())
-                    {
-                        return u;
-                    }
-
-                    /* check down into transparent unit */
-                    if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-                    {
-                        for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                        {
-                            if (this == uu->getFileIndex())
-                            {
-                                return uu;
-                            }
-                        }
-                    }
-                }
-            }
+            return u;
         }
     }
 

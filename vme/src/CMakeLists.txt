@@ -113,6 +113,7 @@ set(VME_SRCS
         unit_dil_affected_type.cpp unit_dil_affected_type.h
         unit_fptr.cpp unit_fptr.h
         unitfind.cpp unitfind.h
+        unitwalk.h
         utility.cpp utility.h
         utils.h
         vmelimits.cpp vmelimits.h

@@ -19,6 +19,7 @@
 #include "trie.h"
 #include "unit_fptr.h"
 #include "unitfind.h"
+#include "unitwalk.h"
 #include "utils.h"
 
 #include <cstdlib>
@@ -781,100 +782,87 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
     if (ch->getUnitIn())
     {
-        /* special in room present? */
-        for (u = ch->getUnitIn()->getUnitContains(); u; u = next)
+        bool blocked = false;
+        // A unit's special blocked the command
+        auto special = [&](unit_data *x) {
+            if (x->getFunctionPointer() && (unit_function_scan(x, sarg)) != SFR_SHARE)
+            {
+                blocked = true;
+            }
+            return blocked;
+        };
+        // The specials of what a character wears
+        auto equipment = [&](unit_data *x) {
+            for (uu = x->getUnitContains(); uu; uu = nextt)
+            {
+                nextt = uu->getNext(); /* Next dude trick */
+                if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && special(uu))
+                {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        /* special in room present? Inside its transparent units, and in its characters' equipment */
+        walk_contents(ch->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
+            if (special(x))
+            {
+                return eWalk::stop;
+            }
+            if (inside || (x != ch))
+            {
+                if (!inside && !x->isTransparent() && x->isChar() && equipment(x))
+                {
+                    return eWalk::stop;
+                }
+                return eWalk::on;
+            }
+            return eWalk::skip;
+        });
+        if (blocked)
         {
-            next = u->getNext(); /* Next dude trick */
-
-            if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
-            {
-                return SFR_BLOCK;
-            }
-
-            if (u != ch)
-            {
-                if (u->isTransparent())
-                {
-                    for (uu = u->getUnitContains(); uu; uu = nextt)
-                    {
-                        nextt = uu->getNext(); /* next dude double trick */
-                        if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
-                        {
-                            return SFR_BLOCK;
-                        }
-                    }
-                }
-                else if (u->isChar())
-                {
-                    /* in equipment? */
-                    for (uu = u->getUnitContains(); uu; uu = nextt)
-                    {
-                        nextt = uu->getNext(); /* Next dude trick */
-                        if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
-                        {
-                            return SFR_BLOCK;
-                        }
-                    }
-                }
-            }
+            return SFR_BLOCK;
         }
 
         /* specials outside room */
         if (ch->getUnitIn() && ch->getUnitIn()->isTransparent() && ch->getUnitIn()->getUnitIn())
         {
             /* special in outside room? */
-            if (ch->getUnitIn()->getUnitIn()->getFunctionPointer())
+            if (special(ch->getUnitIn()->getUnitIn()))
             {
-                if (unit_function_scan(ch->getUnitIn()->getUnitIn(), sarg) != SFR_SHARE)
-                {
-                    return SFR_BLOCK;
-                }
+                return SFR_BLOCK;
             }
 
             if (ch->getUnitIn()->getUnitIn())
             {
-                for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = next)
-                {
-                    next = u->getNext(); /* Next dude trick */
-
+                walk_contents(ch->getUnitIn()->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
                     /* No self activation except when dying... */
-                    if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
+                    if (special(x))
                     {
-                        return SFR_BLOCK;
+                        return eWalk::stop;
                     }
-
+                    if (inside)
+                    {
+                        return eWalk::on;
+                    }
                     if (!ch->getUnitIn()->getUnitIn())
                     {
-                        break;
+                        return eWalk::stop; // ch's room is no longer inside another
                     }
-
-                    if (u != ch->getUnitIn())
+                    if (x == ch->getUnitIn())
                     {
-                        if (u->isTransparent())
-                        {
-                            for (uu = u->getUnitContains(); uu; uu = nextt)
-                            {
-                                nextt = uu->getNext(); /* next dude double trick */
-                                if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
-                                {
-                                    return SFR_BLOCK;
-                                }
-                            }
-                        }
-                        else if (u->isChar())
-                        {
-                            /* in equipment? */
-                            for (uu = u->getUnitContains(); uu; uu = nextt)
-                            {
-                                nextt = uu->getNext(); /* Next dude trick */
-                                if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) &&
-                                    (unit_function_scan(uu, sarg) != SFR_SHARE))
-                                {
-                                    return SFR_BLOCK;
-                                }
-                            }
-                        }
+                        return eWalk::skip;
                     }
+                    if (!x->isTransparent() && x->isChar() && equipment(x))
+                    {
+                        return eWalk::stop;
+                    }
+                    return eWalk::on;
+                });
+                if (blocked)
+                {
+                    return SFR_BLOCK;
                 }
             }
         }
