@@ -139,6 +139,15 @@ code
    i := changecolor(self, notset, "red");
    i := delcolor(self, notset);
    i := delcolor(nobody, "key");
+   // A unit variable never set: the server crashed on each of these
+   pagestring("x", nobody);
+   set_password(nobody, "x");
+   beginedit(nobody);
+   killedit(nobody);
+   gamestate(nobody, 0);
+   reset_level(nobody);
+   reset_vlevel(nobody);
+   reset_race(nobody);
    i := flog(notset, "x", "a");
    i := flog("t023.log", "x", notset);
    i := flog("../t023.log", "x", "a");   // refused: outside the log directory

@@ -1,7 +1,9 @@
 #include "file_index_type.h"
 
+#include "handler.h"
 #include "json_helper.h"
 #include "textutil.h"
+#include "unitwalk.h"
 #include "utils.h"
 #include "vme.h"
 
@@ -20,7 +22,6 @@ file_index_type::file_index_type(zone_type *zone, const char *name, ubit8 type)
 unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bitvector)
 {
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
 
     if (ref == nullptr)
     {
@@ -56,52 +57,18 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
             return ref->getUnitIn();
         }
 
-        /* Run through units in local environment */
-        for (u = ref->getUnitIn()->getUnitContains(); u; u = u->getNext())
+        /* Run through units in local environment, and if upwards transparent the one around */
+        // (ref's room itself was checked above)
+        u = walk_surroundings(ref, [&](unit_data *x, unit_data *inside, bool) {
+            if (x->getFileIndex() == this)
+            {
+                return eWalk::stop;
+            }
+            return (inside || !x->getNumberOfCharactersInsideUnit()) ? eWalk::skip : eWalk::on; // look inside only where someone is
+        });
+        if (u)
         {
-            if (u->getFileIndex() == this)
-            {
-                return u;
-            }
-
-            /* check tranparancy */
-            if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-            {
-                for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                {
-                    if (uu->getFileIndex() == this)
-                    {
-                        return uu;
-                    }
-                }
-            }
-        }
-
-        /* Run through units in local environment if upwards transparent */
-        if ((u = ref->getUnitIn()->getUnitIn()) && ref->getUnitIn()->isTransparent())
-        {
-            for (u = u->getUnitContains(); u; u = u->getNext())
-            {
-                if (u != ref->getUnitIn())
-                {
-                    if (this == u->getFileIndex())
-                    {
-                        return u;
-                    }
-
-                    /* check down into transparent unit */
-                    if (u->getNumberOfCharactersInsideUnit() && u->isTransparent())
-                    {
-                        for (uu = u->getUnitContains(); uu; uu = uu->getNext())
-                        {
-                            if (this == uu->getFileIndex())
-                            {
-                                return uu;
-                            }
-                        }
-                    }
-                }
-            }
+            return u;
         }
     }
 
@@ -111,9 +78,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         {
             for (auto it = m_fi_unit_list.begin(); it != m_fi_unit_list.end(); it++)
             {
-                if ((*it)->getFileIndex() == this)
+                if (((*it)->getFileIndex() == this) && (unit_zone(*it) == unit_zone(ref)))
                 {
-                    return u;
+                    return *it; // was u: whatever the search above left in it
                 }
             }
         }

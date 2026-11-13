@@ -120,6 +120,18 @@ void dil_insterr(dilprg *p, char *where)
     p->waitcmd = WAITCMD_QUIT;
 }
 
+// A unit variable never set passes dil_type_check as DILV_UP with a null pointer: true when
+// the argument v of the built-in f is one, after a line in the zone log
+static bool dil_no_unit(dilprg *p, dilval *v, const char *f)
+{
+    if (v->val.ptr != nullptr)
+    {
+        return false;
+    }
+    szonelog(p->frame->tmpl->zone, "DIL '%s': %s with no unit.", p->frame->tmpl->prgname, f);
+    return true;
+}
+
 /* ************************************************************************ */
 /* DIL-instructions							    */
 /* ************************************************************************ */
@@ -129,7 +141,11 @@ void dilfi_edit(dilprg *p)
 
     if (dil_type_check("beginedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!((unit_data *)v1->val.ptr)->isPC())
+        if (dil_no_unit(p, v1, "beginedit"))
+        {
+            // nothing to do: it is in the zone log
+        }
+        else if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -157,7 +173,11 @@ void dilfi_kedit(dilprg *p)
 
     if (dil_type_check("killedit", p, 1, v1, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!((unit_data *)v1->val.ptr)->isPC())
+        if (dil_no_unit(p, v1, "killedit"))
+        {
+            // nothing to do: it is in the zone log
+        }
+        else if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "not a pc unit");
         }
@@ -188,7 +208,11 @@ void dilfi_gamestate(dilprg *p)
 
     if (dil_type_check("gamestate", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
-        if (!((unit_data *)v1->val.ptr)->isPC())
+        if (dil_no_unit(p, v1, "gamestate"))
+        {
+            // nothing to do: it is in the zone log
+        }
+        else if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "gamestate: Not a pc unit");
         }
@@ -331,7 +355,11 @@ void dilfi_pgstr(dilprg *p)
 
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
+        if (dil_no_unit(p, v2, "pagestring"))
+        {
+            // nothing to do: it is in the zone log
+        }
+        else if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
         {
             dil_typeerr(p, "not a pc/npc unit");
         }
@@ -351,14 +379,18 @@ void dilfi_setpwd(dilprg *p)
 
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (!((unit_data *)v1->val.ptr)->isPC())
-        {
-            dil_typeerr(p, "Not a pc unit");
-        }
-        else if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
+        if (p->frame[0].tmpl->zone->getAccessLevel() > 0)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to violate system access security (setpassword).", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
+        }
+        else if (dil_no_unit(p, v1, "set_password"))
+        {
+            // nothing to do: it is in the zone log
+        }
+        else if (!((unit_data *)v1->val.ptr)->isPC())
+        {
+            dil_typeerr(p, "Not a pc unit");
         }
         else if (v1->val.ptr && v2->val.ptr)
         {
@@ -798,6 +830,10 @@ void dilfi_rslv(dilprg *p)
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset level w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
         }
+        else if (dil_no_unit(p, v1, "reset_level"))
+        {
+            // nothing to do: it is in the zone log
+        }
         else
         {
             auto *character = reinterpret_cast<char_data *>(v1->val.ptr);
@@ -825,6 +861,10 @@ void dilfi_rsvlv(dilprg *p)
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset vlevel w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
         }
+        else if (dil_no_unit(p, v1, "reset_vlevel"))
+        {
+            // nothing to do: it is in the zone log
+        }
         else
         {
             auto *pc = reinterpret_cast<pc_data *>(v1->val.ptr);
@@ -850,6 +890,10 @@ void dilfi_rsrce(dilprg *p)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' attempt to reset race w/o access.", p->frame->tmpl->prgname);
             p->waitcmd = WAITCMD_QUIT;
+        }
+        else if (dil_no_unit(p, v1, "reset_race"))
+        {
+            // nothing to do: it is in the zone log
         }
         else
         {

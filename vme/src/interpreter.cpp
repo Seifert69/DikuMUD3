@@ -19,6 +19,7 @@
 #include "trie.h"
 #include "unit_fptr.h"
 #include "unitfind.h"
+#include "unitwalk.h"
 #include "utils.h"
 
 #include <cstdlib>
@@ -684,9 +685,7 @@ int unit_function_scan(unit_data *u, spec_arg *sarg)
 int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_target, const char *to)
 {
     unit_data *u = nullptr;
-    unit_data *uu = nullptr;
     unit_data *next = nullptr;
-    unit_data *nextt = nullptr;
     unit_data *tou = nullptr;
     file_index_type *fi = nullptr;
 
@@ -781,100 +780,92 @@ int basic_special(unit_data *ch, spec_arg *sarg, ubit16 mflt, unit_data *extra_t
 
     if (ch->getUnitIn())
     {
-        /* special in room present? */
-        for (u = ch->getUnitIn()->getUnitContains(); u; u = next)
+        bool blocked = false;
+        // A unit's special blocked the command
+        auto special = [&](unit_data *x) {
+            if (x->getFunctionPointer() && (unit_function_scan(x, sarg)) != SFR_SHARE)
+            {
+                blocked = true;
+                return true;
+            }
+            return false;
+        };
+        // The specials of what a character wears
+        auto worn_specials = [&](unit_data *x) {
+            unit_data *nextt = nullptr;
+            for (unit_data *uu = x->getUnitContains(); uu; uu = nextt)
+            {
+                nextt = uu->getNext(); /* Next dude trick */
+                if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && special(uu))
+                {
+                    return true;
+                }
+            }
+            return false;
+        };
+
+        /* special in room present? Inside its transparent units, and in its characters' equipment */
+        if (walk_contents(ch->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
+                if (special(x))
+                {
+                    return eWalk::stop;
+                }
+                if (inside)
+                {
+                    return eWalk::on;
+                }
+                if (x == ch)
+                {
+                    return eWalk::skip;
+                }
+                if (!x->isTransparent() && x->isChar()) // its worn things, not what it carries
+                {
+                    return worn_specials(x) ? eWalk::stop : eWalk::skip;
+                }
+                return eWalk::on;
+            }))
         {
-            next = u->getNext(); /* Next dude trick */
-
-            if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
-            {
-                return SFR_BLOCK;
-            }
-
-            if (u != ch)
-            {
-                if (u->isTransparent())
-                {
-                    for (uu = u->getUnitContains(); uu; uu = nextt)
-                    {
-                        nextt = uu->getNext(); /* next dude double trick */
-                        if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
-                        {
-                            return SFR_BLOCK;
-                        }
-                    }
-                }
-                else if (u->isChar())
-                {
-                    /* in equipment? */
-                    for (uu = u->getUnitContains(); uu; uu = nextt)
-                    {
-                        nextt = uu->getNext(); /* Next dude trick */
-                        if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) && (unit_function_scan(uu, sarg) != SFR_SHARE))
-                        {
-                            return SFR_BLOCK;
-                        }
-                    }
-                }
-            }
+            return SFR_BLOCK;
         }
 
         /* specials outside room */
         if (ch->getUnitIn() && ch->getUnitIn()->isTransparent() && ch->getUnitIn()->getUnitIn())
         {
             /* special in outside room? */
-            if (ch->getUnitIn()->getUnitIn()->getFunctionPointer())
+            if (special(ch->getUnitIn()->getUnitIn()))
             {
-                if (unit_function_scan(ch->getUnitIn()->getUnitIn(), sarg) != SFR_SHARE)
-                {
-                    return SFR_BLOCK;
-                }
+                return SFR_BLOCK;
             }
 
             if (ch->getUnitIn()->getUnitIn())
             {
-                for (u = ch->getUnitIn()->getUnitIn()->getUnitContains(); u; u = next)
-                {
-                    next = u->getNext(); /* Next dude trick */
-
+                walk_contents(ch->getUnitIn()->getUnitIn(), nullptr, [&](unit_data *x, unit_data *inside) {
                     /* No self activation except when dying... */
-                    if (u->getFunctionPointer() && (unit_function_scan(u, sarg)) != SFR_SHARE)
+                    if (special(x))
                     {
-                        return SFR_BLOCK;
+                        return eWalk::stop;
                     }
-
+                    if (inside)
+                    {
+                        return eWalk::on;
+                    }
                     if (!ch->getUnitIn()->getUnitIn())
                     {
-                        break;
+                        return eWalk::stop; // ch's room is no longer inside another
                     }
-
-                    if (u != ch->getUnitIn())
+                    if (x == ch->getUnitIn())
                     {
-                        if (u->isTransparent())
-                        {
-                            for (uu = u->getUnitContains(); uu; uu = nextt)
-                            {
-                                nextt = uu->getNext(); /* next dude double trick */
-                                if (uu->getFunctionPointer() && (unit_function_scan(uu, sarg)) != SFR_SHARE)
-                                {
-                                    return SFR_BLOCK;
-                                }
-                            }
-                        }
-                        else if (u->isChar())
-                        {
-                            /* in equipment? */
-                            for (uu = u->getUnitContains(); uu; uu = nextt)
-                            {
-                                nextt = uu->getNext(); /* Next dude trick */
-                                if (uu->getFunctionPointer() && uu->isObj() && OBJ_EQP_POS(uu) &&
-                                    (unit_function_scan(uu, sarg) != SFR_SHARE))
-                                {
-                                    return SFR_BLOCK;
-                                }
-                            }
-                        }
+                        return eWalk::skip;
                     }
+                    if (!x->isTransparent() && x->isChar()) // its worn things, not what it carries
+                    {
+                        return worn_specials(x) ? eWalk::stop : eWalk::skip;
+                    }
+                    return eWalk::on;
+                });
+                if (blocked)
+                {
+                    return SFR_BLOCK;
                 }
             }
         }

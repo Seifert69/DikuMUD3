@@ -405,7 +405,7 @@ void init_mother(int nPort)
     if (fdMother == -1)
     {
         slog(LOG_OFF, 0, "Can't open Mother Connection");
-        exit(0);
+        exit(17);
     }
 
     n = 1;
@@ -413,7 +413,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "OpenMother setsockopt REUSEADDR");
-        exit(0);
+        exit(18);
     }
 
     ld.l_onoff = 0;
@@ -423,7 +423,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "OpenMother setsockopt LINGER");
-        exit(0);
+        exit(19);
     }
 
     n = bind(fdMother, (sockaddr *)&server_addr, sizeof(sockaddr_in));
@@ -432,7 +432,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Can't bind Mother Connection port %d (errno %d).", nPort, errno);
-        exit(0);
+        exit(20); // not 0: a server that never started must not look like a clean run
     }
 
     n = listen(fdMother, 5);
@@ -441,7 +441,7 @@ void init_mother(int nPort)
     {
         close(fdMother);
         slog(LOG_OFF, 0, "Can't listen on Mother Connection.");
-        exit(0);
+        exit(25);
     }
 
     n = fcntl(fdMother, F_SETFL, FNDELAY);

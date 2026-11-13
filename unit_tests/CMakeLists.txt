@@ -22,6 +22,7 @@ add_executable(vme_unit_tests
         sessionlog_tests.cpp
         textutil_tests.cpp
         unit_data_tests.cpp
+        unitwalk_tests.cpp
         weather_cpp_tests.cpp
         when_cache_tests.cpp
         when_limit_tests.cpp

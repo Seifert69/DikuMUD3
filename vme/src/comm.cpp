@@ -17,6 +17,7 @@
 #include "slog.h"
 #include "system.h"
 #include "textutil.h"
+#include "unitwalk.h"
 #include "utils.h"
 
 #include <cctype>
@@ -680,38 +681,18 @@ static void act_walk(cActParameter arg1, cActParameter arg3, actType_e type, SEN
         return;
     }
 
-    if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
+    if (arg1.m_u == nullptr)
     {
         return;
     }
 
-    // The characters in a unit and in its transparent units, except in skip
-    auto walk = [&](const unit_data *in, const unit_data *skip) {
-        for (const unit_data *to = in->getUnitContains(); to; to = to->getNext())
+    walk_surroundings(arg1.m_u, [&](unit_data *u, unit_data *inside, bool) {
+        if (u->isChar())
         {
-            if (to->isChar())
-            {
-                send(to);
-            }
-            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != skip)
-            {
-                for (const unit_data *u = to->getUnitContains(); u; u = u->getNext())
-                {
-                    if (u->isChar())
-                    {
-                        send(u);
-                    }
-                }
-            }
+            send(u);
         }
-    };
-
-    const unit_data *room = arg1.m_u->getUnitIn();
-    walk(room, nullptr);
-    if (room->getUnitIn() && room->isTransparent())
-    {
-        walk(room->getUnitIn(), room);
-    }
+        return (inside || !u->getNumberOfCharactersInsideUnit()) ? eWalk::skip : eWalk::on; // no one inside to tell
+    });
 }
 
 // act_walk() for the unit tests (declared there)
