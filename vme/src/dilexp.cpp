@@ -3301,100 +3301,110 @@ void dilfe_txf(dilprg *p)
     dilval::free(v1);
 }
 
-/* sact - return string (call act_generate) */
-void dilfe_sact(dilprg *p)
+// DIL's act(): the statement sends the act() (DilAct::send); sact() gives its text for the one it
+// is about (act_viewer()), or fails with nobody there (DilAct::text); act() used as an expression
+// gives that text with a <br/>, or "" with nobody there (DilAct::text_br).
+void dil_act(dilprg *p, DilAct mode)
 {
-    dilval *v = dilval::alloc(); // Return variable
-    v->type = DILV_FAIL;    // NULL string
-
-    /* sact() function call */
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
     dilval *v4 = p->stack.pop();
     dilval *v3 = p->stack.pop();
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
+    dilval *v = (mode == DilAct::send) ? nullptr : dilval::alloc();
 
-    /* 6 arguments */
-
-    p->waitcmd--;
-
-    if (dil_type_check("sact",
-                       p,
-                       6,
-                       v1,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_SP,
-                       v2,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT,
-                       v3,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v4,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v5,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v6,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT))
+    if (v)
     {
-        switch (v6->val.num)
-        {
-            case TO_CHAR:
-            case TO_ROOM:
-            case TO_ALL:
-            case TO_REST:
-                /* these require 1st argument */
-                if (v3->val.ptr)
-                {
-                    char dest[MAX_STRING_LENGTH];
-                    sact(dest, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
-                    v->val.ptr = str_dup(dest);
-                    v->atyp = DILA_EXP;
-                    v->type = DILV_SP;
-                }
-                break;
-
-            case TO_VICT:
-            case TO_NOTVICT:
-                if (v5->val.ptr)
-                {
-                    char dest[MAX_STRING_LENGTH];
-                    sact(dest, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num));
-                    v->val.ptr = str_dup(dest);
-                    v->atyp = DILA_EXP;
-                    v->type = DILV_SP;
-                }
-        } // switch
-    }     // if
+        v->type = DILV_FAIL;
+    }
     else
     {
-        v->type = DILV_ERR; /* wrong type */
+        p->waitcmd--; // the statement; an expression must not, or a wait() with it never fires
     }
 
-    p->stack.push(v);
+    bool ok = dil_type_check((mode == DilAct::text) ? "sact" : "act",
+                             p,
+                             6,
+                             v1,
+                             TYPEFAIL_NULL,
+                             1,
+                             DILV_SP,
+                             v2,
+                             TYPEFAIL_NULL,
+                             1,
+                             DILV_INT,
+                             v3,
+                             TYPEFAIL_NULL,
+                             3,
+                             DILV_UP,
+                             DILV_SP,
+                             DILV_NULL,
+                             v4,
+                             TYPEFAIL_NULL,
+                             3,
+                             DILV_UP,
+                             DILV_SP,
+                             DILV_NULL,
+                             v5,
+                             TYPEFAIL_NULL,
+                             3,
+                             DILV_UP,
+                             DILV_SP,
+                             DILV_NULL,
+                             v6,
+                             TYPEFAIL_NULL,
+                             1,
+                             DILV_INT);
+    if (!ok)
+    {
+        if (mode == DilAct::text)
+        {
+            v->type = DILV_ERR; /* wrong type */
+        }
+    }
+    else if ((v6->val.num >= TO_ROOM) && (v6->val.num <= TO_REST)) // anything else does nothing
+    {
+        actType_e type = ActType(v6->val.num);
+        // Without the one it is about (null) the statement sends nothing and sact() fails; a string
+        // there is nobody to see it
+        bool given = (((type == TO_VICT) || (type == TO_NOTVICT)) ? v5 : v3)->val.ptr != nullptr;
+        if (mode == DilAct::send)
+        {
+            if (given)
+            {
+                act((char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, type);
+            }
+        }
+        else if (given || (mode == DilAct::text_br))
+        {
+            char buf[MAX_STRING_LENGTH];
+            if (sact(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, type) && (mode == DilAct::text_br))
+            {
+                strcat(buf, "<br/>"); // act_generate leaves room for it
+            }
+            v->type = DILV_SP;
+            v->atyp = DILA_EXP;
+            v->val.ptr = str_dup(buf);
+        }
+    }
 
+    if (v)
+    {
+        p->stack.push(v);
+    }
     dilval::free(v1);
     dilval::free(v2);
     dilval::free(v3);
     dilval::free(v4);
     dilval::free(v5);
     dilval::free(v6);
+}
+
+/* sact - return string */
+void dilfe_sact(dilprg *p)
+{
+    dil_act(p, DilAct::text);
 }
 
 /* getinteger(idx, p_u, p_i) : index is the kind of int to get.
@@ -7002,86 +7012,5 @@ void dilfe_pck(dilprg *p)
 
 void dilfe_act(dilprg *p)
 {
-    dilval *v = dilval::alloc();
-    char buf[MAX_STRING_LENGTH]; // act_generate's size
-    buf[0] = 0;                  // stays empty without a target
-    /* Conversion of integers to strings */
-    dilval *v6 = p->stack.pop();
-    dilval *v5 = p->stack.pop();
-    dilval *v4 = p->stack.pop();
-    dilval *v3 = p->stack.pop();
-    dilval *v2 = p->stack.pop();
-    dilval *v1 = p->stack.pop();
-
-    v->type = DILV_FAIL;
-
-    if (dil_type_check("act",
-                       p,
-                       6,
-                       v1,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_SP,
-                       v2,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT,
-                       v3,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v4,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v5,
-                       TYPEFAIL_NULL,
-                       3,
-                       DILV_UP,
-                       DILV_SP,
-                       DILV_NULL,
-                       v6,
-                       TYPEFAIL_NULL,
-                       1,
-                       DILV_INT))
-    {
-        switch (v6->val.num)
-        {
-            case TO_CHAR:
-            case TO_ROOM:
-            case TO_ALL:
-            case TO_REST:
-                /* these require 1st argument */
-                if (const unit_data *to = cActParameter(v3).m_u) // a unit, not a string
-                {
-                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), to);
-                }
-                v->type = DILV_SP;
-                v->atyp = DILA_EXP;
-                v->val.ptr = str_dup(buf);
-                break;
-
-            case TO_VICT:
-            case TO_NOTVICT:
-                if (const unit_data *to = cActParameter(v5).m_u) // a unit, not a string
-                {
-                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), to);
-                }
-                v->type = DILV_SP;
-                v->atyp = DILA_EXP;
-                v->val.ptr = str_dup(buf);
-                break;
-        }
-    }
-    p->stack.push(v);
-    dilval::free(v1);
-    dilval::free(v2);
-    dilval::free(v3);
-    dilval::free(v4);
-    dilval::free(v5);
-    dilval::free(v6);
+    dil_act(p, DilAct::text_br);
 }

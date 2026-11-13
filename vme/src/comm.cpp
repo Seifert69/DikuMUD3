@@ -21,6 +21,7 @@
 
 #include <cctype>
 #include <cstring>
+#include <functional>
 
 actType_e ActType(int n)
 {
@@ -343,17 +344,17 @@ void send_to_outdoor(const char *messg)
     }
 }
 
-// To deal with both telnet and HTML newlines, act() should *always*
-// append a <br/> and sact() should never add a <br/>. buf = dest, MAX_STRING_LENGTH long
-void act_generate(char *buf,
+// The text of an act() for "to", without a <br/> (act() and cact() add one, sact() doesn't).
+// buf = dest, MAX_STRING_LENGTH long, with room left for the <br/>. False when there is nothing
+// for "to" (buf "") or the text stops at an illegal $-code (buf what came before it).
+bool act_generate(char *buf,
                   const char *str,
                   actShow_e show_type,
                   cActParameter arg1,
                   cActParameter arg2,
                   cActParameter arg3,
                   actType_e type,
-                  const unit_data *to,
-                  int bNewline)
+                  const unit_data *to)
 {
     const char *strp = nullptr;
     char *point = nullptr;
@@ -372,12 +373,12 @@ void act_generate(char *buf,
 
     if (str == nullptr) // DIL's act() with a string never set
     {
-        return;
+        return false;
     }
 
     if (!to->isChar() || arg1.m_u == nullptr)
     {
-        return;
+        return false;
     }
 
     // if (!IS_CHAR(to) || !CHAR_DESCRIPTOR(to) || arg1.m_u == NULL)
@@ -385,24 +386,24 @@ void act_generate(char *buf,
 
     if (to == arg1.m_u && (type == TO_ROOM || type == TO_NOTVICT || type == TO_REST))
     {
-        return;
+        return false;
     }
 
     if (to == arg3.m_u && type == TO_NOTVICT)
     {
-        return;
+        return false;
     }
 
     if (to->getUnitIn() == arg1.m_u && type == TO_REST)
     {
-        return;
+        return false;
     }
 
     if (show_type != eA_RAW)
     {
         if ((show_type == actShow_e::eA_HIDEINV && !CHAR_CAN_SEE(to, arg1.m_u)) || (show_type != actShow_e::eA_ALWAYS && !CHAR_AWAKE(to)))
         {
-            return;
+            return false;
         }
     }
 
@@ -411,7 +412,7 @@ void act_generate(char *buf,
     bool bInTag = false;
     std::string sEscaped;
 
-    // A longer text is cut short, leaving room for the <br/> below
+    // A longer text is cut short, leaving room for the <br/> act() and cact() add
     const char *const end = buf + MAX_STRING_LENGTH - sizeof("<br/>");
 
     for (strp = str, point = buf;;)
@@ -442,7 +443,7 @@ void act_generate(char *buf,
                 default:
                     slog(LOG_ALL, 0, "Illegal first code to act(): %s", str);
                     *point = 0;
-                    return;
+                    return false;
             }
 
             if (i == nullptr)
@@ -569,7 +570,7 @@ void act_generate(char *buf,
                     default:
                         slog(LOG_ALL, 0, "ERROR: Illegal second code to act(): %s", str);
                         *point = 0;
-                        return;
+                        return false;
                 } /* switch */
             }
 
@@ -618,20 +619,6 @@ void act_generate(char *buf,
         }
     }
 
-    point--;
-    if (bNewline)
-    {
-        if (point > buf)
-        {
-            *(point) = 0;
-            strcat(point, "<br/>");
-        }
-        else
-        {
-            strcat(buf, "<br/>");
-        }
-    }
-
     char *cpos = nullptr;
 
     /* Cap the first letter, but skip all colour and control codes! */
@@ -651,207 +638,133 @@ void act_generate(char *buf,
         }
     }
     *point = toupper(*point);
+    return true;
 }
 
-/// Executes exactly like act() for TO_VICT and TO_CHAR. But never adds newline
-/// Can't handle other
-/// because of variance with each target's ability to e.g. see.
-/// Is there a need for sactother which takes a "to" argument? If we add
-/// to argument here it will be confusing for TO_VICT and TO_CHAR scenarios.
-void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
+/// Who an act() is about when it is written for one: the victim (arg3) for TO_VICT and
+/// TO_NOTVICT, the actor (arg1) otherwise.
+const unit_data *act_viewer(cActParameter arg1, cActParameter arg3, actType_e type)
 {
-    const unit_data *to = nullptr;
+    return ((type == TO_VICT) || (type == TO_NOTVICT)) ? arg3.m_u : arg1.m_u;
+}
 
+/// The text of an act() for the one it is about (act_viewer()), without a <br/>; "" when they
+/// can't see it (or for TO_ROOM/TO_REST/TO_NOTVICT, which leave that one out).
+/// buf = dest, MAX_STRING_LENGTH long. True as act_generate().
+bool sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
+{
     *buf = 0;
 
     if (!str || !*str)
     {
-        return;
+        return false;
     }
 
-    if (type == TO_VICT)
-    {
-        to = arg3.m_u;
-        if (to && to->isChar())
-        {
-            act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0); // No newline
-        }
-        return;
-    }
-    else if (type == TO_CHAR)
-    {
-        to = arg1.m_u;
-        if (to && to->isChar())
-        {
-            act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0);
-        }
-    }
+    const unit_data *to = act_viewer(arg1, arg3, type);
+    return to && to->isChar() && act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
 }
 
-/// @note Always adds <br/> at the end
-void act(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
+/// Everyone an act() reaches, each character given to send(): for TO_CHAR the actor and for
+/// TO_VICT the victim alone; otherwise everyone in the actor's room and in its transparent units,
+/// and when the actor's room is a transparent unit, those in the room around it as well.
+template<typename SEND>
+static void act_walk(cActParameter arg1, cActParameter arg3, actType_e type, SEND &&send)
 {
-    const unit_data *to = nullptr;
-    const unit_data *u = nullptr;
-    char buf[MAX_STRING_LENGTH];
-
-    if (!str || !*str)
+    if ((type == TO_VICT) || (type == TO_CHAR))
     {
-        return;
-    }
-
-    if (type == TO_VICT)
-    {
-        to = arg3.m_u;
-    }
-    else if (type == TO_CHAR)
-    {
-        to = arg1.m_u;
-    }
-    else if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
-    {
-        return;
-    }
-    else
-    {
-        to = arg1.m_u->getUnitIn()->getUnitContains();
-    }
-
-    /* same unit or to person */
-    for (; to; to = to->getNext())
-    {
-        if (to->isChar() && CHAR_DESCRIPTOR(to))
-        {
-            act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
-            send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
-        }
-
-        if (type == TO_VICT || type == TO_CHAR)
-        {
-            return;
-        }
-        if (to->getNumberOfCharactersInsideUnit() && to->isTransparent())
-        {
-            for (u = to->getUnitContains(); u; u = u->getNext())
-            {
-                if (u->isChar() && CHAR_DESCRIPTOR(u))
-                {
-                    act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
-                    send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
-                }
-            }
-        }
-    }
-
-    /* other units outside transparent unit */
-    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
-    {
-        for (to = to->getUnitContains(); to; to = to->getNext())
-        {
-            if (to->isChar() && CHAR_DESCRIPTOR(to))
-            {
-                act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
-                send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
-            }
-
-            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != arg1.m_u->getUnitIn())
-            {
-                for (u = to->getUnitContains(); u; u = u->getNext())
-                {
-                    if (u->isChar() && CHAR_DESCRIPTOR(u))
-                    {
-                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u);
-                        send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
-                    }
-                }
-            }
-        }
-    }
-}
-
-void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type, const char *colortype)
-{
-    const unit_data *to = nullptr;
-    const unit_data *u = nullptr;
-
-    if (!str || !*str)
-    {
-        return;
-    }
-
-    // To one character, inside a <div class='colortype'>; nothing when there's nothing to see
-    const std::string div = divcolor(colortype);
-    auto send = [&](const unit_data *ch) {
-        char temp[MAX_STRING_LENGTH];
-        act_generate(temp, str, show_type, arg1, arg2, arg3, type, ch, false);
-        if (!str_is_empty(temp))
-        {
-            send_to_descriptor(div + temp + "</div><br/>", CHAR_DESCRIPTOR(ch));
-        }
-    };
-
-    if (type == TO_VICT)
-    {
-        to = arg3.m_u;
-    }
-    else if (type == TO_CHAR)
-    {
-        to = arg1.m_u;
-    }
-    else if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
-    {
-        return;
-    }
-    else
-    {
-        to = arg1.m_u->getUnitIn()->getUnitContains();
-    }
-
-    /* same unit or to person */
-    for (; to; to = to->getNext())
-    {
-        if (to->isChar() && CHAR_DESCRIPTOR(to))
+        const unit_data *to = act_viewer(arg1, arg3, type);
+        if (to && to->isChar())
         {
             send(to);
         }
-
-        if (type == TO_VICT || type == TO_CHAR)
-        {
-            return;
-        }
-
-        if (to->getNumberOfCharactersInsideUnit() && to->isTransparent())
-        {
-            for (u = to->getUnitContains(); u; u = u->getNext())
-            {
-                if (u->isChar() && CHAR_DESCRIPTOR(u))
-                {
-                    send(u);
-                }
-            }
-        }
+        return;
     }
 
-    /* other units outside transparent unit */
-    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
+    if (arg1.m_u == nullptr || arg1.m_u->getUnitIn() == nullptr)
     {
-        for (to = to->getUnitContains(); to; to = to->getNext())
+        return;
+    }
+
+    // The characters in a unit and in its transparent units, except in skip
+    auto walk = [&](const unit_data *in, const unit_data *skip) {
+        for (const unit_data *to = in->getUnitContains(); to; to = to->getNext())
         {
-            if (to->isChar() && CHAR_DESCRIPTOR(to))
+            if (to->isChar())
             {
                 send(to);
             }
-
-            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != arg1.m_u->getUnitIn())
+            if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != skip)
             {
-                for (u = to->getUnitContains(); u; u = u->getNext())
+                for (const unit_data *u = to->getUnitContains(); u; u = u->getNext())
                 {
-                    if (u->isChar() && CHAR_DESCRIPTOR(u))
+                    if (u->isChar())
                     {
                         send(u);
                     }
                 }
             }
         }
+    };
+
+    const unit_data *room = arg1.m_u->getUnitIn();
+    walk(room, nullptr);
+    if (room->getUnitIn() && room->isTransparent())
+    {
+        walk(room->getUnitIn(), room);
     }
+}
+
+// act_walk() for the unit tests (declared there)
+void act_recipients(cActParameter arg1, cActParameter arg3, actType_e type, const std::function<void(const unit_data *)> &send)
+{
+    act_walk(arg1, arg3, type, send);
+}
+
+/// act() and cact(): the text to each one connected. act() sends what act_generate() gives, with
+/// the <br/> when the text is whole; cact() sends a text that isn't blank inside a
+/// <div class='colortype'>.
+static void act_send(const char *str,
+                     actShow_e show_type,
+                     cActParameter arg1,
+                     cActParameter arg2,
+                     cActParameter arg3,
+                     actType_e type,
+                     const char *colortype)
+{
+    if (!str || !*str)
+    {
+        return;
+    }
+
+    const std::string div = colortype ? divcolor(colortype) : "";
+    act_walk(arg1, arg3, type, [&](const unit_data *to) {
+        if (!CHAR_DESCRIPTOR(to))
+        {
+            return;
+        }
+        char buf[MAX_STRING_LENGTH];
+        bool whole = act_generate(buf, str, show_type, arg1, arg2, arg3, type, to);
+        if (!colortype)
+        {
+            if (whole)
+            {
+                strcat(buf, "<br/>"); // act_generate leaves room for it
+            }
+            send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
+        }
+        else if (!str_is_empty(buf))
+        {
+            send_to_descriptor(div + buf + "</div><br/>", CHAR_DESCRIPTOR(to));
+        }
+    });
+}
+
+void act(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type)
+{
+    act_send(str, show_type, arg1, arg2, arg3, type, nullptr);
+}
+
+void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type, const char *colortype)
+{
+    act_send(str, show_type, arg1, arg2, arg3, type, colortype);
 }

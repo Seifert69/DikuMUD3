@@ -72,17 +72,17 @@ void send_to_char(const std::string &messg, const unit_data *ch);
  *  anymore...
  */
 void act(const char *str, actShow_e hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type);
-void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type);
+bool sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type);
 void cact(const char *str, actShow_e hide_invisible, cActParameter arg1, cActParameter arg2, cActParameter arg3, actType_e type, const char *colortype);
-void act_generate(char *buf,
+const unit_data *act_viewer(cActParameter arg1, cActParameter arg3, actType_e type);
+bool act_generate(char *buf,
                   const char *str,
                   actShow_e show_type,
                   cActParameter arg1,
                   cActParameter arg2,
                   cActParameter arg3,
                   actType_e type,
-                  const unit_data *to,
-                  int bNewline = 1);
+                  const unit_data *to);
 
 int process_output(descriptor_data *t);
 int process_input(descriptor_data *t);

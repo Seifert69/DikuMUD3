@@ -86,10 +86,10 @@ dilend
 
 // DIL built-ins and a string variable that was never set (it holds null, not ""): replace,
 // mid, strcmp, strncmp, addcolor, changecolor, delcolor, flog, send_pre, send_done and act()
-// as an expression passed
-// the null on to C and crashed the whole server. A string never set now counts as "". Also:
-// mid outside the string, left/right with a count below 0 (wrote before the buffer), and
-// + with an unset string ("(NIL POINTER)x").
+// as an expression passed the null on to C and crashed the whole server. A string never set
+// now counts as "". Also: mid outside the string, left/right with a count below 0 (wrote
+// before the buffer), + with an unset string ("(NIL POINTER)x"), and the act statement with
+// a string as the actor (crashed), with the texts act() and sact() give.
 dilbegin T023(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
@@ -152,7 +152,19 @@ code
    send_done(notset, self, null, null, 0, "", null, CMD_AUTO_NONE);
    nobody := load("experiment@test");
    notset := act(notset, A_ALWAYS, nobody, null, null, TO_CHAR); // act() as an expression
+   // A blank or empty text is a line too; sact() adds no <br/>, and gives "" for a string where
+   // the one it is about goes
+   if ((act(" ", A_ALWAYS, nobody, null, null, TO_CHAR) != " <br/>") or
+       (act("$2t", A_ALWAYS, nobody, "", null, TO_CHAR) != "<br/>") or
+       (sact("hi", A_ALWAYS, nobody, null, null, TO_CHAR) != "Hi") or
+       (sact("hi", A_ALWAYS, "str", null, null, TO_CHAR) != ""))
+   {
+      destroy(nobody);
+      logtest(tstno, LOGT_ERROR, "T023 act() or sact() gave the wrong text");
+      goto terminate;
+   }
    destroy(nobody);
+   act("x", A_ALWAYS, "str", null, null, TO_CHAR); // a string as the actor crashed the server
 
    logtest(tstno, LOGT_INFO, "T023 Success");
    logtest(tstno, LOGT_INFO, "Done");
