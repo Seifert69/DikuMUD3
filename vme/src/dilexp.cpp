@@ -7015,7 +7015,8 @@ void dilfe_pck(dilprg *p)
 void dilfe_act(dilprg *p)
 {
     dilval *v = dilval::alloc();
-    char buf[1024];
+    char buf[MAX_STRING_LENGTH]; // act_generate's size
+    buf[0] = 0;                  // stays empty without a target
     /* Conversion of integers to strings */
     dilval *v6 = p->stack.pop();
     dilval *v5 = p->stack.pop();
@@ -7067,9 +7068,9 @@ void dilfe_act(dilprg *p)
             case TO_ALL:
             case TO_REST:
                 /* these require 1st argument */
-                if (v3->val.ptr)
+                if (const unit_data *to = cActParameter(v3).m_u) // a unit, not a string
                 {
-                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), (unit_data *)v3->val.ptr);
+                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), to);
                 }
                 v->type = DILV_SP;
                 v->atyp = DILA_EXP;
@@ -7078,9 +7079,9 @@ void dilfe_act(dilprg *p)
 
             case TO_VICT:
             case TO_NOTVICT:
-                if (v5->val.ptr)
+                if (const unit_data *to = cActParameter(v5).m_u) // a unit, not a string
                 {
-                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), (unit_data *)v5->val.ptr);
+                    act_generate(buf, (char *)v1->val.ptr, ActShow(v2->val.num), v3, v4, v5, ActType(v6->val.num), to);
                 }
                 v->type = DILV_SP;
                 v->atyp = DILA_EXP;

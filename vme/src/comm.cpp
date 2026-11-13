@@ -344,7 +344,7 @@ void send_to_outdoor(const char *messg)
 }
 
 // To deal with both telnet and HTML newlines, act() should *always*
-// append a <br/> and sact() should never add a <br/>. buf = dest
+// append a <br/> and sact() should never add a <br/>. buf = dest, MAX_STRING_LENGTH long
 void act_generate(char *buf,
                   const char *str,
                   actShow_e show_type,
@@ -406,8 +406,17 @@ void act_generate(char *buf,
     bool bInTag = false;
     std::string sEscaped;
 
+    // A longer text is cut short, leaving room for the <br/> below
+    const char *const end = buf + MAX_STRING_LENGTH - sizeof("<br/>");
+
     for (strp = str, point = buf;;)
     {
+        if (point >= end)
+        {
+            *(point++) = 0;
+            break;
+        }
+
         if (*strp == '$')
         {
             switch (*++strp)
@@ -577,7 +586,7 @@ void act_generate(char *buf,
                     uppercase = FALSE;
                  }
             */
-            while ((*point = *(i++)))
+            while (point < end && (*point = *(i++)))
             {
                 point++;
             }
@@ -631,6 +640,10 @@ void act_generate(char *buf,
         {
             point = cpos + 1; // Skip the '>' char
         }
+        else
+        {
+            break; // A '<' that never closes, e.g. "<3": no tag to skip
+        }
     }
     *point = toupper(*point);
 }
@@ -644,17 +657,17 @@ void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, c
 {
     const unit_data *to = nullptr;
 
+    *buf = 0;
+
     if (!str || !*str)
     {
         return;
     }
 
-    *buf = 0;
-
     if (type == TO_VICT)
     {
         to = arg3.m_u;
-        if (to->isChar())
+        if (to && to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0); // No newline
         }
@@ -663,7 +676,7 @@ void sact(char *buf, const char *str, actShow_e show_type, cActParameter arg1, c
     else if (type == TO_CHAR)
     {
         to = arg1.m_u;
-        if (to->isChar())
+        if (to && to->isChar())
         {
             act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, 0);
         }
@@ -755,15 +768,22 @@ void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParamete
 {
     const unit_data *to = nullptr;
     const unit_data *u = nullptr;
-    char buf[MAX_STRING_LENGTH];
-    char temp[MAX_STRING_LENGTH];
-    char *t = nullptr;
-    char *b = buf;
 
     if (!str || !*str)
     {
         return;
     }
+
+    // To one character, inside a <div class='colortype'>; nothing when there's nothing to see
+    const std::string div = divcolor(colortype);
+    auto send = [&](const unit_data *ch) {
+        char temp[MAX_STRING_LENGTH];
+        act_generate(temp, str, show_type, arg1, arg2, arg3, type, ch, false);
+        if (!str_is_empty(temp))
+        {
+            send_to_descriptor(div + temp + "</div><br/>", CHAR_DESCRIPTOR(ch));
+        }
+    };
 
     if (type == TO_VICT)
     {
@@ -787,20 +807,7 @@ void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParamete
     {
         if (to->isChar() && CHAR_DESCRIPTOR(to))
         {
-            *buf = 0;
-            b = buf;
-            *temp = 0;
-            t = temp;
-            act_generate(t, str, show_type, arg1, arg2, arg3, type, to, false);
-            if (!str_is_empty(t))
-            {
-                strcat(b, divcolor(colortype)); // Adds <div class='colortype'>
-                TAIL(b);
-                strcat(b, t);
-                TAIL(b);
-                strcat(b, "</div><br/>");
-                send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
-            }
+            send(to);
         }
 
         if (type == TO_VICT || type == TO_CHAR)
@@ -814,35 +821,20 @@ void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParamete
             {
                 if (u->isChar() && CHAR_DESCRIPTOR(u))
                 {
-                    *buf = 0;
-                    b = buf;
-
-                    strcat(b, divcolor(colortype));
-                    TAIL(b);
-                    act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
-                    TAIL(b);
-                    strcat(b, "</div><br/>");
-                    send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
+                    send(u);
                 }
             }
         }
     }
 
     /* other units outside transparent unit */
-    if ((to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
+    if (arg1.m_u->getUnitIn() && (to = arg1.m_u->getUnitIn()->getUnitIn()) && arg1.m_u->getUnitIn()->isTransparent())
     {
         for (to = to->getUnitContains(); to; to = to->getNext())
         {
             if (to->isChar() && CHAR_DESCRIPTOR(to))
             {
-                *buf = 0;
-                b = buf;
-                strcat(b, divcolor(colortype));
-                TAIL(b);
-                act_generate(buf, str, show_type, arg1, arg2, arg3, type, to, false);
-                TAIL(b);
-                strcat(b, "</div><br/>");
-                send_to_descriptor(buf, CHAR_DESCRIPTOR(to));
+                send(to);
             }
 
             if (to->getNumberOfCharactersInsideUnit() && to->isTransparent() && to != arg1.m_u->getUnitIn())
@@ -851,14 +843,7 @@ void cact(const char *str, actShow_e show_type, cActParameter arg1, cActParamete
                 {
                     if (u->isChar() && CHAR_DESCRIPTOR(u))
                     {
-                        *buf = 0;
-                        b = buf;
-                        strcat(b, divcolor(colortype));
-                        TAIL(b);
-                        act_generate(buf, str, show_type, arg1, arg2, arg3, type, u, false);
-                        TAIL(b);
-                        strcat(b, "</div><br/>");
-                        send_to_descriptor(buf, CHAR_DESCRIPTOR(u));
+                        send(u);
                     }
                 }
             }
