@@ -12640,6 +12640,59 @@ code
 }
 dilend
 
+/* gmzap <npc or object> <dil@zone>: remove a DIL from an NPC or object tagged with
+ * gmmem ... event, such as the wandering DIL of an event's character. */
+dilbegin gmzap(arg : string);
+var
+   u : unitptr;
+   word : string;
+   prg : string;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   word := getword(arg);
+   prg := getword(arg);
+   if ((word == "") or (prg == ""))
+   {
+      sendtext("Usage: gmzap &lt;npc, object or sym@zone&gt; &lt;dil@zone&gt;<br/>", self);
+      quit;
+   }
+
+   if ("@" in word)
+      u := findsymbolic(word);
+   else
+      u := findunit(self, word, FIND_UNIT_WORLD, null, UNIT_ST_NPC | UNIT_ST_OBJ);
+   if (u == null)
+   {
+      sendtext("No such NPC or object: " + word + "<br/>", self);
+      quit;
+   }
+   if (not (u.type & (UNIT_ST_NPC | UNIT_ST_OBJ))) // sym@zone may name a room
+   {
+      sendtext("Only an NPC or object.<br/>", self);
+      quit;
+   }
+   if (u.zoneidx == "treasure")
+   {
+      sendtext("Treasure keeps its DILs.<br/>", self);
+      quit;
+   }
+   if (not ("$gm_event" in u.extra))
+   {
+      sendtext(u.name + " isn't tagged as part of an event (gmmem &lt;unit&gt; event &lt;id&gt;).<br/>", self);
+      quit;
+   }
+
+   if (dildestroy(prg, u))
+      sendtext("Removed " + prg + " from " + u.name + ".<br/>", self);
+   else
+      sendtext(u.name + " runs no " + prg + " (wstat &lt;unit&gt; functions lists its DILs).<br/>", self);
+   quit;
+}
+dilend
+
 %rooms
 
 hold_room
