@@ -2210,7 +2210,7 @@ title "the captain"
 descr "The captain is standing here."
 weight 1
 M_ZOMBIE_SMALL(1,SEX_NEUTRAL)
-dilcopy ship_captain@function("shipdeck@test");
+dilcopy ship_captain@function("shipdeck@test", {});
 end
 
 

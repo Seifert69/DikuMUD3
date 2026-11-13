@@ -39,14 +39,16 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 ## Traps
 
 - **Reserved words.** Every function, field and built-in variable in `diltok.h` is reserved,
-  so `name`, `names`, `key`, `npcs`, `target`, `length`, `title`, `level`... can't be
-  variable names. vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
+  so `name`, `names`, `key`, `npcs`, `unset`, `target`, `length`, `title`, `level`... can't
+  be variable names. vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
   `pname`, `namex`, `kw`, `u`.
 - **Template names are 15 characters at most** (`Name of dilprogram ... was too long`).
 - **No field on a call's result**: `findroom(s).title` is a syntax error; put the unit in a
   variable first. Likewise `getword(s);` alone is one: write `w := getword(s);` (it also takes
   the word, and the spaces after it, off the variable `s`).
 - **No `\"` in a string**: vmc stops at it. Use single quotes inside the text.
+- **Strings**: `replace(old, new, text)` replaces every `old`; `left`, `right` and `mid` cut;
+  `split(text, sep)` trims the spaces around each piece, so it can't put text back together.
 - **`addextra(u.extra, {"$x"}, "")` adds nothing**: an extra made in DIL needs some text.
 - **`"words" in a stringlist`** is the position plus one (0 when absent) of the first entry
   that is the string or its first words, ignoring case: `"arrived"` doesn't match
