@@ -33,7 +33,8 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
       will type, written out for each unit, never "same as the other one" (lokee.md: each word
       of its title, the title itself, what it is). A character the story needs (who gives the
       quest, who holds the key) is one that stays put: read its zone source and choose one
-      without a wandering or aggressive DIL, and keep it out of rooms where monsters hunt. Say
+      without a wandering or aggressive DIL (or name the DIL to take off it, `gmzap`), and
+      keep it out of rooms where monsters hunt. Say
       who takes over if it dies before its part is done (an apprentice, its ghost, a note in
       its things), so the story can go on
     BEATS: in order, each with

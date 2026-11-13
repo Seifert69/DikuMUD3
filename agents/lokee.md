@@ -107,6 +107,11 @@ with `gmmem`:
 - `gmmem <unit> brief <text>` (`brief+` adds to it): who or what it is, what it knows, what it
   may reveal and how it speaks, from the plan. Rooms and objects get briefs too.
 - `gmmem <unit> event <id>`: the event it belongs to.
+- `gmzap <unit> <dil@zone>` takes a DIL off a unit of your event (one with `gmmem ... event`):
+  a character who must stay put but walks, the beggar who wanders off, loses the DIL that
+  moves it. `wstat <unit> functions` lists its DILs by name (`wander_zones@function` and
+  the like); the zone source says what each does. Only on what you loaded; never a zone's own
+  residents, and never what is a player's (it refuses those).
 - `gmmem <unit> told <text>`: after a character reveals something: what, and to whom.
 - `gmmem <unit>` shows it all: read it before a character speaks, so it stays consistent.
 
