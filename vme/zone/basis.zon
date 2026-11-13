@@ -536,6 +536,8 @@ code
    {
       if (dilfind("gm_track@commands", activator))
          i := dildestroy("gm_track@commands", activator);
+      if (dilfind("gm_recent@commands", activator))
+         i := dildestroy("gm_recent@commands", activator);
       if (dilfind("gm_lure@commands", activator))
          i := dildestroy("gm_lure@commands", activator);
       gm_alert@commands(activator, mid(asctime(realtime), 12, 16) + " left the game");

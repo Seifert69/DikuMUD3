@@ -95,6 +95,14 @@ at the player's next command or within the minute. The tracker removes itself af
 `gmtrack <player> off`; saved with a player all the same, it finds itself expired at the next
 login. `gmtrack` alone lists who is tracked.
 
+`gmtrack <player> recent` shows what a tracked player typed last (`gm_recent@commands`, copied on
+with the tracker and gone with it), the last 20 commands with the time, to the game master who
+asks. It is for a player who seems stuck: a command the game doesn't know is marked `(not a
+command)`, and one whose target isn't there `(nothing called 'warden' here)`. What they say and
+emote in the room is shown as typed; tells, whispers, shouts, prayers and channels only show to
+whom or on which channel, never the words. A command the room or something in it blocks before
+it reaches the player isn't seen.
+
 ## Drawing a player in
 
 `gmlure <player> <room@zone|room> [zone] [hours]` copies `gm_lure@commands` onto a player, which plays
