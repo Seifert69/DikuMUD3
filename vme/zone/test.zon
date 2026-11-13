@@ -139,6 +139,8 @@ code
    i := changecolor(self, notset, "red");
    i := delcolor(self, notset);
    i := delcolor(nobody, "key");
+   pagestring("x", nobody);        // a unit variable never set: the server crashed on both
+   set_password(nobody, "x");
    i := flog(notset, "x", "a");
    i := flog("t023.log", "x", notset);
    i := flog("../t023.log", "x", "a");   // refused: outside the log directory

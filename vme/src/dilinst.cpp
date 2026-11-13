@@ -331,7 +331,11 @@ void dilfi_pgstr(dilprg *p)
 
     if (dil_type_check("pagestring", p, 2, v1, TYPEFAIL_NULL, 1, DILV_SP, v2, TYPEFAIL_NULL, 1, DILV_UP))
     {
-        if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
+        if (v2->val.ptr == nullptr) // a unit variable never set passes the type check as DILV_UP
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s': pagestring with no unit.", p->frame->tmpl->prgname);
+        }
+        else if (!((unit_data *)v2->val.ptr)->isPC() && !((unit_data *)v2->val.ptr)->isNPC())
         {
             dil_typeerr(p, "not a pc/npc unit");
         }
@@ -351,7 +355,11 @@ void dilfi_setpwd(dilprg *p)
 
     if (dil_type_check("setpassword", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_SP))
     {
-        if (!((unit_data *)v1->val.ptr)->isPC())
+        if (v1->val.ptr == nullptr) // a unit variable never set passes the type check as DILV_UP
+        {
+            szonelog(p->frame->tmpl->zone, "DIL '%s': set_password with no unit.", p->frame->tmpl->prgname);
+        }
+        else if (!((unit_data *)v1->val.ptr)->isPC())
         {
             dil_typeerr(p, "Not a pc unit");
         }
