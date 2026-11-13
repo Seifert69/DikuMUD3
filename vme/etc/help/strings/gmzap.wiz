@@ -1,0 +1,27 @@
+<div class="mw-parser-output"><h1>Gmzap</h1>
+<p>Usage:
+</p>
+<pre>gmzap &lt;npc or object&gt; &lt;dil@zone&gt;      (230)
+gmzap &lt;sym@zone&gt; &lt;dil@zone&gt;
+</pre>
+<p>Removes a DIL program from an NPC or object of an event: one tagged with 
+<a cmd='#'>Wizhelp Gmmem</a> &lt;unit&gt; event &lt;id&gt;, as a game master tags the units it 
+loads. Use it on a character that must stay put, to take off the DIL 
+that makes it wander. <b>wstat &lt;unit&gt; functions</b> lists a unit's DILs by 
+name; when a DIL is on a unit more than once, every copy comes off.
+</p><p>It never touches rooms, treasure, players or what is theirs: what they 
+carry or wear, their pets and followers. The tag marks the units of 
+events but doesn't prove who loaded them, so tag only your own. To 
+remove a DIL from any unit, a higher god uses <a cmd='#'>Wizhelp Zap</a> (245).
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmmem</a>
+&gt; <a cmd='#'>Wizhelp Zap</a>
+&gt; <a cmd='#'>Wizhelp Wstat</a>
+</pre>
+
+
+
+
+</div>

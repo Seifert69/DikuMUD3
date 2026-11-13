@@ -35,6 +35,7 @@ gmquest=gmquest.wiz
 gmroom=gmroom.wiz
 gmtrack=gmtrack.wiz
 gmtreasure=gmtreasure.wiz
+gmzap=gmzap.wiz
 goto=goto.wiz
 :end:g
 :start:h
