@@ -2481,6 +2481,334 @@ dilend
 
 
 /*
+ * ship: a ship sailing between ports. The room running it is the ship (its main deck): it is
+ * linked into a port room while it lies there and into its own sea room while it sails. Players
+ * board with "enter <ship>" and leave with "exit", and followers come along; at sea the ship
+ * carries a $no_exit extra, so exit and leave refuse. Nobody has to steer it.
+ *
+ *   shipname   "the longship": $2t in the messages
+ *   ports      the port rooms in visiting order, each once: {"pier@town", "dock@isle"}
+ *   portnames  $3t for each port: {"Town", "the isle"}; {} for the port rooms' titles
+ *   departs    the departure hours in order round the day, starting anywhere: {"15", "21",
+ *              "3", "9"}. Departure k leaves ports.[k % length(ports)], so give a multiple of
+ *              length(ports) departures; at boot the ship lies at the port of the next one.
+ *              {} to sail by the "dwell" option instead.
+ *   sea        the ship's own room at sea: "ocean@zone". Give it no exits and
+ *              UNIT_FL_NO_TELEPORT: the only way out is the ship.
+ *   decks      the rooms aboard that hear the ship; the ship room always does
+ *   opts       "<option> <value>" entries, all optional:
+ *                 "sail 300"   seconds at sea per leg (300, a mud hour; 30 at least)
+ *                 "dwell 120"  seconds in port when departs is {} (120; 30 at least)
+ *                 "boarding <text>"     aboard and in port before casting off
+ *                 "leaving <text>"      aboard as it casts off   "leaving_port <text>" in port
+ *                 "arrived <text>"      aboard on arrival        "arrived_port <text>" in port
+ *                 "sea <text>"          aboard, one about every minute at sea; repeat it for more
+ *              $2t in these is the ship, $3t the port it sails to or has reached.
+ *                 "noexit <text>"       to someone trying to get off at sea. It is the $no_exit
+ *                                       text of exit and leave: $1n is them, $2n the ship room,
+ *                                       so write the ship's name in it.
+ *
+ * The ship tells the decks, the room it lies in (port or sea), and the NPCs in all of them of
+ * each move, so a zone can keep its own crew, timetable criers or sea monsters in a DIL that
+ * waits for these messages (rooms by symbolic name; hour -1 when sailing by dwell):
+ *    "ship arrived <port> <next port> <next departure hour>"   (also at boot)
+ *    "ship boarding <port> <next port>"
+ *    "ship leaving <port> <next port>"
+ *    "ship at sea <port> <next port>"
+ *
+ * dilcopy ship@function("the longship", {"beach@isle", "dock@town"}, {"the isle", "town"},
+ *                       {"0", "6", "12", "18"}, "ocean@isle", {"bow@isle", "mid@isle"},
+ *                       {"sail 180", "sea The longship glides through the mist."});
+ */
+
+// For ship: the departure in departs that comes next at hour (one at that very hour included)
+dilbegin integer ship_next(departs : stringlist, hour : integer);
+var
+   k   : integer;
+   t   : integer;
+   gap : integer;
+   i   : integer;
+code
+{
+   gap := 24;
+   k := 0;
+   while (k < length(departs))
+   {
+      t := (atoi(departs.[k]) - hour + 24) % 24;
+      if (t < gap)
+      {
+         gap := t;
+         i := k;
+      }
+      k := k + 1;
+   }
+   return (i);
+}
+dilend
+
+
+// For ship: tell a room and the NPCs in it of a move
+dilbegin ship_sigroom(r : unitptr, ev : string);
+var
+   u : unitptr;
+   n : unitptr;
+code
+{
+   sendto(ev, r);
+   u := r.inside;
+   while (u)
+   {
+      n := u.next; // the NPC may move on the message
+      if (u.type == UNIT_ST_NPC)
+         sendto(ev, u);
+      u := n;
+   }
+   return;
+}
+dilend
+
+
+// For ship: tell the decks and the room the ship lies in of a move
+dilbegin ship_signal(decks : stringlist, ev : string);
+external
+   ship_sigroom@function(r : unitptr, ev : string);
+var
+   k : integer;
+code
+{
+   k := 0;
+   while (k < length(decks))
+   {
+      ship_sigroom@function(findroom(decks.[k]), ev);
+      k := k + 1;
+   }
+   ship_sigroom@function(self.outside, ev);
+   return;
+}
+dilend
+
+
+// For ship: one text to everyone on the decks, another to those around the ship (port or sea)
+dilbegin ship_tell(decks : stringlist, aboard : string, around : string, shipname : string,
+                   portname : string);
+var
+   k : integer;
+   r : unitptr;
+code
+{
+   k := 0;
+   while (k < length(decks))
+   {
+      r := findroom(decks.[k]);
+      if (r.inside != null)
+         act(aboard, A_SOMEONE, r.inside, shipname, portname, TO_ALL);
+      k := k + 1;
+   }
+   if (around != "")
+      act(around, A_SOMEONE, self, shipname, portname, TO_REST);
+   return;
+}
+dilend
+
+
+dilbegin ship(shipname : string, ports : stringlist, portnames : stringlist, departs : stringlist,
+              sea : string, decks : stringlist, opts : stringlist);
+external
+   integer ship_next@function(departs : stringlist, hour : integer);
+   ship_tell@function(decks : stringlist, aboard : string, around : string, shipname : string,
+                      portname : string);
+   ship_signal@function(decks : stringlist, ev : string);
+var
+   pnames : stringlist;
+   dk     : stringlist;
+   seamsg : stringlist;
+   keys   : stringlist;
+   texts  : stringlist;  // boarding, leaving, leaving_port, arrived, arrived_port, noexit
+   np     : integer;
+   nd     : integer;
+   sailsecs : integer;
+   dwell  : integer;
+   i      : integer;  // the next departure in departs
+   p      : integer;  // the port the ship lies at
+   q      : integer;  // the port it sails to
+   prev   : integer;  // the hour of the last departure (at boot: of the boot)
+   gap    : integer;  // hours from prev to departs.[i], 24 for a day
+   passed : integer;  // hours since prev
+   last   : integer;  // the mud hour passed was last counted at
+   t      : integer;
+   k      : integer;
+   o      : string;
+   kw     : string;
+   hour   : string;
+   r      : unitptr;
+code
+{
+   heartbeat := PULSE_SEC * 15;
+   np := length(ports);
+   nd := length(departs);
+
+   if ((np < 2) or (findroom(sea) == null))
+   {
+      log("ship@function on " + self.symname + ": needs two ports or more and a sea room.");
+      quit;
+   }
+
+   k := 0;
+   while (k < np)
+   {
+      if (findroom(ports.[k]) == null)
+      {
+         log("ship@function on " + self.symname + ": no port room " + ports.[k] + ".");
+         quit;
+      }
+      k := k + 1;
+   }
+
+   if (nd > 0)
+   {
+      // In order round the day: at most one step back (the wrap past midnight)
+      t := 0;
+      k := 0;
+      while (k < nd)
+      {
+         if (atoi(departs.[(k + 1) % nd]) <= atoi(departs.[k]))
+            t := t + 1;
+         k := k + 1;
+      }
+      if ((t > 1) or ((nd % np) != 0))
+         log("ship@function on " + self.symname + ": departs should be in order round the day, " +
+             "a multiple of the ports in number.");
+   }
+
+   pnames := portnames;
+   while (length(pnames) < np)
+   {
+      r := findroom(ports.[length(pnames)]);
+      addstring(pnames, r.title);
+   }
+
+   dk := decks;
+   if (not (self.symname in dk))
+      addstring(dk, self.symname);
+
+   sailsecs := 300;
+   dwell := 120;
+   keys := {"boarding", "leaving", "leaving_port", "arrived", "arrived_port", "noexit"};
+   texts := {"All aboard! $2t is about to leave for $3t.",
+             "$2t casts off and heads out to sea, bound for $3t.",
+             "$2t casts off and heads out to sea.",
+             "$2t reaches $3t and ties up at the dock.",
+             "$2t arrives and ties up at the dock."};
+   addstring(texts, "You'd better stay aboard: " + shipname + " is out at sea.");
+   k := 0;
+   while (k < length(opts))
+   {
+      o := opts.[k];
+      kw := getword(o);
+      t := kw in keys;
+      if (kw == "sail")
+         sailsecs := atoi(o);
+      else if (kw == "dwell")
+         dwell := atoi(o);
+      else if (kw == "sea")
+         addstring(seamsg, o);
+      else if (t > 0)
+         texts.[t - 1] := o;
+      else
+         log("ship@function on " + self.symname + ": unknown option " + kw + ".");
+      k := k + 1;
+   }
+   if (sailsecs < 30)
+      sailsecs := 30;
+   if (dwell < 30)
+      dwell := 30;
+   if (length(seamsg) == 0)
+      seamsg := {"$2t rocks gently on the waves."};
+
+   // At boot: the port of the next departure
+   hour := "-1";
+   if (nd > 0)
+   {
+      i := ship_next@function(departs, mudhour);
+      p := i % np;
+      prev := mudhour;
+      gap := (atoi(departs.[i]) - prev + 24) % 24;
+   }
+
+   subextra(self.extra, "$no_exit");
+   link(self, findroom(ports.[p]));
+
+   :port:
+   q := (p + 1) % np;
+   if (nd > 0)
+      hour := departs.[i];
+   ship_signal@function(dk, "ship arrived " + ports.[p] + " " + ports.[q] + " " + hour);
+
+   if (nd > 0)
+   {
+      pause; // time to get on and off, even when it's late
+      pause;
+      // Count the hours since the last departure until they reach the gap, so a late arrival
+      // leaves at once and a gap of a whole day is a day
+      passed := (mudhour - prev + 24) % 24;
+      last := mudhour;
+      heartbeat := PULSE_SEC * 60;
+      while (passed < gap)
+      {
+         pause;
+         passed := passed + (mudhour - last + 24) % 24;
+         last := mudhour;
+      }
+      heartbeat := PULSE_SEC * 15;
+      prev := atoi(departs.[i]);
+   }
+   else
+   {
+      t := dwell;
+      while (t > 0)
+      {
+         pause;
+         t := t - 15;
+      }
+   }
+
+   ship_signal@function(dk, "ship boarding " + ports.[p] + " " + ports.[q]);
+   ship_tell@function(dk, texts.[0], texts.[0], shipname, pnames.[q]);
+   pause;
+
+   ship_signal@function(dk, "ship leaving " + ports.[p] + " " + ports.[q]);
+   ship_tell@function(dk, texts.[1], texts.[2], shipname, pnames.[q]);
+   addextra(self.extra, {"$no_exit"}, texts.[5]);
+   link(self, findroom(sea));
+   ship_signal@function(dk, "ship at sea " + ports.[p] + " " + ports.[q]);
+
+   t := 0;
+   while (t < sailsecs)
+   {
+      pause;
+      t := t + 15;
+      if (((t % 60) == 0) and (t < sailsecs))
+         ship_tell@function(dk, seamsg.[rnd(0, length(seamsg) - 1)], "", shipname, pnames.[q]);
+   }
+
+   p := q;
+   link(self, findroom(ports.[p]));
+   subextra(self.extra, "$no_exit");
+   ship_tell@function(dk, texts.[3], texts.[4], shipname, pnames.[p]);
+
+   if (nd > 0)
+   {
+      i := (i + 1) % nd;
+      gap := (atoi(departs.[i]) - prev + 24) % 24;
+      if (gap == 0)
+         gap := 24;
+   }
+   goto port;
+}
+dilend
+
+
+/*
  * function: dirstring
  * purpose:  use to return the string of a direction when you ahve its number value.
  * for example if you have  DIR_NORTH you can use this like
