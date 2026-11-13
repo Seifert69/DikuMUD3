@@ -110,10 +110,21 @@ with `gmmem`:
 - `gmmem <unit> told <text>`: after a character reveals something: what, and to whom.
 - `gmmem <unit>` shows it all: read it before a character speaks, so it stays consistent.
 
-Give your characters a name of their own as you load them (`set <npc> add-name hrafn`), so
-`gmmem`, `force` and the players' tells find the right one. Pick a name nothing else in the
-zone has (not a real NPC's, like the goblin captain Ralston): `gmmem`, `force` and `purge`
-take the first unit by that name they find, and that may not be yours. Stand in the room
+Every unit of yours gets two kinds of names as you load it:
+
+- **a handle**, for you: one word nothing else in the zone has (`hrafn`, `palewarden`; not a
+  real NPC's, like the goblin captain Ralston), so `gmmem`, `force` and `purge`, which take the
+  first unit by that name they find, find yours;
+- **the names a player will type**, from what they see: the title and each of its words on
+  its own, and what it is or looks like. `add-name` takes them all at once, comma-separated:
+  for `the Pale Warden`, a stone gargoyle, `set palewarden add-name pale warden, pale, warden,
+  gargoyle, statue, stone`. A player's word finds a unit only when it is one of its names
+  whole (`pale` doesn't find a unit named just `pale warden`), so list every word. Keep the
+  names the loaded unit had while they still fit what it looks like; delete only those that no
+  longer do (a beggar who is now a glass-seller loses `beggar`).
+
+A player who can't find the word can't play, however good the story is. Once named, check it
+from the room: `look <each name a player would type>` must show your unit. Stand in the room
 (`goto`) when you name, watch and set up a unit.
 
 `set <unit> descr <text>` and `set <unit> add-extra <keyword,keyword>: <text>` (what `look

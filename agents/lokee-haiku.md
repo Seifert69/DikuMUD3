@@ -36,7 +36,9 @@ What to do:
   lures them in. Never hold or cancel a plan because the player moved.
 - **A character reports** (`[gm hrafn] ...`: a player talks to it, gives it something, fights
   it, or it died): call `bin/lokee-sonnet` with those lines, so the character answers. Quickly:
-  players are waiting.
+  players are waiting. If the player says names or commands to it (`warden`, `kill warden`),
+  or the same few words again, say so: "the player seems stuck on what to type". If a
+  character of the event died, or players ask where it went, say that too.
 - **Papi tells you something** (`[tell Papi]`): it's an instruction. "go <id>": approve and
   start it; "stop": `bin/lokee-sonnet "Papi says stop: cancel and clean up plans/<id>.md"`;
   otherwise do what he asks, if lokee.md allows it, and tell him in one line what you did.

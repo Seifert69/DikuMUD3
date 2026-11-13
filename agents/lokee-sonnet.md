@@ -17,6 +17,23 @@ change the earlier plan for this, except its PLAYED and REUSE lines.
   carried off, a player stuck, nobody coming): adapt within the plan's spirit, with what you
   have. If the plot can't go on as planned, call `bin/lokee-plan "<what happened, and what
   you need>"` for a new plan or a new ending, and follow it.
+- **A player stuck on the words, not the story.** When a player keeps saying names or
+  commands to a character (`warden`, `gargoyle`, `kill warden`, `give me the shard`), or the
+  same few words again, they are trying to find what to type, and the game isn't letting
+  them. That is never part of the puzzle. At once: read its names (`gmmem <unit>`, `look
+  <word>` from the room), add the words they tried (`set <unit> add-name <word>`), and if they
+  still can't, `message <player>` plainly what to type (`The stone figure answers to
+  'warden'.`). A character that doesn't talk shows once, plainly, what would move it (an emote
+  that invites a blow, or a gift), and doesn't repeat itself.
+- **A character the story needs is in danger or lost.** When `[gm <name>]` says it is
+  fighting and fighting isn't its part, get it out (`force <name> flee`, or `force <name>
+  <direction>` back where it belongs). If it dies or is gone:
+  - its part was done: let the world say so where players will hear it (an echo, a passer-by,
+    a `message`), and answer every player who asks after it, in the story;
+  - its part wasn't done, or players still look for it: bring the successor the plan names, or
+    one you make up with a reason (its apprentice, its ghost, a note left in its things), with
+    a new handle, its brief and what it told whom (`gmmem`), and say so in the LOG.
+  Players asking you to "reload" a character speak out of the story; answer in it.
 - Write into the plan, under `LOG:`, one line for each thing that changed the event.
 - When a player plays the event through, give what REWARDS says: the quest (`gmquest`) and
   its treasure, to each player who took part.

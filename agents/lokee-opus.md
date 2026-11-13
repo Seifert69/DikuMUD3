@@ -29,7 +29,13 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
     WHERE: the rooms (room@zone), the rooms you'll make (gmroom: keyword, where it stands,
       title, inside, outside), and the exits you'll add (set room dir-to, unused directions only)
     CAST: each character: what you load (npc@zone), its new title, names and description,
-      what it knows and may reveal, how it speaks
+      what it knows and may reveal, how it speaks. Names: its handle and every name a player
+      will type, written out for each unit, never "same as the other one" (lokee.md: each word
+      of its title, the title itself, what it is). A character the story needs (who gives the
+      quest, who holds the key) is one that stays put: read its zone source and choose one
+      without a wandering or aggressive DIL, and keep it out of rooms where monsters hunt. Say
+      who takes over if it dies before its part is done (an apprentice, its ghost, a note in
+      its things), so the story can go on
     BEATS: in order, each with
       - when it starts (a time, or what the players do),
       - what happens: the exact commands for the scripted parts (echo, message, force ...
