@@ -8,7 +8,7 @@
 #   run-review.sh [day]     review that day (default: yesterday)
 #
 # The coach works in ~/dwili/review/<day>/ and may write nothing else; this script then installs
-# its plan.txt, notes.txt and lessons.txt in ~/dwili/memory. The old notes and lessons stay in
+# its plan.txt, notes.txt, lessons.txt and zones.txt in ~/dwili/memory. The old notes and lessons stay in
 # ~/dwili/review/<day>/ as *.orig. Each day is tried once: the directory marks it.
 #
 cd ~/dwili || exit 1
@@ -28,7 +28,7 @@ mkdir -p -m 700 "$dir"
 
 bin/daylog.py "$LOGDIR/session-$day.log" > "$dir/day.txt"
 cp "$LOGDIR/claude-$day.log" "$dir/claude.txt" 2>/dev/null
-for f in notes lessons; do
+for f in notes lessons zones; do
     cp -p "memory/$f.txt" "$dir/$f.orig"
     cp "memory/$f.txt" "$dir/$f.txt"
 done
@@ -46,7 +46,7 @@ settings='{
 echo "review of $day: coach started $(date '+%F %T')"
 timeout 1800 claude -p --model claude-opus-5-5 --effort high --settings "$settings" \
     --append-system-prompt-file bin/coach.md \
-    "Review Dwili's day $day. Your files are in ~/dwili/review/$day/. Write plan.txt, notes.txt, lessons.txt and report.md there." \
+    "Review Dwili's day $day. Your files are in ~/dwili/review/$day/. Write plan.txt, notes.txt, lessons.txt, zones.txt and report.md there." \
     > "$dir/coach.log" 2>&1
 echo "review of $day: coach exited with code $? at $(date '+%F %T')"
 
@@ -56,7 +56,7 @@ if [ -s "$dir/plan.txt" ] && grep -q "^GOAL" "$dir/plan.txt"; then
     cp "$dir/plan.txt" memory/plan.txt.new && mv memory/plan.txt.new memory/plan.txt
     echo "installed plan.txt"
 fi
-for f in notes lessons; do
+for f in notes lessons zones; do
     if (($(wc -l < "$dir/$f.txt") < 5 && $(wc -l < "$dir/$f.orig") >= 5)); then
         echo "kept memory/$f.txt: the coach's version is too short"
     elif ! cmp -s "$dir/$f.orig" "$dir/$f.txt"; then

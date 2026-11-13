@@ -25,7 +25,7 @@ LOGDIR=$HOME/.local/state/mud/dwili
 mkdir -p -m 700 "$LOGDIR"
 rm -f ~/.dwili-stop
 
-FIRST="Read memory/plan.txt, guide.txt, lessons.txt, notes.txt and dont-ask-again.txt, then start your loop: wait with bin/mud.py read 300, act on what happens, and read again. Never end your turn on your own."
+FIRST="Read memory/plan.txt, guide.txt, lessons.txt, notes.txt, zones.txt and dont-ask-again.txt, then start your loop: wait with bin/mud.py read 300, act on what happens, and read again. Never end your turn on your own."
 AGAIN="Go on with your loop: wait with bin/mud.py read 300, act on what happens, and read again. Never end your turn on your own."
 
 FRESH=7200
