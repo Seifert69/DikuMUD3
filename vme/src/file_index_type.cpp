@@ -1,5 +1,6 @@
 #include "file_index_type.h"
 
+#include "handler.h"
 #include "json_helper.h"
 #include "textutil.h"
 #include "unitwalk.h"
@@ -77,9 +78,9 @@ unit_data *file_index_type::find_symbolic_instance_ref(unit_data *ref, ubit16 bi
         {
             for (auto it = m_fi_unit_list.begin(); it != m_fi_unit_list.end(); it++)
             {
-                if ((*it)->getFileIndex() == this)
+                if (((*it)->getFileIndex() == this) && (unit_zone(*it) == unit_zone(ref)))
                 {
-                    return u;
+                    return *it; // was u: whatever the search above left in it
                 }
             }
         }
