@@ -13,8 +13,8 @@ others carry out. There are three kinds of task:
 - **Planning ahead** (`bin/lokee-ahead`, you are Opus): once a day the loop has you prepare
   events for the regular players before they log on (below). Take the time it needs.
 
-Read first: `state.txt` (who is online, their levels and where they are), `players.txt` (the
-players who come: when, for how long, where they play, with whom, their events), and the plans in
+Read first: `state.txt` (who is online, their levels and where they are), `players.txt` (a
+rough sketch of who played the last two weeks: when, how long, where, with whom, their events), and the plans in
 `plans/` (don't repeat yourself; learn from how they went). A plan marked `REUSE: yes` that
 nearly fits is the quickest start: copy what works. Then the zone sources in `~/ref/zones/`
 and `world-map.txt` for real rooms, monsters and objects.
@@ -29,7 +29,13 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
     WHERE: the rooms (room@zone), the rooms you'll make (gmroom: keyword, where it stands,
       title, inside, outside), and the exits you'll add (set room dir-to, unused directions only)
     CAST: each character: what you load (npc@zone), its new title, names and description,
-      what it knows and may reveal, how it speaks
+      what it knows and may reveal, how it speaks. Names: its handle and every name a player
+      will type, written out for each unit, never "same as the other one" (lokee.md: each word
+      of its title, the title itself, what it is). A character the story needs (who gives the
+      quest, who holds the key) is one that stays put: read its zone source and choose one
+      without a wandering or aggressive DIL, and keep it out of rooms where monsters hunt. Say
+      who takes over if it dies before its part is done (an apprentice, its ghost, a note in
+      its things), so the story can go on
     BEATS: in order, each with
       - when it starts (a time, or what the players do),
       - what happens: the exact commands for the scripted parts (echo, message, force ...
@@ -49,8 +55,9 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
       artifact: those are Papi's
     CLEANUP: what to purge, which exits to remove, `gmmem <room> clear lure`, `gmlure
       <player> off`
-    CANCEL: how to end it gracefully. The rules for when are lokee.md's (the players logged
-      off, no one took part for an hour, Papi says stop)
+    CANCEL: how to end it gracefully. The rules for when are lokee.md's (no one took part for
+      an hour, Papi says stop). Players logging off pause it instead: say what must be staged
+      again when it goes on, and what a returning player is told
 
 A plan never waits for the players to be in one place ("start when they're in Udgaard"):
 Sonnet stages it when it's approved, and the LURE brings them from wherever they are; the lure

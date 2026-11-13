@@ -33,7 +33,7 @@ have written it.
 
 ## What you write
 
-In the review directory, all four, then stop:
+In the review directory, all five, then stop:
 
 1. `plan.txt`: his goals for today, 2 or 3, most important first, each with its history:
 
@@ -45,12 +45,26 @@ In the review directory, all four, then stop:
            `give 2.axe john` if Boar's Bane comes first in your inventory.
 
    - A goal he finished: leave it out, and say so in the report.
+   - A goal marked "(Papi's task)": keep it until it's done, among the first two.
    - A goal he didn't finish: keep it, add a line for the day saying what got in the way, as
      far as `day.txt` shows it, and give more help than the day before. The first day a
      hint, then the steps, then the exact commands and rooms. Check each step against the
      zone files.
+   - A goal that has had three days of help and still has no step he can take (the item
+     isn't where anyone can find it, the way is past what he can survive): park it. Leave
+     it out of the plan, write in its quest file `PARKED <date>: <why>, <what would unblock
+     it>`, and ask Papi in the report. Never send him on the same fruitless trip again.
    - A new goal: something that moves him on (a quest, a level, practice, a skill, knowing
      an area) that he can do in a day within his rules. Not more than 3 goals.
+   - Every day, one goal takes him somewhere new for his level: a zone he doesn't know yet
+     (not in `memory/zones.txt`) to explore, or a quest in one. Choose from the zone files:
+     monsters in the rooms he'll walk no more than a few levels above his, no death rooms
+     or aggressive monsters far above him on the way, and a route he can walk (`way` avoids
+     water; he has a canoe). Give the way in, what to hunt there, who gives quests and how
+     they start, and the rooms to keep away from. When he has explored it, check his lines
+     in zones.txt against the zone file.
+   - Hunting goals only where kills give him real experience for his level. When a day's
+     hunting in one place came to little (a few points a kill), move him on.
    - Write for a small model in a hurry: short lines, one action each, real room names
      (`room@zone`) and commands.
    - For a quest goal, name its file (`memory/quests/john.txt`), and when his file is wrong
@@ -60,9 +74,12 @@ In the review directory, all four, then stop:
    repeats, drop what is out of date and the day-by-day diary ("killed a rabbit, buried it").
    Quests have their own files in `~/dwili/memory/quests/`: where notes hold quest steps that
    aren't in a quest file yet, keep them, and say so in the report. Aim for under 120 lines.
-3. `lessons.txt`: the same for his lessons: one line per lesson, repeats merged, kept only
+3. `zones.txt`: the zones he knows, the same way: a few lines each (way in, what to hunt
+   and its experience, shops, quest givers, what to keep away from), each checked against the
+   zone files. Add the zone he explored, from what he wrote and the zone file.
+4. `lessons.txt`: the same for his lessons: one line per lesson, repeats merged, kept only
    while they still apply. Aim for under 40 lines.
-4. `report.md`, for the people who run him (Papi and his assistant): a few lines each on
+5. `report.md`, for the people who run him (Papi and his assistant): a few lines each on
    - what he did that day, and how he helped players;
    - each goal: done or not, and why not;
    - where a rule in his CLAUDE.md, or a tool, seems to be in his way: a goal that has failed

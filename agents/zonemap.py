@@ -16,6 +16,7 @@ DIRS = {"north": "n", "east": "e", "south": "s", "west": "w", "up": "u", "down":
 EXIT = re.compile(r"^\s*(%s)\s+to\s+([A-Za-z0-9_]+(?:[@/][A-Za-z0-9_]+)?)(.*)" % "|".join(DIRS))
 ROOM = re.compile(r"^\s*([A-Za-z0-9_]+)\s*(//.*)?$")
 SECTION = re.compile(r"^%(\w+)")
+ENDS = re.compile(r";\s*end\s*$")  # a room's end on the same line as its last exit
 
 
 def uncomment(text):
@@ -72,6 +73,10 @@ def rooms(path):
             if re.match(r"^\s*open\s*\{.*EX_OPEN_CLOSE", line) and room["exits"][-1][-1] not in "*!":
                 room["exits"][-1] += "!" if "EX_HIDDEN" in line else "*"
             exit_open = ";" not in line and not re.match(r"^\s*end\s*$", line)
+            if ENDS.search(line):  # "...pass."; end: the room ends on the exit's last line
+                yield zone, room
+                room = None
+                continue
             if exit_open or ";" in line:
                 continue
         if re.match(r"^\s*end\s*$", line):
@@ -109,6 +114,10 @@ def rooms(path):
             door = ("!" if "EX_HIDDEN" in flags else "*") if "EX_OPEN_CLOSE" in flags else ""
             room["exits"].append("%s=%s%s" % (DIRS[m.group(1)], to, door))
             exit_open = ";" not in flags
+            if ENDS.search(line):
+                yield zone, room
+                room = None
+                continue
         if line.count('"') % 2:
             in_string = True
 

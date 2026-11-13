@@ -110,10 +110,21 @@ with `gmmem`:
 - `gmmem <unit> told <text>`: after a character reveals something: what, and to whom.
 - `gmmem <unit>` shows it all: read it before a character speaks, so it stays consistent.
 
-Give your characters a name of their own as you load them (`set <npc> add-name hrafn`), so
-`gmmem`, `force` and the players' tells find the right one. Pick a name nothing else in the
-zone has (not a real NPC's, like the goblin captain Ralston): `gmmem`, `force` and `purge`
-take the first unit by that name they find, and that may not be yours. Stand in the room
+Every unit of yours gets two kinds of names as you load it:
+
+- **a handle**, for you: one word nothing else in the zone has (`hrafn`, `palewarden`; not a
+  real NPC's, like the goblin captain Ralston), so `gmmem`, `force` and `purge`, which take the
+  first unit by that name they find, find yours;
+- **the names a player will type**, from what they see: the title and each of its words on
+  its own, and what it is or looks like. `add-name` takes them all at once, comma-separated:
+  for `the Pale Warden`, a stone gargoyle, `set palewarden add-name pale warden, pale, warden,
+  gargoyle, statue, stone`. A player's word finds a unit only when it is one of its names
+  whole (`pale` doesn't find a unit named just `pale warden`), so list every word. Keep the
+  names the loaded unit had while they still fit what it looks like; delete only those that no
+  longer do (a beggar who is now a glass-seller loses `beggar`).
+
+A player who can't find the word can't play, however good the story is. Once named, check it
+from the room: `look <each name a player would type>` must show your unit. Stand in the room
 (`goto`) when you name, watch and set up a unit.
 
 `set <unit> descr <text>` and `set <unit> add-extra <keyword,keyword>: <text>` (what `look
@@ -134,6 +145,12 @@ zones, dies, falls below a third of their hit points, gets a follower, is idle 1
 comes back, or leaves the game. Track the players an event is for once it's approved, instead
 of asking `where` again and again, and `gmtrack <player> off` at cleanup. It changes nothing
 about the player, and it ends by itself.
+
+`gmtrack <player> recent` shows what a tracked player typed last (their last 20 commands, with
+the time): a command the game didn't know is marked `(not a command)`, one whose target isn't
+there `(nothing called 'warden' here)`. Look at it whenever a player seems stuck or quiet: it
+shows what they tried, which a character never hears. What they say and emote in the room is
+there as typed; their tells and channels show only to whom, never the words.
 
 ### Drawing a player in: gmlure
 
@@ -201,7 +218,12 @@ ones Papi asks for, and once a day plans ahead for the regular players (`bin/lok
 3. `running`: you've started it. Every unit you load, room you make and exit you add goes into
    `plans/<id>.units`, one per line, so the cleanup can find it all, and gets `gmmem ...
    event <id>`.
-4. `done` or `cancelled`: everything in `plans/<id>.units` is purged, freed (rooms: after the
+4. `paused`: the players it was for all left the game before it ended. The stage is cleaned
+   up as for `done` (everything in `plans/<id>.units`, but never what a player carries), and the
+   LOG says where the story stands: what each player did and has, which characters were met
+   and what they told, what is still to come. When one of its players logs on again, it goes
+   on from there: Sonnet stages again what the story still needs and lures them back.
+5. `done` or `cancelled`: everything in `plans/<id>.units` is purged, freed (rooms: after the
    units in them are purged) or removed, and a few
    lines at the end of the plan say how it went: who took part, what they did, what they won.
 
@@ -212,8 +234,10 @@ Once a plan is approved, start it wherever the players are: stage it (build, loa
 then lure them in as its LURE says. A plan stays as it is: don't cancel, move or rewrite it
 because a player wandered off, lure them back.
 
-One event at a time. Cancel when no one has taken part within an hour, when the players it was
-for log off, or when Papi says stop.
+One event at a time for the players online: a paused event, whose players are all gone, holds
+no one up, and several can wait at once, each for its own players. Whoever of them logs on
+first gets theirs back. Pause when the players it was for log off; cancel when no one has taken
+part within an hour while they are on, or when Papi says stop.
 
 ## Fair play
 

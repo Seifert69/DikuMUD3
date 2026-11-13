@@ -89,12 +89,16 @@ $seen"
     ready=$(for f in $(grep -l '^STATE: ready' plans/*.md 2>/dev/null); do
                 echo "$f: $(grep -m1 -h '^WHEN:' "$f") $(grep -m1 -h '^FITS:' "$f")"
             done)
+    paused=$(for f in $(grep -l '^STATE: paused' plans/*.md 2>/dev/null); do
+                echo "$f: $(grep -m1 -h '^FOR:' "$f")"
+            done)
     reuse=$(for f in $(grep -l '^REUSE: yes' plans/*.md 2>/dev/null); do
                 echo "$f: $(grep -m1 -h '^FITS:' "$f") $(grep -m1 -h '^PLAYED:' "$f")"
             done)
     orders="$orders
 Plans (file: first line): ${plans:-none}
 Plans ready for players who aren't all online yet: ${ready:-none}
+Paused plans, waiting for one of their players to log on: ${paused:-none}
 Plans to reuse: ${reuse:-none}
 "
     bin/claude-turn $TURN -p --append-system-prompt "$(cat lokee-haiku.md)" "It's $(date '+%A %F, %H:%M') UTC.$orders

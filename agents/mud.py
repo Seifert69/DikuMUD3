@@ -8,6 +8,10 @@ usage: mud.py start [--throw]   log in; the session stays in the background
        mud.py read [SECONDS]    print what came in since the last call (waits up to SECONDS for some)
        mud.py status            is the session logged in, and where
        mud.py way PLACE [from ROOM]   the shortest way to PLACE (room@zone, or words of its title)
+       mud.py find WORDS...     the objects in the item list whose line has all the words,
+                                and where each comes from
+       mud.py message NAME TEXT...    something to tell a player when they're next online
+       mud.py message           the messages not given yet
        mud.py stop [MINUTES]    quit the game and end the session; with MINUTES, start refuses
                                 until they have passed, and read waits them out
 
@@ -50,11 +54,32 @@ idle timeout never throws the character out.
 When the mud reboots, the session logs in again by itself and says so. When it closes the
 connection, the last call says so; start again.
 A tell to a player who logged on again a little while ago is not sent when the character spoke to
-them earlier that day and they haven't spoken since: that would be a second greeting.
+them earlier that day and they haven't spoken since: that would be a second greeting. A tell to a
+player with a message waiting is always sent.
+
+Messages (~/memory/messages.txt, one per line: "date time Name: text") are shown when the player
+logs on or speaks, and crossed off when the character sends them a tell.
 """
 import base64, codecs, fcntl, hashlib, html.parser, json, os, re, selectors, socket, ssl, sys, time
 import urllib.parse
 
+
+
+def messages(name=None):
+    """The messages not given yet, all or a player's: their lines in MESSAGES."""
+    try:
+        with open(MESSAGES) as f:
+            lines = [ln.rstrip("\n") for ln in f if ln.strip()]
+    except OSError:
+        return []
+    return [ln for ln in lines if name is None or (ln.split()[2:3] or [""])[0].rstrip(":").lower() == name.lower()]
+
+
+def drop_messages(name):
+    keep = [ln for ln in messages() if ln not in messages(name)]
+    with open(MESSAGES + ".new", "w") as f:
+        f.write("".join(ln + "\n" for ln in keep))
+    os.replace(MESSAGES + ".new", MESSAGES)
 
 
 def agent():
@@ -89,7 +114,10 @@ SOCK = os.path.join(STATE, "mud.sock")
 PAUSE = os.path.join(STATE, "paused")  # until when (epoch seconds) the character stays off, after stop MINUTES
 LOGDIR = os.path.expanduser(os.path.join("~/.local/state/mud", AGENT or ""))  # on disk, unlike STATE: kept across reboots
 PEOPLE = os.path.expanduser(os.path.join("~", AGENT or "", "memory/people"))
+MESSAGES = os.path.join(os.path.dirname(PEOPLE), "messages.txt")
 MAP = os.path.expanduser(os.environ.get("MUD_MAP", "~/zones/map.txt"))  # from zonemap.py
+ITEMS = os.path.expanduser(os.environ.get("MUD_ITEMS", "~/zones/items.txt"))  # from zoneitems.py
+FIND_MAX = 30       # lines find prints at most
 
 QUIET = 1.0         # the answer to a command is complete when nothing came for this long
 SEND_WAIT = 10      # but wait no longer than this
@@ -97,6 +125,7 @@ MAX_UNREAD = 100000  # characters of unread output kept
 KEEPALIVE = 600     # the mud throws out a player idle for 20 minutes
 RECAP = 8           # lines of earlier conversation shown
 RECAP_AGAIN = 7200  # shown again when they speak this long after (the agent's conversation is new by then)
+MESSAGE_AGAIN = 600  # a waiting message is shown again when they speak this long after
 SAY_TO = 300        # a say goes in the history of the players who spoke in the room this recently
 ALONE = 900         # while no players but the admins are online, a reminder to go hunting this often
 ADMINS = {"Papi"}
@@ -534,8 +563,8 @@ def refused(mud, line):
     if word == "buy" and re.search(r"\b(tuborg|beer|green)", line, re.I):
         return ("Green Tuborg is a single sip. Drink water, free: drink barrel in Mary's cabin"
                 " (mud.py way cabin@haon_dor) or drink obelisk (mud.py way market_sq@midgaard)")
-    # the recap says "no greeting", and the agent greeted anyway
-    if word in ("tell", "tel", "te") and len(words) > 1:
+    # the recap says "no greeting", and the agent greeted anyway; a message isn't a greeting
+    if word in ("tell", "tel", "te") and len(words) > 1 and not messages(words[1]):
         name = words[1].capitalize()
         since = mud.greet_quiet.get(name)
         if since and time.strftime("%Y-%m-%d", time.localtime(since)) == time.strftime("%Y-%m-%d"):
@@ -583,6 +612,7 @@ class Session:
         self.seen = {}  # repeating line -> when it was last shown
         self.reflexes = {}  # reflex -> when its hint was last given
         self.greet_quiet = {}  # player -> when they logged on again, spoken to today and silent since
+        self.messaged = {}  # player -> when their waiting messages were last shown
         self.playing = False  # logged in: a name prompt now means the mud rebooted
         self.rebooted = False
 
@@ -640,6 +670,7 @@ class Session:
                 if kind in ("say", "ask", "whisper", "emote"):
                     self.speakers[name] = time.time()
                 self.recap(name)
+                self.show_messages(name)
                 self.remember(name, kind, name, body)
             else:
                 if not mine and now_repeat(self, text):
@@ -647,6 +678,9 @@ class Session:
                 self.add(text)
                 if mine and kind == "tell" and name:
                     self.remember(name, kind, self.me, body)
+                    if messages(name):
+                        drop_messages(name)
+                        self.add("\n[Your message for %s is given: crossed off.]\n" % name)
                 elif mine and kind in ("say", "ask", "whisper", "emote"):
                     for p, t in self.speakers.items():
                         if time.time() - t < SAY_TO:
@@ -666,6 +700,9 @@ class Session:
                         if self.conf.get("role") == "gm":  # the game master's loop wakes on this
                             self.add("\n[%s logged on]\n" % name)
                         self.recap(name, "%s logged on. " % name)
+                        self.show_messages(name, True)
+                    elif full and name != self.me:
+                        self.show_messages(name, True)
                 elif item[:1] == "-":
                     self.online.discard(item[1:].strip())
             others = sorted(self.online - {self.me})
@@ -678,6 +715,15 @@ class Session:
             self.login_text += "[password]"
         elif ev["type"] not in ("prompt", "data", "script"):
             self.add(text)
+
+    def show_messages(self, name, logon=False):
+        waiting = messages(name)
+        if not waiting or not logon and time.time() - self.messaged.get(name, 0) < MESSAGE_AGAIN:
+            return
+        self.messaged[name] = time.time()
+        self.add("\n[%s is online, and you have a message for them. Tell them now, even if you spoke"
+                 " today; your next tell to them crosses it off:]\n%s\n"
+                 % (name, "\n".join("  " + ln for ln in waiting)))
 
     def person(self, name):
         return os.path.join(PEOPLE, name.lower() + ".txt")
@@ -942,12 +988,31 @@ def show(r):
         die("not connected; mud.py start logs in again")
 
 
+def find(words):
+    """The item list's lines with all the words in them (any case): the agent's search, since
+    it may read only this file and not run grep."""
+    words = [w.lower() for w in words]
+    try:
+        with open(ITEMS, encoding="utf-8", errors="replace") as f:
+            hits = [line.rstrip("\n") for line in f if all(w in line.lower() for w in words)]
+    except OSError as e:
+        die("can't read %s: %s" % (ITEMS, e.strerror))
+    if not hits:
+        print("[Nothing in the item list has: %s]" % " ".join(words))
+        return
+    print("\n".join(hits[:FIND_MAX]))
+    if len(hits) > FIND_MAX:
+        print("[%d more: add a word to narrow it]" % (len(hits) - FIND_MAX))
+
+
 def way(args):
     """Breadth-first search over the map, around water a walker can't cross; prints the directions."""
     start = None
     if "from" in args:
         i = args.index("from")
         args, start = args[:i], " ".join(args[i + 1:])
+        if start in ("here", "this room"):
+            start = None  # where the character stands
     if not args:
         die("way where?")
     if not start:
@@ -1071,6 +1136,18 @@ def main():
         show(r)
     elif op == "way":
         way(args[1:])
+    elif op == "find" and len(args) > 1:
+        find(args[1:])
+    elif op == "message" and len(args) == 1:
+        print("\n".join(messages()) or "[No messages waiting]")
+    elif op == "message" and len(args) > 2 and re.fullmatch(r"[A-Za-z]+", args[1]):
+        name = args[1].capitalize()
+        os.makedirs(os.path.dirname(MESSAGES), mode=0o700, exist_ok=True)
+        with open(MESSAGES, "a") as f:
+            f.write("%s %s: %s\n" % (time.strftime("%Y-%m-%d %H:%M"), name, " ".join(" ".join(args[2:]).split())))
+        r = request({"op": "status"}, 5)
+        print("[Noted for %s. %s]" % (name, "They're online now: tell them." if r and name in (r.get("others") or [])
+                                     else "mud.py shows it when they log on or speak."))
     elif op == "status":
         r = request({"op": "status"}, 5)
         if r is None:
@@ -1091,6 +1168,11 @@ def main():
         sys.stdout.write(r["text"])
         print("\n[session ended%s]" % (", back at " + time.strftime("%H:%M", time.localtime(paused()))
                                         if paused() else ""))
+    elif op and op not in ("send", "find", "message"):
+        # an agent that tries a game command here (mud.py score) learns the way to send it
+        print('[%s is not a mud.py command. Game commands go through send: bin/mud.py send "%s"]'
+              % (op, " ".join(args)))
+        sys.exit(2)
     else:
         print(__doc__.strip())
         sys.exit(2)
