@@ -1066,7 +1066,7 @@ def way(args):
     if target is None:
         die("no way from %s to %s on the map" % (start, want))
     if steps_only:
-        print(" ".join(steps).replace(":", " "))
+        print(" ".join(steps))  # enter:barrel stays one step
         return
     print("From %s (%s) to %s (%s): %s (%d steps)%s" % (
         rooms[start][0], start, rooms[target][0], target, " ".join(steps).replace(":", " ") or "you are there", len(steps),

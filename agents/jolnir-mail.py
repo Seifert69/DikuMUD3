@@ -28,18 +28,17 @@ def mud(*args, timeout=60):
     return r.stdout + r.stderr
 
 
-def walk(to, start):
-    """Walk from room@zone start to room@zone to by mud.py's map; False if there's no way. (The
-    game shows Jolnir no room marks, so mud.py can't tell where he is: he starts and ends each
-    round at the temple.)"""
-    out = mud("way", to, "from", start, "--steps")
+def walk(to):
+    """Walk to room@zone by mud.py's map, from where Jolnir stands (his session is the web
+    client's, which shows mud.py the room); False if there's no way."""
+    out = mud("way", to, "--steps")
     if "mud.py:" in out:
         print("no way to %s: %s" % (to, out.strip()), file=sys.stderr)
         return False
     for step in out.split():
         if step.endswith("*"):
             mud("send", "open door")
-        mud("send", step.rstrip("*!"))
+        mud("send", step.rstrip("*!").replace(":", " "))  # enter:barrel is "enter barrel"
     return True
 
 
@@ -74,13 +73,22 @@ def save(player, date, wish):
     return True
 
 
+def unread(text):
+    """A letter letter() can't read: kept whole in wishes/unread/, for Papi to look at."""
+    d = os.path.join(WISHES, "unread")
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, time.strftime("%Y%m%d-%H%M%S-") + str(os.getpid()) + ".txt"), "a") as f:
+        f.write(text + "\n")
+    print("jolnir: a letter I can't read is in wishes/unread/", file=sys.stderr)
+
+
 def main():
     os.makedirs(WISHES, exist_ok=True)
     out = mud("start", timeout=90)
     if "mud.py:" in out and "logged in" not in out:
         sys.exit("jolnir: " + out.strip())
     try:
-        if not walk("postoffice@udgaard", "temple@udgaard"):
+        if not walk("postoffice@udgaard"):
             return
         mud("send", "request")
         # every letter he carries, new ones and any a round before left behind
@@ -92,14 +100,16 @@ def main():
                 break
             n += 1
             w = letter(out)
-            if w and save(*w) and w[0] not in got:
+            if not w:  # kept, so the shredder doesn't lose a wish
+                unread(out)
+            elif save(*w) and w[0] not in got:
                 got.append(w[0])
         for _ in range(n + 5 if n else 0):
             if re.search(r"No such thing|don't|do not|You have no|What|Put 'in'",
                          mud("send", "put letter in shredder")):
                 break
         print("jolnir: %d letters, new from %s" % (n, ", ".join(got) or "no one"))
-        walk("temple@udgaard", "postoffice@udgaard")
+        walk("temple@udgaard")
     finally:
         mud("stop")
 

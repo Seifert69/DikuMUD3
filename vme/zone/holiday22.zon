@@ -1225,6 +1225,7 @@ external
    string yule_ladder(pc : unitptr);
 var
    pc : unitptr;
+   u : unitptr;
    ex : extraptr;
    sl : stringlist;
    yw : string;
@@ -1234,6 +1235,19 @@ code
 {
 :start:
    wait(SFB_CMD, command(verb) and (noun in argument) and (activator.type == UNIT_ST_PC));
+   // only when it's this spoke the player means: their own things first (light lantern lights
+   // the lantern they carry), and on Christmas Eve Odin himself counts
+   u := findunit(activator, argument, FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
+   if (u != null)
+      goto start;
+   u := findunit(activator, argument, FIND_UNIT_SURRO, null);
+   if (u == null)
+      goto start;
+   if (u != self)
+   {
+      if ((n != 24) or (u.nameidx != "odin_statue"))
+         goto start;
+   }
    block;
    pc := activator;
    today := realmmdd@function();
@@ -1348,12 +1362,14 @@ var
    line : string;
    q : integer;
    c : integer;
+   i : integer;
 code
 {
 :start:
    wait(SFB_CMD, command("kneel") and (activator.type == UNIT_ST_PC));
    block;
    pc := activator;
+   u := null;
    secure(pc, lost);
    yg := "Yule Gift " + yule_year();
    if (yg in pc.quests)
@@ -1388,19 +1404,25 @@ code
    if (kind == "")
       kind := "any";
 
-   // Made as gmtreasure makes it: randomt keeps its rolls on the item's first extra, so the
-   // runes and the binding wait until it's done
+   // Made as gmtreasure makes it, in Jolnir's hands: randomt keeps its rolls on the item's
+   // first extra, so the runes and the binding wait until Treasure is done; then it's the
+   // player's, and only then the Yule's gift is given (a player who leaves before has had none)
    u := load("treasure@randomt");
-   link(u, pc);
+   link(u, self);
    addextra(u.extra, {"$treasure_height"}, itoa(pc.height));
    dilcopy("Treasure@randomt(" + itoa(q) + "," + replace(",", " ", kind) + ")", u);
-   secure(u, made);
-   pause;
+   secure(u, spoilt);
+   i := 0;
+   while (dilfind("treasure@randomt", u) and (i < 20))
+   {
+      pause;
+      i := i + 1;
+   }
    if (line != "")
       addextra(u.extra, {"runes", "inscription"}, "Runes run along it: '" + line + "' Jolnir's Yule gift to " + pc.name + ".");
    dilcopy("ply_restrict@function(" + pc.name + ",0,25,holiday_burn@holiday22)", u);
    unsecure(u);
-:made:
+   link(u, pc);
    sl := null;
    addstring(sl, yg);
    addextra(pc.quests, sl, "Jolnir's Yule gift: " + yule_qname(q) + ".");
@@ -1423,7 +1445,18 @@ code
    unsecure(pc);
    goto start;
 
-:lost:
+:spoilt:
+   exec("say The gift crumbled in my hands. Kneel again.", self);
+   goto home;
+
+:lost: // the player left: a gift half made goes with them (released first, or destroying it
+       // would jump to spoilt)
+   if (u != null)
+   {
+      unsecure(u);
+      if (u.outside == self)
+         destroy(u);
+   }
    unsecure(pc);
    goto start;
 }
@@ -1513,6 +1546,8 @@ code
          store(cont, wkey, TRUE);
          sendtext(w + "'s wish is cleared.<br/>", self);
       }
+      else
+         sendtext(w + " has no wish read to clear.<br/>", self);
       if (cont != null)
          destroy(cont);
       quit;
@@ -1529,6 +1564,7 @@ code
       line := line + sl.[i];
       i := i + 1;
    }
+   kind := replace("|", " ", replace("(", " ", replace(")", " ", kind))); // Treasure@randomt's arguments
    if (kind == "")
       kind := "any";
    line := replace("|", "/", line);
@@ -1614,9 +1650,11 @@ title "Jolnir's Yule Hall"
 descr
 "A long hall of smoke-dark timber, lit by a great fire. On a high seat at its
 end sits an old man in a blue cloak: Jolnir, the Yule one. Kneel before him to
-receive his gift."
+receive his gift. Behind you, a door of old oak leads back out into the snow."
 movement SECT_INSIDE
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS, UNIT_FL_NOSAVE}
+south to square@udgaard descr
+"The door leads back out into the snow of Udgaard's square.";
 end
 
 %objects
