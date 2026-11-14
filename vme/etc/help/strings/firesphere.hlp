@@ -1,5 +1,6 @@
 <div class="mw-parser-output"><h1>Fire Sphere</h1>
-<p>The spells of the fire sphere burn: the sorcerers' bolts and storms of flame, the dark knights' hellfire and brimstone, and the burning rays of the sun. Your ability in the sphere decides how well you cast them, and also how well you resist fire spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist fire better, see <a cmd='#'>Help Heat Resistance</a>; dragons may also breathe fire (see <a cmd='#'>Help Breath</a>).
+<p>The spells of the fire sphere burn: the sorcerers' bolts and storms of flame, the dark knights' hellfire and brimstone, and the burning rays of the sun. How strongly one burns depends on your skill in that spell and your magic; the sun spells and the dark knights' fires draw on your divine power instead.
+</p><p>The sphere itself is a category. It can't be practised: it rises by itself to half your best spell in it. It counts when you resist: against a fire spell aimed at you, you defend with your brain and the better of your fire sphere or half your skill in that spell (see <a cmd='#'>Help Spheres</a>). To resist fire better, see <a cmd='#'>Help Heat Resistance</a>; dragons may also breathe fire (see <a cmd='#'>Help Breath</a>).
 </p><p>The spells, and who teaches them (guild level, and how far when a guild teaches less than 100%):
 </p>
 <pre>sun ray       healer 31 (up to 80%), druid 41
