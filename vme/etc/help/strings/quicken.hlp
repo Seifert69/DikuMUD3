@@ -9,12 +9,12 @@ Mana: 20
 <a cmd='#'>cast quicken</a>   (on yourself)
 </pre>
 <p>Makes the target a little faster, so they strike more often in a fight. The 
-better your creation sphere, the longer it lasts: from half a minute to almost 
+better your magic and your skill in the spell, the longer it lasts: from half a minute to almost 
 two minutes.
 </p><p>Quicken, haste and slow replace each other: only the last one cast on someone 
 holds. Haste speeds them up twice as much as quicken, and slow slows them down 
 as much as haste speeds them up, so quicken is also a way to lift a slow. You 
-must be standing, and you can't cast it while fighting. It is also found on 
+must be standing, not fighting. It is also found on 
 potions, wands and scrolls, and those still work in a fight.
 </p><p><br />
 See Also:
