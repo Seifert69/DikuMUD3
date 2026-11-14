@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Search</h1>
 <p>Skill
-Class: Thief (guild level 0), Ranger (0, up to 90%), Assassin (2, up to 80%), Druid (7, up to 60%)
+Class: Thief (guild level 0), Ranger (guild level 0, up to 90%), Assassin (guild level 2, up to 80%), Druid (guild level 7, up to 60%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40)
 </p><p>Usage:
 </p>
 <pre>search &lt;direction&gt;
