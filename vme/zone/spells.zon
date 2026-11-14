@@ -46,6 +46,28 @@ code
 }
 dilend
 
+/* A corpse of this race can't be raised (animate dead, raise skeleton, raise skeletal champion,
+   raise horde): it crumbles to dust. Insects, the undead, demons, devils, elementals and other
+   unnatural things. */
+dilbegin integer unraisable(rc : integer);
+code
+{
+   if (((rc > RACE_ARTHROPODA_MIN) and (rc <= RACE_INSECT)) or RACE_IS_UNDEAD(rc) or
+       (rc == RACE_SCORPION) or (rc == RACE_STONE_RENDER) or (rc == RACE_SLIME) or
+       (rc == RACE_LESSER_DEMON) or (rc == RACE_GREATER_DEMON) or
+       (rc == RACE_SNAKE_DEMON) or
+       (rc == RACE_LESSER_DEVIL) or (rc == RACE_GREATER_DEVIL) or
+       (rc == RACE_SHADOW_DEVIL) or (rc == RACE_GARGOYLE) or
+       (rc == RACE_GOLEM) or (rc == RACE_YOGOLOTH) or
+       (rc == RACE_MIST_DWELLER) or (rc == RACE_ELEMENTAL_AIR) or
+       (rc == RACE_ELEMENTAL_FIRE) or (rc == RACE_ELEMENTAL_EARTH) or
+       (rc == RACE_ELEMENTAL_FROST) or (rc == RACE_ELEMENTAL_WATER) or
+       (rc == RACE_ELEMENTAL_LIGHT))
+      return (TRUE);
+   return (FALSE);
+}
+dilend
+
 dilbegin condemn(medi:unitptr, tgt : unitptr, arg : string,
                    hm : integer, effect : string);
 external
@@ -2611,6 +2633,8 @@ dilend /* portal_dil */
 
 dilbegin raise_horde(medi : unitptr, tgt : unitptr, arg : string,
                     hm : integer, effect : string);
+external
+   integer unraisable@spells(rc : integer);
 var
    u : unitptr;
    chk : integer;
@@ -2648,19 +2672,7 @@ foreach(UNIT_ST_OBJ, can)
 
   chk := (can.value[4]);
 
-  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
-       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
-       (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER)
-	   or (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
-       (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
-       (chk == RACE_SNAKE_DEMON) or
-       (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
-       (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
-       (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
-       (chk == RACE_MIST_DWELLER) or (chk == RACE_ELEMENTAL_AIR) or
-       (chk == RACE_ELEMENTAL_FIRE) or (chk == RACE_ELEMENTAL_EARTH) or
-       (chk == RACE_ELEMENTAL_FROST) or (chk == RACE_ELEMENTAL_WATER) or
-       (chk == RACE_ELEMENTAL_LIGHT) )
+  if (unraisable@spells(chk))
   {
    act("A corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null, null, TO_REST);
@@ -2729,6 +2741,8 @@ dilend /* raise_horde  */
 
 dilbegin raise_champ(medi : unitptr, tgt : unitptr, arg : string,
                      hm : integer, effect : string);
+external
+   integer unraisable@spells(rc : integer);
 var
    u : unitptr;
    chk : integer;
@@ -2751,19 +2765,7 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
-       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
-       (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER)
-	    or (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
-       (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
-       (chk == RACE_SNAKE_DEMON) or
-       (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
-       (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
-       (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
-       (chk == RACE_MIST_DWELLER) or (chk == RACE_ELEMENTAL_AIR) or
-       (chk == RACE_ELEMENTAL_FIRE) or (chk == RACE_ELEMENTAL_EARTH) or
-       (chk == RACE_ELEMENTAL_FROST) or (chk == RACE_ELEMENTAL_WATER) or
-       (chk == RACE_ELEMENTAL_LIGHT) )
+  if (unraisable@spells(chk))
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
@@ -2810,6 +2812,8 @@ dilend /* raise_champ */
 
 dilbegin raise_skel(medi : unitptr, tgt : unitptr, arg : string,
                     hm : integer, effect : string);
+external
+   integer unraisable@spells(rc : integer);
 var
    u : unitptr;
    chk : integer;
@@ -2833,19 +2837,7 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
-       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
-       (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER) or
-	   (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
-       (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
-       (chk == RACE_SNAKE_DEMON) or
-       (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
-       (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
-       (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
-       (chk == RACE_MIST_DWELLER) or (chk == RACE_ELEMENTAL_AIR) or
-       (chk == RACE_ELEMENTAL_FIRE) or (chk == RACE_ELEMENTAL_EARTH) or
-       (chk == RACE_ELEMENTAL_FROST) or (chk == RACE_ELEMENTAL_WATER) or
-       (chk == RACE_ELEMENTAL_LIGHT) )
+  if (unraisable@spells(chk))
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
@@ -7230,6 +7222,7 @@ code
       link(u, self.outside);
       /* Not bound: the caster can't order or dismiss it */
       i := dildestroy("obey_animal@function", u);
+      i := dildestroy("obey@function", u);   // obey_animal starts it at load: it takes any order
       i := dildestroy("sum_check@spells", u);
       /* Free, but still summoned: it goes back in a while (longer the worse
          the miss), and banish works on it */
@@ -7279,6 +7272,7 @@ code
       link(u, self.outside);
       /* Not bound: the caster can't order or dismiss it */
       i := dildestroy("obey_animal@function", u);
+      i := dildestroy("obey@function", u);   // obey_animal starts it at load: it takes any order
       i := dildestroy("sum_check@spells", u);
       /* Free, but still summoned: it goes back in a while (longer the worse
          the miss), and banish works on it */
@@ -9550,14 +9544,7 @@ external
 provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
- if (isset(self.charflags, CHAR_PEACEFUL))
- {
- unset (self.charflags, CHAR_PEACEFUL);
- provoked_attack(tgt, self);
- set (self.charflags, CHAR_PEACEFUL);
- }
- else
- provoked_attack(tgt, self);
+ provoked_attack(tgt, self);  // it checks only the victim's peaceful flag
 
    if ((hm < 35) or ((not RACE_IS_HUMANOID(tgt.race)) and
                     (not RACE_IS_MAMMAL(tgt.race))))
@@ -9596,14 +9583,7 @@ var
 
  code
  {
- if(isset(self.charflags, CHAR_PEACEFUL))
- {
- unset (self.charflags, CHAR_PEACEFUL); // So that provoked_attack
- provoked_attack(tgt, self);            // doesn't fail
- set (self.charflags, CHAR_PEACEFUL);
- }
- else
- provoked_attack(tgt, self);
+ provoked_attack(tgt, self);  // it checks only the victim's peaceful flag
 
  if (RACE_IS_HUMANOID(tgt.race))
          hm := hm - 25;
@@ -9737,14 +9717,7 @@ external
 provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
- if (isset(self.charflags, CHAR_PEACEFUL))
- {
- unset (self.charflags, CHAR_PEACEFUL);
- provoked_attack(tgt, self);
- set (self.charflags, CHAR_PEACEFUL);
- }
- else
- provoked_attack(tgt, self);
+ provoked_attack(tgt, self);  // it checks only the victim's peaceful flag
 
    if ((hm < 35) or (not RACE_IS_UNDEAD(tgt.race)))
    {
@@ -10743,6 +10716,8 @@ dilend
 
 dilbegin animate(medi : unitptr, tgt : unitptr, arg : string,
 		      hm : integer, effect : string);
+external
+   integer unraisable@spells(rc : integer);
 var
    u : unitptr;
   chk : integer;
@@ -10765,19 +10740,7 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
-       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
-       (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER) or
-	   (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
-       (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
-       (chk == RACE_SNAKE_DEMON) or
-       (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
-       (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
-       (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
-       (chk == RACE_MIST_DWELLER) or (chk == RACE_ELEMENTAL_AIR) or
-       (chk == RACE_ELEMENTAL_FIRE) or (chk == RACE_ELEMENTAL_EARTH) or
-       (chk == RACE_ELEMENTAL_FROST) or (chk == RACE_ELEMENTAL_WATER) or
-       (chk == RACE_ELEMENTAL_LIGHT))
+  if (unraisable@spells(chk))
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
@@ -11330,6 +11293,7 @@ external
                              bb : integer);
 
 var
+   n : integer;
   i : integer;
   i2 : integer;
   u : unitptr;
@@ -11347,19 +11311,16 @@ code
       quit;
    }
 
-   i2 := 0; /* Now check for already following animals. */
+   i2 := 0; /* Now check for already following animals, wherever they are */
 
-   foreach (UNIT_ST_NPC, u)
+   n := 0;
+   while (n < self.followercount)
    {
-      if( (u.master == self) and (u != self) and
-          (race_lower_animal(u.race)))
-      {
+      u := getfollower(self, n);
+      if ((u.type == UNIT_ST_NPC) and (race_lower_animal(u.race)))
          i2 := 1;
-      }
+      n := n + 1;
    }
-
-   if ((self.follower.type == UNIT_ST_NPC) and (race_lower_animal(self.follower.race)))
-      i2 := 1; // This is easy to bypass but no way to find all followers
 
    if (i2)
    {
@@ -11444,14 +11405,7 @@ var
 
 code
 {
- if (isset(self.charflags, CHAR_PEACEFUL))
- {
- unset (self.charflags, CHAR_PEACEFUL);
- provoked_attack@skills(tgt, self);
- set (self.charflags, CHAR_PEACEFUL);
- }
- else
- provoked_attack@skills(tgt, self);
+ provoked_attack@skills(tgt, self);  // it checks only the victim's peaceful flag
 
    if (hm < 35) goto fail_it;
        if(self.type==UNIT_ST_PC)
