@@ -6,15 +6,15 @@ Mana: 10
 </p><p>Usage:
 </p>
 <pre>cast unholy word &lt;target&gt;
-<a cmd='#'>cast unholy word</a>   (at whoever you are fighting)
 </pre>
 <p>The first and weakest of the prayers to the dark forces against the good: 
 the caster calls on evil to wound the target. Any target whose alignment 
 is above neutral can be struck, and the truly good are hurt more; on the evil and the neutral, nothing 
 happens. The better your divine power and sphere, the more it hurts. It 
-does better against heavy armour than against light, and a shield can 
-block it. No free hands are needed.
-</p><p>Casting it is an attack and starts a fight. It is also found on scrolls. 
+does best against clothes and less the heavier the armour, and it barely 
+hurts plate. A shield can block it. No free hands are needed.
+</p><p>Casting it is an attack and starts a fight. You must be standing, so you 
+can't cast it in the middle of a fight. It is also found on scrolls. 
 Stronger prayers follow: unholy touch, unholy grasp and unholy shout.
 </p><p><br />
 See Also:
