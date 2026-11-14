@@ -1,9 +1,11 @@
 <div class="mw-parser-output"><h1>Appraise</h1>
-<p>Usage:
+<p>Skill
+Class: Ranger (guild level 0), Thief (guild level 0)
+</p><p>Usage:
 </p>
 <pre>appraise &lt;item&gt;
 </pre>
-<p>Used to figure out how much an item is worth. Beware that you might make a wrong guess depending on how skilled you are (brain and skill used).
+<p>Used to figure out how much an item is worth, whether you carry it or it lies in the room. Beware that you might make a wrong guess depending on how skilled you are: the better your brain and your appraisal skill, the more often you get it right.
 </p>
 
 
