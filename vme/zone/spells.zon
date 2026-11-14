@@ -2059,7 +2059,7 @@ if ((targ.type==UNIT_ST_PC) or (targ.type == UNIT_ST_NPC))
 
   here := self.outside;
   while (here.type != UNIT_ST_ROOM)
-     here := self.outside;
+     here := here.outside;
 
   act("The power flows into and through you. You channel it through time " +
       "and space...<br/>A horizontal " +
@@ -2494,7 +2494,7 @@ code
 
   here := self.outside;
   while (here.type != UNIT_ST_ROOM)
-     here := self.outside;
+     here := here.outside;
 
   act("A miasma of light coalesces into a glittering portal which " +
       "stands before you.",
@@ -2648,11 +2648,12 @@ foreach(UNIT_ST_OBJ, can)
 
   chk := (can.value[4]);
 
-  if ( ((chk > RACE_OTHER_MAMMAL) and (chk <= RACE_INSECT)) or
-       ((chk > RACE_OTHER_CREATURE) and (chk <= RACE_UNDEAD)) or
+  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
+       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
        (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER)
 	   or (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
        (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
+       (chk == RACE_SNAKE_DEMON) or
        (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
        (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
        (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
@@ -2750,11 +2751,12 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk > RACE_OTHER_MAMMAL) and (chk <= RACE_INSECT)) or
-       ((chk > RACE_OTHER_CREATURE) and (chk <= RACE_UNDEAD)) or
+  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
+       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
        (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER)
 	    or (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
        (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
+       (chk == RACE_SNAKE_DEMON) or
        (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
        (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
        (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
@@ -2831,11 +2833,12 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk > RACE_OTHER_MAMMAL) and (chk <= RACE_INSECT)) or
-       ((chk > RACE_OTHER_CREATURE) and (chk <= RACE_UNDEAD)) or
+  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
+       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
        (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER) or
 	   (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
        (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
+       (chk == RACE_SNAKE_DEMON) or
        (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
        (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
        (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
@@ -4369,8 +4372,8 @@ code{
 
        if((u.race>=RACE_SPIRIT_MIN) and (u.race<=RACE_SPIRIT_MAX))
        {
-        skilla:=skillb/2;
-        skillb:=skilld/2;
+        skillb:=skillb/2;
+        skilld:=skilld/2;
         res:=spellresist (skilla,skillb,skillc,skilld);
 
         if(res>0)
@@ -4609,14 +4612,14 @@ code
      skillb:=self.abilities[ABIL_BRA];
 
      if(self.type & UNIT_ST_PC)
-      skilld:=self.spells[SPL_CAUSE_FLIGHT];
+      skilld:=self.spells[SPL_CAUSE_PANIC];
      else
       skilld:=self.abilities[ABIL_BRA];
 
      res:=spellresist (skilla,skillb,skillc,skilld);
 
 
-     if(res<0)
+     if(res>0)
      {
       act("Your neck hair rises.",A_ALWAYS,self,null,null,TO_CHAR);
       exec("flee",self);
@@ -5112,16 +5115,20 @@ code
 
    u := findrndunit(self, FIND_UNIT_SURRO, UNIT_ST_PC|UNIT_ST_NPC);
 
+   if (u == null)
+     goto cough;
+
    if (dilfind("spl_plague@spells", u))
-     goto loop;
+     goto cough;
 
    j :=spellresist (pwr, u.abilities[ABIL_CON], pwr, u.abilities[ABIL_CHA]);
 
    if (j < 0)
-     goto loop;
+     goto cough;
 
    dilcopy("spl_plague@spells("+itoa((3*pwr)/5)+")", u);
 
+   :cough:
    self.hp := self.hp - self.max_hp / 5;
    position_update(self);
    goto loop;
@@ -5211,7 +5218,7 @@ code
 	 if (parse.[0] == "spl_dispel")
 	 {
 	    if (atoi(parse.[1]) >= pwr)
-	      goto loop;
+	      goto vanish;
 	 }
       }
    }
@@ -5604,7 +5611,7 @@ code
        (tgt.objecttype == ITEM_WEAPON))
    {
       /* Material quality makes it harder / easier */
-      hm := hm - (2*tgt.value[2]);
+      hm := hm - (2*tgt.value[1]);
    }
 
    if ("$resized" in tgt.extra)
@@ -6120,7 +6127,7 @@ code
    }
 
    s := identify_str(tgt, 1);
-   sendtext(s, medi);
+   sendtext(s, self);
 
    quit;
 }
@@ -6145,7 +6152,7 @@ code
    }
 
    s := identify_str(tgt, 2);
-   sendtext(s, medi);
+   sendtext(s, self);
    quit;
 }
 dilend
@@ -7208,6 +7215,7 @@ dilbegin demon_summon(medi : unitptr, tgt : unitptr, arg : string,
 		      hm : integer, effect : string);
 var
    u : unitptr;
+   i : integer;
 
 code
 {
@@ -7220,6 +7228,9 @@ code
 	  A_HIDEINV, self, u, null, TO_ROOM);
       u := load("demon@spells");
       link(u, self.outside);
+      /* Not bound: the caster can't order or dismiss it */
+      i := dildestroy("obey_animal@function", u);
+      i := dildestroy("sum_check@spells", u);
       /* Free, but still summoned: it goes back in a while (longer the worse
          the miss), and banish works on it */
       dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
@@ -7257,6 +7268,7 @@ dilbegin devil_summon(medi : unitptr, tgt : unitptr, arg : string,
 		      hm : integer, effect : string);
 var
    u : unitptr;
+   i : integer;
 code
 {
    if (hm < 0)
@@ -7265,6 +7277,9 @@ code
 	  A_SOMEONE, self, null, null, TO_ALL);
       u := load("devil@spells");
       link(u, self.outside);
+      /* Not bound: the caster can't order or dismiss it */
+      i := dildestroy("obey_animal@function", u);
+      i := dildestroy("sum_check@spells", u);
       /* Free, but still summoned: it goes back in a while (longer the worse
          the miss), and banish works on it */
       dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
@@ -9122,8 +9137,9 @@ code
       if (hm < -50)
       {
          u := unit_char (tgt);
-         act("You realize that $2n attempted to locate your $3N.",
-             A_ALWAYS, u, self, tgt, TO_CHAR);
+         if (u != null)
+            act("You realize that $2n attempted to locate your $3N.",
+                A_ALWAYS, u, self, tgt, TO_CHAR);
       }
    }
    quit;
@@ -9534,9 +9550,14 @@ external
 provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
+ if (isset(self.charflags, CHAR_PEACEFUL))
+ {
  unset (self.charflags, CHAR_PEACEFUL);
  provoked_attack(tgt, self);
  set (self.charflags, CHAR_PEACEFUL);
+ }
+ else
+ provoked_attack(tgt, self);
 
    if ((hm < 35) or ((not RACE_IS_HUMANOID(tgt.race)) and
                     (not RACE_IS_MAMMAL(tgt.race))))
@@ -9581,6 +9602,8 @@ var
  provoked_attack(tgt, self);            // doesn't fail
  set (self.charflags, CHAR_PEACEFUL);
  }
+ else
+ provoked_attack(tgt, self);
 
  if (RACE_IS_HUMANOID(tgt.race))
          hm := hm - 25;
@@ -9714,9 +9737,14 @@ external
 provoked_attack (victim : unitptr, ch : unitptr);
 code
 {
+ if (isset(self.charflags, CHAR_PEACEFUL))
+ {
  unset (self.charflags, CHAR_PEACEFUL);
  provoked_attack(tgt, self);
  set (self.charflags, CHAR_PEACEFUL);
+ }
+ else
+ provoked_attack(tgt, self);
 
    if ((hm < 35) or (not RACE_IS_UNDEAD(tgt.race)))
    {
@@ -10127,7 +10155,7 @@ else
 		position_update(tgt);
 		quit;
 		}
-	if (self.position==POSITION_SLEEPING)
+	if (tgt.position==POSITION_SLEEPING)
 		{
 		sendtext("You are already sound asleep.<br/>", tgt);
 		quit;
@@ -10737,11 +10765,12 @@ code
   }
   chk := (tgt.value[4]);
 
-  if ( ((chk > RACE_OTHER_MAMMAL) and (chk <= RACE_INSECT)) or
-       ((chk > RACE_OTHER_CREATURE) and (chk <= RACE_UNDEAD)) or
+  if ( ((chk >= RACE_ARTHROPODA_MIN) and (chk <= RACE_ARTHROPODA_MAX)) or
+       ((chk >= RACE_UNDEAD_MIN) and (chk <= RACE_UNDEAD_MAX)) or
        (chk == RACE_SCORPION) or (chk == RACE_STONE_RENDER) or
 	   (chk == RACE_VAMPIRE) or (chk == RACE_SLIME) or
        (chk == RACE_LESSER_DEMON) or (chk == RACE_GREATER_DEMON) or
+       (chk == RACE_SNAKE_DEMON) or
        (chk == RACE_LESSER_DEVIL) or (chk == RACE_GREATER_DEVIL) or
        (chk == RACE_SHADOW_DEVIL) or (chk == RACE_GARGOYLE) or
        (chk == RACE_GOLEM) or (chk == RACE_YOGOLOTH) or
@@ -10911,7 +10940,7 @@ code
          if (parse.[0] == "spl_dispel")
          {
             if (atoi(parse.[1]) >= pwr)
-              goto loop;
+              break;
          }
       }
    }
@@ -11329,7 +11358,7 @@ code
       }
    }
 
-   if ((self.follower.type == UNIT_ST_NPC) and (race_lower_animal(u.race)))
+   if ((self.follower.type == UNIT_ST_NPC) and (race_lower_animal(self.follower.race)))
       i2 := 1; // This is easy to bypass but no way to find all followers
 
    if (i2)
@@ -11415,9 +11444,14 @@ var
 
 code
 {
+ if (isset(self.charflags, CHAR_PEACEFUL))
+ {
  unset (self.charflags, CHAR_PEACEFUL);
  provoked_attack@skills(tgt, self);
  set (self.charflags, CHAR_PEACEFUL);
+ }
+ else
+ provoked_attack@skills(tgt, self);
 
    if (hm < 35) goto fail_it;
        if(self.type==UNIT_ST_PC)
@@ -11502,8 +11536,7 @@ code
       quit;
    }
 
-   heal_ran := rnd(self.spells[SPL_HEAL_ANIMAL]/2,
-                  self.spells[SPL_HEAL_ANIMAL]/2 + 30);
+   heal_ran := rnd(hm/2, hm/2 + 30);
 
    if ( (tgt.hp + heal_ran) > (tgt.max_hp) )
       tgt.hp := (tgt.max_hp);
@@ -11527,6 +11560,7 @@ external
 
 var
    i    : integer;
+   n    : integer;
    u    : unitptr;
    pow  : integer;
  skilla : integer;
@@ -11581,15 +11615,13 @@ code
 
    i := 0; /* Now check for already following animals. */
 
-   foreach (UNIT_ST_NPC, u)
+   n := 0;
+   while (n < self.followercount)
    {
-      if( (u.master == self) and (u != self) and
-          (race_lower_animal(u.race)))
-      {
+      u := getfollower(self, n);
+      if ((u.type == UNIT_ST_NPC) and (race_lower_animal(u.race)))
          i := 1;
-      }
-      if (self.follower.type == UNIT_ST_NPC)
-         i :=1;
+      n := n + 1;
    }
 
    if (i)
@@ -11749,6 +11781,12 @@ i:= interrupt(SFB_TICK, TRUE, control_over);
    }
 
 
+   // A direction, even one letter, is a move: "s" or "u" isn't say or use
+   if (tstr2 in {"n", "e", "s", "w", "u", "d", "ne", "nw", "se", "sw", "north", "east", "south",
+                 "west", "up", "down", "northeast", "northwest", "southeast", "southwest"})
+      goto cleared;
+
+   // The rest by abbreviation: "sa" is say, "rec" recite
    if ((tstr2 in "tell") or (tstr2 in "recite") or (tstr2 in "use") or
        (tstr2 in "trip") or (tstr2 in "disarm") or (tstr2 in "say") or
        (tstr2 in "shout") or (tstr2 in "pick") or (tstr2 in "cast") or
@@ -12179,7 +12217,8 @@ var
 
 code
 {
-   interrupt(SFB_MSG, TRUE, check);
+   interrupt(SFB_MSG, (getword(argument) == "spl_rem_disease") and
+                      (atoi(getword(argument)) >= atoi(hm)), finished);
    interrupt(SFB_DEAD, activator == self, stop);
 
    x := 0;
@@ -12219,13 +12258,6 @@ act("Your rash has healed.", A_ALWAYS, self, null, null, TO_CHAR);
 act("$1n's rash heals.", A_SOMEONE, self, null, null, TO_REST);
 :stop:
 quit;
-
-   :check:
-   if (getword(argument) == "spl_rem_disease")
-    {
-     if (atoi(getword(argument)) >= atoi(hm)) goto finished;
-    }
-   goto itch;
 }
 dilend
 
@@ -12488,7 +12520,7 @@ code
       if(pc.level >= IMMORTAL_LEVEL) goto loop;
       if(pc.position <= POSITION_SITTING) goto loop;
 
-       if(self.type==UNIT_ST_PC)
+       if(pc.type==UNIT_ST_PC)
         skillc:=pc.spells[SPL_MUD_PUDDLE];
        else
         skillc:=pc.abilities[ABIL_BRA];
@@ -12594,6 +12626,12 @@ var
 
 code
 {
+   if (hm < 0)
+   {
+      act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+
  spl := self.spells[SPL_ICE_THORN];
  abil := self.abilities[ABIL_DIV];
    combo := (spl + abil) / 10;
@@ -13873,7 +13911,8 @@ code
 
   if(hm < 0) quit;
 
-  if(tgt == self) quit;
+  /* A potion is drunk by the one it works on */
+  if((tgt == self) and (not (medi.objecttype == ITEM_POTION))) quit;
   /* this could be done in the spells.def, but I like seeing people
      continuously trying to cast it upon themselves. @grin@ */
 
@@ -14375,6 +14414,7 @@ dilbegin spl_rem_curse(medi : unitptr, tgt : unitptr, arg : string,
                       hm : integer, effect : string);
 var
 u: unitptr;
+i: integer;
 
 code
 {
@@ -14386,7 +14426,13 @@ code
    quit;
   }
 
-  if(isaff(tgt, ID_CURSE)) subaff(tgt,ID_CURSE);
+  /* The curse spell lays five penalties, one affect each. Bounded, as an
+     affect that can't be lifted stays. */
+  while(isaff(tgt, ID_CURSE) and (i < 10))
+  {
+   subaff(tgt,ID_CURSE);
+   i := i + 1;
+  }
 
   u := tgt.inside;
 
