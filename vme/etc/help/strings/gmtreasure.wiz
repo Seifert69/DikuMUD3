@@ -10,8 +10,10 @@ inventory, and tells you what it became.
 </p><p><b>What</b> is in words: weapon, or a weapon (dagger, long sword; sword 
 is any of the swords); jewelry, or a piece (ring, crown); armour, an 
 armour type (cloth, leather, hard leather, chain or mail, plate), a 
-piece (boots, gloves, helmet, sleeves, leggings, shield, body) or both (plate 
-boots). Nothing means any kind.
+piece (feet or boots, hands or gloves, head, arms or sleeves, legs or
+leggings, shield, body) or both (plate boots). Nothing means any kind. A
+piece's name that only one armour type uses gives that type too: helmet
+is always plate, hood cloth, cap leather; head is a helmet of any type.
 </p><p>How good it is comes from the player's level (with <b>for</b>) or the 
 level you give (with <b>level</b>; with both, the lower counts), one rung 
 for each level restriction treasure carries, so the player can use it:
