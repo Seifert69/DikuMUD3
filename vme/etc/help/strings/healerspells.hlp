@@ -4,11 +4,11 @@
 <pre>Name                   Level   Up to
 Cure Light Wounds          0   100%
 Cause Light Wounds         1   80%
-Aid                        2   100%
+Aid                        2   80%
 Command                    4   75%
 Divine Resistance          4   100%
 Raise Divine               4   100%
-Summer Rain                4   100%
+Summer Rain                4   80%
 Detect Alignment           5   100%
 Detect Undead              5   100%
 Charisma                   6   100%
@@ -18,44 +18,45 @@ Awaken                     7   100%
 Blind                      8   50%
 Leather Skin               8   100%
 Bless                      9   100%
-Sanctuary                 10   100%
-Word Of Recall            10   100%
+Sanctuary                 10   80%
+Word Of Recall            10   80%
 Detect Curse              11   100%
-Remove Disease            11   100%
-Calm                      12   100%
+Remove Disease            11   80%
+Calm                      12   80%
 Light                     12   100%
-Remove Poison             13   100%
+Remove Poison             13   80%
 Cure Serious Wounds       14   100%
-Sense Life                14   100%
-Cure Blind                15   100%
-Bark Skin                 16   100%
+Sense Life                14   50%
+Cure Blind                15   80%
+Bark Skin                 16   80%
 Create Water              16   100%
-Life Protection           17   100%
-Create Food               18   100%
-Find Path                 18   100%
+Life Protection           17   80%
+Create Food               18   80%
+Find Path                 18   80%
 Remove Curse              18   100%
-Locate Object             19   100%
-Locate Person             20   100%
-Total Recall              20   100%
-Protection From Evil      22   100%
+Locate Object             19   50%
+Locate Person             20   80%
+Total Recall              20   50%
+Protection From Evil      22   80%
 Hold Undead               23   50%
-Continual Light           24   100%
-Raise Dead                27   100%
-Cause Serious Wounds      28   80%
-Flash                     28   100%
-Dispel Evil               29   100%
-Heal                      30   100%
+Continual Light           24   80%
+Sun Beam                  26   80%
+Raise Dead                27   50%
+Cause Serious Wounds      28   50%
+Flash                     28   50%
+Dispel Evil               29   80%
+Heal                      30   80%
 Sun Ray                   31   80%
-Clear Skies               33   100%
+Clear Skies               33   50%
 Harm                      37   80%
-Resurrection              40   100%
-Colourbeam                45   100%
-Final Rest                70   100%
-Colourspray               75   100%
-Raise Hitpoints           75   100%
-Holy Word                 80   100%
-Flashing Grip            115   100%
-Deathly Grasp            120   100%
+Resurrection              40   80%
+Colourbeam                45   80%
+Colourspray               75   80%
+Raise Hitpoints           75   50%
+Final Rest                80   100%
+Holy Word                 90   100%
+Flashing Grip            115   80%
+Deathly Grasp            120   80%
 </pre>
 <p><br />
 See Also:
