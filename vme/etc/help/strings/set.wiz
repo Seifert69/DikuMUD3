@@ -9,7 +9,8 @@ command will list them, if you just give a unit name. However it is essential,
 that you understand the argument types.
 </p><p>The unit can be room (the room you are in), or anything you can name: in 
 your inventory or equipment, here, or anywhere in the world. Fields can be 
-shortened, as long as the start is clear. Some fields need a higher level 
+shortened: the first field in the list (as the command shows it) that 
+starts that way is taken. Some fields need a higher level 
 than 230; changing another player, or anything they carry or wear, needs 
 level 245 at least. Money can only be changed at level 255. The command is 
 logged.
@@ -21,13 +22,20 @@ logged.
     End with a '@' on a single line.
  &lt;unitpath&gt;: a 'path' to the unit, specifying its zonename and itemname.
  &lt;keyword&gt;&#160;: a single keyword.
- &lt;direction&gt;&#160;: direction can be any of the six: n s e w u d
+ &lt;direction&gt;&#160;: north, east, south, west, up or down (n e s w u d will do),
+             or northeast, northwest, southeast, southwest written out.
  &lt;bitlist&gt;&#160;: a list of bitnames. nothing indicates no set bits.
              separate bitnames with a single '|'.
 </pre>
 <p>For add-name and xxxdirection info:
 </p>
 <pre>  &lt;names&gt; is a comma separated list of values e.g. city guard, guard
+</pre>
+<p>For dir-to (on a room: makes the exit lead to another room):
+</p>
+<pre>  &lt;direction&gt; &lt;room@zone&gt;, or &lt;direction&gt; none to remove the exit.
+  The path finder (wpath, monsters finding their way) only learns of a
+  new exit at the next reboot.
 </pre>
 <p>For extra data (add-extra, add-info, add-quest):
 </p>
@@ -38,6 +46,7 @@ logged.
 </p>
 <pre> &gt; set rabbit add-name killer rabbit, carrot muncher
  &gt; set papi add-info $professions,barbarian,dark knight,necromancer;1,2,3
+ &gt; set room dir-to north temple@udgaard
  &gt; set john del-extra ,     // This example removes the an empty name, i.e. the default description
 </pre>
 <p><br />
