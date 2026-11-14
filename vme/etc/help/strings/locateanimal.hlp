@@ -10,14 +10,16 @@ Mana: 20
 </p>
 <pre>cast locate animal deer
 </pre>
-<p>The caster prays for a vision from the gods and senses where an animal 
-is: the room it is in. It looks in your own area first, and then in the 
-whole world. It finds only animals (beasts, birds, reptiles, amphibians, 
-insects and worms); for anything else you only learn that it is not one.
+<p>The caster prays for a vision from the gods and senses where an animal is: 
+the room it is in. It looks in your own area first, and then in the whole 
+world. It finds only animals (beasts, birds, reptiles, amphibians, insects 
+and worms); for anything else you only learn that it is not one. An animal 
+you couldn't see, an invisible one say, stays hidden.
 </p><p>The animal's mind may turn the vision aside, and then you just feel 
 slightly disoriented: the better your brain and your skill in the spell, 
-against the animal's brain, the better you do. You must be standing. It 
-is also found on scrolls.
+against the animal's brain, the better you do. You must be standing, and 
+you can't cast it while fighting. It is also found on scrolls. Practising 
+it needs divine 18.
 </p><p><br />
 See Also:
 </p>
