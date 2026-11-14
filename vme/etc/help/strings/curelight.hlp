@@ -1,17 +1,17 @@
 <div class="mw-parser-output"><h1>Cure Light Wounds</h1>
 <p>Sphere: Divine Sphere
-Class: Healer (guild level 0), Paladin (guild level 10)
+Class: Healer (guild level 0), Paladin (guild level 10, up to 50%)
 Mana: 15
 </p><p>Usage:
 </p>
 <pre>cast cure light wounds &lt;target&gt;
 <a cmd='#'>cast cure light wounds</a>   (on yourself)
 </pre>
-<p>Heals some of the target's lost hit points: the better your divine sphere, the 
-more it heals. It works on humanoids and mammals, and always on yourself. You 
+<p>Heals some of the target's lost hit points: the better your divine power and 
+your skill in the spell, the more it heals. It works on humanoids and mammals, and always on yourself. You 
 can cast it while fighting, and it is also found on scrolls, potions and 
 staffs.
-</p><p>It is the first spell a healer learns.
+</p><p>It is the first spell a healer learns. Practising it needs divine 5.
 </p><p><br />
 See Also:
 </p>
