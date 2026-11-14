@@ -2,6 +2,7 @@
 <p>Usage:
 </p>
 <pre> &gt; practice (skill|weapon|ability)
+ &gt; practice auto
 </pre>
 <p>Examples:
 </p>
@@ -10,10 +11,11 @@
  practice flee
 </pre>
 <p>This command enables you to raise your abilities, and practice your
-skills, spells and weapons. The command can only be used at a teacher.
-Different teachers teach different abilities and skills, spells or weapons
-and the cost is different in each guild. Your race also modifies this
-cost.
+skills, spells and weapons. The command is used at a teacher: type
+<a cmd='#'>info</a> there to see what the teacher teaches and what it costs you.
+Different teachers teach different abilities and skills, spells or weapons,
+and each only up to a certain percentage. From level 26 a practice also costs
+money, and what it costs is different in each guild.
 </p><p>When you look at your 'status' you will notice you have got a certain
 amount of skill and ability practice points. The skill-points are used for
 practicing spells, weapons and skills. The ability-points are used for
@@ -34,7 +36,19 @@ as follows:
   +4    6
   +5    5
 </pre>
-<p>See Also:
+<p>That is the cost of the first practice of something in a level. With a sum
+of +1 or better you can practice the same thing a second time in that
+level, for half as much again; with +3 or better more times still, each
+costing half as much again as the one before. Nothing can be practised for
+more than 50 points at a time. The sum also decides how far you can ever
+get in it.
+</p><p>Teachers won't teach you while you are under magic that changes you, such
+as bless, curse, berserk or rage, or while you wear things that raise your
+abilities: remove them first (see <a cmd='#'>Help Remove</a>).
+</p><p>Practice auto, typed anywhere, spends your points for you with your guild's
+teachers, cheapest first, and leaves the costly ones for you to choose.
+</p><p><br />
+See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Info</a>
  &gt; <a cmd='#'>Help Experience</a>
