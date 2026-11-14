@@ -11,16 +11,17 @@ cast displace magic &lt;object&gt;
 creature or an object, one after another. It removes, among others: bless, 
 unholy blessing and condemn, the detect spells, invisibility, charm, hold, 
 haste, quicken and slow, poison, mire, rage, berserk and focus, absorption, 
-magic light and darkness, enchanted weapons and armour, and the raise 
-spells. The better your spell, the more it removes: up to fifteen for a 
+magic light and darkness, enchanted weapons and armour, the raise 
+spells and the resistances. The better your spell, the more it removes: up to fifteen for a 
 master.
 </p><p>Like dispel magic, it also breaks spells such as sleep, plague and madness, 
-when your spell is at least as strong as they were. It doesn't touch the 
-resistances, sanctuary, the skin spells, protection from evil, life 
-protection or sustain.
+when your spell is at least as strong as they were. It doesn't touch 
+sanctuary, the skin spells, protection from evil, life protection or 
+sustain.
 </p><p>It is harder work than dispel magic: each spell removed costs you 30 
 endurance, and if your endurance runs out you fall stunned. You need more 
-than 20 endurance to begin. You must be standing. It is also found on 
+than 20 endurance to begin. You must be standing, and you can't cast it 
+while fighting. It is also found on 
 scrolls and wands.
 </p><p><br />
 See Also:
