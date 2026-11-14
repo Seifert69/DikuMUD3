@@ -7,7 +7,8 @@ Mana: 20
 <pre>cast calm &lt;target&gt;
 </pre>
 <p>Soothes a frightened mind. It ends the fear spell on the target, and stops 
-cause panic, so they no longer flee in terror. On someone who isn't afraid, 
+cause panic if your spell is at least as strong as what is left of the 
+panic, so they no longer flee in terror. On someone who isn't afraid, 
 nothing happens. It doesn't help against confusion.
 </p><p>You must be standing. It is also found on potions and scrolls.
 </p><p><br />
