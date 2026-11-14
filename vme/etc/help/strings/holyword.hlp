@@ -1,18 +1,20 @@
 <div class="mw-parser-output"><h1>Holy Word</h1>
 <p>Sphere: Divine Sphere
-Class: Healer (guild level 80), Paladin (guild level 90)
+Class: Healer (guild level 90), Paladin (guild level 90)
 Mana: 15
 </p><p>Usage:
 </p>
 <pre>cast holy word &lt;target&gt;
-<a cmd='#'>cast holy word</a>   (at whoever you are fighting)
 </pre>
-<p>A holy word, spoken with a touch, that wounds those who lean to evil. Any 
-target whose alignment is below neutral can be struck; the truly evil are 
-struck harder still. On the good and the neutral, nothing happens. The 
+<p>A holy word that wounds those who lean to evil. Any target whose alignment 
+is below 0 can be struck, even a neutral who leans to evil; the truly evil 
+are struck harder still. On anyone of alignment 0 or above, nothing 
+happens. The 
 better your divine power and sphere, the more it hurts.
-</p><p>Being a touch, it does most against plate and chain, and a shield can block 
-it. Casting it is an attack and starts a fight. It is also found on scrolls.
+</p><p>It hurts most through clothes and least through plate, which takes about 
+40% less, and a weak cast does nothing to plate at all. A shield can block 
+it. Casting it is an attack and starts a fight, but you can't cast it 
+while fighting: it can only open one. It is also found on scrolls.
 </p><p><br />
 See Also:
 </p>
