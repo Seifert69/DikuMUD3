@@ -3,6 +3,7 @@
 </p>
 <pre>donate &lt;item&gt;              to the donation room of Udgaard
 donate &lt;item&gt; midgaard     to the donation room of Midgaard
+donate &lt;item&gt; nymgaard     to the donation room of Nymgaard
 donate &lt;item&gt; clan         to your clan chest (see <a cmd='#'>Help Clan Donate</a>)
 </pre>
 <p>Sends an item from your inventory to a town's donation room, from anywhere 
