@@ -1,6 +1,6 @@
 <div class="mw-parser-output"><h1>Cure Serious Wounds</h1>
 <p>Sphere: Divine Sphere
-Class: Healer (guild level 14), Paladin (guild level 40)
+Class: Healer (guild level 14), Paladin (guild level 40, up to 50%)
 Mana: 20
 </p><p>Usage:
 </p>
@@ -8,9 +8,11 @@ Mana: 20
 <a cmd='#'>cast cure serious wounds</a>   (on yourself)
 </pre>
 <p>Heals more of the target's lost hit points than cure light wounds, for a 
-little more mana: the better your divine sphere, the more it heals. It works on 
+little more mana: the better your divine power and your skill in the 
+spell, the more it heals. It works on 
 humanoids and mammals, and always on yourself. You can cast it while fighting, 
-and it is also found on scrolls, potions and staffs.
+and it is also found on scrolls, potions and staffs. Practising it 
+needs divine 25.
 </p><p><br />
 See Also:
 </p>
