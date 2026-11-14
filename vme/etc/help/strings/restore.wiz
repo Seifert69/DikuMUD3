@@ -9,13 +9,17 @@ restore all
 maximum, and no longer hungry or thirsty. It works on a player or a 
 monster anywhere in the game; they are told "&lt;you&gt; has restored you to 
 health."
-</p><p>restore all does the same for every player in the game, who are told 
-that you "restored the world to health!". It is logged.
+</p><p><b>restore self</b> (or your own name) does more: besides your health, it
+sets all your abilities, weapon skills, spells and skills to 200 ("You
+have divinely boosted yourself!").
+</p><p>restore all does the same for every player in the game, who are told
+that you "restored the world to health!"; gods above level 200 are left
+out. It is logged.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Wizhelp Set</a>
-&gt; <a cmd='#'>Help Hits</a>
+&gt; <a cmd='#'>Help Hitpoints</a>
 </pre>
 
 
