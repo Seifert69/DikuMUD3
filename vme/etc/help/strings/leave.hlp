@@ -4,12 +4,16 @@
 <pre><a cmd='#'>leave</a>
 <a cmd='#'>exit</a>
 </pre>
-<p>To move around in the world you just type the direction. But when you are 
-inside something, like a boat, a cart or a barrel you climbed into (see 
-<a cmd='#'>Help Enter</a>), leave or exit gets you out of it again, into the place around 
+<p>To move around in the world you just type the direction. But when you are
+inside something, like a boat, a cart or a barrel you climbed into (see
+<a cmd='#'>Help Enter</a>), leave or exit gets you out of it again, into the place around
 it.
-</p><p>You must be standing, not fighting, and the thing must be open. On a steed, 
-dismount instead (see <a cmd='#'>Help Mount</a>).
+</p><p>The two differ when your boat or cart, or the steed you ride, is itself
+inside something (you can take them along when you enter some places):
+leave takes you out together with it, while exit gets you out of the boat
+or cart and leaves it behind.
+</p><p>You must be standing, not fighting, and the thing must be open. To get off
+a steed, dismount (see <a cmd='#'>Help Mount</a>).
 </p><p><br />
 See Also:
 </p>
