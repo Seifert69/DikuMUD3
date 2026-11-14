@@ -1012,6 +1012,22 @@ code
 {
     if (inseason)
     {
+        // Santa's sleigh on Christmas Eve and Day
+        i := realmmdd@function() % 100;
+        if ((i == 24) or (i == 25))
+        {
+            if (findsymbolic("sleigh_elf@holiday22") == null)
+            {
+                u := load("sleigh_elf@holiday22");
+                link(u, findroom("square@udgaard"));
+            }
+        }
+        else
+        {
+            u := findsymbolic("sleigh_elf@holiday22");
+            if (u != null)
+                destroy(u);
+        }
         if ((realmmdd@function() % 100 > 24) and
             (findsymbolic("norma@holiday22") == null))
         {
@@ -1571,7 +1587,8 @@ dilcopy season@function(12, 1, 12, 31, 25,
                         {"santa@holiday22", "elf@holiday22", "norma@holiday22",
                          "graf_jan@holiday22", "northpole@holiday22", "xmas_tree@holiday22",
                          "xmas_tree2@holiday22", "mistletoe@holiday22",
-                         "yule_wheel@holiday22", "jolnir@holiday22", "yspoke01@holiday22",
+                         "yule_wheel@holiday22", "jolnir@holiday22", "sleigh_elf@holiday22", "sleigh@holiday22",
+                         "sleigh_driver@holiday22", "yspoke01@holiday22",
                          "yspoke02@holiday22", "yspoke03@holiday22", "yspoke04@holiday22",
                          "yspoke05@holiday22", "yspoke06@holiday22", "yspoke07@holiday22",
                          "yspoke08@holiday22", "yspoke09@holiday22", "yspoke10@holiday22",
@@ -1581,6 +1598,16 @@ dilcopy season@function(12, 1, 12, 31, 25,
                          "yspoke20@holiday22", "yspoke21@holiday22", "yspoke22@holiday22",
                          "yspoke23@holiday22", "yspoke24@holiday22"},
                         "xmas_season@holiday22");
+end
+
+sky
+title "High Above the World"
+descr
+"   The sleigh races through the night, high above the clouds. Below, the world
+lies white and quiet, and the stars seem close enough to touch."
+movement SECT_FIELD
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_NOSAVE, UNIT_FL_NO_TELEPORT}
+light 5
 end
 
 yulehall
@@ -3924,6 +3951,18 @@ CONTAINER_DEF(1000)
 dilcopy rocket("Halloween");
 end
 
+sleigh
+names {"sleigh"}
+title "Santa's sleigh"
+descr "Santa's sleigh stands here, its reindeer stamping in the snow."
+inside_descr
+"You are in Santa's sleigh, wrapped in furs."
+type ITEM_BOAT
+manipulate {MANIPULATE_ENTER}
+capacity 30000
+weight 20000
+end
+
 yule_wheel
 names {"yule wheel", "wheel"}
 title "the Yule Wheel"
@@ -4255,7 +4294,7 @@ extra {}
 "Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
 alignment +1000
 level 150
-sex SEX_MALE
+sex SEX_FEMALE
 weight 100
 height 30
 race RACE_SPIRIT
@@ -4327,6 +4366,61 @@ end
 // comment out this entire load section after the holiday season.
 // this will maitain the items for players, but take away some christmas cheer.
 
+
+sleigh_elf
+names {"sleigh elf", "elf", "sleigh"}
+title "the sleigh elf"
+descr "An elf in red and green holds the reins of Santa's sleigh: list, then hire sky."
+extra {}
+"A bright-eyed elf with frost in her hair. On Christmas Eve and Christmas Day she takes anyone up
+in Santa's sleigh, for a ride over the whole world and back. Type list, then hire sky."
+alignment +1000
+level 150
+sex SEX_FEMALE
+weight 60
+height 120
+exp 110
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy spirit_nokill();
+dilcopy hire_ship@function("square@udgaard",
+   {"sky", "1", "1", "square@udgaard"},
+   "sleigh@holiday22", "sleigh_driver@holiday22", "sky@holiday22",
+   {"unknown The sleigh only goes one way: up! Type hire sky.",
+    "busy The sleigh is up in the sky. It will be back soon.",
+    "shake Maybe next Christmas, then.",
+    "poor Just one iron piece, for the reindeer's oats.",
+    "noexit You can't get out of the sleigh up here in the sky!",
+    "depart $1n shakes the reins, the bells ring out, and the sleigh leaps into the sky.",
+    "land The lights of Udgaard twinkle below as the sleigh comes down.",
+    "dock The sleigh lands softly in Udgaard's square, its bells ringing.",
+    "sea Far below, Midgaard's towers glitter with Yule lanterns.",
+    "sea You drop a present down the chimney of a sleeping village.",
+    "sea The beam of Torsbay's lighthouse sweeps the dark sea beneath you.",
+    "sea Over the Mushroom Forest, glowing spores rise to meet the sleigh.",
+    "sea The northern lights ripple green and violet across the sky.",
+    "sea The reindeer's bells ring out over the snowy forests."});
+end
+
+sleigh_driver
+names {"elf at the reins", "elf", "driver"}
+title "the elf at the reins"
+descr "An elf holds the reins, humming a Yule song."
+alignment +1000
+level 150
+sex SEX_MALE
+weight 60
+height 110
+exp 110
+race RACE_SPIRIT
+MSET_ABILITY (20,20,1,20,15,4,15,5)
+MSET_WEAPON(9,4,4,4,3,3)
+MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+dilcopy spirit_nokill();
+end
 
 jolnir
 names {"jolnir", "odin", "old man", "yule one"}
