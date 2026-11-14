@@ -9169,7 +9169,9 @@ var
    highrating: integer;    /* The highest rating encountered so far */
    verdict   : integer;    /* Used as pass value for the unitptr test */
    sancvar   : integer;    /* Whether the PC has SANCTUARY cast on self */
-   soothe    : integer;    /* Whether the PC has SOOTHE cast on self */
+   soothe    : integer;    /* Whether the PC has soothed me */
+   eptr      : extraptr;   /* My $Soothe extra */
+   soothers  : stringlist; /* The names in it */
    count     : integer;    /* The count of elligible PCs checked so far */
 code
 {
@@ -9202,7 +9204,13 @@ secure(u,endloop);
                             this u fails. */
 
           sancvar := isaff(u, ID_SANCTUARY);
-          if ("$ID_SOOTHE" in u.extra) soothe := 1;
+          /* soothe@skills adds each soothing PC's name to my $Soothe extra */
+          eptr := "$Soothe" in self.extra;
+          if (eptr != null)
+             {
+                soothers := split(eptr.descr, " ");
+                if (u.name in soothers) soothe := 1;
+             }
           if (not(visible(self, u))) verdict := 0;
 
 /* Go get the pc's rating */
