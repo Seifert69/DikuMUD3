@@ -1,9 +1,9 @@
 <div class="mw-parser-output"><h1>Frost Sphere</h1>
-<p>The spells of the frost sphere freeze: the sorcerers' snowballs, frostballs, ice storms and blizzards. Cold cares little for armour, so these spells bite almost as hard through plate as through clothes. Your ability in the sphere decides how well you cast them, and also how well you resist frost spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist cold better, see <a cmd='#'>Help Cold Resistance</a>; dragons may also breathe frost (see <a cmd='#'>Help Breath</a>).
+<p>The spells of the frost sphere freeze: the sorcerers' snowballs, frostballs, ice storms and blizzards. Most of them bite hardest through clothes and less through plate. Your ability in the sphere decides how well you cast them, and also how well you resist frost spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist cold better, see <a cmd='#'>Help Cold Resistance</a>; dragons may also breathe frost (see <a cmd='#'>Help Breath</a>).
 </p><p>The spells, and who teaches them (guild level):
 </p>
 <pre>frost breath   no guild teaches it
-blizzard       sorcerer 70
+blizzard       sorcerer 70 (up to 90%)
 snowball       sorcerer 6
 frostball      sorcerer 19
 iceball        sorcerer 100
