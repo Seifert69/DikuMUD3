@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Sleep (spell)</h1>
 <p>Sphere: Mind Sphere
 Class: Necromancer (guild level 14)
+Practising it needs divine 28.
 Mana: 20
 </p><p>Usage:
 </p>
@@ -13,7 +14,8 @@ a fight can only try to sleep. The better your spell, the longer it lasts:
 from half a minute to several minutes.
 </p><p>It works on humanoids only, and on no one already under it. The target 
 resists with their mind; if you fail, they know you tried, and they turn on 
-you. Awaken, or a strong enough dispel magic, breaks the sleep. It is also 
+you. Awaken or dispel magic breaks the sleep, if it is cast at least as strongly 
+as the sleep was. You can't cast it while fighting. It is also 
 found on potions, wands, staffs and scrolls.
 </p><p><br />
 See Also:
