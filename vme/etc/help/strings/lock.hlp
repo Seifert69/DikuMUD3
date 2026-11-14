@@ -19,7 +19,7 @@ it from the other side too.
 </p><p>Without the key, there are other ways:
 </p>
 <ul><li>the skill pick lock (see <a cmd='#'>Help Pick Lock</a>), though some locks can't be picked;</li>
-<li>the spell unlock, which opens a lock with a *click*, and its twin lock, which locks one; conjurers learn them (lock at guild level 14, unlock at 27), and sorcerers and thieves learn them up to 50%. Name the direction or the thing: cast unlock north, cast unlock chest.</li></ul>
+<li>the spell unlock, which opens a lock with a *click*, and its twin lock, which locks one; conjurers learn them (lock at guild level 16, unlock at 27), and sorcerers and thieves learn them up to 50%. Name the direction or the thing: cast unlock north, cast unlock chest.</li></ul>
 <p><br />
 See Also:
 </p>
