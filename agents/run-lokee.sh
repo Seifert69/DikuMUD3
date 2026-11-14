@@ -59,7 +59,7 @@ while [ ! -e ~/.lokee-stop ]; do
     text=$(bin/mud.py read 300 2>&1)
     if [ "$(date -u +%m)" = 12 ] && (($(date +%s) - mailed >= 3600)); then
         mailed=$(date +%s)
-        bin/jolnir-mail.py >> "$log" 2>&1
+        bin/jolnir-mail.py >> "$log" 2>&1 &  # a round takes a minute or more: don't keep Lokee waiting
     fi
     # the wishes not granted yet: no .decided, or a letter came after it
     wishes=$(for f in wishes/*.txt; do

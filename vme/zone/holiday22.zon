@@ -27,6 +27,10 @@ help
 
 %dil
 
+// What Santa's helpers share: spirits, out of reach of a fight (spirit_nokill)
+// (one line: a backslash before CRLF doesn't continue a #define)
+#define XMAS_SPIRIT race RACE_SPIRIT MSET_ABILITY (20,20,1,20,15,4,15,5) MSET_WEAPON(9,4,4,4,3,3) MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+
 #define XMAS_SANTA_IDX   0
 #define XMAS_DONE_IDX    1
 #define XMAS_DAY_IDX     2
@@ -422,6 +426,7 @@ dilbegin touch_pole();
 external
     integer realmmdd@function();
     integer yule_count(pc : unitptr);
+    string yule_year();
 var
     xmas_quests  : stringlist global xmas_done@holiday22;
 	pc 			: unitptr;
@@ -444,7 +449,7 @@ code
 	// December 24 to 31: Jolnir sees those with 16 spokes of the Yule Wheel, any level
 	z := realmmdd@function();
 	if ((z >= 1224) and (z <= 1231) and (yule_count(pc) >= 16) and
-	    not (("Yule Gift " + itoa(getinteger(DIL_GINT_REALYEAR, self, 0))) in pc.quests))
+	    not (("Yule Gift " + yule_year()) in pc.quests))
 	{
 		act("You touch the pole, and the Yule fire seems to roar in your ears.", A_ALWAYS, pc, null, null, TO_CHAR);
 		act("$1n touches the pole and vanishes in a swirl of snow.", A_SOMEONE, pc, null, null, TO_REST);
@@ -1028,7 +1033,7 @@ code
             if (u != null)
                 destroy(u);
         }
-        if ((realmmdd@function() % 100 > 24) and
+        if ((i > 24) and
             (findsymbolic("norma@holiday22") == null))
         {
             u := load("norma@holiday22");
@@ -1070,36 +1075,36 @@ dilend
 // December 24 to 31 the pole takes them to Jolnir's hall, where kneeling makes the gift:
 // the rung of the player's level (yule_rung), one lower with fewer than 24 spokes.
 
-// The rung of random treasure a player of level lvl can use: randomt's level restrictions
-// (vrestrict@randomt: 10, 20, 40, 60, 80, 100) and an artifact (7) from level 100.
+// The rung of random treasure a player of level lvl can use: gmtreasure's rungs (randomt's
+// level restrictions), and at Yule an artifact (7) from level 100.
 dilbegin integer yule_rung(lvl : integer);
+external
+   integer gm_trquality@commands(lvl : integer);
 code
 {
-   if (lvl < 5)
-      return (BONUS_AVERAGE);
-   if (lvl < 10)
-      return (BONUS_AVERAGE_PLUS);
-   if (lvl < 20)
-      return (BONUS_GOOD);
-   if (lvl < 40)
-      return (BONUS_GOOD_PLUS);
-   if (lvl < 60)
-      return (BONUS_EXCELLENT);
-   if (lvl < 80)
-      return (BONUS_EXCELLENT_PLUS);
-   if (lvl < 100)
-      return (BONUS_SUPERIOR);
-   return (BONUS_ARTIFACT);
+   if (lvl >= 100)
+      return (BONUS_ARTIFACT);
+   return (gm_trquality@commands(lvl));
+}
+dilend
+
+// This year, for the Yule's quest names ("Yule Wheel 2026") and the store of wishes
+dilbegin string yule_year();
+code
+{
+   return (itoa(getinteger(DIL_GINT_REALYEAR, self, 0)));
 }
 dilend
 
 // The spokes pc has turned this year
 dilbegin integer yule_count(pc : unitptr);
+external
+   string yule_year();
 var
    ex : extraptr;
 code
 {
-   ex := ("Yule Wheel " + itoa(getinteger(DIL_GINT_REALYEAR, self, 0))) in pc.quests;
+   ex := ("Yule Wheel " + yule_year()) in pc.quests;
    if (ex == null)
       return (0);
    return (length(ex.names) - 1);
@@ -1124,22 +1129,6 @@ code
 }
 dilend
 
-// The quality of Jolnir's gift for pc
-dilbegin integer yule_quality(pc : unitptr);
-external
-   integer yule_q(lvl : integer, c : integer);
-   integer yule_count(pc : unitptr);
-var
-   lvl : integer;
-   c : integer;
-code
-{
-   lvl := pc.vlevel;
-   c := yule_count(pc);
-   return (yule_q(lvl, c));
-}
-dilend
-
 // A quality in words
 dilbegin string yule_qname(q : integer);
 var
@@ -1158,35 +1147,36 @@ dilend
 // What pc's spokes are worth, in a line or two
 dilbegin string yule_ladder(pc : unitptr);
 external
-   integer yule_rung(lvl : integer);
+   integer yule_q(lvl : integer, c : integer);
    integer yule_count(pc : unitptr);
    string yule_qname(q : integer);
 var
    c : integer;
+   lvl : integer;
    r : integer;
    lo : integer;
+   s : string;
 code
 {
    c := yule_count(pc);
-   r := yule_rung(pc.vlevel);
-   lo := r - 1;
-   if (lo < 0)
-      lo := 0;
-   if ((c < 16) and (lo == r))
-      return ("You have turned " + itoa(c) + " of the 24 spokes. At 16, Jolnir grants you a " +
-              "wish: " + yule_qname(r) + " at your level.");
-   if (c < 16)
-      return ("You have turned " + itoa(c) + " of the 24 spokes. At 16, Jolnir grants you a " +
-              "wish: " + yule_qname(lo) + " at your level, and with all 24 spokes, " +
+   lvl := pc.vlevel;
+   r := yule_q(lvl, 24);  // all spokes
+   lo := yule_q(lvl, 16); // a wish's worth, short of all 24
+   s := "You have turned " + itoa(c) + " of the 24 spokes";
+   if (c >= 24)
+      return ("You have turned all 24 spokes: Jolnir's gift will be " + yule_qname(r) +
+              ", the best your level allows.");
+   if (c >= 16)
+   {
+      if (lo == r)
+         return (s + ": Jolnir's gift would be " + yule_qname(r) + ", the best your level allows.");
+      return (s + ": Jolnir's gift would be " + yule_qname(lo) + ". With all 24 it would be " +
               yule_qname(r) + ".");
-   if ((c < 24) and (lo == r))
-      return ("You have turned " + itoa(c) + " of the 24 spokes: Jolnir's gift would be " +
-              yule_qname(r) + ", the best your level allows.");
-   if (c < 24)
-      return ("You have turned " + itoa(c) + " of the 24 spokes: Jolnir's gift would be " +
-              yule_qname(lo) + ". With all 24 it would be " + yule_qname(r) + ".");
-   return ("You have turned all 24 spokes: Jolnir's gift will be " + yule_qname(r) +
-           ", the best your level allows.");
+   }
+   if (lo == r)
+      return (s + ". At 16, Jolnir grants you a wish: " + yule_qname(r) + " at your level.");
+   return (s + ". At 16, Jolnir grants you a wish: " + yule_qname(lo) + " at your level, and " +
+           "with all 24 spokes, " + yule_qname(r) + ".");
 }
 dilend
 
@@ -1229,6 +1219,7 @@ dilend
 // A spoke of the Yule Wheel: verb noun turns spoke n, from December n for seven days
 dilbegin yule_spoke(n : integer, verb : string, noun : string, msg : string, rmsg : string);
 external
+   string yule_year();
    integer realmmdd@function();
    integer yule_count(pc : unitptr);
    string yule_ladder(pc : unitptr);
@@ -1264,7 +1255,7 @@ code
           A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
-   yw := "Yule Wheel " + itoa(getinteger(DIL_GINT_REALYEAR, self, 0));
+   yw := "Yule Wheel " + yule_year();
    ex := yw in pc.quests;
    if (ex == null)
    {
@@ -1292,6 +1283,7 @@ dilend
 // the player's spokes are worth, and how to wish
 dilbegin yule_wheel();
 external
+   string yule_year();
    integer realmmdd@function();
    string yule_ladder(pc : unitptr);
    string yule_hint(n : integer);
@@ -1314,7 +1306,7 @@ code
         "Each spoke is a small task somewhere in the world, and waits seven days.<br/>";
    if ((today / 100 == 12) and (day <= 31))
    {
-      ex := ("Yule Wheel " + itoa(getinteger(DIL_GINT_REALYEAR, self, 0))) in pc.quests;
+      ex := ("Yule Wheel " + yule_year()) in pc.quests;
       i := day - 7;
       if (i < 1)
          i := 1;
@@ -1341,8 +1333,10 @@ dilend
 // master's reading of the wish (gmyule), or any; its quality yule_quality's.
 dilbegin jolnir_gift();
 external
-   integer yule_quality(pc : unitptr);
+   integer yule_q(lvl : integer, c : integer);
+   integer yule_count(pc : unitptr);
    string yule_qname(q : integer);
+   string yule_year();
 var
    pc : unitptr;
    u : unitptr;
@@ -1353,6 +1347,7 @@ var
    kind : string;
    line : string;
    q : integer;
+   c : integer;
 code
 {
 :start:
@@ -1360,13 +1355,15 @@ code
    block;
    pc := activator;
    secure(pc, lost);
-   yg := "Yule Gift " + itoa(getinteger(DIL_GINT_REALYEAR, self, 0));
+   yg := "Yule Gift " + yule_year();
    if (yg in pc.quests)
    {
       exec("say You have had my gift this Yule, " + pc.name + ".", self);
       goto home;
    }
-   q := yule_quality(pc);
+   q := pc.vlevel;
+   c := yule_count(pc);
+   q := yule_q(q, c);
    if (q < 0)
    {
       exec("say Sixteen spokes of the wheel earn a wish, " + pc.name + ". Come back next Yule.", self);
@@ -1375,7 +1372,7 @@ code
 
    kind := "any";
    line := "";
-   cont := restore("yulewishes" + itoa(getinteger(DIL_GINT_REALYEAR, self, 0)), null);
+   cont := restore("yulewishes" + yule_year(), null);
    if (cont != null)
    {
       ex := tolower(pc.name) in cont.extra;
@@ -1441,6 +1438,8 @@ dilend
  * this zone, as jolnir_gift does, so both read and write the same file (store() and
  * restore() use the zone's own directory). */
 dilbegin gmyule(arg : string);
+external
+   string yule_year();
 var
    cont : unitptr;
    ex : extraptr;
@@ -1457,7 +1456,7 @@ code
    if (self.type != UNIT_ST_PC)
       quit;
 
-   wkey := "yulewishes" + itoa(getinteger(DIL_GINT_REALYEAR, self, 0));
+   wkey := "yulewishes" + yule_year();
    w := getword(arg);
    if (w == "")
    {
@@ -4380,10 +4379,7 @@ sex SEX_FEMALE
 weight 60
 height 120
 exp 110
-race RACE_SPIRIT
-MSET_ABILITY (20,20,1,20,15,4,15,5)
-MSET_WEAPON(9,4,4,4,3,3)
-MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+XMAS_SPIRIT
 flags {UNIT_FL_NO_TELEPORT}
 dilcopy spirit_nokill();
 dilcopy hire_ship@function("square@udgaard",
@@ -4415,10 +4411,7 @@ sex SEX_MALE
 weight 60
 height 110
 exp 110
-race RACE_SPIRIT
-MSET_ABILITY (20,20,1,20,15,4,15,5)
-MSET_WEAPON(9,4,4,4,3,3)
-MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+XMAS_SPIRIT
 dilcopy spirit_nokill();
 end
 
@@ -4436,10 +4429,7 @@ sex SEX_MALE
 weight 400
 height 190
 exp 110
-race RACE_SPIRIT
-MSET_ABILITY (20,20,1,20,15,4,15,5)
-MSET_WEAPON(9,4,4,4,3,3)
-MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+XMAS_SPIRIT
 flags {UNIT_FL_NO_TELEPORT}
 romflags{CHAR_DETECT_INVISIBLE}
 dilcopy jolnir_gift();

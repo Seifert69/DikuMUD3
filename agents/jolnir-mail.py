@@ -32,14 +32,11 @@ def walk(to, start):
     """Walk from room@zone start to room@zone to by mud.py's map; False if there's no way. (The
     game shows Jolnir no room marks, so mud.py can't tell where he is: he starts and ends each
     round at the temple.)"""
-    out = mud("way", to, "from", start)
-    m = re.search(r"\): (.+?) \(\d+ steps\)", out)
-    if "you are there" in out:
-        return True
-    if not m:
+    out = mud("way", to, "from", start, "--steps")
+    if "mud.py:" in out:
         print("no way to %s: %s" % (to, out.strip()), file=sys.stderr)
         return False
-    for step in m.group(1).split():
+    for step in out.split():
         if step.endswith("*"):
             mud("send", "open door")
         mud("send", step.rstrip("*!"))
@@ -62,11 +59,11 @@ def when(date):
 def save(player, date, wish):
     """Add a letter to the player's file, oldest first; returns False if it's there already."""
     path = os.path.join(WISHES, player.lower() + ".txt")
-    letters = []
     try:
-        letters = re.findall(r"^DATE: (.+)\n(.*)$", open(path).read(), re.M)
+        with open(path) as f:
+            letters = re.findall(r"^DATE: (.+)\n(.*)$", f.read(), re.M)
     except OSError:
-        pass
+        letters = []
     if (date, wish) in letters:
         return False
     letters.append((date, wish))
@@ -97,8 +94,9 @@ def main():
             w = letter(out)
             if w and save(*w) and w[0] not in got:
                 got.append(w[0])
-        for k in range(n + 5):
-            if re.search(r"don't|do not|You have no|What|Put 'in'", mud("send", "put letter in shredder")):
+        for _ in range(n + 5 if n else 0):
+            if re.search(r"No such thing|don't|do not|You have no|What|Put 'in'",
+                         mud("send", "put letter in shredder")):
                 break
         print("jolnir: %d letters, new from %s" % (n, ", ".join(got) or "no one"))
         walk("temple@udgaard", "postoffice@udgaard")

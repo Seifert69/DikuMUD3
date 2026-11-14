@@ -9716,7 +9716,8 @@ dilend
 // set a test date on the DIL chamber, for trying a season out of season on a test server:
 //   at dil_chamber@function set room add-extra $test_date   (then 1205, then @)
 // Rooms aren't saved, so it lasts until the next reboot; `at dil_chamber@function set room
-// del-extra $test_date` ends it sooner. season@function and the Yule Wheel go by it.
+// del-extra $test_date` ends it sooner. season@function and the Yule Wheel go by it; the year
+// stays the real one (quest names such as "Yule Wheel 2026" take it).
 dilbegin integer realmmdd();
 var
    r : unitptr;
