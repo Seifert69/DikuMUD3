@@ -444,7 +444,7 @@ GM_COMMANDS = {
     "equipment", "time", "weather", "help", "stand", "rest", "wizinv",
     "goto", "at", "echo", "message", "restore", "force", "makemoney", "load", "purge", "set",
     "give", "get", "drop", "put", "open", "close", "lock", "unlock", "tell", "gmmem", "gmroom", "gmtrack",
-    "gmlure", "gmtreasure", "gmquest",
+    "gmlure", "gmtreasure", "gmquest", "gmzap", "gmyule",
     "enter", "leave", "north", "east", "south", "west", "up", "down", "n", "e", "s", "w", "u", "d",
 }
 GM_SET_FIELDS = {"title", "descr", "add-name", "del-name", "add-extra", "del-extra",
@@ -1006,7 +1006,11 @@ def find(words):
 
 
 def way(args):
-    """Breadth-first search over the map, around water a walker can't cross; prints the directions."""
+    """Breadth-first search over the map, around water a walker can't cross; prints the directions.
+    With --steps it prints only the steps, one line, for a script (a door * or hidden door !
+    after a step), or nothing when the character is there already."""
+    steps_only = "--steps" in args
+    args = [a for a in args if a != "--steps"]
     start = None
     if "from" in args:
         i = args.index("from")
@@ -1061,6 +1065,9 @@ def way(args):
         target, steps = search(True)
     if target is None:
         die("no way from %s to %s on the map" % (start, want))
+    if steps_only:
+        print(" ".join(steps))  # enter:barrel stays one step
+        return
     print("From %s (%s) to %s (%s): %s (%d steps)%s" % (
         rooms[start][0], start, rooms[target][0], target, " ".join(steps).replace(":", " ") or "you are there", len(steps),
         ("; * is a door: open it first" if any(s.endswith("*") for s in steps) else "") +

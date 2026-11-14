@@ -47,6 +47,9 @@ change the earlier plan for this, except its PLAYED and REUSE lines.
   same person, with the same handle, names and brief, and knows what it told), and lure the
   player back with a step that fits what they already know. Check first what they still carry
   of it (`wstat <player> data`); if a story item didn't survive, the world explains it.
+- **Granting Yule wishes** (lokee.md, Yuletide): read each player's `wishes/<player>.txt`, all
+  their letters, and grant one gift: `gmyule <player> <kind> : <Jolnir's line>`, then write
+  `wishes/<player>.decided` with the kind and the line. Never the quality: the game sets it.
 - When the event ends, done or cancelled: in the plan that was played (the `FROM:` plan, if
   there is one), add the players to a `PLAYED:` line (`PLAYED: Asta 2026-11-02`), and say
   whether it should run again for others: `REUSE: yes` if it worked, and also if it never

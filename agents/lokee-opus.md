@@ -33,7 +33,8 @@ Write `plans/<id>.md` (id: the date and a short name, `2026-11-02-raven`):
       will type, written out for each unit, never "same as the other one" (lokee.md: each word
       of its title, the title itself, what it is). A character the story needs (who gives the
       quest, who holds the key) is one that stays put: read its zone source and choose one
-      without a wandering or aggressive DIL, and keep it out of rooms where monsters hunt. Say
+      without a wandering or aggressive DIL (or name the DIL to take off it, `gmzap`), and
+      keep it out of rooms where monsters hunt. Say
       who takes over if it dies before its part is done (an apprentice, its ghost, a note in
       its things), so the story can go on
     BEATS: in order, each with
@@ -97,6 +98,8 @@ it, a `WHEN:` line: who must be online for it to start (`WHEN: Asta online`, `WH
 Asta, Brand, Hild online`). Read the plans first: what's ready already, what each player has
 played, and how it went.
 
+- **In December** every event takes its colour from Yule (lokee.md, Yuletide), and the weekly
+  event that falls on Christmas Eve is a Yule one.
 - **The weekly event**: one, for the regulars who play together (their `with:` and hours):
   45 to 90 minutes, two or more players, a real story with a dangerous climax, where they
   play. Write a new one when the last was played or has waited a week (set the old one's STATE

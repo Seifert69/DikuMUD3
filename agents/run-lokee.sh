@@ -6,6 +6,10 @@
 # when Papi tells Lokee something, or now and then while an event runs. Haiku decides what to
 # do; it calls bin/lokee-sonnet to play the characters and bin/lokee-opus to plan.
 #
+# In December (the Yule Wheel, holiday22) it has the player Jolnir fetch his letters once an hour
+# (bin/jolnir-mail.py, into wishes/<player>.txt) and wakes Haiku when a player's wishes are new:
+# Lokee reads them and grants one gift with gmyule, then writes wishes/<player>.decided.
+#
 # Every 10 minutes it notes who is online, their levels and rooms (bin/lokee-players sample,
 # into seen/), and once a day, when no event runs, it has Opus plan ahead in the background
 # (bin/lokee-ahead): from players.txt (bin/lokee-players profile), events made for the players
@@ -37,7 +41,7 @@ git -C plans add -A >/dev/null 2>&1 && git -C plans commit -qm "$(date '+%F %T')
 # (mud.py prints "[Asta logged on]" for a game master; the game doesn't tell an invisible god)
 WAKE='^\[[A-Z][a-z]+ logged on\]|^\[gm |^\[tell Papi\]|the mud closed the connection|logging in again failed'
 # (and a lure playing its steps: it needs nothing from Lokee)
-QUIET='^\[(Dwili|Groa|Papi|Lokee) logged on\]|^\[gm [A-Za-z]+\] [0-9:]+ lure step '
+QUIET='^\[(Dwili|Groa|Papi|Lokee|Jolnir) logged on\]|^\[gm [A-Za-z]+\] [0-9:]+ lure step '
 TURN=3600     # the longest one turn may take
 CHECK=900     # while an event runs, look in on it this often (seconds)
 SAMPLE=600    # note who is online this often (seconds)
@@ -53,6 +57,15 @@ while [ ! -e ~/.lokee-stop ]; do
         bin/mud.py send "wizinv 230" >> "$log" 2>&1
     fi
     text=$(bin/mud.py read 300 2>&1)
+    if [ "$(date -u +%m)" = 12 ] && (($(date +%s) - mailed >= 3600)); then
+        mailed=$(date +%s)
+        bin/jolnir-mail.py >> "$log" 2>&1 &  # a round takes a minute or more: don't keep Lokee waiting
+    fi
+    # the wishes not granted yet: no .decided, or a letter came after it
+    wishes=$(for f in wishes/*.txt; do
+                 [ -e "$f" ] || continue
+                 [ "$f" -nt "${f%.txt}.decided" ] && echo "$f"
+             done)
     running=$(grep -l '^STATE: \(running\|approved\)' plans/*.md 2>/dev/null)
     ahead=""
     if ((10#$(date +%H) >= AHEAD_AT)) && [ -z "$running" ] && [ ! -e "$LOGDIR/ahead-$(date +%F)" ]; then
@@ -75,12 +88,15 @@ $seen"
     fi
     if grep -E "$WAKE" <<< "$text" | grep -qvE "$QUIET"; then
         why="This just happened:"
+    elif [ -n "$wishes" ] && [ "$wishes" != "$told_wishes" ]; then
+        why="New Yule wishes have come in (wishes/): grant them. Lately:"
     elif [ -n "$running" ] && (($(date +%s) - last >= CHECK)); then
         why="Nothing called you, but an event is running ($running): look in on it. Lately:"
     else
         continue
     fi
     last=$(date +%s)
+    told_wishes=$wishes
     echo "=== $(date '+%F %T') woken" >> "$log"
     orders=$(cat orders.txt 2>/dev/null)
     [ -n "$orders" ] && orders=" Papi's standing orders (orders.txt): $orders
@@ -99,6 +115,7 @@ $seen"
 Plans (file: first line): ${plans:-none}
 Plans ready for players who aren't all online yet: ${ready:-none}
 Paused plans, waiting for one of their players to log on: ${paused:-none}
+Yule wishes not granted yet: ${wishes:-none}
 Plans to reuse: ${reuse:-none}
 "
     bin/claude-turn $TURN -p --append-system-prompt "$(cat lokee-haiku.md)" "It's $(date '+%A %F, %H:%M') UTC.$orders

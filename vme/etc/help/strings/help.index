@@ -135,6 +135,7 @@ charge wand=chargewand.hlp
 charisma=chr.hlp
 charm animal=charmanimal.hlp
 chr=chr.hlp
+christmas=yule.hlp
 church knights=paladins.hlp
 cinfo=cinfo.hlp
 claim=claim.hlp
@@ -472,6 +473,7 @@ javelin=javelin.hlp
 jeddart=jeddart.hlp
 join=join.hlp
 join group=groups.hlp
+jolnir=yule.hlp
 jolt=jolt.hlp
 junk=dump.hlp
 justice council=laws.hlp
@@ -946,3 +948,5 @@ xray vision=xrayvision.hlp
 :start:y
 yell=shout.hlp
 :end:y
+yule=yule.hlp
+yule wheel=yule.hlp

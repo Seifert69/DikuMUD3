@@ -27,6 +27,10 @@ help
 
 %dil
 
+// What Santa's helpers share: spirits, out of reach of a fight (spirit_nokill)
+// (one line: a backslash before CRLF doesn't continue a #define)
+#define XMAS_SPIRIT race RACE_SPIRIT MSET_ABILITY (20,20,1,20,15,4,15,5) MSET_WEAPON(9,4,4,4,3,3) MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
+
 #define XMAS_SANTA_IDX   0
 #define XMAS_DONE_IDX    1
 #define XMAS_DAY_IDX     2
@@ -419,6 +423,10 @@ dilend
 /*start the quest, touch the pole if char less than level 50 give newbie gift
 otherwise, set the flag, and start the exp tracker */ 
 dilbegin touch_pole();
+external
+    integer realmmdd@function();
+    integer yule_count(pc : unitptr);
+    string yule_year();
 var
     xmas_quests  : stringlist global xmas_done@holiday22;
 	pc 			: unitptr;
@@ -437,6 +445,20 @@ code
 
 	pc := activator;
 	secure(pc, lostpc);
+
+	// December 24 to 31: Jolnir sees those with 16 spokes of the Yule Wheel, any level
+	z := realmmdd@function();
+	if ((z >= 1224) and (z <= 1231) and (yule_count(pc) >= 16) and
+	    not (("Yule Gift " + yule_year()) in pc.quests))
+	{
+		act("You touch the pole, and the Yule fire seems to roar in your ears.", A_ALWAYS, pc, null, null, TO_CHAR);
+		act("$1n touches the pole and vanishes in a swirl of snow.", A_SOMEONE, pc, null, null, TO_REST);
+		link(pc, findroom("yulehall@holiday22"));
+		act("$1n appears out of a swirl of snow.", A_SOMEONE, pc, null, null, TO_REST);
+		exec("look", pc);
+		unsecure(pc);
+		goto start;
+	}
 
 	if (xmas_quests.[XMAS_NO_DEC_IDX] in pc.extra)
 	{
@@ -983,6 +1005,8 @@ dilend
 // Udgaard's market on Christmas Day, and when December has ended anyone still in Santa's
 // rooms is sent back to the square.
 dilbegin xmas_season(inseason : integer);
+external
+    integer realmmdd@function();
 var
     rml : stringlist;
     u : unitptr;
@@ -993,7 +1017,23 @@ code
 {
     if (inseason)
     {
-        if ((getinteger(DIL_GINT_REALDAY, self, 0) > 24) and
+        // Santa's sleigh on Christmas Eve and Day
+        i := realmmdd@function() % 100;
+        if ((i == 24) or (i == 25))
+        {
+            if (findsymbolic("sleigh_elf@holiday22") == null)
+            {
+                u := load("sleigh_elf@holiday22");
+                link(u, findroom("square@udgaard"));
+            }
+        }
+        else
+        {
+            u := findsymbolic("sleigh_elf@holiday22");
+            if (u != null)
+                destroy(u);
+        }
+        if ((i > 24) and
             (findsymbolic("norma@holiday22") == null))
         {
             u := load("norma@holiday22");
@@ -1003,7 +1043,7 @@ code
         quit;
     }
 
-    rml := {"study@holiday22", "workshop@holiday22"};
+    rml := {"study@holiday22", "workshop@holiday22", "yulehall@holiday22"};
     i := 0;
     while (i < length(rml))
     {
@@ -1023,6 +1063,522 @@ code
         i := i + 1;
     }
     quit;
+}
+dilend
+
+// ======================== THE YULE WHEEL ========================
+// From December 1 to 24 a spoke of the Yule Wheel turns each day: spoke n is a small task
+// in a safe place (yspoke01..24, put out by the season's resets), open from December n for
+// seven days. The spokes a player turned are the names "s<n>" of the quest "Yule Wheel
+// <year>". With 16 spokes or more a player may wish for a gift: they mail their wish to the
+// player Jolnir, a game master reads it and gives it a kind of item with gmyule, and from
+// December 24 to 31 the pole takes them to Jolnir's hall, where kneeling makes the gift:
+// the rung of the player's level (yule_rung), one lower with fewer than 24 spokes.
+
+// The rung of random treasure a player of level lvl can use: gmtreasure's rungs (randomt's
+// level restrictions), and at Yule an artifact (7) from level 100.
+dilbegin integer yule_rung(lvl : integer);
+external
+   integer gm_trquality@commands(lvl : integer);
+code
+{
+   if (lvl >= 100)
+      return (BONUS_ARTIFACT);
+   return (gm_trquality@commands(lvl));
+}
+dilend
+
+// This year, for the Yule's quest names ("Yule Wheel 2026") and the store of wishes
+dilbegin string yule_year();
+code
+{
+   return (itoa(getinteger(DIL_GINT_REALYEAR, self, 0)));
+}
+dilend
+
+// The spokes pc has turned this year
+dilbegin integer yule_count(pc : unitptr);
+external
+   string yule_year();
+var
+   ex : extraptr;
+code
+{
+   ex := ("Yule Wheel " + yule_year()) in pc.quests;
+   if (ex == null)
+      return (0);
+   return (length(ex.names) - 1);
+}
+dilend
+
+// The quality of Jolnir's gift for a player of level lvl with c spokes, or -1 under 16
+// spokes: the rung of their level, one lower with fewer than 24 (T025 pins it)
+dilbegin integer yule_q(lvl : integer, c : integer);
+external
+   integer yule_rung(lvl : integer);
+var
+   q : integer;
+code
+{
+   if (c < 16)
+      return (-1);
+   q := yule_rung(lvl);
+   if ((c < 24) and (q > 0))
+      q := q - 1;
+   return (q);
+}
+dilend
+
+// A quality in words
+dilbegin string yule_qname(q : integer);
+var
+   sl : stringlist;
+code
+{
+   sl := {"an average treasure", "an average-plus treasure", "a good treasure",
+          "a good-plus treasure", "an excellent treasure", "an excellent-plus treasure",
+          "a superior treasure", "an artifact"};
+   if ((q < 0) or (q > 7))
+      return ("nothing");
+   return (sl.[q]);
+}
+dilend
+
+// What pc's spokes are worth, in a line or two
+dilbegin string yule_ladder(pc : unitptr);
+external
+   integer yule_q(lvl : integer, c : integer);
+   integer yule_count(pc : unitptr);
+   string yule_qname(q : integer);
+var
+   c : integer;
+   lvl : integer;
+   r : integer;
+   lo : integer;
+   s : string;
+code
+{
+   c := yule_count(pc);
+   lvl := pc.vlevel;
+   r := yule_q(lvl, 24);  // all spokes
+   lo := yule_q(lvl, 16); // a wish's worth, short of all 24
+   s := "You have turned " + itoa(c) + " of the 24 spokes";
+   if (c >= 24)
+      return ("You have turned all 24 spokes: Jolnir's gift will be " + yule_qname(r) +
+              ", the best your level allows.");
+   if (c >= 16)
+   {
+      if (lo == r)
+         return (s + ": Jolnir's gift would be " + yule_qname(r) + ", the best your level allows.");
+      return (s + ": Jolnir's gift would be " + yule_qname(lo) + ". With all 24 it would be " +
+              yule_qname(r) + ".");
+   }
+   if (lo == r)
+      return (s + ". At 16, Jolnir grants you a wish: " + yule_qname(r) + " at your level.");
+   return (s + ". At 16, Jolnir grants you a wish: " + yule_qname(lo) + " at your level, and " +
+           "with all 24 spokes, " + yule_qname(r) + ".");
+}
+dilend
+
+// Where spoke n is and what to type there
+dilbegin string yule_hint(n : integer);
+var
+   sl : stringlist;
+code
+{
+   sl := {"In Udgaard's Village Square, the straw Yule goat is hungry: feed goat.",
+          "In the Temple of Udgaard, a Yule candle waits to be lit: light candle.",
+          "In the Udgaard Market, a Yule bell hangs on a post: ring bell.",
+          "In the back room of Udgaard's inn, the Yule log burns: toast yule.",
+          "In Mammon's Nest, Udgaard's bank, lies a Yule coin for luck: polish coin.",
+          "Up in Udgaard's wooden watchtower, the Yule beacon is dark: light beacon.",
+          "In the Forest Clearing of Haon-Dor, west of Udgaard, a young fir is bare: hang star.",
+          "In Mary's cabin in Haon-Dor, the Yule porridge simmers: taste porridge.",
+          "On the top of the green hill in Haon-Dor, the winter wind sings: listen wind.",
+          "On the top of the hill in the Cypress forest, the low sun rises: greet sun.",
+          "In the Cypress Tree Circle stands the oldest tree: hug tree.",
+          "At the blacksmith's forge in the Cypress forest, Yule nails wait: strike anvil.",
+          "On Midgaard's Market Square, the Yule lantern by the obelisk is dark: light lantern.",
+          "In the Cathedral Nave of Midgaard, the Yule altar is dressed: bow altar.",
+          "Midgaard's Park Pond has frozen over: skate pond.",
+          "On Baker Street in Midgaard, gingerbread is baking: smell gingerbread.",
+          "In the Midgaard stable, Santa's reindeer rest: pat reindeer.",
+          "Outside Midgaard's South Gate lies the Yule log: pull log.",
+          "Outside Barnham's Farm, the Yule sheaf for the birds is waiting: hang sheaf.",
+          "On Torsbay Square, the carol singers sing: clap singers.",
+          "Outside Torsbay's lighthouse, its old lamp is dark: light lamp.",
+          "On the gravel beach of Torsbay, a Yule wreath is for the sea: throw wreath.",
+          "At the end of the dock in the Mushroom Forest (by ship from Torsbay), spores drift: catch spores.",
+          "On Christmas Eve, in the Temple of Udgaard: kneel odin."};
+   if ((n < 1) or (n > 24))
+      return ("");
+   return (sl.[n - 1]);
+}
+dilend
+
+// A spoke of the Yule Wheel: verb noun turns spoke n, from December n for seven days
+dilbegin yule_spoke(n : integer, verb : string, noun : string, msg : string, rmsg : string);
+external
+   string yule_year();
+   integer realmmdd@function();
+   integer yule_count(pc : unitptr);
+   string yule_ladder(pc : unitptr);
+var
+   pc : unitptr;
+   u : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   yw : string;
+   today : integer;
+   day : integer;
+code
+{
+:start:
+   wait(SFB_CMD, command(verb) and (noun in argument) and (activator.type == UNIT_ST_PC));
+   // only when it's this spoke the player means: their own things first (light lantern lights
+   // the lantern they carry), and on Christmas Eve Odin himself counts
+   u := findunit(activator, argument, FIND_UNIT_INVEN | FIND_UNIT_EQUIP, null);
+   if (u != null)
+      goto start;
+   u := findunit(activator, argument, FIND_UNIT_SURRO, null);
+   if (u == null)
+      goto start;
+   if (u != self)
+   {
+      if ((n != 24) or (u.nameidx != "odin_statue"))
+         goto start;
+   }
+   block;
+   pc := activator;
+   today := realmmdd@function();
+   day := today % 100;
+   if (today / 100 != 12)
+   {
+      act("The Yule Wheel only turns in December.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   if (day < n)
+   {
+      act("Not yet: this is spoke " + itoa(n) + " of the Yule Wheel, and it turns on " +
+          "December " + itoa(n) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   if (day > n + 7)
+   {
+      act("The Yule Wheel has turned past spoke " + itoa(n) + ": a spoke waits only seven days.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   yw := "Yule Wheel " + yule_year();
+   ex := yw in pc.quests;
+   if (ex == null)
+   {
+      sl := null;
+      addstring(sl, yw);
+      addextra(pc.quests, sl, "The spokes of the Yule Wheel you have turned.");
+      ex := yw in pc.quests;
+   }
+   if (("s" + itoa(n)) in ex.names)
+   {
+      act("You have turned this spoke of the Yule Wheel already.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   addstring(ex.names, "s" + itoa(n));
+   act(msg, A_ALWAYS, pc, null, null, TO_CHAR);
+   act(rmsg, A_SOMEONE, pc, null, null, TO_ROOM);
+   act("<div class='cpg'>Spoke " + itoa(n) + " of the Yule Wheel turns.</div> " + yule_ladder(pc),
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   log(pc.name + " turned spoke " + itoa(n) + " of the Yule Wheel (" + itoa(yule_count(pc)) + ").");
+   goto start;
+}
+dilend
+
+// The Yule Wheel in Udgaard's square: look wheel shows today's spoke, the open ones, what
+// the player's spokes are worth, and how to wish
+dilbegin yule_wheel();
+external
+   string yule_year();
+   integer realmmdd@function();
+   string yule_ladder(pc : unitptr);
+   string yule_hint(n : integer);
+var
+   pc : unitptr;
+   ex : extraptr;
+   s : string;
+   today : integer;
+   day : integer;
+   i : integer;
+code
+{
+:start:
+   wait(SFB_CMD, command("look") and ("wheel" in argument) and (activator.type == UNIT_ST_PC));
+   block;
+   pc := activator;
+   today := realmmdd@function();
+   day := today % 100;
+   s := "The Yule Wheel, the year's wheel, turns one spoke a day from December 1 to 24. " +
+        "Each spoke is a small task somewhere in the world, and waits seven days.<br/>";
+   if ((today / 100 == 12) and (day <= 31))
+   {
+      ex := ("Yule Wheel " + yule_year()) in pc.quests;
+      i := day - 7;
+      if (i < 1)
+         i := 1;
+      while ((i <= day) and (i <= 24))
+      {
+         if (ex == null)
+            s := s + "<br/>Spoke " + itoa(i) + ": " + yule_hint(i);
+         else if (not (("s" + itoa(i)) in ex.names))
+            s := s + "<br/>Spoke " + itoa(i) + ": " + yule_hint(i);
+         i := i + 1;
+      }
+      s := s + "<br/>";
+   }
+   s := s + "<br/>" + yule_ladder(pc) + "<br/><br/>Tell Jolnir your wish by letter: at a post " +
+        "office, type write, write your wish, end with @, then mail paper jolnir. He reads every " +
+        "letter, and grants one gift. From December 24 to 31, touch the pole in Udgaard's square, " +
+        "and Jolnir will see you.<br/>";
+   sendtext(s, pc);
+   goto start;
+}
+dilend
+
+// Jolnir, the Yule one, in his hall: kneel, and he makes the gift. Its kind is the game
+// master's reading of the wish (gmyule), or any; its quality yule_quality's.
+dilbegin jolnir_gift();
+external
+   integer yule_q(lvl : integer, c : integer);
+   integer yule_count(pc : unitptr);
+   string yule_qname(q : integer);
+   string yule_year();
+var
+   pc : unitptr;
+   u : unitptr;
+   cont : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   yg : string;
+   kind : string;
+   line : string;
+   q : integer;
+   c : integer;
+   i : integer;
+code
+{
+:start:
+   wait(SFB_CMD, command("kneel") and (activator.type == UNIT_ST_PC));
+   block;
+   pc := activator;
+   u := null;
+   secure(pc, lost);
+   yg := "Yule Gift " + yule_year();
+   if (yg in pc.quests)
+   {
+      exec("say You have had my gift this Yule, " + pc.name + ".", self);
+      goto home;
+   }
+   q := pc.vlevel;
+   c := yule_count(pc);
+   q := yule_q(q, c);
+   if (q < 0)
+   {
+      exec("say Sixteen spokes of the wheel earn a wish, " + pc.name + ". Come back next Yule.", self);
+      goto home;
+   }
+
+   kind := "any";
+   line := "";
+   cont := restore("yulewishes" + yule_year(), null);
+   if (cont != null)
+   {
+      ex := tolower(pc.name) in cont.extra;
+      if (ex != null)
+      {
+         sl := split(ex.descr, "|");
+         kind := sl.[0];
+         if (length(sl) > 1)
+            line := sl.[1];
+      }
+      destroy(cont);
+   }
+   if (kind == "")
+      kind := "any";
+
+   // Made as gmtreasure makes it, in Jolnir's hands: randomt keeps its rolls on the item's
+   // first extra, so the runes and the binding wait until Treasure is done; then it's the
+   // player's, and only then the Yule's gift is given (a player who leaves before has had none)
+   u := load("treasure@randomt");
+   link(u, self);
+   addextra(u.extra, {"$treasure_height"}, itoa(pc.height));
+   dilcopy("Treasure@randomt(" + itoa(q) + "," + replace(",", " ", kind) + ")", u);
+   secure(u, spoilt);
+   i := 0;
+   while (dilfind("treasure@randomt", u) and (i < 20))
+   {
+      pause;
+      i := i + 1;
+   }
+   if (line != "")
+      addextra(u.extra, {"runes", "inscription"}, "Runes run along it: '" + line + "' Jolnir's Yule gift to " + pc.name + ".");
+   dilcopy("ply_restrict@function(" + pc.name + ",0,25,holiday_burn@holiday22)", u);
+   unsecure(u);
+   link(u, pc);
+   sl := null;
+   addstring(sl, yg);
+   addextra(pc.quests, sl, "Jolnir's Yule gift: " + yule_qname(q) + ".");
+   act("Jolnir lays his hand on your head, and something heavy settles into your pack.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   act("Jolnir lays his hand on $1n's head.", A_SOMEONE, pc, null, null, TO_ROOM);
+   if (line != "")
+      exec("say " + line, self);
+   else
+      exec("say A good Yule to you, " + pc.name + ".", self);
+   log(pc.name + " received Jolnir's Yule gift: " + yule_qname(q) + ", " + kind + ".");
+
+:home:
+   pause;
+   pause;
+   act("The fire flares, the hall fades, and you stand in Udgaard's square again.",
+       A_ALWAYS, pc, null, null, TO_CHAR);
+   link(pc, findroom("square@udgaard"));
+   exec("look", pc);
+   unsecure(pc);
+   goto start;
+
+:spoilt:
+   exec("say The gift crumbled in my hands. Kneel again.", self);
+   goto home;
+
+:lost: // the player left: a gift half made goes with them (released first, or destroying it
+       // would jump to spoilt)
+   if (u != null)
+   {
+      unsecure(u);
+      if (u.outside == self)
+         destroy(u);
+   }
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+/* gmyule <player> <kind of item> : <a line from Jolnir>: the game master's reading of a
+ * player's Yule wish (mailed to the player Jolnir). Jolnir makes the gift when the player
+ * kneels before him, December 24 to 31 (jolnir_gift@holiday22): this kind ("ring", "long
+ * sword", "plate boots", or "any"), the line carved on it, and the quality the Yule Wheel
+ * gives, never chosen here. gmyule <player> shows it, gmyule <player> clear removes it,
+ * gmyule list shows them all. Kept with store(), so a reboot doesn't lose them; it lives in
+ * this zone, as jolnir_gift does, so both read and write the same file (store() and
+ * restore() use the zone's own directory). */
+dilbegin gmyule(arg : string);
+external
+   string yule_year();
+var
+   cont : unitptr;
+   ex : extraptr;
+   sl : stringlist;
+   w : string;
+   pname : string;
+   kind : string;
+   line : string;
+   wkey : string;
+   s : string;
+   i : integer;
+code
+{
+   if (self.type != UNIT_ST_PC)
+      quit;
+
+   wkey := "yulewishes" + yule_year();
+   w := getword(arg);
+   if (w == "")
+   {
+      sendtext("Usage: gmyule &lt;player&gt; &lt;kind of item&gt; : &lt;a line from Jolnir&gt;, " +
+               "gmyule &lt;player&gt; [clear], gmyule list<br/>", self);
+      quit;
+   }
+
+   cont := restore(wkey, null);
+   if (w == "list")
+   {
+      s := "";
+      if (cont != null)
+      {
+         ex := cont.extra;
+         while (ex != null)
+         {
+            if (length(ex.names) > 0) // the envelope's own description has no names
+               s := s + "  " + ex.names.[0] + ": " + replace("|", " : ", ex.descr) + "<br/>";
+            ex := ex.next;
+         }
+         destroy(cont);
+      }
+      if (s == "")
+         s := "  none yet<br/>";
+      sendtext("Yule wishes read:<br/>" + s, self);
+      quit;
+   }
+
+   pname := tolower(w);
+   if (not isplayer(pname))
+   {
+      if (cont != null)
+         destroy(cont);
+      sendtext("No player called " + w + ".<br/>", self);
+      quit;
+   }
+
+   if ((arg == "") or (arg == "clear"))
+   {
+      ex := null;
+      if (cont != null)
+         ex := pname in cont.extra;
+      if (arg == "")
+      {
+         if (ex == null)
+            sendtext(w + "'s wish isn't read yet: Jolnir would give any kind.<br/>", self);
+         else
+            sendtext(w + ": " + replace("|", " : ", ex.descr) + "<br/>", self);
+      }
+      else if (ex != null)
+      {
+         subextra(cont.extra, pname);
+         store(cont, wkey, TRUE);
+         sendtext(w + "'s wish is cleared.<br/>", self);
+      }
+      else
+         sendtext(w + " has no wish read to clear.<br/>", self);
+      if (cont != null)
+         destroy(cont);
+      quit;
+   }
+
+   sl := split(arg, ":");
+   kind := sl.[0];
+   line := "";
+   i := 1;
+   while (i < length(sl))
+   {
+      if (line != "")
+         line := line + ": ";
+      line := line + sl.[i];
+      i := i + 1;
+   }
+   kind := replace("|", " ", replace("(", " ", replace(")", " ", kind))); // Treasure@randomt's arguments
+   if (kind == "")
+      kind := "any";
+   line := replace("|", "/", line);
+
+   if (cont == null)
+      cont := load("envelope@mail");
+   subextra(cont.extra, pname);
+   sl := null;
+   addstring(sl, pname);
+   addextra(cont.extra, sl, kind + "|" + line);
+   store(cont, wkey, TRUE);
+   destroy(cont);
+   sendtext("Jolnir will give " + w + " " + kind + ", with the words: " + line + "<br/>", self);
+   quit;
 }
 dilend
 
@@ -1065,8 +1621,40 @@ dilend
 dilcopy season@function(12, 1, 12, 31, 25,
                         {"santa@holiday22", "elf@holiday22", "norma@holiday22",
                          "graf_jan@holiday22", "northpole@holiday22", "xmas_tree@holiday22",
-                         "xmas_tree2@holiday22", "mistletoe@holiday22"},
+                         "xmas_tree2@holiday22", "mistletoe@holiday22",
+                         "yule_wheel@holiday22", "jolnir@holiday22", "sleigh_elf@holiday22", "sleigh@holiday22",
+                         "sleigh_driver@holiday22", "yspoke01@holiday22",
+                         "yspoke02@holiday22", "yspoke03@holiday22", "yspoke04@holiday22",
+                         "yspoke05@holiday22", "yspoke06@holiday22", "yspoke07@holiday22",
+                         "yspoke08@holiday22", "yspoke09@holiday22", "yspoke10@holiday22",
+                         "yspoke11@holiday22", "yspoke12@holiday22", "yspoke13@holiday22",
+                         "yspoke14@holiday22", "yspoke15@holiday22", "yspoke16@holiday22",
+                         "yspoke17@holiday22", "yspoke18@holiday22", "yspoke19@holiday22",
+                         "yspoke20@holiday22", "yspoke21@holiday22", "yspoke22@holiday22",
+                         "yspoke23@holiday22", "yspoke24@holiday22"},
                         "xmas_season@holiday22");
+end
+
+sky
+title "High Above the World"
+descr
+"   The sleigh races through the night, high above the clouds. Below, the world
+lies white and quiet, and the stars seem close enough to touch."
+movement SECT_FIELD
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_NOSAVE, UNIT_FL_NO_TELEPORT}
+light 5
+end
+
+yulehall
+title "Jolnir's Yule Hall"
+descr
+"A long hall of smoke-dark timber, lit by a great fire. On a high seat at its
+end sits an old man in a blue cloak: Jolnir, the Yule one. Kneel before him to
+receive his gift. Behind you, a door of old oak leads back out into the snow."
+movement SECT_INSIDE
+flags {UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS, UNIT_FL_NOSAVE}
+south to square@udgaard descr
+"The door leads back out into the snow of Udgaard's square.";
 end
 
 %objects
@@ -3400,6 +3988,293 @@ CONTAINER_DEF(1000)
 dilcopy rocket("Halloween");
 end
 
+sleigh
+names {"sleigh"}
+title "Santa's sleigh"
+descr "Santa's sleigh stands here, its reindeer stamping in the snow."
+inside_descr
+"You are in Santa's sleigh, wrapped in furs."
+type ITEM_BOAT
+manipulate {MANIPULATE_ENTER}
+capacity 30000
+weight 20000
+end
+
+yule_wheel
+names {"yule wheel", "wheel"}
+title "the Yule Wheel"
+descr "A great wooden Yule Wheel stands in the square, its 24 spokes hung with candles."
+extra {}
+"The year's wheel: one spoke turns each day from December 1 to 24. Look at the wheel to see today's spoke."
+type ITEM_OTHER
+weight 5000
+dilcopy yule_wheel@holiday22();
+end
+
+yspoke01
+names {"straw goat", "yule goat", "goat"}
+title "a straw Yule goat"
+descr "A straw Yule goat, tied with red ribbon, stands here looking hungry."
+extra {}
+"A goat of plaited straw, as tall as a child, its horns bound in red ribbon. An old Yule custom: someone has to feed it."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(1, "feed", "goat", "You feed the straw Yule goat a handful of oats. Its straw eyes seem to twinkle.", "$1n feeds the straw Yule goat a handful of oats.");
+end
+
+yspoke02
+names {"yule candle", "candle"}
+title "a Yule candle"
+descr "A tall Yule candle stands unlit by the altar."
+extra {}
+"A thick candle of beeswax, carved with the twelve days of Yule. It waits to be lit."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(2, "light", "candle", "You light the Yule candle. Its warm light reaches every corner of the temple.", "$1n lights the Yule candle, and warm light fills the temple.");
+end
+
+yspoke03
+names {"yule bell", "bell"}
+title "a Yule bell"
+descr "A bronze Yule bell hangs on a post here."
+extra {}
+"An old bronze bell on a carved post, rung for luck at Yule."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(3, "ring", "bell", "You ring the Yule bell, and its clear note carries over the market.", "$1n rings the Yule bell, and its clear note carries over the market.");
+end
+
+yspoke04
+names {"yule log", "log", "yule"}
+title "the Yule log"
+descr "The Yule log burns slowly in the hearth."
+extra {}
+"A great oak log, set to burn through all the twelve nights of Yule. The guests raise their mugs to it."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(4, "toast", "yule", "You raise your mug and toast the Yule. Around you, the guests cheer.", "$1n raises a mug and toasts the Yule.");
+end
+
+yspoke05
+names {"yule coin", "coin"}
+title "a Yule coin"
+descr "A tarnished Yule coin lies in a bowl on the counter."
+extra {}
+"An old silver coin stamped with a sun wheel, kept for Yule luck. It could do with a polish."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(5, "polish", "coin", "You polish the Yule coin until the sun wheel on it shines.", "$1n polishes the old Yule coin until it shines.");
+end
+
+yspoke06
+names {"yule beacon", "beacon"}
+title "the Yule beacon"
+descr "A dark iron beacon stands ready on the watchtower."
+extra {}
+"An iron basket of pitch-soaked wood, lit at Yule to tell the countryside the light is coming back."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(6, "light", "beacon", "You light the Yule beacon, and its fire leaps up against the winter sky.", "$1n lights the Yule beacon, and its fire leaps up against the sky.");
+end
+
+yspoke07
+names {"young fir", "fir", "stars", "star"}
+title "a young fir"
+descr "A young fir stands bare in the clearing, a pile of glass stars at its foot."
+extra {}
+"A slender fir, just right for decorating. Someone has left a pile of glass stars beside it."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(7, "hang", "star", "You hang a glass star on the young fir. It catches the light like ice.", "$1n hangs a glass star on the young fir.");
+end
+
+yspoke08
+names {"porridge pot", "porridge", "pot"}
+title "a pot of Yule porridge"
+descr "A pot of Yule porridge simmers on the stove."
+extra {}
+"Rice porridge with cinnamon, made for Yule. Somewhere in it hides a single almond."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(8, "taste", "porridge", "You taste Mary's Yule porridge. Sweet and warm, with a hint of cinnamon.", "$1n tastes the Yule porridge and smiles.");
+end
+
+yspoke09
+names {"winter wind", "wind"}
+title "the winter wind"
+descr "The winter wind sings over the hilltop."
+extra {}
+"The wind sweeps over the green hill, and if you listen, it seems to carry voices."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(9, "listen", "wind", "You listen to the winter wind. Far away, the Wild Hunt rides across the sky.", "$1n stands very still, listening to the wind.");
+end
+
+yspoke10
+names {"low sun", "sun"}
+title "the low winter sun"
+descr "The low winter sun hangs over the trees."
+extra {}
+"The sun barely clears the treetops this time of year. From now on, the days grow longer."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(10, "greet", "sun", "You greet the returning sun. Its pale light warms your face.", "$1n greets the low winter sun.");
+end
+
+yspoke11
+names {"oldest cypress", "oldest tree", "tree"}
+title "the oldest cypress"
+descr "The oldest cypress in the circle is hung with ribbons."
+extra {}
+"Older than anyone remembers, its trunk hung with ribbons left by those who came before."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(11, "hug", "tree", "You hug the oldest cypress. The bark is rough and the tree feels very old and very patient.", "$1n hugs the oldest cypress in the circle.");
+end
+
+yspoke12
+names {"yule nails", "nails", "anvil"}
+title "Yule nails on the anvil"
+descr "Yule nails lie ready on the anvil."
+extra {}
+"Iron nails for the Yule log, to be struck once each for luck."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(12, "strike", "anvil", "You strike the anvil, and the Yule nails ring like a bell.", "$1n strikes the anvil, and the Yule nails ring.");
+end
+
+yspoke13
+names {"yule lantern", "lantern"}
+title "a Yule lantern"
+descr "An unlit Yule lantern hangs by the obelisk."
+extra {}
+"A lantern of red glass, hung by the obelisk for Yule. It waits for a flame."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(13, "light", "lantern", "You light the Yule lantern, and red light spills over the square.", "$1n lights the Yule lantern, and red light spills over the square.");
+end
+
+yspoke14
+names {"yule altar", "altar"}
+title "the Yule altar"
+descr "The altar is dressed in evergreen for Yule."
+extra {}
+"Boughs of fir and holly cover the altar, and candles burn among them."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(14, "bow", "altar", "You bow before the Yule altar. For a moment, the cathedral is very quiet.", "$1n bows before the Yule altar.");
+end
+
+yspoke15
+names {"frozen pond", "pond", "ice"}
+title "the frozen pond"
+descr "The park pond has frozen over, smooth as glass."
+extra {}
+"Thick, clear ice. Children have been sliding on it all morning."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(15, "skate", "pond", "You slide across the frozen pond, arms wide, and nearly keep your balance.", "$1n slides across the frozen pond, arms wide.");
+end
+
+yspoke16
+names {"gingerbread", "smell"}
+title "the smell of gingerbread"
+descr "The smell of gingerbread fills the street."
+extra {}
+"From a bakery window comes the smell of ginger, honey and cloves."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(16, "smell", "gingerbread", "You breathe in the smell of gingerbread. It smells exactly like Yule.", "$1n breathes in deeply, smelling the gingerbread.");
+end
+
+yspoke17
+names {"reindeer", "deer"}
+title "a resting reindeer"
+descr "One of Santa's reindeer rests here, steaming gently."
+extra {}
+"A reindeer with a frosty muzzle and a bell on its harness, resting before the long night."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(17, "pat", "reindeer", "You pat the reindeer. It nuzzles your hand and its bell jingles.", "$1n pats the reindeer, and its bell jingles.");
+end
+
+yspoke18
+names {"yule log", "log"}
+title "a Yule log"
+descr "A great Yule log lies here, waiting to be hauled into town."
+extra {}
+"A huge log of oak, wrapped in a rope for hauling to a hearth."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(18, "pull", "log", "You take the rope and haul the Yule log a few steps toward town. Others will pull it further.", "$1n hauls the Yule log a few steps toward town.");
+end
+
+yspoke19
+names {"yule sheaf", "sheaf", "pole"}
+title "a sheaf on a pole"
+descr "A sheaf of oats is ready to go up on a pole for the birds."
+extra {}
+"An old Yule custom: a sheaf of oats on a pole, so the birds have a feast too."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(19, "hang", "sheaf", "You hang the Yule sheaf on its pole. At once, the sparrows come.", "$1n hangs the Yule sheaf on its pole, and the sparrows come.");
+end
+
+yspoke20
+names {"carol singers", "singers"}
+title "the carol singers"
+descr "Carol singers stand in the square, singing for Yule."
+extra {}
+"A group of sailors and their families, singing old Yule songs in the cold."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(20, "clap", "singers", "You clap for the carol singers. They bow and start another verse.", "$1n claps for the carol singers.");
+end
+
+yspoke21
+names {"lighthouse lamp", "lamp"}
+title "the lighthouse lamp"
+descr "The old lighthouse lamp stands dark."
+extra {}
+"A great lamp of brass and glass. On Yule night, someone keeps it lit for the ships at sea."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(21, "light", "lamp", "You light the old lamp, and its beam sweeps out over the dark sea.", "$1n lights the old lighthouse lamp.");
+end
+
+yspoke22
+names {"yule wreath", "wreath"}
+title "a Yule wreath"
+descr "A wreath of fir lies on the stones, meant for the sea."
+extra {}
+"Sailors give a wreath to the sea at Yule, for the ones who didn't come home."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(22, "throw", "wreath", "You throw the Yule wreath into the sea. The waves carry it out, slowly.", "$1n throws a Yule wreath into the sea.");
+end
+
+yspoke23
+names {"drifting spores", "spores"}
+title "drifting spores"
+descr "Glowing spores drift over the end of the dock."
+extra {}
+"Tiny lights drift down from the giant mushrooms. They say catching one brings a good year."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(23, "catch", "spores", "You catch a glowing spore. It warms your hand for a moment, then fades.", "$1n catches a glowing spore.");
+end
+
+yspoke24
+names {"yule fire", "fire"}
+title "the Yule fire before Odin"
+descr "A small Yule fire burns before Odin's statue."
+extra {}
+"On Christmas Eve, a fire is lit before Odin, Jolnir, the Yule one. People kneel to him tonight."
+type ITEM_OTHER
+weight 1000
+dilcopy yule_spoke@holiday22(24, "kneel", "odin", "You kneel before Odin. The Yule fire flares, and for a moment his stone eye seems to look at you.", "$1n kneels before the statue of Odin.");
+end
+
 %mobiles
 
 santa
@@ -3456,7 +4331,7 @@ extra {}
 "Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
 alignment +1000
 level 150
-sex SEX_MALE
+sex SEX_FEMALE
 weight 100
 height 30
 race RACE_SPIRIT
@@ -3529,6 +4404,76 @@ end
 // this will maitain the items for players, but take away some christmas cheer.
 
 
+sleigh_elf
+names {"sleigh elf", "elf", "sleigh"}
+title "the sleigh elf"
+descr "An elf in red and green holds the reins of Santa's sleigh: list, then hire sky."
+extra {}
+"A bright-eyed elf with frost in her hair. On Christmas Eve and Christmas Day she takes anyone up
+in Santa's sleigh, for a ride over the whole world and back. Type list, then hire sky."
+alignment +1000
+level 150
+sex SEX_FEMALE
+weight 60
+height 120
+exp 110
+XMAS_SPIRIT
+flags {UNIT_FL_NO_TELEPORT}
+dilcopy spirit_nokill();
+dilcopy hire_ship@function("square@udgaard",
+   {"sky", "1", "1", "square@udgaard"},
+   "sleigh@holiday22", "sleigh_driver@holiday22", "sky@holiday22",
+   {"unknown The sleigh only goes one way: up! Type hire sky.",
+    "busy The sleigh is up in the sky. It will be back soon.",
+    "shake Maybe next Christmas, then.",
+    "poor Just one iron piece, for the reindeer's oats.",
+    "noexit You can't get out of the sleigh up here in the sky!",
+    "depart $1n shakes the reins, the bells ring out, and the sleigh leaps into the sky.",
+    "land The lights of Udgaard twinkle below as the sleigh comes down.",
+    "dock The sleigh lands softly in Udgaard's square, its bells ringing.",
+    "sea Far below, Midgaard's towers glitter with Yule lanterns.",
+    "sea You drop a present down the chimney of a sleeping village.",
+    "sea The beam of Torsbay's lighthouse sweeps the dark sea beneath you.",
+    "sea Over the Mushroom Forest, glowing spores rise to meet the sleigh.",
+    "sea The northern lights ripple green and violet across the sky.",
+    "sea The reindeer's bells ring out over the snowy forests."});
+end
+
+sleigh_driver
+names {"elf at the reins", "elf", "driver"}
+title "the elf at the reins"
+descr "An elf holds the reins, humming a Yule song."
+alignment +1000
+level 150
+sex SEX_MALE
+weight 60
+height 110
+exp 110
+XMAS_SPIRIT
+dilcopy spirit_nokill();
+end
+
+jolnir
+names {"jolnir", "odin", "old man", "yule one"}
+title "Jolnir"
+descr "Jolnir, the Yule one, sits on his high seat by the fire."
+extra {}
+"An old man in a long blue cloak, a broad hat shading one eye, a grey beard down to his belt.
+Two ravens sit on the back of his high seat. Kneel before him (kneel), and he will grant your
+Yule wish."
+alignment +1000
+level 199
+sex SEX_MALE
+weight 400
+height 190
+exp 110
+XMAS_SPIRIT
+flags {UNIT_FL_NO_TELEPORT}
+romflags{CHAR_DETECT_INVISIBLE}
+dilcopy jolnir_gift();
+dilcopy spirit_nokill();
+end
+
 %reset 
 load xmas_tree2 into hall@newbie         local 1
 load xmas_tree into square@udgaard       local 1
@@ -3552,5 +4497,33 @@ load elf into workshop max 1
 load northpole into square@udgaard max 1
 
 load graf_jan into village_rd6@udgaard max 1
+
+// The Yule Wheel, its 24 spokes, and Jolnir in his hall
+load yule_wheel into square@udgaard max 1
+load yspoke01 into square@udgaard max 1
+load yspoke02 into temple@udgaard max 1
+load yspoke03 into market@udgaard max 1
+load yspoke04 into inn_2@udgaard max 1
+load yspoke05 into bank@udgaard max 1
+load yspoke06 into up_tower1@udgaard max 1
+load yspoke07 into rn_6008@haon_dor max 1
+load yspoke08 into cabin@haon_dor max 1
+load yspoke09 into rn_6029@haon_dor max 1
+load yspoke10 into hill@cypress max 1
+load yspoke11 into tree_circle@cypress max 1
+load yspoke12 into smithy@cypress max 1
+load yspoke13 into market_sq@midgaard max 1
+load yspoke14 into cth_nave@midgaard max 1
+load yspoke15 into park_pond@midgaard max 1
+load yspoke16 into baker_st1@midgaard max 1
+load yspoke17 into stable2@midgaard max 1
+load yspoke18 into n_incline@etznab max 1
+load yspoke19 into farm_01@gremlin max 1
+load yspoke20 into square@torsbay max 1
+load yspoke21 into out_light@torsbay max 1
+load yspoke22 into gravel_beach@torsbay max 1
+load yspoke23 into mpath74@mforest max 1
+load yspoke24 into temple@udgaard max 1
+load jolnir into yulehall max 1
 
 %end

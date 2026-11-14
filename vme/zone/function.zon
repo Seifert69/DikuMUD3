@@ -9712,6 +9712,32 @@ code
 }
 dilend
 
+// Today as month * 100 + day (1205 for December 5), in UTC: the real date, unless a god has
+// set a test date on the DIL chamber, for trying a season out of season on a test server:
+//   at dil_chamber@function set room add-extra $test_date   (then 1205, then @)
+// Rooms aren't saved, so it lasts until the next reboot; `at dil_chamber@function set room
+// del-extra $test_date` ends it sooner. season@function and the Yule Wheel go by it; the year
+// stays the real one (quest names such as "Yule Wheel 2026" take it).
+dilbegin integer realmmdd();
+var
+   r : unitptr;
+   ex : extraptr;
+code
+{
+   r := findroom("dil_chamber@function");
+   if (r != null)
+   {
+      ex := "$test_date" in r.extra;
+      if (ex != null)
+      {
+         if (atoi(ex.descr) > 100)
+            return (atoi(ex.descr));
+      }
+   }
+   return (getinteger(DIL_GINT_REALMONTH, self, 0) * 100 + getinteger(DIL_GINT_REALDAY, self, 0));
+}
+dilend
+
 // Runs an event zone (Christmas, Halloween...) by the real date, in UTC. Put it on a room
 // of a zone with "reset RESET_NEVER" whose %reset puts out the event:
 //   dilcopy season@function(10, 15, 11, 1, 25, {"samedi@hallows23", ...}, "");
@@ -9726,6 +9752,7 @@ dilbegin season(startm : integer, startd : integer, endm : integer, endd : integ
                 minutes : integer, syms : stringlist, hook : string);
 external
    destroy_symbols(syms : stringlist);
+   integer realmmdd();
 var
    first : integer;
    last : integer;
@@ -9740,8 +9767,7 @@ code
 :loop:
    wait(SFB_TICK, TRUE);
    heartbeat := PULSE_SEC * SECS_PER_REAL_MIN * minutes;
-   today := getinteger(DIL_GINT_REALMONTH, self, 0) * 100 +
-            getinteger(DIL_GINT_REALDAY, self, 0);
+   today := realmmdd(); // the real date, or a god's test date
    if (((first <= last) and (first <= today) and (today <= last)) or
        ((first > last) and ((today >= first) or (today <= last))))
    {

@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 24  // T010, T009, ...
+#define TEST_MAXIMUM 25  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,48 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T025 =====================
+
+// The Yule wish (yule_q@holiday22): the rung of the player's level, one lower with fewer than
+// 24 spokes, nothing under 16, and an artifact only at level 100 with all 24.
+
+dilbegin T025(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   integer yule_q@holiday22(lvl : integer, c : integer);
+var
+   il : intlist;
+   i : integer;
+   q : integer;
+code
+{
+   logtest(tstno, LOGT_INFO, "T025 Yule wish ladder running");
+   // level, spokes, quality
+   il := {1, 15, -1,   1, 16, 0,   1, 24, 0,   5, 16, 0,   5, 24, 1,   19, 24, 2,
+          20, 23, 2,   59, 24, 4,   60, 16, 4,   79, 24, 5,   80, 24, 6,   99, 24, 6,
+          100, 23, 6,   100, 24, 7,   150, 16, 6,   150, 15, -1};
+   i := 0;
+   while (i < length(il))
+   {
+      q := yule_q@holiday22(il.[i], il.[i + 1]);
+      if (q != il.[i + 2])
+      {
+         logtest(tstno, LOGT_ERROR, "T025 level " + itoa(il.[i]) + " with " + itoa(il.[i + 1]) +
+                 " spokes gives " + itoa(q) + ", not " + itoa(il.[i + 2]));
+         sendtoalldil("fail", "labdirector@test");
+         quit;
+      }
+      i := i + 3;
+   }
+
+   logtest(tstno, LOGT_INFO, "T025 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   quit;
 }
 dilend
 

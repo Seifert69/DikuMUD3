@@ -111,6 +111,12 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   `foreach` works from a snapshot and skips units that have died or left; it also lists what is
   inside transparent units, so test `u.outside == self` for the room's own
   (`watercurrent@basemove`).
+- **A DIL function's result can't be another DIL function's argument**: `yule_q(lvl,
+  yule_count(pc))` fails with "Incompatible argument types in argument 1" (whatever argument it
+  is). Put the result in a variable first. Built-ins like `itoa(f(x))` are fine.
+- **In a zone file with CRLF line endings, a `#define` can't continue over lines**: the `\` is
+  followed by `\r`, not the newline, and vmc reports a syntax error at the `#define`. Write it on
+  one line (holiday22.zon is such a file; keep its CRLF when editing).
 - **A `dilbegin` inside a unit's block belongs to that unit**: vmc copies it onto the unit at
   every load, with no arguments. A template that rooms or other units `dilcopy` goes in the
   zone's `%dil` section; otherwise the boot logs "Template ... had mismatching argument count".

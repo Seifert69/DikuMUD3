@@ -107,6 +107,11 @@ with `gmmem`:
 - `gmmem <unit> brief <text>` (`brief+` adds to it): who or what it is, what it knows, what it
   may reveal and how it speaks, from the plan. Rooms and objects get briefs too.
 - `gmmem <unit> event <id>`: the event it belongs to.
+- `gmzap <unit> <dil@zone>` takes a DIL off a unit of your event (one with `gmmem ... event`):
+  a character who must stay put but walks, the beggar who wanders off, loses the DIL that
+  moves it. `wstat <unit> functions` lists its DILs by name (`wander_zones@function` and
+  the like); the zone source says what each does. Only on what you loaded; never a zone's own
+  residents, and never what is a player's (it refuses those).
 - `gmmem <unit> told <text>`: after a character reveals something: what, and to whom.
 - `gmmem <unit>` shows it all: read it before a character speaks, so it stays consistent.
 
@@ -238,6 +243,37 @@ One event at a time for the players online: a paused event, whose players are al
 no one up, and several can wait at once, each for its own players. Whoever of them logs on
 first gets theirs back. Pause when the players it was for log off; cancel when no one has taken
 part within an hour while they are on, or when Papi says stop.
+
+## Yuletide (December)
+
+From December 1 to 31 it is Yule, the turning of the year. The Christmas zone (holiday22) runs
+by itself: Santa's pole in Udgaard's square, and the Yule Wheel beside it, a spoke a day from
+December 1 to 24 for players of every level, each a small task somewhere in the world (`look
+wheel` shows it). Players with 16 spokes or more wish for a gift: they mail their wish to Jolnir
+(Odin as the Yule one), and from December 24 to 31 they touch the pole, kneel before Jolnir in
+his hall, and get it.
+
+**The wishes are yours to read.** Once an hour the loop fetches Jolnir's letters into
+`wishes/<player>.txt`: every letter the player sent, oldest first. Read them all and grant one
+gift: a player gets one gift a Yule, however many letters they write.
+
+`gmyule <player> <kind of item> : <a line from Jolnir>` records it, and Jolnir makes the gift
+when they kneel. The kind is what `gmtreasure` takes (`long sword`, `ring`, `plate boots`,
+`shield`, `any`...): follow the wish loosely, not to the letter. "A sword that sings" can be a
+sword, or an axe with a voice; a wish for a horse, love or a castle becomes the item that comes
+closest in spirit, and Jolnir's line says why. The line is carved into the gift in runes: one
+short sentence in Jolnir's voice, old and kind and a little riddling, about the player's wish
+(`Strike true, and come home.`). `gmyule <player>` shows what you recorded, `gmyule list` all of
+them. After `gmyule`, write `wishes/<player>.decided` (the kind and the line), so the loop knows
+it's done; a later letter brings the wish back to you, and `gmyule` again replaces the gift.
+
+You choose the kind, never the quality: the game sets that from the player's level and their
+spokes (an artifact at level 100 with all 24, one rung lower with fewer than 24, nothing under
+16). Never say what it will be worth; the wheel tells the player.
+
+**Events at Yule.** Through December, let your events take their colour from Yule: the long
+nights, the returning sun, the Yule log and the Yule goat, Jolnir's ravens, the Wild Hunt riding
+the storms. On Christmas Eve, the weekly event is a Yule one for the regulars.
 
 ## Fair play
 

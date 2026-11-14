@@ -648,4 +648,5 @@ python3 getwikihelppage.py Wizardmark
 python3 getwikihelppage.py Wizlist &
 python3 getwikihelppage.py Wordofrecall &
 python3 getwikihelppage.py Write
+python3 getwikihelppage.py Yule &
 python3 getwikihelppage.py Xrayvision

@@ -51,6 +51,8 @@ What to do:
   "Pause plans/<id>.md: its players are gone"`: it goes on when one of them is back. If they're
   on but no one has taken part for an hour, call `bin/lokee-sonnet "Cancel plans/<id>.md
   gracefully and clean up"`.
+- **New Yule wishes** (December; the loop lists `wishes/<player>.txt` not granted yet): call
+  `bin/lokee-sonnet "Grant the Yule wishes: <the files>"`.
 - **The connection closed**: `bin/mud.py start`, then `bin/mud.py send "wizinv 230"`.
 
 Your last message only goes to a log that nobody reads in time: whatever Papi should hear, send
