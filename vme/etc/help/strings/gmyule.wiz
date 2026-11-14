@@ -1,0 +1,29 @@
+<div class="mw-parser-output"><h1>Gmyule</h1>
+<p>Usage:
+</p>
+<pre>gmyule &lt;player&gt; &lt;kind of item&gt;&#160;: &lt;a line from Jolnir&gt;   (230)
+gmyule &lt;player&gt; [clear]
+gmyule list
+</pre>
+<p>The game master's reading of a player's Yule wish (see <a cmd='#'>Help Yule</a>). Players 
+mail their wishes to the player Jolnir; a game master reads every letter a 
+player sent and grants one gift with gmyule: the kind of item, as for 
+<a cmd='#'>Wizhelp Gmtreasure</a> (long sword, ring, plate boots, any...), following the 
+wish loosely, and a line Jolnir carves into it in runes.
+</p><p>From December 24 to 31, when the player kneels before Jolnir, he makes the gift. 
+Its quality is never the game master's: it is the rung of the player's level, an 
+artifact from level 100, one lower with fewer than 24 spokes of the Yule Wheel, 
+and nothing under 16. A player without a reading gets any kind.
+</p><p>gmyule &lt;player&gt; shows what was recorded, clear removes it, and list shows them 
+all. The readings are stored on disk, so a reboot keeps them.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Wizhelp Gmtreasure</a>
+&gt; <a cmd='#'>Wizhelp Gmquest</a>
+</pre>
+
+
+
+
+</div>
