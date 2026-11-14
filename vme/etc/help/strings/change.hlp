@@ -2,6 +2,7 @@
 <p>Usage:
 </p>
 <pre> change &lt;type&gt; [arguments]
+ change &lt;words&gt;
 </pre>
 <p>&lt;type&gt; being one of:
 </p>
@@ -14,15 +15,22 @@
 <li>communications</li>
 <li>wimpy</li>
 <li>peaceful</li>
-<li>prompt</li>
+<li>prompt (to set what your prompt shows, use the prompt command: see <a cmd='#'>Help Prompt</a>)</li>
 <li>exits</li>
-<li>columns</li>
-<li>rows</li>
-<li>terminal</li>
+<li>columns &lt;number&gt;</li>
+<li>rows &lt;number&gt;</li>
+<li>terminal dumb, terminal tty or terminal ansi</li>
 <li>telnet</li>
 <li>character echo</li>
 <li>redraw prompt</li></ul>
-<p><br />
+<p>change on its own lists them. Most of them switch a setting on or off: type
+the same again to switch it back. They can be shortened, for example change
+comm for communications. communications and character echo are explained in
+<a cmd='#'>Help Echo</a>.
+</p><p>Anything else you type after change becomes your status in the who list, for
+example change looking for a group (see <a cmd='#'>Help Who</a>). If the first word starts
+like one of the types above, that setting is switched instead.
+</p><p><br />
 See also:
 </p>
 <pre>&gt; <a cmd='#'>Help Brief</a>
@@ -31,7 +39,7 @@ See also:
 &gt; <a cmd='#'>Help Inform</a>
 &gt; <a cmd='#'>Help Shout</a>
 &gt; <a cmd='#'>Help Tell</a>
-&gt; <a cmd='#'>Help Communications</a>
+&gt; <a cmd='#'>Help Echo</a>
 &gt; <a cmd='#'>Help Wimpy</a>
 &gt; <a cmd='#'>Help Peaceful</a>
 &gt; <a cmd='#'>Help Prompt</a>
@@ -40,8 +48,7 @@ See also:
 &gt; <a cmd='#'>Help Rows</a>
 &gt; <a cmd='#'>Help Terminal</a>
 &gt; <a cmd='#'>Help Telnet</a>
-&gt; <a cmd='#'>Help Character echo</a>
-&gt; <a cmd='#'>Help Redraw prompt</a>
+&gt; <a cmd='#'>Help Who</a>
 </pre>
 
 
