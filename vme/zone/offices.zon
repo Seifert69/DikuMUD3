@@ -224,8 +224,12 @@ code
 
 if (medium.symname == "card@holiday22")
    {
-		log("its a card");
-		if (("$"+activator.name) == medium.extra.["card"].names.[1])
+		if (("$"+activator.name) != medium.extra.["card"].names.[1])
+		{
+			sendtext("The shredder spits the card back out: it is made out to someone else.<br/>", activator);
+			link(medium, activator);
+			goto start;
+		}
 		experience (medium.extra.["card"].vals.[0], activator);
 		sendtext("The shredder makes a loud grinding noise and you gain "+
 			"the experience noted...<br/>",activator);

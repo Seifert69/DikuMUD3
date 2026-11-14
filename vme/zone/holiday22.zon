@@ -1789,6 +1789,8 @@ weight 10
 spell 200
 
 dilbegin prg4();
+external
+	integer gm_trquality@commands(lvl : integer);
 var
 	pc : unitptr;
 	gift: unitptr;
@@ -1798,6 +1800,10 @@ var
 	sl  : stringlist;
 	gift1 : string;
 	surprise : stringlist;
+	pct : integer;
+	xp : integer;
+	q : integer;
+	lvl : integer;
    
 code
 {
@@ -1823,7 +1829,7 @@ code
 		goto trap;
 	}
 :lost:
-	act("<div class='cpr'>A possible 500000 experience disappears forever!",
+	act("<div class='cpr'>The gift falls apart, and whatever was in it is lost.",
 		A_SOMEONE, self, null, pc, TO_ALL);
 	destroy(self);
 	quit;
@@ -1838,6 +1844,8 @@ code
 	act("It seems this is a real gift box!",
 		A_ALWAYS, pc, null, null, TO_CHAR);	  
 
+	if (rnd(1,20) == 1)
+		goto treasure;
 	i := rnd(0,11);
 	surprise := {"pcoins","icoins","gcoins","scoins","toy_horse","cookie","gin_cookie","candy_cane","fcake","choco_heart","raisin","card"};
 	gift := load(surprise.[i]+"@holiday22");
@@ -1850,9 +1858,30 @@ code
 	pause;
 	quit;
 
+:treasure: // two rungs below what the opener's level can use, as gmtreasure makes it
+	lvl := pc.vlevel;
+	q := gm_trquality@commands(lvl) - 2;
+	if (q < 0)
+		q := 0;
+	gift := load("treasure@randomt");
+	link(gift, pc);
+	addextra(gift.extra, {"$treasure_height"}, itoa(pc.height));
+	dilcopy("Treasure@randomt(" + itoa(q) + ",any)", gift);
+	act("Something heavy is wrapped inside: a treasure!", A_ALWAYS, pc, null, null, TO_CHAR);
+	log(pc.name + " found a treasure (" + itoa(q) + ") in a Christmas gift.");
+	destroy(self);
+	pause;
+	quit;
+
 :give_card:
 	
-	insert(il,0,rnd(500,5500));    //500 to 5500
+	// a share of what the opener's next level needs: 5% to half a level, mostly little
+	i := rnd(0,13);
+	pct := 5 + (i * i * i * 45) / 2197;
+	xp := (getinteger(DIL_GINT_LEVELXP, null, pc.vlevel) * pct) / 100;
+	if (xp < 1)
+		xp := 1;
+	insert(il,0,xp);
 
 	buf :="<div class='cpr'>Merry </div><div class='cpg'>Christmas </div><div class='cpr'></div>"+pc.name+"<br/><br/><div class='cpc'>Place this greeting<br/> into the shredder<br/></div>"
 	+"in the post office to<br/> to receive "+itoa(il.[0])+" experience.<br/><br/>"
@@ -1866,6 +1895,7 @@ code
 	addextra(gift.extra,sl,buf,il);
 	log("<div class='cpy'>loaded </div>" +itoa(il.[0])+" card for "+pc.name);
 	link(gift,pc);
+	dilcopy("ply_restrict@function(" + pc.name + ",0,25,holiday_burn@holiday22)", gift); // the opener's card
 	destroy(self);
 
 	pause;
@@ -1892,6 +1922,8 @@ spell 200
 
 dilbegin prg5();
 var
+	pct : integer;
+	xp : integer;
 	pc 		: unitptr;
 	gift	: unitptr;
 	i  		: integer;
@@ -1925,7 +1957,7 @@ code
 	
 :lost_pc:
 
-	act("<div class='cpr'>A possible 500000 experience disappears forever!</div>",
+	act("<div class='cpr'>The gift falls apart, and whatever was in it is lost.</div>",
 	A_SOMEONE, self, null, pc, TO_ALL);
 	destroy(self);
 
@@ -1940,8 +1972,13 @@ code
 		A_ALWAYS, pc, null, null, TO_CHAR);
  
 	gift := load("card@holiday22");
+	// a share of what the opener's next level needs: 5% to half a level, mostly little
 	i := rnd(0,13);
-	insert(il,0,rnd(((i)*(i)*(i)*30)+500,((i)*(i)*(i)*40)+700));
+	pct := 5 + (i * i * i * 45) / 2197;
+	xp := (getinteger(DIL_GINT_LEVELXP, null, pc.vlevel) * pct) / 100;
+	if (xp < 1)
+		xp := 1;
+	insert(il,0,xp);
 	
 	buf :="<div class='cpr'>Merry </div><div class='cpg'>Christmas </div><div class='cpr'></div>"+pc.name+"<br/><br/><div class='cpc'>Place this greeting<br/> into the shredder<br/></div>"+
 	"in the post office to<br/>receive "+itoa(il.[0])+" experience.<br/><br/>"+
@@ -1953,8 +1990,9 @@ code
 	addstring(sl,"card");
 	addstring(sl,"$"+pc.name);
 	addextra(gift.extra,sl,buf,il);
-	log("<div class='cpy'>loaded </div>"+itoa(il.[0])+" card");
+	log("<div class='cpy'>loaded </div>"+itoa(il.[0])+" card for "+pc.name);
 	link(gift,pc);
+	dilcopy("ply_restrict@function(" + pc.name + ",0,25,holiday_burn@holiday22)", gift); // the opener's card
 	destroy(self);
 	pause;
 	quit;
