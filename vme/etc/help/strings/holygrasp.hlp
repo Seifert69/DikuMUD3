@@ -6,15 +6,16 @@ Mana: 25
 </p><p>Usage:
 </p>
 <pre>cast holy grasp &lt;target&gt;
+<a cmd='#'>cast holy grasp</a>   (at whoever you are fighting)
 </pre>
 <p>A stronger prayer than holy touch: the paladin speaks the liturgy of the 
 gods and grasps the target, and those who lean to evil are hurt badly. Any target whose alignment is below 0 can be 
 struck, even a neutral who leans to evil, and the truly evil are hurt more; 
 on anyone of alignment 0 or above, nothing happens. The better 
-your divine power and sphere, the more it hurts. It hurts most through clothes and least through plate, 
+your divine power and your skill in the spell, the more it hurts. It hurts most through clothes and least through plate, 
 which takes about a third less, and a shield can block it.
-</p><p>Casting it is an attack and starts a fight, but you can't cast it while 
-fighting: it can only open one. It is also found on scrolls. 
+</p><p>Casting it is an attack and starts a fight. It can be cast while 
+fighting. It is also found on scrolls. 
 The strongest of these prayers is holy shout.
 </p><p><br />
 See Also:
