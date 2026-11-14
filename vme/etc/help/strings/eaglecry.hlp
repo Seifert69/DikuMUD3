@@ -10,13 +10,15 @@ Mana: 20
 of nowhere and alights on the ranger's shoulder. It follows you, and fights 
 for you by itself: when you fight, it attacks your foe, and when your 
 wounds grow serious, below a third of your hit points, it tries to rescue 
-you. It never attacks another player unless both of you have signed the 
-Book of Blood.
+you. It does no harm to another player unless both of you have signed the 
+Book of Blood. You can give it orders with tell, for example 'tell eagle 
+kill orc'.
 </p><p>The eagle stays only a short while, from twenty seconds to a little over a 
 minute, the better your spell, and then flies away, its mission fulfilled. 
-Banish sends it away sooner; dispel magic doesn't. It needs the open sky: indoors, or wherever the weather doesn't 
-reach, the spell can't be cast. You must be standing. It is also found on 
-scrolls.
+Banish sends it away sooner. It needs the open sky: indoors, or wherever 
+the weather doesn't reach, the spell can't be cast. You must be standing, 
+and you can't cast it while fighting. Practising it needs divine 58. It is 
+also found on scrolls.
 </p><p><br />
 See Also:
 </p>
