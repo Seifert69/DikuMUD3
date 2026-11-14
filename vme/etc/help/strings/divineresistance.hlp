@@ -7,11 +7,12 @@ Mana: 20
 <pre>cast divine resistance &lt;target&gt;
 <a cmd='#'>cast divine resistance</a>   (on yourself)
 </pre>
-<p>Raises the target's divine sphere for about ten minutes. Your ability in a 
-sphere also protects you against its spells (see <a cmd='#'>Help Spheres</a>), so the 
-target resists divine spells cast at them better: harm, cause wounds and the 
-like. The better your protection sphere, the bigger the raise, up to ten 
-points and a little more for a master.
+<p>Raises the target's divine sphere for about ten minutes. Against a spell 
+aimed at you, you defend with your brain and the better of its sphere or 
+half your skill in that spell (see <a cmd='#'>Help Spheres</a>), so the target resists 
+divine spells cast at them better: harm, cause wounds and the like. The 
+better your divine power and your skill in the spell, the bigger the raise, 
+up to ten points and a little more for a master.
 Practising it needs divine 10.
 </p><p>It doesn't add up: cast on someone who already has it, the magic just 
 dissipates. You must be standing, not fighting. It is also found on potions, 
