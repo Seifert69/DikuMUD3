@@ -10,9 +10,12 @@ Mana: 20
 </pre>
 <p>A dark prayer that strikes at the life force of a good being. The target must 
 be of good alignment, and you must not be good yourself; otherwise the spell 
-fails. The better your divine power and sphere, the harder it strikes.
+fails. The better your divine power and your skill in the spell, the harder 
+it strikes. It hurts most through clothes and least through plate, and a 
+shield doesn't stop it.
 </p><p>If the target is warded by protection from evil, the first cast only breaks 
-that ward. Casting it is an attack and starts a fight. It is also found on 
+that ward. When it strikes, it is an attack and starts a fight. It can be 
+cast while fighting. Practising it needs divine 78. It is also found on 
 staffs and scrolls. Its bright twin, for those of good heart, is 
 <a cmd='#'>Help Dispel Evil</a>.
 </p><p><br />
