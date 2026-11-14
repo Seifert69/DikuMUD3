@@ -8,16 +8,17 @@ contract &lt;player&gt;    pay, and have the player killed
 </p>
 <pre>contract Mayor
 </pre>
-<p>Mercenaries will kill other players for money: the Assassin on Colosseum 
-Road in Midgaard is one. Stand before one and name your victim. If you 
-can pay, the money is taken at once, the mercenary says "Consider them 
-dead", sneaks and hides its way to the victim wherever they are, and 
-attacks. Win or lose, it then vanishes in a blue cloud and returns to its 
-post.
-</p><p>A contract costs about 200 platinum pieces, a little more for a 
-high-level victim. If you can't pay, the mercenary tells you the price. 
-(The offer command quotes a much lower price at present; trust the price 
-contract tells you.)
+<p>Mercenaries will kill other players for money: the Assassin who walks the
+streets of Midgaard is one (he starts out on Colosseum Road). Stand before
+one and name your victim. If you can pay, the money is taken at once, the
+mercenary says "Consider them dead", sneaks and hides its way to the victim
+wherever they are, and attacks. It keeps after the victim until they are
+dead, takes what is in the corpse, and then vanishes in a blue cloud and
+returns to where you hired it. If it loses the victim's trail, it gives up
+and returns the same way.
+</p><p>A contract costs 20 platinum pieces, and a little more the higher the
+victim's level. If you can't pay, the mercenary tells you the price;
+offer tells you the same price without paying.
 </p><p>A mercenary takes no contract on:
 </p>
 <ul><li>a player of level 20 or below: "Killing of newbies is not permitted!"</li>
