@@ -1,10 +1,21 @@
 <div class="mw-parser-output"><h1>Bash</h1>
-<p>Usage:
+<p>Skill
+Class: Fighter (guild level 0), Dark Knight (guild level 3, up to 80%), Paladin (guild level 3, up to 80%), Ranger (guild level 3, up to 80%), Druid (guild level 23, up to 50%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40); an old sinewy man, in a sea cave in the Fjord (once you have brought him food)
+</p><p>Usage:
 </p>
 <pre>bash &lt;character&gt;
+bash               (in a fight: your opponent)
 </pre>
-<p>Bash your opponent with your shield, improving your chance of winning, if you're good that is. Especially useful against magic using creatures as they may fall on their rear and be unable to cast a spell in the same round.
+<p>Bash your opponent with your shield, improving your chance of winning, if you're good that is. A bash that lands in a fight knocks your opponent off balance, so that they lose a round; and once bashed, they can't be bashed again for a few rounds.
+</p><p>You must wear a shield. Your bash skill and strength are set against your opponent's dexterity (and a player's own bash skill). If you miss, you bash the passing wind and lose half a round; miss badly and your shield slips from your arm, and you lose a whole round. You can't bash someone who isn't standing, or who is much heavier than you: the stronger, heavier and more skilled you are, the bigger the creatures you can bash. Each try costs 10 endurance.
+</p><p>Bashing starts a fight if there isn't one. You can bash another player only when both of you have signed the Book of Blood. Practising it needs strength 10.
+</p><p><br />
+See Also:
 </p>
+<pre>&gt; <a cmd='#'>Help Shields</a>
+&gt; <a cmd='#'>Help Kick</a>
+</pre>
 
 
 
