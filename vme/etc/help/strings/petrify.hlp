@@ -9,9 +9,9 @@ Mana: 40
 </pre>
 <p>A spell to be reckoned with: the caster grasps their head in their hands 
 and wills the target's flesh to turn to stone. It hurts a great deal: the 
-better your divine power and your mind sphere, the more. It does best 
-against clothes and somewhat less against leather, chain and plate, and a 
-shield is no use against it.
+better your divine power and your mind sphere, the more. It does least 
+against clothes, where a weak casting does no harm at all, and about as 
+well against leather, chain and plate; a shield is no use against it.
 </p><p>Anyone it slays leaves no corpse but a life-like <b>statue</b>, with 
 everything they carried turned to stone with them. Nothing can be taken 
 from a statue until its stone is undone: a successful <a cmd='#'>Help Dispel Magic</a> 
