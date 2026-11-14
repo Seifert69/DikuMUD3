@@ -10,7 +10,8 @@ Mana: 20
 <p>Holds an undead creature in place: for five rounds it can't fight, and it 
 can't flee in panic. It has no effect on the living. The spell is very difficult to 
 use and may therefore fail quite often: it needs a good cast to work at all. 
-Casting it starts a fight with the target, whether it works or not.
+Casting it starts a fight with the target, whether it works or not. 
+It can be cast while fighting.
 </p><p>It is also found on wands, scrolls and potions. Practising it needs divine 
 28.
 </p><p><br />
