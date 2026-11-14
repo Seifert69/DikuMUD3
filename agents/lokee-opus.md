@@ -98,6 +98,8 @@ it, a `WHEN:` line: who must be online for it to start (`WHEN: Asta online`, `WH
 Asta, Brand, Hild online`). Read the plans first: what's ready already, what each player has
 played, and how it went.
 
+- **In December** every event takes its colour from Yule (lokee.md, Yuletide), and the weekly
+  event that falls on Christmas Eve is a Yule one.
 - **The weekly event**: one, for the regulars who play together (their `with:` and hours):
   45 to 90 minutes, two or more players, a real story with a dangerous climax, where they
   play. Write a new one when the last was played or has waited a week (set the old one's STATE

@@ -32,6 +32,7 @@ The character's file (mode 600, never in a repository):
        role=gm                            (a game master: only the commands in GM_COMMANDS, set
                                            only on GM_SET_FIELDS, load and makemoney within a
                                            daily budget, no tells but to Papi)
+       role=post                          (the postman Jolnir: only POST_COMMANDS)
 
 --throw: when the character is playing already, throw that copy out. Without it start stops, since
 the other copy may be the character's owner.
@@ -444,9 +445,12 @@ GM_COMMANDS = {
     "equipment", "time", "weather", "help", "stand", "rest", "wizinv",
     "goto", "at", "echo", "message", "restore", "force", "makemoney", "load", "purge", "set",
     "give", "get", "drop", "put", "open", "close", "lock", "unlock", "tell", "gmmem", "gmroom", "gmtrack",
-    "gmlure", "gmtreasure", "gmquest", "gmzap",
+    "gmlure", "gmtreasure", "gmquest", "gmzap", "gmyule",
     "enter", "leave", "north", "east", "south", "west", "up", "down", "n", "e", "s", "w", "u", "d",
 }
+# The postman (role=post, the player Jolnir, level 230 to be invisible and goto the post office):
+# only what fetching letters needs
+POST_COMMANDS = {"goto", "request", "look", "put", "wizinv", "save", "inventory", "i"}
 GM_SET_FIELDS = {"title", "descr", "add-name", "del-name", "add-extra", "del-extra",
                  "dir-to", "add-dir-name", "del-dir-name", "dir-flags"}
 GM_LOADS = 30  # units loaded a day
@@ -553,6 +557,8 @@ def refused(mud, line):
         why = gm_refused(line)
         if why:
             return why
+    if mud.conf.get("role") == "post" and word not in POST_COMMANDS:
+        return "%s: a postman fetches letters, nothing else (%s)" % (word, ", ".join(sorted(POST_COMMANDS)))
     cmd = word if word in CHANNELS else next((c for c in COMMANDS if c.startswith(word)), None)
     if cmd in CHANNELS + ("shout",):
         return ("%s is a channel, and channels relay to Discord. To answer someone who asked there,"
@@ -1006,7 +1012,11 @@ def find(words):
 
 
 def way(args):
-    """Breadth-first search over the map, around water a walker can't cross; prints the directions."""
+    """Breadth-first search over the map, around water a walker can't cross; prints the directions.
+    With --steps it prints only the steps, one line, for a script (a door * or hidden door !
+    after a step), or nothing when the character is there already."""
+    steps_only = "--steps" in args
+    args = [a for a in args if a != "--steps"]
     start = None
     if "from" in args:
         i = args.index("from")
@@ -1061,6 +1071,9 @@ def way(args):
         target, steps = search(True)
     if target is None:
         die("no way from %s to %s on the map" % (start, want))
+    if steps_only:
+        print(" ".join(steps))  # enter:barrel stays one step
+        return
     print("From %s (%s) to %s (%s): %s (%d steps)%s" % (
         rooms[start][0], start, rooms[target][0], target, " ".join(steps).replace(":", " ") or "you are there", len(steps),
         ("; * is a door: open it first" if any(s.endswith("*") for s in steps) else "") +
