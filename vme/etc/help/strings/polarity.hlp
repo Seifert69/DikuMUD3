@@ -20,8 +20,7 @@ to change.
 target's level for a monster, and twice their level for a player. If you 
 don't have it, the spell fails. You can't cast it on yourself, and on 
 another player only if you have both signed the Book of Blood. Casting it 
-is an attack. You must be standing, and you can't cast it while 
-fighting. It is also found on scrolls, wands and staffs.
+is an attack. It can be cast while fighting. It is also found on scrolls, wands and staffs.
 </p><p><br />
 See Also:
 </p>
