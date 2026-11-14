@@ -11,17 +11,21 @@ resize &lt;item&gt; &lt;person&gt;
 <pre>resize boots
 resize boots eve
 </pre>
-<p>Alters something worn or wielded to fit a different size of person: 
-yourself, or the person you name. Armour, clothes and weapons are made for 
-someone's height, and don't fit everyone.
+<p>Alters something worn or wielded to fit a different size of person:
+yourself, or the person you name. Armour, clothes and weapons are made for
+someone's height, and don't fit everyone. The item must be in your
+inventory, not worn. The person you name must be here; if they aren't, the
+item is made to fit you.
 </p><p>Which of the three skills you need depends on the item: clothes and 
 cloth for resize clothes, leather armour for resize leather, and chain, 
 plate, shields, weapons and anything else for resize metal. Clothes take 
 dexterity, leather and metal take strength.
-</p><p>The bigger the change, and the finer the item, the harder the job and the 
-more endurance it takes; shrinking is easier than enlarging. An item can 
-be resized only once. Fail, and nothing happens; fail badly, and you 
-damage the item, or even destroy it. You must be standing.
+</p><p>The bigger the change, the harder the job and the more endurance it
+takes; shrinking is easier than enlarging. A finer or more magical item
+is harder too. An item can be resized only once. Fail, and nothing
+happens; fail badly, and you damage the item, or even destroy it. Only a
+finished job costs endurance, but you need enough to start. You must be
+standing.
 </p><p><br />
 See Also:
 </p>
