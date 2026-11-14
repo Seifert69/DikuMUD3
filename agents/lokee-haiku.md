@@ -21,7 +21,8 @@ What to do:
   plans/<id>.md for <player>"`, and tell Papi in one line. Otherwise, if no event is running,
   approved or proposed for players who are online (`plans/*.md`, the `STATE:` line; a paused one
   doesn't count), and the player isn't a god or a helper agent (`users` shows levels; Dwili and
-  Groa are helpers), find them an event:
+  Groa are helpers) and is level 4 or higher (levels 0 to 3 are Dwili's, learning the game: no
+  events for them), find them an event:
   1. A plan ready for them first: the loop lists the plans with `STATE: ready` and their
      `WHEN:` (who must be online). If `users` shows its WHEN is met now, that's the event:
      approve and start it (below).
