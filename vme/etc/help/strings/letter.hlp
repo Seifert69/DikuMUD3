@@ -8,20 +8,21 @@ request
 </p>
 <pre>mail paper asta
 request
-eat letter
 </pre>
-<p>The mail command sends a letter to another player, in the game or not. It only 
-works at a post office, with the postman there: Jim in Midgaard, or Hansen in 
-Udgaard. Write your letter first (see <a cmd='#'>Help Write</a>), then give it to the postman 
+<p>The mail command sends a letter to another player, in the game or not. It only
+works at a post office, with the postman there, such as Jim in Midgaard, Hansen
+in Udgaard or Sally Snayl in Nymgaard; many towns have one. Write your letter first (see <a cmd='#'>Help Write</a>), then give it to the postman 
 with mail, the paper and the player's name. He adds who it's from and the date.
 </p><p>When mail has come for you, you get "a sudden urge to visit the post office" 
 when you log on. Go to a postman and type <a cmd='#'>request</a> to get your letters. A 
-mailbox holds 100 letters; when it's full, nothing more can be sent to it. To 
-throw away a letter you have read, eat it.
+mailbox holds 100 letters; when it's full, nothing more can be sent to it. To
+get rid of a letter you have read, bury it or drop it at the dump (see
+<a cmd='#'>Help Junk</a>).
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Write</a>
+&gt; <a cmd='#'>Help Junk</a>
 </pre>
 
 
