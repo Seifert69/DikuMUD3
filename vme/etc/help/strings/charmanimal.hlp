@@ -10,7 +10,7 @@ tell &lt;animal&gt; &lt;command&gt;
 <p>The caster utters 'Voce sequi', and a wild animal is tamed: it wakes, 
 stands and follows the caster, and does what it is told. Command it with 
 tell, for example tell wolf kill rat. It fights, walks and does most 
-things you ask, but it won't talk, cast, steal, use or recite things, and 
+things you ask, but it won't talk, cast, steal, pick, trip, disarm, use or recite things, and 
 it won't attack another player unless both of you have signed the Book of 
 Blood.
 </p><p>It only works on animals; the animal resists with its mind, and animals of 
