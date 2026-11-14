@@ -94,6 +94,7 @@ external
    logtest(no : integer, ltype : integer, msg : string);
 var
    u : unitptr;
+   w : unitptr;
    n : integer;
    i : integer;
 code
@@ -107,7 +108,7 @@ code
    link(u, findroom("currenta@test"));
    u := load("experiment@test"); // linked last: the first the current comes to
    link(u, findroom("currenta@test"));
-   u.hp := 1;
+   u.hp := -9; // mortally wounded: any failed swim drowns it
 
    n := 0;
    i := 0;
@@ -135,15 +136,48 @@ code
       logtest(tstno, LOGT_ERROR, "T024 only " + itoa(n) + " box drifted on the beat");
       goto terminate;
    }
+   u := findroom("currentb@test");
+   u := u.inside;
+   while (u != null)
+   {
+      if ((u.nameidx == "experiment") and (u.type == UNIT_ST_NPC))
+      {
+         logtest(tstno, LOGT_ERROR, "T024 the experiment swam: the drowned unit wasn't tried");
+         goto terminate;
+      }
+      u := u.next;
+   }
 
    logtest(tstno, LOGT_INFO, "T024 Success");
    logtest(tstno, LOGT_INFO, "Done");
-   sendtoalldil("done", "labdirector@test");
-   return;
+   i := 1;
+   goto cleanup;
 
 :terminate:
    logtest(tstno, LOGT_INFO, "T024 failed");
-   sendtoalldil("fail", "labdirector@test");
+   i := 0;
+
+:cleanup: // what T024 made, the corpse too, so T003 finds only its own boxes
+   u := findroom("currenta@test");
+   u := u.inside;
+   while (u != null)
+   {
+      w := u.next;
+      destroy(u);
+      u := w;
+   }
+   u := findroom("currentb@test");
+   u := u.inside;
+   while (u != null)
+   {
+      w := u.next;
+      destroy(u);
+      u := w;
+   }
+   if (i)
+      sendtoalldil("done", "labdirector@test");
+   else
+      sendtoalldil("fail", "labdirector@test");
    quit;
 }
 dilend

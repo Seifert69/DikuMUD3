@@ -488,7 +488,6 @@ external
 var
    i    : integer;
    u    : unitptr;
-   nxt  : unitptr;
    sl : stringlist;
    exd : extraptr;
 
@@ -506,11 +505,13 @@ code
    {
       wait(SFB_TICK|SFB_RANTIME, TRUE);
 
-      u := self.inside;
-
-      while (u != null)
+      // foreach: a snapshot of the room, which skips units that drown, drift or leave while
+      // it runs (u.next would follow a drifted unit into the next room's list)
+      foreach (UNIT_ST_PC | UNIT_ST_NPC | UNIT_ST_OBJ, u)
       {
-         nxt := u.next; // this room's next: u may drown, or drift into the next room's list
+         if (u.outside != self) // inside a boat or another unit here: it drifts with that
+            continue;
+
          exd := "$current" in u.extra;
 
          if (exd == null)
@@ -563,10 +564,7 @@ code
                   u.hp := u.hp + i / 10;
                   position_update(u);
                   if (u.position == POSITION_DEAD)
-                  {
-                     u := nxt;
                      continue;
-                  }
                }
             }
 
@@ -580,8 +578,6 @@ code
 
             act(messages.[3], A_ALWAYS, u, null, null, TO_REST);
          }
-
-         u := nxt;
       }
    }
 }
