@@ -1,5 +1,6 @@
 <div class="mw-parser-output"><h1>Divine Sphere</h1>
-<p>The spells of the divine sphere are prayers, granted by the powers the caster serves: healing and blessing for the good, curses and wounds for the evil, the holy and unholy words against the other side, aid and repulsion for the undead, and the finding of people and things. They draw on your divine power rather than your magic. Your ability in the sphere decides how well you cast them, and also how well you resist such spells cast on you (see <a cmd='#'>Help Spheres</a>).
+<p>The spells of the divine sphere are prayers, granted by the powers the caster serves: healing and blessing for the good, curses and wounds for the evil, the holy and unholy words against the other side, aid and repulsion for the undead, and the finding of people and things. They draw on your divine power rather than your magic: how strongly one works depends on your divine power and your skill in that spell.
+</p><p>The sphere itself is a category. It can't be practised: it rises by itself to half your best spell in it. It counts when you resist: against a divine spell aimed at you, you defend with your brain and the better of your divine sphere or half your skill in that spell (see <a cmd='#'>Help Spheres</a>).
 </p><p>The spells, and who teaches them (guild level, and how far when a guild teaches less than 100%):
 </p>
 <pre>bless                  healer 9, paladin 35 (up to 50%)
