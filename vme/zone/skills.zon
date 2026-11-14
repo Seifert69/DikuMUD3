@@ -1334,8 +1334,10 @@ code
       {
          act("You PANIC! but you cannot escape!", A_SOMEONE, self, null, null, TO_CHAR);
          act("$1n tries to flee, but $1e cannot!", A_SOMEONE, self, null, null, TO_REST);
-         self.endurance := self.endurance + hm/5;  // hm <= -50: costs 10 or more
-         position_update(self);
+         me.endurance := me.endurance + hm/5;  // hm <= -50: costs 10 or more, from the mount if riding
+         if (me.endurance < 0)
+            me.endurance := 0;
+         position_update(me);
          quit;
       }
    }
@@ -1499,7 +1501,8 @@ var
    arg2       :  string;
    arg3       :  stringlist;
    dir        :  integer;
-   oppdir     :  intlist;
+   back       :  unitptr;
+   backdir    :  integer;
    test       :  integer;
    count      :  integer;
    counter    :  integer;
@@ -1511,8 +1514,6 @@ var
 
 code
 {
-   oppdir := {SOUTH, WEST, NORTH, EAST, DOWN, UP, SOUTHWEST, SOUTHEAST, NORTHWEST, NORTHEAST};
-
    if ((self.type == UNIT_ST_PC) and (self.skills[SKI_PICK_LOCK] <= 0))
    {
       act("Perhaps you should practice first.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -1654,12 +1655,23 @@ code
    act("$1n picks the $2t - *click*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
 
    unset(item.exit_info[dir], EX_LOCKED);
-   unset(item.exit_to[dir].exit_info[oppdir.[dir]], EX_LOCKED);
 
-   pc := item.exit_to[dir].inside;
+   /* The other side: the far room's exit that leads back here, as unlock_dil@basemove finds it */
+   back := item.exit_to[dir];
+   backdir := 0;
+   while (backdir <= MAX_EXIT)
+   {
+      if (back.exit_to[backdir] == item)
+         break;
+      backdir := backdir + 1;
+   }
+   if (backdir > MAX_EXIT)
+      quit;
 
+   unset(back.exit_info[backdir], EX_LOCKED);
+   pc := back.inside;
    if (pc != null)
-      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[oppdir.[dir]].[0], null, TO_ALL);
+      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, back.exit_names[backdir].[0], null, TO_ALL);
    quit;
 }
 dilend
@@ -2013,6 +2025,7 @@ dilbegin disarm(arg : string);
 external
     integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
+    bobcheck(victim : unitptr);
 
 var
     tweapon  : unitptr;
@@ -2073,22 +2086,6 @@ code
         quit;
     }
 
-    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
-    {
-        if (not(isset (self.pcflags, PC_PK_RELAXED)))
-        {
-            act ("You are not allowed to do this unless you sign the book of blood.", A_ALWAYS,self,null,null,TO_CHAR);
-            quit;
-        }
-
-        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-        {
-            act ("You are not allowed to do this unless $2e signs the book of blood.",
-            A_ALWAYS,self,targ,null,TO_CHAR);
-            quit;
-        }
-    }
-
     /*darg added to make mobs a bit more intelligent acting */
 
     if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
@@ -2103,6 +2100,7 @@ code
 
 
 :disarm:
+    bobcheck(targ);   // both players must have signed the Book of Blood, also with no argument
     provoked_attack (targ, self);
     if ((dilfind ("disarmed@skills",targ))or(dilfind ("disarmed@skills",targ)))
     {
@@ -6205,19 +6203,6 @@ quit;
    wielded := equipment(self, WEAR_WIELD);
    held    := equipment(self, WEAR_HOLD);
 
-/* This doesn't seem to work, but later in the dil something takes care
-of the case in which you're wielding a weapon.. */
-
-   if ((wielded != null) and (held != null) and ((thing != wielded) and
-                                                 (thing != held)))
-   {
-      act("Your hands are full! How do you expect to throw something " +
-          "if you don't have a free hand (or aren't throwing what's in " +
-          "your hand) ?!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
    cost_of := (rnd(20,30) * thing.weight) / 25;
 
    if (self.endurance < cost_of)
@@ -6336,6 +6321,8 @@ hm := skillroll(skilla,skillb,skillc,skilld);
 
    else
    {
+      if (thing == held)  // from the hand that holds it: it can't be in two places
+         unequip(thing);
       addequip(thing, WEAR_WIELD);
       act("You throw your " + thing.name + " at $3n!",
           A_ALWAYS, self, null, targ, TO_CHAR);
@@ -8520,26 +8507,26 @@ wait (SFB_PRE, (command(CMD_AUTO_DAMAGE) and
        /*
         skillc:=self.abilities[ABIL_BRA];
        */
-       if(self.outside.fighting.type==UNIT_ST_PC)
-        skilld:=self.outside.fighting.skills[SKI_HERBS];
+       if(target.type==UNIT_ST_PC)
+        skilld:=target.skills[SKI_HERBS];
        else
 	             skilld := rnd(40,124);
-      /*        skilld:=self.outside.fighting.abilities[ABIL_DEX];
+      /*        skilld:=target.abilities[ABIL_DEX];
         */
        skilla:=self.outside.abilities[ABIL_DEX];
-       skillb:=self.outside.fighting.abilities[ABIL_DEX];
+       skillb:=target.abilities[ABIL_DEX];
         hm:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
 
    hm := skillroll@skills(self.outside.abilities[ABIL_DEX],
-                         self.outside.fighting.abilities[ABIL_DEX],
+                         target.abilities[ABIL_DEX],
                          self.outside.abilities[ABIL_BRA],
-                         self.outside.fighting.abilities[ABIL_CON]);
+                         target.abilities[ABIL_CON]);
 */
    if (hm >= 0)
       {
-         if (not(isset(self.outside.fighting.pcflags, PC_PK_RELAXED)) and
+         if (not(isset(target.pcflags, PC_PK_RELAXED)) and
              (target.type == UNIT_ST_PC))
             goto battle;
       if (not(dilfind("spl_poison@spells", target)))
@@ -9296,6 +9283,7 @@ skilld   : integer;
    targ    : unitptr;
    temp_st : string;   /* Temporary string */
    elist   : extraptr; /* For the $Soothe extra */
+   soothers : stringlist;
 
 code
 {
@@ -9344,7 +9332,8 @@ code
       }
 
    elist := "$Soothe" in targ.extra;
-   if (self.name in elist.descr)
+   soothers := split(elist.descr, " ");  // exact names, as aggressive@function reads them
+   if (self.name in soothers)
       {
          act("It is already friendly towards you, why bother!?",
              A_ALWAYS, self, null, null, TO_CHAR);
@@ -12616,34 +12605,35 @@ code
 		quit;
 	}
 	
-	if (arg in "north") {
+	// Directions by abbreviation from the start ("nor" is north), not as any substring
+	if (arg == left("north", length(arg))) {
 		i := DIR_NORTH;
 		d := "north"; }
-	else if ((arg in "east") and (arg != "s")) {
+	else if (arg == left("east", length(arg))) {
 		i := DIR_EAST;
 		d := "east"; }
-	else if ((arg in "south") and (arg != "u")) {
+	else if (arg == left("south", length(arg))) {
 		i := DIR_SOUTH;
 		d := "south"; }
-	else if (arg in "west") {
+	else if (arg == left("west", length(arg))) {
 		i := DIR_WEST;
 		d := "west"; }
-	else if (arg in "up") {
+	else if (arg == left("up", length(arg))) {
 		i := DIR_UP;
 		d := "up"; }
-	else if (arg in "down") {
+	else if (arg == left("down", length(arg))) {
 		i := DIR_DOWN;
 		d := "down"; }
-	else if ((arg in "northeast") or (arg == "ne")) {
+	else if ((arg == left("northeast", length(arg))) or (arg == "ne")) {
 		i := DIR_NORTHEAST;
 		d := "northeast"; }
-	else if ((arg in "northwest") or (arg == "nw")) {
+	else if ((arg == left("northwest", length(arg))) or (arg == "nw")) {
 		i := DIR_NORTHWEST;
 		d := "northwest"; }
-	else if ((arg in "southeast") or (arg == "se")) {
+	else if ((arg == left("southeast", length(arg))) or (arg == "se")) {
 		i := DIR_SOUTHEAST;
 		d := "southeast"; }
-	else if ((arg in "southwest") or (arg == "sw")) {
+	else if ((arg == left("southwest", length(arg))) or (arg == "sw")) {
 		i := DIR_SOUTHWEST;
 		d := "southwest"; }
 	else {

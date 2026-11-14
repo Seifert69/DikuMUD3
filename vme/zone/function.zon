@@ -8981,7 +8981,7 @@ code
       }
    if (sanc > 1)
       {
-         addextra(self.extra, {"$Soothe"}, "");
+         addextra(self.extra, {"$Soothe"}, " "); // an extra with "" text isn't added
       }
 
 :time_check: /* Checking if the time argument is valid */
@@ -9179,6 +9179,13 @@ code
    heartbeat:=PULSE_SEC*3; /* In case we need it */
 
    count      := 0; /* Initialise the variable (no real reason) */
+
+   /* soothe@skills adds each soothing PC's name to my $Soothe extra */
+   soothers := null;
+   eptr := "$Soothe" in self.extra;
+   if (eptr != null)
+      soothers := split(eptr.descr, " ");
+
 u:=self.outside.inside;
 while (u)
 {
@@ -9204,13 +9211,7 @@ secure(u,endloop);
                             this u fails. */
 
           sancvar := isaff(u, ID_SANCTUARY);
-          /* soothe@skills adds each soothing PC's name to my $Soothe extra */
-          eptr := "$Soothe" in self.extra;
-          if (eptr != null)
-             {
-                soothers := split(eptr.descr, " ");
-                if (u.name in soothers) soothe := 1;
-             }
+          if (u.name in soothers) soothe := 1;
           if (not(visible(self, u))) verdict := 0;
 
 /* Go get the pc's rating */
