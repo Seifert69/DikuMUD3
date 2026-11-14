@@ -14,11 +14,11 @@ shield: its craftsmanship and its magic both grow with them (see <a cmd='#'>Help
 Craftsmanship</a>). It keeps as long as you carry or wear it; leave it on 
 the ground, and within ten minutes it shrinks back into a normal leaf.
 </p><p>It needs leaves: it can't be cast indoors, on or under water, or on snow, 
-slush or ice. You must be standing.
+slush or ice. You must be standing, and you can't cast it while fighting.
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Shield</a>
+<pre>&gt; <a cmd='#'>Help Shields</a>
 &gt; <a cmd='#'>Help Craftsmanship</a>
 &gt; <a cmd='#'>Help Creation Sphere</a>
 &gt; <a cmd='#'>Help Druid Spells</a>
