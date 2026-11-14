@@ -1,18 +1,18 @@
 <div class="mw-parser-output"><h1>Charge Skill</h1>
-<p>Class and level:
-</p>
-<pre> Barbarian Level 10
-</pre>
-<p>Usage:
+<p>Skill
+Class: Barbarian (guild level 10)
+</p><p>Usage:
 </p>
 <pre> charge &lt;target&gt;
 </pre>
-<p>Headstrong and sometimes reckless, the Barbarian may attack without regard for their 
-own safety. A charge is a hard blow that starts the fight: the higher your level, and 
-the better your constitution and strength against your enemy's, the harder it hits. 
-But it always costs you some hit points as well, about a tenth of what you have.
-</p><p>You need some endurance left to charge. You can charge at another player only when 
-both of you have signed the book of blood.
+<p>Headstrong and sometimes reckless, the Barbarian may attack without regard for their
+own safety. A charge is a hard blow that starts the fight: the higher your level and
+your skill, and the better your constitution and strength against your enemy's, the
+harder it hits. But it always costs you some hit points as well, between a fifteenth
+and a tenth of what you have.
+</p><p>You need more than 20 endurance to charge, though a charge doesn't use any up. You
+can't charge once you are fighting. You can charge at another player only when both
+of you have signed the book of blood.
 </p><p>Charging staffs and wands is something else: see <a cmd='#'>Help Charge Staff</a> and <a cmd='#'>Help Charge Wand</a>.
 </p><p><br />
 See Also:
