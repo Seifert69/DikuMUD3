@@ -11,9 +11,9 @@ more constitution and hit points, and going berserk heals some of their
 wounds at once. The better your berserk skill and constitution, the 
 stronger and longer it is.
 </p><p>Going berserk takes a lot of endurance: you need at least 100 to try, 
-and even a failed try costs some. You can't go berserk again while you 
-are berserk, nor while you are raging (see <a cmd='#'>Help Rage</a>), and if you are 
-hasted already, berserk doesn't make you any faster.
+and even a failed try costs some. You can't go berserk while you are 
+fighting, nor again while you are berserk, nor while you are raging 
+(see <a cmd='#'>Help Rage</a>), and if you are hasted already, berserk doesn't make you any faster.
 </p><p>The Barbarians teach berserk from guild level 5.
 </p><p><br />
 See Also:
