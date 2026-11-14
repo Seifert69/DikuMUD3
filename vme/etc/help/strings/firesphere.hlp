@@ -1,11 +1,11 @@
 <div class="mw-parser-output"><h1>Fire Sphere</h1>
-<p>The spells of the fire sphere burn: the sorcerers' bolts and storms of flame, the dark knights' hellfire and brimstone, and the burning rays of the sun. Your ability in the sphere decides how well you cast them, and also how well you resist fire spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist fire better, see <a cmd='#'>Help Heat Resistance</a>; dragons may also breathe fire (see <a cmd='#'>Help Breath</a>). Sun beam and solar flare can't be cast at present, because of a known bug.
-</p><p>The spells, and who teaches them (guild level):
+<p>The spells of the fire sphere burn: the sorcerers' bolts and storms of flame, the dark knights' hellfire and brimstone, and the burning rays of the sun. Your ability in the sphere decides how well you cast them, and also how well you resist fire spells cast on you (see <a cmd='#'>Help Spheres</a>). To resist fire better, see <a cmd='#'>Help Heat Resistance</a>; dragons may also breathe fire (see <a cmd='#'>Help Breath</a>).
+</p><p>The spells, and who teaches them (guild level, and how far when a guild teaches less than 100%):
 </p>
-<pre>sun ray       healer 31, druid 41
+<pre>sun ray       healer 31 (up to 80%), druid 41
 fire breath   no guild teaches it
-sun beam      no guild teaches it
-solar flare   no guild teaches it
+sun beam      druid 24, healer 26 (up to 80%)
+solar flare   druid 110
 burn          sorcerer 0
 fireball      sorcerer 14
 firestorm     sorcerer 28
