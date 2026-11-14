@@ -3,12 +3,12 @@
 </p>
 <pre>Name                     Level   Up to
 Burn                         0   100%
-Detect Magic                 0   100%
+Detect Magic                 0   80%
 Raise Magic                  0   100%
 Brain                        2   100%
 Electrical Shock             3   100%
 Dexterity                    4   100%
-Mind Shield                  5   100%
+Mind Shield                  5   80%
 Constitution                 6   100%
 Heat Resistance              6   100%
 Snowball                     6   100%
@@ -16,54 +16,54 @@ Cold Resistance              7   100%
 Magic Candle                 7   75%
 Electricity Resistance       8   100%
 Poison Resistance            9   100%
-Slow                         9   100%
+Slow                         9   80%
 Acid Resistance             10   100%
 Strength                    10   100%
-Detect Invisible            11   100%
-Identify                    12   100%
-Confusion                   13   80%
+Identify                    12   50%
+Confusion                   13   50%
 Fireball                    14   100%
 Mending                     14   100%
-Quicken                     14   100%
-Charge Wand                 15   100%
+Charge Wand                 15   80%
+Detect Invisible            15   80%
 Sending                     15   100%
 Stun                        15   80%
 Jolt                        16   100%
 Lock                        16   50%
-Charge Staff                17   100%
-Dispel Magic                17   100%
+Charge Staff                17   80%
+Dispel Magic                17   80%
 Xray Vision                 17   50%
 Unlock                      18   50%
 Frostball                   19   100%
 Repair                      20   100%
-Bone Skin                   24   100%
-Drowse                      25   100%
-Night Globe                 25   75%
-Sun Globe                   25   75%
-Hold Monster                27   100%
-Firestorm                   28   100%
+Bone Skin                   24   50%
+Drowse                      25   50%
+Night Globe                 25   50%
+Sun Globe                   25   50%
+Hold Monster                27   80%
+Firestorm                   28   80%
 Improved Identify           28   100%
-Haste                       29   100%
-Lightning Bolt              30   100%
+Haste                       29   80%
+Lightning Bolt              30   80%
 Minor Gate                  30   50%
-Reconstruct                 31   100%
-Transport                   32   80%
-Icestorm                    34   100%
-Toxicate                    37   100%
-Blinding Flash              45   100%
-Stone Skin                  45   100%
-Blizzard                    70   90%
-Wizard Mark                 80   100%
-Acid Drop                  100   100%
-Iceball                    100   100%
-Mana Boost                 100   100%
-Portal                     120   100%
-Spray Of Acid              120   100%
-Acid Ball                  145   100%
-Fire Blast                 150   100%
-Travel                     150   100%
-Lightning Storm            160   100%
-Acid Swirl                 180   100%
+Reconstruct                 31   80%
+Transport                   32   50%
+Icestorm                    34   80%
+Quicken                     35   80%
+Toxicate                    37   80%
+Blinding Flash              45   70%
+Stone Skin                  45   80%
+Blizzard                    70   80%
+Wizard Mark                 80   50%
+Acid Drop                  100   80%
+Iceball                    100   80%
+Mana Boost                 100   80%
+Portal                     120   80%
+Spray Of Acid              120   80%
+Acid Ball                  145   80%
+Fire Blast                 150   80%
+Travel                     150   80%
+Lightning Storm            160   80%
+Acid Swirl                 180   80%
 </pre>
 <p><br />
 See Also:
