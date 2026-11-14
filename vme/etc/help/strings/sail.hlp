@@ -11,9 +11,11 @@
 Shallow water you can swim instead (see <a cmd='#'>Help Swimming</a>).
 </p><p>To sail, drop your boat by the water, enter it (see <a cmd='#'>Help Enter</a>), and 
 sail the way you want to go: the boat carries you, and anything aboard, 
-across the water. While you sit in the boat, sail east does the same as 
-just east. Leave the boat when you reach the far shore, and take it with 
-you if you will need it again.
+across the water. While you are in the boat, sail east does the same as 
+just east. Stand up in it first: you can't sail sitting or resting, nor 
+while anyone aboard is fighting. A boat can carry you out of the water 
+onto the shore, but not further over land. Leave the boat when you reach 
+the far shore, and take it with you if you will need it again.
 </p><p>Boats are sold at the boat shop in Midgaard (see <a cmd='#'>Help Midgaard</a>), among 
 other places.
 </p><p><br />
