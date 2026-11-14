@@ -12,10 +12,10 @@ direction, which is limited to:
 <a cmd='#'>up</a> This will take you upwards if it is possible
 <a cmd='#'>down</a> This will take you downwards if it is possible
 <a cmd='#'>enter</a> (item) This will take you inside the item if possible
-<a cmd='#'>exit</a>  (item) This will take you outside the item if possible
-<a cmd='#'>leave</a> (item) This will take you outside the item if possible
+<a cmd='#'>exit</a> This will take you out of what you are in (a boat, a cart...)
+<a cmd='#'>leave</a> The same, but takes your boat, cart or steed along (see <a cmd='#'>Help Leave</a>)
 <a cmd='#'>mount</a> (npc) You'll mount your mount. 
-<a cmd='#'>dismount</a> (npc)  You'll dismount your mount.
+<a cmd='#'>dismount</a> You'll dismount your mount.
 </p><p><br />
 See also:
 </p>
