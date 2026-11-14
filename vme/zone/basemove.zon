@@ -488,6 +488,7 @@ external
 var
    i    : integer;
    u    : unitptr;
+   nxt  : unitptr;
    sl : stringlist;
    exd : extraptr;
 
@@ -509,6 +510,7 @@ code
 
       while (u != null)
       {
+         nxt := u.next; // this room's next: u may drown, or drift into the next room's list
          exd := "$current" in u.extra;
 
          if (exd == null)
@@ -561,7 +563,10 @@ code
                   u.hp := u.hp + i / 10;
                   position_update(u);
                   if (u.position == POSITION_DEAD)
+                  {
+                     u := nxt;
                      continue;
+                  }
                }
             }
 
@@ -576,7 +581,7 @@ code
             act(messages.[3], A_ALWAYS, u, null, null, TO_REST);
          }
 
-         u := u.next;
+         u := nxt;
       }
    }
 }
