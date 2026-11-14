@@ -9,7 +9,9 @@ Mana: 60
 </pre>
 <p>Restores spent charges to a magic staff you carry, up to as many as the 
 staff can hold. The better your spell, the more charges come back: one 
-for a modest success, up to four or more for a master.
+for a modest success, up to four or more for a master. The staff's own 
+power fights you: the more powerful the staff, the harder it is to charge, 
+and the likelier the spell is to fail, or even explode.
 </p><p>It is risky. If the spell fails, the staff only sputters and goes dim; but 
 if it fails badly, the staff explodes in a sphere of uncontrolled mana, 
 and is lost: a lightning bolt strikes everyone in the room, you included. 
