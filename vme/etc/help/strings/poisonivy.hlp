@@ -8,13 +8,15 @@ Mana: 20
 </pre>
 <p>The caster touches the target and growls 'Rasica Potio', and their skin 
 breaks out in an ugly red rash. Every half minute the rash torments 
-them: first an itch, then painful blisters, then several rounds of 
-scratching it bloody, each costing them 13 to 17 hit points, and at last 
-it subsides and heals. The better the casting, the more rounds of 
-scratching. Someone who already has the rash can't catch it again.
+them: first an itch, then painful blisters (5 to 9 hit points), then 
+several rounds of scratching it bloody, each costing them 13 to 17 hit 
+points, and at last it subsides (another 5 to 9) and heals. The better 
+the casting, the more rounds of scratching. Someone who already has the 
+rash can't catch it again.
 </p><p>The target resists with their mind, and casting it is an attack: they 
 will fight you for it. A strong enough <a cmd='#'>Help Remove Disease</a> heals the 
-rash at once; remove poison does not. You must be standing.
+rash at once; remove poison does not. You must be standing, and you can't 
+cast it while fighting.
 </p><p><br />
 See Also:
 </p>
