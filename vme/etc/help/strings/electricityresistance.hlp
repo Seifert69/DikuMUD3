@@ -8,12 +8,13 @@ Mana: 20
 <pre>cast electricity resistance &lt;target&gt;
 <a cmd='#'>cast electricity resistance</a>   (on yourself)
 </pre>
-<p>Raises the target's electricity sphere for about ten minutes. Your ability in 
-a sphere also protects you against its spells (see <a cmd='#'>Help Spheres</a>), so the 
-target resists electric spells better: jolt, electrical shock, lightning bolt, 
-call lightning, lightning storm and lightning breath. The better your 
-protection sphere, the bigger the raise, up to ten points and a little more 
-for a master.
+<p>Raises the target's electricity sphere for about ten minutes. Against a 
+spell aimed at you, you defend with your brain and the better of its sphere 
+or half your skill in that spell (see <a cmd='#'>Help Spheres</a>), so the target resists 
+electric spells better: jolt, electrical shock, lightning bolt, call 
+lightning, lightning storm and lightning breath. The better your magic and 
+your skill in the spell, the bigger the raise, up to ten points and a little 
+more for a master.
 </p><p>It doesn't add up: cast on someone who already has it, the magic just 
 dissipates. You must be standing, not fighting. It is also found on potions, 
 wands and scrolls.
