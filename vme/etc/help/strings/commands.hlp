@@ -3,16 +3,19 @@
 </p>
 <pre><a cmd='#'>commands</a>
 </pre>
-<p>Gives a complete listing of the commands you can use. Most have a help page of 
+<p>Lists, in alphabetical order, the commands you can use at your level. Skills
+you use as commands, such as climb or consider, aren't in it: <a cmd='#'>skills</a> lists
+those, and <a cmd='#'>socials</a> lists the socials. Most commands have a help page of
 their own: type help and the command, like <a cmd='#'>help look</a>.
-</p><p>Some commands are only there in certain places, or near certain people or 
-things: the postman takes mail, a storage clerk store and unstore, a shopkeeper 
-buy and sell, a teacher practice and info. They work where they make sense, and 
+</p><p>Some commands are only there in certain places, or near certain people or
+things: the postman takes mail, a storage clerk store and unstore, a shopkeeper
+buy and sell, a teacher practice and info. They work where they make sense, and
 the help for each tells you where.
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Socials</a>
+<pre>&gt; <a cmd='#'>Help Skills</a>
+&gt; <a cmd='#'>Help Socials</a>
 &gt; <a cmd='#'>Help Communications</a>
 &gt; <a cmd='#'>Help Newbie</a>
 </pre>
