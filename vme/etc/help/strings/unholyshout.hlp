@@ -6,15 +6,16 @@ Mana: 40
 </p><p>Usage:
 </p>
 <pre>cast unholy shout &lt;target&gt;
+<a cmd='#'>cast unholy shout</a>   (at whoever you are fighting)
 </pre>
 <p>The strongest of the prayers to the dark forces against the good: the 
 caster shouts to evil and grasps the target. Any target whose alignment 
 is above neutral can be struck, and is hurt hard; the truly good are hurt harder still; on the evil and the 
-neutral, nothing happens. The better your divine power and sphere, the 
-more it hurts. It does best against clothes and a little less the heavier 
+neutral, nothing happens. The better your divine power and your skill in the 
+spell, the more it hurts. It does best against clothes and a little less the heavier 
 the armour, and since the caster grasps the target, a shield can block it.
-</p><p>Casting it is an attack and starts a fight. You must be standing, so you 
-can't cast it in the middle of a fight. It is also found on scrolls.
+</p><p>Casting it is an attack and starts a fight. It can be cast while 
+fighting. It is also found on scrolls.
 </p><p><br />
 See Also:
 </p>
