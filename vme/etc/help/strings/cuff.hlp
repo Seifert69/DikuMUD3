@@ -6,9 +6,12 @@
 </pre>
 <p>Members of the police guild learn hand cuffing at the police in Midgaard (see 
 <a cmd='#'>Help Police Guild</a>). With it, a deputy can put the handcuffs on a wanted 
-criminal and take them to jail. It only works on someone who is wanted, and 
-it can fail: the better your hand cuffing against theirs, the better your 
-chance. A criminal in cuffs can try to break them (see <a cmd='#'>Help Break</a>).
+criminal and take them to jail. You need a pair of hand cuffs on you;
+deputies can buy them at the police. It only works on someone who is
+wanted, and it can fail: the better your hand cuffing and your dexterity
+against theirs, the better your chance. If you fail, the criminal ends up
+with your cuffs. A criminal in cuffs can try to break them (see
+<a cmd='#'>Help Break</a>).
 </p><p>A deputy who breaks the law and is caught is thrown out of the police guild, 
 and loses the hand cuffing skill.
 </p><p><br />
