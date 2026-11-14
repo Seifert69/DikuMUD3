@@ -43,8 +43,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 ## Traps
 
 - **Reserved words.** Every function, field and built-in variable in `diltok.h` is reserved,
-  so `name`, `names`, `key`, `npcs`, `unset`, `target`, `length`, `title`, `level`... can't
-  be variable names. vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
+  so `name`, `names`, `key`, `npcs`, `unset`, `target`, `length`, `title`, `level`, `race`,
+  `extra`, `help`... can't be variable or parameter names. vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
   `pname`, `namex`, `kw`, `u`.
 - **Template names are 15 characters at most** (`Name of dilprogram ... was too long`).
 - **No field on a call's result**: `findroom(s).title` is a syntax error; put the unit in a
@@ -53,7 +53,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **No `\"` in a string**: vmc stops at it. Use single quotes inside the text.
 - **Strings**: `replace(old, new, text)` replaces every `old`; `left`, `right` and `mid` cut;
   `split(text, sep)` trims the spaces around each piece, so it can't put text back together.
-- **`addextra(u.extra, {"$x"}, "")` adds nothing**: an extra made in DIL needs some text.
+- **`addextra(u.extra, {"$x"}, s)` adds nothing when `s` is a string that was never set**
+  (null, e.g. `sl.[5]` past the end of a list): the text must exist. A literal `""` is fine.
 - **`"words" in a stringlist`** is the position plus one (0 when absent) of the first entry
   that is the string or its first words, ignoring case: `"arrived"` doesn't match
   `"arrived_port"`, but `"ship arrived"` matches `"ship"`.
@@ -62,8 +63,7 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
   `{}` fits either kind of list.
 - **`x := {};` in code doesn't compile** (`Assigning incompatible types (C)`): an empty `{}`
-  only works as a zone-file argument. To start a list over, build a fresh one with
-  `addstring`, or keep a plain string and `split` it.
+  only works as a zone-file argument. To empty a list, `sl := null;`.
 - **Unit and extra variables are cleared at every activation**: after each `pause` or `wait`,
   every `unitptr` and `extraptr` variable that isn't `secure`d is null (`dil_clear_non_secured`
   in dilrun.cpp), wherever the unit is. Find the unit again after the pause
@@ -74,6 +74,15 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
 - **String `==` and `!=` ignore case**; `<` and `>` don't.
 - **Locals start empty**: null, 0 or "". No need to set them first.
+- **A failed value assigned**: an integer variable keeps its old value, a string variable
+  becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
+- **`return (null);` doesn't compile** in a `unitptr` function (`return expression not of
+  correct type`): return a `unitptr` variable that is null.
+- **`and` / `or` bind tighter than the comparisons**: `a == 1 and b == 2` is
+  `(a == (1 and b)) == 2`. Always bracket each comparison: `(a == 1) and (b == 2)`.
+- **`MEDIA_*` and `TAR_*` from `spelldef.h` can't be used in DIL** (they're written with `<<`,
+  a syntax error); `spelldef.h` isn't in `macros.h`, so `SPLCST_*` need
+  `#include <spelldef.h>`.
 - **`{...}` takes only constants**: `{"a", MACRO}` works, `{flag}` with a variable is a
   syntax error. Build such a list with `addstring(sl, flag)`.
 - **`pause` waits for the unit's next tick** (`wait(SFB_TICK | SFB_RANTIME, TRUE)` in
@@ -99,8 +108,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
      ... // not in the game
   ```
 
-  `phead()` is the first player (null when none is on), `nhead()` the first NPC, `ohead()`
-  the first object and `rhead()` the first room, each with `.gnext` to go on.
+  `pc_head()` is the first player (null when none is on), `npc_head()` the first NPC,
+  `obj_head()` the first object and `room_head()` the first room, each with `.gnext` to go on.
 - **Moving an NPC through an exit**: `exec("<dir>", self)`, then check `self.outside`, as
   CLAUDE.md says; `link()` only where no exit exists.
 - Text to a player is `sendtext("...<br/>", u)` (lines end with `<br/>`) or `act(...)` with
