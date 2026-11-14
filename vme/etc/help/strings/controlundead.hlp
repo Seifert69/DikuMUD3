@@ -7,12 +7,15 @@ Mana: 20
 </p>
 <pre>cast control undead &lt;undead&gt;
 tell &lt;undead&gt; &lt;command&gt;
-tell horde &lt;command&gt;     (all your undead at once)
+tell horde &lt;command&gt;     (your zombies and skeletons at once)
 </pre>
 <p>The necromancer utters 'Muera reslox' and bends one of the undead to their 
 will: it follows you and obeys you. Command it with tell, for example 
-tell ghoul kill rat. Like an animated zombie, it walks, fights, gets, 
-drops, gives and follows; anything else, it only moans. It won't attack 
+tell ghoul kill rat. Like an animated zombie, it walks, climbs, fights, 
+flees, follows, gets, drops, puts and gives, digs and buries, looks, and 
+sits, rests, sleeps, wakes or stands; anything else, it only moans. Tell 
+horde reaches only zombies and skeletons, such as those you raise with 
+animate dead; any other undead you control you must tell by name. It won't attack 
 another player unless both of you have signed the Book of Blood.
 </p><p>The undead resists, and undead above your level are much harder to 
 control; if the spell fails, it attacks you. Each casting also darkens your 
