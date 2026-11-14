@@ -431,6 +431,8 @@ external
     integer realmmdd@function();
     integer yule_count(pc : unitptr);
     string yule_year();
+    string yule_quest();
+    string qstComplete@quests(qname : string);
 var
     xmas_quests  : stringlist global xmas_done@holiday22;
 	pc 			: unitptr;
@@ -439,6 +441,7 @@ var
 	z 			: integer;
 	i 			: integer;
     sl          : stringlist;
+    yq          : string;
 
 code
 {
@@ -452,8 +455,9 @@ code
 
 	// December 24 to 31: Jolnir sees those with 16 spokes of the Yule Wheel, any level
 	z := realmmdd@function();
-	if ((z >= 1224) and (z <= 1231) and (yule_count(pc) >= 16) and
-	    not (("Yule Gift " + yule_year()) in pc.quests))
+	yq := yule_quest();
+	yq := qstComplete@quests(yq);
+	if ((z >= 1224) and (z <= 1231) and (yule_count(pc) >= 16) and not (yq in pc.quests))
 	{
 		act("You touch the pole, and the Yule fire seems to roar in your ears.", A_ALWAYS, pc, null, null, TO_CHAR);
 		act("$1n touches the pole and vanishes in a swirl of snow.", A_SOMEONE, pc, null, null, TO_REST);
@@ -1092,6 +1096,21 @@ code
 }
 dilend
 
+// The Yule Wheel's quest this year ("Yule Wheel 2026"), for quests.zon's functions: it is
+// "Yule Wheel 2026 Ongoing" while a player turns spokes (the spokes are its names "s<n>"), and
+// "Yule Wheel 2026 Complete" once Jolnir has given the gift
+dilbegin string yule_quest();
+external
+   string yule_year();
+var
+   y : string;
+code
+{
+   y := yule_year();
+   return ("Yule Wheel " + y);
+}
+dilend
+
 // This year, for the Yule's quest names ("Yule Wheel 2026") and the store of wishes
 dilbegin string yule_year();
 code
@@ -1103,12 +1122,16 @@ dilend
 // The spokes pc has turned this year
 dilbegin integer yule_count(pc : unitptr);
 external
-   string yule_year();
+   string yule_quest();
+   string qstOngoing@quests(qname : string);
 var
    ex : extraptr;
+   q : string;
 code
 {
-   ex := ("Yule Wheel " + yule_year()) in pc.quests;
+   q := yule_quest();
+   q := qstOngoing@quests(q);
+   ex := q in pc.quests;
    if (ex == null)
       return (0);
    return (length(ex.names) - 1);
@@ -1227,7 +1250,10 @@ dilend
 // A spoke of the Yule Wheel: verb noun turns spoke n, from December n for seven days
 dilbegin yule_spoke(n : integer, verb : string, noun : string, msg : string, rmsg : string);
 external
-   string yule_year();
+   string yule_quest();
+   string qstOngoing@quests(qname : string);
+   string qstComplete@quests(qname : string);
+   extraptr qstSetOngoing@quests(qname : string, pc : unitptr, qdescr : string);
    integer realmmdd@function();
    integer yule_count(pc : unitptr);
    string yule_ladder(pc : unitptr);
@@ -1237,6 +1263,8 @@ var
    ex : extraptr;
    sl : stringlist;
    yw : string;
+   qo : string;
+   qc : string;
    today : integer;
    day : integer;
 code
@@ -1277,14 +1305,20 @@ code
           A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
-   yw := "Yule Wheel " + yule_year();
-   ex := yw in pc.quests;
+   yw := yule_quest();
+   qc := qstComplete@quests(yw);
+   if (qc in pc.quests)
+   {
+      act("Jolnir has given you his gift this Yule: the wheel has turned for you.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   qo := qstOngoing@quests(yw);
+   ex := qo in pc.quests;
    if (ex == null)
    {
-      sl := null;
-      addstring(sl, yw);
-      addextra(pc.quests, sl, "The spokes of the Yule Wheel you have turned.");
-      ex := yw in pc.quests;
+      ex := qstSetOngoing@quests(yw, pc, "The spokes of the Yule Wheel you have turned.");
+      ex := qo in pc.quests;
    }
    if (("s" + itoa(n)) in ex.names)
    {
@@ -1305,7 +1339,8 @@ dilend
 // the player's spokes are worth, and how to wish
 dilbegin yule_wheel();
 external
-   string yule_year();
+   string yule_quest();
+   string qstOngoing@quests(qname : string);
    integer realmmdd@function();
    string yule_ladder(pc : unitptr);
    string yule_hint(n : integer);
@@ -1313,6 +1348,7 @@ var
    pc : unitptr;
    ex : extraptr;
    s : string;
+   q : string;
    today : integer;
    day : integer;
    i : integer;
@@ -1328,7 +1364,9 @@ code
         "Each spoke is a small task somewhere in the world, and waits seven days.<br/>";
    if ((today / 100 == 12) and (day <= 31))
    {
-      ex := ("Yule Wheel " + yule_year()) in pc.quests;
+      q := yule_quest();
+      q := qstOngoing@quests(q);
+      ex := q in pc.quests;
       i := day - 7;
       if (i < 1)
          i := 1;
@@ -1359,6 +1397,9 @@ external
    integer yule_count(pc : unitptr);
    string yule_qname(q : integer);
    string yule_year();
+   string yule_quest();
+   string qstOngoing@quests(qname : string);
+   string qstComplete@quests(qname : string);
 var
    pc : unitptr;
    u : unitptr;
@@ -1366,6 +1407,7 @@ var
    ex : extraptr;
    sl : stringlist;
    yg : string;
+   yo : string;
    kind : string;
    line : string;
    q : integer;
@@ -1379,7 +1421,9 @@ code
    pc := activator;
    u := null;
    secure(pc, lost);
-   yg := "Yule Gift " + yule_year();
+   yg := yule_quest();
+   yo := qstOngoing@quests(yg);
+   yg := qstComplete@quests(yg);
    if (yg in pc.quests)
    {
       exec("say You have had my gift this Yule, " + pc.name + ".", self);
@@ -1431,6 +1475,7 @@ code
    dilcopy("ply_restrict@function(" + pc.name + ",0,25,holiday_burn@holiday22)", u);
    unsecure(u);
    link(u, pc);
+   subextra(pc.quests, yo); // done, as quests.zon's qstOnComplete marks it
    sl := null;
    addstring(sl, yg);
    addextra(pc.quests, sl, "Jolnir's Yule gift: " + yule_qname(q) + ".");

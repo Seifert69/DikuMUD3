@@ -111,6 +111,11 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   `foreach` works from a snapshot and skips units that have died or left; it also lists what is
   inside transparent units, so test `u.outside == self` for the room's own
   (`watercurrent@basemove`).
+- **Quests: use quests.zon's functions**, not hand-made extras: `qstSetOngoing@quests` (the
+  "<name> Ongoing" entry and the "New Quest" banner), `qstOngoing@quests` / `qstComplete@quests`
+  for the names, and on completion the Ongoing removed and "<name> Complete" added, as
+  `qstOnComplete` does (or `qstSimpleQuest` / `qstItemsWanted` for a whole quest). Players then
+  see every quest the same way in `quests`.
 - **A DIL function's result can't be another DIL function's argument**: `yule_q(lvl,
   yule_count(pc))` fails with "Incompatible argument types in argument 1" (whatever argument it
   is). Put the result in a variable first. Built-ins like `itoa(f(x))` are fine.
