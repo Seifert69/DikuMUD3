@@ -540,7 +540,7 @@ int generic_move(unit_data *ch, unit_data *mover, int direction, int following)
         if (mover->isChar())
         {
             if (!mover->getExtraList().find_raw(S_SWIM_ON) &&
-                (!mover->getExtraList().find_raw(S_IS_FISH) || !mover->getExtraList().find_raw(S_IS_AMPHIB)))
+                (!mover->getExtraList().find_raw(S_IS_FISH) && !mover->getExtraList().find_raw(S_IS_AMPHIB)))
             {
                 act("You might want to swim.", eA_ALWAYS, ch, cActParameter(), cActParameter(), eTO_CHAR);
                 return 0;

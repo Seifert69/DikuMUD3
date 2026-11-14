@@ -16,7 +16,7 @@ The levels are the `minlevel` of each command in `vme/etc/commands.def`; the nam
 | **240** `MODERATOR_LEVEL` | **Disruptive players** | `nocomm`, `notell`, `petrify`, `freeze`, `ban` (a site), `broadcast` |
 | **245** `PLAYER_ADMIN_LEVEL` | **Players**: change a player or what they carry | `set` on another player or anything they carry or wear, `purge` and `eat` of a player, `load <player>` (brings an offline player into the game), `force` of a player or `force all`, `transfer`, `seize` (takes an item from a player or NPC), `snoop`, `setskill`, `zap` (removes a DIL from a unit), `copy` (adds a DIL to a unit), `cdelete` (deletes a clan) |
 | **250** | **Running the game** | `reboot`, `wizlock`, `advance` |
-| **253–255** | **The server** | `nset` (the DIL `set`), `execute` (runs a shell command), `plog`, `crash`, `wtimewarp`, `shutdown`, and the `set` fields `add-info`, `del-info`, `access`, `profession`, `lifespan`, `lights`, `exp` |
+| **253–255** | **The server** | `nset` (the DIL `set`), `plog`, `crash`, `wtimewarp`, `shutdown`, and the `set` fields `add-info`, `del-info`, `access`, `profession`, `lifespan`, `lights`, `exp` |
 
 ## Guards
 
