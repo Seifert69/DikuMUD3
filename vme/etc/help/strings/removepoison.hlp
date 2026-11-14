@@ -11,8 +11,9 @@ cast remove poison &lt;food or drink&gt;
 needs at least a quarter of the poison's power, so even a weak one cures most 
 poisons. Cast on food or a drink, in the room, in your inventory or held, it 
 makes it safe to eat or drink.
-</p><p>It doesn't clean a poisoned weapon. You must be standing. It is also found on 
-potions, wands, scrolls and staffs. To find out what is poisoned, see 
+</p><p>It doesn't clean a poisoned weapon. You must be standing, not fighting. 
+Practising it needs divine 10. It is also found on potions, wands, 
+scrolls and staffs. To find out what is poisoned, see 
 <a cmd='#'>Help Detect Poison</a>.
 </p><p><br />
 See Also:
