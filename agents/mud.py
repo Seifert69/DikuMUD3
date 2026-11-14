@@ -32,6 +32,7 @@ The character's file (mode 600, never in a repository):
        role=gm                            (a game master: only the commands in GM_COMMANDS, set
                                            only on GM_SET_FIELDS, load and makemoney within a
                                            daily budget, no tells but to Papi)
+       role=post                          (the postman Jolnir: only POST_COMMANDS)
 
 --throw: when the character is playing already, throw that copy out. Without it start stops, since
 the other copy may be the character's owner.
@@ -447,6 +448,9 @@ GM_COMMANDS = {
     "gmlure", "gmtreasure", "gmquest", "gmzap", "gmyule",
     "enter", "leave", "north", "east", "south", "west", "up", "down", "n", "e", "s", "w", "u", "d",
 }
+# The postman (role=post, the player Jolnir, level 230 to be invisible and goto the post office):
+# only what fetching letters needs
+POST_COMMANDS = {"goto", "request", "look", "put", "wizinv", "save", "inventory", "i"}
 GM_SET_FIELDS = {"title", "descr", "add-name", "del-name", "add-extra", "del-extra",
                  "dir-to", "add-dir-name", "del-dir-name", "dir-flags"}
 GM_LOADS = 30  # units loaded a day
@@ -553,6 +557,8 @@ def refused(mud, line):
         why = gm_refused(line)
         if why:
             return why
+    if mud.conf.get("role") == "post" and word not in POST_COMMANDS:
+        return "%s: a postman fetches letters, nothing else (%s)" % (word, ", ".join(sorted(POST_COMMANDS)))
     cmd = word if word in CHANNELS else next((c for c in COMMANDS if c.startswith(word)), None)
     if cmd in CHANNELS + ("shout",):
         return ("%s is a channel, and channels relay to Discord. To answer someone who asked there,"

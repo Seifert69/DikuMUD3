@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Jolnir's post, for the Yule Wheel (holiday22): logs in as the player Jolnir (MUD_AGENT=jolnir,
-through mud.py), fetches his letters at Udgaard's post office, and adds each letter to
+through mud.py; level 230, wizinv, role=post in his character file so mud.py lets him do only
+what fetching letters needs), goes to Udgaard's post office, fetches his letters, and adds each letter to
 ~/lokee/wishes/<player>.txt for Lokee, who reads all of a player's letters and records one gift
 with gmyule (Jolnir gives each player one gift a year). The letters are read here and shredded
 in the post office, so no one else reads them.
@@ -26,20 +27,6 @@ DATE = re.compile(r"[A-Z][a-z]{2} [A-Z][a-z]{2} +\d+ \d\d:\d\d:\d\d \d{4}")  # a
 def mud(*args, timeout=60):
     r = subprocess.run([MUD] + list(args), env=ENV, capture_output=True, text=True, timeout=timeout)
     return r.stdout + r.stderr
-
-
-def walk(to):
-    """Walk to room@zone by mud.py's map, from where Jolnir stands (his session is the web
-    client's, which shows mud.py the room); False if there's no way."""
-    out = mud("way", to, "--steps")
-    if "mud.py:" in out:
-        print("no way to %s: %s" % (to, out.strip()), file=sys.stderr)
-        return False
-    for step in out.split():
-        if step.endswith("*"):
-            mud("send", "open door")
-        mud("send", step.rstrip("*!").replace(":", " "))  # enter:barrel is "enter barrel"
-    return True
 
 
 def letter(text):
@@ -88,7 +75,9 @@ def main():
     if "mud.py:" in out and "logged in" not in out:
         sys.exit("jolnir: " + out.strip())
     try:
-        if not walk("postoffice@udgaard"):
+        mud("send", "wizinv 230")  # no one sees him come and go
+        if "Post Office" not in mud("send", "goto postoffice@udgaard"):
+            print("jolnir: goto postoffice@udgaard failed", file=sys.stderr)
             return
         mud("send", "request")
         # every letter he carries, new ones and any a round before left behind
@@ -109,7 +98,7 @@ def main():
                          mud("send", "put letter in shredder")):
                 break
         print("jolnir: %d letters, new from %s" % (n, ", ".join(got) or "no one"))
-        walk("temple@udgaard")
+        mud("send", "goto temple@udgaard")
     finally:
         mud("stop")
 
