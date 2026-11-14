@@ -10,7 +10,7 @@ Mana: 20
 <p>Creates a bright yellow globe of light out of your mana. Hold it (see 
 <a cmd='#'>Help Hold</a>) to light up dark places. It is as bright as a magic candle, but 
 it doesn't burn out: it lasts until you drop it or it is lost.
-</p><p>You must be standing. The spell is also found on staffs, scrolls and wands. 
+</p><p>You must be standing, not fighting. The spell is also found on staffs, scrolls and wands. 
 For darkness instead, see <a cmd='#'>Help Night Globe</a>.
 </p><p><br />
 See Also:
