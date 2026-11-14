@@ -5,18 +5,18 @@ Mana: 15
 </p><p>Usage:
 </p>
 <pre>cast sun beam &lt;target&gt;
-<a cmd='#'>cast sun beam</a>   (at whoever you are fighting)
 use a wand or staff of sun beam
 </pre>
 <p>The caster calls to the shining rays of the sun for power, and a beam of 
-sunlight burns the target. It is quick to cast, quick enough to use in a 
-fight. It needs the sun: you must be outdoors, in the daytime (from five in 
-the morning until nine at night), under a clear or cloudy sky; rain and 
-storms block it. It is strongest at noon and weaker towards dawn and dusk, 
-and it burns the undead far worse than the living.
-</p><p>It does about as well against any armour, and a shield softens it. Casting 
-it is an attack and starts a fight. You must be standing. It also turns up 
-on wands and staffs among random treasure.
+sunlight burns the target. It is quick to cast. It needs the sun: you must 
+be outdoors, in the daytime (from five in the morning until nine at night), 
+under a clear or cloudy sky; rain and storms block it. It is strongest at 
+noon and weaker towards dawn and dusk, and it burns the undead far worse 
+than the living.
+</p><p>It does best against clothes and a little less the heavier the armour, and 
+a shield softens it. Casting it is an attack and starts a fight. You must 
+be standing, so you can't cast it in the middle of a fight. It also turns up 
+on wands and staffs among random treasure. Practising it needs divine 20.
 </p><p><br />
 See Also:
 </p>
