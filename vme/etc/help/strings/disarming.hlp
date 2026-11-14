@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Disarm</h1>
 <p>Skill
-Class: Assassin (guild level 4, up to 90%), Fighter (guild level 10), Thief (guild level 12, up to 70%)
+Class: Assassin (guild level 4, up to 80%), Fighter (guild level 10), Thief (guild level 12, up to 70%)
+Practising it needs dexterity 10.
 </p><p>Usage:
 </p>
 <pre>disarm &lt;character&gt;
@@ -10,13 +11,14 @@ disarm                  (whoever you are fighting)
 floor, and a monster will try to pick it up and wield it again. You must 
 wield a weapon yourself, and your foe must wield one too. Your skill, 
 dexterity and strength are matched against your foe's dexterity and 
-strength.
+strength (and, if your foe is a player, their own disarming skill).
 </p><p>If you fail, nothing happens; but if you fail badly, your foe counters, and 
 it is your own weapon that drops to the floor. A foe you have just 
 disarmed is on guard for a few combat rounds and can't be disarmed again 
 until then; and if you have just been disarmed yourself, you are too 
-shaken to try. Disarming takes endurance, 
-and it starts a fight. You can disarm a sleeping foe without waking them. 
+shaken to try. Each try costs 20 
+endurance, and you need at least 30 to try. It starts a fight, and a 
+monster you have tried it on may start trying to disarm you in turn. You can disarm a sleeping foe without waking them. 
 Other players only when both of you have signed the Book of Blood.
 </p><p><br />
 See Also:
