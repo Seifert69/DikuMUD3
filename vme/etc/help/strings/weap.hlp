@@ -13,7 +13,7 @@ weapon each one is.
 <a cmd='#'>Help Rapier</a>, <a cmd='#'>Help Main Gauche</a>, <a cmd='#'>Help Stiletto</a>, <a cmd='#'>Help Dagger</a>, 
 <a cmd='#'>Help Sickle</a>
 </p><p><b>Clubs and maces:</b> <a cmd='#'>Help Club</a>, <a cmd='#'>Help Mace</a>, <a cmd='#'>Help Morning Star</a>, 
-<a cmd='#'>Help Flail</a>, <a cmd='#'>Help Ball and Chain</a>
+<a cmd='#'>Help Flail</a>
 </p><p><b>Polearms:</b> <a cmd='#'>Help Quarterstaff</a>, <a cmd='#'>Help Spear</a>, <a cmd='#'>Help Javelin</a>, 
 <a cmd='#'>Help Lance</a>, <a cmd='#'>Help Trident</a>, <a cmd='#'>Help Halberd</a>, <a cmd='#'>Help Bardiche</a>
 </p><p><b>Special:</b> <a cmd='#'>Help Whip</a>, <a cmd='#'>Help Long Bow</a>, <a cmd='#'>Help Crossbow</a>
@@ -23,7 +23,7 @@ weapon each one is.
 <a cmd='#'>Help Cutlass</a>, <a cmd='#'>Help Dirk</a>, <a cmd='#'>Help Estoc</a>, <a cmd='#'>Help Fish Spine</a>, 
 <a cmd='#'>Help Flamberge</a>, <a cmd='#'>Help Kopesh</a>, <a cmd='#'>Help Sappara</a>, <a cmd='#'>Help Shamshir</a>, 
 <a cmd='#'>Help Talwar</a>
-</p><p><b>Clubs, hammers and axes:</b> <a cmd='#'>Help Baculus</a>, <a cmd='#'>Help Cudgel</a>, 
+</p><p><b>Clubs, hammers and axes:</b> <a cmd='#'>Help Ball and Chain</a>, <a cmd='#'>Help Baculus</a>, <a cmd='#'>Help Cudgel</a>, 
 <a cmd='#'>Help Crowbill</a>, <a cmd='#'>Help Bec de Corbin</a>, <a cmd='#'>Help Hammer of Kai</a>, 
 <a cmd='#'>Help Lucern</a>, <a cmd='#'>Help War Axe</a>, <a cmd='#'>Help Gaff</a>, <a cmd='#'>Help Staff</a>, 
 <a cmd='#'>Help Fighting Staff</a>
