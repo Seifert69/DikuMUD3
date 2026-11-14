@@ -105,6 +105,15 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   CLAUDE.md says; `link()` only where no exit exists.
 - Text to a player is `sendtext("...<br/>", u)` (lines end with `<br/>`) or `act(...)` with
   its `$1n`-style fields. `log("...")` writes to `vme.log`.
+- **A loop over a room's units that moves or kills them: use `foreach`.** In a `while` over
+  `u.next`, after `link(u, elsewhere)` the next unit is the other room's, and a `continue` that
+  skips the step loops on the same unit until the server kills the DIL ("had endless loop").
+  `foreach` works from a snapshot and skips units that have died or left; it also lists what is
+  inside transparent units, so test `u.outside == self` for the room's own
+  (`watercurrent@basemove`).
+- **A `dilbegin` inside a unit's block belongs to that unit**: vmc copies it onto the unit at
+  every load, with no arguments. A template that rooms or other units `dilcopy` goes in the
+  zone's `%dil` section; otherwise the boot logs "Template ... had mismatching argument count".
 
 ## Waking up and secure
 

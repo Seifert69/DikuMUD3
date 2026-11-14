@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 23  // T010, T009, ...
+#define TEST_MAXIMUM 24  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -78,6 +78,107 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+
+// ==================== T024 =====================
+
+// watercurrent@basemove: currenta's current (east to currentb, a swim no one makes) drowns
+// the experiment, then carries both boxes after it. It looped on the drowned unit for ever
+// (the DIL was killed as an endless loop, and the boxes stayed), and it followed a moved
+// unit into currentb's list, so only one box drifted on a beat.
+
+dilbegin T024(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   w : unitptr;
+   n : integer;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   logtest(tstno, LOGT_INFO, "T024 watercurrent running");
+
+   u := load("pbox@test");
+   link(u, findroom("currenta@test"));
+   u := load("pbox@test");
+   link(u, findroom("currenta@test"));
+   u := load("experiment@test"); // linked last: the first the current comes to
+   link(u, findroom("currenta@test"));
+   u.hp := -9; // mortally wounded: any failed swim drowns it
+
+   n := 0;
+   i := 0;
+   while ((n == 0) and (i < 60))
+   {
+      pause;
+      i := i + 1;
+      u := findroom("currentb@test"); // unit variables are cleared at each pause
+      u := u.inside;
+      while (u != null)
+      {
+         if (u.nameidx == "pbox")
+            n := n + 1;
+         u := u.next;
+      }
+   }
+
+   if (n == 0)
+   {
+      logtest(tstno, LOGT_ERROR, "T024 the boxes never drifted: the current stopped at the drowned unit");
+      goto terminate;
+   }
+   if (n != 2)
+   {
+      logtest(tstno, LOGT_ERROR, "T024 only " + itoa(n) + " box drifted on the beat");
+      goto terminate;
+   }
+   u := findroom("currentb@test");
+   u := u.inside;
+   while (u != null)
+   {
+      if ((u.nameidx == "experiment") and (u.type == UNIT_ST_NPC))
+      {
+         logtest(tstno, LOGT_ERROR, "T024 the experiment swam: the drowned unit wasn't tried");
+         goto terminate;
+      }
+      u := u.next;
+   }
+
+   logtest(tstno, LOGT_INFO, "T024 Success");
+   logtest(tstno, LOGT_INFO, "Done");
+   i := 1;
+   goto cleanup;
+
+:terminate:
+   logtest(tstno, LOGT_INFO, "T024 failed");
+   i := 0;
+
+:cleanup: // what T024 made, the corpse too, so T003 finds only its own boxes
+   u := findroom("currenta@test");
+   u := u.inside;
+   while (u != null)
+   {
+      w := u.next;
+      destroy(u);
+      u := w;
+   }
+   u := findroom("currentb@test");
+   u := u.inside;
+   while (u != null)
+   {
+      w := u.next;
+      destroy(u);
+      u := w;
+   }
+   if (i)
+      sendtoalldil("done", "labdirector@test");
+   else
+      sendtoalldil("fail", "labdirector@test");
+   quit;
 }
 dilend
 
@@ -2126,6 +2227,24 @@ in shipport1
 dilcopy ship@function("the test ship", {"shipport1@test", "shipport2@test"}, {}, {},
                       "shipsea@test", {}, {"dwell 30", "sail 30"});
 dilcopy shipwatch@test();
+end
+
+                                   currenta
+title "A Strong Current"
+descr
+"The water pulls hard to the east here."
+movement SECT_WATER_SWIM
+east to currentb difficulty 250;
+dilcopy watercurrent@basemove(DIR_EAST,
+   {"The current sweeps you east.", "$1n is swept east by the current.",
+    "The current tugs at you.", "$1n is swept in from the west."}, 1);
+end
+
+                                   currentb
+title "Downstream"
+descr
+"The current spends itself here."
+movement SECT_WATER_SWIM
 end
 
                                    labcontrol
