@@ -1,31 +1,49 @@
 <div class="mw-parser-output"><h1>Fighter Weapons</h1>
-<p>The weapon skills the Fighters' guild of Midgaard teaches. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each weapon has its own help: help and the weapon's name.
+<p>The weapon skills the Fighters' guild of Midgaard teaches. Level is the guild level at which you can first practice the weapon there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Some weapons also need strength or dexterity before you can practise them. Each weapon has its own help: help and the weapon's name.
 </p>
-<pre>Name             Level   Up to
-Club                 0   100%
+<pre>Name             Level   Up to   Practising needs
 Dagger               0   100%
-Fist                 0   100%
+Fist                 0   90%
 Hand Axe             0   100%
+Javelin              0   90%
 Quarterstaff         0   100%
-Whip                 0   80%
-Rapier               1   100%
+Sling                1   70%     dexterity 20
 Short Sword          2   100%
-Spear                2   100%
-Kick Small           4   80%
-Long Sword           4   100%
 Mace                 4   100%
-Scimitar             4   100%
-War Hammer           8   100%
-Brass Knuckles      10   100%
-Morning Star        12   100%
-Flail               14   100%
-Battle Club         16   100%
-Trident             16   80%
-Bardiche            18   100%
-Battle Mace         18   100%
-Battle Axe          22   100%
-War Mattock         25   100%
-Halberd             30   100%
+Rapier               4   70%     dexterity 30
+Club                 5   100%
+Broad Sword          8   100%
+Elbow                8   60%     dexterity 40
+Falchion             8   100%
+Whip                 9   60%     dexterity 50
+Bow                 10   70%     dexterity 30
+Sickle              10   70%     dexterity 40
+Spear               10   100%
+War Hammer          10   100%    strength 90
+Brass Knuckles      12   80%
+Kick Small          12   60%     dexterity 40
+Kick Tiny           12   60%     dexterity 40
+Adze Mattock        14   100%
+Main Gauche         14   70%
+Flail               15   100%    strength 32
+Long Sword          15   100%
+Battle Club         16   100%    strength 35
+Scimitar            16   100%
+Trident             16   70%     strength 20
+Battle Mace         18   100%    strength 37
+Bardiche            20   100%    strength 25
+Crossbow            20   90%     dexterity 30
+Morning Star        20   100%
+Scythe              20   70%     strength 20
+Lance               21   70%
+Battle Axe          22   100%    strength 30
+Maul                24   80%     strength 70
+Claymore            25   100%    strength 30
+Great Sword         25   100%    strength 30
+War Mattock         25   100%    strength 26
+Halberd             30   100%    strength 25
+Knee                35   60%     dexterity 40
+Stiletto            40   70%
 </pre>
 <p><br />
 See Also:
