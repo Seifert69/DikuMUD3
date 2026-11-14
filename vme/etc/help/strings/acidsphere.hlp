@@ -1,7 +1,10 @@
 <div class="mw-parser-output"><h1>Acid Sphere</h1>
-<p>The spells of the acid sphere conjure and control acid. Your ability in the 
-sphere decides how well you cast them, and also how well you resist acid 
-spells cast on you (see <a cmd='#'>Help Spheres</a>).
+<p>The spells of the acid sphere conjure and control acid. The sphere is a 
+category: it can't be practised, but rises by itself to half your best 
+acid spell. How strongly your acid spells burn depends on your magic and 
+your skill in each spell, not on the sphere. The sphere counts when an 
+acid spell is aimed at you: you resist with your brain and the better of 
+half your skill in that spell or your acid sphere (see <a cmd='#'>Help Spheres</a>).
 </p><p>The acid spells, all taught by the sorcerers:
 </p>
 <pre><a cmd='#'>Help Acid Drop</a>       guild level 100
