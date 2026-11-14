@@ -1,6 +1,6 @@
 <div class="mw-parser-output"><h1>Sun Ray</h1>
 <p>Sphere: Fire Sphere
-Class: Healer (guild level 31), Druid (guild level 41)
+Class: Healer (guild level 31, up to 80%), Druid (guild level 41)
 Mana: 25
 </p><p>Usage:
 </p>
@@ -9,15 +9,18 @@ Mana: 25
 <p>Calls down a ray of burning sunlight on the target. It needs the sun: you 
 must be outdoors, under a cloudless sky, in the daytime (from five in the 
 morning until nine at night). It is weak in the early morning and late 
-evening, and strongest at high noon.
-</p><p>A shield can block it, and it does a little more against clothes than 
-against armour. Casting it is an attack and starts a fight. To clear the sky 
-first, see <a cmd='#'>Help Clear Skies</a>. You must be standing. It is also found on 
-wands, staffs and scrolls.
+evening, and strongest at high noon. It burns the undead far worse than the 
+living.
+</p><p>A shield can block it. It does best against clothes and less the heavier the 
+armour. Casting it is an attack and starts a fight. To clear the sky first, 
+see <a cmd='#'>Help Clear Skies</a>. You must be standing, so you can't cast it in the 
+middle of a fight. It is also found on wands, staffs and scrolls. Practising 
+it needs divine 62.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Clear Skies</a>
+&gt; <a cmd='#'>Help Sun Beam</a>
 &gt; <a cmd='#'>Help Weather</a>
 &gt; <a cmd='#'>Help Fire Sphere</a>
 </pre>
