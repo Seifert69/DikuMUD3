@@ -4,18 +4,21 @@ Class: Ranger (guild level 8)
 </p><p>Usage:
 </p>
 <pre>shelter
+open shelter
 enter shelter
 </pre>
 <p>Builds a shelter out in the wilds, from what the land offers: a wooden 
 shack in a forest, a grass hut in a field or a swamp, an igloo on snow or 
 ice. It can't be built anywhere else, or indoors. Building one takes a 
 little while and a good deal of endurance, and you must be standing.
-</p><p>Enter it, and you are out of the weather, and out of sight of the room: 
-a snug place to rest. It holds a few people, so your friends can crawl in 
-with you.
-</p><p>The better your skill, the longer it stands: from a quarter of an hour 
-for a clumsy builder to forty minutes or so for a master. Then it rots, 
-or melts, and collapses, and anyone inside is left in the open.
+</p><p>It is built closed: open it, then enter it, and you are out of the 
+weather and out of sight of the room. Inside, you recover hit points, 
+mana and endurance twice as fast: a snug place to rest. It holds a few 
+people, so your friends can crawl in with you.
+</p><p>The better your skill, the longer it is likely to stand, though luck 
+plays a part: from twenty minutes for a clumsy builder to forty minutes 
+for a master. Then it rots, or melts, and collapses, and anyone inside is 
+left in the open.
 </p><p><br />
 See Also:
 </p>
