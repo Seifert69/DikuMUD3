@@ -12,8 +12,8 @@ drop &lt;amount&gt; &lt;coins&gt;
 drop 17 iron pieces
 </pre>
 <p>This is used to drop an item you have in your inventory. The item is put where 
-you are. drop all drops everything you carry (not what you wear), and drop money 
-only your coins. If the item is in a container, you have to get it out into your 
+you are. drop all drops everything you carry (not what you wear, and not your 
+coins), and drop money only your coins. If the item is in a container, you have to get it out into your 
 inventory first (see <a cmd='#'>Help Get</a>).
 </p><p><br />
 See Also:
