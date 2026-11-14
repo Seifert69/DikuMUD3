@@ -8,15 +8,18 @@ Mana: 20
 <a cmd='#'>cast protection from evil</a>   (on yourself)
 </pre>
 <p>Wards the target against evil. Whenever someone of evil alignment attacks 
-them, monster or player, the target defends better: against blows, with their 
-shield, and against spells alike.
+them, monster or player, the target defends better against their blows and 
+against their attack spells. It doesn't keep anyone from attacking.
 </p><p>The better your protection sphere, the longer it lasts: from a minute up to 
-several minutes. It doesn't add up on someone who already has it. You must be 
-standing. It is also found on scrolls.
+several minutes. It doesn't add up on someone who already has it. A dispel 
+good cast at the warded one breaks the ward first. You must be standing, 
+and you can't cast it while fighting. It is also found on scrolls. 
+Practising it needs divine 64.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Protection from Good</a>
+&gt; <a cmd='#'>Help Dispel Good</a>
 &gt; <a cmd='#'>Help Alignment</a>
 &gt; <a cmd='#'>Help Protection Sphere</a>
 </pre>
