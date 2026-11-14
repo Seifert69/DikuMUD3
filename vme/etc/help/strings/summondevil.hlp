@@ -5,17 +5,21 @@ Mana: 40
 </p><p>Usage:
 </p>
 <pre><a cmd='#'>cast summon devil</a>
+tell devil &lt;command&gt;
 </pre>
 <p>The ultimate in summoning: a portal of fire opens, and a greater devil (level 
 90) emerges to serve you. It follows you, fights beside you when you are in a 
 fight, and when your hit points drop below a third it tries to rescue you. 
 Like all summoned servants, it stays only a short time, from half a minute to 
-a minute and a half, and doesn't take orders.
+a minute and a half. You can give it orders with tell: to attack (tell devil 
+kill orc), to walk, and the like. It won't attack another player unless both 
+of you have signed the Book of Blood. You can have only one summoned servant 
+at a time: summoning another sends the first one away.
 </p><p>Beware: if the spell fails, the devil steps through free, glad to be here 
 unbound, and attacks you. At level 90, that is a fight few can survive. Even 
 unbound, it goes back after a while, the longer the worse the spell 
 failed, and banish can send it back sooner (see <a cmd='#'>Help Banish</a>).
-</p><p>You must be standing. It is also found on scrolls.
+</p><p>You must be standing, not fighting. It is also found on scrolls.
 </p><p><br />
 See Also:
 </p>
