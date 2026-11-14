@@ -7,8 +7,8 @@ evil       -350 to -1000
 </pre>
 <p>It changes mostly with what you kill:
 </p>
-<ul><li><b>Good</b> characters grow better by killing the evil, and lose much of their goodness by killing the good. Killing a neutral that leans to good costs them a little too.</li>
-<li><b>Evil</b> characters sink deeper by killing the good.</li>
+<ul><li><b>Good</b> characters grow better by killing the evil, and lose much of their goodness by killing the good. Killing a neutral that leans to good costs them a little too, while one that leans to evil earns them a little.</li>
+<li><b>Evil</b> characters sink deeper by killing the good, and grow a little better by killing something even more evil than themselves.</li>
 <li><b>Neutral</b> characters are pulled toward good when they kill something far more evil than themselves, and toward evil when they kill something far more good.</li></ul>
 <p>The higher your level above your victim's, the bigger the change. Good is 
 hard to keep and evil hard to leave, while staying neutral is easy. At -1000 
