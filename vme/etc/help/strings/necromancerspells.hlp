@@ -4,6 +4,7 @@
 <pre>Name                      Level   Up to
 Detect Undead                 0   100%
 Raise Divine                  0   100%
+Unholy Blessing               0   100%
 Cause Light Wounds            1   100%
 Detect Curse                  1   100%
 Fart                          1   100%
@@ -13,10 +14,10 @@ Sustain                       3   50%
 Animate Dead                  4   100%
 Darkness                      5   100%
 Detect Poison                 5   100%
-Detect Alignment              6   100%
-Madness                       7   100%
+Detect Alignment              6   80%
+Madness                       7   80%
 Blind                         9   100%
-Cause Serious Wounds         12   100%
+Cause Serious Wounds         13   80%
 Continual Darkness           14   100%
 Hold Undead                  14   100%
 Sleep                        14   100%
@@ -25,10 +26,10 @@ Curse                        18   100%
 Fear                         19   100%
 Remove Curse                 24   100%
 Plague                       25   100%
-Undead Door                  25   100%
+Undead Door                  25   50%
 Command                      28   100%
-Harm                         29   100%
-Stinking Cloud               30   100%
+Harm                         29   50%
+Stinking Cloud               30   80%
 Repel Greater Undead         31   100%
 Protection From Good         33   100%
 Slow Rot                     34   100%
@@ -39,13 +40,13 @@ Unholy Word                  40   100%
 Cause Panic                  42   100%
 Raise Skeleton               50   100%
 Aid Undead                   60   100%
-Deathly Grasp                60   100%
+Deathly Grasp                60   80%
 Raise Skeletal Champion      75   100%
-Unholy Touch                 80   100%
-Stinking Breath             100   100%
+Unholy Touch                 80   60%
+Stinking Breath             100   80%
 Unholy Grasp                120   100%
 Raise Horde                 150   100%
-Unholy Shout                160   100%
+Unholy Shout                160   80%
 </pre>
 <p><br />
 See Also:
