@@ -12,8 +12,10 @@ setskill Gnort spell cure_light 50
 setskill guard weapon category_sword 75
 </pre>
 <p>Sets how well someone knows a skill, a spell or a weapon, anywhere in the 
-world. Write a name of two words with an underscore (pick_lock), and you 
-may shorten it from the end. You are told "New value: &lt;n&gt;".
+world. Write a name of two words with an underscore (pick_lock); the 
+words may be shortened. A name it doesn't know gets you the list of all 
+the names. You are told, for example, "Gnort's skill in pick lock is set 
+to 80."
 </p><p>Only players have the full tree of spells and weapons, and only players 
 have skills. Monsters have just the spheres and the weapon categories, such as 
 category_sword (see <a cmd='#'>Help Weapons</a>): giving a monster a single spell or 
