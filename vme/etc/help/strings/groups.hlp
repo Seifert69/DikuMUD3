@@ -9,7 +9,9 @@ safer, as you are protected by the other members.
 </p><p>To form a group, first decide who is to be the leader; the leader is going to 
 get beaten up the most, so make a good choice. Each one who wants to join must 
 follow the leader (see <a cmd='#'>Help Follow</a>). That alone doesn't make them part of the 
-group: the leader then makes each follower a member, like group asta. To put a 
+group: the leader then makes each follower a member, like group asta. The 
+leader must be in the group too, or nobody shares anything: group self puts 
+you in (or takes you out again), and group shows whether you are in. To put a 
 member out of the group, the leader types the same again; to stop them 
 following too, ditch them. group alone shows who is in your group.
 </p><p>When the group kills something, everyone in the group who is there gets a share 
