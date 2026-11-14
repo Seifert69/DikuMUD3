@@ -8,15 +8,19 @@ it. However dragging something big around, is a good way to be exhausted.
 This command enables you to drag sleeping or unconscious characters in a
 given direction. To drag another person will take a lot more of your
 endurance than just walking around. With this command, you can drag
-group-members out of a fight, If both you and the character, being
-dragged, are not involved in the fighting. You can also drag items too
+group-members out of a fight, if both you and the character being
+dragged are not involved in the fighting. You can also drag items too
 big for you to carry.
+</p><p>Only things that could be picked up can be dragged: whatever is fixed in
+place stays where it is. The heavier it is, the more endurance it costs
+on top of the walk. You can't drag anything through a closed door, or
+where you would have to climb, and you can't drag while you are fighting.
 </p><p><br />
 See also:
 </p>
 <pre> &gt; <a cmd='#'>Help Sleep</a>
- &gt; <a cmd='#'>Help Group-members</a>
- &gt; <a cmd='#'>Help Endurance</a>
+ &gt; <a cmd='#'>Help Group</a>
+ &gt; <a cmd='#'>Help Endurance Points</a>
  &gt; <a cmd='#'>Help Movement</a>
  &gt; <a cmd='#'>Help Position</a>
 </pre>
