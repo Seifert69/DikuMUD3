@@ -5,8 +5,8 @@
 accuse &lt;name&gt; murder
 accuse &lt;name&gt; of stealing
 </pre>
-<p>When you see someone commit a crime, you are told: "You have just 
-witnessed a crime committed by &lt;name&gt;". You may let it go, or be an 
+<p>When you see someone commit a crime, you are told: "You just 
+witnessed a crime committed by &lt;name&gt;." You may let it go, or be an 
 upstanding citizen: go to the captain of the city guard where it 
 happened, and accuse them there. Type accuse alone to see the crimes you 
 remember; click one to accuse.
@@ -16,7 +16,8 @@ his own city's lands. If the criminal isn't in the realm right now, come
 back when they are; your memory of it lasts two weeks. If the criminal was 
 a monster that has since died, justice has found them already.
 </p><p>An accusation goes on the criminal's record, and may put a reward on their 
-head (see <a cmd='#'>Help Laws</a>).
+head (see <a cmd='#'>Help Laws</a>). Doing your duty also raises your alignment a 
+little.
 </p><p><br />
 See Also:
 </p>
