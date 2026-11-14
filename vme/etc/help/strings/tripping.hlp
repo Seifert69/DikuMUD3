@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Trip</h1>
 <p>Skill
 Class: Thief (guild level 7)
+Practising it needs dexterity 20.
 </p><p>Usage:
 </p>
 <pre>trip &lt;someone&gt;
@@ -10,12 +11,13 @@ trip            (whoever you are fighting)
 round of the fight: a moment to strike, or to get away. It costs 10 
 endurance, and it is an attack: they will fight you for it.
 </p><p>Your dexterity and skill against theirs decide it. Fumble, and you 
-stumble yourself, losing half a round or a whole one. Someone you have 
-just tripped watches for it, and leaps over your leg if you try again 
-too soon.
+stumble yourself, losing half a round or a whole one. Someone who has 
+just been tripped watches for it, and leaps over your leg if you try 
+again too soon. Beware: a monster you try to trip learns the trick, and 
+may trip the players it fights from then on.
 </p><p>Only people and other mammals can be tripped; you can't trip a snake, a 
 spider or a ghost. Nor can you trip someone far heavier than you, or 
-someone already lying down. To trip another player, both of you must have 
+someone already sitting or lying down. To trip another player, both of you must have 
 signed the Book of Blood.
 </p><p><br />
 See Also:
