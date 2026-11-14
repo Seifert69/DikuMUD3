@@ -2,7 +2,7 @@
 <p>Brain (BRA) is one of your abilities: your intelligence, wisdom, awareness 
 and perception together. It determines:
 </p>
-<ul><li><b>Resisting magic.</b> Whenever a spell is aimed at you, your brain stands against the caster's magic or divine power, together with your skill in the spell's sphere (see <a cmd='#'>Help Spheres</a>). That goes for attack spells as well as for spells like sleep, blind or fear.</li>
+<ul><li><b>Resisting magic.</b> Whenever a spell is aimed at you, your brain stands against the caster's magic or divine power, together with the better of half your own skill in that spell or your skill in its sphere (see <a cmd='#'>Help Spheres</a>). That goes for attack spells as well as for spells like sleep, blind or fear.</li>
 <li><b>Your mana.</b> Your maximum mana grows with your brain and your charisma together (see <a cmd='#'>Help Mana Points</a>). With no brain at all you can't cast spells.</li>
 <li><b>Some spells</b> that pit mind against mind use the caster's brain instead of their magic or divine power, such as blinding flash and cause panic.</li>
 <li><b>Thieves.</b> When someone tries to steal from you, pick your pocket or peek at what you carry, your brain helps you resist; anyone else in the room may notice the theft with their brain.</li>
