@@ -19,9 +19,7 @@ of the magic in it.
 </p><p>The skill wand use is taught by the conjurers and sorcerers from guild 
 level 0, the necromancers from level 1 (up to 80%) and the druids from 
 level 8. Gustav, in the back room of the inn in Udgaard, 
-teaches it to anyone up to 35%, and Brother Johannes, at the monastery in 
-the vineyards near Nymgaard, to anyone from level 40. Practising it needs 
-brain 20.
+teaches it to anyone up to 35%. Practising it needs brain 20.
 </p><p>Each use takes a charge, even when nothing happens, and a bad failure 
 drains a second one. Each staff and wand holds only so many charges. When they are used up, it is 
 "drained of all power" until it is charged again (see <a cmd='#'>Help Charge Wand</a> and 
