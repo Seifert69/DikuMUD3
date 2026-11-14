@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Hide</h1>
 <p>Skill
-Class: Thief, Assassin (guild level 0), Ranger (guild level 0, up to 75%)
+Class: Thief (guild level 0), Assassin (guild level 0), Ranger (guild level 0, up to 75%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>hide
@@ -10,7 +11,7 @@ look around don't see you in the room. Type hide again to come out.
 </p><p>Your skill decides how well it goes, with your dexterity and brain. You 
 can't always tell: you "try to hide yourself" either way, but if you 
 failed, you aren't hidden at all, and the messages you get while you wait 
-give a hint ("Maybe you should practice this hide-thing"). <a cmd='#'>score</a> tells 
+give a hint ("Maybe you should practice this hide-thing"). <a cmd='#'>affect</a> tells 
 you for sure: it says "You are hiding" while you are.
 </p><p>Hiding wears off after a while. It ends at once if someone attacks you. 
 Those with sense life still feel that a hidden life form is in the room.
