@@ -1,7 +1,7 @@
 <div class="mw-parser-output"><h1>Quicken</h1>
 <p>Sphere: Creation Sphere
 Spell Tier: 1
-Class: Sorcerer (guild level 14), Conjurer (guild level 15), Thief (guild level 35), Assassin (guild level 35)
+Class: Sorcerer (guild level 35), Conjurer (guild level 35), Thief (guild level 35, up to 50%), Assassin (guild level 35, up to 50%)
 Mana: 20
 </p><p>Usage:
 </p>
@@ -14,7 +14,8 @@ two minutes.
 </p><p>Quicken, haste and slow replace each other: only the last one cast on someone 
 holds. Haste speeds them up twice as much as quicken, and slow slows them down 
 as much as haste speeds them up, so quicken is also a way to lift a slow. You 
-must be standing. It is also found on potions, wands and scrolls.
+must be standing, and you can't cast it while fighting. It is also found on 
+potions, wands and scrolls, and those still work in a fight.
 </p><p><br />
 See Also:
 </p>
