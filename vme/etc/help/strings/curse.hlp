@@ -15,8 +15,9 @@ wears it can't take it off again.
 </p><p>The curse lasts from a minute up to several minutes, longer the better your 
 spell, and remove curse lifts it. The target resists with their mind, and the 
 spell may fail; cast on someone, it starts a fight either way. Someone 
-already cursed can't be cursed more. You must be standing. It is also found 
-on scrolls.
+already cursed can't be cursed more. You must be standing, and you can't 
+cast it while fighting. Practising it needs divine 50. It is also found on 
+scrolls.
 </p>
 <h2><span class="mw-headline" id="Getting_rid_of_a_curse">Getting rid of a curse</span></h2>
 <p>A curse from the spell wears off by itself after some minutes. Some things, 
@@ -26,7 +27,7 @@ is lifted. To be rid of a curse:
 <ul><li>ask a Healer, Necromancer or Paladin to cast remove curse on you (see <a cmd='#'>Help Remove Curse</a>): it lifts the curse on you and on everything you carry and wear, all at once. Healers learn it at guild level 18, Necromancers and Paladins at 24;</li>
 <li>or recite a scroll of remove curse, if you have one.</li></ul>
 <p>To see what is cursed, the spell detect curse shows a cursed thing or 
-person with an (orange) aura when you look at them (see <a cmd='#'>Help Detect 
+person with an (orange) aura when you examine them (see <a cmd='#'>Help Detect 
 Curse</a>).
 </p><p><br />
 See Also:
