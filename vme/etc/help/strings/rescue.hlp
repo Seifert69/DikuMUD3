@@ -1,13 +1,8 @@
 <div class="mw-parser-output"><h1>Rescue</h1>
 <p>SKILL
-</p><p>Class and level:
-</p>
-<pre> Dark Knight - 0
- Fighter     - 1
- Paladin     - 0
- Ranger      - 0
-</pre>
-<p>Usage:
+</p><p>Class: Dark Knight (guild level 0), Fighter (guild level 1, up to 70%), Paladin (guild level 0), Ranger (guild level 0, up to 90%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40)
+</p><p>Usage:
 </p>
 <pre>rescue &lt;character&gt;
 </pre>
@@ -18,8 +13,10 @@
 <p>To help a friend in trouble, use this command. You jump between your friend and 
 the one fighting them, so that the attacker fights you instead and your friend 
 gets out of the battle; if you succeed, that is. It is a test of your rescue 
-skill and dexterity against the attacker's dexterity.
+skill and dexterity against the attacker's dexterity. If you lead the
+group and your friend follows you, your leadership skill helps.
 </p><p>You can only rescue someone who is being attacked, and not from yourself.
+You can rescue while you are fighting yourself.
 </p><p><br />
 See Also:
 </p>
