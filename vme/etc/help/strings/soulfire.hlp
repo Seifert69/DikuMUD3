@@ -8,10 +8,11 @@ Mana: 40
 <a cmd='#'>cast soulfire</a>   (at whoever you are fighting)
 </pre>
 <p>The last and fiercest of the dark knight's fires: a fire that burns the very 
-soul of the target. The better your power and fire sphere, the more it burns. 
-It does about as well against any armour. A shield takes some of 
+soul of the target. The better your divine power and your skill in the spell, the more it burns. 
+It does about as well against leather, chain and plate, and a little less 
+against clothes. A shield takes some of 
 it, but can't stop it.
-</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting. It is also found on staffs, 
 wands and scrolls.
 </p><p><br />
 See Also:
