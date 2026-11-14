@@ -1,8 +1,12 @@
 <div class="mw-parser-output"><h1>Assassin Profession</h1>
-<p>Primary stats: STR, HP
-</p><p>Only the thief can specialize to become an assassin.
+<p>Primary stats: DEX, BRA
+</p><p>Only the thief can specialize to become an assassin. A character of level 25 or
+more, with thief as the first or second profession, who has never specialized
+and has had no more than two professions, can join the Assassins' guild in
+Khorsabad, say specialize to the Master Assassin and drink the grey ale he
+gives. The change is permanent (see <a cmd='#'>Help Khorsabad Assassin</a>).
 </p><p>Assassins are the hired killers of the land. Their profession requires that they know many weapons, but they actually master few. They share some skills
-with both fighters and thieves but unlike either, they dabble slightly in the magics to enhance their stealth. Their main attributes are dexterity and hitpoints with strength and constitution as secondary.
+with both fighters and thieves but unlike either, they dabble slightly in the magics to enhance their stealth. Their main attributes are dexterity and brain, with strength, constitution and magic as secondary.
 </p><p>Attributes:
 </p>
 <pre> Dex	+2
@@ -20,6 +24,7 @@ with both fighters and thieves but unlike either, they dabble slightly in the ma
  &gt; <a cmd='#'>Help Assassin Spells</a>
  &gt; <a cmd='#'>Help Assassin Skills</a>
  &gt; <a cmd='#'>Help Assassin Role Play</a>
+ &gt; <a cmd='#'>Help Khorsabad Assassin</a>
 </pre>
 
 
