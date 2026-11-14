@@ -72,7 +72,7 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   still reads `u.level`.
 - **A field of null fails, and a failed value is false in every comparison**: `u.level > 5`
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
-- **String `==` and `!=` ignore case**; `<` and `>` don't.
+- **String comparisons ignore case**, `<` and `>` too; `strcmp()` is exact.
 - **Locals start empty**: null, 0 or "". No need to set them first.
 - **A failed value assigned**: an integer variable keeps its old value, a string variable
   becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
