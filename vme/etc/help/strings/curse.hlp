@@ -7,6 +7,7 @@ Mana: 20
 </p>
 <pre>cast curse &lt;target&gt;
 cast curse &lt;object&gt;
+<a cmd='#'>cast curse</a>   (at whoever you are fighting)
 </pre>
 <p>Brings the gods' bad attention down on the target. Cast on a person or 
 creature, it lowers their strength, dexterity, brain, charisma and 
@@ -15,8 +16,7 @@ wears it can't take it off again.
 </p><p>The curse lasts from a minute up to several minutes, longer the better your 
 spell, and remove curse lifts it. The target resists with their mind, and the 
 spell may fail; cast on someone, it starts a fight either way. Someone 
-already cursed can't be cursed more. You must be standing, and you can't 
-cast it while fighting. Practising it needs divine 50. It is also found on 
+already cursed can't be cursed more. It can be cast while fighting. Practising it needs divine 50. It is also found on 
 scrolls.
 </p>
 <h2><span class="mw-headline" id="Getting_rid_of_a_curse">Getting rid of a curse</span></h2>
