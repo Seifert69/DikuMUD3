@@ -1,7 +1,7 @@
 <div class="mw-parser-output"><h1>Scroll Use</h1>
 <p>Skill
-Class: Conjurer (guild level 0), Sorcerer (guild level 1), Necromancer (guild level 2, up to 80%), Healer (guild level 3, up to 80%), Druid (guild level 10), Assassin (guild level 13, up to 70%), Thief (guild level 15, up to 50%)
-Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40)
+Class: Conjurer (guild level 0), Dark Knight (guild level 0, up to 80%), Paladin (guild level 0, up to 80%), Ranger (guild level 0, up to 80%), Sorcerer (guild level 1), Necromancer (guild level 2, up to 80%), Healer (guild level 3, up to 80%), Druid (guild level 10), Assassin (guild level 13, up to 70%), Thief (guild level 15, up to 50%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>recite &lt;scroll&gt;
