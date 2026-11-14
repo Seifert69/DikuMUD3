@@ -9,11 +9,11 @@ Mana: 20
 <a cmd='#'>cast detect magic</a>   (on yourself)
 </pre>
 <p>For a while after this spell, the target sees which things are magical: 
-wherever a magical thing is listed, in a room, an inventory or a container, it 
-shows a (yellow) aura. Cast it on yourself to check your own things and what 
+when they examine a magical thing, it shows a (yellow) aura. Cast it on yourself to check your own things and what 
 lies around you, or on a friend.
-</p><p>The better your detection sphere, the longer it lasts: from a minute up to 
-several minutes. You must be standing, not fighting. It is also found on 
+</p><p>The better your magic power and your skill in the spell, the longer it 
+lasts: from a minute up to 
+several minutes. You must be standing, not fighting. Practising it needs magic 5. It is also found on 
 scrolls and potions.
 </p><p><br />
 See Also:
