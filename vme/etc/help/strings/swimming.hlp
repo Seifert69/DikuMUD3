@@ -1,7 +1,7 @@
 <div class="mw-parser-output"><h1>Swimming</h1>
 <p>Skill
-Class: Ranger (guild level 6, up to 50%), Thief (guild level 6, up to 50%), Assassin (guild level 5, up to 50%)
-Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40)
+Class: Barbarian (guild level 0, up to 80%), Conjurer (guild level 0, up to 60%), Dark Knight (guild level 0, up to 80%), Druid (guild level 0), Fighter (guild level 0, up to 80%), Healer (guild level 0, up to 70%), Necromancer (guild level 0, up to 60%), Paladin (guild level 0, up to 80%), Sorcerer (guild level 0, up to 60%), Assassin (guild level 5, up to 50%), Ranger (guild level 6, up to 50%), Thief (guild level 6, up to 50%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre> swim &lt;direction&gt;
