@@ -1,13 +1,19 @@
 <div class="mw-parser-output"><h1>Hold (spell)</h1>
 <p>Sphere: Mind Sphere
+Class: none (no guild teaches it)
+Mana: 20
 </p><p>Usage:
 </p>
 <pre>cast hold &lt;target&gt;
 </pre>
-<p>The hold spell magically keeps a humanoid or animal target from fighting for 
-five rounds, and from fleeing in that time. It has no effect on other creatures. 
-The spell is very difficult to use and may therefore fail quite often, and 
-casting it starts a fight with the target whether it works or not.
+<p>Magic engulfs a humanoid or a mammal, leaving it unable to fight: it 
+misses its next five combat rounds, and it can't flee in panic meanwhile. 
+It has no effect on other creatures, such as birds, reptiles, insects or 
+the undead (for those, see hold animal, hold monster and hold undead).
+</p><p>The target resists with its mind, and the spell is very difficult: it 
+fails quite often. Casting it is an attack, so it starts a fight with the 
+target whether it works or not. You can cast it while fighting. It is also 
+found on wands, scrolls and potions.
 </p><p>For the hold command, holding something in your hand, see <a cmd='#'>Help Hold</a>.
 </p><p><br />
 See Also:
