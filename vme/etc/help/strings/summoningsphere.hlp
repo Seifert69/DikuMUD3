@@ -2,9 +2,12 @@
 <p>The spells of the summoning sphere call things from elsewhere and send things 
 away: the conjurers' elementals, demons and devils, the gates, portals and 
 teleports that carry you across the world, the recalls that bring you home, 
-and the druids' and rangers' forces of nature. Your ability in the sphere 
-decides how well you cast them, and also how well you resist summoning spells 
-cast on you (see <a cmd='#'>Help Spheres</a>).
+and the druids' and rangers' forces of nature. The sphere is a 
+category: it can't be practised, and rises by itself to half your best spell 
+in it. How well you cast each spell depends on your skill in that spell and 
+your magic or divine power. The sphere counts when you resist: against a 
+summoning spell aimed at you, you defend with your brain and the better of 
+half your skill in that spell or your summoning sphere (see <a cmd='#'>Help Spheres</a>).
 </p><p>The spells, and who teaches them (guild level):
 </p>
 <pre>dust devil            conjurer 9
@@ -46,7 +49,8 @@ thorn strike          druid 2
 wind slash            druid 10
 summon lightning      druid 60
 </pre>
-<p>Each spell has its own help: help and the spell's name.
+<p>Some are also taught outside the guilds. Each spell has its own help: help and 
+the spell's name.
 </p><p><br />
 See Also:
 </p>
