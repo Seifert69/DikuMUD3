@@ -1,9 +1,9 @@
 <div class="mw-parser-output"><h1>Creation Sphere</h1>
-<p>The spells of the creation sphere make things, or change them: food and water, light and darkness, the skin spells that harden your body, the undead of the necromancers, the druids' brambles and quicksand, and the sorcerers' arts of charging wands and mending armour. Your ability in the sphere decides how well you cast them, and also how well you resist such spells cast on you (see <a cmd='#'>Help Spheres</a>).
+<p>The spells of the creation sphere make things, or change them: food and water, light and darkness, the skin spells that harden your body, the undead of the necromancers, the druids' brambles and quicksand, and the sorcerers' arts of charging wands and mending armour. You don't practise the sphere itself: it grows by itself as you practise its spells, to half of your best spell in it. Together with your brain, it helps you resist such spells cast on you (see <a cmd='#'>Help Spheres</a>). How well you cast each spell depends on your skill in that spell and on your divine or magic power.
 </p><p>The creation spells, and who teaches them (guild level):
 </p>
 <pre>refit                     no guild teaches it
-quicken                   sorcerer 14, conjurer 15, assassin 35, thief 35
+quicken                   sorcerer 35, conjurer 35, assassin 35, thief 35
 haste                     sorcerer 29, conjurer 30
 create food               healer 18
 create water              healer 16
@@ -22,9 +22,9 @@ charge staff              sorcerer 17
 mending                   sorcerer 14
 repair                    sorcerer 20
 reconstruct               sorcerer 31
-magic candle              conjurer 3, sorcerer 7
-sun globe                 conjurer 18, sorcerer 25
-night globe               conjurer 18, sorcerer 25
+magic candle              conjurer 7, sorcerer 7
+sun globe                 conjurer 25, sorcerer 25
+night globe               conjurer 25, sorcerer 25
 blinding flash            sorcerer 45
 heal animal               ranger 5, druid 13
 entangle                  druid 21, ranger 35
