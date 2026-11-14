@@ -13,8 +13,9 @@ Where you do wear armour, the armour counts as before.
 </p><p>It lasts a few minutes, longer the better your spell, and then wears off. It 
 is especially useful when you go to fetch your corpse with nothing on (see 
 <a cmd='#'>Help Die</a>). It doesn't add up with leather skin, bone skin or stone skin: 
-only one natural armour spell works at a time. You must be standing. It is 
-also found on potions and scrolls.
+only one natural armour spell works at a time. You must be standing, not 
+fighting. It is also found on potions and scrolls. Practising it needs 
+divine 32.
 </p><p><br />
 See Also:
 </p>
