@@ -1312,10 +1312,10 @@ code
       }
       s := s + "<br/>";
    }
-   s := s + "<br/>" + yule_ladder(pc) + "<br/><br/>Write your wish on a piece of paper (the " +
-        "general stores sell paper and quills), and mail it to Jolnir at a post office: mail " +
-        "paper jolnir. Your last letter is your wish. From December 24 to 31, touch the pole in " +
-        "Udgaard's square, and Jolnir will see you.<br/>";
+   s := s + "<br/>" + yule_ladder(pc) + "<br/><br/>Tell Jolnir your wish by letter: at a post " +
+        "office, type write, write your wish, end with @, then mail paper jolnir. He reads every " +
+        "letter, and grants one gift. From December 24 to 31, touch the pole in Udgaard's square, " +
+        "and Jolnir will see you.<br/>";
    sendtext(s, pc);
    goto start;
 }

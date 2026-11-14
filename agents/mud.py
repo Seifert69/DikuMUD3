@@ -444,7 +444,7 @@ GM_COMMANDS = {
     "equipment", "time", "weather", "help", "stand", "rest", "wizinv",
     "goto", "at", "echo", "message", "restore", "force", "makemoney", "load", "purge", "set",
     "give", "get", "drop", "put", "open", "close", "lock", "unlock", "tell", "gmmem", "gmroom", "gmtrack",
-    "gmlure", "gmtreasure", "gmquest", "gmzap",
+    "gmlure", "gmtreasure", "gmquest", "gmzap", "gmyule",
     "enter", "leave", "north", "east", "south", "west", "up", "down", "n", "e", "s", "w", "u", "d",
 }
 GM_SET_FIELDS = {"title", "descr", "add-name", "del-name", "add-extra", "del-extra",

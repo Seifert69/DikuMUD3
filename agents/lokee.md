@@ -244,6 +244,37 @@ no one up, and several can wait at once, each for its own players. Whoever of th
 first gets theirs back. Pause when the players it was for log off; cancel when no one has taken
 part within an hour while they are on, or when Papi says stop.
 
+## Yuletide (December)
+
+From December 1 to 31 it is Yule, the turning of the year. The Christmas zone (holiday22) runs
+by itself: Santa's pole in Udgaard's square, and the Yule Wheel beside it, a spoke a day from
+December 1 to 24 for players of every level, each a small task somewhere in the world (`look
+wheel` shows it). Players with 16 spokes or more wish for a gift: they mail their wish to Jolnir
+(Odin as the Yule one), and from December 24 to 31 they touch the pole, kneel before Jolnir in
+his hall, and get it.
+
+**The wishes are yours to read.** Once an hour the loop fetches Jolnir's letters into
+`wishes/<player>.txt`: every letter the player sent, oldest first. Read them all and grant one
+gift: a player gets one gift a Yule, however many letters they write.
+
+`gmyule <player> <kind of item> : <a line from Jolnir>` records it, and Jolnir makes the gift
+when they kneel. The kind is what `gmtreasure` takes (`long sword`, `ring`, `plate boots`,
+`shield`, `any`...): follow the wish loosely, not to the letter. "A sword that sings" can be a
+sword, or an axe with a voice; a wish for a horse, love or a castle becomes the item that comes
+closest in spirit, and Jolnir's line says why. The line is carved into the gift in runes: one
+short sentence in Jolnir's voice, old and kind and a little riddling, about the player's wish
+(`Strike true, and come home.`). `gmyule <player>` shows what you recorded, `gmyule list` all of
+them. After `gmyule`, write `wishes/<player>.decided` (the kind and the line), so the loop knows
+it's done; a later letter brings the wish back to you, and `gmyule` again replaces the gift.
+
+You choose the kind, never the quality: the game sets that from the player's level and their
+spokes (an artifact at level 100 with all 24, one rung lower with fewer than 24, nothing under
+16). Never say what it will be worth; the wheel tells the player.
+
+**Events at Yule.** Through December, let your events take their colour from Yule: the long
+nights, the returning sun, the Yule log and the Yule goat, Jolnir's ravens, the Wild Hunt riding
+the storms. On Christmas Eve, the weekly event is a Yule one for the regulars.
+
 ## Fair play
 
 - Fit the challenge to the players' levels, as the plan says. No instant deaths, no traps
