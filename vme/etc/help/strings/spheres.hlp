@@ -1,7 +1,13 @@
 <div class="mw-parser-output"><h1>Spells</h1>
-<p>Spells are divided into categories called spheres. Your ability in a sphere 
-decides both how well you cast its spells, and how well you resist a similar 
-spell cast on you: as far as your ability goes, it protects you as well.
+<p>Spells are divided into categories called spheres, such as the fire sphere 
+or the divine sphere. A sphere can't be practised: it rises by itself to half 
+your best spell in it.
+</p><p>The sphere doesn't make your spells stronger. How much a spell hurts or heals, 
+how long it lasts and whether it works depend on your skill in that spell 
+together with your magic, or your divine power for divine spells.
+</p><p>The sphere counts when you resist: against a spell aimed at you, you defend 
+with your brain and the better of half your skill in that spell or your 
+sphere.
 </p><p>These are the spheres, each with its own help:
 </p>
 <pre><a cmd='#'>help divine sphere</a>, <a cmd='#'>help protection sphere</a>, <a cmd='#'>help detection sphere</a>,
