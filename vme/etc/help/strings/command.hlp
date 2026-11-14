@@ -18,8 +18,9 @@ about two minutes.
 </p><p>The target resists with their mind, and the spell may fail. If it does, they 
 know what you tried, and attack you. Some words can't be commanded: quit, 
 clear, cdefect, password, typo, bug and idea.
-</p><p>Against another player, you both must have signed the Book of Blood. You 
-must be standing. It is also found on scrolls.
+</p><p>Against another player, you both must have signed the Book of Blood. It 
+can be cast while fighting. It is also found on scrolls. Practising it needs 
+divine 25.
 </p><p>For the list of commands you can type yourself, see <a cmd='#'>Help Commands</a>.
 </p><p><br />
 See Also:
