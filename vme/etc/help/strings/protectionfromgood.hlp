@@ -9,12 +9,13 @@ Mana: 20
 <a cmd='#'>cast protection from good</a>   (on yourself)
 </pre>
 <p>Wards the target against good. Whenever someone of good alignment attacks 
-them, monster or player, the target defends better: against blows, with their 
-shield, and against spells alike. It doesn't keep anyone from attacking.
+them, monster or player, the target defends better against their blows and 
+against their attack spells. It doesn't keep anyone from attacking.
 </p><p>The better your protection sphere, the longer it lasts: from a minute up to 
 several minutes. It doesn't add up on someone who already has it. A dispel 
-evil cast at the warded one breaks the ward first. You must be standing. It 
-is also found on scrolls.
+evil cast at the warded one breaks the ward first. You must be standing, and 
+you can't cast it while fighting. It is also found on scrolls. Practising 
+it needs divine 60.
 </p><p><br />
 See Also:
 </p>
