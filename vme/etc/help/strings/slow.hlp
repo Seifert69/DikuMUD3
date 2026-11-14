@@ -9,10 +9,10 @@ Mana: 20
 <a cmd='#'>cast slow</a>   (at whoever you are fighting)
 </pre>
 <p>Clouds the target's mind so they fight more slowly, striking less often. The 
-better your mind sphere, the longer it lasts: from a quarter of a minute up 
+better your magic and your skill in the spell, the longer it lasts: from a quarter of a minute up 
 to two minutes or more.
 </p><p>The target resists with their mind, and the spell may fail. Either way, 
-casting it is an attack and starts a fight. Slow, haste and quicken replace 
+casting it is an attack and starts a fight. It can be cast while fighting. Slow, haste and quicken replace 
 each other, so a slow also takes away the target's haste or quicken (and 
 either of those lifts the slow again). It is also found on wands and scrolls.
 </p><p><br />
