@@ -8,10 +8,12 @@ Mana: 20
 </pre>
 <p>Gives you a sense of where someone is: you see them, and the room they are 
 in. It looks in your own area first, and then in the whole world. It only 
-finds people and other humanoids, not animals or monsters of other kinds.
+finds people and other humanoids, not animals or monsters of other kinds, 
+and the one you look for resists it with their brain.
 </p><p>If the spell fails, you feel confused; if it fails badly, the one you looked 
 for realizes that you tried to locate them. To find the way there, see 
-<a cmd='#'>Help Find Path</a>. You must be standing. It is also found on scrolls.
+<a cmd='#'>Help Find Path</a>. You must be standing, and you can't cast it while 
+fighting. It is also found on scrolls. Practising it needs divine 28.
 </p><p><br />
 See Also:
 </p>
