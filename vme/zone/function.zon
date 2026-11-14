@@ -8089,7 +8089,7 @@ code
       //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
       // A message relayed from Discord (sent by discord@basis, not a player)
       // carries the speaker's name in its text
-      if ((sChan in DISCORD_CHANNELS) and (talker.type != UNIT_ST_PC))
+      if ((sChan in DISCORD_CHANNELS) and (talker.type == UNIT_ST_ROOM))  // the relay room, discord@basis
       {
          sendtext("<div class='comm_emote' chan='"+sChanAttr+"'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }

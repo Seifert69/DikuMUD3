@@ -605,13 +605,13 @@ code
 	check:=self.inside;
 	while (check!=null)
 	{
-		temp:=check.next;
 		if (check.minv!=253)
 			amount:=amount+1;
 		if ((amount >=CLAN_MAX_DONATION) and (check.minv!=253))
 		{
 			act ("$3N falls out of the  overloaded clan chest onto the floor.",
 			A_SOMEONE,self,null,check,TO_REST);
+			temp:=check.next;
 			link (check, self.outside);
 		}
 		check:=temp;
@@ -1661,6 +1661,7 @@ dilbegin cstat (arg:string);
 		mlist:stringlist;
 		temp:string;
 		members:integer;
+		j:integer;
 
 code
 {
@@ -1697,10 +1698,15 @@ code
 		else
 			mlist:=split(temp,"\n");
 
-		// The file ends with a newline: split gives an empty last entry
-		members:=length(mlist);
-		if (mlist.[members-1]=="")
-			members:=members-1;
+		// Count member lines as cinfo does: three fields or more (no blank or broken lines)
+		members:=0;
+		j:=0;
+		while (j<length(mlist))
+		{
+			if (length(split(mlist.[j],":"))>=3)
+				members:=members+1;
+			j:=j+1;
+		}
 
 		if (i==0)
 			buf:=clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(members)+"<br/>";

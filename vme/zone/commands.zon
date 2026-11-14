@@ -2957,6 +2957,8 @@ code
    if (isaff(torch, ID_LIGHT_EXTINGUISH))
      subaff(torch, ID_LIGHT_EXTINGUISH);
 
+  if (torch.value[0] > 0)
+       torch.value[0] := 0;
   act ("You extinguish $2n with your bare hands.",
        A_SOMEONE, self, torch, null, TO_CHAR);
 

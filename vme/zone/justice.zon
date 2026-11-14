@@ -1109,7 +1109,7 @@ var
    juris : string;
    accused : unitptr;
    j : integer;
-   seen : string;
+   seen : stringlist;
 
 code
 {
@@ -1157,7 +1157,7 @@ code
             }
 
             // Each crime seen is in names.[3] on (add_witness adds a later one at the end)
-            seen := "";
+            seen := null;
             j := 3;
             while (j < length(w_ptr.names))
             {
@@ -1168,7 +1168,7 @@ code
 
                if (not (crime in seen))
                {
-                  seen := seen + " " + crime;
+                  addstring(seen, crime);
                   act("<a cmd='accuse #'>" + w_ptr.names.[1] + " "+crime, A_SOMEONE, activator, null, null, TO_CHAR);
                   i := i + 1;
                }
@@ -1291,7 +1291,17 @@ goto end;
    act("$1n says, 'Thank you very much $3N, I will stop $2t.'", A_SOMEONE, self, criminal, activator, TO_ROOM);
    if (activator.alignment > -1000)
       activator.alignment := activator.alignment +100;
-   subextra(activator.extra,w_ptr.names.[0]);
+   // Forget the crime accused; the memory goes only when no other crime is left in it
+   j := 3;
+   while (j < length(w_ptr.names))
+   {
+      if (atoi(w_ptr.names.[j]) == crime_type)
+         remove(w_ptr.names, j);
+      else
+         j := j + 1;
+   }
+   if (length(w_ptr.names) <= 3)
+      subextra(activator.extra,w_ptr.names.[0]);
    add_reward@justice(accused.symname, accused.idx, crime_type);    
    block; 
    goto start;  

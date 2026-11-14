@@ -336,8 +336,7 @@ code
    if (exd == null)
       return (0);
 
-   // BanishGuild adds the bare guild name to the list
-   if (sGuild in exd.names)
+   if ((GUILD_KEY_PREPEND + sGuild) in exd.names)
       return (1);
 
    return (0);

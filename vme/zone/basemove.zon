@@ -2635,9 +2635,8 @@ code
    }
 
 
-   /* Also, a thing needs to be manipulate take in order to drag it
-      (characters can be dragged once asleep or worse, see above) */
-   if ((item.type == UNIT_ST_OBJ) and (not isset(item.manipulate, MANIPULATE_TAKE)))
+   /* Also, needs to be manipulate take in order to drag it */
+   if (not isset(item.manipulate, MANIPULATE_TAKE))
    {
       act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
       return;

@@ -863,16 +863,6 @@ code
    goto start;
       }
 
-         if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment < -900))
-         {
-            block;
-            exec ("say You are a disgrace to our order, you have been banished!", self);
-            BanishGuild@guilds(pc, GUILD_PALADIN);
-            unsecure (pc);
-            exec ("spit "+activator.name, self);
-            goto start;
-         }
-
          if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment < 349))
          {
             block;
@@ -881,6 +871,16 @@ code
    purified yourself.", self);
          unsecure(pc);
          goto start;
+         }
+
+         if (IsInGuild@guilds(pc, GUILD_PALADIN) and (pc.alignment < -900))
+         {
+            block;
+            exec ("say You are a disgrace to our order, you have been banished!", self);
+            BanishGuild@guilds(pc, GUILD_PALADIN);
+            unsecure (pc);
+            exec ("spit "+activator.name, self);
+            goto start;
          }
       else
          {
