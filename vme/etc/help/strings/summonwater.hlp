@@ -5,14 +5,19 @@ Mana: 20
 </p><p>Usage:
 </p>
 <pre><a cmd='#'>cast summon water</a>
+tell elemental &lt;command&gt;
 </pre>
 <p>A column of water rises, and from it a small water elemental (level 35) 
 emerges to serve you. It follows you, fights beside you when you are in a 
-fight, and when your hit points drop below a third it tries to rescue you.
-</p><p>It can only stay on this plane a short time: from half a minute to a minute 
-and a half, longer the better your summoning sphere. Then it vanishes in a 
+fight, and when your hit points drop below a third it tries to rescue you. 
+You can give it orders with tell: to attack (tell elemental kill orc), to 
+walk, to pick things up or drop them, and the like. It won't hurt another 
+player unless both of you have signed the Book of Blood.
+</p><p>It can only stay on this plane a short time: from about twenty seconds to 
+two minutes or more, longer the better the casting. Then it vanishes in a 
 puff of smoke, dropping whatever it carried. If it is killed first, it is 
-gone too. It doesn't take orders.
+gone too. Only one summoned creature serves you at a time: summon another, 
+and one of them is sent away.
 </p><p>You must be standing. It is also found on scrolls.
 </p><p><br />
 See Also:
@@ -20,6 +25,7 @@ See Also:
 <pre>&gt; <a cmd='#'>Help Summon Earth</a>
 &gt; <a cmd='#'>Help Summon Air</a>
 &gt; <a cmd='#'>Help Summon Fire</a>
+&gt; <a cmd='#'>Help Banish</a>
 &gt; <a cmd='#'>Help Summoning Sphere</a>
 </pre>
 
