@@ -9,7 +9,8 @@ Mana: 20
 <p>Creates a barrel full of clear, fresh water for the thirsty. It's yours to 
 carry: drink from it (see <a cmd='#'>Help Drink</a>), or fill your own water skin from it 
 (see <a cmd='#'>Help Fill</a>). It weighs a little, so drop it when it's empty.
-</p><p>You must be standing. It is also found on staffs, scrolls and wands. For 
+</p><p>You must be standing, and you can't cast it while fighting. Practising it 
+needs divine 18. It is also found on staffs, scrolls and wands. For 
 something to eat, see <a cmd='#'>Help Create Food</a>.
 </p><p><br />
 See Also:
