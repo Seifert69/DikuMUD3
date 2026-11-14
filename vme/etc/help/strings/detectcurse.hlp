@@ -8,11 +8,11 @@ Mana: 20
 <pre>cast detect curse &lt;target&gt;
 <a cmd='#'>cast detect curse</a>   (on yourself)
 </pre>
-<p>For a while after this spell, the target sees curses: when they look at 
+<p>For a while after this spell, the target sees curses: when they examine 
 a cursed thing, or at someone under a curse, it shows an (orange) aura. 
 A cursed thing can't be taken off once worn; see <a cmd='#'>Help Remove Curse</a>.
-</p><p>The better your detection sphere, the longer it lasts. You must be 
-standing, not fighting. It is also found on scrolls and potions.
+</p><p>The better your divine power and your skill in the spell, the longer it 
+lasts. You must be standing, not fighting. Practising it needs divine 6. It is also found on scrolls and potions.
 </p><p><br />
 See Also:
 </p>
