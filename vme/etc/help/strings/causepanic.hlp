@@ -1,21 +1,28 @@
 <div class="mw-parser-output"><h1>Cause Panic</h1>
 <p>Sphere: Mind Sphere
 Spell Tier: 4
-Class: Necromancer
-Guild Level: 42
+Class: Necromancer (guild level 42)
+Mana: 20
 </p><p>Usage:
 </p>
 <pre>cast cause panic &lt;target&gt;
+<a cmd='#'>cast cause panic</a>   (at whoever you are fighting)
 </pre>
-<p>This spell slowly fills the target with fear. For a while after it takes hold, 
-the target has to fight the fear again and again: each time their mind fails 
-them, they flee in panic. The stronger the spell, the longer it lasts, until 
-the target feels calm again. A strong mind resists it better.
-</p><p>Casting it is an attack, and starts a fight.
+<p>The caster stares deep into the target's eyes and slowly fills them with 
+fear. The target first resists with their mind; if the spell takes hold, 
+then every few seconds they have to fight the fear again, and each time 
+their mind fails them, they flee in panic. The stronger the spell, the 
+longer it lasts, from a few seconds to several minutes, until the target 
+feels calm again. A strong calm spell ends it sooner. Someone already in 
+a panic can't be panicked more.
+</p><p>Casting it is an attack and starts a fight, even if the spell fails. It 
+can be cast while fighting, but not on yourself, and it isn't found on 
+scrolls or other items.
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Fear</a>
+<pre>&gt; <a cmd='#'>Help Calm</a>
+&gt; <a cmd='#'>Help Fear</a>
 &gt; <a cmd='#'>Help Mind Sphere</a>
 &gt; <a cmd='#'>Help Necromancer</a>
 </pre>
