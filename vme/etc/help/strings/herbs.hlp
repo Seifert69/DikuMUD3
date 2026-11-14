@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Herbs</h1>
 <p>Skill
-Class: Druid (guild level 1), Ranger (guild level 12, up to 75%)
+Class: Druid (guild level 12), Ranger (guild level 12, up to 75%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (from level 12, up to 35%)
 </p><p>Usage:
 </p>
 <pre>herbs              (heal yourself)
@@ -8,8 +9,8 @@ herbs &lt;someone&gt;    (heal someone with you)
 </pre>
 <p>You search the land around you for healing herbs, and use them at once to 
 treat yourself or someone else in the room. It costs 20 endurance, and you 
-must be standing. The better your search goes, the more hit points it 
-heals.
+must be standing. Your skill and your brain decide how well your 
+search goes, and the better it goes, the more hit points it heals.
 </p><p>Fields and forests are full of herbs, and easy to search. Hills, swamps 
 and water are harder, mountains harder still, and the desert hardest. In 
 cities, indoors, and on snow or ice, nothing grows that heals. Fail, and 
