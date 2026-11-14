@@ -1,20 +1,20 @@
 <div class="mw-parser-output"><h1>Invisibility</h1>
 <p>Sphere: Mind Sphere
-Class: Conjurer (guild level 20), Assassin (guild level 25)
+Class: Conjurer (guild level 25), Assassin (guild level 25, up to 50%)
 Mana: 20
 </p><p>Usage:
 </p>
 <pre>cast invisibility &lt;target&gt;
 cast invisibility &lt;object&gt;
-<a cmd='#'>cast invisibility</a>   (on yourself)
+<a cmd='#'>cast invisibility self</a>   (on yourself)
 </pre>
 <p>Hides the target from sight for a while: "You become invisible." Only those 
 who can see the invisible, for example with detect invisible, still see them. 
 It works on objects too.
 </p><p>It lasts from a minute up to several minutes, longer the better your mind 
 sphere. But when an invisible person is attacked, the invisibility is broken 
-at once, and so is hiding. You must be standing. It is also found on potions, 
-wands and scrolls.
+at once, and so is hiding. You must be standing, and you can't cast it 
+while fighting. It is also found on potions, wands and scrolls.
 </p><p><br />
 See Also:
 </p>
