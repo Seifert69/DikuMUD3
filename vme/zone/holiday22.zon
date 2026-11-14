@@ -27,6 +27,10 @@ help
 
 %dil
 
+// Santa's gift for level 49 and up comes from this year's set: XMAS_GIFTSET + <slot>_<stat>.
+// A new set is new units with a new prefix; the old ones stay for the gifts already given.
+#define XMAS_GIFTSET "yule_"
+
 // What Santa's helpers share: spirits, out of reach of a fight (spirit_nokill)
 // (one line: a backslash before CRLF doesn't continue a #define)
 #define XMAS_SPIRIT race RACE_SPIRIT MSET_ABILITY (20,20,1,20,15,4,15,5) MSET_WEAPON(9,4,4,4,3,3) MSET_SPELL(9,4,0,7,6,5,10,14,6,6,6)
@@ -914,7 +918,7 @@ code
 	exec("emote starts gathering materials to make your gift.",self);
 	pause;
 
-	gift := load(spot+"_"+stat+"@holiday22");
+	gift := load(XMAS_GIFTSET+spot+"_"+tolower(stat)+"@holiday22");
 	dilcopy ("ply_restrict@function("+pc.name+",0,25,holiday_burn@holiday22)",gift);
 	dilcopy ("quest_restrict@function("+xmas_quests.[XMAS_DONE_IDX]+",0,25,hq_burn@holiday22)",gift);
 	gift.height := pc.height;
@@ -1112,7 +1116,9 @@ code
 dilend
 
 // The quality of Jolnir's gift for a player of level lvl with c spokes, or -1 under 16
-// spokes: the rung of their level, one lower with fewer than 24 (T025 pins it)
+// spokes: the rung of their level, one lower with fewer than 24, and never below good (2):
+// below that randomt makes copper and bronze with nothing on it (T025 pins it). From 2 up an
+// item asks for level 10, so a newcomer's gift is one to grow into.
 dilbegin integer yule_q(lvl : integer, c : integer);
 external
    integer yule_rung(lvl : integer);
@@ -1123,8 +1129,10 @@ code
    if (c < 16)
       return (-1);
    q := yule_rung(lvl);
-   if ((c < 24) and (q > 0))
+   if (c < 24)
       q := q - 1;
+   if (q < BONUS_GOOD)
+      q := BONUS_GOOD;
    return (q);
 }
 dilend
@@ -1858,11 +1866,11 @@ code
 	pause;
 	quit;
 
-:treasure: // two rungs below what the opener's level can use, as gmtreasure makes it
+:treasure: // two rungs below what the opener's level can use (good at least), as gmtreasure makes it
 	lvl := pc.vlevel;
 	q := gm_trquality@commands(lvl) - 2;
-	if (q < 0)
-		q := 0;
+	if (q < BONUS_GOOD) // below good, randomt makes copper and bronze with nothing on it
+		q := BONUS_GOOD;
 	gift := load("treasure@randomt");
 	link(gift, pc);
 	addextra(gift.extra, {"$treasure_height"}, itoa(pc.height));
@@ -4311,6 +4319,1270 @@ extra {}
 type ITEM_OTHER
 weight 1000
 dilcopy yule_spoke@holiday22(24, "kneel", "odin", "You kneel before Odin. The Yule fire flares, and for a moment his stone eye seems to look at you.", "$1n kneels before the statue of Odin.");
+end
+
+// ======== The Yule gift set, 2026: Santa's gift for level 49 and up (Howard, XMAS_GIFTSET) ========
+// yule_<slot>_<stat>: +5 to the stat, -1 to another, as every set before it. The earlier sets
+// (<slot>_<stat>, 2022-2025) stay, for the gifts players already own.
+
+yule_chest_str
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The sash gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_chest_dex
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The sash gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_chest_cha
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The sash gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_chest_con
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The sash gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_chest_div
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The sash gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_chest_bra
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The sash gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_chest_mag
+names {"yule-knot sash", "yule sash", "sash"}
+title "a Yule-knot sash"
+descr "A sash of red and green wool lies here, woven in endless knots."
+extra {}
+"A broad sash of red and green wool, woven in the endless knots of the north,
+which have no beginning and no end, like the turning year.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This sash will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The sash gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_belt_str
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The belt gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_belt_dex
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The belt gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_belt_cha
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The belt gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_belt_con
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The belt gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_belt_div
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The belt gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_belt_bra
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The belt gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_belt_mag
+names {"sun-wheel belt", "sun wheel belt", "belt"}
+title "a sun-wheel belt"
+descr "A belt of white reindeer leather lies here."
+extra {}
+"Soft white reindeer leather, closed by a silver buckle shaped as a sun wheel:
+the sign of the sun that comes back after the longest night.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
+type ITEM_WORN
+MATERIAL_LEATHER("reindeer leather")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This belt will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The belt gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_ring_str
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The ring gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_ring_dex
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The ring gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_ring_cha
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The ring gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_ring_con
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The ring gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_ring_div
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The ring gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_ring_bra
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The ring gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_ring_mag
+names {"straw-braid ring", "braided ring", "ring"}
+title "a straw-braid ring"
+descr "A small ring of braided gold lies here."
+extra {}
+"Gold and silver threads braided like the straw of a Yule goat, so fine you
+could almost smell the summer hay.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
+type ITEM_WORN
+MATERIAL_METAL("gold")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This ring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The ring gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_wrist_str
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The bracelet gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_wrist_dex
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The bracelet gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_wrist_cha
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The bracelet gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_wrist_con
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The bracelet gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_wrist_div
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The bracelet gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_wrist_bra
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The bracelet gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_wrist_mag
+names {"frost-silver bracelet", "frost bracelet", "bracelet"}
+title "a frost-silver bracelet"
+descr "A bracelet of pale silver lies here, rimed with frost."
+extra {}
+"Pale silver traced with patterns of hoarfrost, which never melt, however warm
+the hand that wears it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WRIST}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This bracelet will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The bracelet gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_back_str
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The pelt gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_back_dex
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The pelt gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_back_cha
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The pelt gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_back_con
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The pelt gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_back_div
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The pelt gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_back_bra
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The pelt gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_back_mag
+names {"winter wolf pelt", "wolf pelt", "pelt"}
+title "a winter wolf pelt"
+descr "A thick white wolf pelt lies here."
+extra {}
+"The pelt of a great white wolf, worn across the shoulders. Hunters say Odin's
+wolves run in the Yule snows.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
+type ITEM_WORN
+MATERIAL_LEATHER("wolf fur")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pelt will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The pelt gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_cape_str
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The cloak gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_cape_dex
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The cloak gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_cape_cha
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The cloak gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_cape_con
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The cloak gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_cape_div
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The cloak gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_cape_bra
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The cloak gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_cape_mag
+names {"midwinter cloak", "starry cloak", "cloak"}
+title "a midwinter cloak"
+descr "A deep blue cloak lies here, sewn with tiny silver stars."
+extra {}
+"Deep blue wool, sewn with the stars of the longest night in tiny silver beads.
+Under it, the cold cannot find you.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
+type ITEM_WORN
+MATERIAL_CLOTH("wool")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This cloak will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The cloak gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_neck_str
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The pendant gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_neck_dex
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The pendant gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_neck_cha
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The pendant gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_neck_con
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The pendant gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_neck_div
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The pendant gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_neck_bra
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The pendant gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_neck_mag
+names {"amber sun pendant", "sun pendant", "pendant"}
+title "an amber sun pendant"
+descr "A pendant of golden amber lies here."
+extra {}
+"A disc of golden amber on a silver chain. Held to the light, a tiny sun seems
+to glow inside it.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
+type ITEM_WORN
+MATERIAL_STONE("amber")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This pendant will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The pendant gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_ear_str
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The earring gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_ear_dex
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The earring gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_ear_cha
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The earring gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_ear_con
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The earring gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_ear_div
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The earring gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_ear_bra
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The earring gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_ear_mag
+names {"icicle earring", "earring", "icicle"}
+title "an icicle earring"
+descr "A small crystal icicle earring lies here."
+extra {}
+"A drop of clear crystal shaped like an icicle. It is always cool to the touch,
+and catches every light.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
+type ITEM_WORN
+MATERIAL_STONE("crystal")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This earring will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The earring gives added magic aura when worn. It can only be possessed by one person."
+end
+
+yule_ankle_str
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their strength."
+extra {"$improved identify"}
+"The anklet gives added strength when worn. It can only be possessed by one person."
+end
+
+yule_ankle_dex
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+DEX_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CON_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their dexterity."
+extra {"$improved identify"}
+"The anklet gives added dexterity when worn. It can only be possessed by one person."
+end
+
+yule_ankle_cha
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+CHA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+STR_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their charisma."
+extra {"$improved identify"}
+"The anklet gives added charisma when worn. It can only be possessed by one person."
+end
+
+yule_ankle_con
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+CON_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DEX_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their constitution."
+extra {"$improved identify"}
+"The anklet gives added constitution when worn. It can only be possessed by one person."
+end
+
+yule_ankle_div
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+DIV_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their divine aura."
+extra {"$improved identify"}
+"The anklet gives added divine aura when worn. It can only be possessed by one person."
+end
+
+yule_ankle_bra
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+BRA_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their intelligence."
+extra {"$improved identify"}
+"The anklet gives added intelligence when worn. It can only be possessed by one person."
+end
+
+yule_ankle_mag
+names {"holly anklet", "anklet", "holly"}
+title "a holly anklet"
+descr "A thin chain of holly leaves lies here."
+extra {}
+"Little holly leaves of green enamel on a silver chain, with garnet berries
+between them.
+It was made for Yule 2026, and carries the Yule greeting of the Admin of
+Valhalla: may the returning sun light your way."
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
+type ITEM_WORN
+MATERIAL_METAL("silver")
+MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // +5
+DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // -1
+extra {"$identify"}
+"This anklet will grant its wearer an added boost to their magic aura."
+extra {"$improved identify"}
+"The anklet gives added magic aura when worn. It can only be possessed by one person."
 end
 
 %mobiles
