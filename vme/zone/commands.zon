@@ -40,7 +40,6 @@ code
 	if (self.extra.["$whostatus"] != null)
 		subextra(self.extra,"$whostatus");
 	addextra(self.extra,{"$whostatus"},"- "+arg);
-	act ("Your Who Status has been set to: "+arg,A_SOMEONE,self,null,null,TO_CHAR);	
 	sendtext("Your Who Status has been set to: "+arg+"<br/>", self);
 	quit;
 }
@@ -1030,8 +1029,9 @@ var
 code{
 
 
-  if ((self.outside.type == UNIT_ST_NPC) and (isset(self.outside.flags, UNIT_FL_TRANS)) and
-      (isset(self.outside.manipulate, MANIPULATE_ENTER)) and (self.outside.extra.["$trained"]))
+  // Whatever do_mount accepts: an NPC that is transparent or can be entered
+  if ((self.outside.type == UNIT_ST_NPC) and ((isset(self.outside.flags, UNIT_FL_TRANS)) or
+      (isset(self.outside.manipulate, MANIPULATE_ENTER))))
      {
        horse := self.outside;
        act("You dismount $2n.", A_SOMEONE, self, horse, null, TO_CHAR);
@@ -1254,33 +1254,20 @@ code
     {
      if ((ch.level >= IMMORTAL_LEVEL) and (visible(self,ch)))
      {
-      if (cnt == 0)
-      {
-       if (ch.minv > 0)
-        tmp := "*<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
-       else
-        tmp := "<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
-
-                  if (isset(ch.pcflags,PC_NOWIZ))
-                   tmp := tmp+"-<div class='wiz'>";
-                 }
-      else
-      {
-       if (ch.minv > 0)
-        tmp := tmp+", *<div class='wiz'>"+ch.name+"("+itoa(ch.level)+")";
-       else
-        tmp := tmp+"<div class='wiz'>, "+ch.name+"("+itoa(ch.level)+")";
-
-                  if (isset(ch.pcflags, PC_NOWIZ))
-                   tmp := tmp+"-<div class='wiz'>";
-                 }
+      if (cnt > 0)
+       tmp := tmp+", ";
+      if (ch.minv > 0)
+       tmp := tmp+"*";
+      tmp := tmp+ch.name+"("+itoa(ch.level)+")";
+      if (isset(ch.pcflags,PC_NOWIZ))
+       tmp := tmp+"-";
       cnt := cnt + 1;
       }
 
      ch := ch.gnext;
     }
 
-    sendtext(tmp, self);
+    sendtext("<div class='wiz'>"+tmp+"</div>", self);
     quit;
    }
 
@@ -1782,10 +1769,9 @@ code{
 
 
  temp := arg;
+ cnt := 1;
 
 :loop:
-
- cnt := 1;
 
  item := findunit(self, temp, FIND_UNIT_GLOBAL, null);
 
@@ -2300,7 +2286,7 @@ code{
 
            if (not visible(self, mast))
               {
-                if (fol.sex == SEX_NEUTRAL)
+                if (mast.sex == SEX_NEUTRAL)
                      temp := "Something (Head of Group)<br/>";
                 else
                      temp := "Someone (Head of Group)<br/>";
@@ -2867,6 +2853,12 @@ code
       quit;
    }
 
+   if (lvl>self.level)
+   {
+      sendtext("You can't advance anyone above your own level.<br/>",self);
+      quit;
+   }
+
    if (lvl<targ.level)
    {
       act ("You demote $3n.", A_ALWAYS,self,null,targ,TO_CHAR);
@@ -2910,14 +2902,25 @@ code
       quit;
    }
 
+   if (lvl>=IMMORTAL_LEVEL)
+   {
+      sendtext("Level must be below "+itoa(IMMORTAL_LEVEL)+" for Player levels, use Admin for more.<br/>",self);
+      quit;
+   }
+
    sendtext("Characters Experience before you advanced = "+itoa(targ.exp)+"<br/>", self);
 
-   targ.exp := getinteger(DIL_GINT_LEVELXP, null, lvl);
+   // The total experience of a character at that (virtual) level, as a new player gets
+   targ.exp := getinteger(DIL_GINT_REQXP, null, lvl);
    targ.vlevel := lvl;
-   targ.level := lvl;
+   // Above MORTAL_MAX_LEVEL only the virtual level rises, as with the level command
+   if (lvl>MORTAL_MAX_LEVEL)
+      targ.level := MORTAL_MAX_LEVEL;
+   else
+      targ.level := lvl;
 
    sendtext("Characters Experience after you advanced = "+itoa(targ.exp)+"<br/>", self);
-   sendtext("Character needs "+itoa(targ.exptol)+" to level.", self);
+   sendtext("Character needs "+itoa(targ.exptol)+" to level.<br/>", self);
 
    if (targ.exptol == 0)
       sendtext("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
@@ -2954,8 +2957,6 @@ code
    if (isaff(torch, ID_LIGHT_EXTINGUISH))
      subaff(torch, ID_LIGHT_EXTINGUISH);
 
-  if (torch.value[0] > 0)
-       torch.value[0] := 0;
   act ("You extinguish $2n with your bare hands.",
        A_SOMEONE, self, torch, null, TO_CHAR);
 
@@ -4850,7 +4851,7 @@ else str := "minute";
 
 /* Only tell the players it will reboot if it's under 20 */
  if (i < 20)
- send_to_world("The mud will reboot in "+itoa(i)+" "+str+".</br>");
+ send_to_world("The mud will reboot in "+itoa(i)+" "+str+".<br/>");
 
 heartbeat := PULSE_SEC * SECS_PER_REAL_MIN;
 
@@ -4858,10 +4859,10 @@ while (i > 1)
 {
  wait(SFB_TICK, TRUE);
 
+ i := i - 1;
+
  if ((i == 10) or (i == 5))
  send_to_world("The mud will reboot in "+itoa(i)+" minutes.<br/>");
-
- i := i - 1;
 }
 
 
@@ -4970,7 +4971,7 @@ else if ("cancel" in arg)
  {
  i := dildestroy("rebooting@commands",void);
  sendtext("Reboot cancelled.<br/>", self);
- send_to_world("The reboot has been halted..<br/>");
+ send_to_world("The reboot has been halted.<br/>");
  }
  else
  {
@@ -5817,7 +5818,7 @@ code
 
         if (u.type != UNIT_ST_ROOM)
         {
-            sendtext("Copying on symbolic units other than rooms is denied.<br/>", self);
+            sendtext("Zapping on symbolic units other than rooms is denied.<br/>", self);
             quit;
         }
     }
@@ -6693,7 +6694,6 @@ code
 
    addstring(cmdlist,"dual wield");
    addstring(cmdlist,"shield");
-   addstring(cmdlist,"climb");
    addstring(cmdlist,"leadership");
 
    newlist:=dilshell(cmdlist);
@@ -7752,6 +7752,7 @@ else
  }
 
 i:=0;
+ln:=length(args.[1]);
 while (i<6)
  {
  if (args.[1]==left(oneword.[i],ln))
@@ -7787,7 +7788,7 @@ else
  if (location=="")
  sendtext ("Enter a text you would like others to see when they look at your body.<br/>",self);
 else
- sendtext ("Enter a text you would like others to see when they look at your"+location+".<br/>",self);
+ sendtext ("Enter a text you would like others to see when they look at your "+location+".<br/>",self);
 
  beginedit (self);
  wait(SFB_EDIT,self==activator) ;
@@ -8220,8 +8221,11 @@ pois:integer;
 code
 {
 if (arg=="")
+ {
  act("What do you want to sip?",
   A_SOMEONE, self, null, null, TO_CHAR);
+ quit;
+ }
 d_obj:=findunit(self, arg, FIND_UNIT_HERE, null);
 
 if (d_obj==null)
@@ -8443,16 +8447,6 @@ apply_poison(self,pois,amount);
  food.value[0]:=food.value[0]-amount;
  if (food.value[0]<=0)
   destroy (food);
-else if ((self.level<200) or (food.type==UNIT_ST_ROOM))
- act("Your stomach refuses to taste that!?!",A_SOMEONE, self, null, null,
-TO_CHAR);
-else
- {
- act("$1n tastes $2n.", A_HIDEINV, self, food, null, TO_REST);
- act("You taste $2n.", A_HIDEINV, self, food, null, TO_CHAR);
- destroy (food);
-  quit;
- }
 }
 
 
@@ -9513,6 +9507,8 @@ code
             gld:="";
 		if (u.extra.["$whostatus"] != null)
 			status := textformat(u.extra.["$whostatus"].descr);
+		else
+			status := "";
          buff:="<div class='who_name'>"+u.name+"</div><div class='who_title'> "+status+" "+gld+"</div> ";
          if (u.minv>0)
             buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
@@ -10110,7 +10106,7 @@ null, TO_CHAR);
   dest_s := self.outside;
   dest_t := tgt.outside;
 
-  if ((("$NO_TRANS" in dest_s.extra) or ("NO_TRANS" in dest_t.extra)) and
+  if ((("NO_TRANS" in dest_s.extra) or ("NO_TRANS" in dest_t.extra)) and
       (self.level < 250))
   {
    act("Sorry, you are unable to transfer that person.", A_ALWAYS, self,

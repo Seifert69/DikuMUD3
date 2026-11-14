@@ -673,9 +673,15 @@ code
          }
       }
 
-      addextra(self.extra, {SWIM_ON_NAME}, "");
-      exec(arg1, self);
-      subextra(self.extra, SWIM_ON_NAME);
+      // Swim this once; leave automatic swimming as it was
+      if (self.extra.[SWIM_ON_NAME])
+         exec(arg1, self);
+      else
+      {
+         addextra(self.extra, {SWIM_ON_NAME}, "");
+         exec(arg1, self);
+         subextra(self.extra, SWIM_ON_NAME);
+      }
    }
    else
    {
@@ -2629,8 +2635,9 @@ code
    }
 
 
-   /* Also, needs to be manipulate take in order to drag it */
-   if (not isset(item.manipulate, MANIPULATE_TAKE))
+   /* Also, a thing needs to be manipulate take in order to drag it
+      (characters can be dragged once asleep or worse, see above) */
+   if ((item.type == UNIT_ST_OBJ) and (not isset(item.manipulate, MANIPULATE_TAKE)))
    {
       act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
       return;

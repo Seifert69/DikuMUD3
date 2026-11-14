@@ -387,8 +387,13 @@ code
       bonus:=-1;
 
     :gotbonus:
-    gain_cond(self,"full",-1+bonus);
-    gain_cond(self,"thirst",-1+bonus);
+    // No hunger or thirst in sacred rooms (as gain_condition in vmelimits.cpp says);
+    // drinks still wear off faster there
+    if (bonus == 0)
+    {
+        gain_cond(self,"full",-1);
+        gain_cond(self,"thirst",-1);
+    }
 
     if (self.drunk>0)
     {

@@ -7851,8 +7851,8 @@ code
         statue_load(pc, "udgaard/newbie_boots",   1);
         statue_load(pc, "udgaard/newbie_pants",   1);
         statue_load(pc, "udgaard/necro_item",     1);
-        statue_load(pc, "midgaard/silver_dagger", 1);
-        statue_load(pc, "necro_guild/necro_hand", 1);
+        statue_load(pc, "midgaard/silver_dag",    1);
+        statue_load(pc, "necro_guild/necro_hand1", 1);
     }
     else if (pc.profession == PROFESSION_DRUID)
     {
