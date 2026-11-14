@@ -3,19 +3,26 @@
 </p>
 <pre>Name           Level   Up to
 Fist               0   70%
-Rapier             1   100%
 Sling              1   100%
 Dagger             3   80%
-Club               4   100%
+Rapier             4   70%
+Club               5   100%
 Quarterstaff       5   100%
 Short Sword        5   85%
 Hand Axe           6   60%
-Kick Small         8   90%
+Broad Sword        8   70%
+Falchion           8   90%
 Mace               9   70%
+Whip               9   100%
 Bow               10   100%
-Spear             14   100%
+Sickle            10   90%
+Kick Small        12   80%
+Kick Tiny         12   80%
+Spear             14   90%
 Long Sword        16   100%
-Crossbow          20   100%
+Scimitar          16   90%
+Crossbow          20   80%
+Battle Axe        22   60%
 </pre>
 <p><br />
 See Also:
