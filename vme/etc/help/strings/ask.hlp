@@ -2,9 +2,13 @@
 <p>Usage:
 </p>
 <pre> ask &lt;character&gt; (sentence asking for something?)
+ ask (sentence asking for something?)
 </pre>
 <p>Ask is mostly same as say, except this is directed as a character
-question. Only the character you're asking will hear the question.
+question: "Gnort asks you '...'". Everyone in the room hears the
+question, just as with say. If the first word isn't someone in the room,
+you ask the room at large. To keep a question between the two of you,
+whisper it instead.
 </p><p><br />
 See Also:
 </p>
