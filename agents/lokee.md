@@ -239,6 +239,9 @@ Once a plan is approved, start it wherever the players are: stage it (build, loa
 then lure them in as its LURE says. A plan stays as it is: don't cancel, move or rewrite it
 because a player wandered off, lure them back.
 
+No events for players of level 0 to 3: they are learning the game, with Dwili. The earliest
+event is for level 4 (Papi, 2026-11-14).
+
 One event at a time for the players online: a paused event, whose players are all gone, holds
 no one up, and several can wait at once, each for its own players. Whoever of them logs on
 first gets theirs back. Pause when the players it was for log off; cancel when no one has taken
