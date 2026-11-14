@@ -8,11 +8,12 @@ Mana: 34
 <a cmd='#'>cast colourspray</a>   (at whoever you are fighting)
 </pre>
 <p>The third of the colour spells, stronger than colourbeam: a spray of 
-blinding colours tears at the target's mind. The better your power and mind 
-sphere, the more it hurts. It does a little better against clothes than 
-against plate, and a shield takes some of it, but can't stop it.
-</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
-wands and scrolls.
+blinding colours tears at the target's mind. The better your divine power and your 
+skill in the spell, the more it hurts. It hurts most through clothes and 
+least through plate, which takes about a quarter less. A shield takes some 
+of it, but can't stop it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting. 
+It is also found on staffs, wands and scrolls.
 </p><p><br />
 See Also:
 </p>
