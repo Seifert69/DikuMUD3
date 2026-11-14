@@ -9,9 +9,11 @@ Mana: 20
 <p>Gives you a sense of where an object is: you see it, and where it lies, the 
 room it is in, or the one who carries it. It looks in your own area first, 
 and then in the whole world, and it finds one such object, the first it 
-comes to.
-</p><p>If the spell fails badly, the one who has the object realizes that you tried 
-to locate it. You must be standing. It is also found on scrolls.
+comes to. An object with magic of its own may resist it.
+</p><p>If the spell fails, you feel confused; if it fails badly, the one who has 
+the object realizes that you tried to locate it. You must be standing, and 
+you can't cast it while fighting. It is also found on scrolls. Practising 
+it needs divine 32.
 </p><p><br />
 See Also:
 </p>
