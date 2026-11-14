@@ -2,24 +2,32 @@
 <p>The skills the Druids' guild teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
 </p>
 <pre>Name                 Level   Up to
+Appraisal                0   60%
+Armor Chain              0   60%
+Armor Hard Leather       0   70%
 Armor Soft Leather       0   75%
+Climb                    0   60%
 Consider                 0   85%
 Diagnostics              0   85%
+Evaluating               0   60%
 Fleeing                  0   80%
-Herbs                    1   100%
+Swimming                 0   100%
+Weather Watching         0   100%
 Scan                     4   50%
 First Aid                5   80%
-Forage                   6   100%
+Turn Undead              5   100%
+Forage                   6   90%
 Search                   7   60%
 Wand Use                 8   100%
 Scroll Use              10   100%
+Herbs                   12   100%
 Shield                  12   50%
 Skin                    12   80%
 Soothe                  13   75%
 Dowse                   15   75%
-Cook                    18   100%
-Curare                  20   100%
+Cook                    18   80%
 Bash                    23   50%
+Curare                  40   100%
 </pre>
 <p><br />
 See Also:
