@@ -1,20 +1,8 @@
 <div class="mw-parser-output"><h1>Consider</h1>
-<p>SKILL
-</p><p>Class and level:
-</p>
-<pre> Assassin    - 0
- Barbarian   - 0
- Conjurer    - 0
- Dark Knight - 0
- Druid       - 0
- Fighter     - 0
- Healer      - 3
- Paladin     - 0
- Ranger      - 0
- Sorcerer    - 3
- Thief       - 0
-</pre>
-<p>Usage:
+<p>Skill
+Class: Assassin (guild level 0), Barbarian (guild level 0), Conjurer (guild level 0, up to 80%), Dark Knight (guild level 0, up to 90%), Druid (guild level 0, up to 85%), Fighter (guild level 0), Healer (guild level 3, up to 80%), Paladin (guild level 0, up to 90%), Ranger (guild level 0, up to 90%), Sorcerer (guild level 3, up to 60%), Thief (guild level 0, up to 80%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%); Brother Johannes, at the monastery in the vineyards near Nymgaard (from level 40)
+</p><p>Usage:
 </p>
 <pre>consider &lt;character&gt;
 </pre>
@@ -22,14 +10,17 @@
 </p>
 <pre>consider beast
 </pre>
-<p>If you are wondering whether an opponent is too strong for you, use this command 
-to see if you would have even the slightest chance. Some monsters are simply so 
+<p>If you are wondering whether an opponent is too strong for you, use this command
+to see if you would have even the slightest chance. Some monsters are simply so
 strong that they may kill you in one hit, and this command will help you know.
-</p><p>Be aware that it doesn't consider whether nearby monsters will help the one you 
-attack, or whether it has special attacks like a breath weapon or spells: these 
-are the risks you must run. It assumes you have full hit points, and it doesn't 
-count others who may help you. The better your consider skill, the more accurate 
-your judgement.
+It judges how many rounds the opponent's blows would need to kill you, from
+"RUN AWAY!" to "Plenty of time to flee.", and warns you when it is ten or more
+levels above you.
+</p><p>Be aware that it doesn't consider whether nearby monsters will help the one you
+attack, or whether it has special attacks like a breath weapon or spells: these
+are the risks you must run. It assumes you have full hit points, and it doesn't
+count others who may help you. You need to have practised consider to use it,
+but how well you know it doesn't change the answer.
 </p><p><br />
 See Also:
 </p>
