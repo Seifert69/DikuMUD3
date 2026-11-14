@@ -16,7 +16,8 @@ damage, see repair and reconstruct. And every mending costs the item
 something: each time, the most wear it can ever take shrinks by an 
 eighth, so an item mended again and again grows ever more fragile. 
 Indestructible items need no mending.
-</p><p>You must be standing, and carry the item. It is also found on scrolls.
+</p><p>You must be standing, and carry or wear the item, and you can't cast it 
+while fighting. It is also found on scrolls.
 </p><p><br />
 See Also:
 </p>
