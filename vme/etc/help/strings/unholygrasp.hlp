@@ -6,15 +6,16 @@ Mana: 30
 </p><p>Usage:
 </p>
 <pre>cast unholy grasp &lt;target&gt;
+<a cmd='#'>cast unholy grasp</a>   (at whoever you are fighting)
 </pre>
 <p>A stronger prayer to the dark forces than unholy touch: the caster grasps 
 at the target, and those who lean to good are hurt badly. Any target whose 
 alignment is above neutral can be struck, and the truly good are hurt more; on the evil and the neutral, 
-nothing happens. The better your divine power and sphere, the more it 
-hurts. It does best against clothes and a little less the heavier the 
+nothing happens. The better your divine power and your skill in the spell, the 
+more it hurts. It does best against clothes and a little less the heavier the 
 armour, and a shield can block it.
-</p><p>Casting it is an attack and starts a fight. You must be standing, so you 
-can't cast it in the middle of a fight. It is also found on scrolls. The 
+</p><p>Casting it is an attack and starts a fight. It can be cast while 
+fighting. It is also found on scrolls. The 
 strongest of these prayers is unholy shout.
 </p><p><br />
 See Also:
