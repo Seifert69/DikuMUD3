@@ -8,11 +8,12 @@ Mana: 20
 <a cmd='#'>cast hellfire</a>   (at whoever you are fighting)
 </pre>
 <p>The second of the dark knight's fires: flames from below engulf the target. 
-The better your power and fire sphere, the more it burns. Unlike lava flow, it 
+The better your divine power and your skill in the spell, the more it burns. Unlike lava flow, it 
 burns hardest against plate and chain, and least against clothes (only the 
 most powerful casts hurt all armour alike). A 
 shield can block it.
-</p><p>Casting it is an attack and starts a fight. It is also found on staffs, 
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting. 
+It is also found on staffs, 
 wands and scrolls.
 </p><p><br />
 See Also:
