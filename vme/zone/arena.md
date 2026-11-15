@@ -21,4 +21,44 @@
 5. **Ring Of Honor titles**: 30 rooms are titled "Ring Of Honor" and arena_33 "Ring of Honor".
    Left as they are; make them all "Ring of Honor"?
 6. **shitthrow (magicdus1)** (line 446): when no target is found it prints "I see no " +
-   enemy.name, with enemy null. For step 2.
+   enemy.name, with enemy null. For step 2. Fixed in step 2.
+
+## Step 2
+
+Fixed in place:
+- **bone_aff, flame_aff, flame_aff2, dagger_nheal** (lines 232, 271, 277, 294, 334): spell-effect
+  messages for the victim were sent TO_VICT with `null` as the victim, so the victim never saw
+  them; now `targ`. flame_aff line 280 used the built-in `target` instead of its `targ` argument.
+- **shitthrow** (line 436): anyone in the room typing "throw dust" set off the dust held by someone
+  else; the wait now checks `activator == self.outside`. Line 446: with no target found it printed
+  "I see no " + enemy.name with `enemy` null, so nothing at all (step 1, question 6); now "You see
+  no one here to throw $2n at!".
+- **nighteff** (line 492): a spell effect must take `(medi, targ, hm)`; without them the server
+  refused it ("Spell DIL effect wrong arg count") and nightdrain's cause wounds showed the plain
+  spell messages. It now has the arguments and uses them instead of `medium`/`target`.
+- **exit_arena** (line 708): `exec("look", self.outside)` made the room look; now the player looks
+  at the arena entrance.
+- **whip** (lines 3275, 3286): TO_VICT with `null` as the victim; now `enemy`.
+- **nine_switch** (line 4537): when the weapon was neither flail nor whip the program ran off its
+  end and "ninesw" stopped working; `goto start` added.
+
+Questions:
+1. **arena_enter** (line 767): it sends "remove kill prottection" (misspelt, also in basis.zon),
+   but no_kill@function listens for "remove kill protection", so entering the arena never ends a
+   player's post-death PK protection. Correct the spelling? It changes who can be attacked after
+   leaving the arena, so it's your call.
+2. **restore_pc** (line 1114): nothing copies it, and it copies `expcatch@arena`, which doesn't
+   exist. Delete the template?
+3. **goddaggerdil** (line 2846): casts lightning 3 on the wielder (`self.outside`), with
+   dagger_nheal as effect, whose messages describe the dagger digging into the enemy's flesh;
+   `enemy` is set and never used. Was `enemy` the target? (Balance.)
+4. **lio** (line 2703): `enemy.hp := enemy.hp + i` heals the enemy, with the message "Your $2N shoots
+   forth a burst of pure evil". Meant `-`? (Balance.)
+5. **gel** (lines 3330-3342): the three first branches take 2-4 times `i` hit points, silently, only
+   from enemies *above* IMMORTAL_LEVEL; mortal enemies only get the `i < 30` drain. Was `<` meant
+   there, or is it a deliberate anti-god trap? (Balance.)
+6. **flames** (lines 389-410): touching the flames takes 75 or 30 hit points without
+   `position_update`, so a player can stand on below 0 hp until something else updates them; `if
+   (1 < 30)` (line 402) is always true (meant `i < 30`; the same except when `i` is 30), and
+   `secure(pc, lost)` secures a `pc` that is never set. Add `position_update(activator)` after the
+   damage?

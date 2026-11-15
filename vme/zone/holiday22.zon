@@ -193,7 +193,7 @@ code
 			continue;
 		}
 		if (item.extra==null)
-			goto default;
+			break; // s stays "": the default burst, after holstr2 is set
 		s:=item.extra.descr;
 		break;
    }
@@ -472,7 +472,7 @@ code
 	{
 		act("We are sorry, but you have not played here long enough to get on our gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("But we still wish you a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
-		log(pc.name+"has not played here long enough to receive a gift.");
+		log(pc.name+" has not played here long enough to receive a gift.");
 		unsecure(pc);
 		goto start;
 	}
@@ -504,6 +504,7 @@ code
         addstring(sl, xmas_quests.[XMAS_EXP_IDX]);
 		addextra (pc.extra,sl,itoa(pc.exp)); 
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
+		unsecure(pc);
 		goto start;
 	}
 	else if ((pc.exp - atoi(pc.extra.[xmas_quests.[XMAS_EXP_IDX]].descr)) >=200000)
@@ -525,6 +526,7 @@ code
 	{  /*they need */
 		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.[xmas_quests.[XMAS_EXP_IDX]].descr)))
 		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
+		unsecure(pc);
 		goto start;
 	}
 
@@ -633,6 +635,7 @@ code
 	if (xmas_quests.[XMAS_DONE_IDX] in pc.quests)
 	{
 		exec("whisper "+pc.name+ " Don't be greedy or I shall take your gift away!", self);
+		unsecure(pc);
 		goto start;
     }
 	else if (xmas_quests.[XMAS_SANTA_IDX] in pc.quests)
@@ -640,6 +643,7 @@ code
 		exec("say "+pc.name+ ", I'd love to talk more, but I have a lot to do. " +
 		"My assistant will take care of you. The workshop is over there.", self);
 		exec("point ", self);
+		unsecure(pc);
 		goto start;
     }
 	
@@ -875,6 +879,7 @@ code
 	log("SANTA DIL: ("+pc.name+") Spot is "+spot);
 	if (spot in sl)
 	{
+		spot := sl.[(spot in sl) - 1]; // "ankle please" matches ankle: the gift is made from the slot alone
 		exec("say Okay, you have chosen "+spot+".", self);
 		pause;
 	}
@@ -905,6 +910,7 @@ code
 	log("SANTA DIL: ("+pc.name+") Stat is "+stat);
 	if (stat in sl)
 	{
+		stat := sl.[(stat in sl) - 1]; // likewise "str please"
 		exec("say Okay, you want to boost "+stat+".", self);
 		pause;
 	}
@@ -1790,6 +1796,7 @@ code
 		{
 			act("You must pick me up before opening me.",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -1800,9 +1807,10 @@ code
     }
 	
 :lost:
-	act("<div class='cpr'>A possible 500000 experience disappears forever!</div>",
+	act("<div class='cpr'>The gift falls apart, and whatever was in it is lost.</div>",
 	A_SOMEONE, self, null, pc, TO_ALL);
 	destroy(self);
+	quit;
 
 :trap:
       act("*tick*  *tick*  *tick*",
@@ -1873,6 +1881,7 @@ code
 		{
 			act("You must pick me up before opening me. DOH!",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -1999,6 +2008,7 @@ code
 		{
 			act("You must pick me up before opening me. DOH!",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -2013,6 +2023,7 @@ code
 	act("<div class='cpr'>The gift falls apart, and whatever was in it is lost.</div>",
 	A_SOMEONE, self, null, pc, TO_ALL);
 	destroy(self);
+	quit;
 
 :trap:
 	act("*tick*  *tick*  *tick*",
@@ -5745,11 +5756,14 @@ code
 	exec("say Someone is going on Santa's naughty list for this!", self);
 	pause;
 	exec("remove remover",self);
-	destroy(u);
+	u := findsymbolic(self, "graf_r@g_q", FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
+	if (u != null)
+		destroy(u);
 	pause;
 	exec("emote puts the empty can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover in his bag.", self);
 	subextra (self.extra,"$block wander");
 	pause;
+	goto start;
 }
 dilend
 

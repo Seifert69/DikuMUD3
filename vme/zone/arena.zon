@@ -229,7 +229,7 @@ code
         act("$1n slams $3n HARD, you hear some bones BREAK!",
         A_SOMEONE, self, null,targ, TO_NOTVICT);
         act("$1n pounds your kneecap HARD! *CRUNCH*",
-        A_ALWAYS, self, null,null, TO_VICT);
+        A_ALWAYS, self, null,targ, TO_VICT);
         act("You go berserk and slam $3n's kneecap! *CRUNCH*",
         A_ALWAYS, self, null,targ , TO_CHAR);
         act("That really did HURT!",
@@ -268,16 +268,16 @@ code
         A_SOMEONE, self, medi,targ, TO_NOTVICT);
 
         act("Flames ERUPT from $1n's $2N, melting your skin gravely!",
-        A_ALWAYS, self, medi,null, TO_VICT);
+        A_ALWAYS, self, medi,targ, TO_VICT);
 
         act("Flames ERUPT from your $2N, melting $3n's skin gravely!",
         A_ALWAYS, self, medi,targ , TO_CHAR);
 
         act("That really did HURT!",
-        A_ALWAYS, self, medi,null, TO_VICT);
+        A_ALWAYS, self, medi,targ, TO_VICT);
 
         act("$1n screams with agony!",
-        A_SOMEONE, target, medi, null, TO_REST);
+        A_SOMEONE, targ, medi, null, TO_REST);
 
                                          return;
   }
@@ -291,7 +291,7 @@ code
         A_SOMEONE, self, medi,targ, TO_NOTVICT);
 
         act("Flames ERUPT from $1n's $2N, burning your skin fairly!",
-        A_ALWAYS, self, medi,null, TO_VICT);
+        A_ALWAYS, self, medi,targ, TO_VICT);
 
         act("Flames ERUPT from your $2N, burning $3n's skin fairly!",
         A_ALWAYS, self, medi,targ , TO_CHAR);
@@ -331,7 +331,7 @@ code
 
 
         act("$1n's $2N glows brightly as it digs into your flesh.",
-        A_ALWAYS, self, medi,null, TO_VICT);
+        A_ALWAYS, self, medi,targ, TO_VICT);
                                                  return;
                                                  }
                                                  dilend
@@ -433,7 +433,7 @@ code
         unsecure (a);
         unsecure ( enemy);
   heartbeat := PULSE_SEC * 10;
-  wait(SFB_CMD, command("throw") and (self.equip == WEAR_HOLD) and
+  wait(SFB_CMD, command("throw") and (self.equip == WEAR_HOLD) and (activator == self.outside) and
 (argument in self.names));
   block;
   a := activator;
@@ -443,8 +443,8 @@ code
      enemy:=findrndunit (a,FIND_UNIT_SURRO,UNIT_ST_PC);
      if (enemy == null)
      {
-        act("I see no " + enemy.name + " here!",
-             A_SOMEONE, a, null, null, TO_CHAR);
+        act("You see no one here to throw $2n at!",
+             A_SOMEONE, a, self, null, TO_CHAR);
         goto start;
      }
    i:= rnd(1,100);
@@ -489,15 +489,15 @@ goto start;
 }
 dilend
 
-dilbegin nighteff();
+dilbegin nighteff(medi : unitptr, targ : unitptr, hm : integer);
 code
 {
    act("The area grows darker as your $2N absorbs $3n's lifeforce!",
-        A_SOMEONE, self, medium, target, TO_CHAR);
+        A_SOMEONE, self, medi, targ, TO_CHAR);
    act("The area grows darker as $1n's $2N drains $3n of $3s lifeforce!",
-        A_SOMEONE, self, medium, target, TO_NOTVICT);
+        A_SOMEONE, self, medi, targ, TO_NOTVICT);
    act("Your vision blurs and fades as $1n's $2N drains you!",
-        A_SOMEONE, self, medium, target, TO_VICT);
+        A_SOMEONE, self, medi, targ, TO_VICT);
    return;
 }
 dilend
@@ -705,7 +705,7 @@ A_SOMEONE, self,null,null,TO_REST);
 sendto ("action",self);
 exec ("save",self);
 
-exec ("look",self.outside);
+exec ("look",self);
 
    :abort:
 	 quit;
@@ -3272,7 +3272,7 @@ code
       act("You hear a large clang, as $1n's $2N hits $3n.",
           A_SOMEONE,pc,self,enemy,TO_NOTVICT);
       act("You hear a large clang, as $1n's $2N hits you.",
-          A_SOMEONE,pc,self,null,TO_VICT);
+          A_SOMEONE,pc,self,enemy,TO_VICT);
       enemy.hp := enemy.hp - damage;
       goto start;
 
@@ -3283,7 +3283,7 @@ code
       act("$1n's $2N FLOGS $3n severely.",
           A_SOMEONE,pc,self,enemy,TO_NOTVICT);
       act("$1n's $2N FLOGS you severely.",
-          A_SOMEONE,pc,self,null,TO_VICT);
+          A_SOMEONE,pc,self,enemy,TO_VICT);
       if (enemy.level < 200) enemy.hp := enemy.hp - damage;
    }
    unsecure(enemy);
@@ -4534,6 +4534,7 @@ code
              null, TO_REST);
          goto start;
       }
+      goto start;
 }
 dilend
 
