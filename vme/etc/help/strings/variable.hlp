@@ -1,5 +1,5 @@
 <div class="mw-parser-output"><h1>Variable</h1>
-<p>Variables are basically string lists that can be used in <a href="/wiki/Help/Trigger" title="Help/Trigger">triggers</a> and can be defined as such: 
+<p>Variables are basically string lists that can be used in triggers and can be defined as such: 
 </p>
 <pre> <a cmd='#'>variable friends papi|john|aja|bruce|cityguard|the janitor</a>
 </pre>
