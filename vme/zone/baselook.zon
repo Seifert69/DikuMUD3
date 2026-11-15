@@ -415,7 +415,7 @@ code
    }
    else if (isaff(looker, ID_BLIND_CHAR) or isset(looker.charflags,CHAR_BLIND))
    {
-      sendtext("You can't see a thing, you are blind!<br/>",self);
+      sendtext("You can't see a thing, you are blind!<br/>",looker);
       return;
    }
 
@@ -466,10 +466,10 @@ code
          else if ((looker.outside.outside.type == UNIT_ST_NPC) or (looker.outside.outside.type == UNIT_ST_OBJ))
          {
             if (looker.outside.outside.type==UNIT_ST_OBJ)
-               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div> and which contains:<br/>",
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div>, which contains:<br/>",
                               A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
             else
-               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='npc_title'>$3n</div> and which is carrying:<br/>",
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='npc_title'>$3n</div>, which is carrying:<br/>",
                               A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
 
             temp := obj_content(looker, looker.outside.outside);
@@ -478,7 +478,7 @@ code
          }
          else // UNIT_ST_PC 
          {
-            buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='pc_title'>$3n</div> and which contains:<br/>",
+            buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='pc_title'>$3n</div>, which contains:<br/>",
                               A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
             temp := obj_content (looker, looker.outside.outside);
             /* MS2020 buff := buff + "<br/>" + temp;*/
@@ -488,10 +488,10 @@ code
    }
    else /* looker is inside a UNIT_ST_PC*/
    {
-      if (looker.outside.inside_descr != null)
+      if (looker.outside.inside_descr != "")
          buff := buff + "<div class='pc_descr'>" + looker.outside.inside_descr +"</div><br/>";
       else
-         buff := buff + sact("You are riding <div class='pc_title'>$2n</div> which is carrying:</div><br/>",
+         buff := buff + sact("You are riding <div class='pc_title'>$2n</div> which is carrying:<br/>",
                            A_SOMEONE, looker, looker.outside, null, TO_CHAR);
 
       temp := obj_content (looker, looker.outside);
@@ -506,10 +506,10 @@ code
          else if ((looker.outside.outside.type == UNIT_ST_NPC) or (looker.outside.outside.type == UNIT_ST_OBJ))
          {
             if (looker.outside.outside.type == UNIT_ST_OBJ)
-               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div> and which contains:<br/>",
+               buff := buff + sact("<div class='obj_title'>$2n</div> is inside <div class='obj_title'>$3n</div>, which contains:<br/>",
                            A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
             else
-               buff := buff + sact("<div class='obj_title'>$2n</div> is riding <div class='npc_title'>$3n</div> and which is carrying:<br/>",
+               buff := buff + sact("<div class='obj_title'>$2n</div> is riding <div class='npc_title'>$3n</div>, which is carrying:<br/>",
                            A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
             
             temp := obj_content (looker, looker.outside.outside);
@@ -517,7 +517,7 @@ code
          }
          else // It's a PC
          {
-            buff := buff + sact("<div class='pc_title'>$2n</div> is inside $3n and which contains:<br/>",
+            buff := buff + sact("<div class='pc_title'>$2n</div> is inside $3n, which contains:<br/>",
                            A_SOMEONE, looker, looker.outside, looker.outside.outside, TO_CHAR);
             temp := obj_content (looker, looker.outside.outside);
             buff := buff + temp;
@@ -762,7 +762,10 @@ code
 
          sendtext(temp,looker);
 
-         act("$1n looks at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);
+         if (pc == looker)
+            act("$1n looks at $1s $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);
+         else
+            act("$1n looks at $3n's $2N.", A_ALWAYS, looker, item, pc,TO_NOTVICT);
          if (pc != looker)
             act("$1n looks at your $2N.", A_SOMEONE, looker, item, pc,TO_VICT);
          send_done ("look", looker, item, pc, 1, arg, null, CMD_AUTO_NONE);
@@ -812,7 +815,7 @@ code
 			else if (item.race == RACE_GNOME)
 				temp := temp + "is rather small and, well, gnomish.";
 			else if (item.race == RACE_HALF_ORC)
-				temp := temp + "has an ungly face and mishappen hair.";
+				temp := temp + "has an ugly face and misshapen hair.";
 			else if (item.race == RACE_HALF_OGRE)
 				temp := temp + "has big green ears, and long greasy hair.";
 			else if (item.race == RACE_HALF_ELF)
@@ -1130,6 +1133,10 @@ code
    else if(arg == "northwest") dir := NORTHWEST;
    else if(arg == "southeast") dir := SOUTHEAST;
    else if(arg == "southwest") dir := SOUTHWEST;
+   else if(arg == "nw") dir := NORTHWEST;     // is_dir() gives these short
+   else if(arg == "ne") dir := NORTHEAST;
+   else if(arg == "se") dir := SOUTHEAST;
+   else if(arg == "sw") dir := SOUTHWEST;
 
 
    test := is_hidden@basemove(looker, dir, room);
@@ -1138,7 +1145,7 @@ code
       sendtext("<div class='exit'>You see a closed "+room.exit_names[dir].[0]+".</div><br/>",looker);
    else if ((room.extra.[arg]) and (not test))
       sendtext("<div class='exit'>" + arg + " - " + room.extra.[arg].descr +"</div><br/>",looker);
-   else if (room.exit_to[dir].extra.["$exit_descr"]!=null)
+   else if ((room.exit_to[dir].extra.["$exit_descr"]!=null) and (not test))
       sendtext("<div class='exit'>" + arg + " - " + room.exit_to[dir].extra.["$exit_descr"].descr +"</div><br/>",looker);
    else if ((room.exit_to[dir]) and (not test))
       sendtext("<div class='exit'>" + arg + " - You see nothing special.</div><br/>",looker);
@@ -1387,7 +1394,7 @@ code
          }
          else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
          {
-            temp := "You sense a hidden life form in the room.</div>";
+            temp := "You sense a hidden life form in the room.";
             temp_in:=textformat(temp) in npc;
 
             if (temp_in > 0)
@@ -1448,7 +1455,7 @@ code
          }
          else if ((isaff(looker, ID_DETECT_LIFE)) and (isset(u.charflags,CHAR_HIDE)) and (u.level < IMMORTAL_LEVEL))
          {
-            temp := "You sense a hidden life form in the room.<br/>";
+            temp := "You sense a hidden life form in the room.";
 
             temp_in:=temp in npc;
 
@@ -1684,7 +1691,7 @@ code
                 else
                 {
                     if (isaff(looker, ID_DETECT_LIFE))
-                        addstring(pc, "You sense a hidden life form somewhere near by.<br/>");
+                        addstring(pc, "You sense a hidden life form somewhere nearby.<br/>");
                 }
             }
         }
@@ -1710,7 +1717,7 @@ code
             {
                 if (isaff(looker, ID_DETECT_LIFE))
                 {
-                    temp := "You sense a hidden life form somewhere near by.<br/>";
+                    temp := "You sense a hidden life form somewhere nearby.<br/>";
                 }
             }
             if (temp != "")
@@ -1870,7 +1877,7 @@ code
                temp := "<div class='pc_title'>" + u.name + " " + u.title;
 
                if ((u.minv > 0) and (looker.level >= IMMORTAL_LEVEL))
-                  temp := temp + "  (wizinv)";
+                  temp := temp + " (wizinv)";
 
                if ((isset(u.charflags, CHAR_HIDE)) and (looker.level >=IMMORTAL_LEVEL))
                   temp := temp + " (hidden)";
@@ -1881,7 +1888,7 @@ code
             addstring (pc, temp);
          }
          else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
-            addstring (pc, "You sense a hidden life form somewhere near by.<br/>");
+            addstring (pc, "You sense a hidden life form somewhere nearby.<br/>");
       }
       else if (u.type == UNIT_ST_NPC)
       {
@@ -1911,7 +1918,7 @@ code
          }
          else if ((isaff(looker, ID_DETECT_LIFE)) and (u.level < IMMORTAL_LEVEL))
          {
-            temp := "You sense a hidden life form somewhere near by.<br/>";
+            temp := "You sense a hidden life form somewhere nearby.<br/>";
             temp_in := temp in npc;
 
             if (temp_in > 0)

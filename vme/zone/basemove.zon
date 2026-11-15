@@ -210,7 +210,9 @@ code
    room_next:=room.exit_to[dir];	
 
    // If circular or doesn't exist, end here
-   if ((room==room_next) or (fall_from==room_next.idx) or (room_next == null))
+   if (room_next == null)
+      goto splat_now;
+   if ((room==room_next) or (fall_from==room_next.idx))
       goto splat_now;
 
    // On the ships, if the cargo hold is closed, dont fall through...
@@ -630,7 +632,7 @@ code
 
    if (self.outside.type != UNIT_ST_ROOM)
    {
-      act("You cant swim here!", A_ALWAYS, self, null, null, TO_CHAR);
+      act("You can't swim here!", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -1787,9 +1789,9 @@ code
     // Messages to the people
 
     if (pc)  // Opening from the inside
-        act("$1n is opened from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+        act("$1n is opened from the inside by $2n.", A_SOMEONE, item,  self, null, TO_ALL);
     else // opening from the outside
-        act("$2n is opened from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+        act("$2n is opened from the outside by $3n.", A_SOMEONE, item.inside, item, self, TO_ALL);
 
     act("You open $2n.", A_ALWAYS, self, item, null, TO_CHAR);
     act("$1n opens $2n.", A_ALWAYS, self, item, null, TO_REST);
@@ -1802,17 +1804,7 @@ code
     /* first we are going to check if the player dictated what direction
         they want to open */
 
-    arg1 := arg;
-
-    arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
-
-    if (length(arg3) > 1)
-    {
-        count := atoi(arg3.[0]);
-        if (count > 0)
-            arg := arg3.[1];
-    }
-
+    // checkdoor() reads "2.door" itself
     arg2 := arg;
     arg1 := getword(arg2);
 
@@ -1988,12 +1980,12 @@ code
 
    // Messages to the people
    if (pc)  // Closing from the inside
-      act("$1n is closed from the inside by $2n", A_SOMEONE, item,  self, null, TO_ALL);
+      act("$1n is closed from the inside by $2n.", A_SOMEONE, item,  self, null, TO_ALL);
    else // closing from the outside
-      act("$2n is closed from the outside by $3n", A_SOMEONE, item.inside, item, self, TO_ALL);
+      act("$2n is closed from the outside by $3n.", A_SOMEONE, item.inside, item, self, TO_ALL);
 
    act("You close $2n.", A_ALWAYS, self, item, null, TO_CHAR);
-   act("$1n closed $2n.", A_ALWAYS, self, item, null, TO_REST);
+   act("$1n closes $2n.", A_ALWAYS, self, item, null, TO_REST);
 
    set(item.openflags, EX_CLOSED);
    send_done ("close", self, null,item, 0, "", null, CMD_AUTO_NONE);
@@ -2004,15 +1996,7 @@ code
    /* first we are going to check if the player dictated what direction
       they want to open */
 
-   arg1 := arg;
-   arg3 := split(arg1, ".");   /* checking for 2.door, 3.door, etc */
-
-   if (length(arg3) > 1)
-      {count := atoi(arg3.[0]);
-      if (count > 0)
-         arg := arg3.[1];
-      }
-
+   // checkdoor() reads "2.door" itself
    arg2 := arg;
    arg1 := getword(arg2);
 
@@ -2137,7 +2121,7 @@ code
       /* If it cant be opened, it cant be locked. let the player know */
    if (not isset(item.openflags, EX_OPEN_CLOSE))
    {
-      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      act("That is impossible.", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -2222,7 +2206,7 @@ code
 
    if (not isset(item.exit_info[dir], EX_CLOSED))
    {
-      act("Perhaps you should close it first....", A_ALWAYS, self, null, null, TO_CHAR);
+      act("Perhaps you should close it first...", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -2338,7 +2322,7 @@ code
    /* If it cant be opened, it cant be locked. let the player know */
    if (not isset(item.openflags, EX_OPEN_CLOSE))
    {
-      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      act("That is impossible.", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -2420,7 +2404,7 @@ code
 
    if (not isset(item.exit_info[dir], EX_CLOSED))
    {
-      act("Perhaps you should close it first....", A_ALWAYS, self, null, null, TO_CHAR);
+      act("Perhaps you should close it first...", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -2533,9 +2517,9 @@ code{
 
         buff := buff + "<div class='exit'><a cmd='#'>" + temp + "</a> - ";
         if (isset(room.exit_info[dir], EX_CLOSED))
-            buff := buff + "Closed " + room.exit_names[dir].[0] + "<br/>";
+            buff := buff + "Closed " + room.exit_names[dir].[0] + "<br/></div>";
         else
-            buff := buff + room.exit_to[dir].title + "<br/>";
+            buff := buff + room.exit_to[dir].title + "<br/></div>";
        }
       dir := dir + 1;
    }
@@ -2681,8 +2665,8 @@ code
    /* the movement dil will take care of the movenet cost  for the walking */
    end_cost := item.weight / 5;
 
-  /* start the walking */
-   exec(arg, self);
+  /* start the walking (arg may be an exit's name or part of a direction) */
+   exec(dirstring@function(dir), self);
 
   /* Couldnt move for some reason */
    if (room == self.outside)
