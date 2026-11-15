@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 25  // T010, T009, ...
+#define TEST_MAXIMUM 26  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -81,6 +81,80 @@ code
 }
 dilend
 
+
+// ==================== T026 =====================
+
+// and/or bind looser than the comparisons, as in C: a == 1 and b == 2 is
+// (a == 1) and (b == 2). Before, and sat with * and or with +, so it was
+// (a == (1 and b)) == 2, and every condition written without brackets was wrong.
+dilbegin T026(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   a : integer;
+   b : integer;
+   s : string;
+code
+{
+   logtest(tstno, LOGT_INFO, "T026 and/or precedence running");
+   a := 1;
+   b := 2;
+   s := "x";
+
+   if (not (a == 1 and b == 2))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a == 1 and b == 2 is false");
+      goto terminate;
+   }
+   if (a == 2 or b == 3)
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a == 2 or b == 3 is true");
+      goto terminate;
+   }
+   if (not (a == 6 or a == 12 or a == 1))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a chain of or comparisons is false");
+      goto terminate;
+   }
+   if (not (a < b and s == "X" and b != 5))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 mixed comparisons with and are false");
+      goto terminate;
+   }
+   // and binds tighter than or
+   if (not (a == 2 and b == 2 or a == 1))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 and doesn't bind tighter than or");
+      goto terminate;
+   }
+   // All constants: worked out by vmc, through the same rules
+   if (not (1 == 1 and 2 == 2) or (1 == 2 or 2 == 3))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 constant comparisons with and/or are wrong");
+      goto terminate;
+   }
+   // not still binds tightest: not a == 1 is (not a) == 1
+   if ((not a == 1) or not (not (a == 2) and "x" in s))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 not with and/in is wrong");
+      goto terminate;
+   }
+   // + and & are unchanged: they still bind tighter than the comparisons
+   if ((a + 1 != b) or ((b & 2) != 2))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 + or & changed");
+      goto terminate;
+   }
+
+   logtest(tstno, LOGT_INFO, "T026 Success");
+   sendtoalldil("done", "labdirector@test");
+   quit;
+
+:terminate:
+   sendtoalldil("fail", "labdirector@test");
+   quit;
+}
+dilend
 
 // ==================== T025 =====================
 
