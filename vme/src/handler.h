@@ -38,6 +38,7 @@ unit_data *equipment(unit_data *ch, ubit8 pos);
 unit_data *equipment_type(unit_data *ch, int pos, ubit8 type);
 void equip_char(unit_data *ch, unit_data *obj, ubit8 pos);
 
+void unequip_transfer_affect(unit_data *ch, unit_affected_type *af);
 unit_data *unequip_object(unit_data *obj);
 
 int unit_recursive(unit_data *from, unit_data *to);

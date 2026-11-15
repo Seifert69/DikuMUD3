@@ -96,6 +96,8 @@ dilval::dilval()
     val.ptr = nullptr;
     ref = nullptr;
     atyp = DILA_NONE;
+    min = INT32_MIN;
+    max = INT32_MAX;
 }
 
 /* free generated temporary values */

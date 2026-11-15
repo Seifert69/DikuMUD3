@@ -493,7 +493,7 @@ int load_string(const char *filename, char **file_str)
 
     stat(filename, &statbuf);
     input = open(filename, O_RDONLY);
-    if (!input)
+    if (input < 0)
     {
         slog(LOG_ALL, 0, "load_string(): File won't open: %s", filename);
         return (FILE_NOT_FOUND);
@@ -526,6 +526,13 @@ int load_string(const char *filename, char **file_str)
 #else
         rt = read(input, temp, nread);
 #endif
+        if ((int)rt <= 0) // a directory, or an error: rt would move temp far past the buffer
+        {
+            slog(LOG_ALL, 0, "load_string(): File won't read: %s", filename);
+            close(input);
+            FREE(*file_str);
+            return (FILE_NOT_FOUND);
+        }
         temp = temp + rt;
         nread = nread - rt;
     }
@@ -554,9 +561,9 @@ int save_string(const char *filename, char **file_str, char *opp)
     if (opp[0] == 'w')
     {
 #ifdef _WINDOWS
-        output = open(filename, O_WRONLY | O_CREAT, S_IREAD | S_IWRITE);
+        output = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IREAD | S_IWRITE);
 #else
-        output = open(filename, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+        output = open(filename, O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
 #endif
     }
     else
@@ -567,7 +574,7 @@ int save_string(const char *filename, char **file_str, char *opp)
         output = open(filename, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 #endif
     }
-    if (!output)
+    if (output < 0)
     {
         return (FILE_NOT_CREATED);
     }
@@ -619,7 +626,8 @@ int store_name_test(char *name)
     int i = 0;
     int ln = 0;
 
-    if (str_is_empty(name))
+    // "." and ".." are directories, not files
+    if (str_is_empty(name) || !strcmp(name, ".") || !strcmp(name, ".."))
     {
         return (0);
     }

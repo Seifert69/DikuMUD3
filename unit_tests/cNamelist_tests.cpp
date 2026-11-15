@@ -955,6 +955,21 @@ BOOST_AUTO_TEST_CASE(InsertName3_tests)
     BOOST_TEST(rc == expected);
 }
 
+BOOST_AUTO_TEST_CASE(InsertName_out_of_range_tests)
+{
+    cNamelist list;
+    list.AppendName("Thor");
+    ////////////////////////// Test Subject //////////////////////////////
+    // -1 from a signed caller is 4 billion: it once wrote namelist[0xFFFFFFFF]
+    BOOST_TEST(list.InsertName("Loki", static_cast<ubit32>(-1)) == false);
+    BOOST_TEST(list.InsertName("Loki", 10001) == false);
+    BOOST_TEST(list.InsertName("Loki", 1) == true);
+    ////////////////////////// Test Subject //////////////////////////////
+    BOOST_TEST(list.Length() == 2);
+    std::string expected = R"("namelist": ["Thor","Loki"])";
+    BOOST_TEST(list.json() == expected);
+}
+
 BOOST_AUTO_TEST_CASE(InsertName4_tests)
 {
     cNamelist list;

@@ -531,7 +531,7 @@ char dil_getbool(dilval *v, dilprg *prg)
 
         case DilVarType_e::DILV_HASHSTR:
             /* return Lvalue */
-            return ((std::string *)(v->ref))->empty();
+            return !((std::string *)(v->ref))->empty();
 
         case DilVarType_e::DILV_INT:
             return (v->val.num != 0); /* return Rvalue */
@@ -2175,7 +2175,12 @@ dilprg *dil_copy(char *name, unit_data *u)
     char *args[256];
 
     assert(name);
-    assert(strlen(name) < sizeof(buf));
+
+    if (strlen(name) >= sizeof(buf))
+    {
+        szonelog(u->getFileIndex()->getZone(), "DIL copy string too long (%d characters): %s", (int)strlen(name), u->getFileIndexSymName());
+        return nullptr;
+    }
 
     strcpy(buf, name);
 
@@ -2197,7 +2202,7 @@ dilprg *dil_copy(char *name, unit_data *u)
         {
             args[0]++; /* Skip the space we just generated! */
 
-            for (narg = 1; narg < (int)sizeof(args); narg++)
+            for (narg = 1; narg < (int)std::size(args); narg++)
             {
                 args[narg] = strtok(nullptr, ",");
 

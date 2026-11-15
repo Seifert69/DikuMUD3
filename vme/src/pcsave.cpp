@@ -50,10 +50,17 @@ std::string PlayerFileName(const char *pName)
     return diku::format_to_str("%s%c/%s", g_cServerConfig.getPlyDir(), *TmpBuf.c_str(), TmpBuf);
 }
 
+// A player name is a file name in its letter's directory: an empty name, or one with a '.' or a
+// '/' ("." and ".." name a directory, '/' leaves the player directory), is no player's name
+static bool is_player_name(const char *pName)
+{
+    return !str_is_empty(pName) && !strchr(pName, '.') && !strchr(pName, '/');
+}
+
 /* Return TRUE if exists */
 int player_exists(const char *pName)
 {
-    return file_exists(PlayerFileName(pName));
+    return is_player_name(pName) && file_exists(PlayerFileName(pName));
 }
 
 unit_data *find_player(char *name)
@@ -86,7 +93,7 @@ int delete_inventory(const char *pName)
 /* Return TRUE if deleted */
 int delete_player(const char *pName)
 {
-    if (remove(PlayerFileName(pName).c_str()))
+    if (!is_player_name(pName) || remove(PlayerFileName(pName).c_str()))
     {
         return FALSE;
     }
@@ -106,6 +113,11 @@ sbit32 find_player_id(char *pName)
     if (str_is_empty(pName))
     {
         slog(LOG_ALL, 0, "Empty string in find_player_id.");
+        return -1;
+    }
+
+    if (!is_player_name(pName))
+    {
         return -1;
     }
 
@@ -470,7 +482,7 @@ unit_data *load_player(const char *pName)
     FILE *pFile = nullptr;
     unit_data *pc = nullptr;
 
-    if (str_is_empty(pName))
+    if (!is_player_name(pName))
     {
         return nullptr;
     }

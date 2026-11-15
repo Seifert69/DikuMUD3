@@ -41,7 +41,11 @@ ubit1 apf_mod_char_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(unit->isChar());
+    if (!unit->isChar())
+    {
+        slog(LOG_ALL, 0, "ERROR: Affect char flags on room/obj %s", unit->getFileIndexSymName());
+        return TRUE;
+    }
 
     if (set)
     {
@@ -75,7 +79,11 @@ ubit1 apf_mod_obj_flags(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
     unit_affected_type *taf = nullptr;
 
-    assert(unit->isObj());
+    if (!unit->isObj())
+    {
+        slog(LOG_ALL, 0, "ERROR: Affect obj flags on room/char %s", unit->getFileIndexSymName());
+        return TRUE;
+    }
 
     if (set)
     {
@@ -278,7 +286,11 @@ ubit1 apf_spell_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 /* Unit must be a CHAR!                                   */
 ubit1 apf_ability_adj(unit_affected_type *af, unit_data *unit, ubit1 set)
 {
-    assert(unit->isChar());
+    if (!unit->isChar())
+    {
+        slog(LOG_ALL, 0, "ERROR: Affect abilities on room/obj %s", unit->getFileIndexSymName());
+        return TRUE;
+    }
 
     if (set)
     {

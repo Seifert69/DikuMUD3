@@ -13,6 +13,7 @@
 #include "slog.h"
 #include "textutil.h"
 
+#include <algorithm>
 #include <cctype>
 #include <cstring>
 
@@ -673,12 +674,19 @@ void cNamelist::PrependName(const char *name)
     namelist[0] = new std::string(name ? name : "");
 }
 
-void cNamelist::InsertName(const char *name, ubit32 loc)
+/* A position past the end pads the list with empty strings, up to position 10000; a position
+   further out (such as -1 from a caller's signed number) is refused and changes nothing */
+bool cNamelist::InsertName(const char *name, ubit32 loc)
 {
     ubit32 nadd = 0;
     ubit32 x = 0;
     ubit32 olen = 0;
     olen = length;
+
+    if (loc > std::max<ubit32>(length, 10000))
+    {
+        return false;
+    }
 
     if (name)
     {
@@ -722,6 +730,7 @@ void cNamelist::InsertName(const char *name, ubit32 loc)
             namelist[x] = new std::string("");
         }
     }
+    return true;
 }
 
 // Find the index of the entry matching 'name' exactly (case insensitive,

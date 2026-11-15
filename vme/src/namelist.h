@@ -44,7 +44,7 @@ public:
     void AppendNameTrim(const char *name);
     void AppendName(const char *name);
     void PrependName(const char *name);
-    void InsertName(const char *name, ubit32 loc);
+    bool InsertName(const char *name, ubit32 loc);
     bool InsertNameOrdered(const char *name);
 
     cNamelist *Duplicate();

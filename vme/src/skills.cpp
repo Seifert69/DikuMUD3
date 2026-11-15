@@ -39,14 +39,14 @@ int g_hit_location_table[] = /* Determine by using 2d8 */
      WEAR_FEET, /* 15..16 => 4.68% for feet   */
      WEAR_FEET};
 
-int wear_location_prop[WEAR_MAX] = {0,  0, 0, 0, 0, 0,
-                                    22, // Body  [6]
-                                    3,  // Head  [7]
-                                    18, // Legs  [8]
-                                    3,  // Feet  [9]
-                                    3,  // Hands [10]
-                                    15, // Arms  [11]
-                                    0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int wear_location_prop[WEAR_MAX + 1] = {0,  0, 0, 0, 0, 0,
+                                        22, // Body  [6]
+                                        3,  // Head  [7]
+                                        18, // Legs  [8]
+                                        3,  // Feet  [9]
+                                        3,  // Hands [10]
+                                        15, // Arms  [11]
+                                        0,  0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 // HEAD (7), HANDS(10), ARMS(11), BODY(6), LEGS(8), FEET(9)
 

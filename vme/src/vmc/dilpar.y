@@ -688,12 +688,13 @@ somerefargs : refarg ',' somerefargs
 refarg   : SYMBOL ':' type
     {
         /* collect argument */
-        ref.argt[ref.argc] = DilVarTypeIntToEnum($3); ;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
-        ref.argv[ref.argc] = str_dup($1);
-        if (++ref.argc > ARGMAX)
+        if (ref.argc >= ARGMAX)
         {
             dilfatal("Too many arguments");
         }
+        ref.argt[ref.argc] = DilVarTypeIntToEnum($3); ;  // I'm not sure why 'type' returns the INT value rather than a DilVarType_e
+        ref.argv[ref.argc] = str_dup($1);
+        ref.argc++;
     }
     ;
 
@@ -960,6 +961,13 @@ variable : variable '.' field
             }
         }
         $$.dsl = $3.dsl; /* static/dynamic/lvalue */
+
+        /* A zone's title and a command's level can only be read */
+        if ((($1.typ == DilVarType_e::DILV_ZP) && ($3.num == DILF_TIT)) ||
+            (($1.typ == DilVarType_e::DILV_CP) && ($3.num == DILF_LVL)))
+        {
+            $$.dsl = DSL_DYN;
+        }
 
         if ($1.typ == DilVarType_e::DILV_SLP && $1.dsl == DSL_LFT)
         {
@@ -1783,7 +1791,7 @@ field   : idx
         INITEXP($$);
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_MAPX;
     }
     | DILSF_MAPY /* .mapy */
@@ -1791,7 +1799,7 @@ field   : idx
         INITEXP($$);
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_MAPY;
     }
     | DILSF_RFL /* .roomflags */
@@ -1905,7 +1913,7 @@ field   : idx
         copy_code(&($$), &($2));
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_ABL_C;
         FREEEXP($2);
     }
@@ -1924,7 +1932,7 @@ field   : idx
         copy_code(&($$), &($2));
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_SPL_C;
     }
     | DILSF_SKL_L idx /* .skill_levels */
@@ -1943,7 +1951,7 @@ field   : idx
         copy_code(&($$), &($2));
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_SKL_C;
         FREEEXP($2);
     }
@@ -1963,7 +1971,7 @@ field   : idx
         copy_code(&($$), &($2));
         $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_WPN_C;
         FREEEXP($2);
     }
@@ -1986,7 +1994,7 @@ field   : idx
     | DILSF_PROF /* .profession */
     {
         INITEXP($$);
-        $$.rtyp = DilVarType_e::DILV_UCP;
+        $$.rtyp = DilVarType_e::DILV_UP;
         $$.typ = DilVarType_e::DILV_INT;
         $$.dsl = DSL_LFT;
         $$.num = DILF_PROF;
@@ -2066,10 +2074,7 @@ field   : idx
     | DILSF_DRE /* .dex_red */
     {
         INITEXP($$);
-        $$.rtyp = DilVarType_e::DILV_UP;
-        $$.typ = DilVarType_e::DILV_INT;
-        $$.dsl = DSL_DYN;
-        $$.num = DILF_DRE;
+        dilfatal("The field .dex_red does not exist");
     }
     | DILSF_FGT /* .fighting */
     {
@@ -2184,7 +2189,7 @@ field   : idx
         INITEXP($$);
         $$.rtyp = DilVarType_e::DILV_ZP;
         $$.typ = DilVarType_e::DILV_SP;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_FNAME;
     }
     | DILSF_NOTES /*.notes*/
@@ -2192,7 +2197,7 @@ field   : idx
         INITEXP($$);
         $$.rtyp = DilVarType_e::DILV_ZP;
         $$.typ = DilVarType_e::DILV_SP;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_NOTES;
     }
     | DILSF_HELP /*.help*/
@@ -2200,7 +2205,7 @@ field   : idx
         INITEXP($$);
         $$.rtyp = DilVarType_e::DILV_ZP;
         $$.typ = DilVarType_e::DILV_SP;
-        $$.dsl = DSL_LFT;
+        $$.dsl = DSL_DYN;
         $$.num = DILF_HELP;
     }
     | DILSF_QST /* .quests */
@@ -5069,6 +5074,7 @@ dilfun  :  funcall
             /* Make nodes dynamic */
             $$.dsl = DSL_DYN;
             $$.typ = DilVarType_e::DILV_SP;
+            make_code(&($3));
             add_code(&($$), &($3));
             add_ubit8(&($$), DILE_AST);
         }
@@ -5228,6 +5234,11 @@ dilfun  :  funcall
         else if ($5.typ != DilVarType_e::DILV_SP)
         {
             dilfatal("Arg 2 of 'loadstr' not string");
+        }
+        else if (($5.dsl != DSL_LFT) || ($5.codep - $5.code != 1 + (int)sizeof(ubit16)) || ($5.code[0] != DILE_VAR))
+        {
+            /* the text is written into it: only a variable (DILE_VAR and its number) will do */
+            dilfatal("Arg 2 of 'loadstr' not a string variable");
         }
         else
         {
@@ -7320,6 +7331,17 @@ void add_var(char *name, DilVarType_e type, const char *globalVarName)
     //    fprintf(stderr, "\nAdding global variable: %s\n", globalVarName);
     //}
 
+    // The server keeps only stringlists and intlists as global variables
+    if (globalVarName && type != DilVarType_e::DILV_SLP && type != DilVarType_e::DILV_ILP)
+    {
+        dilfatal("var global '%s' must be a stringlist or an intlist", name);
+    }
+
+    if (tmpl.varc >= VARMAX)
+    {
+        dilfatal("Too many variables");
+    }
+
     tmpl.vart[tmpl.varc] = type;
     tmpl.varg[tmpl.varc] = str_dup(globalVarName);
 
@@ -7328,10 +7350,7 @@ void add_var(char *name, DilVarType_e type, const char *globalVarName)
     frm.vars[tmpl.varc].type = type;
     frm.vars[tmpl.varc].itype = DilIType_e::Regular;
 
-    if (++tmpl.varc > VARMAX)
-    {
-        dilfatal("Too many variables");
-    }
+    tmpl.varc++;
 }
 
 int add_label(char *name, ubit32 adr)
