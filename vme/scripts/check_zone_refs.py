@@ -12,7 +12,8 @@ It reads each zone as vmc's preprocessor leaves it (vmc -p) and takes these as r
 - `dilcopy x@zone(...)`, and calls `x@zone(...)` in DIL: a template;
 - best effort: a string that is exactly "x@zone" ("load("x@zone")", findsymbolic, dilfind,
   link, ...): a unit or a template; not a zone's title, nor a string joined to others with +.
-`key nokey` is the zones' way of saying a door has no key, so nokey is never looked up.
+`key nokey` is the zones' way of saying a door has no key, so nokey is never looked up; the
+references of the DIL test zone (test.zon) aren't checked: its tests use missing names on purpose.
 
 Zones listed in vme/etc/zonelist but not present (the private zones, in a public checkout) are
 skipped; a zone that is neither present nor listed is reported.
@@ -50,6 +51,7 @@ SECTIONS = {"zone", "dil", "rooms", "objects", "mobiles", "reset", "end"}
 UNIT_SECTIONS = {"%rooms", "%objects", "%mobiles"}
 RESET_WORDS = {"load", "equip", "door", "purge", "remove", "follow", "into", "in"}
 NOT_LOOKED_UP = {"nokey"}  # `key nokey`: a door without a key
+NOT_CHECKED = {"test"}     # the DIL test zone names missing units on purpose
 UNIT, TEMPLATE = 1, 2      # what a reference may name (a string may name either)
 
 
@@ -208,6 +210,8 @@ def main():
 
     unresolved = {}  # (zone, name@zone) -> the places it is used
     for z, (units, templates, refs) in sorted(zones.items()):
+        if z in NOT_CHECKED:
+            continue
         for wanted, n, rz, f, ln in refs:
             tz = rz or z
             if tz not in zones:
