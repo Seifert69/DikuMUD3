@@ -394,7 +394,7 @@ code
 	{
 		act("We are sorry, but you have not played here long enough to get on our gift list.", A_ALWAYS, activator, null, null, TO_CHAR);
 		act("But we still Wish you a Happy Holiday Season!", A_ALWAYS, activator, null, null, TO_CHAR);
-		log(pc.name+"has not played here long enough to receive a gift.");
+		log(pc.name+" has not played here long enough to receive a gift.");
 		unsecure(pc);
 		goto start;
 	}
@@ -422,6 +422,7 @@ code
 	{
 		addextra (pc.extra,{"$XMASEXP20"},itoa(pc.exp)); 
 		act("Come back when you have gained some experience!", A_ALWAYS, activator, null, null, TO_CHAR);
+		unsecure(pc);
 		goto start;
 	}
 	else if ((pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)) >=200000)
@@ -433,9 +434,7 @@ code
 		link(pc, findroom("study@holiday20"));
 		act("$1n appears in a flash of light!", A_SOMEONE, activator, null, null,TO_REST);
 		act("You find yourself mysteriously transferred to the North Pole!", A_ALWAYS, activator, null, null, TO_CHAR);
-		pause;
-		pause;
-		exec("look ", pc);
+		exec("look", pc);
 		unsecure(pc);
 		goto start;
 	}
@@ -443,6 +442,7 @@ code
 	{  /*they need */
 		act( "You need "+itoa(200000 - (pc.exp - atoi(pc.extra.["$XMASEXP20"].descr)))
 		+ " more experience to see Santa.", A_ALWAYS, activator, null, null, TO_CHAR);
+		unsecure(pc);
 		goto start;
 	}
 
@@ -549,6 +549,7 @@ code
 	if (XMAS_DONE20 in pc.quests)
 	{
 		exec("whisper "+pc.name+ " Don't be greedy or I shall take your gift away!", self);
+		unsecure(pc);
 		goto start;
     }
 	else if (XMAS_SANTA20 in pc.quests)
@@ -556,6 +557,7 @@ code
 		exec("say "+pc.name+ ", I'd love to talk more, but I have a lot to do. " +
 		"My assistant will take care of you. The workshop is over there.", self);
 		exec("point ", self);
+		unsecure(pc);
 		goto start;
     }
 	
@@ -736,6 +738,7 @@ var
 	stat	:	string;
 	spot	:	string;
 	sl		:	stringlist;
+	i		:	integer;
 
 code
 {
@@ -774,6 +777,8 @@ code
 	log("SANTA DIL: ("+pc.name+") Spot is "+spot);
 	if (spot in sl)
 	{
+		i := spot in sl;
+		spot := sl.[i - 1];
 		exec("say Okay, you have chosen "+spot+".", self);
 		pause;
 	}
@@ -804,6 +809,8 @@ code
 	log("SANTA DIL: ("+pc.name+") Stat is "+stat);
 	if (stat in sl)
 	{
+		i := stat in sl;
+		stat := sl.[i - 1];
 		exec("say Okay, you want to boost "+stat+".", self);
 		pause;
 	}
@@ -834,7 +841,6 @@ code
 	pause;
 	exec("shout <div class='cpr'>Happy Holidays "+pc.name+"</div>",self);
 	link(pc, findroom("square@udgaard"));
-	pause;
 	exec("look",pc);
 
 :lost_pc:
@@ -1012,6 +1018,7 @@ code
 		{
 			act("You must pick me up before opening me.",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -1092,6 +1099,7 @@ code
 		{
 			act("You must pick me up before opening me. DOH!",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -1137,7 +1145,7 @@ code
 	+"<div class='cpr'>Happy Holidays </div><div class='cpw'>from the </div><div class='cpg'>Valhalla Staff</div>" ;
 
 	gift1 := textformat(buf);
-	sendtext(gift1+"<br/><br/>", activator);
+	sendtext(gift1+"<br/><br/>", pc);
 
 	addstring(sl,"card");
 	addstring(sl,"$"+pc.name);
@@ -1192,6 +1200,7 @@ code
 		{
 			act("You must pick me up before opening me. DOH!",
 				A_ALWAYS, activator, null, null, TO_CHAR);
+			unsecure(pc);
 			goto start;
 		}
 		act("You hear a faint click. *click* ",
@@ -1226,7 +1235,7 @@ code
 	"<div class='cpr'>Happy Holidays </div><div class='cpw'>from the </div><div class='cpg'>Valhalla Staff</div>" ;
         
 	gift1 := textformat(buf);
-	sendtext(gift1+"<br/><br/>", activator);
+	sendtext(gift1+"<br/><br/>", pc);
 
 	addstring(sl,"card");
 	addstring(sl,"$"+pc.name);
@@ -3379,11 +3388,13 @@ code
 	exec("say Someone is going on Santa's naughty list for this!", self);
 	pause;
 	exec("remove remover",self);
+	u := findsymbolic(self, "graf_r@g_q", FIND_UNIT_INVEN | FIND_UNIT_EQUIP);
 	destroy(u);
 	pause;
 	exec("emote puts the empty can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover in his bag.", self);
 	subextra (self.extra,"$block wander");
 	pause;
+	goto start;
 }
 dilend
 

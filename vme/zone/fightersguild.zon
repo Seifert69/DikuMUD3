@@ -207,15 +207,15 @@ code
       { craft:="very bad"; goto effect2; }	/* craft below -5  */
    if (item.value[1] < 0)
       { craft:="bad"; goto effect2; }		/* craft below 0   */
-   if ((item.value[1] > -1) and (item.value[2] < 3))
+   if ((item.value[1] > -1) and (item.value[1] < 3))
       { craft:="average"; goto effect2; }   	/* craft 0-2	*/
-   if ((item.value[1] > 2) and (item.value[2] < 5))
+   if ((item.value[1] > 2) and (item.value[1] < 5))
       { craft:="above average"; goto effect2; }  /* craft 3-4	*/
-   if ((item.value[1] > 4) and (item.value[2] < 8))
+   if ((item.value[1] > 4) and (item.value[1] < 8))
       { craft:="fine"; goto effect2; }	/* craft 5-7	*/
-   if ((item.value[1] > 7) and (item.value[2] < 11))
+   if ((item.value[1] > 7) and (item.value[1] < 11))
       { craft:="excellent"; goto effect2; }	/* craft 8-10	*/
-   if ((item.value[1] > 10) and (item.value[2] <16))
+   if ((item.value[1] > 10) and (item.value[1] <16))
       { craft:="amazing"; goto effect2; }	/* craft 11-15	*/
    if (item.value[1] > 15)
       { craft:="unique"; goto effect2; }	/* craft over 15 */
@@ -681,7 +681,7 @@ wait (SFB_DONE, command ("worship")and(self ==target));
       item := load("fight_belt@fightersguild");
       item.height := pc.height;
       link(item, pc);
-      sendtext("Sir Arthur hands you a belt.<br/>",self);
+      sendtext("Sir Arthur hands you a belt.<br/>",pc);
       act("$3n hands $1n a belt.",A_SOMEONE,pc,null,self,TO_REST);
       pause;
       exec ("say There you go. Run along now.", self);pause;

@@ -348,9 +348,7 @@ code
         "whisper $1N You see, I'm feeling rather parched.",
         "whisper $1N A dash of water would do me well!",
         "whisper $1N Would you be so kind as to help me out?",
-        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details."}, "", "");
-
-    act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details. <div class='hint'>HINT: Simply type 'nod' and hit enter.</div>"}, "", "");
 
     if (pc == null)
         goto start;
@@ -525,8 +523,7 @@ code
     goto accept_explore;
 
   :accept_explore:
-    wait(SFB_DONE, activator.type == UNIT_ST_PC);
-    pc := activator;
+    wait(SFB_DONE, activator == pc);
     if (command("nod"))
     {
       goto anchor_accepted;
@@ -615,7 +612,7 @@ code
       pause;
       exec("say Now, go forth and die freely!", self);
       pause;
-      exec("wave $1n", self);
+      exec("wave " + pc.name, self);
 
       // settle rewards
       subextra(pc.quests, SOUL_ANCHOR_ONGOING);
@@ -807,7 +804,7 @@ code
 	if ((item.symname == "tarn_dagger@gremlin") and (not(EXPLORE_COMPLETE in activator.quests)))
 	{
 		addstring(exdp.names, "dagger");
-		destroy(self.inside);
+		destroy(item);
 		// exec("say I see. It is as I feared, then.", self);
 		pause;
 		exec("cry", self);
@@ -818,9 +815,9 @@ code
 	else
 	{
 		exec("say Did I ask for this, "+pc.name +"?", self);
+		link(item, pc);
 		pause;
 		exec("say I think not.", self);
-		link(self.inside, pc);
 	}
 
 :rejected:	

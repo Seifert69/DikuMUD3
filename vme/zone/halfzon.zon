@@ -235,7 +235,7 @@ code
   item.title:=item.title+" Broken";
    item.objecttype := ITEM_TRASH;
   item.manipulate:=MANIPULATE_TAKE;
-  if (item.equip==0)
+  if (item.equip!=0)
    {
   act ("Your $2N falls off.",
   A_ALWAYS,pc,item,null,TO_CHAR);
@@ -390,7 +390,7 @@ inside_descr
 "You are standing in a giant firepit up to your ankles in hot embers!"
 
 flags{UNIT_FL_TRANS}
-dilcopy firepit_inside@halfzon("w_pit@halfzon e_pit@halfzon w_pit@halfzon n_pit@halfzon nw_pit@halfzon ne_pit@halfzon sw_pit@halfzon
+dilcopy firepit_inside@halfzon("w_pit@halfzon e_pit@halfzon s_pit@halfzon n_pit@halfzon nw_pit@halfzon ne_pit@halfzon sw_pit@halfzon
 se_pit@halfzon");
 
 end
@@ -3727,6 +3727,7 @@ if (item==null)
 
    item.height := pc.height;
   exec ("give staff "+pc.name,self);
+  unsecure(pc);
   goto start;
 
 }
@@ -4605,9 +4606,9 @@ if ("canoe1" == item.nameidx)
  {
   exec("say Did I ask for this, "+pc.name +"?", self);
   exec("say I don't think so. I think I have a nice spot for it though.", self);
+  destroy(item);   // before the pause, which clears item
   pause;
   exec("thank "+pc.name, self);
-  destroy(item);
   unsecure(pc);
   pause;
   goto start;
@@ -6212,6 +6213,7 @@ drink:={"waterbarrel@halfzon", "waterbarrel@halfzon", "waterbarrel@halfzon",
 
 wait(SFB_CMD,(( (command("make")) and
                 (activator.type == UNIT_ST_PC) and
+                (activator == self.outside) and
                 (self.equip == WEAR_HOLD) and
                 (("food" in argument) or ("drink" in argument)))));
 

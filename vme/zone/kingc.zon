@@ -88,11 +88,12 @@ code
 
       act(TRANS_TEXT,
 	  A_HIDEINV, u, null, null, TO_CHAR);
-
-      exec("look", u);
    }
 
    link(u, findsymbolic("rn_8200@ww1"));
+
+   if (u.type & (UNIT_ST_PC | UNIT_ST_NPC))
+      exec("look", u);
 
    :done:
    return;
@@ -1992,7 +1993,8 @@ code
       u := load("chalice@kingc");
       link(u, pc);
 
-      exec("emote gives you the chalice.", self);
+      act("$3n gives you $2n.", A_SOMEONE, pc, u, self, TO_CHAR);
+      act("$3n gives $2n to $1n.", A_SOMEONE, pc, u, self, TO_REST);
       pause;
       exec("say Return with the water of life, and prove your loyalty to the "+
            "King of Midgaard.", self);
@@ -2350,8 +2352,9 @@ code
 	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
 	pc := activator;
 	secure(pc, lost);
-	dice := load("dice@manse");
-	link(dice, self);
+	dice := findsymbolic(self, "dice@manse", FIND_UNIT_INVEN);
+	if (dice == null)
+		dice := load("dice@manse");
 	exec("roll", self);
 	pause;
 	exec("curse", self);
@@ -2417,8 +2420,9 @@ code
 	wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
 	pc := activator;
 	secure(pc, lost);
-	dice := load("dice@manse");
-	link(dice, self);
+	dice := findsymbolic(self, "dice@manse", FIND_UNIT_INVEN);
+	if (dice == null)
+		dice := load("dice@manse");
 	exec("roll", self);
 	pause;
 	exec("clap", self);

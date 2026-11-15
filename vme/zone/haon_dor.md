@@ -23,3 +23,28 @@
    the typical grandmother") but is `SEX_MALE`. Both carry the comment "He shall use a polearm"
    while wielding a sword. These player-house units are only compiled with `EXTENDED_MUD`; fix
    them, or are they dead and could be removed?
+
+## Step 2
+
+Fixed in place:
+- dragon_attack (green_dragon): `priority` was set before the vlevel test and never released, and
+  a player below vlevel 71 left a secure behind. The test now comes first, and `:start:` releases
+  the priority (the dragon has no other program today, so nothing changes in play).
+
+Questions:
+1. **web_movement** (room under_web, line 2133) and **spider** (line 43): web_movement has no
+   `goto`, but it restarts at the top when it runs off its end, so every command typed under the
+   web (by anyone visible below level 200) sends "webaction", and at the first one every spider on
+   the web drops. The spiders then `exec("u", self)` to go back, but under_web has no up exit (only
+   east), so they stay under the web for good, and as they are no longer `on_web` they never drop
+   again (the reset's `max 4` loads no new ones while they live). Put the spider back with
+   `link(self, findroom("on_web@haon_dor"))` plus messages, since no exit leads there (perhaps with
+   a pause or a per-player limit)? That makes the ambush happen every time, so it is your call.
+2. **orc_return** (line 137, on the chief's three followers): the first thing it does is
+   `walk_room@function("throne@dwarves", 4)`, so the orcs try to walk to that room in another zone
+   as soon as they load, and only come back to orc_cave_chief when woken. Is that meant (a raid?), or a leftover from a copy (`orc_cave_chief@haon_dor`)? orc_return also puts an
+   orc back to sleep as soon as it is awake, while orc_follower wakes them for the stew raid;
+   the two fight each other.
+3. **compl_pot** (line 2643): Mary's list includes "hold pot", but qstWaitDone has already
+   deleted the pot she was given and the new one is loaded only after it, so she holds nothing.
+   Load the pot before qstWaitDone's lines, or drop "hold pot"?

@@ -572,7 +572,7 @@ if( not visible( self, pc ) )
       goto lost_pc;
    }
 
-dilcopy ("busy@function(Please wait I am busy with other work right now.",
+dilcopy ("busy@function(Please wait I am busy with other work right now.)",
 self)
 ;
 
@@ -650,7 +650,7 @@ goto how_much;
 
    if (transfermoney(pc, self, tcost))
    {
-      exec(", touches " + thing.name + " softly and begins to chant...", self);
+      exec("emote touches " + thing.name + " softly and begins to chant...", self);
 :repair_it:
       if(thing.objecttype==ITEM_WAND)
         result := cast_spell(SPL_CHARGE_WAND, self, self, thing, "");
@@ -726,7 +726,7 @@ code
       goto lost_pc;
    }
 
-   dilcopy ("busy@function(Please wait I am busy with other work right now.", self);
+   dilcopy ("busy@function(Please wait I am busy with other work right now.)", self);
 
    pause;
 
@@ -797,7 +797,7 @@ code
     {
         exec("sigh",self);
         exec("say How can I deal with someone I can't see?", self );
-        exec("drop"+medium.name,self);
+        exec("drop "+medium.name,self);
         goto start;
     }
     pc := activator;
@@ -911,7 +911,7 @@ code
     {
         exec("sigh",self);
         exec("say How can I deal with someone I can't see?", self );
-        exec("drop"+medium.name,self);
+        exec("drop "+medium.name,self);
         goto start;
     }
     pc := activator;
@@ -987,7 +987,7 @@ code
 
     wait(SFB_DONE,(command("say") or command("nod") or command("shake"))and(activator == pc));
 
-    if((command("say")and((" " + argument)in "no")) or command("shake"))
+    if((command("say")and(argument == "no")) or command("shake"))
     {
         exec("say Oh, what is it then?",self);
         goto brieftext;
@@ -1077,7 +1077,7 @@ code
    secure (pc,lostpc);
    tgt := medium;
    secure (tgt,lostitem);
-   dilcopy ("busy@function(Please wait I am busy with other work right now.",
+   dilcopy ("busy@function(Please wait I am busy with other work right now.)",
             self);
 
    if (not (tgt.type&UNIT_ST_OBJ))
@@ -7210,6 +7210,7 @@ code
    pause;
    exec("handshake "+u.name, self);
    addextra(u.quests, {POLICE_ACADEMY}, "");
+   goto loop;
 }
 dilend
 
@@ -8180,7 +8181,7 @@ code
 
    // qitems_ deletes items received 
    log(pc.symname + " became a citizen of Midgaard.");
-   addextra(pc.extra, {"$protected midgaard"}, "Paid 1 PP to the Mayor");
+   addextra(pc.extra, {"$protected midgaard"}, "Paid 2 PP to the Mayor");
 
    goto start;
 }
@@ -9846,8 +9847,7 @@ code
       pause;
       act ("Understand though if you sign there is no turning back.  "+
       "Once a book signer always a book signer.  Also don't complain to "+
-      "the gods about another book signer that kills you cause that's what
-signing "+
+      "the gods about another book signer that kills you cause that's what signing "+
       "this book means.  You are giving your permission to be killed.",
         A_ALWAYS, pc, self, null, TO_CHAR);
         pause;

@@ -62,7 +62,7 @@ code
    position_update(pc);
    act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
    "$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
-   room := findroom("sth1@sewers");
+   room := findroom("sth1@midsewers");
    link(pc,room);
    act("Two large Dark Knights emerge from the Guild, dragging $1n "+
    "between them and dump $1m unceremoniously in the sewer."
@@ -289,13 +289,17 @@ code
    secure(pc, lost);
 
    if (AVENGER_GIVEN in pc.quests) 
+      {
+      unsecure(pc);
       goto start;
+      }
 
    if (IsInGuild@guilds(pc, GUILD_KNIGHT))
    {
       if (pc.alignment >= -349)
       {
          exec ("say You must work harder on your demeanor.", self);
+         unsecure(pc);
          goto start;
       }
 
@@ -607,9 +611,9 @@ act("$1n's $2n engulfs $3n in darkness!"
 act("$3n screams in agony as $3s body is engulfed in a fury of brimstone!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's $2n darkens violently, brimstone engulfs your body!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("The forces of darkness engulf you in unbearable pain!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 enemy.hp := -7;
 position_update(enemy);
 goto start;
@@ -621,7 +625,7 @@ act("Your slash leaves a fiery trail of hellfire through the air!"
 act("$1n's slash leaves a fiery trail of hellfire through the air!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's slash leaves a fiery trail of hellfire through the air!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 if (random < 20)
 {
@@ -631,8 +635,8 @@ act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$1n's $2n darkens and erupts into hellfire, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("$1n's $2N darkens and erupts into hellfire, burning you!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+act("$1n's $2n darkens and erupts into hellfire, burning you!"
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 else if (random < 30)
 {
@@ -641,7 +645,7 @@ act("Your $2n surges with the powers of darkness!"
 act("$1n's $2n surges with the powers of darkness!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's $2n surges with the powers of darkness!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 else if (random < 40)
 {
@@ -654,7 +658,7 @@ act("The blade of $1n's $2n erupts in brimstone!"
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("A blinding flash of brimstone from $1n's $2n causes you to avert your "+
-"eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT);
+"eyes in pain!" ,A_ALWAYS,self.outside,self,enemy,TO_VICT);
  goto start;
 }
 if (random < 50)
@@ -668,9 +672,9 @@ act("The demon engraved on $1n's $2n seems to grin in satisfaction!"
 act("$3n suddenly clutches $3s chest and screams in agony!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("The demon engraved on $1n's $2n seems to grin in satisfaction!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("You feel the wrath of Hades flood through your body!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 if (random < 60)
 {
@@ -683,9 +687,9 @@ act("Hellfire sprays from $1n's $2n, engulfing $3n!"
 act("$3n screams in agony!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("Hellfire sprays from $1n's $2n, engulfing you!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("That REALLY hurt!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 goto start;
 }
 goto start;
@@ -724,7 +728,8 @@ charge:=interrupt (SFB_MSG,((self==activator) and
         (argument=="add charge")), charge);
 :start:
   wait (SFB_CMD,(command ("say")) and
-  ("Avenge!" in argument)and(self.equip==WEAR_WIELD));
+  ("Avenge!" in argument)and(self.equip==WEAR_WIELD)and
+  (activator==self.outside));
         block;
 act ("You raise your hand and shout to the dark forces <div class='cpr'>'Avenge!'</div><div class='cw'></div>",
 A_SOMEONE,self.outside,null,null,TO_CHAR);
@@ -737,7 +742,7 @@ if (i < self.outside.abilities[ABIL_DIV])
 {
    act("Your $2n darkens in response to your prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-   act("$1N's $2n darkens in response to $1s prayer!",
+   act("$1n's $2n darkens in response to $1s prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_REST);
 n:=cast_spell(SPL_DISPLACE_MAGIC,self.outside,self,self.outside,"");
 pause;

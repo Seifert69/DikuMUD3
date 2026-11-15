@@ -539,6 +539,7 @@ code
       pause;
       exec("say I hope this will serve you well in your travels.  Return when "+
       "you are ready to continue your education with us.", self);
+      unsecure(pc);
       goto start;
    }
    pause;

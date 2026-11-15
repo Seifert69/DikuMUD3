@@ -172,7 +172,7 @@ code
 
    act ("Your $2N burns you and you drop it to the ground.",
       A_ALWAYS,self.outside,self,null,TO_CHAR);
-   act ("$1n's $2N burns $1m and $1s drops it to the ground.",
+   act ("$1n's $2N burns $1m and $1e drops it to the ground.",
       A_SOMEONE,self.outside,self,null,TO_REST);
    act ("Being in the right guild might help.",
       A_ALWAYS,self.outside,null,null,TO_CHAR);
@@ -243,6 +243,7 @@ code
       exec ("say You are a disgrace to our order!!", self);
       exec ("say In the future you will be banned for this action!", self);
       exec ("spit "+ activator.name, self);
+      goto start;
    }
 
    if (activator.alignment < 350)
@@ -718,6 +719,7 @@ code
          goto start;
       }
       exec("say You are not pure enough to join our order.", self);
+      goto start;
    }
 
    if (not check_protected@justice(activator, "midgaard"))
@@ -930,6 +932,7 @@ code
    or ((pc.level < 51)and
    (gift.nameidx $= "sword_dark")and(gift.zoneidx $= "keep")))
          {
+   destroy(gift);   // here: gift isn't secured, so after the pauses it is null
    exec("say Ahhh... Excellent. Your courage failed you not.", self);pause;
    exec("say Now take this Flame Tongue, and use it wisely. "+
    "It will serve you well.", self);
@@ -1345,9 +1348,9 @@ act("$1n's $2N engulfs $3n in living flame!"
 act("$3n screams in agony as $3s body is devoured in the fury of the fire!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's $2N flames violently, fire engulfs your body!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("The holy fire devours you in unbearable pain!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 enemy.hp := -7;
 position_update(enemy);
 goto start;
@@ -1359,7 +1362,7 @@ act("Your slash leaves a fiery trail through the air!"
 act("$1n's slash leaves a fiery trail through the air!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's slash leaves a fiery trail through the air!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 if (random < 20)
 {
@@ -1370,7 +1373,7 @@ act("$1n's $2N flickers and bursts into flames, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's $2N flickers and bursts into flames, burning you!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 else if (random < 30)
 {
@@ -1379,7 +1382,7 @@ act("Fire flickers along the edge of your $2N!"
 act("Fire flickers along the edge of $1n's $2N!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("Fire flickers along the edge of $1n's $2N!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 else if (random < 40)
 {
@@ -1392,7 +1395,7 @@ act("The blade of $1n's $2N flashes in a blinding flame!"
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("A blinding flash of fire from $1n's $2N causes you to avert your "+
-"eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+"eyes in pain!" ,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 if (random < 50)
 {
@@ -1405,9 +1408,9 @@ act("The eyes of the carved dragon on $1n's $2N glow with a red light!"
 act("$3n suddenly clutches $3s chest and screams in agony!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("The eyes of the carved dragon on $1n's $2N glow with a red light!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("A searing PAIN drives through your chest!"
-,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+,A_ALWAYS,self.outside,self,enemy,TO_VICT); goto start;
 }
 if (random < 60)
 {
@@ -1420,9 +1423,9 @@ act("Fire erupts from $1n's $2N, the flames reach for $3n!"
 act("$3n screams in agony!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("Fire erupts from $1n's $2N, the flames reach out for you!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("That REALLY hurt!"
-,A_ALWAYS,self.outside,self,null,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 goto start;
 }
 goto start;
@@ -1461,7 +1464,7 @@ charge:=interrupt (SFB_MSG,((self==activator) and
         (argument=="add charge")), charge);
 :start:
   wait (SFB_CMD,(command ("say")) and
-  ("Faith!" in argument)and(self.equip==WEAR_WIELD));
+  ("Faith!" in argument)and(self.equip==WEAR_WIELD)and(activator == self.outside));
         block;
 act ("You raise your fist to the heavens and shout 'Faith!'",
 A_SOMEONE,self.outside,null,null,TO_CHAR);

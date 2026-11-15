@@ -749,6 +749,7 @@ code
     pause;
     exec("cast burn "+char.name, self);
     pause;
+    unsecure(char);
     goto start;
   }
 :lostpc:
@@ -1274,7 +1275,7 @@ code
       goto start;
    }
 
-   i := u1.value[3] + u1.value[3]; /* Test for poison */
+   i := u1.value[3] + u2.value[3]; /* Test for poison */
    unsecure(u1);
    destroy(u1);
    unsecure(u2);
@@ -1304,21 +1305,20 @@ code
 
    pause;
    exec("give stew to burp", self);
-   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
-     destroy(u1);
    pause;
 
    exec("give stew to ghopla", self);
-   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
-     destroy(u1);
    pause;
 
    exec("give stew to mguul", self);
+
+   // Throw away the stew of a lord who wasn't here, so it doesn't pile up
    u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
+   while (u1 != null)
+   {
      destroy(u1);
+     u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
+   }
    pause;
 
    exec("say Mhore is caming raight up, ma lurds!", self);

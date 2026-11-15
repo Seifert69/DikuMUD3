@@ -68,13 +68,13 @@ dilend
 dilbegin integer isAgeDead(pc : unitptr);
 code
 {
-   if (self.type != UNIT_ST_PC)
+   if (pc.type != UNIT_ST_PC)
       return (FALSE);
 
-   if (self.level >= IMMORTAL_LEVEL)
+   if (pc.level >= IMMORTAL_LEVEL)
       return (FALSE);
 
-   return ((realtime - self.birth) > (self.lifespan * SECS_PER_MUD_YEAR));
+   return ((realtime - pc.birth) > (pc.lifespan * SECS_PER_MUD_YEAR));
 }
 dilend
 
@@ -333,21 +333,21 @@ spring_saveobj
         sendtext("The Eternal Spring now: On.<br/>", pc);
         item := load("spring@youth");
         link(item, findroom("springroom@youth"));
-        act("You command $1n into existence.", A_SOMEONE, item, null, null, TO_ALL);
+        act("You command $2n into existence.", A_SOMEONE, pc, item, null, TO_CHAR);
     }
     else{
         self.extra.["$status"].descr := "OFF";
         sendtext("The Eternal Spring now: Off.<br/>", pc);
         item := findsymbolic("spring@youth");
         while(item){
-          act("You command $1n out of existence.", A_SOMEONE, item, null, null, TO_ALL);
+          act("You command $2n out of existence.", A_SOMEONE, pc, item, null, TO_CHAR);
           destroy(item);
           item := findsymbolic("spring@youth");
         }
     }
 
     :do_save:
-    store(self, self.nameidx + "." + self.zoneidx, TRUE);
+    store(self, "spring_saveobj", TRUE);
     goto start;
   }
 

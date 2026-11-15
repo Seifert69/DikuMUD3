@@ -674,7 +674,7 @@ code
    act("$1n says 'Just 'nod' if you want to continue or 'shake' otherwise.'",
       A_ALWAYS,self,null,pc,TO_VICT);
 
-   wait (SFB_DONE,TRUE);
+   wait (SFB_DONE, activator == pc);
    if (command("nod"))
    {
       act("$1n says 'Very well, let's continue.'", A_ALWAYS,self,null,pc,TO_VICT);
@@ -1357,7 +1357,7 @@ code
          goto try_again;
       }
    }
-   if (pc.master.name != self.name)
+   if (not(pc.master.name == self.name))  // also when pc follows no one
    {
       act("$1n says 'Please type 'fol newbie guide' now.'", A_ALWAYS,self,null,pc,TO_VICT);
 
@@ -1542,22 +1542,24 @@ code
    pause;
    act("$1n says 'Now try to see what abilities you can train by using the <a cmd='#'>info</a> command.'",
      A_ALWAYS, self, null,pc,TO_VICT);
+   :try_info:
    wait(SFB_CMD, activator #= pc);
    if (not command("info"))
    {
       pause;
       act("$1n says 'Please just try the info command.'", A_ALWAYS,self,null,pc,TO_VICT);
-      goto try_again;
+      goto try_info;
    }
 
    pause;
    act("$1n says 'Now you should try to practice one of your core abilities using the practice command. The top one is the least expensive.'",A_ALWAYS, self, null,pc,TO_VICT);
+   :try_practice:
    wait(SFB_CMD, activator #= pc);
    if (not command("practice"))
    {
       pause;
       act("$1n says 'Please try the practice command.'", A_ALWAYS,self,null,pc,TO_VICT);
-      goto try_again;
+      goto try_practice;
    }
    
    pause;
@@ -1688,8 +1690,8 @@ code
        A_ALWAYS, self, null, null, TO_ALL);
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
    exec("look", pc);
    pause;
 
@@ -1886,8 +1888,8 @@ pause;
        A_ALWAYS, self, null, null, TO_ALL);
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
    exec("look", pc);
    pause;
 
@@ -2080,8 +2082,8 @@ A_ALWAYS, self, null,pc,TO_VICT);
        A_ALWAYS, self, null, null, TO_ALL);
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
    exec("look", pc);
    pause;
    act("$1n says 'Here we are, and this is your Guild Master Rafizir!'",
@@ -2279,8 +2281,8 @@ A_ALWAYS, self, null,pc,TO_VICT);
        A_ALWAYS, self, null, null, TO_ALL);
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
    exec("look", pc);
 
    act("$1n says 'Here we are, and this is your Guild Master Oliver!'",
@@ -2670,8 +2672,8 @@ else
   link(pc, findroom("temple@udgaard"));
   act("Suddenly you re-appear in a new location.",
     A_ALWAYS, pc, null, null, TO_CHAR);
-  act("Suddenly $2n appears before your eyes.",
-    A_ALWAYS, self.outside, pc, null, TO_REST);
+  act("Suddenly $1n appears before your eyes.",
+    A_ALWAYS, pc, null, null, TO_REST);
   }
 pause;
 act("$1n says 'Well, I really must run! More newbies await.'",
@@ -2753,8 +2755,8 @@ act("A portal opens, the Newbie Guide steps through and disappears.",
    link(pc, findroom("newbie_chat@udgaard"));
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
    exec("look",pc);
        }
 
@@ -2789,8 +2791,8 @@ A_ALWAYS,self,null,pc,TO_VICT);
    link(pc, findroom("newbie_chat@udgaard"));
    act("Suddenly you re-appear in a new location.",
        A_ALWAYS, pc, null, null, TO_CHAR);
-   act("Suddenly "+pc.name+" appears before your eyes.",
-       A_ALWAYS, self.outside, null, null, TO_REST);
+   act("Suddenly $1n appears before your eyes.",
+       A_ALWAYS, pc, null, null, TO_REST);
   exec("look",pc);
        }
 
@@ -2828,8 +2830,8 @@ act("A portal opens, the Newbie Guide exits and stands before you.",
 link(pc, findroom("temple@udgaard"));
 act("Suddenly you re-appear in a new location.",
   A_ALWAYS, pc, null, null, TO_CHAR);
-act("Suddenly $2n appears before your eyes.",
-  A_ALWAYS, self.outside,pc, null, TO_REST);
+act("Suddenly $1n appears before your eyes.",
+  A_ALWAYS, pc, null, null, TO_REST);
 exec("look",pc);
 
 goto newbie_te;
@@ -2854,8 +2856,8 @@ act("A portal opens, the Newbie Guide exits and stands before you.",
 link(pc, findroom("temple@udgaard"));
 act("Suddenly you re-appear in a new location.",
   A_ALWAYS, pc, null, null, TO_CHAR);
-act("Suddenly $2n appears before your eyes.",
-  A_ALWAYS, self.outside,pc, null, TO_REST);
+act("Suddenly $1n appears before your eyes.",
+  A_ALWAYS, pc, null, null, TO_REST);
 exec("look",pc);
 
 :newbie_te:
@@ -2889,8 +2891,8 @@ if (self.outside!=findroom("temple@udgaard"))
   link(pc, findroom("temple@udgaard"));
   act("Suddenly you re-appear in a new location.",
     A_ALWAYS, pc, null, null, TO_CHAR);
-  act("Suddenly $2n appears before your eyes.",
-    A_ALWAYS,self.outside,pc, null, TO_REST); }
+  act("Suddenly $1n appears before your eyes.",
+    A_ALWAYS, pc, null, null, TO_REST); }
 
    n := newbie_part4@newbie(pc);
    if (n == FALSE)

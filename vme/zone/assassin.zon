@@ -267,7 +267,7 @@ code
       exec("say And also take this, it will show your membership as an " +
          "Assassin.  Wear it proudly.", self);
       act("The Master Assassin pulls some items from underneath the folds of " +
-         "his cloak and gives them to you.",A_ALWAYS,self,null,null,TO_CHAR);
+         "his cloak and gives them to you.",A_ALWAYS,pc,null,null,TO_CHAR);
       item := load ("death_bringer@assassin");
       item.height := pc.height;
       link(item,pc);
@@ -504,8 +504,8 @@ code
 
   :start:
   wait (SFB_CMD, activator.type == UNIT_ST_PC);
-  secure(pc,lostpc);
   pc := activator;
+  secure(pc,lostpc);
 
    if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
    {
@@ -667,7 +667,7 @@ code
    wait(SFB_COM, ((self.outside.fighting) and
        (self.equip == WEAR_WIELD)));
 
-   if (IsInGuild@guilds(self, GUILD_ASSASSIN))
+   if (IsInGuild@guilds(self.outside, GUILD_ASSASSIN))
    {
       num2 := rnd(1, 5);
       storenum := self.outside.fighting.max_hp / (4 * num2);
@@ -684,9 +684,9 @@ code
          {
             act("Your sword glows as it absorbs your opponent's life energy!",
                 A_ALWAYS, self.outside, null, null,TO_CHAR);
-	    act(""+self.outside.name+"'s Death Bringer glows as it steals " +
-	    "the life force from "+self.outside.fighting.name+".", A_ALWAYS,
-	    self.outside, null, null, TO_REST);
+	    act("$1n's Death Bringer glows as it steals " +
+	    "the life force from $3n.", A_ALWAYS,
+	    self.outside, null, self.outside.fighting, TO_REST);
          }
          else
              pause;
@@ -694,6 +694,7 @@ code
 
     }
 }
+goto start;
 }
 dilend
 

@@ -421,6 +421,7 @@ code
          "sorting and I will give you another dirk.",self);pause;
          exec("emote shakes his head and mumbles something about stupid gits."
          ,self);
+         unsecure(pc);
          goto start;
       }
       exec("say Let's cut straight to business.",self);pause;
@@ -443,6 +444,7 @@ code
       exec("say Hope you can use it. Be careful with the poison.",self);pause;
       addextra(pc.quests, {THIEVES_DIRK}, "");
       exec("emote waves goodbye. This conversation is apparently over.",self);
+      unsecure(pc);
       goto start;
    }
    else
@@ -480,7 +482,7 @@ code
    pc := activator;
    secure(pc, lost);
    gift := medium;
-   secure(pc,lost);
+   secure(gift,lost);
 
    if (IsInGuild@guilds(pc, GUILD_UDG_THIEF) and (THIEVES_DIRK in pc.quests))
    {
@@ -488,6 +490,7 @@ code
       {
          exec("say Beautiful.",self);pause;
          exec("emote examines the gemstone and hides it in his pocket.",self);
+         unsecure(gift);
          destroy(gift);pause;
          exec("say Guess you are not such a fluff head after all.",self);
          exec("say Here is your new dirk, now, DON'T lose this one!",self);
@@ -504,10 +507,13 @@ code
          exec("emote grins wickedly.",self);
       }
 :lost:
+      unsecure(gift);
       destroy(gift);
       unsecure(pc);
       goto start;
    }
+   unsecure(gift);
+   unsecure(pc);
    goto start;
 }
 dilend
@@ -747,7 +753,7 @@ charge:=interrupt (SFB_MSG,((self==activator) and
         heartbeat := PULSE_SEC*1;
 	:start:
 wait (SFB_CMD,(command ("press"))and("button" in argument)
-and(self.equip==WEAR_WIELD));
+and(self.equip==WEAR_WIELD)and(activator==self.outside));
 block;
 pc :=self.outside;
 vict:=self.outside.fighting;

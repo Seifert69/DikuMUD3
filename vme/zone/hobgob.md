@@ -22,4 +22,60 @@
 5. **DIL, for step 2** (lines 5488, 5684, 3577): `wings_2` makes the wearer say "lost him" when it
    loses track of the player (`exec("say lost him", pc)`). `wing_scroll` makes the player emote
    "You are not yet meant to have this knowledge" instead of telling them. In `mageq_2` (the
-   cheater branch) "You feel less experienced." is an act() with no character, so nobody sees it.
+   cheater branch) "You feel less experienced." is an act() with no character, so nobody sees it. Fixed in step 2.
+
+## Step 2
+
+Fixed in place:
+- `smelldil` (line 77): the immortal check compared `activator.type` with `IMMORTAL_LEVEL`, which
+  is never true; now `activator.level`.
+- `pet_container` (line 254): `link(pet, self.inside)` linked the new pet into whatever was first in
+  the cage (null when empty); now `link(pet, self)`.
+- `mageq_2` (line 3577): "You feel less experienced." had no character; now sent to the player
+  (step-1 item 5).
+- `i_fool` (line 3707): after the story the program ran off its end, which restarts it at the top
+  (only `heartbeat` again); the `goto start;` added there has no effect in play; kept for clarity.
+- `lor_2` (line 3826) and `eagle_2` (line 4062): `secure(item, ...)` and the test
+  `item #= self.inside` used `item` without setting it; set to `self.inside` first, as `mageq_2`
+  and `getit_dil` do.
+- `getit_dil` (lines 4921, 4958): after a wrong item or the first of the two items, the program
+  went back to waiting with the player still secured, so the old cuss said "Wuss! Can't even
+  handle one little assignment." whenever that player later left; `unsecure(pc)` added.
+- `wings_2` (line 5465): `if` instead of `else if` after the assassin branch, so assassins were
+  flown home and then also told "Tell an administrator your guild wasn't found."
+- `wings_2` (line 5495): removed the debug `exec("say lost him", pc)` that made the player say
+  "lost him" (step-1 item 5).
+- `wing_scroll` (line 5691): a player without the quest emoted "You are not yet meant to have this
+  knowledge"; now it is told to them (step-1 item 5).
+- `wing_scroll` (line 5695): the `:lost:` branch ran off the end, which restarts the program at the
+  top (only `heartbeat` again); the `goto start` added there has no effect in play; kept for clarity.
+
+Questions:
+0. **smelldil** (line 76): the skunk's spray copies `stink` onto `self.outside`, the room, instead
+   of the player it sprays (the stink texts say "emits from your clothing"). The fix is
+   `enemy := pc`. Not made: `stink` is a recall DIL, so players would then carry a skunk smell that
+   is announced to their room every tick and survives a save, which they never did before.
+
+1. **lover_6** (Reckus, line 3241): `secure(pc, losthim)` with `pc` never set (only `pname` is), so
+   the `losthim` branch can't run. Setting `pc` would make the quest break when the player walks
+   off during the speech: Jesealla keeps her `$gnitiaw` extra and never starts the ending again.
+   Remove the `secure` (and the dead `losthim`), or set `pc` and, on `losthim`, tell Jesealla to
+   drop `$gnitiaw`?
+2. **lover_2** (Jesealla, line 3038): she ends the quest for any player whose command she sees
+   while Reckus is in her room, also one without "Lost Love Search Ongoing"; `lover_3` then gives
+   that player the heart tear and "Lost Love Search Complete". Add
+   `(LOVE_ONGOING in activator.quests)` to the wait?
+3. **echo_pet** (the macaw, line 368) and **pet_func** (the kittens, line 394): neither has a
+   `goto start`, but both restart at the top when they run off their end, so the macaw echoes every
+   say in its room and a kitten follows and purrs at every tickle. The macaw also echoes other
+   NPCs' says, so two macaws in one room set each other off (each echo has a 3 in 4 chance of being
+   answered). Should it ignore other pets' says?
+4. **teddy_hea** (line 5096): the teddy heals its holder when anyone in the room says "I love you
+   teddy", and blocks that person's say; the description says you should say it. Add
+   `(activator == self.outside)` to the wait?
+
+### Precedence
+
+- `getit_dil` line 4930: `if (command("give") and activator.type == UNIT_ST_PC)` is read as
+  `(command("give") and activator.type) == UNIT_ST_PC`, always false, so a second `give` typed right
+  after the first is missed. Meant: `(command("give")) and (activator.type == UNIT_ST_PC)`.

@@ -1793,7 +1793,7 @@ dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
 dilcopy abi_restrict@function(ABIL_BRA,50,0,0,"bra_rest@skaven");
 dilcopy abi_restrict@function(ABIL_DEX,30,0,0,"dex_rest@skaven");
 dilcopy level_restrict@function(34,0,0,"lvl_rest@skaven");
-dilcopy mvlev_restrict@function(84,0,0,"You are too high a level to use this dagger.");  //43.01
+dilcopy mvlev_restrict@function(84,0,0,"");  //43.01
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 MAG_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 WEAPON_TRANSFER(WPN_DAGGER, BONUS_GOOD)  // Xyzzy: +2
@@ -1836,7 +1836,7 @@ act("Your pierce cuts deep into $3n's stomach!"
 act("$1n's pierce cuts deep into $3n's stomach!",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's pierce cuts deep into your stomach!"
-,A_SOMEONE,self.outside,self,null,TO_VICT);
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
 goto start ;
 }
 if (flux < 30)
@@ -1845,7 +1845,7 @@ act("You make a sudden spin and place your stiletto in $3n's side!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("$1n makes a sudden spin and places $1s stiletto in $3n's side!",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
-act("With a rapid spin, $1n avoids your blow and places $1s stiletto in your side!",A_SOMEONE,self.outside,self,null,TO_VICT);
+act("With a rapid spin, $1n avoids your blow and places $1s stiletto in your side!",A_SOMEONE,self.outside,self,enemy,TO_VICT);
 goto start ;
 }
 if (flux < 40)

@@ -480,8 +480,8 @@ code
    if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
       goto start;
 
-   secure(pc,lostpc);
    pc := activator;
+   secure(pc,lostpc);
 
    exec("tell "+pc.name+" Hello, would you like to " +
          "journey to our guild to increase your powerful skills?  Just nod if " +
@@ -535,8 +535,8 @@ code
    if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
       goto start;
 
-   secure(pc,lostpc);
    pc := activator;
+   secure(pc,lostpc);
 
 
    exec("say Hello, would you like a lift back to Midgaard? " +
@@ -1309,6 +1309,7 @@ code
    goto waitawhile;
 
    :hagsecure:
+   nopriority;
    exec ("say Fool probably could command it anyhow!", self);
    goto waitawhile;
 
@@ -1420,6 +1421,7 @@ code
    goto init;
 
    :lostpc:
+   nopriority;
    exec ("say The little snot... doesn't know its manners!", self);
    goto start;
 
@@ -1659,7 +1661,7 @@ if (flux < 25)
    A_ALWAYS,self.outside,self,enemy,TO_REST);
    act("$3n screams in terror and pain!",
    A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-   act("You scream as faces of people long dead surround you and rip at your flesh!",A_ALWAYS,self.outside,enemy,self,TO_VICT);
+   act("You scream as faces of people long dead surround you and rip at your flesh!",A_ALWAYS,self.outside,self,enemy,TO_VICT);
 n:=
 cast_spell(SPL_FEAR,self.outside,self,self.outside.fighting,"");
 pause;
@@ -1672,10 +1674,10 @@ if (flux < 50)
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$1N's $3N emits a ghastly howl in response to $1s call!",
    A_ALWAYS,self.outside,enemy,self,TO_REST);
-   act("$2n's eyes bulge, $2e looks around wildly!",
-   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("$3n's eyes bulge, $3e looks around wildly!",
+   A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
    act("Thousands of hands rip at your flesh from every direction!"
-,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 n:=
 cast_spell(SPL_CONFUSION,self.outside,self,self.outside.fighting,"");
 pause;
@@ -1688,10 +1690,10 @@ if (flux < 50)
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$1N's $3N emits a ghastly howl in response to $1s call!",
    A_ALWAYS,self.outside,enemy,self,TO_REST);
-   act("$2n grasps $2s head and screams wildly!",
-   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("$3n grasps $3s head and screams wildly!",
+   A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
    act("Your blood begins to boil in your veins, your flesh to decay!"
-,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 n:=
 cast_spell(SPL_CURSE,self.outside,self,self.outside.fighting,"");
 pause;
@@ -1704,10 +1706,10 @@ else
    A_ALWAYS,self.outside,enemy,self,TO_CHAR);
    act("$1N's $3N emits a ghastly howl in response to $1s call!",
    A_ALWAYS,self.outside,enemy,self,TO_REST);
-   act("$2n's eyes open wide, staring at something unseen beyond $1n!",
-   A_ALWAYS,self.outside,enemy,self,TO_NOTVICT);
+   act("$3n's eyes open wide, staring at something unseen beyond $1n!",
+   A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
    act("Behind $1n, the ghastly face of Cthulhu himself stares at you!"
-,A_ALWAYS,self.outside,enemy,self,TO_VICT);
+,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 n:=
 cast_spell(SPL_DISEASE_1,self.outside,self,self.outside.fighting,"");
 pause;

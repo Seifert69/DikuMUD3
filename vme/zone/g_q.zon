@@ -78,7 +78,7 @@ code
 
 :start:
 
-	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti"));
+	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti") and (activator == self.outside));
 	
 	pc:=activator;
 	secure(pc, lostpc);
@@ -225,7 +225,7 @@ code
 	clanst := left(self.outside.outside.zoneidx, 5);
 	
 :start:
-	wait(SFB_CMD,(command("use")) and ("remover" in argument));
+	wait(SFB_CMD,(command("use")) and ("remover" in argument) and (activator == self.outside));
 	pc:=activator;
 	secure(pc, lostpc);
 	
@@ -1715,12 +1715,12 @@ code
    :start:
 wait (SFB_DONE ,activator.type==UNIT_ST_PC);
 
-if (command ("give"))
+if (command ("give") and (target == self))
 	goto give;
 
    if (FAMILIAR_BAN in activator.quests)
    {
-   exec ("say You have been banned from owning a familiar, "+pc.name+"!", self);
+   exec ("say You have been banned from owning a familiar, "+activator.name+"!", self);
    unsecure (pc);
    goto start;
    }

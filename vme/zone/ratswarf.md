@@ -23,3 +23,20 @@
 5. **turning_point** (line 100): "All roads lead to Midgaard, they say, well, until the Great Dragon
    toasted it. Now, most roads lead to Midgaard II". Midgaard is just to the west and isn't toasted
    anywhere else; is this old lore that should go?
+
+## Step 2
+
+Fixed in place:
+- **captainprg** (line 1663): when the Elven Commander wasn't in the room (at load, or after he died
+  or left, through `:nobuddy:` and `goto init`), the captain went to `wait(SFB_MSG, activator==buddy)`
+  with `buddy` null and never woke again, even when a new commander was loaded. Now it pauses and
+  looks again.
+
+1. **slaverprg** (lines 1398-1437): `walk_room@function` sets the caller's heartbeat to its walking
+   speed (5 seconds) and leaves it there, so after his first walk the slaver's pauses are 5 seconds
+   instead of the 20 he sets at the start, and he chatters four times as fast. Set
+   `heartbeat := PULSE_SEC*20;` again after each `walk_room` call (or fix `walk_room`, which is
+   shared)?
+
+### Precedence
+None found.

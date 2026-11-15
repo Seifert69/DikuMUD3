@@ -79,7 +79,7 @@ code
     while (i < length(patrollist))
     {
         insert(patrol, length(patrol), "::walkto::" + patrollist.[i] + "::8");
-        insert(patrol, length(patrol), "emote Speaks with the Guards.");
+        insert(patrol, length(patrol), "emote speaks with the guards.");
         i := i + 1;
     }
     insert(patrol, length(patrol), "emote jots some notes on a piece of paper.");
@@ -4449,19 +4449,19 @@ code
          A_SOMEONE, pc, null, null, TO_CHAR);
 
          act("$1n picks up a rock.",
-         A_SOMEONE, self.outside, null, null, TO_ROOM);
+         A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hurl the rock through the murder hole.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("$1n hurls a rock through the murder hole.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hear someone cursing from the room below.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("You hear someone cursing from the room below.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	goto start;
    }
@@ -4470,13 +4470,13 @@ code
          A_SOMEONE, pc, null, null, TO_CHAR);
 
          act("$1n picks up a rock.",
-         A_SOMEONE, self.outside, null, null, TO_ROOM);
+         A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hurl the rock off the walls.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("$1n hurls a rock off the walls.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	goto start;
      }

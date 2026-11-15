@@ -82,8 +82,8 @@ code
 
    :start:
    wait(SFB_COM,  self.position == POSITION_FIGHTING );
-   if(pc.type == UNIT_ST_NPC) goto start;
    pc := self.fighting;
+   if(pc.type == UNIT_ST_NPC) goto start;
    if(pc.level>200) goto start;
    if (command("flee"))
    block;
@@ -93,7 +93,7 @@ code
    A_ALWAYS, pc, self, null, TO_ALL);
    act("Suddenly the air is hot with magic, as several spells smash into "+
    "your body and mind!", A_ALWAYS, pc, self, null, TO_CHAR);
-   act("Several of them charge into the room, $3n topples under the magical "+
+   act("Several of them charge into the room, $1n topples under the magical "+
    "assault!",A_SOMEONE, pc, self, null, TO_REST);
    pc.hp := 0;
    pc.mana := 0;
@@ -743,7 +743,7 @@ code
       item := load("conj_charm@mageguild");
       item.height := pc.height;
       link(item, pc);
-      sendtext(self.name+" hands you a small charm.<br/>",pc);
+      act("$3n hands you a small charm.",A_SOMEONE,pc,null,self,TO_CHAR);
       act("$3n hands $1n a small charm.",A_SOMEONE,pc,null,self,TO_REST);
       pause;
       exec("say This charm summons a creature to stand by your side in combat."
@@ -824,8 +824,10 @@ exec("emote returns to his paperwork.",self);
 else
 {
 exec("say Hmm, nice of you to give me that, but this is not what I asked "+
-"for.",self);pause;
-exec("emote locks "+gift.title+" away in the cabinet.",self);pause;
+"for.",self);
+exec("emote locks "+gift.title+" away in the cabinet.",self);
+destroy(gift);
+pause;
 exec("emote smiles slightly.",self);
 }
 	:lost:
@@ -1215,7 +1217,7 @@ charge:=interrupt (SFB_MSG,((self==activator)and
 
         :start:
 wait (SFB_CMD,(command ("grip"))and
-((self.equip==WEAR_NECK_1)or(self.equip==WEAR_NECK_1)));
+((self.equip==WEAR_NECK_1)or(self.equip==WEAR_NECK_2))and(activator == self.outside));
 block;
 enemy:=self.outside.fighting;
 pc:= self.outside;

@@ -74,7 +74,7 @@ code
        wait (SFB_CMD, (activator.type == UNIT_ST_PC));
        pc := activator;
        enemy := self.outside;
-	   if (activator.type >= IMMORTAL_LEVEL) goto start;
+	   if (activator.level >= IMMORTAL_LEVEL) goto start;
        secure(enemy,lost);
        secure(pc,lost);
         i := rnd(1,100);
@@ -251,7 +251,7 @@ code
     pet:=load(pet_passed);
     secure(pet, lostpet);
     pet_string:=pet.symname;
-    link(pet, self.inside);
+    link(pet, self);
 
     pause;
     i1 := interrupt(SFB_DONE,( (command ("say")) and (activator.type==UNIT_ST_PC) and (activator==pc)), named);
@@ -3574,7 +3574,7 @@ pause;
 exec("say Oh... and to remind you to be honest in your endeavors I will "+
 "take a little part of you... as a small reminder.",self);
          experience(-200, pc);
-act("You feel less experienced.",A_SOMEONE,null,null,null,TO_CHAR);
+act("You feel less experienced.",A_ALWAYS,pc,null,null,TO_CHAR);
 destroy (self.inside);
    if ((command("give")) and (activator.type == UNIT_ST_PC))
 
@@ -3704,6 +3704,7 @@ exec("say To gain eternal peace King Cromwell requires these four elements of "+
 "life, heart and soul, mind and body.",self);
 exec ("say Please write down what I have said; I might not want to repeat myself again.",self);
 nopriority;
+goto start;
 }
 dilend
 
@@ -3822,6 +3823,7 @@ priority;
 
 pc := activator;
 secure(pc, losthim);
+item := self.inside;
 secure(item, losthim);
 
 wait(SFB_CMD | SFB_TICK, TRUE);
@@ -4057,6 +4059,7 @@ priority;
 
 pc := activator;
 secure(pc, losthim);
+item := self.inside;
 secure(item, losthim);
 
 wait(SFB_CMD | SFB_TICK, TRUE);
@@ -4917,6 +4920,7 @@ code
       {
          exec("say Did I ask for this crap?", self);
          link(self.inside,pc);
+          unsecure(pc);
           goto start;
       };
 
@@ -4948,7 +4952,11 @@ code
         goto start;
       }
 
-else goto start;
+else
+{
+   unsecure(pc);
+   goto start;
+}
    :labsecure:
    exec("say Wuss! Can't even handle one little assignment.", self);
 
@@ -5454,7 +5462,7 @@ code
 
    if (IsInGuild@guilds(pc, GUILD_ASSASSIN))
       link(self.outside, findroom("master_room@assassin"));
-   if (IsInGuild@guilds(pc, GUILD_SORCERER))
+   else if (IsInGuild@guilds(pc, GUILD_SORCERER))
       link(self.outside, findroom("grotto@sorcerer"));
    else if (IsInGuild@guilds(pc, GUILD_NYM_RANGER))
       link(self.outside, findroom("tent_1@ranger"));
@@ -5485,7 +5493,6 @@ code
    goto init;
 
 	:losthim:
-	exec ("say lost him",pc);
 	unsecure (pc);
 	goto init;
 
@@ -5681,14 +5688,14 @@ act("The spirit bows to $1n.", A_SOMEONE, pc, null, null, TO_REST);
 
 goto start;
 :fail:
-exec("emote You are not yet meant to have this knowledge", pc);
+act("You are not yet meant to have this knowledge.", A_ALWAYS, pc, null, null, TO_CHAR);
 unsecure(pc);
 goto start;
 
 :lost:
 unsecure(pc);
 pause;
-
+goto start;
 }
 dilend
 end
