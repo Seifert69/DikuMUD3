@@ -89,7 +89,7 @@ code
 	
 	if ((pc.extra.[CLAN_SYMBOLIC] == null) or (pc.extra.[CLAN_SYMBOLIC].descr != self.outside.zoneidx))
 	{
-		act ("<div class='clan'>You must be a clan member to sign this pillar!'</div> ",
+		act ("<div class='clan'>You must be a clan member to sign this pillar!</div> ",
 		A_ALWAYS,pc,null,self,TO_CHAR);
 		goto start_sign;
 	}
@@ -98,7 +98,7 @@ code
 	{
 		if(pc.name in nlist.[i])
 		{
-			act ("<div class='clan'>You have already signed this pillar!'</div>",
+			act ("<div class='clan'>You have already signed this pillar!</div>",
 			A_ALWAYS,pc,null,self,TO_CHAR);
 			goto start_sign;
 		}
@@ -144,7 +144,7 @@ code
 		buf := buf + nlist.[i] + "<br>";
 		i := i+1;
 	}
-	self.extra.[0].descr := "The tome lists the names Bounty Hunters who accomplished incredible works on behalf of The Guild.<br><br>" + buf;
+	self.extra.[0].descr := "The tome lists the names of Bounty Hunters who accomplished incredible works on behalf of The Guild.<br><br>" + buf;
 	
 :start_sign:	
 	wait(SFB_CMD, (command("sign")) and (argument == "tome"));
@@ -153,7 +153,7 @@ code
 	
 	if (not("Bounty Hunter" in pc.quests))
 	{
-		act ("<div class='clan'>You are not worthy of signing the tome!'</div> ",
+		act ("<div class='clan'>You are not worthy of signing the tome!</div> ",
 		A_ALWAYS,pc,null,self,TO_CHAR);
 		goto start_sign;
 	}
@@ -162,7 +162,7 @@ code
 	{
 		if(pc.name in nlist.[i])
 		{
-			act ("<div class='clan'>You have already signed the tome!'</div>",
+			act ("<div class='clan'>You have already signed the tome!</div>",
 			A_ALWAYS,pc,null,self,TO_CHAR);
 			goto start_sign;
 		}
@@ -227,9 +227,9 @@ code
 		if ((u == self) or (u.level > 200)) continue;
 		if ((u.vlevel < 20) and (u.hometown != home))
 		{
-			act("$1n magically transfers $3n out of harms way....",
+			act("$1n magically transfers $3n out of harm's way....",
 			  A_ALWAYS, self, null, u, TO_NOTVICT);
-			act("$1n magically transfers you out of harms way....",
+			act("$1n magically transfers you out of harm's way....",
 			  A_SOMEONE, self, null, u, TO_VICT);
 			link(u, findroom("temple@udgaard"));
 			u.hp:= 5;
@@ -245,17 +245,17 @@ code
 			if ((u.type == UNIT_ST_PC) and (u.hometown != home))
 			if (self.position != POSITION_FIGHTING)
 			{
-				act(" $3n, you are not a member of this clan! Leave NOW!",
-				A_SOMEONE,self,null,u,TO_NOTVICT);
+				act("$1n says, '$3n, you are not a member of this clan! Leave NOW!'",
+				A_SOMEONE,self,null,u,TO_ROOM);
 				act("$1n attacks $3n!",A_SOMEONE,self,null,u,TO_NOTVICT);
 				act("$1n attacks you!", A_SOMEONE,self,null,u,TO_VICT);
 				set_fighting(self,u);
 			}
 			if (u.hp < 10)
 			{
-				act("$1n drives his spear through you killing you instantly.",
+				act("$1n drives his spear through you, killing you instantly.",
 				A_ALWAYS,self,null,u,TO_VICT);
-				act("$1n drives his spear through $3n killing $3s instantly.",
+				act("$1n drives his spear through $3n, killing $3m instantly.",
 				A_ALWAYS,self,null,u,TO_NOTVICT);
 				u.hp := -10;
 				position_update(u);
@@ -345,7 +345,7 @@ code
 	if (ln<1)
 	{
 		log ("02:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -426,7 +426,7 @@ code
 		pc.hometown := "temple@udgaard";
 		act ("<div class='clan'>$3n has been removed from the clan.</div>",
 		A_ALWAYS,self,null,pc,TO_CHAR);
-		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+		act ("<div class='clan'>You have been removed from the "+cname+" clan.</div>",
 		A_ALWAYS,pc,null,null,TO_CHAR);
 		i:=i+1;
 		continue;
@@ -441,7 +441,7 @@ code
 		}
 		else
 		{
-			act ("<div class='clan'></div>"+line.[0]+" has been removed from the clan."
+			act ("<div class='clan'>"+line.[0]+" has been removed from the clan.</div>"
 			,A_ALWAYS,self,null,pc,TO_CHAR);
 			err:=savestr("clan.delete",line.[0]+"\n","a");
 		}
@@ -609,7 +609,7 @@ code
 			amount:=amount+1;
 		if ((amount >=CLAN_MAX_DONATION) and (check.minv!=253))
 		{
-			act ("$3N falls out of the  overloaded clan chest onto the floor.",
+			act ("$3N falls out of the overloaded clan chest onto the floor.",
 			A_SOMEONE,self,null,check,TO_REST);
 			temp:=check.next;
 			link (check, self.outside);
@@ -680,13 +680,13 @@ code
 	else if (arg==left("lord",length(arg)))
 		goto cinfo_lord;
 	else if (arg==left("treasurer",length(arg)))
-		goto cinfo_treas
+		goto cinfo_treas;
 	else if (arg==left("quartermaster",length(arg)))
 		goto cinfo_quar;
 		
 :cinfo_who:
 
-	buf:="<div class='clan'>Clan members (* denotes on line):<br/><br/></div>";
+	buf:="<div class='clan'>Clan members (* denotes online):<br/><br/></div>";
 	i:=0;
 	ln:=length(mlist);
 	while (i<ln)
@@ -732,7 +732,7 @@ code
 		sendtext (textformat("You are the master daaa!<br/>"),self);
 		quit;
 	}
-	buf:="<div class='clan'>The "+self.extra.[CLAN_NAME].descr+" clan master is (* denotes on line):</div>";
+	buf:="<div class='clan'>The "+self.extra.[CLAN_NAME].descr+" clan master is (* denotes online):</div>";
 	i:=0;
 	ln:=length(mlist);
 	while (i<ln)
@@ -769,7 +769,7 @@ code
 	
 	ln:=length(mlist);
 	i:=0;
-	buf:="<div class='clan'>Clan lords (* denotes on line):<br/><br/></div>";
+	buf:="<div class='clan'>Clan lords (* denotes online):<br/><br/></div>";
 	count:=0;
 	while (i<ln)
 	{
@@ -801,7 +801,7 @@ code
 		i:=i+1;
 	}
 	if (count<=0)
-		buf:="This clan has no lords yet see the master.<br/>";
+		buf:="This clan has no lords yet; see the master.<br/>";
 	goto cinfo_list;
 	
 :cinfo_treas:
@@ -809,7 +809,7 @@ code
 	ln:=length(mlist);
 
 	i:=0;
-	buf:="<div class='clan'>Clan treasurers (* denotes on line):<br/><br/></div>";
+	buf:="<div class='clan'>Clan treasurers (* denotes online):<br/><br/></div>";
 	count:=0;
 	while (i<ln)
 	{
@@ -842,14 +842,14 @@ code
 	}
 
 	if (count<=0)
-		buf:="This clan has no treasurers yet see the master.<br/>";
+		buf:="This clan has no treasurers yet; see the master.<br/>";
 	goto cinfo_list;
 
 :cinfo_quar:
 	
 	ln:=length(mlist);
 	i:=0;
-	buf:="<div class='clan'>Clan Quartermasters (* denotes on line):<br/><br/></div>";
+	buf:="<div class='clan'>Clan Quartermasters (* denotes online):<br/><br/></div>";
 	count:=0;
 	while (i<ln)
 	{
@@ -881,7 +881,7 @@ code
 		i:=i+1;
 	}
 	if (count<=0)
-		buf:="This clan has no quartermaster yet see the master.<br/>";
+		buf:="This clan has no quartermaster yet; see the master.<br/>";
 	goto cinfo_list;
 
 :cinfo_list:
@@ -914,7 +914,7 @@ code
 	 {
 		substring (list,self.name);
 		self.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+self.extra.[CLAN_NAME].descr+" clan<div class='default'></div>";
-		act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+		act ("<div class='clan'>You have been removed from the "+self.extra.[CLAN_NAME].descr+" clan.</div>",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		subextra (self.extra,CLAN_NAME);
 		subextra (self.extra,CLAN_RANK);
@@ -1009,7 +1009,7 @@ code
 		room:=findsymbolic("dchest@"+x.descr);
 		if (room==null)
 		{
-			act ("<div class='clan'>Clan code error report to Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+			act ("<div class='clan'>Clan code error; report it to an Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
 			quit;
 		}
 		if (item.objecttype==ITEM_CONTAINER)
@@ -1034,7 +1034,7 @@ code
 
 		if (amount >=CLAN_MAX_DONATION)
 		{
-			act("<div class='clan'>You can't donate your clan Chest is full.</div>"
+			act("<div class='clan'>You can't donate; your clan chest is full.</div>"
 			,A_ALWAYS,self,null,null,TO_CHAR);
 			quit;
 		}
@@ -1074,7 +1074,7 @@ code
 		{
 			item.cost := 0;
 			link(item, room);
-			act("A Glowing red portal appears hovering in the air, $2n emerges"+
+			act("A glowing red portal appears hovering in the air, $2n emerges"+
 			" from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
 		}
 		else
@@ -1166,7 +1166,7 @@ code
 		subextra (self.extra,CLAN_SYMBOLIC);
 		self.hometown:= "temple@udgaard";
 		self.title:= "<div class='cpr'></div><div class='bw'>Banished from </div>"+cname+" clan<div class='default'></div>";	
-		act ("<div class='clan'>You have been removed from the </div>"+cname+" clan.",
+		act ("<div class='clan'>You have been removed from the "+cname+" clan.</div>",
 			A_ALWAYS,self,null,null,TO_CHAR);
 	}
 	quit;
@@ -1243,24 +1243,24 @@ code
 	if (rlist.[atoi(pc.extra.[CLAN_RANK].descr)]=="blank")
 	{
 		if (self==pc)
-			act("<div class='clan'>You don't hold a Labeled rank in your clan.</div><div class='default'></div>",
+			act("<div class='clan'>You don't hold a labeled rank in your clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		else
-			act("<div class='clan'>$3n doesn't hold a Labeled rank in $3s clan.</div><div class='default'></div>",
+			act("<div class='clan'>$3n doesn't hold a labeled rank in $3s clan.</div><div class='default'></div>",
 			A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	 }
 
 	if (pc!=self)
-		act ("<div class='clan'>$3n holds the rank of </div>"+
+		act ("<div class='clan'>$3n holds the rank of "+
 		rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
 		pc.extra.[CLAN_NAME].descr+
-		" clan.<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+		" clan.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
 	else
-		act ("<div class='clan'>You hold the rank of </div>"+
+		act ("<div class='clan'>You hold the rank of "+
 		rlist.[atoi(pc.extra.[CLAN_RANK].descr)]+" in the "+
 		pc.extra.[CLAN_NAME].descr+
-		" clan.<div class='default'></div>",A_ALWAYS,self,null,null,TO_CHAR);
+		" clan.</div><div class='default'></div>",A_ALWAYS,self,null,null,TO_CHAR);
 	quit;
 	:list_rank:
 	if (self.extra.[CLAN_NAME]==null)
@@ -1361,7 +1361,7 @@ code
 
 	rlist:=split(buf,"\n");
 	rlist.[atoi(rank)]:=textformat("blank");
-	act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
+	act ("<div class='clan'>"+rank+" is now set to: "+rlist.[atoi(rank)]+"</div>",
 	A_ALWAYS,self,null,null,TO_CHAR);
 	i:=0;
 	ln:=length(rlist);
@@ -1393,7 +1393,7 @@ code
 
 	rlist:=split(buf,"\n");
 	rlist.[atoi(rank)]:=textformat(arg);
-	act ("<div class='clan'></div>"+rank+" is now set to:  "+rlist.[atoi(rank)],
+	act ("<div class='clan'>"+rank+" is now set to: "+rlist.[atoi(rank)]+"</div>",
 	A_ALWAYS,self,null,null,TO_CHAR);
 	i:=0;
 	ln:=length(rlist);
@@ -1500,7 +1500,7 @@ code
 	if (err<1)
 		{
 	log ("01:  Error in clanlist.data");
-	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 	quit;
 	}
 
@@ -1510,7 +1510,7 @@ code
 	if (ln<1)
 		{
 	log ("02:  Error in clanlist.data");
-	sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+	sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 	quit;
 	}
 
@@ -1553,14 +1553,14 @@ code
 {
 	if (self.extra.[CLAN_NAME]!=null)
 	{
-		sendtext ("<div class='clan'>You already belong to a clan why would you try to start another?<br/></div>",self);
+		sendtext ("<div class='clan'>You already belong to a clan; why would you try to start another?<br/></div>",self);
 		quit;
 	}
 	err:=loadstr ("clanlist.data",buf);
 	if (err<1)
 	{
 		log ("01:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1570,7 +1570,7 @@ code
 	if (ln<1)
 	{
 		log ("02:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1669,7 +1669,7 @@ code
 	if (err<1)
 	{
 		log ("01:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1679,7 +1679,7 @@ code
 	if (ln<4)
 	{
 		log ("02:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1808,7 +1808,7 @@ code
 	if (err<1)
 	{
 		log ("01:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1818,7 +1818,7 @@ code
 	if (ln<1)
 	{
 		log ("02:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -1969,8 +1969,7 @@ code
 	"1",{"$member","$none","$none"});
 
 	act ("<div class='clan'>$3n has been accepted into the clan.</div>",
-	A_ALWAYS,self,null,pc,TO_CHAR); act ("<div class='clan'>You have been accepted
-	into the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+	A_ALWAYS,self,null,pc,TO_CHAR); act ("<div class='clan'>You have been accepted into the "+self.extra.[CLAN_NAME].descr+" clan.</div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
 	quit;
 }
@@ -2202,7 +2201,7 @@ code
 
 	if (pc.extra.[CLAN_RANK].names.[1]=="$master")
 	{
-		act ("<div class='clan'>$3n is a clan master you can not do that.</div>",
+		act ("<div class='clan'>$3n is a clan master; you cannot do that.</div>",
 		A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	}
@@ -2216,7 +2215,7 @@ code
 	pc.hometown := "temple@udgaard";
 	act ("<div class='clan'>$3n has been removed from the clan.</div>",
 	A_ALWAYS,self,null,pc,TO_CHAR);
-	act ("<div class='clan'>You have been removed from the </div>"+self.extra.[CLAN_NAME].descr+" clan.",
+	act ("<div class='clan'>You have been removed from the "+self.extra.[CLAN_NAME].descr+" clan.</div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
 
 	quit;
@@ -2227,7 +2226,7 @@ code
 	if (err<1)
 	{
 		log ("01:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -2237,7 +2236,7 @@ code
 	if (ln<1)
 	{
 		log ("02:  Error in clanlist.data");
-		sendtext ("There is something wrong with clans talk with an admin about how you got this message.<br/>",self);
+		sendtext ("There is something wrong with clans; talk with an admin about how you got this message.<br/>",self);
 		quit;
 	}
 
@@ -2262,7 +2261,7 @@ code
 	}
 	else
 	{
-		act ("<div class='clan'></div>"+pname+" has been removed from the clan."
+		act ("<div class='clan'>"+pname+" has been removed from the clan.</div>"
 		,A_ALWAYS,self,null,pc,TO_CHAR);
 		i:=savestr("clan.delete",pname+"\n","a");
 	}
@@ -2368,7 +2367,7 @@ code
 	if (self.extra.[CLAN_NAME].descr!=pc.extra.[CLAN_NAME].descr)
 	{
 		act ("<div class='clan'>$3n is not a member of your clan.</div><div class='default'></div>",
-		A_ALWAYS,self,null,null,TO_CHAR);
+		A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	}
 	
@@ -2376,8 +2375,8 @@ code
 	(self.extra.[CLAN_RANK].names.[1]!="$lord") and
 	(atoi(self.extra.[CLAN_RANK].descr)<=atoi(pc.extra.[CLAN_RANK].descr)))
 	{
-		act ("<div class='clan'>$3n's rank is equal to or higher then yours.</div><div class='default'></div>",
-		A_ALWAYS,self,null,null,TO_CHAR);
+		act ("<div class='clan'>$3n's rank is equal to or higher than yours.</div><div class='default'></div>",
+		A_ALWAYS,self,null,pc,TO_CHAR);
 		quit;
 	}
 
@@ -2389,14 +2388,14 @@ code
 		(self.extra.[CLAN_RANK].names.[1]!="$lord") and
 		(atoi(rank)>=atoi(self.extra.[CLAN_RANK].descr)))
 		{
-			sendtext ("<div class='clan'>You are limited to setting ranks less then yours.<br/></div>",self);
+			sendtext ("<div class='clan'>You are limited to setting ranks lower than yours.<br/></div>",self);
 			quit;
 		}
 		
 		if ((self.extra.[CLAN_RANK].names.[1]!="$master") and
 		(atoi(rank)==25))
 		{
-			sendtext ("<div class='clan'>only clan Masters can set rank 25.<br/></div>",self);
+			sendtext ("<div class='clan'>Only clan Masters can set rank 25.<br/></div>",self);
 			quit;
 		}
 		
@@ -2419,17 +2418,17 @@ code
 		pc.extra.[CLAN_RANK].descr:=rank;
 		if (atoi(rank)!=0)
 		{
-			act ("<div class='clan'>Setting $3n's clan rank to </div>"+rank+
-			":  "+rlist.[atoi(rank)]+
-			".<div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-			act ("<div class='clan'>Your clan rank is now </div>"+
+			act ("<div class='clan'>Setting $3n's clan rank to "+rank+
+			": "+rlist.[atoi(rank)]+
+			".</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>Your clan rank is now "+
 			rlist.[atoi(rank)]+
-			"<div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+			".</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
 		}
 		else
 		{
-			act ("<div class='clan'>Striping $3n of their clan rank.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
-			act ("<div class='clan'>You have been striped of your clan rank.</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
+			act ("<div class='clan'>Stripping $3n of their clan rank.</div><div class='default'></div>",A_ALWAYS,self,null,pc,TO_CHAR);
+			act ("<div class='clan'>You have been stripped of your clan rank.</div><div class='default'></div>", A_ALWAYS,pc,null,null,TO_CHAR);
 		}
 	}
 	else
@@ -2572,7 +2571,7 @@ code
 	pc.extra.[CLAN_RANK].descr,{"$lord","$none","$none"});
 	act ("<div class='clan'>$3n is now Lord of the clan.</div><div class='default'></div>",
 	A_ALWAYS,self,null,pc,TO_CHAR);
-	act("<div class='clam'>You are now a Lord of the clan.</div><div class='default'></div>",
+	act("<div class='clan'>You are now a Lord of the clan.</div><div class='default'></div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
 	quit;
 
@@ -2700,7 +2699,7 @@ code
 	pc.extra.[CLAN_RANK].names.[1]:="$none";
 	act ("<div class='clan'>$3n is no longer a clan lord.</div><div class='default'></div>",
 	A_ALWAYS,self,null,pc,TO_CHAR);
-	act("<div class='clam'>You are no longer a clan lord.</div><div class='default'></div>",
+	act("<div class='clan'>You are no longer a clan lord.</div><div class='default'></div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
 	addstring(tlist,pc.extra.[CLAN_RANK].names.[1]);
 	addstring(tlist, pc.extra.[CLAN_RANK].names.[2]);
@@ -2719,7 +2718,7 @@ code
 		quit;
 	}
 	pc.extra.[CLAN_RANK].names.[2]:="$none";
-	act ("<div class='clan'>$3n's  access to the treasury has been removed.</div>",
+	act ("<div class='clan'>$3n's access to the treasury has been removed.</div>",
 	A_ALWAYS,self,null,pc,TO_CHAR);
 	act ("<div class='clan'>Your access to the treasury has been removed.</div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
@@ -2740,7 +2739,7 @@ code
 		quit;
 	}
 	pc.extra.[CLAN_RANK].names.[3]:="$none";
-	act ("<div class='clan'>$3n's  access to the equipment has been removed.</div>",
+	act ("<div class='clan'>$3n's access to the equipment has been removed.</div>",
 	A_ALWAYS,self,null,pc,TO_CHAR);
 	act ("<div class='clan'>Your access to the equipment has been removed.</div>",
 	A_ALWAYS,pc,null,null,TO_CHAR);
@@ -2787,10 +2786,10 @@ code
 	args:=getwords(arg);
 	if (length(args) < 2)
 	{
-		sendtext("You may either type 'deposit all [money type]' or "
-		+"'deposit amount [money type]'<br/>",self);
-		sendtext("Example deposit 10 of your 20 iron pieces type 'deposit 10 iron pieces'<br/>",self);
-		sendtext("Or to deposit all of your 20 iron pieces type 'deposit all iron pieces'<br/>",self);
+		sendtext("You may either type 'cdeposit all [money type]' or "
+		+"'cdeposit amount [money type]'<br/>",self);
+		sendtext("Example deposit 10 of your 20 iron pieces type 'cdeposit 10 iron pieces'<br/>",self);
+		sendtext("Or to deposit all of your 20 iron pieces type 'cdeposit all iron pieces'<br/>",self);
 		quit;
 	}
 	if (args.[0]=="all")
@@ -2843,7 +2842,7 @@ code
 		sendtext("<div class='clan'>The deposit box can't contain that much.</div><br/>",self);
 		quit;
 	}
-	act ("<div class='clan'>You slip "+moneystring(tmp,TRUE)+" into the deposit slot on the chest</div>",
+	act ("<div class='clan'>You slip "+moneystring(tmp,TRUE)+" into the deposit slot on the chest.</div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
 	act ("<div class='clan'>$1n slips some money in the deposit slot on the clan chest.</div>",
 	A_SOMEONE,self,null,null,TO_REST);
@@ -2893,7 +2892,7 @@ code
 		quit;
 	}
 
-	act ("<div class='clan'>Your clan chest has a balance of </div>"+moneystring(balance,TRUE)+".",
+	act ("<div class='clan'>Your clan chest has a balance of "+moneystring(balance,TRUE)+".</div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
 	quit;
 }
@@ -2983,19 +2982,19 @@ code
 
 	if (FALSE==transfermoney (null,self,tmp))
 	{
-		sendtext ("<div class='clan'>Error in the transfer contact an admin.</div><div class='default'><br/></div>",self);
+		sendtext ("<div class='clan'>Error in the transfer; contact an admin.</div><div class='default'><br/></div>",self);
 		log ("Transfer money error:  "+itoa(tmp));
 		quit;
 	}
 
-	act ("<div class='clan'></div>"+moneystring(tmp,TRUE)+" falls into your hands from the chest withdraw slot.<div class='default'></div>",
+	act ("<div class='clan'>"+moneystring(tmp,TRUE)+" falls into your hands from the chest withdraw slot.</div><div class='default'></div>",
 	A_ALWAYS,self, null,null,TO_CHAR);
 	act ("<div class='clan'>$1n gets some money from the withdraw slot on the clan chest.</div><div class='default'></div>",
 	A_SOMEONE,self,null,null,TO_REST);
 	log("HMM! "+self.name+" withdrew "+moneystring(tmp,TRUE)+" from "+self.extra.[CLAN_SYMBOLIC].descr);
    quit;
 }
-dilend // cbalance
+dilend // cwithdraw
 
 /* Allows removing of items from secret clan storage
 leverages clan_symbolic.dc file */
@@ -3062,7 +3061,7 @@ code
 
 	if (amount==0)
 	{
-		act ("<div class='clan'>What do you want to Unstore</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		act ("<div class='clan'>What do you want to unstore?</div>", A_ALWAYS,self,null,null,TO_CHAR);
 		quit;
 	}
 
@@ -3110,7 +3109,7 @@ code
 	secure(item,chestlock);
 	if (can_carry(self,item,1)==1)
 	{
-		sendtext ("<div class='clan'>You can't carry that your hands are full.</div><div class='default'><br/></div>",self);
+		sendtext ("<div class='clan'>You can't carry that; your hands are full.</div><div class='default'><br/></div>",self);
 		quit;
 	}
 
@@ -3179,7 +3178,7 @@ code
 		item:=item.next;
 	}
 	buff:="<div class='clan'>Your secret clan storage contains:</div><div class='default'><br/></div>"+buff;
-	buff:=buff+"<div class='clan'></div>"+itoa(amount)+" items total.<div class='default'><br/></div>";
+	buff:=buff+"<div class='clan'>"+itoa(amount)+" items total.</div><div class='default'><br/></div>";
 	pagestring (buff,self);
 	buff:="";
 	
@@ -3327,6 +3326,7 @@ code
 	exec("yawn", self);
 	heartbeat:= 3;
 	tf:= walk_room@function (placename,2);
+	on_activation(self.position <= POSITION_SLEEPING, sleep);
 	goto start;
 }
 dilend // guard_dir
@@ -3376,12 +3376,12 @@ forgotten cries of warriors long gone and you can somehow still feel their
 presence. The entire room is centered around a huge petrified stump with
 chairs surrounding it."
 extra {"chairs", "chair"}
-"Here are 24 solid stone chairs surrounding the stump. They are made of
+"There are 24 solid stone chairs surrounding the stump. They are made of
 ancient stone and have been smoothed by years of wear. They are cool to
 the touch and by some magic quality are quite comfortable."
 extra {"stump"}
 "This ancient tree had apparently seen warriors become victorious and
-perish throughout it's many long years here. Someone has cut it down to
+perish throughout its many long years here. Someone has cut it down to
 waist height and smoothed the hardened wood down to form a table like
 surface. The stump is warm to the touch, as if the souls of all the
 warriors lost before inhabit it. This is now where all important decisions
@@ -3395,7 +3395,7 @@ extra {"pillars", "pillar"}
 "These monumental pillars are so large and tall that it would take 15 men
 side by side to encircle them. They are made of smooth white stone and are
 always cool to the touch. You see ancient runes made of precious gems
-encircling each of them although much of the runes have long since eroded
+encircling each of them although many of the runes have long since eroded
 into the stone itself."
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 ALWAYS_LIGHT
@@ -3410,8 +3410,8 @@ descr "A large black pillar stands in the middle of the room."
 
 extra {}
 "<pre><br/>
-The entire pillar is black, and it seems as it is used<br/>
-as some kind of information board. There is a few red<br/>
+The entire pillar is black, and it seems as if it is used<br/>
+as some kind of information board. There are a few red<br/>
 runes carved into the surface of the pillar.</pre>"
 
 extra {"red runes","runes"}
@@ -3445,8 +3445,8 @@ extra {"chapter 1","chapter one","one","1","Current Clans and Clan Slots"}
     Vendetta<br/>
     House Jurai<br/>
     Bushido<br/>
-    Knight of Fire<br/>
-	Imperial Order<br/>
+    Knights of Fire<br/>
+    Imperial Order<br/>
 </div><div class='cw'><br/>
 </div></pre>"
 
@@ -3490,10 +3490,9 @@ extra {"chapter 2","chapter two","2","two","What is required to get a Clan"}
    Also include 3 places where you would like to have your<br/>
    clan linked, and I will choose the one I deem fit.<br/>
 </div></pre>"
-extra {"chapter 3","chapter Three","What a Clan is not intended
-for","3","three"}
+extra {"chapter 3","chapter Three","What a Clan is not intended for","3","three"}
 "<pre><div class='cr'><br/>
-    Chapter Three</div><div class='cw'> : </div><div class='cr'>What A Clan Is Not Required For</div><div class='cw'>.</div><div class='cy'><br/>
+    Chapter Three</div><div class='cw'> : </div><div class='cr'>What A Clan Is Not Intended For</div><div class='cw'>.</div><div class='cy'><br/>
     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</div><div class='cw'><br/>
 <br/>
     A clan is not intended to be your own personal home,<br/>

@@ -110,7 +110,7 @@ var
 code
 {
    :start:
-   wait(SFB_CMD,command("backstab") and (activator.type == UNIT_ST_PC) and (self.position >= POSITION_RESTING));
+   wait(SFB_CMD,command(s) and (activator.type == UNIT_ST_PC) and (self.position >= POSITION_RESTING));
    pc:=activator;
    secure(pc,start);
    block;
@@ -641,7 +641,7 @@ code
 
       self.hp := 1;
 
-      act("Just as things are looking bleak for $1n $1e suddenly vanishes in a puff of smoke.", A_ALWAYS, self, null, null, TO_ROOM);
+      act("Just as things are looking bleak for $1n, $1e suddenly vanishes in a puff of smoke.", A_ALWAYS, self, null, null, TO_ROOM);
 
       u := findroom("heal_room@udgaard");
       if (u == null)
@@ -872,7 +872,7 @@ while (u!=null)
  }
 
 sendtext ("Your equipment has been deleted for using illegal dils on your equipment.<br/>",self);
-sendtext ("If this has acted on you and you think it is in error contacted Whistler@blinksoft.com<br/>",self);
+sendtext ("If this has acted on you and you think it is in error contact Whistler@blinksoft.com<br/>",self);
 }
 dilend
 
@@ -1084,7 +1084,9 @@ goto start;
    sending := replace("&gt;",">",sending);
    
    pc := findunit(activator, victim_name, FIND_UNIT_WORLD, null);
-   if (pc.type != UNIT_ST_PC)
+   if (pc == null)
+      act("Not a PC.", A_ALWAYS, activator, null, null, TO_CHAR);
+   else if (pc.type != UNIT_ST_PC)
       {
          act("Not a PC.", A_ALWAYS, activator, null, null, TO_CHAR);
       }
@@ -1222,6 +1224,7 @@ heartbeat := PULSE_SEC;
             if (victim==null)
             {
                victim := findunit(pc, victim_name, FIND_UNIT_WORLD, null);
+               if (victim==null) goto noperson;
                if (victim.type!=UNIT_ST_PC) goto noperson;
             }
         }
@@ -1577,7 +1580,7 @@ if (s=="help")
 {
 err:=loadstr ("alignment.logon",buf);
 if (err<1)
-sendtext ("The alignment logon help is not set please tell an admin when you log on.",self);
+sendtext ("The alignment logon help is not set please tell an admin when you log on.<br/>",self);
 else
 {
 buf:=textformat (buf);
@@ -2440,7 +2443,7 @@ code
    {
       err:=loadstr("sex.logon",buf);
       if (err<1)
-         sendtext ("The gender logon help is not set please tell an admin when you log on.",self);
+         sendtext ("The gender logon help is not set please tell an admin when you log on.<br/>",self);
       else
       {
          buf:=textformat (buf);
@@ -2534,7 +2537,7 @@ code
          nanny_maiden("");
       }
       else
-         sendtext("<br/>Please anwser Yes or No : ", self);
+         sendtext("<br/>Please answer Yes or No : ", self);
    }
    return;
 }
@@ -2587,7 +2590,7 @@ heartbeat := PULSE_SEC;
   nanny_email("");
       }
       else
- sendtext("<br/>Please anwser Yes or No : ", self);
+ sendtext("<br/>Please answer Yes or No : ", self);
    }
    return;
 }
@@ -2621,7 +2624,7 @@ code
       {
          rules:=0;
          newinfo:=0;
-         sendtext ("There is a few things you need to read before entering Valhalla.<br/>",self);
+         sendtext ("There are a few things you need to read before entering Valhalla.<br/>",self);
       }
 
    :newbie_menu:
@@ -2685,7 +2688,7 @@ code
       }
       else
       {
-         sendtext ("Please pick one of the menu choices they are as follows:<br/><br/>",self);
+         sendtext ("Please pick one of the menu choices; they are as follows:<br/><br/>",self);
          sendtext("1) Read Newbie information.<br/>",self);
          sendtext("2) Read Rules.<br/>",self);
          sendtext("3) Enter the game.<br/>",self);
@@ -2793,7 +2796,7 @@ code
    }
     if (command("wear") or command("hold") or command("wield"))
    {
-      act("You have no need to dress you are dead!",
+      act("You have no need to dress, you are dead!",
    A_ALWAYS, activator, null, null, TO_CHAR);
       block;
    }
@@ -3036,7 +3039,7 @@ dilend
 
 title "The Great Ocean"
 descr
-"   You drifting helplessly around in the great ocean."
+"   You are drifting helplessly around in the great ocean."
 movement SECT_WATER_SAIL
 flags {UNIT_FL_NO_WEATHER}
 light 5
@@ -3093,7 +3096,7 @@ end
 
 title "The Timeout Room"
 descr
-"   All players which are idle, are stored in this room."
+"   All players who are idle are stored in this room."
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 light 5
 dilcopy dead_only@basis("You should not have been here, you are sent home.");
@@ -3144,7 +3147,7 @@ some of the more venerated Newbie Guides to have walked the realms of Valhalla.
 A one way exit leads east."
 
 extra {"statue","statues","guides"}
-"Each statue has a name on it Kuros, Ginger, Grift, Iaso, Malice, Ratlin, 
+"Each statue has a name on it: Kuros, Ginger, Grift, Iaso, Malice, Ratlin, 
 Heulflodyn, Colwyn, Kalrai, Bloody and Cira are a few you see but many more
 are honored here for the blood, sweat, tears and more blood they dedicated to 
 newbies." 
@@ -3163,7 +3166,7 @@ title "The Throne Hall"
 descr
 "   You are inside the great throne hall of Odin. The ceiling is made of
 the purest silver and in the far end of the hall is the throne of Odin,
-said to let anyone sitting in it, view the entire world. The dining hall
+said to let anyone sitting in it view the entire world. The dining hall
 is down."
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 dilcopy dead_only@basis("You should not have been here, you are sent home.");
@@ -3179,8 +3182,8 @@ end
                                     hell_entry
 title "Burning in Hel"
 descr "The walls around flame bright red.  Nothing could live here for very
-long not that you should worry....You ARE dead!</div>  Evil deeds must have
-got you to this place nothing good could stay here without destroying its
+long, not that you should worry... You ARE dead!  Evil deeds must have
+got you to this place; nothing good could stay here without destroying its
 soul.  Hot and taunting flames dance around pools of black liquids that look
 as if they have no bottom.  A more pleasant dining room is up from here."
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
@@ -3199,7 +3202,7 @@ title "a dead bug"
 descr "A dead bug lies here."
 extra {}
 "The bug kind of looks like a black lady bug - and it's obviously quite dead. Perhaps someone squashed it. 
-You notice the word 'Papi' inscribed with tiny letters on the rim of its shield"
+You notice the word 'Papi' inscribed with tiny letters on the rim of its shield."
 cost 1 SILVER_PIECE
 rent 1 IRON_PIECE
 type ITEM_OTHER
@@ -3303,8 +3306,8 @@ title "a magic dice"
 descr "A small dice lies on the ground here."
 
 extra {}
-"The magical dice has scintillating colors. Try to <a cmd='#'>roll 2d100</a> to cast two 100 sided dices.
-Looks like an excellent dice to be used with rolling dices online with your friends. Try adding text after the roll."
+"The magical dice has scintillating colors. Try to <a cmd='#'>roll 2d100</a> to roll two 100-sided dice.
+Looks like an excellent dice to be used with rolling dice online with your friends. Try adding text after the roll."
 manipulate {MANIPULATE_TAKE}
 type ITEM_OTHER
 
@@ -3377,7 +3380,7 @@ code
    act("You roll the " + s + " dice... the total is " + itoa(k)+u, A_SOMEONE, pc, null, null, TO_CHAR);
    act("$1n rolls the " + s + " dice... the total is " + itoa(k)+u, A_SOMEONE, pc, null, null, TO_REST);
    self.extra.descr :=  "The magical dice has scintillating colors. "+
-      "The last rool of " + s + " was " + itoa(k) + " rolled as "+ t + u;
+      "The last roll of " + s + " was " + itoa(k) + " rolled as "+ t + u;
 
    :losthim:
    unsecure (pc);
@@ -3397,7 +3400,7 @@ extra {}
 "This object is for adding <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> titles and names to objects, and <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> <br>
 titles, and names to players. With it, you can also execute any command (except wiz commands)<br>
 in <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div>. Please use restraint in your color schemes - we wish to avoid<br>
-gawdy titles/names. The syntax for its use follows HTML &ltdiv&gt tags, and<br>
+gaudy titles/names. The syntax for its use follows HTML &ltdiv&gt tags, and<br>
 the CSS classes we've published. Static color codes are included in the CSS files<br>
 similar to previously available ANSI colors. For example, the legacy &amp;c+r code<br>
 for the color <div class='cpr'>bright red</div>, would now look like &ltdiv class='cpr'&gtcolor red&lt/div&gt.<br>
@@ -3434,7 +3437,7 @@ To add a <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div
 
 <br><br>For level 242+ gods, it is possible to <div class='cpr'>c</div><div class='cpb'>o</div><div class='cpg'>l</div><div class='cpy'>o</div><div class='cpm'>r</div> broadcast.
 <br><div class='cpw'>To use this capability, do the following:</div><br>
-<br>cb &ltdiv class='cpr'&gtValhalla will be rebooting in 2 minutes.,&ltdiv&gt<br>
+<br>cb &ltdiv class='cpr'&gtValhalla will be rebooting in 2 minutes.&lt/div&gt<br>
 <br>This would broadcast the message...
 <br><div class='cpr'>Valhalla will be rebooting in 2 minutes</div>
 <br>...in <div class='cpr'>bright red</div>.<br><br>
@@ -3855,7 +3858,7 @@ if (self.outside.quests.["New Player Helper"] != null)
  {
    act("After a short ride she lets your spirit drift into
 the
-   astral planes."+
+   astral planes. "+
    "You slowly regain your senses.",
        A_ALWAYS, self.outside, null, null, TO_CHAR);
    act("$1n floats into the astral planes.",
@@ -3882,7 +3885,7 @@ descr
 extra {}
 "There are seven runes engraved into the blade of the scythe."
 extra {"runes"}
-"Each rune is very complex, and glow in a different colour."
+"Each rune is very complex, and glows in a different colour."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SCYTHE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
 dilcopy level_restrict@function(51,0,0,"");
@@ -3970,7 +3973,7 @@ names {"rod of error", "rod"}
 title "a rod of error cancellation"
 descr "A rod has carelessly been left here."
 extra {}
-"When this objects is held and used with the 'use rod' command all errors
+"When this object is held and used with the 'use rod' command all errors
 in the zone will be cleared."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 type ITEM_OTHER
@@ -3982,7 +3985,7 @@ names {"rod of info", "rod"}
 title "a rod of user information cancellation"
 descr "A rod has carelessly been left here."
 extra {}
-"When this objects is held and used with the 'wave rod' command all
+"When this object is held and used with the 'wave rod' command all
 information given by the players in a given zone is erased. USE ONLY
 WHEN ALL USER INFO HAS BEEN READ AND CORRECTED."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -4102,7 +4105,7 @@ code
         {
             self.hp := self.max_hp;
             u := self.fighting;
-            act("As $2n attacks $1n $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
+            act("As $2n attacks $1n, $2e is dissolved in a bright light.", A_SOMEONE, self, u, null, TO_ROOM);
             stop_fighting(self.fighting, self);
             stop_fighting(self, self.fighting);
             log("Overpopulation destroyed aggressive NPC " + u.symname + " from the game");
@@ -4136,7 +4139,7 @@ code
         {
             // if there's anything we cannot eat, skip
             log("Overpopulation removed " + s + " from the game");
-            act("$1n consumes $2n.", A_SOMEONE, self, u, null, TO_ROOM);
+            act("$1n consume $2n.", A_SOMEONE, self, u, null, TO_ROOM);
             destroy(u);
             goto init;
         }
@@ -4391,7 +4394,7 @@ code
       if ("$witness" in u.extra)
       {
          exec("tell "+u.name+" I see you have been the victim of a "+
-              "horrible crime, if you wish to accuse anyone, I can help you.",
+              "horrible crime. If you wish to accuse anyone, I can help you.",
               self);
          ou := u;
          secure(ou, loop);
@@ -4494,7 +4497,7 @@ heartbeat := PULSE_SEC;
    }
    else
    {
-      act("You can only cut in Saerimner the pig.",
+      act("You can only cut Saerimner the pig.",
    A_SOMEONE, activator, self, null, TO_CHAR);
    }
    block;
@@ -4573,6 +4576,7 @@ exec("emote counts the money." ,self);
 destroy(item);
 unsecure(pc);
 :losthim:
+nopriority;
 goto start;
 }
 dilend
