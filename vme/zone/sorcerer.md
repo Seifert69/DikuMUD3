@@ -24,9 +24,6 @@
 ## Step 2
 
 Fixed in place:
-- headbump (the cave rooms): it hurt and made scream `self.inside`, the room's first unit (often
-  another player or an item), instead of the non-sorcerer who typed the command; now `activator`,
-  and the room message uses `$1n` instead of the name.
 - daggerchat (blkm_stiletto): two TO_VICT messages ("pierce cuts deep into your stomach", "places $1s stiletto in
   your side") had `null` as the victim, so the victim never saw them; now `enemy`.
 - blkm_stiletto (line 1796): `mvlev_restrict@function(84,0,0,"You are too high a level to use this
@@ -35,6 +32,11 @@ Fixed in place:
   maximum level allowed to use ...").
 
 Questions:
+0. **headbump** (the cave rooms, line 144): it hurts and makes scream `self.inside`, the room's
+   first unit (often another player or an item), instead of the non-sorcerer who typed the
+   command. The fix is `activator` in place of `self.inside` (and `$1n` in the room message). Not
+   made: the stalactites would then always hit the player who types, 1-10 hp on one command in
+   five, with no `position_update` and no exception for gods; that makes the caves harder.
 1. **cloak_invi** (invi_cloak1, line 2225): `command("raise hood")` never matches: "raise" is taken as the
    abbreviation of the social `raisebrow`, and `command()` looks up the whole string "raise hood",
    which is no command. So the cloak's invisibility (which its extra text promises: "The command to

@@ -27,8 +27,6 @@ Fixed in place:
 - **knight_dil** (lines 293, 302): the "already given" and "work harder on your demeanor" branches
   went back to waiting with the player still secured, so that player walking off later made
   Gawaine jump to `:lost:` and say "Just wait until ..." out of nowhere; `unsecure(pc)` added.
-- **knight_dil** (line 334): the pendant was linked straight to the player and then `give pendant`
-  failed (Gawaine didn't have it); now linked to Gawaine and given like the sword.
 - **flamechat** (lines 614-692, ten acts): the TO_VICT messages had `null` as the victim, so the
   enemy never saw them; now `enemy`. Line 639: `$2N` made `$2n` like the other lines.
 - **flamespell** (line 732): anyone in the room saying "Avenge!" set off the wielder's sword (and

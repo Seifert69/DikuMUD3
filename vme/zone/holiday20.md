@@ -33,13 +33,12 @@ Fixed in place:
 - clean_graf (the janitor): `u` (the graffiti remover) was cleared by the pauses, so
   `destroy(u)` did nothing and the can stayed in his inventory. It is looked up again before
   being destroyed.
+- clean_graf: the code had no `goto start` at the end, so the program ended after the first
+  graffiti he cleaned; `goto start;` added, as in holiday22 (the janitor's description says he
+  keeps the streets clean).
 
 Questions:
-1. **clean_graf** (the janitor graf_jan, loaded into village_rd6@udgaard; same in holiday21 and
-   holiday22, so three janitors): the code has no `goto start` at the end, so the program ends
-   after the first graffiti he cleans; from then on he only wanders. The `:start:` loop shows he
-   was meant to keep cleaning. Add `goto start;` at the end? (Graffiti that players paint in
-   Udgaard would then be cleaned again and again, so it is your call.)
+1. **clean_graf**: fixed (see above), as in holiday22.
 2. **xmas_magic / x_charge** (Mrs. Claus's upgrade): `addextra` puts a new extra first, so once
    `$XMAS_Charges` exists, `self.extra.[0]` is that extra and not the item's description. When the
    charge is used, the "magical twinkle" sentence Mrs. Claus added to the description is never

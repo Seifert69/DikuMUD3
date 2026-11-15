@@ -27,8 +27,6 @@
 ## Step 2
 
 Fixed in place:
-- `smelldil` (line 76): the skunk's spray copied `stink` onto `self.outside`, the room, instead of
-  the player it sprays (the stink texts say "emits from your clothing"); now `enemy := pc`.
 - `smelldil` (line 77): the immortal check compared `activator.type` with `IMMORTAL_LEVEL`, which
   is never true; now `activator.level`.
 - `pet_container` (line 254): `link(pet, self.inside)` linked the new pet into whatever was first in
@@ -53,6 +51,10 @@ Fixed in place:
 - `wing_scroll` (line 5695): the `:lost:` branch ended the program for good (no `goto start`).
 
 Questions:
+0. **smelldil** (line 76): the skunk's spray copies `stink` onto `self.outside`, the room, instead
+   of the player it sprays (the stink texts say "emits from your clothing"). The fix is
+   `enemy := pc`. Not made: `stink` is a recall DIL, so players would then carry a skunk smell that
+   is announced to their room every tick and survives a save, which they never did before.
 
 1. **lover_6** (Reckus, line 3241): `secure(pc, losthim)` with `pc` never set (only `pname` is), so
    the `losthim` branch can't run. Setting `pc` would make the quest break when the player walks

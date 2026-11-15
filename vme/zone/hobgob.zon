@@ -73,7 +73,7 @@ code
         unsecure(enemy);
        wait (SFB_CMD, (activator.type == UNIT_ST_PC));
        pc := activator;
-       enemy := pc;
+       enemy := self.outside;
 	   if (activator.level >= IMMORTAL_LEVEL) goto start;
        secure(enemy,lost);
        secure(pc,lost);

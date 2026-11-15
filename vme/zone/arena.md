@@ -32,7 +32,9 @@ Fixed in place:
 - **shitthrow** (line 436): anyone in the room typing "throw dust" set off the dust held by someone
   else; the wait now checks `activator == self.outside`. Line 446: with no target found it printed
   "I see no " + enemy.name with `enemy` null, so nothing at all (step 1, question 6); now "You see
-  no one here to throw $2n at!".
+  no one here to throw $2n at!". `secure(enemy, lostenemy)` ran before `enemy` was set, so it
+  secured nothing; it now comes after the `findrndunit`. (`findrndunit` can still pick the thrower
+  himself when he is the only player in the room; a question, since it changes who is hit.)
 - **nighteff** (line 492): a spell effect must take `(medi, targ, hm)`; without them the server
   refused it ("Spell DIL effect wrong arg count") and nightdrain's cause wounds showed the plain
   spell messages. It now has the arguments and uses them instead of `medium`/`target`.

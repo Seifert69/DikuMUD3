@@ -331,7 +331,7 @@ code
          item2 := load("night_cross@knight");
       dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item2);
          item2.height := pc.height;
-         link(item2,self);
+         link(item2,pc);
       exec("give pendant "+pc.name, self);
       pause;
       exec("say I hope to see you again soon, our guild's strength is returning.",self);

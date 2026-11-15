@@ -27,5 +27,10 @@ Fixed in place:
    names (`drink spring`, `drink pool`); `drink from spring` falls through to the ordinary drink command,
    which says the spring is not a drink. Accept a leading "from " as well?
 
+Added after review: **save_spring** (line 324): `interrupt(SFB_MSG, ...)` sits after `:start:`, so
+every `togglespring`/`savespring` adds another interrupt; after enough of them one "savespring"
+message runs the save several times (or the interrupt table fills). Move the `interrupt` above
+`:start:`?
+
 ### Precedence
 None found.

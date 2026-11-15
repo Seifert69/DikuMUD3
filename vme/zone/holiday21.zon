@@ -3377,6 +3377,7 @@ code
 	exec("emote puts the empty can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover in his bag.", self);
 	subextra (self.extra,"$block wander");
 	pause;
+	goto start;
 }
 dilend
 

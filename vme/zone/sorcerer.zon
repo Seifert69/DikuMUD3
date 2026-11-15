@@ -141,12 +141,12 @@ code
 
    num := rnd(1,10);
    if (num > 2) goto start;
-   exec("scream", activator);
-   act("$1n cries out and stumbles backwards.",
-       A_ALWAYS, activator, null, null, TO_REST);
+   exec("scream", self.inside);
+   act(self.inside.name+" cries out and stumbles backwards.",
+       A_ALWAYS, self.inside, null, null, TO_REST);
    act("You cry out loud as you bump your head on a stalactite.",
-       A_ALWAYS, activator, null, null, TO_CHAR);
-   activator.hp := activator.hp - (rnd(1,10));
+       A_ALWAYS, self.inside, null, null, TO_CHAR);
+   self.inside.hp := self.inside.hp - (rnd(1,10));
    pause;
    goto start;
 }
