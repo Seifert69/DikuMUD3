@@ -486,6 +486,7 @@ kick=kick.hlp
 kill=kill.hlp
 kindred=kindred.hlp
 knee=knee.hlp
+knight=knight.hlp
 knock=knock.hlp
 kopesh=kopesh.hlp
 :end:k
@@ -951,6 +952,6 @@ xray vision=xrayvision.hlp
 :end:x
 :start:y
 yell=shout.hlp
-:end:y
 yule=yule.hlp
 yule wheel=yule.hlp
+:end:y
