@@ -51,10 +51,7 @@ Questions:
    `:hurry:` short tour (line 1004) is dead. Fix: move the interrupt to just before
    `goto stage1` (line 790), and `clear(i1)` at `:stage6:`. It changes what the tour does, so
    your call. `:no_quest:` itself is dead too; drop it?
-2. **feedme** (pillar, line 3650): after the first `feast` the code runs off the end (no
-   `goto start`), so the program ends and FEAST works once per boot, although the pillar says
-   "If you are under level 20 and hungry or thirsty, type 'FEAST'". Fix: `goto start;` after the
-   block. That gives food and drink again, so your call.
+2. (Withdrawn: the program restarts at the top when it runs off its end.)
 3. **newbie_help** (lines 2642-2651): after `walk_room` to the temple the code returns whatever
    `tf` is; the `if (tf == FALSE)` block with the teleport is reached only through
    `goto to_long2` from other zones. A walk that fails leaves the player where they were. Meant:

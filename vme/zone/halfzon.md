@@ -35,10 +35,11 @@ Fixed in place:
   his hit points). The wait now also needs `activator == self.outside`.
 
 Questions:
-1. **war_hammer** (line 5056): the program has no loop. It acts on the first combat round after it
-   is loaded (a flash, or "slams $2n into the dust" when the enemy has under 10 hp, setting him to
-   -10 hp without `position_update`) and then ends. Add `goto start;` at the end? Not made: the hammer
-   would then finish off every enemy below 10 hp, and throw itself out of the wielder's hand each time.
+1. **war_hammer** (line 5056): it has no `goto start`, but it restarts at the top when it runs off
+   its end, so it acts in every combat round while wielded: 1 in 20 a flash, and when the enemy has
+   under 10 hp it "slams $2n into the dust", setting him to -10 hp without `position_update`, and
+   drops itself on the floor. So it finishes off every enemy below 10 hp and throws itself out of
+   the wielder's hand each time. Meant (balance), or rarer, with `position_update`?
 2. **oldstaff** (line 6239): `make drink` takes the 10 mana twice (once for every make, once more in
    the drink branch), and only 10 are checked. Meant (drinks dearer than food), or remove the second?
 3. **wine_press** (line 5571): the press can be entered. When the handle is pulled with the wrong

@@ -46,8 +46,9 @@ Fixed in place:
 - **engrave** (line 990): saying "no" to "An engraving saying: '...', yes?" tested
   `(" " + argument) in "no"`, which is never true, so "no" was taken as yes and the player was
   charged for the engraving; now `argument == "no"` (shake still works as before).
-- **deputy_join** (line 7213): the program ran off its end after the first deputy it swore in, so
-  until the next boot nobody else could join; `goto loop` added.
+- **deputy_join** (line 7213): the program ran off its end after each deputy it swore in, which
+  restarts it at the top, where `:loop:` is; the `goto loop` added there has no effect in play;
+  kept for clarity.
 - **citizenDone** (line 8184): the hidden note said "Paid 1 PP to the Mayor"; the quest takes 2
   (step 1, question 13).
 - **bob** (line 9850): a line break inside a string literal put a newline in the middle of "that's
@@ -60,6 +61,6 @@ Questions:
    the mage's hands, and the mage stops serving until the next boot. The labels `:broken_thing:`
    and `:not_possible:` are never jumped to. Add a counter (give up after, say, 20 casts and go to
    `:broken_thing:`)?
-2. **fido** (line 1779): nothing uses this template (the fido dogs use fido@function), and it would
-   stop after its first round that finds no corpse: there is no `goto loop` after the `foreach`.
-   Delete it, or add the `goto loop` if it is meant to be used?
+2. **fido** (line 1779): nothing uses this template (the fido dogs use fido@function). It has no
+   `goto loop` after the `foreach`, but it restarts at the top when it runs off its end, so it would
+   work. Delete it?

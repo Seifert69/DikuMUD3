@@ -40,8 +40,8 @@ Fixed in place:
   `:trap:` (destroy(self) already stopped them, so this changes nothing in play).
 - **clean_graf** (lines 5759-5766): the remover can was destroyed through a variable cleared by
   the pauses before it, so every cleaning left a can in the janitor's pack; it is looked up again
-  now. The program also ran off its end after the first cleaning, so the holiday janitor cleaned
-  one graffiti per boot; it now goes back to `:start:` and keeps cleaning, as his description says.
+  now. The program also ran off its end after each cleaning, which restarts it at the top (only
+  `heartbeat` again); the `goto start` added there has no effect in play; kept for clarity.
 
 Questions:
 1. **xmas_magic / x_charge** (lines 787 and 827): they take the twinkle off and put it back with

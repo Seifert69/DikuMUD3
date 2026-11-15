@@ -42,7 +42,8 @@ Fixed in place:
   at the arena entrance.
 - **whip** (lines 3275, 3286): TO_VICT with `null` as the victim; now `enemy`.
 - **nine_switch** (line 4537): when the weapon was neither flail nor whip the program ran off its
-  end and "ninesw" stopped working; `goto start` added.
+  end, which restarts it at the top (`heartbeat` and `on_activation` again, which change nothing);
+  the `goto start` added there has no effect in play; kept for clarity.
 
 Questions:
 1. **arena_enter** (line 767): it sends "remove kill prottection" (misspelt, also in basis.zon),

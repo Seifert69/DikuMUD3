@@ -33,12 +33,13 @@ Fixed in place:
 
 Questions:
 1. **web_movement** (room under_web, line 2133) and **spider** (line 43): web_movement has no
-   loop, so it sends "webaction" once per boot: only the first command typed under the web makes
-   the spiders drop. The spiders then `exec("u", self)` to go back, but under_web has no up exit
-   (only east), so they stay under the web for good, and as they are no longer `on_web` they never
-   drop again. Make web_movement loop (with a pause or a per-player limit) and put the spider back
-   with `link(self, findroom("on_web@haon_dor"))` plus messages, since no exit leads there? That
-   makes the ambush happen every time, so it is your call.
+   `goto`, but it restarts at the top when it runs off its end, so every command typed under the
+   web (by anyone visible below level 200) sends "webaction", and at the first one every spider on
+   the web drops. The spiders then `exec("u", self)` to go back, but under_web has no up exit (only
+   east), so they stay under the web for good, and as they are no longer `on_web` they never drop
+   again (the reset's `max 4` loads no new ones while they live). Put the spider back with
+   `link(self, findroom("on_web@haon_dor"))` plus messages, since no exit leads there (perhaps with
+   a pause or a per-player limit)? That makes the ambush happen every time, so it is your call.
 2. **orc_return** (line 137, on the chief's three followers): the first thing it does is
    `walk_room@function("throne@dwarves", 4)`, so the orcs try to walk to that room in another zone
    as soon as they load, and only come back to orc_cave_chief when woken. Is that meant (a raid?), or a leftover from a copy (`orc_cave_chief@haon_dor`)? orc_return also puts an

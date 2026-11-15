@@ -36,13 +36,11 @@ Questions:
    master, 2% grumpy) has never run. Meant `activator != self` with the same master. Not changed:
    it would start destroying players' familiars. Keep it off and remove it (with the unused
    `oldfam_persona`, line 1132), or turn it on?
-2. **prg1** (magic cricket, line 1491): the program has no loop: after the cricket's first escape
-   from a player and its walk home, it ends, and from then on (until it is reloaded) it can be carried
-   as long as anyone likes. The comment says it "routinely tries to go back". Add `goto start;` at
-   the end? Not made: it makes the quest harder than it is now.
-3. **dil_zap** (Phoenix, line 1438): also no loop: it answers the first "fix me" after a boot and
-   then ends. It resets a `$stone code` extra that only a zone outside this repository uses, and
-   says "Your code was successfully fixed" even to players without it. Loop it, or remove it?
+2. (Withdrawn: the program restarts at the top when it runs off its end.)
+3. **dil_zap** (Phoenix, line 1438): it has no `goto`, but it restarts at the top when it runs off
+   its end, so it answers every "fix me". It resets a `$stone code` extra that only a zone outside
+   this repository uses, and says "Your code was successfully fixed" even to players without it.
+   Keep it, or remove it?
 4. **create_fam** (line 442): when the player leaves during the ritual, the familiar already
    loaded into Hexica's inventory stays there (its `fam_unbonded` waits while an NPC holds it), one
    more for each broken ritual, and Hexica says "lost pointer". `unsecure(familiar); destroy(familiar);`

@@ -33,12 +33,12 @@ Fixed in place:
 - clean_graf (the janitor): `u` (the graffiti remover) was cleared by the pauses, so
   `destroy(u)` did nothing and the can stayed in his inventory. It is looked up again before
   being destroyed.
-- clean_graf: the code had no `goto start` at the end, so the program ended after the first
-  graffiti he cleaned; `goto start;` added, as in holiday22 (the janitor's description says he
-  keeps the streets clean).
+- clean_graf: the code had no `goto start` at the end; running off the end restarts it at the
+  top (only `heartbeat` again), so the `goto start;` added, as in holiday22, has no effect in play;
+  kept for clarity.
 
 Questions:
-1. **clean_graf**: fixed (see above), as in holiday22.
+1. (Withdrawn: the program restarts at the top when it runs off its end.)
 2. **xmas_magic / x_charge** (Mrs. Claus's upgrade): `addextra` puts a new extra first, so once
    `$XMAS_Charges` exists, `self.extra.[0]` is that extra and not the item's description. When the
    charge is used, the "magical twinkle" sentence Mrs. Claus added to the description is never

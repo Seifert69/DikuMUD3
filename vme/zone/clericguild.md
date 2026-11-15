@@ -21,11 +21,14 @@ Fixed in place:
 - torc_give (Morenae, line 915): the three ritual messages went by `sendtext` to the room unit
   and reached nobody; they are now act() to everyone in the room (step 1 question 4).
 - torc_give: the wait takes any give by a player in the room, but only `if (target == self)` led
-  back to `start`; a give between two other players fell off the end of the code and ended the
-  program, so Morenae stopped taking quest items until the next boot. Added `goto start`.
-- torc_repl: when an immortal looked at Morenae, the code fell off the end of the program in the
-  same way (the whole body is inside `if (pc.level < IMMORTAL_LEVEL)`); added `goto start`, and
-  `unsecure(pc)` on the two other ways back to `start`.
+  back to `start`; a give between two other players ran off the end of the code, which restarts the
+  program at the top (only `heartbeat` again). The `goto start` added there has no effect in play;
+  kept for clarity.
+- torc_repl: when an immortal looked at Morenae, the code ran off the end of the program in the
+  same way (the whole body is inside `if (pc.level < IMMORTAL_LEVEL)`) and restarted at the top
+  (`heartbeat` and `on_activation` again, which change nothing). Added `unsecure(pc); goto start;`
+  there (the goto has no effect in play; kept for clarity), and `unsecure(pc)` on the two other ways
+  back to `start`.
 - healer_give: a non-member who worshipped Father Tuck got "Please, not here" and then fell into
   the lecture for players who lost their torc ("You were given a powerful protection ... go see
   Sister Morenae"); added `unsecure(pc); goto start;`.

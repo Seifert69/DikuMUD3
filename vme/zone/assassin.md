@@ -24,10 +24,10 @@ Fixed in place:
 - **prg3** (line 507): `secure(pc, lostpc)` came before `pc := activator`, so it secured nothing; the
   two lines are swapped.
 - **death** (line 670): `IsInGuild@guilds(self, ...)` tested the sword; now the wielder,
-  `self.outside` (step 1, question 5). The program also ended after its first combat event whenever
-  one of the two outer tests failed (no `goto start` at the end), so it never ran a second time; added
-  the loop. The room message wrote `self.outside.fighting.name`, so an NPC victim showed by its first
-  name ("from goblin"); now `$1n`/`$3n`.
+  `self.outside` (step 1, question 5). When one of the two outer tests failed the program ran off its
+  end, which restarts it at the top (only `heartbeat` again); the `goto start` added there has no
+  effect in play; kept for clarity. The room message wrote `self.outside.fighting.name`, so an NPC
+  victim showed by its first name ("from goblin"); now `$1n`/`$3n`.
 
 1. **death** (lines 666-697): the program only prints the glow messages. `storenum` (a part of the
    victim's max hp) is computed and never used, so no health is drained or given, though the

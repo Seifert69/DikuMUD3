@@ -20,12 +20,14 @@ Fixed in place:
   `TO_ALL`, so everyone saw two messages for one event; now `TO_VICT` and `TO_NOTVICT`, as in
   every other branch.
 - **hall23** (line 2201): when an immortal said "trick or treat", the program skipped the
-  mortal-only block and ran off the end of its code, so the Baron never answered anyone again until
-  he was reloaded. Now it goes back to waiting. The "already done" and "working on it" answers
-  (lines 2116, 2125) also unsecure the player before waiting again, as the other branches do.
+  mortal-only block and ran off the end of its code, which restarts the program at the top
+  (`heartbeat` and `on_activation` again, which change nothing). It now unsecures the immortal and
+  goes back to `start` (the goto has no effect in play; kept for clarity). The "already done" and
+  "working on it" answers (lines 2116, 2125) also unsecure the player before waiting again, as the
+  other branches do.
 - **hall23_give** (line 2556): a give between two other people in the room (the `target == self`
-  test failing) ran off the end of the program, so the Baron stopped taking quest pieces. Now it
-  goes back to waiting.
+  test failing) ran off the end of the program, which restarts it at the top (only `heartbeat`
+  again). The `goto start` added there has no effect in play; kept for clarity.
 - **hall23_give** (line 2249): the heart was destroyed after a `pause`, when `item` had been
   cleared, so the hearts stayed in the Baron's inventory. Destroyed before the pause now.
 - **hall23_give** (line 2522): the "all 13 pieces?" check read `activator.quests`, which after the
