@@ -253,7 +253,7 @@ code
 	temp_str := getword(mobname);
 
     item.outside_descr := "The decapitated head of " + mobname ;
-    item.title := "The decapitated head of " + left(mobname, length(mobname)-15);
+    item.title := "the decapitated head of " + left(mobname, length(mobname)-15);
     addstring(item.names, "head_of_" + left(mobname, length(mobname)-15));
     addextra(item.extra, {""}, "The head has been severed from the body");
     headless:=left(corpse.title,length(corpse.title)-6);
@@ -325,7 +325,7 @@ code
 
     if (not  hasRaceHead(corpse.value[4]))
     {
-        act("There is no head on that corpse silly!" , A_SOMEONE, self, null,null, TO_CHAR);
+        act("There is no head on that corpse, silly!" , A_SOMEONE, self, null,null, TO_CHAR);
         quit;
     }
 
@@ -435,7 +435,7 @@ if (splno==81)
 {
 power:=-1;
   block;
-  act ("Making a Zombie from a fellow players corpse is forbiden.",
+  act ("Making a zombie from a fellow player's corpse is forbidden.",
   A_ALWAYS,activator,null,null,TO_CHAR);
   goto start;
   }
@@ -504,7 +504,7 @@ code
    {
       act(self.extra.["$rotact"].names.[1], A_HIDEINV, self, null, null, TO_ALL);
       if ("$headless" in self.extra)
-      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[1],4,length(self.extra.["$rot"].names.[1]));
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[1],5,length(self.extra.["$rot"].names.[1]));
       else
       	self.outside_descr := self.extra.["$rot"].names.[1];
    }
@@ -523,7 +523,7 @@ code
    {
       act(self.extra.["$rotact"].names.[2], A_HIDEINV,self,null,null,TO_ALL);
       if ("$headless" in self.extra)
-      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[2],4,length(self.extra.["$rot"].names.[2]));
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[2],5,length(self.extra.["$rot"].names.[2]));
       else
       	self.outside_descr := self.extra.["$rot"].names.[2];
    }
@@ -542,7 +542,7 @@ code
    {
       act(self.extra.["$rotact"].names.[3], A_HIDEINV,self,null,null,TO_ALL);
       if ("$headless" in self.extra)
-      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[3],4,length(self.extra.["$rot"].names.[3]));
+      	self.outside_descr := "The headless " + mid(self.extra.["$rot"].names.[3],5,length(self.extra.["$rot"].names.[3]));
       else
       	self.outside_descr := self.extra.["$rot"].names.[3];
    }
@@ -785,7 +785,7 @@ code
 
     if (self.quests.["New Player Helper"] != null)
     {
-        act("After a short ride she sets your spirit down inside thew Newbie Guide Respite room "+ // fixed room name from a mispelling and renamed the room - see basis.zon
+        act("After a short ride she sets your spirit down inside the Newbie Guide Respite room. "+ // fixed room name from a mispelling and renamed the room - see basis.zon
         "You slowly regain a more material form.",
             A_ALWAYS, self, null, null, TO_CHAR);
         act("$1n enters the castle of Valhalla.",
@@ -812,7 +812,7 @@ code
     }
     else
     {
-        act("After a short ride she lets your spirit drift into the astral planes."+
+        act("After a short ride she lets your spirit drift into the astral planes. "+
         "You slowly regain your senses.",
             A_ALWAYS, self, null, null, TO_CHAR);
         act("$1n floats into the astral planes.",
@@ -866,7 +866,7 @@ code
    if (activator.level < IMMORTAL_LEVEL)
    {
       act("You are dead, don't move!",
-          A_ALWAYS, self.outside, null, null, TO_CHAR);
+          A_ALWAYS, self, null, null, TO_CHAR);
       block;
    }
 
@@ -914,7 +914,7 @@ code
 	while(self.inside != null)
 		link(self.inside, self.outside);
 	
-		act("The familiar's magic unwinds and it fades from this plane of existance.",
+		act("The familiar's magic unwinds and it fades from this plane of existence.",
 			A_ALWAYS,self,null,null,TO_ALL);
       crp := null;
       return (crp);
@@ -1254,7 +1254,7 @@ code
    while (dir <= MAX_EXIT)
 	{
       if (self.outside.exit_to[dir])
-         act("<div class='death'>Your blood freezes as you hear someones death cry from a distance.",
+         act("<div class='death'>Your blood freezes as you hear someone's death cry from a distance.</div>",
             A_ALWAYS,self.outside.exit_to[dir].inside,null,null,TO_ALL);
       dir:=dir+1;
 	}
@@ -1352,7 +1352,7 @@ extra {"$rotact",
        "$1n starts smelling.",
        "$1n begins to rot.",
        "You notice maggots crawling around on $1n.",
-       "A quivering horde of maggots consume $1n"} ""
+       "A quivering horde of maggots consumes $1n."} ""
 dilcopy rot_corpse();
 dilcopy report_corpse();
 dilcopy bob_code();
@@ -1369,12 +1369,12 @@ extra {}
 extra {"$rot", 
        "The cracked statue of $1n is standing here.",
        "The decaying statue of $1n is standing here.",
-       "The broken statue of $1n standing here." } ""
+       "The broken statue of $1n is standing here." } ""
 extra {"$rotact",
        "Little pieces of stone fall from $1n.",
        "$1n begins to crack.",
        "$1n begins to break and deteriorate.",
-       "$1n shatters into a million pieces"} ""
+       "$1n shatters into a million pieces."} ""
 dilcopy rot_corpse();
 dilcopy report_corpse();
 dilcopy bob_code();
