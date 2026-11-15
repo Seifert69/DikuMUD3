@@ -1,6 +1,9 @@
 #!/bin/bash
 set -x
 TIMEOUT=300s
+# The run uses zonelist.test; the game's own zonelist is put back afterwards
+cp ../etc/zonelist ../etc/zonelist.saved
+trap 'mv ../etc/zonelist.saved ../etc/zonelist' EXIT
 cp ../etc/zonelist.test ../etc/zonelist
 # -w: time-warped, the tests' waits pass without waiting for the clock
 timeout --signal=KILL ${TIMEOUT} ./vme -w
