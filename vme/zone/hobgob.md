@@ -76,6 +76,11 @@ Questions:
 
 ### Precedence
 
+Since #603 (merged 2026-11-15) `and`/`or` bind as in C (looser than the comparisons), so once the
+zones are rebuilt these conditions do what was written. What that changes in play is on Papi's
+review list (#596's table).
+
+
 - `getit_dil` line 4930: `if (command("give") and activator.type == UNIT_ST_PC)` is read as
   `(command("give") and activator.type) == UNIT_ST_PC`, always false, so a second `give` typed right
   after the first is missed. Meant: `(command("give")) and (activator.type == UNIT_ST_PC)`.
