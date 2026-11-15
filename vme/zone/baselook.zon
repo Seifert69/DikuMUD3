@@ -107,12 +107,12 @@ code
 
          temp := temp + "You see nothing special.</div><br/>";
       }
+   }
 
-      if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
-      {
-         buff := weapon_name(item.value[0]);
-         temp := temp +  "<br>The " + item.name + " clearly requires a "	+ buff + " fighting style.";
-      }
+   if ((item.type == UNIT_ST_OBJ) and (item.objecttype == ITEM_WEAPON))
+   {
+      buff := weapon_name(item.value[0]);
+      temp := temp +  "<br>The " + item.name + " clearly requires a "	+ buff + " fighting style.<br/>";
    }
 
    sendtext(temp, self);

@@ -797,7 +797,6 @@ code
 				else
 					buf:=buf+"  "+line.[0]+" - "+rlist.[atoi(line.[1])]+"<br/>";
 			}
-			i:=i+1;
 		}
 		i:=i+1;
 	}
@@ -851,7 +850,7 @@ code
 	ln:=length(mlist);
 	i:=0;
 	buf:="<div class='clan'>Clan Quartermasters (* denotes on line):<br/><br/></div>";
-	count:=count+1;
+	count:=0;
 	while (i<ln)
 	{
 		line:=split(mlist.[i],":");
@@ -1661,6 +1660,8 @@ dilbegin cstat (arg:string);
 		clist:stringlist;
 		mlist:stringlist;
 		temp:string;
+		members:integer;
+		j:integer;
 
 code
 {
@@ -1697,10 +1698,20 @@ code
 		else
 			mlist:=split(temp,"\n");
 
+		// Count member lines as cinfo does: three fields or more (no blank or broken lines)
+		members:=0;
+		j:=0;
+		while (j<length(mlist))
+		{
+			if (length(split(mlist.[j],":"))>=3)
+				members:=members+1;
+			j:=j+1;
+		}
+
 		if (i==0)
-			buf:=clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
+			buf:=clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(members)+"<br/>";
 		else
-			buf:=buf+ clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(length(mlist))+"<br/>";
+			buf:=buf+ clist.[i+2]+"  "+clist.[i+1]+"  "+itoa(members)+"<br/>";
 		i:=i+5;
 	}
 	buf:=textformat(buf);
@@ -1763,14 +1774,14 @@ code
 	if (self.level >IMMORTAL_LEVEL) goto admin_title;
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Load, to use ctitle.</div>",
+		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Lord, to use ctitle.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
 
 	if ((self.extra.[CLAN_RANK].names.[1]!="$master") and (self.extra.[CLAN_RANK].names.[1]!="$lord") and (atoi(self.extra.[CLAN_RANK].descr)<21))
 	{
-		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Load, to use ctitle.</div>",
+		act ("<div class='clan'>You must be rank 21 or higher, or a clan Master or Lord, to use ctitle.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -2237,7 +2248,7 @@ code
 		if (pname==clist.[i+1])
 		{
 			act ("<div class='clan'>You can not cremove the master.  The master must step down first.</div>",
-			A_ALWAYS,pc,null,null,TO_CHAR);
+			A_ALWAYS,self,null,null,TO_CHAR);
 			quit;
 		}
 		i:=i+5;
@@ -2319,7 +2330,7 @@ code
 {
 	if (self.extra.[CLAN_RANK]==null)
 	{
-		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Load, to use cpromote.</div>",
+		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Lord, to use cpromote.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}
@@ -2327,7 +2338,7 @@ code
 	(self.extra.[CLAN_RANK].names.[1]!="$lord") and
 	(atoi(self.extra.[CLAN_RANK].descr)<16))
 	{
-		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Load, to use cpromote.</div>",
+		act ("<div class='clan'>You must be rank 16 or higher, or a clan Master or Lord, to use cpromote.</div>",
 		A_ALWAYS, self, null,null,TO_CHAR);
 		quit;
 	}

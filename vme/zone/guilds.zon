@@ -212,10 +212,13 @@ external
    integer ReadySpecialize@professions(pc : unitptr);
    SpecializeProf@professions(pc : unitptr, newProf : integer);
    Explainer@quests(pc : unitptr, sl : stringlist);
+   integer ProfessionIdx@professions(sName : string);
 
 var
    i : integer;
    pc : unitptr;
+   exd : extraptr;
+   fromok : integer;
 code
 {
    heartbeat := 1;
@@ -234,12 +237,27 @@ code
       goto start;
 
    // Something was drunk
-   if ((self.profession != fromProfession) or (not ReadySpecialize@professions(pc)))
+   // The drinker's first or second profession must be the one this drink
+   // specialises (as SpecializeProf checks)
+   fromok := FALSE;
+   exd := PROFESSION_KEY in pc.info;
+   if (exd != null)
+   {
+      if (ProfessionIdx@professions(exd.names.[1]) == fromProfession)
+         fromok := TRUE;
+      else if (length(exd.names) == 3)
+      {
+         if (ProfessionIdx@professions(exd.names.[2]) == fromProfession)
+            fromok := TRUE;
+      }
+   }
+
+   if ((not fromok) or (not ReadySpecialize@professions(pc)))
    {
       pc.position := POSITION_STUNNED;
       pc.hp := 0;
       act("Your overwhelmed with agony and pass out.", A_ALWAYS, pc, self, null, TO_CHAR);
-      act("$1n drinks $2n then $1e screams out in pain and passes out.", A_ALWAYS, pc, self, null, TO_CHAR);
+      act("$1n drinks $2n then $1e screams out in pain and passes out.", A_ALWAYS, pc, self, null, TO_REST);
       quit;
    }
 
