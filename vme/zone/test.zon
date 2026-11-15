@@ -4444,6 +4444,7 @@ var
    npc : unitptr;
    r : unitptr;
    r2 : unitptr;
+   rf : unitptr;
    u : unitptr;
    nobody : unitptr;
    eh : extraptr;
@@ -4485,6 +4486,14 @@ code
    if ((i != FILE_NOT_FOUND) or (j != FILE_NOT_FOUND) or (s != "kept"))
    {
       logtest(tstno, LOGT_ERROR, "T031 loadstr of no file: " + itoa(i) + " " + itoa(j) + " '" + s + "'");
+      bad := 1;
+   }
+   // savestr refuses the same names (it wrote "../t031x.txt" outside the strings directory)
+   i := savestr("../t031x.txt", "x", "w");
+   j := savestr("a/b", "x", "w");
+   if ((i != FALSE) or (j != FALSE))
+   {
+      logtest(tstno, LOGT_ERROR, "T031 savestr of a name that isn't one: " + itoa(i) + " " + itoa(j));
       bad := 1;
    }
 
@@ -4651,6 +4660,14 @@ code
        (not (restore("a/b", b2) == null)))
    {
       logtest(tstno, LOGT_ERROR, "T031 restore of no file isn't null");
+      bad := 1;
+   }
+   // a failed name fails (it stopped the program with a type error)
+   rf := b2;
+   rf := restore(nobody.name, b2);
+   if (not (rf == b2))
+   {
+      logtest(tstno, LOGT_ERROR, "T031 restore of a failed name changed the variable");
       bad := 1;
    }
    i := delunit("t031box");
@@ -5088,6 +5105,22 @@ code
    if ((s != "fire sphere") or (r1 != 77) or (s2 != ""))
    {
       logtest(tstno, LOGT_ERROR, "T030 spellinfo of a sphere or out of range");
+      bad := 1;
+   }
+   // A failed argument makes them fail, as it does the other functions (they stopped the
+   // program with a type error): a string variable is emptied, an integer keeps its value
+   s := "kept";
+   s := spellinfo(nobody.level, r1, r1, r1, r1, r1, r1, r1);
+   s2 := "kept";
+   s2 := moneystring(nobody.level, TRUE);
+   i := 7;
+   i := openroll(nobody.level, 5);
+   j := 7;
+   j := openroll(100, nobody.level);
+   il := weapon_info(nobody.level);
+   if ((s != "") or (s2 != "") or (r1 != 77) or (i != 7) or (j != 7))
+   {
+      logtest(tstno, LOGT_ERROR, "T030 spellinfo, moneystring or openroll of a failed value");
       bad := 1;
    }
 

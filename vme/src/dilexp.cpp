@@ -1378,6 +1378,7 @@ void dilfe_resta(dilprg *p)
                 break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1387,6 +1388,7 @@ void dilfe_resta(dilprg *p)
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -1419,11 +1421,17 @@ void dilfe_opro(dilprg *p)
                         v->val.num = 0;
                     }
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -1926,6 +1934,11 @@ void dilfe_svstr(dilprg *p)
                             {
                                 v->type = DILV_FAIL;
                             }
+                            else if (!store_name_test((char *)v1->val.ptr))
+                            {
+                                szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to savestr an illegal file name.", p->frame->tmpl->prgname);
+                                v->val.num = FALSE;
+                            }
                             else
                             {
                                 std::filesystem::path filename{
@@ -2399,6 +2412,9 @@ void dilfe_spli(dilprg *p)
             }
 
             break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2510,11 +2526,17 @@ void dilfe_mons(dilprg *p)
                     v->atyp = DILA_EXP;
                     v->val.ptr = str_dup(money_string(v1->val.num, DEF_CURRENCY, v2->val.num));
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -4049,6 +4071,9 @@ void dilfe_wepinfo(dilprg *p)
                 v->val.ptr = nullptr;
                 v->type = DILV_NULL;
             }
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
