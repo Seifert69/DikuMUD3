@@ -177,7 +177,7 @@ code
    }
    else
    {
-      sendtext("Replacing <a cmd='#'>" + c + " " + s + " " + exd.names.[1] + "</a> (click link to revet to this)<br/>", self);
+      sendtext("Replacing <a cmd='#'>" + c + " " + s + " " + exd.names.[1] + "</a> (click link to revert to this)<br/>", self);
       sendtext("New " + c + " " + s + " " + arg + "<br/>", self);
       exd.names.[1] := arg;
    }
@@ -262,7 +262,7 @@ code
 
    if (arg == "")
    {
-      act("knock on what?", A_ALWAYS, self, null, null, TO_CHAR);
+      act("Knock on what?", A_ALWAYS, self, null, null, TO_CHAR);
       return;
    }
 
@@ -308,7 +308,7 @@ code
    }
 
    // message to everyone in the same location
-   act("You knock on $2m.", A_SOMEONE, self, item, null, TO_CHAR);
+   act("You knock on $2n.", A_SOMEONE, self, item, null, TO_CHAR);
    act("$1n knocks on $3n.", A_SOMEONE, self, null, item,TO_NOTVICT);
    act("$1n knocks on you.", A_SOMEONE, self, null, item, TO_VICT);
 
@@ -664,7 +664,6 @@ addextra(self.extra,zonlist,"all");
 addextra(self.extra,donlist,"all");
 addextra(self.extra,conlist,"all");
 addextra(self.extra,nodonlist,"all");
-                                                                      addextra(self.extra,donlist,"all");
 quit;
 }
 dilend
@@ -728,7 +727,7 @@ code
 
    i := 1;
    ln := length(rm.extra.["$zonlist"].names);
-   buffer := "<u>All Areas of Valhalla (*)denotes donation area:</u><br/>";
+   buffer := "<u>All Areas of Valhalla (*) denotes donation area:</u><br/>";
    buffer := buffer + "<table class='colh2'>";
    while (i < ln)
    {
@@ -789,7 +788,7 @@ code
       if (action==left(tlist.[0],length(action)))
       {
          if (tf==0)
-            buffer := "<u>"+tlist.[0]+" areas:</u>";
+            buffer := "<u>"+tlist.[0]+" areas:</u><br/>";
          tf:=1;
          if (tlist.[2]=="n")
             buffer := buffer+" "+tlist.[1]+"<br/>";
@@ -1083,7 +1082,7 @@ code
     
    if (arg == "show")
    {
-      sendtext("Your current prompt is :<br/><br/> " +self.prompt+"<br/>", self);
+      sendtext("Your current prompt is:<br/><br/> " +self.prompt+"<br/>", self);
       /*log(self.name+" shows their prompt as : " +self.prompt+ " <br/>");*/
       quit;
    }
@@ -1311,9 +1310,9 @@ code
            (not isset(ch.pcflags,PC_NOWIZ)))
         {
         if (emote)
-           sendtext("<div class='wiz'>"+lft+" "+self.name+" "+arg+"<br/>", ch);
+           sendtext("<div class='wiz'>"+lft+" "+self.name+" "+arg+"</div>", ch);
         else
-           sendtext("<div class='wiz'>"+lft+" "+self.name+" :: "+arg+"<br/>", ch);
+           sendtext("<div class='wiz'>"+lft+" "+self.name+" :: "+arg+"</div>", ch);
     }
     ch := ch.gnext;
    }
@@ -2209,13 +2208,13 @@ code
 
    if ((u == null) or not visible(self, u))
    {
-      act("No such person by that name!.",A_SOMEONE, self, null, null, TO_CHAR);
+      act("No such person by that name!",A_SOMEONE, self, null, null, TO_CHAR);
       quit;
    }
 
    if (not (visible(self,u)))
    {
-      act("No such person by that name!.",A_SOMEONE, self, null, null, TO_CHAR);
+      act("No such person by that name!",A_SOMEONE, self, null, null, TO_CHAR);
       quit;
    }
 
@@ -2237,7 +2236,7 @@ code
    }
    else
    {
-      act("$2n is not following you",A_SOMEONE, self, u, null, TO_CHAR);
+      act("$2n is not following you.",A_SOMEONE, self, u, null, TO_CHAR);
       quit;
    }
 
@@ -2373,7 +2372,7 @@ code{
 
  if ((mast != self) and (mast.master != self))
     {
-      sendtext(mast.name + " must follow you to enter your group.", self);
+      sendtext(mast.name + " must follow you to enter your group.<br/>", self);
       quit;
     }
 
@@ -2475,7 +2474,7 @@ pc.thirst := 24;
 
 position_update(pc);
 
-act("You have restore $3n to health.", A_ALWAYS, self, null, pc, TO_CHAR);
+act("You have restored $3n to health.", A_ALWAYS, self, null, pc, TO_CHAR);
 act("$1n has restored you to health.", A_ALWAYS, self, null, pc, TO_VICT);
 
 quit;
@@ -2674,7 +2673,7 @@ code
       stat1 := "";
 
    if (self.full < 4 )
-      stat2 :="<div class='score'>You are hungry!</div>.";
+      stat2 :="<div class='score'>You are hungry!</div>";
    else
       stat2 := "";
 
@@ -2798,7 +2797,7 @@ code
 
    if (arg=="")
    {
-      sendtext("Who do you want to advance and how high.<br/>",self);
+      sendtext("Who do you want to advance and how high?<br/>",self);
       quit;
    }
 
@@ -2863,8 +2862,8 @@ code
    {
       act ("You demote $3n.", A_ALWAYS,self,null,targ,TO_CHAR);
          act ("$3n makes some strange gestures. "+
-         "A horrible feeling comes upon you, like a giant hand, darkness"+
-         "comes down from above, grabbing your body, which begin to ache "+
+         "A horrible feeling comes upon you, like a giant hand, darkness "+
+         "comes down from above, grabbing your body, which begins to ache "+
          "with striking pain from inside. Your head seems to be filled with "+
          "daemons from another plane as your body dissolves into the "+
          "elements of time and space itself. You feel less powerful.",
@@ -2898,7 +2897,7 @@ code
 
    if (targ.level>=200)
    {
-      sendtext("You can't diminish that Admin status to a player you need to delete and start that character again.<br/>",self);
+      sendtext("You can't diminish that Admin status to a player; you need to delete and start that character again.<br/>",self);
       quit;
    }
 
@@ -2908,7 +2907,7 @@ code
       quit;
    }
 
-   sendtext("Characters Experience before you advanced = "+itoa(targ.exp)+"<br/>", self);
+   sendtext("Character's experience before you advanced = "+itoa(targ.exp)+"<br/>", self);
 
    // The total experience of a character at that (virtual) level, as a new player gets
    targ.exp := getinteger(DIL_GINT_REQXP, null, lvl);
@@ -2919,11 +2918,11 @@ code
    else
       targ.level := lvl;
 
-   sendtext("Characters Experience after you advanced = "+itoa(targ.exp)+"<br/>", self);
+   sendtext("Character's experience after you advanced = "+itoa(targ.exp)+"<br/>", self);
    sendtext("Character needs "+itoa(targ.exptol)+" to level.<br/>", self);
 
    if (targ.exptol == 0)
-      sendtext("You have been advanced in levels you may raise levels using the 'level' command<br/>",targ);
+      sendtext("You have been advanced in levels; you may raise levels using the 'level' command.<br/>",targ);
    quit;
 }
 dilend
@@ -2999,7 +2998,7 @@ code
 
    if (torch.value[0] <= 0) // Hours left
    {
-      sendtext("It is used up, it wont ignite.<br/>",self);
+      sendtext("It is used up, it won't ignite.<br/>",self);
       return;
    }
 
@@ -3324,8 +3323,8 @@ else if ((keyword == WEAR_FINGER_L) or
    }
 
    unit_msg(ch,obj,"$wear",
-            "You put $2n on your left hand's ringfinger.",
-            "$1n puts $2n on $1s left hand's ringfinger.");
+            "You put $2n on your left hand's ring finger.",
+            "$1n puts $2n on $1s left hand's ring finger.");
 
    addequip(obj,WEAR_FINGER_L);
  }
@@ -3341,8 +3340,8 @@ else if ((keyword == WEAR_FINGER_L) or
    }
 
    unit_msg(ch,obj,"$wear",
-            "You put $2n on your right hand's ringfinger.",
-            "$1n puts $2n on $1s right hand's ringfinger.");
+            "You put $2n on your right hand's ring finger.",
+            "$1n puts $2n on $1s right hand's ring finger.");
 
    addequip(obj,WEAR_FINGER_R);
  }
@@ -3728,7 +3727,7 @@ else if (keyword == WEAR_SHIELD)
 
     if (c != "")
     {
-    act("$3n are $2t to fit your arms.",
+    act("$3n is $2t to fit your arm.",
 	A_ALWAYS, ch, c, obj, TO_CHAR);
     return(FALSE);
     }
@@ -4106,7 +4105,7 @@ external
 code
 {
 
- if ((isset(obj.flags,OBJ_NO_UNEQUIP))or
+ if ((isset(obj.objectflags,OBJ_NO_UNEQUIP))or
  (isaff(obj, ID_CURSE)))
  {
   act("$3n is cursed, you can't remove it!",
@@ -4235,14 +4234,14 @@ str_self := ex_str+"_s";
 str_other := ex_str+"_o";
 
 if (obj.extra.[str_self].descr != "")
- act(obj.extra.[str_self].descr, A_ALWAYS, self, obj, null, TO_CHAR);
+ act(obj.extra.[str_self].descr, A_ALWAYS, ch, obj, null, TO_CHAR);
 else
- act(act_self, A_ALWAYS, self, obj, null, TO_CHAR);
+ act(act_self, A_ALWAYS, ch, obj, null, TO_CHAR);
 
 if (obj.extra.[str_other].descr != "")
- act(obj.extra.[str_other].descr, A_SOMEONE, self, obj, null ,TO_REST);
+ act(obj.extra.[str_other].descr, A_SOMEONE, ch, obj, null ,TO_REST);
 else
- act(act_other, A_SOMEONE, self, obj, null, TO_REST);
+ act(act_other, A_SOMEONE, ch, obj, null, TO_REST);
 
 return;
 }
@@ -4803,7 +4802,7 @@ code
             i := i + 1;
         }
 
-        sendtext("That option is not available (choose "+str+"</div>).<br/>",self);
+        sendtext("That option is not available (choose "+str+").<br/>",self);
     }
     else
     {
@@ -5329,7 +5328,7 @@ code
          sendtext("<br/><br/>"+goodbye, self);
       }
 
-      sendtext("Goodbye, friend.. Come back soon!<br/>", self);
+      sendtext("Goodbye, friend. Come back soon!<br/>", self);
       quit_str:="logging on";
       gamestate(self, GS_QUIT);
    }
@@ -5384,7 +5383,7 @@ code
 
    if (length(excmdstr_case) < 5)
    {
-      sendtext ("Password to short. Password must be 5 characters or longer.  Try again.<br/>",self);
+      sendtext ("Password too short. Password must be 5 characters or longer.  Try again.<br/>",self);
       self.prompt:=prmt;
       i:=dildestroy("send_prompt@update",self);
       dilcopy("send_prompt@update",self);
@@ -5393,7 +5392,7 @@ code
 
    if (length(excmdstr_case) > 16)
    {
-      sendtext ("Password to long. Try again.<br/>",self);
+      sendtext ("Password too long. Try again.<br/>",self);
       self.prompt:=prmt;
       i:=dildestroy("send_prompt@update",self);
       dilcopy ("send_prompt@update",self);
@@ -5408,7 +5407,7 @@ code
 
    if (strcmp(excmdstr_case,firstpwd)!=0)
    {
-      sendtext ("Passwords do not match try again.<br/>",self);
+      sendtext ("Passwords do not match. Try again.<br/>",self);
       self.prompt:=prmt;
       i:=dildestroy("send_prompt@update",self);
       dilcopy ("send_prompt@update",self);
@@ -5474,7 +5473,7 @@ if (command ("say"))
 	quit;
 	}
 
-sendtext("Deletion aborted<br/>",self);
+sendtext("Deletion aborted.<br/>",self);
 
 quit;
 	:admin_delete:
@@ -5611,7 +5610,7 @@ code
     }
 
     if (self.fighting!=null) {
-        act ("No Way! Your fighting for your life!",A_ALWAYS,self,null,null,TO_CHAR);
+        act ("No way! You're fighting for your life!",A_ALWAYS,self,null,null,TO_CHAR);
         quit;
     }
 
@@ -5663,7 +5662,7 @@ code
 
         if ((item.type!=UNIT_ST_OBJ) or ( not(isset (item.manipulate,MANIPULATE_TAKE))))
         {
-            act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
+            act ("You can't bury $2n.",A_ALWAYS,self,item,null,TO_CHAR);
         }
         else
         {
@@ -5699,17 +5698,23 @@ code
     item:=self.inside;
     while (item!=null)
     {
-        if ((item.equip!=0) or (not(visible(self,item))) or (isset(item.flags,UNIT_FL_BURIED)) or (not(arg in item.names)) or (count>1))
+        if ((item.equip!=0) or (not(visible(self,item))) or (isset(item.flags,UNIT_FL_BURIED)) or (not(arg in item.names)))
         {
-            if (count>1)
-                count:=count-1;
             item:=item.next;
             continue;
         }
 
+        if (count>1)
+        {
+            count:=count-1;
+            item:=item.next;
+            continue;
+        }
+
+        temp:=item.next;
         if ((item.type!=UNIT_ST_OBJ) or (not(isset (item.manipulate,MANIPULATE_TAKE))))
         {
-            act ("You can't bury $2n",A_ALWAYS,self,item,null,TO_CHAR);
+            act ("You can't bury $2n.",A_ALWAYS,self,item,null,TO_CHAR);
         }
         else
         {
@@ -5718,7 +5723,6 @@ code
             act ("You bury $3n from your inventory.",A_SOMEONE,self,null,item,TO_CHAR);
             set (item.flags,UNIT_FL_BURIED);
             dilcopy("buried_timer@commands(60)", item);
-            temp:=item.next;
             link (item,self.outside);
             send_done("bury",self,item,null,0,arg,null, CMD_AUTO_NONE);
         }
@@ -5892,7 +5896,7 @@ code
   else if (self.position == POSITION_SITTING)
   {
    DO_ACT("You stand up.")
-   act("$1n clambers on $1s feet.", A_HIDEINV, self, null, null, TO_REST);
+   act("$1n clambers to $1s feet.", A_HIDEINV, self, null, null, TO_REST);
    self.position := POSITION_STANDING;
 
     send_done("stand",self,null,null,0,arg,null, CMD_AUTO_NONE);
@@ -5904,7 +5908,7 @@ code
   else if (self.position == POSITION_RESTING)
   {
    DO_ACT("You stop resting, and stand up.")
-   act("$1n stops resting, and clambers on $1s feet.", A_HIDEINV, self,
+   act("$1n stops resting, and clambers to $1s feet.", A_HIDEINV, self,
 null, null, TO_REST);
    self.position := POSITION_STANDING;
 
@@ -5963,7 +5967,7 @@ code
   }
  else if (self.position == POSITION_FIGHTING)
   {
-   DO_ACT("Sit down while fighting? are you MAD?")
+   DO_ACT("Sit down while fighting? Are you MAD?")
   }
  else
   {
@@ -6011,7 +6015,7 @@ code
   }
   else if (self.position == POSITION_FIGHTING)
   {
-   DO_ACT("Rest while fighting? are you MAD?")
+   DO_ACT("Rest while fighting? Are you MAD?")
   }
   else
   {
@@ -6050,12 +6054,12 @@ code
   }
   else if (self.position == POSITION_FIGHTING)
   {
-   DO_ACT("Sleep while fighting? are you MAD?")
+   DO_ACT("Sleep while fighting? Are you MAD?")
   }
   else
   {
    DO_ACT("You stop floating around, and lie down to sleep.")
-   act("$1n stops floating around, and lie down to sleep.",A_HIDEINV, self,
+   act("$1n stops floating around, and lies down to sleep.",A_HIDEINV, self,
 null, null, TO_REST);
    self.position := POSITION_SLEEPING;
 
@@ -6091,7 +6095,7 @@ code
    else
    {
       if (self.position == POSITION_SLEEPING)
-         DO_ACT("You can't wake people up if you are asleep yourself!<br>")
+         DO_ACT("You can't wake people up if you are asleep yourself!")
       else
       {
          vict := findunit(self, arg, FIND_UNIT_SURRO, null);
@@ -6149,7 +6153,7 @@ start:integer;
 code
 {
 size:=length (sl);
-if (i+ln>=size)
+if (i+ln>size)
  return ("");
 
 size:=i+ln;
@@ -6159,7 +6163,7 @@ while (i<size)
  if (start==i)
   temp:=sl.[i];
  else
-  temp:=" "+sl.[i];
+  temp:=temp+" "+sl.[i];
   i:=i+1;
   }
 
@@ -6260,7 +6264,7 @@ code
 
 if (arg=="")
  {
- sendtext ("piset what?<br/>",self);
+ sendtext ("Piset what?<br/>",self);
  quit;
  }
 
@@ -6299,7 +6303,7 @@ else if (action==left("descr",length(action)))
  goto do_descr;
 else
  {
- sendtext ("Incorrect argument to piset please see <help piset><br/>",self);
+ sendtext ("Incorrect argument to piset; please see 'help piset'.<br/>",self);
  quit;
  }
 :arg_title:
@@ -6310,13 +6314,13 @@ arg:=excmdstr+" "+argument;
 :do_title:
 if (u.extra.["$pititle"].descr=="true")
  {
- sendtext ("You have already set this objects title.<br/>",self);
+ sendtext ("You have already set this object's title.<br/>",self);
  quit;
  }
 
 
 temp:=self.prompt;
-self.prompt:="Is "+arg+" the title you want? ([Q]uit, [Y]es, or (N)o";
+self.prompt:="Is "+arg+" the title you want? ([Q]uit, [Y]es, or [N]o)";
 i:=dildestroy("send_prompt@update",self);
 dilcopy ("send_prompt@update",self);
 
@@ -6386,13 +6390,13 @@ arg:=excmdstr+" "+argument;
 :do_shortdescr:
 if (u.extra.["$pishortdescr"].descr=="true")
  {
- sendtext ("You have already set this objects short description.<br/>",self);
+ sendtext ("You have already set this object's short description.<br/>",self);
  quit;
  }
 
 
 temp:=self.prompt;
-self.prompt:="Is "+arg+" the short description you want? ([Q]uit, [Y]es, or (N)o";
+self.prompt:="Is "+arg+" the short description you want? ([Q]uit, [Y]es, or [N]o)";
 i:=dildestroy("send_prompt@update",self);
 dilcopy ("send_prompt@update",self);
 
@@ -6461,14 +6465,14 @@ quit;
 :do_descr:
 if (u.extra.["$pidescr"].descr=="true")
  {
- sendtext ("You have already set this objects description.<br/>",self);
+ sendtext ("You have already set this object's description.<br/>",self);
  i:=dildestroy("send_prompt@update",self);
 dilcopy ("send_prompt@update",self);
 
  quit;
  }
 
-sendtext ("Enter item descr.  type '@' to end descr<br/>",self);
+sendtext ("Enter the item's description. Type '@' to end it.<br/>",self);
    beginedit(self);
    wait(SFB_EDIT, self == activator);
    temp := argument;
@@ -6485,7 +6489,7 @@ temp:=textformat(temp);
 tmp:=self.prompt;
 sendtext (textformat(temp),self);
       i:=dildestroy("send_prompt@update",self);
-self.prompt:="Is this the description you want? ([Q]uit, [Y]es, or (N)o ";
+self.prompt:="Is this the description you want? ([Q]uit, [Y]es, or [N]o) ";
 dilcopy ("send_prompt@update",self);
 
 wait (SFB_CMD,self==activator);
@@ -6934,10 +6938,17 @@ dilbegin string agestring(rce : integer);
 external
    string genderstring();
    string racestring(rce : integer);
+var
+   age : string;
+   art : string;
 
 code
 {
-   return("You are a " + itoa((realtime - self.birth) / SECS_PER_MUD_YEAR) +
+   age := itoa((realtime - self.birth) / SECS_PER_MUD_YEAR);
+   art := "a";
+   if ((left(age, 1) == "8") or (age == "11") or (age == "18"))
+      art := "an";
+   return("You are " + art + " " + age +
           " year old " + genderstring() + " " + racestring(rce) + " at level " + 
           itoa(self.vlevel) + ".<br/>");
 }
@@ -6994,7 +7005,7 @@ code
    }
    else if (hours_played>0)
    {
-      time_str:=time_str+", and "+itoa(hours_played)+" hours";
+      time_str:=time_str+" "+itoa(hours_played)+" hours";
       tf:=TRUE;
    }
 
@@ -7287,6 +7298,7 @@ while (i<len)
    buff := buff + divlist.[i] + "<br/>";
    i:=i+1;
 }
+buff:=buff+"</div>";
 
 :end_sp:
 
@@ -7651,7 +7663,7 @@ code
 {
     if (self.level < 200)
     {
-        sendtext ("You don't have access tot he 'title' command.<br/>",self);
+        sendtext ("You don't have access to the 'title' command.<br/>",self);
         quit;
     }
 
@@ -7703,7 +7715,9 @@ quit;
 
 args:=getwords(arg);
 ln:=length(args);
-if ((ln<1) or (ln>2))
+if (ln<1)
+ goto hlp_dscr;
+if (ln>2)
  {
  sendtext ("No such location to describe.<br/>",self);
  quit;
@@ -7782,9 +7796,9 @@ else
 x:=location in self.extra;
 if (x!=null)
  if (location=="")
- sendtext("your Current description for your body is:<br/>"+x.descr+"<br/>",self);
+ sendtext("Your current description for your body is:<br/>"+x.descr+"<br/>",self);
 else
-  sendtext("your Current description for your "+location+" is:<br/>"+x.descr+"<br/>",self);
+  sendtext("Your current description for your "+location+" is:<br/>"+x.descr+"<br/>",self);
 
 
  if (location=="")
@@ -8062,7 +8076,7 @@ code
       if (self.thirst>=24)
       {
          /* Stomach full */
-         act("Your stomach can't contain anymore!", A_SOMEONE, self, null, null,
+         act("Your stomach can't contain any more!", A_SOMEONE, self, null, null,
          TO_CHAR);
          quit;
       }
@@ -8266,7 +8280,7 @@ TO_REST);
  if (self.thirst>=24)
   {
   /* Stomach full */
-  act("Your stomach can't contain anymore!", A_SOMEONE, self, null, null,
+  act("Your stomach can't contain any more!", A_SOMEONE, self, null, null,
 TO_CHAR);
   quit;
   }
@@ -8375,7 +8389,7 @@ TO_CHAR);
     /* The pig is drunk */
     act("You simply fail to reach your mouth!", A_SOMEONE, self, null, null,
 TO_CHAR);
-    act("$1n tried to sip but missed $1s mouth!",A_HIDEINV, self, null,
+    act("$1n tried to taste but missed $1s mouth!",A_HIDEINV, self, null,
 null, TO_REST);
     quit;
      }
@@ -8383,7 +8397,7 @@ null, TO_REST);
    if (self.thirst>=24)
     {
     /* Stomach full */
-    act("Your stomach can't contain anymore!",A_SOMEONE, self, null, null,
+    act("Your stomach can't contain any more!",A_SOMEONE, self, null, null,
 TO_CHAR);
     quit;
     }
@@ -8394,7 +8408,7 @@ TO_CHAR);
 
   act("$1n tastes $3t from $2n.", A_HIDEINV, self,
 food,food.names.[length(food.names)-1], TO_REST);
-  act("You sip the $2t.", A_SOMEONE, self,food.names.[length(food.names)-1]
+  act("You taste the $2t.", A_SOMEONE, self,food.names.[length(food.names)-1]
 , null, TO_CHAR);
 
   i:=dv(food,"drunk");
@@ -8412,10 +8426,7 @@ apply_poison(self,pois,amount);
  set_weight_base(food, food.weight-amount); /* Subtract amount */
  if (food.value[0]<=0)
   {   /* The last bit */
- set_weight_base(food,food.weight+(-(food.value[0])));
- food.value[0]:=0;
-  food.value[3]:=0;
-  substring (food.names,food.names.[length(food.names)-1]);
+ sub_drink_info(food);
   }
  }
 
@@ -8631,7 +8642,7 @@ if (t_obj.value[0]==0)
   {
   :error:
   log ("Drink container error on "+f_obj.nameidx+"@"+f_obj.zoneidx);
-  act ("Drink container error do to new container code replace your container.",
+  act ("Drink container error due to the new container code; replace your container.",
    A_ALWAYS, self,null,null,TO_CHAR);
   quit;
   }
@@ -8753,7 +8764,7 @@ if (sel <= 0)
 
 if (sel <= 0) /* still not found */
     {
-    act ("You can only split iron, copper, silver, gold, or platinum pieces"+
+    act ("You can only split iron, copper, silver, gold, or platinum pieces "+
         "(or all of them).", A_ALWAYS, self, null, null, TO_CHAR);
     return;
     }
@@ -8826,7 +8837,7 @@ self, null, null, TO_REST);
     return;
     }
 
-i:= flog ("split.log", asctime(realtime)+": "+self.name+" called the split"+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" called the split "+
         "command ("+itoa(sel)+")", "a");
 
 if (sel == 5)
@@ -8898,7 +8909,7 @@ TO_CHAR);
             A_HIDEINV, self, null, u, TO_VICT);
     }
 
-i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the"+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the "+
     "split command.", "a");
 return;
 
@@ -8998,7 +9009,7 @@ if (not done)
         A_HIDEINV, self, null, null, TO_REST);
     }
 
-i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the"+
+i:= flog ("split.log", asctime(realtime)+": "+self.name+" returned from the "+
         "split command.", "a");
 return;
 
@@ -9229,8 +9240,7 @@ null, null, TO_CHAR);
 
    if (pc.level >= self.level)
    {
-      act("I don't think $3e would appreciate that. Better ask
-first.",A_ALWAYS, self, null, pc, TO_CHAR);
+      act("I don't think $3e would appreciate that. Better ask first.",A_ALWAYS, self, null, pc, TO_CHAR);
       quit;
    }
 
@@ -9302,16 +9312,14 @@ person:="$reply" in self.quests;
 
 if (person==null)
   {
-  act ("<div class='respond'>No one to respond
-to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+  act ("<div class='respond'>No one to respond to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
   quit;
   }
 
 pc:=findunit (self,person.descr,FIND_UNIT_WORLD,null);
 if (pc==null)
 {
-act ("<div class='respond'>No one to respond
-to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+act ("<div class='respond'>No one to respond to.</div>",A_ALWAYS,self,null,null,TO_CHAR);
 quit;
  }
 
@@ -9319,8 +9327,7 @@ quit;
 
 if (isset (self.pcflags, PC_NOTELLING))
  {
- act ("You have lost your telepathic
-ability.",A_ALWAYS,self,null,null,TO_CHAR);
+ act ("You have lost your telepathic ability.",A_ALWAYS,self,null,null,TO_CHAR);
  quit;
  }
 
@@ -9430,7 +9437,7 @@ code
    }
    else if (arg in "friend")
    {
-      arg:="<u>Valhalla Friend:</u><br/>";
+      arg:="<u>Valhalla Friends:</u><br/>";
       temp:="";
       temps:="friend";
       tempp:="friends";
@@ -9475,17 +9482,17 @@ code
          if (u.minv>0)
             buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
          else if (isaff(u, ID_INVISIBILITY))
-            buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+            buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
          if ("valhalla builder" in u.quests)
-            buff:=buff+" * Builder *</div>";
+            buff:=buff+"<div class='who'> * Builder *</div>";
          if ("valhalla friend" in u.quests)
-            buff:=buff+" * Friend *</div>";  
+            buff:=buff+"<div class='who'> * Friend *</div>";  
          if ("New Player Helper" in u.quests)
          {
             if (u.extra.["$whoguidecolor"] != null)
             gcolor := textformat(u.extra.["$whoguidecolor"].descr);
             else gcolor := "";
-            buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+            buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
          }
          buff:=buff+" <br/>";
          addstring (ply_list,buff);
@@ -9515,17 +9522,17 @@ code
          if (u.minv>0)
             buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
          else if (isaff(u, ID_INVISIBILITY))
-            buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+            buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
          if ("valhalla builder" in u.quests)
-            buff:=buff+" * Builder *</div>";
+            buff:=buff+"<div class='who'> * Builder *</div>";
          if ("valhalla friend" in u.quests)
-            buff:=buff+" * Friend *</div>";  
+            buff:=buff+"<div class='who'> * Friend *</div>";  
          if ("New Player Helper" in u.quests)
          {
             if (u.extra.["$whoguidecolor"] != null)
             gcolor := textformat(u.extra.["$whoguidecolor"].descr);
             else gcolor := "";
-            buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+            buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
          }
          buff:=buff+" <br/>";
          addstring (ply_list,buff);
@@ -9554,17 +9561,17 @@ code
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("valhalla builder" in u.quests)
-   buff:=buff+" * Builder *</div>";
+   buff:=buff+"<div class='who'> * Builder *</div>";
    if ("valhalla friend" in u.quests)
-   buff:=buff+" * Friend *</div>";  
+   buff:=buff+"<div class='who'> * Friend *</div>";  
    if ("New Player Helper" in u.quests)
    {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
-   buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+   buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
    }
    buff:=buff+" <br/>";
    addstring (ply_list,buff);
@@ -9590,17 +9597,17 @@ code
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("valhalla builder" in u.quests)
-   buff:=buff+" * Builder *</div>";
+   buff:=buff+"<div class='who'> * Builder *</div>";
    if ("valhalla friend" in u.quests)
-   buff:=buff+" * Friend *</div>";  
+   buff:=buff+"<div class='who'> * Friend *</div>";  
    if ("New Player Helper" in u.quests)
    {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
-   buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+   buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
    }
    buff:=buff+" <br/>";
    addstring (ply_list,buff);
@@ -9626,13 +9633,13 @@ code
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("New Player Helper" in u.quests)
    {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
-   buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+   buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
    }
 
    buff:=buff+" <br/>";
@@ -9658,9 +9665,9 @@ code
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("valhalla friend" in u.quests)
-   buff:=buff+" * Friend *</div>";  
+   buff:=buff+"<div class='who'> * Friend *</div>";  
    buff:=buff+" <br/>";
    addstring (ply_list,buff);
    }
@@ -9684,9 +9691,9 @@ code
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]</div><div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("valhalla builder" in u.quests)
-   buff:=buff+" * Builder *</div>";
+   buff:=buff+"<div class='who'> * Builder *</div>";
 
    buff:=buff+" <br/>";
    addstring (ply_list,buff);
@@ -9723,21 +9730,21 @@ code
    gld:="(Immortal)";
    else gld:="";
 
-   buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'>"+u.title+"</div>"+gld+"</div> ";
+   buff:="<div class='who_name'>"+u.name+"</div> <div class='who_title'> "+u.title+" "+gld+"</div> ";
    if (u.minv>0)
    buff:=buff+"<div class='who_inv'>[ WIZINV "+itoa(u.minv)+" ]</div> ";
    else if (isaff(u, ID_INVISIBILITY))
-   buff:=buff+"<div class='who_inv'>[ INV ]<div class='who'>";
+   buff:=buff+"<div class='who_inv'>[ INV ]</div> ";
    if ("valhalla builder" in u.quests)
-   buff:=buff+" * Builder *</div>";
+   buff:=buff+"<div class='who'> * Builder *</div>";
    if ("valhalla friend" in u.quests)
-   buff:=buff+" * Friend *</div>";  
+   buff:=buff+"<div class='who'> * Friend *</div>";  
    if ("New Player Helper" in u.quests)
    {
    if (u.extra.["$whoguidecolor"] != null)
    gcolor := textformat(u.extra.["$whoguidecolor"].descr);
    else gcolor := "";
-   buff:=buff+" *"+gcolor+" Guide "+"</div>*";
+   buff:=buff+"<div class='who'> *"+gcolor+" Guide *</div>";
    }
    buff:=buff+" <br/>";
    addstring (ply_list,buff);
@@ -9848,8 +9855,6 @@ code
  addstring(spl_aff,"Berserk<br/>");
    if (isaff(self, ID_RAGE))
  addstring(spl_aff,"Enraged<br/>");
-   if (isaff(self, ID_FRENZY))
- addstring(spl_aff,"Frenzied<br/>");
    if (isaff(self, ID_FRENZY))
  addstring(spl_aff,"Frenzied<br/>");
 if (isaff(self, ID_DETECT_ALIGN))
@@ -10152,7 +10157,7 @@ null, null, TO_CHAR);
 
   if ((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
   {
-   act("You are unable to transfer dead persons",A_ALWAYS, self, null, null,
+   act("You are unable to transfer dead persons.",A_ALWAYS, self, null, null,
 TO_CHAR);
    quit;
   }
@@ -10196,7 +10201,7 @@ null, null, TO_CHAR);
 
   if ((isset(tgt.pcflags,PC_SPIRIT)) and (self.level < 250))
   {
-   act("You are unable to transfer dead persons",A_ALWAYS, self, null, null,
+   act("You are unable to transfer dead persons.",A_ALWAYS, self, null, null,
 TO_CHAR);
    quit;
   }
@@ -10216,7 +10221,7 @@ TO_REST);
 
   if (arg != "all now")
   {
-   act("You must type transfer all now</div>.",A_ALWAYS, self, null,
+   act("You must type 'transfer all now'.",A_ALWAYS, self, null,
 null, TO_CHAR);
    quit;
   }
@@ -10262,15 +10267,13 @@ if (arg=="") {
 u:=findunit(self,arg,FIND_UNIT_SURRO,null);
 secure(u,losthim);
 if (u==null) {
-  act("No such person by that name!.",A_SOMEONE,self,null,null,TO_CHAR);
+  act("No such person by that name!",A_SOMEONE,self,null,null,TO_CHAR);
   quit; }
 if (u==self) {
-  act("Assist yourself?  Your in pretty bad shape if your the only one who
-can help you.",A_SOMEONE,self,null,null,TO_CHAR);
+  act("Assist yourself?  You're in pretty bad shape if you're the only one who can help you.",A_SOMEONE,self,null,null,TO_CHAR);
   quit; }
 if (self.fighting) {
-  act("No way! You are too busy fighting for your
-life!",A_ALWAYS,self,null,null,TO_CHAR);
+  act("No way! You are too busy fighting for your life!",A_ALWAYS,self,null,null,TO_CHAR);
   quit; }
 if (u.fighting==null) {
   act("Assist $3n? $3e isn't fighting anything.",
@@ -10428,7 +10431,7 @@ code
       else if (degrade >= 50)
          s := "worn.";
       else if (degrade >= 30)
-         s := "in a poor condition";
+         s := "in a poor condition.";
       else if (degrade >= 10)
          s := "in a horrible condition.";
       else
@@ -10468,15 +10471,15 @@ code
    goto nextstep;
 
    :clothes:
-   act ("Refitting the size of it, requires tailoring skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it requires tailoring skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :leather:
-   act ("Refitting the size of it, requires leather working skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it requires leatherworking skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :metal:
-   act ("Refitting the size of it, requires metal skills.",A_ALWAYS,self,null, null,TO_CHAR);
+   act ("Refitting the size of it requires metal skills.",A_ALWAYS,self,null, null,TO_CHAR);
    goto nextstep;
 
    :nextstep:
@@ -10508,7 +10511,7 @@ code
    block;
    if (argument == "")
    {
-      act("You must supply a the name of a player",A_ALWAYS, self.outside, null, null, TO_CHAR);
+      act("You must supply the name of a player.",A_ALWAYS, self.outside, null, null, TO_CHAR);
       goto start;
    }
 
@@ -10522,7 +10525,7 @@ code
 
    if (pc.guild != "")
    {
-      act("They are still in a guild - get them to quit first", A_ALWAYS, self.outside, null, null, TO_CHAR);
+      act("They are still in a guild - get them to quit first.", A_ALWAYS, self.outside, null, null, TO_CHAR);
       goto start;
    }
 
@@ -10678,7 +10681,7 @@ code
 
     if (item.objecttype == ITEM_CONTAINER)
     {
-        sendtext("We do not accept to store containers anymore, sorry.<br/>", self);
+        sendtext("We do not store containers any more, sorry.<br/>", self);
         return;
     }
 
@@ -10857,7 +10860,7 @@ code
       return;
    }
 
-   sendtext("Your storage contains : <br/>", self);
+   sendtext("Your storage contains:<br/>", self);
 
    s := obj_content@baselook(self, cont);
 
@@ -10955,7 +10958,7 @@ code
    
    if ((item.objecttype == ITEM_TRASH) or (item.objecttype == ITEM_TRAP))
    {
-      act("You can not donate that! Who would want your junk!",   A_ALWAYS,self, null, null, TO_CHAR);
+      act("You can not donate that! Who would want your junk?",   A_ALWAYS,self, null, null, TO_CHAR);
       quit;
    }
   
@@ -10975,7 +10978,7 @@ code
       room:=findsymbolic("dchest@"+x.descr);
       if (room==null)
       {
-         act ("<div class='clan'>Clan code error report to Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
+         act ("<div class='clan'>Clan code error; report to an Admin.</div>",A_ALWAYS,self,null,null,TO_CHAR);
          quit;
       }
 
@@ -11002,7 +11005,7 @@ code
 
       if (amount >=CLAN_MAX_DONATION)
       {
-         act("<div class='clan'>You can't donate your clan Chest is full.</div>"
+         act("<div class='clan'>You can't donate; your clan chest is full.</div>"
          ,A_ALWAYS,self,null,null,TO_CHAR);
          quit;
       }
@@ -11044,7 +11047,7 @@ code
       {
          item.cost := 0;
          link(item, room);
-         act("A Glowing red portal appears hovering in the air, $2n emerges from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
+         act("A glowing red portal appears hovering in the air, $2n emerges from it and drops to the floor.",A_ALWAYS, room.inside, item,null, TO_ALL);
       }
       else
          destroy (item);
@@ -12776,8 +12779,8 @@ descr
 "A guild-wipe object has been left here."
 extra {}
 "This object is used to remove guild details from a player. Don't
-forget to remove exp from the player after using it. Simple type
-'gwipe <playername>'."
+forget to remove exp from the player after using it. Simply type
+'gwipe &lt;playername&gt;'."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 
