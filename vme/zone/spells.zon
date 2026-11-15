@@ -2643,7 +2643,7 @@ foreach(UNIT_ST_OBJ, can)
   if (can == self)
      continue;
 
-  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and can.value[2] == 1))  // no player corpses
+  if (not (IS_CORPSE(can)) or (IS_CORPSE(can) and (can.value[2] == 1)))  // no player corpses
      continue;
 
   chk := (can.value[4]);
@@ -2740,7 +2740,7 @@ code
       quit;
    }
 
-  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and (tgt.value[2] == 1)))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -2821,7 +2821,7 @@ code
    }
 
 
-  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and (tgt.value[2] == 1)))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);
@@ -10727,7 +10727,7 @@ code
       quit;
    }
 
-  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
+  if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and (tgt.value[2] == 1)))
   {
   act ("You try to bring life to $2n but nothing happens",
   A_ALWAYS,self,tgt,null,TO_CHAR);

@@ -5066,7 +5066,7 @@ leverage the competition boards. Will investigate.
 		
 		
 		// streak milestone rewards
-		if(i == 14 or i == 30 or i == 60 or i == 90 or i == 180 or i == 365)
+		if((i == 14) or (i == 30) or (i == 60) or (i == 90) or (i == 180) or (i == 365))
 		{
 			exec("say I've included a little something for making "+itoa(i)+" daily contracts in a row.",self);
 			bp := bp * 2;
@@ -5106,7 +5106,7 @@ leverage the competition boards. Will investigate.
 		}
 		
 		// streak milestone rewards
-		if(i == 6 or i == 12 or i == 18 or i == 24)
+		if((i == 6) or (i == 12) or (i == 18) or (i == 24))
 		{
 			exec("say I've included a little something for making "+itoa(i)+" monthly contracts in a row.",self);
 			bp := bp * 2;
