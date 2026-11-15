@@ -190,7 +190,7 @@ void make_code(struct exptype *dest);
 %token <num> PNUM FUNCTION 
 
 %type <dilstr_list> stringlist strings
-%type <exp> dilexp dilsexp dilterm dilfactor variable dilfun idx field funcall
+%type <exp> dilexp diland dilcmp dilsexp dilterm dilfactor variable dilfun idx field funcall
 %type <num> cmp icmp pcmp scmp type ihold ahold ftypecast
 %type <ins> dilinstlist dilproc dilinst block dilcomposed dilcomplex
 %type <ins> label labelskip labellist coreexp corevar corefuncall
@@ -2271,15 +2271,88 @@ icmp     : DILTO_GT
 /*                      DIL expression                           */
 /* ************************************************************* */
 
-dilexp  : dilsexp
+/* or binds loosest, then and, then the comparisons, as in C (but & and | still bind
+   tighter than the comparisons: they sit with * and +) */
+dilexp  : diland
     {
-        /*          fprintf(stderr,"dilsexp->dilexp\n");*/
         INITEXP($$);
         $$.boolean = $1.boolean;
         copy_code(&($$), &($1));
         FREEEXP($1);
     }
-    | dilexp cmp dilsexp
+    | dilexp DILSE_LOR diland
+    {
+        INITEXP($$);
+        $$.boolean = 1;
+        /* Type is ok */
+        $$.typ = DilVarType_e::DILV_INT;
+        if (!($1.dsl + $3.dsl)
+            && ($1.typ == DilVarType_e::DILV_INT)
+            && ($3.typ == DilVarType_e::DILV_INT))
+        {
+            /* static integers */
+            $$.num = $1.num || $3.num;
+            $$.dsl = DSL_STA;
+        }
+        else
+        {
+            /* make nodes dynamic */
+            make_code(&($1));
+            make_code(&($3));
+            add_code(&($$), &($1));
+            add_code(&($$), &($3));
+            add_ubit8(&($$), DILE_LOR);
+            $$.dsl = DSL_DYN;
+        }
+        FREEEXP($1);
+        FREEEXP($3);
+    }
+    ;
+
+diland  : dilcmp
+    {
+        INITEXP($$);
+        $$.boolean = $1.boolean;
+        copy_code(&($$), &($1));
+        FREEEXP($1);
+    }
+    | diland DILSE_LAND dilcmp
+    {
+        INITEXP($$);
+        $$.boolean = 1;
+        /* Type is ok */
+        $$.typ = DilVarType_e::DILV_INT;
+        if (!($1.dsl + $3.dsl)
+            && ($1.typ == DilVarType_e::DILV_INT)
+            && ($3.typ == DilVarType_e::DILV_INT))
+        {
+            $$.dsl = DSL_STA;
+            $$.num = $1.num && $3.num;
+        }
+        else
+        {
+            /* make nodes dynamic */
+            make_code(&($1));
+            make_code(&($3));
+            add_code(&($$), &($1));
+            add_code(&($$), &($3));
+            add_ubit8(&($$), DILE_LAND);
+            $$.dsl = DSL_DYN;
+        }
+        FREEEXP($1);
+        FREEEXP($3);
+    }
+    ;
+
+dilcmp  : dilsexp
+    {
+        /*          fprintf(stderr,"dilsexp->dilcmp\n");*/
+        INITEXP($$);
+        $$.boolean = $1.boolean;
+        copy_code(&($$), &($1));
+        FREEEXP($1);
+    }
+    | dilcmp cmp dilsexp
     {
         INITEXP($$);
         $$.boolean = 1;
@@ -2371,7 +2444,7 @@ dilexp  : dilsexp
         FREEEXP($1);
         FREEEXP($3);
     }
-    | dilexp icmp dilsexp
+    | dilcmp icmp dilsexp
     {
         INITEXP($$);
         $$.boolean = 1;
@@ -2649,33 +2722,6 @@ dilsexp : dilterm
         FREEEXP($1);
         FREEEXP($3);
     }
-    | dilsexp DILSE_LOR dilterm
-    {
-        INITEXP($$);
-        $$.boolean = 1;
-        /* Type is ok */
-        $$.typ = DilVarType_e::DILV_INT;
-        if (!($1.dsl + $3.dsl)
-            && ($1.typ == DilVarType_e::DILV_INT)
-            && ($3.typ == DilVarType_e::DILV_INT))
-        {
-            /* static integers */
-            $$.num = $1.num || $3.num;
-            $$.dsl = DSL_STA;
-        }
-        else
-        {
-            /* make nodes dynamic */
-            make_code(&($1));
-            make_code(&($3));
-            add_code(&($$), &($1));
-            add_code(&($$), &($3));
-            add_ubit8(&($$), DILE_LOR);
-            $$.dsl = DSL_DYN;
-        }
-        FREEEXP($1);
-        FREEEXP($3);
-    }
     | dilsexp DILSE_OR dilterm
     {
         INITEXP($$);
@@ -2780,32 +2826,6 @@ dilterm : dilfactor
                 add_ubit8(&($$), DILE_DIV);
                 $$.dsl = DSL_DYN;
             }
-        }
-        FREEEXP($1);
-        FREEEXP($3);
-    }
-    | dilterm DILSE_LAND dilfactor
-    {
-        INITEXP($$);
-        $$.boolean = 1;
-        /* Type is ok */
-        $$.typ = DilVarType_e::DILV_INT;
-        if (!($1.dsl + $3.dsl)
-            && ($1.typ == DilVarType_e::DILV_INT)
-            && ($3.typ == DilVarType_e::DILV_INT))
-        {
-            $$.dsl = DSL_STA;
-            $$.num = $1.num && $3.num;
-        }
-        else
-        {
-            /* make nodes dynamic */
-            make_code(&($1));
-            make_code(&($3));
-            add_code(&($$), &($1));
-            add_code(&($$), &($3));
-            add_ubit8(&($$), DILE_LAND);
-            $$.dsl = DSL_DYN;
         }
         FREEEXP($1);
         FREEEXP($3);
