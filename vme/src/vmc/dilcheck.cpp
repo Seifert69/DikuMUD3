@@ -13,8 +13,9 @@ void DilCheck::begin(const std::vector<Var> &vars, int argc)
     for (const auto &v : vars)
     {
         State state = static_cast<int>(vars_.size()) < argc ? State::Unknown : State::Never;
-        vars_.push_back(Track{v.name, v.kind, state, false, false, false, 0});
+        vars_.push_back(Track{v.name, v.kind, state, false, false, 0, false});
     }
+    securedAbove_.assign(vars_.size(), false);
     tickLine_ = 0;
     for (bool &w : eventWarned_)
     {
@@ -24,7 +25,7 @@ void DilCheck::begin(const std::vector<Var> &vars, int argc)
     quiet_ = false;
     held_.clear();
     condReads_.clear();
-    waitAddrs_.clear();
+    ifs_.clear();
     unsecured_.clear();
 }
 
@@ -32,8 +33,7 @@ void DilCheck::end()
 {
     for (const Held &h : held_)
     {
-        Track *v = at(h.unlessSecured);
-        if (!v || !v->everSecured)
+        if (h.unlessSecured < 0 || !securedAbove_[h.unlessSecured])
         {
             report_(h.line, h.msg);
         }
@@ -59,7 +59,12 @@ void DilCheck::assign(int var, int from)
         // too, a variable set to anything else doesn't
         Track *f = at(from);
         v->state = State::Fresh;
-        v->secured = f && f->secured;
+        // from activator & co. it is often the same unit again (wait(..., activator == pc);
+        // pc := activator), so a secured variable is taken to stay secured
+        if (from >= -1)
+        {
+            v->secured = f && f->secured;
+        }
         v->warned = false;
     }
 }
@@ -100,9 +105,11 @@ void DilCheck::use(int var, bool field, int line)
     else if (v->state == State::Stale)
     {
         v->warned = true;
+        // when it was set on some way only, or above a label, a secure() further down may cover it
         warn(line,
-                v->name + " is null here: it was set before the wait on line " + std::to_string(v->staleLine) +
-                    (extra ? ", and a wait clears every extraptr variable" : " and isn't secured, and a wait clears unsecured unitptr variables"));
+             v->name + " is null here: it was set before the wait on line " + std::to_string(v->staleLine) +
+                 (extra ? ", and a wait clears every extraptr variable" : " and isn't secured, and a wait clears unsecured unitptr variables"),
+             (v->staleVague && !extra) ? var : -1);
     }
     else if (v->state == State::Never && field)
     {
@@ -111,21 +118,79 @@ void DilCheck::use(int var, bool field, int line)
     }
 }
 
-void DilCheck::branches(unsigned from, unsigned to)
+void DilCheck::ifBegin()
 {
-    for (unsigned a : waitAddrs_)
-    {
-        if (a >= from && a < to)
-        {
-            boundary();
-            return;
-        }
-    }
+    ifs_.push_back({Snapshot{vars_, tickLine_, jumped_}, Snapshot{}});
+    unsecured_.clear();
+    jumped_ = false;
 }
 
-void DilCheck::wait(bool tick, int line, unsigned addr)
+void DilCheck::elseBegin()
 {
-    waitAddrs_.push_back(addr);
+    if (ifs_.empty())
+    {
+        return;
+    }
+    ifs_.back().second = Snapshot{vars_, tickLine_, jumped_};
+    vars_ = ifs_.back().first.vars;
+    tickLine_ = ifs_.back().first.tickLine;
+    unsecured_.clear();
+    jumped_ = false;
+}
+
+void DilCheck::ifEnd(bool hasElse)
+{
+    if (ifs_.empty())
+    {
+        return;
+    }
+    Snapshot before = ifs_.back().first;
+    Snapshot other = hasElse ? ifs_.back().second : before; // the then-branch, or no branch
+    if (!hasElse)
+    {
+        other.jumped = false;
+    }
+    ifs_.pop_back();
+    if (jumped_ && !other.jumped)
+    {
+        // this way jumped away: below the if only the other way arrives
+        vars_ = other.vars;
+        tickLine_ = other.tickLine;
+        unsecured_.clear();
+    }
+    else if (!jumped_ && other.jumped)
+    {
+        unsecured_.clear();
+    }
+    else
+    {
+        merge(other);
+    }
+    jumped_ = before.jumped;
+}
+
+void DilCheck::merge(const Snapshot &other)
+{
+    for (size_t i = 0; i < vars_.size() && i < other.vars.size(); i++)
+    {
+        Track &v = vars_[i];
+        const Track &o = other.vars[i];
+        if (v.state != o.state)
+        {
+            v.state = State::Unknown;
+        }
+        v.secured = v.secured || o.secured;
+        v.warned = v.warned && o.warned;
+    }
+    if (tickLine_ != other.tickLine)
+    {
+        tickLine_ = 0;
+    }
+    unsecured_.clear();
+}
+
+void DilCheck::wait(bool tick, int line)
+{
     // the conditions read since the last wait are tested from now on, after every wake-up
     for (const auto &r : condReads_)
     {
@@ -154,6 +219,7 @@ void DilCheck::wait(bool tick, int line, unsigned addr)
         bool cleared = (v.kind == VarKind::Extra) || (v.kind == VarKind::Unit && !v.secured);
         if (cleared && (v.state == State::Fresh || v.state == State::Unknown))
         {
+            v.staleVague = (v.state == State::Unknown);
             v.state = State::Stale;
             v.staleLine = line;
             v.warned = false;
@@ -174,7 +240,7 @@ void DilCheck::secure(int var, int line)
             warn(line, "secure(" + v->name + ") secures nothing: " + v->name + " was cleared by the wait on line " + std::to_string(v->staleLine));
         }
         v->secured = true;
-        v->everSecured = true;
+        securedAbove_[var] = true;
     }
 }
 
@@ -192,6 +258,7 @@ void DilCheck::unsecure(int var)
 
 void DilCheck::jump()
 {
+    jumped_ = true;
     for (int var : unsecured_)
     {
         vars_[var].secured = true;
@@ -208,11 +275,12 @@ void DilCheck::boundary(bool label)
         {
             v.state = State::Unknown;
         }
-        v.secured = v.secured || v.everSecured; // it may arrive from a path where it is secured
+        v.secured = v.secured || securedAbove_[&v - &vars_[0]]; // it may arrive from a way where it is secured
         v.warned = false;
     }
     unsecured_.clear();
     tickLine_ = 0;
+    jumped_ = false;
 }
 
 void DilCheck::act(bool chNull, bool victNull, bool typeKnown, bool needsVictim, int line)

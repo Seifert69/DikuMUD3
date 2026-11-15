@@ -49,11 +49,13 @@ public:
     void assign(int var, int from);
     /// A read of var (field: through a field, as in pc.name).
     void use(int var, bool field, int line);
-    /// A wait statement at core address addr; tick is true when it waits for ticks only (a pause).
-    void wait(bool tick, int line, unsigned addr = 0);
-    /// The end of an if statement or a { } block whose code is [from, to): if it waits somewhere,
-    /// the state below depends on the way taken, so it is forgotten.
-    void branches(unsigned from, unsigned to);
+    /// A wait statement; tick is true when it waits for ticks only (a pause).
+    void wait(bool tick, int line);
+    /// An if statement: its branches start from the state before it, and below it a variable keeps
+    /// only what both ways agree on (ifEnd's hasElse: false when the other way is no branch).
+    void ifBegin();
+    void elseBegin();
+    void ifEnd(bool hasElse);
     /// Reads while this is on are in a wait or interrupt condition: they are checked at the next
     /// wait, which is when the condition is first tested after the program wakes up.
     void setCondition(bool on) { condition_ = on; }
@@ -88,10 +90,18 @@ private:
         VarKind kind;
         State state;
         bool secured;     ///< secured, or (after a block end or label) secured somewhere above
-        bool everSecured; ///< secure() seen above
         bool warned;      ///< warned about since its state last changed
         int staleLine;    ///< the wait that made it stale
+        bool staleVague;  ///< it was only Unknown before that wait (set on some way, or above a label)
     };
+
+    struct Snapshot
+    {
+        std::vector<Track> vars;
+        int tickLine;
+        bool jumped; ///< the way ended in a goto/quit/return/break/continue: it doesn't reach below the if
+    };
+    void merge(const Snapshot &other);
 
     Track *at(int var);
     /// A warning; with unlessSecured >= 0 it is dropped if that variable is secured anywhere.
@@ -108,8 +118,10 @@ private:
     std::vector<Held> held_;
     std::vector<std::pair<int, int>> condReads_; ///< (variable, line) read in a condition
     std::vector<Track> vars_;
-    std::vector<unsigned> waitAddrs_;
+    std::vector<bool> securedAbove_; ///< secure() seen above in the text (on any way)
+    std::vector<std::pair<Snapshot, Snapshot>> ifs_; ///< per open if: the state before it, and at the end of its then-branch
     std::vector<int> unsecured_; ///< unsecure()d since the last wait or label
+    bool jumped_{false};         ///< the code since the last if/else start ended in a jump
     int tickLine_{0}; ///< the pause the program last woke from, 0 when the last wait wasn't a pause
     bool eventWarned_[4]{};
     bool condition_{false};

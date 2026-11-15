@@ -318,4 +318,70 @@ BOOST_AUTO_TEST_CASE(secure_of_cleared_variable)
     BOOST_TEST(f.warned("141: secure(pc) secures nothing: pc was cleared by the wait on line 140"));
 }
 
+BOOST_AUTO_TEST_CASE(else_starts_from_the_state_before_the_if)
+{
+    // if (...) { ...; unsecure(pc); } else { pause; pc.name }: pc is secured in the else
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 150);
+    f.check.ifBegin();
+    f.check.unsecure(0);
+    f.check.elseBegin();
+    f.check.wait(true, 152);
+    f.check.use(0, true, 153);
+    f.check.ifEnd(true);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(conditional_pause_is_not_certain)
+{
+    // u := ...; if (busy) pause; u.name
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.ifBegin();
+    f.check.wait(true, 160);
+    f.check.ifEnd(false);
+    f.check.use(0, true, 161);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(branch_that_jumps_away_does_not_reach_below)
+{
+    // u := ...; if (c) { unsecure... goto x; } pause; u.name  (u unsecured: still a warning)
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.ifBegin();
+    f.check.wait(true, 170);
+    f.check.jump();
+    f.check.ifEnd(false);
+    f.check.wait(true, 172);
+    f.check.use(0, true, 173);
+    BOOST_TEST(f.warned("173: pc is null here: it was set before the wait on line 172"));
+}
+
+BOOST_AUTO_TEST_CASE(secured_further_down_drops_a_vague_warning)
+{
+    // :loop: (pc set somewhere above or below) pause; pc.name ... secure(pc, x) further down
+    Fixture f;
+    f.check.boundary(true);
+    f.check.wait(true, 180);
+    f.check.use(0, true, 181);
+    f.check.assign(0, -1);
+    f.check.secure(0, 183);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(reassigned_from_activator_stays_secured)
+{
+    // wait(..., activator == pc); pc := activator;
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 190);
+    f.check.wait(false, 191);
+    f.check.assign(0, DilCheck::ACTIVATOR);
+    f.check.wait(true, 192);
+    f.check.use(0, true, 193);
+    BOOST_TEST(f.all().empty());
+}
+
 BOOST_AUTO_TEST_SUITE_END()

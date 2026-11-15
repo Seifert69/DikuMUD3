@@ -68,9 +68,10 @@ each after the template, `WARNING: <file>: <line>: DIL <template>: ...`:
 - `act()` with a null character, or a null victim for TO_VICT/TO_NOTVICT: nobody sees it;
 - `exec("kill"+name, ...)`: no space after the command.
 
-The checks follow the text and forget what they know at labels, loops, and `{ }` or `if`s that
-wait somewhere, so a warning is almost always real; code reached by a jump isn't checked, nor
-are DIL calls and `waitnoop` that pause. `-l` turns them into errors like other warnings.
+The checks follow the text: each branch of an `if` starts from the state before it, and after
+the `if` only what both ways agree on is kept (a way that ends in a jump doesn't count); labels
+and loops forget what was known. So a warning is almost always real; code reached by a jump
+isn't checked, nor are DIL calls and `waitnoop` that pause. `-l` turns them into errors.
 
 ## Zone files
 
