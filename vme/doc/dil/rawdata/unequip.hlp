@@ -1,4 +1,0 @@
-<span id="bpuneq"></span>
- unequip ( u : unitptr )
-    u : Unit to unequip.
-    result: Unequipes unit presumed to be in equipment of PC/NPC.
