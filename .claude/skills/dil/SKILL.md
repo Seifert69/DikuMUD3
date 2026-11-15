@@ -78,6 +78,11 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
 - **String comparisons ignore case**, `<` and `>` too; `strcmp()` is exact.
 - **Locals start empty**: null, 0 or "". No need to set them first.
+- **Running off the end of the code starts it again at the top**, not ends it: vmc appends
+  `goto 0` to every template (the `program` rule in dilpar.y). Variables keep their values;
+  unsecured unitptrs are null as after any wait. Only `quit` (or destroying the unit) ends a
+  program. So a missing `goto start` re-runs the code above `:start:` (heartbeat, `interrupt`s,
+  which pile up), it doesn't silence the program.
 - **A failed value assigned**: an integer variable keeps its old value, a string variable
   becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
 - **`return (null);` doesn't compile** in a `unitptr` function (`return expression not of
