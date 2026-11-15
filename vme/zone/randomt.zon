@@ -1399,7 +1399,11 @@ code
     goto start;
 
 :burp:
-    act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
+    // A room as $1 reaches nobody: from the bag itself when it lies on the floor
+    if (self.outside.type == UNIT_ST_ROOM)
+        act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self, null, self, TO_ALL);
+    else
+        act("There is a large belching sound as items pour out of $3n.", A_ALWAYS, self.outside, null, self, TO_ALL);
 
     r := self.outside;
     while (r.type != UNIT_ST_ROOM)
@@ -1619,7 +1623,7 @@ code
 {
     i := bonuslvl;
     dilcopy("vorpalweapon@randomt("+itoa(2*i)+")", u);
-    identify(u, "Will occasionally decapitate enemies.", "Decapitates enemies " + itoa(i) + " out of 1000.");
+    identify(u, "Will occasionally decapitate enemies.", "Decapitates enemies " + itoa(2*i) + " out of 1000.");
     return (2);
 }
 dilend
@@ -3189,7 +3193,7 @@ code
     // log("Shafty");
     // $1 - the unit name (e.g. blackwood quaterstaff); $2 = e.g. "rod", $3 = material of handle
     sl := {
-        "You wonder if that's really $3n $1a $1n $2n, it is so warped and bent.", // -7
+        "You wonder if that's really $3a $3n $1n $2n, it is so warped and bent.", // -7
         "The $3n $1n $2n is very crooked and could be a lot better.",
         "This $3n $1n $2n is terribly bad.",
         "This $3n $1n $2n is terrible.", // -4
@@ -4006,7 +4010,7 @@ code
 
     :made:
     if (self.outside.type == UNIT_ST_PC)
-        sendtext(self.title + " takes shape in your hands.<br/>", self.outside);
+        act("$2n takes shape in your hands.", A_ALWAYS, self.outside, self, null, TO_CHAR);
     quit;
 }
 dilend
