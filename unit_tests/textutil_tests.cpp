@@ -196,4 +196,19 @@ BOOST_AUTO_TEST_CASE(empty_old_changes_nothing)
     BOOST_TEST(substituted(empty, "", "", "") == "");
 }
 
+BOOST_AUTO_TEST_CASE(strip_surrounding_quotes_drops_one_pair)
+{
+    auto stripped = [](const char *in) {
+        std::vector<char> buf(in, in + strlen(in) + 1);
+        return std::string(strip_surrounding_quotes(buf.data()));
+    };
+    BOOST_TEST(stripped("\"You pray for $3n's life...\"") == "You pray for $3n's life...");
+    BOOST_TEST(stripped("no quotes") == "no quotes");
+    BOOST_TEST(stripped("\"only at the start") == "\"only at the start");
+    BOOST_TEST(stripped("only 'single' quotes") == "only 'single' quotes");
+    BOOST_TEST(stripped("\"\"") == "");
+    BOOST_TEST(stripped("\"") == "\"");
+    BOOST_TEST(stripped("") == "");
+}
+
 BOOST_AUTO_TEST_SUITE_END()
