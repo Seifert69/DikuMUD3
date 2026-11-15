@@ -457,10 +457,11 @@ code
       {
          hm := skillbattle1(skill, ABIL_DEX, observer, ABIL_BRA);
 
+         // hm is the thief's margin over the observer: the observer notices when the thief fails
          if (not visible(observer, thief))
-            hm := hm - 100;
+            hm := hm + 100;
 
-         if (hm >= 0)
+         if (hm < 0)
          {
             act(msg, A_SOMEONE, observer, thief, victim, TO_CHAR);
 
@@ -1117,7 +1118,8 @@ code
    skilld := stick.value[0];
 
    // Check if the character has enough skill with wands to actually use it.
-   hm := skillroll(skilla, self.abilities[ABIL_BRA], skilld, skilld);
+   // The user's brain and skill against the wand's power
+   hm := skillroll(self.abilities[ABIL_BRA], skilld, skilla, skilld);
 
    /* all considerations before here, now we are ready */
 
@@ -1332,8 +1334,10 @@ code
       {
          act("You PANIC! but you cannot escape!", A_SOMEONE, self, null, null, TO_CHAR);
          act("$1n tries to flee, but $1e cannot!", A_SOMEONE, self, null, null, TO_REST);
-         self.endurance := self.endurance - hm/5;
-         position_update(self);
+         me.endurance := me.endurance + hm/5;  // hm <= -50: costs 10 or more, from the mount if riding
+         if (me.endurance < 0)
+            me.endurance := 0;
+         position_update(me);
          quit;
       }
    }
@@ -1497,7 +1501,8 @@ var
    arg2       :  string;
    arg3       :  stringlist;
    dir        :  integer;
-   oppdir     :  intlist;
+   back       :  unitptr;
+   backdir    :  integer;
    test       :  integer;
    count      :  integer;
    counter    :  integer;
@@ -1650,12 +1655,23 @@ code
    act("$1n picks the $2t - *click*", A_HIDEINV, self, item.exit_names[dir].[0], null, TO_REST);
 
    unset(item.exit_info[dir], EX_LOCKED);
-   unset(item.exit_to[dir].exit_info[oppdir.[dir]], EX_LOCKED);
 
-   pc := item.exit_to[dir].inside;
+   /* The other side: the far room's exit that leads back here, as unlock_dil@basemove finds it */
+   back := item.exit_to[dir];
+   backdir := 0;
+   while (backdir <= MAX_EXIT)
+   {
+      if (back.exit_to[backdir] == item)
+         break;
+      backdir := backdir + 1;
+   }
+   if (backdir > MAX_EXIT)
+      quit;
 
+   unset(back.exit_info[backdir], EX_LOCKED);
+   pc := back.inside;
    if (pc != null)
-      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, item.exit_to[dir].exit_names[oppdir.[dir]].[0], null, TO_ALL);
+      act("A soft *click* comes from the $2t.", A_SOMEONE, pc, back.exit_names[backdir].[0], null, TO_ALL);
    quit;
 }
 dilend
@@ -2009,6 +2025,7 @@ dilbegin disarm(arg : string);
 external
     integer skillbattle2(skillidx : integer, abiidx1 : integer, abiidx2 : integer, opp : unitptr, oabiidx1 : integer, oabiidx2 : integer);
     provoked_attack (victim : unitptr, ch : unitptr);
+    bobcheck(victim : unitptr);
 
 var
     tweapon  : unitptr;
@@ -2069,16 +2086,6 @@ code
         quit;
     }
 
-    if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
-    {
-        if (not(isset (targ.pcflags, PC_PK_RELAXED)))
-        {
-            act ("You are not allowed to do this unless $2e signs the book of blood.",
-            A_ALWAYS,self,targ,null,TO_CHAR);
-            quit;
-        }
-    }
-
     /*darg added to make mobs a bit more intelligent acting */
 
     if (RACE_IS_MAMMAL(targ.race) and (targ.type == UNIT_ST_NPC))
@@ -2093,6 +2100,7 @@ code
 
 
 :disarm:
+    bobcheck(targ);   // both players must have signed the Book of Blood, also with no argument
     provoked_attack (targ, self);
     if ((dilfind ("disarmed@skills",targ))or(dilfind ("disarmed@skills",targ)))
     {
@@ -3905,8 +3913,6 @@ code
         act("You fumble your trip attempt and stumble!.", A_ALWAYS, self,null, targ, TO_CHAR);
         act("$1n ducks clumsily and attempts to sweep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
         act("$1n attempts to trip $3n but fails miserably.", A_SOMEONE, self,  null, targ, TO_NOTVICT);
-        self.endurance := self.endurance - 10;
-        position_update(self);
         quit;
     }
 
@@ -3916,8 +3922,6 @@ code
         act("You fumble your trip attempt on $3n!.", A_ALWAYS, self, null, targ, TO_CHAR);
         act("$1n ducks and attempts to sweeep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
         act("$1n attempts to trip $3n but fails.", A_SOMEONE, self, null, targ, TO_NOTVICT);
-        self.endurance := self.endurance - 10;
-        position_update(self);
         quit;
     }
 
@@ -3931,8 +3935,6 @@ code
     act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null, targ, TO_NOTVICT);
     act("You fall on your backside with a loud THUMP!", A_ALWAYS, self, null, targ, TO_VICT);
     targ.position:=POSITION_SITTING;
-    self.endurance := self.endurance - 10;
-    position_update(self);
 
     if (self.fighting == null)
     {
@@ -6126,8 +6128,8 @@ wp_info:=weapon_info(thing.value[0]);
 
 if (wp_info.[0]>1)
 {
-if ((wielded!=self) and
-(held!=self))
+if ((wielded!=thing) and
+(held!=thing))
        if ((wielded!=null) or (held!=null))
        {
                            act ("You need both hands free to throw that.",
@@ -6137,12 +6139,13 @@ if ((wielded!=self) and
 }
 else
 {
-if ((wielded!=self) and
-(held!=self))
+if ((wielded!=thing) and
+(held!=thing))
 if ((wielded!=null) and (held!=null))
 {
 act ("You need at least one free hand to throw that.",
 A_ALWAYS,self,null,null,TO_CHAR);
+quit;
 }
 }
 
@@ -6200,19 +6203,6 @@ A_ALWAYS,self,null,null,TO_CHAR);
    wielded := equipment(self, WEAR_WIELD);
    held    := equipment(self, WEAR_HOLD);
 
-/* This doesn't seem to work, but later in the dil something takes care
-of the case in which you're wielding a weapon.. */
-
-   if ((wielded != null) and (held != null) and ((thing != wielded) and
-                                                 (thing != held)))
-   {
-      act("Your hands are full! How do you expect to throw something " +
-          "if you don't have a free hand (or aren't throwing what's in " +
-          "your hand) ?!",
-          A_ALWAYS, self, null, null, TO_CHAR);
-      quit;
-   }
-
    cost_of := (rnd(20,30) * thing.weight) / 25;
 
    if (self.endurance < cost_of)
@@ -6221,6 +6211,8 @@ of the case in which you're wielding a weapon.. */
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
+
+   self.endurance := self.endurance - cost_of;
 
    /* DISABLED..Since we can only use meleedamage with Weapons, it's time to
       distinguish item types so we know which way to go. */
@@ -6329,6 +6321,8 @@ hm := skillroll(skilla,skillb,skillc,skilld);
 
    else
    {
+      if (thing == held)  // from the hand that holds it: it can't be in two places
+         unequip(thing);
       addequip(thing, WEAR_WIELD);
       act("You throw your " + thing.name + " at $3n!",
           A_ALWAYS, self, null, targ, TO_CHAR);
@@ -8506,33 +8500,33 @@ wait (SFB_PRE, (command(CMD_AUTO_DAMAGE) and
    if (power < 15)
       goto battle;
 
-       if(self.type==UNIT_ST_PC)
-        skillc:=self.skills[SKI_CURARE];
+       if(self.outside.type==UNIT_ST_PC)
+        skillc:=self.outside.skills[SKI_CURARE];
        else
 	             skillc := rnd(40,124);
        /*
         skillc:=self.abilities[ABIL_BRA];
        */
-       if(self.outside.fighting.type==UNIT_ST_PC)
-        skilld:=self.outside.fighting.skills[SKI_HERBS];
+       if(target.type==UNIT_ST_PC)
+        skilld:=target.skills[SKI_HERBS];
        else
 	             skilld := rnd(40,124);
-      /*        skilld:=self.outside.fighting.abilities[ABIL_DEX];
+      /*        skilld:=target.abilities[ABIL_DEX];
         */
-       skilla:=self.abilities[ABIL_DEX];
-       skillb:=self.outside.fighting.abilities[ABIL_DEX];
+       skilla:=self.outside.abilities[ABIL_DEX];
+       skillb:=target.abilities[ABIL_DEX];
         hm:=skillroll(skilla,skillb,skillc,skilld);
 
 /*
 
    hm := skillroll@skills(self.outside.abilities[ABIL_DEX],
-                         self.outside.fighting.abilities[ABIL_DEX],
+                         target.abilities[ABIL_DEX],
                          self.outside.abilities[ABIL_BRA],
-                         self.outside.fighting.abilities[ABIL_CON]);
+                         target.abilities[ABIL_CON]);
 */
    if (hm >= 0)
       {
-         if (not(isset(self.outside.fighting.pcflags, PC_PK_RELAXED)) and
+         if (not(isset(target.pcflags, PC_PK_RELAXED)) and
              (target.type == UNIT_ST_PC))
             goto battle;
       if (not(dilfind("spl_poison@spells", target)))
@@ -8829,7 +8823,7 @@ code
    }
 
    bonus := missile.value[1] + missile.value[2] + weapon.value[1] +
-            weapon.value[2] + self.skills[weapon.value[4]] +
+            weapon.value[2] + self.weapons[weapon.value[4]] +
             slay_bon;
 
    goto do_damage;
@@ -9143,7 +9137,7 @@ code
    else if (("trap" in arg) and (self.skills[SKI_FASHION] < 50))
    {
       act("You need to practice further before you can make a " +
-          "quarter staff.",
+          "trap.",
           A_ALWAYS, self, null, null, TO_CHAR);
       goto can_current;
    }
@@ -9289,6 +9283,7 @@ skilld   : integer;
    targ    : unitptr;
    temp_st : string;   /* Temporary string */
    elist   : extraptr; /* For the $Soothe extra */
+   soothers : stringlist;
 
 code
 {
@@ -9337,7 +9332,8 @@ code
       }
 
    elist := "$Soothe" in targ.extra;
-   if (self.name in elist.descr)
+   soothers := split(elist.descr, " ");  // exact names, as aggressive@function reads them
+   if (self.name in soothers)
       {
          act("It is already friendly towards you, why bother!?",
              A_ALWAYS, self, null, null, TO_CHAR);
@@ -9524,7 +9520,7 @@ code
          lifetime := 8 * PULSE_SEC;
          j := rnd (40, 60);
       }
-   else if (i < 500)
+   else  /* 200 and up */
       {
          lifetime := 10 * PULSE_SEC;
          j := rnd (20,40);
@@ -10526,14 +10522,6 @@ code
        quit;
     }
 
-    if (self.endurance < 20)
-    {
-       act("You are too exhausted.", A_SOMEONE, self, null, null,
-           TO_CHAR);
-       quit;
-    }
-    else self.endurance := self.endurance - 20;
-
     if ((u.movement >= SECT_WATER_SWIM) or (u.movement <= SECT_CITY))
     {
        act("You cannot build a fire here.", A_ALWAYS, self, null,
@@ -10547,6 +10535,14 @@ code
            TO_CHAR);
        quit;
     }
+
+    if (self.endurance < 20)
+    {
+       act("You are too exhausted.", A_SOMEONE, self, null, null,
+           TO_CHAR);
+       quit;
+    }
+    else self.endurance := self.endurance - 20;
 
     fire := findunit(self, "campfire", FIND_UNIT_SURRO, null);
     if (fire.nameidx == "campfire_0") goto cookit;
@@ -10675,15 +10671,10 @@ code
        /*
 	    skillc:=self.abilities[ABIL_BRA] / 3;
        */
-       if(tgt.type==UNIT_ST_PC)
-        skilld:=tgt.skills[SKI_SCROLL_USE];
-       else
-	             skilld := rnd(40,124);
-       /*
-        skilld:=tgt.abilities[ABIL_BRA] / 2;
-       */
-       skilla:=scroll.value[0];
+       // The reader's skill and brain against the scroll's power
+       skilla:=self.abilities[ABIL_BRA];
        skillb:=scroll.value[0];
+       skilld:=scroll.value[0];
 
        hm:=skillroll(skilla,skillb,skillc,skilld);
 
@@ -10891,10 +10882,16 @@ code
 
  if(hm < 0)
  {
+   // A failure is off by -hm percent (at least 1), too high or too low.
+   // Computed as val * -hm / 100 without overflowing on costly items.
+   f := (val / 100) * (-hm) + ((val % 100) * (-hm)) / 100;
+   if (f < 1)
+     f := 1;
 
-   f := -hm / 100;
-
-   val := val * f;
+   if ((rnd(0,1) == 0) and (val - f >= 8))  // 8 is the lowest value shown
+     val := val - f;
+   else
+     val := val + f;
  }
 
  if(val < 8)
@@ -12091,10 +12088,15 @@ code
 		}
 		else
 		{
-			act("<div class='miss_me'>Your taunting causes $3n to attack!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-			act("<div class='miss_other'>$3n attacks after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
-			act("<div class='miss_opponent'>$1n's taunting causes you to attack!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
 			provoked_attack(tgt,self);
+			if (opponent(tgt, self))
+			{
+				act("<div class='miss_me'>Your taunting causes $3n to attack!</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+				act("<div class='miss_other'>$3n attacks after $1n's taunts!</div>", A_SOMEONE, self, null, tgt, TO_NOTVICT);
+				act("<div class='miss_opponent'>$1n's taunting causes you to attack!</div>", A_SOMEONE, self, null, tgt, TO_VICT);
+			}
+			else
+				act("<div class='miss_me'>$3n ignores your taunts.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
 		}
 	}
    send_done("taunt",self,null,tgt,hm,arg,null, CMD_AUTO_NONE);
@@ -12589,19 +12591,6 @@ code
 		quit;
 	}
 	
-	// Wrong. hm := skillroll(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
-    hm := skillchecksa(SKI_LEAP, ABIL_CON, 30);
-
-	if (hm <= 0)
-	{
-		act("<div class='spell'>You attempt to leap away, but clumsily fail.</div>",
-			A_ALWAYS, self, null, tgt, TO_CHAR);
-		act("<div class='spell'>$1n attempts to leap away, but clumsily fails.</div>",
-			A_SOMEONE, self, null, tgt, TO_REST);
-		tgt.endurance := tgt.endurance - 50;
-		quit;
-	}
-
    /* Find the room that the tgt is inside */
 
 	u := self.outside;
@@ -12616,36 +12605,41 @@ code
 		quit;
 	}
 	
-	if (arg in "north") {
+	// Directions by abbreviation from the start ("nor" is north), not as any substring
+	if (arg == left("north", length(arg))) {
 		i := DIR_NORTH;
 		d := "north"; }
-	else if ((arg in "east") and (arg != "s")) {
+	else if (arg == left("east", length(arg))) {
 		i := DIR_EAST;
 		d := "east"; }
-	else if ((arg in "south") and (arg != "u")) {
+	else if (arg == left("south", length(arg))) {
 		i := DIR_SOUTH;
 		d := "south"; }
-	else if (arg in "west") {
+	else if (arg == left("west", length(arg))) {
 		i := DIR_WEST;
 		d := "west"; }
-	else if (arg in "up") {
+	else if (arg == left("up", length(arg))) {
 		i := DIR_UP;
 		d := "up"; }
-	else if (arg in "down") {
+	else if (arg == left("down", length(arg))) {
 		i := DIR_DOWN;
 		d := "down"; }
-	else if ((arg in "northeast") or (arg == "ne")) {
+	else if ((arg == left("northeast", length(arg))) or (arg == "ne")) {
 		i := DIR_NORTHEAST;
 		d := "northeast"; }
-	else if ((arg in "northwest") or (arg == "nw")) {
+	else if ((arg == left("northwest", length(arg))) or (arg == "nw")) {
 		i := DIR_NORTHWEST;
 		d := "northwest"; }
-	else if ((arg in "southeast") or (arg == "se")) {
+	else if ((arg == left("southeast", length(arg))) or (arg == "se")) {
 		i := DIR_SOUTHEAST;
 		d := "southeast"; }
-	else if ((arg in "southwest") or (arg == "sw")) {
+	else if ((arg == left("southwest", length(arg))) or (arg == "sw")) {
 		i := DIR_SOUTHWEST;
 		d := "southwest"; }
+	else {
+		act("No such direction.", A_SOMEONE, self, null, null, TO_CHAR);
+		quit;
+	}
 
    if ((not u.exit_to[i]) or (u.exit_info[i] & EX_CLOSED) or (u.exit_to[i].movement == SECT_WATER_SAIL))
 	{
@@ -12667,6 +12661,19 @@ code
 			A_ALWAYS, self, null,null,TO_CHAR);
 		act ("Magical Clan powers stop $1n from leaping away.",
 			A_ALWAYS, self, null,null,TO_REST);
+		quit;
+	}
+
+	// Wrong. hm := skillroll(self.abilities[ABIL_CON],30,self.skills[SKI_LEAP],0);
+    hm := skillchecksa(SKI_LEAP, ABIL_CON, 30);
+
+	if (hm <= 0)
+	{
+		act("<div class='spell'>You attempt to leap away, but clumsily fail.</div>",
+			A_ALWAYS, self, null, tgt, TO_CHAR);
+		act("<div class='spell'>$1n attempts to leap away, but clumsily fails.</div>",
+			A_SOMEONE, self, null, tgt, TO_REST);
+		tgt.endurance := tgt.endurance - 50;
 		quit;
 	}
 
