@@ -48,14 +48,12 @@ descr
 "You are above the Chicken's Rest Inn in what seems to be an ordinary
 hallway. The walls are covered in a fine mahogany panelling which gives
 you the feeling this level may contain some offices. There are doorways
-leading East, West and North and there is a set of stairs leading down
-to
+leading East, West and North and there is a set of stairs leading down to
 the inn. You notice a small sign above each of the doors."
 extra {"walls", "wall"}
 "They are covered in a very new looking mahogany panel. Even at closer
 inspection they seem flawless, it looks like someone paid a fortune to
-build
-this hallway."
+build this hallway."
 extra {"signs", "sign"}
 "There is one above each door. The one to the north reads 'Player
 Network', the one to the east reads 'Valhalla Times', and the sign to
@@ -79,12 +77,12 @@ title "The Point of View Network"
 descr
 "As you enter the room you are quite taken aback by the sheer amount of
 stuff lying around here and there. This room defies the very definition
-of 'cluttered'! There is a Very large desk in the corner and you notice
+of 'cluttered'! There is a very large desk in the corner and you notice
 several blueprints scattered about its surface. There is one chair
 stationed at the desk but I sincerely doubt anyone uses it!"
 extra {"desk"}
 "It is a fine oak desk and looks pretty large, although it could be
-twice the size and still not have room enough for eveything on it!"
+twice the size and still not have room enough for everything on it!"
 extra {"chair"}
 "This is a fine oak chair with a comfortable looking cushion, but it
 really looks like it never has been sat in!"
@@ -122,8 +120,8 @@ extra {"chairs","chair","leather"}
 "The chairs are made of very fine leather. The texture looks very
 familiar. Could they be from Tassel Grove?"
 extra {"board","drawing board","sketches"}
-"The board looks alot like slate...there is some white stuff under the
-board itself. Circled many time are the letters- CTF!!"
+"The board looks a lot like slate...there is some white stuff under the
+board itself. Circled many times are the letters- CTF!!"
 extra {"east","west","paintings","walls"}
 "On the east wall is a painting of Market Square in Midgaard, on the
 west wall is a painting of Village Square in Udgaard. You notice that
@@ -139,7 +137,7 @@ names {"valhalla times main office", "valhalla times office", "ca"}
 title "Valhalla Times Main Office"
 descr
 "This is a very spacious room that looks like it could hold many people
-going through it at once. More the better for a newspaper office. The
+going through it at once. The more the better for a newspaper office. The
 walls are dark oak and there is a desk near the west wall. Behind the
 desk are big gold letters. The carpet is black and it makes you wonder why."
 extra {"walls","wall","oak","dark oak"}
@@ -170,10 +168,10 @@ names {"dil classes room", "dilclass"}
 title "The Main Room for Dil Classes"
 
 descr
-"This room is striking by its disordered appearance. Laying on the floor
-are papers of all sorts, plans, graphs, and even a picture of some irish
+"This room is striking by its disordered appearance. Lying on the floor
+are papers of all sorts, plans, graphs, and even a picture of some Irish
 admin. The only furniture here seems to be a large wooden table, on which
-lie more papers. A few torches give light to the whole scene, althought
+lie more papers. A few torches give light to the whole scene, although
 it also makes it quite dangerous to stay here."
 
 extra {"papers"}
@@ -284,13 +282,12 @@ end
 times_sash
 
 names {"Valhalla Times Sash", "sash"}
-title "The Valhalla Times Sash
-(tm)"
+title "the Valhalla Times Sash"
 descr "A beautifully woven sash lies here on the ground."
 
 MATERIAL_CLOTH("White silk")
 extra {}
-"What a beautiful sash! Its been woven of the purest silk,
+"What a beautiful sash! It's been woven of the purest silk,
 which makes it look especially eye-catching, shimmering
 in the light. The symbol of a golden quill has been sewn
 into the sash, the icon of the Valhalla Times Newspaper.
@@ -362,7 +359,7 @@ Extra! Where are the King and Queen of Vasklor Extra!
 (VP) Citizens of Vasklor laboring under the yoke of the Emperor Valmaloch 
  have mounted a surreptitious search for their missing King Amrod and 
 Queen Elbereth as well as the prince and princess Amras and Amber.
-Many fear the worst in spite of reports of letters proporting to be  
+Many fear the worst in spite of reports of letters purporting to be  
 from the Queen in hiding being received by many. The king and queen
 are not the only ones to have disappeared in Vasklor. Abandoned children
 can be found in homes and wandering the park.<br/>
@@ -371,7 +368,7 @@ One orphan when questioned stated 'a man came into town and claimed he
 was the brother of the King. He brought a bunch of thugs with him too!'
 Research has shown that the king was an only child, yet a few days later
 Amrod declared the man his long lost brother and left him as regent as
-he and whole family went to visit the gnome king. Reports are they 
+he and his whole family went to visit the gnome king. Reports are they 
 never arrived there.<br/>
 <br/>
 Citizens believe that their king still lives, but is imprisoned.
@@ -390,13 +387,13 @@ ooooOooooOooooOooooOoooo
 <br/>
 The world seems to have become a colder place in recent years. 
 The influence of the demons and evil races has brought out the
-the worst in many people and the watchwords of the day seem to be
+worst in many people and the watchwords of the day seem to be
 greed and overindulgence. <br/> 
 <br/>
 Citizens have been spotted hoarding mushrooms, berries and  <br/>
 other food stuffs. They set up caches of those things they 
 cannot immediately use. They steal goods donated to the poor and 
-sell then for as low as an iron and then the shopkeepers sell them
+sell them for as low as an iron and then the shopkeepers sell them
 at their face value.<br/>
 <br/>
 We have to ask why. Why destroy the patch of berries just to  
@@ -437,8 +434,8 @@ clans are the willing or even unwitting catspaws of the evil ones.
 Others have pointed fingers at the clanless saying they do not want 
 people to excel at anything that the clans may teach them. This 
 reporter doubts that any particular clan may be serving the ones who
-wish to dominate, but it may be some individuals are who are within the
- the clans. 
+wish to dominate, but it may be some individuals who are within the
+ clans. 
 <br/>
 So how do we tell the good ones from the bad? The ones that want to
 help vs. the ones that want to control. And how do we get out from the 
@@ -469,7 +466,7 @@ Bertha who sent many citizens a plea for aid in her hour of need.  Her
 husband is dead, she and her children are on the run from assassins. 
 For the duration of this article I will attempt to keep names out of
 it to protect those innocents persecuted. But I have been in correspondence
-with 'Bertha' as has report Kytes. Perhaps Kytes will provide us with
+with 'Bertha' as has reporter Kytes. Perhaps Kytes will provide us with
 more information next issue. 
 <br/>
 Her letter states that she has a great deal of money available but 
@@ -478,14 +475,14 @@ one who can to help her retrieve a trunk full of platinum. It is a
 reported hefty sum is in the trunk and but it is held by a bank. 
 <br/>
 All of this sounded a bit odd, so I began to correspond with
-her. According to herm she is a deposed queen. Her husband died   
+her. According to her she is a deposed queen. Her husband died   
 in prison. A sympathetic guard helped her and her 2 children escape 
 from the dungeons beneath the castle and they are hiding out in a foreign  
 city. She is destitute, alone and to top it off frustrated because
-if only she had the fee for the storage or a sponser she could change
+if only she had the fee for the storage or a sponsor she could change
 all that. 
 
-I asked why she was sending letter to strangers. She said she had gotten
+I asked why she was sending letters to strangers. She said she had gotten
 my name from her old advisor as someone who had helped in the past. 
 That much was true, so I continued my questioning and discovered she 
 and her two children were at the mercy of the government who were  
@@ -499,7 +496,7 @@ She asked that we meet at the bank and if I could see my way to loan
 her the money for the fee, I would receive a percentage of what was
 in the trunk. So I prepared to leave, but circumstances have thus far 
 halted me from completing the task. I would much rather help depose 
-the usuper of her husband's throne and place her son on it. I am  
+the usurper of her husband's throne and place her son on it. I am  
 investigating ways to do that and then she can use her own 
 treasury and advisors to reclaim her assets. Although I am skeptical
 as to her authenticity, if she is who she claims, she has been done a 
@@ -551,7 +548,7 @@ Bren and Gothmog have been sighted many times up in Vasklor Area.
 ----------------------------------------------------------------------------
 
 Rumors are afoot that Nikolai may be stalking a new target,   
-orpses of Vanesselle have been spotted in the Fjord. None of 
+corpses of Vanesselle have been spotted in the Fjord. None of 
 his old flames could be reached by seance for comment.  
 <br/>
 =====================================================================
@@ -575,7 +572,7 @@ my way out of the mess I found myself and wandered into a charming
 town, Whesland Hamlet. 
 <br/>
 The hamlet is small, but fortified with a tall fence as if it  
-expects an attack at any moment, It has some heavy protective
+expects an attack at any moment. It has some heavy protective
 magic that kicks out evil that walks into their town. It also 
 seems to have more than its share of problems. 
 <br/>
@@ -599,8 +596,8 @@ Luckily the herbalist in town had some herbs that helped, but they
 also let me see the spirits and made me hallucinate. But with the 
 mission accomplished I still had to slay a couple of animals for the
 herbalist to make a cure for the old man. However do not think the 
-people who live there are not appreciative, the entire villiage turned
-out for a presentation of a medal to me ny the mayor. The town is well
+people who live there are not appreciative, the entire village turned
+out for a presentation of a medal to me by the mayor. The town is well
 worth visiting when you need a break in your studies around half-way.
 but no evil people need to bother. They won't let you in.
 <br/>
@@ -610,30 +607,30 @@ extra {"article 6","6"}
 "
 
 ooooOooooOooooOooooOoooo<br/>
-The Aventurer's Closet
+The Adventurer's Closet
 ooooOooooOooooOooooOoooo<br/>
 <br/>     
  Shoes, Gloves and Purse Pink!
  By Aelle Llofrudd-Gix
 <br/>
 Ladies and gentlemen of Valhalla, I ask you with all the 
-letters of margue passed out and the offers of some to 
-create custom clothing. Why is that so many do not show
+letters of marque passed out and the offers of some to 
+create custom clothing. Why is it that so many do not show
 good taste in having your shoes, gloves and purse or bag match?
 <br/>
 There is no reason to face the evil hordes in any less than perfectly
 matched accessories so that they at least will know their demise was
-brought about by those with a civlized sense of fashion. I have
+brought about by those with a civilized sense of fashion. I have
 noticed SOME people make an effort in wearing their clan colors.
 So many neglect the bag or purse. Why is that? 
 <br/> 
-The back or puse is your most common accessory, it is almost 
-always with you. Of all the items you keep about you, this should 
+The bag or purse is your most common accessory, it is almost 
+always with you. Of all the items you keep about you, this 
 is the one that most notice. Why carry around a natty burlap bag of holding
-when you can sport a spiffy purse, knapsack or even ruckersack? Think 
+when you can sport a spiffy purse, knapsack or even rucksack? Think 
 about it. I know when I send shards whipping through the vitals of
 an enemy, as the light leaves his eyes, he will gaze upon my beautiful
-purple and blue purse as I take the gold he will not longer be requiring.
+purple and blue purse as I take the gold he will no longer be requiring.
 It makes me proud to know that some barbarian will know as his last
 coherent thought that he was exterminated by a woman with a keen sense
 of fashion.
@@ -682,10 +679,10 @@ extra {}
 -=-=-=-=-=-=-=-=-
 =-=-=-=-
 
-To read a specific article, type <look article #>, <read
-article #>, <examine
-article #>, or simply type <look #>, <read #>, <examine
-#.> 
+To read a specific article, type 'look article #', 'read
+article #', 'examine
+article #', or simply type 'look #', 'read #', 'examine
+#'. 
 
                              TABLE OF CONTENTS
 
@@ -711,7 +708,7 @@ Point of View board upstairs in the Chicken's Rest.
 =============================================================
 <br/>
 It has been a while since we wrote an article for the times and a 
-lot has happened. many new ideas, bugs found and lots of zones. First
+lot has happened. Many new ideas, bugs found and lots of zones. First
 the builder news:
 <br/>
 Of the new zones since our last printing, the winner of the 
@@ -719,7 +716,7 @@ builder's contest was Sentrosi for Murhabi. It was a close contest.
 Issa's zone, Soul Lake has many innovative concepts and ideas of the
 type we hope to see more of from the builders and the story is excellent.
 Both zones are in pay areas and are for higher level players. 
-Alvaneu opted to not enter the contest, feeling that he rather
+Alvaneu opted to not enter the contest, feeling that he would rather
 do a good job on his zone rather than hurry to finish. But his
 did get done and it tells the story of the Demonologists and
 Ishlor's army. He took a unique approach to some aspects of the 
@@ -743,12 +740,12 @@ In the meantime though, stories are needed. We like a variety in writers
 So see Aelle about contributing. 
 <br/>
 There have been many bugs reported with morph so we ask you use restraint
-in using it. It maybe we remove it again until it is fixed but some forms
+in using it. It may be we remove it again until it is fixed but some forms
 seem stable. Keep up the good work on reporting find path issues. We are
 slowly finding the causes of that issue and fixing them as we go.
 <br/>
 Speaking of bugs, we have quite a backlog of them. Thanks to everyone
-for reporting them and while it may take a some time, we are working on
+for reporting them and while it may take some time, we are working on them
 in order of priority. Crash bugs are first, then worldwide ones, then zone
 only, quest only then finally localized. We ask you report all bugs and
 do not exploit them. If you are uncertain do not do it! We do nightmare
@@ -841,18 +838,18 @@ as some of you unlucky newbies have found out, not all things that grow
 in the wild are good to eat. While everyone likes a good fungi, many 
 have side effects that range from poison to tripping your head off. The 
 following is a short guide to help you keep safe while out there. 
-Of course if your one of those hippy types who like being really out
+Of course if you're one of those hippy types who like being really out
 there, you might consider this a guide to where to find the best stuff. 
 <br/>
 First off most of you young newbies get to explore the light forest 
 west of Udgaard, the Haon-Dor. For the most part you are safe to eat 
-anything you find in this woods, except the toad stools. The mushrooms 
+anything you find in these woods, except the toad stools. The mushrooms 
 are rather tasty and good in stews as well as soups and salads. There is 
 a rather wonderful bush south of Mary's cabin that grows some beautiful 
 berries. Those are great for eating raw or cooked in many dishes. 
 As a rule of thumb however, any tubers or other random items you rangers 
 dig up or find while searching for food in the woods, it's a good idea 
-to cook it. Cooking over a fire tends too kill any poisons and molds in 
+to cook it. Cooking over a fire tends to kill any poisons and molds in 
 these items making them not only delicious when roasted but safe to eat.
 <br/>
 Now for the more practiced and adventurous, Nymgaard is said to hold a 
@@ -864,15 +861,15 @@ careful. As I have found in my travels the basic rule when dealing
 with mushrooms is leave the blue ones alone. Some of them poison you 
 and some of them do much more. I have to admit once I got over the 
 first peak of my trip it kind of mellowed out and wasn't so bad, except
-for the mimes. However I still would suggest staying way from the 
+for the mimes. However I still would suggest staying away from the 
 blue ones. Puffballs are dangerous to even breathe in the spores, stay
 away from them as well.
 <br/> 
  
 South of Nymgaard I found a strange forest that I got rather lost in. 
-This place was filled with a great number of different types plant life
+This place was filled with a great number of different types of plant life
 and fungi. For those of you starting out, gathering the red mushrooms 
-might be a good idea. The have some strange natural healing properties. 
+might be a good idea. They have some strange natural healing properties. 
 Not to mention they go great in salads. The blue ones here as I have 
 said before stay away! But if for some reason you don't believe me and 
 you just have to go and try one yourself, don't worry. It will all be ok, 
@@ -883,7 +880,7 @@ I have found they can counteract the effects of those nasty blues.
 As for the herbs that seem to grow all over the place. Good luck with 
 that. Some of them are rather interesting and wonderful. While others 
 can be dangerous or disgusting. I would not suggest making a salad of 
-them. Unless you're willing too spend some time in bed sick as a dog. 
+them. Unless you're willing to spend some time in bed sick as a dog. 
 However if you're in a jam and backed into a corner you never know these 
 herbs just might surprise you and save your life. So for those of you who 
 love to gamble or take risks these herbs are for you! Just remember, the
@@ -976,9 +973,9 @@ Tegral upholder of truth seeing the failings of the current law system <br/>
  has started to forge a vigilante group of those who only seek to use  <br/>
 justice for their own means and purposes. However for all sakes of 
 objectivity can one really blame the cityguards for such failings?
-they get paid a measly 3 or 4 iron pieces, are provided with lack luster 
+They get paid a measly 3 or 4 iron pieces, are provided with lackluster 
 equipment and weapons and lack the essential training needed to enforce 
-the only true inpartial law that weve come to know as justice.
+the only true impartial law that we've come to know as justice.
 <br/>
 Ah for the merriment of the young and the path they walk, for now a <br/>
 new tool has appeared to combat the old evil and push forward the <br/>
@@ -993,7 +990,7 @@ turn and look at the results?
 <br/>
 Well this is for you, my readers, to decide. Should justice only be <br/>
 based on results or the resolve and reasons of the enforcers of that <br/>
-which keep our land in balance. Whatever the readers decidem to this <br/>
+which keep our land in balance. Whatever the readers decide, to this <br/>
 young reporter only one fact remains true and close to his heart. <br/>
 THIS HAMMER CAN KICK SERIOUS TAIL.
 <br/>
@@ -1002,7 +999,7 @@ THIS HAMMER CAN KICK SERIOUS TAIL.
 extra {"article 12", "12"}
 "
 ooooOooooOooooOooooOoooo
-[Advocates of Honor]<div class='DEFAULT'>
+[Advocates of Honor]
 ooooOooooOooooOooooOoooo
 <br/> 
 No reports of anything worthwhile or interesting happening in 
@@ -1061,7 +1058,7 @@ of the utmost importance. That is why we are Kindred.
 <br/>
 =============================================================
 ooooOooooOooooOooooOoooo
-<Unseen Chaos>
+&lt;Unseen Chaos&gt;
 ooooOooooOooooOooooOoooo
 <br/>
 No reports of anything worthwhile or interesting happening in 
@@ -1093,8 +1090,8 @@ HELP WANTED
 Package delivery person. Apply to Bill at the Laboratory
 <br/>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-No Experience Neccesary!
-Models wanted. We pay top dollar. See Scarlet the the Lady
+No Experience Necessary!
+Models wanted. We pay top dollar. See Scarlet the Lady
 of Negotiable Affection. Day care provided.
 <br/>
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1165,7 +1162,7 @@ code
    if ((item1.loadcount > 50) or (item2.loadcount > 50))
    {
       act("The machine grinds loudly, but produces no newspaper. "+
-          "Obviously, the machine is out of ink because too many copies"+
+          "Obviously, the machine is out of ink because too many copies "+
           "have been produced... Try again later.",
           A_ALWAYS, activator, null, null, TO_CHAR);
       destroy(item1);

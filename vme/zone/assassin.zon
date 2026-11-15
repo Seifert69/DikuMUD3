@@ -23,7 +23,7 @@ END HEADER*/
 
 
 %zone assassin
-title "Asassins Guild@Khorsabad"
+title "Assassins Guild@Khorsabad"
 lifespan 20
 reset RESET_ANYHOW
 
@@ -61,7 +61,7 @@ code
    self.hp := self.max_hp;
    act("At the sounds of battle, black-covered shapes file quietly into the "+
       "room.", A_SOMEONE, pc, self, null, TO_ALL);
-   act("A sudden blow in the back of your head sends you spinning into"+
+   act("A sudden blow in the back of your head sends you spinning into "+
       "the murky depths of unconsciousness!",A_SOMEONE,pc,self,null,TO_CHAR);
    act("One of them delivers a sharp blow in the back of $1s head, sending "+
       "$1m down to the ground!", A_SOMEONE,pc,self,null,TO_REST);
@@ -69,7 +69,7 @@ code
    act("You feel yourself being dragged away somewhere..."
       ,A_SOMEONE, pc, self, null, TO_CHAR);
    position_update(pc);
-   act("Two assassins grab $1n and drag him out of the Guild, dumping "+
+   act("Two assassins grab $1n and drag $1m out of the Guild, dumping "+
       "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
    room := findroom("a65@arabian");
    link(pc,room);
@@ -130,7 +130,7 @@ end
 title "The Skill Training Room"
 descr
 "   A stuffed dummy stands prominently in the center of the shadowed room.
-Various other devices fill the room, most seemingly to have some use in
+Various other devices fill the room, most seeming to have some use in
 honing an assassin's skills.  A doorway leads south back into the foyer."
 extra {"stuffed dummy","dummy"}
 "The stuffed dummy is covered with many small bells and is slitted in many
@@ -142,7 +142,7 @@ end
 		weapon_room
 title "The Weapon Training Room"
 descr
-"   Among this shadowed room lies racks of weapons that an assassin would
+"   Among this shadowed room lie racks of weapons that an assassin would
 use.  Charts showing vital parts of many varied monsters show the best
 place to place the killing dagger.  Stuffed dummies are marked up with
 practice blows."
@@ -158,7 +158,7 @@ to hide.  A desk stands near the north wall, but is currently free of any
 adornments. A sign hangs on the wall."
 
 extra {"sign"}
-"This is the great hall of the Barbarians Guild. <br/><pre>
+"This is the great hall of the Assassin's Guild. <br/><pre>
 'join'           - join this guild (if you qualify!).
 'title'          - changes your title to a new and better one.
 'worship'        - ... ?
@@ -219,7 +219,7 @@ dilcopy AlertMembers@guilds(GUILD_ASSASSIN, "");
 dilcopy Specialize@guilds(GUILD_ASSASSIN, "alespec@assassin",
     { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
       "say Once you commit this process will alter your body permanently.",
-      "say I'll give you a mug of grey ale. Once you cosume it the change will occur.",
+      "say I'll give you a mug of grey ale. Once you consume it the change will occur.",
       "say Remember, this will only work for those who have taken up thieving as a profession and never specialized.",
       "::$3n hands you a mug of grey ale.::$3n hands a mug of grey ale to $1n."});
 
@@ -261,13 +261,13 @@ code
       pause;
       exec("say Well, you obviously haven't been using the proper weapon.",self);
       pause;
-      exec("say take this, if this can't make you kill better, nothing will. " +
-         " go now, and may all your kills be swift.", self);
+      exec("say Take this, if this can't make you kill better, nothing will. " +
+         "Go now, and may all your kills be swift.", self);
       pause;
-      exec("say and also take this, it will show your membership as an " +
+      exec("say And also take this, it will show your membership as an " +
          "Assassin.  Wear it proudly.", self);
-      act(" The master Assassin pulls some items from underneath the folds of " +
-         " his cloak and gives it to you.",A_ALWAYS,self,null,null,TO_CHAR);
+      act("The Master Assassin pulls some items from underneath the folds of " +
+         "his cloak and gives them to you.",A_ALWAYS,self,null,null,TO_CHAR);
       item := load ("death_bringer@assassin");
       item.height := pc.height;
       link(item,pc);
@@ -359,7 +359,7 @@ names {"Ferrari","assassin","teacher"}
 title "Ferrari"
 descr "Ferrari stands here to teach you the tricks of the trade."
 extra {}
-"Altough slightly ageing, he is still one of the most infamous assassins
+"Although slightly ageing, he is still one of the most infamous assassins
 of all ages."
 
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
@@ -396,7 +396,7 @@ dilcopy TrainMemberChk@guilds(GUILD_ASSASSIN, "");
 dilcopy nokill@assassin();
 
 dilcopy qstSimpleQuest@quests(QUEST_ASSASSIN_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of Ploscik from the Clouds."},
          {"say Excellent! Best of luck, $1N."},
          "Sharki in the Assassin's Guild has asked you to bring him the head of Ploscik from the Clouds.",
@@ -416,7 +416,7 @@ names {"assassin guard","guard","assassin"}
 title "an assassin guard"
 descr "A vague feeling of being watched washes over you..."
 extra {}
-"Whoa! If you didn't know he was there, you'd never seen the guy! Clad
+"Whoa! If you didn't know he was there, you'd never have seen the guy! Clad
 all in black, he watches you intently from the shadows."
 M_HUMAN_WARRIOR_SWORD(150,SEX_MALE)
 
@@ -509,7 +509,7 @@ code
 
    if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
    {
-      exec("say Hello, fellow assassin.  Would you like a lift back to midgaard? " +
+      exec("say Hello, fellow assassin.  Would you like a lift back to Midgaard? " +
          "Just nod if you wish to go.", self);
 
       if (command("nod"))
@@ -540,7 +540,7 @@ names {"dagger"}
 title "a dagger"
 descr "A sleek dagger lies here."
 extra {}
-"The dagger feels like it is meant to kill on specific target but is
+"The dagger feels like it is meant to kill one specific target but is
 otherwise normal."
 extra {"$identify"}
 "This dagger is designed to kill the Amir in Khorsabad.
@@ -620,15 +620,15 @@ descr "A black, sleek shortsword lies here."
 extra {}
 "This sleek, elegant weapon is perfectly balanced and razor sharp, perfect
 for back stabbing! Engraved upon its side are the words 'Death Bringer',
-written in arabic."
+written in Arabic."
 extra {"engraving"}
-"The arabic letters spell 'Death Bringer'.<br/>"
+"The Arabic letters spell 'Death Bringer'.<br/>"
 extra {"$identify"}
 "This powerful weapon will drain the health of your opponent and transfer
-it to you..<br/>"
+it to you.<br/>"
 extra {"$improved identify"}
 "This weapon has a craftsmanship and magical modifier of 7. It improves
-the wearers dexterity and magical power by two, and reduces the power of divine 
+the wearer's dexterity and magical power by two, and reduces the power of divine 
 interactions by 1. Skill in short sword will be improved by 5."
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -682,9 +682,9 @@ code
         lev := self.outside.level;
 	if ((lev*num)/100 >= 15)
          {
-            act("Your sword glows as it absorbs your opponents life energy!",
+            act("Your sword glows as it absorbs your opponent's life energy!",
                 A_ALWAYS, self.outside, null, null,TO_CHAR);
-	    act(""+self.outside.name+"'s Death Dealer glows as it steals " +
+	    act(""+self.outside.name+"'s Death Bringer glows as it steals " +
 	    "the life force from "+self.outside.fighting.name+".", A_ALWAYS,
 	    self.outside, null, null, TO_REST);
          }
@@ -730,13 +730,13 @@ title "a dark-bladed katana"
 descr "A dark-bladed katana sword lies here."
 extra {}
 "The blade of this katana has been covered in some dark, oily substance,
-making it black and mate. The handle bears the sigil of the Assassin Guild."
+making it black and matte. The handle bears the sigil of the Assassin Guild."
 extra {"$identify"}
 "This katana will raise your Dexterity as well as your katana skills and
 hide skills.<br/>"
 extra {"$improved identify"}
 "The katana and hide skills will raise with 3%, Dexterity with 2 points.<br/>
-The katana is a weapon of craftmanship 5 and magic bonus 5.<br/>"
+The katana is a weapon of craftsmanship 5 and magic bonus 5.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
@@ -752,13 +752,13 @@ title "a dark-bladed wakizashi"
 descr "A dark-bladed wakizashi sword lies here."
 extra {}
 "The blade of this wakizashi has been covered in some dark, oily substance,
-making it black and mate. The handle bears the sigil of the Assassin Guild."
+making it black and matte. The handle bears the sigil of the Assassin Guild."
 extra {"$identify"}
 "This wakizashi will raise your Dexterity as well as your wakizashi and
 hide skills.<br/>"
 extra {"$improved identify"}
 "The wakizashi and hide skills will raise with 3%, Dexterity with 2 points.<br/>
-The wakizashi is a weapon of craftmanship 5 and magic bonus 5.<br/>"
+The wakizashi is a weapon of craftsmanship 5 and magic bonus 5.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 1
@@ -771,7 +771,7 @@ end
 
 alespec
 names {"mug of grey ale","mug", "grey ale", "ale"}
-title "a mug of ale"
+title "a mug of grey ale"
 descr "A wooden mug stands here."
 extra {}
 "A large, wooden mug."

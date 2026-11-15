@@ -44,10 +44,10 @@ code
       block;
 
    self.hp := self.max_hp;
-   act("The sounds of battle attract attention of the training rangers.",
+   act("The sounds of battle attract the attention of the training rangers.",
       A_ALWAYS, pc, self, null, TO_ALL);
-   act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly </div>"+
-      "smashing your head into the wall!<div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
+   act("<div class='cpr'>Several of them charge into the room, grabbing you and repeatedly "+
+      "smashing your head into the wall!</div><div class='cw'></div>", A_ALWAYS, pc, self, null, TO_CHAR);
    act("Several of them charge into the room, grabbing $1n and repeatedly "+
       "smashing $1s head into the wall!",A_SOMEONE, pc, self, null, TO_REST);
    pc.hp := 0;
@@ -57,7 +57,7 @@ code
    act("Two of them grab $1n and drag $1m out of the Guild, dumping "+"$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
    room := findroom("for_gath1@ranger");
    link(pc,room);
-   act("Two large rangers emerge from the Guild, dragging $1n"+
+   act("Two large rangers emerge from the Guild, dragging $1n "+
       "between them and dump $1m unceremoniously on the ground.",A_SOMEONE,pc,self,null,TO_REST);
 
 :gone:
@@ -88,7 +88,7 @@ extra {"foliage"}
 "The plant life growing here is thick and lush. Long vines trail out
 from everywhere and quickly entangle your feet."
 extra {"trail","path"}
-"The path is nothing more then a few animal prints through the thick
+"The path is nothing more than a few animal prints through the thick
 brush."
 south to for_gath2 descr "The brush is too thick for you to see much to
 the south but you can just make out an encampment of sorts.";
@@ -110,10 +110,10 @@ extra {"trees","tree"}
 The trunks are so large that it makes you think you could hollow one
 out as a home."
 extra {"foliage"}
-"The plant life growing here is thick and lush, Long vines trail out
+"The plant life growing here is thick and lush. Long vines trail out
 from everywhere and quickly entangle your feet."
 extra {"trail","path"}
-"The path is nothing more then a few animal prints through the thick
+"The path is nothing more than a few animal prints through the thick
 brush."
 north to for_gath1 descr "To the north you can almost make out a trail.";
 west to field_gath1 descr "Through the trees to the west you can just make
@@ -126,14 +126,14 @@ title "An Open Field"
 descr
 "The field is very large and a group of rangers has set up an encampment
 here for the great Equinox Festival. The rangers have set up separate
-little booths selling there wares, a large area to the south has the
+little booths selling their wares, a large area to the south has the
 cooking fires and eating area. A large bonfire crackles to the west and
 the sleeping area with tents to house the rangers is to the north end of
 the field."
 extra {"camp fire", "bonfire", "fire"}
 "There are a number of cooking fires around the encampment, most emitting
 a wonderful smell of something being cooked."
-extra {"tent"}
+extra {"tents", "tent"}
 "Around the encampment Rangers have set up tents to stay in while at the
 Forgathering."
 east to for_gath2 descr "You see what might be a trail off into the woods
@@ -207,14 +207,14 @@ south you can see mountains, their snowy caps visible over the tree tops
 to offer a divine view. There are two small wooden buildings here, to the
 west is the barn and to the south is the chapel. An open area to the
 east is where the rangers can challenge others to competitions of skill
-and talent. The dining, sleeping area is to the north. A tall, yet small
+and talent. The dining and sleeping area is to the north. A tall, yet small
 tent stands in the centre of the field. Perhaps you should ENTER it?"
 extra {"field"}
 "A large grassy area in the middle of the forest."
 east to chal_area descr "To the east you see rangers showing off their
 prowess at different skills.";
 west to barn descr "To the west you see and smell a barn used to house
-the rangers non-human followers during their stay.";
+the rangers' non-human followers during their stay.";
 north to field_gath1 descr "To the north you see the dining and sleeping
 area.";
 south to chapel descr "To the south you see a small building used as a
@@ -250,12 +250,12 @@ descr
 "This tent seems strangely larger on the inside than on the outside. The
 owner keeps a neat abode - though it is a tent, it looks not to have been
 lifted from the ground in many a year, but despite its age, you have to
-work hard to find a spec of dust. The walls are covered in charts, wall
-hangings, and tapestries. They all look decidely mystical. A tall chair
+work hard to find a speck of dust. The walls are covered in charts, wall
+hangings, and tapestries. They all look decidedly mystical. A tall chair
 stands beside a foldable table at the back of the tent.<br/>To get out you
 must exit the tent."
 
-extra {"chair","wooden chair", "large chair"}
+extra {"chair","wooden chair", "large chair", "tall chair"}
 "Probably carved from an oak tree, it stands in perfect proportion to
 Sholdin beside his table."
 
@@ -321,7 +321,7 @@ house the large number of animals at the festival. As you look around you
 notice the stalls are full of all types of animals, both wild and domestic
 and amazingly enough, all the animals get along well with no natural
 aggression amongst themselves."
-extra {"stall"}
+extra {"stalls", "stall"}
 "Each stall holds a different animal follower, everything from bears to
 horses."
 movement SECT_INSIDE
@@ -358,8 +358,8 @@ names {"barthalamul", "master", "ranger"}
 title "Barthalamul"
 descr "Ranger Barthalamul, Master of the Rangers Guild, is standing here."
 extra {}
-"Ranger Barthalmul is a huge man. He is a Guardian Ranger and as such,
-looks out for the whole forest and its creatures. Barthalamul Is a very
+"Ranger Barthalamul is a huge man. He is a Guardian Ranger and as such,
+looks out for the whole forest and its creatures. Barthalamul is a very
 large man with a scruffy beard and moustache that meets his longish hair
 to cover most of his face."
 flags {UNIT_FL_NO_TELEPORT}
@@ -403,8 +403,8 @@ dilcopy MasterJoin@guilds(GUILD_NYM_RANGER, GUILD_RANGER_EXCL, QUEST_RANGER_ENTR
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say Rangers do not accept magical scholars, Necromancers or Dark Knights."},
- {"say To join $1N, you must prove yourself worthy by completing the Ranger's Guild quest.","say Go speak with Sholdin."},
- {"handshake $1N", "say Welcome to the Ranger's Guild, $1N."});
+ {"say To join $1N, you must prove yourself worthy by completing the Rangers' Guild quest.","say Go speak with Sholdin."},
+ {"handshake $1N", "say Welcome to the Rangers' Guild, $1N."});
 
 
 dilbegin ranger_dil();
@@ -429,7 +429,7 @@ code
 	{
       exec ("say I thank you for your service in protecting "+
       "land and animals from those that wish to destroy "+
-      "them ",self);
+      "them.",self);
       pause;
       exec ("say Since the realm is so dangerous and filled with " +
          "dangerous creatures, we must protect ourselves as only " +
@@ -447,7 +447,7 @@ code
       if (item.outside == self) 
          link(item, pc);
       pause;
-      exec ("say Peace Be with you, go now and protect the lands",self);
+      exec ("say Peace be with you. Go now and protect the lands.",self);
       unsecure(pc);
       goto start;
 	}
@@ -455,7 +455,7 @@ code
    {
    	block;
 		unsecure(pc);
-	   exec ("say You are not a member here, leave now", self);
+	   exec ("say You are not a member here, leave now.", self);
    }
 
    unsecure(pc);
@@ -463,7 +463,7 @@ code
 
 :lost:
    unsecure(pc);
-   exec("say Who dares to leave my presence while i am talking? I "+
+   exec("say Who dares to leave my presence while I am talking? I "+
    "should banish them!", self);
    goto start;
 }
@@ -477,7 +477,7 @@ title "Justin the Justifier"
 descr "Justin the Justifier is here showing off his huge knowledge of
 weapons."
 extra {}
-"Justin is a dangerous looking man with ripping muscles, he stands proud
+"Justin is a dangerous looking man with rippling muscles, he stands proud
 in the knowledge that he can beat almost any man or beast alive."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
@@ -504,7 +504,7 @@ title "Maliki the Seeker"
 descr "Maliki, teacher of the divine magics of the forest, is standing at the
 podium."
 extra {}
-"Maliki is a small man with a soft spoken voice. word amongst the rangers
+"Maliki is a small man with a soft spoken voice. Word amongst the rangers
 is that if there is a spell Maliki does not know then it is not a spell
 worth having."
 flags {UNIT_FL_NO_TELEPORT}
@@ -550,10 +550,10 @@ dilcopy TrainMemberChk@guilds(GUILD_NYM_RANGER, "");
 #undef _SPELL
 
 dilcopy qstSimpleQuest@quests(QUEST_RANGER_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of the Green Dragon in Haon-Dor."},
          {"say Excellent! Best of luck, $1N."},
-         "Sholdin in the Ranger's Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
+         "Sholdin in the Rangers' Guild has asked you to bring him the head of the Green Dragon from Haon-Dor.",
          {"emote looks at the head of the Green Dragon.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
           800, 1 * COPPER_MULT, {""}, "");
@@ -566,7 +566,7 @@ end
 
 mountain_man
 names {"dwayn", "mountain man", "man"}
-title "Dwayn The Mountain Man"
+title "Dwayn the Mountain Man"
 descr "Dwayn is sitting here testing his strength."
 extra {}
 "Dwayn is a large burly man who looks like he could be the strongest man
@@ -594,10 +594,10 @@ pathfinder
 names {"dreanna", "pathfinder"}
 title "Dreanna the Pathfinder"
 descr
-"Dreanna is sitting in front of the the camp fire, deep in her own
+"Dreanna is sitting in front of the camp fire, deep in her own
 thoughts."
 extra {}
-"Dreanna is very knowledgable in many areas. She sits in meditation beside
+"Dreanna is very knowledgeable in many areas. She sits in meditation beside
 the warm campfire."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
@@ -621,7 +621,7 @@ end
 %objects
 
 ranger_bow
-names {"Milvamer", "long bow", "bow"}
+names {"Milivamar", "Milvamer", "long bow", "bow"}
 title "the long bow named, <div class='cpy'>Milivamar</div><div class='cw'></div>"
 descr "A great long bow crafted by the Rangers of yore lies on the ground here."
 MATERIAL_WOOD("Yew branch")
@@ -635,8 +635,8 @@ rent 75 IRON_PIECE
 weight 8
 
 extra {}
-"This magnificient hand-crafted bow is made from prime yew is almost five
-feet long. It has a metal grip and a slot for knocking arrows."
+"This magnificent hand-crafted bow is made from prime yew and is almost five
+feet long. It has a metal grip and a slot for nocking arrows."
 
 extra {"$wear_s"}
 "You take the long bow in your hand, ready for battle."

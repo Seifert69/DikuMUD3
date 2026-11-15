@@ -33,31 +33,11 @@ lifespan 125
 
 help
 "<pre><br/>
-The Barbarians Hall is the legendary training ground of some of Valhalla's<br/>
+The Barbarians' Hall is the legendary training ground of some of Valhalla's<br/>
 most notable warriors. Known for their ferocity in battle, the Barbarians<br/>
 fight with bloodlust and rage, embracing the raw emotions brought out in<br/>
 the game of life and death.<br/>
-/* leftovers from the conjuror intro I copied, may or may not keep.
-<br/>
-	<div class='cpw'>Training/Education</div><div class='cw'><br/>
-<br/>
-  Skill Practice	- Main Lecture Hall, east and south from the Main Hall.<br/>
-  Weapon Practice	- Tower of Mundane, all north from the Main Hall.<br/>
-  Ability Practice	- The Library, east and north from the Main Hall.<br/>
-<br/>
-	</div><div class='cpw'>Other services</div><div class='cw'><br/>
-<br/>
-  Title change		- At the Archcancellor, type 'title' to gain a new<br/>
-			  and hopefully better title.<br/>
-  Academy items		- Personal magical trinkets of the Conjurers. Those<br/>
-			  are available at the Archcancellor by bowing or<br/>
-			  worshipping him.<br/>
-  Bar and relaxation 	- A small resting area, along with a bar, can be found<br/>
-			  in the College Gardens (north and east or south<br/>
-			  and east from the Main Hall).<br/>
-*/
-<br/>
-</div></pre>"
+</pre>"
 
 /* ================================================================== */
 /*                               DIL                                  */
@@ -180,10 +160,10 @@ code
 	act("Suddenly several burly guards rush into the room, eyes "+
 		"<div class='c+r'>red</div> with rage. Fists start flying!", A_ALWAYS, pc, self, null, TO_CHAR);
 	act("Several of them charge into the room, their eyes <div class='c+r'>red</div> with rage! "+
-		"$3n is crushed by the ferocity of their attack!",A_SOMEONE, pc, self, null, TO_REST);
+		"$1n is crushed by the ferocity of their attack!",A_SOMEONE, pc, self, null, TO_REST);
 	pc.hp := 0;
 	pc.mana := 0;
-	act("You can feel yourself being dragged away as you slip into the "+
+	act("You can feel yourself being dragged away as you slip into "+
 		"unconsciousness.",A_ALWAYS, pc, self, null, TO_CHAR);
 	position_update(pc);
 	act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
@@ -373,7 +353,7 @@ descr
 Under their fearsome leader, the Barbarians have emerged as a powerful 
 force driving the ways of the realm. Their hall, however, harkens back 
 to humble beginnings. While large, it is a simple structure. Here on the
-high pleateau it would certainly be difficult to assail, but clearly its 
+high plateau it would certainly be difficult to assail, but clearly its 
 inhabitants favor practicality over beauty. "
 movement SECT_CITY
 
@@ -384,24 +364,24 @@ end
 
 hall_01
 names {"inside hall"}
-title "Inside the Barbarians Hall"
+title "Inside the Barbarians' Hall"
 descr
 "Upon entering the hall you are struck by a cacophony containing the 
-sounds of revelry and dabauchery. Large oaken beams form the structure of 
+sounds of revelry and debauchery. Large oaken beams form the structure of 
 the ceiling above you, forming a large open space below. In the distance the 
 ring of weapons can be heard as the Barbarians practice their infamous skills. 
-Through the western doors lies the Guild Entarnce, and to the east the hall 
+Through the western doors lies the Guild Entrance, and to the east the hall 
 opens further. You can just make out a large table and a throng of people to 
 the far eastern end of the hall. "
 extra {"floor","wood","beams"}
-"The structure is made of large sturdy beans of rough-hewn oak. 
+"The structure is made of large sturdy beams of rough-hewn oak. 
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to entrance descr "Barbarians Entrance<br/>";
+west to entrance descr "Barbarians' Entrance<br/>";
 east to hall_02 descr "Inside the Hall<br/>";
 end
 
@@ -417,7 +397,7 @@ odor fills your nose. Clearly the Barbarians haven't prioritized
 cleanliness in their practices. To the west lies the hall entryway, 
 and to the east the hall continues towards the head table. "
 extra {"floor","wood","beams"}
-"The structure is made of large sturdy beans of rough-hewn oak. 
+"The structure is made of large sturdy beams of rough-hewn oak. 
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
@@ -426,7 +406,7 @@ members are smoking runs the length of the room. "
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to hall_01 descr "Inside the Barbarians Hall<br/>";
+west to hall_01 descr "Inside the Barbarians' Hall<br/>";
 east to hall_03 descr "Inside the Hall<br/>";
 end
 
@@ -434,14 +414,14 @@ hall_03
 names {"barbarian hallway"}
 title "Inside the Hall"
 descr
-"Immediately to the east the large Guildmasters table dominates the hall. 
+"Immediately to the east the large Guildmaster's table dominates the hall. 
 It is clear that whoever holds that position commands the attention of not 
 only those in this guild, but also of powerful leaders both far and wide. 
 The reputation of the Barbarians as fierce warriors has granted them 
 significant leverage in negotiations of all forms. Far to the west, the 
 entry doors of the hall can be seen. "
 extra {"floor","wood","beams"}
-"The structure is made of large sturdy beans of rough-hewn oak. 
+"The structure is made of large sturdy beams of rough-hewn oak. 
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
@@ -449,28 +429,28 @@ extra {"table","food"}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-west to hall_02 descr "Guildmasters Table<br/>";
-east to hall_04 descr "Inside the Hall<br/>";
+west to hall_02 descr "Inside the Hall<br/>";
+east to hall_04 descr "Guildmaster's Table<br/>";
 end
 
 hall_04
 names {"guildmasters table"}
 title "The Guildmaster's Table"
 descr
-"Hilka, Master of Barbarians sits here behind a massive oaken table. 
+"Hilka, Master of Barbarians, sits here behind a massive oaken table. 
 A range of armaments adorn the table, as well as gifts of both food 
 and armors from across the lands. Alcoves can be seen to both the 
 north and south. A large ladder leading up to the loft rests in one 
 corner, while another heading down to the armory and training grounds 
 can be made out in the other. There is a small sign on the table. "
 extra {"floor","wood","beams"}
-"The structure is made of large sturdy beans of rough-hewn oak. 
+"The structure is made of large sturdy beams of rough-hewn oak. 
 The room is open, and the floor worn from use. Beams overhead seem 
 more than strong enough to support the roof and its heavy seasonal snows. "
 extra {"table","food"}
 "Here the guildmaster's table dominates the space. Best approach carefully. "
 extra {"small sign","sign"}
-"This is the great hall of the Barbarians Guild. <br/><pre>
+"This is the great hall of the Barbarians' Guild. <br/><pre>
 	'join'           - join this guild (if you qualify!).
 	'title'          - changes your title to a new and better one.
 	'worship'        - ... 
@@ -483,7 +463,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
 west to hall_03 descr "Inside the Hall<br/>";
-up to loft_04 descr "The Barbarians Loft<br/>";
+up to loft_04 descr "The Barbarians' Loft<br/>";
 down to train_04 descr "The Training Hall<br/>";
 north to hall_n descr "Northern Alcove<br/>";
 south to hall_s descr "Southern Alcove<br/>";
@@ -495,14 +475,12 @@ title "The Southern Alcove"
 descr
 "The southern alcove is filled with smoke, and appears to primarily be a social space.
 There are plentiful seating options and many of the comforts expected to support the Barbarians 
-returning from their many adventures. The Guildmasters table dominates the space 
+returning from their many adventures. The Guildmaster's table dominates the space 
 to the north. "
-extra {"extra"}
-"This is an extra.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-north to hall_04 descr "Guildmasters Table<br/>";
+north to hall_04 descr "Guildmaster's Table<br/>";
 end
 
 hall_n
@@ -521,7 +499,7 @@ separation between Raz and the Barbarians.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-south to hall_04 descr "Guildmasters Table<br/>";
+south to hall_04 descr "Guildmaster's Table<br/>";
 end
 
 train_02
@@ -532,12 +510,10 @@ descr
 A mural dominates one wall, that of a large bloodshot eye. This must 
 be where the Barbarians train in their infamous skills. The tools of training 
 line the room, and are stacked in corners."
-extra {"extra"}
-"This is an extra.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
-east to train_03 descr "South Descr<br/>";
+east to train_03 descr "Hallway of Legends<br/>";
 end
 
 train_03
@@ -549,7 +525,7 @@ gone by. Upon the north wall, the continued imagery of the masters past of
 this historic guild of barbarians. On the south wall, those adventurers and 
 legends who have earned their positions in the lore of the guild through prowess 
 in battle."
-extra {"legends"}
+extra {"murals", "mural", "legends"}
 "The mural depicts great battles featuring some of the most feared warriors to 
 have stalked these halls. The great warrior Issa is depicted with his mighty 
 hammer, conquering Deresh Karany.<br/>"
@@ -569,8 +545,6 @@ descr
 gone by. Upon the east wall, ancient imagery of the masters past of 
 this historic guild of barbarians. To the south lies a small alcove, and to 
 the north, the fabled Armory of the Barbarians. "
-extra {"extra"}
-"This is an extra.<br/>"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -584,11 +558,10 @@ train_s
 names {"south alcove"}
 title "The Southern Alcove"
 descr
-"The southern alcove relatively quiet, and is deeper than first glance indicated. 
+"The southern alcove is relatively quiet, and is deeper than first glance indicated. 
 In the shadowed recess at the back of the alcove, a few well-used cots lie neatly  
 made. It appears that the barbarians weary of their training and adventures use this 
-space to rest and recouperate.
-to the north. "
+space to rest and recuperate. "
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT, UNIT_FL_SACRED}
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -600,7 +573,7 @@ names {"weapons"}
 title "The Armory"
 descr
 "The Armory of the Barbarians is very much as you would expect it to be. Weapons 
-ranging from massive cudgels and hammers, to small and sharp stilleto daggers can 
+ranging from massive cudgels and hammers, to small and sharp stiletto daggers can 
 be found in every visible space. Faeld the long-serving weaponmaster has more than 
 earned the spot here. Countless barbarians have faced their enemies with 
 knowledge shared in this very room, that which helped them survive."
@@ -618,12 +591,12 @@ title "Hall of Strength"
 descr
 "The loft ends here, in the Hall of Strength. In the center of the room a large 
 brazier burns with an eerily red flame. Despite the large fire, the room feels 
-no warmer than any of the others in the Barbarian's hall. Suspended above the 
+no warmer than any of the others in the Barbarians' hall. Suspended above the 
 flames, seemingly hanging in mid-air, the bloodshot eye of the guild seems to 
 look directly at you, as you move about the space. The only exit is returning 
 to the East."
 extra {"brazier"}
-"The barzier glows with a large flame, casting an eery red light flickering across 
+"The brazier glows with a large flame, casting an eerie red light flickering across 
 the room.<br/>"
 extra {"bloodshot eye","eye"}
 "The eye seems to follow you as you move about the space. It feels as if the eye 
@@ -655,7 +628,7 @@ loft_04
 names {"hall of strength"}
 title "Hall of Strength"
 descr
-"Here in the Barbarians loft, the Hall of Strength leads at its far end to 
+"Here in the Barbarians' loft, the Hall of Strength leads at its far end to 
 the glowing brazier, that even here casts its red glow. Between here and 
 there, the walls are lined with the feats of strength that form the narrative 
 history of the guild. Great warriors past and present are represented. On the 
@@ -668,7 +641,7 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 ALWAYS_LIGHT
 west to loft_03 descr "Hall of Strength<br/>";
-down to hall_04 descr "Guildmasters Table<br/>";
+down to hall_04 descr "Guildmaster's Table<br/>";
 end
 
 %mobiles
@@ -699,7 +672,7 @@ end
 hilka
 names {"hilka","guild master","master","chief","barbarian"}
 title "Hilka"
-descr "Hilka the Bold, Chief of the Barbarians is here."
+descr "Hilka the Bold, Chief of the Barbarians, is here."
 extra {}
 "Hilka may be the largest human woman you have ever seen. A deep smouldering 
 look looms from bright red eyes, as if she is unable to let go of the rage her 
@@ -730,8 +703,8 @@ dilcopy SetTitles@guilds(GUILD_BARBARIAN,
 dilcopy Specialize@guilds(GUILD_BARBARIAN, "alespec@barbarian",
     { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
       "say Once you commit this process will alter your body permanently.",
-      "say I'll give you a mug of black ale. Once you cosume it the change will occur.",
-      "say Remember, this will only work for those who have been fighters and never specialzied.",
+      "say I'll give you a mug of black ale. Once you consume it the change will occur.",
+      "say Remember, this will only work for those who have been fighters and never specialized.",
       "::$3n hands you a mug of black ale.::$3n hands a mug of black ale to $1n."});
 
 dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_ENTRY, 
@@ -739,7 +712,7 @@ dilcopy MasterJoin@guilds(GUILD_BARBARIAN, GUILD_BARBARIAN_EXCL, QUEST_ENTRY,
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say Barbarians don't accept people of faith."},
  {"say To join $1N, you must prove yourself worthy by completing the Barbarian quest.","say Go speak with Raz."},
- {"handshake $1N", "say Welcome to the Barbarian's Guild, $1N."});
+ {"handshake $1N", "say Welcome to the Barbarians' Guild, $1N."});
 
 
 /* Barbarian Master DIL - gives out the Bloody Gauntlets. */
@@ -767,7 +740,7 @@ code
 		{
 			if (BARBARIAN_ITEM in pc.quests)
 			{
-				exec("say Well, if it isnt "+pc.name+". Back for more handouts I presume?",self);pause;
+				exec("say Well, if it isn't "+pc.name+". Back for more handouts I presume?",self);pause;
 				exec("sigh",self);
 				pause;
 				exec("say I think you managed to lose your Bloody Gauntlets and are here "+
@@ -798,13 +771,13 @@ code
 				unsecure(pc);
 				goto start;
 			}
-			exec("say Greetings "+pc.name+", I had heard you were approaching the Barbarians hall.",self);
+			exec("say Greetings "+pc.name+", I had heard you were approaching the Barbarians' hall.",self);
 			pause;
-			exec("say I know you are learning the ways of the Barbarian",self);
+			exec("say I know you are learning the ways of the Barbarian.",self);
 			pause;
 			exec("say The life we live is perilous... and not without discomfort.",self);
 			pause;
-			exec("say I wont bandy words - it will take sweat and blood to master our profession.",self);
+			exec("say I won't bandy words - it will take sweat and blood to master our profession.",self);
 			pause;
 			exec("say Even the strongest have faltered on this path. ",self);
 			pause;
@@ -837,7 +810,7 @@ code
 	{
         unsecure(pc);
         pause;
-        exec ("say Well then, lets not overdo this "+
+        exec ("say Well then, let's not overdo this "+
 			"thing, shall we?", self);
         goto start;
 	}
@@ -879,7 +852,7 @@ code
 		{
 			heartbeat := PULSE_SEC * 7;
 			exec("say Aaah, yes!",self);
-			exec("say I dont relish this ceremony...",self);
+			exec("say I don't relish this ceremony...",self);
 			pause;
 			exec("emote grabs a pair of gauntlets from the table.",self);
 			pause;
@@ -887,7 +860,7 @@ code
 			exec("drink bowl",self);
 			destroy(gift);
 			exec("grimace",self);
-			act("Hilka's eye lids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ALL);
+			act("Hilka's eyelids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ALL);
 			act("You recoil at the sight of two <div class='cr'>blood-red</div> orbs where her eyes were.",A_SOMEONE, pc, null, null, TO_ALL);	
 			pause;
 			exec("scream",self);
@@ -903,7 +876,7 @@ code
 		}
 		else
 		{
-			exec("say This is not what I asked for..",self);pause;
+			exec("say This is not what I asked for...",self);pause;
 			exec("emote tosses "+gift.title+" away onto the table.",self);
 			pause;
 		}
@@ -1027,9 +1000,9 @@ dilcopy shopkeeper@function(
    "$1n smiles and says, 'Not here, $3n, not even from you.'",
    "$1n exclaims, 'No credit here, $3n!'",
    "$1n exclaims, 'I should have $2N in my bag!'",
-   "$1n says, 'I assume we dont need to sign this deal in blood, $3n.'",
+   "$1n says, 'I assume we don't need to sign this deal in blood, $3n.'",
    "$1n sighs and says, 'Alas, $3n, I can't afford that.'",
-   "$1n asks, 'It will have to be later.'" },
+   "$1n says, 'It will have to be later.'" },
 {},"",100,50,10*PLATINUM_MULT,"",""
 );
 dilcopy nokill@barbarian();
@@ -1066,7 +1039,7 @@ code
 
 	pc := qstWaitHero@quests(QUEST_ENTRY, activator, 
 		{"look $1N",
-		"say To join the Barbarian's guild you have to prove your raw instincts.",
+		"say To join the Barbarians' guild you have to prove your raw instincts.",
       "say We require that you kill an arctic wolf with your bare hands wearing nothing but a loin cloth.",
       "say Are you up for the challenge, $1n?"}, "", "");
 
@@ -1098,19 +1071,19 @@ damage that is similar to a poison, though it sends endurance to the wearer. */
 bloody_gauntlet
 names {"bloody gauntlets","gauntlets"}
 title "Bloody Gauntlets"
-descr "A pair of gauntlets lie in a small pool of blood."
+descr "A pair of gauntlets lies in a small pool of blood."
 extra {}
-"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+"A heavy pair of gauntlets, it isn't immediately clear where the blood 
 on them is coming from. An inscription can be seen along the cuff, which 
 appears to glow a deep red. It's not clear what kind of alloy these are 
 made from, though you suspect they could be magical in nature. 
-You recognise the number '10' among the inscripted runes. "
+You recognise the number '10' among the inscribed runes. "
 extra {"inscription","inscriptions","runes"}
 "The inscriptions seem to form an enchantment for the wearer and grant 
 them the ability to draw energy from their opponent in combat.<br/>
 Simply grip your weapon to activate the gauntlets. <br/>"
 extra {"$identify"}
-"The Bloody Gauntlets improve your strength, and as well as your
+"The Bloody Gauntlets improve your strength as well as your
 health. When your weapon is gripped, it summons the power of the Barbarians to 
 draw energy from your opponent, tainting their blood.<br/>"
 extra {"$improved identify"}
@@ -1145,11 +1118,11 @@ code
 		pwr := pwr + 1;
 	self.extra.["$power"].descr := itoa(pwr);
 	self.extra.[0].descr :=
-		"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+		"A heavy pair of gauntlets, it isn't immediately clear where the blood 
 		on them is coming from. An inscription can be seen along the cuff, which 
 		appears to glow a deep red. It's not clear what kind of alloy these are 
 		made from, though you suspect they could be magical in nature. 
-		You recognise the number '"+itoa(pwr)+"' among the inscripted runes. ";
+		You recognise the number '"+itoa(pwr)+"' among the inscribed runes. ";
 	goto start;
 }
 dilend
@@ -1186,7 +1159,7 @@ code
 	arg := getword(argument);	
 	if (arg == "")
 	{
-		act("You must grip your weapon to active the power!",A_ALWAYS, self.outside, null, null, TO_CHAR);
+		act("You must grip your weapon to activate the power!",A_ALWAYS, self.outside, null, null, TO_CHAR);
 		goto start;
 	}
 	enemy:=self.outside.fighting;
@@ -1215,11 +1188,11 @@ code
 	pwr:=pwr-1;
 	self.extra.["$power"].descr := itoa(pwr);
 	self.extra.[0].descr :=
-		"A heavy pair of gauntlets, it isnt immediately clear where the blood 
+		"A heavy pair of gauntlets, it isn't immediately clear where the blood 
 		on them is coming from. An inscription can be seen along the cuff, which 
 		appears to glow a deep red. It's not clear what kind of alloy these are 
 		made from, though you suspect they could be magical in nature. 
-		You recognise the number '"+itoa(pwr)+"' among the inscripted runes. ";
+		You recognise the number '"+itoa(pwr)+"' among the inscribed runes. ";
 	act ("You grip your $2n and concentrate on the blood of battle..."
 		, A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act ("Blood gushes out from your gauntlets and bathes your " + weap.name + "!"
@@ -1334,7 +1307,7 @@ end
 
 hilka_mattock
 names {"ancient war mattock","ancient mattock","war mattock","mattock"}
-title "ancient war mattock"
+title "an ancient war mattock"
 descr
 "This well-worn war mattock bears the markings of luxury, beneath
 significant wear. Portions of the hammer head show a deeply aged patina,
@@ -1408,7 +1381,7 @@ end
 
 alespec
 names {"mug of black ale","mug", "black ale", "ale"}
-title "a mug of ale"
+title "a mug of black ale"
 descr "A wooden mug stands here."
 extra {}
 "A large, wooden mug."
@@ -1418,19 +1391,19 @@ cost 3 IRON_PIECE
 dilcopy Transform@guilds(PROFESSION_FIGHTER, PROFESSION_BARBARIAN, 
    {"::The black ale flows down your throat.::",
     "::You get a warm feeling.::",
-    "::You muscles tense up::",
+    "::Your muscles tense up.::",
     "::You're now a Barbarian::"});
 end
 
 barb_bracer
 names {"barbarians bracers", "bracers"}
 title "a barbarian's bracers"
-descr "A pair of hard leather bracers lie here."
+descr "A pair of hard leather bracers lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 ARMOUR_HRD_LEATHER(BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 2,2
 weight 6
 extra {}
-"This fine pair of hard leather bracers has a bloodshot eye inscribed each wrist."
+"This fine pair of hard leather bracers has a bloodshot eye inscribed on each wrist."
 end
 
 barb_cloth
@@ -1459,14 +1432,14 @@ end
 hilka_bracer
 names {"hilkas bracers", "bracers"}
 title "fine leather bracers"
-descr "A fine pair of hard leather bracers lie here."
+descr "A fine pair of hard leather bracers lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 ARMOUR_HRD_LEATHER(BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
 weight 6
 extra {}
 "These bracers show hard wear, and fine craftsmanship. The mistress of the
 Barbarians has clearly earned these well crafted bracers. Tellingly, they bear
-they symbol of a bloodshot eye inscribed on each wrist."
+the symbol of a bloodshot eye inscribed on each wrist."
 end
 
 hilka_cloth

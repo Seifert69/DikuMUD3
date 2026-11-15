@@ -104,12 +104,12 @@ code
       exec("say That's it, "+pc.name+", thy time is up!",self);
       pc.hp := 0;
       pc.endurance := 0;
-      exec("emote cast a spell that drains your lives energy.",self);
+      exec("emote casts a spell that drains your life energy.",self);
       act("Two paladin guards appear and grab $1n and drag $1m out of the Guild, dumping "+
       "$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
       room := findroom("cth_square1@midgaard");
       link(pc,room);
-      act("Two paladin guards emerge from the Guild halls, dragging $1n"+
+      act("Two paladin guards emerge from the Guild halls, dragging $1n "+
       "between them and dump $1m unceremoniously on the street.", A_SOMEONE,pc,self,null,TO_REST);
       goto gone;
    }
@@ -210,10 +210,10 @@ code
       A_SOMEONE, pc, self, null, TO_REST);
    pc.hp := 0;
 
-   act("You can feel yourself being dragged away as you slip into the "+
+   act("You can feel yourself being dragged away as you slip into "+
       "unconsciousness.",A_SOMEONE, pc, self, null, TO_CHAR);
    position_update(pc);
-   act("Two of the guards grab $1n and drag him out of the Guild, dumping "+
+   act("Two of the guards grab $1n and drag $1m out of the Guild, dumping "+
       "$1m in the streets.",A_SOMEONE, pc, self, null, TO_REST);
    room := findroom("cth_square7@midgaard");
    link(pc,room);
@@ -263,7 +263,7 @@ dilend
 
                         mon_yard
 names {"monastery yard", "paladin yard", "yard"}
-title "The monastery Yard"
+title "The Monastery Yard"
 descr
 "     You have stepped into the walled-in yard of the Holy Knights of
 Midgaard, the Paladins.  The sturdy stone walls surrounding this well-tended
@@ -271,14 +271,14 @@ yard are broken by high archways leading in each direction. To the east,
 through the raised portcullises, you can see the Cathedral square. Placed in
 the center of the courtyard is a large statue of a man struck down in battle."
 extra {"archways", "archway", "walls"}
-"Archways lie in the middle of each of wall of the courtyard, providing exits
+"Archways lie in the middle of each wall of the courtyard, providing exits
 to the north, south, east and west."
 extra {"great statue","statue", "man"}
 "The statue depicts an older man, regal in stance, smiling as he dies from
 deep wounds clawed through his armor. There is a plaque at the base of the
 statue."
-extra {"plague at the base","plaque", "base"}
-"The plaque reads: 'Our holy lord, Founder of Midgaard, the Matyr King
+extra {"plaque at the base","plaque", "base"}
+"The plaque reads: 'Our holy lord, Founder of Midgaard, the Martyr King
 Cromwell.'"
 movement SECT_INSIDE
 flags {UNIT_FL_NO_TELEPORT}
@@ -327,14 +327,14 @@ was brooding. Her eldest son, Ancalador, began to raise a huge<br/>
 army... through his mind control, he managed to dominate the<br/>
 goblins, and hobgoblins and trolls, and even some of the dark<br/>
 and mysterious Drow elves. With his brothers and sisters (fierce<br/>
-dragons all, but fortunately, none with the magical prowress of<br/>
+dragons all, but fortunately, none with the magical prowess of<br/>
 Ancalador), this huge army descended from the mountain, raining<br/>
-fire and ice upon the homes of the halfings and gnomes.<br/><br/><br/>
+fire and ice upon the homes of the halflings and gnomes.<br/><br/><br/>
 <br/>
-Many of the halfings and gnomes chose to hide in burrows deep in<br/>
+Many of the halflings and gnomes chose to hide in burrows deep in<br/>
 the ground while the dragons destroyed all that lived above.<br/>
 Others, caught in the outside and forced into acts of bravery,<br/>
-fled toward Urland. There lived in Urland one of the noblest and<br/>
+fled toward Urland. There lived in Urland one of the noblest and most<br/>
 respected of the Church Knights under Cromwell.  After advancing<br/>
 considerably in his years (almost as old as good Cromwell himself),<br/>
 Sir Gehron had retired to the small village of Urland to ensure<br/>
@@ -346,10 +346,10 @@ and took up the position as general of the army.<br/><br/><br/>
 <br/>
 King Cromwell, although nearly a hundred years in age, was<br/>
 still the favored of the gods, and what he might have lacked<br/>
-then in strength and stature, he more then made up for in<br/>
+then in strength and stature, he more than made up for in<br/>
 judgement and divine luck. He immediately mobilized his troops<br/>
 and sent Knights to warn the dwarven king. With a large<br/>
-contingent of his Holy Knights and many great heros of the<br/>
+contingent of his Holy Knights and many great heroes of the<br/>
 Kingdom, Cromwell set out to meet the invading army in Urland.<br/><br/><br/>
 <br/>
 By the time this combined force of humans and dwarves arrived<br/>
@@ -390,7 +390,7 @@ Gehron, tears streaming from his eyes, agreed, and said goodbye<br/>
 to the one king that he loved so much.<br/><br/><br/>
 <br/>
 It is said in the Books of the Ages, that the Gods themselves<br/>
-descended from the heavens and rode along side the king in his<br/>
+descended from the heavens and rode alongside the king in his<br/>
 final charge, for they loved that one more than anyone can imagine.<br/>
 It is said that valiant Cromwell, in one last act of defiance,<br/>
 raised his sword and charged.  Unearthly light appeared all about<br/>
@@ -423,13 +423,13 @@ At the sight of the death of King Cromwell, beloved by all, the<br/>
 world itself shook and wept. Thorigorn ripped his beard from<br/>
 his face in grief, and the great armies of men and dwarves<br/>
 were heartbroken. The gods, in their great sorrow, carried the<br/>
-body of the Cromwell out to sea, where a mighty island arose<br/>
+body of Cromwell out to sea, where a mighty island arose<br/>
 from the Torsbay to serve as his tomb.<br/><br/><br/>
 <br/>
 And yet that tale, the tale of King Cromwell, the Martyr King,<br/>
 sacrificing himself to allow his troops to fall back and regroup,<br/>
-would become the rallying cry of the Great Heros of the War. But<br/>
-story of the Great Heros, and of the defeat of Ancalador, is one<br/>
+would become the rallying cry of the Great Heroes of the War. But the<br/>
+story of the Great Heroes, and of the defeat of Ancalador, is one<br/>
 for another telling.</pre>"
 
 movement SECT_INSIDE
@@ -553,8 +553,8 @@ names {"gehron's shrine", "shrine", "gehron"}
 title "The Shrine to Gehron"
 descr
 "     The marble walls of this holy shrine stretch up above you into a dome
-of stained glass. There is a peace an solitude that surrounds this place like
-none you have ever felt before. A wide archway leads to east to the great
+of stained glass. There is a peace and solitude that surrounds this place like
+none you have ever felt before. A wide archway leads east to the great
 mustering hall, and a set of marble stairs descend down into the darkness.
 Set in the middle of the shrine is a massive sarcophagus carved from a single
 block of snow white marble. There is an inscription on the tomb."
@@ -562,7 +562,7 @@ extra {"stained glass dome","glass"}
 "The magnificent stained glass that forms the dome of this shrine depicts
 great victories by holy knights against dragons and goblins, each panel
 representing a battle in the Great War. Many of the Paladins, their wounds
-gushing red glass, seem to be smiling as the die. At the peak of the dome, in
+gushing red glass, seem to be smiling as they die. At the peak of the dome, in
 a central panel, the one-eyed countenance of Odin ponders thoughtfully."
 extra {"marble stairs","stairs"}
 "The stairs descend down under the shrine, perhaps to some kind of sub-
@@ -586,7 +586,7 @@ title "The Holy Meditation Chamber"
 descr
 "     At the bottom of these marble stairs lies an amazing chamber... you
 suspect part of the original Holy Order monastery before the sacking of
-Midgaard in the Great War. The stone of the walls are of a different color
+Midgaard in the Great War. The stone of the walls is of a different color
 than the structure above. You shudder as you think that the broken stained
 glass windows stretching from the floor to ceiling once looked out on a
 different Midgaard, one that would be destroyed - now they look out on
@@ -595,7 +595,7 @@ off somber shadows in every direction. You have a feeling of sorrow, but
 also of sacredness.<br/>
 A small scroll is fastened to the wall here, with a message to all visitors."
 extra {"small scroll","scroll"}
-"<pre>The small scrolls reads in a clear and tidy script:<br/>
+"<pre>The small scroll reads in a clear and tidy script:<br/>
 <br/>
 			- Greetings, Visitor -<br/>
 <br/>
@@ -607,7 +607,7 @@ extra {"small scroll","scroll"}
    'worship'        - ... 
 <br/>
 	Speak to me, Reignier, if your faith is weak and your path<br/>
-	pain full. I can provide you with the holy weapon of the<br/>
+	painful. I can provide you with the holy weapon of the<br/>
 	Paladins, as well as the symbol to recognize you as one.<br/>
 <br/>
 	  Greet me with a bow or a worship when you are near.<br/>
@@ -777,7 +777,7 @@ code
    pause;
    if (PALADIN_SWORD in pc.quests)
    {
-   exec("say What brings you hither, "+pc.name+" and how does your weapon "+
+   exec("say What brings you hither, "+pc.name+", and how does your weapon "+
    "serve you?",self);pause;
    exec("say Is the light of the blade making you proud and fierce?",self);
    pause;
@@ -823,8 +823,8 @@ code
    exec("say I have received a great gift from our fathers above, a replica "+
    "of the sword used by King Cromwell in the last minutes of his life.",
    self); pause;
-   exec("say Without his sacrifice only the gods know where we would be
-   today.", self);
+   exec("say Without his sacrifice only the gods know where we would be "+
+   "today.", self);
    pause;
    exec("say The sword is a bastard sword, you can wield it in one,"+
    " or in both hands, as you please.", self);
@@ -851,10 +851,10 @@ code
    addextra(pc.quests, {PALADIN_SWORD}, "");
    pause;
       :cu:
-   exec("say I hope to see you again soon, our guild's strength is
-   returning.", self);
+   exec("say I hope to see you again soon, our guild's strength is "+
+   "returning.", self);
    pause;
-   exec("say Our faithfulness and prayers has touched the gods above.", self);
+   exec("say Our faithfulness and prayers have touched the gods above.", self);
    pause;
    exec("say Only they know the gifts that lie ahead in our paths.", self);
    pause;
@@ -867,8 +867,8 @@ code
          {
             block;
          exec ("say You have strayed from the path of our order. I will "+
-               "not allow your worthless soul worship me. Go until you have
-   purified yourself.", self);
+               "not allow your worthless soul to worship me. Go until you have "+
+   "purified yourself.", self);
          unsecure(pc);
          goto start;
          }
@@ -947,7 +947,7 @@ code
    exec("say I hope to see you again soon, our guild's strength is returning."
    ,self);
    pause;
-   exec("say Our faithfulness and prayers has touched the gods above.", self);
+   exec("say Our faithfulness and prayers have touched the gods above.", self);
    pause;
    exec("say Only they know the gifts that lie ahead in our paths.", self);
    pause;
@@ -962,8 +962,8 @@ dilend
 
 dilcopy SetTitles@guilds(GUILD_PALADIN, { "Converted", "Converted",
 "Dedicated", "Dedicated", "Pure", "Pure", "Redeemed", "Redeemed",
-"Hero of the Narrow Path", "Heroine of the Narrow Path", "Annointed Knight",
-"Annointed Knight", "Blessed Knight", "Blessed Knight", "Holy Knight",
+"Hero of the Narrow Path", "Heroine of the Narrow Path", "Anointed Knight",
+"Anointed Knight", "Blessed Knight", "Blessed Knight", "Holy Knight",
 "Holy Knight", "Hero of Midgaard", "Heroine of Midgaard",
 "Protector of the Realm", "Protector of the Realm", "Defender of the Faith",
 "Defender of the Faith", "Champion of Truth", "Champion of Truth",
@@ -982,7 +982,7 @@ title "Sir Edmund"
 descr
 "Sir Edmund, the keeper of the Holy Armory, stands guard outside the gates."
 extra {}
-"You have heard that only the bravest and stronget warrior of the Holy Order
+"You have heard that only the bravest and strongest warrior of the Holy Order
 is selected to guard the Armory. Looking at Edmund, you have no doubt that
 rumor to be true. You wonder if you could pick up some pointers on technique
 from this great hero."
@@ -1065,7 +1065,7 @@ dilcopy BlockEvilTrain@paladin_guild();
 #undef _ABILITY
 
 dilcopy qstSimpleQuest@quests(QUEST_PALADIN_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of the Frozen Shade from the Fourth Plane of Hades."},
          {"say Excellent! Best of luck, $1N."},
          "Joan in the Paladin's Guild has asked you to bring her the head of the Frozen Shade from the Fourth Plane of Hades.",
@@ -1123,7 +1123,7 @@ title  "a heavy chain flail"
 descr
 "A heavy chain flail lies abandoned on the ground."
 extra {}
-"This is one of those really big flails used by footman in the armies of
+"This is one of those really big flails used by footmen in the armies of
 Midgaard. It looks like it could cave in a skull."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 type ITEM_WEAPON
@@ -1161,7 +1161,7 @@ descr "A heavy plate hauberk of fine steel lies here."
 extra {}
 "The well-polished steel shines brightly, showing signs of loving care.
 The plate is elegantly crafted, offering maximum protection with minimum
-encumberance."
+encumbrance."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
 ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 30
@@ -1177,7 +1177,7 @@ descr "A pair of plated chausses shines brightly here."
 extra {}
 "The well-polished steel shines brightly, showing signs of loving care.
 The chausses are elegantly crafted, offering maximum protection with minimum
-encumberance. A short chainmail shirt provides added protection to the
+encumbrance. A short chainmail shirt provides added protection to the
 groin area."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_LEGS}
 ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -1194,7 +1194,7 @@ descr "A pair of plated vambracers shines brightly here."
 extra {}
 "The well-polished steel shines brightly, showing signs of loving care.
 The vambracers are carefully crafted, offering maximum protection with
-minimum encumberance."
+minimum encumbrance."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ARMS}
 ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 15
@@ -1225,8 +1225,8 @@ title "plated sorelets"
 descr "A pair of plated sorelets stands here."
 extra {}
 "The well-polished steel shines brightly, showing signs of loving care.
-Altough heavy and rather uncomfortable, those sorelets will provide the
-best protection to your feet in combats. Don't leave home without them."
+Although heavy and rather uncomfortable, those sorelets will provide the
+best protection to your feet in combat. Don't leave home without them."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
 ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
@@ -1259,7 +1259,7 @@ title "a white cape"
 descr "A white cape lies here in a heap."
 extra {}
 "The cape is thick and soft, the bright colour inspiring hope and
-happiness. You admire the incredable craftmanship of this cloth."
+happiness. You admire the incredible craftsmanship of this cloth."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
@@ -1277,7 +1277,7 @@ names {"Flame Tongue","tongue","sword","bastard","blade","flame"}
 title "the Flame Tongue"
 descr "A beautifully crafted bastard sword lies on the ground."
 extra {}
-"This long sword is of exquisite craftmanship. The handle is shaped in
+"This long sword is of exquisite craftsmanship. The handle is shaped in
 the image of a fiery dragon, its wings forming the handguard and the
 blade created in the image of flames spewing forth from its jaws. The
 wavy blade of the weapon is beautifully crafted and shines with a slight,
@@ -1285,25 +1285,25 @@ red glow. You notice that the handle is long enough for both single and
 two-handed use. The word <div class='cpr'>'Faith!'</div><div class='cw'> is carved into the blade.</div>"
 extra {"handle of the Flame Tongue","handle","dragon","handguard"}
 "The handle is crafted from what seems like ivory. The slender body of
-the dragon streches forth, spewing the blade like a flame, its wings
+the dragon stretches forth, spewing the blade like a flame, its wings
 protecting your hand. You can grip the handle with both hands, by typing
 'wield sword two'.<br/>"
 extra {"$identify"}
 "You concentrate on the Flame Tongue and reveal that this weapon is
 strictly reserved for Paladins. You can wield it two-handedly as a
-great sword by typing 'wield Tongue two'. By incanating the word
-</div><div class='cpr'>'Faith!'</div><div class='cw'> you can call upon the hidden powers of the sword.<br/></div>"
+great sword by typing 'wield Tongue two'. By incanting the word
+<div class='cpr'>'Faith!'</div><div class='cw'> you can call upon the hidden powers of the sword.<br/></div>"
 extra {"$improved identify"}
 "The sword can offer you a blessing if you are pious enough.<br/>
-The blade is of good craftmanship and bears a magic bonus.<br/>"
+The blade is of good craftsmanship and bears a magic bonus.<br/>"
 extra {"$wear_s"}
 "Your $2N starts to glow as you wrap your hands around its hilt."
 extra {"$wear_o"}
 "$1n's $2N starts to glow as $1e wraps $1s hands around its hilt."
 extra {"$rem_s"}
-"You sheat your $2N... The glow from the blade subsides."
+"You sheathe your $2N... The glow from the blade subsides."
 extra {"$rem_o"}
-"As $1n sheats $1s $2N, the glow from its blade subsides."
+"As $1n sheathes $1s $2N, the glow from its blade subsides."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -1363,7 +1363,7 @@ act("$1n's slash leaves a fiery trail through the air!"
 }
 if (random < 20)
 {
-act("Your $2N flickers and burst into flames, burning $3n!"
+act("Your $2N flickers and bursts into flames, burning $3n!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n howls in pain!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$1n's $2N flickers and bursts into flames, burning $3n!"
@@ -1383,16 +1383,16 @@ act("Fire flickers along the edge of $1n's $2N!"
 }
 else if (random < 40)
 {
-act("Blade of your $2N flashes in a blinding flame!"
+act("The blade of your $2N flashes in a blinding flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("Blade of $1n's $2N flashes in a blinding flame!"
+act("The blade of $1n's $2N flashes in a blinding flame!"
 , A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n screams and averts $3s eyes!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("A blinding flash of fire from $1n's $2N causes you to avert your
-eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
+act("A blinding flash of fire from $1n's $2N causes you to avert your "+
+"eyes in pain!" ,A_ALWAYS,self.outside,self,null,TO_VICT); goto start;
 }
 if (random < 50)
 {
@@ -1436,9 +1436,9 @@ code
 heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/6;
 wait (SFB_TICK,(self.equip==WEAR_WIELD));
 heartbeat:=PULSE_SEC*5;
-act ("Soft glow sparkles along the blade of your Flame Tongue...",
+act ("A soft glow sparkles along the blade of your Flame Tongue...",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("Soft glow sparkles along the blade of $1n's Flame Tongue...",
+act ("A soft glow sparkles along the blade of $1n's Flame Tongue...",
 A_ALWAYS,self.outside,self,null,TO_REST);
 sendto ("add charge",self);
 goto start;
@@ -1474,7 +1474,7 @@ if (i < self.outside.abilities[ABIL_DIV])
 {
    act("Your $2N glows brightly in response to your prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-   act("$1N's $2N glows brightly in response to $1n's prayer!",
+   act("$1N's $2N glows brightly in response to $1s prayer!",
    A_ALWAYS,self.outside,self,enemy,TO_REST);
 n:=cast_spell(SPL_BLESS,self.outside,self,self.outside,"");
 pause;
@@ -1508,12 +1508,12 @@ end
 
 	pal_cross
 names {"symbol","amulet"}
-title "Amulet of the Righteous"
+title "the Amulet of the Righteous"
 descr "A small, silver amulet lies here in the dust."
 extra {}
 "A small silver amulet, depicting the runes for 'Righteousness' and
 'Good'. The amulet is the sign of membership of Midgaard Paladins and is
-said to protect the wearers from the perils durning their crusades for good."
+said to protect the wearers from the perils during their crusades for good."
 extra {"runes on the Amulet","runes","rune","sign"}
 "The runes can be read as 'Righteousness' and 'Good'.<br/>"
 extra {"$identify"}
