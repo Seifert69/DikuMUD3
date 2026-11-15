@@ -274,6 +274,7 @@ unit_data *random_unit(unit_data *ref, int sflags, int tflags)
             {
                 if (u->isObj() && OBJ_EQP_POS(u))
                 {
+                    count++;
                     if (number(1, count) == count)
                     {
                         selected = u;

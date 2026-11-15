@@ -587,10 +587,20 @@ unit_data *equipment_type(unit_data *ch, int pos, ubit8 type)
     }
 }
 
+/* Give the wearer ch its copy of the transfer affect af of a worn object */
+void equip_transfer_affect(unit_data *ch, unit_affected_type *af)
+{
+    unit_affected_type newaf = *af;
+
+    assert(af->getID() < 0);
+    newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
+    newaf.setDuration(-1);           /* Permanent until unequip */
+    create_affect(ch, &newaf);
+}
+
 void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
 {
     unit_affected_type *af = nullptr;
-    unit_affected_type newaf;
 
     assert(pos > 0 && obj->isObj() && ch->isChar());
     assert(!equipment(ch, pos));
@@ -603,10 +613,28 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     {
         if (af->getID() < 0) /* It is a transfer affect! */
         {
-            newaf = *af;
-            newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
-            newaf.setDuration(-1);           /* Permanent until unequip */
-            create_affect(ch, &newaf);
+            equip_transfer_affect(ch, af);
+        }
+    }
+}
+
+/* Remove from the wearer ch the copy that equip_char made of the transfer affect af */
+void unequip_transfer_affect(unit_data *ch, unit_affected_type *af)
+{
+    unit_affected_type *caf = nullptr;
+
+    assert(af->getID() < 0);
+
+    for (caf = ch->getUnitAffected(); caf; caf = caf->getNext())
+    {
+        if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
+            (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
+            // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
+            (caf->getApplyFI() == af->getApplyFI()) && (caf->getFirstFI() == af->getFirstFI()) &&
+            (caf->getLastFI() == af->getLastFI()) && (caf->getTickFI() == af->getTickFI()))
+        {
+            destroy_affect(caf);
+            break; /* Only one: each worn object gave its own copy */
         }
     }
 }
@@ -615,7 +643,6 @@ unit_data *unequip_object(unit_data *obj)
 {
     unit_data *ch = nullptr;
     unit_affected_type *af = nullptr;
-    unit_affected_type *caf = nullptr;
 
     ch = obj->getUnitIn();
 
@@ -629,18 +656,7 @@ unit_data *unequip_object(unit_data *obj)
     {
         if (af->getID() < 0) /* It is a transfer affect! */
         {
-            for (caf = ch->getUnitAffected(); caf; caf = caf->getNext())
-            {
-                if ((-caf->getID() == af->getID()) && (caf->getDuration() == -1) && (caf->getDataAtIndex(0) == af->getDataAtIndex(0)) &&
-                    (caf->getDataAtIndex(1) == af->getDataAtIndex(1)) &&
-                    // THIS IS NOT TESTED! (caf->data[2] == af->data[2]) &&
-                    (caf->getApplyFI() == af->getApplyFI()) && (caf->getFirstFI() == af->getFirstFI()) &&
-                    (caf->getLastFI() == af->getLastFI()) && (caf->getTickFI() == af->getTickFI()))
-                {
-                    destroy_affect(caf);
-                    break; /* Skip inner for loop since we found the affect */
-                }
-            }
+            unequip_transfer_affect(ch, af);
         }
     }
 

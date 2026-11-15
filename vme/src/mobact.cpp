@@ -202,6 +202,13 @@ void special_event(void *p1, void *p2)
             {
                 fptr->setHeartBeat(5 * PULSE_SEC);
             }
+
+            // A program in waitnoop has no tick to wake it later: try again on its next beat
+            if (fptr->isActivateOnEventFlagSet(SFB_NOOP))
+            {
+                SetFptrTimer(u, fptr);
+                return;
+            }
         }
     }
 

@@ -54,14 +54,18 @@ void do_save(unit_data *ch, char *arg, const command_info *cmd)
 
 /**
  * @note  This function is also called from DIL  from the dil function reset_race()
+ * @return false, changing nothing, when the race isn't a player race (DIL can set any)
  */
-void race_adjust(unit_data *ch)
+bool race_adjust(unit_data *ch)
 {
     base_race_info_type *sex_race = nullptr;
     race_info_type *my_race = nullptr;
 
     assert(ch->isPC());
-    assert(is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1));
+    if (!is_in(CHAR_RACE(ch), 0, PC_RACE_MAX - 1))
+    {
+        return false;
+    }
 
     my_race = &g_race_info[CHAR_RACE(ch)];
 
@@ -86,6 +90,7 @@ void race_adjust(unit_data *ch)
 
     const auto value = PC_TIME(ch).getPlayerCharacterCreationTime() - years * SECS_PER_MUD_YEAR;
     UPC(ch)->getPCTimeInformation().setPlayerBirthday(value);
+    return true;
 }
 
 /* OBSOLETE. Should only be called when initializing a new player (or rerolling)
