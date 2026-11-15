@@ -5152,6 +5152,28 @@ code
       logtest(tstno, LOGT_ERROR, "T030 spellinfo, moneystring or openroll of a failed value");
       bad := 1;
    }
+   i := 7;
+   i := can_carry(npc, box, nobody.level);
+   j := 7;
+   j := meleeattack(npc, npc, nobody.level, WPN_FIST, TRUE);
+   k := 7;
+   k := attack_spell(SPL_FIREBALL_1, nobody.outside, npc, npc, 0, "");
+   u := box;
+   u := getopponent(npc, nobody.level);
+   s := "kept";
+   s := fits(npc, box, nobody.level);
+   if ((i != 7) or (j != 7) or (k != 7) or (u != box) or (s != ""))
+   {
+      logtest(tstno, LOGT_ERROR, "T030 can_carry, meleeattack, attack_spell, getopponent or fits of a failed value");
+      bad := 1;
+   }
+   u := box;
+   u := getfollower(npc, nobody.level);
+   if (u != box)
+   {
+      logtest(tstno, LOGT_ERROR, "T030 getfollower of a failed value");
+      bad := 1;
+   }
 
    // load: a new unit inside the program's own unit; null for no such unit and for a room
    if ((npc == null) or (not (npc.outside == self)) or (not (npc.nameidx == "experiment")) or

@@ -11,13 +11,14 @@ PW=${PCTEST_PASSWORD:-pctest12}
 MOTHER=$(awk -F= '/^ *[Pp]ort *=/{gsub(/ /,"",$2); print $2; exit}' ../etc/server.cfg)
 NAME=$(awk -F= '/^ *immortal_name *=/{gsub(/[ ~]/,"",$2); print $2; exit}' ../etc/server.cfg)
 
-# The game's own zonelist, without the test zone, and only the zones compiled here (a public clone
-# has no private zones), with diltest.
+# The game's own zonelist with only the zones compiled here (a public clone has no private zones).
+# The test zone is left out in case an interrupted intergration_test.sh left zonelist.test in place.
 cp ../etc/zonelist ../etc/zonelist.pctest-saved
 trap 'mv ../etc/zonelist.pctest-saved ../etc/zonelist; kill $MPLEX $VME 2>/dev/null' EXIT
-awk '/^#/ {print; next} NF {if ($1 != "test" && system("test -f ../zone/" $1 ".data") == 0) print}' \
-    ../etc/zonelist.pctest-saved > ../etc/zonelist
-grep -q '^diltest ' ../etc/zonelist || echo 'diltest 1120tw0008       1 0 255 0' >> ../etc/zonelist
+while read -r z rest; do
+    [[ $z == \#* || ( -n $z && $z != test && -f ../zone/$z.data ) ]] && echo "$z $rest"
+done < ../etc/zonelist.pctest-saved > ../etc/zonelist
+grep -q '^diltest ' ../etc/zonelist || { echo "diltest isn't in zonelist or isn't compiled"; exit 1; }
 
 # A server stopped a moment ago may still hold the mother port
 timeout 60 bash -c "while (echo > /dev/tcp/127.0.0.1/$MOTHER) 2>/dev/null; do sleep 1; done"

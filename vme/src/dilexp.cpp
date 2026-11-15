@@ -1190,6 +1190,9 @@ void dilfe_atsp(dilprg *p)
                         }
                     }
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1538,16 +1541,25 @@ void dilfe_mel(dilprg *p)
                                                                 TRUE);
 								dil_test_secure(p);
 								break;
+							case DILV_FAIL:
+								v->type = DILV_FAIL;
+								break;
 							default:
 								v->type = DILV_ERR;
 								break;
 						}
+                                            break;
+                                        case DILV_FAIL:
+                                            v->type = DILV_FAIL;
                                             break;
                                         default:
                                             v->type = DILV_ERR;
                                             break;
                                     }
 
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -2171,6 +2183,9 @@ void dilfe_gopp(dilprg *p)
                             }
                         }
                         break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
+                        break;
                     default:
                         v->type = DILV_ERR;
                         break;
@@ -2231,6 +2246,9 @@ void dilfe_gfol(dilprg *p)
                                 v->type = DILV_NULL;
                             }
                         }
+                        break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
                         break;
                     default:
                         v->type = DILV_ERR;
@@ -2660,6 +2678,9 @@ void dilfe_cary(dilprg *p)
                                         }
                                     }
                                     break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
+                                    break;
                                 default:
                                     v->type = DILV_ERR;
                                     break;
@@ -2836,6 +2857,9 @@ void dilfe_fits(dilprg *p)
 
                                     v->atyp = DILA_EXP;
                                     v->val.ptr = str_dup(c == nullptr ? "" : c);
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
