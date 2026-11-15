@@ -22,7 +22,7 @@
    `act("$1n picks up a rock.", A_SOMEONE, self.outside, ...)` and `"$1n hurls a rock ..."` with
    `self.outside` (the room) as `$1`, so the other players see the room's name instead of the
    thrower. Probably `pc` was meant. The `wait()` condition also mixes `and`/`or` so the PC check
-   only applies to "get rocks".
+   only applies to "get rocks". First half fixed in step 2; the second is step 2's question 1.
 7. **food** (line 4504): the cook's "hunk o beef" has no `descr`, so it is invisible when dropped
    in a room. Add one (e.g. "A hunk of beef lies here.")?
 8. **gate_e3** (Sven, line 3859): "You get the idea that he has been to visit a fanny recently." In
@@ -30,3 +30,27 @@
 9. **guard1 to guard24**: their `names` include "lieutenant", but their descriptions call them
    ordinary wall guards ("one of the wall guards"); only lieu1 to lieu8 are lieutenants. Drop
    "lieutenant" from the guards' names, or keep it so that "lieutenant" finds any of them?
+
+## Step 2
+
+Fixed in place:
+- **rock** (lines 4452-4479): the five room messages had the room (`self.outside`) as `$1`; now the
+  player (step 1, question 6, first half).
+- **guardschedule** (line 82): the patrol emote read "Speaks with the Guards."; now "speaks with the
+  guards.".
+
+1. **rock** (line 4436): `get` and `"rock"` `or` (`get` and `"rocks"` and a PC): `"rock"` already
+   matches "rocks", so the PC test never matters and an NPC's `get rock` would be caught too (none
+   does today). Meant `command("get") and ("rock" in argument) and (activator.type == UNIT_ST_PC)`?
+   (Step 1, question 6, second half.)
+2. **rock** (line 4432): `on_activation` tests `self.position`, but `self` is the pile of rocks, which
+   has no position, so it never skips. Was it meant to ignore sleeping or fighting players
+   (`activator.position`)?
+3. **guardstep** (line 37): `if (not transfermoney(u, null, 1 * COPPER_MULT))` takes a copper from
+   the guard whenever he has one, and gives him two only when he has none. So a guard with money loses
+   a copper at every meal besides paying for it. Meant as "if he has no money, give him some"? A fix
+   that keeps his purse: `if (transfermoney(u, null, 1 * COPPER_MULT)) j := transfermoney(null, u, 1 *
+   COPPER_MULT); else j := transfermoney(null, u, 2 * COPPER_MULT);`.
+
+### Precedence
+None found.

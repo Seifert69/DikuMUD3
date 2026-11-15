@@ -1661,7 +1661,10 @@ code
   :init:
   buddy:=findunit(self, "commander", FIND_UNIT_SURRO, null);
   if(buddy==null)
-    goto start;
+  {
+    pause;
+    goto init;
+  }
   secure(buddy, nobuddy);
   :start:
   wait(SFB_MSG, activator==buddy);

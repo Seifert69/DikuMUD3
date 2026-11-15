@@ -12,3 +12,16 @@
    but not the open exit south to `dil_room`. Add it to the text?
 4. **hallway** (line 60): the west sign says 'Games Development', but the room west is the
    Conference Room, whose plaque says it is for the Valhalla Times staff. Which is right?
+
+## Step 2
+
+Fixed in place:
+- **shred** (line 223): the holiday card branch didn't test `target == self`, so a card put into any
+  container near the shredder (the player's own bag) was shredded for its experience, and a card made
+  out to someone else was pulled out of the bag. The card says "Place this greeting into the
+  shredder"; now only the shredder takes it.
+
+No new questions.
+
+### Precedence
+None found.
