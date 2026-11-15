@@ -88,8 +88,12 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
 - **`return (null);` doesn't compile** in a `unitptr` function (`return expression not of
   correct type`): return a `unitptr` variable that is null.
-- **`and` / `or` bind tighter than the comparisons**: `a == 1 and b == 2` is
-  `(a == (1 and b)) == 2`. Always bracket each comparison: `(a == 1) and (b == 2)`.
+- **`and` / `or` bind as in C** since #603 (looser than the comparisons, `or` looser than
+  `and`), but `&` and `|` still bind tighter than the comparisons. Zones compiled with an older
+  vmc kept the old meaning (`a == 1 and b == 2` was `(a == (1 and b)) == 2`).
+- **vmc warns** about pointers used after a wait without `secure`, `activator` & co. after a
+  `pause`, unsecured pointers in wait/interrupt conditions, `act()` that reaches nobody and
+  `exec("kill"+name)` (vmc skill, "DIL warnings"): fix them, they are almost always real.
 - **`MEDIA_*` and `TAR_*` from `spelldef.h` can't be used in DIL** (they're written with `<<`,
   a syntax error); `spelldef.h` isn't in `macros.h`, so `SPLCST_*` need
   `#include <spelldef.h>`.
