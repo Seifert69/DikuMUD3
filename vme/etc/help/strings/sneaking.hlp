@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Sneak</h1>
 <p>Skill
 Class: Assassin (guild level 0), Thief (guild level 1), Ranger (guild level 1, up to 75%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>sneak
@@ -13,12 +14,13 @@ sneaks and hides can come and go unseen.
 </p><p>Your skill decides it, with your dexterity and brain. If you fail, you 
 know it: you "make a feeble attempt to move silently", and so do those 
 who watch you. If you succeed, you sneak about unnoticed for a while, 
-longer the better you did. <a cmd='#'>score</a> tells you when you are sneaking.
+longer the better you did. <a cmd='#'>affect</a> tells you when you are sneaking. 
+You can't start sneaking during a fight.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Hide</a>
-&gt; <a cmd='#'>Help Score</a>
+&gt; <a cmd='#'>Help Affect</a>
 &gt; <a cmd='#'>Help Thief Skills</a>
 </pre>
 

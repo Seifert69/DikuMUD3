@@ -1,13 +1,24 @@
 <div class="mw-parser-output"><h1>Pickpockets</h1>
-<p>Usage:
+<p>Skill
+Class: Thief (guild level 0)
+</p><p>Usage:
 </p>
 <pre> pickpocket &lt;target&gt;
 </pre>
 <p>The pickpocket skill enables you to steal money from another living being.
-When you try to pickpocket your pick pocket skill and dexterity and roll is
-compared to the targets pick pocket and brain.  If your pick pocket is 
-successful you still risk that any bystanders see your crime even if the 
-target didn't.
+When you try to pickpocket, your pick pocket skill, dexterity and brain and a
+roll are compared to the target's brain and dexterity (and their own pick
+pocket skill, if they are a player). The better your skill, the bigger the
+handful of coins you take.
+</p><p>A bad failure gets you caught red-handed with nothing to show for it. A
+near miss gets you the coins, but the target sees you take them. Either way
+it is a crime, you lose any invisibility, and the target may attack
+you. A small failure gets you
+nothing, but nobody notices. If your pick pocket is successful you still
+risk that any bystanders see your crime even if the target didn't.
+</p><p>You need at least one hand free, and you can't do it while fighting. You
+can only pick a player's pocket if both of you have signed the book of
+blood (see <a cmd='#'>Help Book of Blood</a>). Practising it needs dexterity 20.
 </p><p>Example:
 </p>
 <pre> &gt; pickpo city guard
@@ -25,6 +36,7 @@ See Also:
 <pre> &gt; <a cmd='#'>Help Stealing</a>
  &gt; <a cmd='#'>Help Filch</a>
  &gt; <a cmd='#'>Help Peek</a>
+ &gt; <a cmd='#'>Help Thief Skills</a>
 </pre>
 
 

@@ -1,19 +1,26 @@
 <div class="mw-parser-output"><h1>Trigger</h1>
-<p>If you're playing DikuMUD with the web-client there is built-in support for 
+<p>If you're playing DikuMUD with the web-client there is built-in support for
 triggers. A trigger is useful for sending commands to the MUD when certain
 text appears on your screen.
 </p><p>Triggers in the web-client are based on Java Script Regular Expressions.They're
-super powerful but they can also be a bit tricky to use. 
+super powerful but they can also be a bit tricky to use.
 Usage:
 </p>
-<pre> trigger &lt;regexp&gt; command
+<pre> trigger                              (lists your triggers)
+ trigger &lt;name&gt; /&lt;regexp&gt;/ &lt;commands&gt;
+ trigger &lt;name&gt;                       (removes the trigger)
 </pre>
-<p>Best with a few examples. Say you want to do whatever the beastly Fido tells you to do.
+<p>The name is one word of up to 12 letters. In the commands, $1 is the text
+caught by the first pair of parentheses in the regexp, $2 by the second, and
+so on; $0 is all the text that matched. Upper and lower case don't matter.
+Several commands can be given, separated by&#160;;. Your triggers are kept with your
+character, up to 25 of them.
+</p><p>Best with a few examples. Say you want to do whatever the beastly Fido tells you to do.
 This command will trigger on the tell from beastly Fido, will extract what the dog
-told you and will execute the command (the $ sign, i.e. the whole string between the
+told you and will execute the command ($1, i.e. the whole string between the
 parenthesis):
 </p>
-<pre> <a cmd='#'>trigger obey /^the Beastly Fido tells you '(.+?)'/ $</a>
+<pre> <a cmd='#'>trigger obey /^the Beastly Fido tells you '(.+?)'/ $1</a>
 </pre>
 <p>Or if maybe, every time one of the city guards leave a room you'd like to say
 "I love the cityguard. Especially when the guard leaves &lt;direction&gt;.". This is
@@ -26,8 +33,10 @@ how to do it:
 <pre> <a cmd='#'>variable friends papi|the cityguard|the beastly fido</a>
  <a cmd='#'>trigger loveit /^(@friends)\sleaves (.+?)\./ say I love it when $1 leaves. Especially when $1 leaves $2.</a>
 </pre>
-<p>This tool <a rel="nofollow" class="external text" href="https://regexr.com/">RegEx Reference</a> can help you design your triggers. Just 
-copy &amp; paste some text from DikuMUD into the text field and begin to write your regular 
+<p>If triggers fire more than five times in a second (two triggers answering each
+other, say), they pause for a second.
+</p><p>This tool <a rel="nofollow" class="external text" href="https://regexr.com/">RegEx Reference</a> can help you design your triggers. Just
+copy &amp; paste some text from DikuMUD into the text field and begin to write your regular
 expression. It's an excellent tool&#160;:-)
 </p><p><br />
 See also:

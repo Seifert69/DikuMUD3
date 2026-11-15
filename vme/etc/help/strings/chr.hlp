@@ -3,11 +3,11 @@
 </p>
 <ul><li><b>Your mana.</b> Your maximum mana grows with your charisma and your brain together (see <a cmd='#'>Help Mana Points</a>).</li>
 <li><b>How fast your mana comes back.</b> When your charisma equals your magic or divine power, whichever is higher, mana returns at the normal rate; more charisma makes it faster, less makes it slower.</li>
-<li><b>Some skills</b> that work on others: soothing a monster and ventriloquism compare your charisma with your target's.</li>
+<li><b>Some skills</b> that work on others: soothing a monster compares your charisma with the monster's, and ventriloquism your brain and charisma with your listener's.</li>
 <li><b>Resisting plague</b>, together with your constitution.</li></ul>
-<p>Some aggressive monsters pick whom to attack by charisma among other 
-abilities. The spell charisma raises it for a while, and the curse spell 
-lowers it.
+<p>Some equipment needs a minimum charisma: without it, the item burns you 
+and you drop it. The spell charisma raises it for a while, and the curse 
+spell lowers it.
 </p><p><br />
 See Also:
 </p>

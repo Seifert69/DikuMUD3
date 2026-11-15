@@ -3,7 +3,8 @@
 </p>
 <pre> assist &lt;character&gt;
 </pre>
-<p>You may help another player in a battle with this command. You may assist someone at any time. You will begin to help fighting.
+<p>You may help another player, or a creature, in a battle with this command. You will begin to fight whoever they are fighting.
+</p><p>They must be fighting already, and you must not be: once you are in a fight yourself, you can't switch to assisting. If they are fighting a player, you can only assist when both you and that player have signed the Book of Blood.
 </p><p><br />
 See Also:
 </p>

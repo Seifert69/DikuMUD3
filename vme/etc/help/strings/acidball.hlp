@@ -1,25 +1,29 @@
 <div class="mw-parser-output"><h1>Acid Ball</h1>
-<p>Sphere: acid sphere
-</p><p>Spell level: 3
-</p><p>Class: Sorcerer
-</p><p>Guild Level: 145
-</p><p><br />
+<p>Sphere: Acid Sphere
+Spell Tier: 3
+Class: Sorcerer (guild level 145, up to 80%)
+Mana: 28
+</p><p>Usage:
 </p>
-<pre> Usage: cast acid ball (target)
+<pre>cast acid ball &lt;target&gt;
+<a cmd='#'>cast acid ball</a>   (at whoever you are fighting)
 </pre>
-<p><br />
-</p><p>This spell causes a compact ball of acid to form before the caster. It is then
-hurled toward the named target or present target in battle to inflict damage
-by acid on any living target. The spell requires the caster to have one hand
-free.
+<p>The caster points three fingers at the target and hisses 'Oses causter', 
+and a compact ball of acid is hurled at them. It is the third of the acid 
+spells, stronger than spray of acid: the better your magic and your skill 
+in the spell, the more it burns. It does best against clothes and less well the 
+heavier the armour, and a shield can block it.
+</p><p>Casting it is an attack and starts a fight. It can be cast while fighting, 
+and no free hands are needed. It is also found on wands, staffs and 
+scrolls.
 </p><p><br />
-</p><p>See Also:
+See Also:
 </p>
-<pre> <a cmd='#'>help acid sphere</a>
- <a cmd='#'>help acid resistance</a>
- <a cmd='#'>help acid drop</a>
- <a cmd='#'>help spray of acid</a>
- <a cmd='#'>help acid swirl</a>
+<pre>&gt; <a cmd='#'>Help Acid Drop</a>
+&gt; <a cmd='#'>Help Spray of Acid</a>
+&gt; <a cmd='#'>Help Acid Swirl</a>
+&gt; <a cmd='#'>Help Acid Resistance</a>
+&gt; <a cmd='#'>Help Acid Sphere</a>
 </pre>
 
 

@@ -3,10 +3,11 @@
 determines:
 </p>
 <ul><li><b>Your endurance.</b> Your maximum endurance grows with your constitution, and so does how fast it comes back (see <a cmd='#'>Help Endurance Points</a>).</li>
-<li><b>How fast your hit points come back</b> when you rest or sleep. Your maximum hit points come from your hit point ability (HP), not from constitution.</li>
+<li><b>How fast your hit points come back</b> whenever you are not fighting, and faster still when you rest or sleep. Your maximum hit points come from your hit point ability (HP), not from constitution.</li>
 <li><b>Swimming.</b> Each time you swim, your swimming skill and your constitution decide whether you flounder and take in water (see <a cmd='#'>Help Swimming</a>).</li>
 <li><b>Resisting plague</b>, together with your charisma.</li></ul>
-<p>The spell constitution raises it for a while.
+<p>Some equipment needs a minimum constitution: without it, the item burns 
+you and you drop it. The spell constitution raises it for a while.
 </p><p><br />
 See Also:
 </p>

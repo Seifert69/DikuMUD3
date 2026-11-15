@@ -1,6 +1,6 @@
 <div class="mw-parser-output"><h1>Guests</h1>
 <p>A new character starts out as a guest. A guest isn't stored anywhere yet: 
-if you quit, or lose your connection and don't come back in time, the 
+if you quit, or lose your connection, the 
 character is gone for good, with everything you did.
 </p><p>To keep your character, type <a cmd='#'>save</a>. You'll see "You are no longer a guest 
 on this game", and from then on your character is kept, and saved again 

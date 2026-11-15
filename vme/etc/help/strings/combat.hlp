@@ -2,10 +2,10 @@
 <p>Usage:
 </p>
 <pre>kill &lt;character&gt;
-hit &lt;character&gt;
 </pre>
-<p>kill or hit starts a fight. You strike with the weapon you wield, or your 
-bare hands, round after round, until one of you falls, dies or flees. While 
+<p>kill starts a fight. You strike with the weapon you wield, or your bare 
+hands, round after round, until one of you falls, dies or flees. (hit and 
+punch start a fight too, with a punch of your fists: see <a cmd='#'>Help Hit</a>.) While 
 you fight you can give other orders too: cast spells, use your skills, 
 rescue a friend.
 </p><p>Before you start, <a cmd='#'>consider</a> your foe to see how strong it is. During the 
@@ -20,6 +20,7 @@ Blood (see <a cmd='#'>Help BoB</a>).
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Kill</a>
+&gt; <a cmd='#'>Help Hit</a>
 &gt; <a cmd='#'>Help Consider</a>
 &gt; <a cmd='#'>Help Fleeing</a>
 &gt; <a cmd='#'>Help Wimpy Mode</a>

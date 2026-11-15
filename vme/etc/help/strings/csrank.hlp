@@ -3,6 +3,7 @@
 </p>
 <pre><a cmd='#'>csrank</a>
 csrank &lt;rank&gt; &lt;title&gt;
+csrank &lt;rank&gt;
 </pre>
 <p>Example:
 </p>
@@ -16,7 +17,8 @@ titles of their own:
 <pre> with a set of military titles, from Private and Corporal up to the Generals, 
  with the top ranks blank.
 </pre>
-<ul><li><b>csrank &lt;rank&gt; &lt;title&gt;</b> gives rank &lt;rank&gt; a new title.</li></ul>
+<ul><li><b>csrank &lt;rank&gt; &lt;title&gt;</b> gives rank &lt;rank&gt; a new title.</li>
+<li><b>csrank &lt;rank&gt;</b> with no title makes that rank blank again.</li></ul>
 <p>To give a member a rank, use <a cmd='#'>Help Cpromote</a>. A rank without a title (blank) 
 can't be given to anyone.
 </p><p><br />

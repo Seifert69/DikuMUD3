@@ -3,7 +3,9 @@
 else, the King's Castle included, falls under Midgaard's law. The law 
 protects every player who is in good standing, and many townsfolk: 
 shopkeepers, guards and others marked as protected. Killing a protected 
-character, or being caught stealing from one, is a crime.
+character, or being caught stealing from one, is a crime; so is killing 
+any other player who isn't wanted dead, or being caught stealing from any 
+player.
 </p><p><b>Self-defence.</b> Whoever attacks a protected character first, or 
 casts a harmful spell at one, may be killed without crime while they stay 
 in that room; so may a thief who is caught. Guards also treat evil 
@@ -14,10 +16,11 @@ walks to the captain and accuses you by themselves; a player must go to
 the captain of the city guard and accuse you there (see <a cmd='#'>Help Accuse</a>). 
 A player's memory of a crime lasts two weeks.
 </p><p><b>Your record.</b> Each accusation adds to your record: 3 for stealing, 
-8 for murder. With any record at all you lose the protection of the law, 
-and on 32 or more you are <b>wanted</b> (an outlaw): guards who see you 
-arrest you. On 64 or more you are <b>wanted dead</b>: there is a reward on 
-your head, and guards attack you on sight. Any accusation also puts a 
+8 for murder. With a record under 32 you lose the protection of the law: 
+guards no longer step in when you are attacked. On 32 or more you are 
+<b>wanted</b> (an outlaw): guards who see you arrest you, but you are wanted 
+alive, so the law protects you again. On 64 or more you are <b>wanted dead</b>: there is a reward on 
+your head, and guards attack you on sight; killing you is no crime. Any accusation also puts a 
 reward on your head, larger the higher your level and record. The board 
 in the captain's office lists who is wanted.
 </p><p><b>Arrest and jail.</b> A guard who arrests you puts you in handcuffs: you 

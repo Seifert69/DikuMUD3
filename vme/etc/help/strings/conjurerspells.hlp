@@ -6,49 +6,51 @@ Detect Magic                 0   100%
 Energy Bolt                  0   100%
 Raise Magic                  0   100%
 Brain                        2   100%
-Magic Candle                 3   100%
 Dexterity                    6   100%
+Magic Candle                 7   100%
 Constitution                 8   100%
-Leaving                      8   100%
-Dust Devil                   9   100%
-Detect Invisible            10   100%
+Leaving                      8   80%
+Dust Devil                   9   80%
 Strength                    10   100%
-Identify                    11   100%
 Focus                       12   100%
-Storm Call                  12   100%
+Identify                    12   100%
 Clenched Fist               13   100%
-Lock                        14   100%
 Mind Shield                 14   80%
-Summon Earth                14   100%
+Summon Earth                14   80%
+Detect Invisible            15   80%
 Heat Resistance             15   80%
-Quicken                     15   100%
-Slow                        15   80%
+Slow                        15   50%
 Cold Resistance             16   80%
+Lock                        16   80%
 Electricity Resistance      17   80%
-Transport                   17   100%
-Night Globe                 18   100%
 Poison Resistance           18   80%
-Summon Air                  18   100%
-Sun Globe                   18   100%
+Storm Call                  18   100%
+Summon Air                  18   80%
 Acid Resistance             19   80%
-Invisibility                20   100%
-Improved Identify           21   100%
-Random Teleport             22   100%
+Random Teleport             22   80%
 Wizard Eye                  23   100%
-Summon Water                24   100%
-Minor Gate                  27   100%
-Unlock                      27   100%
-Dispel Magic                30   100%
-Haste                       30   100%
-Summon Fire                 30   100%
-Cone Of Shards              32   100%
-Controlled Teleport         35   100%
-Gate                        35   100%
-Summon Demon                40   100%
-Summon Devil                50   100%
-Group Teleport             130   100%
+Summon Water                24   80%
+Invisibility                25   100%
+Night Globe                 25   80%
+Sun Globe                   25   80%
+Unlock                      27   80%
+Improved Identify           28   80%
+Dispel Magic                30   50%
+Haste                       30   50%
+Minor Gate                  30   100%
+Summon Fire                 30   80%
+Cone Of Shards              32   80%
+Transport                   32   100%
+Controlled Teleport         35   80%
+Gate                        35   80%
+Quicken                     35   80%
+Summon Demon                40   80%
+Summon Devil                50   80%
+Group Teleport             130   80%
 </pre>
-<p><br />
+<p>Practising detect magic, energy bolt and raise magic needs magic 5; brain, 
+dexterity, constitution and strength need magic 20.
+</p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Conjurer Skills</a>

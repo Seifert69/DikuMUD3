@@ -12,7 +12,8 @@ crank &lt;player&gt;     the rank a player holds in their clan
 tells you the rank that player holds, and in which clan. Anyone can look 
 up another player's rank, in a clan or not; the player must be in the 
 game. The clan Master and Lords choose the titles of the ranks (see 
-<a cmd='#'>Help Csrank</a>) and set members' ranks (see <a cmd='#'>Help Cpromote</a>).
+<a cmd='#'>Help Csrank</a>); they and members of rank 16 or higher set members' ranks 
+(see <a cmd='#'>Help Cpromote</a>).
 </p><p><br />
 See Also:
 </p>

@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Search</h1>
 <p>Skill
-Class: Thief (guild level 0), Ranger (0, up to 90%), Assassin (2, up to 80%), Druid (7, up to 60%)
+Class: Barbarian (guild level 0, up to 60%), Conjurer (guild level 0, up to 80%), Dark Knight (guild level 0, up to 70%), Fighter (guild level 0, up to 70%), Healer (guild level 0, up to 80%), Necromancer (guild level 0, up to 80%), Paladin (guild level 0, up to 70%), Ranger (guild level 0, up to 90%), Sorcerer (guild level 0, up to 80%), Thief (guild level 0), Assassin (guild level 2, up to 80%), Druid (guild level 7, up to 60%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>search &lt;direction&gt;

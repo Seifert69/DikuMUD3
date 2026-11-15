@@ -1,10 +1,11 @@
 <div class="mw-parser-output"><h1>Building</h1>
 <p>Valhalla is built by its players. Every zone, monster, object and quest in 
-the game is written in the zone files of DikuMUD3, which are open source: 
-anyone can read them, change them, and send in a new zone or a fix.
+the game is written in the zone files of DikuMUD3. The game and many of its 
+zones are open source: anyone can read them, change them, and send in a new 
+zone or a fix.
 </p><p>To start building:
 </p>
-<ul><li>The source of the whole game, zones included, is on GitHub: <a rel="nofollow" class="external free" href="https://github.com/Seifert69/DikuMUD3">https://github.com/Seifert69/DikuMUD3</a></li>
+<ul><li>The source of the game, with many of its zones, is on GitHub: <a rel="nofollow" class="external free" href="https://github.com/Seifert69/DikuMUD3">https://github.com/Seifert69/DikuMUD3</a></li>
 <li>The DikuMUD wiki explains the zone language and DIL, the scripting language of the zones: <a rel="nofollow" class="external free" href="https://wiki.dikumud.com/wiki/DikuMUD">https://wiki.dikumud.com/wiki/DikuMUD</a> (start with "Getting started - Step by Step").</li>
 <li>Talk with other builders on the builder channel (<a cmd='#'>comm add builder</a>; it is relayed to the game's Discord server).</li></ul>
 <p>Valhalla likes unique zones: please don't send in a zone that is already on 

@@ -1,14 +1,20 @@
 <div class="mw-parser-output"><h1>Brain</h1>
-<p>Brain is a character attribute and represents a combination of Intelligence, Wisdom, Awareness,
-PSI and Perception.
-</p><p>Brain Determines:
+<p>Brain (BRA) is one of your abilities: your intelligence, wisdom, awareness 
+and perception together. It determines:
 </p>
-<ul><li>A factor in deciding if you hit another character with a magic attack.</li>
-<li>A factor in deciding if you defend against a magic attack.</li>
-<li>A factor in discovering theft, sneaking and hidden.</li></ul>
-<p>See Also:
+<ul><li><b>Resisting magic.</b> Whenever a spell is aimed at you, your brain stands against the caster's magic or divine power, together with the better of half your own skill in that spell or your skill in its sphere (see <a cmd='#'>Help Spheres</a>). That goes for attack spells as well as for spells like sleep, blind or fear.</li>
+<li><b>Your mana.</b> Your maximum mana grows with your brain and your charisma together (see <a cmd='#'>Help Mana Points</a>). With no brain at all you can't cast spells.</li>
+<li><b>Some spells</b> that pit mind against mind use the caster's brain instead of their magic or divine power, such as blinding flash and cause panic.</li>
+<li><b>Thieves.</b> When someone tries to steal from you, pick your pocket or peek at what you carry, your brain helps you resist; anyone else in the room may notice the theft with their brain.</li>
+<li><b>Many skills</b> lean on it, usually together with dexterity: sneak, hide, search, glance, flee, track and using wands, among others.</li></ul>
+<p>The spell brain raises it for a while, and the curse spell lowers it.
+</p><p><br />
+See Also:
 </p>
-<pre> <a cmd='#'>Help Spell Brain</a>
+<pre>&gt; <a cmd='#'>Help Abilities</a>
+&gt; <a cmd='#'>Help Spell Brain</a>
+&gt; <a cmd='#'>Help Mana Points</a>
+&gt; <a cmd='#'>Help Spheres</a>
 </pre>
 
 

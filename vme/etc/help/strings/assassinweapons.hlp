@@ -6,15 +6,23 @@ Claw Small           0   100%
 Dagger               0   100%
 Fist                 0   100%
 Short Sword          1   100%
+Sling                1   100%
 Rapier               4   80%
+Elbow                8   100%
 Falchion             8   80%
-Spear               10   80%
+Whip                 9   100%
+Bow                 10   80%
+Spear               10   50%
 Brass Knuckles      12   90%
 Kick Small          12   90%
+Kick Tiny           12   100%
 Main Gauche         14   100%
-Hand Axe            16   100%
+Hand Axe            16   70%
+Scimitar            16   80%
+Crossbow            20   90%
 Long Sword          20   90%
 Quarterstaff        25   100%
+Knee                35   100%
 Stiletto            40   90%
 </pre>
 <p><br />

@@ -13,16 +13,19 @@
 For this, you use the command 'score'. Then the game states your current
 hitpoints, mana points, and endurance points as well as other useful 
 information.
-</p><p>It is possible to simply get your hp, ep or mp as a single digit by using
+</p><p>It is possible to simply get your hp, ep or mp as a single number by using
 the command e.g. <a cmd='#'>score hp</a>.
 </p><p>The <a cmd='#'>score group</a> command is useful when you're in a group to see how your
 fellow players are doing.
+</p><p>While you are fighting, only <a cmd='#'>score hp</a>, <a cmd='#'>score ep</a> and <a cmd='#'>score mp</a> work. Until
+you have saved for the first time (see <a cmd='#'>Help Save</a>), score and score group
+only tell you that you are still a guest.
 </p><p>See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Prompt</a>
  &gt; <a cmd='#'>Help Status</a>
  &gt; <a cmd='#'>Help Hitpoints</a>
- &gt; <a cmd='#'>Help Mana</a>
+ &gt; <a cmd='#'>Help Mana Points</a>
  &gt; <a cmd='#'>Help Endurance</a>
 </pre>
 

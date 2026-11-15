@@ -14,14 +14,15 @@ don't strike back at spells cast on you, nor at anyone you catch trying
 to steal from you or to bash you.
 </p><p>New characters start out peaceful, unless they are evil. Peaceful mode 
 is handy when a friend casts a spell on you that counts as harmful, such 
-as summon: you won't turn on them for it.
+as gate or minor gate, which summon you to them: you won't turn on them 
+for it.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Change</a>
 &gt; <a cmd='#'>Help Wimpy</a>
 &gt; <a cmd='#'>Help Steal</a>
-&gt; <a cmd='#'>Help Summon</a>
+&gt; <a cmd='#'>Help Gate</a>
 </pre>
 
 

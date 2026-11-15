@@ -1,13 +1,13 @@
 <div class="mw-parser-output"><h1>Drowse</h1>
 <p>Sphere: Mind Sphere
 Spell Tier: 2
-Class: Sorcerer (guild level 25)
+Class: Sorcerer (guild level 25, up to 50%)
 Mana: 20
 </p><p>Usage:
 </p>
 <pre>cast drowse &lt;target&gt;
 </pre>
-<p>The caster waves a finger before the target's eyes and utters 'Shonashi', 
+<p>The caster waves a finger before their own eyes and utters 'Shonashi', 
 and the target grows drowsy: their reflexes slow, and in a fight they 
 strike more slowly. It slows harder than the slow spell, but it doesn't 
 last long: from a quarter of a minute up to a little over a minute, the 

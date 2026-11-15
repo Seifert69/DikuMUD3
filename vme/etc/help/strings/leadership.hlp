@@ -1,19 +1,13 @@
 <div class="mw-parser-output"><h1>Leadership</h1>
-<p>SKILL
-</p><p>Class and level:
-</p>
-<pre> Necromancer -  3
- Dark Knight - 12
- Paladin     - 12
- Barbarian   - 15
- Fighter     - 15
- Ranger      - 16
-</pre>
-<p>A born leader, or one who has studied the skill, is something of value to their 
+<p>Skill
+Class: Healer (guild level 0, up to 80%), Necromancer (guild level 3, up to 80%), Dark Knight (guild level 12), Paladin (guild level 12), Barbarian (guild level 15, up to 70%), Fighter (guild level 15, up to 50%), Ranger (guild level 16, up to 80%)
+Practising it needs charisma 20.
+</p><p>A born leader, or one who has studied the skill, is something of value to their 
 group: people want to follow a real leader. Leadership is used by itself; there 
 is no command for it.
-</p><p>For now it does one thing: when you rescue someone who follows you (see 
-<a cmd='#'>Help Rescue</a>), your leadership adds to your chance of succeeding.
+</p><p>In a fight it does one thing: when you rescue someone who follows you (see 
+<a cmd='#'>Help Rescue</a>), your leadership adds to your chance of succeeding. Some quests 
+also ask for a skilled leader.
 </p><p><br />
 See Also:
 </p>

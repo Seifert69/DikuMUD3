@@ -1,19 +1,25 @@
 <div class="mw-parser-output"><h1>Ambush Skill</h1>
-<p>Class and level:
-</p>
-<pre> Ranger Level 8
-</pre>
-<p>Usage:
+<p>Skill
+Class: Ranger (guild level 18)
+</p><p>Usage:
 </p>
 <pre> ambush &lt;target&gt;
 </pre>
 <p>Hiding in the shadows waiting for your arch nemesis, an ambush is
 a surprise attack that lets you take them by surprise and deal the first
 damage, if you do not miss that is.
+</p><p>You must be hiding (see <a cmd='#'>Help Hide</a>) and wielding a weapon, and you can't
+ambush while you are fighting. You leap out and strike one blow with your
+weapon, and the fight is on. The higher your level, the easier the blow is
+to land; a victim who can detect life sees you coming, and it is harder
+instead. Each try costs 20 endurance, so you need at least 20 to try. You
+can ambush another player only when both of you have signed the Book of
+Blood.
 </p><p><br />
 See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help hide</a>
+ &gt; <a cmd='#'>Help Ranger Skills</a>
 </pre>
 
 
