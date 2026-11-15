@@ -11924,7 +11924,14 @@ var
 code
 {
 
-pc:= findunit(self, caster, FIND_UNIT_ZONE, null);
+// self is the room, which can't see anyone to findunit() them: look for the caster's name
+pc := null;
+foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+   if (u.name == caster)
+   {
+      pc := u;
+      break;
+   }
 
 x:= 0;
    dir := tsu_exit(self);
@@ -11950,7 +11957,7 @@ x:= 0;
         if (u != pc)
            act("$1n summons a powerful tidal wave that washes you away!",
                 A_SOMEONE, pc, null, u, TO_VICT);
-        act("$3n is washed away!", A_SOMEONE, self, null, u, TO_NOTVICT);
+        act("$1n is washed away!", A_SOMEONE, u, null, null, TO_ROOM);
         link(u,room);
         exec("look", u);
         act("$1n is swept in by a sudden flood of water!",
