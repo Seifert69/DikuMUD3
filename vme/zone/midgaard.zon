@@ -48,8 +48,8 @@ G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07
 H   R |   S   |   O   | G O   |   S   | R        Butcher's Shop     J17
     | |   |   |   |   |   |   |   |   | |        Boat Shop          L06
 I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08
-    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09
-J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05
+    | |   |   |   |   |   |   |   |   | |        Armourer's Shop    Q09
+J   R |   S   S   S   |   T   |   S   | R        Mortician's Shop   S05
       |               |       |       |          Blacksmith's Shop  S09
 K     |               #-I   O-#       |          Carpenter's Shop   T05
       |               |       |       |          Weaponsmith's Shop T08
@@ -65,7 +65,7 @@ N     W       #       #               W        Inns
   1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
                                                Guilds
       |               |               |          Paladins           F09
-O     W---#---#---#---#---#---#---#---W          Sorcerors          Y03
+O     W---#---#---#---#---#---#---#---W          Sorcerers          Y03
       |       |       |       |       |          Healers            U06
 P     |       #       #       #       |          Thieves            G06
       |       |       |       |       |          Mage               H12
@@ -184,7 +184,7 @@ var
 code
 {
    act("You cuff $3n.", A_SOMEONE, deputy, null, targ, TO_CHAR);
-   act("$1n surprises you and put $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
+   act("$1n surprises you and puts $2n around your wrists.", A_SOMEONE, deputy, cuffs, targ, TO_VICT);
    act("$1n puts $2n around $3N's wrists.", A_SOMEONE, deputy, cuffs, targ, TO_NOTVICT);
 
    follow(targ, deputy);
@@ -272,7 +272,7 @@ code
    if (self.outside.type == UNIT_ST_ROOM)
    {
       if (not isset(self.flags, UNIT_FL_BURIED))
-        act("A "+self.name+" rots away." , A_SOMEONE, self, null, null, TO_ROOM);
+        act("$1n rots away." , A_SOMEONE, self, null, null, TO_ROOM);
       destroy(self);
    }
 
@@ -423,7 +423,7 @@ code
          msg2 := rnd(0, (length(move)-1));
          exec(move.[msg2], self);
          pause;
-         exec("emote utters the words, 'fadiz univisa!'..", self);
+         exec("emote utters the words, 'fadiz univisa!'", self);
          act("$2n de-materializes before your very eyes.", A_ALWAYS, self, trash, null, TO_ALL);
          unsecure(trash);
          destroy(trash);
@@ -433,10 +433,10 @@ code
       {
          secure(trash, collect);
          pause;
-         exec("say looks like someone lost their head.", self);
+         exec("say Looks like someone lost their head.", self);
          exec("chuckle", self);
          pause;
-         exec("emote utters the words, 'fadiz univisa!'..", self);
+         exec("emote utters the words, 'fadiz univisa!'", self);
          act("$2n de-materializes before your very eyes.", A_ALWAYS, self, trash, null, TO_ALL);
          unsecure(trash);
          destroy(trash);
@@ -595,8 +595,8 @@ if ((thing.objecttype!=ITEM_WAND) and (thing.objecttype!=ITEM_STAFF))
 
 if ("$norecharge" in thing.extra)
    {
-      exec ("say I can't recharge this " + thing.title +
-            "," + pc.name +". It is beyond my ability.", self);
+      exec ("say I can't recharge this " + thing.name +
+            ", " + pc.name +". It is beyond my ability.", self);
       goto give_back;
    }
 
@@ -880,7 +880,7 @@ code
     goto start;
 
 :ingenting:
-    exec("say Huh? Where did that ting go?",self);
+    exec("say Huh? Where did that thing go?",self);
     I:=dildestroy("busy@function",self);
     unsecure(ting);
     unsecure(pc);
@@ -946,7 +946,7 @@ code
 
     if("$no_engrave" in ting.extra)
     {
-        exec("emote examines "+ting.title+"carefully...",self);
+        exec("emote examines "+ting.title+" carefully...",self);
         exec("say This item cannot be engraved. I am sorry, "+pc.name+
         ".",self);
         goto giveback;
@@ -1034,7 +1034,7 @@ code
     goto start;
 
 :ingenting:
-    exec("say Huh? Where did that ting go?",self);
+    exec("say Huh? Where did that thing go?",self);
     I:=dildestroy("busy@function",self);
     unsecure(ting);
     unsecure(pc);
@@ -1068,7 +1068,7 @@ code
 
    if (not (visible(self, activator)))
    {
-      exec("say I can't resize it when I can't see you!.",self);
+      exec("say I can't resize it when I can't see you!",self);
       exec("drop "+medium.name, self);
       goto start;
    }
@@ -1085,7 +1085,7 @@ code
       exec ("say I can't resize that, "+pc.name+".",self);
       :giveit:
       link (tgt, pc);
-      act ("$2n gives $3n to $1n",
+      act ("$2n gives $3n to $1n.",
 	   A_SOMEONE,pc,self,tgt,TO_REST);
       act ("$2n gives $3n to you.",
 	   A_SOMEONE,pc,self,tgt,TO_CHAR);
@@ -1097,7 +1097,7 @@ code
 
    if ("$resize" in tgt.extra)
    {
-      exec ("say It cant be resize any more, "+pc.name+".",self);
+      exec ("say It can't be resized any more, "+pc.name+".",self);
       goto giveit;
    }
 
@@ -1115,7 +1115,7 @@ code
       if ((tgt.value[0]!=arm_type) and
           (arm_type2!=tgt.value[0]))
       {
-         exec ("say I can't resize that I am only a "+a_name+".",self);
+         exec ("say I can't resize that, I am only a "+a_name+".",self);
          goto giveit;
       }
    }
@@ -1150,19 +1150,19 @@ code
          goto giveit;
       }
 
-      exec ("say There you go, thats the best I can do.",self);
+      exec ("say There you go, that's the best I can do.",self);
       goto giveit;
    }
    else
      goto no_money;
 
    :no:
-   exec ("say Very well then come back when you want me to.",self);
+   exec ("say Very well then, come back when you want me to.",self);
    goto giveit;
 
    :no_need:
    exec ("say It already fits you. I should charge you for "+
-         "waisting my time!",self);
+         "wasting my time!",self);
    goto giveit;
 
    :no_money:
@@ -1482,7 +1482,7 @@ code
       u := nextu;
    }
 
-   act("You get your posessions back.", A_SOMEONE, prisoner, null, null, TO_CHAR);
+   act("You get your possessions back.", A_SOMEONE, prisoner, null, null, TO_CHAR);
 
    if (safe.inside == null)
       destroy(safe);
@@ -1797,7 +1797,7 @@ code
          {
             if ((i.objecttype == ITEM_CONTAINER) and isaff(i, ID_CORPSE))
             {
-               act("$1n savagely devour $2n.",
+               act("$1n savagely devours $2n.",
                A_SOMEONE, self, i, null, TO_ROOM);
 
                while (i.inside)
@@ -1865,7 +1865,7 @@ code
 
    heartbeat := PULSE_SEC * 15;
 
-   act("The nightshade berries has a bitter taste.",
+   act("The nightshade berries have a bitter taste.",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 
@@ -1972,7 +1972,7 @@ title "Randall's Shop of Wand and Stave Recharging"
 descr
 "The shop is filled with small wands and staves everywhere.  Many of them
 appear to be burned out or broken.  The building is quite sturdy and looks to
-be in good repair, despite a few charred spots on the walls.  a <a cmd='read #'>sign</a> on the
+be in good repair, despite a few charred spots on the walls.  A <a cmd='read #'>sign</a> on the
 back wall catches your attention."
 extra {"sign"}
 "Wands and Staves recharged!  Simply give the staff or wand to Randall and
@@ -2004,7 +2004,7 @@ extra {"tack", "saddles"}
 extra {"racks"}
 "These racks hold the saddles."
 extra {"roof"}
-"This heavy timbered roof look to be constructed of oak
+"This heavy timbered roof looks to be constructed of oak
 beams."
 extra {"door", "doors", "doorways"}
 "These doorways look to be large enough to allow the passage
@@ -2038,7 +2038,7 @@ extra {"bridles", "saddles"}
 "These were made by Myrna the leather worker."
 extra {"care items"}
 "Everything to make your horse happy."
-extra {"hook"}
+extra {"hooks", "hook"}
 "OOHHH, sharp."
 extra {"shelves"}
 "OOHHH, flat and made of oak."
@@ -2055,7 +2055,7 @@ end
 
                        stall2
 
-title "The stalls"
+title "The Stalls"
 names {"stalls"}
 descr
 "You are standing in a room with many doors.  This is the part of
@@ -2156,7 +2156,7 @@ title "Wall Road"
 descr
 "   You are on a long road running east-west along the southern city wall.
 A road flanked by slender beeches leads north from here, and a street sign by
-the neares beech says `Park Road'."
+the nearest beech says `Park Road'."
 movement SECT_CITY
 gmap(588,1094)
 north to park_rd5;
@@ -2281,7 +2281,7 @@ end
 names {"wall road"}
 title "Wall Road"
 descr
-"   You are on a long road running east-west along the eastern city wall.
+"   You are on a long road running east-west along the northern city wall.
 A narrow street paved with cobblestones leads south.  A street sign nearby
 says `Tailor Street'."
 movement SECT_CITY
@@ -2298,7 +2298,7 @@ end
 names {"wall road"}
 title "Wall Road"
 descr
-"   You are on a long road running east-west along the eastern city wall.
+"   You are on a long road running east-west along the northern city wall.
 A narrow street paved with cobblestones leads south.  A street sign nearby
 says `Baker Street'."
 movement SECT_CITY
@@ -2419,7 +2419,7 @@ names {"baker street"}
 title "Baker Street"
 descr
 "   You are outside a shady-looking tavern.  The sign above the darkened
-windows say `The Grubby Inn'.  The tavern door is to the west, and a small
+windows says `The Grubby Inn'.  The tavern door is to the west, and a small
 alley leads east to Cathedral Square.  Baker Street continues north and
 south."
 movement SECT_CITY
@@ -2488,7 +2488,7 @@ descr
 "   You are in the southeast corner of Cathedral Square.  The great grey
 tower looms above you.  You can go north and west around the church, and a
 small alley to Tailor Street leads east from here. To the south you see a
-pair of grand gates leading into college arcanum."
+pair of grand gates leading into College Arcanum."
 movement SECT_CITY
 gmap(530,403)
 north to cth_square3;
@@ -2639,8 +2639,8 @@ descr
 "This is the massive oaken west bridge of Midgaard.  It is well
 worn from the ages, and spans twenty feet across a great dry moat.
 Two immense chains run to the end of this bridge, issuing from holes on the
-front of each gate tower.  To the  east are the eastern gates of
-Midgaard, while a path to the west leads through the Cypress forest."
+front of each gate tower.  To the east are the western gates of
+Midgaard, while a path to the west leads through the Cypress Forest."
 extra {"oaken bridge", "west bridge", "bridge"}
 "This gigantic bridge looks to be as strong as the walls of Midgaard,
 and was constructed from huge trees of Haon dor."
@@ -2650,8 +2650,8 @@ speaking for a moat of course."
 extra {"immense chain", "chains"}
 "These chains were forged by the dwarves of the arctic wasteland,
 and were well worth the cost spent to manufacture them."
-extra {"eastern gatehouse", "gate tower", "gatehouse"}
-"These massive structures stand guard over the gates of Midgaard"
+extra {"western gatehouse", "gate tower", "gatehouse"}
+"These massive structures stand guard over the gates of Midgaard."
 extra {"path"}
 "This path leads into the Cypress Forest."
 
@@ -2680,7 +2680,7 @@ extra {"massive gatehouse", "gate tower","gatehouse"}
 Midgaard."
 extra {"murder holes", "holes"}
 "In the event that attackers breach the gates, boiling oil can be
-pourn down on them from above."
+poured down on them from above."
 extra {"arrow loops", "loops"}
 "From these narrow slots in the walls, can be fired arrows at any attackers
 who might be able to breach the gates."
@@ -2690,7 +2690,7 @@ extra {"walls"}
 "These walls were built from stone quarried south of Midgaard."
 extra {"portcullises"}
 "These massive iron gates can be dropped from above to trap intruders
-within the gate house"
+within the gate house."
 extra {"oaken doors"}
 "These oaken doors are banded with iron, and were constructed from the
 trees of Haon dor."
@@ -2718,13 +2718,13 @@ descr
 "Two large murder holes are cut into the ceiling of the eastern gatehouse.
 Arrow loops line the walls,  and the gargantuan stone blocks of the structure are quite impressive.  There are doorways in the northern and southern walls, leading into
 the two gate towers.  The gatehouse is adorned with two portcullises, and a set of oaken doors.
-The drawbridge spans the moat the east, the gate opens into Midgaard proper to the west."
+The drawbridge spans the moat to the east, the gate opens into Midgaard proper to the west."
 extra {"massive gatehouse", "gatehouse"}
 "This gatehouse was built to protect the entrance to the city of
 Midgaard."
 extra {"murder holes", "holes", "roof"}
 "In the event that attackers breach the gates, boiling oil can be
-pourn down on them from above."
+poured down on them from above."
 extra {"arrow loops", "loops"}
 "From these narrow slots in the walls, can be fired arrows at any attackers
 who might be able to breach the gates."
@@ -2775,8 +2775,8 @@ looks to be some sort of excretion."
 extra {"immense chains", "chains"}
 "These chains were forged by the dwarves of the arctic wasteland,
 and were well worth the cost spent to manufacture them."
-extra {"northern gatehouse", "gatehouse"}
-"These massive structures stand guard over the gates of Midgaard"
+extra {"eastern gatehouse", "gatehouse"}
+"These massive structures stand guard over the gates of Midgaard."
 extra {"kings road", "road"}
 "This highway was constructed to allow the movement of large armies."
 
@@ -2831,13 +2831,13 @@ loops.  There are doorways in the
 eastern and western walls, leading into the two gate towers.
 The gatehouse is adorned with two portcullises, and a set of oaken doors.
 Passage to the south over the drawbridge is possible, or travel northward into
-Midgaard proper can be undertook."
+Midgaard proper can be undertaken."
 extra {"massive gatehouse", "gatehouse"}
 "This gatehouse was built to protect the entrance to the city of
 Midgaard."
 extra {"murder holes", "holes"}
 "In the event that attackers breach the gates, boiling oil can be
-pourn down on them from above."
+poured down on them from above."
 extra {"arrow loops", "loops"}
 "From these narrow slots in the walls, can be fired arrows at any attackers
 who might be able to breach the gates."
@@ -2847,7 +2847,7 @@ extra {"walls"}
 "These walls were built from stone quarried south of Midgaard."
 extra {"portcullises"}
 "These massive iron gates can be dropped from above to trap intruders within
-the gate house"
+the gate house."
 extra {"oaken doors", "doors"}
 "These oaken doors are banded with iron, and were constructed from the
 trees of Haon dor."
@@ -2887,8 +2887,8 @@ speaking for a moat of course."
 extra {"immense chain", "chains"}
 "These chains were forged by the dwarves of the arctic wasteland,
 and were well worth the cost spent to manufacture them."
-extra {"northern gatehouse", "gate tower", "gatehouse", "towers"}
-"These massive structures stand guard over the gates of Midgaard"
+extra {"southern gatehouse", "gate tower", "gatehouse", "towers"}
+"These massive structures stand guard over the gates of Midgaard."
 extra {"path"}
 "This path leads into the forest."
 
@@ -2907,7 +2907,7 @@ end
 names {"inside", "south gate"}
 title "Inside the South Gate of Midgaard"
 descr
-"   Two small towers have been built into the city wall to the west and
+"   Two small towers have been built into the city wall to the south and
 connected with a footbridge across a heavy wooden gate.  Palace Road leads
 north into the city and Wall Road leads east and west along the city wall."
 movement SECT_CITY
@@ -2946,14 +2946,14 @@ extra {"oaken bridge", "north bridge", "bridge"}
 and was constructed from huge trees of Haon dor."
 extra {"dry moat","trash", "moat"}
 "Into the moat has been thrown a wide variety of items ranging from
-swords to wrent suits of plate mail."
+swords to rent suits of plate mail."
 extra {"immense chain", "chains"}
 "These chains were forged by the dwarves of the arctic wasteland,
 and were well worth the cost spent to manufacture them."
 extra {"northern gatehouse", "gate tower", "gatehouse", "tower"}
-"These massive structures stand guard over the gates of Midgaard"
+"These massive structures stand guard over the gates of Midgaard."
 extra {"path"}
-"This path leads into the Cypress Forest."
+"This path leads into the Moor."
 
 
 movement SECT_CITY
@@ -2981,7 +2981,7 @@ extra {"massive gatehouse", "gate tower", "gatehouse", "tower"}
 Midgaard."
 extra {"murder holes", "holes"}
 "In the event that attackers breach the gates, boiling oil can be
-pourn down on them from above."
+poured down on them from above."
 extra {"arrow loops", "loops"}
 "From these narrow slots in the walls, can be fired arrows at any attackers
 who might be able to breach the gates."
@@ -3016,7 +3016,7 @@ end
 names {"inside", "north gate"}
 title "Inside the North Gate of Midgaard"
 descr
-"   Two small towers have been built into the city wall to the west and
+"   Two small towers have been built into the city wall to the north and
 connected with a footbridge across a heavy wooden gate.  Cathedral Road leads
 south into the city and Wall Road leads east and west along the city wall."
 movement SECT_CITY
@@ -3050,7 +3050,7 @@ names {"market square"}
 title "The Market Square"
 descr
 "   A huge ancient oak tree stands majestically in the middle of this place.
-The Cathedral Square and the great Cathedral of Midgaard is north of here, and
+The Cathedral Square and the great Cathedral of Midgaard are north of here, and
 the very broad Royal Avenue leads south through the city.  Main Street leads
 east and west."
 movement SECT_CITY
@@ -3059,7 +3059,7 @@ north to cth_square1 descr
 "The great Cathedral of Midgaard towers proudly beyond Cathedral Square.  The
 two massive southern towers reach ambitiously for the sky.";
 south to royal_av1 descr
-"A long row of well-grown oak trees line each side of Royal Avenue.";
+"A long row of well-grown oak trees lines each side of Royal Avenue.";
 west to main_st3;
 east to main_st4;
 ALWAYS_LIGHT
@@ -3125,7 +3125,7 @@ title "Main Street"
 descr
 "   You are on a broad street leading east-west through the City of Midgaard.
 To your north, a solid building made from many stones of various shapes and
-sizes bear a sign reading Cityguard Office.  To your south, a tall, grey
+sizes bears a sign reading Cityguard Office.  To your south, a tall, grey
 tower, with a dark and heavy-looking oak door, rises above your head."
 movement SECT_CITY
 gmap(580,504)
@@ -3252,9 +3252,9 @@ end
 title "On the River in Midgaard"
 descr
 "   You are on the river in Midgaard just by the boat bridge. What better
-place could you find for a landing. The river flows eastwards out of
-Midgaard. Upstream, under the city wall, you can reach the cypress
-forest."
+place could you find for a landing? The river flows eastwards out of
+Midgaard. Upstream, under the city wall, you can reach the Cypress
+Forest."
 
 ALWAYS_LIGHT
 movement SECT_WATER_SWIM
@@ -3354,7 +3354,7 @@ descr
 "   You are on a broad avenue leading north-south through the city.  It is
 flanked by numerous tall chestnut trees, and the road is paved with many
 carefully hewn flagstones.  The Northern Promenade leads east, and a small
-road leads west towards to the wharves.  South, a large stone bridge spans
+road leads west towards the wharves.  South, a large stone bridge spans
 the river."
 movement SECT_CITY
 gmap(480,591)
@@ -3462,7 +3462,7 @@ names {"west bridge"}
 title "On the West Bridge"
 descr
 "   You are on a stone bridge crossing the river.  The bridge is built near
-the western city wall and the river flows west through an opening in the wall
+the western city wall and the river flows in through an opening in the wall
 about ten feet below."
 movement SECT_CITY
 gmap(165,634)
@@ -3478,7 +3478,7 @@ names {"east bridge"}
 title "On the East Bridge"
 descr
 "   You are on a stone bridge crossing the river.  The bridge is built near
-the eastern city wall and the river flows west through an opening in the wall
+the eastern city wall and the river flows east through an opening in the wall
 about ten feet below."
 movement SECT_CITY
 gmap(702,634)
@@ -3694,7 +3694,7 @@ names {"park road"}
 title "Park Road"
 descr
 "   You are on a road flanked by slender beeches.  The road leads north to
-to the city park and south through the city.  To your east is a rather large
+the city park and south through the city.  To your east is a rather large
 building with a sign saying `Bank' on the front, and westwards is a small
 boutique with a pair of scales on a sign saying `Jeweller's'."
 movement SECT_CITY
@@ -3820,7 +3820,7 @@ names {"palace road"}
 title "Palace Road"
 descr
 "   You are on a road paved with reddish brown flagstones.  A thick hawthorn
-hedge to the northwest, and the road leads north and west along the hedge."
+hedge is to the northwest, and the road leads north and west along the hedge."
 extra {"hedge", "hawthorn"}
 "Its thorns look very pointy and the hedge itself appears quite impenetrable."
 movement SECT_CITY
@@ -3835,7 +3835,7 @@ end
 names {"palace road"}
 title "Palace Road"
 descr
-"   You by a T-junction on the south side of a thick hawthorn hedge.  The road
+"   You are by a T-junction on the south side of a thick hawthorn hedge.  The road
 is paved with reddish brown flagstones and leads east and west along the
 hedge and south, away from the hedge."
 extra {"hedge", "hawthorn"}
@@ -4019,7 +4019,7 @@ names {"gladiator road"}
 title "Gladiator Road"
 descr
 "   You are on a road leading east-west through the city.  To the west is
-Colosseum Square and a rather large oval building.."
+Colosseum Square and a rather large oval building."
 movement SECT_CITY
 gmap(424,849)
 east to glad_rd4;
@@ -4050,7 +4050,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the northwest corner of a large square paved with gravel.  To
-your southeast is an enourmous oval building with many arches.  You can go
+your southeast is an enormous oval building with many arches.  You can go
 south and east around the Colosseum. The armour shop is to the west."
 movement SECT_CITY
 gmap(337,820)
@@ -4067,7 +4067,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the north end of a large square paved with gravel.  To your
-south is an enourmous oval building with many arches.  You can go east and
+south is an enormous oval building with many arches.  You can go east and
 west around the Colosseum.  Colosseum Road leads north from here."
 movement SECT_CITY
 gmap(365,820)
@@ -4084,8 +4084,8 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the northeast corner of a large square paved with gravel.  To
-your southwest is an enourmous oval building with many arches.  You can go
-south and west around the Colosseum.  The fighter's guild is to the east."
+your southwest is an enormous oval building with many arches.  You can go
+south and west around the Colosseum.  The fighters' guild is to the east."
 movement SECT_CITY
 gmap(394,820)
 east to entrance@fightersguild;
@@ -4101,7 +4101,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the east end of a large square paved with gravel.  To your
-west is an enourmous oval building with many arches.  You can go north and
+west is an enormous oval building with many arches.  You can go north and
 south around the Colosseum.  Gladiator Road leads east from here."
 movement SECT_CITY
 gmap(394,849)
@@ -4118,7 +4118,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the southeast corner of a large square paved with gravel.
-To your northwest is an enourmous oval building with many arches.  You can go
+To your northwest is an enormous oval building with many arches.  You can go
 north and west around the Colosseum.  A blacksmith's shop is to the east and
 a weaponsmith's shop is to the south."
 movement SECT_CITY
@@ -4137,7 +4137,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the south end of a large square paved with gravel.  To your
-north is the entrance to an enourmous oval building with many arches.  You
+north is the entrance to an enormous oval building with many arches.  You
 can go east and west around the Colosseum.  Colosseum Road leads south from
 here."
 movement SECT_CITY
@@ -4156,7 +4156,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the southwest corner of a large square paved with gravel.
-To your northeast is an enourmous oval building with many arches.  You can go
+To your northeast is an enormous oval building with many arches.  You can go
 north and east around the Colosseum.  The Mortician's is to the west and the
 Carpenter's is to the south."
 movement SECT_CITY
@@ -4175,7 +4175,7 @@ names {"colosseum square"}
 title "Colosseum Square"
 descr
 "   You are in the west end of a large square paved with gravel.  To your
-east is an enourmous oval building with many arches.  You can go north and
+east is an enormous oval building with many arches.  You can go north and
 south around the Colosseum.  Gladiator Road leads west from here."
 movement SECT_CITY
 gmap(337,849)
@@ -4195,7 +4195,7 @@ end
 names {"cathedral entrance"}
 title "Cathedral Entrance"
 descr
-"   You are in a high-ceiling entrance room.  The walls are white as chalk
+"   You are in a high-ceilinged entrance room.  The walls are white as chalk
 and the reddish floor is paved with carefully lain flagstones.  A pair of
 huge bronze doors lead south to the square outside and an arched doorway
 leads north into the central church."
@@ -4215,7 +4215,7 @@ end
 names {"cathedral nave"}
 title "Cathedral Nave"
 descr
-"   You are in centre of the church.  The arched ceiling high above you
+"   You are in the centre of the church.  The arched ceiling high above you
 features many colourful mosaics.  Memorial plaques are set in the white walls
 between the numerous tall mosaic windows and a large number of pews stand on
 the reddish stone floor."
@@ -4239,7 +4239,7 @@ descr
 huge ivory candles stand on the red altar cloth, burning brightly.  In the
 eastern wall is a heavy wooden door.  You can go south to the nave and north
 to the inner sanctum."
-extra {"altar"} "It looks very expensive"
+extra {"altar"} "It looks very expensive."
 extra {"candle", "candles"} "There is nothing special about the candles."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 movement SECT_INSIDE
@@ -4261,7 +4261,7 @@ descr
 windows make the light sparkle in a kaleidoscopic shower.  The floor is
 covered by a soft red carpet, and in the centre stands a large
 three-legged golden bowl in which a small flame is burning steadily.  A door
-leading to the small humble midgaard donation room is to the west."
+leading to the small humble Midgaard donation room is to the west."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_SACRED}
 movement SECT_INSIDE
 gmap(480,254)
@@ -4320,7 +4320,7 @@ names {"north cathedral stairs"}
 title "A Narrow Stairway"
 descr
 "   You are on a narrow flight of stone stairs in the northern tower of the
-Cathedral.  The stairs lead up, and there is a heavy wooden door is to the
+Cathedral.  The stairs lead up, and there is a heavy wooden door to the
 west."
 up to cth_n_stairs2;
 west to cth_altar open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
@@ -4535,7 +4535,7 @@ names {"jail"}
 title "The Jail"
 descr
 "   You are in a dark and humid jail.  The dark stone walls are hard and cold
-to the touch.  A heavy steel door is to the east."
+to the touch.  A heavy iron grating is to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 gmap(559,484)
@@ -4605,7 +4605,7 @@ end
 title "The Yard"
 descr
 "   You are in the centre of a small square cobblestone yard surrounded
-by white chalked walls. To your west is the guard dormatory, to the north
+by white chalked walls. To your west is the guard dormitory, to the north
 lies the gym, the lecture room is to your east and the entrance is south."
 extra {"yard", "walls"}
 "The yard is clean, the closeness of the walls lets in but a little light
@@ -4626,7 +4626,7 @@ title "The Cityguard Office"
 descr
 "   You are in a tidy office.  A big desk made from dark wood is standing in
 the centre of the room beside a strong safe.  In the corner is a wooden table
-and a few chairs.  The street is to the south, and in the north wall is a
+and a few chairs.  The street is to the south, and in the west wall is a
 heavy iron grating through which you can see the jail."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT,
 UNIT_FL_SACRED}
@@ -4682,7 +4682,7 @@ end
 
                              th_citizen
 
-title "The Hall of the Citizens."
+title "The Hall of the Citizens"
 descr
 "   You are in a large empty hall.  It appears to be quite unused, as most
 of the citizens are either out working or getting drunk, maimed, or killed,
@@ -4704,8 +4704,8 @@ title "The Town Library"
 descr
 "   You are in a large room separated in two by a wooden bar.  On the other
 side are numerous bookshelves holding lots and lots of old dusty volumes, and
-between the bar and the shelves is a massive desk and a large uncomfortable-
-looking chair."
+between the bar and the shelves is a massive desk and a large
+uncomfortable-looking chair."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 gmap(351,475)
@@ -4762,7 +4762,7 @@ end
 names {"reception"}
 title "The Reception"
 descr
-"   You by the counter in the reception room.  A staircase leads down to the
+"   You are by the counter in the reception room.  A staircase leads down to the
 Grunting Boar Inn.  There is a small <a cmd='read #'>sign</a> on the counter."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -4861,7 +4861,7 @@ extra {"plate","words", "sign"}
 "It says :-<pre>
                         The Midgaard Academy of Magic
 
-                            In Memorial Rofomagus</pre>"
+                            In Memoriam Rofomagus</pre>"
 ALWAYS_LIGHT
 end
 
@@ -4871,8 +4871,8 @@ end
 names {"magic school dormitory"}
 title "Magic School Dormitory"
 descr
-"   You are in a large low-ceiling room with many simple bunk beds.  Most
-of the beds are unmade and appear to be left in great hurry.  A spiral
+"   You are in a large low-ceilinged room with many simple bunk beds.  Most
+of the beds are unmade and appear to be left in a great hurry.  A spiral
 staircase in the northeast corner of the room leads downwards."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -5123,7 +5123,7 @@ names {"park"}
 title "The Park"
 descr
 "   You are on a gravel path leading through a peaceful park. To the south
-you hear the faint trinkling of water. The grass is fresh and green, and
+you hear the faint trickling of water. The grass is fresh and green, and
 many young and healthy-looking trees grow on each side of the path."
 
 movement SECT_FIELD
@@ -5173,7 +5173,7 @@ end
 names {"park", "pond"}
 title "Park Pond"
 descr
-"  Trees provide a shaded back drop to this quiet little pond.  Its water
+"  Trees provide a shaded backdrop to this quiet little pond.  Its water
 looks fresh and clear and many colourful flowers grow on the bank. The
 pond seems to be home to a gaggle of geese and a flock of ducks that
 waddle around waiting to be fed. In the center of the pond water sprays
@@ -5196,9 +5196,9 @@ title "On A Rainbow"
 names {"rainbow"}
 descr
 "You are standing on a rainbow and the colors seem to encompass you into
-thier folds. You have a feeling of pure peace over come you as you look
-out over the world throught the calming colors of the rainbow. You may
-follow the rainbow down to midgaard or up further into the sky."
+their folds. You have a feeling of pure peace overcome you as you look
+out over the world through the calming colors of the rainbow. You may
+follow the rainbow down to Midgaard or up further into the sky."
 movement SECT_HILLS
 down to park_pond;
 up to rainbow_2;
@@ -5211,9 +5211,9 @@ title "On A Rainbow"
 names {"rainbow"}
 descr
 "You are standing on a rainbow and the colors seem to encompass you into
-thier folds. You have a feeling of pure peace over come you as you look
-out over the world throught the calming colors of the rainbow. You may
-climb to the skys or slide down the rainbow to the solid ground below."
+their folds. You have a feeling of pure peace overcome you as you look
+out over the world through the calming colors of the rainbow. You may
+climb to the skies or slide down the rainbow to the solid ground below."
 movement SECT_HILLS
 down to rainbow_1;
 up to rainbow_3;
@@ -5226,7 +5226,7 @@ title "On A Rainbow"
 names {"rainbow"}
 descr
 "You are standing at the crown of a large rainbow, colors seem to
-encompass you into thier folds. You have a feeling of pure peace over come
+encompass you into their folds. You have a feeling of pure peace overcome
 you as you look out over the world through the calming colors of the
 rainbow.  The rainbow curves a bit to the west here and a crystal bridge
 spans to the east."
@@ -5243,9 +5243,9 @@ title "On A Rainbow"
 names {"rainbow"}
 descr
 "You are standing on a rainbow and the colors seem to encompass
-you into thier folds. You have a feeling of pure peace over come you as
-you look out over the world throught the calming colors of the rainbow.
-You may go east to the crown of the rainbow of continue downwards."
+you into their folds. You have a feeling of pure peace overcome you as
+you look out over the world through the calming colors of the rainbow.
+You may go east to the crown of the rainbow or continue downwards."
 movement SECT_HILLS
 east to rainbow_3;
 down to rainbow_5;
@@ -5257,9 +5257,9 @@ title "On A Rainbow"
 names {"rainbow"}
 descr
 "You are standing on a rainbow and the colors seem to encompass you into
-thier folds. You have a feeling of pure peace over come you as you look
-out over the world throught the calming colors of the rainbow. You may
-climb to the skys or slide down the rainbow to the solid ground below."
+their folds. You have a feeling of pure peace overcome you as you look
+out over the world through the calming colors of the rainbow. You may
+climb to the skies or slide down the rainbow to the solid ground below."
 movement SECT_HILLS
 down to bifrost_bridge@asgaard;
 up to rainbow_4;
@@ -5277,7 +5277,7 @@ end
 names {"grubby", "inn"}
 title "The Grubby Inn"
 descr
-"   You are in a large, low-ceiling room with many old chairs and tables.
+"   You are in a large, low-ceilinged room with many old chairs and tables.
 The walls are dark from many years of smoke, most of which must still be here,
 judging by the air quality.  A counter is to the south and beside it is a
 private-looking door.  A staircase leads up, and a faded  <a cmd='read #'>sign</a> hangs
@@ -5354,8 +5354,8 @@ grub_cellar3
 names {"grubby", "cellar"}
 title "The Grubby Inn Cellar"
 descr
-"   You are in a large dusty room below the Grubby Inn.  The ceiling is arch-
-shaped but almost hidden by many years of cobwebs. A huge barrel lies face
+"   You are in a large dusty room below the Grubby Inn.  The ceiling is
+arch-shaped but almost hidden by many years of cobwebs. A huge barrel lies face
 against you by the east wall."
 extra {"barrel"}
 "It seems empty, judging by the sound it makes when you knock on it."
@@ -5392,11 +5392,11 @@ end
 names {"thief", "guild"}
 title "The Abandoned Original Thieves' Guild"
 descr
-"   You are in a large low-ceiling and dimly-lit room.  Dark, heavy drapes
-cover most of the walls, giving the room an eerie atmosphere. A small ladder leads up through a hatch in the roof"
+"   You are in a large low-ceilinged and dimly-lit room.  Dark, heavy drapes
+cover most of the walls, giving the room an eerie atmosphere. A small ladder leads up through a hatch in the roof."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
-up to engraver_back descr "A small hatch leads upwards into a small shop";
+up to engraver_back descr "A small hatch leads upwards into a small shop.";
 /* XXX */
 /* Michael: Perhaps a secret entrance to the sewers? or to Haon Dor? */
 /* Mads   : Til sewers var en meget god ide.  N�r de bliver lavet. */
@@ -5512,7 +5512,7 @@ food and human sweat."
 
 extra {"three inches of dust", "dust"}
 "The dust is dark gray and heavy.  It covers everything in the room evenly,
-and it is as deep the top of your boot."
+and it is as deep as the top of your boot."
 
 extra {"broken furniture", "broken pieces", "furniture", "pieces"}
 "The wood has long since rotted and decayed, leaving moldy broken pieces
@@ -5565,7 +5565,7 @@ names {"engraver's workshop","workshop"}
 title "At Veejay's Engraving Workshop"
 descr
 "A characteristic smell of warm leather, metal and sound of people
-working fills this small shop. A single window offers a view of the
+working fills this small shop. A single window offers a view of
 Tailor Street and the Post Office just opposite the workshop. A dwarf and a
 gnome are both hard at work at the back of the shop. A large tapestry lines the
 far wall of the shop detailing the steps of the engraving process. <br/>
@@ -5575,7 +5575,7 @@ extra {"sign in the window","sign","window"}
 "<pre>The sign proclaims:
 
 		------------------------------------------
-			Veejays Engraving Services
+			Veejay's Engraving Services
 
 <div class='cpr'> 	Engraving (max.20 letters)	:	min. 5 GP</div><div class='cw'>
 
@@ -5610,7 +5610,7 @@ extra {"note fastened to the sign","note"}
 extra {"dwarf and the gnome in the workshop","dwarf","gnome","workshop"}
 "They both appear very busy and hard at work. Better not bother them or
 your job will take even longer. They occasionally stare at the tapestry
-on the far wall intently<br/>"
+on the far wall intently.<br/>"
 extra {"tapestry"}
 "The tapestry depicts the steps of the engraving process on various materials.
 It shifts as you examine it."
@@ -5619,7 +5619,7 @@ gmap(653,562)
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 ALWAYS_LIGHT
 west to tailor_st3@midgaard open {EX_OPEN_CLOSE}
-descr "The Tailor Street is just outside the door.";
+descr "Tailor Street is just outside the door.";
 east to engraver_back open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
         keyword {"door", "wall","tapestry"} difficulty 45;
 end
@@ -5652,7 +5652,7 @@ flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 ALWAYS_LIGHT
 west to engraver_shop@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"}
 descr "A door in the west wall leads into Veejay's Engraving Workshop.";
-down to thief_guild descr "There is a hatch here in the floor that is rusted open, leading down into the darkness";
+down to thief_guild descr "There is a hatch here in the floor that is rusted open, leading down into the darkness.";
 end
 
                            armour_shop
@@ -5715,10 +5715,10 @@ end
 
 title "Storage Office"
 descr
-"You have entered the famous safety deposit room of the midgaard bank.
-hundreds of small drawers line the  walls in neat rows.  The room glitters
-with the polished bronze and steal that make up the Thief proof deposit boxes.
-The marble floors shine like nothing you have ever seen and the profesional
+"You have entered the famous safety deposit room of the Midgaard bank.
+Hundreds of small drawers line the  walls in neat rows.  The room glitters
+with the polished bronze and steel that make up the thief-proof deposit boxes.
+The marble floors shine like nothing you have ever seen and the professional
 way the room is kept makes you feel safe with putting your most prized 
 possessions here for safe keeping."
 
@@ -5750,9 +5750,9 @@ end
 names {"bank"}
 title "The Bank"
 descr
-"   You are in a high-ceiling room with white-chalked walls.  A pair of tall
-windows with bars are set in the west wall, and wall-like mahogany counter,
-complete with teller window, seperates the room in two.  A small passage
+"   You are in a high-ceilinged room with white-chalked walls.  A pair of tall
+windows with bars are set in the west wall, and a wall-like mahogany counter,
+complete with teller window, separates the room in two.  A small passage
 leads around the tellers to the east.  The door is to the
 west, and a <a cmd='read #'>sign</a> hangs on the wall between the windows."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -5824,7 +5824,7 @@ extra {"sign", "wall"}
     Use `evaluate &lt;item&gt;' to make the smith evaluate the quality of a
     weapon, armour or shield.
 
-    Use  `give &lt;item&gt; Sam to have an item resized.</pre>"
+    Use `give &lt;item&gt; Sam' to have an item resized.</pre>"
 
 extra {"$metal room"}
 "this room is for armor sizing"
@@ -5863,7 +5863,7 @@ title "The Carpenter's"
 descr
 "   You are in a nice, light workshop.  The room is rather large and contains
 many wooden shelves with different tools used for carpentry.  The floor is
-littered with sawdust and woodshaving.  A <a cmd='read #'>sign</a> hangs on the wall."
+littered with sawdust and wood shavings.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 gmap(337,899)
@@ -5888,7 +5888,7 @@ names {"fishmonger"}
 title "The Fishmonger's"
 descr
 "   You are in a small, smelly room.  The stone floor is covered by a thick
-layer of sawdust, and numerous caskets with fish are standing along the walls.
+layer of sawdust, and numerous casks with fish are standing along the walls.
 A fishing net is suspended below the ceiling to add to the atmosphere, and a
 sign hangs below the net."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -5965,8 +5965,8 @@ flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 gmap(566,957)
 east to park_rd2;
-extra {"oil","lamps"}
-"They are made from polished gold and looks as if they are securely fastened
+extra {"oil lamps", "lamps", "lamp", "oil"}
+"They are made from polished gold and look as if they are securely fastened
 to the smooth stone walls."
 extra {"desk"}
 "Your face is reflected in its surface."
@@ -5977,8 +5977,8 @@ extra {"sign"}
         `buy &lt;item&gt;' to buy an item,
         `sell &lt;item&gt;' to sell an item,
         `request &lt;item&gt;' to ask the price of an item and
-        `value &lt;item&gt;' to make the jeweller evaluate an item.
-        `give &lt;item&gt; Janet to have an item resized.</pre>"
+        `value &lt;item&gt;' to make the jeweller evaluate an item and
+        `give &lt;item&gt; Janet' to have an item resized.</pre>"
 
 ALWAYS_LIGHT
 extra {"$metal room"} ""
@@ -6015,9 +6015,9 @@ extra {"sign"}
     Use `list' to see what is in store,
         `buy &lt;item&gt;' to buy an item,
         `sell &lt;item&gt;' to sell an item,
-        `request &lt;item&gt;' to ask the price of an item
+        `request &lt;item&gt;' to ask the price of an item,
         `value &lt;item&gt;' to make the leather worker evaluate an item and
-        `give &lt;item&gt; Myrna to have an item resized.</pre>"
+        `give &lt;item&gt; Myrna' to have an item resized.</pre>"
 ALWAYS_LIGHT
 
 extra {"$leather room"}
@@ -6029,7 +6029,7 @@ end
 names {"magic shop"}
 title "The Magic Shop"
 descr
-"   You are in a low-ceiling room with many shelves filled with jars and
+"   You are in a low-ceilinged room with many shelves filled with jars and
 bottles of all shapes and sizes.  The scent of foreign herbs and spices
 puzzles your nose.  A <a cmd='read #'>sign</a> stands on a desk in the middle of the room."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -6079,7 +6079,7 @@ names {"park cafe", "cafe"}
 title "Park Cafe"
 descr
 "   You are in a small, light cafe.  The small number of chairs and tables
-are all made from white-painted metal shaped in an somewhat fragile-looking
+are all made from white-painted metal shaped in a somewhat fragile-looking
 but very elegant way.  The exit is to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -6102,7 +6102,7 @@ end
 names {"pet shop"}
 title "The Pet Shop"
 descr
-"   You are in a large, high-ceiling room.  The air is smelly and filled
+"   You are in a large, high-ceilinged room.  The air is smelly and filled
 with the sounds of birds squeaking, dogs barking, and cats meowing.  Numerous
 cages standing on the floor and hanging from the ceiling contain many
 different animals.  A <a cmd='read #'>sign</a> hangs on the wall."
@@ -6116,7 +6116,7 @@ extra {"sign"}
     Use `list' to see what is in store,
         `buy &lt;pet&gt;' to buy a pet,
         `sell &lt;pet&gt;' to sell a pet,
-        `request &lt;item&gt;' to ask the price of a pet and
+        `request &lt;pet&gt;' to ask the price of a pet and
         `value &lt;pet&gt;' to make the pet shop boy evaluate a pet.</pre>"
 ALWAYS_LIGHT
 end
@@ -6127,9 +6127,9 @@ end
 names {"post office"}
 title "The Post Office"
 descr
-"   You are in a small, low-ceiling room.  Light shines in through a pair
+"   You are in a small, low-ceilinged room.  Light shines in through a pair
 of tall windows in the east wall.  A high wooden counter separates the room
-in t`wo.  A <a cmd='read #'>sign</a> hangs on the wall."
+in two.  A <a cmd='read #'>sign</a> hangs on the wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 gmap(596,562)
@@ -6167,7 +6167,7 @@ extra {"sign"}
         `sell &lt;item&gt;' to sell something,
         `request &lt;item&gt;' to ask the price of something,
         `value &lt;item&gt;' to make the tailor evaluate something and
-        `give &lt;item&gt; Tom to have your item resized.</pre>"
+        `give &lt;item&gt; Tom' to have your item resized.</pre>"
 ALWAYS_LIGHT
 
 extra {"$clothes room"}
@@ -6188,7 +6188,7 @@ movement SECT_INSIDE
 gmap(394,900)
 north to col_sq5;
 extra {"forge"} "The forge looks very hot indeed."
-extra {"anvil"} "The anvils appears very used."
+extra {"anvil"} "The anvil appears very used."
 extra {"bellows"}
 "The bellows are used for heating the forge by blowing air into the fire."
 extra {"sign"}
@@ -6279,7 +6279,7 @@ title "Reejay the deengraver"
 descr "Reejay the deengraver sits at his table, hard at work."
 extra {}
 "A black-haired and dark-skinned woman, apparently not native to the city of
-Midgaard. She is the best in his field and can remove an engraving for
+Midgaard. She is the best in her field and can remove an engraving for
 an unreasonable price."
 M_SHOP_KEEPER(47,SEX_FEMALE,RACE_HUMAN)
 money 3 IRON_PIECE
@@ -6317,7 +6317,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'This tasty $2N is too expensive for you, $3n.'",
  "$1n says, 'Here you are, some delicious $2N.'",
  "$1n says, 'I might be able to sell this $2N.'",
- "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
+ "$1n says, 'I don't have that many right now, maybe if you come back later.'"},
 {ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, TRUE);
 dilcopy evaluate@function(64);
 
@@ -6350,11 +6350,11 @@ dilcopy shopkeepernew@function(
 {
  "$1n says, 'I've got no such fish, landlubber!'",
  "$1n says, 'You are really trying to sell me something you don't have, $3n?'",
- "$1n says, 'Would you like to buy some fish?",
+ "$1n says, 'Would you like to buy some fish?'",
  "$1n says, '$3n, you can't afford $2n'",
- "$1n says, 'Enjoy $2n.",
- "$1n says, 'I might be able to sell this.",
- "$1n says, 'I don't have that many $2N in my stock right now.",
+ "$1n says, 'Enjoy $2n.'",
+ "$1n says, 'I might be able to sell this.'",
+ "$1n says, 'I don't have that many $2N in my stock right now.'",
  "$1n says, '."
 }, {ITEM_FOOD}, 130, 10,2*PLATINUM_MULT, TRUE);
 end
@@ -6389,9 +6389,9 @@ dilcopy shopkeepernew@function(
  "$1n says, '$3n are you trying to cheat me? You don't even have it!!'",
  "$1n says, 'Would you like to buy some beef or not?'",
  "$1n says, '$3n, you can't afford $2n'",
- "$1n says, 'Here you $3n, some $2n'",
+ "$1n says, 'Here you are, $3n, some $2n.'",
  "$1n says, 'Did you kill this yourself, $3n? Cleaned is it? Well, I'll buy it then.'",
- "$1n says, 'Seems like i have to prepare some more meat, i don't have that many right now.'"
+ "$1n says, 'Seems like I have to prepare some more meat, I don't have that many right now.'"
 }, {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT, TRUE);
 end
 
@@ -6417,7 +6417,7 @@ dilcopy evaluate@function(64);
 dilcopy opening_hours@function({4,23}, {"list", "buy", "sell", "value", "request"}, 
                                 "say Sorry we're closed", 
                                 {"wake","stand","say We're open for business"},
-                                {"rest", "say Lucky the next shipment arrives tonight, i don't have that many in my stock."});
+                                {"rest", "say Lucky the next shipment arrives tonight, I don't have that many in my stock."});
 
 dilcopy shopkeepernew@function(
    {"torch@midgaard 10 40","lantern@midgaard 5 20","bag@midgaard 5 20",
@@ -6465,7 +6465,7 @@ dilcopy shopkeepernew@function(
  "$1n says, '$3n, you can't afford $2n'",
  "$1n says, 'Here you are.'",
  "$1n says, 'Thank you $3n, this is a nice $2N.'",
- "$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+ "$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
  {ITEM_FOOD}, 110, 10,2*PLATINUM_MULT, TRUE);
 end
 
@@ -6508,7 +6508,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_WEAPON, ITEM_FIREWEAPON}, 110,60,286720, TRUE);
 end
 
@@ -6554,7 +6554,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_ARMOR, ITEM_SHIELD}, 110,60,286720, TRUE);
 end
 
@@ -6565,7 +6565,7 @@ names {"tailor","Tom"}
 title "Tom"
 descr "Tom the Tailor is sitting on the table, sewing busily. Maybe he can teach you how to resize clothes?"
 extra {}
-"He looks as an honest, hard-working artisan."
+"He looks like an honest, hard-working artisan."
 
 M_SHOP_KEEPER(53, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 3 COPPER_PIECE
@@ -6592,7 +6592,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
  {ITEM_WORN}, 110, 60, 286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_ARMOR,ITEM_WORN,ITEM_WORN,
@@ -6622,7 +6622,7 @@ title "Myrna the Leather Worker"
 descr "Myrna the Leather Worker is sitting by the table, sewing a leather
 cap."
 extra {}
-"She looks as an honest, hard-working artisan who only just earns enough to
+"She looks like an honest, hard-working artisan who only just earns enough to
 keep herself going. Maybe she can teach you how to resize."
 
 M_SHOP_KEEPER(44, SEX_FEMALE, RACE_HUMAN)
@@ -6658,7 +6658,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_ARMOR}, 110,60,286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WORN, ITEM_WORN,
@@ -6715,7 +6715,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_SCROLL, ITEM_WAND, ITEM_POTION, ITEM_STAFF}, 110,60,286720, TRUE);
 
 end
@@ -6724,7 +6724,7 @@ end
 
                               jeweller
 
-names {"jeweler", "Janet"}
+names {"jeweller", "jeweler", "Janet"}
 title "Janet"
 descr "Janet the Jeweler is standing behind the desk."
 extra {} "She has a content although watchful look on her face."
@@ -6754,7 +6754,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_TREASURE}, 110, 60, 286720, TRUE);
 
 dilcopy resize_func@midgaard (ITEM_TREASURE,ITEM_OTHER,ITEM_WORN,
@@ -6795,7 +6795,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_BOAT}, 110, 60, 286720, TRUE);
 end
 
@@ -6818,7 +6818,7 @@ end
 names {"mortician", "Marty"}
 title "Marty"
 descr "Marty the Mortician is standing here, smirking softly."
-extra {} "He is a pale man dressed in black clothes, fit for funeral."
+extra {} "He is a pale man dressed in black clothes, fit for a funeral."
 flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(57, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
@@ -6839,7 +6839,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
 end
@@ -6849,7 +6849,7 @@ end
 
 names {"pet shop boy","boy"}
 title "the pet shop boy"
-descr "A Pet Shop boy is here, humming gently."
+descr "A pet shop boy is here, humming gently."
 extra {} "He is young and close-cropped and looks quite happy."
 M_AVG_HUMAN(7, SEX_MALE)
 money 10 IRON_PIECE, 2 COPPER_PIECE
@@ -6859,11 +6859,11 @@ end
 				mid_clerk
 
 names {"clerk"}
-title "Storage Clerk"
+title "the storage clerk"
 descr "The storage clerk stands here waiting to serve you."
 extra {}
 "The storage clerk is wearing a leather apron which is quite stained.
-He looks at you with as half cocked eye as if awaiting your request."
+He looks at you with a half-cocked eye as if awaiting your request."
 M_HUMAN_WARRIOR_SWORD(38,SEX_MALE)
 romflags {CHAR_PROTECTED}
 flags {UNIT_FL_NO_TELEPORT}
@@ -6874,7 +6874,7 @@ end
 
                              banker
 
-names {"Smith"}
+names {"Smith", "banker"}
 title "Smith"
 descr "Smith the Banker is here, sitting behind the counter."
 extra {} "He has a very serious look on his face."
@@ -6970,7 +6970,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 
 end
@@ -6982,7 +6982,7 @@ names {"Filthy"}
 title "Filthy"
 descr "Filthy is standing here, eager to serve you a special drink."
 extra {}
-"Filthy looks real, erhm, dirty.  He likes to keep his costumers happy, as
+"Filthy looks real, erhm, dirty.  He likes to keep his customers happy, as
 long as they don't want him to take a bath."
 
 M_SHOP_KEEPER(53, SEX_MALE, RACE_HUMAN)
@@ -7005,7 +7005,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
@@ -7051,7 +7051,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
@@ -7081,7 +7081,7 @@ dilcopy shopkeepernew@function(
 "$1n says, '$3n, you can't afford $2n'",
 "$1n says, 'Here you are.'",
 "$1n says, 'Thank you $3n, this is a nice $2N.'",
-"$1n says, 'That shipment better arrive tonight, i don't have that many in my stock.'"},
+"$1n says, 'That shipment better arrive tonight, I don't have that many in my stock.'"},
 {ITEM_CONTAINER}, 110, 60, 286720, TRUE);
 end
 
@@ -7163,7 +7163,7 @@ dilcopy guard_door@function(WEST,
 "$1n stops you.",
 "$1n prevents $3n from accessing the grating.");
 dilcopy guard_unit@function("safe@midgaard","$1n stops you.","$1n prevents $3n from accessing the safe.");
-dilcopy guard_unit@function("desk@midgaard","$1n stops you","$1n prevents $3n from accessing the desk.");
+dilcopy guard_unit@function("desk@midgaard","$1n stops you.","$1n prevents $3n from accessing the desk.");
 dilcopy deputy_check@function();
 
 dilbegin deputy_join();
@@ -7195,7 +7195,7 @@ code
        isset(u.charflags, CHAR_OUTLAW))
    {
       exec("say You have a criminal record, we can not accept you as a "+
-	   "deputy "+u.name+".",self);
+	   "deputy, "+u.name+".",self);
       goto loop;
    }
 
@@ -7246,7 +7246,7 @@ Jeweller/Banker */
 names {"cityguard","guard"}
 title "the Cityguard"
 descr "A cityguard is here."
-extra {} "A fairly big, content looking cityguard."
+extra {} "A fairly big, content-looking cityguard."
 exp 0
 romflags {CHAR_PROTECTED}
 M_HUMAN_WARRIOR_POLE(62, SEX_MALE)   /* He shall use a polearm */
@@ -7531,7 +7531,7 @@ end
                                 fanny
 names {"Fanny"}
 title "Fanny"
-descr "Fanny is here, dressed in french underwear."
+descr "Fanny is here, dressed in French underwear."
 extra {} "She is young and very pretty."
 
 romflags {CHAR_PROTECTED}
@@ -7722,7 +7722,7 @@ title "Quasimodo"
 descr "Quasimodo is silently watching you."
 extra {}
 "He is a human, and yet he has the face of a troll.  His old, dirty robe
-makes a bad job hiding a hideous-looking hunch on his back. He seems very
+makes a bad job of hiding a hideous-looking hunch on his back. He seems very
 sad."
 
 romflags {CHAR_PROTECTED, CHAR_WIMPY}
@@ -7836,7 +7836,7 @@ end
 
 names {"drunk"}
 title "the Drunk"
-descr "A singing, happy Drunk."
+descr "A singing, happy drunk is here."
 extra {} "A drunk who seems to be too happy, and to carry too much money."
 
 M_AVG_HUMAN(8, SEX_MALE)
@@ -8014,7 +8014,7 @@ names {"kitten"}
 title "the Kitten"
 descr "A small loyal Kitten is here."
 extra {} "The Kitten looks like a cute, little, fierce fighter. She is a
-special friend of the great god 'Papi'"
+special friend of the great god 'Papi'."
 M_CAT_TINY(2,SEX_FEMALE)
 
 end
@@ -8102,7 +8102,7 @@ money 5 IRON_PIECE
 
 dilcopy qstItemsWanted@quests(QUEST_CITIZEN_MIDGAARD, {"platinum piece"}, {"moneycheck@quests 2 4"},
             {"say Thank you $1N, these citizen taxes will be put to good use."},
-            "say Thank you $1N but I can't accept that. I need 2 platinum piece.");
+            "say Thank you $1N but I can't accept that. I need 2 platinum pieces.");
 
 // Give a chance to grant citizenship
 //
@@ -8145,7 +8145,7 @@ code
        "say and to prove no one is above the law you must pay me 2 platinum",
        "cough",
        "say to be spent solely on the city of Midgaard of course.",
-       "emote puts his hand forward and awaits your payment"},
+       "emote puts his hand forward and awaits your payment."},
       "Bring the Mayor of Midgaard 2 platinum pieces to become a citizen.");
    goto start;
 }
@@ -8196,7 +8196,7 @@ end
 tbag
 names{"trash bag","bag"}
 title "a trash bag"
-descr "a large trash bag has been dropped here."
+descr "A large trash bag has been dropped here."
 extra {}
  "<pre>This large black bag is commonly used for trash.
 There is some writing printed on it.</pre>"
@@ -8274,7 +8274,7 @@ extra {}
 	[  ------------------------------------&gt;   ]]
 	[	  Personalize your outfit!	            ]]
 	[	    Dazzle your friends!	            ]]
-	[	   Suprise your loved one!	            ]]
+	[	   Surprise your loved one!	            ]]
 	[_________________________________________]]</div></pre>"
 weight 20
 
@@ -8435,7 +8435,7 @@ end
                               nightshade
 names {"nightshade", "berries"}
 title "some nightshade berries"
-descr "A handful of nightshade berries have been left here."
+descr "A handful of nightshade berries has been left here."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(2, 5)
 weight 1
@@ -8465,7 +8465,7 @@ POTION_DEF(50, SPL_REM_DISEASE, SPL_NONE, SPL_NONE)
 weight 1
 cost 5 GOLD_PIECE
 extra {}
-"It has a nice white colour and smells little like peppermint."
+"It has a nice white colour and smells a little like peppermint."
 end
 
 			p_rpoison
@@ -8629,8 +8629,8 @@ end
 
                               bread
 
-names {"bread"}
-title "a bread"
+names {"bread", "loaf"}
+title "a loaf of bread"
 descr "A loaf of bread has been left here."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(12, 0)
@@ -8740,10 +8740,10 @@ end
 
                                 garlic
 
-names {"garlic"}
-title "a garlic"
-descr "A large garlic has been left here."
-extra {} "In memorandum Bode."
+names {"garlic", "bulb"}
+title "a bulb of garlic"
+descr "A large bulb of garlic has been left here."
+extra {} "In memoriam Bode."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(4, 0)
 weight 1
@@ -8865,7 +8865,7 @@ names {"katana"}
 title "a katana"
 descr "A katana has been left here."
 extra {}
-"The katana is a light weight finely crafted weapon."
+"The katana is a lightweight, finely crafted weapon."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SCIMITAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 dilcopy randomizeItem@randomt(BONUS_AVERAGE);
@@ -8876,7 +8876,7 @@ end
 
                               ham0
 
-names {"war hammer","hammer"}
+names {"war hammer","warhammer","hammer"}
 title "a war hammer"
 descr "A medium-sized warhammer is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -9649,7 +9649,7 @@ end
                                amethyst
 
 names {"amethyst","gem"}
-title "a amethyst"
+title "an amethyst"
 descr "A small beautifully polished amethyst has been left here."
 type ITEM_TREASURE
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -9757,7 +9757,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 1
 cost 6   SILVER_PIECE
 extra {}
-"This is just a old leather tool."
+"This is just an old leather tool."
 extra {"$improved identify"}
 "This leather tool would be perfect for adjusting the size of leather armor."
 extra {"$refit leather"}
@@ -9780,7 +9780,7 @@ variety of different signatures, all once names of respected citizens.
 extra {"pedestal"}
 "The book is securely fastened and doesn't seem to budge."
 extra {"signatures", "signature", "blood", "pages", "page"}
-"The recognize many of the names written on the book's pages.
+"You recognize many of the names written on the book's pages.
 In fact, many ring out in your memory, these are the names of
 outlaws!
 _____________________________________________________________<br/>"
@@ -9837,16 +9837,16 @@ code
       pause;
       act("A morbid voice intones 'Thou truly wishes to sign the " +
 	  "death book? Let the warnings of the dead ring out in your " +
-       	  "mind!", A_ALWAYS, pc, self, null, TO_CHAR);
+       	  "mind!'", A_ALWAYS, pc, self, null, TO_CHAR);
 		pause;
       act("The voices of the dead whisper 'If you really choose to sign, " +
 	  "be it known that your death may be sought by ANYONE else " +
 	  "who has signed. You will be free to murder other signers " +
-	  "as you wish.", A_ALWAYS, pc, self, null, TO_CHAR);
+	  "as you wish.'", A_ALWAYS, pc, self, null, TO_CHAR);
       pause;
       act ("Understand though if you sign there is no turning back.  "+
       "Once a book signer always a book signer.  Also don't complain to "+
-      "The gods about another book signer that kills you cause thats what
+      "the gods about another book signer that kills you cause that's what
 signing "+
       "this book means.  You are giving your permission to be killed.",
         A_ALWAYS, pc, self, null, TO_CHAR);
@@ -9874,7 +9874,7 @@ signing "+
  	 }
          i := i+1;
       }
-      act("An eerie voice exclaims 'A wise decision not to sign!",
+      act("An eerie voice exclaims 'A wise decision not to sign!'",
 	  A_ALWAYS, activator, self, null, TO_CHAR);
       unsecure(pc);
       goto start;
@@ -9907,7 +9907,7 @@ var
   ));
   block;
   pc:=ghead();
-sendtext ("The following book signers are on line.<br/><br/>",activator);
+sendtext ("The following book signers are online.<br/><br/>",activator);
 
      while (pc.type==UNIT_ST_PC)
       {
@@ -9966,8 +9966,8 @@ G     |     I-#-----#-#-#-----#-S     |          Baker's Shop       J07
 H   R |   S   |   O   |   O   |   S   | R        Butcher's Shop     J17
     | |   |   |   |   |   |   |   |   | |        Boat Shop          L06
 I @-#-W---#---#---#---#---#---#---#---W-#-@      Fish Shop          L08
-    | |   |   |   |   |   |   |   |   | |        Armour's Shop      Q09
-J   R |   S   S   S   |   T   |   S   | R        Mortican's Shop    S05
+    | |   |   |   |   |   |   |   |   | |        Armourer's Shop    Q09
+J   R |   S   S   S   |   T   |   S   | R        Mortician's Shop   S05
       |               |       |       |          Blacksmith's Shop  S09
 K     |               #-I   O-#       |          Carpenter's Shop   T05
       |               |       |       |          Weaponsmith's Shop T08
@@ -9980,7 +9980,7 @@ N     W       #       #               W          Filthy's           G06
 
    South Midgaard.                             Guilds
                     1 1 1 1 1 1 1 1 1 1 1 1      Paladins           F09
-  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1      Sorcerors          Y03
+  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1      Sorcerers          Y03
 
       |               |               |        Connections
 O     W---#---#---#---#---#---#---#---W          Cypress Forest     I01
@@ -10184,7 +10184,7 @@ end
                              prom_bench
 
 names {"bench"}
-title "the Bench"
+title "the bench"
 descr "A white-painted wooden bench is standing here."
 type ITEM_OTHER
 weight 100
@@ -10198,7 +10198,7 @@ end
                              park_bench
 
 names {"bench"}
-title "the Bench"
+title "the bench"
 descr "A white-painted wooden bench is standing here."
 type ITEM_OTHER
 weight 100

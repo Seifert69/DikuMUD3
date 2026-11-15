@@ -1261,8 +1261,8 @@ code
         goto loop;
     }
 
-    act("Your $2N makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_CHAR);
-    act("$1n's $2N makes a high pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_ROOM);
+    act("Your $2N makes a high-pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_CHAR);
+    act("$1n's $2N makes a high-pitched zing.", A_SOMEONE, activator, self, activator.fighting, TO_ROOM);
 
     u := activator;
     i := u.fighting.idx;
@@ -1292,7 +1292,7 @@ code
 
     // Maybe make other descriptions depending on slashing, piercing, crushing. 
     //
-    act("You decapitate $3n's head with your $2N, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_CHAR);
+    act("You decapitate $3n with your $2N, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_CHAR);
     act("$1n decapitates you with $1s $2N, killing you instantly.", A_SOMEONE, u, self, u.fighting, TO_VICT);
     act("$1n decapitates $3n with $1s $2N, killing $3m instantly.", A_SOMEONE, u, self, u.fighting, TO_REST);
 
@@ -2751,7 +2751,7 @@ code
         "An excellent $2n $1n.",
         "An excellent and well balanced $2n $1n.",
         "A superior $2n $1n.",
-        "A god like $2n $1n." };
+        "A godlike $2n $1n." };
 
     // debug log("weapon extra : " + sl.[smithlvl+7]);
 
@@ -2846,9 +2846,9 @@ code
         "The $2n is very well made.",
         "It's a well made and strong $2n with sewn in $3n threads.",
         "It's a well made and very strong $2n with sewn in $3n threads.",
-        "It's a beautiful and very strong $2n with swen in $3n threads.",
+        "It's a beautiful and very strong $2n with sewn in $3n threads.",
         "It's a fantastical and a very strong $2n which is highly decorated and with sewn in $3n threads.",
-        "The $2n looks to be created by divine forces, and it is highly decorated and with swen in $3n threads."  //+7
+        "The $2n looks to be created by divine forces, and it is highly decorated and with sewn in $3n threads."  //+7
     };
 
     s := sl.[smithRoll + 7];
@@ -2894,10 +2894,10 @@ code
         "The club base looks ordinary.", // 0
         "The club base is well made.",
         "The club base is very well made and balanced.",
-        "It's a strong and well balanced club base with $2n with rune engravings.",
+        "It's a strong and well balanced club base with $3n rune engravings.",
         "It's a well made and very strong club base with $3n inlaid rune engravings.",
         "It's a beautiful and very strong club base with $3n inlaid rune engravings.",
-        "It's a fantastical and a very strong club base which is highly decorated and $3n inlaid rune engravings.",
+        "It's a fantastical and a very strong club base which is highly decorated and with $3n inlaid rune engravings.",
         "The club base looks to be created by divine forces, and it is highly decorated and with $3n inlaid rune engravings."  //+7
     };
 
@@ -2944,10 +2944,10 @@ code
         "The lance pole looks ordinary.", // 0
         "The lance pole is well made.",
         "The lance pole is very well made and balanced.",
-        "It's a strong and well balanced lance pole with $2n with rune engravings.",
+        "It's a strong and well balanced lance pole with $3n rune engravings.",
         "It's a well made and very strong lance pole with $3n inlaid rune engravings.",
         "It's a beautiful and very strong lance pole with $3n inlaid rune engravings.",
-        "It's a fantastical and a very strong lance pole which is highly decorated and $3n inlaid rune engravings.",
+        "It's a fantastical and a very strong lance pole which is highly decorated and with $3n inlaid rune engravings.",
         "The lance pole looks to be created by divine forces, and it is highly decorated and with $3n inlaid rune engravings."  //+7
     };
 
@@ -3045,7 +3045,7 @@ code
         "Its strong well made $2n has $3n runes inlaid.",
         "Its beautiful and strong $2n has $3n runes inlaid.",
         "Its fantastic $1n $2n is highly decorated and with inlaid $3n runes.",
-        "Its one of the most stunning $1n $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
+        "It's one of the most stunning $1n $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
     };
 
     // log("smithRoll = " + itoa(smithRoll));
@@ -3094,11 +3094,11 @@ code
         "The $2n looks quite plain.", // 0
         "The $2n is very well made.",
         "The well made $2n seems quite strong.",
-        "Its a strong $2n that has $3n runes inlaid.",
-        "Its a strong well made $2n that has $3n runes inlaid.",
-        "Its a beautiful and strong $2n which has $3n runes inlaid.",
+        "It's a strong $2n that has $3n runes inlaid.",
+        "It's a strong well made $2n that has $3n runes inlaid.",
+        "It's a beautiful and strong $2n which has $3n runes inlaid.",
         "This is truly a fantastical $2n with wood engravings and inlaid $3n runes.",
-        "Its one of the most divinely stunning $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
+        "It's one of the most divinely stunning $2ns you have ever seen, it is highly decorated and with inlaid $3n runes."  //+7
     };
 
     // log("smithRoll = " + itoa(smithRoll));
@@ -3681,7 +3681,7 @@ code
         "Excellent $2n armour.",
         "Excellent, well fitted $2n armour.",
         "Superior $2n armour.",
-        "God like $2n armour." };
+        "Godlike $2n armour." };
 
     exd := "" in u.extra;
     exd.descr :=  sreplace(sl.[smithlvl+7], u.name, slMatNames.[matIndex], "", "");
@@ -4018,7 +4018,7 @@ treasury
 
 title "Test treasury"
 descr
-"You are in the treasury, its a huge square room with no exits. Apparently
+"You are in the treasury, it's a huge square room with no exits. Apparently
 the room is empty - obviously the treasures are beyond the reach of mere
 mortals."
 
@@ -4032,7 +4032,7 @@ end
 anklet // A thought experiment
 names {"$2n anklet", "anklet"}
 title "$2a $2n anklet"
-descr "$2a $2n anklet has is lying here."
+descr "$2a $2n anklet is lying here."
 extra {} ""
 manipulate {MANIPULATE_TAKE}
 dilcopy RndTreasure@randomt(BONUS_AVERAGE);
