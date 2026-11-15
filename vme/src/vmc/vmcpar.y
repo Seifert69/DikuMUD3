@@ -1677,12 +1677,17 @@ void fatal(const char *str)
     g_errcon = 1;
 }
 
-void real_warning(const char *str)
+void real_warning_at(int line, const char *str)
 {
     // if(!g_quiet_compile)
     {
-        fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, linenum, str);
+        fprintf(stderr, "WARNING: %s: %d: %s\n", g_cur_filename, line, str);
     }
+}
+
+void real_warning(const char *str)
+{
+    real_warning_at(linenum, str);
 }
 
 void warning(const char *str)

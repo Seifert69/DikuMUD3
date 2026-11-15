@@ -40,7 +40,7 @@ int dillinenum = 1;
 CByteBuffer *dpBuf = &g_FileBuffer;
 
 int dilpos;
-void setline(char *str);
+int line_marker(const char *str);
 void dilwarning(const char *str);
 void fatal(const char *str);
 void syntax(const char *str);
@@ -214,28 +214,9 @@ char diltmpstr[YYLMAX * 2 + 1], *dila, *dilb;
 }
 
 ^\#.*\n {
-    /* line marker "# <line> ..." or "#line <line>": the next line of the DIL is that line */
-    const char *s = diltext + 1;
-    while (*s == ' ' || *s == '\t')
-    {
-        s++;
-    }
-    if (strncmp(s, "line", 4) == 0)
-    {
-        s += 4;
-        while (*s == ' ' || *s == '\t')
-        {
-            s++;
-        }
-    }
-    if (isdigit(*s))
-    {
-        dillinenum = atoi(s);
-    }
-    else
-    {
-        dillinenum++;
-    }
+    /* a cpp line marker: the next line of the DIL is the line it names */
+    int line = line_marker(diltext);
+    dillinenum = (line >= 0) ? line : dillinenum + 1;
 }
 
 [\t ]   /* ignore */

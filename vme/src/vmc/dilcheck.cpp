@@ -2,73 +2,47 @@
 
 #include <cctype>
 
-namespace
-{
-constexpr int TO_VICT_ = 1; // vme.h: TO_VICT
-
-const char *eventName(int var)
-{
-    switch (var)
-    {
-        case DilCheck::ACTIVATOR:
-            return "activator";
-        case DilCheck::MEDIUM:
-            return "medium";
-        case DilCheck::TARGET:
-            return "target";
-        default:
-            return "argument";
-    }
-}
-} // namespace
-
 DilCheck::DilCheck(Report report)
     : report_(std::move(report))
 {
 }
 
-void DilCheck::begin(const std::vector<std::string> &names, const std::vector<VarKind> &kinds, int argc)
+void DilCheck::begin(const std::vector<Var> &vars, int argc)
 {
-    names_ = names;
-    kinds_ = kinds;
-    kinds_.resize(names_.size(), VarKind::Other);
-    state_.assign(names_.size(), State::Never);
-    for (int i = 0; i < argc && i < static_cast<int>(state_.size()); i++)
+    vars_.clear();
+    for (const auto &v : vars)
     {
-        state_[i] = State::Unknown;
+        State state = static_cast<int>(vars_.size()) < argc ? State::Unknown : State::Never;
+        vars_.push_back(Track{v.name, v.kind, state, false, false, false, 0});
     }
-    secured_.assign(names_.size(), Secured::No);
-    everSecured_.assign(names_.size(), false);
-    warned_.assign(names_.size(), false);
-    staleLine_.assign(names_.size(), 0);
-    afterTick_ = false;
     tickLine_ = 0;
     for (bool &w : eventWarned_)
     {
         w = false;
     }
-    condition_ = 0;
-    quiet_ = 0;
+    condition_ = false;
+    quiet_ = false;
 }
 
-std::string DilCheck::name(int var) const
+DilCheck::Track *DilCheck::at(int var)
 {
-    return (var >= 0 && var < static_cast<int>(names_.size())) ? names_[var] : std::string("?");
+    return (var >= 0 && var < static_cast<int>(vars_.size())) ? &vars_[var] : nullptr;
 }
 
 void DilCheck::assign(int var)
 {
-    if (var < 0 || var >= static_cast<int>(state_.size()))
+    if (Track *v = at(var))
     {
-        return;
+        v->state = State::Fresh;
+        v->warned = false;
     }
-    state_[var] = State::Fresh;
-    warned_[var] = false;
 }
 
 void DilCheck::use(int var, bool field, int line)
 {
-    if (quiet_ > 0)
+    static const char *const eventNames[] = {"activator", "medium", "target", "argument"};
+
+    if (quiet_)
     {
         return;
     }
@@ -76,141 +50,108 @@ void DilCheck::use(int var, bool field, int line)
     {
         // activator, medium, target, argument after a pause belong to the tick
         int i = ACTIVATOR - var;
-        if (afterTick_ && condition_ == 0 && i >= 0 && i < 4 && !eventWarned_[i])
+        if (tickLine_ && !condition_ && i >= 0 && i < 4 && !eventWarned_[i])
         {
             eventWarned_[i] = true;
             report_(line,
-                    std::string(eventName(var)) + (var == ARGUMENT ? " is empty here" : " is null here") +
-                        ": after the pause on line " + std::to_string(tickLine_) +
-                        " the program was woken by a tick. Keep what you need in a variable before the pause");
+                    std::string(eventNames[i]) + (var == ARGUMENT ? " is empty here" : " is null here") + ": after the pause on line " +
+                        std::to_string(tickLine_) + " the program was woken by a tick. Keep what you need in a variable before the pause");
         }
         return;
     }
-    if (var >= static_cast<int>(state_.size()) || kinds_[var] == VarKind::Other || warned_[var])
+
+    Track *v = at(var);
+    if (!v || v->kind == VarKind::Other || v->warned)
     {
         return;
     }
+    bool extra = (v->kind == VarKind::Extra);
 
-    if (condition_ > 0 && (kinds_[var] == VarKind::Extra || secured_[var] == Secured::No))
+    if (condition_ && (extra || !v->secured))
     {
-        warned_[var] = true;
+        v->warned = true;
         report_(line,
-                name(var) + " is null in this condition: the condition is tested after the program wakes up, and waking up clears " +
-                    (kinds_[var] == VarKind::Extra ? std::string("every extraptr variable") : std::string("unsecured unitptr variables")) +
-                    (kinds_[var] == VarKind::Extra ? "" : " (secure it first)"));
-        return;
+                v->name + " is null in this condition: the condition is tested after the program wakes up, and waking up clears " +
+                    (extra ? "every extraptr variable" : "unsecured unitptr variables (secure it first)"));
     }
-
-    if (state_[var] == State::Stale)
+    else if (v->state == State::Stale)
     {
-        warned_[var] = true;
+        v->warned = true;
         report_(line,
-                name(var) + " is null here: it was set before the wait on line " + std::to_string(staleLine_[var]) +
-                    (kinds_[var] == VarKind::Extra ? ", and a wait clears every extraptr variable"
-                                                   : " and isn't secured, and a wait clears unsecured unitptr variables"));
+                v->name + " is null here: it was set before the wait on line " + std::to_string(v->staleLine) +
+                    (extra ? ", and a wait clears every extraptr variable" : " and isn't secured, and a wait clears unsecured unitptr variables"));
     }
-    else if (state_[var] == State::Never && field)
+    else if (v->state == State::Never && field)
     {
-        warned_[var] = true;
-        report_(line, name(var) + " is used before it is set: it is still null here");
+        v->warned = true;
+        report_(line, v->name + " is used before it is set: it is still null here");
     }
 }
 
 void DilCheck::wait(bool tick, int line)
 {
-    afterTick_ = tick;
+    tickLine_ = tick ? line : 0;
     if (tick)
     {
-        tickLine_ = line;
         for (bool &w : eventWarned_)
         {
             w = false;
         }
     }
-    for (size_t i = 0; i < state_.size(); i++)
+    for (Track &v : vars_)
     {
-        bool cleared = (kinds_[i] == VarKind::Extra) || (kinds_[i] == VarKind::Unit && secured_[i] == Secured::No);
-        if (cleared && (state_[i] == State::Fresh || state_[i] == State::Unknown))
+        bool cleared = (v.kind == VarKind::Extra) || (v.kind == VarKind::Unit && !v.secured);
+        if (cleared && (v.state == State::Fresh || v.state == State::Unknown))
         {
-            state_[i] = State::Stale;
-            staleLine_[i] = line;
-            warned_[i] = false;
+            v.state = State::Stale;
+            v.staleLine = line;
+            v.warned = false;
         }
-    }
-}
-
-void DilCheck::conditionBegin()
-{
-    condition_++;
-}
-
-void DilCheck::conditionEnd()
-{
-    if (condition_ > 0)
-    {
-        condition_--;
     }
 }
 
 void DilCheck::secure(int var, int line)
 {
-    if (var < 0 || var >= static_cast<int>(state_.size()))
+    if (Track *v = at(var))
     {
-        return;
+        if (v->state == State::Never)
+        {
+            report_(line, "secure(" + v->name + ") comes before " + v->name + " is set, so it secures nothing");
+        }
+        v->secured = true;
+        v->everSecured = true;
     }
-    if (state_[var] == State::Never)
-    {
-        report_(line, "secure(" + name(var) + ") comes before " + name(var) + " is set, so it secures nothing");
-    }
-    secured_[var] = Secured::Yes;
-    everSecured_[var] = true;
 }
 
 void DilCheck::unsecure(int var)
 {
-    if (var >= 0 && var < static_cast<int>(secured_.size()))
+    if (Track *v = at(var))
     {
-        secured_[var] = Secured::No;
-    }
-}
-
-void DilCheck::quietBegin()
-{
-    quiet_++;
-}
-
-void DilCheck::quietEnd()
-{
-    if (quiet_ > 0)
-    {
-        quiet_--;
+        v->secured = false;
     }
 }
 
 void DilCheck::boundary()
 {
-    for (size_t i = 0; i < state_.size(); i++)
+    for (Track &v : vars_)
     {
-        if (state_[i] == State::Stale || state_[i] == State::Fresh)
+        if (v.state == State::Stale || v.state == State::Fresh)
         {
-            state_[i] = State::Unknown;
+            v.state = State::Unknown;
         }
-        if (everSecured_[i] && secured_[i] == Secured::No)
-        {
-            secured_[i] = Secured::Maybe;
-        }
-        warned_[i] = false;
+        v.secured = v.secured || v.everSecured; // it may arrive from a path where it is secured
+        v.warned = false;
     }
-    afterTick_ = false;
+    tickLine_ = 0;
 }
 
-void DilCheck::act(bool chNull, bool victNull, int type, int line)
+void DilCheck::act(bool chNull, bool victNull, bool toVict, int line)
 {
-    if (type == TO_VICT_ && victNull)
+    if (toVict && victNull)
     {
         report_(line, "act() TO_VICT with null as the victim: nobody sees it");
     }
-    else if (type != TO_VICT_ && chNull)
+    else if (!toVict && chNull)
     {
         report_(line, "act() with null as the character: nobody sees it");
     }

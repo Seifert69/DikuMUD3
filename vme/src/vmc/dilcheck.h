@@ -25,6 +25,12 @@ public:
         Extra
     };
 
+    struct Var
+    {
+        std::string name;
+        VarKind kind;
+    };
+
     /// Built-in variables passed to use(); real variables are their index (0 and up).
     static constexpr int ACTIVATOR = -2;
     static constexpr int MEDIUM = -3;
@@ -36,25 +42,23 @@ public:
     explicit DilCheck(Report report);
 
     /// A new template: its variables (the first argc are its arguments).
-    void begin(const std::vector<std::string> &names, const std::vector<VarKind> &kinds, int argc);
+    void begin(const std::vector<Var> &vars, int argc);
     void assign(int var);
     /// A read of var (field: through a field, as in pc.name).
     void use(int var, bool field, int line);
     /// A wait statement; tick is true when it waits for ticks only (a pause).
     void wait(bool tick, int line);
-    /// Reads between these are in a wait or interrupt condition.
-    void conditionBegin();
-    void conditionEnd();
+    /// Reads while this is on are in a wait or interrupt condition.
+    void setCondition(bool on) { condition_ = on; }
+    /// Reads while this is on are not checked (the argument of unsecure()).
+    void setQuiet(bool on) { quiet_ = on; }
     void secure(int var, int line);
     void unsecure(int var);
-    /// Reads between these are not checked (the argument of unsecure()).
-    void quietBegin();
-    void quietEnd();
     /// A block end or a label: code may arrive here from elsewhere.
     void boundary();
 
-    /// act(): ch/vict say whether those arguments are the constant null; type is the TO_ value or -1.
-    void act(bool chNull, bool victNull, int type, int line);
+    /// act(): chNull/victNull say whether those arguments are the constant null.
+    void act(bool chNull, bool victNull, bool toVict, int line);
     /// exec(): the first argument, when it starts with a string literal and adds something to it.
     void exec(const std::string &literal, bool concatenated, int line);
 
@@ -67,25 +71,23 @@ private:
         Stale    ///< set before a wait and not secured: null now
     };
 
-    std::string name(int var) const;
+    struct Track
+    {
+        std::string name;
+        VarKind kind;
+        State state;
+        bool secured;     ///< secured, or (after a block end or label) secured somewhere above
+        bool everSecured; ///< secure() seen above
+        bool warned;      ///< warned about since its state last changed
+        int staleLine;    ///< the wait that made it stale
+    };
+
+    Track *at(int var);
 
     Report report_;
-    std::vector<std::string> names_;
-    std::vector<VarKind> kinds_;
-    std::vector<State> state_;
-    enum class Secured
-    {
-        No,
-        Yes,
-        Maybe ///< after a label or block end, when it was secured somewhere above
-    };
-    std::vector<Secured> secured_;
-    std::vector<bool> everSecured_;
-    std::vector<bool> warned_;
-    std::vector<int> staleLine_;
-    bool afterTick_{false};
-    int tickLine_{0};
+    std::vector<Track> vars_;
+    int tickLine_{0}; ///< the pause the program last woke from, 0 when the last wait wasn't a pause
     bool eventWarned_[4]{};
-    int condition_{0};
-    int quiet_{0};
+    bool condition_{false};
+    bool quiet_{false};
 };

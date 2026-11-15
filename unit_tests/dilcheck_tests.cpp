@@ -12,7 +12,7 @@ struct Fixture
 
     explicit Fixture(int argc = 0)
     {
-        check.begin({"pc", "exd", "s"}, {DilCheck::VarKind::Unit, DilCheck::VarKind::Extra, DilCheck::VarKind::Other}, argc);
+        check.begin({{"pc", DilCheck::VarKind::Unit}, {"exd", DilCheck::VarKind::Extra}, {"s", DilCheck::VarKind::Other}}, argc);
     }
     bool warned(const std::string &part) const
     {
@@ -156,10 +156,10 @@ BOOST_AUTO_TEST_CASE(unsecured_unit_in_condition)
 {
     Fixture f;
     f.check.assign(0);
-    f.check.conditionBegin();
+    f.check.setCondition(true);
     f.check.use(DilCheck::ACTIVATOR, false, 30);
     f.check.use(0, false, 30);
-    f.check.conditionEnd();
+    f.check.setCondition(false);
     BOOST_TEST(f.warnings.size() == 1);
     BOOST_TEST(f.warned("30: pc is null in this condition"));
 }
@@ -169,9 +169,9 @@ BOOST_AUTO_TEST_CASE(secured_unit_in_condition)
     Fixture f;
     f.check.assign(0);
     f.check.secure(0, 29);
-    f.check.conditionBegin();
+    f.check.setCondition(true);
     f.check.use(0, false, 30);
-    f.check.conditionEnd();
+    f.check.setCondition(false);
     BOOST_TEST(f.warnings.empty());
 }
 
@@ -203,19 +203,19 @@ BOOST_AUTO_TEST_CASE(quiet_unsecure_argument)
     Fixture f;
     f.check.assign(0);
     f.check.wait(true, 10);
-    f.check.quietBegin();
+    f.check.setQuiet(true);
     f.check.use(0, false, 11);
-    f.check.quietEnd();
+    f.check.setQuiet(false);
     BOOST_TEST(f.warnings.empty());
 }
 
 BOOST_AUTO_TEST_CASE(act_null_units)
 {
     Fixture f;
-    f.check.act(false, true, 1, 60); // TO_VICT, null victim
-    f.check.act(true, false, 3, 61); // TO_CHAR, null character
-    f.check.act(true, false, 1, 62); // TO_VICT only needs the victim
-    f.check.act(false, true, 2, 63); // TO_NOTVICT: the room still sees it
+    f.check.act(false, true, true, 60);  // TO_VICT, null victim
+    f.check.act(true, false, false, 61); // TO_CHAR, null character
+    f.check.act(true, false, true, 62);  // TO_VICT only needs the victim
+    f.check.act(false, true, false, 63); // TO_NOTVICT: the room still sees it
     BOOST_TEST(f.warnings.size() == 2);
     BOOST_TEST(f.warned("60: act() TO_VICT with null as the victim"));
     BOOST_TEST(f.warned("61: act() with null as the character"));

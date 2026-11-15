@@ -97,6 +97,8 @@ extern char **g_tmplnames;
 extern const char *g_error_zone_name;
 extern int g_errcon;
 extern int g_fatal_warnings;
+/// A warning about line `line` of the file being compiled (vmcpar.y).
+void real_warning_at(int line, const char *str);
 extern int g_verbose;
 extern int g_nooutput;
 extern int g_make;
