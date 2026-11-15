@@ -1927,6 +1927,35 @@ code
       logtest(tstno, LOGT_ERROR, "T040 roomcount " + itoa(z.roomcount) + ", rooms on the list " + itoa(n));
       bad := 1;
    }
+   // objcount and npccount: the objects and NPCs the zone defines (they were always 0), at
+   // least as many as the kinds of them now in the game
+   sl := null;
+   u := obj_head();
+   while (u != null)
+   {
+      if (u.type != UNIT_ST_OBJ)
+         break;
+      if ((u.zoneidx == "test") and (not (u.nameidx in sl)))
+         addstring(sl, u.nameidx);
+      u := u.gnext;
+   }
+   n := length(sl);
+   sl := null;
+   u := npc_head();
+   while (u != null)
+   {
+      if (u.type != UNIT_ST_NPC)
+         break;
+      if ((u.zoneidx == "test") and (not (u.nameidx in sl)))
+         addstring(sl, u.nameidx);
+      u := u.gnext;
+   }
+   if ((n < 1) or (z.objcount < n) or (length(sl) < 1) or (z.npccount < length(sl)))
+   {
+      logtest(tstno, LOGT_ERROR, "T040 objcount " + itoa(z.objcount) + " for " + itoa(n) +
+              " kinds loaded, npccount " + itoa(z.npccount) + " for " + itoa(length(sl)));
+      bad := 1;
+   }
    u := null;
    u := z.rooms;
    if ((u == null) or (u.type != UNIT_ST_ROOM) or (u.zoneidx != "test") or (u.nameidx != first))
