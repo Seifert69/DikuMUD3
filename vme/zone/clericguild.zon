@@ -198,6 +198,8 @@ code
       exec("say Please, not here, "+pc.name+". People are watching.", self);
       exec("peer",self);pause;
       exec("tokiss "+pc.name,self);           //this sub works
+      unsecure(pc);
+      goto start;
    }
 
 :lecture:
@@ -770,10 +772,12 @@ heartbeat := PULSE_SEC*7;
      pause;
      exec("emote beckons to " +pc.name+".",self);
      exec("say Have you performed your penance?", self);  
+     unsecure(pc);
      goto start;
     }
     else  
   {
+    unsecure(pc);
     goto start;
    } 
  :torc_acc:
@@ -827,6 +831,8 @@ addextra(pc.quests,{TORC_REPL},"");
  unsecure(pc); 
 goto start; 
 }
+unsecure(pc);
+goto start;
 }
 dilend   /*torc_repl*/
 
@@ -912,17 +918,17 @@ pause;
 exec("emote places the hand in the center of the semi-circle.",self);
 exec("emote chants a mantra as she prays.",self);
 pause;
-sendtext("The potion starts to glow.<br/>", self.outside);
+act("The potion starts to glow.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote takes the grave beater in her hand and gestures, a bright light surrounds the grave beater.", self);
 pause;
-sendtext("The grave beater flares with bright light and starts to disintegrate. ", self.outside);
+act("The grave beater flares with bright light and starts to disintegrate.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote holds the beater over the semi-circle letting motes of light fall "+
       "upon the hand within.", self);
 pause;	  
 exec("emote continues chanting calmly.", self);
-sendtext("There is a blinding flash in the center of the room. "+
+act("There is a blinding flash in the center of the room. "+
           "When the light clears, a Silver Torc glows where the "+
-		  "semi-circle had been. ", self.outside);
+		  "semi-circle had been.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote picks up the glowing torc.", self);
 act ("Sister Morenae gives you your torc.",
 A_SOMEONE, pc, null, null, TO_CHAR);
@@ -938,6 +944,7 @@ link(item, pc);
 }
 goto start;
 }
+goto start;
 }
 dilend 
 

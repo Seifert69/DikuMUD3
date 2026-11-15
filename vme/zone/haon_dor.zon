@@ -3173,6 +3173,7 @@ code
    on_activation(self.position != POSITION_STANDING, skip);
 
    :start:
+   nopriority;
    heartbeat := PULSE_SEC * 4;
 
    :findmob:
@@ -3182,9 +3183,9 @@ code
    if ( this_ptr == null ) goto start;
 
   
+if (this_ptr.vlevel <= 70) goto start;
    priority;
    secure(this_ptr, start);
-if (this_ptr.vlevel <= 70) goto start;
  
    act("$1n roars at you!", A_SOMEONE, self, null,
         this_ptr, TO_VICT);

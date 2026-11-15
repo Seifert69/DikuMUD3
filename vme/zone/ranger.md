@@ -12,3 +12,16 @@
    teacher; there's no second skill or ability teacher. Intended?
 4. **master** (line 377): the lowest title is "Master of the Hunt", above "Scout"/"Guide". Is the
    first title in the wrong place?
+
+## Step 2
+
+Nothing fixed in place.
+
+Questions:
+1. **nokill** (line 29): unlike the paladin and mage guilds' nokill, it has no
+   `if (pc.type == UNIT_ST_NPC) goto start;`, so an NPC fighting a ranger guild NPC (a pet, a
+   summoned creature, a wandering monster) is beaten unconscious and thrown out to for_gath1 like a
+   player. Skip NPCs as the other guilds do?
+2. **ranger_dil** (line 423): every time a guild member bows to (or worships) the master, a new
+   ranger bow is loaded and given, with no check for one given before. Intended, or once only (a
+   quest flag)?
