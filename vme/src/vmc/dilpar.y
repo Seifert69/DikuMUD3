@@ -2406,6 +2406,10 @@ dilcmp  : dilsexp
     }
     | dilcmp cmp dilsexp
     {
+        if ($2 == DILE_EQ)
+        {
+            g_dilcheck.equal($1.chkfield ? -1 : $1.chkvar, $3.chkfield ? -1 : $3.chkvar);
+        }
         INITEXP($$);
         $$.boolean = 1;
         switch ($1.typ)
@@ -6567,7 +6571,7 @@ dilproc : corefuncall
     } */
     | DILSI_WIT '(' coreexp ','
     {
-        g_dilcheck.setCondition(true);
+        g_dilcheck.setCondition(true, true);
     }
     coreexp ')' ihold ahold
     {
@@ -6978,7 +6982,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     | DILSI_FOE '(' coreexp ',' ihold pushbrk pushcnt defcnt corevar ihold ahold ')'
     {
-        g_dilcheck.boundary(true);
+        g_dilcheck.loopBegin();
         g_dilcheck.assign($9.var, -1);
         in_foreach++;
         if (in_foreach > 1)
@@ -6992,7 +6996,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     ihold ahold defbrk popbrk popcnt
     {
-        g_dilcheck.boundary();
+        g_dilcheck.loopEnd();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the next element
@@ -7015,11 +7019,11 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     | DILSI_WHI pushbrk pushcnt defcnt '('
     {
-        g_dilcheck.boundary(true); /* the condition is tested again after each pass */
+        g_dilcheck.loopBegin(); /* the condition is tested again after each pass */
     }
     coreexp ')' ihold ahold dilcomposed ihold ahold defbrk popbrk popcnt
     {
-        g_dilcheck.boundary();
+        g_dilcheck.loopEnd();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the test statement.
@@ -7040,7 +7044,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     | ':' SYMBOL ':'
     {
-        g_dilcheck.boundary(true);
+        g_dilcheck.label();
     }
     dilcomposed
     {

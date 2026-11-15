@@ -106,35 +106,35 @@ BOOST_AUTO_TEST_CASE(one_warning_per_variable)
     BOOST_TEST(f.all().size() == 1);
 }
 
-BOOST_AUTO_TEST_CASE(boundary_forgets)
+BOOST_AUTO_TEST_CASE(label_forgets)
 {
     // after a label or block end the code may come from elsewhere: no warning
     Fixture f;
     f.check.assign(0, -1);
     f.check.wait(true, 10);
-    f.check.boundary();
+    f.check.label();
     f.check.use(0, true, 12);
     BOOST_TEST(f.all().empty());
 }
 
-BOOST_AUTO_TEST_CASE(boundary_after_unsecure_is_maybe_secured)
+BOOST_AUTO_TEST_CASE(label_after_unsecure_is_maybe_secured)
 {
     // secured above, unsecured on one path: after a label it may still be secured
     Fixture f;
     f.check.assign(0, -1);
     f.check.secure(0, 8);
     f.check.unsecure(0);
-    f.check.boundary();
+    f.check.label();
     f.check.wait(true, 10);
     f.check.use(0, true, 11);
     BOOST_TEST(f.all().empty());
 }
 
-BOOST_AUTO_TEST_CASE(never_secured_stays_unsecured_after_boundary)
+BOOST_AUTO_TEST_CASE(never_secured_stays_unsecured_after_label)
 {
     Fixture f;
     f.check.assign(0, -1);
-    f.check.boundary();
+    f.check.label();
     f.check.wait(true, 10);
     f.check.use(0, false, 11);
     BOOST_TEST(f.warned("pc is null here"));
@@ -259,7 +259,7 @@ BOOST_AUTO_TEST_CASE(condition_on_loop_back_secured_further_down)
 {
     // :start: wait(..., activator == pc); pc := activator; secure(pc, lost); goto start;
     Fixture f;
-    f.check.boundary(true);
+    f.check.label();
     f.check.setCondition(true);
     f.check.use(0, false, 90);
     f.check.setCondition(false);
@@ -296,7 +296,7 @@ BOOST_AUTO_TEST_CASE(loop_start_forgets_the_pause)
     // pause; while (activator ...) { wait(SFB_CMD, TRUE); }
     Fixture f;
     f.check.wait(true, 120);
-    f.check.boundary(true);
+    f.check.label();
     f.check.use(DilCheck::ACTIVATOR, true, 121);
     BOOST_TEST(f.all().empty());
 }
@@ -304,7 +304,7 @@ BOOST_AUTO_TEST_CASE(loop_start_forgets_the_pause)
 BOOST_AUTO_TEST_CASE(label_may_be_reached_after_the_variable_is_set)
 {
     Fixture f;
-    f.check.boundary(true);
+    f.check.label();
     f.check.use(0, true, 130);
     BOOST_TEST(f.all().empty());
 }
@@ -347,7 +347,7 @@ BOOST_AUTO_TEST_CASE(conditional_pause_is_not_certain)
 
 BOOST_AUTO_TEST_CASE(branch_that_jumps_away_does_not_reach_below)
 {
-    // u := ...; if (c) { unsecure... goto x; } pause; u.name  (u unsecured: still a warning)
+    // u := ...; if (c) { pause; goto x; } pause; u.name: the branch doesn't reach below, u is still set
     Fixture f;
     f.check.assign(0, -1);
     f.check.ifBegin();
@@ -363,7 +363,7 @@ BOOST_AUTO_TEST_CASE(secured_further_down_drops_a_vague_warning)
 {
     // :loop: (pc set somewhere above or below) pause; pc.name ... secure(pc, x) further down
     Fixture f;
-    f.check.boundary(true);
+    f.check.label();
     f.check.wait(true, 180);
     f.check.use(0, true, 181);
     f.check.assign(0, -1);
@@ -377,8 +377,9 @@ BOOST_AUTO_TEST_CASE(reassigned_from_activator_stays_secured)
     Fixture f;
     f.check.assign(0, -1);
     f.check.secure(0, 190);
-    f.check.setCondition(true);
+    f.check.setCondition(true, true);
     f.check.use(0, false, 191);
+    f.check.equal(DilCheck::ACTIVATOR, 0);
     f.check.setCondition(false);
     f.check.wait(false, 191);
     f.check.assign(0, DilCheck::ACTIVATOR);
@@ -407,6 +408,96 @@ BOOST_AUTO_TEST_CASE(code_after_a_jump_is_not_checked)
     f.check.wait(true, 210);
     f.check.jump();
     f.check.use(0, true, 211);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(unsecure_then_jump_in_a_branch)
+{
+    // secure(pc); if (c) { unsecure(pc); goto start; } pause; pc.name
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 220);
+    f.check.ifBegin();
+    f.check.unsecure(0);
+    f.check.jump();
+    f.check.ifEnd();
+    f.check.wait(true, 223);
+    f.check.use(0, true, 224);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(activator_read_without_equality_does_not_keep_secured)
+{
+    // wait(SFB_CMD, activator != pc); pc := activator: a different unit
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 230);
+    f.check.setCondition(true, true);
+    f.check.use(0, false, 231);
+    f.check.setCondition(false);
+    f.check.wait(false, 231);
+    f.check.assign(0, DilCheck::ACTIVATOR);
+    f.check.wait(true, 233);
+    f.check.use(0, true, 234);
+    BOOST_TEST(f.warned("234: pc is null here"));
+}
+
+BOOST_AUTO_TEST_CASE(set_on_both_ways_then_wait_is_definite)
+{
+    // pc := ...; if (c) { pause; } pause; pc.name (with a secure(pc) elsewhere further down)
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.ifBegin();
+    f.check.wait(true, 240);
+    f.check.ifEnd();
+    f.check.wait(true, 242);
+    f.check.use(0, true, 243);
+    f.check.label();
+    f.check.assign(0, -1);
+    f.check.secure(0, 245);
+    BOOST_TEST(f.warned("243: pc is null here"));
+}
+
+BOOST_AUTO_TEST_CASE(every_way_paused)
+{
+    // if (x) { pause; } else { pause; } activator.name
+    Fixture f;
+    f.check.ifBegin();
+    f.check.wait(true, 250);
+    f.check.elseBegin();
+    f.check.wait(true, 252);
+    f.check.ifEnd();
+    f.check.use(DilCheck::ACTIVATOR, true, 254);
+    BOOST_TEST(f.warned("254: activator is null here"));
+}
+
+BOOST_AUTO_TEST_CASE(nested_if_in_else)
+{
+    // secure(pc); if (a) { unsecure(pc); } else if (b) { pause; pc.name }
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 260);
+    f.check.ifBegin();
+    f.check.unsecure(0);
+    f.check.elseBegin();
+    f.check.ifBegin();
+    f.check.wait(true, 263);
+    f.check.use(0, true, 264);
+    f.check.ifEnd();
+    f.check.ifEnd();
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(loop_in_dead_code_is_not_checked)
+{
+    // goto done; while (c) { pause; pc.name }
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.jump();
+    f.check.loopBegin();
+    f.check.wait(true, 270);
+    f.check.use(0, true, 271);
+    f.check.loopEnd();
     BOOST_TEST(f.all().empty());
 }
 

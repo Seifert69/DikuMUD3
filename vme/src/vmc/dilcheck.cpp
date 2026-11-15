@@ -19,13 +19,11 @@ void DilCheck::begin(const std::vector<Var> &vars, int argc)
     securedAbove_.assign(vars_.size(), false);
     ifs_.clear();
     held_.clear();
+    loops_.clear();
     condReads_.clear();
-    lastCondVars_.clear();
-    for (bool &w : eventWarned_)
-    {
-        w = false;
-    }
+    condSame_.clear();
     condition_ = false;
+    waitCondition_ = false;
     quiet_ = false;
 }
 
@@ -63,7 +61,8 @@ void DilCheck::assign(int var, int from)
     if (from <= ACTIVATOR)
     {
         // wait(..., activator == pc); pc := activator: the same unit, so it stays secured
-        if (std::find(lastCondVars_.begin(), lastCondVars_.end(), var) == lastCondVars_.end())
+        const auto &same = flow_.sameAsActivator;
+        if (std::find(same.begin(), same.end(), var) == same.end())
         {
             v->secured = false;
         }
@@ -88,9 +87,9 @@ void DilCheck::use(int var, bool field, int line)
     {
         // activator, medium, target, argument after a pause belong to the tick
         int i = ACTIVATOR - var;
-        if (flow_.tickLine && !condition_ && i >= 0 && i < 4 && !eventWarned_[i])
+        if (flow_.tickLine && !condition_ && i >= 0 && i < 4 && !flow_.eventWarned[i])
         {
-            eventWarned_[i] = true;
+            flow_.eventWarned[i] = true;
             warn(line,
                  std::string(eventNames[i]) + (var == ARGUMENT ? " is empty here" : " is null here") + ": after the pause on line " +
                      std::to_string(flow_.tickLine) + " the program was woken by a tick. Keep what you need in a variable before the pause");
@@ -128,12 +127,12 @@ void DilCheck::use(int var, bool field, int line)
 void DilCheck::wait(bool tick, int line)
 {
     // the conditions read since the last wait are tested from now on, after every wake-up
-    lastCondVars_.clear();
+    flow_.sameAsActivator = condSame_;
+    condSame_.clear();
     for (const auto &r : condReads_)
     {
         VarState *v = at(r.first);
         bool extra = (vars_[r.first].kind == VarKind::Extra);
-        lastCondVars_.push_back(r.first);
         if (v && !v->warned && (extra || !v->secured))
         {
             v->warned = true;
@@ -147,7 +146,7 @@ void DilCheck::wait(bool tick, int line)
     flow_.tickLine = tick ? line : 0;
     if (tick)
     {
-        for (bool &w : eventWarned_)
+        for (bool &w : flow_.eventWarned)
         {
             w = false;
         }
@@ -185,7 +184,10 @@ void DilCheck::secure(int var, int line)
                  std::to_string(v->staleLine));
     }
     v->secured = true;
-    securedAbove_[var] = true;
+    if (flow_.reachable)
+    {
+        securedAbove_[var] = true;
+    }
 }
 
 void DilCheck::unsecure(int var)
@@ -201,13 +203,29 @@ void DilCheck::jump()
     flow_.reachable = false;
 }
 
-void DilCheck::boundary(bool label)
+void DilCheck::equal(int a, int b)
+{
+    // wait(..., activator == pc): pc := activator afterwards is the same unit
+    if (waitCondition_)
+    {
+        if (a <= ACTIVATOR && a >= ARGUMENT && b >= 0)
+        {
+            condSame_.push_back(b);
+        }
+        else if (b <= ACTIVATOR && b >= ARGUMENT && a >= 0)
+        {
+            condSame_.push_back(a);
+        }
+    }
+}
+
+void DilCheck::forget(bool label)
 {
     for (size_t i = 0; i < flow_.vars.size(); i++)
     {
         VarState &v = flow_.vars[i];
-        // a label can be reached from further down, where it may be set
-        if (v.state == State::Stale || v.state == State::Fresh || (label && v.state == State::Never))
+        // code from further down, where it may be set
+        if (v.state == State::Stale || v.state == State::Fresh || v.state == State::Never)
         {
             v.state = State::Unknown;
         }
@@ -215,7 +233,33 @@ void DilCheck::boundary(bool label)
         v.warned = false;
     }
     flow_.tickLine = 0;
-    flow_.reachable = true;
+    flow_.sameAsActivator.clear();
+    if (label)
+    {
+        flow_.reachable = true;
+    }
+}
+
+void DilCheck::label()
+{
+    forget(true);
+}
+
+void DilCheck::loopBegin()
+{
+    loops_.push_back(flow_.reachable);
+    forget(false);
+}
+
+void DilCheck::loopEnd()
+{
+    // the loop ends when its condition fails or at a break: reached when its start was
+    forget(false);
+    if (!loops_.empty())
+    {
+        flow_.reachable = loops_.back();
+        loops_.pop_back();
+    }
 }
 
 void DilCheck::ifBegin()
@@ -255,17 +299,38 @@ void DilCheck::merge(const Flow &other)
     {
         VarState &v = flow_.vars[i];
         const VarState &o = other.vars[i];
-        if (v.state != o.state)
+        if (v.state == State::Stale && o.state == State::Stale)
+        {
+            v.staleVague = v.staleVague && o.staleVague; // definite if definite on either way
+        }
+        else if ((v.state == State::Fresh || v.state == State::Stale) && (o.state == State::Fresh || o.state == State::Stale))
+        {
+            v.state = State::Fresh; // set on both ways: the next wait clears it either way
+        }
+        else if (v.state != o.state)
         {
             v.state = State::Unknown;
         }
         v.secured = v.secured || o.secured;
         v.warned = v.warned && o.warned;
     }
-    if (flow_.tickLine != other.tickLine)
+    if (!flow_.tickLine || !other.tickLine)
     {
-        flow_.tickLine = 0;
+        flow_.tickLine = 0; // woken by a tick only if both ways were
     }
+    for (int i = 0; i < 4; i++)
+    {
+        flow_.eventWarned[i] = flow_.eventWarned[i] && other.eventWarned[i];
+    }
+    std::vector<int> same;
+    for (int var : flow_.sameAsActivator)
+    {
+        if (std::find(other.sameAsActivator.begin(), other.sameAsActivator.end(), var) != other.sameAsActivator.end())
+        {
+            same.push_back(var);
+        }
+    }
+    flow_.sameAsActivator = same;
 }
 
 void DilCheck::act(bool chNull, bool victNull, bool typeKnown, bool needsVictim, int line)
