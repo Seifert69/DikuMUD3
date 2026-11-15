@@ -54,7 +54,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **No `\"` in a string**: vmc stops at it. Use single quotes inside the text.
 - **Strings**: `replace(old, new, text)` replaces every `old`; `left`, `right` and `mid` cut;
   `split(text, sep)` trims the spaces around each piece, so it can't put text back together.
-- **`addextra(u.extra, {"$x"}, "")` adds nothing**: an extra made in DIL needs some text.
+- **`addextra(u.extra, {"$x"}, s)` adds nothing when `s` is a string that was never set**
+  (null, e.g. `sl.[5]` past the end of a list): the text must exist. A literal `""` is fine.
 - **`"words" in a stringlist`** is the position plus one (0 when absent) of the first entry
   that is the string or its first words, ignoring case: `"arrived"` doesn't match
   `"arrived_port"`, but `"ship arrived"` matches `"ship"`.
@@ -63,18 +64,39 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
   `{}` fits either kind of list.
 - **`x := {};` in code doesn't compile** (`Assigning incompatible types (C)`): an empty `{}`
-  only works as a zone-file argument. To start a list over, build a fresh one with
-  `addstring`, or keep a plain string and `split` it.
+  only works as a zone-file argument. To empty a list, `sl := null;`.
 - **Unit and extra variables are cleared at every activation**: after each `pause` or `wait`,
   every `unitptr` and `extraptr` variable that isn't `secure`d is null (`dil_clear_non_secured`
   in dilrun.cpp), wherever the unit is. Find the unit again after the pause
   (`findroom`, `findsymbolic`), or `secure` it.
-- **`and` / `or` evaluate both sides.** No short-circuit: `(u != null) and (u.level > 5)`
-  still reads `u.level`.
+- **`and` / `or` evaluate both sides**, no short-circuit: `(u != null) and (u.level > 5)`
+  still reads `u.level`. That read fails, and `and`, `or` and `not` count a failed value as false
+  (`dilfe_land`/`dilfe_lor`/`dilfe_not` use `dil_getbool`), so `(u == null) or (u.level > 5)` is
+  true when `u` is null: such guards work. Only the bitwise `&` and `|` fail as a whole when a side
+  fails (`dilfe_and`/`dilfe_or`).
 - **A field of null fails, and a failed value is false in every comparison**: `u.level > 5`
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
-- **String `==` and `!=` ignore case**; `<` and `>` don't.
+- **String comparisons ignore case**, `<` and `>` too; `strcmp()` is exact.
 - **Locals start empty**: null, 0 or "". No need to set them first.
+- **Running off the end of the code starts it again at the top**, not ends it: vmc appends
+  `goto 0` to every template (the `program` rule in dilpar.y). Variables keep their values;
+  unsecured unitptrs are null as after any wait. Only `quit` (or destroying the unit) ends a
+  program. So a missing `goto start` re-runs the code above `:start:` (heartbeat, variable
+  setup), it doesn't silence the program. Running `interrupt()` again doesn't add a second one:
+  `dil_intr_insert` replaces the interrupt with the same label.
+- **A failed value assigned**: an integer variable keeps its old value, a string variable
+  becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
+- **`return (null);` doesn't compile** in a `unitptr` function (`return expression not of
+  correct type`): return a `unitptr` variable that is null.
+- **`and` / `or` bind as in C** since #603 (looser than the comparisons, `or` looser than
+  `and`), but `&` and `|` still bind tighter than the comparisons. Zones compiled with an older
+  vmc kept the old meaning (`a == 1 and b == 2` was `(a == (1 and b)) == 2`).
+- **vmc warns** about pointers used after a wait without `secure`, `activator` & co. after a
+  `pause`, unsecured pointers in wait/interrupt conditions, `act()` that reaches nobody and
+  `exec("kill"+name)` (vmc skill, "DIL warnings"): fix them, they are almost always real.
+- **`MEDIA_*` and `TAR_*` from `spelldef.h` can't be used in DIL** (they're written with `<<`,
+  a syntax error); `spelldef.h` isn't in `macros.h`, so `SPLCST_*` need
+  `#include <spelldef.h>`.
 - **`{...}` takes only constants**: `{"a", MACRO}` works, `{flag}` with a variable is a
   syntax error. Build such a list with `addstring(sl, flag)`.
 - **`pause` waits for the unit's next tick** (`wait(SFB_TICK | SFB_RANTIME, TRUE)` in
@@ -100,8 +122,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
      ... // not in the game
   ```
 
-  `phead()` is the first player (null when none is on), `nhead()` the first NPC, `ohead()`
-  the first object and `rhead()` the first room, each with `.gnext` to go on.
+  `pc_head()` is the first player (null when none is on), `npc_head()` the first NPC,
+  `obj_head()` the first object and `room_head()` the first room, each with `.gnext` to go on.
 - **Moving an NPC through an exit**: `exec("<dir>", self)`, then check `self.outside`, as
   CLAUDE.md says; `link()` only where no exit exists.
 - Text to a player is `sendtext("...<br/>", u)` (lines end with `<br/>`) or `act(...)` with
