@@ -1190,6 +1190,10 @@ void dilfe_atsp(dilprg *p)
                         }
                     }
                     break;
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1378,6 +1382,7 @@ void dilfe_resta(dilprg *p)
                 break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1387,6 +1392,7 @@ void dilfe_resta(dilprg *p)
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -1419,11 +1425,17 @@ void dilfe_opro(dilprg *p)
                         v->val.num = 0;
                     }
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -1530,16 +1542,25 @@ void dilfe_mel(dilprg *p)
                                                                 TRUE);
 								dil_test_secure(p);
 								break;
+							case DILV_FAIL:
+								v->type = DILV_FAIL;
+								break;
 							default:
 								v->type = DILV_ERR;
 								break;
 						}
+                                            break;
+                                        case DILV_FAIL:
+                                            v->type = DILV_FAIL;
                                             break;
                                         default:
                                             v->type = DILV_ERR;
                                             break;
                                     }
 
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -1926,6 +1947,11 @@ void dilfe_svstr(dilprg *p)
                             {
                                 v->type = DILV_FAIL;
                             }
+                            else if (!store_name_test((char *)v1->val.ptr))
+                            {
+                                szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to savestr an illegal file name.", p->frame->tmpl->prgname);
+                                v->val.num = FALSE;
+                            }
                             else
                             {
                                 std::filesystem::path filename{
@@ -2158,6 +2184,9 @@ void dilfe_gopp(dilprg *p)
                             }
                         }
                         break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
+                        break;
                     default:
                         v->type = DILV_ERR;
                         break;
@@ -2218,6 +2247,9 @@ void dilfe_gfol(dilprg *p)
                                 v->type = DILV_NULL;
                             }
                         }
+                        break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
                         break;
                     default:
                         v->type = DILV_ERR;
@@ -2399,6 +2431,9 @@ void dilfe_spli(dilprg *p)
             }
 
             break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2510,11 +2545,17 @@ void dilfe_mons(dilprg *p)
                     v->atyp = DILA_EXP;
                     v->val.ptr = str_dup(money_string(v1->val.num, DEF_CURRENCY, v2->val.num));
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -2637,6 +2678,9 @@ void dilfe_cary(dilprg *p)
                                             v->val.num = 0;
                                         }
                                     }
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -2814,6 +2858,9 @@ void dilfe_fits(dilprg *p)
 
                                     v->atyp = DILA_EXP;
                                     v->val.ptr = str_dup(c == nullptr ? "" : c);
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -4042,6 +4089,7 @@ void dilfe_wepinfo(dilprg *p)
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].basedam);
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].alpha);
                 }
+                v->atyp = DILA_EXP;
                 v->val.ptr = ilist;
             }
             else
@@ -4049,6 +4097,9 @@ void dilfe_wepinfo(dilprg *p)
                 v->val.ptr = nullptr;
                 v->type = DILV_NULL;
             }
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -5691,6 +5742,8 @@ void dilfe_pe(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
+    // A failed or wrong-typed operand on either side decides the result
+    v->type = DILV_INT;
     switch (dil_getval(v2))
     {
         case DILV_FAIL:
@@ -5698,22 +5751,19 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp2 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_EDP:
         case DILV_UP:
         case DILV_SP:
         case DILV_ZP:
-            v->type = DILV_INT;
+        case DILV_CP:
             break;
 
         default:
@@ -5728,22 +5778,19 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp1 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_SP:
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
-            v->type = DILV_INT;
+        case DILV_CP:
             break;
 
         default:
@@ -5812,6 +5859,7 @@ void dilfe_pne(dilprg *p)
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
         case DILV_SP:
             break;
 
@@ -5839,6 +5887,7 @@ void dilfe_pne(dilprg *p)
         case DILV_SP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
             break;
 
         default:

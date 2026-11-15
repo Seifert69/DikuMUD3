@@ -380,13 +380,17 @@ file_index_type *zone_type::findOrCreatePlayerFileIndex(const char *name)
 {
     assert(this == find_zone(g_player_zone)); // This should only be done in the special player zone
 
-    if (auto it = m_mmp_fi.find(name); it != m_mmp_fi.end())
+    // Kept in lower case, as every lookup is (a player file may hold the name as it was typed)
+    std::string key{name};
+    str_lower(key);
+
+    if (auto it = m_mmp_fi.find(key); it != m_mmp_fi.end())
     {
         return it->second.get();
     }
 
-    auto fi = std::make_unique<file_index_type>(this, name, UNIT_ST_PC);
-    auto result = m_mmp_fi.insert(std::make_pair(name, std::move(fi)));
+    auto fi = std::make_unique<file_index_type>(this, key.c_str(), UNIT_ST_PC);
+    auto result = m_mmp_fi.insert(std::make_pair(key, std::move(fi)));
 
     return result.first->second.get();
 }
