@@ -572,7 +572,7 @@ code
 
    if (targ.equip != 0)  /* 0 = not equipped, value not in values.h */
    {
-      act("You can only steal non-equiped items!", A_SOMEONE, self, null, vict, TO_CHAR);
+      act("You can only steal non-equipped items!", A_SOMEONE, self, null, vict, TO_CHAR);
       quit;
    }
 
@@ -622,7 +622,7 @@ code
 
    if (hm < 25)
    {
-      act("You steal $2n from $3n just as $3e turns toward you..You have "+
+      act("You steal $2n from $3n just as $3e turns toward you... You have "+
           "been caught!", A_SOMEONE, self, targ, vict, TO_CHAR);
       if (isaff(self, ID_INVISIBILITY))
       {
@@ -640,7 +640,7 @@ code
 
    act("You stealthily steal $3n's $2N and quickly tuck it out of sight!", A_SOMEONE, self, targ, vict, TO_CHAR);
    link(targ, self);
-   awareness_check(self, vict, SKI_STEAL, "You notice $2n stealing something from $3n");
+   awareness_check(self, vict, SKI_STEAL, "You notice $2n stealing something from $3n.");
    send_done("steal",self,targ,vict,hm,arg,null, CMD_AUTO_NONE);
    quit;
 }
@@ -721,7 +721,7 @@ code
         if (isaff(self, ID_INVISIBILITY))
         subaff(self, ID_INVISIBILITY);
 
-        act("Arrgh!  $1n just tried to steal some of your hard earned money!",
+        act("Arrgh!  $1n just stole some of your hard-earned money!",
             A_SOMEONE, self, null, vict, TO_VICT);
         act("You see $1n swipe a handful of coins from $3n...$3e doesn't seem amused!",
             A_SOMEONE, self, null, vict, TO_NOTVICT);
@@ -775,7 +775,7 @@ code
     position_update(vict);
     act("You stealthily pilfer a handful of coins from $3n's purse and " +
         "quickly deposit them in your own.",A_SOMEONE, self, null, vict, TO_CHAR);
-    awareness_check(self, vict, SKI_PICK_POCKETS, "You notice $2n stealing gold from $3n");
+    awareness_check(self, vict, SKI_PICK_POCKETS, "You notice $2n stealing gold from $3n.");
     send_done("pickpocket",self,null,vict,hm,arg,null, CMD_AUTO_NONE);
     quit;
 }
@@ -861,7 +861,7 @@ code
             (targ.equip != WEAR_EAR_R) and (targ.equip != WEAR_ANKLE_L) and
             (targ.equip != WEAR_ANKLE_R) and (targ.equip != WEAR_WRIST_L) )
     {
-        act("That would be much to difficult to filch away from $3n!",
+        act("That would be much too difficult to filch away from $3n!",
             A_SOMEONE, self, null, vict, TO_CHAR);
         quit;
     }
@@ -909,7 +909,7 @@ code
 
     if (hm <= 5)
     {
-        act("You filch $2n from $3n just as $3e turns toward you..You have been caught!",
+        act("You filch $2n from $3n just as $3e turns toward you... You have been caught!",
             A_SOMEONE, self, targ, vict, TO_CHAR);
         if (isaff(self, ID_INVISIBILITY))
             subaff(self, ID_INVISIBILITY);
@@ -958,7 +958,7 @@ code
 
     if (arg == "")
     {
-        act("Who's inventory do you wish to peek at?", A_SOMEONE, self, null,
+        act("Whose inventory do you wish to peek at?", A_SOMEONE, self, null,
             null, TO_CHAR);
         quit;
     }
@@ -998,7 +998,7 @@ code
             "doesn't seem to be amused.", A_SOMEONE, self, null, targ, TO_CHAR);
         if (isaff(self, ID_INVISIBILITY))
             subaff(self, ID_INVISIBILITY);
-        act("You catch $1n blatently peeking at your possessions!",
+        act("You catch $1n blatantly peeking at your possessions!",
             A_SOMEONE, self, null, targ, TO_VICT);
         quit;
     }
@@ -1006,7 +1006,7 @@ code
     if (hm <= 0)
     {
         act("You can't quite make out what $3e has, but at least you were " +
-        "discrete.", A_SOMEONE, self, null, targ, TO_CHAR);
+        "discreet.", A_SOMEONE, self, null, targ, TO_CHAR);
         quit;
     }
 
@@ -1072,7 +1072,7 @@ code
    stick := findunit(self,arg,FIND_UNIT_HERE,null);
    if(stick == null)
    {
-      sendtext("How do you intend to use what you do not have?.<br/>",self);
+      sendtext("How do you intend to use what you do not have?<br/>",self);
       quit;
    }
 
@@ -1082,8 +1082,7 @@ code
       return;
    }
 
-   stick:=equipment(self,WEAR_HOLD);
-   if (stick ==null)
+   if (equipment(self, WEAR_HOLD) != stick)  // the staff or wand named, not whatever is held
    {
       act("You must hold it in your hand to use it.", A_SOMEONE, self, null, null, TO_CHAR);
       return;
@@ -1207,7 +1206,7 @@ code
 
    if (self == tgt)
 	{
-      sendtext("You must use it on somebody not yourself!.<br/>",self);
+      sendtext("You must use it on somebody, not yourself!<br/>",self);
       quit;
 	}
 
@@ -1294,7 +1293,7 @@ code
     /* MS2020 ought to be placed on vines DIL, not here. */
     if(dilfind("entangled_2@spells",self))
     {
-        act("You struggle to flee but are prevented by the vines!.",
+        act("You struggle to flee but are prevented by the vines!",
         A_SOMEONE, self, null, null, TO_CHAR);
         act("$1n struggles to flee but is prevented by the entangling vines.",
         A_SOMEONE, self, null, null, TO_REST);
@@ -1472,7 +1471,7 @@ code
         if (self.outside.type != UNIT_ST_NPC)
             act("$1n flees out of $2n!", A_SOMEONE, self, roomin, null, TO_ROOM);
         else
-            act("$1n charges out of $2n on $1s $2N!", A_SOMEONE, self, me, roomin, TO_ROOM);
+            act("$1n charges out of $3n on $1s $2N!", A_SOMEONE, self, me, roomin, TO_ROOM);
     }
 
     self.position := POSITION_STANDING;
@@ -1553,7 +1552,7 @@ code
    /* If it cant be opened, it cant be locked. let the player know */
    if (not isset(item.openflags, EX_OPEN_CLOSE))
    {
-      act("That is impossible", A_ALWAYS, self, null, null, TO_CHAR);
+      act("That is impossible.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
@@ -1631,7 +1630,7 @@ code
    {
       act("This door seems to be pick proof.",
       A_ALWAYS, self, null, null, TO_CHAR);
-         act("$1n Tries to pick the door but finds it impossible.",
+         act("$1n tries to pick the door but finds it impossible.",
       A_SOMEONE, self, null, null, TO_REST);
       quit;
    }
@@ -1726,7 +1725,7 @@ code
 
     if (not isaff(self, ID_HIDE))
     {
-        sendtext("Without hiding? What are you crazy?<br/>", self);
+        sendtext("Without hiding? What, are you crazy?<br/>", self);
         quit;
     }
 
@@ -1740,7 +1739,7 @@ code
 
     if (tgt == self)
     {
-        sendtext("You glance at yourself, amazing ehh?<br/>", self);
+        sendtext("You glance at yourself, amazing, eh?<br/>", self);
         act("$1n glances at $1mself.", A_SOMEONE, self, null, null, TO_REST);
         quit;
     }
@@ -1985,8 +1984,8 @@ if (not(shield == null)){
 	       bonus := meleeattack(self, tgt, (bonus+self.level),    WPN_CRUSH,TRUE);
 	   }
    }else{
-   		   act("<div class='hit_opponent'>You slam into $3n and send them reeling.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
-	   act("<div class='hit_other'>$1n slams into $3n and sends them reeling.</div>", A_SOMEONE, self,  null, tgt, TO_NOTVICT);
+   		   act("<div class='hit_opponent'>You slam into $3n and send $3m reeling.</div>", A_SOMEONE, self, null, tgt, TO_CHAR);
+	   act("<div class='hit_other'>$1n slams into $3n and sends $3m reeling.</div>", A_SOMEONE, self,  null, tgt, TO_NOTVICT);
 	   act("<div class='hit_me'>$1n slams into you!</div>", A_SOMEONE, self,  null, tgt, TO_VICT);
    }
    
@@ -2066,7 +2065,7 @@ code
 
     if (targ==self)
     {
-        act("Why not use the remove command.", A_SOMEONE, self,
+        act("Why not use the remove command?", A_SOMEONE, self,
             null, null, TO_CHAR);
         quit;
     }
@@ -2106,7 +2105,7 @@ code
     {
         act ("$3n anticipates $1n's disarm attempt and avoids it completely.",
             A_ALWAYS, self,null,targ,TO_NOTVICT);
-        act ("You try to disarm $3n again but $3n anticipates it and avoids it completely.",
+        act ("You try to disarm $3n again but $3e anticipates it and avoids it completely.",
             A_ALWAYS, self,null,targ,TO_CHAR);
         act ("You notice $3n trying to disarm you again and avoid it completely.",
             A_ALWAYS, targ,null,self,TO_CHAR);
@@ -2117,7 +2116,7 @@ code
 
     if ((dilfind ("disarmed@skills",self))or(dilfind ("disarmed@skills",self)))
     {
-        act ("You are too shook up to try to disarm $3n at the moment.", A_ALWAYS, self,null,targ,TO_CHAR);
+        act ("You are too shaken up to try to disarm $3n at the moment.", A_ALWAYS, self,null,targ,TO_CHAR);
         self.endurance := self.endurance - 20;
         position_update(self);
         quit;
@@ -2171,7 +2170,7 @@ code
     if (hm <= -25)
     {
         act("As you attempt to disarm $3n, your $2N slips through your hands!", A_SOMEONE, self, mweapon, targ, TO_CHAR);
-        act("$1n tries a fancy move, but you counter and cause $1m to drop $1s $2N!.", A_SOMEONE, self, mweapon, targ, TO_VICT);
+        act("$1n tries a fancy move, but you counter and cause $1m to drop $1s $2N!", A_SOMEONE, self, mweapon, targ, TO_VICT);
         act("$3n counters $1n's disarm attempt, $1n lost $1s own weapon instead!",A_SOMEONE, self, mweapon, targ, TO_NOTVICT);
 
         link(mweapon, self.outside);
@@ -2189,7 +2188,7 @@ code
 
     if (targ.position <= POSITION_SLEEPING)
     {
-        act("You quietly disarm $3n without waking them.", A_SOMEONE, self, null, targ, TO_CHAR);
+        act("You quietly disarm $3n without waking $3m.", A_SOMEONE, self, null, targ, TO_CHAR);
     }
     provoked_attack(targ, self);
 
@@ -2237,8 +2236,8 @@ code
                (not isset(tweap.flags, UNIT_FL_BURIED)) )
       {
         link(tweap, self);
-        act("$1n manages to retrieve $1s "+tweap.name+"", A_SOMEONE, self,
-            null, null, TO_ROOM);
+        act("$1n manages to retrieve $1s $2N.", A_SOMEONE, self,
+            tweap, null, TO_ROOM);
         exec("wield "+tweap.name+"", self);
         goto stop;
       }
@@ -2252,10 +2251,10 @@ code
                (not isset(tweap.flags, UNIT_FL_BURIED)) )
           {
             link(tweap, self);
-            act("$1n manages to retrieve a "+tweap.name+"", A_SOMEONE, self,
-                null, null, TO_ROOM);
+            act("$1n manages to retrieve $2n.", A_SOMEONE, self,
+                tweap, null, TO_ROOM);
             exec("wield "+tweap.name+"", self);
-            act("$1n scowls at $1s "+tweap.name+"", A_SOMEONE, self, null,
+            act("$1n scowls at $1s $2N.", A_SOMEONE, self, tweap,
                 null, TO_ROOM);
             i := 1;
             break;
@@ -2267,7 +2266,7 @@ code
           }
         }
       if (i == 0)
-        act("$1n resigns to using $1s natural weapons.", A_SOMEONE, self,
+        act("$1n resigns $1mself to using $1s natural weapons.", A_SOMEONE, self,
             null, null, TO_ROOM);
 
       goto stop;
@@ -2556,6 +2555,7 @@ var
    hm:integer;
    scale:integer;
    size:string;
+   verb:string;   // "enlarge" or "shrink", for "You try to ..."
    skilla : integer;
    rm:unitptr;
    skilld : integer;
@@ -2577,11 +2577,13 @@ code
     if (tgt_pc.height > tgt.height)
     {
         size:="enlarges";
+        verb:="enlarge";
         scale := (100*tgt_pc.height) / tgt.height - 100;  // Enlarge %
     }
     else
     {
         size:="shrinks";
+        verb:="shrink";
         scale := (((100*tgt.height) / tgt_pc.height)-100) / 2; // Shrink %, ½ = easier to shrink
     }
 
@@ -2624,7 +2626,7 @@ code
    {
       act("You skillfully work on $2n until it $3t enough to fit.",
 	  A_ALWAYS, self, tgt, size, TO_CHAR);
-      act("$1n skillfully works on $2n until it $3t enough to fit $1m",
+      act("$1n skillfully works on $2n until it $3t enough to fit $1m.",
 	  A_SOMEONE, self, tgt, size, TO_REST);
    }
    else
@@ -2632,7 +2634,7 @@ code
       act("You skillfully work on $2n until it $3t enough to fit "+
 	  tgt_pc.name+".", A_SOMEONE, self, tgt, size, TO_CHAR);
       act("$1n skillfully works on "+tgt.title+
-	  " until it $3t enough to fit $2n",
+	  " until it $3t enough to fit $2n.",
 	  A_SOMEONE, self, tgt_pc, size, TO_REST);
    }
    quit;
@@ -2641,17 +2643,17 @@ code
    tgt.hp := tgt.hp + hm;
    if (tgt.hp < 1)
       goto major_fail;
-   act("You try to $3t $2n but you make a mistake and damage it instead", A_ALWAYS, self, tgt, size, TO_CHAR);
-   act("$1n tries to $3t but $1e makes a mistake and damages it instead.",A_SOMEONE,self, tgt, size, TO_REST);
+   act("You try to $3t $2n but you make a mistake and damage it instead.", A_ALWAYS, self, tgt, verb, TO_CHAR);
+   act("$1n tries to $3t $2n but $1e makes a mistake and damages it instead.",A_SOMEONE,self, tgt, verb, TO_REST);
    quit;
 
    :major_fail:
    act("You try to $3t $2n but the job is too much for you and you destroy it.",
-      A_ALWAYS, self, tgt, size, TO_CHAR);
-   act ("$1n tries to $3t but the job is too much for $1m and $1e destroys it.",
-	   A_SOMEONE, self, tgt, size, TO_REST);
+      A_ALWAYS, self, tgt, verb, TO_CHAR);
+   act ("$1n tries to $3t $2n but the job is too much for $1m and $1e destroys it.",
+	   A_SOMEONE, self, tgt, verb, TO_REST);
    addextra(tgt.extra,tgt.names,
-      "Well whatever this was it looks like someone realy screwed up resizing this.");
+      "Well, whatever this was, it looks like someone really screwed up resizing it.");
    tgt.title := tgt.title+" (broken)";
    tgt.objecttype := ITEM_TRASH;
    tgt.manipulate:=MANIPULATE_TAKE;
@@ -2662,8 +2664,8 @@ code
    :fail_endurance:
    act("You begin to work on $2n but realize you are much too tired to finish.",
        A_ALWAYS, self, tgt,null, TO_CHAR);
-   act("$1n Begins working on $2n but realizes $1e is too tired and slumps "+
-       "back exausted.",
+   act("$1n begins working on $2n but realizes $1e is too tired and slumps "+
+       "back exhausted.",
        A_SOMEONE, self, tgt, size, TO_REST);
    quit;
 }
@@ -3116,7 +3118,7 @@ dilend
      make gravity work correctly.
      The destination can be the same room in which you started.
      The <direction> is the direction in which a climb is required
-     (most usually it is up, which is macro UP == 5).
+     (most usually it is up, which is macro UP == 4).
 */
 
 dilbegin climb(destination:string, difficulty:integer, damage:integer, direction:integer);
@@ -3176,12 +3178,12 @@ code
         act("You fall and hit yourself!",
         A_ALWAYS, activator, doorname, null, TO_CHAR);
 
-        act("$1n failed to climb the $2t and takes a nasty fall...",
+        act("$1n fails to climb the $2t and takes a nasty fall...",
         A_SOMEONE, activator, doorname, null, TO_ROOM);
 
         link(activator, dest);
 
-        act("$1n failed to climb the $2t and lands at your feet...",
+        act("$1n fails to climb the $2t and lands at your feet...",
         A_SOMEONE, activator, doorname, null, TO_ROOM);
     }
     else
@@ -3189,7 +3191,7 @@ code
         act("You fail to climb the $2t!",
         A_ALWAYS, activator, doorname, null, TO_CHAR);
 
-        act("$1n failed to climb the $2t!",
+        act("$1n fails to climb the $2t!",
         A_SOMEONE, activator, doorname, null, TO_ROOM);
     }
 
@@ -3222,7 +3224,7 @@ code
 
     targ :=findunit(self, arg, FIND_UNIT_SURRO, null);
 
-    if ((not targ) or not(targ.type & UNIT_ST_PC|UNIT_ST_NPC))
+    if ((not targ) or not(targ.type & (UNIT_ST_PC|UNIT_ST_NPC)))
     {
         sendtext("Who do you want to rescue?<br/>", self);
         quit;
@@ -3780,7 +3782,7 @@ code
 
     if ( self.position== POSITION_STUNNED)
     {
-        act("There doesn't seem to be a way to effectively trip $3n while you're lying face down in the muck!",
+        act("There doesn't seem to be a way to effectively trip anyone while you're lying face down in the muck!",
             A_SOMEONE, self, null, targ, TO_CHAR);
         quit;
     }
@@ -3858,7 +3860,7 @@ code
 
     if ( ((targ.weight - self.weight) > 350) )
     {
-        act("You quickly find that $3e is much to heavy to trip...ouch.", A_SOMEONE, self, null, targ, TO_CHAR);
+        act("You quickly find that $3e is much too heavy to trip...ouch.", A_SOMEONE, self, null, targ, TO_CHAR);
         quit;
     }
 
@@ -3874,7 +3876,7 @@ code
     if ((dilfind("tripwt@skills",targ)) or (dilfind("tripped@skills",targ)))
     {
         act ("$3n anticipates $1n's trip and leaps harmlessly over.", A_ALWAYS, self,null,targ,TO_NOTVICT);
-        act ("You try to trip $3n again but $3n anticipates your trip and leaps harmlessly over.", A_ALWAYS, self,null,targ,TO_CHAR);
+        act ("You try to trip $3n again but $3e anticipates your trip and leaps harmlessly over.", A_ALWAYS, self,null,targ,TO_CHAR);
         act ("You notice $3n trying to trip you again and you leap harmlessly over $3s leg.", A_ALWAYS, targ,null,self,TO_CHAR);
         self.endurance := self.endurance - 10;
         position_update(self);
@@ -3913,8 +3915,8 @@ code
     {
         change_speed(self, PULSE_VIOLENCE);
         provoked_attack (targ, self);
-        act("You fumble your trip attempt and stumble!.", A_ALWAYS, self,null, targ, TO_CHAR);
-        act("$1n ducks clumsily and attempts to sweep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
+        act("You fumble your trip attempt and stumble!", A_ALWAYS, self,null, targ, TO_CHAR);
+        act("$1n ducks clumsily and attempts to sweep your feet!", A_ALWAYS, self, null, targ, TO_VICT);
         act("$1n attempts to trip $3n but fails miserably.", A_SOMEONE, self,  null, targ, TO_NOTVICT);
         quit;
     }
@@ -3922,8 +3924,8 @@ code
     if (hm < 0)
     {
         change_speed(self, PULSE_VIOLENCE / 2);
-        act("You fumble your trip attempt on $3n!.", A_ALWAYS, self, null, targ, TO_CHAR);
-        act("$1n ducks and attempts to sweeep your feet!.", A_ALWAYS, self, null, targ, TO_VICT);
+        act("You fumble your trip attempt on $3n!", A_ALWAYS, self, null, targ, TO_CHAR);
+        act("$1n ducks and attempts to sweep your feet!", A_ALWAYS, self, null, targ, TO_VICT);
         act("$1n attempts to trip $3n but fails.", A_SOMEONE, self, null, targ, TO_NOTVICT);
         quit;
     }
@@ -3933,7 +3935,7 @@ code
     change_speed(targ, PULSE_VIOLENCE);
     act("You make a quick move and trip $3n.", A_ALWAYS, self, null, targ, TO_CHAR);
     act("$1n ducks quickly and sweeps your feet from under you.", A_ALWAYS, self, null, targ, TO_VICT);
-    act("$1n makes a quick manuever and trips $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
+    act("$1n makes a quick maneuver and trips $3n.", A_SOMEONE, self, null, targ, TO_NOTVICT);
     act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null, targ, TO_CHAR);
     act("$3n falls on $3s backside with a loud THUMP!", A_SOMEONE, self, null, targ, TO_NOTVICT);
     act("You fall on your backside with a loud THUMP!", A_ALWAYS, self, null, targ, TO_VICT);
@@ -4913,7 +4915,7 @@ code
 
    if ("$skinned" in targ.extra)
    {
-      act ("Sorry that has already been skinned.", A_ALWAYS,self,null,null,TO_CHAR);
+      act ("Sorry, that has already been skinned.", A_ALWAYS,self,null,null,TO_CHAR);
       quit;
    }
 
@@ -4964,7 +4966,7 @@ code
    {
       act("You sadly mangle the "+skin_name+" of $3n with your $2N.",
          A_SOMEONE, self, wpn, targ, TO_CHAR);
-      act("$1n mangles the "+skin_name+"  of $3n with $1s $2N. What a mess!",
+      act("$1n mangles the "+skin_name+" of $3n with $1s $2N. What a mess!",
          A_SOMEONE, self, wpn, targ, TO_ROOM);
 
       if (beheaded==0){
@@ -4981,7 +4983,7 @@ code
 
    s := hm_adjective(hm);
    act("Using your $2N you"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_CHAR);
-   act("$1n uses $1s $2N to"+s+"skin $3n .", A_SOMEONE, self, wpn, targ, TO_REST);
+   act("$1n uses $1s $2N to"+s+"skin $3n.", A_SOMEONE, self, wpn, targ, TO_REST);
 
    race_name := race_name(targ.value[4]);
    targ.title:="a skinned " + targ.names.[0];
@@ -5416,7 +5418,7 @@ return ("a ghost");}
 else if (race_def==RACE_SPIRIT)  {
 return ("a spirit");}
 else if (race_def==RACE_MUMMIE)  {
-return ("a mummie");}
+return ("a mummy");}
 else if (race_def==RACE_BANSHEE)  {
 return ("a banshee");}
 else if (race_def==RACE_UNDEAD)  {
@@ -5462,13 +5464,13 @@ return ("a jellyfish");}
 else if (race_def==RACE_PIRANHA)  {
 return ("a piranha");}
 else if (race_def==RACE_BARACUDA)  {
-return ("a baracuda");}
+return ("a barracuda");}
 else if (race_def==RACE_CROCODILE)  {
 return ("a crocodile");}
 else if (race_def==RACE_SQUID)  {
 return ("a squid");}
 else if (race_def==RACE_OCTOPUS)  {
-return ("a octopus");}
+return ("an octopus");}
 else if (race_def==RACE_CHICKEN)  {
 return ("a chicken");}
 else if (race_def==RACE_GOOSE)  {
@@ -5478,7 +5480,7 @@ return ("a pigeon");}
 else if (race_def==RACE_PEACOCK)  {
 return ("a peacock");}
 else if (race_def==RACE_OSTRICH)  {
-return ("a ostrich");}
+return ("an ostrich");}
 else if (race_def==RACE_SEAGULL)  {
 return ("a seagull");}
 else if (race_def==RACE_SWAN)  {
@@ -5512,7 +5514,7 @@ return ("a sloth");}
 else if (race_def==RACE_WALRUS)  {
 return ("a walrus");}
 else if (race_def==RACE_WEASLE)  {
-return ("a weasle");}
+return ("a weasel");}
 else if (race_def==RACE_WARTHOG)  {
 return ("a warthog");}
 else if (race_def==RACE_TUMBLEWEED)  {
@@ -5548,7 +5550,7 @@ return ("a corn");}
 else if (race_def==RACE_ACIDPLANT)  {
 return ("a strange plant");}
 else if (race_def==RACE_PLANT_GROW)  {
-return ("a odd plant");}
+return ("an odd plant");}
 else if (race_def==RACE_NORSE_GOD_AIR)  {
 return ("a norse god");}
 else if (race_def==RACE_NORSE_GOD_EARTH)  {
@@ -5664,7 +5666,7 @@ code
    if ((targ.nameidx+"@"+targ.zoneidx)!="corpse@death")
 
    {
-      act ("You can't butcher that stupid!",
+      act ("You can't butcher that, stupid!",
            A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -5676,7 +5678,7 @@ code
    }
    if (not("$skinned" in targ.extra))
    {
-      act ("You should skin it first silly!",
+      act ("You should skin it first, silly!",
            A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -5722,7 +5724,7 @@ code
 
    hm := skillchecksa(SKI_BUTCHER, ABIL_DEX, i);
 
-  if ("beheaded" in targ.outside_descr) behead := 1;
+  if (("headless" in targ.outside_descr) or ("$headless" in targ.extra)) behead := 1;  // as death.zon marks it
 
   bw := targ.weight / 9;
 
@@ -5797,7 +5799,11 @@ code
      else
         self.endurance := self.endurance - 2;
 
-     if (legs == 5) destroy(targ);
+     if (legs == 5)
+     {
+        unsecure(targ);  // or destroying it jumps to lost_targ
+        destroy(targ);
+     }
      goto done;
   }
 
@@ -5840,7 +5846,11 @@ code
      else
         self.endurance := self.endurance - 2;
 
-     if (legs == 5) destroy(targ);
+     if (legs == 5)
+     {
+        unsecure(targ);  // or destroying it jumps to lost_targ
+        destroy(targ);
+     }
      goto done;
   }
 
@@ -6019,6 +6029,7 @@ code
 
   if (legs == 5)
   {
+     unsecure(targ);  // or destroying it jumps to lost_targ
      destroy (targ); /* Crabs don't have skeletons */
   }
   goto done;
@@ -6093,8 +6104,8 @@ code
 
    if (thing.type==UNIT_ST_NPC)
    {
-   act ("$1e would not like that.",
-   A_ALWAYS,self,null,null,TO_CHAR);
+   act ("$2e would not like that.",
+   A_ALWAYS,self,thing,null,TO_CHAR);
    quit;
    }
 
@@ -6285,7 +6296,7 @@ hm := skillroll(skilla,skillb,skillc,skilld);
           A_ALWAYS, self, null, targ, TO_CHAR);
       act("$1n throws $1s " + thing.name + " at you!",
           A_SOMEONE, self, null, targ, TO_VICT);
-      act("$1n throw $1s " + thing.name + " at $3n!",
+      act("$1n throws $1s " + thing.name + " at $3n!",
           A_SOMEONE, self, null, targ, TO_NOTVICT);
       bonus := meleedamage(self, targ, bonus, 0);
       unequip(thing);
@@ -6299,7 +6310,7 @@ hm := skillroll(skilla,skillb,skillc,skilld);
           A_ALWAYS, self, null, targ, TO_CHAR);
       act("$1n throws $1s " + thing.name + " at you!",
           A_SOMEONE, self, null, targ, TO_VICT);
-      act("$1n throw $1s " + thing.name + " at $3n!",
+      act("$1n throws $1s " + thing.name + " at $3n!",
           A_SOMEONE, self, null, targ, TO_NOTVICT);
       bonus := meleedamage(self, targ, bonus, 0);
       unequip(thing);
@@ -6314,7 +6325,7 @@ hm := skillroll(skilla,skillb,skillc,skilld);
           A_ALWAYS, self, null, targ, TO_CHAR);
       act("$1n throws $1s " + thing.name + " at you!",
           A_SOMEONE, self, null, targ, TO_VICT);
-      act("$1n throw $1s " + thing.name + " at $3n!",
+      act("$1n throws $1s " + thing.name + " at $3n!",
           A_SOMEONE, self, null, targ, TO_NOTVICT);
       bonus := meleedamage(self, targ, bonus, 0);
       unequip(thing);
@@ -6331,7 +6342,7 @@ hm := skillroll(skilla,skillb,skillc,skilld);
           A_ALWAYS, self, null, targ, TO_CHAR);
       act("$1n throws $1s " + thing.name + " at you!",
           A_SOMEONE, self, null, targ, TO_VICT);
-      act("$1n throw $1s " + thing.name + " at $3n!",
+      act("$1n throws $1s " + thing.name + " at $3n!",
           A_SOMEONE, self, null, targ, TO_NOTVICT);
       bonus := meleedamage(self, targ, bonus, 0);
       unequip(thing);
@@ -6457,7 +6468,7 @@ code
 
    if (arg == "woman")
    {
-      act("You're kidding right?!",
+      act("You're kidding, right?!",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -6585,7 +6596,7 @@ code
           "someone has already planted some kind of trap here - " +
           "the ground has been disturbed ever so slightly. It might " +
           "be wise to find that trap in case you trip it accidentally " +
-          "first!.",
+          "first!",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -6691,7 +6702,7 @@ code
    if ((hm > pow) and (rnd(0,7) < 4))
    {
       act("You spot " + self.title + " carefully hidden here, and " +
-          "narrowily avoid it.",
+          "narrowly avoid it.",
           A_ALWAYS, pc, null, null, TO_CHAR);
       addstring(ppl_list, pc.name);
       goto pre_start;
@@ -6708,8 +6719,12 @@ code
       s_self := "You spring a carefully hidden " + self.name + "! " +
                      "You are trapped!";
    }
+   else
+      s_self := spring_self;
    if ("default" in spring_other)
       s_other := "$1n springs a carefully hidden " + self.name + "! ";
+   else
+      s_other := spring_other;
 
    tstr := pc.name;
 
@@ -6726,7 +6741,7 @@ code
       self.outside_descr := "A " + self.name + " has trapped " + pc.name +
                             " here!";
    else
-      self.outside_descr := "A " + self.title + " has trapped " + pc.name +
+      self.outside_descr := "A " + self.name + " has trapped " + pc.title +
                             " here!";
 
    j := interrupt(SFB_COM, (command(CMD_AUTO_COMBAT) and
@@ -7592,19 +7607,19 @@ code
 {
    heartbeat := 2*PULSE_SEC;
    argsave := arg;
-   room := self.outside;
 
 /* make sure we have the ability necessary */
 
    if ((self.type == UNIT_ST_PC) and ((self.skills[SKI_TRACK] +
                                       self.skills[SKI_HUNT] / 2) <= 0))
    {
-      act("You must practice your tracking and hunting skills first..",
+      act("You must practice your tracking and hunting skills first.",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
 
 :loop:
+   room := self.outside;  // where this step starts, to see whether it got anywhere
 
 /* make sure we have the proper enviroment */
 
@@ -7801,7 +7816,7 @@ if (i==DIR_TRYAGAIN)
 {
 if (first ==0)
 {
-act ("The path is a bit harder to follow than you expected you start turning over everything in sight.",
+act ("The path is a bit harder to follow than you expected; you start turning over everything in sight.",
 A_SOMEONE,self,null,u,TO_CHAR);
 first:=1;
 
@@ -7809,6 +7824,7 @@ first:=1;
 pause;
    goto repeater;
    }
+targ := u;  // targ is cleared by the pause above
 
    if (i == DIR_IMPOSSIBLE)
    {
@@ -7844,7 +7860,7 @@ pause;
       if (not(visible(self, targ)))
       {
          act("Though you can't see $3n, you know $3e must be right here.",
-             A_ALWAYS, self, null, null, TO_CHAR);
+             A_ALWAYS, self, null, targ, TO_CHAR);
          quit;
       }
          if ((targ.type==UNIT_ST_PC) and (self.type==UNIT_ST_PC))
@@ -7948,7 +7964,7 @@ code
    {
       act("You show off your tracking skills to the people around you.",
           A_ALWAYS, self, null, null, TO_CHAR);
-      act("$1n demonstrates his tracking skills - oooooh ahhhhh.",
+      act("$1n demonstrates $1s tracking skills - oooooh ahhhhh.",
           A_SOMEONE, self, null, null, TO_REST);
       quit;
    }
@@ -8133,7 +8149,7 @@ if (i==DIR_TRYAGAIN)
 {
 if (first ==0)
 {
-act ("The path is a bit harder to follow than you expected you start turning over everything in sight.",
+act ("The path is a bit harder to follow than you expected; you start turning over everything in sight.",
 A_SOMEONE,self,null,u,TO_CHAR);
 first:=1;
 
@@ -8544,12 +8560,12 @@ wait (SFB_PRE, (command(CMD_AUTO_DAMAGE) and
                 "your body!",
                 A_ALWAYS, target, null, self.outside,
                 TO_CHAR);
-            act("Your weapon cuts $1n and they flinch as poison " +
+            act("Your weapon cuts $1n and $1e flinches as poison " +
                 "enters $1s body.",
                 A_ALWAYS, target, null, self.outside,
                 TO_VICT);
             act("$1n flinches as poison enters $1s body!",
-                A_ALWAYS, target, null, null, TO_REST);
+                A_ALWAYS, target, null, self.outside, TO_NOTVICT);
          }
       else if (rnd(0,10) < 1)
          {
@@ -8663,13 +8679,13 @@ code
    }
 
    if (wep_type == WPN_BOW)
-      act_list := {"Bow", "arrow", "quiver", "42", "draw back",
+      act_list := {"bow", "arrow", "quiver", "42", "draw back",
                    "draws back", "shoot", "shoots"};
    else if (wep_type == WPN_CROSSBOW)
-      act_list := {"Crossbow", "bolt", "quiver", "43", "knock",
-                   "knocks", "shoot", "shoots"};
+      act_list := {"crossbow", "bolt", "quiver", "43", "cock",
+                   "cocks", "shoot", "shoots"};
    else
-      act_list := {"Sling", "stone", "pouch", "44", "spin",
+      act_list := {"sling", "stone", "pouch", "44", "spin",
                    "spins", "let fly", "lets fly"};
 
    if (self.weapons[wep_type] <= 0)
@@ -8729,7 +8745,7 @@ code
       quit;
    }
 
-   if (not (targ.type & UNIT_ST_NPC|UNIT_ST_PC))
+   if (not (targ.type & (UNIT_ST_NPC|UNIT_ST_PC)))
    {
       act("Why waste a good " + act_list.[1] + " on an inanimate object " +
           "like that?",
@@ -9210,7 +9226,7 @@ code
        "of $1s work.",
    A_SOMEONE, self, null, null, TO_REST);
    unit1 := load(thingid);
-   link(unit1, self.inside);
+   link(unit1, self);  // into the inventory, not into its first item
    unit1.value[1] := hm;
    unit1.value[2] := hm1;
    addextra(unit1.extra, {"$identify"},
@@ -9257,7 +9273,7 @@ code
          A_ALWAYS, self, null, null, TO_CHAR);
   }
   else
-     act("You can only fashion an arrow, a quarter staff, a trap, a " +
+     act("You can fashion an arrow, a quarter staff, a trap, a " +
          "bow, or a fighting staff.",
          A_ALWAYS, self, null, null, TO_CHAR);
    subextra(self.extra, "$fashioning");
@@ -9322,7 +9338,7 @@ code
 
    if (targ.type != UNIT_ST_NPC)
       {
-         act("You can't Soothe that!",
+         act("You can't soothe that!",
              A_ALWAYS, self, null, null, TO_CHAR);
          quit;
       }
@@ -9384,9 +9400,9 @@ code
 */
    if (hm < -25)
       {
-         act("You provoke it into attack!",
+         act("You provoke it into attacking!",
              A_ALWAYS, self, null, null, TO_CHAR);
-         act("$1n fails to soothe $3n and provokes it into attack!",
+         act("$1n fails to soothe $3n and provokes it into attacking!",
              A_SOMEONE, self, null, targ, TO_REST);
          set_fighting(targ, self);
          quit;
@@ -9586,7 +9602,7 @@ code
 
    pause;
    if ("shack" in self.names) shelter_t := "The wooden shack begins to rot.";
-   else if ("igloo" in self.names) shelter_t := "The igloo begings to melt " +
+   else if ("igloo" in self.names) shelter_t := "The igloo begins to melt " +
                                                 "and collapse.";
    else shelter_t := "The grass hut begins to rot.";
 
@@ -9613,9 +9629,9 @@ code
    temp_t := load(shelter_t);
    link(temp_t, self.outside);
 
-   if ("shack" in self.names) shelter_t := "The grass rots away.";
+   if ("shack" in self.names) shelter_t := "The wood rots.";
    else if ("igloo" in self.names) shelter_t := "The ice melts.";
-   else shelter_t := "The wood rots.";
+   else shelter_t := "The grass rots away.";
 
    dilcopy("blowaway@function(300, " + shelter_t +")", temp_t);
 
@@ -9695,7 +9711,7 @@ over usage of the command */
 
    if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
       {
-         act("You can't ambush that, silly! Sheesh some people.",
+         act("You can't ambush that, silly! Sheesh, some people.",
              A_ALWAYS, self, null, null, TO_CHAR);
          quit;
       }
@@ -10651,7 +10667,7 @@ code
 
  if(scroll.objecttype != ITEM_SCROLL)
  {
-  act("Recite is normally used for scroll's.",
+  act("Recite is normally used for scrolls.",
      A_ALWAYS, self, null, null, TO_CHAR);
   quit;
  }
@@ -11353,7 +11369,7 @@ code
  }
  else if(hm < -50)
   {
-   act("You fumble... Real bad..",
+   act("You fumble... Real bad.",
        A_ALWAYS, self, null, vict, TO_CHAR);
    act("You feel someone poke in your wounds.",
        A_SOMEONE, self, null, vict, TO_VICT);
@@ -11422,7 +11438,7 @@ code
         tgt := findunit(self, arg, FIND_UNIT_SURRO, null);
 
         if((tgt == null) or (not visible(self,tgt)) or
-	   (not tgt.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+	   (not (tgt.type & (UNIT_ST_PC | UNIT_ST_NPC))))
         {
         act("No such person to slip something to...",
                 A_ALWAYS, self, null, null, TO_CHAR);
@@ -11442,7 +11458,7 @@ code
 	    "$1s hand and falls to the ground.",
 		A_SOMEONE, self, medi, tgt, TO_VICT);
 	act("$1n tries to slip $2n to $3n but it slips from "+
-	    "$1s hand and falls to the groud.",
+	    "$1s hand and falls to the ground.",
 	    	A_SOMEONE, self, medi, tgt, TO_NOTVICT);
 
 	link(medi,self.outside);
@@ -11481,7 +11497,7 @@ code
 	foreach(UNIT_ST_PC, u)
 	{
 
-	if(u == self) continue;
+	if((u == self) or (u == tgt)) continue;  // tgt was told already
 
 	if(u.level >= IMMORTAL_LEVEL)
 	{
@@ -11556,7 +11572,7 @@ code
 	tgt := findunit(self,arg,FIND_UNIT_SURRO,null);
 
 	if((tgt == null) or (not visible(self,tgt)) or
-	   (not tgt.type & (UNIT_ST_PC | UNIT_ST_NPC)))
+	   (not (tgt.type & (UNIT_ST_PC | UNIT_ST_NPC))))
 	{
 	act("There is no one here by that name.",
 		A_ALWAYS, self, null, null, TO_CHAR);
@@ -11600,7 +11616,7 @@ code
 	    "$1s hand and falls to the ground.",
 		A_SOMEONE, self, medi, tgt, TO_VICT);
 	act("$1n tries to plant $2n on $3n but it slips from "+
-	    "$1s hand and falls to the groud.",
+	    "$1s hand and falls to the ground.",
 	    	A_SOMEONE, self, medi, tgt, TO_NOTVICT);
 
 	link(medi,self.outside);
@@ -11722,7 +11738,7 @@ code
 
 	if(arg == "")
 	{
-	act("Palm what ?",
+	act("Palm what?",
 		A_ALWAYS, self, null, null, TO_CHAR);
 	quit;
 	}
@@ -11785,6 +11801,7 @@ code
 
 	foreach(UNIT_ST_PC,u)
 	{
+	if (u == self) continue;
 
 	res := skillroll(self.abilities[ABIL_DEX],
 			   u.abilities[ABIL_DEX],
@@ -11864,7 +11881,7 @@ if(tgt == self)
  quit;
 }
 
-if(not tgt.type & (UNIT_ST_PC | UNIT_ST_NPC))
+if(not (tgt.type & (UNIT_ST_PC | UNIT_ST_NPC)))
 {
  sendtext("Yeah, a lot of good that would do!<br/>", self);
  quit;
@@ -11967,7 +11984,7 @@ code
 
 	if (tgt == self)
 	{
-      act("You mercilessly taunt yourself !", A_ALWAYS, self, null, null, TO_CHAR);
+      act("You mercilessly taunt yourself!", A_ALWAYS, self, null, null, TO_CHAR);
       act("$1n mercilessly taunts $1mself!", A_SOMEONE, self, null, null, TO_REST);
       quit;
 	}
@@ -12002,9 +12019,9 @@ code
 	{
 		act("<div class='nodam_me'>You foolishly exhaust yourself attempting to taunt $3n!</div>",
 		A_SOMEONE, self, null, tgt, TO_CHAR);
-		act("<div class='nodam_other'>$1n seems to foolishly exhaust themself attempting to taunt $3n!</div>",
+		act("<div class='nodam_other'>$1n seems to foolishly exhaust $1mself attempting to taunt $3n!</div>",
 			A_SOMEONE, self, null, tgt, TO_NOTVICT);
-		act("<div class='nodam_opponent'>$1n foolishly exhausts themself attempting to taunt you!</div>",
+		act("<div class='nodam_opponent'>$1n foolishly exhausts $1mself attempting to taunt you!</div>",
 			A_SOMEONE, self, null, tgt, TO_VICT);		
 		if(self.fighting)
 			change_speed(self,PULSE_ROUND);
@@ -12056,9 +12073,9 @@ code
 			change_speed(self,PULSE_ROUND);
 		act("<div class='miss_me'>Your taunting of $3n falls on deaf ears.</div>",
 		A_ALWAYS, self, null, tgt, TO_CHAR);
-		act("<div class='miss_other'>$1n pitifully attempt to taunt $3n.</div>",
+		act("<div class='miss_other'>$1n pitifully attempts to taunt $3n.</div>",
 		A_SOMEONE, self, null, tgt, TO_NOTVICT);
-		act("<div class='hit_opponent'>$1n fails their effort to taunt you.</div>",
+		act("<div class='hit_opponent'>$1n fails in $1s effort to taunt you.</div>",
 		A_SOMEONE, self, null, tgt, TO_VICT);
 		if(dilfind("defending@skills", self) or (dilfind("def_block@skills", self)))
 		{
@@ -12218,8 +12235,8 @@ code
 	block;
 	if(dilfind("def_block@skills", self))
 		i := dildestroy("def_block@skills", self);
-	act("<div class='miss_me'>$3n is left reeling after you defend their attack!</div>", A_SOMEONE, self, null, foe, TO_CHAR);
-	act("<div class='miss_other'>$3n is left reeling after $1n defends their attack!</div>", A_SOMEONE, self, null, foe, TO_NOTVICT);
+	act("<div class='miss_me'>$3n is left reeling after you defend $3s attack!</div>", A_SOMEONE, self, null, foe, TO_CHAR);
+	act("<div class='miss_other'>$3n is left reeling after $1n defends $3s attack!</div>", A_SOMEONE, self, null, foe, TO_NOTVICT);
 	act("<div class='miss_opponent'>$1n defends your attack, leaving you reeling!</div>", A_SOMEONE, self, null, foe, TO_VICT);
 	set_fighting(foe,self);
 	change_speed(foe,PULSE_VIOLENCE*2);
@@ -12256,7 +12273,7 @@ code
     {
 		act("<div class='spell'>You attempt to channel your energy, but find yourself exhausted.</div>",
 			A_ALWAYS, self, null, tgt, TO_CHAR);
-		act("<div class='spell'>$1n attemps to channel their energy, but is exhausted.</div>",
+		act("<div class='spell'>$1n attempts to channel $1s energy, but is exhausted.</div>",
 			A_SOMEONE, self, null, tgt, TO_REST);
 		if (tgt.endurance > 20)
 			tgt.endurance := tgt.endurance - 20;
@@ -12273,7 +12290,7 @@ code
 	{
 		act("<div class='spell'>You attempt to channel your energy, but nothing happens.</div>",
 			A_ALWAYS, self, null, tgt, TO_CHAR);
-		act("<div class='spell'>$1n attemps to channel their energy, but nothing happens.</div>",
+		act("<div class='spell'>$1n attempts to channel $1s energy, but nothing happens.</div>",
 			A_SOMEONE, self, null, tgt, TO_REST);
 		tgt.endurance := tgt.endurance - 50;
 		quit;
@@ -12285,7 +12302,7 @@ code
 	{
 		act("<div class='spell'>You channel your energy, but fail to go berserk.</div>",
 			A_ALWAYS, self, null, tgt, TO_CHAR);
-		act("<div class='spell'>$1n channels their energy, but fails to go berserk.</div>",
+		act("<div class='spell'>$1n channels $1s energy, but fails to go berserk.</div>",
 			A_SOMEONE, self, null, tgt, TO_REST);
 		tgt.endurance := tgt.endurance - 50;
 		quit;
@@ -12295,7 +12312,7 @@ code
 	
 	act("<div class='spell'>You channel your energy, and go berserk!</div>",
 		A_ALWAYS, self, null, tgt, TO_CHAR);
-	act("<div class='spell'>$1n channels their energy, and goes berserk!</div>",
+	act("<div class='spell'>$1n channels $1s energy, and goes berserk!</div>",
 		A_SOMEONE, self, null, tgt, TO_REST);
 	if (isaff(tgt, ID_SPEED))
 		act("<div class='cpw'>Nothing happens.</div>",A_ALWAYS, self, null, tgt, TO_CHAR);
@@ -12524,7 +12541,7 @@ code
 
 	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
 	{
-		act("You can't charge at that, silly! Sheesh some people.",
+		act("You can't charge at that, silly! Sheesh, some people.",
 			A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
@@ -12558,7 +12575,7 @@ code
 	pain := rnd(self.hp/10,self.hp/15);
 	
 	act("You recklessly charge at $3n!", A_ALWAYS, self, null, targ, TO_CHAR);
-	act("$1n recklessly charges at you !", A_ALWAYS, self, null, targ, TO_VICT);
+	act("$1n recklessly charges at you!", A_ALWAYS, self, null, targ, TO_VICT);
 	act("$1n recklessly charges at $3n!", A_SOMEONE, self, null, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	hm := skillbattle2(SKI_CHARGE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_STR);
@@ -12611,16 +12628,16 @@ code
 	// Directions by abbreviation from the start ("nor" is north), not as any substring
 	if (arg == left("north", length(arg))) {
 		i := DIR_NORTH;
-		d := "north"; }
+		d := "to the north"; }
 	else if (arg == left("east", length(arg))) {
 		i := DIR_EAST;
-		d := "east"; }
+		d := "to the east"; }
 	else if (arg == left("south", length(arg))) {
 		i := DIR_SOUTH;
-		d := "south"; }
+		d := "to the south"; }
 	else if (arg == left("west", length(arg))) {
 		i := DIR_WEST;
-		d := "west"; }
+		d := "to the west"; }
 	else if (arg == left("up", length(arg))) {
 		i := DIR_UP;
 		d := "up"; }
@@ -12629,16 +12646,16 @@ code
 		d := "down"; }
 	else if ((arg == left("northeast", length(arg))) or (arg == "ne")) {
 		i := DIR_NORTHEAST;
-		d := "northeast"; }
+		d := "to the northeast"; }
 	else if ((arg == left("northwest", length(arg))) or (arg == "nw")) {
 		i := DIR_NORTHWEST;
-		d := "northwest"; }
+		d := "to the northwest"; }
 	else if ((arg == left("southeast", length(arg))) or (arg == "se")) {
 		i := DIR_SOUTHEAST;
-		d := "southeast"; }
+		d := "to the southeast"; }
 	else if ((arg == left("southwest", length(arg))) or (arg == "sw")) {
 		i := DIR_SOUTHWEST;
-		d := "southwest"; }
+		d := "to the southwest"; }
 	else {
 		act("No such direction.", A_SOMEONE, self, null, null, TO_CHAR);
 		quit;
@@ -12683,7 +12700,7 @@ code
 	tgt.endurance := tgt.endurance - 50;
 	act("$1n leaps out of sight.",
        A_HIDEINV, self, null, null, TO_ROOM);
-	act("You leap to the "+d+".",
+	act("You leap "+d+".",  // "to the north", "up"
        A_SOMEONE, self, null, null, TO_CHAR);
 
 	link(self, u.exit_to[i]);
@@ -12740,8 +12757,8 @@ code
 		quit;
 	}
 
-	act("You begin whirling your $2N and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
-	act("$1n begins whirling their $2N and $3n for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
+	act("You begin whirling your $2N and $3N for a deadly attack!",A_HIDEINV, self, weap, held, TO_CHAR);
+	act("$1n begins whirling $1s $2N and $3N for a deadly attack!",A_HIDEINV, self, weap, held, TO_ROOM);
 	self.endurance := self.endurance - endcost;  // 75, down to 55 at full skill
 	heartbeat := PULSE_ROUND*4;
 	change_speed(self, PULSE_ROUND*4);
@@ -12756,8 +12773,8 @@ code
 
 	hm := skillbattle2(SKI_WHIRL, ABIL_DEX, ABIL_CON, self.fighting, ABIL_DEX, ABIL_CON);
 	if (hm <= -30){ // was extremely easy to fail before making the skill unusable against many mobs. Lowering base difficulty a little bit.
-		act("Your get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
-		act("$1n gets tripped up and stumbles in their whirl!", A_SOMEONE, self, null, null, TO_REST);
+		act("You get tripped up and stumble in your whirl!", A_SOMEONE, self, null, null, TO_CHAR);
+		act("$1n gets tripped up and stumbles in $1s whirl!", A_SOMEONE, self, null, null, TO_REST);
 		change_speed(self,PULSE_ROUND*2);
 	}
 	else 
@@ -12815,7 +12832,7 @@ code
 	}
 	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
 	{
-		act("You can't cleave that, silly! Sheesh some people.",
+		act("You can't cleave that, silly! Sheesh, some people.",
 			A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
@@ -12856,8 +12873,8 @@ code
 
 	bonus := rnd(self.level-10,self.level+10);
 	act("You pull back your $2N and cleave $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
-	act("$1n pulls back their $2N and cleaves you!", A_ALWAYS, self, weap, targ, TO_VICT);
-	act("$1n pulls back their $2N and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	act("$1n pulls back $1s $2N and cleaves you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n pulls back $1s $2N and cleaves $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 50;
 	hm := skillbattle2(SKI_CLEAVE, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
@@ -12901,7 +12918,7 @@ code
 	}
 	if (not (targ.type & (UNIT_ST_PC | UNIT_ST_NPC)))
 	{
-		act("You can't rend that, silly! Sheesh some people.",
+		act("You can't rend that, silly! Sheesh, some people.",
 			A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
@@ -12936,13 +12953,13 @@ code
 	}
 	else if (is_cleaver(weap.value[0]) != TRUE)
 	{
-		act("You must wield a heavy bladed to do that.", A_ALWAYS, self, null, null, TO_CHAR);
+		act("You must wield a heavy bladed weapon to do that.", A_ALWAYS, self, null, null, TO_CHAR);
 		quit;
 	}
 
 	act("You swing your $2N and violently rend $3n!", A_ALWAYS, self, weap, targ, TO_CHAR);
-	act("$1n swings their $2N and violently rends you!", A_ALWAYS, self, weap, targ, TO_VICT);
-	act("$1n swings their $2N and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
+	act("$1n swings $1s $2N and violently rends you!", A_ALWAYS, self, weap, targ, TO_VICT);
+	act("$1n swings $1s $2N and violently rends $3n!", A_SOMEONE, self, weap, targ, TO_NOTVICT);
 	provoked_attack(targ, self);
 	self.endurance := self.endurance - 75;
 	hm := skillbattle2(SKI_REND, ABIL_CON, ABIL_STR, targ, ABIL_CON, ABIL_DEX);
@@ -12983,7 +13000,7 @@ code
 
 		if (self.hp < -10)
 		{
-			act("$1n dies from their loss of blood.",
+			act("$1n dies from $1s loss of blood.",
 				 A_HIDEINV, self, null, null, TO_ROOM);
 			act("You die from the loss of blood.",
 				A_HIDEINV, self, null, null, TO_CHAR);
@@ -12991,7 +13008,7 @@ code
 			goto the_end;
 		}
 
-		act("$1n bleeds from their gaping wounds.", A_HIDEINV, self, null, null, TO_ROOM);
+		act("$1n bleeds from $1s gaping wounds.", A_HIDEINV, self, null, null, TO_ROOM);
 		act("You bleed from your gaping wounds.",
 		A_HIDEINV, self, null, null, TO_CHAR);
 		position_update(self);
@@ -13069,7 +13086,7 @@ code
 		mast := self;
  
 	act("You swing your $2N and do a violent slam!",A_SOMEONE, self, weap, null, TO_CHAR);
-	act("$1n swings their $2N and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
+	act("$1n swings $1s $2N and does a violent slam!",A_SOMEONE, self, weap, null, TO_ROOM);
 	self.endurance := self.endurance - 75;
 
 	foreach(UNIT_ST_PC|UNIT_ST_NPC, u)
@@ -13442,7 +13459,7 @@ descr "A dead fish lies here, doing nothing."
 extra {}
 "This dead fish is about a foot long, bright silver and looks almost
 yummy. Caught by a ranger in search of food, this fish will yield a
-lot of filet."
+lot of fillet."
 weight 12
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(25, 0)
@@ -13481,7 +13498,7 @@ names {"dead slug", "slug"}
 title "a dead slug"
 descr "A dead slug is here, being disgusting."
 extra {}
-"Despite it's horrific appearance, this bright green, slimy object is
+"Despite its horrific appearance, this bright green, slimy object is
 a slug, and not only that, it's food for a ranger. Maybe it's time to
 finally start that diet..."
 weight 2
@@ -13721,9 +13738,9 @@ extra {"$enter_o"}
 "$1n enters the wooden shack."
 
 extra {"$exit_s"}
-"You duck and exit the hut."
+"You duck and exit the shack."
 extra {"$exit_o"}
-"$1n emerges from the wooden hut."
+"$1n emerges from the wooden shack."
 
 CONTAINER_DEF(3000)
 manipulate {MANIPULATE_ENTER}
@@ -13744,7 +13761,7 @@ descr "A small makeshift igloo has been constructed here."
 inside_descr
 "The crudely cut blocks of ice which make up the walls of this igloo provide a
 greater amount of insulation than their appearance would betray. They form a
-dome which apexs in a smooth curve for a roof, making the shape of the igloo
+dome which apexes in a smooth curve for a roof, making the shape of the igloo
 like a half-sphere. There is a single entrance."
 
 extra {}
@@ -13791,7 +13808,7 @@ end /* grass */
 ice
 names {"ice blocks", "ice block", "ice", "pile"}
 title "a pile of ice blocks"
-descr "A pile of ice blocks have been left here."
+descr "A pile of ice blocks has been left here."
 
 extra {}
 "They look to be the remains of an igloo."
@@ -13801,13 +13818,13 @@ end /* ice */
 wood
 names {"wood sticks", "wood", "sticks"}
 title "wooden sticks"
-descr "A pile of wooden sticks are all that remain of a shack that was once
+descr "A pile of wooden sticks is all that remains of a shack that was once
 here."
 
 extra {}
-"They look to be the remains of an igloo."
+"They look to be the remains of a wooden shack."
 
-end /* ice */
+end /* wood */
 
 %mobiles
 %mobiles
