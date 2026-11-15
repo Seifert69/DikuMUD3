@@ -10,14 +10,18 @@ use &lt;wand&gt; &lt;target&gt;
 use wand rat
 </pre>
 <p>Staves and wands are a way to carry magic with you. A staff affects everyone 
-where you are; a wand must be used at a single target. To use one you must hold 
+where you are except you and your group; a wand must be used at a single 
+target, and not while you are blind. Other players are touched by them 
+only when both of you have signed the Book of Blood. To use one you must hold 
 it in your hand (see <a cmd='#'>Help Hold</a>), and you must have practiced the skill wand 
 use: how well it works depends on that skill and your brain against the power 
 of the magic in it.
 </p><p>The skill wand use is taught by the conjurers and sorcerers from guild 
 level 0, the necromancers from level 1 (up to 80%) and the druids from 
-level 8.
-</p><p>Each staff and wand holds only so many charges. When they are used up, it is 
+level 8. Gustav, in the back room of the inn in Udgaard, 
+teaches it to anyone up to 35%. Practising it needs brain 20.
+</p><p>Each use takes a charge, even when nothing happens, and a bad failure 
+drains a second one. Each staff and wand holds only so many charges. When they are used up, it is 
 "drained of all power" until it is charged again (see <a cmd='#'>Help Charge Wand</a> and 
 <a cmd='#'>Help Charge Staff</a>).
 </p><p><br />

@@ -264,6 +264,7 @@ dilend
 
 names {"monastery gate"}
 title "Monastery Gate"
+gmap(464,270)
 descr
 "You are standing just inside the gates to the entrance of the healers guild,
 Midgaard's bastion of goodness and righteousness. The large monastery
@@ -291,6 +292,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(390,270)
 descr
 "   You are on a small gravel path leading through a well-tended flourishing
 garden, encircled by a whitewashed stone wall.  To the east is the monastery
@@ -318,6 +320,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(390,158)
 descr
 "You are standing just outside the massive monastery housing the followers of
 the 'Way of the Petal', the Midgaard healers. The large monastery rises into
@@ -337,6 +340,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(258,158)
 descr
 "You are walking on a small gravel path, inside the walls of the Midgaard
 Healers Guild Monastery. The monastery itself is to the south-west, and the
@@ -353,6 +357,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(127,158)
 descr
 "You are standing on a small gravel path just inside the walls surrounding the
 Midgaard Healers guild Monastery. The path leads around the monastery to the
@@ -370,6 +375,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(127,270)
 descr
 "   You are on a small gravel path leading through a well-tended flourishing
 garden, encircled by a whitewashed stone wall.  The path leads north and
@@ -386,6 +392,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(127,383)
 descr
 "   You are on a small gravel path leading through a well-tended flourishing
 garden, encircled by a whitewashed stone wall.  The path leads north and east
@@ -402,6 +409,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(258,383)
 descr
 "   You are on a small gravel path leading through a well-tended flourishing
 garden, encircled by a whitewashed stone wall.  The path leads east and west
@@ -418,6 +426,7 @@ end
 
 names {"monastery garden"}
 title "Monastery Garden"
+gmap(390,383)
 descr
 "   You are on a small gravel path leading through a well-tended flourishing
 garden, encircled by a whitewashed stone wall.  The path leads north and west
@@ -435,6 +444,7 @@ end
 
 names {"monastery foyer"}
 title "Monastery Foyer"
+gmap(296,270)
 descr
 "You have entered the large entry chamber of the Midgaard Healers Guild's
 monastery. The room has a tall roof, and a green marbled floor. There are
@@ -458,6 +468,7 @@ end
 
 names {"monastery sanctuary"}
 title "Sanctuary"
+gmap(296,215)
 descr
 "   You are in a rather bare, but peaceful, room.  The heavy wall hangings in
 tranquil colours and the stone statue at the north wall seem to be the only
@@ -483,6 +494,7 @@ end
 
 names {"monastery refectory"}
 title "Refectory"
+gmap(296,328)
 descr
 "   You are in a rather bare room with long tables and hard benches made from
 wood.  The white walls and the stone floor are scrupulously clean.  You can
@@ -498,6 +510,7 @@ end
 
 names {"monastery infirmary"}
 title "Infirmary"
+gmap(240,270)
 descr
 "  You are in a tranquil room with many soft-looking beds along the white
 walls.  By the northern wall stands a statue of a man, holding his hands out
@@ -514,6 +527,7 @@ end
 
 names {"monastery crypt"}
 title "The Crypt"
+gmap(240,270)
 descr
 "You are in a dark and humid crypt, underneath the infirmary. A single
 holy symbol is placed on the wall and a pair of torches illuminate this
@@ -528,6 +542,7 @@ end
 
 names {"monastery dormitory"}
 title "Dormitory"
+gmap(296,270)
 descr
 "  You are in a long dark low-ceilinged room directly below the roof.  Heavy
 wooden beams support the countless red tiles and many thin, hard mattresses

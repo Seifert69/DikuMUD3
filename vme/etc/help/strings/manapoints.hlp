@@ -4,8 +4,8 @@ amount (shown in its help). With too little mana left, you can't cast.
 <a cmd='#'>score</a> shows how much you have of your most.
 </p><p><b>How much you can have.</b> 100, plus half the sum of your brain and 
 charisma, up to 200 at most. It also grows as your character ages, up to 
-two fifths more late in life, and it fades away when you grow too old 
-for your race (see <a cmd='#'>Help Age</a>).
+two fifths more late in life, and it is gone entirely once you outlive 
+your lifespan (see <a cmd='#'>Help Age</a>).
 </p><p><b>Getting it back.</b> Mana comes back by itself every half minute, 
 except while you fight:
 </p>

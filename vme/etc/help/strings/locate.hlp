@@ -7,7 +7,7 @@ skills that tell you:
 <li><a cmd='#'>Help Locate Animal</a>: where an animal is;</li>
 <li><a cmd='#'>Help Find Path</a>: the way to someone;</li>
 <li><a cmd='#'>Help Track</a> and <a cmd='#'>Help Hunt</a>: follow someone's trail;</li>
-<li><a cmd='#'>Help Sense Life</a>: who is in the room, even hidden.</li></ul>
+<li><a cmd='#'>Help Sense Life</a>: that someone hidden or invisible is in the room.</li></ul>
 <p><a cmd='#'>who</a> shows who is playing, but not where.
 </p><p><br />
 See Also:

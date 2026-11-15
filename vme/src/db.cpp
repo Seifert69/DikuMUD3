@@ -308,6 +308,14 @@ int generate_datafile_file_indexes(FILE *f, zone_type *zone, bool do_reindex)
         {
             temp_index->setRoomNum(room_number++);
         }
+        else if (temp_index->getType() == UNIT_ST_OBJ)
+        {
+            zone->incrementNumOfObjects();
+        }
+        else if (temp_index->getType() == UNIT_ST_NPC)
+        {
+            zone->incrementNumOfNPCs();
+        }
 
         // Skip over the 'data' portion since we didnn't read it from the file
         // i.e. skip forward "length" from the current file position

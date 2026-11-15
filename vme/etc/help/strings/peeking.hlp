@@ -1,13 +1,25 @@
 <div class="mw-parser-output"><h1>Peeking</h1>
-<p>Usage:
+<p>Skill
+Class: Thief (guild level 8)
+</p><p>Usage:
 </p>
 <pre> peek &lt;character&gt;
 </pre>
 <p>Peeking is a useful thieving skill used to scan another person's inventory.
 Usually a prelude to a theft.
+</p><p>You see what they carry, not what they wear. Your peeking skill, dexterity
+and brain are tried against their brain and dexterity (and their own
+peeking skill, if they are a player); someone asleep can't stop you at all.
+If you fail badly, they catch you peeking and you lose any
+invisibility. It is no crime, though, and
+doesn't start a fight. You can't peek while fighting. Practising it needs
+brain 15.
 </p><p>See also:
 </p>
 <pre> &gt; <a cmd='#'>Help Stealing</a>
+ &gt; <a cmd='#'>Help Pick Pockets</a>
+ &gt; <a cmd='#'>Help Filching</a>
+ &gt; <a cmd='#'>Help Thief Skills</a>
 </pre>
 
 

@@ -5,14 +5,14 @@
 Heal Animal           5   60%
 Sense Life            6   60%
 Locate Animal         9   60%
-Refresh              13   70%
+Refresh              13   50%
 Hold Animal          17   50%
-Tiger Claw           21   100%
+Tiger Claw           21   80%
 Charm Animal         25   60%
 Sense Invisible      28   50%
-Eagle Cry            29   100%
-Entangle             35   70%
-Summon Animal        40   70%
+Eagle Cry            29   50%
+Entangle             35   50%
+Summon Animal        40   60%
 Glowing Fungus       45   50%
 </pre>
 <p><br />

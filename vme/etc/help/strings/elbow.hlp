@@ -1,10 +1,20 @@
 <div class="mw-parser-output"><h1>Elbow</h1>
-<p>Usage:
+<p>Weapon skill
+Class: Assassin (guild level 8), Barbarian (guild level 8, up to 60%), Fighter (guild level 8, up to 60%), Thief (guild level 8, up to 90%)
+Practising it needs dexterity 40.
+Also taught by: Jojun the weapon master, in the west hall of the Huashan Temple near Xiyang City (members of the Fighters', Thieves' and Assassins' guilds only, from level 8)
+</p><p>Usage:
 </p>
-<pre> elbow &lt;target&gt;
+<pre> elbow &lt;character&gt;
+ elbow              (whoever you are fighting)
 </pre>
 <p>This command will allow you to elbow your opponent. It is more powerful when your
-hands are free.
+hands are free: a shield, a held item or a wielded weapon each make it weaker,
+and a two-handed weapon most of all.
+</p><p>Elbow is a weapon skill; you must have practised it to elbow. Each elbow costs
+2 endurance, and it lands best on someone who isn't fighting yet. It hurts
+lightly armoured foes most and does little against plate. You can elbow another
+player only when both of you have signed the book of blood.
 </p><p><br />
 See Also:
 </p>

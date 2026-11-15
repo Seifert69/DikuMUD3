@@ -1,6 +1,9 @@
 <div class="mw-parser-output"><h1>Druid profession</h1>
 <p>Primary stats: BRA, DIV
-</p><p>Only the healer can specialize to become a druid. 
+</p><p>Only the healer can specialize to become a druid: a member of the Druids'
+guild who was a healer, has never specialised and has at most two
+professions can, from level 25, say "specialize" at the guild master, the
+oak tree, and drink what it hands over.
 </p><p>The Druid are a collective of peoples who use their divine abilities
 to nurture and harness the powers of nature. With these powerful forces
 at one's disposal, a Druid can command, manipulate and channel one's
@@ -16,7 +19,13 @@ surroundings, making the Druid a most formidable friend... Or foe.
  Con	-3
  Mag	-7
 </pre>
-<p>See Also:
+<h2><span class="mw-headline" id="The_guild">The guild</span></h2>
+<p>The Druids' guild is in a cavern behind the waterfall in the Mystic Forest,
+in Alquenburg. Its teachers are trees, and its master is the oak. To join,
+first do the willow tree's quest: bring it the head of the Magical Ice
+Beast of Mjorngar. Then type join at the oak. Evil characters, and members
+of the Conjurers', Sorcerers' and Necromancers' guilds, can't join.
+</p><p>See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Magic</a>
  &gt; <a cmd='#'>Help Divine Sphere</a>

@@ -408,6 +408,10 @@ void basic_save_contents(const char *pFileName, unit_data *unit, int fast, int b
             }
         }
     }
+    else
+    {
+        remove(pFileName); // Nothing to save: an old file would bring back what is gone
+    }
 }
 
 /* Save all units inside 'unit' in the blk_file 'bf' as uncompressed  */

@@ -38,7 +38,7 @@ python3 getwikihelppage.py Barbarian &
 python3 getwikihelppage.py Bardiche &
 python3 getwikihelppage.py Barkskin &
 python3 getwikihelppage.py Bash
-python3 getwikihelppage.py berserk &
+python3 getwikihelppage.py Berserk &
 python3 getwikihelppage.py Bastard &
 python3 getwikihelppage.py Battleaxe &
 python3 getwikihelppage.py Becdecorbin &
@@ -343,6 +343,7 @@ python3 getwikihelppage.py Khorsabadassassin &
 python3 getwikihelppage.py Kick &
 python3 getwikihelppage.py Kill &
 python3 getwikihelppage.py Kindred
+python3 getwikihelppage.py Knight &
 python3 getwikihelppage.py Knee &
 python3 getwikihelppage.py Knock &
 python3 getwikihelppage.py Kopesh &
@@ -459,6 +460,7 @@ python3 getwikihelppage.py Pour &
 python3 getwikihelppage.py Poweritems
 python3 getwikihelppage.py Practice &
 python3 getwikihelppage.py Pray &
+python3 getwikihelppage.py Privacy &
 python3 getwikihelppage.py Professions &
 python3 getwikihelppage.py Promptcolors
 python3 getwikihelppage.py Protected &
@@ -650,3 +652,4 @@ python3 getwikihelppage.py Wordofrecall &
 python3 getwikihelppage.py Write
 python3 getwikihelppage.py Yule &
 python3 getwikihelppage.py Xrayvision
+wait

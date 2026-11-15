@@ -1,17 +1,23 @@
 <div class="mw-parser-output"><h1>Contract</h1>
 <p>Usage:
 </p>
-<pre>contract &lt;character&gt;
+<pre>offer &lt;player&gt;
+contract &lt;player&gt;
 </pre>
 <p>Example:
 </p>
-<pre>contract mayor
+<pre>offer Joe
+contract Joe
 </pre>
-<p>This command is used to hire one of the NPC assassins to murder other characters.
+<p>These commands hire one of the NPC mercenaries, such as the Assassin who 
+walks the streets of Midgaard, to kill another player for money: offer asks 
+the price, contract pays it. A mercenary takes no contract on a monster, an 
+immortal, yourself or a player of level 20 or below. See <a cmd='#'>Help Contract</a> for 
+the details.
 </p><p>See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Offer</a>
-&gt; <a cmd='#'>Help Khorsabad Assassin</a>
+<pre>&gt; <a cmd='#'>Help Contract</a>
+&gt; <a cmd='#'>Help Player Killing</a>
 </pre>
 
 

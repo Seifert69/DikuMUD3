@@ -54,6 +54,7 @@
 #include <fcntl.h>
 #include <sys/stat.h>
 
+#include <algorithm>
 #include <cstdlib>
 #include <cstring>
 #include <filesystem>
@@ -155,11 +156,12 @@ void dilfi_edit(dilprg *p)
         }
         else
         {
+            // First: on a player already editing, set_descriptor_fptr ends that edit, clearing these
+            set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
+
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setPostEditFunctionPtr(dil_edit_done);
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditing(p->owner);
             CHAR_DESCRIPTOR((unit_data *)v1->val.ptr)->setEditReference(nullptr);
-
-            set_descriptor_fptr(CHAR_DESCRIPTOR((unit_data *)v1->val.ptr), interpreter_string_add, TRUE);
         }
     }
 
@@ -897,9 +899,12 @@ void dilfi_rsrce(dilprg *p)
         }
         else
         {
-            if (((unit_data *)v1->val.ptr)->isPC())
+            if (((unit_data *)v1->val.ptr)->isPC() && !race_adjust((unit_data *)v1->val.ptr))
             {
-                race_adjust((unit_data *)v1->val.ptr);
+                szonelog(p->frame->tmpl->zone,
+                         "DIL '%s': reset_race on a player of race %d, not a player race.",
+                         p->frame->tmpl->prgname,
+                         CHAR_RACE((unit_data *)v1->val.ptr));
             }
         }
     }
@@ -1397,9 +1402,9 @@ void dilfi_rsfunc(dilprg *p)
                             }
                             break;
                         case DILV_ILP:
-                            if ((t != DILV_NULL) && (t != DILV_SLP))
+                            if ((t != DILV_NULL) && (t != DILV_ILP))
                             {
-                                fail = TRUE; /* type error, expect stringlist */
+                                fail = TRUE; /* type error, expect intlist */
                             }
                             break;
                         default:
@@ -1445,6 +1450,38 @@ void dilfi_rsfunc(dilprg *p)
 }
 
 /* Assignment of value to reference */
+/* A transfer affect added to a worn object reaches the wearer at once, as equip_char gives it, so
+   that taking it off again (destroy_affect) has the wearer's copy to take */
+static void dil_transfer_to_wearer(unit_data *u, unit_affected_type *af)
+{
+    if ((af->getID() < 0) && u->isObj() && OBJ_EQP_POS(u) && !u->is_destructed())
+    {
+        equip_transfer_affect(u->getUnitIn(), af);
+    }
+}
+
+/* A field with a range (an index of a table, or alignment) takes a value outside it only when it
+   clamps; otherwise the assignment is refused and the zone log says so */
+static bool dil_fit_range(dilprg *p, dilval *v1, sbit32 &num)
+{
+    if ((num >= v1->min) && (num <= v1->max))
+    {
+        return true;
+    }
+    if (v1->clamp)
+    {
+        num = std::clamp(num, v1->min, v1->max);
+        return true;
+    }
+    szonelog(p->frame->tmpl->zone,
+             "DIL '%s' assigned %d to a field that takes %d to %d.",
+             p->frame->tmpl->prgname,
+             num,
+             v1->min,
+             v1->max);
+    return false;
+}
+
 void dilfi_ass(dilprg *p)
 {
     dilval *v2 = p->stack.pop();  // Pop the result
@@ -1474,7 +1511,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "unit assignemt");
+                    dil_typeerr(p, "unit assignment");
                     break;
             }
             break;
@@ -1494,7 +1531,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "zoneptr assignemt");
+                    dil_typeerr(p, "zoneptr assignment");
                     break;
             }
             break;
@@ -1514,7 +1551,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "cmdptr assignemt");
+                    dil_typeerr(p, "cmdptr assignment");
                     break;
             }
             break;
@@ -1636,7 +1673,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "namelist SPLR assignemt");
+                    dil_typeerr(p, "namelist SPLR assignment");
                     break;
             }
             break;
@@ -1670,7 +1707,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "namelist IPLR assignemt");
+                    dil_typeerr(p, "namelist IPLR assignment");
                     break;
             }
             break;
@@ -1693,7 +1730,7 @@ void dilfi_ass(dilprg *p)
 
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "exdp assignemt");
+                    dil_typeerr(p, "exdp assignment");
                     break;
             }
             break;
@@ -1705,11 +1742,14 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit8 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit8 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
@@ -1721,11 +1761,14 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit16 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit16 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
@@ -1737,11 +1780,14 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit32 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit32 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
@@ -1753,11 +1799,14 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit8 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit8 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
@@ -1769,11 +1818,14 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit16 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit16 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
@@ -1785,18 +1837,21 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit32 *)v1->ref) = v2->val.num;
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit32 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
-                    dil_typeerr(p, "integer assignemt");
+                    dil_typeerr(p, "integer assignment");
                     break;
             }
             break;
 
         default:
             /* not an lvalue! */
-            dil_typeerr(p, "lvalue assignemt");
+            dil_typeerr(p, "lvalue assignment");
             break;
     }
     dilval::free(v1);
@@ -1894,7 +1949,10 @@ void dilfi_folo(dilprg *p)
     {
         if (v1->val.ptr && !(v2->val.ptr))
         {
-            stop_following((unit_data *)v1->val.ptr);
+            if (((unit_data *)v1->val.ptr)->isChar() && CHAR_MASTER((unit_data *)v1->val.ptr))
+            {
+                stop_following((unit_data *)v1->val.ptr);
+            }
         }
         else
         {
@@ -2122,13 +2180,14 @@ void dilfi_inslst(dilprg *p)
             {
                 if (v1->type == DILV_SLPR)
                 {
-                    if (dil_getval(v3) == DILV_INT)
+                    const char *text = (dil_getval(v3) == DILV_INT) ? itoa(v3->val.num) : (char *)v3->val.ptr;
+                    // InsertName refuses a position below 0 (4 billion as a ubit32) or past 10000
+                    if (text && !((cNamelist *)v1->ref)->InsertName(text, (ubit32)v2->val.num))
                     {
-                        ((cNamelist *)v1->ref)->InsertName(itoa(v3->val.num), (ubit32)v2->val.num);
-                    }
-                    else if (v3->val.ptr)
-                    {
-                        ((cNamelist *)v1->ref)->InsertName(((char *)v3->val.ptr), (ubit32)v2->val.num);
+                        szonelog(p->frame->tmpl->zone,
+                                 "DIL '%s' insert() into a stringlist at position %d.",
+                                 p->frame->tmpl->prgname,
+                                 v2->val.num);
                     }
                 }
                 else if (v1->type == DILV_ILPR)
@@ -2374,13 +2433,14 @@ void dilfi_sue(dilprg *p)
                         /* *((class extra_descr_data **)v1->ref) =
                             (*((class extra_descr_data **)v1->ref))->remove((char *)v2->val.ptr); */
 
-                        // Save our friend exd here, because rogue_delete is going to change the ref value
-                        extra_descr_data *exd = *(extra_descr_data **)v1->ref;
+                        // The extra that goes, to clear this program's variables that point at it
+                        extra_descr_data *exd = (*(extra_descr_data **)v1->ref)->find_raw((char *)v2->val.ptr);
 
-                        rogue_remove((extra_descr_data **)v1->ref, (char *)v2->val.ptr);
-
-                        // Now reuse exd here to clear out any invalid pointers
-                        dil_clear_extras(p, exd);
+                        if (exd)
+                        {
+                            rogue_remove((extra_descr_data **)v1->ref, (char *)v2->val.ptr);
+                            dil_clear_extras(p, exd);
+                        }
 
                         // So we can get into a really messy situation here.
                         // If in a DIL program you have two extraptr, e.g. u.extra and myextra := u.extra.
@@ -2537,7 +2597,8 @@ void dilfi_wit(dilprg *p)
         if (p->waitcmd != WAITCMD_MAXINST)
         {
             REMOVE_BIT(v1->val.num,
-                       ~(SFB_DONE | SFB_PRE | SFB_CMD | SFB_TICK | SFB_RANTIME | SFB_DEAD | SFB_COM | SFB_MSG | SFB_EDIT | SFB_PROMPT));
+                       ~(SFB_DONE | SFB_PRE | SFB_CMD | SFB_TICK | SFB_RANTIME | SFB_DEAD | SFB_COM | SFB_MSG | SFB_SAVE | SFB_EDIT |
+                         SFB_PROMPT));
 
             p->sarg->fptr->removeActivateOnEventFlag(SFB_CMD | SFB_TICK | SFB_DEAD | SFB_DONE | SFB_PRE | SFB_COM | SFB_MSG | SFB_SAVE |
                                                      SFB_ACTIVATE | SFB_EDIT | SFB_PROMPT);
@@ -2740,6 +2801,7 @@ void dilfi_ada(dilprg *p)
                         af.setLastFI(v10->val.num);
                         af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
+                        dil_transfer_to_wearer((unit_data *)v1->val.ptr, &af);
                     }
                 }
                 else
@@ -2786,6 +2848,7 @@ void dilfi_ada(dilprg *p)
                         af.setLastFI(v10->val.num);
                         af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
+                        dil_transfer_to_wearer((unit_data *)v1->val.ptr, &af);
                     }
                 }
                 else
@@ -3093,7 +3156,8 @@ void dilfi_eqp(dilprg *p)
     if (dil_type_check("equip", p, 2, v1, TYPEFAIL_NULL, 1, DILV_UP, v2, TYPEFAIL_NULL, 1, DILV_INT))
     {
         auto *unit = reinterpret_cast<unit_data *>(v1->val.ptr);
-        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !equipment(unit->getUnitIn(), v2->val.num))
+        if (unit && unit->getUnitIn() && unit->getUnitIn()->isChar() && unit->isObj() && !OBJ_EQP_POS(unit) &&
+            !equipment(unit->getUnitIn(), v2->val.num))
         {
             /* Then equip char */
             equip_char(unit->getUnitIn(), unit, v2->val.num);
@@ -3227,7 +3291,7 @@ void dilfi_setroomexit(dilprg *p)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with null room pointer.", p->frame->tmpl->prgname);
         }
-        else if (!unit_room((unit_data *)v1->val.ptr))
+        else if (!((unit_data *)v1->val.ptr)->isRoom())
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with non-room unit.", p->frame->tmpl->prgname);
         }
@@ -3235,7 +3299,7 @@ void dilfi_setroomexit(dilprg *p)
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with invalid direction %d (valid: 0-%d).", p->frame->tmpl->prgname, v2->val.num, MAX_EXIT);
         }
-        else if (v3->val.ptr != nullptr && !unit_room((unit_data *)v3->val.ptr))
+        else if (v3->val.ptr != nullptr && !((unit_data *)v3->val.ptr)->isRoom())
         {
             szonelog(p->frame->tmpl->zone, "DIL '%s' tried to call setroomexit() with non-room destination.", p->frame->tmpl->prgname);
         }

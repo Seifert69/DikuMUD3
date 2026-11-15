@@ -4,26 +4,36 @@
 <pre>Name           Level   Up to
 Dagger             0   80%
 Fist               0   70%
-Quarterstaff       0   100%
-Hand Axe           1   100%
-Rapier             1   100%
-Short Sword        2   100%
+Javelin            0   80%
+Quarterstaff       0   60%
+Hand Axe           1   90%
+Short Sword        2   80%
 Mace               3   100%
-Long Sword         4   100%
-Scimitar           4   100%
-Club               5   100%
-Spear              6   100%
+Rapier             4   100%
+Club               5   60%
+Broad Sword        8   100%
+Falchion           8   60%
 Whip               9   100%
-War Hammer        10   100%
-Morning Star      14   100%
-Flail             15   100%
-Battle Club       16   100%
+Spear             10   100%
+War Hammer        10   80%
+Brass Knuckles    12   70%
+Adze Mattock      14   90%
+Flail             15   80%
+Long Sword        15   100%
+Battle Club       16   90%
+Scimitar          16   100%
 Battle Mace       18   100%
+Crossbow          20   80%
+Morning Star      20   80%
+Scythe            20   60%
 Lance             21   100%
-Maul              24   100%
+Battle Axe        22   100%
+Maul              24   80%
+Claymore          25   100%
 Great Sword       25   100%
-Bardiche          26   100%
-Halberd           28   100%
+War Mattock       25   100%
+Bardiche          26   80%
+Halberd           28   80%
 </pre>
 <p><br />
 See Also:

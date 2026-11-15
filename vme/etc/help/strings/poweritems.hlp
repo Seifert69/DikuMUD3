@@ -2,8 +2,9 @@
 <p>Power items are magic items from Valhalla's early days, when players got 
 them for donations. Valhalla takes no donations any more, and the 
 players who have power items keep them. They include anklets, girdles, 
-rings, bracelets, back plates and sashes, most of them raising one of 
-your abilities, and a few with powers of their own.
+rings, bracelets, back plates, sashes, necklaces, earrings and skullcaps, 
+most of them raising one of your abilities, and a few with powers of 
+their own.
 </p><p>A power item is yours alone. With <a cmd='#'>Help Piset</a> you may give it a title 
 and descriptions of your own, once. A power item bag holds them without 
 taking up room in your inventory (see <a cmd='#'>Help Pibag</a>).
@@ -14,7 +15,9 @@ place on the body. It stores mana for later:
 touch hand to head       store mana in it
 touch hand to heart      take the mana back
 </pre>
-<p>It doesn't work while you are fighting, nor for 5 minutes after a fight 
+<p>It keeps half of the mana you put in, and holds at most as much as your 
+own full mana.
+</p><p>It doesn't work while you are fighting, nor for 5 minutes after a fight 
 with another player.
 </p><p><br />
 See Also:

@@ -11,7 +11,12 @@ wpath &lt;unit@zone&gt;
 <p>Finds the way to someone or something: anyone or anything in the world 
 by name, or a unit by its symbolic name. You are told its symbolic name, 
 the room it is in (click it to goto there), and the first direction to 
-walk from where you stand to get there along the shortest path.
+walk from where you stand to get there along the shortest path. Instead 
+of a direction it may say enter or exit (go into or out of something on 
+the way), here, try again (the way is still being worked out: ask again 
+in a moment), or impossible: there is no way both there and back, as 
+across a one-way exit, or to a room made since the last reboot (new 
+exits aren't known until then either).
 </p><p>It replaces the old path command. It is logged.
 </p><p><br />
 See Also:

@@ -1,21 +1,20 @@
 <div class="mw-parser-output"><h1>Wield</h1>
 <p>Usage:
 </p>
-<pre> wield (item) [two]
+<pre> wield &lt;weapon&gt;
 </pre>
-<p>To start using a weapon, you must use the'wield' command. If the weapon
-is two-handed, you must have both hands free, else, your right hand must
-be free. Weapon that can be used both with one or two hands are normally
-wielded one-handed. If you specify the keyword 'two' after the weapons
-name, you will wield it in two hands. For example:
+<p>Example:
 </p>
-<pre> wield bastard sword
+<pre> wield long sword
 </pre>
-<p>You will wield it in one hand.
-</p>
-<pre> wield bastard sword two
-</pre>
-<p>You will wield it in two hands.
+<p>To start using a weapon, you must use the 'wield' command. If the weapon
+is two-handed, you must have both hands free, else, your weapon hand must
+be free. Whether a weapon takes one hand or two is decided by its kind:
+you can't choose to wield a one-handed weapon in two hands. A shield, or
+something you hold, takes up a hand too. When you wield a weapon, you are
+told how good you are at fighting with it.
+</p><p>A weapon that is too big or too small for you can't be wielded (see
+<a cmd='#'>Help Resize</a>).
 </p><p>To wield two weapons, you must hold the second weapon using the <a cmd='#'>Hold|Help Hold</a> command.
 </p><p><br />
 See Also:

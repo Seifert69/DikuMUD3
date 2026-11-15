@@ -68,6 +68,7 @@ void free_namelist(char **list);
 char *str_ccmp_next_word(const char *buf, const char *next_word);
 
 char *str_next_word_copy(const char *argument, char *first_arg);
+char *str_next_word_copy(const char *argument, char *first_arg, size_t size);
 char *str_next_word(const char *argument, char *first_arg);
 char *str_next_word_delim(const char *argument, char *first_arg, char delim);
 void split_fi_ref(const char *str, char *zone, char *name);
@@ -75,6 +76,9 @@ const char *skip_spaces(const char *);
 const char *skip_blanks(const char *string);
 void strip_trailing_spaces(char *str);
 void strip_trailing_blanks(char *str);
+/// The text between a pair of surrounding double quotes ("text" -> text), else str itself.
+/// Changes str (the closing quote) and returns a pointer into it.
+char *strip_surrounding_quotes(char *str);
 
 const char *divcolor(const char *colorstr);
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);

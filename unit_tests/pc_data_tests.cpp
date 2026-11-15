@@ -1,4 +1,5 @@
 #include "FixtureBase.h"
+#include "act_other.h"
 #include "descriptor_data.h"
 #include "nanny.h"
 #include "pc_data.h"
@@ -154,6 +155,30 @@ BOOST_FIXTURE_TEST_CASE(golden_vectors_before_and_after, PasswordFixture)
                 BOOST_TEST(!logs_in(""));
             }
         }
+    }
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/**********************************************************************************
+ * PcData_RaceAdjust_Suite - race_adjust(), which DIL's reset_race() calls
+ */
+BOOST_AUTO_TEST_SUITE(PcData_RaceAdjust_Suite)
+
+// DIL can set .race to any number: one that isn't a player race (0 to PC_RACE_MAX - 1)
+// changes nothing. It used to fail an assert and bring the server down.
+BOOST_FIXTURE_TEST_CASE(not_a_player_race_changes_nothing, unit_tests::FixtureBase)
+{
+    std::unique_ptr<pc_data> pc{dynamic_cast<pc_data *>(new_unit_data(UNIT_ST_PC, nullptr))};
+
+    for (ubit16 race : {ubit16(PC_RACE_MAX), ubit16(150), ubit16(65535)})
+    {
+        pc->setRace(race);
+        pc->setWeight(123);
+        pc->setSize(45);
+        race_adjust(pc.get());
+        BOOST_TEST(pc->getWeight() == 123);
+        BOOST_TEST(pc->getSize() == 45);
     }
 }
 

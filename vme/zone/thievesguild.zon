@@ -127,6 +127,7 @@ dilend
                                 entrance
 
 title "The Thieves Bar"
+gmap(312,412)
 descr
 "    This is an abandoned bar which has been left unused for many years.
 There is a sign hanging on the wall. There is a dark alley to the north.
@@ -150,6 +151,7 @@ end
 
 names{"wine cellar"}
 title "The Wine Cellar"
+gmap(312,412)
 descr
 "    This room seems a little damp, but not nearly as much as the upper
 wine cellar. The two dozen beer barrels seem to be of fine quality compared
@@ -167,6 +169,7 @@ end
 
 names{"middle wine cellar"}
 title "The Guild of Thieves Entrance"
+gmap(312,337)
 descr
 "    A faint scent of wine fills the air here and slight sounds of music
 float in from the door to the east. A low door leads to the adjoining
@@ -189,6 +192,7 @@ end
 
 names {"thieves bar"}
 title "Smugglers Corner"
+gmap(387,337)
 descr
 "    This low-ceilinged inn has a comforting air to it that relaxes you
 in addition to the soft sounds of music emanating from a large adorned
@@ -221,6 +225,7 @@ end
 
 names {"coal room"}
 title "Training Centre and Coal Room"
+gmap(237,337)
 descr
 "    The floor in here is completely covered with coal and coal dust. A
 small flagstone stands upright against the southern wall. The northern
@@ -238,6 +243,7 @@ end
 
 names {"inner wine cellar"}
 title "The Inner Wine Cellar"
+gmap(312,262)
 descr
 "    The walls are carved from the virgin rock underneath the city. The
 wall to the north has a near-invisible crack. A low staircase disappears
@@ -266,6 +272,7 @@ end
 
 names {"storage room"}
 title "The Storage Room"
+gmap(387,262)
 descr
 "    A strong pong of hardship and sweaty labour pervades the entire room.
 Large boulders cover the west end of the room, and wooden figures adorn
@@ -290,6 +297,7 @@ end
 
 names {"the work shop"}
 title "The Thieves' Work Shop"
+gmap(312,187)
 descr
 "    This room is completely empty except for a doll of wood and cloth. It is
 dressed in fancy clothes and stands in the middle of the room. A heavy door
@@ -314,6 +322,7 @@ end
 
 names {"the study"}
 title "Guildmaster's Study"
+gmap(312,262)
 descr
 "    Paintings of great thieves and renowned criminals adorn the walls of
 this place. The lighting is low but comfortable, warmth emanates from a

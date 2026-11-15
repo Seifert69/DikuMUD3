@@ -56,6 +56,7 @@ char *m_pBadStrings = nullptr;
 int _parse_name(const char *arg, char *name)
 {
     int i = 0;
+    char *start = name;
 
     badnames_list badnames;
     badnames_list badstrings;
@@ -80,7 +81,7 @@ int _parse_name(const char *arg, char *name)
         return 1;
     }
 
-    if (fill_word(name - i))
+    if (fill_word(start))
     { /* Don't allow fillwords */
         return 1;
     }
@@ -90,7 +91,7 @@ int _parse_name(const char *arg, char *name)
     badstrings.create(m_pBadStrings);
     FREE(m_pBadStrings);
 
-    if (badstrings.in(name - i))
+    if (badstrings.in(start))
     {
         return 2;
     }
@@ -100,12 +101,12 @@ int _parse_name(const char *arg, char *name)
     badnames.create(m_pBadNames);
     FREE(m_pBadNames);
 
-    if (badnames.equal(name - i))
+    if (badnames.equal(start))
     {
         return 3;
     }
 
-    str_lower(name);
+    str_lower(start);
 
     return 0;
 }

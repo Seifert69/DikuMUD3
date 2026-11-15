@@ -1,6 +1,6 @@
 <div class="mw-parser-output"><h1>Forage</h1>
 <p>Skill
-Class: Ranger (guild level 3, up to 75%), Druid (guild level 6)
+Class: Ranger (guild level 3, up to 75%), Druid (guild level 6, up to 90%)
 </p><p>Usage:
 </p>
 <pre>forage
@@ -19,7 +19,7 @@ water             newts, algae, kelp, fish, bullfrogs
 snow, slush       roots, tubers
 city, indoors, ice   nothing at all
 </pre>
-<p>Your skill decides whether you find anything. Mountains and swamps are 
+<p>Your skill and your brain decide whether you find anything. Mountains and swamps are 
 the easiest places to forage, hills and water a little harder, fields and 
 forests harder still, and the desert and snow the hardest. Fail, and you 
 find nothing, or only dirt.

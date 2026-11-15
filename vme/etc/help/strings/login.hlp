@@ -1,7 +1,8 @@
 <div class="mw-parser-output"><p>Welcome to Valhalla. To login as a new player, you must first pick
 a name and then select a password. If you are prompted for a password just
 after picking the name, it means that the name is already in use by
-another player. Then just hit enter and try a different name. You are not
+another player. Then just hit enter: you are disconnected, and you can 
+connect again and try a different name. You are not
 making any commitments so just continue the login procedure, you can
 always make a new player if you pick a wrong choice. To get more help, you
 can write help followed by the word on which you want help,
@@ -12,8 +13,6 @@ can write help followed by the word on which you want help,
 <p>See also:
 </p>
 <pre> <a cmd='#'>Help Password</a>
- <a cmd='#'>Help Personal Email</a>
- <a cmd='#'>Help Maiden Name</a>
  <a cmd='#'>Help Login Guilds</a>
  <a cmd='#'>Help Login Races</a>
 </pre>

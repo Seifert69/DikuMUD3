@@ -10,9 +10,11 @@ reset &lt;zone&gt;
 </pre>
 <p>Resets a zone at once, instead of waiting for its next reset: the zone's 
 reset commands are carried out, loading the monsters and things that are 
-missing, up to the numbers its builder set. Without a name, it 
-resets the zone you are in. Nothing that is already there is removed: to 
-clear a room first, use <a cmd='#'>Wizhelp Purge</a>.
+missing, up to the numbers its builder set, and setting its doors as
+the builder set them. Without a name, it resets the zone you are in.
+Mostly nothing that is already there is removed (a few zones take away
+and reload one thing, such as a chest): to clear a room first, use
+<a cmd='#'>Wizhelp Purge</a>.
 </p><p>It is logged.
 </p><p><br />
 See Also:

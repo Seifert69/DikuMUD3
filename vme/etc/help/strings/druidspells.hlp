@@ -4,41 +4,43 @@
 <pre>Name               Level   Up to
 Sense Life             1   100%
 Thorn Strike           2   100%
-Bark Skin              3   100%
-Glowing Fungus         5   100%
+Bark Skin              3   80%
+Glowing Fungus         5   80%
 Sense Invisible        6   100%
-Summer Rain            7   100%
-Mud Puddle             8   100%
-Refresh                8   100%
+Summer Rain            7   80%
+Mud Puddle             8   70%
+Refresh                8   80%
 Poison Ivy             9   100%
-Wind Slash            10   100%
-Brambles              12   100%
-Detect Alignment      12   100%
-Heal Animal           13   100%
-Life Protection       14   100%
-Charm Animal          15   100%
+Wind Slash            10   70%
+Brambles              12   90%
+Detect Alignment      12   70%
+Heal Animal           13   50%
+Life Protection       14   90%
+Charm Animal          15   50%
 Detect Poison         16   100%
-Ice Thorn             17   100%
-Locate Animal         19   100%
-Entangle              21   100%
+Ice Thorn             17   70%
+Locate Animal         19   50%
+Entangle              21   80%
 Hedge Wall            21   100%
 Sustain               22   80%
-Remove Disease        25   100%
-Calm                  26   80%
-Remove Poison         28   100%
+Sun Beam              24   100%
+Remove Disease        25   50%
+Calm                  26   50%
+Remove Poison         28   50%
 Cure Blind            29   80%
-Petrify               30   100%
-Quicksand             31   100%
-Find Path             34   100%
-Locate Object         35   100%
+Petrify               30   80%
+Quicksand             31   50%
+Find Path             34   70%
+Locate Object         35   50%
 Locate Person         37   100%
-Sun Ray               41   100%
-Clear Skies           43   100%
-Leaf Shield           47   100%
-Tsunami               52   100%
-Summon Lightning      60   100%
-Earthquake            90   100%
-Polarity             120   100%
+Sun Ray               41   80%
+Clear Skies           43   50%
+Leaf Shield           47   80%
+Tsunami               52   50%
+Summon Lightning      60   50%
+Earthquake            90   70%
+Solar Flare          110   100%
+Polarity             120   60%
 </pre>
 <p><br />
 See Also:

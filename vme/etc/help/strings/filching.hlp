@@ -1,13 +1,22 @@
 <div class="mw-parser-output"><h1>Filching</h1>
-<p>Usage:
+<p>Skill
+Class: Thief (guild level 5)
+</p><p>Usage:
 </p>
 <pre> filch &lt;item&gt; from &lt;target&gt;
 </pre>
-<p>The filch skill enables you to take worn jewelry from another living being.
-With this skill you can only filch jewelry items that are worn by the target.
-When you try to filch your filch skill and dexterity and roll is compared to
-the targets filch and brain.  If your filch is successful you still risk 
-that any bystanders see your crime even if the target didn't.
+<p>The filch skill enables you to take things another living being is wearing: 
+rings, necklaces, earrings, bracelets and anklets, and also whatever is worn 
+about the waist or on the back. Nothing else they wear or wield can be filched, and you need a hand free to 
+try. You can only filch from another player if you have both signed the book 
+of blood.
+</p><p>When you try to filch, your filch skill, with your dexterity and a little of 
+your brain, and a roll are compared to the target's brain and a little 
+dexterity (and a player's own filch skill). Fail by a little and nothing 
+happens, and no one notices. Fail badly and you are caught: the target 
+attacks you. A narrow success gets you the item, but the target catches you 
+at it and attacks. Even if the target didn't notice, you still risk that 
+bystanders see your crime.
 </p><p>If you're good at filching, this is a fast way to get good jewelry, and also a
 way to spend some quality time in jail. Not to mention, a horde of blood thirsty
 enemies. 

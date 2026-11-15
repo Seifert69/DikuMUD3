@@ -196,4 +196,63 @@ BOOST_AUTO_TEST_CASE(empty_old_changes_nothing)
     BOOST_TEST(substituted(empty, "", "", "") == "");
 }
 
+BOOST_AUTO_TEST_CASE(strip_surrounding_quotes_drops_one_pair)
+{
+    auto stripped = [](const char *in) {
+        std::vector<char> buf(in, in + strlen(in) + 1);
+        return std::string(strip_surrounding_quotes(buf.data()));
+    };
+    BOOST_TEST(stripped("\"You pray for $3n's life...\"") == "You pray for $3n's life...");
+    BOOST_TEST(stripped("no quotes") == "no quotes");
+    BOOST_TEST(stripped("\"only at the start") == "\"only at the start");
+    BOOST_TEST(stripped("only 'single' quotes") == "only 'single' quotes");
+    BOOST_TEST(stripped("\"\"") == "");
+    BOOST_TEST(stripped("\"") == "\"");
+    BOOST_TEST(stripped("") == "");
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(Textutil_StrStr_Suite)
+
+BOOST_AUTO_TEST_CASE(empty_text_is_found_nowhere)
+{
+    // Zero-filled: the old loop read the byte after the empty text and matched at the end of cs
+    char empty[2] = {};
+    const char *cs = "abc";
+
+    BOOST_TEST(str_str(cs, empty) == nullptr);
+    BOOST_TEST(str_str(empty, empty) == nullptr);
+    BOOST_TEST(str_str(cs, "bc") == cs + 1);
+    BOOST_TEST(str_str(cs, "abcd") == nullptr);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(Textutil_NextWordCopy_Suite)
+
+BOOST_AUTO_TEST_CASE(word_is_cut_to_the_buffer)
+{
+    const std::string word(100, 'x');
+    const std::string text = "  " + word + "  next";
+    char buf[11 + GUARD];
+    std::memset(buf, '#', sizeof(buf));
+
+    const char *rest = str_next_word_copy(text.c_str(), buf, 11);
+
+    BOOST_TEST(std::string(buf) == std::string(10, 'x'));
+    BOOST_TEST(std::string(rest) == "next");
+    BOOST_TEST(std::all_of(buf + 11, buf + sizeof(buf), [](char c) { return c == '#'; }));
+}
+
+BOOST_AUTO_TEST_CASE(short_word_is_whole)
+{
+    char buf[16];
+
+    const char *rest = str_next_word_copy("ab cd", buf, sizeof(buf));
+
+    BOOST_TEST(std::string(buf) == "ab");
+    BOOST_TEST(std::string(rest) == "cd");
+}
+
 BOOST_AUTO_TEST_SUITE_END()

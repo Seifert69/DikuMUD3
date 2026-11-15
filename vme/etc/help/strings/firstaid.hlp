@@ -1,6 +1,8 @@
 <div class="mw-parser-output"><h1>First Aid</h1>
 <p>Skill
-Class: Healer (guild level 0), Dark Knight, Paladin, Ranger (3, up to 50%), Druid (5, up to 80%), Thief (9, up to 30%)
+Class: Healer (guild level 0), Dark Knight (guild level 3, up to 50%), Paladin (guild level 3, up to 50%), Ranger (guild level 3, up to 50%), Druid (guild level 5, up to 80%), Thief (guild level 9, up to 30%)
+Practising it needs brain 15.
+Also taught by: Mary the Lumberjack Wife, in her cabin in the forest of Haon-Dor (anyone who has brought back her cooking pot, up to 50%); Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>aid &lt;character&gt;

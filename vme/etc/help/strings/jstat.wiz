@@ -7,8 +7,9 @@ jstat &lt;someone or something&gt; [data|contents|affects|descriptor|...]
 </pre>
 <p>The same as <a cmd='#'>Wizhelp Wstat</a>, with the same arguments, but the answer is 
 JSON, for tools rather than people: the web client gets it as a data 
-packet, telnet as plain text. Not every part answers in JSON yet: 
-functions still answer as text.
+packet, telnet as plain text. Not every part answers in JSON yet:
+functions, account, bank and combat still answer as text, and descriptor
+not at all.
 </p><p>Example:
 </p>
 <pre>jstat world

@@ -4,8 +4,9 @@
 <pre>purse
 </pre>
 <p>Shows the coins you carry, platinum first, down to iron: for example 
-"3 gold pieces" and "12 copper pieces". It shows only the money you carry, 
-not what is in the bank. It works at any time, even when you are stunned 
+"3 gold pieces" and "12 copper pieces". It shows only the coins loose in
+your inventory, not those in a bag or other container, nor what is in the
+bank. It works at any time, even when you are stunned 
 or asleep.
 </p><p><br />
 See Also:

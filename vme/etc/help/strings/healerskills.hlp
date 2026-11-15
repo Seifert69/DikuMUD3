@@ -2,14 +2,21 @@
 <p>The skills the Healers' guild of Midgaard teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
 </p>
 <pre>Name                 Level   Up to
+Appraisal                0   70%
 Armor Soft Leather       0   75%
+Butcher                  0   80%
+Climb                    0   50%
 Diagnostics              0   100%
+Evaluating               0   60%
 First Aid                0   100%
 Fleeing                  0   60%
-Turn Undead              2   100%
+Leadership               0   80%
+Search                   0   80%
+Swimming                 0   70%
 Consider                 3   80%
 Scroll Use               3   80%
 Shield                   3   80%
+Turn Undead              5   100%
 Armor Hard Leather       7   75%
 Armor Chain             15   75%
 Armor Plate             20   50%

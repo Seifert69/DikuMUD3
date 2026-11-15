@@ -3,9 +3,14 @@
 </p>
 <pre>Name                 Level   Up to
 Armor Soft Leather       0   50%
+Climb                    0   60%
 Consider                 0   90%
+Evaluating               0   70%
 Rescue                   0   100%
+Scroll Use               0   80%
+Search                   0   70%
 Shield                   0   100%
+Swimming                 0   80%
 Diagnostics              1   70%
 Bash                     3   80%
 First Aid                3   50%

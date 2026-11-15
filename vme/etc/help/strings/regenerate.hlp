@@ -1,12 +1,14 @@
 <div class="mw-parser-output"><h1>Regenerate</h1>
 <p>At short intervals you get back hit points, mana and endurance, unless you are 
-hungry or thirsty: then you lose them instead (see <a cmd='#'>Help Eat</a> and 
-<a cmd='#'>Help Drink</a>). In a fight you get nothing back.
+hungry or thirsty: then you get back less, the hungrier and thirstier you are, 
+until you lose them instead (see <a cmd='#'>Help Eat</a> and <a cmd='#'>Help Drink</a>). In a fight you 
+get nothing back.
 </p><p>You get them back faster when you aren't on your feet: half again as fast when 
 you rest or sleep, a quarter faster when you sit (see <a cmd='#'>Help Position</a>). Your 
-constitution decides how fast your hit points come back, and you get mana back 
-faster when your charisma is higher than both your magic and divine. A very old 
-character, past the years of their race, hardly heals at all.
+constitution decides how fast your hit points and endurance come back. Your 
+brain and charisma decide your mana, and you get it back faster when your 
+charisma is higher than both your magic and divine, slower when it is lower. A 
+very old character, past the years of their race, hardly heals at all.
 </p><p>In holy places you get back twice as much. Some of them:
 </p>
 <ul><li>in Udgaard: the Temple, the Healing Center of the Temple, the Chicken's Rest, the Town Hall</li>

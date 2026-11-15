@@ -3,14 +3,17 @@
 </p>
 <pre><a cmd='#'>decapitate corpse</a>
 </pre>
-<p>Use this command to cut the head off of your victims. Very useful if you must bring it back to the captain to collect a reward or if you are rebirthing and collecting heads for sacrifice.
+<p>Use this command to cut the head off of your victims. A head is the proof of 
+a kill: bring the head of a wanted criminal to the city guard Captain to 
+collect the reward on it, or the head of a bounty target to the Bounty 
+Hunters Guild. Some guild entry quests also ask for the head of a certain 
+creature.
 </p><p><br />
 See Also:
 </p>
 <pre>&gt; <a cmd='#'>Help Decapitate</a>
-&gt; <a cmd='#'>Help Cut</a>
 &gt; <a cmd='#'>Help Wanted</a>
-&gt; <a cmd='#'>Help Reward</a>
+&gt; <a cmd='#'>Help Bounty</a>
 </pre>
 
 

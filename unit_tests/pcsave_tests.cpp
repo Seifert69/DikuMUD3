@@ -109,6 +109,46 @@ BOOST_FIXTURE_TEST_CASE(missing_file_is_not_corrupted, PlayerDirFixture)
 BOOST_AUTO_TEST_SUITE_END()
 
 /**********************************************************************************
+ * PcSave_NotAName_Suite - "." and ".." make the path of a directory: fopen() opens it,
+ * fread() fails, and find_player_id() stopped the server (DIL isplayer(), reached by a
+ * player with "mail <note> .."). They, "" and a name with '/' are no player's name.
+ */
+BOOST_AUTO_TEST_SUITE(PcSave_NotAName_Suite)
+
+BOOST_FIXTURE_TEST_CASE(directory_is_no_player, PlayerDirFixture)
+{
+    for (const char *name : {".", "..", "", "b/bx"})
+    {
+        std::string buf{name};
+        BOOST_TEST(find_player_id(buf.data()) == -1);
+        BOOST_TEST(!player_exists(name));
+        BOOST_TEST(load_player(name) == nullptr);
+        BOOST_TEST(!delete_player(name));
+    }
+}
+
+// An empty or cut file (a disk that filled up) has no id to read: that stopped the server too
+BOOST_FIXTURE_TEST_CASE(unreadable_file_is_no_player, PlayerDirFixture)
+{
+    player_file("bempty", "");
+    player_file("bshort", std::string("\x05\x00", 2));
+    char empty[] = "Bempty";
+    char shortname[] = "Bshort";
+    BOOST_TEST(find_player_id(empty) == -1);
+    BOOST_TEST(find_player_id(shortname) == -1);
+}
+
+BOOST_FIXTURE_TEST_CASE(player_is_found, PlayerDirFixture)
+{
+    player_file("bfound", std::string("\x05\x00\x00\x00", 4));
+    char name[] = "Bfound";
+    BOOST_TEST(find_player_id(name) == 5);
+    BOOST_TEST(player_exists(name));
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+/**********************************************************************************
  * PcSave_SaveHandler_Suite - what a save handler leaves in g_FileBuffer is not saved.
  * A save runs the SFB_SAVE handlers, whose DIL can fill g_FileBuffer: a load() of a unit
  * reads its zone data there, and loading a player file reads that file there. The save

@@ -1,0 +1,1017 @@
+/*
+filename    diltest
+password    screwloose
+changedby   Papi
+EmailAdd
+request     compile
+version     1
+END HEADER*/
+
+#include <macros.h>
+
+
+%zone diltest
+
+   lifespan 60
+   reset RESET_NOT
+   creators {"papi"}
+
+   notes
+   "DIL tests that need a player: a level 255 god goes to lab@diltest (no exits, no teleport)
+   and types <b>diltest</b>; the tests P001, P002, ... run on that god's own character. What a test changes on the character it puts back. Every
+   failed check is logged as diltest/Pnnn//ERROR and shown to the god. The tests without a
+   player are in test.zon (T001, T002, ...), run by vme -w with zonelist.test."
+
+   help
+   "This zone is not intended for players."
+
+%dil
+
+// Logs a line of a test and shows it to the player running the tests.
+// A failed check (ok == FALSE) is counted in the zone's error list.
+dilbegin plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   il : intlist global perrors@diltest;
+   s : string;
+code
+{
+   if (ok)
+      s := "P" + right("00" + itoa(no), 3) + "//INFO " + msg;
+   else
+   {
+      s := "P" + right("00" + itoa(no), 3) + "//ERROR " + msg;
+      insert(il, length(il), no);
+   }
+   log(s);
+   sendtext(s + "<br/>", pc);
+   return;
+}
+dilend
+
+
+// ==================== P001 =====================
+// The runner itself: the tests get a player of the right level.
+dilbegin P001(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+code
+{
+   if (pc.type != UNIT_ST_PC)
+      plog(pc, 1, FALSE, "not run on a player");
+   if (pc.level < 255)
+      plog(pc, 1, FALSE, "not run by a level 255 god");
+   plog(pc, 1, TRUE, "done");
+   return;
+}
+dilend
+
+
+// ==================== P002 =====================
+// Accounting: acc_balance and acc_total. The game runs with accounting off (accounting = 0 in
+// server.cfg) and both read 0 on a player. acc_modify() isn't called: DIL can't tell whether
+// accounting is on, and on a game where it is, the deposit and withdrawal would stay in the
+// god's account history.
+dilbegin P002(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   bal0 : integer;
+   tot0 : integer;
+code
+{
+   bal0 := -1;
+   tot0 := -1;
+   bal0 := pc.acc_balance;
+   tot0 := pc.acc_total;
+   plog(pc, 2, ((bal0 == 0) and (tot0 == 0)), "with accounting off acc_balance and acc_total read 0: " +
+        itoa(bal0) + ", " + itoa(tot0));
+   return;
+}
+dilend
+
+
+// ==================== P003 =====================
+// Age: birth (real seconds, assignable from any zone), playtime (read-only, grows at saves) and
+// lifespan (mud years, 16 bits unsigned, assignable at access level 0).
+dilbegin P003(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   bt0 : integer;
+   bt1 : integer;
+   bt2 : integer;
+   pt : integer;
+   ls0 : integer;
+   ls1 : integer;
+   ls2 : integer;
+   ls3 : integer;
+   ls9 : integer;
+code
+{
+   bt0 := pc.birth;
+   pc.birth := bt0 - 100;
+   bt1 := pc.birth;
+   pc.birth := bt0;
+   bt2 := pc.birth;
+
+   ls0 := pc.lifespan;
+   ls9 := (ls0 + 1) % 200;
+   pc.lifespan := ls9;
+   ls1 := pc.lifespan;
+   pc.lifespan := 70000;
+   ls2 := pc.lifespan;
+   pc.lifespan := ls0;
+   ls3 := pc.lifespan;
+
+   pt := -1;
+   pt := pc.playtime;
+
+   plog(pc, 3, ((bt0 > 0) and (bt0 < realtime)), "birth " + itoa(bt0) + " is before now, " + itoa(realtime));
+   plog(pc, 3, (bt1 == (bt0 - 100)), "birth assigned 100 seconds earlier reads " + itoa(bt1));
+   plog(pc, 3, (bt2 == bt0), "birth put back: " + itoa(bt2));
+   plog(pc, 3, ((pt >= 0) and (pt <= (realtime - bt0))), "playtime " + itoa(pt) +
+        " seconds, not more than the time since birth");
+   plog(pc, 3, (ls0 > 0), "lifespan " + itoa(ls0) + " mud years");
+   plog(pc, 3, (ls1 == ls9), "lifespan := " + itoa(ls9) + " reads " + itoa(ls1));
+   plog(pc, 3, (ls2 == 4464), "lifespan 70000 wraps to " + itoa(ls2));
+   plog(pc, 3, (ls3 == ls0), "lifespan put back: " + itoa(ls3));
+   return;
+}
+dilend
+
+
+// ==================== P004 =====================
+// Conditions and record: full, thirst and drunk (8 bits signed), crimes (16 bits unsigned) and
+// pcflags (16 bits unsigned, with set() and unset()). Assigned, read back, wrapped, put back.
+dilbegin P004(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   fu0 : integer;
+   fu1 : integer;
+   fu2 : integer;
+   th0 : integer;
+   th1 : integer;
+   th2 : integer;
+   dr0 : integer;
+   dr1 : integer;
+   dr2 : integer;
+   cr0 : integer;
+   cr1 : integer;
+   cr2 : integer;
+   pf0 : integer;
+   pf1 : integer;
+   pf2 : integer;
+   pf3 : integer;
+   pfx : integer;
+code
+{
+   fu0 := pc.full;
+   th0 := pc.thirst;
+   dr0 := pc.drunk;
+   cr0 := pc.crimes;
+   pf0 := pc.pcflags;
+
+   pc.full := 20;
+   fu1 := pc.full;
+   pc.thirst := -5;
+   th1 := pc.thirst;
+   pc.drunk := 200;
+   dr1 := pc.drunk;
+   pc.crimes := 70000;
+   cr1 := pc.crimes;
+   if (isset(pf0, PC_INFORM))
+   {
+      unset(pc.pcflags, PC_INFORM);
+      pfx := pf0 - PC_INFORM;
+   }
+   else
+   {
+      set(pc.pcflags, PC_INFORM);
+      pfx := pf0 + PC_INFORM;
+   }
+   pf1 := pc.pcflags;
+   pc.pcflags := pf0 + 65536;
+   pf2 := pc.pcflags;
+
+   pc.full := fu0;
+   pc.thirst := th0;
+   pc.drunk := dr0;
+   pc.crimes := cr0;
+   pc.pcflags := pf0;
+   fu2 := pc.full;
+   th2 := pc.thirst;
+   dr2 := pc.drunk;
+   cr2 := pc.crimes;
+   pf3 := pc.pcflags;
+
+   plog(pc, 4, (fu1 == 20), "full := 20 reads " + itoa(fu1));
+   plog(pc, 4, (th1 == -5), "thirst := -5 reads " + itoa(th1));
+   plog(pc, 4, (dr1 == -56), "drunk := 200 wraps to " + itoa(dr1));
+   plog(pc, 4, (cr1 == 4464), "crimes := 70000 wraps to " + itoa(cr1));
+   plog(pc, 4, (pf1 == pfx), "PC_INFORM flipped in pcflags: " + itoa(pf0) + " -> " + itoa(pf1));
+   plog(pc, 4, (pf2 == pf0), "pcflags + 65536 keeps the low 16 bits: " + itoa(pf2));
+   plog(pc, 4, ((fu2 == fu0) and (th2 == th0) and (dr2 == dr0) and (cr2 == cr0) and (pf3 == pf0)),
+        "put back: full " + itoa(fu2) + ", thirst " + itoa(th2) + ", drunk " + itoa(dr2) + ", crimes " +
+        itoa(cr2) + ", pcflags " + itoa(pf3));
+   return;
+}
+dilend
+
+
+// ==================== P005 =====================
+// Level and experience: exptol is the experience for vlevel + 1 less exp; experience(),
+// reset_level() and reset_vlevel() leave a god as is. For a moment the god is a mortal of level
+// 50: experience() adds, and takes away no further than level 1 needs; reset_vlevel() sets
+// vlevel to 1 and reset_level() level to 1. skill_points and ability_points (32 bits, may go below
+// 0). Everything is put back before the checks.
+dilbegin P005(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   lv0 : integer;
+   vl0 : integer;
+   ex0 : integer;
+   sk0 : integer;
+   ab0 : integer;
+   et0 : integer;
+   et1 : integer;
+   et2 : integer;
+   rq0 : integer;
+   rq1 : integer;
+   rq2 : integer;
+   ex1 : integer;
+   lv1 : integer;
+   vl1 : integer;
+   ex2 : integer;
+   ex3 : integer;
+   vl2 : integer;
+   lv2 : integer;
+   lv3 : integer;
+   sk1 : integer;
+   ab1 : integer;
+   lv4 : integer;
+   vl4 : integer;
+   ex4 : integer;
+   sk2 : integer;
+   ab2 : integer;
+code
+{
+   lv0 := pc.level;
+   vl0 := pc.vlevel;
+   ex0 := pc.exp;
+   sk0 := pc.skill_points;
+   ab0 := pc.ability_points;
+   rq0 := getinteger(DIL_GINT_REQXP, null, 1);
+   rq1 := getinteger(DIL_GINT_REQXP, null, vl0 + 1);
+   rq2 := getinteger(DIL_GINT_REQXP, null, vl0 + 2);
+
+   et0 := pc.exptol;
+   pc.exp := ex0 + 1000;
+   et1 := pc.exptol;
+   pc.exp := ex0;
+   pc.vlevel := vl0 + 1;
+   et2 := pc.exptol;
+   pc.vlevel := vl0;
+
+   // A god
+   experience(1000, pc);
+   ex1 := pc.exp;
+   reset_level(pc);
+   lv1 := pc.level;
+   reset_vlevel(pc);
+   vl1 := pc.vlevel;
+   pc.exp := ex0;
+   pc.level := lv0;
+   pc.vlevel := vl0;
+
+   // A mortal of level 50, for a moment
+   pc.level := 50;
+   pc.exp := 100000;
+   experience(250, pc);
+   ex2 := pc.exp;
+   experience(-200000, pc);
+   ex3 := pc.exp;
+   reset_vlevel(pc);
+   vl2 := pc.vlevel;
+   lv2 := pc.level;
+   reset_level(pc);
+   lv3 := pc.level;
+   pc.level := lv0;
+   pc.vlevel := vl0;
+   pc.exp := ex0;
+
+   pc.skill_points := sk0 + 5;
+   sk1 := pc.skill_points;
+   pc.ability_points := -3;
+   ab1 := pc.ability_points;
+   pc.skill_points := sk0;
+   pc.ability_points := ab0;
+
+   lv4 := pc.level;
+   vl4 := pc.vlevel;
+   ex4 := pc.exp;
+   sk2 := pc.skill_points;
+   ab2 := pc.ability_points;
+
+   plog(pc, 5, (et0 == (rq1 - ex0)), "exptol " + itoa(et0) + " is the experience for vlevel " + itoa(vl0) +
+        " + 1, " + itoa(rq1) + ", less exp " + itoa(ex0));
+   plog(pc, 5, (et1 == (et0 - 1000)), "with 1000 more exp, exptol is " + itoa(et1));
+   plog(pc, 5, (et2 == (rq2 - ex0)), "with vlevel + 1, exptol is " + itoa(et2));
+   plog(pc, 5, (ex1 == ex0), "experience(1000) leaves a god's exp as is: " + itoa(ex1));
+   plog(pc, 5, (lv1 == lv0), "reset_level() leaves a god's level as is: " + itoa(lv1));
+   plog(pc, 5, (vl1 == vl0), "reset_vlevel() leaves a god's vlevel as is: " + itoa(vl1));
+   plog(pc, 5, (ex2 == 100250), "experience(250) on a mortal with 100000 gives " + itoa(ex2));
+   plog(pc, 5, (ex3 == rq0), "experience(-200000) stops at level 1's " + itoa(rq0) + ": " + itoa(ex3));
+   plog(pc, 5, ((vl2 == 1) and (lv2 == 50)), "reset_vlevel() on a mortal: vlevel " + itoa(vl2) +
+        ", level still " + itoa(lv2));
+   plog(pc, 5, (lv3 == 1), "reset_level() on a mortal: level " + itoa(lv3));
+   plog(pc, 5, (sk1 == (sk0 + 5)), "skill_points + 5 reads " + itoa(sk1));
+   plog(pc, 5, (ab1 == -3), "ability_points := -3 reads " + itoa(ab1));
+   plog(pc, 5, ((lv4 == lv0) and (vl4 == vl0) and (ex4 == ex0) and (sk2 == sk0) and (ab2 == ab0)),
+        "put back: level " + itoa(lv4) + ", vlevel " + itoa(vl4) + ", exp " + itoa(ex4) +
+        ", skill_points " + itoa(sk2) + ", ability_points " + itoa(ab2));
+   return;
+}
+dilend
+
+
+// ==================== P006 =====================
+// Profession and the string fields: profession (8 bits signed: -1 is no profession and reads -1),
+// guild, hometown and prompt (assigned, emptied with "", put back).
+dilbegin P006(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   pr0 : integer;
+   pr1 : integer;
+   pr2 : integer;
+   pr3 : integer;
+   gd0 : string;
+   gd1 : string;
+   gd2 : string;
+   gd3 : string;
+   ht0 : string;
+   ht1 : string;
+   ht2 : string;
+   ht3 : string;
+   pm0 : string;
+   pm1 : string;
+   pm2 : string;
+   pm3 : string;
+code
+{
+   pr0 := pc.profession;
+   pc.profession := -1;
+   pr1 := pc.profession;
+   pc.profession := PROFESSION_MAX - 1;
+   pr2 := pc.profession;
+   pc.profession := pr0;
+   pr3 := pc.profession;
+
+   gd0 := pc.guild;
+   pc.guild := "DIL Test Guild";
+   gd1 := pc.guild;
+   pc.guild := "";
+   gd2 := pc.guild;
+   pc.guild := gd0;
+   gd3 := pc.guild;
+
+   ht0 := pc.hometown;
+   pc.hometown := "lab@diltest";
+   ht1 := pc.hometown;
+   pc.hometown := "";
+   ht2 := pc.hometown;
+   pc.hometown := ht0;
+   ht3 := pc.hometown;
+
+   pm0 := pc.prompt;
+   pc.prompt := "%hp%h diltest> ";
+   pm1 := pc.prompt;
+   pc.prompt := "";
+   pm2 := pc.prompt;
+   pc.prompt := pm0;
+   pm3 := pc.prompt;
+
+   plog(pc, 6, ((pr0 >= -1) and (pr0 < PROFESSION_MAX)), "profession " + itoa(pr0));
+   plog(pc, 6, (pr1 == -1), "profession := -1 reads " + itoa(pr1));
+   plog(pc, 6, (pr2 == (PROFESSION_MAX - 1)), "profession := PROFESSION_MAX - 1 reads " + itoa(pr2));
+   plog(pc, 6, (pr3 == pr0), "profession put back: " + itoa(pr3));
+   plog(pc, 6, (gd1 == "DIL Test Guild"), "guild assigned reads '" + gd1 + "'");
+   plog(pc, 6, (gd2 == ""), "guild := '' reads '" + gd2 + "'");
+   plog(pc, 6, ((gd3 == gd0) and (length(gd3) == length(gd0))), "guild put back: '" + gd3 + "'");
+   plog(pc, 6, (ht1 == "lab@diltest"), "hometown assigned reads '" + ht1 + "'");
+   plog(pc, 6, (ht2 == ""), "hometown := '' reads '" + ht2 + "'");
+   plog(pc, 6, ((ht3 == ht0) and (length(ht3) == length(ht0))), "hometown put back: '" + ht3 + "'");
+   plog(pc, 6, (pm1 == "%hp%h diltest> "), "prompt assigned reads '" + pm1 + "'");
+   plog(pc, 6, (pm2 == ""), "prompt := '' reads '" + pm2 + "'");
+   plog(pc, 6, ((pm3 == pm0) and (length(pm3) == length(pm0))), "prompt put back: '" + pm3 + "'");
+   return;
+}
+dilend
+
+
+// ==================== P007 =====================
+// What a player trains: skills, spells, weapons and abilities (16 bits signed; a player has the
+// whole range, an NPC only the groups) and their skill_levels, spell_levels, weapon_levels and
+// ability_levels (8 bits unsigned). Each is assigned, wrapped and put back; an index past the
+// end fails, leaving the variable as it was.
+dilbegin P007(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   a0 : integer;
+   a1 : integer;
+   a2 : integer;
+   a3 : integer;
+   t : integer;
+   x : integer;
+   y : integer;
+code
+{
+   // skills
+   a0 := pc.skills[SKI_SEARCH];
+   t := (a0 + 1) % 200;
+   pc.skills[SKI_SEARCH] := t;
+   a1 := pc.skills[SKI_SEARCH];
+   pc.skills[SKI_SEARCH] := 40000;
+   a2 := pc.skills[SKI_SEARCH];
+   pc.skills[SKI_SEARCH] := a0;
+   a3 := pc.skills[SKI_SEARCH];
+   x := 777;
+   x := pc.skills[SKI_TREE_MAX];
+   y := 777;
+   y := pc.skills[-1];
+   plog(pc, 7, ((a1 == t) and (a2 == -25536) and (a3 == a0)), "skills[SKI_SEARCH] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 40000 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, ((x == 777) and (y == 777)), "skills[SKI_TREE_MAX] and skills[-1] fail");
+
+   // spells: a player has all SPL_TREE_MAX
+   a0 := pc.spells[SPL_TREE_MAX - 1];
+   t := (a0 + 1) % 200;
+   pc.spells[SPL_TREE_MAX - 1] := t;
+   a1 := pc.spells[SPL_TREE_MAX - 1];
+   pc.spells[SPL_TREE_MAX - 1] := 40000;
+   a2 := pc.spells[SPL_TREE_MAX - 1];
+   pc.spells[SPL_TREE_MAX - 1] := a0;
+   a3 := pc.spells[SPL_TREE_MAX - 1];
+   x := 777;
+   x := pc.spells[SPL_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == -25536) and (a3 == a0)), "spells[SPL_TREE_MAX - 1] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 40000 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "spells[SPL_TREE_MAX] fails");
+
+   // weapons: a player has single weapons too (an NPC's weapons[WPN_DAGGER] fails)
+   a0 := pc.weapons[WPN_DAGGER];
+   t := (a0 + 1) % 200;
+   pc.weapons[WPN_DAGGER] := t;
+   a1 := pc.weapons[WPN_DAGGER];
+   pc.weapons[WPN_DAGGER] := 40000;
+   a2 := pc.weapons[WPN_DAGGER];
+   pc.weapons[WPN_DAGGER] := a0;
+   a3 := pc.weapons[WPN_DAGGER];
+   x := 777;
+   x := pc.weapons[WPN_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == -25536) and (a3 == a0)), "weapons[WPN_DAGGER] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 40000 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "weapons[WPN_TREE_MAX] fails");
+
+   // abilities
+   a0 := pc.abilities[ABIL_STR];
+   t := (a0 + 1) % 200;
+   pc.abilities[ABIL_STR] := t;
+   a1 := pc.abilities[ABIL_STR];
+   pc.abilities[ABIL_STR] := 40000;
+   a2 := pc.abilities[ABIL_STR];
+   pc.abilities[ABIL_STR] := a0;
+   a3 := pc.abilities[ABIL_STR];
+   x := 777;
+   x := pc.abilities[ABIL_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == -25536) and (a3 == a0)), "abilities[ABIL_STR] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 40000 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "abilities[ABIL_TREE_MAX] fails");
+
+   // skill_levels
+   a0 := pc.skill_levels[SKI_SEARCH];
+   t := (a0 + 1) % 200;
+   pc.skill_levels[SKI_SEARCH] := t;
+   a1 := pc.skill_levels[SKI_SEARCH];
+   pc.skill_levels[SKI_SEARCH] := 300;
+   a2 := pc.skill_levels[SKI_SEARCH];
+   pc.skill_levels[SKI_SEARCH] := a0;
+   a3 := pc.skill_levels[SKI_SEARCH];
+   x := 777;
+   x := pc.skill_levels[SKI_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == 44) and (a3 == a0)), "skill_levels[SKI_SEARCH] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 300 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "skill_levels[SKI_TREE_MAX] fails");
+
+   // spell_levels
+   a0 := pc.spell_levels[SPL_DARKNESS_1];
+   t := (a0 + 1) % 200;
+   pc.spell_levels[SPL_DARKNESS_1] := t;
+   a1 := pc.spell_levels[SPL_DARKNESS_1];
+   pc.spell_levels[SPL_DARKNESS_1] := 300;
+   a2 := pc.spell_levels[SPL_DARKNESS_1];
+   pc.spell_levels[SPL_DARKNESS_1] := a0;
+   a3 := pc.spell_levels[SPL_DARKNESS_1];
+   x := 777;
+   x := pc.spell_levels[SPL_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == 44) and (a3 == a0)), "spell_levels[SPL_DARKNESS_1] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 300 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "spell_levels[SPL_TREE_MAX] fails");
+
+   // weapon_levels
+   a0 := pc.weapon_levels[WPN_DAGGER];
+   t := (a0 + 1) % 200;
+   pc.weapon_levels[WPN_DAGGER] := t;
+   a1 := pc.weapon_levels[WPN_DAGGER];
+   pc.weapon_levels[WPN_DAGGER] := 300;
+   a2 := pc.weapon_levels[WPN_DAGGER];
+   pc.weapon_levels[WPN_DAGGER] := a0;
+   a3 := pc.weapon_levels[WPN_DAGGER];
+   x := 777;
+   x := pc.weapon_levels[WPN_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == 44) and (a3 == a0)), "weapon_levels[WPN_DAGGER] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 300 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "weapon_levels[WPN_TREE_MAX] fails");
+
+   // ability_levels
+   a0 := pc.ability_levels[ABIL_STR];
+   t := (a0 + 1) % 200;
+   pc.ability_levels[ABIL_STR] := t;
+   a1 := pc.ability_levels[ABIL_STR];
+   pc.ability_levels[ABIL_STR] := 300;
+   a2 := pc.ability_levels[ABIL_STR];
+   pc.ability_levels[ABIL_STR] := a0;
+   a3 := pc.ability_levels[ABIL_STR];
+   x := 777;
+   x := pc.ability_levels[ABIL_TREE_MAX];
+   plog(pc, 7, ((a1 == t) and (a2 == 44) and (a3 == a0)), "ability_levels[ABIL_STR] " + itoa(a0) +
+        ", " + itoa(t) + " reads " + itoa(a1) + ", 300 wraps to " + itoa(a2) + ", put back " + itoa(a3));
+   plog(pc, 7, (x == 777), "ability_levels[ABIL_TREE_MAX] fails");
+   return;
+}
+dilend
+
+
+// ==================== P008 =====================
+// The race's modifiers: ability_costs, weapon_costs, spell_costs and skill_costs come from the
+// race lines in abilities.def, weapons.def, spells.def and commands.def. For a moment the god is
+// an elf, a dwarf, a brownie, a halfling and race 150. Abilities take -3 to +4 (a brownie's
+// magic is 4), weapons -3 to +3 (a brownie's -6 and a halfling's -4 for the battle axe are
+// skipped: 0); a race outside the table (100 and up) has 0 everywhere, and reset_race() leaves
+// such a player as is. The race, and anything reset_race() changed, is put back before the checks.
+dilbegin P008(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   rc0 : integer;
+   rc1 : integer;
+   ac0 : integer;
+   ac1 : integer;
+   ac2 : integer;
+   ac3 : integer;
+   ac5 : integer;
+   ac6 : integer;
+   wc1 : integer;
+   wc2 : integer;
+   wc3 : integer;
+   wc4 : integer;
+   sc1 : integer;
+   kc1 : integer;
+   hg0 : integer;
+   hg1 : integer;
+   ls0 : integer;
+   ls1 : integer;
+   bt0 : integer;
+   bt1 : integer;
+   wt0 : integer;
+   wt1 : integer;
+   x1 : integer;
+   x2 : integer;
+   x3 : integer;
+   x4 : integer;
+code
+{
+   rc0 := pc.race;
+   ac0 := pc.ability_costs[ABIL_MAG];
+
+   pc.race := RACE_ELF;
+   ac1 := pc.ability_costs[ABIL_MAG];
+   wc1 := pc.weapon_costs[WPN_BATTLE_AXE];
+   sc1 := pc.spell_costs[SPL_DARKNESS_1];
+   kc1 := pc.skill_costs[SKI_DUAL_WIELD];
+   pc.race := RACE_DWARF;
+   ac2 := pc.ability_costs[ABIL_MAG];
+   wc2 := pc.weapon_costs[WPN_BATTLE_AXE];
+   pc.race := RACE_BROWNIE;
+   ac3 := pc.ability_costs[ABIL_MAG];
+   wc3 := pc.weapon_costs[WPN_BATTLE_AXE];
+   pc.race := RACE_HALFLING;
+   wc4 := pc.weapon_costs[WPN_BATTLE_AXE];
+   pc.race := 150;
+   ac5 := pc.ability_costs[ABIL_MAG];
+   hg0 := pc.height;
+   ls0 := pc.lifespan;
+   bt0 := pc.birth;
+   wt0 := pc.baseweight;
+   reset_race(pc);
+   hg1 := pc.height;
+   ls1 := pc.lifespan;
+   bt1 := pc.birth;
+   wt1 := pc.baseweight;
+   // put back whatever reset_race() changed, should it ever change something
+   pc.height := hg0;
+   pc.lifespan := ls0;
+   pc.birth := bt0;
+   if (pc.baseweight != wt0)
+      set_weight_base(pc, wt0);
+   pc.race := rc0;
+
+   rc1 := pc.race;
+   ac6 := pc.ability_costs[ABIL_MAG];
+   x1 := 777;
+   x1 := pc.ability_costs[ABIL_TREE_MAX];
+   x2 := 777;
+   x2 := pc.weapon_costs[WPN_TREE_MAX];
+   x3 := 777;
+   x3 := pc.spell_costs[SPL_TREE_MAX];
+   x4 := 777;
+   x4 := pc.skill_costs[SKI_TREE_MAX];
+
+   plog(pc, 8, ((ac1 == 2) and (wc1 == -1) and (sc1 == -3) and (kc1 == 1)),
+        "an elf: magic " + itoa(ac1) + ", battle axe " + itoa(wc1) + ", darkness " + itoa(sc1) +
+        ", dual wield " + itoa(kc1));
+   plog(pc, 8, ((ac2 == -3) and (wc2 == 3)), "a dwarf: magic " + itoa(ac2) + ", battle axe " + itoa(wc2));
+   plog(pc, 8, ((ac3 == 4) and (wc3 == 0)), "a brownie: magic " + itoa(ac3) + ", battle axe (-6 skipped) " +
+        itoa(wc3));
+   plog(pc, 8, (wc4 == 0), "a halfling: battle axe (-4 skipped) " + itoa(wc4));
+   plog(pc, 8, (ac5 == 0), "race 150: magic " + itoa(ac5));
+   plog(pc, 8, ((hg1 == hg0) and (ls1 == ls0) and (bt1 == bt0) and (wt1 == wt0)),
+        "reset_race() on race 150 changes nothing: height " + itoa(hg1) + ", lifespan " + itoa(ls1) +
+        ", birth " + itoa(bt1) + ", baseweight " + itoa(wt1));
+   plog(pc, 8, ((rc1 == rc0) and (ac6 == ac0)), "race put back: " + itoa(rc1) + ", magic " + itoa(ac6));
+   plog(pc, 8, ((x1 == 777) and (x2 == 777) and (x3 == 777) and (x4 == 777)),
+        "ability_costs, weapon_costs, spell_costs and skill_costs past the end fail");
+   return;
+}
+dilend
+
+
+// ==================== P009 =====================
+// A player's lists of extras: quests and info. An extra added with addextra() is found with
+// "in" and .["name"], and subextra() takes it out again.
+dilbegin P009(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   e : extraptr;
+   d1 : string;
+   q1 : integer;
+   q2 : integer;
+   q3 : integer;
+code
+{
+   e := "diltest marker" in pc.quests;
+   if (e != null)
+      plog(pc, 9, FALSE, "a 'diltest marker' quest is there already, from an earlier run: not touched");
+   else
+   {
+      addextra(pc.quests, {"diltest marker"}, "P009 quest");
+      e := "diltest marker" in pc.quests;
+      q1 := (e != null);
+      d1 := "";
+      if (e != null)
+         d1 := e.descr;
+      e := pc.quests.["diltest marker"];
+      q2 := (e != null);
+      subextra(pc.quests, "diltest marker");
+      e := "diltest marker" in pc.quests;
+      q3 := (e == null);
+      plog(pc, 9, (q1 and q2 and (d1 == "P009 quest")), "a quest added with addextra() is found: '" + d1 + "'");
+      plog(pc, 9, q3, "subextra() took the quest out");
+   }
+
+   e := "diltest marker" in pc.info;
+   if (e != null)
+      plog(pc, 9, FALSE, "a 'diltest marker' info is there already, from an earlier run: not touched");
+   else
+   {
+      addextra(pc.info, {"diltest marker"}, "P009 info");
+      e := "diltest marker" in pc.info;
+      q1 := (e != null);
+      d1 := "";
+      if (e != null)
+         d1 := e.descr;
+      e := pc.info.["diltest marker"];
+      q2 := (e != null);
+      subextra(pc.info, "diltest marker");
+      e := "diltest marker" in pc.info;
+      q3 := (e == null);
+      plog(pc, 9, (q1 and q2 and (d1 == "P009 info")), "an info added with addextra() is found: '" + d1 + "'");
+      plog(pc, 9, q3, "subextra() took the info out");
+   }
+   return;
+}
+dilend
+
+
+// ==================== P010 =====================
+// Who the player is: pc_head() (the god is on), the player list from it, idx (the player id).
+// findsymbolic() on a player is P013. The god is saved, as the save command
+// does: playtime doesn't go down, lastroom is the room saved, isplayer() is TRUE for the name in
+// any case. check_password() is FALSE for a wrong password (the real one is never in a zone).
+dilbegin P010(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   ph : unitptr;
+   gh : unitptr;
+   u : unitptr;
+   lr : unitptr;
+   found : integer;
+   n : integer;
+   id : integer;
+   pt0 : integer;
+   pt1 : integer;
+   ip1 : integer;
+   ip2 : integer;
+   ip3 : integer;
+   cp : integer;
+code
+{
+   ph := pc_head();
+   gh := ghead();
+   u := pc_head();
+   while (u.type == UNIT_ST_PC)
+   {
+      if (u == pc)
+         found := found + 1;
+      n := n + 1;
+      u := u.gnext;
+   }
+   id := pc.idx;
+
+   pt0 := pc.playtime;
+   exec("save", pc);
+   pt1 := pc.playtime;
+   lr := pc.lastroom;
+   ip1 := isplayer(pc.name);
+   ip2 := isplayer(toupper(pc.name));
+   ip3 := isplayer("diltestnobody");
+   cp := 7;
+   cp := check_password(pc, "Wr0ng-P010-diltest");
+
+   plog(pc, 10, ((ph != null) and (ph == gh)), "pc_head() is a player, the same as ghead()");
+   plog(pc, 10, (found == 1), "the god is once among the " + itoa(n) + " players from pc_head()");
+   plog(pc, 10, ((id > 0) and (id <= 1000000)), "idx is the player id " + itoa(id));
+   plog(pc, 10, (pt1 >= pt0), "after a save playtime is " + itoa(pt1) + ", was " + itoa(pt0));
+   plog(pc, 10, ((lr != null) and (lr == pc.outside)), "after a save lastroom is this room");
+   plog(pc, 10, ((ip1 == TRUE) and (ip2 == TRUE)), "isplayer() is TRUE for the god's name, also in capitals");
+   plog(pc, 10, (ip3 == FALSE), "isplayer() is FALSE for a name nobody has");
+   plog(pc, 10, (cp == FALSE), "check_password() is FALSE for a wrong password: " + itoa(cp));
+   return;
+}
+dilend
+
+
+// ==================== P011 =====================
+// The connection: editing is FALSE, TRUE after beginedit() and FALSE again after killedit();
+// switched is null on a player who hasn't switched. sendtext() and pagestring() reach the god:
+// their lines show in the output.
+dilbegin P011(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   sw : unitptr;
+   ed0 : integer;
+   ed1 : integer;
+   ed2 : integer;
+code
+{
+   ed0 := 7;
+   ed0 := pc.editing;
+   sw := pc;
+   sw := pc.switched;
+   beginedit(pc);
+   ed1 := pc.editing;
+   killedit(pc);
+   ed2 := pc.editing;
+
+   plog(pc, 11, (ed0 == FALSE), "editing is FALSE at a prompt: " + itoa(ed0));
+   plog(pc, 11, (ed1 == TRUE), "editing is TRUE after beginedit(): " + itoa(ed1));
+   plog(pc, 11, (ed2 == FALSE), "editing is FALSE after killedit(): " + itoa(ed2));
+   plog(pc, 11, (sw == null), "switched is null");
+   sendtext("P011//INFO this line came by sendtext()<br/>", pc);
+   pagestring("P011//INFO this line came by pagestring()<br/>", pc);
+   return;
+}
+dilend
+
+
+// ==================== P012 =====================
+// A player's own colours: addcolor(), changecolor() and delcolor(), keys matched by abbreviation,
+// refused keys and colours, and getcolor()'s tag. The keys it adds are removed again; if
+// the god has a key that begins with it, the test leaves the colours alone.
+dilbegin P012(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   r1 : integer;
+   r2 : integer;
+   r3 : integer;
+   r4 : integer;
+   r5 : integer;
+   r6 : integer;
+   r7 : integer;
+   r8 : integer;
+   r9 : integer;
+   r10 : integer;
+   r11 : integer;
+   s : string;
+code
+{
+   r1 := 7;
+   r1 := addcolor(pc, "diltestclrlong", "cpc bn");
+   if (r1 != TRUE)
+   {
+      plog(pc, 12, FALSE, "addcolor(pc, 'diltestclrlong', 'cpc bn') gave " + itoa(r1) +
+           ": the god has such a key already; colours not tested");
+      return;
+   }
+   r2 := addcolor(pc, "diltestclrlong", "cw bn");
+   r3 := addcolor(pc, "diltestclr", "cw bn");
+   r4 := changecolor(pc, "diltestclr", "cpy bn");
+   r5 := changecolor(pc, "diltestnone", "cw bn");
+   r6 := 7;
+   r6 := addcolor(pc, "bad key", "cw bn");
+   r7 := 7;
+   r7 := addcolor(pc, "diltest_key_of_21char", "cw bn");
+   r8 := 7;
+   r8 := changecolor(pc, "diltestclrlong", "");
+   r9 := 7;
+   r9 := delcolor(pc, "bad-key");
+   r10 := delcolor(pc, "diltestclrlong");
+   r11 := delcolor(pc, "diltestclrlong");
+   s := getcolor("diltestclrlong");
+   // keys that should have been refused are removed if they were added
+   if (r3 == TRUE)
+      r3 := delcolor(pc, "diltestclr") + 2; // stays wrong for the check below
+   if (r6 == TRUE)
+      r6 := delcolor(pc, "bad key") + 2;
+   if (r7 == TRUE)
+      r7 := delcolor(pc, "diltest_key_of_21char") + 2;
+
+   plog(pc, 12, (r1 == TRUE), "addcolor() of a new key: " + itoa(r1));
+   plog(pc, 12, (r2 == FALSE), "addcolor() of the same key again: " + itoa(r2));
+   plog(pc, 12, (r3 == FALSE), "addcolor() of an abbreviation of the key: " + itoa(r3));
+   plog(pc, 12, (r4 == TRUE), "changecolor() by an abbreviation: " + itoa(r4));
+   plog(pc, 12, (r5 == FALSE), "changecolor() of a key the god hasn't: " + itoa(r5));
+   plog(pc, 12, ((r6 == 7) and (r7 == 7) and (r8 == 7) and (r9 == 7)),
+        "fail: a key with a space, a key of 21 characters, an empty colour, a key with a '-'");
+   plog(pc, 12, (r10 == TRUE), "delcolor() of the key: " + itoa(r10));
+   plog(pc, 12, (r11 == FALSE), "delcolor() of the key again: " + itoa(r11));
+   plog(pc, 12, (s == "<div class='diltestclrlong'>"), "getcolor() gives the tag " + s);
+   return;
+}
+dilend
+
+
+// ==================== P013 =====================
+// findsymbolic() finds the player, also when the name was typed with capitals at the login (the
+// player's index was kept under the name as typed, and every lookup is in lower case).
+dilbegin P013(pc : unitptr);
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+var
+   u : unitptr;
+   u2 : unitptr;
+code
+{
+   u := findsymbolic(pc.symname);
+   u2 := findsymbolic(pc.symname, pc.idx);
+   plog(pc, 13, (u == pc), "findsymbolic(" + pc.symname + ") found the player");
+   plog(pc, 13, (u2 == pc), "findsymbolic(" + pc.symname + ", idx) found the player");
+   return;
+}
+dilend
+
+
+// The console's program: "diltest" typed here by a level 255 god runs every test on that god.
+dilbegin diltest_lab();
+external
+   plog(pc : unitptr, no : integer, ok : integer, msg : string);
+   P001(pc : unitptr);
+   P002(pc : unitptr);
+   P003(pc : unitptr);
+   P004(pc : unitptr);
+   P005(pc : unitptr);
+   P006(pc : unitptr);
+   P007(pc : unitptr);
+   P008(pc : unitptr);
+   P009(pc : unitptr);
+   P010(pc : unitptr);
+   P011(pc : unitptr);
+   P012(pc : unitptr);
+   P013(pc : unitptr);
+var
+   il : intlist global perrors@diltest;
+   pc : unitptr;
+   z : zoneptr;
+   i : integer;
+   s : string;
+code
+{
+:start:
+   wait(SFB_CMD, command("diltest"));
+   block;
+   pc := activator;
+   if ((pc.type != UNIT_ST_PC) or (pc.level < 255))
+   {
+      act("Nothing happens.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   // The tests change fields that only a zone with access level 0 may change (zonelist, fourth
+   // column); elsewhere the first such assignment would stop the program halfway
+   z := findzone("diltest");
+   if (z.access != 0)
+   {
+      sendtext("diltest: the zone's access level is " + itoa(z.access) + "; the tests need 0.<br/>", pc);
+      goto start;
+   }
+   secure(pc, start);
+   il := null;
+   log("diltest started by " + pc.name);
+   sendtext("Running the DIL player tests on you; what they change is put back.<br/>", pc);
+
+   P001(pc);
+   P002(pc);
+   P003(pc);
+   P004(pc);
+   P005(pc);
+   P006(pc);
+   P007(pc);
+   P008(pc);
+   P009(pc);
+   P010(pc);
+   P011(pc);
+   P012(pc);
+   P013(pc);
+
+   if (length(il) == 0)
+   {
+      log("diltest//SUCCESS all player tests passed");
+      sendtext("diltest: all player tests passed.<br/>", pc);
+   }
+   else
+   {
+      s := "";
+      i := 0;
+      while (i < length(il))
+      {
+         s := s + " P" + right("00" + itoa(il.[i]), 3);
+         i := i + 1;
+      }
+      log("diltest//FAILED " + itoa(length(il)) + " failed checks:" + s);
+      sendtext("diltest: " + itoa(length(il)) + " failed checks:" + s + "<br/>", pc);
+   }
+   unsecure(pc);
+   goto start;
+}
+dilend
+
+
+%rooms
+
+                                   lab
+
+title "The DIL Test Laboratory"
+descr
+"   A bare white room without doors. Gods test DIL here: type <b>diltest</b> to run the player tests on yourself."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
+light 5
+end
+
+
+%objects
+
+                                   console
+
+names {"test console", "console"}
+title "a test console"
+descr "A test console stands in the middle of the room."
+extra {}
+"A grey console with one word on it: diltest."
+weight 500
+// On a unit %reset loads, the program starts at once. A room's program read at boot starts only
+// when the first event reaches it, and that event is lost: the first "diltest" would do nothing.
+dilcopy diltest_lab();
+end
+
+
+%reset
+
+load console into lab max 1
+
+%end
