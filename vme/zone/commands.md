@@ -88,3 +88,11 @@ Questions:
 3. do_areas, 860-890: the newbie-area table can't be reached (it comes after `goto end`). Remove it, or give it an option (`areas newbie`)?
 4. Templates that nothing uses: depre_donate (11068, the old donate, still with &[clan] codes), reply (respond runs reply@comm), whostatus, wizhelp, do_reroll ("Deprecated"), and add_spaces (commented out). Remove them?
 5. hel (mobile, 12802): `dilcopy test1();` names a template that exists in no zone, and nothing loads hel@commands. Remove the mobile, or at least the dilcopy?
+
+## Play-test follow-ups
+
+- Drink containers: drink and taste subtract the amount from the container's weight, which
+  LIQ_DEF() sets to empty weight + contents. 39 containers (11 public: udgaard 10, midwalls 1)
+  write `weight N` after LIQ_DEF() and so leave the contents out; tasting such a bottle empty took
+  it to weight -4. The code now stops at 0. Question: remove those `weight` lines (the bottles
+  get heavier by their contents, as LIQ_DEF() means), or keep them?

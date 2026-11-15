@@ -5767,7 +5767,7 @@ code
   {
      act("You make a mess of butchering the corpse!",
          A_ALWAYS, self, null, null, TO_CHAR);
-     act("$1n makes a mess of butchering the $3N!",
+     act("$1n makes a mess of butchering $3n!",
          A_ALWAYS, self, null, targ, TO_REST);
      if (behead == 1)
      {
@@ -5812,7 +5812,7 @@ code
      act("$3N is so small that you only get a small amount of meat " +
          "from it.",
          A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves a small amount of meat.",
+     act("$1n butchers $3n and leaves a small amount of meat.",
          A_ALWAYS, self, null, targ, TO_REST);
 
      if (behead == 1)
@@ -5870,16 +5870,16 @@ code
 
   if (pct < 100)
   {
-     act("You butcher the $3N, but much of the meat is left on the carcass.",
+     act("You butcher $3n, but much of the meat is left on the carcass.",
          A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves some meat.",
+     act("$1n butchers $3n and leaves some meat.",
          A_ALWAYS, self, null, targ, TO_REST);
   }
   else
   {
-     act("You butcher the $3N and leave a large amount of meat.",
+     act("You butcher $3n and leave a large amount of meat.",
          A_ALWAYS, self, null, targ, TO_CHAR);
-     act("$1n butchers the $3N and leaves a large amount of meat.",
+     act("$1n butchers $3n and leaves a large amount of meat.",
          A_ALWAYS, self, null, targ, TO_REST);
   }
 
@@ -6722,7 +6722,7 @@ code
    else
       s_self := spring_self;
    if ("default" in spring_other)
-      s_other := "$1n springs a carefully hidden " + self.name + "! ";
+      s_other := "$1n springs a carefully hidden " + self.name + "!";
    else
       s_other := spring_other;
 

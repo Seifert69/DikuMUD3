@@ -8111,7 +8111,11 @@ code
    {
       /* empty the container, and no longer poison. */
       d_obj.value[0]:=d_obj.value[0]-amount;
-      set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
+      // not below 0: zones that set weight after LIQ_DEF() leave the drink out of it
+      if (d_obj.weight > amount)
+         set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
+      else
+         set_weight_base(d_obj, 0);
       if (d_obj.value[0]<=0)
       {
          sub_drink_info(d_obj);
@@ -8308,7 +8312,11 @@ if (d_obj.capacity>0)
  {
   /* empty the container, and no longer poison. */
  d_obj.value[0]:=d_obj.value[0]-amount;
- set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
+ // not below 0: zones that set weight after LIQ_DEF() leave the drink out of it
+ if (d_obj.weight > amount)
+    set_weight_base(d_obj, d_obj.weight-amount); /* Subtract amount */
+ else
+    set_weight_base(d_obj, 0);
  if (d_obj.value[0]<=0)
   {
  sub_drink_info(d_obj);
@@ -8423,7 +8431,11 @@ apply_poison(self,pois,amount);
    {
    /* empty the container, and no longer poison. */
  food.value[0]:=food.value[0]-amount;
- set_weight_base(food, food.weight-amount); /* Subtract amount */
+ // not below 0: zones that set weight after LIQ_DEF() leave the drink out of it
+ if (food.weight > amount)
+    set_weight_base(food, food.weight-amount); /* Subtract amount */
+ else
+    set_weight_base(food, 0);
  if (food.value[0]<=0)
   {   /* The last bit */
  sub_drink_info(food);

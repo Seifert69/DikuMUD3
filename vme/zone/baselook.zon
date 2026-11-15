@@ -1133,10 +1133,11 @@ code
    else if(arg == "northwest") dir := NORTHWEST;
    else if(arg == "southeast") dir := SOUTHEAST;
    else if(arg == "southwest") dir := SOUTHWEST;
-   else if(arg == "nw") dir := NORTHWEST;     // is_dir() gives these short
-   else if(arg == "ne") dir := NORTHEAST;
-   else if(arg == "se") dir := SOUTHEAST;
-   else if(arg == "sw") dir := SOUTHWEST;
+   // is_dir() gives these short; rooms keep a direction's description under the long name
+   else if(arg == "nw") { dir := NORTHWEST; arg := "northwest"; }
+   else if(arg == "ne") { dir := NORTHEAST; arg := "northeast"; }
+   else if(arg == "se") { dir := SOUTHEAST; arg := "southeast"; }
+   else if(arg == "sw") { dir := SOUTHWEST; arg := "southwest"; }
 
 
    test := is_hidden@basemove(looker, dir, room);
