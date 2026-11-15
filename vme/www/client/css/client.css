@@ -67,7 +67,9 @@ button { cursor: pointer; }
 :root[data-stamps="off"] .output { padding-left: 18px; }
 .seg { position: relative; white-space: pre-wrap; overflow-wrap: anywhere; }
 .seg::before {
-    content: attr(data-t); position: absolute; left: -54px; top: 0; width: 44px; text-align: right;
+    content: attr(data-t);
+    content: attr(data-t) / ""; /* empty alt text: screen readers don't read the time before every line */
+    position: absolute; left: -54px; top: 0; width: 44px; text-align: right;
     font-family: var(--f-ui); font-size: .72rem; color: var(--faint); opacity: 0; transition: opacity .15s;
     font-variant-numeric: tabular-nums; line-height: 2.1; white-space: nowrap;
 }
@@ -147,7 +149,7 @@ button { cursor: pointer; }
 details.cgroup { margin: .3em 0; border-left: 2px solid color-mix(in srgb, var(--m-hurt) 50%, var(--line)); padding-left: 10px; }
 details.cgroup summary { cursor: pointer; color: var(--muted); list-style: none; display: flex; gap: 12px; flex-wrap: wrap; align-items: baseline; font-family: var(--f-ui); font-size: .88rem; }
 details.cgroup summary::-webkit-details-marker { display: none; }
-details.cgroup summary::before { content: "▸"; color: var(--faint); display: inline-block; transition: transform .15s; }
+details.cgroup summary::before { content: "▸"; content: "▸" / ""; color: var(--faint); display: inline-block; transition: transform .15s; }
 details.cgroup[open] summary::before { transform: rotate(90deg); }
 .ctag { font-size: .72rem; letter-spacing: .12em; text-transform: uppercase; color: var(--m-hurt); font-weight: 600; }
 .cfoes { color: var(--fg); font-weight: 500; }
