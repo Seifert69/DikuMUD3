@@ -1992,7 +1992,6 @@ code
    }
 
    // Commands, as commands.def has them
-   // (== and != don't work on a cmdptr: test it as a truth value)
    c := chead();
    n := 0;
    while (c)
@@ -4228,13 +4227,17 @@ code
    }
 
    // The command list: chead() and command_head() are its start; getcmd() finds as typed.
-   // A cmdptr is tested with if (c): == and != on a cmdptr are always false (dilfe_pe and
-   // dilfe_pne have no case for it), even c == null for a null c.
    c := chead();
    c2 := command_head();
    if (c.name != c2.name)
    {
       logtest(tstno, LOGT_ERROR, "T032 chead and command_head differ");
+      bad := 1;
+   }
+   // == and != on cmdptrs: they gave an error value, false even for c == null
+   if ((not (c == c2)) or (c != c2) or (c == null) or (not (c != null)))
+   {
+      logtest(tstno, LOGT_ERROR, "T032 == or != on a cmdptr is wrong");
       bad := 1;
    }
    n := 0;
@@ -4261,7 +4264,7 @@ code
       f := 1;
    if (c2)
       f := 1;
-   if ((s != "look north") or (f != 0))
+   if ((s != "look north") or (f != 0) or (not (c == null)) or (c2 != null))
    {
       logtest(tstno, LOGT_ERROR, "T032 getcmd found " + s);
       bad := 1;
@@ -5166,9 +5169,8 @@ code
    }
 
    // cmdptr and zoneptr: start null, keep their value through a wait; a unitptr not secured and
-   // an extraptr are null after it; integers, strings and lists keep theirs. (== and != don't
-   // work on a cmdptr, a bug: it is tested on its own and through its fields.)
-   if (c or (zp != null) or (eh != null))
+   // an extraptr are null after it; integers, strings and lists keep theirs.
+   if ((c != null) or (zp != null) or (eh != null))
    {
       logtest(tstno, LOGT_ERROR, "T030 a pointer variable didn't start null");
       bad := 1;
@@ -5179,7 +5181,7 @@ code
    u := self; // not secured
    addextra(box.extra, {"$t030"}, "x");
    eh := "$t030" in box.extra;
-   if ((not c) or (not (c.name == "smile")) or (not (c2.name == "smile")) or (zp == null) or
+   if ((c == null) or (c2 != c) or (not (c.name == "smile")) or (zp == null) or
        (not (zp.name == "test")) or (u != self) or
        (eh == null))
    {
@@ -5203,7 +5205,7 @@ code
       bad := 1;
    }
    c := null;
-   if (c)
+   if (c or (c != null) or (not (c == null)))
    {
       logtest(tstno, LOGT_ERROR, "T030 a cmdptr set to null isn't null");
       bad := 1;

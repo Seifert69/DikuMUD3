@@ -5713,6 +5713,7 @@ void dilfe_pe(dilprg *p)
         case DILV_UP:
         case DILV_SP:
         case DILV_ZP:
+        case DILV_CP:
             v->type = DILV_INT;
             break;
 
@@ -5743,6 +5744,7 @@ void dilfe_pe(dilprg *p)
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
             v->type = DILV_INT;
             break;
 
@@ -5812,6 +5814,7 @@ void dilfe_pne(dilprg *p)
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
         case DILV_SP:
             break;
 
@@ -5839,6 +5842,7 @@ void dilfe_pne(dilprg *p)
         case DILV_SP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
             break;
 
         default:
