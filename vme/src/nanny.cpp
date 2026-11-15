@@ -105,7 +105,7 @@ int _parse_name(const char *arg, char *name)
         return 3;
     }
 
-    str_lower(name);
+    str_lower(name - i); // name is at the end of the copy here
 
     return 0;
 }
