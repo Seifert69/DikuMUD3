@@ -54,3 +54,9 @@ Questions:
    `pname := pc.name;` (nothing later uses `pc`)? Also the loop "The rocket you are riding in
    explodes" never reaches anyone, since `ast_launch` has already thrown the riders out.
 
+## vmc warnings
+
+- **fam_unbonded** (line 719): the warning is wrong; left as it is. `pcowner` is secured on both
+  ways into `:second_part:` (lines 669 and 682); `pcowner := activator;` after the whisper sets it
+  to the same unit (the wait requires `activator == pcowner`), which stays secured. The checker
+  takes any new value as unsecured.

@@ -1619,16 +1619,19 @@ dilcopy teamwork@function("goblin / bryan / esbanoviz");
 dilcopy hideaway@function(120);
 
 dilbegin goblin2prg();
+var
+  s : string;
 code
 {
   heartbeat := PULSE_SEC*2;
   :start:
   wait(SFB_MSG, (activator.nameidx=="goblin1") and (activator.zoneidx=="goblin_cave"));
+  s := argument;
   pause;
   act("$1n whispers 'yes... kill... KILL!'", A_SOMEONE, self, null, null, TO_ALL);
   pause;
   pause;
-  exec("kill "+argument, self);
+  exec("kill "+s, self);
   pause;
   goto start;
 }

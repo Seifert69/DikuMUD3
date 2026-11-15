@@ -147,8 +147,8 @@ code
 :start:
 
 	wait(SFB_COM,  self.position == POSITION_FIGHTING );
-	if(pc.type == UNIT_ST_NPC) goto start;
 	pc := self.fighting;
+	if(pc.type == UNIT_ST_NPC) goto start;
 	if(pc.level>200)
 		goto start;
 	if (command("flee"))

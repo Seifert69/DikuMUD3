@@ -715,7 +715,6 @@ dilend
 dilbegin recall aware flamespell();
 var
         i : integer;
-        enemy :unitptr;
         n : integer;
         charge:integer;
         pwr : integer;
@@ -741,9 +740,9 @@ A_SOMEONE,self.outside,null,null,TO_REST);
 if (i < self.outside.abilities[ABIL_DIV])
 {
    act("Your $2n darkens in response to your prayer!",
-   A_ALWAYS,self.outside,self,enemy,TO_CHAR);
+   A_ALWAYS,self.outside,self,null,TO_CHAR);
    act("$1n's $2n darkens in response to $1s prayer!",
-   A_ALWAYS,self.outside,self,enemy,TO_REST);
+   A_ALWAYS,self.outside,self,null,TO_REST);
 n:=cast_spell(SPL_DISPLACE_MAGIC,self.outside,self,self.outside,"");
 pause;
 }

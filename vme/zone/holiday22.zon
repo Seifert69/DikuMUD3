@@ -2049,7 +2049,7 @@ code
 	"<div class='cpr'>Happy Holidays </div><div class='cpw'>from the </div><div class='cpg'>Valhalla Staff</div>" ;
         
 	gift1 := textformat(buf);
-	sendtext(gift1+"<br/><br/>", activator);
+	sendtext(gift1+"<br/><br/>", pc);
 
 	addstring(sl,"card");
 	addstring(sl,"$"+pc.name);

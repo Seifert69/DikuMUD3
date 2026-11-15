@@ -1005,13 +1005,13 @@ arg:= "";
 u1:= null;
 
 wait (SFB_CMD, command("evaluate"));
+pc:= activator;
 
 if (visible(pc, self) == FALSE)
     goto start; // Pc is just trying to eval using the command
 
 block;
 
-pc:= activator;
 if (pc.type == UNIT_ST_PC) pcn := pc.name;
 else pcn := pc.title;
 
@@ -6369,7 +6369,7 @@ some */
         command( "request" ) )
    {
       block;
-      act( acts.[7], A_SOMEONE, self, u, activator, TO_VICT );
+      act( acts.[7], A_SOMEONE, self, null, activator, TO_VICT );
    }
    else if ( not( command( CMD_AUTO_TICK ) or command( "give" ) ) ) /* MS2020 this must be wrong */
       goto loop_closed;

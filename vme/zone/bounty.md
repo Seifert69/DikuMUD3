@@ -133,3 +133,9 @@ Questions:
   contract and never at 14, 30, ... Meant `(i == 14) or (i == 30) or ...`.
 - **claim_bounty** line 5125: the same for the monthly milestones `i == 6 or i == 12 or i == 18 or
   i == 24`: true for a streak of 1. Meant `(i == 6) or (i == 12) or ...`.
+
+## vmc warnings
+
+- **qnecro2** (line 3474): the warning is wrong; left as it is. `item` is secured at line 3443
+  and still is at the sash's `destroy(item)`: the checker carries the `unsecure(item)` of the
+  crystal branch (line 3461) into the exclusive `else if` after it.

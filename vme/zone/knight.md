@@ -45,3 +45,8 @@ Questions:
 3. **flamechat** (line 603): the instant kill ("engulfs $3n in darkness", hp set to -7) fires on
    enemies under 10 hp with `alignment < 0`, i.e. on evil ones, while the sword belongs to the Dark
    Knights who "vanquish good". Was `alignment > 0` meant? (Balance: owner's call.)
+
+## vmc warnings
+
+- **flamespell** (lines 743, 745): the two acts passed `enemy`, never set, as `$3`, which their
+  texts don't use; now `null`, and the unused `enemy` variable removed. No change in play.
