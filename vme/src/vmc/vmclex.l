@@ -162,6 +162,11 @@ dilbegin[^\^]*\^ {
     pBuf->Clear();
     dilmain(istemplate, g_zone.z_zone.name, startlinenum, bptr);
     FREE(bptr);
+    {
+        /* dil's lexer followed the line markers in the DIL; carry on from where it ended */
+        extern int dillinenum;
+        linenum = dillinenum;
+    }
     if (pBuf->GetLength() == 0)
     {
         fatal("DIL not compiled properly.");
@@ -227,9 +232,12 @@ null  {
 }
 %%
 
-void setline(char *str)
+/* A cpp line marker ("# 12 "file"" or "#line 12"): sets the file name if it has one and
+   returns the line number of the line after it, or -1 if it has none */
+int line_marker(const char *str)
 {
     char *p;
+    int line;
 
     while (!isdigit(*str) && *str)
     {
@@ -238,10 +246,10 @@ void setline(char *str)
 
     if (!isdigit(*str))
     {
-        return;
+        return -1;
     }
 
-    linenum = atoi(str);
+    line = atoi(str);
 
     while (*str != '"' && *str)
     {
@@ -250,7 +258,7 @@ void setline(char *str)
 
     if (!*str)
     {
-        return;
+        return line;
     }
 
     str++;
@@ -266,6 +274,17 @@ void setline(char *str)
     if (!*g_cur_filename)
     {
         strcpy(g_cur_filename, top_filename);
+    }
+    return line;
+}
+
+void setline(char *str)
+{
+    int line = line_marker(str);
+
+    if (line >= 0)
+    {
+        linenum = line;
     }
 }
 
