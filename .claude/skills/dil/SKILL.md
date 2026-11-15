@@ -31,12 +31,15 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 
 ## Reference
 
-- `vme/doc/dil/AGENTS.md` is the overview; each function, field and keyword has its own
-  page in `vme/doc/dil/*.wiki`, also at <https://wiki.dikumud.com/wiki/DikuMUD>.
-- The manual has mistakes; some of its own examples break the rules below (variables named
-  `name` or `target`, a two-argument `findunit`). When it and the code disagree, the code is
-  right: keywords in `vme/src/vmc/diltok.h`, functions in `vme/src/dilexp.cpp`, fields in
-  `vme/src/dilfld.cpp`, statements in `vme/src/dilinst.cpp`.
+- The DIL manual is on the wiki: <https://wiki.dikumud.com/wiki/Manual:DIL_Manual>, with a
+  page per function, field and keyword, checked against the compiler and the interpreter
+  (November 2026; every example compiles). Read a page with
+  `python3 deploy/wiki.py get "Manual:DIL Manual/<name>"`, e.g. `addaff()`, `exit to`,
+  `integer`; the chapters (Operators, DIL Constructs, Messages...) and the Full Listing are
+  there too.
+- When the manual and the code disagree, the code is right: keywords in
+  `vme/src/vmc/diltok.h`, the grammar in `vme/src/vmc/dilpar.y`, functions in
+  `vme/src/dilexp.cpp`, fields in `vme/src/dilfld.cpp`, statements in `vme/src/dilinst.cpp`.
 - Working examples: grep `vme/zone/*.zon` for the function you need. `quests.zon` and
   `randomt.zon` hold helper libraries.
 
