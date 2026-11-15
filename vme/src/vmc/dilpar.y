@@ -6940,7 +6940,7 @@ dilcomposed   : '{' dilinstlist '}' optsemicolons
 
 dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI_ELS elsemark dilcomposed
     {
-        g_dilcheck.ifEnd(true);
+        g_dilcheck.ifEnd();
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
@@ -6954,7 +6954,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     | DILSI_IF '(' coreexp ')' ihold ahold ifmark dilinst optsemicolons ihold ahold DILSI_ELS elsemark dilcomposed
     {
-        g_dilcheck.ifEnd(true);
+        g_dilcheck.ifEnd();
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
@@ -6968,7 +6968,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI
     }
     | DILSI_IF '(' coreexp ')' ihold ahold ifmark dilcomposed
     {
-        g_dilcheck.ifEnd(false);
+        g_dilcheck.ifEnd();
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];

@@ -329,7 +329,7 @@ BOOST_AUTO_TEST_CASE(else_starts_from_the_state_before_the_if)
     f.check.elseBegin();
     f.check.wait(true, 152);
     f.check.use(0, true, 153);
-    f.check.ifEnd(true);
+    f.check.ifEnd();
     BOOST_TEST(f.all().empty());
 }
 
@@ -340,7 +340,7 @@ BOOST_AUTO_TEST_CASE(conditional_pause_is_not_certain)
     f.check.assign(0, -1);
     f.check.ifBegin();
     f.check.wait(true, 160);
-    f.check.ifEnd(false);
+    f.check.ifEnd();
     f.check.use(0, true, 161);
     BOOST_TEST(f.all().empty());
 }
@@ -353,7 +353,7 @@ BOOST_AUTO_TEST_CASE(branch_that_jumps_away_does_not_reach_below)
     f.check.ifBegin();
     f.check.wait(true, 170);
     f.check.jump();
-    f.check.ifEnd(false);
+    f.check.ifEnd();
     f.check.wait(true, 172);
     f.check.use(0, true, 173);
     BOOST_TEST(f.warned("173: pc is null here: it was set before the wait on line 172"));
@@ -377,10 +377,36 @@ BOOST_AUTO_TEST_CASE(reassigned_from_activator_stays_secured)
     Fixture f;
     f.check.assign(0, -1);
     f.check.secure(0, 190);
+    f.check.setCondition(true);
+    f.check.use(0, false, 191);
+    f.check.setCondition(false);
     f.check.wait(false, 191);
     f.check.assign(0, DilCheck::ACTIVATOR);
     f.check.wait(true, 192);
     f.check.use(0, true, 193);
+    BOOST_TEST(f.all().empty());
+}
+
+BOOST_AUTO_TEST_CASE(reassigned_from_activator_without_condition_is_cleared)
+{
+    // pc secured, then pc := activator after a wait that didn't look at pc: a new, unsecured unit
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.secure(0, 200);
+    f.check.wait(false, 201);
+    f.check.assign(0, DilCheck::ACTIVATOR);
+    f.check.wait(true, 202);
+    f.check.use(0, true, 203);
+    BOOST_TEST(f.warned("203: pc is null here"));
+}
+
+BOOST_AUTO_TEST_CASE(code_after_a_jump_is_not_checked)
+{
+    Fixture f;
+    f.check.assign(0, -1);
+    f.check.wait(true, 210);
+    f.check.jump();
+    f.check.use(0, true, 211);
     BOOST_TEST(f.all().empty());
 }
 
