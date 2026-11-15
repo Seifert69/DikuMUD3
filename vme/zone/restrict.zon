@@ -79,7 +79,7 @@ code
    {
       if (self.weapons[u.extra.[WEAPON_R].vals.[2]]>=u.extra.[WEAPON_R].vals.[3])
          goto spl;
-      action:= self.weapons[u.extra.[ABILITY_R].vals.[2]]-u.extra.[ABILITY_R].vals.[3];
+      action:= self.weapons[u.extra.[WEAPON_R].vals.[2]]-u.extra.[WEAPON_R].vals.[3];
       act_str:="You are not skilled enough to use $3n.  $2t skill needed to use it.";
       act_dil:=u.extra.[WEAPON_R].descr;
       goto restricted;
@@ -122,7 +122,7 @@ code
 :agld:
    if (u.extra.[ANTI_GUILD_R]!=null)
    {
-      if (not IsInGuilds@guilds(self.outside, u.extra.[GUILD_R].names))
+      if (not IsInGuilds@guilds(self.outside, u.extra.[ANTI_GUILD_R].names))
          goto qst;
       Act_str:=  "Not being in this guild might help.";
       act_dil:=u.extra.[ANTI_GUILD_R].descr;
@@ -145,10 +145,10 @@ code
       if ((self.alignment<=u.extra.[ALIGNMENT_R].vals.[2]) and
             (self.alignment>=u.extra.[ALIGNMENT_R].vals.[3]))
          goto mlvl;
-      if (activator.alignment>u.extra.[ALIGNMENT_R].vals.[2])
-         act_str:="You are too good to use $2n";
+      if (self.alignment>u.extra.[ALIGNMENT_R].vals.[2])
+         act_str:="You are too good to use $3n.";
       else
-         act_str :="You are too evil to use $2n";
+         act_str :="You are too evil to use $3n.";
       act_dil:=u.extra.[ALIGNMENT_R].descr;
       goto restricted;
    }
@@ -323,10 +323,10 @@ end
                 hammer
 
 names {"Iron Hammer","hammer"}
-title "an old  iron hammer"
+title "an old iron hammer"
 descr "An old iron hammer is lying here."
 extra {}
-"Nothing realy special about this hammer. it is old and slightly rustted.
+"Nothing really special about this hammer. It is old and slightly rusted.
 It looks to have seen lots of battles in its time."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0

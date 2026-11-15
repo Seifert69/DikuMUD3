@@ -205,7 +205,7 @@ quit;
 
 if(ch == self)
 {
-sendtext("So you don't think to highly of yourself?<br/>",self);
+sendtext("So you don't think too highly of yourself?<br/>",self);
 quit;
 }
 
@@ -217,7 +217,7 @@ quit;
 
 if(ch.name in ex.names)
 {
-sendtext("You are alreadying ignoring "+ch.name+".<br/>", self);
+sendtext("You are already ignoring "+ch.name+".<br/>", self);
 quit;
 }
 
@@ -385,8 +385,8 @@ if(left(arg,5) == "group")
     if(vict.type == UNIT_ST_PC)
     {
     add_history(vict,str);
-    subextra(vict.extra,"$reply");
-    addextra(vict.extra,{"$reply"},self.name);
+    subextra(vict.quests,"$reply");
+    addextra(vict.quests,{"$reply"},self.name);
     }
     send_done("tell",self,null,vict,0,arg,null, CMD_AUTO_NONE);
    }
@@ -428,8 +428,14 @@ if(arg == "")
  quit;
 }
 
-if((vict.position <= POSITION_SLEEPING) or
-   (isset(vict.pcflags,PC_NOTELL)))
+// Two ifs: an NPC has no pcflags, and that failed isset would fail the whole "or"
+if(vict.position <= POSITION_SLEEPING)
+{
+ act("$3e can't hear you.",
+ 	A_ALWAYS, self, null, vict, TO_CHAR);
+ quit;
+}
+if((vict.type == UNIT_ST_PC) and isset(vict.pcflags,PC_NOTELL))
 {
  act("$3e can't hear you.",
  	A_ALWAYS, self, null, vict, TO_CHAR);
@@ -438,7 +444,7 @@ if((vict.position <= POSITION_SLEEPING) or
 if ((vict.outside.zoneidx=="hobgob") and (vict.outside.nameidx=="nightmare")and
 (self.level < IMMORTAL_LEVEL))
 {
- act("$3e can't hear you .",
+ act("$3e can't hear you.",
  	A_ALWAYS, self, null, vict, TO_CHAR);
  quit;
 }
@@ -495,8 +501,8 @@ else
  else
    sendtext("<div class='tell_self' to='"+html_attr@function(vnme)+"'>You tell "+vnme+" "+punct+"'"+arg+"'</div><br/>",self);
 
- str := "<div class='tell_other' from='"+html_attr@function(nme)+"'>"+nme+" tells you "+punct+"'"+dr+"'</div><br/>";
- sendtext(str,vict);
+ str := "<div class='tell_other' from='"+html_attr@function(nme)+"'>"+nme+" tells you "+punct+"'"+dr+"'</div>";
+ sendtext(str+"<br/>",vict);
 
  if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_NOTELL)))
    sendtext("You realize that you can't hear people telling back.<br/>", self);
@@ -1331,7 +1337,7 @@ code
 
    tgt:= findunit(self,arg,FIND_UNIT_SURRO,null);
 
-   if ((tgt == null) or (not visible(self,tgt)) or (not tgt.type & (UNIT_ST_PC|UNIT_ST_NPC)))
+   if ((tgt == null) or (not visible(self,tgt)) or (not (tgt.type & (UNIT_ST_PC|UNIT_ST_NPC))))
    {
       act("No-one by that name here..",
       A_ALWAYS, self, null, null, TO_CHAR);
@@ -1359,7 +1365,7 @@ code
             arg:= textformat(arg);
 
          if ((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_ECHO)))
-            act("<div class='whisper'>You whisper to $3n '$2t<div class='whisper'>'</div>", A_ALWAYS, self, arg, tgt, TO_CHAR);
+            act("<div class='whisper'>You whisper to $3n '$2t'</div>", A_ALWAYS, self, arg, tgt, TO_CHAR);
          else
             sendtext("Ok.<br/>", self);
 

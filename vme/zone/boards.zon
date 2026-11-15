@@ -71,7 +71,7 @@ if (u.level>=200)
 	if (x!=null)
 	return ("");
 
-return ("You can not remove other peoples posts.");
+return ("You can not remove other people's posts.");
 }
 dilend
 
@@ -126,7 +126,7 @@ code
 		}
    }
 
-   if (u.objecttype!=ITEM_BOARD)
+   if (u==null)
 	{
       act ("You have nothing to write on.",
          A_ALWAYS,self,null,null,TO_CHAR);
@@ -174,7 +174,7 @@ code
    if (err<0)
 	{
       log ("02:  Error in boards on:  "+brdname);
-      act ("This board doesn't work report to an administrator.",
+      act ("This board doesn't work; report it to an administrator.",
          A_ALWAYS,self,null,null,TO_CHAR);
       goto quitboard;
 	}
@@ -196,7 +196,7 @@ code
 
    if (ln>=atoi (xn.descr))
 	{
-      act ("You can't reply to that the board is full.",
+      act ("You can't reply to that; the board is full.",
          A_ALWAYS,self,null,null,TO_CHAR);
       goto quitboard;
 	}
@@ -208,7 +208,7 @@ code
 	err:=loadstr(brdname+"."+msg_time,buff);
 	if (err==0)
    {
-      sendtext ("You can only reply to finished posts please wait and try again.<br/>",self);
+      sendtext ("You can only reply to finished posts; please wait and try again.<br/>",self);
       quit;
    }
    msg:=indexlist.[msg_num-1];
@@ -237,7 +237,7 @@ code
    if (err<1)
 	{
 	log ("03:  Error in boards on:  "+brdname);
-	act ("This board doesn't work report to an administrator.",
+	act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 	goto quitboard;
 	}
@@ -263,7 +263,7 @@ temp:=argument;
 	if (err<1)
 		{
 		log ("04:  Error in boards on:  "+brdname);
-		act ("This board doesn't work report to an administrator.",
+		act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 	goto quitboard;
 	}
@@ -377,7 +377,7 @@ err:=loadstr (idxfile+".idx",temp);
 if (err<0)
 	{
 	log ("0.1:  Error in boards on:  "+idxfile);
-	act ("This board doesn't work report to an administrator.",
+	act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 quit;
 	}
@@ -496,7 +496,7 @@ if (x==null)
 	goto start;
 msg_num:=atoi(argument);
 if ((itoa(msg_num)!=argument) or
-	(msg_num<0) or
+	(msg_num<1) or
 	(msg_num>atoi(x.descr)))
 	goto start;
 
@@ -548,7 +548,7 @@ msg_time:=getword(templist.[msg_num-1]);
 	goto start;
 		}
 
-act ("You remove message "+argument+" from $3n",
+act ("You remove message "+argument+" from $3n.",
 	A_ALWAYS,activator,null,self,TO_CHAR);
 
 temp:=templist.[msg_num-1];
@@ -634,7 +634,7 @@ code
 		ln:=length(u.extra.["competitions"].names);
 		if ((i<1) or (i>(ln-1)))
 		{
-			sendtext ("No competition found with a value of +"+arg+"<br/>",activator);
+			sendtext ("No competition found with a value of "+arg+".<br/>",self);
 			quit;
 		}
 		cname:=itoa(u.extra.["competitions"].vals.[i]);
@@ -646,7 +646,7 @@ code
 		}
 		else
 		{
-			buf:=buf+"Started:  "+
+			buf:=buf+"Starts:  "+
 			asctime(u.extra.[cname +" INFO"].vals.[0])+"<br/>";
 		}
 
@@ -693,7 +693,7 @@ if (self.level>=200)
 if (u.extra.[cname+" INFO"].names.[3]!="")
 buf:=buf+"Quests not allowed in this <br/> competition:  "+u.extra.[cname+" INFO"].names.[3]+"<br/>";
 if (u.extra.[cname+" INFO"].names.[4]!="")
-buf:=buf+"Only these Quests allowed in this <br/> competition:  "+u.extra.[cname+" INFO"].names.[3]+"<br/>";
+buf:=buf+"Only these Quests allowed in this <br/> competition:  "+u.extra.[cname+" INFO"].names.[4]+"<br/>";
 
 }
 sendtext(buf,self);
@@ -723,8 +723,8 @@ if (i<=0)
 	}
 templist:=split(temp,"<br/>");
 ln:=length (templist);
-x:="$BOARD_MAX" in self.extra;
-if ((atoi(arg)>atoi(x.descr)) or
+x:="$BOARD_MAX" in u.extra;
+if ((atoi(arg)<1) or (atoi(arg)>atoi(x.descr)) or
 (atoi(arg)>ln))
 	{
 	act("That message exists only within the boundaries of your mind.",
@@ -744,7 +744,7 @@ if (i==0)
 if (i<1)
 	{
 	log("05: Error when loading board info.");
-	act ("This board is not working report to an Administrator",
+	act ("This board is not working; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		quit;
 	}
@@ -865,7 +865,7 @@ if (u.objecttype!=ITEM_NOTE)
 
 if (u.extra==null)
 	{
-	act ("You begin to jot down a note on $2n",
+	act ("You begin to jot down a note on $2n.",
 		A_ALWAYS,self,u,null,TO_CHAR);
 act ("$1n begins to jot down a note.",
 A_ALWAYS,self,null,null,TO_REST);
@@ -881,7 +881,7 @@ interrupt (SFB_DONE, ((command("eat")) and
 	wait(SFB_EDIT,self==activator);
 temp:=argument;
 	addextra (u.extra,null,temp);
-	act ("Done editing",
+	act ("Done editing.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		unsecure(u);
 		:lostpaper:
@@ -936,7 +936,7 @@ if (arg=="")
 		}
 if (length (arg)>50)
 	{
-	act ("Headline to long truncating.",
+	act ("Headline too long; truncating.",
 	A_ALWAYS,self,null,null,TO_CHAR);
 	arg:=left(arg,50);
 	}
@@ -955,7 +955,7 @@ if (err==0)
 		{
 		:lostboard:
 		log ("01:  Error in boards on:  "+brdname);
-		act ("This board doesn't work report to an administrator.",
+		act ("This board doesn't work; report it to an administrator.",
 			A_ALWAYS,self,null,null,TO_CHAR);
 		goto quitboard;
 		}
@@ -965,7 +965,7 @@ if (err==0)
 if (err<0)
 	{
 	log ("02:  Error in boards on:  "+brdname);
-	act ("This board doesn't work report to an administrator.",
+	act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		goto quitboard;
 	}
@@ -984,7 +984,7 @@ err:=savestr(brdname+".idx",temp,"a");
 if (err<1)
 	{
 	log ("03:  Error in boards on:  "+brdname);
-	act ("This board doesn't work report to an administrator.",
+	act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 		goto quitboard;
 	}
@@ -997,7 +997,7 @@ interrupt (SFB_COM,activator==self,clean_up);
 interrupt (SFB_DONE, ((command("eat")) and
 (medium==self)),clean_up);
 
-act ("You begin to write a message on the board",
+act ("You begin to write a message on the board.",
 A_ALWAYS,self,null,null,TO_CHAR);
 act ("$1n begins to write a message on the board.",
 A_ALWAYS,self,null,null,TO_REST);
@@ -1010,7 +1010,7 @@ temp:=argument;
 	if (err<1)
 		{
 		log ("04:  Error in boards on:  "+brdname);
-		act ("This board doesn't work report to an administrator.",
+		act ("This board doesn't work; report it to an administrator.",
 		A_ALWAYS,self,null,null,TO_CHAR);
 	goto quitboard;
 	}
@@ -1090,7 +1090,7 @@ names {"bulletin board", "board"}
 title "a bulletin board"
 descr "A large bulletin board is mounted on a wall here."
 extra{}
-"Its a big ugly Oak Bulletin board."
+"It's a big ugly oak bulletin board."
 type ITEM_BOARD
 dilcopy board("citizen","","","",50);
 end

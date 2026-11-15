@@ -209,7 +209,7 @@ code
         (self.thirst<0) or
         (self.full<0)));
 
-    if (isset(self.flags,PC_SPIRIT))
+    if (isset(self.pcflags,PC_SPIRIT))
       goto start;
 
   // We really need to check here if the player has a link.
@@ -294,17 +294,17 @@ else if (cond=="thirst")
  else if (pc.thirst>-8)
  {
   sendtext("You are very thirsty.<br/>",pc);
- act("$1n is very thirsty.</div> ",A_ALWAYS, pc, null, null, TO_REST);
+ act("$1n is very thirsty.",A_ALWAYS, pc, null, null, TO_REST);
  }
  else if (pc.thirst>-12)
  {
   sendtext("You are dehydrated.<br/>",pc);
  act("$1n is very dehydrated.",A_ALWAYS, pc, null, null, TO_REST);
  }
- else if (pc.full>-96)
+ else if (pc.thirst>-96)
  {
  sendtext("You are dying of thirst.<br/>",pc);
- act("$1n is dying of thirst. ",A_ALWAYS, pc, null, null, TO_REST);
+ act("$1n is dying of thirst.",A_ALWAYS, pc, null, null, TO_REST);
   }
  }
 else if ((cond=="full") and (pc.full>=48))
@@ -341,18 +341,18 @@ else if ((cond=="drunk") and (pc.drunk>=48))
 else if (cond=="drunk")
     {
  pc.drunk:=pc.drunk+i;
- if ((pc.drunk<dr) and (pc.drunk==0))
-  sendtext ("You sober up!<br/>",pc);
  if (pc.drunk>24)
   pc.drunk:=24;
   if (pc.drunk<0)
    pc.drunk:=0;/*you can't get any more sober than this*/
+ if ((pc.drunk<dr) and (pc.drunk==0))
+  sendtext ("You sober up!<br/>",pc);
    if (pc.drunk>11)
     sendtext ("You are seeing double!<br/>",pc);
  else if (pc.drunk>7)
-  sendtext("You are feeling very light headed.<br/>",pc);
+  sendtext("You are feeling very light-headed.<br/>",pc);
  else if (pc.drunk>3)
-  sendtext ("You are getting tipsy.</br>",pc);
+  sendtext ("You are getting tipsy.<br/>",pc);
  }
 return;
 }

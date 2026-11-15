@@ -323,7 +323,7 @@ code
       return;
    }
 
-   if ((i < 0) or (i >= PROFESSION_COUNT))
+   if ((prof < 0) or (prof >= PROFESSION_COUNT))
    {
       log("SetInitalProf() called but prof OOB.");
       return;
@@ -363,7 +363,7 @@ code
       return;
    }
 
-   if ((i < 0) or (i >= PROFESSION_COUNT))
+   if ((newProf < 0) or (newProf >= PROFESSION_COUNT))
    {
       log("AddSpec() called but prof OOB.");
       return;
@@ -401,7 +401,7 @@ code
       return;
    }
 
-   if ((i < 0) or (i >= PROFESSION_COUNT))
+   if ((newProf < 0) or (newProf >= PROFESSION_COUNT))
    {
       log("AddNonSpecProf() called but prof OOB.");
       return;

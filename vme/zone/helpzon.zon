@@ -295,8 +295,7 @@ code
          rm:=rm.outside;
 
       while (zptr.name!=rm.zoneidx)
-         while (left(zptr.name,length(rm.zoneidx)) != rm.zoneidx)
-            zptr:=zptr.next;
+         zptr:=zptr.next;
 
       /*log("checking pay"); */
       if (not(zptr.payonly))
@@ -315,7 +314,7 @@ code
       }
       else
       {
-         sendtext ("There is no help on this area written by the creators. You're on your own<br/>",self);
+         sendtext ("There is no help on this area written by the creators. You're on your own.<br/>",self);
          quit;
       }
 	}

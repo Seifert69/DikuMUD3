@@ -152,7 +152,7 @@ if (cont==null)
 ex:="$letters" in cont.extra;
 if (ex==null)
 	{
-	act ("$1n says 'That persons address has problems contact an administrator.",
+	act ("$1n says, 'That person's address has a problem; contact an administrator.'",
 		A_SOMEONE,self,null,pc,TO_VICT);
 		destroy (cont);
 		goto start;
@@ -160,7 +160,7 @@ if (ex==null)
 
 if (atoi(ex.descr)>=100)
 	{
-	act ("$1n says 'Sorry $3n that persons mail box is full try and send it later.",
+	act ("$1n says, 'Sorry $3n, that person's mailbox is full; try sending it later.'",
 		A_SOMEONE,self,null,pc,TO_VICT);
 		destroy (cont);
 		goto start;
@@ -214,7 +214,7 @@ if (noletter>1)
 	       A_SOMEONE, pc, null, self, TO_REST);
 				 }
 			 else
-			  act ("$1n says 'You don't have any mail.  Sorry.'",
+			  act ("$1n says, 'You don't have any mail. Sorry.'",
 				A_SOMEONE,self,null,pc,TO_VICT);
 
 		destroy (cont);
