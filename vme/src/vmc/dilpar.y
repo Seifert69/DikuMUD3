@@ -2406,6 +2406,10 @@ dilcmp  : dilsexp
     }
     | dilcmp cmp dilsexp
     {
+        if ($2 == DILE_EQ)
+        {
+            g_dilcheck.equal($1.chkfield ? -1 : $1.chkvar, $3.chkfield ? -1 : $3.chkvar);
+        }
         INITEXP($$);
         $$.boolean = 1;
         switch ($1.typ)
@@ -5546,6 +5550,18 @@ corevar   : variable
 /*                      DIL procedures                               */
 /* ************************************************************* */
 
+ifmark  : /* DilCheck: the branches of an if start here */
+    {
+        g_dilcheck.ifBegin();
+    }
+    ;
+
+elsemark : /* DilCheck: the else branch starts here */
+    {
+        g_dilcheck.elseBegin();
+    }
+    ;
+
 ihold   : /* instruction core placeholder */
     {
         $$ = wcore - tmpl.core;
@@ -6555,14 +6571,14 @@ dilproc : corefuncall
     } */
     | DILSI_WIT '(' coreexp ','
     {
-        g_dilcheck.setCondition(true);
+        g_dilcheck.setCondition(true, true);
     }
     coreexp ')' ihold ahold
     {
         sbit32 flags = $3.num;
         g_dilcheck.setCondition(false);
         /* a wait for ticks only is a pause: activator & co. belong to the tick afterwards */
-        g_dilcheck.wait($3.isint && (flags & SFB_TICK) && !(flags & ~(SFB_TICK | SFB_RANTIME)), dillinenum, $3.fst);
+        g_dilcheck.wait($3.isint && (flags & SFB_TICK) && !(flags & ~(SFB_TICK | SFB_RANTIME)), dillinenum);
         checkbool("argument 1 of wait", $3.boolean);
         if ($3.typ != DilVarType_e::DILV_INT)
         {
@@ -6897,7 +6913,6 @@ optsemicolons   :
 
 block    : '{' dilinstlist '}'
     {
-        g_dilcheck.branches($2.fst, $2.lst);
         $$ = $2;
     }
     ;
@@ -6915,7 +6930,6 @@ dilinstlist   : dilcomposed
 
 dilcomposed   : '{' dilinstlist '}' optsemicolons
     {
-        g_dilcheck.branches($2.fst, $2.lst);
         $$ = $2;
     }
     | dilinst semicolons
@@ -6928,47 +6942,47 @@ dilcomposed   : '{' dilinstlist '}' optsemicolons
     }
     ;
 
-dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS dilcomposed
+dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold ifmark block ihold ahold DILSI_ELS elsemark dilcomposed
     {
-        g_dilcheck.branches($3.fst, wcore - tmpl.core);
+        g_dilcheck.ifEnd();
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
-        bwrite_ubit32(&wtmp, $11.fst); /* address of else */
-        wtmp = &tmpl.core[$8];
-        bwrite_ubit8(&wtmp, DILI_GOTO); /* skip else */
-        wtmp = &tmpl.core[$9];
-        bwrite_ubit32(&wtmp, $11.lst); /* end of else */
-        $$.fst = $3.fst;
-        $$.lst = $11.lst;
-    }
-    | DILSI_IF '(' coreexp ')' ihold ahold dilinst optsemicolons ihold ahold DILSI_ELS dilcomposed
-    {
-        g_dilcheck.branches($3.fst, wcore - tmpl.core);
-        wtmp = &tmpl.core[$5];
-        bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
-        wtmp = &tmpl.core[$6];
-        bwrite_ubit32(&wtmp, $12.fst); /* address of else */
+        bwrite_ubit32(&wtmp, $13.fst); /* address of else */
         wtmp = &tmpl.core[$9];
         bwrite_ubit8(&wtmp, DILI_GOTO); /* skip else */
         wtmp = &tmpl.core[$10];
-        bwrite_ubit32(&wtmp, $12.lst); /* end of else */
+        bwrite_ubit32(&wtmp, $13.lst); /* end of else */
         $$.fst = $3.fst;
-        $$.lst = $12.lst;
+        $$.lst = $13.lst;
     }
-    | DILSI_IF '(' coreexp ')' ihold ahold dilcomposed
+    | DILSI_IF '(' coreexp ')' ihold ahold ifmark dilinst optsemicolons ihold ahold DILSI_ELS elsemark dilcomposed
     {
-        g_dilcheck.branches($3.fst, wcore - tmpl.core);
+        g_dilcheck.ifEnd();
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
-        bwrite_ubit32(&wtmp, $7.lst); /* address of else */
+        bwrite_ubit32(&wtmp, $14.fst); /* address of else */
+        wtmp = &tmpl.core[$10];
+        bwrite_ubit8(&wtmp, DILI_GOTO); /* skip else */
+        wtmp = &tmpl.core[$11];
+        bwrite_ubit32(&wtmp, $14.lst); /* end of else */
         $$.fst = $3.fst;
-        $$.lst = $7.lst;
+        $$.lst = $14.lst;
+    }
+    | DILSI_IF '(' coreexp ')' ihold ahold ifmark dilcomposed
+    {
+        g_dilcheck.ifEnd();
+        wtmp = &tmpl.core[$5];
+        bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
+        wtmp = &tmpl.core[$6];
+        bwrite_ubit32(&wtmp, $8.lst); /* address of else */
+        $$.fst = $3.fst;
+        $$.lst = $8.lst;
     }
     | DILSI_FOE '(' coreexp ',' ihold pushbrk pushcnt defcnt corevar ihold ahold ')'
     {
-        g_dilcheck.boundary(true);
+        g_dilcheck.loopBegin();
         g_dilcheck.assign($9.var, -1);
         in_foreach++;
         if (in_foreach > 1)
@@ -6982,7 +6996,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     ihold ahold defbrk popbrk popcnt
     {
-        g_dilcheck.boundary();
+        g_dilcheck.loopEnd();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the next element
@@ -7005,11 +7019,11 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | DILSI_WHI pushbrk pushcnt defcnt '('
     {
-        g_dilcheck.boundary(true); /* the condition is tested again after each pass */
+        g_dilcheck.loopBegin(); /* the condition is tested again after each pass */
     }
     coreexp ')' ihold ahold dilcomposed ihold ahold defbrk popbrk popcnt
     {
-        g_dilcheck.boundary();
+        g_dilcheck.loopEnd();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the test statement.
@@ -7030,7 +7044,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | ':' SYMBOL ':'
     {
-        g_dilcheck.boundary(true);
+        g_dilcheck.label();
     }
     dilcomposed
     {
