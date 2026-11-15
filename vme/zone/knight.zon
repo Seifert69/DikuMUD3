@@ -62,7 +62,7 @@ code
    position_update(pc);
    act("Two of them grab $1n and drag $1m out of the Guild, dumping "+
    "$1m outside the guild.",A_ALWAYS, pc, self, null, TO_REST);
-   room := findroom("sth1@sewers");
+   room := findroom("sth1@midsewers");
    link(pc,room);
    act("Two large Dark Knights emerge from the Guild, dragging $1n"+
    "between them and dump $1m unceremoniously in the sewer."
