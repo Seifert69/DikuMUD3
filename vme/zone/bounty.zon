@@ -440,9 +440,11 @@ external
 	cleanup@bounty();
 var
   i         :  integer;
+  moved     :  integer;
 
   room_pt   :  unitptr;
   item      :  unitptr;
+  nxt       :  unitptr;
   corpse    :  string;
 code{
 
@@ -454,9 +456,11 @@ code{
 	log(activator.name+" has died attempting to finish quest! Moohahah.");
 	corpse := "corpse of "+activator.name;
 	pause;
+	moved := 0;
 	item := self.inside;
 	while(item != null)
 	{
+		nxt := item.next;   // item.next changes when item is moved
 		log("corpse move initiated for "+corpse);
 		room_pt := findroom(room_to);
 		if ((item.symname == "corpse@death") and (item.value[2] == 1))
@@ -464,11 +468,16 @@ code{
 			act("A giant vortex opens up and sucks $1n into it!", A_SOMEONE, item, null, null, TO_ROOM);
 			link(item, room_pt);
 			act("A giant vortex opens up, dumping $1n into the room!", A_SOMEONE, item, null, null, TO_ROOM);
-			if(dilfind("qhistorian3@bounty",findsymbolic("library@bounty")))
-				i := dildestroy("qhistorian3@bounty",findsymbolic("library@bounty"));
-			cleanup();
+			moved := 1;
 		}
-		item := item.next;
+		item := nxt;
+	}
+	/* Only after every player corpse is out: cleanup() destroys the corpses left here */
+	if (moved == 1)
+	{
+		if(dilfind("qhistorian3@bounty",findsymbolic("library@bounty")))
+			i := dildestroy("qhistorian3@bounty",findsymbolic("library@bounty"));
+		cleanup();
 	}
 	goto start;
 }
@@ -1330,22 +1339,25 @@ code
 	
 	exec("say You have collected "+total+" of 40 rainbow crystals.",self);
 	
-	if("book" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me the most evil book to ever grace the earth.",self);
-	else
-		exec("say I still require the most evil book to ever grace the earth.",self);
-	if("sash" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me a dark sash with a pocket.",self);
-	else
-		exec("say I still require a dark sash with a pocket.",self);
-	if("scythe" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me a weapon of blood and hate.",self);
-	else
-		exec("say I still require a weapon of blood and hate.",self);
-	if("skin" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me the skin of shadow.",self);
-	else
-		exec("say I still require the skin of shadow.",self);
+	if (NECRO_ONGOING in pc.quests)
+	{
+		if("book" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me the most evil book to ever grace the earth.",self);
+		else
+			exec("say I still require the most evil book to ever grace the earth.",self);
+		if("sash" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me a dark sash with a pocket.",self);
+		else
+			exec("say I still require a dark sash with a pocket.",self);
+		if("scythe" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me a weapon of blood and hate.",self);
+		else
+			exec("say I still require a weapon of blood and hate.",self);
+		if("skin" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me the skin of shadow.",self);
+		else
+			exec("say I still require the skin of shadow.",self);
+	}
 		
 	goto donezo;
 	
@@ -1741,7 +1753,7 @@ code
 	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr +"</div>";
 	
 	bty.extra.[0].descr := buf;
-	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
+	act (buf, A_ALWAYS, pc, null, null, TO_CHAR);	
 	link(bty,pc);
 	return;
 }
@@ -1774,6 +1786,9 @@ code
 	pc := activator;
 	secure(pc,donezo);
 	
+	sd := "";
+	sm := "";
+	sb := "";
 	daily := "$daily_target" in pc.extra;
 	monthly := "$monthly_target" in pc.extra;
 	bonus := "$bonus_target" in pc.extra;
@@ -1838,11 +1853,11 @@ code
 	{
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("say Here's what you have open, "+pc.name+".",self);
-		if((sb != null) and (not("DONE" in sb)))
+		if((sb != "") and (not("DONE" in sb)))
 			reprint(pc,sb,"bonus");
-		if((sd != null) and (not("DONE" in sd)))
+		if((sd != "") and (not("DONE" in sd)))
 			reprint(pc,sd,"daily");
-		if((sm != null) and (not("DONE" in sm)))
+		if((sm != "") and (not("DONE" in sm)))
 			reprint(pc,sm,"monthly");
 		
 		if(k == 1)
@@ -1995,8 +2010,9 @@ var
 code
 {
 	
-	heartbeat := PULSE_SEC*4;
+
 :start:
+	heartbeat := PULSE_SEC*4;
 
 	wait(SFB_CMD, ("$feasted" in activator.extra) and (JOIN_ONGOING in activator.quests) and 
 	(BLACKSMITH_COMPLETE in activator.quests) and (JEWELER_COMPLETE in activator.quests) and
@@ -2540,6 +2556,7 @@ code
 		exec("say 100 lbs of activated elemental earth, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth1");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
+		unsecure(item);
 		destroy(item);
 	}
 	else if((item.symname == "air1@bounty") and (not("air1" in exdp.names)))
@@ -2694,10 +2711,10 @@ code
 		if(qty == 4)
 			goto noneed;
 		pc.quests.["$sum_act"].descr := itoa(qty + 1);
+		exec("say This has the power to activate the raw elemental crystals!", self);
+		exec("emote sets "+item.title+" aside.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say This has the power to activate the raw elemental crystals!", self);
-		exec("emote sets the "+item.title+" aside.", self);
 		exec("say You have now given me "+itoa((qty + 1)*20)+" of the requisite 80 lbs.", self);
 	}
 	else if((item.symname == "q_air@faeries2"))
@@ -2708,10 +2725,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_air"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental air. It is more beautiful than even the rumors suggest.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystallized elemental air. It is more beautiful than even the rumors suggest.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_fire@faeries2"))
@@ -2722,10 +2739,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_fire"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental fire. I can sense its power.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystallized elemental fire. I can sense its power.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_water@faeries2"))
@@ -2736,10 +2753,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_water"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental water. A wonder of nature!", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystallized elemental water. A wonder of nature!", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_earth@faeries2"))
@@ -2750,10 +2767,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_earth"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental earth. Marvelous!", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystallized elemental earth. Marvelous!", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "ball_energ@akaren"))
@@ -2764,10 +2781,10 @@ code
 		if(qty == 20)
 			goto noneed;
 		pc.quests.["$sum_ball"].descr := itoa(qty + 1);
+		exec("say Energy in its purest form! The raw power is incredible.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Energy in its purest form! The raw power is incredible.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 20.", self);
 	}
 	else
@@ -3258,7 +3275,7 @@ code
 	}
 	
 :streak:
-	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
+	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("packages" in pc.quests.[JEWELER_ONGOING].names)))
 		addstring(pc.quests.[JEWELER_ONGOING].names, "packages");
 	
 :checkit:
@@ -3436,13 +3453,13 @@ code
 			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 		pc.quests.["$nec_lc"].descr := itoa(qty + 1);
 		pc.quests.[NECRO_ONGOING].descr := itoa(qty + 1);
-		unsecure(item);
-		destroy(item);
 		exec("say The very essence of life!", self);	
-		if ("skin" in pc.quests.[NECRO_ONGOING].names)
+		if ("sash" in pc.quests.[NECRO_ONGOING].names)
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
 			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks "+item.title+" into his robes.", self);
+		unsecure(item);
+		destroy(item);
 		exec("say This is "+itoa(qty + 1)+" of the 40 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
@@ -3738,15 +3755,15 @@ code
 	
 	exec("say It is a special type of fool who would attack me here.",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	act("$1n gestures, and the world fades.",A_SOMEONE, self, pc, null, TO_CHAR);
-	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_ROOM);
+	act("$1n gestures, and the world fades.",A_SOMEONE, self, null, pc, TO_VICT);
+	act("$1n gestures, and $3n begins to fade.",A_SOMEONE, self, null, pc, TO_NOTVICT);
 	pc.hp := 0;
 	pc.endurance := 0;
 	pc.mana := 0;
 	subextra(pc.extra, "$daily_streak");
 	position_update(pc);
 	link(pc,findroom("entry_room@bounty"));
-	act("You feel a searing pain!",A_SOMEONE, self, pc, null, TO_CHAR);
+	act("You feel a searing pain!",A_ALWAYS, pc, null, null, TO_CHAR);
 :lostpc:
 	unsecure(pc);
 	goto start;
@@ -3956,10 +3973,10 @@ code
 	if((kn == 0) and (xn == 0))
 	{
 		log("Spree Tracker: "+self.name+" has led a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
-		u := self;
+		u := ghead();
 		while (u.type==UNIT_ST_PC)
 		{
-			sendtext(self.name+" has just led a successful spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.",u);
+			sendtext(self.name+" has just led a successful spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.<br/>",u);
 			u := u.gnext;
 		}
 	}
@@ -4035,6 +4052,7 @@ code
 	
 	pc := activator;
 	secure(pc,donezo);
+	sl := null;
 	
 	sdate := stringdate(3);
 	
@@ -4583,7 +4601,7 @@ code
 	
 	exec("Say Would you like the daily, monthly, or a bonus contract?", self);	
 	exec("Say You may also shake your head to decline.", self);
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" in argument) or ("monthly" in argument) or ("bonus" in argument)))  or (command("shake")));
+	wait(SFB_CMD, (activator == pc) and (((command("say")) and (("daily" in argument) or ("monthly" in argument) or ("bonus" in argument))) or (command("shake"))));
 	
 	if (command ("shake"))
 		goto decline;
@@ -4706,7 +4724,7 @@ code
 	else
 		exec("say I've updated your tablet with the new "+which+" contract, "+pc.name+".",self);
 	
-	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
+	act (buf, A_ALWAYS, pc, null, null, TO_CHAR);	
 	goto the_end;
 	
 :have_bounty:
@@ -4720,9 +4738,8 @@ code
 	
 	exec("say You've already taken a "+which+" contract.",self);
 	exec("say Are you suggesting that you'd like to abandon this one, and get another?",self);
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("nod") or command("shake")));
+	wait(SFB_CMD, (activator == pc) and (command("nod") or command("shake")));
 	
-	pc := activator;
 	
 	if (command ("shake"))
 		goto decline;
@@ -4806,7 +4823,7 @@ code
 		exec("snicker",self);
 		exec("say So you need to be freed from your contract, "+pc.name+"?",self);
 		exec("say It seems your... documentation is in order. Just say 'daily' or 'monthly' and it will be ended.",self);
-		wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
+		wait(SFB_CMD, (activator == pc) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
 	
 		arg := argument;
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -5022,7 +5039,6 @@ leverage the competition boards. Will investigate.
 	*/
 	
 	
-	destroy(self.inside);
 	exec("say Yes, "+slstr.[2]+"'s head.",self);
 	exec("say It appears we can consider your "+sdone+" contract closed, "+pc.name+".",self);
 	exec("grin",self);
@@ -5346,8 +5362,7 @@ code
 	block;
 	
 		
-	if(argument)
-		arg := argument;
+	arg := argument;
 	
 	pc := activator;
 	secure(pc, donezo);
