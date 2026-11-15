@@ -130,9 +130,10 @@ sbit32 find_player_id(char *pName)
 
     rewind(pFile);
 
-    if (fread(&id, sizeof(sbit32), 1, pFile) != 1)
+    if (fread(&id, sizeof(sbit32), 1, pFile) != 1) // an empty or broken file: no such player
     {
-        error(HERE, "Unable to read ID for player: '%s'", pName);
+        slog(LOG_ALL, 0, "Unable to read ID for player: '%s'", pName);
+        id = -1;
     }
 
     fclose(pFile);

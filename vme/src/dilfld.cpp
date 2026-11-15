@@ -2097,6 +2097,7 @@ void dilfe_fld(dilprg *p)
                         v->ref = unit->getAlignmentPtr();
                         v->min = unit_data::MinAlignment;
                         v->max = unit_data::MaxAlignment;
+                        v->clamp = true; // as setAlignment(): zones write 5000 to mean the most
                     }
                     else
                     {

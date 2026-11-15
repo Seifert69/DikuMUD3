@@ -208,6 +208,28 @@ code
       bad := 1;
    }
 
+   // A transfer affect added while the object is worn reaches the wearer at once, and taking
+   // it off again takes only that copy, not the copy of the object's other transfer affect
+   addaff(o, -ID_BLANK10, -1, 0, ABIL_STR, 5, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_ABILITY);
+   st := n.abilities[ABIL_STR];
+   addequip(o, WEAR_BODY);
+   addaff(o, -ID_BLANK11, -1, 0, ABIL_STR, 3, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_ABILITY);
+   if (n.abilities[ABIL_STR] != st + 8)
+   {
+      logtest(tstno, LOGT_ERROR, "T028 addaff of a transfer affect to a worn object: strength " +
+              itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st + 8));
+      bad := 1;
+   }
+   subaff(o, -ID_BLANK11);
+   if (n.abilities[ABIL_STR] != st + 5)
+   {
+      logtest(tstno, LOGT_ERROR, "T028 subaff of the added transfer affect: strength " +
+              itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st + 5));
+      bad := 1;
+   }
+   subaff(o, -ID_BLANK10);
+   unequip(o);
+
    // Armour at WEAR_ANKLE_R (24, WEAR_MAX) counted past the end of the table of body parts
    n.abilities[ABIL_DEX] := 50;
    a := load("pbox@test");
@@ -615,7 +637,8 @@ dilend
 // the stack ran empty), a dilcopy() string longer than the copy buffer or with more arguments
 // than it has room for, and "if (u.title)" (false for a title that is set). Also attack_type,
 // natural_armour and movement took any value, read later past the end of the weapon, armour
-// and landscape tables, and alignment took any value, not -1000..1000: they now clamp.
+// and landscape tables: a value outside the table is now refused (logged). Alignment took any
+// value, not -1000..1000: it now clamps, as setAlignment() does.
 dilbegin T026(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
@@ -670,10 +693,11 @@ code
       goto terminate;
    }
 
+   u.attack_type := WPN_DAGGER;
    u.attack_type := 200;
    i := u.attack_type;
    u.attack_type := 3; // a weapon group, not an attack type
-   if ((i != WPN_TREE_MAX - 1) or (u.attack_type != WPN_GROUP_MAX))
+   if ((i != WPN_DAGGER) or (u.attack_type != WPN_DAGGER))
    {
       logtest(tstno, LOGT_ERROR, "T026 attack_type took " + itoa(i) + " and " + itoa(u.attack_type));
       goto terminate;
@@ -685,10 +709,11 @@ code
       goto terminate;
    }
 
+   u.natural_armour := ARM_LEATHER;
    u.natural_armour := 9;
    i := u.natural_armour;
    u.natural_armour := -1;
-   if ((i != ARM_PLATE) or (u.natural_armour != ARM_CLOTHES))
+   if ((i != ARM_LEATHER) or (u.natural_armour != ARM_LEATHER))
    {
       logtest(tstno, LOGT_ERROR, "T026 natural_armour took " + itoa(i) + " and " + itoa(u.natural_armour));
       goto terminate;
@@ -699,7 +724,7 @@ code
    r.movement := 50;
    i := r.movement;
    r.movement := j;
-   if (i != SECT_ICE)
+   if (i != j)
    {
       logtest(tstno, LOGT_ERROR, "T026 movement took " + itoa(i));
       goto terminate;

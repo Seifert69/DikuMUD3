@@ -587,10 +587,20 @@ unit_data *equipment_type(unit_data *ch, int pos, ubit8 type)
     }
 }
 
+/* Give the wearer ch its copy of the transfer affect af of a worn object */
+void equip_transfer_affect(unit_data *ch, unit_affected_type *af)
+{
+    unit_affected_type newaf = *af;
+
+    assert(af->getID() < 0);
+    newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
+    newaf.setDuration(-1);           /* Permanent until unequip */
+    create_affect(ch, &newaf);
+}
+
 void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
 {
     unit_affected_type *af = nullptr;
-    unit_affected_type newaf;
 
     assert(pos > 0 && obj->isObj() && ch->isChar());
     assert(!equipment(ch, pos));
@@ -603,10 +613,7 @@ void equip_char(unit_data *ch, unit_data *obj, ubit8 pos)
     {
         if (af->getID() < 0) /* It is a transfer affect! */
         {
-            newaf = *af;
-            newaf.setID(newaf.getID() * -1); /* No longer a transfer    */
-            newaf.setDuration(-1);           /* Permanent until unequip */
-            create_affect(ch, &newaf);
+            equip_transfer_affect(ch, af);
         }
     }
 }

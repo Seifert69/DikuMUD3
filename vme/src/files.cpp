@@ -491,11 +491,9 @@ int load_string(const char *filename, char **file_str)
         return (FILE_NOT_FOUND);
     }
 
-    stat(filename, &statbuf);
-    input = open(filename, O_RDONLY);
-    if (input < 0)
+    if (stat(filename, &statbuf) != 0)
     {
-        slog(LOG_ALL, 0, "load_string(): File won't open: %s", filename);
+        slog(LOG_ALL, 0, "load_string(): File won't stat: %s", filename);
         return (FILE_NOT_FOUND);
     }
 
@@ -503,6 +501,13 @@ int load_string(const char *filename, char **file_str)
     {
         slog(LOG_ALL, 0, "load_string(): File too large: %s", filename);
         return (FILE_TO_LARGE);
+    }
+
+    input = open(filename, O_RDONLY);
+    if (input < 0)
+    {
+        slog(LOG_ALL, 0, "load_string(): File won't open: %s", filename);
+        return (FILE_NOT_FOUND);
     }
 
     *file_str = (char *)malloc(statbuf.st_size + 1);

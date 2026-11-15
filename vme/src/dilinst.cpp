@@ -1450,6 +1450,38 @@ void dilfi_rsfunc(dilprg *p)
 }
 
 /* Assignment of value to reference */
+/* A transfer affect added to a worn object reaches the wearer at once, as equip_char gives it, so
+   that taking it off again (destroy_affect) has the wearer's copy to take */
+static void dil_transfer_to_wearer(unit_data *u, unit_affected_type *af)
+{
+    if ((af->getID() < 0) && u->isObj() && OBJ_EQP_POS(u) && !u->is_destructed())
+    {
+        equip_transfer_affect(u->getUnitIn(), af);
+    }
+}
+
+/* A field with a range (an index of a table, or alignment) takes a value outside it only when it
+   clamps; otherwise the assignment is refused and the zone log says so */
+static bool dil_fit_range(dilprg *p, dilval *v1, sbit32 &num)
+{
+    if ((num >= v1->min) && (num <= v1->max))
+    {
+        return true;
+    }
+    if (v1->clamp)
+    {
+        num = std::clamp(num, v1->min, v1->max);
+        return true;
+    }
+    szonelog(p->frame->tmpl->zone,
+             "DIL '%s' assigned %d to a field that takes %d to %d.",
+             p->frame->tmpl->prgname,
+             num,
+             v1->min,
+             v1->max);
+    return false;
+}
+
 void dilfi_ass(dilprg *p)
 {
     dilval *v2 = p->stack.pop();  // Pop the result
@@ -1710,7 +1742,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit8 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit8 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -1726,7 +1761,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit16 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit16 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -1742,7 +1780,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((sbit32 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((sbit32 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -1758,7 +1799,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit8 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit8 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -1774,7 +1818,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit16 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit16 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -1790,7 +1837,10 @@ void dilfi_ass(dilprg *p)
                 case DILV_FAIL:
                     break;
                 case DILV_INT:
-                    *((ubit32 *)v1->ref) = std::clamp(v2->val.num, v1->min, v1->max);
+                    if (dil_fit_range(p, v1, v2->val.num))
+                    {
+                        *((ubit32 *)v1->ref) = v2->val.num;
+                    }
                     break;
                 default:
                     /* ERROR incompatible types */
@@ -2751,6 +2801,7 @@ void dilfi_ada(dilprg *p)
                         af.setLastFI(v10->val.num);
                         af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
+                        dil_transfer_to_wearer((unit_data *)v1->val.ptr, &af);
                     }
                 }
                 else
@@ -2797,6 +2848,7 @@ void dilfi_ada(dilprg *p)
                         af.setLastFI(v10->val.num);
                         af.setApplyFI(v11->val.num);
                         create_affect((unit_data *)v1->val.ptr, &af);
+                        dil_transfer_to_wearer((unit_data *)v1->val.ptr, &af);
                     }
                 }
                 else

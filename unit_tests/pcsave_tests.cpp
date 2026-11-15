@@ -127,6 +127,17 @@ BOOST_FIXTURE_TEST_CASE(directory_is_no_player, PlayerDirFixture)
     }
 }
 
+// An empty or cut file (a disk that filled up) has no id to read: that stopped the server too
+BOOST_FIXTURE_TEST_CASE(unreadable_file_is_no_player, PlayerDirFixture)
+{
+    player_file("bempty", "");
+    player_file("bshort", std::string("\x05\x00", 2));
+    char empty[] = "Bempty";
+    char shortname[] = "Bshort";
+    BOOST_TEST(find_player_id(empty) == -1);
+    BOOST_TEST(find_player_id(shortname) == -1);
+}
+
 BOOST_FIXTURE_TEST_CASE(player_is_found, PlayerDirFixture)
 {
     player_file("bfound", std::string("\x05\x00\x00\x00", 4));

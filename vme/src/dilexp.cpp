@@ -1776,7 +1776,7 @@ void dilfe_ldstr(dilprg *p)
                         filename += "/strings/";
                         filename += (char *)v1->val.ptr;
                         v->val.num = load_string(filename.c_str(), &sstr);
-                        if (!str_is_empty(sstr))
+                        if (sstr) // loaded, perhaps an empty file: the variable gets the text
                         {
                             if (*((char **)v2->ref))
                             {
@@ -1784,10 +1784,6 @@ void dilfe_ldstr(dilprg *p)
                             }
                             *((char **)v2->ref) = str_dup(sstr);
                             FREE(sstr);
-                        }
-                        else
-                        {
-                            v2->val.ptr = nullptr;
                         }
                     }
                     break;
@@ -3097,7 +3093,12 @@ void *threadcallout(void *p)
 
     str_next_word_copy(str, buf, sizeof(buf));
 
-    if (strchr(buf, '/') || strchr(buf, ' ') || strchr(buf, ';') || strstr(buf, ".."))
+    if (strlen(buf) >= sizeof(buf) - 1) // cut off: the rest of the word was never checked
+    {
+        slog(LOG_BRIEF, 0, "bin command is too long");
+        ok = false;
+    }
+    else if (strchr(buf, '/') || strchr(buf, ' ') || strchr(buf, ';') || strstr(buf, ".."))
     {
         slog(LOG_BRIEF, 0, "bin command %s contains an illegal character (/ ;) or .. ", buf);
         ok = false;

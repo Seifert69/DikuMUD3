@@ -533,8 +533,9 @@ public:
         sbit32 num; /* result integer  */
     } val;
     void *ref; /* result reference (NULL=Rexpr) */
-    sbit32 min; /* integer reference: a value assigned to it is clamped to min..max */
+    sbit32 min; /* integer reference: a value outside min..max is refused (and logged) */
     sbit32 max;
+    bool clamp; /* ... or, when set, clamped to min..max */
 };
 
 /* structure for securing unit pointers */
