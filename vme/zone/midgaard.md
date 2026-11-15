@@ -64,3 +64,9 @@ Questions:
 2. **fido** (line 1779): nothing uses this template (the fido dogs use fido@function). It has no
    `goto loop` after the `foreach`, but it restarts at the top when it runs off its end, so it would
    work. Delete it?
+
+## vmc warnings (after #604)
+
+- janitors (line 403): a player's corpse got "$owner notified" after two pauses, when `trash` was
+  already cleared, so the flag never landed and the owner was told again on every pass. The flag
+  is now set before the pauses.

@@ -4739,6 +4739,7 @@ code
       }
       else
       {
+	 keyu := null; // no key was loaded for this one
 	 notokdil(activator, keyu);
       }
    }
