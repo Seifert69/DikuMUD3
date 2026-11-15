@@ -347,6 +347,17 @@ const char *skip_spaces(const char *string)
     return string;
 }
 
+char *strip_surrounding_quotes(char *str)
+{
+    size_t len = strlen(str);
+    if (len >= 2 && str[0] == '"' && str[len - 1] == '"')
+    {
+        str[len - 1] = '\0';
+        return str + 1;
+    }
+    return str;
+}
+
 void strip_trailing_blanks(char *str)
 {
     if (!*str)

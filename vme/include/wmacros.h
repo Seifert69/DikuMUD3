@@ -74,7 +74,7 @@ extra{FLEE_LEAVE, directions}  \
  (RACE_IS_PCHUMANOID(race)) or (RACE_IS_NPCHUMANOID(race)) )
 
 #define RACE_IS_UNDEAD(race) \
-( ((race) > RACE_SPIRIT_MIN ) and ((race) < RACE_SPIRIT_MAX ) )
+( ((race) > RACE_UNDEAD_MIN ) and ((race) <= RACE_UNDEAD_MAX ) )
 
 
 

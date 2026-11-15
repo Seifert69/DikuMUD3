@@ -75,6 +75,9 @@ const char *skip_spaces(const char *);
 const char *skip_blanks(const char *string);
 void strip_trailing_spaces(char *str);
 void strip_trailing_blanks(char *str);
+/// The text between a pair of surrounding double quotes ("text" -> text), else str itself.
+/// Changes str (the closing quote) and returns a pointer into it.
+char *strip_surrounding_quotes(char *str);
 
 const char *divcolor(const char *colorstr);
 int substHTMLTagClass(const char *pOldTag, const char *pAttr, const char *pNewVal, char *pNewTag, int nTagMax);

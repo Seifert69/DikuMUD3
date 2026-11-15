@@ -209,7 +209,7 @@ code
             temp := temp +  " (black)";
 
         if (isset(self.charflags, CHAR_DETECT_UNDEAD) and
-            ((item.race > RACE_SPIRIT_MIN) and (item.race < RACE_SPIRIT_MAX)))
+            RACE_IS_UNDEAD(item.race))
             temp := temp + " (violet)";
     }
 
