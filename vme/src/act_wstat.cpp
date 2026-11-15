@@ -122,7 +122,7 @@ static void stat_memory(unit_data *ch)
     // Also do a unit sanity check here, not memory related, just a hack
     //
 
-    for (unit_data *u = g_unit_list; u; u = u->getNext())
+    for (unit_data *u = g_unit_list; u; u = u->getGlobalNext())
     {
         if (u->getUnitType() != UNIT_ST_ROOM)
         {
@@ -1342,7 +1342,7 @@ void do_wstat(unit_data *ch, char *argument, const command_info *cmd)
         argument++;
         if (!strncmp("dil", argument, 3))
         {
-            int i = atoi(argument + 4);
+            int i = atoi(argument + 3); // "dil" alone, or "dil <n>"
             stat_global_dil(ch, i);
             return;
         }
