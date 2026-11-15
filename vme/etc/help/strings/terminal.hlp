@@ -17,7 +17,8 @@ another setting.
 </p><p><b>change telnet</b> switches whether the game assumes you use a telnet 
 program, which lets it, for example, hide your password as you type it. 
 Turn it off only if your client prints odd characters after each line.
-</p><p>Your settings are kept with your character.
+</p><p>Your terminal setting is kept with your character. The telnet setting 
+is not: it is switched back on each time you log in.
 </p><p><br />
 See Also:
 </p>

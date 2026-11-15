@@ -3,8 +3,8 @@
 </p>
 <pre> &gt; bug
 </pre>
-<p>This command is used to report bugs in the game and a copy is posted to Discord. If the bug is a crash bug, PLEASE also send an email report to admin@valahall.com.
-</p><p>To use type the word bug and press enter. This will open the editor as if you were writing a letter at the post office. Turn off all triggers that may echo in the editor. Type in the details of the bug. Close the editor with @ on a single line at the end.
+<p>This command is used to report bugs in the game and a copy is posted to Discord. If the bug is a crash bug, PLEASE also send an email report to admin@valhalla.com.
+</p><p>To use type the word bug and press enter. This will open the editor as if you were writing a letter at the post office. Turn off all triggers that may echo in the editor. Type in the details of the bug. Close the editor with @ on a single line at the end. A report of only one word, or nothing at all, is thrown away.
 </p><p>Example:
 </p>
 <pre> 42h&gt; bug

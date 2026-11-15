@@ -12,6 +12,7 @@ advanced=advanced.hlp
 advocates=aoh.hlp
 advocates of honor=aoh.hlp
 adze=adze.hlp
+adze mattock=adze.hlp
 affect=affect.hlp
 age=age.hlp
 aggressive mode=peace.hlp
@@ -485,6 +486,7 @@ kick=kick.hlp
 kill=kill.hlp
 kindred=kindred.hlp
 knee=knee.hlp
+knight=knight.hlp
 knock=knock.hlp
 kopesh=kopesh.hlp
 :end:k
@@ -626,6 +628,7 @@ pibag=pibag.hlp
 pick=picklock.hlp
 pick lock=picklock.hlp
 pick pockets=pickpockets.hlp
+pickpocket=pickpockets.hlp
 pike=pike.hlp
 pilist=pibag.hlp
 pilum=pilum.hlp
@@ -659,6 +662,7 @@ power items=poweritems.hlp
 practice=practice.hlp
 pray=pray.hlp
 priests=healers.hlp
+privacy=privacy.hlp
 professions=professions.hlp
 prompt colors=promptcolors.hlp
 prompts=promptcolors.hlp
@@ -747,6 +751,7 @@ sending=sending.hlp
 sense life=senselife.hlp
 serious wounds=causeseriouswounds.hlp
 sex=genders.hlp
+sexual harassment=seual.hlp
 sexual harrassment=seual.hlp
 shamshir=shamshir.hlp
 shard breath=breath.hlp
@@ -947,6 +952,6 @@ xray vision=xrayvision.hlp
 :end:x
 :start:y
 yell=shout.hlp
-:end:y
 yule=yule.hlp
 yule wheel=yule.hlp
+:end:y

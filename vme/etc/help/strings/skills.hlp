@@ -6,22 +6,23 @@ your profession and your abilities. Some skills are commands of their own,
 like backstab or hide; others are used by themselves when you do something, 
 like climb or swimming.
 </p><p>These are the skills of Valhalla. Click one to read its help:
-</p><p><a cmd='#'>help ambush</a>, <a cmd='#'>help appraisal</a>, armor chain, armor hard leather, armor plate,
-armor soft leather, <a cmd='#'>help backstab</a>, <a cmd='#'>help bash</a>, <a cmd='#'>help berserk</a>,
-<a cmd='#'>help butcher</a>, <a cmd='#'>help charge</a>, <a cmd='#'>help cleave</a>, <a cmd='#'>help climb</a>, <a cmd='#'>help consider</a>,
-<a cmd='#'>help cook</a>, <a cmd='#'>help curare</a>, <a cmd='#'>help defend</a>, <a cmd='#'>help diagnostics</a>,
-<a cmd='#'>help disarming</a>, <a cmd='#'>help dowse</a>, <a cmd='#'>help elbow</a>, evaluating,
-<a cmd='#'>help fashion weapon</a>, <a cmd='#'>help filching</a>, <a cmd='#'>help first aid</a>, <a cmd='#'>help fleeing</a>,
-<a cmd='#'>help forage</a>, hand cuffing, <a cmd='#'>help herbs</a>, <a cmd='#'>help hide</a>, <a cmd='#'>help hit</a>,
-<a cmd='#'>help hunt</a>, <a cmd='#'>help kick</a>, <a cmd='#'>help knee</a>, <a cmd='#'>help lay trap</a>, leadership,
-<a cmd='#'>help leap</a>, <a cmd='#'>help palm</a>, <a cmd='#'>help peeking</a>, <a cmd='#'>help pick lock</a>,
-<a cmd='#'>help pick pockets</a>, <a cmd='#'>help plant</a>, punch, <a cmd='#'>help rend</a>, <a cmd='#'>help rescue</a>,
-<a cmd='#'>help resize</a>, <a cmd='#'>help scan</a>, <a cmd='#'>help scroll use</a>, <a cmd='#'>help search</a>, <a cmd='#'>help shelter</a>,
-<a cmd='#'>help shield</a>, <a cmd='#'>help shoot</a>, <a cmd='#'>help skin</a>, slam, <a cmd='#'>help slip</a>, <a cmd='#'>help sneak</a>,
+</p><p><a cmd='#'>help ambush</a>, <a cmd='#'>help appraisal</a>, <a cmd='#'>help armor chain</a>, <a cmd='#'>help armor hard leather</a>,
+<a cmd='#'>help armor plate</a>, <a cmd='#'>help armor soft leather</a>, <a cmd='#'>help backstab</a>, <a cmd='#'>help bash</a>,
+<a cmd='#'>help berserk</a>, <a cmd='#'>help butcher</a>, <a cmd='#'>help charge</a>, <a cmd='#'>help cleave</a>, <a cmd='#'>help climb</a>,
+<a cmd='#'>help consider</a>, <a cmd='#'>help cook</a>, <a cmd='#'>help curare</a>, <a cmd='#'>help defend</a>,
+<a cmd='#'>help diagnostics</a>, <a cmd='#'>help disarming</a>, <a cmd='#'>help dowse</a>, <a cmd='#'>help elbow</a>,
+<a cmd='#'>help evaluating</a>, <a cmd='#'>help fashion weapon</a>, <a cmd='#'>help filching</a>, <a cmd='#'>help first aid</a>,
+<a cmd='#'>help fleeing</a>, <a cmd='#'>help forage</a>, <a cmd='#'>help frenzy</a>, <a cmd='#'>help glance</a>,
+<a cmd='#'>help hand cuffing</a>, <a cmd='#'>help herbs</a>, <a cmd='#'>help hide</a>, <a cmd='#'>help hit</a>, <a cmd='#'>help hunt</a>,
+<a cmd='#'>help kick</a>, <a cmd='#'>help knee</a>, <a cmd='#'>help lay trap</a>, <a cmd='#'>help leadership</a>, <a cmd='#'>help leap</a>,
+palm, <a cmd='#'>help peeking</a>, <a cmd='#'>help pick lock</a>, <a cmd='#'>help pick pockets</a>, <a cmd='#'>help plant</a>,
+<a cmd='#'>help punch</a>, <a cmd='#'>help rage</a>, <a cmd='#'>help rend</a>, <a cmd='#'>help rescue</a>, <a cmd='#'>help resize</a>,
+<a cmd='#'>help scan</a>, <a cmd='#'>help scroll use</a>, <a cmd='#'>help search</a>, <a cmd='#'>help shelter</a>, <a cmd='#'>help shield</a>,
+<a cmd='#'>help shoot</a>, <a cmd='#'>help skin</a>, <a cmd='#'>help slam</a>, <a cmd='#'>help slip</a>, <a cmd='#'>help sneak</a>,
 <a cmd='#'>help soothe</a>, <a cmd='#'>help stalk</a>, <a cmd='#'>help stealing</a>, <a cmd='#'>help swimming</a>, <a cmd='#'>help taunt</a>,
 <a cmd='#'>help throw</a>, <a cmd='#'>help track</a>, <a cmd='#'>help tripping</a>, <a cmd='#'>help turn undead</a>,
 <a cmd='#'>help two weapon style</a>, <a cmd='#'>help ventriloquate</a>, <a cmd='#'>help wand use</a>,
-<a cmd='#'>help weather watching</a>, whirl
+<a cmd='#'>help weather watching</a>, <a cmd='#'>help whirl</a>
 </p><p><br />
 See Also:
 </p>

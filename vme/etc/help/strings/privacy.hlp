@@ -4,13 +4,16 @@
 Valhalla Discord server: newbie, builder, mud, accessibility, bugs, diku3 
 and chat (see <a cmd='#'>Help Comm</a>). Anything you say on them can be read by 
 anyone there, so treat them as public. When a new player joins, their 
-name is announced in Discord's newbie channel.
+name is announced in Discord's newbie channel, and Discord shows a list 
+of the players who are online.
 </p><p><b>Bug, typo and idea reports</b> (see <a cmd='#'>Help Bug</a>, <a cmd='#'>Help Typo</a> and 
 <a cmd='#'>Help Idea</a>) are read by the administrators; bug and typo reports also 
 go to Discord's bugs channel, with your name.
 </p><p><b>The server log</b> records when you log in and out, with your level 
 and whether you play in the web client or over telnet, so that we can 
-count players. It does not record what you say or type. The commands 
+count players. When you connect, it also records the internet address 
+you connect from, and so does a wrong password. It does not record what 
+you say or type. The commands 
 the gods use are logged.
 </p><p><b>The helpers.</b> Dwili, Groa and Lokee are run by an AI (Claude, from 
 Anthropic), and they say so if you ask. What you say to them, near them 

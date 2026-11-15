@@ -10,9 +10,11 @@ hunt               (again, to stop hunting)
 your prey's tracks, and if you can read them, you set off after them by 
 yourself, step after step, wherever they lead in the world: you search 
 for hidden exits and open doors on the way. When you catch up, you attack.
-</p><p>Your track and hunt skills together decide whether you can read the 
-trail, with your brain and level against your prey's. You read it again 
-at every step, so you may lose it on the way. Each step costs endurance, 
+</p><p>Your hunt skill, brain and level, against your prey's dexterity and
+level (and a player's own hunt skill), decide whether you can read the
+trail. Trails are easiest to read in snow, then in fields, forests and
+hills, and hardest in cities, in the mountains and on ice. You read it
+again at every step, so you may lose it on the way. Each step costs endurance, 
 more in cities, indoors and on ice than in the open, and when you are too 
 tired you stop. You must be standing, and you can't hunt on water. The 
 trail ends where your prey enters something, such as a ship or a cart.

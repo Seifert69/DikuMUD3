@@ -20,8 +20,9 @@ bantotal.txt for a total ban, bannew.txt for a new-character ban, or the
 file you name. The period, such as 2d 3h 30m (days, hours, minutes), makes 
 the ban lift by itself when the time is up. Note that the period comes 
 after the text file: to give a period, name the file too.
-</p><p>Banning a site that is already banned changes its ban. Bans are kept over 
-reboots. The command is logged.
+</p><p>Banning a site that is already banned gives it the new type and period
+(no period: it lasts until lifted); it keeps the text file it had. Bans
+are kept over reboots. The command is logged.
 </p><p><br />
 See Also:
 </p>

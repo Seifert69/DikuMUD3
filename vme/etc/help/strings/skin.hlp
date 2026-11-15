@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Skin</h1>
 <p>Skill
 Class: Ranger (guild level 2), Druid (guild level 12, up to 80%)
+Also taught by: Ben the skin trader, at his trading post in Udgaard (anyone, up to 50%); Mary the Lumberjack Wife, in her cabin in the forest of Haon-Dor (anyone, up to 50%, once you have brought back her cooking pot); Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>skin corpse
@@ -10,9 +11,10 @@ it as a trophy. You need a dagger to do it, carried or wielded, and it
 costs endurance, more for a big beast. You must be standing.
 </p><p>Your skill and dexterity decide how well it goes, against the creature's 
 level: the mightier the beast, the harder its skin is to take cleanly. A 
-fine skin from a rare creature is worth a good deal; a botched one, 
-mangled by your knife, is worth nothing. Either way, a corpse can only be 
-skinned once. Some creatures have no skin worth taking.
+fine skin from a rare creature is worth a good deal. Botch it, and the 
+skin is mangled by your knife and you get nothing. Either way, a corpse can only be 
+skinned once. Some creatures have no skin worth taking. Practising it 
+needs dexterity 10.
 </p><p><br />
 See Also:
 </p>

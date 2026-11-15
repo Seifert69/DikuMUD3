@@ -14,6 +14,7 @@ add_executable(vme_unit_tests
         combat_packet_tests.cpp
         comm_act_tests.cpp
         eliza_tests.cpp
+        files_tests.cpp
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
@@ -26,6 +27,7 @@ add_executable(vme_unit_tests
         weather_cpp_tests.cpp
         when_cache_tests.cpp
         when_limit_tests.cpp
+        zone_type_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
 target_compile_definitions(vme_unit_tests PUBLIC
@@ -48,6 +50,7 @@ add_test(NAME vme_unit_tests
 ############################### VMC ######################################
 add_executable(vmc_unit_tests
         vmc_main.cpp
+        dilcheck_tests.cpp
         ChecksumDataset.cpp ChecksumDataset.h
         sha512.cpp sha512.h
         )
@@ -58,6 +61,7 @@ target_compile_definitions(vmc_unit_tests PUBLIC
         RAPIDJSON_HAS_STDSTRING
         PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
         )
+target_include_directories(vmc_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/vme/src/vmc)
 target_link_libraries(vmc_unit_tests
         vmc_objs
         pp_objs

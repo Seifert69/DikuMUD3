@@ -2,10 +2,8 @@
 <p>The spells the Assassins' guild teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
 </p>
 <pre>Name               Level   Up to
-Find Wanted            0   100%
-Locate Wanted          0   100%
 Detect Invisible      15   50%
-Toxicate              20   80%
+Toxicate              20   50%
 Invisibility          25   50%
 Dexterity             30   50%
 Quicken               35   50%

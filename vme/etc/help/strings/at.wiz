@@ -10,10 +10,12 @@ at &lt;someone or something&gt; &lt;command&gt;
 at Gnort say Hello there.
 </pre>
 <p>Does a command as if you stood somewhere else, and brings you straight 
-back. Name a room by its symbolic name (room@zone), or anyone or anything 
-in the world: then you are where they are. You are back where you were 
-afterwards, unless the command took you somewhere else, or your place 
-no longer exists.
+back. Name a room by its symbolic name (room@zone; for a room in the
+zone you are in, its name alone will do), or anyone or anything in the
+world: then you are where they are. Something carried or in a container
+won't do ("Sorry, you may only 'at' at a room!"). You are back where you
+were afterwards, even if the command took you somewhere else, unless
+your place no longer exists.
 </p><p>It is logged.
 </p><p><br />
 See Also:

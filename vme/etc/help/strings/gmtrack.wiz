@@ -3,6 +3,7 @@
 </p>
 <pre>gmtrack &lt;player&gt; &lt;zone ...&gt; [hours]       (230)
 gmtrack &lt;player&gt; any [hours]
+gmtrack &lt;player&gt; recent
 gmtrack &lt;player&gt; off
 gmtrack
 </pre>
@@ -23,6 +24,12 @@ outer room's zone),
 <p>A game master is a god with $gm in their info (set &lt;god&gt; add-info $gm). 
 Nothing about the player changes. A move by magic (goto, teleport, 
 recall, summon) is noticed at their next command, or within the minute.
+</p><p><b>gmtrack &lt;player&gt; recent</b> shows you the last 20 commands a tracked
+player typed, with the time: for a player who seems stuck. A command the
+game doesn't know is marked "(not a command)", and one whose target isn't
+there "(nothing called 'warden' here)". What they say and emote in the
+room is shown as typed; of tells, whispers, shouts, prayers and channels
+you only see to whom or on which channel, never the words.
 </p><p>Tracking ends by itself after the hours you give (2 if you give none, 6 
 at most), when the player leaves the game, or with <b>off</b>. Tracking a 
 player again starts over. <b>gmtrack</b> alone lists who is tracked.

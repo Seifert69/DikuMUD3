@@ -1,9 +1,16 @@
 <div class="mw-parser-output"><h1>Necromancer profession</h1>
 <p>Primary stats: BRA, CHA
-</p><p>This group of ex-clerics have moved away from the healing spells and no
+</p><p>This group of ex-clerics have moved away from the healing spells and now
 dabble in evil magic. There are stories floating around that some have
-even raised the dead from thier final resting place and used the zomebies
-for thier own gain.
+even raised the dead from their final resting place and used the zombies
+for their own gain.
+</p><p>The Necromancers' guild hides in the crypts beneath the ruins of an old
+church in the cemetery. Its head is Wicca the Tainted One. To join, stand
+before Wicca and type <a cmd='#'>join</a>. Conjurers and sorcerers are turned away, and
+so is anyone good (alignment +350 or more). First you must prove yourself
+worthy by finishing the Necromancer's Guild quest; Wicca sends you to
+Murim the bartender to begin it. To leave the guild, insult the Master;
+but a member who is banished can never come back.
 </p><p>Attributes:
 </p>
 <pre> Bra	+3
@@ -23,6 +30,7 @@ for thier own gain.
  &gt; <a cmd='#'>Help Necromancer Spells</a>
  &gt; <a cmd='#'>Help Necromancer Weapons</a>
  &gt; <a cmd='#'>Help Necromancer Skills</a>
+ &gt; <a cmd='#'>Help Guilds</a>
 </pre>
 
 

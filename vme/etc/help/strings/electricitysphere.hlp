@@ -1,5 +1,6 @@
 <div class="mw-parser-output"><h1>Electricity Sphere</h1>
-<p>The spells of the electricity sphere call down and hurl lightning. Your ability in the sphere decides how well you cast them, and also how well you resist electricity spells cast on you (see <a cmd='#'>Help Spheres</a>). Lightning finds its way past a shield: no shield is of any use against these spells. To resist electricity better, see <a cmd='#'>Help Electricity Resistance</a>; dragons may also breathe lightning (see <a cmd='#'>Help Breath</a>).
+<p>The spells of the electricity sphere call down and hurl lightning. How strongly one strikes depends on your magic and your skill in that spell.
+</p><p>The sphere itself is a category. It can't be practised: it rises by itself to half your best spell in it. It counts when you resist: against an electricity spell aimed at you, you defend with your brain and the better of your electricity sphere or half your skill in that spell (see <a cmd='#'>Help Spheres</a>). Lightning finds its way past a shield: no shield is of any use against these spells. To resist electricity better, see <a cmd='#'>Help Electricity Resistance</a>; dragons may also breathe lightning (see <a cmd='#'>Help Breath</a>).
 </p><p>The spells, and who teaches them (guild level):
 </p>
 <pre>call lightning     no guild teaches it

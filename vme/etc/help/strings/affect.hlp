@@ -1,10 +1,19 @@
 <div class="mw-parser-output"><h1>Affect</h1>
-<p>Type this to see what magic affects you. The spells listed
-could be spells place upon you by another player (like strength or curse)
-or boosts or detriments caused by equipment. If you are trying to train
-remove all equipment first then try affect again. If spells are still listed
-you will have to wait for them to wear off or if you have signed the Book of
-Blood another player may be able to remove them.
+<p>Usage:
+</p>
+<pre><a cmd='#'>affect</a>
+</pre>
+<p>Type this to see what magic affects you: spells placed upon you by another
+player or a creature (like bless or curse), the detect and raise spells,
+poison, berserk and rage, and the like. It also tells you if you are hiding
+or sneaking, and if the room you are in is sacred. You can't use it while
+you are fighting.
+</p><p>The magic of your equipment is not listed. If you are trying to train, a
+teacher won't teach you while you are blessed or cursed, raging or
+berserk, energy drained or raised by a spell, nor while your equipment raises an ability or a skill:
+remove such equipment first. Spells you will have to wait to wear off, or
+if you have signed the Book of Blood another player may be able to remove
+them.
 </p><p>See Also:
 </p>
 <pre> <a cmd='#'>Help dispel magic</a>

@@ -14,6 +14,7 @@
 #include "slog.h"
 
 #include <cctype>
+#include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -270,11 +271,17 @@ char *str_dup(const char *source)
 /*  As defined by 2nd Ed. of K&R ANSI C
  *  Return pointer to first occurence of ct in cs - or NULL
  *  Used to determine ei. "from" and "in"
+ *  An empty ct is found nowhere (the loop below would read past its end)
  */
 char *str_str(const char *cs, const char *ct)
 {
     char *si = nullptr;
     char *ti = nullptr;
+
+    if (*ct == '\0')
+    {
+        return nullptr;
+    }
 
     do
     {
@@ -345,6 +352,17 @@ const char *skip_spaces(const char *string)
     }
 
     return string;
+}
+
+char *strip_surrounding_quotes(char *str)
+{
+    size_t len = strlen(str);
+    if (len >= 2 && str[0] == '"' && str[len - 1] == '"')
+    {
+        str[len - 1] = '\0';
+        return str + 1;
+    }
+    return str;
 }
 
 void strip_trailing_blanks(char *str)
@@ -533,13 +551,21 @@ int fill_word(const char *argument)
 /* Exactly as str_next-word, except it wont change the case */
 char *str_next_word_copy(const char *argument, char *first_arg)
 {
-    /* Find first non blank */
+    return str_next_word_copy(argument, first_arg, SIZE_MAX);
+}
+
+/* As above, but copies at most size - 1 characters of the word; the rest of it is skipped */
+char *str_next_word_copy(const char *argument, char *first_arg, size_t size)
+{
     argument = skip_spaces(argument);
 
-    /* Copy next word and make it lower case */
     for (; *argument > ' '; argument++)
     {
-        *first_arg++ = *argument;
+        if (size > 1)
+        {
+            *first_arg++ = *argument;
+            size--;
+        }
     }
 
     *first_arg = '\0';

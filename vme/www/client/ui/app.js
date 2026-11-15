@@ -183,6 +183,9 @@
 
     function echo(cmd) {
         const e = el("div", "seg echo");
+        // Shown on screen only: a screen reader user just typed this, so announcing
+        // "›e" is noise. They hear the game's reply instead.
+        e.setAttribute("aria-hidden", "true");
         e.append(el("span", "gt", "›"), cmd);
         push(e);
     }
@@ -500,8 +503,9 @@
         cb.hide.title = "Hide until this fight is over";
         cb.hide.setAttribute("aria-label", cb.hide.title);
         head.append(cb.tag, cb.round, cb.took, vit, sw, cb.flee, cb.hide);
+        // No aria-label on the live region itself: screen readers would speak the
+        // name before every new line. The enclosing "Combat" section names it.
         cb.log.setAttribute("role", "log");
-        cb.log.setAttribute("aria-label", "Combat log");
         dock.append(head, cb.body, cb.log);
     }
 

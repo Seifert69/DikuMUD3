@@ -17,8 +17,10 @@ written on it, it stays.
 from the Post Office. Then give it to the postman to mail it to another 
 player (see <a cmd='#'>Help Mail</a>).
 </p><p>Where there is a board, in the room or in your hands, write followed by a 
-headline posts a message on it instead (see <a cmd='#'>Help Boards</a>). Some boards 
-want you to be level 10 or more before you post.
+headline posts a message on it instead (see <a cmd='#'>Help Boards</a>); a headline 
+longer than 50 characters is cut short. Most boards want you to be level 
+10 or more before you post; clan boards and the gods' boards have rules 
+of their own.
 </p><p><br />
 See Also:
 </p>

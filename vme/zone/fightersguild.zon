@@ -324,6 +324,7 @@ dilend
                                entrance
 
 title "The Fighters Guild Entrance"
+gmap(188,233)
 descr
 "    You are standing in a vast gate entrance of a fortress yard. There is
 a big sign hanging on the wall. The way west leads out into the Swordsman
@@ -355,6 +356,7 @@ end
 
 names {"yard entrance"}
 title "The Fighters Guild Yard"
+gmap(263,233)
 descr
 "    The south opens into the yard. To the east a tower rises
 majestically with a tall opening at ground level. Lit torches
@@ -375,6 +377,7 @@ end
 
 names {"the yard"}
 title "The Yard"
+gmap(263,308)
 descr
 "    You stand in an open space surrounded by towering walls of the
 fortress. No wind blows here making this place awfully quiet. A barn lies
@@ -395,6 +398,7 @@ end
 
 names {"the barn"}
 title "In a Large Barn"
+gmap(263,383)
 descr
 "    A dim light of a torch lights up the barn, where hay and dirt cover the
 floor. A feeling of peace and quiet descends over you, as all sounds from
@@ -417,6 +421,7 @@ end
                                smithy
 names {"the smithy"}
 title "The Smithy of the Fighters Guild"
+gmap(188,308)
 descr
 "    This place is hot-aired, due to the fact that an open furnace is
 burning intensely here. It is kept going by a mechanical setup of sprockets
@@ -436,6 +441,7 @@ end
                                bridge
 names {"the bridge"}
 title "The Bridge"
+gmap(338,308)
 descr
 "    This is a low hanging bridge running over an oblong pond that looks
 deep. Fresh air blows through here and chills you to the bone. Be that as
@@ -457,6 +463,7 @@ end
                                tower
 names {"the tower"}
 title "The Tower of the Fighters Guild"
+gmap(338,233)
 descr
 "    You stand inside a large tower connecting the fortress walls to the
 west and south. A broad staircase leads around the inside of the tower walls
@@ -477,6 +484,7 @@ end
 
 names {"the laboratory"}
 title "The Metallurgic Laboratory"
+gmap(338,157)
 descr
 "    The room is filled with shelves and racks containing scraps of metal
 and other materials. Tubes and glass containers cover a large table in the
@@ -521,6 +529,7 @@ end
 
 names {"the tower outlook"}
 title "The Tower Outlook"
+gmap(338,233)
 descr
 "    Here is a place from which you can see all of Midgaard, all four
 directions are free for inspection of the curious. A large desk and a chair
@@ -561,6 +570,7 @@ end
                                bar
 names {"the fighters bar"}
 title "At `The Broken Shield'"
+gmap(413,233)
 descr
 "The bar is filled with mercenaries and fighters of all kinds, most of
 them drinking heavily, chatting and exchanging tales. Candles illuminate

@@ -14,16 +14,17 @@ cast charisma &lt;target&gt;
 (see <a cmd='#'>Help Abilities</a>):
 </p>
 <pre>strength       conjurer 10, sorcerer 10
-dexterity      sorcerer 4, conjurer 6, assassin 30
+dexterity      sorcerer 4, conjurer 6, assassin 30 (up to 50%)
 constitution   sorcerer 6, conjurer 8
 brain          conjurer 2, sorcerer 2
 charisma       healer 6
 </pre>
 <p>(the guilds that teach each, with the guild level). Charisma draws on 
-divine power, the other four on magic.
+divine power, the other four on magic. Practising charisma needs divine 20, 
+and each of the other four needs magic 20.
 </p><p>The better the casting, the bigger the rise: about +10 for a good 
 casting, a little more for a master's. It lasts at least ten minutes, and 
-longer the better the casting. Each works once at a time: cast it again 
+longer the better the casting. You can't cast them while fighting. Each works once at a time: cast it again 
 on someone who already has it, and the magic just dissipates. They are 
 also found on potions, wands and scrolls.
 </p><p><br />

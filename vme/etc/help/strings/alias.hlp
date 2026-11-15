@@ -1,28 +1,34 @@
 <div class="mw-parser-output"><h1>Alias</h1>
-<p>There are two alias systems in DikuMUD. The original alias system is built into the 
+<p>There are two alias systems in DikuMUD. The original alias system is built into the
 dictionary which you can buy in Udgaard and in Midgaard. Look at the dictionary
-for help. The old system is for you if you're using telnet only.
-</p><p>This help section is about alias in the web client which built-in alias handling. 
+for help (see <a cmd='#'>Help Dictionary</a>). The old system is for you if you're using telnet only.
+</p><p>This help section is about alias in the web client, which has built-in alias handling.
+Your aliases are kept with your character, so they follow you to any browser,
+but only the web client carries them out. While you carry a dictionary, the
+alias command goes to the dictionary instead.
 </p><p><br />
 Usage:
 </p>
 <pre> alias                   // list your alias
  alias foo               // remove alias foo
- alias foo cmd1 [; cmd2] // create alias foo
+ alias foo cmd1 [\; cmd2] // create alias foo
 </pre>
 <p>No arguments will list all your defined aliases.
 One argument will remove the alias in question (in this case `foo').
 Any other number of arguments will result in the first word of the argument
-to become an alias for the remainder.
+to become an alias for the remainder. An alias name can be at most 12
+letters long, and you can have up to 25 aliases.
 </p><p>Various special control characters are available in aliases:
-</p><p>You can combine several commands with the semicolon ';'
+</p><p>You can combine several commands with the semicolon ';'. When you type the
+alias command, write each semicolon as '\;', or the web client splits your
+line there and sends the rest as a command of its own.
 </p><p>You can insert various parts of an argument in an alias-text using the
-dollar sign '$'. $1 will get the first occurrence of the
+dollar sign '$'. $1 will get the first word of the
 argument, the '$2' the second word etc. The '$0' can be used to substitute
 the entire argument string.
 </p><p>Examples:
 </p>
-<pre> alias ge get $0 from $1; eat $0;
+<pre> alias ge get $1 from $2\; eat $1
  alias gb ge bread bag
  alias gs ge steak sack
 </pre>
@@ -39,10 +45,10 @@ say Hello, friends becomes:
 </pre>
 <p>Notice that 'sa' will still work as the original say-command, as aliases
 don't check for abbreviations, unlike the command interpreter.
-</p><p>Notice that ANY and all use of ';' and '$' in an alias will be interpreted
-as that characters special meaning. I.e.:
+</p><p>Notice that ANY and all use of ';' and of '$' followed by a digit in an alias
+will be interpreted as that character's special meaning. I.e.:
 </p>
-<pre> alias greet say Hi Quinn $0 God&#160;!!&#160;;-)
+<pre> alias greet say Hi Quinn $0 God&#160;!! \;-)
 </pre>
 <p>will substitute the '$0' with whatever argument 'greet' will be given or
 simply the empty string. Thus the alias 'greet' with no arguments will
@@ -54,6 +60,7 @@ See Also:
 </p>
 <pre> <a cmd='#'>Help Trigger</a>
  <a cmd='#'>Help Variable</a>
+ <a cmd='#'>Help Dictionary</a>
 </pre>
 
 

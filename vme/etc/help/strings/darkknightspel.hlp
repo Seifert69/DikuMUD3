@@ -2,29 +2,30 @@
 <p>The spells the Dark Knights' guild of Midgaard teaches. Level is the guild level at which you can first practice the spell there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>). Each spell has its own help: help and the spell's name.
 </p>
 <pre>Name                   Level   Up to
-Sense Invisible            0   100%
-Sense Life                 9   100%
-Cause Light Wounds        10   100%
-Lava Flow                 11   100%
-Darkness                  12   100%
-Repel Lesser Undead       15   100%
-Mire                      18   100%
-Plague                    20   100%
-Curse                     24   100%
-Fear                      28   100%
-Hellfire                  32   100%
-Protection From Good      32   100%
-Unholy Touch              34   100%
-Condemn                   35   100%
-Cause Serious Wounds      40   100%
+Sense Invisible            0   80%
+Unholy Blessing            0   80%
+Sense Life                 9   80%
+Cause Light Wounds        10   50%
+Lava Flow                 11   80%
+Darkness                  12   80%
+Repel Lesser Undead       15   50%
+Mire                      18   80%
+Curse                     24   80%
+Plague                    25   50%
+Fear                      28   50%
+Hellfire                  32   80%
+Protection From Good      32   80%
+Condemn                   35   80%
+Cause Serious Wounds      40   50%
 Continual Darkness        41   100%
 Dispel Good               45   100%
-Unholy Grasp              50   100%
-Brimstone                 80   100%
-Displace Magic            80   100%
-Energy Drain              85   100%
+Brimstone                 80   50%
+Displace Magic            80   80%
+Unholy Touch              80   80%
+Energy Drain              85   80%
 Soulfire                 100   100%
-Unholy Shout             120   100%
+Unholy Grasp             120   100%
+Unholy Shout             160   80%
 </pre>
 <p><br />
 See Also:

@@ -1,14 +1,17 @@
 <div class="mw-parser-output"><h1>Police Guild</h1>
-<p>Players that are 'protected' citizens may join the police guild in
+<p>Players with a clean record (no crimes against their name, not outlawed, 
+and never thrown out of the police before) may join the police guild in
 addition to their own guild (you remain in both guilds) by going to the
-chief of police (captain) in Midgaard and typing 'join' (you may have to
-type it two times). Once you are a member of the 'police guild' you will have
+Captain of the Guard in the Cityguard Office in Midgaard and typing 'join'.
+Once you are a member of the 'police guild' you will have
 the ability to arrest wanted criminals and take them to jail. You will
 also be allowed to practice special skills and spells that no one else can
-practice. Beware however, if for what ever reason you lose your status as
-a protected citizen (break the law and get caught) you will be kicked out
-of the police guild and you will lose any spells/skills you learned while
-in the guild.
+practice: hand cuffing from Tenzin in the Guard Gym, find wanted and
+locate wanted from Arjuna in the Guard Lecture Room, and Lenka in the yard
+sells hand cuffs to deputies only. Beware however, if for what ever reason
+you lose your status as a protected citizen (break the law and get caught)
+you will be kicked out of the police guild for good and you will lose any
+spells/skills you learned while in the guild.
 </p><p>See Also:
 </p>
 <pre> &gt; <a cmd='#'>Help Spells</a>
@@ -21,6 +24,7 @@ in the guild.
  &gt; <a cmd='#'>Help Offer</a>
  &gt; <a cmd='#'>Help Break</a>
  &gt; <a cmd='#'>Help Protected</a>
+ &gt; <a cmd='#'>Help Cuff</a>
 </pre>
 
 

@@ -11,19 +11,19 @@ Repel Lesser Undead       15   50%
 Sustain                   18   80%
 Remove Disease            20   50%
 Remove Curse              24   50%
-Calm                      28   70%
-Sanctuary                 30   60%
-Protection From Evil      32   100%
+Calm                      28   50%
+Sanctuary                 30   50%
+Protection From Evil      32   80%
 Bless                     35   50%
 Cure Serious Wounds       40   50%
 Continual Light           41   50%
 Dispel Evil               45   50%
-Final Rest                80   100%
-Raise Hitpoints           85   100%
-Holy Word                 90   100%
+Final Rest                80   80%
+Raise Hitpoints           85   80%
+Holy Word                 90   80%
 Holy Touch               100   100%
-Holy Grasp               120   100%
-Holy Shout               160   100%
+Holy Grasp               120   80%
+Holy Shout               160   80%
 </pre>
 <p><br />
 See Also:

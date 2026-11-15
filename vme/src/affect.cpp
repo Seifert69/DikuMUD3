@@ -7,6 +7,7 @@
 #include "affect.h"
 
 #include "apf_affect.h"
+#include "handler.h"
 #include "main_functions.h"
 #include "slog.h"
 #include "tif_affect.h"
@@ -173,6 +174,12 @@ void unlink_affect(unit_affected_type *af)
  */
 void destroy_affect(unit_affected_type *af)
 {
+    /* A transfer affect on a worn object takes the wearer's copy with it */
+    if ((af->getID() < 0) && af->getOwner()->isObj() && OBJ_EQP_POS(af->getOwner()))
+    {
+        unequip_transfer_affect(af->getOwner()->getUnitIn(), af);
+    }
+
     /* It is assumed that none of these function calls can */
     /* destroy the affect.                                 */
     if (af->getID() >= 0)

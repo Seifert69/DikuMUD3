@@ -15,18 +15,20 @@ corpse and give the head to the Hunter. A daily contract only counts on
 the day it was given, a monthly one only in its month. You hold one 
 contract of each kind at a time.
 </p><p>Each contract closed pays experience and money, and bounty points (BP), 
-which you spend in the guild shop (<a cmd='#'>list</a>, <a cmd='#'>buy</a>). The reward grows with 
-your streak, the number of contracts of a kind you have closed in a row, 
-and doubles on milestones: a daily streak of 14, 30, 60, 90, 180 or 365, a 
-monthly streak of 6, 12, 18 or 24. Miss a day (or a month), or leave a 
-contract unfinished, and that streak starts over. Logging in on days in a 
-row also earns BP.
+which you spend in the guild shop (<a cmd='#'>list</a>, <a cmd='#'>buy</a>). The reward of a daily 
+or monthly contract grows with your streak, the number of contracts of that 
+kind you have closed in a row, and doubles on milestones: a daily streak of 
+14, 30, 60, 90, 180 or 365, a monthly streak of 6, 12, 18 or 24. Miss a day 
+(or a month), or leave a contract unfinished, and that streak starts over. 
+A bonus contract always pays the same, doubled at a bonus streak of 10, 20, 
+30, 40 or 50. Logging in on days in a row also earns BP.
 </p><p>From the shop:
 </p>
 <ul><li>The <b>tablet</b> keeps all your contracts in one place (<a cmd='#'>look tablet</a>); with it, the Hunter updates the tablet instead of handing you papers.</li>
 <li>A <b>contract breaking note</b> lets you drop a daily or monthly contract without losing your streak: give it to the Hunter and say daily or monthly.</li>
-<li>A <b>hint</b> (<a cmd='#'>look hint</a>) tells you in which zone or land your target is.</li></ul>
-<p>Giving up a bonus contract costs 25,000 experience and 5 BP.
+<li>A <b>hint</b> (<a cmd='#'>look hint</a>) tells you in which zone, or on which continent, the target of your daily or monthly contract is.</li></ul>
+<p>To give up a bonus contract, ask for a new one and nod: it costs 25,000 
+experience, 5 BP and your bonus streak.
 </p><p>The guild has more for veterans: the Jeweler sends you to deliver packages, 
 the Blacksmith leads killing sprees for groups, and in time the Historian, 
 the Summoner and the Necromancer have their own tasks.

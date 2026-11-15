@@ -14,7 +14,9 @@ put 20 gold in bag
 </pre>
 <p>This command puts your things inside a container, like a bag or a chest. The 
 word in is needed: put lantern bag doesn't work. The container must be open 
-(see <a cmd='#'>Help Open</a>), and it only holds so much.
+(see <a cmd='#'>Help Open</a>), and it only holds so much. put all puts in everything in
+your inventory except your money and what you wear; put money in puts in all
+your coins.
 </p><p>You can only put into one container at a time: put &lt;item1&gt; in &lt;item2&gt; in 
 &lt;item3&gt; is the same as put &lt;item1&gt; in &lt;item2&gt;. To take things out again, see 
 <a cmd='#'>Help Get</a>.

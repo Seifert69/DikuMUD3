@@ -59,6 +59,7 @@ $Revision: 2.18 $
 #include <cstring>
 #include <ctime>
 #include <filesystem>
+#include <memory>
 #include <string>
 
 #include <boost/filesystem/directory.hpp>
@@ -1027,7 +1028,7 @@ void dilfe_ckpwd(dilprg *p)
             switch (dil_getval(v2))
             {
                 case DILV_SP:
-                    if (!((unit_data *)v1->val.ptr)->isPC())
+                    if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isPC())
                     {
                         szonelog(p->sarg->owner->getFileIndex()->getZone(),
                                  "DIL %s, Illegal: Unit must be a pc to check password.\n",
@@ -1106,7 +1107,7 @@ void dilfe_atsp(dilprg *p)
                                     switch (dil_getval(v4))
                                     {
                                         case DILV_UP:
-                                            if (!v4->val.ptr)
+                                            if (!v4->val.ptr || !((unit_data *)v4->val.ptr)->isChar())
                                             {
                                                 v->type = DILV_FAIL;
                                             }
@@ -1118,6 +1119,7 @@ void dilfe_atsp(dilprg *p)
 
                                                         switch (dil_getval(v6))
                                                         {
+                                                            case DILV_NULL: // no effect
                                                             case DILV_SP:
                                                                 if (is_in(v1->val.num, SPL_GROUP_MAX, SPL_TREE_MAX - 1) &&
                                                                     (g_spell_info[v1->val.num].spell_pointer ||
@@ -1152,7 +1154,6 @@ void dilfe_atsp(dilprg *p)
                                                             case DILV_FAIL:
                                                                 v->type = DILV_FAIL;
                                                                 break;
-                                                            case DILV_NULL:
                                                             default:
                                                                 v->type = DILV_ERR;
                                                                 break;
@@ -1188,6 +1189,10 @@ void dilfe_atsp(dilprg *p)
                                 break;
                         }
                     }
+                    break;
+                case DILV_FAIL:
+                case DILV_NULL:
+                    v->type = DILV_FAIL;
                     break;
                 default:
                     v->type = DILV_ERR;
@@ -1377,6 +1382,7 @@ void dilfe_resta(dilprg *p)
                 break;
                 case DILV_FAIL:
                     v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
@@ -1386,6 +1392,7 @@ void dilfe_resta(dilprg *p)
         case DILV_FAIL:
         case DILV_NULL:
             v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -1418,11 +1425,17 @@ void dilfe_opro(dilprg *p)
                         v->val.num = 0;
                     }
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -1529,16 +1542,25 @@ void dilfe_mel(dilprg *p)
                                                                 TRUE);
 								dil_test_secure(p);
 								break;
+							case DILV_FAIL:
+								v->type = DILV_FAIL;
+								break;
 							default:
 								v->type = DILV_ERR;
 								break;
 						}
+                                            break;
+                                        case DILV_FAIL:
+                                            v->type = DILV_FAIL;
                                             break;
                                         default:
                                             v->type = DILV_ERR;
                                             break;
                                     }
 
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -1764,6 +1786,10 @@ void dilfe_ldstr(dilprg *p)
                         szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to loadstr n illegal file name.", p->frame->tmpl->prgname);
                         v->val.num = FALSE;
                     }
+                    else if (v2->type != DILV_SPR) // the text goes into a string variable only
+                    {
+                        v->type = DILV_FAIL;
+                    }
                     else
                     {
                         sstr = nullptr;
@@ -1771,7 +1797,7 @@ void dilfe_ldstr(dilprg *p)
                         filename += "/strings/";
                         filename += (char *)v1->val.ptr;
                         v->val.num = load_string(filename.c_str(), &sstr);
-                        if (!str_is_empty(sstr))
+                        if (sstr) // loaded, perhaps an empty file: the variable gets the text
                         {
                             if (*((char **)v2->ref))
                             {
@@ -1779,10 +1805,6 @@ void dilfe_ldstr(dilprg *p)
                             }
                             *((char **)v2->ref) = str_dup(sstr);
                             FREE(sstr);
-                        }
-                        else
-                        {
-                            v2->val.ptr = nullptr;
                         }
                     }
                     break;
@@ -1835,7 +1857,7 @@ void dilfe_delstr(dilprg *p)
                 std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
                 filename += "/strings/";
                 filename += (char *)v1->val.ptr;
-                v->val.num = remove(filename.c_str()) ? TRUE : FALSE;
+                v->val.num = remove(filename.c_str()) ? FALSE : TRUE;
             }
             break;
         case DILV_FAIL:
@@ -1876,7 +1898,7 @@ void dilfe_delunit(dilprg *p)
                 std::filesystem::path filename{p->frame[0].tmpl->zone->getDILFilePath().value_or(g_cServerConfig.getDILFileDir())};
                 filename += "/units/";
                 filename += (char *)v1->val.ptr;
-                v->val.num = remove(filename.c_str()) ? TRUE : FALSE;
+                v->val.num = remove(filename.c_str()) ? FALSE : TRUE;
             }
 
             break;
@@ -1924,6 +1946,11 @@ void dilfe_svstr(dilprg *p)
                                      str_is_empty((char *)v3->val.ptr))
                             {
                                 v->type = DILV_FAIL;
+                            }
+                            else if (!store_name_test((char *)v1->val.ptr))
+                            {
+                                szonelog(p->frame->tmpl->zone, "DIL '%s' attempted to savestr an illegal file name.", p->frame->tmpl->prgname);
+                                v->val.num = FALSE;
                             }
                             else
                             {
@@ -2138,7 +2165,7 @@ void dilfe_gopp(dilprg *p)
         case DILV_UP:
             if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
-                v->type = DILV_FAIL;
+                v->type = DILV_NULL;
             }
             else
             {
@@ -2146,30 +2173,19 @@ void dilfe_gopp(dilprg *p)
                 {
                     case DILV_INT:
 
-                        if (v2->val.num >= 0)
+                        v->type = DILV_NULL; // not fighting, or no such opponent
+                        if ((v2->val.num >= 0) && CHAR_COMBAT((unit_data *)v1->val.ptr))
                         {
-                            if (CHAR_COMBAT((unit_data *)v1->val.ptr))
+                            v->val.ptr = CHAR_COMBAT((unit_data *)v1->val.ptr)->Opponent((int)v2->val.num);
+                            if (v->val.ptr)
                             {
-                                v->val.ptr = CHAR_COMBAT((unit_data *)v1->val.ptr)->Opponent((int)v2->val.num);
-                                if (v->val.ptr)
-                                {
-                                    v->atyp = DILA_NORM;
-                                    v->type = DILV_UP;
-                                }
-                                else
-                                {
-                                    v->val.ptr = nullptr;
-                                    v->atyp = DILA_NORM;
-                                    v->type = DILV_NULL;
-                                }
+                                v->atyp = DILA_NORM;
+                                v->type = DILV_UP;
                             }
                         }
-                        else
-                        {
-                            v->val.ptr = nullptr;
-                            v->atyp = DILA_NORM;
-                            v->type = DILV_NULL;
-                        }
+                        break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
                         break;
                     default:
                         v->type = DILV_ERR;
@@ -2180,6 +2196,8 @@ void dilfe_gopp(dilprg *p)
             break;
         case DILV_FAIL:
         case DILV_NULL:
+            v->type = DILV_NULL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2201,7 +2219,7 @@ void dilfe_gfol(dilprg *p)
         case DILV_UP:
             if (!v1->val.ptr || !((unit_data *)v1->val.ptr)->isChar())
             {
-                v->type = DILV_FAIL;
+                v->type = DILV_NULL;
             }
             else
             {
@@ -2230,6 +2248,9 @@ void dilfe_gfol(dilprg *p)
                             }
                         }
                         break;
+                    case DILV_FAIL:
+                        v->type = DILV_FAIL;
+                        break;
                     default:
                         v->type = DILV_ERR;
                         break;
@@ -2238,6 +2259,8 @@ void dilfe_gfol(dilprg *p)
             break;
         case DILV_FAIL:
         case DILV_NULL:
+            v->type = DILV_NULL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2408,6 +2431,9 @@ void dilfe_spli(dilprg *p)
             }
 
             break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
+            break;
         default:
             v->type = DILV_ERR;
             break;
@@ -2519,11 +2545,17 @@ void dilfe_mons(dilprg *p)
                     v->atyp = DILA_EXP;
                     v->val.ptr = str_dup(money_string(v1->val.num, DEF_CURRENCY, v2->val.num));
                     break;
+                case DILV_FAIL:
+                    v->type = DILV_FAIL;
+                    break;
                 default:
                     v->type = DILV_ERR;
                     break;
             }
 
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -2646,6 +2678,9 @@ void dilfe_cary(dilprg *p)
                                             v->val.num = 0;
                                         }
                                     }
+                                    break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
                                     break;
                                 default:
                                     v->type = DILV_ERR;
@@ -2824,6 +2859,9 @@ void dilfe_fits(dilprg *p)
                                     v->atyp = DILA_EXP;
                                     v->val.ptr = str_dup(c == nullptr ? "" : c);
                                     break;
+                                case DILV_FAIL:
+                                    v->type = DILV_FAIL;
+                                    break;
                                 default:
                                     v->type = DILV_ERR;
                                     break;
@@ -2873,6 +2911,7 @@ void dilfe_intr(dilprg *p)
     beg = &(p->fp->tmpl->core[begptr]);
     end = &(p->fp->tmpl->core[endptr]);
 
+    dil_getval(v1); // the flags may be in a variable
     intnum = dil_intr_insert(p, beg, end, v1->val.num);
 
     // skip past the expression and label
@@ -3090,17 +3129,23 @@ void dilfe_isplayer(dilprg *p)
     dilval::free(v1);
 }
 
+// p is the command, a copy that this thread frees
 void *threadcallout(void *p)
 {
-    const char *str = (char *)p;
+    char *str = (char *)p;
 
     // Process the string here, to do some basic security.
     char buf[MAX_STRING_LENGTH];
     int ok = true;
 
-    str_next_word_copy(str, buf);
+    str_next_word_copy(str, buf, sizeof(buf));
 
-    if (strchr(buf, '/') || strchr(buf, ' ') || strchr(buf, ';') || strstr(buf, ".."))
+    if (strlen(buf) >= sizeof(buf) - 1) // cut off: the rest of the word was never checked
+    {
+        slog(LOG_BRIEF, 0, "bin command is too long");
+        ok = false;
+    }
+    else if (strchr(buf, '/') || strchr(buf, ' ') || strchr(buf, ';') || strstr(buf, ".."))
     {
         slog(LOG_BRIEF, 0, "bin command %s contains an illegal character (/ ;) or .. ", buf);
         ok = false;
@@ -3123,6 +3168,7 @@ void *threadcallout(void *p)
         }
     }
 
+    FREE(str);
     pthread_exit(nullptr);
 }
 
@@ -3151,11 +3197,18 @@ void dilfe_shell(dilprg *p)
                 }
                 else
                 {
+                    // The thread gets its own copy: v1 (a computed string) is freed below
                     pthread_t mythread = 0;
-                    v->val.num = pthread_create(&mythread, nullptr, threadcallout, v1->val.ptr);
+                    char *cmd = str_dup((char *)v1->val.ptr);
+                    v->val.num = pthread_create(&mythread, nullptr, threadcallout, cmd);
                     if (v->val.num)
                     {
                         slog(LOG_ALL, 0, "DIL shell pthread create error code %d.", v->val.num);
+                        FREE(cmd);
+                    }
+                    else
+                    {
+                        pthread_detach(mythread); // no one joins it
                     }
                     // threadcallout((char *) v1->val.ptr);
                 }
@@ -3554,12 +3607,23 @@ void dilfe_gint(dilprg *p)
                 break;
 
             case DIL_GINT_PRESSURE:
-                v->val.num = unit_zone(p_u != nullptr ? p_u : p->sarg->owner)->cgetWeather().getPressure();
-                break;
-
             case DIL_GINT_PRESSURECHG:
-                v->val.num = unit_zone(p_u != nullptr ? p_u : p->sarg->owner)->cgetWeather().getChange();
+            {
+                zone_type *z = unit_zone(p_u != nullptr ? p_u : p->sarg->owner);
+                if (z == nullptr)
+                {
+                    v->type = DILV_FAIL; // in no room
+                }
+                else if (idx == DIL_GINT_PRESSURE)
+                {
+                    v->val.num = z->cgetWeather().getPressure();
+                }
+                else
+                {
+                    v->val.num = z->cgetWeather().getChange();
+                }
                 break;
+            }
 
             default:
                 v->type = DILV_FAIL; /* failed */
@@ -3634,7 +3698,7 @@ void dilfe_getw(dilprg *p)
             {
                 v->atyp = DILA_EXP;
                 v->type = DILV_SP;
-                c = str_next_word_copy((char *)v1->val.ptr, buf1);
+                c = str_next_word_copy((char *)v1->val.ptr, buf1, sizeof(buf1));
                 c = (char *)skip_spaces(c);
                 v->val.ptr = str_dup(buf1);
 
@@ -3837,7 +3901,7 @@ void dilfe_udir(dilprg *p)
     dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
 
-    cNamelist *words = new cNamelist;
+    auto words = std::make_unique<cNamelist>();
     std::string sPath;
 
     v->type = DILV_SLP;
@@ -3895,7 +3959,7 @@ void dilfe_udir(dilprg *p)
                     break;
                 }
 
-                v->val.ptr = words;
+                v->val.ptr = words.release();
                 break;
             }
             else
@@ -3923,7 +3987,7 @@ void dilfe_sdir(dilprg *p)
 {
     dilval *v = dilval::alloc();
     dilval *v1 = p->stack.pop();
-    cNamelist *words = new cNamelist;
+    auto words = std::make_unique<cNamelist>();
 
     v->type = DILV_SLP;
 
@@ -3955,7 +4019,7 @@ void dilfe_sdir(dilprg *p)
                 }
                 catch (std::exception &e)
                 {
-                    v->type = DILV_ERR;
+                    v->type = DILV_FAIL;
                     break;
                 }
 
@@ -3976,11 +4040,11 @@ void dilfe_sdir(dilprg *p)
                 }
                 catch (std::exception &ex)
                 {
-                    v->type = DILV_ERR;
+                    v->type = DILV_FAIL;
                     break;
                 }
 
-                v->val.ptr = words;
+                v->val.ptr = words.release();
             }
             else
             {
@@ -4025,6 +4089,7 @@ void dilfe_wepinfo(dilprg *p)
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].basedam);
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].alpha);
                 }
+                v->atyp = DILA_EXP;
                 v->val.ptr = ilist;
             }
             else
@@ -4032,6 +4097,9 @@ void dilfe_wepinfo(dilprg *p)
                 v->val.ptr = nullptr;
                 v->type = DILV_NULL;
             }
+            break;
+        case DILV_FAIL:
+            v->type = DILV_FAIL;
             break;
         default:
             v->type = DILV_ERR;
@@ -5674,6 +5742,8 @@ void dilfe_pe(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
+    // A failed or wrong-typed operand on either side decides the result
+    v->type = DILV_INT;
     switch (dil_getval(v2))
     {
         case DILV_FAIL:
@@ -5681,22 +5751,19 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp2 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_EDP:
         case DILV_UP:
         case DILV_SP:
         case DILV_ZP:
-            v->type = DILV_INT;
+        case DILV_CP:
             break;
 
         default:
@@ -5711,22 +5778,19 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp1 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_SP:
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
-            v->type = DILV_INT;
+        case DILV_CP:
             break;
 
         default:
@@ -5795,6 +5859,7 @@ void dilfe_pne(dilprg *p)
         case DILV_EDP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
         case DILV_SP:
             break;
 
@@ -5822,6 +5887,7 @@ void dilfe_pne(dilprg *p)
         case DILV_SP:
         case DILV_UP:
         case DILV_ZP:
+        case DILV_CP:
             break;
 
         default:
@@ -5918,7 +5984,7 @@ void dilfe_in(dilprg *p)
             }
             else
             {
-                v->type = DILV_NULL; /* not found */
+                v->type = DILV_INT; /* not found: FALSE */
             }
             break;
 
@@ -5934,14 +6000,7 @@ void dilfe_in(dilprg *p)
             break;
 
         case DILV_SP:
-            if (v2->val.ptr)
-            {
-                v->type = DILV_INT;
-            }
-            else
-            {
-                v->type = DILV_NULL; /* not found */
-            }
+            v->type = DILV_INT; /* a string never set (null) holds nothing: FALSE */
             break;
 
         case DILV_NULL:
@@ -5960,14 +6019,7 @@ void dilfe_in(dilprg *p)
             break;
 
         case DILV_SP:
-            if (v1->val.ptr)
-            {
-                break;
-            }
-            else
-            {
-                v->type = DILV_FAIL;
-            }
+            break; /* a string never set (null) is found nowhere: FALSE, or no extra */
 
         case DILV_NULL:
             v->type = DILV_NULL;
@@ -6671,9 +6723,18 @@ void dilfe_weat(dilprg *p)
     dilval *v = dilval::alloc();
     /* Self */
 
-    v->type = DILV_INT;
-    v->atyp = DILA_NORM;
-    v->val.num = unit_zone(p->sarg->owner)->cgetWeather().getSky();
+    zone_type *z = unit_zone(p->sarg->owner);
+
+    if (z)
+    {
+        v->type = DILV_INT;
+        v->atyp = DILA_NORM;
+        v->val.num = z->cgetWeather().getSky();
+    }
+    else
+    {
+        v->type = DILV_FAIL; // in no room
+    }
     p->stack.push(v);
 }
 
@@ -6693,7 +6754,7 @@ void dilfe_hrt(dilprg *p)
     dilval *v = dilval::alloc();
     /* Heartbeat */
 
-    v->type = DILV_SINT2R;
+    v->type = DILV_UINT2R;
     v->atyp = DILA_NONE;
     v->ref = p->sarg->fptr->getHeartBeatPtr();
     p->stack.push(v);

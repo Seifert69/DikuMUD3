@@ -10,7 +10,7 @@ comm add &lt;channel&gt;           then &lt;channel&gt; &lt;words&gt;
 </pre>
 <p>There are many ways to talk with other players:
 </p>
-<ul><li><b>say</b> speaks to everyone in the room. ' is short for say, so mind the space: a mistyped ' can turn into some other command.</li>
+<ul><li><b>say</b> speaks to everyone in the room. ' at the start of a line is short for say ('hello works too). If you forget the ', your first word is read as a command, and that may do something you didn't intend.</li>
 <li><b>ask</b> asks someone in the room a question; the others in the room hear it too.</li>
 <li><b>whisper</b> speaks to one person in the room; the others see that you whisper, but not what.</li>
 <li><b>tell</b> reaches one player anywhere in the world; nobody else hears it. A player can turn off tells (see <a cmd='#'>Help Tell</a>).</li>

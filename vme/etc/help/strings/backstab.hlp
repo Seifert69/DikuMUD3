@@ -1,6 +1,7 @@
 <div class="mw-parser-output"><h1>Backstab</h1>
 <p>Skill
 Class: Assassin (guild level 0), Thief (guild level 0, up to 50%)
+Also taught by: Gustav, in the back room of the inn in Udgaard (anyone, up to 35%)
 </p><p>Usage:
 </p>
 <pre>backstab &lt;character&gt;
@@ -10,11 +11,13 @@ their back. A backstab that lands strikes as if the victim wore no armour
 at all, so it can do terrible damage, and it starts the fight on your 
 terms.
 </p><p>You must wield a dagger, a short sword or a stiletto; other weapons won't 
-do. You can't backstab someone who is already fighting. A sleeping victim 
+do. You can't backstab someone who is already fighting, nor while you are 
+fighting yourself. A sleeping victim 
 can't resist at all; an awake one resists with their dexterity and their 
 own skill against yours. Once stabbed, a victim stays wary: for about a 
 quarter of an hour, every backstab tried on them is much harder than the 
-last. A failed backstab misses, and the fight is on.
+last. A failed backstab misses, and the fight is on. Practising it needs 
+dexterity 10.
 </p><p><br />
 See Also:
 </p>

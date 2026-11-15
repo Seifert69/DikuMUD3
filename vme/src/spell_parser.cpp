@@ -556,6 +556,8 @@ static void spell_read()
             *pCh = 0;
             pCh = (char *)skip_blanks(pCh + 1);
             strip_trailing_blanks(pCh);
+            // spells.def quotes the texts with an apostrophe, for the preprocessor: not for the players
+            pCh = strip_surrounding_quotes(pCh);
         }
 
         str_lower(pTmp);

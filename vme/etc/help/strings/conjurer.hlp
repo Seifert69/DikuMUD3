@@ -1,5 +1,5 @@
 <div class="mw-parser-output"><h1>The Conjurer's Guild</h1>
-<p>For the conjurer profession see <a cmd='#'>Help Magician</a>
+<p>For the conjurer profession see <a cmd='#'>Help Conjurers</a>
 </p><p>The Conjurer Guild is described by some as the elite of magic with the
 cunning to match. It is certainly true they have more than their share
 of geniuses, Magical powers combined with the brains and charisma to
@@ -9,10 +9,29 @@ are also known for their lack of stamina and weakness of arm. This class
 gives your character good possibilities for learning magic spells. Some of
 these spells can defend you from the hostile world surrounding you and even
 make some think twice before attacking.
+</p><p>The guild is the College of Arcane Arts in Midgaard, just south of 
+Cathedral Square. Its head is Rafizir the Archchancellor, in his office at 
+the back of the College. Spells are taught in the Tower of Arcane, skills 
+in the Main Lecture Hall, weapons in the Tower of Mundane and abilities in 
+the Library.
+</p><p>To join, stand before Rafizir and type <a cmd='#'>join</a>. Followers of the faith 
+can't master the science of magic: healers, druids, necromancers, 
+paladins, dark knights and rangers are turned away. First you must prove 
+yourself worthy by finishing the Conjurer's Guild quest: Mr Backspindle, 
+the gardener in the College gardens, wants the head of Xad, the Master of 
+Conjuring at the Academy. To leave the guild, insult the Master; but a 
+member who is banished can never come back.
+</p><p>The first time a member bows to Rafizir, he gives a Spellweaver Charm: 
+grip it in a fight and it summons a creature to fight at your side for a 
+short while. Type <a cmd='#'>title</a> before him for a new title as you rise in the 
+guild.
 </p><p><br />
 See Also:
 </p>
-<pre> &gt; <a cmd='#'>Help Magician</a>
+<pre> &gt; <a cmd='#'>Help Conjurers</a>
+ &gt; <a cmd='#'>Help Conjurer Skills</a>
+ &gt; <a cmd='#'>Help Conjurer Spells</a>
+ &gt; <a cmd='#'>Help Conjurer Weapons</a>
 </pre>
 
 

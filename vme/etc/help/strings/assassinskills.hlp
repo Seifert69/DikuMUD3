@@ -2,21 +2,26 @@
 <p>The skills the Assassins' guild teaches. Level is the guild level at which you can first practice the skill there, and Up to is the most you can learn it at the guild (see <a cmd='#'>Help Practice</a>).
 </p>
 <pre>Name                 Level   Up to
+Appraisal                0   100%
+Armor Chain              0   60%
 Armor Soft Leather       0   100%
 Backstab                 0   100%
 Climb                    0   100%
 Consider                 0   100%
 Diagnostics              0   60%
+Evaluating               0   100%
+First Aid                0   70%
 Fleeing                  0   100%
-Hand Cuffing             0   100%
 Hide                     0   100%
+Pick Lock                0   90%
 Sneak                    0   100%
+Ventriloquate            0   100%
 Search                   2   80%
 Shield                   3   50%
-Disarming                4   90%
+Disarming                4   80%
 Glance                   5   100%
 Swimming                 5   50%
-Armor Hard Leather       7   100%
+Armor Hard Leather       7   80%
 Two Weapon Style        10   100%
 Scroll Use              13   70%
 Stalk                   22   100%

@@ -988,7 +988,7 @@ void dilfe_fld(dilprg *p)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_UPR;
-                        v->ref = character->getLastLocation();
+                        v->ref = character->getLastLocationPtr();
                     }
                     else
                     {
@@ -2095,6 +2095,9 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NONE;
                         v->type = DILV_SINT2R;
                         v->ref = unit->getAlignmentPtr();
+                        v->min = unit_data::MinAlignment;
+                        v->max = unit_data::MaxAlignment;
+                        v->clamp = true; // as setAlignment(): zones write 5000 to mean the most
                     }
                     else
                     {
@@ -2252,17 +2255,21 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr)
+                {
+                    // A unit in no room (a player gone to the menu) has no zone
+                    zone_type *zone = v1->val.ptr ? unit_zone((unit_data *)v1->val.ptr) : nullptr;
+                    if (zone)
                     {
                         v->atyp = DILA_NORM;
                         v->type = DILV_SP;
-                        v->val.ptr = unit_zone((unit_data *)v1->val.ptr)->getNamePtr();
+                        v->val.ptr = zone->getNamePtr();
                     }
                     else
                     {
                         v->type = DILV_FAIL; /* not applicable */
                     }
-                    break;
+                }
+                break;
                 default:
                     v->type = DILV_ERR; /* wrong type */
                     break;
@@ -2827,6 +2834,8 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
                         v->ref = room->getLandscapeTerrainPtr();
+                        v->min = SECT_INSIDE; // an index of g_movement_loss
+                        v->max = SECT_ICE;
                     }
                     else
                     {
@@ -3584,7 +3593,7 @@ void dilfe_fld(dilprg *p)
                     v->type = DILV_FAIL; /* not applicable */
                     break;
                 case DILV_UP:
-                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isChar())
+                    if (v1->val.ptr && ((unit_data *)v1->val.ptr)->isPC())
                     {
                         v->atyp = DILA_NONE;
                         v->type = DILV_INT;
@@ -3675,7 +3684,7 @@ void dilfe_fld(dilprg *p)
                         }
                         else
                         {
-                            v->type = DILV_UINT1R;
+                            v->type = DILV_SINT1R;
                             v->ref = pc->getProfessionPtr();
                         }
                     }
@@ -3823,6 +3832,8 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
                         v->ref = character->getAttackTypePtr();
+                        v->min = WPN_GROUP_MAX; // an index of g_wpn_info, as vmc checks
+                        v->max = WPN_TREE_MAX - 1;
                     }
                     else
                     {
@@ -3916,6 +3927,8 @@ void dilfe_fld(dilprg *p)
                         v->atyp = DILA_NONE;
                         v->type = DILV_UINT1R;
                         v->ref = character->getNaturalArmorPtr();
+                        v->min = ARM_CLOTHES; // an index of the damage charts, as vmc checks
+                        v->max = ARM_PLATE;
                     }
                     else
                     {

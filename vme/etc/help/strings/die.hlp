@@ -1,7 +1,7 @@
 <div class="mw-parser-output"><h1>Death</h1>
-<p>When you die you lose some of your experience points. How many you lose depends largely on your current level, how much you need for the next level, etc. The amount you lose is proportional to how much XP you have above your current level. So it is a good idea to level as soon as you can.
-</p><p>After you die you will be transported to Valhalla, and upon release from Valhalla you will need to go back to the temple of Udgaard.
-</p><p>If you have died and find an alternate way out of 'Valhalla', e.g. someone might have cast resurrect or raise dead on you. You still lose the experience points but it shortens your stay and you are returned to the game where you died with all your items.
+<p>When you die you lose some of your experience points, unless you are level 3 or below. You lose half the experience you have above what your current level needed, but never more than half of what the next level takes and never less than a fifth of it. So it is a good idea to level as soon as you can.
+</p><p>After you die a Valkyrie carries your soul away: to Valhalla if you are good, to the pits of Hel if you are evil, and into the astral planes if you are neutral. After a while (about a minute up to level 5, two minutes up to level 24, three from level 25) you are set down in the temple of Udgaard, or in your clan's home town if your clan has one.
+</p><p>While you wait there, someone carrying your corpse, or standing by it, can cast resurrection or raise dead on you. You still lose the experience points, but it shortens your stay: you come back to life where the caster stands, with everything that was in your corpse.
 </p>
 <h2><span class="mw-headline" id="Your_corpse">Your corpse</span></h2>
 <p>Your corpse stays where you died, with everything you carried, your coins too. Go back and get your things: get all from corpse (see <a cmd='#'>Help Get</a>).
@@ -14,7 +14,7 @@ See Also:
 <pre>&gt; <a cmd='#'>Help Equipment</a>
 &gt; <a cmd='#'>Help Valhalla</a>
 &gt; <a cmd='#'>Help Raise Dead</a>
-&gt; <a cmd='#'>Help Resurrect</a>
+&gt; <a cmd='#'>Help Resurrection</a>
 &gt; <a cmd='#'>Help Level</a>
 </pre>
 

@@ -6,6 +6,7 @@ who admin
 who builder
 who guide
 who clan
+who friend
 who status
 </pre>
 <p>Gives you a list of the players currently in the game. You can use this to see if 
@@ -14,8 +15,10 @@ your best friend (or enemy) is here.
 <ul><li><b>who admin</b>: the administrators online.</li>
 <li><b>who builder</b>: the builders online.</li>
 <li><b>who guide</b>: the New Player Helpers online, who are glad to help you.</li>
-<li><b>who clan</b>: the members of clans online.</li>
-<li><b>who status</b>: the status players have set for themselves.</li></ul>
+<li><b>who clan</b>: the members of your own clan online.</li>
+<li><b>who friend</b>: the players marked as a Valhalla Friend online.</li>
+<li><b>who status</b>: the status players have set for themselves.</li>
+<li><b>who newbie</b>: for New Player Helpers only, the players up to level 20 online.</li></ul>
 <p>To set your own status, the few words shown behind your name, type change and 
 the words, for example change looking for a group. Words that start like one of 
 the settings of <a cmd='#'>Help Change</a> switch that setting instead.

@@ -7,16 +7,18 @@ help page.
 </p><p><b>Clan Master:</b>
 </p>
 <pre><a cmd='#'>help cappoint</a>   appoint a lord, treasurer, quartermaster or new Master
-<a cmd='#'>help cdepose</a>    take a member out of a position (also rank 25)
+                  (treasurers and quartermasters also rank 25)
+<a cmd='#'>help cdepose</a>    take a member out of a position
+                  (treasurers and quartermasters also rank 25)
 <a cmd='#'>help cstart</a>     take up a newly approved clan, once
 </pre>
 <p><b>Clan Master and lords:</b>
 </p>
-<pre><a cmd='#'>help caccept</a>    take in a new member
+<pre><a cmd='#'>help caccept</a>    take in a new member (also rank 10 and up)
 <a cmd='#'>help cremove</a>    remove a member
 <a cmd='#'>help cpromote</a>   set a member's rank (also rank 16 and up)
 <a cmd='#'>help csrank</a>     the titles of the clan's ranks
-<a cmd='#'>help ctitle</a>     a member's title
+<a cmd='#'>help ctitle</a>     a member's title (also rank 21 and up)
 </pre>
 <p><b>Members:</b>
 </p>

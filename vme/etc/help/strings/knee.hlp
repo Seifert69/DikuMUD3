@@ -1,10 +1,18 @@
 <div class="mw-parser-output"><h1>Knee</h1>
-<p>Usage: 
+<p>Weapon skill
+Class: Assassin (guild level 35), Barbarian (guild level 35, up to 60%), Fighter (guild level 35, up to 60%), Thief (guild level 35, up to 90%)
+Practising it needs dexterity 40.
+Also taught by: Jojun the weapon master, in the Huashan Temple outside Xiyang (members of the Fighter, Thief and Assassin guilds only, from level 35)
+</p><p>Usage: 
 </p>
 <pre> knee &lt;target&gt;
+ knee              (whoever you are fighting)
 </pre>
 <p>This command will allow you to knee your opponent. It is more powerful when your
 hands are free.
+</p><p>Knee is a weapon skill; you must have practised it to knee. Each knee costs 2
+endurance, and it lands best on someone who isn't fighting yet. You can knee
+another player only when both of you have signed the book of blood.
 </p><p><br />
 See Also:
 </p>

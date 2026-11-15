@@ -10,8 +10,9 @@ Class: Ranger (guild level 28)
 <pre>lay trap
 </pre>
 <p>Sets a trap you carry, such as one made with <a cmd='#'>Help Fashion Weapon</a>, 
-hidden on the ground where you stand. It costs endurance, more indoors 
-and in cities than in the open. It can't be laid on water (it sinks), or 
+hidden on the ground where you stand. It costs endurance, more indoors, 
+in cities and on snow and ice than in the open. You can't lay a trap while 
+fighting. It can't be laid on water (it sinks), or 
 where another trap is already hidden.
 </p><p>How well it is hidden depends on your skill, dexterity and brain, the 
 trap's quality, and the ground: deserts, forests, hills and snow hide a 
@@ -19,12 +20,13 @@ trap well, swamps, indoors and ice badly. You never step in your own
 trap.
 </p><p>Anyone else who moves or looks around in the room may spring it, unless 
 they spot it first; a monster just wandering in will too. A trapped 
-victim can't move or do much more than look, talk and cast spells until 
-the trap breaks, and if both of you have signed the Book of Blood, or the 
+victim can't move or do much more than look and talk until the trap 
+breaks (the pain even keeps them from casting spells), and if both of you have signed the Book of Blood, or the 
 victim is a monster, struggling in it hurts. Attacking the victim breaks 
 the trap, painfully. The trap breaks by itself after a few minutes, 
 sooner for a poor one, caught or not.
-</p><p>Others can look for hidden traps with search trap.
+</p><p>Others can look for hidden traps with search trap, and try to disarm one 
+with disarm and the trap's name; a slip springs it on them.
 </p><p><br />
 See Also:
 </p>

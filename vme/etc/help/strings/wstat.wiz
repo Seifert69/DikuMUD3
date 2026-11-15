@@ -2,6 +2,7 @@
 <p>Usage:
 </p>
 <pre> wstat &lt;unit&gt; [group]
+ wstat &lt;unit@zone&gt; [group]
  wstat room [group]
  wstat zone [zone name] [mobiles|objects|rooms|reset|errors|info|path|dil]
  wstat world [zones]
@@ -19,7 +20,7 @@
  data        : the data for the type of unit
  contents    : what the unit contains
  affects     : its affect structures
- descriptor  : a player's connection data
+ descriptor  : (not written yet)
  functions   : its special functions and DIL programs
  spells      : spells learned
  skills      : skills learned
@@ -27,21 +28,24 @@
  ability     : abilities
  extras      : extra descriptions
  quests      : quest information (players only)
- info        : other extras: e-mail, maiden name, guilds, profession, ignore list
- account     : a player's account
+ info        : other extras: e-mail, maiden name, guilds, profession, ignore list (level 254 and up)
+ account     : a player's account (only when the game charges for playing)
  bank        : a player's bank
- ip          : a player's addresses
+ ip          : a player's last addresses (level 254 and up)
 </pre>
 <p>A group can be shortened: wstat fido dat.
 </p><p>The others:
 </p>
 <pre> world             : the game as a whole; world zones lists all zones
  world dil [ms]    : the DIL programs of all zones that have run longer than ms milliseconds (the place to start with a slow game)
- memory            : the server's memory use
- account           : account totals
+ memory            : the event queue's statistics, and any unit that isn't inside anything
+ account           : the accounting settings (only when the game charges for playing; else nothing)
  creators &lt;name&gt;   : the zones a builder made; creators all lists every zone and its creators
  count &lt;number&gt;    : the first 40 units that hold at least that many units
- combat, splcombat&#160;: how a fight (or a spell) between two units would go
+ combat, splcombat&#160;: how a fight (or a spell, acid breath if none is named) between two units
+                     would go; unit2 must be here (you, if left out), and if unit1 is
+                     fighting, its opponent is used
+ zone ... path     : not written yet
 </pre>
 <p>Examples:
 </p>
@@ -59,7 +63,9 @@
 </pre>
 <p>Wstat displays everything about a unit. All of it at once would be several 
 screens per unit, so it is split into groups: the optional [group] chooses 
-what you see. It is logged.
+what you see. A unit is found by name anywhere in the game, or by its 
+symbolic name (janitor2@udgaard); if none is in the game, level 254 and up 
+loads one, as <a cmd='#'>Wizhelp Load</a> does. It is logged.
 </p><p><br />
 See Also:
 </p>

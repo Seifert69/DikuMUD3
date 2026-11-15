@@ -1007,7 +1007,7 @@ u1:= null;
 wait (SFB_CMD, command("evaluate"));
 pc:= activator;
 
-if (visible(pc, self) == FALSE)
+if (visible(activator, self) == FALSE)
     goto start; // Pc is just trying to eval using the command
 
 block;
@@ -1339,6 +1339,8 @@ code
       /* Clear all skills & spells taught by the law */
 
       activator.skills[SKI_CUFF] := 0;
+      activator.spells[SPL_FIND_WANTED] := 0;
+      activator.spells[SPL_LOCATE_WANTED] := 0;
 
       exec("say "+activator.name+", I am very disappointed in you, you "+
 	   "can no longer consider yourself a deputy.", self);
@@ -8086,7 +8088,9 @@ code
    if (sKey == "@")
    {
       //log("Recieve @ sKey="+sKey+" sChan="+sChan+" msg="+msg);
-      if (sChan in DISCORD_CHANNELS)
+      // A message relayed from Discord (sent by discord@basis, not a player)
+      // carries the speaker's name in its text
+      if ((sChan in DISCORD_CHANNELS) and (talker.type == UNIT_ST_ROOM))  // the relay room, discord@basis
       {
          sendtext("<div class='comm_emote' chan='"+sChanAttr+"'>&lt;"+sChan+"&gt; " + msg+"</div><br/>",self );
       }
@@ -8982,7 +8986,7 @@ code
       }
    if (sanc > 1)
       {
-         addextra(self.extra, {"$Soothe"}, "");
+         addextra(self.extra, {"$Soothe"}, " "); // an extra with "" text isn't added
       }
 
 :time_check: /* Checking if the time argument is valid */
@@ -9170,7 +9174,9 @@ var
    highrating: integer;    /* The highest rating encountered so far */
    verdict   : integer;    /* Used as pass value for the unitptr test */
    sancvar   : integer;    /* Whether the PC has SANCTUARY cast on self */
-   soothe    : integer;    /* Whether the PC has SOOTHE cast on self */
+   soothe    : integer;    /* Whether the PC has soothed me */
+   eptr      : extraptr;   /* My $Soothe extra */
+   soothers  : stringlist; /* The names in it */
    count     : integer;    /* The count of elligible PCs checked so far */
 code
 {
@@ -9178,6 +9184,13 @@ code
    heartbeat:=PULSE_SEC*3; /* In case we need it */
 
    count      := 0; /* Initialise the variable (no real reason) */
+
+   /* soothe@skills adds each soothing PC's name to my $Soothe extra */
+   soothers := null;
+   eptr := "$Soothe" in self.extra;
+   if (eptr != null)
+      soothers := split(eptr.descr, " ");
+
 u:=self.outside.inside;
 while (u)
 {
@@ -9203,7 +9216,7 @@ secure(u,endloop);
                             this u fails. */
 
           sancvar := isaff(u, ID_SANCTUARY);
-          if ("$ID_SOOTHE" in u.extra) soothe := 1;
+          if (u.name in soothers) soothe := 1;
           if (not(visible(self, u))) verdict := 0;
 
 /* Go get the pc's rating */

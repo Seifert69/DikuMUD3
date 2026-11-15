@@ -896,7 +896,7 @@ int practice(unit_data *teacher,
                       currency,
                       1);
 
-    if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
+    if (CHAR_LEVEL(pupil) >= PRACTICE_COST_LEVEL)
     {
         if (!char_can_afford(pupil, amt, currency))
         {
@@ -1059,7 +1059,7 @@ int auto_train(int type, unit_data *pupil, skill_collection *pColl, pc_train_val
                 continue;
             }
 
-            if (CHAR_LEVEL(pupil) > PRACTICE_COST_LEVEL)
+            if (CHAR_LEVEL(pupil) >= PRACTICE_COST_LEVEL)
             {
                 currency_t currency = local_currency(pckt->teacher);
 

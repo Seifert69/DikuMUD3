@@ -922,9 +922,13 @@ void stop_fighting(unit_data *ch, unit_data *victim)
             CHAR_COMBAT(ch)->subOpponent(CHAR_COMBAT(ch)->Opponent());
         }
     }
-    else
+    else if (CHAR_COMBAT(ch))
     {
         CHAR_COMBAT(ch)->subOpponent(victim);
+    }
+    else
+    {
+        return; // not fighting anyone
     }
 
     if (CHAR_COMBAT(ch) == nullptr)

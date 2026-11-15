@@ -4,8 +4,8 @@
 <pre> <a cmd='#'>change brief</a>
 </pre>
 <p>If you're tired of seeing all the old room descriptions scrolling up over
-the screen you can use this command. Then you will only get the room title,
-and its contents. You can still type 'look' to see the full room description.
+the screen you can use this command. Then, as you walk, you will only get
+the room title, its exits and its contents. You can still type 'look' to see the full room description.
 </p><p>Beware, do not use brief when you're exploring new sections, there might be
 clues in the room description text that are important. To turn off brief, 
 just use the same command again.

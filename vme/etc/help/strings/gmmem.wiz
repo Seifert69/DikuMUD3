@@ -32,11 +32,12 @@ a direction, enter, leave or exit; arriving by goto, teleport, recall
 or summon goes unnoticed), the game masters hear "[gm hrafn] 14:05 Asta 
 walks in", and the line plays once for each player: an NPC does it as a 
 command (say Ah, $1n, you came!), a room shows it to everyone there (A 
-cold draught follows $1n in.). $1n is the player. Without a line it 
-only tells you. <b>for</b> keeps it to those players, so passers-by don't 
+cold draught follows $1n in.). $1n is the player. Without a line it
+only tells the game masters. <b>for</b> keeps it to those players, so passers-by don't 
 set it off; <b>for</b> with no names lets everyone count again.
 </p><p><b>lure</b> adds a step to a room's lure, played to a player you draw 
-there with <a cmd='#'>Wizhelp Gmlure</a>.
+there with <a cmd='#'>Wizhelp Gmlure</a>. A room keeps 40 steps at most: a 41st
+pushes out the first. <b>told</b> keeps its last 40 notes the same way.
 </p><p><b>clear</b> removes one part, or all of them; clearing greet also stops 
 the tripwire.
 </p><p><br />

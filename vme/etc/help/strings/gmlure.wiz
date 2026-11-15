@@ -23,8 +23,9 @@ away &lt;name&gt;           it goes back where it was brought from
 do &lt;name&gt; &lt;command&gt;   the NPC does it (say ..., give note $1n)
 lead &lt;name&gt;           the NPC comes and leads the player there
 </pre>
-<p>$1n is the player, and $dir the way to go from where they stand 
-(north, up, in...). A step that starts with "dream " plays only while 
+<p>$1n is the player, and $dir the way to go from where they stand
+(north, up, inside, outside...; "far away" when there is no known way,
+as to or from a room made with gmroom). A step that starts with "dream " plays only while 
 the player sleeps, the others only while they're awake. A guide that 
 <b>lead</b>s goes one room at a time, waiting for the player each time, 
 and goes home if they don't follow for five minutes.
