@@ -29,7 +29,7 @@ dilcopy no_donate@arena();
 dilcopy ret_arena@arena(); \
 dilcopy arena_size@arena (); \
 flags {UNIT_FL_MAGIC,UNIT_FL_NOSAVE}\
-dilcopy blowaway@function (1500,"An arena Janitor sprints through and picks up some trash");
+dilcopy blowaway@function (1500,"An arena janitor sprints through and picks up some trash");
 
 %zone arena
 title "Battle Arena@Mainland"
@@ -61,10 +61,10 @@ help
                             X 
 
 
-The arena is a place where one can enjoy some harmless PKing with out
-worry of experience loss or becoming wanted. Your personal Equipment
+The arena is a place where one can enjoy some harmless PKing without
+worry of experience loss or becoming wanted. Your personal equipment
 is stored for the time you are in the arena and you are encouraged to
-wander and see what you can find. You will find that the colored area's
+wander and see what you can find. You will find that the colored areas
 are level specific and only players of those levels may fight in them.
 However the main arena is open to anyone of any level so if some of you
 lower players would like to try your hand at a high level player or a god
@@ -73,7 +73,7 @@ go check out the open area.
  Blue levels  1 - 12
  Green levels 13 - 24
  Yellow levels 25 - 39
- Red Levels  40 - 255"
+ Red levels  40 - 255"
 
 %dil
 
@@ -191,7 +191,7 @@ code
     :start:
     wait(SFB_CMD, command ("quit") and (activator.level<200));
     block;
-    act("For your safety  you must withdraw from the arena to quit.", A_ALWAYS,activator,null,null,TO_CHAR);
+    act("For your safety, you must withdraw from the arena to quit.", A_ALWAYS,activator,null,null,TO_CHAR);
     goto start;
 }
 dilend
@@ -202,7 +202,7 @@ code
     :start:
     wait (SFB_CMD, command ("save") and (activator.level<200));
     block;
-    act ("For your safety  you must withdraw from the arena to save.", A_ALWAYS,activator,null,null,TO_CHAR);
+    act ("For your safety, you must withdraw from the arena to save.", A_ALWAYS,activator,null,null,TO_CHAR);
     goto start;
 }
 dilend
@@ -309,7 +309,7 @@ code
         act("Your $2N digs into your skin, drawing your pain.",
         A_ALWAYS, self, medi,targ , TO_CHAR);
 
-        act("$1n's $2N digs into $1s flesh",
+        act("$1n's $2N digs into $1s flesh.",
         A_SOMEONE, targ, medi, null, TO_REST);
 
         return;
@@ -322,15 +322,15 @@ dilend
 dilbegin dagger_nheal(medi : unitptr, targ : unitptr, hm : integer);
 code
 {
-       act("Your $2N glows brightly! as it digs into $3n's flesh",
+       act("Your $2N glows brightly as it digs into $3n's flesh!",
        A_ALWAYS, self, medi,targ , TO_CHAR);
 
 
-       act("$1n's $2N glows brightly as it digs into $3n's flesg!",
+       act("$1n's $2N glows brightly as it digs into $3n's flesh!",
         A_SOMEONE, self, medi,targ, TO_NOTVICT);
 
 
-        act("$1n's $2N, glows brightly as it digs into your flesh.",
+        act("$1n's $2N glows brightly as it digs into your flesh.",
         A_ALWAYS, self, medi,null, TO_VICT);
                                                  return;
                                                  }
@@ -343,9 +343,9 @@ code
 dilbegin spirit_heal(medi : unitptr, targ : unitptr, hm : integer);
 code
 {
-        act("You gathers your will and heals your wounds",
+        act("You gather your will and heal your wounds.",
         A_ALWAYS, self, medi, targ , TO_CHAR);
-        act("The Spirit gathers it's will and heals it's wounds",
+        act("The Spirit gathers its will and heals its wounds.",
         A_SOMEONE, targ, null, null, TO_ALL);
 
                                      return;
@@ -384,7 +384,7 @@ code
     {
         act("$1n burns $1s hand severely as $1e reaches out to touch the flames.",
                 A_ALWAYS, activator, null, null, TO_REST);
-        act("You burn your self severely as you touch the flames.",
+        act("You burn yourself severely as you touch the flames.",
             A_ALWAYS, activator, null, null, TO_CHAR);
         activator.hp := activator.hp -75;
         goto start;
@@ -392,16 +392,16 @@ code
 
     if (i < 20)
     {
-        act("$1n burns $1s mildly as $1e reaches out to touch the flames.",
+        act("$1n burns $1s hand mildly as $1e reaches out to touch the flames.",
             A_ALWAYS, activator, null, null, TO_REST);
-        act("You burn your self mildly as you touch the flames.",
+        act("You burn yourself mildly as you touch the flames.",
             A_ALWAYS, activator, null, null, TO_CHAR);
         activator.hp := activator.hp -30;
         goto start;
     }
   if (1 < 30)
     {
-    act("$1n passes $1s hand through the  flame with ease and the flame "+
+    act("$1n passes $1s hand through the flame with ease and the flame "+
     "becomes one with $1m.",
           A_ALWAYS, activator, null, null, TO_REST);
      act("You pass your hands through the flame with ease as the flame "+
@@ -450,10 +450,10 @@ code
    i:= rnd(1,100);
    if ( i < 50 )
     {
-     act("You neatly launch $2n into the air, it explodes as it hits" +
-         "$3n .", A_SOMEONE, a, self, enemy, TO_CHAR);
-     act("$1n neatly launches $2n that explodes as it hits" +
-         "$3n ." ,A_SOMEONE, a, self, enemy, TO_REST);
+     act("You neatly launch $2n into the air, it explodes as it hits " +
+         "$3n.", A_SOMEONE, a, self, enemy, TO_CHAR);
+     act("$1n neatly launches $2n that explodes as it hits " +
+         "$3n." ,A_SOMEONE, a, self, enemy, TO_REST);
        link(self, enemy);
        enemy.hp := enemy.hp - 75 ;
         destroy(self);
@@ -462,10 +462,10 @@ code
     }
 if ( i < 100 )
    {
-    act("You neatly launch $2n in a arc towards $3n "+
+    act("You neatly launch $2n in an arc towards $3n"+
       " but it goes wild and lands on the ground exploding in a large puff.",
        A_SOMEONE, a,self, enemy, TO_CHAR);
-   act("$1n neatly launches $2n in a arc towards $3n "+
+   act("$1n neatly launches $2n in an arc towards $3n"+
 " but it goes wild and lands on the ground exploding in a large puff." ,
     A_SOMEONE, a, self, enemy, TO_REST);
 block;
@@ -515,7 +515,7 @@ code
                    (activator.level >=200) and (activator.level<254)));
     block;
     pc:=activator;
-    act("That command has been disabled for the safety of the players in the arena", A_SOMEONE, pc, null, null, TO_CHAR);
+    act("That command has been disabled for the safety of the players in the arena.", A_SOMEONE, pc, null, null, TO_CHAR);
     :losthim:
     goto start;
 }
@@ -605,8 +605,8 @@ wait (SFB_COM, (not ("$arena" in activator.quests)) and
 (activator.type==UNIT_ST_PC));
 cheat:=activator;
 secure (cheat,lostpc);
-act ("You some how illegally entered the arena your equipment is being destroyed "+
-"please speak to a god about your crimes.",
+act ("You somehow illegally entered the arena; your equipment is being destroyed. "+
+"Please speak to a god about your crimes.",
 A_SOMEONE, cheat,null,null,TO_CHAR);
 while (cheat.inside!=null) destroy (cheat.inside);
 link (cheat,findroom ("temple@udgaard"));
@@ -630,7 +630,7 @@ code
    wait (SFB_TICK|SFB_COM,TRUE);
    if ((self.zone!="arena") and (self.outside!=findroom("deathseq_room@basis")))
    {
-      act ("Some how you left the Arena illegally you are being restored to your status before entering the arena.",
+      act ("Somehow you left the arena illegally; you are being restored to your status before entering the arena.",
          A_SOMEONE,self,null,null,TO_CHAR);
       sendtoall("emptyout", "bag@arena");
       sendto("destroy arena", self);
@@ -683,13 +683,13 @@ sendtoalldil ("destroy arena","ret_arena@arena");
 sendtoall ("emptyout", "bag@arena");
 
 pause;
-act ("A hidden exit opens up and the two guards escort $1n out",
+act ("A hidden exit opens up and the two guards escort $1n out.",
 A_SOMEONE,  self,null,null,TO_REST);
 act ("A hidden door opens in the arena and the guards escort you out.",
 A_SOMEONE,  self,null,null,TO_CHAR);
 pause;
 act ("As you step out of the arena your guards disappear and a proud voice "+
-"booms in your head, 'Come again young adventurer.'",
+"booms in your head, 'Come again, young adventurer.'",
 A_SOMEONE,  self,null,null,TO_CHAR);
 pause;
 act ("Your equipment suddenly appears in your hands and you return to the arena "+
@@ -770,7 +770,7 @@ code
 
    act("As you speak the words of entry you feel your body slowly begin to separate.",
        A_ALWAYS, self, null, null, TO_CHAR);
-	act("$1n chants the words of entry and slowly fades from view",
+	act("$1n chants the words of entry and slowly fades from view.",
 	    A_ALWAYS, self, null, null, TO_REST);
 
    bag := load("bag@arena");
@@ -787,7 +787,7 @@ code
 	unsecure(bag);
 
    act("A sullen voice whispers through your being saying, 'Your equipment " +
-	    "has been stored for safe keeping during your transfer into the arena.'",
+	    "has been stored for safekeeping during your transfer into the arena.'",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 
@@ -847,7 +847,7 @@ code
    act("As you speak the words of entry you feel your body " +
 	    "slowly begin to separate.",
        A_ALWAYS, self, null, null, TO_CHAR);
-	act("$1n chants the words of entry and slowly fades from view",
+	act("$1n chants the words of entry and slowly fades from view.",
 	    A_ALWAYS, self, null, null, TO_REST);
   if(self.level < BLUE_LEVEL) {
 	   entry_point := BLUE_ROOM;
@@ -954,7 +954,7 @@ wait (SFB_CMD, (command ("enter")) and
 (argument =="arena")  and
 (activator.type==UNIT_ST_PC));
 block;
-act ("There is a private event ongoing in the Arena please come back later.",
+act ("There is a private event ongoing in the Arena; please come back later.",
 A_ALWAYS, activator,null,null,TO_CHAR);
 goto close_b;
 
@@ -1002,7 +1002,7 @@ wait (SFB_CMD, (command ("enter")) and
 (argument =="arena")  and
 (activator.type==UNIT_ST_PC));
 block;
-act ("You may not re-enter the arena now you can either wait till the arena "+
+act ("You may not re-enter the arena now; you can either wait till the arena "+
 "re-opens or withdraw.",
 A_ALWAYS, activator,null,null,TO_CHAR);
 goto close_b;
@@ -1078,18 +1078,18 @@ code
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 
-   act("The warrior speaks, 'It is not your time young adventurer'",
+   act("The warrior speaks, 'It is not your time, young adventurer.'",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
 
-   act ("the warrior leads you down a softly lit tunnel of lights.",
+   act ("The warrior leads you down a softly lit tunnel of lights.",
          A_ALWAYS, self, null, null, TO_CHAR);
       pause;
 
-   act ("With blinding speed the Warrior grabs you and "+"stuffs you into a dark nothing.",
+   act ("With blinding speed the warrior grabs you and "+"stuffs you into a dark nothing.",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
-   act ("You feel spikes of pain shoot through you as you realize you are back "+"In your body.",
+   act ("You feel spikes of pain shoot through you as you realize you are back "+"in your body.",
        A_ALWAYS, self, null, null, TO_CHAR);
    pause;
    link(self, findroom ("infirm@arena"));
@@ -1099,7 +1099,7 @@ code
    self.mana:=5;
    self.hp:=5;
    self.position:=POSITION_RESTING;
-   act("$1n enters the  Arena Recovery room.",
+   act("$1n enters the Arena Recovery room.",
        A_ALWAYS, self, null, null, TO_ROOM);
 
 	position_update(self);
@@ -1151,13 +1151,13 @@ dilend
 
 entrance
 names {"arena entrance", "arena"}
-title "Arena entrance"
+title "Arena Entrance"
 descr
 "You are in a high-ceiling entrance way to the arena.  You can hear the
 clatter of battle all around you.  Screams of honorable death and shouts of
 victory can be heard from inside the building.  There is no visible physical
 entrance but there is a <a cmd='read #'>big red sign</a> you might want to read.  To the south
-a arched exit way leads to the square."
+an arched exit way leads to the square."
 movement SECT_INSIDE
 south to col_sq6@midgaard;
 ALWAYS_LIGHT
@@ -1168,7 +1168,7 @@ extra {"big red sign","big sign","red sign","sign"}
      Welcome to the New Arena.
 
 If you find problems please get the attention of a god and let him/her know.
-The arena will be under going many changes.  The more suggestions we get the
+The arena will be undergoing many changes.  The more suggestions we get the
 more fun we can make it.  
 
 To enter the arena just type:
@@ -1177,7 +1177,7 @@ To enter the arena just type:
 
 To exit the arena when you are done killing your friends type:
 
-<a cmd='#'>withdraw</cmd>
+<a cmd='#'>withdraw</a>
 
 For fastest response to arena ideas send mail to
 whistler@blinksoft.com or
@@ -1191,16 +1191,16 @@ arena_1
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage in all directs except south which leads
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except south which leads
 you further into the arena."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_3 descr
 "The arena continues to the south.";
 ARENA_DILS
@@ -1210,16 +1210,16 @@ arena_2
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north and west. You notice
 that the arena seems to stretch out forever to the south and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_6 descr
 "The arena continues to the south.";
 east to arena_3 descr
@@ -1232,12 +1232,12 @@ arena_3
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_4 descr
@@ -1255,16 +1255,16 @@ arena_4
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north and east. You notice
 that the arena seems to stretch out forever to the south and west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_6 descr
 "The arena continues to the south.";
 west to arena_3 descr
@@ -1276,15 +1276,15 @@ arena_5
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage to the in all directions except east."
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 east to arena_6 descr
 "The arena continues to the east.";
 ARENA_DILS
@@ -1294,14 +1294,14 @@ arena_6
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A large wall
+darker in places probably due to being soaked with blood. A large wall
 blocks movement to the south."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "A large wall blocks movement to the south."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_7 descr
@@ -1317,8 +1317,8 @@ arena_7
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A door is
-visible in the  wall to the south." ALWAYS_LIGHT
+darker in places probably due to being soaked with blood. A door is
+visible in the wall to the south." ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"door"}
@@ -1328,7 +1328,7 @@ extra {"sign"}
 You are now leaving the 'blue arena'"
 extra {"wall"}
 "A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_8 descr
@@ -1348,14 +1348,14 @@ arena_8
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A large wall
+darker in places probably due to being soaked with blood. A large wall
 blocks movement to the south."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "A large wall blocks movement to the south."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_9 descr
@@ -1371,15 +1371,15 @@ arena_9
 title "Blue Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage  in all directions except west."
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 west to arena_8 descr
 "The arena continues to the west.";
 ARENA_DILS
@@ -1389,15 +1389,15 @@ arena_10
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage in all directions except south.."
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except south."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_18 descr
 "The arena continues to the south.";
 ARENA_DILS
@@ -1407,14 +1407,14 @@ arena_11
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty
+darker in places probably due to being soaked with blood. The mighty
 Arena walls block your movement to the west and north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
 "Large white walls rise up as if to touch the sky."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_12 descr
@@ -1428,14 +1428,14 @@ arena_12
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The might
+darker in places probably due to being soaked with blood. The mighty
 arena walls block movement to the north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
 "Huge white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_13 descr
@@ -1451,11 +1451,11 @@ arena_13
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood."
+darker in places probably due to being soaked with blood."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
@@ -1474,14 +1474,14 @@ arena_14
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
-wall rise up to block movement to the north."
+darker in places probably due to being soaked with blood. The arena
+walls rise up to block movement to the north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 extra {"walls","wall"}
-"Huge white walls rise up"
+"Huge white walls rise up."
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_15 descr
@@ -1497,14 +1497,14 @@ arena_15
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 walls block movement to the north and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
-"Huge white walls"
-extra {"ground","grass"}
+"Huge white walls."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 west to arena_14 descr
@@ -1518,15 +1518,15 @@ arena_16
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage  in all directions except south."
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except south."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 south to arena_24 descr
 "The arena continues to the south.";
 ARENA_DILS
@@ -1536,16 +1536,16 @@ arena_17
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north and west. You notice
 that the arena seems to stretch out forever to the south and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_27 descr
 "The arena continues to the south.";
 east to arena_18 descr
@@ -1557,7 +1557,7 @@ arena_18
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the east. The red arena continues
 in all other directions."
 ALWAYS_LIGHT
@@ -1565,10 +1565,10 @@ movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "Large white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_28 descr
 "The arena continues to the south.";
 west to arena_17 descr
@@ -1584,17 +1584,17 @@ arena_19
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the west. The arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 south to arena_29 descr
 "The arena continues to the south.";
 east to arena_20 descr
@@ -1608,15 +1608,15 @@ arena_20
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_30 descr
 "The arena continues to the south.";
 west to arena_19 descr
@@ -1633,15 +1633,15 @@ arena_21
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_31 descr
 "The arena continues to the south.";
 west to arena_20 descr
@@ -1658,15 +1658,15 @@ arena_22
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_32 descr
 "The arena continues to the south.";
 west to arena_21 descr
@@ -1682,15 +1682,15 @@ arena_23
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 walls block movement to the east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_33 descr
 "The arena continues to the south.";
 west to arena_22 descr
@@ -1707,20 +1707,20 @@ arena_24
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the west. The green arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 south to arena_34 descr
 "The arena continues to the south.";
 east to arena_25 descr
-"The arena continues to the west.";
+"The arena continues to the east.";
 north to arena_16 descr
 "The arena continues to the north.";
 ARENA_DILS
@@ -1731,16 +1731,16 @@ arena_25
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north and east. You notice
 that the arena seems to stretch out forever to the south and west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_35 descr
 "The arena continues to the south.";
 west to arena_24 descr
@@ -1752,16 +1752,16 @@ arena_26
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage in all directs except east which leads
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except east which leads
 you further into the arena."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 east to arena_27 descr
 "The arena continues to the east.";
 ARENA_DILS
@@ -1771,15 +1771,15 @@ arena_27
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_37 descr
 "The arena continues to the south.";
 west to arena_26 descr
@@ -1795,8 +1795,8 @@ arena_28
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A door is
-visible in the  wall to the east."
+darker in places probably due to being soaked with blood. A door is
+visible in the wall to the east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
@@ -1806,8 +1806,8 @@ extra {"sign"}
 " ***WARNING***
 You are now leaving the 'red arena'"
 extra {"walls","wall"}
-"A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+"A large wall blocks movement to the east. In it you notice a door."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 south to arena_38 descr
@@ -1826,13 +1826,13 @@ arena_29
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood."
+darker in places probably due to being soaked with blood."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
-"A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+"A large wall blocks movement to the west. In it you notice a door."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_30 descr
@@ -1848,15 +1848,15 @@ arena_30
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_40 descr
 "The arena continues to the south.";
 west to arena_29 descr
@@ -1873,15 +1873,15 @@ arena_31
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_41 descr
 "The arena continues to the south.";
 west to arena_30 descr
@@ -1897,15 +1897,15 @@ arena_32
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_42 descr
 "The arena continues to the south.";
 west to arena_31 descr
@@ -1924,13 +1924,13 @@ arena_33
 title "Ring of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood."
+darker in places probably due to being soaked with blood."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
-"A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+"A large wall blocks movement to the east. In it you notice a door."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 south to arena_43 descr
@@ -1948,8 +1948,8 @@ arena_34
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A door is
-visible in the  wall to the west."
+darker in places probably due to being soaked with blood. A door is
+visible in the wall to the west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
@@ -1959,14 +1959,14 @@ extra {"sign"}
 " ***WARNING***
 You are now leaving the 'green arena'"
 extra {"walls","wall"}
-"A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+"A large wall blocks movement to the west. In it you notice a door."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 south to arena_44 descr
 "The arena continues to the south.";
 east to arena_35 descr
-"The arena continues to the west.";
+"The arena continues to the east.";
 north to arena_24 descr
 "The arena continues to the north.";
 west to arena_33 descr
@@ -1981,19 +1981,19 @@ arena_35
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 south to arena_45 descr
 "The arena continues to the south.";
 east to arena_36 descr
-"The arena continues to the west.";
+"The arena continues to the east.";
 north to arena_25 descr
 "The arena continues to the north.";
 west to arena_34 descr
@@ -2005,16 +2005,16 @@ arena_36
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage in all directs except west which leads
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except west which leads
 you further into the arena."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 west to arena_35 descr
 "The arena continues to the west.";
 ARENA_DILS
@@ -2025,16 +2025,16 @@ arena_37
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south and west. You notice
 that the arena seems to stretch out forever to the north and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 north to arena_27 descr
 "The arena continues to the north.";
 east to arena_38 descr
@@ -2046,16 +2046,16 @@ arena_38
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the east. The red arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls","wall"} "huge white walls surrounds the arena."
+extra {"walls","wall"} "Huge white walls surround the arena."
 south to arena_46 descr
 "The arena continues to the south.";
 west to arena_37 descr
@@ -2069,17 +2069,17 @@ arena_39
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the west. The arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 south to arena_47 descr
 "The arena continues to the south.";
 east to arena_40 descr
@@ -2094,15 +2094,15 @@ arena_40
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_48 descr
 "The arena continues to the south.";
 west to arena_39 descr
@@ -2120,15 +2120,15 @@ arena_41
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_49 descr
 "The arena continues to the south.";
 west to arena_40 descr
@@ -2145,15 +2145,15 @@ arena_42
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_40 descr
 "The arena continues to the south.";
 west to arena_41 descr
@@ -2171,15 +2171,15 @@ arena_43
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The arena
+darker in places probably due to being soaked with blood. The arena
 continues in all directions except east which is blocked by a huge wall."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_51 descr
 "The arena continues to the south.";
 west to arena_42 descr
@@ -2193,7 +2193,7 @@ arena_44
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the west. The green arena continues
 in all other directions."
 ALWAYS_LIGHT
@@ -2201,14 +2201,13 @@ movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"walls","wall"}
 "Large white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
 south to arena_52 descr
 "The arena continues to the south.";
 east to arena_45 descr
-"The arena continues to the west.";
+"The arena continues to the east.";
 north to arena_34 descr
 "The arena continues to the north.";
 ARENA_DILS
@@ -2219,16 +2218,16 @@ arena_45
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south and east. You notice
 that the arena seems to stretch out forever to the north and west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_35 descr
 "The arena continues to the north.";
 west to arena_44 descr
@@ -2242,15 +2241,15 @@ arena_46
 title "Red Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage in all directions except north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_38 descr
 "The arena continues to the north.";
 ARENA_DILS
@@ -2260,16 +2259,16 @@ arena_47
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the west and south."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 east to arena_48 descr
 "The arena continues to the east.";
 north to arena_39 descr
@@ -2281,17 +2280,17 @@ arena_48
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south. The arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 west to arena_47 descr
 "The arena continues to the west.";
 east to arena_49 descr
@@ -2306,17 +2305,17 @@ arena_49
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood."
+darker in places probably due to being soaked with blood."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 east to arena_50 descr
-"The arena continues to the south.";
+"The arena continues to the east.";
 west to arena_48 descr
 "The arena continues to the west.";
 north to arena_41 descr
@@ -2331,17 +2330,17 @@ arena_50
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south. The arena continues
 in all other directions."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 west to arena_49 descr
 "The arena continues to the west.";
 east to arena_51 descr
@@ -2355,16 +2354,16 @@ arena_51
 title "Ring Of Honor"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 extra {"walls","wall"}
- "huge white walls surrounds the arena."
+ "Huge white walls surround the arena."
 west to arena_50 descr
 "The arena continues to the west.";
 north to arena_43 descr
@@ -2375,15 +2374,15 @@ arena_52
 title "Green Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage in all directions except north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_44 descr
 "The arena continues to the north.";
 ARENA_DILS
@@ -2395,15 +2394,15 @@ arena_53
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage in all directions except east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 east to arena_54 descr
 "The arena continues to the east.";
 ARENA_DILS
@@ -2413,7 +2412,7 @@ arena_54
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north. The yellow arena continues
 in all other directions."
 ALWAYS_LIGHT
@@ -2421,10 +2420,10 @@ movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "Large white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_58 descr
 "The arena continues to the south.";
 west to arena_53 descr
@@ -2439,8 +2438,8 @@ arena_55
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. A door is
-visible in the  wall to the north."
+darker in places probably due to being soaked with blood. A door is
+visible in the wall to the north."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
@@ -2450,8 +2449,8 @@ extra {"sign"}
 " ***WARNING***
 You are now leaving the 'yellow arena'"
 extra {"wall"}
-"A large wall blocks movement to the south. In it you notice a door."
-extra {"ground","grass"}
+"A large wall blocks movement to the north. In it you notice a door."
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
 south to arena_59 descr
@@ -2474,7 +2473,7 @@ arena_56
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the north. The yellow arena continues
 in all other directions."
 ALWAYS_LIGHT
@@ -2482,10 +2481,10 @@ movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "Large white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_60 descr
 "The arena continues to the south.";
 west to arena_55 descr
@@ -2499,15 +2498,15 @@ arena_57
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage in all directions except west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 west to arena_56 descr
 "The arena continues to the west.";
 ARENA_DILS
@@ -2519,16 +2518,16 @@ arena_58
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south and west. You notice
 that the arena seems to stretch out forever to the north and east."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_54 descr
 "The arena continues to the north.";
 east to arena_59 descr
@@ -2541,17 +2540,17 @@ arena_59
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. You may
+darker in places probably due to being soaked with blood. You may
 travel in any direction."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
 extra {"wall"}
 "Large white walls."
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 south to arena_61 descr
 "The arena continues to the south.";
 west to arena_58 descr
@@ -2567,16 +2566,16 @@ arena_60
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
+darker in places probably due to being soaked with blood. The mighty arena
 walls rise up to block your passage to the south and east. You notice
 that the arena seems to stretch out forever to the north and west."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_56 descr
 "The arena continues to the north.";
 west to arena_59 descr
@@ -2588,16 +2587,16 @@ arena_61
 title "Yellow Arena"
 descr
 "The ground under your feet consists of a thick brown dirt which is
-darker  in places probably due to being soaked  with blood. The mighty arena
-walls rise up to block your passage in all directs except north which leads
+darker in places probably due to being soaked with blood. The mighty arena
+walls rise up to block your passage in all directions except north which leads
 you further into the arena."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
-extra {"ground","grass"}
+extra {"ground","grass","dirt"}
 "The thick brown dirt of the floor has been trampled to a rock hardness
 preventing most of the dust one would expect from a normal dirt floor."
-extra {"walls"} "huge white walls surrounds the arena."
+extra {"walls"} "Huge white walls surround the arena."
 north to arena_59 descr
 "The arena continues to the north.";
 ARENA_DILS
@@ -2606,10 +2605,10 @@ end
 infirm
 title "Hospital"
 descr
-"The hospital rooms is small and filthy with a cot along one wall.  Piles
+"The hospital room is small and filthy with a cot along one wall.  Piles
 of body parts are around the room, and the floor is slick with blood. On
-the shelves sit jars of internal organs and there are some tortuous looking
-instruments lying about in total disregard around the room.  There doesn't
+the shelves sit jars of internal organs and there are some torturous-looking
+instruments lying about in total disregard around the room.  There don't
 seem to be any exits but there is a big red sign you might want to read."
 extra {"big red sign","big sign","red sign","sign"}
 "The sign reads: 
@@ -2617,7 +2616,7 @@ extra {"big red sign","big sign","red sign","sign"}
      Welcome to the New Arena.
 
 If you find problems please get the attention of a god and let him/her know.
-The arena will be under going many changes.  The more suggestions we get the
+The arena will be undergoing many changes.  The more suggestions we get the
 more fun we can make it.  
 
 To enter the arena just type:
@@ -2633,16 +2632,16 @@ whistler@blinksoft.com or
  palio@blinksoft.com"
 
 extra {"jars"}
-"livers, hearts, intestines. Some have extra eye balls and fingers.
+"Livers, hearts, intestines. Some have extra eyeballs and fingers.
 Looking in the finger jar you see one that still has a ruby ring
 attached to it."
 extra {"instruments"}
-"claws to pull gold teeth, saws to remove limbs, and one item that has
-two small cups on it inside the cups razor sharp blades stick out...looks
-like something one may have used to castrate  bulls...but you know there
+"Claws to pull gold teeth, saws to remove limbs, and one item that has
+two small cups on it; inside the cups razor-sharp blades stick out...looks
+like something one may have used to castrate bulls...but you know there
 are no bulls about...could it be?...better cross your legs just in case guys!"
 extra {"body parts","parts"}
-"arms, legs, heads...all those useless parts."
+"Arms, legs, heads...all those useless parts."
 ALWAYS_LIGHT
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_INDOORS}
@@ -2666,8 +2665,8 @@ end
 
 swor1
 names {"mattock", "sword"}
-title "an Evil Mattock"
-descr "A an evil mattock is lying on the ground here."
+title "an evil mattock"
+descr "An evil mattock is lying on the ground here."
 extra {}
 "Can one ever control the powers of evil?"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -2702,9 +2701,9 @@ code
    if (i < 50)
       {
       enemy.hp := enemy.hp + i ;
-      act("Your $2N shoots forth a burst of pure evil ",
+      act("Your $2N shoots forth a burst of pure evil.",
       A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-      act("$1n's $2N emits  a force of pure evil",
+      act("$1n's $2N emits a force of pure evil.",
       A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 
    }
@@ -2717,10 +2716,10 @@ end
 magicdus1
 title "a bag of magic dust"
 names {"magic dust","dust","bag"}
-descr "You see  a small bag of magic dust."
+descr "You see a small bag of magic dust."
 extra {}
-"This bag holds a very lethal dose of fire dust. hold it and throw it
-at  the person you are fighting."
+"This bag holds a very lethal dose of fire dust. Hold it and throw it
+at the person you are fighting."
  type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 2
@@ -2731,9 +2730,9 @@ end
 phoenixcla1
 title "a bloody phoenix claw"
 names {"phoenix claw","claw"}
-descr "A bloody birds claw is lying here."
+descr "A bloody bird's claw is lying here."
 extra {}
-"The claw is  the bloody stump from some poor bird."
+"The claw is the bloody stump from some poor bird."
 WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
 SPELL_TRANSFER(SPL_SUMMONING, BONUS_SUPERIOR)  // Xyzzy: 6
 SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_SUPERIOR)  // Xyzzy: 6
@@ -2752,7 +2751,7 @@ code
         if (self.equip != 0)
         {
         act("As you wield your $2N, it reaches around and wraps its "+
-        " talons about your wrist. ",
+        "talons about your wrist.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
         act("$1n's wrist is grabbed by $1s $2N.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
@@ -2774,7 +2773,7 @@ code
         pause;
         if (self.equip == 0)
         {
-        act("$2n  reluctantly releases your wrist.",
+        act("$2n reluctantly releases your wrist.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
         act("$1n's wrist is released by $1s $2N.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
@@ -2863,7 +2862,7 @@ WPN_ARENA
 spell 50
 weight 70
 extra {}
-"This is all that's left of the evil player Toxic. Bloody still drips from where
+"This is all that's left of the evil player Toxic. Blood still drips from where
 it was cruelly ripped from his body while he was still alive."
 
 dilbegin arm_dil();
@@ -2893,9 +2892,9 @@ end
 ravencla1
 title "Raven Claw"
 names {"raven claw","claw"}
-descr "A bloody birds claw is lying here."
+descr "A bloody bird's claw is lying here."
 extra {}
-"The claw is  the bloody stump from some poor bird."
+"The claw is the bloody stump from some poor bird."
 WEAPON_DEF(WPN_CLAW, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 16,10
 SPELL_TRANSFER(SPL_SUMMONING, BONUS_SUPERIOR)  // Xyzzy: 6
 SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_SUPERIOR)  // Xyzzy: 6
@@ -2916,7 +2915,7 @@ code
         if (self.equip != 0)
         {
         act("As you wield your $2n, it reaches around and wraps its "+
-        " talons about your wrist. ",
+        "talons about your wrist.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
         act("$1n's wrist is grabbed by $1s $2n.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
@@ -2938,7 +2937,7 @@ code
         pause;
         if (self.equip == 0)
         {
-        act("The $2n  reluctantly releases your wrist.",
+        act("The $2n reluctantly releases your wrist.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
         act("$1n's wrist is released by $1s $2n.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
@@ -2953,11 +2952,11 @@ end
 hamme1
 
 names {"warhammer","war hammer","hammer"}
-title "the Huge Warhammer"
-descr "The huge Warhammer is lying here."
+title "the huge warhammer"
+descr "The huge warhammer is lying here."
 extra {}
 "This warhammer is fashioned from the finest metal with a large blunt
-head. The handle is inlaid with diamond that sparkle with the slightest
+head. The handle is inlaid with diamonds that sparkle with the slightest
 light."
 WPN_ARENA
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -2969,14 +2968,14 @@ end
 
 dagger1
 names {"dagger"}
-title "the Dagger of bone"
+title "the dagger of bone"
 descr "A dagger made from human bone is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 16,20
 MAG_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 weight 15
 extra {}
-"The dagger is crafted from human bones and razor sharp"
+"The dagger is crafted from human bones and razor-sharp."
 WPN_ARENA
 end
 
@@ -3008,7 +3007,7 @@ WPN_ARENA
 
 extra {}
 "This is a small but sharp short sword. This sword might also be useful
-when held in the left hand, with it's small size you might be able to hit
+when held in the left hand, with its small size you might be able to hit
 with it while still wielding another weapon."
 dilbegin short_hit();
 var
@@ -3044,11 +3043,11 @@ code
         if (i > 20)
             pwr := "boldly stab";
 
-        act("$1n $2ts $3n with $1s dagger.",
+        act("$1n $2ts $3n with $1s short sword.",
           A_SOMEONE, self.outside, pwr, self.outside.fighting, TO_NOTVICT);
-        act("$1n $2ts you with $1s dagger.",
+        act("$1n $2ts you with $1s short sword.",
              A_ALWAYS, self.outside, pwr, self.outside.fighting, TO_VICT);
-        act("You $2t $3n with your dagger!",
+        act("You $2t $3n with your short sword!",
              A_ALWAYS, self.outside, pwr, self.outside.fighting, TO_CHAR);
 
 wait(SFB_COM, command(CMD_AUTO_COMBAT));
@@ -3158,7 +3157,7 @@ WEAPON_DEF(WPN_HAND_AXE, BONUS_EXCELLENT, BONUS_AVERAGE)  // Xyzzy: 7,0
 weight 35
 extra {}
 "This hand axe is beautifully decorated along the length of the handle. The
-blade is sharp and true. It's sturdy feel gives this weapon good potential in
+blade is sharp and true. Its sturdy feel gives this weapon good potential in
 the right hands."
 WPN_ARENA
 
@@ -3166,15 +3165,15 @@ end
 
 
 pick1
-title "a Miners Pick"
+title "a miner's pick"
 names {"miners pick","pick"}
-descr "A miners pick has been left here"
+descr "A miner's pick has been left here."
 extra {}
-"The minors pick is large  with a wooden handle and a metal head."
+"The miner's pick is large with a wooden handle and a metal head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_HAND_AXE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 18,20
 extra {"$identify"}
-"A plain old pick"
+"A plain old pick."
 weight 25
 WPN_ARENA
 end
@@ -3182,10 +3181,10 @@ end
 
 longswor1
 names {"sword", "long sword"}
-title "a Long Sword"
-descr "A long sword has been left here"
+title "a long sword"
+descr "A long sword has been left here."
 extra {"$identify"}
-"An average long sword"
+"An average long sword."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_ARTIFACT, BONUS_EXCELLENT_PLUS)  // Xyzzy: 20,10
 weight 25
@@ -3195,8 +3194,8 @@ end
 
 spea1
 names {"spear"}
-title "a Spear"
-descr "A spear has been left here"
+title "a spear"
+descr "A spear has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SPEAR, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 weight 25
@@ -3206,8 +3205,8 @@ end
 
 shortswor1
 names {"sword", "short sword"}
-title "a Short Sword"
-descr "A short sword has been left here"
+title "a short sword"
+descr "A short sword has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 weight 15
@@ -3222,12 +3221,12 @@ names {"chain whip","whip"}
 title "a chain whip"
 descr "A chain whip lies here."
 extra {}
-"This Chain whip is very heavy and seems as if it can do some serious
+"This chain whip is very heavy and seems as if it can do some serious
 damage if you master it."
 extra {"$identify"}
 "When wielded this whip drops your strength and dexterity."
 extra {"$improved identify"}
-"Your strength and dexterity are reduced by 1 each.  Which is a small price
+"Your strength and dexterity are reduced by 1 each, which is a small price
 to pay for a weapon that eats Gnomes for breakfast."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_SLAYER(RACE_GNOME)
@@ -3268,9 +3267,9 @@ code
       dexmodi := (strskll*10)/100;
       if (((strskll*rannum)/100) >= 70) goto exdam;
       damage := levmodi+dexmodi;
-      act("Your $2N hits $3n with a loud clang!.",
+      act("Your $2N hits $3n with a loud clang!",
           A_ALWAYS,pc,self,enemy,TO_CHAR);
-      act("You hear a large clang, as $1n's $2N hits $3n",
+      act("You hear a large clang, as $1n's $2N hits $3n.",
           A_SOMEONE,pc,self,enemy,TO_NOTVICT);
       act("You hear a large clang, as $1n's $2N hits you.",
           A_SOMEONE,pc,self,null,TO_VICT);
@@ -3299,7 +3298,7 @@ end
 
 
 hellma1
-title "a War Mattock From Hell"
+title "a war mattock from hell"
 names {"war mattock from hell","mattock","hell"}
 descr "The war mattock from hell is lying here."
 extra {}
@@ -3351,9 +3350,9 @@ code
       {
       enemy.hp := enemy.hp - i ;
       pc.hp := pc.hp + i ;
-      act("Your $2N hits  $3n with a jolt of pure power.",
+      act("Your $2N hits $3n with a jolt of pure power.",
       A_SOMEONE,self.outside,self,enemy,TO_CHAR);
-      act("$1n's $2N hits $3n with a jolt of pure power",
+      act("$1n's $2N hits $3n with a jolt of pure power.",
       A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 
 
@@ -3370,7 +3369,7 @@ end
 
 s1legging1
 names {"leggings"}
-title "a pair of slick Leggings"
+title "a pair of slick leggings"
 descr "A pair of slick leggings has been left here."
 extra {}
 "The leggings are slick with the blood of thine enemies."
@@ -3382,7 +3381,7 @@ end
 
 s2legging1
 names {"leggings"}
-title "a pair of horrible Leggings"
+title "a pair of horrible leggings"
 descr "A pair of horrible leggings has been left here."
 extra {}
 "The leggings look like someone's leg just rotted in them. "
@@ -3396,10 +3395,10 @@ end
 
 s1boot1
 names {"boots"}
-title "a pair of slick Boots"
-descr "A pair of slick boots been left here."
+title "a pair of slick boots"
+descr "A pair of slick boots has been left here."
 extra {}
-"A pair of boot red with blood and some other slimy substance."
+"A pair of boots red with blood and some other slimy substance."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 15
@@ -3410,7 +3409,7 @@ end
 
 s1plat1
 names {"breast plate","breastplate","plate"}
-title "a slick Breastplate"
+title "a slick breastplate"
 descr "A slick breastplate has been left here."
 extra {}
 "The slick plate is full of intestinal slime and blood."
@@ -3424,10 +3423,10 @@ end
 
 s1sleeve1
 names {"sleeves"}
-title "a pair of slick Sleeves"
+title "a pair of slick sleeves"
 descr "A pair of slick sleeves has been left here."
 extra {}
-"A  pair of sleeves slick with blood."
+"A pair of sleeves slick with blood."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 19,21
 weight 20
@@ -3438,7 +3437,7 @@ end
 
 s1helme1
 names {"helmet"}
-title "a slick Helmet"
+title "a slick helmet"
 descr "A slick helmet has been left here."
 extra {}
 "A slick helmet with a large spike on top. Stuck on the spike is a large
@@ -3470,7 +3469,7 @@ end
 
 elflegging1
 names {"leggings"}
-title "a pair of elf Leggings"
+title "a pair of elf leggings"
 descr "A pair of elf leggings has been left here."
 extra {}
 "The difference between these leggings and other elf leggings is that
@@ -3487,7 +3486,7 @@ end
 
 bplat1
 names {"breast plate","breastplate","plate"}
-title "a  Breastplate"
+title "a breastplate"
 descr "A breast plate has been left here."
 extra {}
 "The breast plate is made out of a real breast. The rib cage seems to be
@@ -3535,9 +3534,9 @@ end
 
 
 loinclot1
-title "a  loin cloth"
+title "a loin cloth"
 names {"loin cloth","cloth","loin"}
-descr "A leather cloth is lying here"
+descr "A leather cloth is lying here."
 extra{}
 "This little pile of leather looks as if it might give you some protection.
 Not much but some."
@@ -3552,7 +3551,7 @@ names {"mesh shirt","shirt","mesh"}
 title "a rusty old shirt"
 descr "An old rusted mesh shirt has been left here."
 extra {}
-"This covers you  more than protects you but maybe it was made for those female
+"This covers you more than protects you but maybe it was made for those female
 warriors."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
@@ -3579,7 +3578,7 @@ names {"rusty plate","breast plate","plate"}
 title "a rusty plate"
 descr "A rusted breast plate lies here."
 extra {}
-"This breast plate is old and rusted It looks like it has been left
+"This breast plate is old and rusted. It looks like it has been left
 lying in a puddle of water or worse."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+23
@@ -3609,7 +3608,7 @@ code
    rannum := rnd(1,30);
    if (rannum < 5)
    {
-      act("Your $2N glows brightly and reflex your pain",
+      act("Your $2N glows brightly and reflects your pain.",
           A_ALWAYS, pc, self, null, TO_CHAR);
       act("$1n's $2N starts to glow and prevents $1m from pain.",
           A_SOMEONE, pc, self, null, TO_REST);
@@ -3617,7 +3616,7 @@ code
    }
    else if (rannum < 10)
    {
-      act("Your $2N shimmmers and draws you pain",
+      act("Your $2N shimmers and draws your pain.",
           A_ALWAYS, pc, self, null, TO_CHAR);
       act("$1n's $2N starts to glow and heals $1s pains.",
           A_SOMEONE, pc, self, null, TO_REST);
@@ -3633,7 +3632,7 @@ end
 
 
 ratcloa1
-title "a Rat Skin Cloak"
+title "a rat skin cloak"
 names {"rat skin cloak","cloak","skin"}
 descr "A rat skin cloak is lying here."
 extra {}
@@ -3651,12 +3650,12 @@ end
 
 
 moldcloa1
-title "a Molding Cloak"
+title "a molding cloak"
 names {"molding cloak","cloak","mold"}
-descr "A pile mold is lying here."
+descr "A pile of mold is lying here."
 extra {}
 "The cloak looks like it has been lying out in the rain too long.  Green
-fungi has started to grow on the surface of the cloak"
+fungi has started to grow on the surface of the cloak."
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
 DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
 STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
@@ -3678,8 +3677,8 @@ end
 		mboot1
 
 names {"muddy boots","boots"}
-title "Muddy boots"
-descr "A pair of muddy boots lie here."
+title "a pair of muddy boots"
+descr "A pair of muddy boots lies here."
 extra {}
 "These boots look like they have been left lying about in the mud. They
 are just caked with a deep rich red mud."
@@ -3703,10 +3702,10 @@ end
 		crlegging1
 
 names {"cracked leggings","leggings"}
-title "Cracked Leggings"
-descr "A cracked leggings lies here."
+title "a pair of cracked leggings"
+descr "A pair of cracked leggings lies here."
 extra {}
-"It looks as if these legging have seen better days. The plate is cracked
+"It looks as if these leggings have seen better days. The plate is cracked
 and gaping like it is ready to fall apart."
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
 ARMOUR_PLATE(BONUS_JUNK, BONUS_ARTIFACT)  // Xyzzy: -25,+25
@@ -3715,7 +3714,7 @@ weight 15
 CON_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 7
 CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
 extra {"$identify"}
-"An poor quality pair of leggings."
+"A poor quality pair of leggings."
 extra {"$improved identify"}
 " -25 craftsmanship 25 magical
 CON bonus +7
@@ -3754,8 +3753,8 @@ end
 		livsleeve1
 
 names {"living fungi sleeves","sleeves","fungi"}
-title "living  fungi sleeves"
-descr "A pair of Living sleeves lie here."
+title "a pair of living fungi sleeves"
+descr "A pair of living sleeves lies here."
 extra {}
 "The sleeves seem to be living. Looking at them you see they are crafted
 from some form of fungi."
@@ -3779,10 +3778,10 @@ end
 		ggauntlet1
 
 names {"skin gauntlets","gauntlets"}
-title "Skin gauntlets"
-descr "A pair of Skin gauntlets lie here."
+title "a pair of skin gauntlets"
+descr "A pair of skin gauntlets lies here."
 extra {}
-"These gauntlets look like someone has cut off their enemies hands and
+"These gauntlets look like someone has cut off their enemies' hands and
 made a pair of skin tight gauntlets from the skin."
 CHAR_FLAG_TRANSFER(CHAR_HIDE) 
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+25
@@ -3806,7 +3805,7 @@ end
 		skullhelme1
 
 names {"skull helmet","helmet","helm","skull"}
-title "Skull helmet"
+title "a skull helmet"
 descr "A skull helmet lies here."
 extra {} "This helmet is made from the skull of some poor victim."
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,+25
@@ -3905,7 +3904,7 @@ end
                            blacksleeve1
 
 names {"blackened sleeves", "black sleeves", "sleeves"}
-title "blackened sleeves"
+title "a pair of blackened sleeves"
 descr "Some blackened sleeves have been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 weight 35
@@ -3917,7 +3916,7 @@ end
                            blacklegging1
 
 names {"blackened leggings", "black leggings", "leggings"}
-title "blackened leggings"
+title "a pair of blackened leggings"
 descr "Some blackened leggings have been thrown aside."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 35
@@ -3929,7 +3928,7 @@ end
                            blackgauntlet1
 
 names {"blackened gauntlets", "black gauntlets", "gauntlets"}
-title "blackened gauntlets"
+title "a pair of blackened gauntlets"
 descr "Some blackened gauntlets are piled here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 15
@@ -3941,7 +3940,7 @@ end
                            blackboot1
 
 names {"blackened boots", "black boots", "boots"}
-title "blackened boots"
+title "a pair of blackened boots"
 descr "A pair of blackened boots are here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 weight 15
@@ -4020,7 +4019,7 @@ code
         {
         act("Your $2N shudders and tries to keep itself wielded, but "+
             "to no avail.", A_ALWAYS, self.outside, self, null, TO_CHAR);
-        act("$1n's $2N darken slightly as it leeches a small bit of "+
+        act("$1n's $2N darkens slightly as it leeches a small bit of "+
             "energy from $1m.", A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -4394,9 +4393,9 @@ code
        i := rnd(1, 100);
        if (i <= 5)
        {
-          act("$1n's $2N shimmmers and the light seems to slide off of it!",
+          act("$1n's $2N shimmers and the light seems to slide off of it!",
               A_SOMEONE, pc, self, null, TO_REST);
-          act("Your $2N shimmmers and the light seems to slide off of it!",
+          act("Your $2N shimmers and the light seems to slide off of it!",
               A_SOMEONE, pc, self, null, TO_CHAR);
           act("$3n's soul is ripped from $3s body violently!", A_SOMEONE,
               pc, self, enemy, TO_NOTVICT);
