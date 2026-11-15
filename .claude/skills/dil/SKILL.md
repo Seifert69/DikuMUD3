@@ -68,8 +68,12 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   every `unitptr` and `extraptr` variable that isn't `secure`d is null (`dil_clear_non_secured`
   in dilrun.cpp), wherever the unit is. Find the unit again after the pause
   (`findroom`, `findsymbolic`), or `secure` it.
-- **`and` / `or` evaluate both sides.** No short-circuit: `(u != null) and (u.level > 5)`
-  still reads `u.level`.
+- **`and` / `or` evaluate both sides, and a failed side fails the whole condition.** No
+  short-circuit: `(u != null) and (u.level > 5)` still reads `u.level`. And when either side
+  fails, the result fails (false) whatever the other side is (`dilfe_or`, `dilfe_and`):
+  `(u == null) or (u.level > 5)` is false when `u` is null, and so is
+  `(not ("x" in u.extra)) or (u.extra.["x"].descr == "1")` when the extra is missing. Write the
+  guard as its own `if`.
 - **A field of null fails, and a failed value is false in every comparison**: `u.level > 5`
   and `u.level <= 5` are both false when `u` is null. Test `if (u == null)` on its own first.
 - **String comparisons ignore case**, `<` and `>` too; `strcmp()` is exact.
