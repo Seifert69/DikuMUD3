@@ -239,6 +239,14 @@ code
 	
 	item := load(namex + "@" + zonex);
 
+	if (item == null)
+	{
+		// The zone no longer has this unit: keep the old item rather than destroy it
+		log("FIX: item - "+namex+"@"+zonex+" - with title - "+titlex+" - can't be loaded. Do not fix.");
+		exec("say I'm afraid I can't fix this, "+pc.name+"!", self);
+		goto no_load;
+	}
+
 	if (dilfind("whipe_me@" + zonex, item))
 	{
 		// A holiday gift loses whipe_me when it is handed out; a fresh copy would delete itself
@@ -1254,6 +1262,11 @@ code
     if (findsymbolic(pc, s, FIND_UNIT_INVEN | FIND_UNIT_EQUIP) == null)
     {
         u := load(s);
+        if (u == null)
+        {
+            log("statue_load@udgaard: no such object " + s);
+            return;
+        }
         i := dildestroy("randomizeItem@randomt", u);
         u.cost := 0;
         u.height := pc.height;
@@ -1324,7 +1337,7 @@ code
    }
    else
    {
-      while (i < SPL_GROUP_MAX)
+      while (i < WPN_GROUP_MAX)
       {
          tgt.weapons[i] := original.weapons[i];
          i := i + 1;
@@ -1907,6 +1920,7 @@ act("$1n's cigar burns out.",A_HIDEINV,self.outside,self,null,TO_REST);
 u:=load("dogend@udgaard");
 secure(u,blah);
 link(u,self.outside);
+unequip(self);
 addequip(u,WEAR_HOLD);
 destroy(self);
 quit;
@@ -5484,7 +5498,7 @@ code
 {
 
 sendtext ("Storage has been changed. You must seek an admin to take "+
-    "your stored items from old storage.", self);
+    "your stored items from old storage.<br/>", self);
 heartbeat:= PULSE_VIOLENCE*SECS_PER_MUD_YEAR;
 while (TRUE) pause;
 
@@ -9400,6 +9414,7 @@ if (argument !="lookin" )
  len:=length (self.extra.["$dlist"].names);
   buf:="As you look into the bucket you see the images of";
  i:=1;
+ t:=0;
  while (i<len)
   {
   if (i==1)
@@ -11707,7 +11722,7 @@ code
    addstring(self.names, c);
    substring(self.names, "bonzino");
 
-   self.title := c+"</div>";
+   self.title := c;
    self.outside_descr := "<div class='pc_descr'>"+c+" the human is standing here.</div>";
 
    quit;
@@ -12754,8 +12769,6 @@ act("Items up for auction:", A_ALWAYS, self, null, pc, TO_VICT);
     while(items)
      {
 	 alist:=items.names;
-	 log ("Fucking length:  ");
-	 log (itoa(length(alist)));
       owner := alist.[length(alist)-1];
       act(""+items.title+" ("+owner+")", A_ALWAYS, self, null, pc,
 TO_VICT);
