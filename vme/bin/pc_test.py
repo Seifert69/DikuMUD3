@@ -12,12 +12,17 @@ import re, socket, sys, time
 port, name, pw = int(sys.argv[1]), sys.argv[2], sys.argv[3]
 s = socket.create_connection(("127.0.0.1", port), timeout=10)
 s.settimeout(0.2)
+rest = ""  # what came after the last match, read again by the next call
 
 
 def read(pat=None, quiet=None, timeout=30):
-    """Print what the game says until it matches pat, or has been quiet for `quiet` seconds,
-    or `timeout` passes. Returns the match (None without one)."""
-    buf = ""
+    """Print what the game says until it matches pat (ignoring case), or has been quiet for
+    `quiet` seconds, or `timeout` passes. Returns the match (None without one)."""
+    global rest
+    buf, rest = rest, ""
+    if pat and (m := re.search(pat, buf, re.I)):
+        rest = buf[m.end():]
+        return m
     end = time.time() + timeout
     last = time.time()
     while time.time() < end and not (quiet and time.time() - last >= quiet):
@@ -34,7 +39,8 @@ def read(pat=None, quiet=None, timeout=30):
         last = time.time()
         if "*** Return for more ***" in txt:
             send("")
-        if pat and (m := re.search(pat, buf)):
+        if pat and (m := re.search(pat, buf, re.I)):
+            rest = buf[m.end():]
             return m
     return None
 
@@ -53,7 +59,7 @@ def expect(pat, timeout=30):
 
 expect(r"By what name")
 send(name)
-if expect(r"right|password").group(0) == "right":  # a new character
+if expect(r"right|password").group(0).lower() == "right":  # a new character
     send("y")
     for pat, line in ((r"new password", pw), (r"retype", pw), (r"gender", "1"),
                       (r"profession", "1"), (r"race", "1"), (r"personality", "2")):

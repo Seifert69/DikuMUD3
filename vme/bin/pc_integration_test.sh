@@ -20,8 +20,9 @@ while read -r z rest; do
 done < ../etc/zonelist.pctest-saved > ../etc/zonelist
 grep -q '^diltest ' ../etc/zonelist || { echo "diltest isn't in zonelist or isn't compiled"; exit 1; }
 
-# A server stopped a moment ago may still hold the mother port
-timeout 60 bash -c "while (echo > /dev/tcp/127.0.0.1/$MOTHER) 2>/dev/null; do sleep 1; done"
+# A server stopped a moment ago may still hold the mother port; one that is running isn't ours
+timeout 60 bash -c "while (echo > /dev/tcp/127.0.0.1/$MOTHER) 2>/dev/null; do sleep 1; done" ||
+    { echo "a server is running on port $MOTHER; stop it first"; exit 1; }
 rm -f vme.log
 ./vme > /dev/null 2>&1 &
 VME=$!

@@ -27,6 +27,7 @@ add_executable(vme_unit_tests
         weather_cpp_tests.cpp
         when_cache_tests.cpp
         when_limit_tests.cpp
+        zone_type_tests.cpp
         )
 target_link_options(vme_unit_tests PUBLIC -Wl,-zmuldefs)
 target_compile_definitions(vme_unit_tests PUBLIC

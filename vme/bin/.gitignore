@@ -24,3 +24,4 @@ vme_unit_tests
 *.json
 server.pem
 dh.pem
+pctest-mplex.log

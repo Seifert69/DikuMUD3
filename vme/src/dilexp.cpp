@@ -1191,6 +1191,7 @@ void dilfe_atsp(dilprg *p)
                     }
                     break;
                 case DILV_FAIL:
+                case DILV_NULL:
                     v->type = DILV_FAIL;
                     break;
                 default:
@@ -4088,6 +4089,7 @@ void dilfe_wepinfo(dilprg *p)
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].basedam);
                     ilist->Append(g_weapon_chart[(int)v1->val.num].element[idx2].alpha);
                 }
+                v->atyp = DILA_EXP;
                 v->val.ptr = ilist;
             }
             else
@@ -5740,6 +5742,8 @@ void dilfe_pe(dilprg *p)
     dilval *v2 = p->stack.pop();
     dilval *v1 = p->stack.pop();
 
+    // A failed or wrong-typed operand on either side decides the result
+    v->type = DILV_INT;
     switch (dil_getval(v2))
     {
         case DILV_FAIL:
@@ -5747,15 +5751,12 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp2 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp2 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_EDP:
@@ -5763,7 +5764,6 @@ void dilfe_pe(dilprg *p)
         case DILV_SP:
         case DILV_ZP:
         case DILV_CP:
-            v->type = DILV_INT;
             break;
 
         default:
@@ -5778,15 +5778,12 @@ void dilfe_pe(dilprg *p)
             break;
         case DILV_NULL:
             n1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_SLP:
             slp1 = 1;
-            v->type = DILV_INT;
             break;
         case DILV_ILP:
             ilp1 = 1;
-            v->type = DILV_INT;
             break;
 
         case DILV_SP:
@@ -5794,7 +5791,6 @@ void dilfe_pe(dilprg *p)
         case DILV_UP:
         case DILV_ZP:
         case DILV_CP:
-            v->type = DILV_INT;
             break;
 
         default:

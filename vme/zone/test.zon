@@ -5174,6 +5174,20 @@ code
       logtest(tstno, LOGT_ERROR, "T030 getfollower of a failed value");
       bad := 1;
    }
+   // A null caster fails like a null medium or target (it stopped the program); == with a
+   // failed right side fails as != does and as a failed left side does (it compared as null)
+   k := 7;
+   k := attack_spell(SPL_FIREBALL_1, nobody, npc, npc, 0, "");
+   u := null;
+   i := 7;
+   i := (u == nobody.outside);
+   j := 7;
+   j := (nobody.outside == u);
+   if ((k != 7) or (i != 7) or (j != 7))
+   {
+      logtest(tstno, LOGT_ERROR, "T030 attack_spell with a null caster, or == with a failed side");
+      bad := 1;
+   }
 
    // load: a new unit inside the program's own unit; null for no such unit and for a room
    if ((npc == null) or (not (npc.outside == self)) or (not (npc.nameidx == "experiment")) or

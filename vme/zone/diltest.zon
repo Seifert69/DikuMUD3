@@ -67,19 +67,16 @@ dilend
 
 
 // ==================== P002 =====================
-// Accounting: acc_balance, acc_total and acc_modify(). The game runs with accounting off
-// (accounting = 0 in server.cfg): both fields read 0 on a player, and acc_modify() pays nothing
-// in and takes nothing out. Were accounting on, the 100 paid in is taken out again.
+// Accounting: acc_balance and acc_total. The game runs with accounting off (accounting = 0 in
+// server.cfg) and both read 0 on a player. acc_modify() isn't called: DIL can't tell whether
+// accounting is on, and on a game where it is, the deposit and withdrawal would stay in the
+// god's account history.
 dilbegin P002(pc : unitptr);
 external
    plog(pc : unitptr, no : integer, ok : integer, msg : string);
 var
    bal0 : integer;
    tot0 : integer;
-   bal1 : integer;
-   tot1 : integer;
-   bal2 : integer;
-   tot2 : integer;
 code
 {
    bal0 := -1;
@@ -88,19 +85,6 @@ code
    tot0 := pc.acc_total;
    plog(pc, 2, ((bal0 == 0) and (tot0 == 0)), "with accounting off acc_balance and acc_total read 0: " +
         itoa(bal0) + ", " + itoa(tot0));
-   if ((bal0 != 0) or (tot0 != 0))
-      return; // accounting is on, and the account in use: leave it alone
-
-   acc_modify(pc, 100);
-   bal1 := pc.acc_balance;
-   tot1 := pc.acc_total;
-   acc_modify(pc, -100);
-   bal2 := pc.acc_balance;
-   tot2 := pc.acc_total;
-   plog(pc, 2, ((bal1 == 0) and (tot1 == 0)), "acc_modify(pc, 100) with accounting off pays nothing in: " +
-        itoa(bal1) + ", " + itoa(tot1));
-   plog(pc, 2, ((bal2 == 0) and (tot2 == 0)), "acc_modify(pc, -100) takes nothing out: " +
-        itoa(bal2) + ", " + itoa(tot2));
    return;
 }
 dilend
@@ -577,7 +561,7 @@ dilend
 // an elf, a dwarf, a brownie, a halfling and race 150. Abilities take -3 to +4 (a brownie's
 // magic is 4), weapons -3 to +3 (a brownie's -6 and a halfling's -4 for the battle axe are
 // skipped: 0); a race outside the table (100 and up) has 0 everywhere, and reset_race() leaves
-// such a player as is. The race is put back before the checks.
+// such a player as is. The race, and anything reset_race() changed, is put back before the checks.
 dilbegin P008(pc : unitptr);
 external
    plog(pc : unitptr, no : integer, ok : integer, msg : string);
@@ -637,6 +621,12 @@ code
    ls1 := pc.lifespan;
    bt1 := pc.birth;
    wt1 := pc.baseweight;
+   // put back whatever reset_race() changed, should it ever change something
+   pc.height := hg0;
+   pc.lifespan := ls0;
+   pc.birth := bt0;
+   if (pc.baseweight != wt0)
+      set_weight_base(pc, wt0);
    pc.race := rc0;
 
    rc1 := pc.race;
@@ -729,8 +719,7 @@ dilend
 
 // ==================== P010 =====================
 // Who the player is: pc_head() (the god is on), the player list from it, idx (the player id).
-// findsymbolic(pc.symname, pc.idx) is left out: it gives null for a player who typed the name
-// with a capital at login (nanny.cpp _parse_name). The god is saved, as the save command
+// findsymbolic() on a player is P013. The god is saved, as the save command
 // does: playtime doesn't go down, lastroom is the room saved, isplayer() is TRUE for the name in
 // any case. check_password() is FALSE for a wrong password (the real one is never in a zone).
 dilbegin P010(pc : unitptr);
@@ -823,7 +812,7 @@ dilend
 
 // ==================== P012 =====================
 // A player's own colours: addcolor(), changecolor() and delcolor(), keys matched by abbreviation,
-// refused keys and colours, and getcolor()'s tag. The key diltestclrlong is removed again; if
+// refused keys and colours, and getcolor()'s tag. The keys it adds are removed again; if
 // the god has a key that begins with it, the test leaves the colours alone.
 dilbegin P012(pc : unitptr);
 external
@@ -866,6 +855,13 @@ code
    r10 := delcolor(pc, "diltestclrlong");
    r11 := delcolor(pc, "diltestclrlong");
    s := getcolor("diltestclrlong");
+   // keys that should have been refused are removed if they were added
+   if (r3 == TRUE)
+      r3 := delcolor(pc, "diltestclr") + 2; // stays wrong for the check below
+   if (r6 == TRUE)
+      r6 := delcolor(pc, "bad key") + 2;
+   if (r7 == TRUE)
+      r7 := delcolor(pc, "diltest_key_of_21char") + 2;
 
    plog(pc, 12, (r1 == TRUE), "addcolor() of a new key: " + itoa(r1));
    plog(pc, 12, (r2 == FALSE), "addcolor() of the same key again: " + itoa(r2));
