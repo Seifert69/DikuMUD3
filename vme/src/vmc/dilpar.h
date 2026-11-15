@@ -28,6 +28,7 @@ struct exptype
     ubit8 *codep;         ///< code write pointer
     sbit16 chkvar;        ///< for DilCheck: the variable read (DilCheck::ACTIVATOR.. for built-ins), -1 none
     ubit8 chkfield;       ///< for DilCheck: read through a field (pc.name)
+    ubit8 litplus;        ///< for DilCheck: a string literal + something ("kill"+name)
 };
 
 struct dilref

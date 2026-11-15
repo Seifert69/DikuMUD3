@@ -140,7 +140,8 @@ struct sSyms
     v.dsl = DSL_STA;                                                           \
     v.boolean = 0;                                                             \
     v.chkvar = -1;                                                             \
-    v.chkfield = 0;
+    v.chkfield = 0;                                                            \
+    v.litplus = 0;
 
 #define FREEEXP(v)                                                             \
     free(v.code);                                                              \
@@ -174,7 +175,7 @@ static std::vector<std::pair<int, std::string>> g_dilcheck_msgs;
         ubit8 boolean;
         /* for DilCheck: the plain variable it is (-1 none), or the constant integer / null it is */
         sbit16 var;
-        ubit8 isint, isnull;
+        ubit8 isint, isnull, litplus;
         sbit32 num;
     } ins;
     struct dilxref xref;
@@ -355,7 +356,7 @@ file    : program
         }
         for (const auto &msg : g_dilcheck_msgs)
         {
-            real_warning_at(msg.first, msg.second.c_str());
+            warning_at(msg.first, msg.second.c_str());
         }
         g_dilcheck_msgs.clear();
 
@@ -381,6 +382,7 @@ program : DILSC_BEG dilinit diloptions fundef dilrefs dildecls DILSC_COD
     }
     block DILSC_END
     {
+        g_dilcheck.end();
         /* start at the top again */
         moredilcore(5);
         bwrite_ubit8(&wcore, DILI_GOTO);
@@ -2321,6 +2323,7 @@ dilexp  : diland
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | dilexp DILSE_LOR diland
@@ -2359,6 +2362,7 @@ diland  : dilcmp
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | diland DILSE_LAND dilcmp
@@ -2397,6 +2401,7 @@ dilcmp  : dilsexp
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | dilcmp cmp dilsexp
@@ -2630,6 +2635,7 @@ dilsexp : dilterm
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | '-' dilterm %prec UMINUS
@@ -2700,6 +2706,7 @@ dilsexp : dilterm
                 else
                 {
                     /* one is dynamic */
+                    $$.litplus = ($1.dsl == DSL_STA) || $1.litplus; /* "word" + ..., for DilCheck */
                     make_code(&($1));
                     make_code(&($3));
                     add_code(&($$), &($1));
@@ -2808,6 +2815,7 @@ dilterm : dilfactor
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | dilterm '*' dilfactor
@@ -3068,6 +3076,7 @@ dilfactor   : '(' dilexp ')'
         copy_code(&($$), &($1));
         $$.chkvar = $1.chkvar;
         $$.chkfield = $1.chkfield;
+        $$.litplus = $1.litplus;
         FREEEXP($1);
     }
     | DILSE_NOT dilfactor %prec DILSE_NOT
@@ -5480,6 +5489,7 @@ coreexp   : dilexp
         $$.var = $1.chkfield ? -1 : $1.chkvar;
         $$.isint = ($1.dsl == DSL_STA) && ($1.typ == DilVarType_e::DILV_INT);
         $$.isnull = ($1.typ == DilVarType_e::DILV_NULL);
+        $$.litplus = $1.litplus;
         $$.num = $1.num;
         make_code(&($1));
         $$.boolean = $1.boolean;
@@ -6484,7 +6494,7 @@ dilproc : corefuncall
         }
         else
         {
-            g_dilcheck.act($7.isnull, $11.isnull, $13.isint && $13.num == TO_VICT, dillinenum);
+            g_dilcheck.act($7.isnull, $11.isnull, $13.isint, $13.num == TO_VICT || $13.num == TO_NOTVICT, dillinenum);
             /* make code */
             $$.fst = $3.fst;
             $$.lst = $15 + 1;
@@ -6504,9 +6514,10 @@ dilproc : corefuncall
         }
         else
         {
-            if (tmpl.core[$3.fst] == DILE_FS)
+            if ($3.litplus)
             {
-                g_dilcheck.exec((const char *)&tmpl.core[$3.fst + 1], tmpl.core[$3.lst - 1] == DILE_PLUS, dillinenum);
+                /* the code starts with the leftmost literal: DILE_FS, then its text */
+                g_dilcheck.exec((const char *)&tmpl.core[$3.fst + 1], true, dillinenum);
             }
             $$.fst = $3.fst;
             $$.lst = $7 + 1;
@@ -6551,7 +6562,7 @@ dilproc : corefuncall
         sbit32 flags = $3.num;
         g_dilcheck.setCondition(false);
         /* a wait for ticks only is a pause: activator & co. belong to the tick afterwards */
-        g_dilcheck.wait($3.isint && (flags & SFB_TICK) && !(flags & ~(SFB_TICK | SFB_RANTIME)), dillinenum);
+        g_dilcheck.wait($3.isint && (flags & SFB_TICK) && !(flags & ~(SFB_TICK | SFB_RANTIME)), dillinenum, $3.fst);
         checkbool("argument 1 of wait", $3.boolean);
         if ($3.typ != DilVarType_e::DILV_INT)
         {
@@ -6676,6 +6687,7 @@ dilproc : corefuncall
     }
     | DILSI_QUIT ihold
     {
+        g_dilcheck.jump();
         $$.fst = $2;
         $$.lst = $2 + 1;
         wtmp = &tmpl.core[$2];
@@ -6885,7 +6897,7 @@ optsemicolons   :
 
 block    : '{' dilinstlist '}'
     {
-        g_dilcheck.boundary();
+        g_dilcheck.branches($2.fst, $2.lst);
         $$ = $2;
     }
     ;
@@ -6903,7 +6915,7 @@ dilinstlist   : dilcomposed
 
 dilcomposed   : '{' dilinstlist '}' optsemicolons
     {
-        g_dilcheck.boundary();
+        g_dilcheck.branches($2.fst, $2.lst);
         $$ = $2;
     }
     | dilinst semicolons
@@ -6918,6 +6930,7 @@ dilcomposed   : '{' dilinstlist '}' optsemicolons
 
 dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS dilcomposed
     {
+        g_dilcheck.branches($3.fst, wcore - tmpl.core);
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
@@ -6931,6 +6944,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | DILSI_IF '(' coreexp ')' ihold ahold dilinst optsemicolons ihold ahold DILSI_ELS dilcomposed
     {
+        g_dilcheck.branches($3.fst, wcore - tmpl.core);
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
@@ -6944,6 +6958,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | DILSI_IF '(' coreexp ')' ihold ahold dilcomposed
     {
+        g_dilcheck.branches($3.fst, wcore - tmpl.core);
         wtmp = &tmpl.core[$5];
         bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$6];
@@ -6953,7 +6968,8 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | DILSI_FOE '(' coreexp ',' ihold pushbrk pushcnt defcnt corevar ihold ahold ')'
     {
-        g_dilcheck.assign($9.var);
+        g_dilcheck.boundary(true);
+        g_dilcheck.assign($9.var, -1);
         in_foreach++;
         if (in_foreach > 1)
         {
@@ -6966,6 +6982,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     ihold ahold defbrk popbrk popcnt
     {
+        g_dilcheck.boundary();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the next element
@@ -6986,8 +7003,13 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
         $$.fst = $3.fst;
         $$.lst = wcore - tmpl.core;
     }
-    | DILSI_WHI pushbrk pushcnt defcnt '(' coreexp ')' ihold ahold dilcomposed ihold ahold defbrk popbrk popcnt
+    | DILSI_WHI pushbrk pushcnt defcnt '('
     {
+        g_dilcheck.boundary(true); /* the condition is tested again after each pass */
+    }
+    coreexp ')' ihold ahold dilcomposed ihold ahold defbrk popbrk popcnt
+    {
+        g_dilcheck.boundary();
         /*
          * allows both break and continue inside the composed
          * statement. continue starts at the test statement.
@@ -6995,20 +7017,20 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
          */
 
         /* made with 'if' and 'goto' */
-        wtmp = &tmpl.core[$8];
-        bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
         wtmp = &tmpl.core[$9];
+        bwrite_ubit8(&wtmp, DILI_IF); /* the instruction */
+        wtmp = &tmpl.core[$10];
         bwrite_ubit32(&wtmp, wcore - tmpl.core); /* address of break */
-        wtmp = &tmpl.core[$11];
-        bwrite_ubit8(&wtmp, DILI_GOTO); /* test again */
         wtmp = &tmpl.core[$12];
-        bwrite_ubit32(&wtmp, $6.fst); /* address of start */
-        $$.fst = $6.fst;
+        bwrite_ubit8(&wtmp, DILI_GOTO); /* test again */
+        wtmp = &tmpl.core[$13];
+        bwrite_ubit32(&wtmp, $7.fst); /* address of start */
+        $$.fst = $7.fst;
         $$.lst = wcore - tmpl.core;
     }
     | ':' SYMBOL ':'
     {
-        g_dilcheck.boundary();
+        g_dilcheck.boundary(true);
     }
     dilcomposed
     {
@@ -7214,7 +7236,7 @@ dsomeargs : dilexp
 
 dilass   : corevar DILTO_ASS dilassrgt ihold
     {
-        g_dilcheck.assign($1.var);
+        g_dilcheck.assign($1.var, $3.var);
         /* this is an assignment to an expression */
 
         /* fprintf(stderr,"Assignment\n"); */
@@ -7303,6 +7325,7 @@ dilassrgt: coreexp
     | corefunc
     {
         $$ = $1;
+        $$.var = -1;
     }
     ;
 
@@ -7323,6 +7346,7 @@ dilinst  : dilproc
     }
     | DILSI_RTS ihold
     {
+        g_dilcheck.jump();
         if (!dilistemplate)
         {
             dilfatal("return only allowed in templates");
@@ -7342,6 +7366,7 @@ dilinst  : dilproc
     }
     | DILSI_RTS '(' coreexp ')' ihold
     {
+        g_dilcheck.jump();
         if (!dilistemplate)
         {
             dilfatal("return only allowed in templates");
@@ -7373,6 +7398,7 @@ dilinst  : dilproc
     }
     | DILSI_GOT ihold label
     {
+        g_dilcheck.jump();
         wtmp = &tmpl.core[$2];
         bwrite_ubit8(&wtmp, DILI_GOTO);
         $$.fst = $2;
@@ -7380,6 +7406,7 @@ dilinst  : dilproc
     }
     | DILSI_BRK ihold ahold
     {
+        g_dilcheck.jump();
         /* break statement */
         if (!break_no)
         {
@@ -7399,6 +7426,7 @@ dilinst  : dilproc
     }
     | DILSI_CNT ihold ahold
     {
+        g_dilcheck.jump();
         /* continue statement */
         if (!cont_no)
         {
@@ -7569,13 +7597,7 @@ void dilfatal(const char *str, ...)
 
 static void dilcheck_report(int line, const std::string &msg)
 {
-    std::string text = std::string("DIL ") + tmpl.prgname + ": " + msg;
-    if (g_fatal_warnings)
-    {
-        dillinenum = line;
-        dilfatal("%s", text.c_str());
-    }
-    g_dilcheck_msgs.emplace_back(line, text);
+    g_dilcheck_msgs.emplace_back(line, std::string("DIL ") + tmpl.prgname + ": " + msg);
 }
 
 void dilwarning(const char *str)

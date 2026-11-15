@@ -1690,18 +1690,24 @@ void real_warning(const char *str)
     real_warning_at(linenum, str);
 }
 
-void warning(const char *str)
+void warning_at(int line, const char *str)
 {
     extern int g_fatal_warnings;
 
     if (g_fatal_warnings)
     {
-        fatal(str);
+        fprintf(stderr, "%s: %d: %s\n", g_cur_filename, line, str);
+        g_errcon = 1;
     }
     else
     {
-        real_warning(str);
+        real_warning_at(line, str);
     }
+}
+
+void warning(const char *str)
+{
+    warning_at(linenum, str);
 }
 
 /* Read a string from fl, allocate space for it and return it */

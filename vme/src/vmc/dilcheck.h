@@ -43,22 +43,33 @@ public:
 
     /// A new template: its variables (the first argc are its arguments).
     void begin(const std::vector<Var> &vars, int argc);
-    void assign(int var);
+    /// The template is done: reports what was held back until the whole template was seen.
+    void end();
+    /// var := from (from is the plain variable on the right, or -1).
+    void assign(int var, int from);
     /// A read of var (field: through a field, as in pc.name).
     void use(int var, bool field, int line);
-    /// A wait statement; tick is true when it waits for ticks only (a pause).
-    void wait(bool tick, int line);
-    /// Reads while this is on are in a wait or interrupt condition.
+    /// A wait statement at core address addr; tick is true when it waits for ticks only (a pause).
+    void wait(bool tick, int line, unsigned addr = 0);
+    /// The end of an if statement or a { } block whose code is [from, to): if it waits somewhere,
+    /// the state below depends on the way taken, so it is forgotten.
+    void branches(unsigned from, unsigned to);
+    /// Reads while this is on are in a wait or interrupt condition: they are checked at the next
+    /// wait, which is when the condition is first tested after the program wakes up.
     void setCondition(bool on) { condition_ = on; }
     /// Reads while this is on are not checked (the argument of unsecure()).
     void setQuiet(bool on) { quiet_ = on; }
     void secure(int var, int line);
     void unsecure(int var);
-    /// A block end or a label: code may arrive here from elsewhere.
-    void boundary();
+    /// goto, break, continue, quit or return: the path ends here, so its unsecure()s since the last wait don't
+    /// reach the code below (`if (...) { unsecure(pc); goto start; }`).
+    void jump();
+    /// The end of a loop, or (label) a label or loop start: code may arrive here from elsewhere.
+    void boundary(bool label = false);
 
-    /// act(): chNull/victNull say whether those arguments are the constant null.
-    void act(bool chNull, bool victNull, bool toVict, int line);
+    /// act(): chNull/victNull say whether those arguments are the constant null; needsVictim is
+    /// true for a constant TO_VICT or TO_NOTVICT, typeKnown false when the type isn't a constant.
+    void act(bool chNull, bool victNull, bool typeKnown, bool needsVictim, int line);
     /// exec(): the first argument, when it starts with a string literal and adds something to it.
     void exec(const std::string &literal, bool concatenated, int line);
 
@@ -83,9 +94,22 @@ private:
     };
 
     Track *at(int var);
+    /// A warning; with unlessSecured >= 0 it is dropped if that variable is secured anywhere.
+    void warn(int line, const std::string &msg, int unlessSecured = -1);
+
+    struct Held
+    {
+        int line;
+        std::string msg;
+        int unlessSecured;
+    };
 
     Report report_;
+    std::vector<Held> held_;
+    std::vector<std::pair<int, int>> condReads_; ///< (variable, line) read in a condition
     std::vector<Track> vars_;
+    std::vector<unsigned> waitAddrs_;
+    std::vector<int> unsecured_; ///< unsecure()d since the last wait or label
     int tickLine_{0}; ///< the pause the program last woke from, 0 when the last wait wasn't a pause
     bool eventWarned_[4]{};
     bool condition_{false};

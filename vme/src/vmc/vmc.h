@@ -99,6 +99,8 @@ extern int g_errcon;
 extern int g_fatal_warnings;
 /// A warning about line `line` of the file being compiled (vmcpar.y).
 void real_warning_at(int line, const char *str);
+/// A warning, or an error with -l (vmcpar.y).
+void warning_at(int line, const char *str);
 extern int g_verbose;
 extern int g_nooutput;
 extern int g_make;
