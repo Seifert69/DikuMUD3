@@ -3238,7 +3238,6 @@ heartbeat := PULSE_SEC*5;
    wait(SFB_MSG,activator.name=="jesealla");
 	 priority;
 	 pname:=getword (argument);
-					secure (pc,losthim);
 
 exec ("emote looks Jesealla over and turns white.",self);
 exec("emote screams, 'My god, you're ugly!!!!!!!!!!'", self);
@@ -3576,13 +3575,8 @@ exec("say Oh... and to remind you to be honest in your endeavors I will "+
          experience(-200, pc);
 act("You feel less experienced.",A_ALWAYS,pc,null,null,TO_CHAR);
 destroy (self.inside);
-   if ((command("give")) and (activator.type == UNIT_ST_PC))
-
-   {
-      goto give;
-   }
-   else
-     goto start;
+   unsecure(pc);
+   goto start;
 
 }
 dilend

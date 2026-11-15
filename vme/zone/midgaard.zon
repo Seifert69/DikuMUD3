@@ -400,9 +400,9 @@ code
          {
             sl := getwords(trash.name);
             s := sl.[2];
+            addextra(trash.extra, {"$owner notified"}, ""); // before the pauses: they clear trash
             pause;pause;
             exec ("tell "+s+" Your corpse is at "     +self.outside.title +", please pick it up.", self);
-            addextra(trash.extra, {"$owner notified"}, "");
             continue;
          }
       }

@@ -1165,6 +1165,7 @@ code
    wait(SFB_CMD, command("press") or command("push"));
 
    block;
+   pc := activator;
 
    if (argument != "button")
    {
@@ -1172,7 +1173,6 @@ code
       goto start;      
    }
 
-   pc := activator;
    if (pc.level < 254)
    {
       act("The button says 'clank' rather than 'click'. You don't seem to have the right divine touch.", A_ALWAYS, pc, null, self, TO_CHAR);

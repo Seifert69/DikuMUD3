@@ -64,4 +64,10 @@ Questions:
    `position_update`, so a player can stand on below 0 hp until something else updates them; `if
    (1 < 30)` (line 402) is always true (meant `i < 30`; the same except when `i` is 30), and
    `secure(pc, lost)` secures a `pc` that is never set. Add `position_update(activator)` after the
-   damage?
+   damage? The `secure(pc, lost)` part: Fixed (vmc warnings); the rest is still open.
+
+## vmc warnings
+
+- **flames** (line 382): `secure(pc, lost)` secured a `pc` that was never set. `pc := activator;`
+  added before it, and `unsecure(pc);` at `:start:` so each touch lets the previous player go.
+  No change in play.

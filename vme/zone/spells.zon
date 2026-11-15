@@ -3992,8 +3992,10 @@ A_ALWAYS, self, null, null, TO_REST);
    }
    if("storm gate" in tgt.names)
    {
+     secure(tgt, lost);
      pause;
      sendto("OPENCAST "+itoa(self.abilities[ABIL_BRA]), tgt);
+     unsecure(tgt);
    }
    else
    {
@@ -4005,6 +4007,7 @@ self, null, tgt, TO_NOTVICT);
 tgt, self, null,  TO_CHAR);
       quit;
    }
+:lost:
    quit;
 }
 dilend

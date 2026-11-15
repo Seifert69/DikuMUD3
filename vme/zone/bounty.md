@@ -127,9 +127,20 @@ Questions:
     kills), not at the end. Compute them in `:donezo:`?
 
 ### Precedence
+
+Since #603 (merged 2026-11-15) `and`/`or` bind as in C (looser than the comparisons), so once the
+zones are rebuilt these conditions do what was written. What that changes in play is on Papi's
+review list (#596's table).
+
 - **claim_bounty** line 5085: `if(i == 14 or i == 30 or i == 60 or i == 90 or i == 180 or i == 365)`
   is `((i == (14 or i)) == (30 or i)) ...`, true only for a streak of 1, so the daily milestone
   bonus (double xp and points, "for making 1 daily contracts in a row") is paid on the first daily
   contract and never at 14, 30, ... Meant `(i == 14) or (i == 30) or ...`.
 - **claim_bounty** line 5125: the same for the monthly milestones `i == 6 or i == 12 or i == 18 or
   i == 24`: true for a streak of 1. Meant `(i == 6) or (i == 12) or ...`.
+
+## vmc warnings
+
+- **qnecro2** (line 3474): the warning is wrong; left as it is. `item` is secured at line 3443
+  and still is at the sash's `destroy(item)`: the checker carries the `unsecure(item)` of the
+  crystal branch (line 3461) into the exclusive `else if` after it.

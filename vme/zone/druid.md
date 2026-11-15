@@ -10,4 +10,9 @@ Fixed in place:
    player), with nothing to record that one was given. Intended, or a flag as in the thieves' guild?
 
 ### Precedence
+
+Since #603 (merged 2026-11-15) `and`/`or` bind as in C (looser than the comparisons), so once the
+zones are rebuilt these conditions do what was written. What that changes in play is on Papi's
+review list (#596's table).
+
 None found.

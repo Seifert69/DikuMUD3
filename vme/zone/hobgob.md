@@ -60,7 +60,7 @@ Questions:
    the `losthim` branch can't run. Setting `pc` would make the quest break when the player walks
    off during the speech: Jesealla keeps her `$gnitiaw` extra and never starts the ending again.
    Remove the `secure` (and the dead `losthim`), or set `pc` and, on `losthim`, tell Jesealla to
-   drop `$gnitiaw`?
+   drop `$gnitiaw`? Fixed (vmc warnings): the `secure` removed.
 2. **lover_2** (Jesealla, line 3038): she ends the quest for any player whose command she sees
    while Reckus is in her room, also one without "Lost Love Search Ongoing"; `lover_3` then gives
    that player the heart tear and "Lost Love Search Complete". Add
@@ -76,6 +76,22 @@ Questions:
 
 ### Precedence
 
+Since #603 (merged 2026-11-15) `and`/`or` bind as in C (looser than the comparisons), so once the
+zones are rebuilt these conditions do what was written. What that changes in play is on Papi's
+review list (#596's table).
+
+
 - `getit_dil` line 4930: `if (command("give") and activator.type == UNIT_ST_PC)` is read as
   `(command("give") and activator.type) == UNIT_ST_PC`, always false, so a second `give` typed right
   after the first is missed. Meant: `(command("give")) and (activator.type == UNIT_ST_PC)`.
+
+## vmc warnings
+
+- **lover_6** (line 3240): `secure(pc, losthim)` secured a `pc` that is never set. Removed: setting
+  `pc` would make the quest stick when the player walks off during the speech (question 1), and
+  nothing else uses `pc`. `:losthim:` is unreachable now, as it was before. No change in play.
+- **mageq_2** (lines 3578-3579): after `:cheater:`'s pauses the program was woken by a tick, so
+  `if ((command("give")) and (activator.type == UNIT_ST_PC))` was always false and it always went
+  to `start`. Now plainly `goto start`, with `unsecure(pc)` first, as the main path does: the
+  cheater stayed secured, so walking off later made the NPC say "They won't get far!" out of
+  nowhere. Changes play: only that stray line is gone.

@@ -44,3 +44,8 @@ Questions:
    everyone in the room as "... drains your life energy", and the player's hp is set to 0 without
    `position_update`. Should it be an act() to the player and another to the room, followed by
    `position_update(pc)`?
+
+## vmc warnings
+
+- **flamespell** (lines 1478, 1480): the two acts passed `enemy`, never set, as `$3`, which their
+  texts don't use; now `null`, and the unused `enemy` variable removed. No change in play.

@@ -40,4 +40,11 @@ Questions:
 4. **goblin2prg** (line 1628): it kills `argument` two pauses after goblin1's message, when
    `argument` belongs to a later tick and is empty, so goblin2 never attacks. The fix is to keep
    the name right after the wait (`s := argument;`, then `exec("kill "+s, self)`). Not made: goblin2
-   joining goblin1 makes the cave entrance harder than it has been. Fix it?
+   joining goblin1 makes the cave entrance harder than it has been. Fix it? Fixed (vmc warnings).
+
+## vmc warnings
+
+- **goblin2prg** (line 1629): `exec("kill "+argument, self)` ran three pauses after goblin1's
+  message, when `argument` belonged to a tick and was empty. The name is now kept in `s` right
+  after the wait and used for the kill.
+  Changes play: goblin2 now joins goblin1 in attacking the player goblin1 picked.

@@ -37,7 +37,7 @@ Questions:
    NPCs that fight the guild staff (a player's charmed pet, say) are thrown out at 0 hp like players
    and the staff healed. Swap the two lines, as fightersguild's nokill has it? Not made: the staff
    would then fight such NPCs to the end and could be killed by them. (Smaller: `command("flee")`
-   never matches under `SFB_COM`, and `:gone:` / `unsecure(pc)` have no `secure`; harmless.)
+   never matches under `SFB_COM`, and `:gone:` / `unsecure(pc)` have no `secure`; harmless.) Fixed (vmc warnings).
 2. **brawl_det** (line 123): once the fight is fair, any death the loin cloth hears completes the
    Barbarian entry quest: the player's own death against the wolf as well, or any other creature
    dying in the room. Suggested: on `CMD_AUTO_DEATH`, `if (activator == self.outside) goto init;`
@@ -54,3 +54,10 @@ Questions:
 5. **blood_poison** (lines 294-295): mana and endurance go below 0, while the poison spell it was
    copied from (spells.zon, `poison`) stops them at 0. Add the same two `if (... < 0) ... := 0;`?
    (`$blood_str`, set on the weapon by `blood`, is read by nothing either.)
+
+## vmc warnings
+
+- **nokill** (line 150): `if (pc.type == UNIT_ST_NPC) goto start;` read `pc` before
+  `pc := self.fighting;`; the two lines swapped, as fightersguild's nokill has them.
+  Changes play: an NPC fighting the guild staff (a charmed pet, say) is no longer thrown out at
+  0 hp with the staff healed; the staff fight it out normally.

@@ -376,8 +376,10 @@ code
     heartbeat := PULSE_SEC*30;
 
     :start:
+    unsecure(pc);
     wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (command("touch")) and (("flame" in argument) or ("fire" in argument))));
     block;
+    pc := activator;
     secure(pc,lost);
     i := rnd (1,30);
     if (i < 10)

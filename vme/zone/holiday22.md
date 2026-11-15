@@ -56,3 +56,9 @@ Questions:
    the floor stops players opening their own box or basket there, and one "open gift" opens every
    gift the player carries. Check `findunit(activator, argument, FIND_UNIT_INVEN, null) == self`
    (as yule_spoke does) before blocking?
+
+## vmc warnings
+
+- **prg5** (line 2052): the card's text was sent to `activator` three pauses after the box was
+  opened, when `activator` belonged to a tick (null), so the opener never saw it; now `pc`.
+  Changes play: the opener now sees the greeting card's text when the box opens.
