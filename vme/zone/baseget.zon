@@ -214,7 +214,7 @@ code
                 if ((("corpse of "+self.name) != fromitem.names.[0]) and
                     (("statue of "+self.name) != fromitem.names.[0]) and (fromitem.value[2]==1))
                 {
-                    sendtext ("You can only get stuff from your own players remains.<br/>",self);
+                    sendtext ("You can only get things from your own remains.<br/>",self);
                     quit;
                 }
             }
@@ -466,7 +466,7 @@ code
 
     if ((item.type == UNIT_ST_ROOM) or (not isset(item.manipulate, MANIPULATE_TAKE)))
     {
-        act("$2n</div>: You cannot take that.", A_SOMEONE, self, item, null, TO_CHAR);
+        act("$2n: You cannot take that.", A_SOMEONE, self, item, null, TO_CHAR);
         return(1);
     }
 
@@ -480,13 +480,13 @@ code
 
     if (cnt == 2)
     {
-        act("$2n</div>: You cannot carry that much weight.", A_SOMEONE, self, item, null, TO_CHAR);
+        act("$2n: You cannot carry that much weight.", A_SOMEONE, self, item, null, TO_CHAR);
         return(1);
     }
 
     if ((item.objecttype != ITEM_MONEY) and (cnt == 1))
     {
-        act("$2n</div>: You cannot carry that many items.", A_SOMEONE, self, item, null, TO_CHAR);
+        act("$2n: You cannot carry that many items.", A_SOMEONE, self, item, null, TO_CHAR);
         return(2);
     }
 
@@ -1163,7 +1163,7 @@ code
 
     if ((buff == "0") or (amnt < 0))
     {
-        act("How can you put $2t of something into something?", A_ALWAYS, self, temp, toitem, TO_CHAR);
+        act("How can you put $2t of something into something?", A_ALWAYS, self, buff, null, TO_CHAR);
         quit;
     }
     else if ((amnt > 0) and (not("." in buff)))
@@ -1344,7 +1344,7 @@ code
 
         if (toitem.weight + toitem.baseweight >= toitem.capacity)
         {
-            act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
+            act("The $2N cannot contain any more.", A_ALWAYS, self, toitem, null, TO_CHAR);
             return(2);
         }
 
@@ -1404,7 +1404,7 @@ code
     {
         if ((item.weight + toitem.weight - toitem.baseweight) > toitem.capacity)
         {
-            act("The $2N cannot contain anymore.", A_ALWAYS, self, toitem, null, TO_CHAR);
+            act("The $2N cannot contain any more.", A_ALWAYS, self, toitem, null, TO_CHAR);
             return(2);
         }
 

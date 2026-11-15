@@ -905,7 +905,7 @@ code
    heartbeat := PULSE_SEC*4;
    pause;
    pause;
-   act("$1n says, I would like to report a crime!",
+   act("$1n says, 'I would like to report a crime!'",
                A_HIDEINV, self, null, null, TO_ROOM);
    acc_cmd := "accuse "+criminal_name+" "+crime_name;
 
@@ -971,7 +971,7 @@ code
 
    if (show)
    {
-      act("You just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, witness, TO_VICT);
+      act("You have just witnessed a crime committed by $1n.", A_ALWAYS, criminal, null, witness, TO_VICT);
    }
    
      add_witness(witness, criminal,victimname, crime_type);
@@ -1057,7 +1057,7 @@ code
    else
       sendtext("None at this time.<br>", activator);
 
-   sendtext("<br><b><div class=cpy>Wanted Alive</b></div></b><br><br>",activator);
+   sendtext("<br><b><div class=cpy>Wanted Alive</div></b><br><br>",activator);
 
    if (length(wanted_alive) > 0)
       sendtext(wanted_alive+"<br>", activator);
@@ -1169,7 +1169,7 @@ code
                if (not (crime in seen))
                {
                   addstring(seen, crime);
-                  act("<a cmd='accuse #'>" + w_ptr.names.[1] + " "+crime, A_SOMEONE, activator, null, null, TO_CHAR);
+                  act("<a cmd='accuse #'>" + w_ptr.names.[1] + " "+crime+"</a>", A_SOMEONE, activator, null, null, TO_CHAR);
                   i := i + 1;
                }
                j := j + 1;
@@ -1217,7 +1217,7 @@ code
    {
       if (crime == "")
       {
-         act("$1n says, 'What do you wish to accuse $3t of. Murder or stealing?'",
+         act("$1n says, 'What do you wish to accuse $3t of? Murder or stealing?'",
                A_SOMEONE, self, activator, criminal, TO_ROOM);
          block;
          goto start;
@@ -1227,18 +1227,18 @@ code
    if (not(strcmp(crime, "murder")))
    {
       crime_type := CRIME_MURDER;
-      act("$1n says, 'Murder... lets see', and looks through his files.",
+      act("$1n says, 'Murder... let's see', and looks through his files.",
          A_SOMEONE, self, activator, null, TO_ROOM);
    }
    else if (not(strcmp(crime, "stealing")))
    {
       crime_type := CRIME_STEALING;
-      act("$1n says, 'Stealing... lets see', and looks through his files.",
+      act("$1n says, 'Stealing... let's see', and looks through his files.",
          A_SOMEONE, self, activator, null, TO_ROOM);
    }
    else
    {
-      act("$1n says, 'Are you accusing of murder or stealing?'",
+      act("$1n says, 'Are you accusing them of murder or stealing?'",
          A_SOMEONE, self, activator, null, TO_ROOM);
       block;
       goto start;

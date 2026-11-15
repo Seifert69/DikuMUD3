@@ -90,13 +90,13 @@ provoked_attack (tgt, self);
 if ((isaff(tgt,ID_CONDEMN)) or (hm<=0))
    {
          if (tgt!=self)
-           act ("The magic dissipates as it is cast on $2n",
+           act ("The magic dissipates as it is cast on $2n.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
          else
            act ("The magic dissipates as it is cast on you.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -107,7 +107,7 @@ if ((isaff(tgt,ID_CONDEMN)) or (hm<=0))
 	    if (hm > 10)
 		hm := 10;
 		hm := -hm;
-    act("You call on the dark forces...",A_SOMEONE, tgt, null, null, TO_CHAR);
+    act("You call on the dark forces...",A_SOMEONE, self, null, null, TO_CHAR);
 
         addaff(tgt, ID_CONDEMN, 20, WAIT_SEC*30,
                ABIL_STR, hm, 0, TIF_STR_INC, TIF_NONE, TIF_STR_DEC,
@@ -122,7 +122,7 @@ if ((isaff(tgt,ID_CONDEMN)) or (hm<=0))
                ABIL_DIV, hm, 0, TIF_DIV_INC, TIF_NONE, TIF_DIV_DEC,
                APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
    quit;
 }
@@ -437,7 +437,7 @@ code
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
       quit;
    }
 
@@ -448,7 +448,7 @@ code
 	  -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER,
 	  APF_SPEED);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
    quit;
 }
 dilend
@@ -1583,20 +1583,20 @@ code
 if ((isaff(tgt,ID_FOCUS)) or (hm<0))
    {
          if (tgt!=self)
-           act ("The magic dissipates as it is cast on $2n",
+           act ("The magic dissipates as it is cast on $2n.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
          else
            act ("The magic dissipates as it is cast on you.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
       hm := hm/10+1;
       if (hm>10)
         hm := 10;
-    act("You feel your mental energies comming into focus.",
+    act("You feel your mental energies coming into focus.",
         A_SOMEONE, tgt, null, null, TO_CHAR);
 
         addaff(tgt, ID_FOCUS, 20, WAIT_SEC*30,
@@ -1606,7 +1606,7 @@ if ((isaff(tgt,ID_FOCUS)) or (hm<0))
                ABIL_CHA, hm, 0, TIF_CHA_INC, TIF_NONE, TIF_CHA_DEC,
                APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
    quit;
 }
@@ -1878,7 +1878,7 @@ if ((tgt==self) and (medi.type!=UNIT_ST_OBJ))
 	{
 	act ("Your magical essence circles your body and returns into you.",
 	A_ALWAYS,self,null,null,TO_CHAR);
-	act ("$1n's Magical essence circles $1s body and then returns into $1m.",
+	act ("$1n's magical essence circles $1s body and then returns into $1m.",
 	A_SOMEONE,self,null,null,TO_REST);
 	self.mana:=self.mana+100;
 	quit;
@@ -2366,7 +2366,7 @@ if (argument=="lookin")
       }
       else if ((i == 2) and ("group" in argument))
       {
-         act("You have already allowed others the use of the gate. " +
+         act("You have already allowed only your followers the use of the gate. " +
              "You can deny others the use of the gate with the command " +
              "'deny'.",
              A_ALWAYS, pc, null, null, TO_CHAR);
@@ -2460,7 +2460,7 @@ code
   if ( (isset(self.flags, UNIT_FL_NO_TELEPORT)) or
        (isset(room.flags, UNIT_FL_NO_TELEPORT)) )
   {
-    act("Something prevents the you from opening a portal here.",
+    act("Something prevents you from opening a portal here.",
         A_ALWAYS, self, null, null, TO_CHAR);
     quit;
   }
@@ -2676,7 +2676,7 @@ foreach(UNIT_ST_OBJ, can)
   {
    act("A corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null, null, TO_REST);
-   act("The corpse glows briefly then suddenly crumbles into dust..." +
+   act("The corpse glows briefly then suddenly crumbles into dust... " +
        "something was amiss with the subject." ,
        A_ALWAYS, self, null, null, TO_CHAR);
 
@@ -2757,9 +2757,9 @@ code
 
   if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
-  act ("You try to bring life to $2n but nothing happens",
+  act ("You try to bring life to $2n but nothing happens.",
   A_ALWAYS,self,tgt,null,TO_CHAR);
-  act ("$1n tries to bring life to $2n but nothing happens",
+  act ("$1n tries to bring life to $2n but nothing happens.",
   A_SOMEONE,self,tgt,null,TO_REST);
   quit;
   }
@@ -2769,7 +2769,7 @@ code
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
-   act("The corpse glows briefly then suddenly crumbles into dust..." +
+   act("The corpse glows briefly then suddenly crumbles into dust... " +
           "something was amiss with the subject." , A_SOMEONE, self, null,
           null, TO_CHAR);
 
@@ -2829,9 +2829,9 @@ code
 
   if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
-  act ("You try to bring life to $2n but nothing happens",
+  act ("You try to bring life to $2n but nothing happens.",
   A_ALWAYS,self,tgt,null,TO_CHAR);
-  act ("$1n tries to bring life to $2n but nothing happens",
+  act ("$1n tries to bring life to $2n but nothing happens.",
   A_SOMEONE,self,tgt,null,TO_REST);
   quit;
   }
@@ -2841,7 +2841,7 @@ code
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
-   act("The corpse glows briefly then suddenly crumbles into dust..." +
+   act("The corpse glows briefly then suddenly crumbles into dust... " +
           "something was amiss with the subject." , A_SOMEONE, self, null,
           null, TO_CHAR);
 
@@ -3140,13 +3140,13 @@ if ((isaff(tgt,ID_SPL_RAISE_HPP)) or
 (hm<0))
    {
          if (tgt!=self)
-           act ("The magic dissipates as it is cast on $2n",
+           act ("The magic dissipates as it is cast on $2n.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
          else
            act ("The magic dissipates as it is cast on you.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -3159,7 +3159,7 @@ if ((isaff(tgt,ID_SPL_RAISE_HPP)) or
                APF_ABILITY);
 
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
    quit;
 }
@@ -3474,7 +3474,7 @@ code
 	}
 	else
 	{
-	act("$1n howls and rebels against $1 master!",
+	act("$1n howls and rebels against $1s master!",
 		A_SOMEONE, self, null, mast, TO_NOTVICT);
 	act("$1n howls and rebels against you!",
 		A_SOMEONE, self, null, mast, TO_VICT);
@@ -4319,7 +4319,7 @@ var
 code{
      if(hm<=0)
      {
-      act("A small ball of pure light appears in front of $1n, but fades away",
+      act("A small ball of pure light appears in front of $1n, but fades away.",
              A_SOMEONE,self,null,null,TO_REST);
       act("A small ball of pure light appears in front of you, but fades away.",
              A_ALWAYS,self,null,null,TO_CHAR);
@@ -4523,7 +4523,7 @@ room */
                  A_SOMEONE,self,null,u,TO_NOTVICT);
         act("$3n is unaffected by the sudden breeze and growls at you.",
                  A_SOMEONE,self,null,u,TO_CHAR);
-        act("You is unaffected by the sudden breeze.",
+        act("You are unaffected by the sudden breeze.",
                  A_ALWAYS,self,null,u,TO_VICT);
         provoked_attack (u,self);
        }
@@ -4658,7 +4658,7 @@ code{
       act("You are not fighting.",A_ALWAYS,self,null,null,TO_CHAR);
       quit;
      }
-     act("You feel you hands pulsating with power.",
+     act("You feel your hands pulsating with power.",
               A_ALWAYS,tgt,null,null,TO_CHAR);
      dilcopy("hammer@spells",tgt);
      quit;
@@ -4718,7 +4718,7 @@ code{
    :hold:
      if(hm<=0)
      {
-      act("You are unable to focus, and therefor unable to prevent $3n from fleeing.",
+      act("You are unable to focus, and therefore unable to prevent $3n from fleeing.",
                A_HIDEINV,self,null,tgt,TO_CHAR);
       quit;
      }
@@ -4788,7 +4788,7 @@ code{
      else if(dilfind("rotting@spells",tgt))
       act("Nothing happens.",A_ALWAYS,self,null,null,TO_CHAR);
      else
-      act("Target is not a corpse",A_ALWAYS,self,null,null,TO_CHAR);
+      act("Target is not a corpse.",A_ALWAYS,self,null,null,TO_CHAR);
      quit;
 }
 dilend
@@ -4895,9 +4895,9 @@ i:=0;
       {
         if (self.position != POSITION_FIGHTING)
         {
-           act("You lay down and go to sleep.",
+           act("You lie down and go to sleep.",
                A_ALWAYS, self, null, null, TO_CHAR);
-           act("$1n lays down and goes to sleep.",
+           act("$1n lies down and goes to sleep.",
                A_HIDEINV, self, null, null, TO_REST);
            self.position := POSITION_SLEEPING;
         }
@@ -5067,7 +5067,7 @@ code
    :case3:
    act("You feel sick.",
        A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n look very pale.",
+   act("$1n looks very pale.",
        A_HIDEINV,self,null,null,TO_ROOM);
    if (self.type == UNIT_ST_PC)
    {
@@ -5178,7 +5178,7 @@ addextra (self.extra,{"$pc obey"},self.master.name);
    goto loop;
 
    :byebye:
-   exec("emote howls in pain as it loses his link to the real world.",self);
+   exec("emote howls in pain as it loses its link to the real world.",self);
    exec("emote vanishes in a cloud of grey dust.",self);
    destroy(self);
    quit;
@@ -5523,7 +5523,7 @@ code
 
    if (i == DIR_TRYAGAIN)
    {
-      act("The magic is illusive. Maybe you should try again.", A_ALWAYS, self, null, null, TO_CHAR);
+      act("The magic is elusive. Maybe you should try again.", A_ALWAYS, self, null, null, TO_CHAR);
    }
    else if (i == DIR_IMPOSSIBLE)
    {
@@ -5611,7 +5611,7 @@ code
 
    if ("$resized" in tgt.extra)
    {
-      act("The $2N appear to quiver for a moment, "+
+      act("The $2N appears to quiver for a moment, "+
           "but nothing seems to happen.",
 	   A_ALWAYS,self,tgt,null,TO_CHAR);
       quit;
@@ -5633,9 +5633,9 @@ code
      size := "enlarges"
    else
      size := "shrinks";
-   act("Your $2N glows brightly as it $3t",
+   act("Your $2N glows brightly as it $3t.",
        A_ALWAYS, self, tgt, size, TO_CHAR);
-   act("$1n's $2N glows as it $3t",
+   act("$1n's $2N glows as it $3t.",
        A_ALWAYS, self, tgt, size, TO_REST);
    :lostpc:
    quit;
@@ -5683,7 +5683,7 @@ code
       act ("$2n returns to its normal size and falls off.",
 	   A_ALWAYS, self.outside, self, null, TO_CHAR);
       act ("$2n returns to its normal size and falls off $1n.",
-	   A_ALWAYS, self.outside, self, null, TO_CHAR);
+	   A_ALWAYS, self.outside, self, null, TO_REST);
    }
    self.height:=oldheight;
    unset (self.flags,UNIT_FL_MAGIC);
@@ -5750,12 +5750,12 @@ code
 {
     if (tgt.objecttype == ITEM_LIGHT)
     {
-        s := sact("$3n is light source with "+itoa(tgt.value[0])+" hours left, and an illumination of "+itoa(tgt.value[1])+".<br/>",
+        s := sact("$3n is a light source with "+itoa(tgt.value[0])+" hours left, and an illumination of "+itoa(tgt.value[1])+".<br/>",
                     A_SOMEONE, self, null, tgt, TO_CHAR);
     }
     else if (tgt.objecttype == ITEM_SCROLL)
     {
-        s := sact("$3n is a scroll with a magical power of "+itoa(tgt.value[0])+"<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
+        s := sact("$3n is a scroll with a magical power of "+itoa(tgt.value[0])+".<br/>", A_SOMEONE, self, null, tgt, TO_CHAR);
         if (lvl >= 2)
         {
             s2 := spellinfo(tgt.value[1], i, i, i,i ,i ,i ,i);
@@ -5809,7 +5809,7 @@ code
         mag_str := magic_str(tgt.value[2]);
 
         s := sact("$3n is a weapon that requires a " + weapon_name(tgt.value[0]) + " fighting style, is of " + craft_str + 
-                    " craftsmanship " + " and has a " + mag_str + " magical modifier.<br/>",
+                    " craftsmanship and has a " + mag_str + " magical modifier.<br/>",
                     A_SOMEONE, self, null, tgt, TO_CHAR);
 
         if (lvl >= 2)
@@ -6079,12 +6079,12 @@ code
             }
             else
             {
-                s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i];
+                s := s + "-1 please report to an admin. Unknown secondary kind. " + sl.[i] + "<br/>";
             }
         }
         else if (sl2.[1] != "-1")
         {
-            s := s + "Oh no, please report to an admin. Unknown kind. " + sl.[i];
+            s := s + "Oh no, please report to an admin. Unknown kind. " + sl.[i] + "<br/>";
         }
 
         i := i + 1;
@@ -6247,9 +6247,9 @@ code
 
    if (hm >= 0)
    {
-      act("You feel a battle with your own mind begins.",
+      act("You feel a battle with your own mind begin.",
 	  A_ALWAYS, tgt, null, null, TO_CHAR);
-      act("A mad look appears on $1n's face",
+      act("A mad look appears on $1n's face.",
 	  A_HIDEINV, tgt, null, null, TO_ROOM);
       dilcopy("spl_madness@spells("+itoa(hm)+")", tgt);
    }
@@ -6295,7 +6295,7 @@ code
 
    degree := 32 - i / 2;
 
-   act("The mad look in $1n's eyes intensifies",
+   act("The mad look in $1n's eyes intensifies.",
        A_HIDEINV, self, null, null,TO_ROOM);
 
    on rnd(degree, degree + 10) goto
@@ -6313,7 +6313,7 @@ code
 
    if (visible(self, u))
    {
-      act("You sudden realize that $2n has betrayed you.",
+      act("You suddenly realize that $2n has betrayed you.",
 	  A_SOMEONE, self, u, null, TO_CHAR);
       act("$1n screams 'You evil thing of betrayal' "+
 	  "and growls at $2n.", A_SOMEONE, self, u, null, TO_ROOM);
@@ -6363,8 +6363,8 @@ code
    {
       if (self.name in self.extra)
       {
-	 act("You despair, as you see, the other text written "+
-	     " on the page.", A_ALWAYS, self, null, null, TO_CHAR);
+	 act("You despair, as you see the other text written "+
+	     "on the page.", A_ALWAYS, self, null, null, TO_CHAR);
 	 act("You spit at the page.", A_ALWAYS, self, null, null, TO_CHAR);
 	 act("$1n looks desperate and spits at $2n.",
 	     A_HIDEINV, self,u,null,TO_ROOM);
@@ -6393,11 +6393,11 @@ code
    :case20:
    :case21:
    :case9:
-   act("You sing 'Hare Khrisna Hare Khrisna Hare "+
+   act("You sing 'Hare Krishna Hare Krishna Hare "+
        "Rama Hare Hare Hare Hare Hare'.",
        A_ALWAYS, self, null, null, TO_CHAR);
 
-   act("$1n sing 'Hare Khrisna Hare Khrisna Hare "+
+   act("$1n sings 'Hare Krishna Hare Krishna Hare "+
        "Rama Hare Hare Hare Hare Hare'.",
        A_HIDEINV, self, null, null, TO_ROOM);
    goto loop;
@@ -6419,7 +6419,7 @@ code
    goto loop;
 
    :case12:
-   act("You fear for your life!.",
+   act("You fear for your life!",
        A_ALWAYS, self, null, null, TO_CHAR);
    exec("peer ", self);
    goto loop;
@@ -6505,7 +6505,7 @@ code
    :case34:
    act("Someone is following you around!",
        A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n looks paranoidal at everyone.",
+   act("$1n looks at everyone paranoidly.",
        A_HIDEINV,self,null,null,TO_ROOM);
    goto loop;
 
@@ -6513,7 +6513,7 @@ code
    :case36:
    act("This is funny...",
        A_ALWAYS, self, null, null, TO_CHAR);
-   act("$1n laughs like he heard something extremely funny.",
+   act("$1n laughs like $1e heard something extremely funny.",
        A_SOMEONE,self,null,null,TO_ROOM);
    goto loop;
 
@@ -6605,7 +6605,7 @@ code
 	  (tgt.objecttype == ITEM_DRINKCON))
 	tgt.value[3] := 0;
    }
-   else if (tgt.type & UNIT_ST_PC|UNIT_ST_NPC)
+   else if (tgt.type & (UNIT_ST_PC|UNIT_ST_NPC))
      sendto("spl_rem_poison "+itoa(4*hm), tgt);
 
    quit;
@@ -6743,7 +6743,7 @@ code
    if ( c < 1) c := 1;
    if ( (targ.value[1] + c) > targ.value[4])
    {
-      act("You have recharged the wand enough to use " +
+      act("You have recharged the staff enough to use " +
           itoa((targ.value[4] - targ.value[1]))+
           " more time(s).", A_SOMEONE, self, null, null, TO_CHAR);
       targ.value[1] := targ.value[4];
@@ -6751,7 +6751,7 @@ code
    else
    {
       targ.value[1] := (targ.value[1] + c);
-      act("You have recharged the wand enough to use " +itoa(c)+
+      act("You have recharged the staff enough to use " +itoa(c)+
 	  " more time(s).", A_SOMEONE, self, null, null, TO_CHAR);
    }
    quit;
@@ -6788,7 +6788,7 @@ code
 
   if (targ.hp <= 0)
   {
-     act("Your spell is too weak to mend the $2N",
+     act("Your spell is too weak to mend the $2N.",
 	 A_SOMEONE, self, targ, null, TO_CHAR);
      quit;
   }
@@ -6845,7 +6845,7 @@ code
 
    if (targ.hp <= 0)
    {
-      act("Your spell is too weak to mend the $2N",
+      act("Your spell is too weak to mend the $2N.",
 	  A_SOMEONE, self, targ, null, TO_CHAR);
       quit;
    }
@@ -6904,7 +6904,7 @@ code
 
    if (targ.hp <= 0)
    {
-      act("Your spell is too weak to mend the $2N",
+      act("Your spell is too weak to mend the $2N.",
 	  A_SOMEONE, self, targ, null, TO_CHAR);
       quit;
    }
@@ -7080,7 +7080,7 @@ code
    act("The earth opens as $2n is summoned before you.",
        A_HIDEINV, self, u, null, TO_CHAR);
 
-   act("The earth opens and $2n appears before $1n", A_HIDEINV,
+   act("The earth opens and $2n appears before $1n.", A_HIDEINV,
        self, u, null, TO_ROOM);
 
    dilcopy("magic_summoned@spells("+itoa(hm)+")", u);
@@ -7116,7 +7116,7 @@ code
    act("The portal of air opens and $2n appears before you.",
        A_HIDEINV, self, u, null, TO_CHAR);
 
-   act("The portal of air opens, and $2n emerges before $1n",
+   act("The portal of air opens, and $2n emerges before $1n.",
        A_HIDEINV, self, u, null, TO_ROOM);
 
    dilcopy("magic_summoned@spells("+itoa(hm)+")", u);
@@ -7232,7 +7232,7 @@ code
       dilcopy("magic_summoned@spells("+itoa(-hm)+")", u);
       exec("follow "+self.name, u);
       exec("say Thank you "+self.name+", for bringing me here "+
-	   "unbonded!", u);
+	   "unbound!", u);
       exec("kill "+self.name, u);
       quit;
    }
@@ -8598,13 +8598,13 @@ if ((isaff(tgt,ID_SPL_RAISE_DIV)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8614,7 +8614,7 @@ if ((isaff(tgt,ID_SPL_RAISE_DIV)) or
 	       ABIL_DIV, hm, 0, TIF_DIV_INC, TIF_NONE, TIF_DIV_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8633,13 +8633,13 @@ if ((isaff(tgt,ID_SPL_RAISE_MAG)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8649,7 +8649,7 @@ if ((isaff(tgt,ID_SPL_RAISE_MAG)) or
 	       ABIL_MAG, hm, 0, TIF_MAG_INC, TIF_NONE, TIF_MAG_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8669,13 +8669,13 @@ if ((isaff(tgt,ID_SPL_RAISE_STR)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
          
@@ -8686,7 +8686,7 @@ if ((isaff(tgt,ID_SPL_RAISE_STR)) or
 	       ABIL_STR, hm, 0, TIF_STR_INC, TIF_NONE, TIF_STR_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8705,13 +8705,13 @@ if ((isaff(tgt,ID_SPL_RAISE_DEX)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8721,7 +8721,7 @@ if ((isaff(tgt,ID_SPL_RAISE_DEX)) or
 	       ABIL_DEX, hm, 0, TIF_DEX_INC, TIF_NONE, TIF_DEX_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8740,13 +8740,13 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8756,7 +8756,7 @@ if ((isaff(tgt,ID_SPL_RAISE_CON)) or
 	       ABIL_CON, hm, 0, TIF_CON_INC, TIF_NONE, TIF_CON_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8774,13 +8774,13 @@ if ((isaff(tgt,ID_SPL_RAISE_CHA)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8790,7 +8790,7 @@ if ((isaff(tgt,ID_SPL_RAISE_CHA)) or
 	       ABIL_CHA, hm, 0, TIF_CHA_INC, TIF_NONE, TIF_CHA_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8809,13 +8809,13 @@ if ((isaff(tgt,ID_SPL_RAISE_BRA)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8825,7 +8825,7 @@ if ((isaff(tgt,ID_SPL_RAISE_BRA)) or
 	       ABIL_BRA, hm, 0, TIF_BRA_INC, TIF_NONE, TIF_BRA_DEC,
 	       APF_ABILITY);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8845,13 +8845,13 @@ if ((isaff(tgt,ID_SPL_RAISE_DIVINE)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8861,7 +8861,7 @@ if ((isaff(tgt,ID_SPL_RAISE_DIVINE)) or
 	       SPL_DIVINE, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8880,13 +8880,13 @@ if ((isaff(tgt,ID_SPL_RAISE_HEAT)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8896,7 +8896,7 @@ if ((isaff(tgt,ID_SPL_RAISE_HEAT)) or
 	       SPL_HEAT, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8915,13 +8915,13 @@ if ((isaff(tgt,ID_SPL_RAISE_SUMMONING)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8931,7 +8931,7 @@ if ((isaff(tgt,ID_SPL_RAISE_SUMMONING)) or
 	       SPL_SUMMONING, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8950,13 +8950,13 @@ if ((isaff(tgt,ID_SPL_RAISE_COLD)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -8966,7 +8966,7 @@ if ((isaff(tgt,ID_SPL_RAISE_COLD)) or
 	       SPL_COLD, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -8985,13 +8985,13 @@ if ((isaff(tgt,ID_SPL_RAISE_CELL)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -9001,7 +9001,7 @@ if ((isaff(tgt,ID_SPL_RAISE_CELL)) or
 	       SPL_CELL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -9020,13 +9020,13 @@ if ((isaff(tgt,ID_SPL_RAISE_INTERNAL)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -9036,7 +9036,7 @@ if ((isaff(tgt,ID_SPL_RAISE_INTERNAL)) or
 	       SPL_INTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -9055,13 +9055,13 @@ if ((isaff(tgt,ID_SPL_RAISE_EXTERNAL)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -9071,7 +9071,7 @@ if ((isaff(tgt,ID_SPL_RAISE_EXTERNAL)) or
 	       SPL_EXTERNAL, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -9090,13 +9090,13 @@ if ((isaff(tgt,ID_SPL_RAISE_MIND)) or
 (hm<0))
    {
 	 if (tgt!=self)
-	   act ("The magic dissipates as it is cast on $2n",
+	   act ("The magic dissipates as it is cast on $2n.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
 	 else
 	   act ("The magic dissipates as it is cast on you.",
 		A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
 
@@ -9106,7 +9106,7 @@ if ((isaff(tgt,ID_SPL_RAISE_MIND)) or
 	       SPL_MIND, hm, 0, TIF_PROTECT_INC, TIF_NONE, TIF_PROTECT_DEC,
 	       APF_SPELL_ADJ);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
 
    quit;
@@ -9290,7 +9290,7 @@ code
       act("As you touch $3n your drainage is prevented by a life "+
 	  "protection spell.",
 	  A_SOMEONE, self, null, tgt, TO_CHAR);
-      act("$1n touches $3n and chant in a strange tongue with no result.",
+      act("$1n touches $3n and chants in a strange tongue with no result.",
 	  A_SOMEONE, self, null, tgt, TO_NOTVICT);
       act("$1n tries to drain your energy but your life force is protected.",
 	  A_SOMEONE, self, null, tgt, TO_VICT);
@@ -9301,13 +9301,13 @@ code
 if ((isaff(tgt,ID_ENERGY_DRAIN)) or (hm<0))
    {
          if (tgt!=self)
-           act ("The magic dissipates as it is cast on $2n",
+           act ("The magic dissipates as it is cast on $2n.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
          else
            act ("The magic dissipates as it is cast on you.",
                 A_ALWAYS,self,tgt,null,TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
          quit;
          }
    hm := skill_duration (hm);
@@ -9321,11 +9321,11 @@ if ((isaff(tgt,ID_ENERGY_DRAIN)) or (hm<0))
 
    experience(-500, tgt); /* Loose XP! */
 
-   act("$1n lay hands on $3n and chant in a strange tongue.",
+   act("$1n lays hands on $3n and chants in a strange tongue.",
        A_SOMEONE, self, null, tgt, TO_NOTVICT);
    act("You lay hands on $3n and chant in a strange tongue.",
        A_SOMEONE, self, null, tgt, TO_CHAR);
-   act("$1n lay hands on you and drain your energy.",
+   act("$1n lays hands on you and drains your energy.",
        A_SOMEONE, self, null, tgt, TO_VICT);
    quit;
 }
@@ -9440,7 +9440,7 @@ code
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
       quit;
    }
 
@@ -9450,7 +9450,7 @@ code
    addaff(tgt, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
           -6, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
    quit;
 }
 dilend
@@ -9466,7 +9466,7 @@ code
    {
       act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
       if (effect != "")
-         effect(tgt, medi, -1);
+         effect(medi, tgt, -1);
       quit;
    }
 
@@ -9477,7 +9477,7 @@ code
 	  +6, 0, 0, TIF_SPEED_BETTER, TIF_NONE, TIF_SPEED_WORSE, APF_SPEED);
 
    if (effect != "")
-      effect(tgt, medi, hm);
+      effect(medi, tgt, hm);
 
    quit;
 }
@@ -9605,11 +9605,11 @@ var
          sendto ("1closetimer1", self); /* remove old wimpy block */
          dilcopy ("block_wimpy@spells("+itoa(3*PULSE_VIOLENCE)+")", self);
 
-         act("Your spell misfires and you manage to hold yourself",
+         act("Your spell misfires and you manage to hold yourself.",
                  A_ALWAYS,self,null, tgt, TO_CHAR);
-         act("$1n attempts to hold you but manages to hold $1mself instead",
+         act("$1n attempts to hold you but manages to hold $1mself instead.",
                  A_ALWAYS, self, null, tgt, TO_VICT);
-         act("$1n attempts to hold $3n ,but the spell misfires ,and $1n holds $1mself",
+         act("$1n attempts to hold $3n, but the spell misfires and $1n holds $1mself.",
                  A_ALWAYS, self, null, tgt, TO_NOTVICT);
          quit;
          }
@@ -9624,11 +9624,11 @@ var
          sendto ("1closetimer1", tgt);
          dilcopy ("block_wimpy@spells("+itoa(3*PULSE_VIOLENCE)+")", tgt);
 
-         act("Your spell misfires and you end up holding both of you",
+         act("Your spell misfires and you end up holding both of you.",
                  A_ALWAYS, self,null,tgt,TO_CHAR);
-         act("$1n attempts to hold you but manages to hold you both instead",
+         act("$1n attempts to hold you but manages to hold you both instead.",
                  A_ALWAYS,self,null,tgt,TO_VICT);
-         act("$1n attempts to hold $3n but misfires",
+         act("$1n attempts to hold $3n but misfires.",
          A_ALWAYS,self,null,tgt,TO_NOTVICT);
          quit;
          }
@@ -9767,7 +9767,7 @@ code
      subaff(tgt, ID_FEAR);
 
    act("You feel less paranoid.", A_ALWAYS, self, null, tgt, TO_VICT);
-   act("$1n seems less paranoid.", A_ALWAYS, self, null, tgt, TO_NOTVICT);
+   act("$3n seems less paranoid.", A_ALWAYS, self, null, tgt, TO_NOTVICT);
    act("$3n seems less paranoid.", A_ALWAYS, self, null, tgt, TO_CHAR);
    }
    quit;
@@ -10088,28 +10088,28 @@ if((tmp != "aok") and (tmp != "sleep"))
 	if(tgt==self)
 	 act("Why not use the command '$2t'?", A_ALWAYS, self, tmp, null, TO_CHAR);
 	else
-	 act("Thats not nice! Why not ask them to '$2t'?",
+	 act("That's not nice! Why not ask them to '$2t'?",
 	 A_ALWAYS, self, tmp, null, TO_CHAR);
 	quit;
 }
 
 if (hm < 0)
   {
-   act("You unsuccessfully tried to command $3n to '$2t'",
+   act("You unsuccessfully tried to command $3n to '$2t'.",
        A_SOMEONE, self, arg, tgt,TO_CHAR);
-   act("$1n unsuccessfully tried to command $3n to '$2t'",
+   act("$1n unsuccessfully tried to command $3n to '$2t'.",
        A_SOMEONE, self, arg, tgt,TO_NOTVICT);
-   act("$1n unsuccessfully tried to command you to '$2t'",
+   act("$1n unsuccessfully tried to command you to '$2t'.",
        A_SOMEONE, self, arg, tgt, TO_VICT);
    provoked_attack (tgt, self);
    quit;
    }
 
-act ("You command $3n to '$2t'",
+act ("You command $3n to '$2t'.",
        A_SOMEONE, self, arg, tgt, TO_CHAR);
-act ("$1n  commands you to '$2t'",
+act ("$1n commands you to '$2t'.",
        A_SOMEONE, self, arg, tgt, TO_VICT);
-act ("$1n  commands $3n to '$2t'",
+act ("$1n commands $3n to '$2t'.",
        A_SOMEONE, self, arg, tgt, TO_NOTVICT);
        if ((tmp=="sleep") and
        (tgt.type==UNIT_ST_NPC))
@@ -10138,7 +10138,7 @@ else
 		}
 	if (tgt.position==POSITION_FIGHTING)
 		{
-		sendtext("Sleep while fighting? are you MAD?<br/>", tgt);
+		sendtext("Sleep while fighting? Are you MAD?<br/>", tgt);
 		quit;
 		}
 	}
@@ -10191,7 +10191,7 @@ code
 {
    if (hm < 0)
    {
-      act("Dust swirl around in the air.",
+      act("Dust swirls around in the air.",
           A_SOMEONE, self, null, null, TO_ALL);
       quit;
    }
@@ -10202,7 +10202,7 @@ code
    act("$2n is summoned before you.",
        A_HIDEINV, self, u, null, TO_CHAR);
 
-   act("$2n is summoned before $1n",
+   act("$2n is summoned before $1n.",
        A_HIDEINV, self, u, null, TO_ROOM);
 
    dilcopy("magic_summoned@spells("+itoa(hm)+")", u);
@@ -10353,6 +10353,12 @@ code
         u := u.outside;
 
     arg := getword(arg);
+
+    if (arg == "") {
+        act("You must specify a direction to leave in.",
+        A_SOMEONE, self, null, null, TO_CHAR);
+        quit;
+    }
 
     if (arg in "north") {
         i := DIR_NORTH;
@@ -10520,7 +10526,7 @@ c:=realtime-atoi(self.extra.["$RES_TIME"].descr);
 if (c<150) // increased by 30s time because of power level now affecting time before recast
 {
 self.mana:=self.mana+80;
-act ("You are still too queasy to cast this spell try waiting a minute or so and try again.",
+act ("You are still too queasy to cast this spell. Wait a minute or so and try again.",
 A_ALWAYS,self,null,null,TO_CHAR);
 return;
 }
@@ -10554,7 +10560,7 @@ return;
 	 act("A vortex appears above $1n sucking $1s soul out of Valhalla.",
 	     A_ALWAYS, tgt, null, null, TO_ROOM);
 
-act ("Something about the resurrection has made you queasy you might want to wait a bit before trying again.",
+act ("Something about the resurrection has made you queasy; you might want to wait a bit before trying again.",
 		 A_ALWAYS,self,null,null,TO_CHAR);
 
 
@@ -10735,9 +10741,9 @@ code
 
   if (not (IS_CORPSE(tgt)) or (IS_CORPSE(tgt) and tgt.value[2] == 1))
   {
-  act ("You try to bring life to $2n but nothing happens",
+  act ("You try to bring life to $2n but nothing happens.",
   A_ALWAYS,self,tgt,null,TO_CHAR);
-  act ("$1n tries to bring life to $2n but nothing happens",
+  act ("$1n tries to bring life to $2n but nothing happens.",
   A_SOMEONE,self,tgt,null,TO_REST);
   quit;
   }
@@ -10747,7 +10753,7 @@ code
   {
    act("The corpse glows briefly then suddenly crumbles into dust...",
    A_SOMEONE, self, null,null, TO_REST);
-   act("The corpse glows briefly then suddenly crumbles into dust..." +
+   act("The corpse glows briefly then suddenly crumbles into dust... " +
    "something was amiss with the subject." , A_SOMEONE, self, null,null, TO_CHAR);
 
    u:=load ("dust_bones@spells");
@@ -10992,7 +10998,7 @@ code
    if (not((f == SECT_FIELD) or (f == SECT_FOREST) or (f == SECT_HILLS) or
            (f == SECT_SWAMP) or (f == SECT_CITY)))
    {
-      act("This environment is not condusive to the art of horticulture.",
+      act("This environment is not conducive to the art of horticulture.",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -11004,7 +11010,7 @@ code
    }
    if (targ.level >=51)
    {
-      act("The forces of nature wont let you cast that spell on "+targ.name+"!",
+      act("The forces of nature won't let you cast that spell on "+targ.name+"!",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -11327,7 +11333,7 @@ code
 
    if (i2)
    {
-      act("You already have an animal in your service, why summon "+
+      act("You already have an animal in your service, why charm "+
           "another?",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -11488,7 +11494,7 @@ code
    if (tgt.hp == tgt.max_hp)
    {
       act("It is in excellent health - your spell does nothing more " +
-          "it.",
+          "for it.",
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
@@ -11918,7 +11924,14 @@ var
 code
 {
 
-pc:= findunit(self, caster, FIND_UNIT_ZONE, null);
+// self is the room, which can't see anyone to findunit() them: look for the caster's name
+pc := null;
+foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+   if (u.name == caster)
+   {
+      pc := u;
+      break;
+   }
 
 x:= 0;
    dir := tsu_exit(self);
@@ -11941,9 +11954,10 @@ x:= 0;
     if ((u.type == UNIT_ST_OBJ) and
        (not(isset(u.manipulate,MANIPULATE_TAKE)))) continue;
 
-        act("$1n summons a powerful tidal wave that washes you away!",
-             A_SOMEONE, pc, null, u, TO_VICT);
-        act("$3n is washed away!", A_SOMEONE, self, null, u, TO_NOTVICT);
+        if (u != pc)
+           act("$1n summons a powerful tidal wave that washes you away!",
+                A_SOMEONE, pc, null, u, TO_VICT);
+        act("$1n is washed away!", A_SOMEONE, u, null, null, TO_ROOM);
         link(u,room);
         exec("look", u);
         act("$1n is swept in by a sudden flood of water!",
@@ -12000,7 +12014,7 @@ code
    {
       act("The ground trembles for a moment, then holds firm.",
           A_ALWAYS, self, null, null, TO_ALL);
-      if (effect != "") effect(tgt, medi, -1);
+      if (effect != "") effect(medi, tgt, -1);
       quit;
    }
 
@@ -12031,7 +12045,7 @@ code
          subaff(u, ID_SPEED);
       addaff(u, ID_SPEED, 1 + hm / 25, WAIT_SEC*15,
              -4, 0, 0, TIF_SPEED_WORSE, TIF_NONE, TIF_SPEED_BETTER, APF_SPEED);
-      if (effect != "") effect(u, medi, hm);
+      if (effect != "") effect(medi, u, hm);
    }
   quit;
 }
@@ -12471,7 +12485,7 @@ code
       if (command(CMD_AUTO_TICK))
       {
          d := d - 1;
-         goto loop;
+         continue;
       }
       pc := activator;
       if(pc.level >= IMMORTAL_LEVEL) goto loop;
@@ -12563,7 +12577,7 @@ code
             act("You are knocked off your feet by the tremors!", A_ALWAYS,
                 null, null, u, TO_VICT);
             act("$3n is knocked off $3s feet by the tremors!", A_SOMEONE,
-                null, null, u, TO_NOTVICT);
+                self, null, u, TO_NOTVICT);
             act("$3n is knocked off $3s feet by the tremors!", A_SOMEONE,
                 self, null, u, TO_CHAR);
          }
@@ -12684,7 +12698,7 @@ code
       if (command(CMD_AUTO_TICK))
       {
          d := d - 1;
-         goto loop;
+         continue;
       }
 
       pc := activator;
@@ -13098,6 +13112,7 @@ code
 
    tick := tick + 1;
    if(tick > 1) goto relink;
+   goto start;
 
   :relink:
   heartbeat := PULSE_SEC * rnd(1,4);
@@ -13989,7 +14004,7 @@ if(u.type == UNIT_ST_PC)
         addstring(pc_list,"<div class='pc_descr'>"+u.name+" "+u.title+
                         pos+"</div><br/>");
      }
-   else if((isset(self.flags,ID_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
+   else if((isset(self.charflags,CHAR_DETECT_LIFE)) and (u.level <IMMORTAL_LEVEL))
     addstring(pc_list,"You sense a hidden life form in the room.<br/>");
    /* This may cause a problem */
   }
@@ -14020,7 +14035,7 @@ else if(u.type == UNIT_ST_NPC)
        addstring(n_npc,"1");
       }
     }
-   else if((isset(self.flags,ID_DETECT_LIFE)) and
+   else if((isset(self.charflags,CHAR_DETECT_LIFE)) and
             (self.level<IMMORTAL_LEVEL))
     {
      addstring(npc_list,"You sense a hidden life form in the room.<br/>");
@@ -14083,7 +14098,7 @@ i:= 0;
 
 	while(i < tmp_i)
 	{
-		str:=str+pc_list.[i]+"<br/>";
+		str:=str+pc_list.[i];
 		i := i + 1;
 	}
 
@@ -14219,13 +14234,13 @@ code
 
 if(effect == "")
 {
- act("$1n fades away",
+ act("$1n fades away.",
       A_HIDEINV, tgt, null, null, TO_REST);
  act("You become invisible.",
       A_HIDEINV, tgt, null, null, TO_CHAR);
 }
 else
- effect(tgt,medi,hm);
+ effect(medi,tgt,hm);
 
  hm := skill_duration(hm);
 
@@ -14259,7 +14274,7 @@ code
               APF_NONE);
 
  if(effect != "")
-  effect(tgt,medi,hm);
+  effect(medi,tgt,hm);
 
   quit;
 }
@@ -14361,7 +14376,7 @@ code
     dilcopy("confused@spells", tgt);
 
  if(effect != "")
-  effect(tgt,medi,hm);
+  effect(medi,tgt,hm);
 
  quit;
 }
@@ -14447,7 +14462,7 @@ code
 
   if(IS_GOOD(self.alignment))
       {
-    act("You are to good to cast this spell, you fail.", A_ALWAYS, self, null, null, TO_CHAR);
+    act("You are too good to cast this spell, you fail.", A_ALWAYS, self, null, null, TO_CHAR);
     quit;
    }
 
@@ -14488,7 +14503,7 @@ code
          APF_NONE);
 
  if(effect != "")
-  effect(tgt,medi,hm);
+  effect(medi,tgt,hm);
 
   quit;
 }
@@ -14551,7 +14566,7 @@ code
                  APF_NONE);
 
         if(effect != "")
-          effect(tgt,medi,hm);
+          effect(medi,u,hm);
        }
       else
        provoked_attack@function(u,self);
@@ -14592,7 +14607,7 @@ code
                 TIF_SANCTUARY_OFF, APF_NONE);
 
     if (effect != "")
-        effect(tgt,medi,hm);
+        effect(medi,tgt,hm);
 
    quit;
 }
@@ -14616,7 +14631,7 @@ code
               TIF_SUSTAIN_TICK, TIF_SUSTAIN_OFF, APF_NONE);
 
  if(effect != "")
-  effect(tgt,medi,hm);
+  effect(medi,tgt,hm);
 
   quit;
 
@@ -14669,11 +14684,11 @@ wrd := getword(arg);
 
 dir := -1;
 
-if(wrd in "north") dir := NORTH;
+if(wrd in "up") dir := UP;
+else if(wrd in "north") dir := NORTH;
 else if(wrd in "south") dir := SOUTH;
 else if(wrd in "east") dir := EAST;
 else if(wrd in "west") dir := WEST;
-else if(wrd in "up") dir := UP;
 else if(wrd in "down") dir := DOWN;
 else if(wrd in "northeast") dir := NORTHEAST;
 else if(wrd in "northwest") dir := NORTHWEST;
@@ -14895,11 +14910,11 @@ wrd := getword(arg);
 
 dir := -1;
 
-if(wrd in "north") dir := NORTH;
+if(wrd in "up") dir := UP;
+else if(wrd in "north") dir := NORTH;
 else if(wrd in "south") dir := SOUTH;
 else if(wrd in "east") dir := EAST;
 else if(wrd in "west") dir := WEST;
-else if(wrd in "up") dir := UP;
 else if(wrd in "down") dir := DOWN;
 else if(wrd in "northeast") dir := NORTHEAST;
 else if(wrd in "northwest") dir := NORTHWEST;
@@ -15123,7 +15138,7 @@ end
 
 bram_bush
 names {"brambles", "bush"}
-title "a large brambles bush"
+title "a large bramble bush"
 descr "A large bush of brambles has grown here."
 extra {}
 "It is quite large and intimidating. The thorns are proportionate to the
@@ -15159,28 +15174,37 @@ code
  melt := melt - 1;
   if(melt == 14)
   {
-   act("Your ice dagger begins to melt.",
-       A_ALWAYS, self.outside, null, null, TO_CHAR);
-   act("$1n's ice dagger begins to melt.",
-       A_SOMEONE, self.outside, null, null, TO_REST);
+   if (self.outside.type & (UNIT_ST_PC|UNIT_ST_NPC))
+   {
+      act("Your ice dagger begins to melt.",
+          A_ALWAYS, self.outside, null, null, TO_CHAR);
+      act("$1n's ice dagger begins to melt.",
+          A_SOMEONE, self.outside, null, null, TO_REST);
+   }
    self.value[1] := self.value[1] - 2;
    self.value[2] := self.value[2] - 2;
   }
   if(melt == 7)
   {
-   act("Your ice dagger drips steadily; it will not hold its form for long.",
-       A_ALWAYS, self.outside, null, null, TO_CHAR);
-   act("$1n's ice dagger drips steadily as it melts.",
-       A_SOMEONE, self.outside, null, null, TO_REST);
+   if (self.outside.type & (UNIT_ST_PC|UNIT_ST_NPC))
+   {
+      act("Your ice dagger drips steadily; it will not hold its form for long.",
+          A_ALWAYS, self.outside, null, null, TO_CHAR);
+      act("$1n's ice dagger drips steadily as it melts.",
+          A_SOMEONE, self.outside, null, null, TO_REST);
+   }
    self.value[1] := self.value[1] - 4;
    self.value[2] := self.value[2] - 4;
   }
   if(melt <= 0)
   {
-   act("Your ice dagger melts away completely.",
-       A_ALWAYS, self.outside, null, null, TO_CHAR);
-   act("$1n's ice dagger melts away completely.",
-       A_SOMEONE, self.outside, null, null, TO_REST);
+   if (self.outside.type & (UNIT_ST_PC|UNIT_ST_NPC))
+   {
+      act("Your ice dagger melts away completely.",
+          A_ALWAYS, self.outside, null, null, TO_CHAR);
+      act("$1n's ice dagger melts away completely.",
+          A_SOMEONE, self.outside, null, null, TO_REST);
+   }
    destroy(self);
    quit;
   }
@@ -15287,7 +15311,7 @@ code
   act("The magic candle dims to a faint glow.",
        A_SOMEONE, self.outside, null, null, TO_CHAR);
   pause;
-  act("The magic candle flickers into an oblivion.",
+  act("The magic candle flickers into oblivion.",
        A_SOMEONE, self.outside, null, null, TO_CHAR);
   destroy(self);
 }
@@ -15309,7 +15333,7 @@ descr "A dark orb is here, sucking light into itself."
 bright -6
 manipulate {MANIPULATE_HOLD, MANIPULATE_TAKE}
 dilcopy blowaway@function(300, "The orb of darkness suddenly
-winks out of existance, returning light to the area.");
+winks out of existence, returning light to the area.");
 end
 
                              magic_food
@@ -15330,7 +15354,7 @@ end
 lightn_elm
 names {"lightning elemental", "elemental"}
 title "a lightning elemental"
-descr "a large, humanoid lightning bolt stands here."
+descr "A large, humanoid lightning bolt stands here."
 extra {}
 "The creature is made of pure electricity, and sparkles and crackles
 menacingly."
@@ -15413,7 +15437,7 @@ names {"eagle"}
 title "an eagle"
 descr "A summoned eagle is here."
 extra {}
-"This is an eagle that has been summoned to perform tasks for it's
+"This is an eagle that has been summoned to perform tasks for its
 master. It is a stalwart bird, and won't take any mistreatment lightly."
 M_EAGLE_SMALL(50,SEX_MALE)
 exp 0
@@ -15426,7 +15450,7 @@ end /* sum_eagle */
 
 names {"earth elemental", "elemental"}
 title "an earth elemental"
-descr "a large, humanoid column of rock stands here."
+descr "A large, humanoid column of rock stands here."
 extra {}
 "The large beast is made of solid rock, with huge diamonds for eyes."
 M_ELEMENTAL_EARTH_SMALL(17,SEX_NEUTRAL)
@@ -15441,7 +15465,7 @@ end
 
 names {"air elemental", "elemental"}
 title "an air elemental"
-descr "a large, swirling mist in humanoid form floats here."
+descr "A large, swirling mist in humanoid form floats here."
 extra {}
 "This being is nearly translucent, and floats in the air quietly."
 
@@ -15456,7 +15480,7 @@ end
 
 names {"water elemental", "elemental"}
 title "a water elemental"
-descr "a large column of water stands here."
+descr "A large column of water stands here."
 extra {}
 "This column of water seems to be alive!"
 
@@ -15472,9 +15496,9 @@ end
 
 names {"fire elemental", "elemental"}
 title "a fire elemental"
-descr "a large column of flame stands here."
+descr "A large column of flame stands here."
 extra {}
-"Movement from the flames suggest intelligence is present."
+"Movement from the flames suggests intelligence is present."
 
 M_ELEMENTAL_FIRE_SMALL(45,SEX_NEUTRAL)
 exp 0
@@ -15489,10 +15513,10 @@ end
 
 names {"demon"}
 title "a demon"
-descr "a large demon stands here."
+descr "A large demon stands here."
 extra {}
 "This large beast looks very upset at being pulled from its plane of
-existance."
+existence."
 
 M_DEMON_LESSER_SMALL(60,SEX_MALE)
 exp 0
@@ -15507,7 +15531,7 @@ end
 
 names {"devil"}
 title "a devil"
-descr "a large devil stands here."
+descr "A large devil stands here."
 extra {}
 "This large creature stands with a malevolent grin on his face."
 

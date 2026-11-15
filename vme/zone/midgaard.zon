@@ -301,6 +301,7 @@ var
    obj : unitptr;
    intg : integer;
    inits: integer; // Boolean (added by S)
+   where : string;
 
 code
 {
@@ -401,8 +402,9 @@ code
             sl := getwords(trash.name);
             s := sl.[2];
             addextra(trash.extra, {"$owner notified"}, ""); // before the pauses: they clear trash
+            where := self.outside.title; // the janitor may walk on during the pauses
             pause;pause;
-            exec ("tell "+s+" Your corpse is at "     +self.outside.title +", please pick it up.", self);
+            exec ("tell "+s+" Your corpse is at "     +where +", please pick it up.", self);
             continue;
          }
       }

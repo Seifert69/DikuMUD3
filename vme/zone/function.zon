@@ -686,7 +686,7 @@ code
 
         victim := findunit(self,argument,FIND_UNIT_GLOBAL,null);
 
-        if ((victim == null) or (not (victim.type & UNIT_ST_PC|UNIT_ST_NPC))
+        if ((victim == null) or (not (victim.type & (UNIT_ST_PC|UNIT_ST_NPC)))
             or (not visible(activator,victim)))
         {
             exec("say Never heard of him.", self);
@@ -695,7 +695,7 @@ code
 
         if ((victim.type == UNIT_ST_NPC) and (activator.level < IMMORTAL_LEVEL))
         {
-            exec("say Sorry "+activator.name+" you should fight your own battles.", self);
+            exec("say Sorry "+activator.name+", you should fight your own battles.", self);
             goto start;
         }
 
@@ -738,7 +738,7 @@ code
         }
         else
         {
-            act("<div class='say_other'>$1n says 'Get me $2t.'</div>",
+            act("<div class='say_other'>$1n says, 'Get me $2t.'</div>",
                 A_SOMEONE, self, moneystring(cst,TRUE),null, TO_ROOM);
         }
     }
@@ -749,7 +749,7 @@ code
 
         victim := findunit(self,argument,FIND_UNIT_GLOBAL,null,UNIT_ST_PC|UNIT_ST_NPC);
 
-        if ((victim == null) or (not (victim.type & UNIT_ST_PC|UNIT_ST_NPC))
+        if ((victim == null) or (not (victim.type & (UNIT_ST_PC|UNIT_ST_NPC)))
             or (not visible(activator,victim)))
         {
             exec("say Never heard of him.", self);
@@ -1040,7 +1040,7 @@ if (not u1)
 if ((u1.type != UNIT_ST_OBJ) or ( (u1.objecttype != ITEM_WEAPON) and
     (u1.objecttype != ITEM_ARMOR) and (u1.objecttype != ITEM_SHIELD) ))
     {
-    exec ("say The "+u1.name+" is neither a sword, shield nor armor!", self);
+    exec ("say The "+u1.name+" is neither a weapon, shield nor armor!", self);
     goto start;
     }
 
@@ -1061,15 +1061,15 @@ if (craft < 0) craft := 0;  if (craft > 9) craft := 9;
 // Change the following to use skill_text(craft) instead of itoa(craft)
 if (u1.objecttype == ITEM_WEAPON)
     buf := "say The "+u1.name+" is a "+weapon_name(category)+" of "+
-        craft_text.[craft]+" craftmanship and material.";
+        craft_text.[craft]+" craftsmanship and material.";
 
 if (u1.objecttype == ITEM_ARMOR)
     buf := "say The "+u1.name+" is made of "+arm_text.[category]+" and is of "+
-        craft_text.[craft]+" craftmanship and material.";
+        craft_text.[craft]+" craftsmanship and material.";
 
 if (u1.objecttype == ITEM_SHIELD)
     buf := "say The "+u1.name+" is a "+shi_text.[category]+" shield of "+
-        craft_text.[craft]+" craftmanship and material.";
+        craft_text.[craft]+" craftsmanship and material.";
 
 exec (buf, self);
 
@@ -1279,7 +1279,7 @@ if (findunit (activator,argument,FIND_UNIT_INVEN|FIND_UNIT_SURRO,null)!=self)
 	if ( command("sip") or command("taste") )
 	{
 	  block;
-	  act("$1n tastes $2n enjoying every drop.", A_HIDEINV, u, self, null,
+	  act("$1n tastes $2n, enjoying every drop.", A_HIDEINV, u, self, null,
         TO_ROOM);
     act("The taste of the $2N is nothing less than divine.", A_HIDEINV, u, self,
 		    null, TO_CHAR);
@@ -1416,7 +1416,7 @@ if (isset (self.pcflags, PC_PK_RELAXED))
   :dil_end:
 
   set (self.pcflags,PC_PK_RELAXED);
-  act("Your protection from Pk has just worn off.",
+  act("Your protection from PK has just worn off.",
   A_ALWAYS,self,null,null,TO_CHAR);
   quit;
   }
@@ -3739,7 +3739,7 @@ code
     A_ALWAYS,self.outside,self,null,TO_CHAR);
     act("$1n's $2N burns $1m and $1e drops it to the ground.",
     A_SOMEONE,self.outside,self,null,TO_REST);
-    act("Doing the right Quest might help.",
+    act("Doing the right quest might help.",
     A_ALWAYS,self.outside,null,null,TO_CHAR);
     }
     else action ();
@@ -3808,7 +3808,7 @@ if (action=="")
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
-  act("Doing the right Quest might help.",
+  act("Doing the right quest might help.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
   }
 else action ();
@@ -3875,7 +3875,7 @@ if (action=="")
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   act("$1n's $2N burns $1m and $1e drops it to the ground.",
   A_SOMEONE,self.outside,self,null,TO_REST);
-  act("Doing the right Quest might help.",
+  act("Doing the right quest might help.",
   A_ALWAYS,self.outside,null,null,TO_CHAR);
 }
 else action ();
@@ -3949,10 +3949,10 @@ if (action=="")
   A_SOMEONE,self.outside,self,null,TO_REST);
 
   if (activator.alignment>max_ali)
-    act("You are too good to use $2n",
+    act("You are too good to use $2n.",
     A_ALWAYS,self.outside,self,null,TO_CHAR);
   else
-    act("You are too evil to use $2n",
+    act("You are too evil to use $2n.",
   A_ALWAYS,self.outside,self,null,TO_CHAR);
   }
 else action (max_ali,min_ali);
@@ -5431,13 +5431,13 @@ code
    /*whistler changedthis block to get rid of errors in log.*/
    def_acts:={"$1n says, 'I've got no such item!'" ,
    "$1n says, '$3n, you haven't even got it!'" ,
-   "$1n says, 'I don't trade with things such as $2n'",
-   "$1n says, '$3n, you can't afford $2n'" ,
-   "$1n says, 'Here is $2n'" ,
-   "$1n says, 'Thank you for $2n'" ,
-   "$1n says, 'I don't seem to have that many $2Ns in my stock'" ,
+   "$1n says, 'I don't trade with things such as $2n.'",
+   "$1n says, '$3n, you can't afford $2n.'" ,
+   "$1n says, 'Here is $2n.'" ,
+   "$1n says, 'Thank you for $2n.'" ,
+   "$1n says, 'I don't seem to have that many $2Ns in my stock.'" ,
    "$1n says, '$3n, I have no use for $2n.'" ,
-   "$1n says, 'It looks like i don't have enough cash for it.'" };
+   "$1n says, 'It looks like I don't have enough cash for it.'" };
 
    ln:=length (custom_acts);
    i:=0;
@@ -5566,7 +5566,7 @@ code
    {
       log(self.symname + " is in "+self.outside.symname + " instead of home shop " + homes);
       pause;
-      exec("say I better get back to my shop.", self);
+      exec("say I'd better get back to my shop.", self);
       pause;
       i := walk_room@function(homes, 4); // incase he was dragged away
       goto loop;
@@ -5596,7 +5596,7 @@ code
    pc := activator;
    if ((not visible( self, pc ) ) and (pc.level <200))
    {
-      exec("say I only do business with people i can see.", self );
+      exec("say I only do business with people I can see.", self );
       goto loop;
    }
    arg := argument;
@@ -5795,7 +5795,7 @@ item. */
 
    if (u.type != UNIT_ST_OBJ)
        {
-       act("$1n says, 'Ewww it's alive!'", // Let's assume it's not a room
+       act("$1n says, 'Ewww, it's alive!'", // Let's assume it's not a room
            A_SOMEONE, self, u, pc, TO_VICT);
        unsecure ( pc );
        goto loop;
@@ -5812,7 +5812,7 @@ item. */
    {
       tmps := moneystring( ( u.cost * buyprofit ) / 100, 0 );
 
-      act( "$1n says, 'I'll pay " + tmps + " for the $2N'",
+      act( "$1n says, 'I'll pay " + tmps + " for the $2N.'",
 	 A_SOMEONE, self, u, pc, TO_VICT );
    }
    else
@@ -5836,7 +5836,7 @@ item. */
 
       if ( nitem > 100 )
       {
-	 act( "$1n says, 'I don't sell over 100 items at one time'",
+	 act( "$1n says, 'I don't sell over 100 items at one time.'",
 	    A_SOMEONE, self, null, pc, TO_ALL );
 	 unsecure( pc );
 	 goto loop;
@@ -5873,8 +5873,6 @@ item. */
 	       if ( nitem <= atoi( nitml.[sitem - 1] ) )
 	       {
 	 	  nitml.[sitem - 1] := itoa(atoi( nitml.[sitem - 1] ) - nitem);
-		  if ( nitml.[sitem - 1] == "0" )
-	 	     destroy( u );
                   temp_nitem:=nitem;
 		  while( temp_nitem > 0 )      /* Load and link all items */
 		  {
@@ -5884,12 +5882,14 @@ item. */
 		     temp_nitem := temp_nitem- 1;
 		  }
                   tmps := moneystring( (cc * nitem), FALSE );
-                  act( "$1n says, 'Those cost you $2t", A_SOMEONE, self,
+                  act( "$1n says, 'Those cost you $2t.'", A_SOMEONE, self,
 tmps, pc, TO_ALL );
-		  act( "$1n gives you " + getword( argument ) + " $2n.",
+		  act( "$1n gives you " + itoa( nitem ) + " $2Ns.",
 		     A_SOMEONE, self, u, pc, TO_VICT );
-		  act( "$1n gives $3n some $2ns.",
+		  act( "$1n gives $3n some $2Ns.",
 		     A_SOMEONE, self, u, pc, TO_NOTVICT );
+		  if ( nitml.[sitem - 1] == "0" ) /* after the acts, which name it */
+	 	     destroy( u );
                }
 	       else
 	       {
@@ -5905,7 +5905,7 @@ tmps, pc, TO_ALL );
          }
 	 else
          {
-	    act( "You can't afford "+itoa(nitem)+" of those.", A_SOMEONE, self, u, pc, TO_ALL );
+	    act( "You can't afford "+itoa(nitem)+" of those.", A_SOMEONE, self, u, pc, TO_VICT );
          }
       }
       else
@@ -5960,7 +5960,7 @@ tmps, pc, TO_ALL );
 
                   tmps := ext.descr;
 
-                  act( "$1n says, 'That cost you $2t", A_SOMEONE, self,
+                  act( "$1n says, 'That cost you $2t.'", A_SOMEONE, self,
 tmps, pc, TO_ALL );
 /*
                   act( acts.[4], A_SOMEONE, self, u, pc, TO_ALL );
@@ -5982,7 +5982,7 @@ tmps, pc, TO_ALL );
 	    {
 
                tmps := moneystring( cc, FALSE );
-               act( "$1n says, 'That cost you $2t", A_SOMEONE, self, tmps,
+               act( "$1n says, 'That cost you $2t.'", A_SOMEONE, self, tmps,
 pc, TO_ALL );
 /*
                act( acts.[4], A_SOMEONE, self, u, pc, TO_ALL );
@@ -6172,13 +6172,13 @@ code
    /*whistler changedthis block to get rid of errors in log.*/
    def_acts:={"$1n says, 'I've got no such item!'" ,
    "$1n says, '$3n, you haven't even got it!'" ,
-   "$1n says, 'I don't trade with things such as $2n'",
-   "$1n says, '$3n, you can't afford $2n'" ,
-   "$1n says, 'Here is $2n'" ,
-   "$1n says, 'Thank you for $2n'" ,
-   "$1n says, 'I don't seem to have that many $2Ns in my stock'" ,
+   "$1n says, 'I don't trade with things such as $2n.'",
+   "$1n says, '$3n, you can't afford $2n.'" ,
+   "$1n says, 'Here is $2n.'" ,
+   "$1n says, 'Thank you for $2n.'" ,
+   "$1n says, 'I don't seem to have that many $2Ns in my stock.'" ,
    "$1n says, '$3n, I have no use for $2n.'" ,
-   "$1n says, 'It looks like i don't have enough cash for it.'" };
+   "$1n says, 'It looks like I don't have enough cash for it.'" };
 
    ln:=length (custom_acts);
    i:=0;
@@ -7512,7 +7512,7 @@ code
    dirlist:={};
    x:=0;
    while (x<10){
-      if ( self.exit_to[x] == null)
+      if ( self.outside.exit_to[x] == null)
       goto endwhi;
 
       if (not ((self.outside.exit_to[x].zoneidx) in zones_lst))
@@ -8359,7 +8359,7 @@ code
    {
       if ( words.[1] in slActive )
       {
-         act("Channel "+words.[1] + " Already Active!", A_SOMEONE, self, null, null, TO_CHAR);
+         act("Channel "+words.[1] + " is already active!", A_SOMEONE, self, null, null, TO_CHAR);
          goto start;
       }
 
@@ -8392,7 +8392,7 @@ code
       goto start;
    }
 
-   if (("del" in words.[0]) and (words.[1]!="") and (words.[1] in slActive))
+   if (("del" in words.[0]) and (words.[1]!=""))
    {
       if (not(words.[1] in slActive) )
       {
@@ -8441,7 +8441,7 @@ code
    {
       if (not (slActive.[x] in discordChn))
       {
-         s := "<div class='cpy'>Channel "+slActive.[x]+" is active</div><br/>";
+         s := "<div class='cpy'>Channel "+slActive.[x]+" is active.</div><br/>";
          sendtext(s, self);
       }
       x := x+1;
@@ -8464,29 +8464,29 @@ code
 :help_chan:
    block;
    sendtext (" To add a channel type:<br/>"+
-   "comm add <channel name><br/><br/>"+
+   "comm add &lt;channel name&gt;<br/><br/>"+
    "  To delete a channel type:<br/>"+
-   "comm delete <channel name><br/><br/>"+
+   "comm delete &lt;channel name&gt;<br/><br/>"+
    "  To see all your active channels type:<br/>"+
    "comm #<br/><br/>"+
    "  To see who is on a specific channel type:<br/>"+
-   "<channel name> #<br/><br/>"+
+   "&lt;channel name&gt; #<br/><br/>"+
    "  To see who joins or departs a channel type:<br/>"+
-   "comm inform <on|off|depart|join> <br/><br/>"+
-   "  To toggle echoing of your message type:<br/>"+
-   "comm echo<br/>"+
-   "  To do a channel emote type: <br/>"+
-   "<channel name> @ <action><br/>"+
-   "  The standard guild channel is gchat only members will hear you.
-   <br/><br/>",self);
+   "comm inform &lt;on|off|depart|join&gt;<br/><br/>"+
+   "  To toggle echoing of your messages type:<br/>"+
+   "comm echo<br/><br/>"+
+   "  To do a channel emote type:<br/>"+
+   "&lt;channel name&gt; @ &lt;action&gt;<br/><br/>"+
+   "  The guild channel is gchat: only members of your guild will hear you."+
+   "<br/><br/>",self);
 
    goto start;
 
 :inform:
    block;
    words:= getwords(argument);
-   if (words.[1] == "") {
-   act("Not enough arguments for inform command try 'chan help'",
+   if (length(words) < 2) {
+   act("Not enough arguments for the inform command, try 'comm help'.",
          A_SOMEONE, self, null, null, TO_CHAR);
    } else if (words.[1] == "on") {
    act("Channel full inform on.",
@@ -9085,17 +9085,20 @@ code
    if (length(attack) < 1) goto start_fight;
    if (attack.[0] == "") goto start_fight;
 
+   tempstr := "";
    if (length(attack)>1)
+      tempstr := attack.[1];
+   if (tempstr != "")
       {
          act(attack.[0],
              A_SOMEONE, self, null, sucker, TO_NOTVICT);
          act(attack.[1],
              A_ALWAYS, self, null, sucker, TO_VICT);
       }
-   else
+   else /* no victim's text: the victim sees the room's, as the comment above says */
       {
          act(attack.[0],
-             A_SOMEONE, self, null, null, TO_ALL);
+             A_SOMEONE, self, null, sucker, TO_ALL);
       }
 
 :start_fight:
@@ -9824,7 +9827,7 @@ end
 moneychanger
 names {"moneyman"}
 title "the Wizi Money Man"
-descr "Surely noone can see him here."
+descr "Surely no one can see him here."
 
 minv 200
 

@@ -281,7 +281,7 @@ if (getword(argument) != self.name)
 if (getword(argument) != itoa(ID))
     goto start;
 
-sendtext ("Watchdog "+itoa(ID)+": "+argument, self);
+sendtext ("Watchdog "+itoa(ID)+": "+argument+"<br/>", self);
 goto start;
 }
 
@@ -322,7 +322,7 @@ goto loop;
 if (self.outside.zoneidx=="g_q")
 	{
 	log (self.outside.name+" cheating with power items and familiar");
-	sendtext ("You were caught cheating with your familiar and power items and are logged<br/>",self.outside.outside);
+	sendtext ("You were caught cheating with your familiar and power items and are logged.<br/>",self.outside.outside);
 	sendtext ("Your familiar and all on it have been destroyed.<br/>",self.outside.outside);
 	destroy (self);
 	}
@@ -472,8 +472,8 @@ addp (arg_2,paper);
 exec ("emote places the "+arg_1+" into a slot in the wall.",self);
 act ("You hear a large machine behind the wall grumble to life.",
 A_ALWAYS,self,null,null,TO_ALL);
-exec ("say Well thats all there is to it.",self);
-exec ("say Your article should be in the next issue of the paper.  buy one and see", self);
+exec ("say Well, that's all there is to it.",self);
+exec ("say Your article should be in the next issue of the paper. Buy one and see.", self);
 goto start;
 
 :no_subject:
@@ -521,7 +521,7 @@ else if (command("say"))
 /*  This specifies what happens if the pc says something */
 
 pause;
-exec("say Nod if it is what you want, shake your head" +
+exec("say Nod if it is what you want, shake your head " +
 "otherwise.", self);
 }
 else if (command("shake"))
@@ -597,7 +597,7 @@ title "The Grand Quest Hall"
 descr
 "    You have arrived in the vaulted Quest Hall, where gods discuss
 the tasks they will set for mortals. Many devious schemes and terrible
-secrets have echoed of its ancient stones. The owners of this place
+secrets have echoed off its ancient stones. The owners of this place
 obviously have no need of exits, as none are provided."
 movement SECT_INSIDE
 flags {UNIT_FL_SACRED}
@@ -711,7 +711,7 @@ end
 names "board_room"
 title "The Board Room of the Gods"
 descr
-"  You are floating in a endless void, infinity surrounding you on all sides.
+"  You are floating in an endless void, infinity surrounding you on all sides.
 The effect on your eyes and mind is a soothing one. By some freak accident of
 nature there is a pleasant little sofa group right next to you, set for tea."
 extra {"sofa group", "sofa"}
@@ -835,11 +835,11 @@ Valhalla is operated.<br/><br/>
 
 The Valhalla engine is being licensed out to different
 people interested in running a mud in a more professional manner. Currently,
-there is a Valhalla in Cananda, Denmark, California and Singapore. With these
+there is a Valhalla in Canada, Denmark, California and Singapore. With these
 engines come a stock of zones (write: look stock zones to see a
 listing of these zones).<br/><br/>
 
-Be sure that you read the builders agreement on the web site. The zones you
+Be sure that you read the builders' agreement on the web site. The zones you
 build here will only be used on Valhalla USA. If you currently
 have a zone 'out there' which you would like removed, please mail Papi and
 he will take care of it."
@@ -873,8 +873,8 @@ end
 names "gnort_home"
 title "Gnort's Hangout"
 descr
-"   Nothing much, just a wellstocked virtual bar and an unspecified number of a
-counting lounge chair. So called as noone has yet managed to count it."
+"   Nothing much, just a well-stocked virtual bar and an unspecified number of a
+counting lounge chair. So called as no one has yet managed to count it."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
 /*special SFUN_SOFA*/
@@ -889,9 +889,9 @@ nature brought you here, as no visible entries or exits are present. As you
 examine the room, you are struck with awe and wonder at the beauty of it.
 There are large paintings and etchings in the walls, representing the Lir of
 the world. The edge of the room is bathed in shadows, indicating the presence
-of strong magical powers, as the walls themselves glow with in inner light.
+of strong magical powers, as the walls themselves glow with an inner light.
 Standing in the midst of this beauty, you feel like a trespasser, not sure if
-you have violated someones sense of privacy. There is a musky, unfamiliar scent
+you have violated someone's sense of privacy. There is a musky, unfamiliar scent
 in the air, as if you were in the den of a pack of Wolves."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
@@ -911,7 +911,7 @@ end
 			aaaaa
 title "The Wiz Zone"
 descr
-"You are in the Wiz zone, be sure to visit the Builder's Bar"
+"You are in the Wiz zone, be sure to visit the Builders' Bar."
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS,UNIT_FL_PRIVATE,UNIT_FL_NO_TELEPORT}
 end
@@ -968,10 +968,10 @@ end
 /* God of death */
 names {"reboot daemon", "daemon"}
 title "a reboot daemon"
-descr "A reboot daemon is playing here"
+descr "A reboot daemon is playing here."
 extra {}
 "Even though she's a daemon she looks quite harmless. But with daemons you just 
-never really know, do you. You probably shouldn't <a cmd='# daemon'>ruffle</a> its hair.
+never really know, do you? You probably shouldn't <a cmd='# daemon'>ruffle</a> her hair.
 If a reboot kicks off and you change your mind you can try to kill the daemon to prevent
 a reboot."
 BASE_DEMON_LESSER(1, SEX_FEMALE, ARM_CLOTHES)
@@ -993,7 +993,7 @@ code
    if (activator.level < 254)
    {
       act("$3n bites you very hard in your finger.", A_ALWAYS, activator, null, self, TO_CHAR);
-      act("$3n bites $1n  very hard in $1s finger.", A_ALWAYS, activator, null, self, TO_CHAR);
+      act("$3n bites $1n very hard in $1s finger.", A_ALWAYS, activator, null, self, TO_ROOM);
       if (activator.hp > 1)
          activator.hp := 1;
       goto start;
@@ -1098,7 +1098,7 @@ code
 
    i := shell("adopt.sh");
    act("You initiate the universe adoption process. *click* ("+itoa(i)+")", A_ALWAYS, pc, null, self, TO_CHAR);
-   act("$3n initiates the universe adoption process.", A_ALWAYS, pc, null, self, TO_ROOM);
+   act("$1n initiates the universe adoption process.", A_ALWAYS, pc, null, self, TO_ROOM);
    pause;
    act("Strange <a cmd='look #'>symbols</a> begin floating around the parallel universe.", A_ALWAYS, pc, null, self, TO_CHAR);
    unsecure(pc);
@@ -1285,7 +1285,7 @@ type ITEM_OTHER
 weight 1
 extra {}
 "Usage:<br/>
-personal <playername> <item>"
+personal &lt;playername&gt; &lt;item&gt;"
 
 dilcopy make_personal@wiz();
 
@@ -1296,7 +1296,7 @@ end
 names {"dil_board", "board"}
 title "the dil board"
 descr
-"In the middle of the void a bulletin board hangs unexplicably."
+"In the middle of the void a bulletin board hangs inexplicably."
 dilcopy board@boards("dil","","rem_res@boards","",100);
 
 HIT_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
@@ -1315,7 +1315,7 @@ end
 names {"wiz_board", "board"}
 title "the wizard board"
 descr
-"In the middle of the void a bulletin board hangs unexplicably."
+"In the middle of the void a bulletin board hangs inexplicably."
 dilcopy board@boards("wiz","admin_res@boards","admin_res@boards","admin_res@boards",100);
 end
 
@@ -1368,7 +1368,7 @@ code
           A_SOMEONE,targ,self,null,TO_REST);
           pc:=findunit (targ,"whistler",FIND_UNIT_WORLD,null);
 if (not ("$nobell" in pc.quests))
-          act ("You here a loud bell clanging ... someone wants coffee!.",
+          act ("You hear a loud bell clanging... someone wants coffee!",
           A_ALWAYS,pc,null,null,TO_CHAR);
           unsecure (targ);
       goto start;

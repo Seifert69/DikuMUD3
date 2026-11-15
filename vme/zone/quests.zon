@@ -388,8 +388,9 @@ dilend
 // 'arg2' is optional, e.g. an object ($2n)
 //
 // :: commands::
-//    ::$3n pats you on the head.::$3n pats $1n on the head.::
-//    ::walkto::sym@name::
+//    ::$3n pats you on the head.::$3n pats $1n on the head.
+//    ::walkto::sym@name
+//    (no "::" at the end: it makes a fourth, empty part and the line is refused)
 //  
 dilbegin integer Explain(arg1 : unitptr, arg2 : unitptr, msg : string);
 external 
@@ -434,7 +435,7 @@ dilend
 
 // expl:
 //   list of strings for the NPC to execute to explain the quest.
-//   You can use $ variables, e.g. $1n = self (npc), $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//   You can use $ variables, e.g. $1n = player, $3n = self (npc). Strings formatted with "TO_CHAR", "SOMEONE"
 //   You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
 //
 // Example:
@@ -976,7 +977,7 @@ dilend
 
 // pc : The player that is the target of this explanation
 // expl: list of strings for the NPC to execute to explain the quest.
-//       YOu can use $ variables, e.g. $1n. $1 = self, $3 = player. Strings formatted with "TO_CHAR", "SOMEONE"
+//       You can use $ variables, e.g. $1n. $1 = player, $3 = self. Strings formatted with "TO_CHAR", "SOMEONE"
 //       You can use a special code "::string1::string2" to send an act(string1, pc, null, npc, TO_CHAR) and act(string2, pc, null, npc, TO_REST)
 //       The very last string should be "nod to accept..." as it will be repeated
 //   {"say $1n, do you want this quest?", "jump", "hug $1n", "say <a cmd='"'>nod</a> if you wish to accept"}
@@ -1564,6 +1565,7 @@ var
    i      : integer;
    ln     : integer;
    exdp   : extraptr;
+   qsl    : stringlist;
 
 code
 {
@@ -1628,9 +1630,10 @@ code
    }
 
    subextra(pc.quests, qon);
-   sl := null;
-   addstring(sl, qdone);
-   addextra(pc.quests, sl, "");
+   // qsl, not sl: sl is the explanation for the next player who completes the quest
+   qsl := null;
+   addstring(qsl, qdone);
+   addextra(pc.quests, qsl, "");
    if (xp > 0)
    {
       experience(xp, pc);

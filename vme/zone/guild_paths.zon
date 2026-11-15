@@ -360,10 +360,10 @@ extra {}
 "It is quite large, weighing heavily in the hand, but more from its
 power than because of its weight. There is a small copy of the statue
 of Odin in the Temple of Udgaard set in its centre.<br/>
-To use the medallion, you must be in Udgaard. Once there, simply wear 
-the medallion and then 'return &lt;guild&gt;', where &lt;guild&gt; is fighter,
-thief, healer, conjurer, ranger, paladin, sorcerer, assassin, knight, 
-barbarian, or necromancer.<br/>
+To use the medallion, you must be in Udgaard, Midgaard or a guild. Once there,
+simply wear the medallion and then 'return &lt;guild&gt;', where &lt;guild&gt; is fighter,
+thief, healer, conjurer, ranger, paladin, sorcerer, assassin, druid, knight, 
+barbarian, or necromancer. It only serves those of level 15 or below.<br/>
 If you are in your guild and wish to return to Udgaard, 'return Udgaard'
 will take you to Udgaard."
 

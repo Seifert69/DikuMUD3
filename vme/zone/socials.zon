@@ -142,7 +142,7 @@ quit;
 }
 if (vict.position==POSITION_DEAD)
 {
-socialact("<div class='social_self'>Too late to be friends with $3m now. </div>",
+socialact("<div class='social_self'>Too late to be friends with $3n now. </div>",
        A_HIDEINV,self,null,vict,TO_CHAR);
 act ("<div class='social_other'>$1n gives the corpse of $3n a punch in the arm. " +
       "There seems to be something odd about $1n.</div>",
@@ -160,7 +160,7 @@ socialact("<div class='social_other'>$1n gives $3n a friendly punch in the arm t
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 socialact("<div class='social_other'>You dream someone is using your arm for " +
       "a punching bag.</div>",
-        A_HIDEINV,self,null,vict,TO_VICT);
+        A_ALWAYS,self,null,vict,TO_VICT);
 quit;
 }
 
@@ -190,7 +190,7 @@ quit;
 socialact("<div class='social_self'>You give your invisible friend a friendly "  +
       "sock in the arm. </div>",
        A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n gives the air a friendly punch," +
+socialact("<div class='social_other'>$1n gives the air a friendly punch, " +
       "maybe $1e needs professional help? </div>",
        A_HIDEINV,self,null,null,TO_REST);
   send_done ("armpunch",self,null,null,0,"",null, CMD_AUTO_NONE);
@@ -213,7 +213,7 @@ if (arg!="")
 vict:=findunit(self,arg,SOCIAL_FIND,null);
 if ((vict==null) or not visible(self,vict))
 {
-   sendtext ("<div class='social_self'>There is no one here Sniff! Your friend isn't here.</div><br/>",self);
+   sendtext ("<div class='social_self'>Sniff! Your friend isn't here.</div><br/>",self);
 quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
@@ -233,13 +233,13 @@ quit;
 
 if (vict.position == POSITION_SLEEPING)
 {
-socialact("<div class='social_self'>You give $3m a friendly slap on the back.</div>",
+socialact("<div class='social_self'>You give $3n a friendly slap on the back.</div>",
       A_ALWAYS,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n gives $3n a slap on the back. "+
       "What a rude awakening! </div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 socialact("<div class='social_other'>You dream someone is pounding on your back.</div>",
-        A_HIDEINV,self,null,vict,TO_VICT);
+        A_ALWAYS,self,null,vict,TO_VICT);
 quit;
 }
 
@@ -300,7 +300,7 @@ quit;
 }
 if (vict.position==POSITION_DEAD)
 {
-socialact("<div class='social_self'>You are content that at last $3m is dead!</div>",
+socialact("<div class='social_self'>You are content that at last $3n is dead!</div>",
        A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n gives a contented sigh at the death of $3n.</div>",
        A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -328,7 +328,7 @@ quit;
 socialact("<div class='social_self'>You sigh contentedly at $3n, " +
       "$3e is being so sweet to you!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-socialact("<div class='social_other'>$1n sighs contently at $3n.</div>",
+socialact("<div class='social_other'>$1n sighs contentedly at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 socialact("<div class='social_other'>$1n sighs contentedly at you. "+
       "You have made $1m very happy!</div>",
@@ -381,7 +381,7 @@ if (vict.position == POSITION_SLEEPING)
 {
 socialact("<div class='social_self'>You peck $3n gently on the cheek, $3e looks so sweet asleep.</div>",
       A_ALWAYS,self,null,vict,TO_CHAR);
-socialact("<div class='social_other'>$1n pecks gently $3n on the cheek.</div>",
+socialact("<div class='social_other'>$1n gently pecks $3n on the cheek.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 quit;
 }
@@ -396,7 +396,7 @@ socialact("<div class='social_other'>$1n tries to kiss $1mself. Maybe you should
 quit;
 }
 socialact("<div class='social_self'>You give $3n a fond peck on the cheek. " +
-      "$3e is so sweet to you!</div>",
+      "$3n is so sweet to you!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n gives $3n a peck on the cheek.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -408,7 +408,7 @@ quit;
  }
 socialact("<div class='social_self'>You blow a kiss to the MUD Admin.</div>",
        A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n blows a kiss to the Mud Admin.</div>",
+socialact("<div class='social_other'>$1n blows a kiss to the MUD Admin.</div>",
        A_HIDEINV,self,null,null,TO_REST);
   send_done ("peck",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -515,7 +515,7 @@ quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'>Their is no one here listening to you!</div><br/>",self);
+   sendtext ("<div class='social_self'>There is no one here listening to you!</div><br/>",self);
 quit;
 }
 if (vict.position==POSITION_DEAD)
@@ -528,7 +528,7 @@ quit;
 }
 if (vict.position == POSITION_SLEEPING)
 {
-socialact("<div class='social_self'>You can talk about $3n all you like, $3e can't hear it </div>",
+socialact("<div class='social_self'>You can talk about $3n all you like, $3e can't hear it.</div>",
       A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
@@ -792,7 +792,7 @@ if (vict.position == POSITION_SLEEPING)
 socialact("<div class='social_self'>You grumble about $3n's snoring.</div>",
       A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n grumbles at $3n's snoring.</div>",
-      A_HIDEINV,self,null,null,TO_REST);
+      A_HIDEINV,self,null,vict,TO_NOTVICT);
 
 quit;
 }
@@ -848,13 +848,13 @@ quit;
 }
 if (vict.position==POSITION_DEAD)
 {
-socialact("<div class='social_self'>You are startled that to discover $3n is dead!</div>",
+socialact("<div class='social_self'>You are startled to discover $3n is dead!</div>",
        A_HIDEINV,self,null,vict,TO_CHAR);
 quit;
 }
 if (vict.position == POSITION_SLEEPING)
 {
-socialact("<div class='social_self'>No use $3n is sound asleep.</div>",
+socialact("<div class='social_self'>No use, $3n is sound asleep.</div>",
       A_HIDEINV,self,null,vict,TO_CHAR);
 quit;
 }
@@ -863,7 +863,7 @@ if (self==vict)
 {
 socialact("<div class='social_self'>You jump. Your brilliance startles even you!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n jumps startled by their own presence.</div>",
+socialact("<div class='social_other'>$1n jumps, startled by $1s own presence.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("startle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -878,7 +878,7 @@ socialact("<div class='social_other'>You jump. $1n startled you!</div>",
 quit;
 }
 
-socialact("<div class='social_self'>You are startled by something! Maybe your being hunted.</div>",
+socialact("<div class='social_self'>You are startled by something! Maybe you're being hunted.</div>",
               A_HIDEINV,self,null,null,TO_CHAR);
 socialact("<div class='social_other'>$1n looks around startled. Maybe $1e is hearing things?</div>",
                A_HIDEINV,self,null,null,TO_REST);
@@ -917,7 +917,7 @@ quit;
 }
 if (vict.position == POSITION_SLEEPING)
 {
-socialact("<div class='social_self'>No use $3n is sound asleep.</div>",
+socialact("<div class='social_self'>No use, $3n is sound asleep.</div>",
       A_HIDEINV,self,null,vict,TO_CHAR);
 quit;
 }
@@ -943,7 +943,7 @@ quit;
  }
 socialact("<div class='social_self'>You kneel and give thanks to the Admin of the MUD.</div>",
        A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n kneels to offers up prayers of thanks to the Admin. What a suck up!</div>",
+socialact("<div class='social_other'>$1n kneels to offer up prayers of thanks to the Admin. What a suck up!</div>",
        A_HIDEINV,self,null,null,TO_REST);
   send_done ("kneel",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -1055,14 +1055,14 @@ socialact("<div class='social_self'>You give $3n a sweet kiss.</div>",
        A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n gives $3n a sweet kiss right on the lips!</div>",
        A_HIDEINV,self,null,vict,TO_NOTVICT);
-socialact("<div class='social_other'> $1n gives you a quick but sweet kiss!</div>",
+socialact("<div class='social_other'>$1n gives you a quick but sweet kiss!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("swkiss",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
  }
 socialact("<div class='social_self'>You look around for someone to kiss sweetly.</div>",
       A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n looks around force someone to kiss sweetly.</div>",
+socialact("<div class='social_other'>$1n looks around for someone to kiss sweetly.</div>",
                A_HIDEINV,self,null,null,TO_REST);
   send_done ("swkiss",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -1109,7 +1109,7 @@ socialact("<div class='social_other'>$1n melts into the ground after what they j
   send_done ("melt",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
 }
-socialact("<div class='social_self'>You melt in $3n's arms </div>",
+socialact("<div class='social_self'>You melt in $3n's arms.</div>",
               A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n sighs happily and melts into $3n's arms.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -1146,7 +1146,7 @@ quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> They aren't here. Sigh!</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here. Sigh!</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1162,7 +1162,7 @@ if (self==vict)
 socialact("<div class='social_self'>You smile shyly to yourself.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
 socialact("<div class='social_other'>$1n smiles shyly at $1s shadow. " +
-      "$1e seems to be just a TAD shy. </div>",
+      "$1n seems to be just a TAD shy. </div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("shysmile",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -1201,12 +1201,12 @@ if (arg!="")
 vict:=findunit(self,arg,SOCIAL_FIND,null);
 if ((vict==null) or not visible(self,vict))
 {
-   sendtext ("<div class='social_self'>They aren't here.(</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here. :(</div><br/>",self);
 quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> They aren't here.(</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here. :(</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1264,7 +1264,7 @@ quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> They aren't here.</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here.</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1324,7 +1324,7 @@ quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> The smell drove them off.</div><br/>",self);
+   sendtext ("<div class='social_self'>The smell drove them off.</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1348,7 +1348,7 @@ socialact("<div class='social_self'>You fan $3n's rancid smell away from you.</d
        A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n fans $3n's stench from $1m.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-socialact("<div class='social_other'>$1n fans the air in front of $1s nose "  +
+socialact("<div class='social_other'>$1n fans the air in front of $1s nose. "  +
       "Hey, you just took a bath last month!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("stench",self,null,vict,0,"",null, CMD_AUTO_NONE);
@@ -1356,7 +1356,7 @@ quit;
  }
 socialact("<div class='social_self'>It smells in here!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n fans the stench away $1s nose coughing.</div>",
+socialact("<div class='social_other'>$1n fans the stench away from $1s nose, coughing.</div>",
        A_HIDEINV,self,null,null,TO_REST);
   send_done ("stench",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -1395,7 +1395,7 @@ quit;
 
 if (self==vict)
 {
-socialact("<div class='social_self'>You look evilly at your clothing. Ok you NEED new clothes</div>",
+socialact("<div class='social_self'>You look evilly at your clothing. Ok you NEED new clothes.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
 socialact("<div class='social_other'>$1n looks evilly at $1s clothes. " +
       "Hmm perhaps $1n is TOO fashion conscious. </div>",
@@ -1407,7 +1407,7 @@ socialact("<div class='social_self'>You burn holes in $3n with the intensity of 
        A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n gives $3n such a look!</div>",
        A_HIDEINV,self,null,vict,TO_NOTVICT);
-socialact("<div class='social_other'>$1n glares at you with hatred burning in their eyes. "  +
+socialact("<div class='social_other'>$1n glares at you with hatred burning in $1s eyes. "  +
       "They'll get over it or die pissed. </div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("elook",self,null,vict,0,"",null, CMD_AUTO_NONE);
@@ -1521,10 +1521,10 @@ socialact("<div class='social_other'>$1n leans $1s forehead against the wall. " 
   send_done ("headbang",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
 }
-socialact("<div class='social_self'>You whack $3n head with your own! Oww $3e has a HARD head!</div>",
+socialact("<div class='social_self'>You whack $3n's head with your own! Oww, $3e has a HARD head!</div>",
       A_HIDEINV,self,null,vict,TO_CHAR);
 socialact("<div class='social_other'>$1n and $3n charge toward each other and "+
-      "bang their heads together. That MIGHT explain their lowered IQ </div>",
+      "bang their heads together. That MIGHT explain their lowered IQ.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 socialact("<div class='social_other'>$1n slams $1s head into yours. Look at the little birdies!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -1554,12 +1554,12 @@ if (arg!="")
 vict:=findunit(self,arg,SOCIAL_FIND,null);
 if ((vict==null) or not visible(self,vict))
 {
-   sendtext ("<div class='social_self'>They aren't here. They anticipated your request(</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here. They anticipated your request. :(</div><br/>",self);
 quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> They aren't here. They anticipated your request.(</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here. They anticipated your request. :(</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1618,7 +1618,7 @@ quit;
 }
 if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 {
-   sendtext ("<div class='social_self'> They aren't here.</div><br/>",self);
+   sendtext ("<div class='social_self'>They aren't here.</div><br/>",self);
 quit;
 }
 if ((vict.position<POSITION_DEAD) or
@@ -1691,7 +1691,7 @@ if (self==vict)
 {
 socialact("<div class='social_self'>You flex your muscles hoping someone will notice you.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-socialact("<div class='social_other'>$1n flexes $1s muscle. You manage to keep a straight face.</div>",
+socialact("<div class='social_other'>$1n flexes $1s muscles. You manage to keep a straight face.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("flex",self,null,vict,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -1860,12 +1860,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Your hearts desire left :(</div><br/>",self);
+                sendtext ("<div class='social_self'>Your heart's desire left :(</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Your hearts desire left :(</div><br/>",self);
+                sendtext ("<div class='social_self'>Your heart's desire left :(</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -1878,7 +1878,7 @@ if (self==vict)
 	{
 	socialact("<div class='social_self'>You try to kiss yourself. That really should be done in private!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n tries to kiss $1mself tenderly. $1e really should do that in private.</div>",
+        socialact("<div class='social_other'>$1n tries to kiss $1mself tenderly. $1n really should do that in private.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("tkiss",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -2487,16 +2487,16 @@ if (self==vict)
 	{
 	socialact("<div class='social_self'>ACK!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>ACK!</div>",
+	socialact("<div class='social_other'>$1n ACKs!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("ack",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
 	socialact("<div class='social_self'>You ACK loudly at $3n!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n ACK's loudly at $3n!</div>",
+        socialact("<div class='social_other'>$1n ACKs loudly at $3n!</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-	socialact("<div class='social_other'>$1n ACK's loudly at you!</div>",
+	socialact("<div class='social_other'>$1n ACKs loudly at you!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("ack",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -2504,7 +2504,7 @@ if (self==vict)
 
 	socialact("<div class='social_self'>You ACK loudly!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n ACK's loudly!</div>",
+	socialact("<div class='social_other'>$1n ACKs loudly!</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("ack",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -2563,7 +2563,7 @@ if (self==vict)
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You hmmm thoughtfully.</div>",
+        socialact("<div class='social_self'>You hmm thoughtfully.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n places $1s finger on $1s chin and hmms thoughtfully.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -2746,9 +2746,9 @@ if (self==vict)
 	quit;
 	 }
 
-        socialact("You try to find an ass to grab.",
+        socialact("<div class='social_self'>You try to find an ass to grab.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("$1n tries to grab someone's ass!.",
+        socialact("<div class='social_other'>$1n tries to grab someone's ass!</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("grabass",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -3014,12 +3014,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You couldn't find anyone to chortle at, but don't let that stop you from</div><br/>",self);
+                sendtext ("<div class='social_self'>You couldn't find anyone to chortle at, but don't let that stop you from chortling.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You couldn't find anyone to chortle at, but don't let that stop you from</div><br/>",self);
+                sendtext ("<div class='social_self'>You couldn't find anyone to chortle at, but don't let that stop you from chortling.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -3102,7 +3102,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n looks at $3n with huge tears flooding $1s eyes.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n looks at you with  huge tears in $1s eyes.</div>",
+        socialact("<div class='social_other'>$1n looks at you with huge tears in $1s eyes.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("btears",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -3258,12 +3258,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Stomp all you want that person is not here.</div><br/>",self);
+                sendtext ("<div class='social_self'>Stomp all you want, that person is not here.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Stomp all you want $3n's not here.</div><br/>",self);
+                sendtext ("<div class='social_self'>Stomp all you want, that person is not here.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -3319,7 +3319,7 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Cover someone that's not there? Go find someone else to protect pal.</div><br/>",self);
+                sendtext ("<div class='social_self'>Cover someone that's not there? Go find someone else to protect, pal.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
@@ -3344,7 +3344,7 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You cover $3n's eyes hoping to keep $3m pure and innocent.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n covers $3n's eyes protecting $3s innocence.</div>",
+        socialact("<div class='social_other'>$1n covers $3n's eyes, protecting $3s innocence.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n covers your eyes, protecting you from the world.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -3390,13 +3390,13 @@ if (arg!="")
 		}
 if (vict.position<POSITION_STANDING)
 {
-socialact("<div class='social_self'>$3n is not positioned to react to that to $3m.</div>",
+socialact("<div class='social_self'>$3n is not positioned to react to that.</div>",
 A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You try to hide behind yourself,but you can't. You feel scared!!</div>",
+        socialact("<div class='social_self'>You try to hide behind yourself, but you can't. You feel scared!!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n tries to hide behind $1mself, but fails.  You sense $1s fear.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -3415,7 +3415,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You try to hide behind yourself, you can't. You feel scared!!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n tries to hide behind $1sself, but fails. You sense $1s fear.</div>",
+        socialact("<div class='social_other'>$1n tries to hide behind $1mself, but fails. You sense $1s fear.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("hidebehind",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -3609,15 +3609,15 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n wants $3n's blood.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n wants your blood, You must have really peeved $1m off.</div>",
+        socialact("<div class='social_other'>$1n wants your blood. You must have really peeved $1m off.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("blood",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You shout 'I WANT BLOOD</div> LETS KILL!'</div>",
+        socialact("<div class='social_self'>You shout 'I WANT BLOOD, LET'S KILL!'</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n shouts 'I WANT BLOOD</div> LETS KILL!'</div>",
+        socialact("<div class='social_other'>$1n shouts 'I WANT BLOOD, LET'S KILL!'</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("blood",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -3643,12 +3643,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Must be a real secret their not even here.</div><br/>",self);
+                sendtext ("<div class='social_self'>Must be a real secret, they're not even here.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Must be a real secret their not even here.</div><br/>",self);
+                sendtext ("<div class='social_self'>Must be a real secret, they're not even here.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -3659,7 +3659,7 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You secretly admire your self...You really need help.</div>",
+        socialact("<div class='social_self'>You secretly admire yourself...You really need help.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("secret",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -3762,12 +3762,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Not likely, as there is no-one her by that name.</div><br/>",self);
+                sendtext ("<div class='social_self'>Not likely, as there is no-one here by that name.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Not likely, as there is no-one her by that name.</div><br/>",self);
+                sendtext ("<div class='social_self'>Not likely, as there is no-one here by that name.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -3978,7 +3978,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Where, what, how, WHO ???</div>",
+	socialact("<div class='social_self'>Where, what, how, WHO???</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("bonk",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -4306,12 +4306,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Laughing at someone thats not even here?</div><br/>",self);
+                sendtext ("<div class='social_self'>Laughing at someone that's not even here?</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Laughing at someone thats not even here?</div><br/>",self);
+                sendtext ("<div class='social_self'>Laughing at someone that's not even here?</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -4322,7 +4322,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You laugh at yourself...boy your funny...looking</div>",
+	socialact("<div class='social_self'>You laugh at yourself...boy, you're funny...looking</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n rolls on the floor laughing.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -4339,7 +4339,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Kind of silly laughing to your self!</div>",
+	socialact("<div class='social_self'>Kind of silly laughing to yourself!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
 	socialact("<div class='social_other'>$1n rolls on the floor laughing!</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -4413,7 +4413,7 @@ if (self==vict)
   send_done ("dance",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You lead $3m to the dance floor.</div>",
+        socialact("<div class='social_self'>You lead $3n to the dance floor.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n sends $3n across the dance floor.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -4423,7 +4423,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>You dance merrily, Feels silly, doesn't it?</div>",
+	socialact("<div class='social_self'>You dance merrily. Feels silly, doesn't it?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n dances merrily around you.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -4507,7 +4507,7 @@ if (self.position<POSITION_RESTING)
         sendtext ("<div class='social_self'>You can't seem to do that from this position.</div><br/>",self);
 	quit;
 	}
-        socialact("<div class='social_self'>You lay out in the sun and start catching the rays.</div>",
+        socialact("<div class='social_self'>You lie out in the sun and start catching the rays.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n basks in the warm light of the sun.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -4793,26 +4793,26 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You mutter 'bleh!</div>' to yourself</div>",
+        socialact("<div class='social_self'>You mutter 'bleh!' to yourself.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n mutters about something.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("bleh",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You whisper 'bleh!</div>' to $3n.</div>",
+        socialact("<div class='social_self'>You whisper 'bleh!' to $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n whispers something to $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n whispers 'bleh!</div>' to you.</div>",
+        socialact("<div class='social_other'>$1n whispers 'bleh!' to you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("bleh",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You make a gagging expression and say, 'bleh!</div>'</div>",
+        socialact("<div class='social_self'>You make a gagging expression and say, 'bleh!'</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n chokes and says, 'bleh!</div>'</div>",
+        socialact("<div class='social_other'>$1n chokes and says, 'bleh!'</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("bleh",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -4856,7 +4856,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>You confer with yourself... Nice.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n starts conferring with herself.  Maybe a mental case?</div>",
+	socialact("<div class='social_other'>$1n starts conferring with $1mself.  Maybe a mental case?</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("confer",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -5105,7 +5105,7 @@ if (self==vict)
   send_done ("alone",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You wish to be alone with $3m.</div>",
+        socialact("<div class='social_self'>You wish to be alone with $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n wants to be alone with $3n.  GO AWAY!</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -5227,19 +5227,19 @@ if (self==vict)
   send_done ("halo",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>As you look at $3n, a bright white halo</div> appears above your head.</div>",
+        socialact("<div class='social_self'>As you look at $3n, a bright white halo appears above your head.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>A bright white halo</div> appears above $1n's head as $1e looks at $3n.</div>",
+        socialact("<div class='social_other'>A bright white halo appears above $1n's head as $1e looks at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>A bright white halo</div> appears above $1n's head as $1e looks at you.</div>",
+        socialact("<div class='social_other'>A bright white halo appears above $1n's head as $1e looks at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("halo",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>A bright white halo</div> appears above your head.</div>",
+        socialact("<div class='social_self'>A bright white halo appears above your head.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>A bright white halo</div> appears above $1n's head.</div>",
+        socialact("<div class='social_other'>A bright white halo appears above $1n's head.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("halo",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -5300,7 +5300,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You look around for someone to strangle.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n puts $1s hands at $1s throat until $1s face turns blue.</div>",
+        socialact("<div class='social_other'>$1n looks around for someone to strangle.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("choke",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -5347,7 +5347,7 @@ if (self==vict)
   send_done ("highfive",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You jump up and high-five $3m.</div>",
+        socialact("<div class='social_self'>You jump up and high-five $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n jumps up and high-fives $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -5375,7 +5375,7 @@ code
 
 if (self.level<220)
 	{
-        sendtext (cmdstr+" is not a command.",self);
+        sendtext (cmdstr+" is not a command.<br/>",self);
 	quit;
 	}
 
@@ -5389,12 +5389,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>No such person to smash</div><br/>",self);
+                sendtext ("<div class='social_self'>No such person to smash.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>No such person to smash</div><br/>",self);
+                sendtext ("<div class='social_self'>No such person to smash.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -5440,7 +5440,7 @@ code
 
 if (self.level<220)
 	{
-        sendtext (cmdstr+" is not a command.",self);
+        sendtext (cmdstr+" is not a command.<br/>",self);
 	quit;
 	}
 
@@ -5454,12 +5454,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>No such person to flick</div><br/>",self);
+                sendtext ("<div class='social_self'>No such person to flick.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>No such person to flick</div><br/>",self);
+                sendtext ("<div class='social_self'>No such person to flick.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -5472,7 +5472,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>You extend a giant finger and flick yourself ...takes brains.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-  send_done ("mash",self,null,vict,0,"",null, CMD_AUTO_NONE);
+  send_done ("flick",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
         socialact("<div class='social_self'>You extend a giant finger and flick $3n across the room.</div>",
@@ -5481,7 +5481,7 @@ if (self==vict)
         A_SOMEONE,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>A giant finger appears from the sky and flicks you across the room.</div>",
         A_SOMEONE,self,null,vict,TO_VICT);
-  send_done ("mash",self,null,vict,0,"",null, CMD_AUTO_NONE);
+  send_done ("flick",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
@@ -5489,7 +5489,7 @@ if (self==vict)
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>A giant finger appears from the sky and flicks the ground, the earth quakes.</div>",
 A_HIDEINV,self,null,null,TO_REST);
-  send_done ("mash",self,null,null,0,"",null, CMD_AUTO_NONE);
+  send_done ("flick",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
 }
 dilend
@@ -5536,7 +5536,7 @@ if (self==vict)
   send_done ("handshake",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You shake $3s hand.</div>",
+        socialact("<div class='social_self'>You shake $3n's hand.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n shakes $3n's hand.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -5590,18 +5590,18 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You patronize yourself down to the boots, He he he.</div>",
+        socialact("<div class='social_self'>You patronize yourself down to the boots. He he he.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n seems to hate $1s own guts thoroughly.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("cackle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You spitefully cackle right up $3n's face.</div>",
+        socialact("<div class='social_self'>You spitefully cackle right in $3n's face.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n cackles spitefully at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-	socialact("<div class='social_other'>$1n cackles patronizing right up your face!</div>",
+	socialact("<div class='social_other'>$1n cackles patronizingly right in your face!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("cackle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -5776,7 +5776,7 @@ if (self==vict)
   send_done ("shake",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You shake your head no at $3m.</div>",
+        socialact("<div class='social_self'>You shake your head no at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n shakes $1s head no at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -5875,12 +5875,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Growl all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Growl all you want, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Growl all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Growl all you want, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -5898,7 +5898,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n growls angrily at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n growls angrily at You.</div>",
+        socialact("<div class='social_other'>$1n growls angrily at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("growl",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -5932,12 +5932,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Scream all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Scream all you want, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Scream all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Scream all you want, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -5948,9 +5948,9 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You scream at yourself! Frightening isn't it?</div>",
+        socialact("<div class='social_self'>You scream at yourself! Frightening, isn't it?</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n screams at $1mself! Silly isn't it?</div>",
+        socialact("<div class='social_other'>$1n screams at $1mself! Silly, isn't it?</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("scream",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -6111,12 +6111,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Sigh away they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Sigh away, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Sigh away they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Sigh away, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -6309,12 +6309,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>They aren't here .</div><br/>",self);
+                sendtext ("<div class='social_self'>They aren't here.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>They aren't here .</div><br/>",self);
+                sendtext ("<div class='social_self'>They aren't here.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -6387,7 +6387,7 @@ if (self==vict)
   send_done ("nuzzle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You nuzzle $3s neck softly.</div>",
+        socialact("<div class='social_self'>You nuzzle $3n's neck softly.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n softly nuzzles $3n's neck.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -6446,7 +6446,7 @@ if (self==vict)
   send_done ("cry",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You cry on $3s shoulder.</div>",
+        socialact("<div class='social_self'>You cry on $3n's shoulder.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n cries on $3n's shoulder.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -6484,12 +6484,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You can't poke someone who's not here !.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't poke someone who's not here!</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You can't poke someone who's not here !.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't poke someone who's not here!</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -6543,12 +6543,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Accuse somebody who's not even there ??</div><br/>",self);
+                sendtext ("<div class='social_self'>Accuse somebody who's not even there??</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Accuse somebody who's not even there ??</div><br/>",self);
+                sendtext ("<div class='social_self'>Accuse somebody who's not even there??</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -6724,12 +6724,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Opps they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Oops, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Oops they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Oops, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -6747,7 +6747,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n gives a round of applause for $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n give a round of applause for You.</div>",
+        socialact("<div class='social_other'>$1n gives a round of applause for you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("applaud",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -6802,9 +6802,9 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You turn beet red.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n turns beet red</div> because of something $3n said.</div>",
+        socialact("<div class='social_other'>$1n turns beet red because of something $3n said.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n turns beet red</div> because of you.</div>",
+        socialact("<div class='social_other'>$1n turns beet red because of you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("blush",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7027,7 +7027,7 @@ if (self==vict)
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n coughs loudly.</div>",
 A_HIDEINV,self,null,null,TO_REST);
-  send_done ("<div class='social_self'>cough",self,null,null,0,"",null, CMD_AUTO_NONE);
+  send_done ("cough",self,null,null,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
         socialact("<div class='social_self'>You cough on $3n.</div>",
@@ -7078,7 +7078,7 @@ if (arg!="")
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
 {
-socialact("<div class='social_self'>$3n is not positioned to react to that to $3m.</div>",
+socialact("<div class='social_self'>$3n is not positioned to react to that.</div>",
 A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
@@ -7086,7 +7086,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>You curtsey to yourself, nice to meet you. Please get some help.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n curtsey to $1mself. Perhaps they have amnesia.</div>",
+        socialact("<div class='social_other'>$1n curtsies to $1mself. Perhaps $1e has amnesia.</div>",
         A_HIDEINV, self,null,null,TO_REST);
   send_done ("curtsey",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7160,9 +7160,9 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Where are your manners ?</div>",
+	socialact("<div class='social_self'>Where are your manners?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n lets off a real rip-roarer !</div>",
+	socialact("<div class='social_other'>$1n lets off a real rip-roarer!</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("fart",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -7227,9 +7227,9 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You fondly fondle yourself, feels funny doesn't it ?</div>",
+	socialact("<div class='social_self'>You fondly fondle yourself, feels funny doesn't it?</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n fondly fondles $1mself - this is going too far !!</div>",
+	socialact("<div class='social_other'>$1n fondly fondles $1mself - this is going too far!!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("fondle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7244,7 +7244,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Who needs to be fondled ?</div>",
+	socialact("<div class='social_self'>Who needs to be fondled?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("fondle",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -7299,7 +7299,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>What's bothering you ?</div>",
+	socialact("<div class='social_self'>What's bothering you?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n frowns.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -7327,12 +7327,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Gasp all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Gasp all you want, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Gasp all you want they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Gasp all you want, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -7402,7 +7402,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>You glare icily at your feet, they are suddenly very cold.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n glares at $1s feet, what is bothering $1m ?</div>",
+	socialact("<div class='social_other'>$1n glares at $1s feet, what is bothering $1m?</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("glare",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7445,17 +7445,17 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Who is upsetting you?.</div><br/>",self);
+                sendtext ("<div class='social_self'>Who is upsetting you?</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Who is upsetting you?.</div><br/>",self);
+                sendtext ("<div class='social_self'>Who is upsetting you?</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
 {
-socialact("<div class='social_self'>$3n is not positioned to react to that to $3m.</div>",
+socialact("<div class='social_self'>$3n is not positioned to react to that.</div>",
 A_HIDEINV,self,null,vict,TO_CHAR);
 quit;
 }
@@ -7539,7 +7539,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Whom do you wish to grope ??</div>",
+	socialact("<div class='social_self'>Whom do you wish to grope??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("grope",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -7665,9 +7665,9 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>Well, we already know you love yourself (lucky someone does !)</div>",
+	socialact("<div class='social_self'>Well, we already know you love yourself (lucky someone does!)</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n loves $1mself, can you believe it ?</div>",
+	socialact("<div class='social_other'>$1n loves $1mself, can you believe it?</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("love",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7785,9 +7785,9 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You nibble on your OWN ear ???????????????????</div>",
+	socialact("<div class='social_self'>You nibble on your OWN ear???????????????????</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n nibbles on $1s OWN ear ( I wonder how it is done !!).</div>",
+        socialact("<div class='social_other'>$1n nibbles on $1s OWN ear ( I wonder how it is done!!).</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("nibble",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -7802,7 +7802,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Nibble on who ?</div>",
+	socialact("<div class='social_self'>Nibble on who?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("nibble",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -7960,7 +7960,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>Ruffling your hair, you wonder when the rest start thinking you're crazy.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n ruffles $1s hair - weirdo !</div>",
+	socialact("<div class='social_other'>$1n ruffles $1s hair - weirdo!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("ruffle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -8104,7 +8104,7 @@ if (self==vict)
   send_done ("sing",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You sing a beautiful song in the honor of $3n.</div>",
+        socialact("<div class='social_self'>You sing a beautiful song in honor of $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n sings beautifully to $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -8142,12 +8142,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>How about slapping someone in the same room as you ??</div><br/>",self);
+                sendtext ("<div class='social_self'>How about slapping someone in the same room as you??</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>How about slapping someone in the same room as you ??</div><br/>",self);
+                sendtext ("<div class='social_self'>How about slapping someone in the same room as you??</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8201,12 +8201,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>They left</div><br/>",self);
+                sendtext ("<div class='social_self'>They left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>They left</div><br/>",self);
+                sendtext ("<div class='social_self'>They left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8253,7 +8253,7 @@ if (self.position<POSITION_RESTING)
         sendtext ("<div class='social_self'>You can't seem to do that from this position.</div><br/>",self);
 	quit;
 	}
-        socialact("<div class='social_self'>PRONTO ! You snap your fingers.</div>",
+        socialact("<div class='social_self'>PRONTO! You snap your fingers.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n snaps $1s fingers.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -8281,12 +8281,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Cover you mouth!</div><br/>",self);
+                sendtext ("<div class='social_self'>Cover your mouth!</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Cover you mouth!</div><br/>",self);
+                sendtext ("<div class='social_self'>Cover your mouth!</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8304,13 +8304,13 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n sneezes all over $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n sneezes all over you EWWWWWWW.</div>",
+        socialact("<div class='social_other'>$1n sneezes all over you. EWWWWWWW!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("sneeze",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Gesundheit !</div>",
+	socialact("<div class='social_self'>Gesundheit!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n sneezes.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -8338,12 +8338,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Snicker way, they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Snicker away, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Snicker way, they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Snicker away, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8479,12 +8479,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Can you spit that far ?</div><br/>",self);
+                sendtext ("<div class='social_self'>Can you spit that far?</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Can you spit that far ?</div><br/>",self);
+                sendtext ("<div class='social_self'>Can you spit that far?</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8540,12 +8540,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Where, what, how, WHO ???</div><br/>",self);
+                sendtext ("<div class='social_self'>Where, what, how, WHO???</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Where, what, how, WHO ???</div><br/>",self);
+                sendtext ("<div class='social_self'>Where, what, how, WHO???</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -8556,7 +8556,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You squeeze yourself - try to relax a little !</div>",
+	socialact("<div class='social_self'>You squeeze yourself - try to relax a little!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n squeezes $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -8573,7 +8573,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Where, what, how, WHO ???</div>",
+	socialact("<div class='social_self'>Where, what, how, WHO???</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("squeeze",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -8617,7 +8617,7 @@ if (self==vict)
 	{
         socialact("<div class='social_self'>You stare dreamily at yourself - enough narcissism for now.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n stares dreamily at $1mself - NARCISSIST !</div>",
+	socialact("<div class='social_other'>$1n stares dreamily at $1mself - NARCISSIST!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("stare",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -8699,7 +8699,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You thank yourself since nobody else wants to !</div>",
+	socialact("<div class='social_self'>You thank yourself since nobody else wants to!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n thanks $1mself since you won't.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -8783,7 +8783,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>Are you going on adventures as well ??</div>",
+	socialact("<div class='social_self'>Are you going on adventures as well??</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n waves goodbye to $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -8851,7 +8851,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n whistles at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n whistles at you, maybe they like you.</div>",
+        socialact("<div class='social_other'>$1n whistles at you, maybe $1e likes you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("whistle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -8958,7 +8958,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You wink at yourself ?? - what are you up to ?</div>",
+	socialact("<div class='social_self'>You wink at yourself?? - what are you up to?</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n winks at $1mself - something strange is going on...</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -8975,7 +8975,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Have you got something in your eye ?</div>",
+	socialact("<div class='social_self'>Have you got something in your eye?</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n winks suggestively.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -9059,7 +9059,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Who do you want to throw a snowball at ??</div>",
+	socialact("<div class='social_self'>Who do you want to throw a snowball at??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("snowball",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9103,23 +9103,23 @@ if (self==vict)
 	{
 socialact("<div class='social_self'>You turn your back on yourself and pout.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n turns their back and pouts.</div>",
+        socialact("<div class='social_other'>$1n turns $1s back and pouts.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("french",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-socialact("<div class='social_self'>You turn your back on $3n throw your hands in the air in a gesture of surrender.</div>",
+socialact("<div class='social_self'>You turn your back on $3n and throw your hands in the air in a gesture of surrender.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n turns $1s back on $3n throw $1s hands in the air in a gesture of surrender.</div>",
+        socialact("<div class='social_other'>$1n turns $1s back on $3n and throws $1s hands in the air in a gesture of surrender.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n turns their back on you and throws their hands in the air in a gesture of surrender.</div>",
+        socialact("<div class='social_other'>$1n turns $1s back on you and throws $1s hands in the air in a gesture of surrender.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   exec("say Veto!!!",self);
   send_done ("french",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-	socialact("<div class='social_self'>French whom ??</div>",
+	socialact("<div class='social_self'>French whom??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("french",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9178,7 +9178,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Kiss whom ??</div>",
+	socialact("<div class='social_self'>Kiss whom??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("tokiss",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9230,7 +9230,7 @@ if (self==vict)
   send_done ("comb",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-	socialact("<div class='social_self'>You patiently untangle $3n's hair - what a mess !</div>",
+	socialact("<div class='social_self'>You patiently untangle $3n's hair - what a mess!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n tries patiently to untangle $3n's hair.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -9242,7 +9242,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You comb (h)air - perfect.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n combs (h)air, what a dashing specimen !</div>",
+	socialact("<div class='social_other'>$1n combs (h)air, what a dashing specimen!</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("comb",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9343,7 +9343,7 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You tickle</div> yourself, how funny !</div>",
+        socialact("<div class='social_self'>You tickle yourself, how funny!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n tickles $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -9360,7 +9360,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Who do you want to tickle ??</div>",
+	socialact("<div class='social_self'>Who do you want to tickle??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("tickle",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9386,12 +9386,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Who, where, what ??</div><br/>",self);
+                sendtext ("<div class='social_self'>Who, where, what??</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Who, where, what ??</div><br/>",self);
+                sendtext ("<div class='social_self'>Who, where, what??</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -9419,7 +9419,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>Pat who ??</div>",
+	socialact("<div class='social_self'>Pat who??</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("pat",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -9499,7 +9499,7 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>You beg the gods for mercy. ( No way you're gonna get it ! :->)</div>",
+	socialact("<div class='social_self'>You beg the gods for mercy. ( No way you're gonna get it! :->)</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>The gods fall down laughing at $1n's request for mercy.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -9588,12 +9588,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You must really like them think about them so much.</div><br/>",self);
+                sendtext ("<div class='social_self'>You must really like them to think about them so much.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You must really like them think about them so much.</div><br/>",self);
+                sendtext ("<div class='social_self'>You must really like them to think about them so much.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -9668,7 +9668,7 @@ if (self==vict)
   send_done ("fume",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You stare at $3m, fuming.</div>",
+        socialact("<div class='social_self'>You stare at $3n, fuming.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n stares at $3n, fuming with rage.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -9727,7 +9727,7 @@ if (self==vict)
   send_done ("grovel",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-	socialact("<div class='social_self'>You grovel before $3m</div>",
+	socialact("<div class='social_self'>You grovel before $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n grovels in the dirt before $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -9785,9 +9785,9 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You hop on $3n, just what are you trying to do?</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n hops on $3n! What is $1e, a kangaroo?.</div>",
+        socialact("<div class='social_other'>$1n hops on $3n! What is $1e, a kangaroo?</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n hops on you! Get $1m off! Get $1m off!.</div>",
+        socialact("<div class='social_other'>$1n hops on you! Get $1m off! Get $1m off!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("hop",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -9842,7 +9842,7 @@ if (self==vict)
   send_done ("nudge",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You nudge $3m with your elbow. He he.</div>",
+        socialact("<div class='social_self'>You nudge $3n with your elbow. He he.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n nudges $3N suggestively with $1s elbow.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -9878,12 +9878,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Peer away they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Peer away, they left.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Peer away they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>Peer away, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -9901,7 +9901,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n peers keenly at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n peers keenly at You.</div>",
+        socialact("<div class='social_other'>$1n peers keenly at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("peer",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -10101,9 +10101,9 @@ if (self==vict)
   send_done ("snarl",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-	socialact("<div class='social_self'>You snarl at $3m angrily. Control yourself!</div>",
+	socialact("<div class='social_self'>You snarl at $3n angrily. Control yourself!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n snarls angrily at $3m and seems incapable of controlling $1mself.</div>",
+        socialact("<div class='social_other'>$1n snarls angrily at $3n and seems incapable of controlling $1mself.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n snarls viciously at you, $1s self control seems to have gone bananas.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -10197,7 +10197,7 @@ if (self.position<POSITION_RESTING)
 	}
         socialact("<div class='social_self'>Go ahead, blow your own head off in anger... see if we care.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n is rapidly gaining a deeply purple</div> color in $1s face. Is $1e unhappy?</div>",
+        socialact("<div class='social_other'>$1n is rapidly gaining a deeply purple color in $1s face. Is $1e unhappy?</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("steam",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -10248,7 +10248,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n looks like $1e has a hard time tackling the problem $3n has become.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-	socialact("<div class='social_other'>$1n envelopes $1mself in contemplating a solution regarding YOU!</div>",
+	socialact("<div class='social_other'>$1n envelops $1mself in contemplating a solution regarding YOU!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("tackle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -10527,7 +10527,7 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>Ah, and how many other of your personalities do agree with?</div>",
+	socialact("<div class='social_self'>Ah, and how many other of your personalities do you agree with?</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n seemingly agrees with $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -10591,13 +10591,13 @@ code
         if (self==vict)
         {
             socialact("<div class='social_self'>You jump onto your own foot, and nearly stumble.</div>", A_HIDEINV,self,null,null,TO_CHAR);
-            socialact("<div class='social_other'>$1n clumsily stumble upon $1s own feet.</div>", A_HIDEINV,self,null,null,TO_REST);
+            socialact("<div class='social_other'>$1n clumsily stumbles upon $1s own feet.</div>", A_HIDEINV,self,null,null,TO_REST);
             send_done("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
             quit;
         }
     	socialact("<div class='social_self'>You jump on $3n's big feet!</div>", A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n jumps on $3n's feet.</div>", A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n jumps on you foot.</div>", A_HIDEINV,self,null,vict,TO_VICT);
+        socialact("<div class='social_other'>$1n jumps on your foot.</div>", A_HIDEINV,self,null,vict,TO_VICT);
         send_done("jump",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	    quit;
     }
@@ -10649,7 +10649,7 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You stretch your muscles in front of $3n. Trying to show off?</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n stretchs $1s muscles, showing off for $3n.</div>",
+        socialact("<div class='social_other'>$1n stretches $1s muscles, showing off for $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n shows you $1s muscles, what a showoff!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -11090,7 +11090,7 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You herald yourself... nobody seams to notice.</div>",
+        socialact("<div class='social_self'>You herald yourself... nobody seems to notice.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n heralds $1mself... pay no attention.</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -11107,9 +11107,9 @@ if (self==vict)
 	quit;
 	 }
 
-	socialact("<div class='social_self'>You herald the coming of an new age!</div>",
+	socialact("<div class='social_self'>You herald the coming of a new age!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n heralds the coming of an new age.</div>",
+        socialact("<div class='social_other'>$1n heralds the coming of a new age.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("herald",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -11345,7 +11345,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n bites $3n! That must have hurt!</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>OUCH!</div> You were bitten by $1n!</div>",
+        socialact("<div class='social_other'>OUCH! You were bitten by $1n!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("bite",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -11532,12 +11532,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You get red</div> with rage. You really hate typing errors!</div><br/>",self);
+                sendtext ("<div class='social_self'>You get red with rage. You really hate typing errors!</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You get red</div> with rage. You really hate typing errors!</div><br/>",self);
+                sendtext ("<div class='social_self'>You get red with rage. You really hate typing errors!</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -11548,18 +11548,18 @@ quit;
 }
 if (self==vict)
 	{
-	socialact("<div class='social_self'>You are consumed by hate on yourself!</div>",
+	socialact("<div class='social_self'>You are consumed by hate for yourself!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n gets red</div> with rage and starts to scream at $1mself!</div>",
+        socialact("<div class='social_other'>$1n gets red with rage and starts to scream at $1mself!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("hate",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You get red</div> with rage. You really hate $3n.</div>",
+        socialact("<div class='social_self'>You get red with rage. You really hate $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>Because of $3n, $1n gets red</div> with rage.</div>",
+        socialact("<div class='social_other'>Because of $3n, $1n gets red with rage.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>You must have really angered $1n. $1e gets red</div> with rage!</div>",
+        socialact("<div class='social_other'>You must have really angered $1n. $1n gets red with rage!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("hate",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -11567,7 +11567,7 @@ if (self==vict)
 
 	socialact("<div class='social_self'>You hate this MUD!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n gets red</div> with rage because of this MUD.</div>",
+        socialact("<div class='social_other'>$1n gets red with rage because of this MUD.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("hate",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -11588,9 +11588,9 @@ if (self.position<POSITION_DEAD)
         sendtext ("<div class='social_self'>You can't seem to do that from this position.</div><br/>",self);
 	quit;
 	}
-socialact("<div class='social_self'>You slap a huge red sign on your forehead which reads 'AFK</div>'.",
+socialact("<div class='social_self'>You slap a huge red sign on your forehead which reads 'AFK'.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n heard a call in an other world, $1e will be back soon.</div>",
+        socialact("<div class='social_other'>$1n heard a call in another world, $1e will be back soon.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("afk",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -11632,7 +11632,7 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You grimace to yourself. To bad you have no mirror with you.</div>",
+        socialact("<div class='social_self'>You grimace to yourself. Too bad you have no mirror with you.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
 	socialact("<div class='social_other'>$1n grimaces to $1mself, $1e really looks stupid!</div>",
         A_HIDEINV,self,null,null,TO_REST);
@@ -11841,7 +11841,7 @@ if (self==vict)
 	{
 	socialact("<div class='social_self'>You drool all over yourself. ICK!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n drools all over $1sself.</div>",
+        socialact("<div class='social_other'>$1n drools all over $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("drool",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -12205,7 +12205,7 @@ if (self==vict)
 	{
 	socialact("<div class='social_self'>You pinch yourself. No, you are not dreaming. IT'S REAL!</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-	socialact("<div class='social_other'>$1n pinches $1mself. He realizes he is awake! AAARRRRGGGGG!</div>",
+	socialact("<div class='social_other'>$1n pinches $1mself. $1n realizes $1e is awake! AAARRRRGGGGG!</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("pinch",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -12346,16 +12346,16 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You  scratch your own back. If your arms would be just a bit longer...</div>",
+        socialact("<div class='social_self'>You scratch your own back. If your arms would be just a bit longer...</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n scratches $1s back, but $1e just can't reach the right place...</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("scratch",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You scratch $3ns back.</div>",
+        socialact("<div class='social_self'>You scratch $3n's back.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n scratches $3ns back.</div>",
+        socialact("<div class='social_other'>$1n scratches $3n's back.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n scratches your back. Hmm, good.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -12424,7 +12424,7 @@ if (arg!="")
 		}
 if (vict.position<POSITION_RESTING)
 {
-socialact("<div class='social_self'>$3n is not positioned to react to that to $3m",
+socialact("<div class='social_self'>$3n is not positioned to react to that.</div>",
 A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
@@ -12525,7 +12525,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n gently strokes $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>You are stroked by $1ns gentle hands.</div>",
+        socialact("<div class='social_other'>You are stroked by $1n's gentle hands.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("stroke",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -12582,7 +12582,7 @@ if (self==vict)
 	}
 	socialact("<div class='social_self'>You threaten $3n to take $3s life!</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$3ns life is threatened by $1n!</div>",
+        socialact("<div class='social_other'>$3n's life is threatened by $1n!</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
 	socialact("<div class='social_other'>$1n threatens your life!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -12721,12 +12721,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You cant see anyone by that name to zigzag around.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't see anyone by that name to zigzag around.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You cant see anyone by that name to zigzag around.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't see anyone by that name to zigzag around.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -12754,7 +12754,7 @@ if (self==vict)
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You zigzag all about, surley nothing can catch you.</div>",
+        socialact("<div class='social_self'>You zigzag all about, surely nothing can catch you.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n zigzags all about, you couldn't catch $1n if you tried.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -12782,12 +12782,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Funny, cant see them here nearby.</div><br/>",self);
+                sendtext ("<div class='social_self'>Funny, can't see them here nearby.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Funny, cant see them here nearby.</div><br/>",self);
+                sendtext ("<div class='social_self'>Funny, can't see them here nearby.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -12841,12 +12841,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>Noone by that name to thrust your tongue at.</div><br/>",self);
+                sendtext ("<div class='social_self'>No one by that name to thrust your tongue at.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>Noone by that name to thrust your tongue at.</div><br/>",self);
+                sendtext ("<div class='social_self'>No one by that name to thrust your tongue at.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -12857,14 +12857,14 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>$1n sticks $1s tongue out at $1mself.</div>",
+        socialact("<div class='social_other'>$1n sticks $1s tongue out at $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
-        socialact("<div class='social_other'>You stick your tongue out at yourself.</div>",
+        socialact("<div class='social_self'>You stick your tongue out at yourself.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("tongue",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You stick your tongue out at $3n..</div>",
+        socialact("<div class='social_self'>You stick your tongue out at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n sticks $1s tongue out at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
@@ -13036,9 +13036,9 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>$1n grabs $1s neck and begins to throttle $1mself.</div>",
+        socialact("<div class='social_other'>$1n grabs $1s neck and begins to throttle $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
-        socialact("<div class='social_other'>You grab your neck, and begin to throttle yourself, it begins to turn black.</div>",
+        socialact("<div class='social_self'>You grab your neck, and begin to throttle yourself, it begins to turn black.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
   send_done ("throttle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13047,7 +13047,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n maniacally grasps $3n by the neck and throttles $3m!!!!</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-	socialact("<div class='social_other'>$1n grasps you around the neck and throttles you! You cant breathe!</div>",
+	socialact("<div class='social_other'>$1n grasps you around the neck and throttles you! You can't breathe!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("throttle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13089,7 +13089,7 @@ if (arg!="")
 		}
 if (self==vict)
 	{
-        socialact("<div class='social_self'>$1n starts brushing $1mself off carefully.</div>",
+        socialact("<div class='social_other'>$1n starts brushing $1mself off carefully.</div>",
         A_HIDEINV,self,null,null,TO_REST);
         socialact("<div class='social_self'>You grab a brush and begin to brush yourself off.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
@@ -13098,9 +13098,9 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You brush some dirt off of $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_self'>$1n takes the time to brush dirt off of $3n.</div>",
+        socialact("<div class='social_other'>$1n takes the time to brush dirt off of $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_self'>$1n is really nice and brushes some dirt off of you!</div>",
+        socialact("<div class='social_other'>$1n is really nice and brushes some dirt off of you!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("brush",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13154,7 +13154,7 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You mumble something to $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n mumbles something unintelligable to $3n</div>",
+        socialact("<div class='social_other'>$1n mumbles something unintelligible to $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n tries to tell you something but you don't understand!</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -13164,7 +13164,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You mumble something. Speak up!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n mumbles something unintelligable.</div>",
+        socialact("<div class='social_other'>$1n mumbles something unintelligible.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("mumble",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -13297,7 +13297,7 @@ if (arg!="")
 		}
 if (self==vict)
 	{
-        socialact("<div class='social_other'>$1n gags, maybe $1e needs the heimlich maneuver.</div>",
+        socialact("<div class='social_other'>$1n gags, maybe $1e needs the Heimlich maneuver.</div>",
         A_HIDEINV,self,null,null,TO_REST);
         socialact("<div class='social_self'>You are gagging! Too bad there is no spell to save you.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
@@ -13334,7 +13334,7 @@ code
 
 if (self.position<POSITION_RESTING)
   {
-sendtext ("<div class='social_self'>No, I am afraid you cant. not in this position.</div><br/>",self);
+sendtext ("<div class='social_self'>No, I am afraid you can't. Not in this position.</div><br/>",self);
 	quit;
 	}
 if (arg!="")
@@ -13342,12 +13342,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-sendtext ("<div class='social_self'>Flowers for nobody? Or are those mine?.</div><br/>",self);
+sendtext ("<div class='social_self'>Flowers for nobody? Or are those mine?</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-sendtext ("<div class='social_self'>Flowers for nobody? Or are those mine?.</div><br/>",self);		         quit;
+sendtext ("<div class='social_self'>Flowers for nobody? Or are those mine?</div><br/>",self);		         quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
 {
@@ -13363,15 +13363,15 @@ if (self==vict)
 	}
  socialact("<div class='social_self'>You wander around picking flowers for $3n. </div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-socialact("<div class='social_other'>$1n wanders around picking flowers for $3n .</div>",
+socialact("<div class='social_other'>$1n wanders around picking flowers for $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n Wanders around picking flowers for you.</div>",
+        socialact("<div class='social_other'>$1n wanders around picking flowers for you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("flowers",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You Wander around picking flowers. </div>",
+        socialact("<div class='social_self'>You wander around picking flowers. </div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n wanders about gathering flowers.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -13405,7 +13405,7 @@ if (arg!="")
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>angel eyes, they are gone.</div><br/>",self);
+                sendtext ("<div class='social_self'>Angel eyes, they are gone.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -13421,17 +13421,17 @@ if (self==vict)
 	}
         socialact("<div class='social_self'>You bat your eyes at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n bats their eyes at $3n.</div>",
+        socialact("<div class='social_other'>$1n bats $1s eyes at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n bats their eyes at you.</div>",
+        socialact("<div class='social_other'>$1n bats $1s eyes at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("batt",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You bat Your eyes.</div>",
+        socialact("<div class='social_self'>You bat your eyes.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n bats their eyes.</div>",
+        socialact("<div class='social_other'>$1n bats $1s eyes.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("batt",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -13458,12 +13458,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>that's the way to go, act innocent, they cant see you!.</div><br/>",self);
+                sendtext ("<div class='social_self'>That's the way to go, act innocent, they can't see you!</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>that's the way to go, act innocent, they left.</div><br/>",self);
+                sendtext ("<div class='social_self'>That's the way to go, act innocent, they left.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -13477,11 +13477,11 @@ if (self==vict)
   send_done ("hoff",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You take off a halo engraved (GUILTY) $3n.</div>",
+        socialact("<div class='social_self'>You look at $3n and take off a halo engraved (GUILTY).</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n looks at $3n and takes off a halo engraved (GUILTY).</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n takes off a halo engraved (GUILTY)as they look at you.</div>",
+        socialact("<div class='social_other'>$1n takes off a halo engraved (GUILTY) as $1e looks at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("hoff",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13576,7 +13576,7 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-sendtext("<div class='social_self'>You can be sarcastic all you want , they are gone.</div><br/>",self);
+sendtext("<div class='social_self'>You can be sarcastic all you want, they are gone.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
@@ -13592,26 +13592,26 @@ quit;
 }
 if (self==vict)
 	{
-        socialact("<div class='social_self'>You giggle sarcasticly to yourself.</div>",
+        socialact("<div class='social_self'>You giggle sarcastically to yourself.</div>",
         A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n giggles sarcasticly to $1mself.</div>",
+        socialact("<div class='social_other'>$1n giggles sarcastically to $1mself.</div>",
         A_HIDEINV,self,null,null,TO_REST);
   send_done ("sgiggle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You giggle sarcasticly at $3n.</div>",
+        socialact("<div class='social_self'>You giggle sarcastically at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n giggles sarcasticly at $3n.</div>",
+        socialact("<div class='social_other'>$1n giggles sarcastically at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n giggles sarcasticly at you.</div>",
+        socialact("<div class='social_other'>$1n giggles sarcastically at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("sgiggle",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You giggle sarcasticly.</div>",
+        socialact("<div class='social_self'>You giggle sarcastically.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n giggles sarcasticly.</div>",
+        socialact("<div class='social_other'>$1n giggles sarcastically.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("sgiggle",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -13702,12 +13702,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-sendtext ("<div class='social_self'>Guess they didnt need the parchment after all.</div><br/>",self);
+sendtext ("<div class='social_self'>Guess they didn't need the parchment after all.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-sendtext ("<div class='social_self'>Guess they didnot need the parchment after all.</div><br/>",self);
+sendtext ("<div class='social_self'>Guess they didn't need the parchment after all.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -13725,7 +13725,7 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
         socialact("<div class='social_other'>$1n pulls out a piece of parchment and a quill for $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n pulls out a piece of parchment and a quill for  you.</div>",
+        socialact("<div class='social_other'>$1n pulls out a piece of parchment and a quill for you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("parchment",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13761,12 +13761,12 @@ if (arg!="")
 	vict:=findunit(self,arg,SOCIAL_FIND,null);
         if ((vict==null) or not visible(self,vict))
 		{
-                sendtext ("<div class='social_self'>You cant annoy someone who isnt here.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't annoy someone who isn't here.</div><br/>",self);
 		quit;
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>You cant annoy someone who isnt here.</div><br/>",self);
+                sendtext ("<div class='social_self'>You can't annoy someone who isn't here.</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
@@ -13780,9 +13780,9 @@ if (self==vict)
   send_done ("annoy",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You annoy  $3n.</div>",
+        socialact("<div class='social_self'>You annoy $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n annoys  $3n.</div>",
+        socialact("<div class='social_other'>$1n annoys $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
         socialact("<div class='social_other'>$1n annoys you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
@@ -13792,7 +13792,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You annoy everyone around you.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n annoys everyone around them.</div>",
+        socialact("<div class='social_other'>$1n annoys everyone around $1m.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("annoy",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -13829,7 +13829,7 @@ if (arg!="")
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>No such rock in sight</div><br/>",self);
+                sendtext ("<div class='social_self'>No such rock in sight.</div><br/>",self);
 		quit;
 		}
 if (vict.position<POSITION_RESTING)
@@ -13845,11 +13845,11 @@ if (self==vict)
   send_done ("rock",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You pick up $3n and add them to your bag of rocks.</div>",
+        socialact("<div class='social_self'>You pick up $3n and add $3m to your bag of rocks.</div>",
         A_SOMEONE,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n picks up $3n and adds them to their bag of rocks.</div>",
+        socialact("<div class='social_other'>$1n picks up $3n and adds $3m to $1s bag of rocks.</div>",
         A_SOMEONE,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n picks you up and adds you to their bag of rocks.</div>",
+        socialact("<div class='social_other'>$1n picks you up and adds you to $1s bag of rocks.</div>",
         A_SOMEONE,self,null,vict,TO_VICT);
   send_done ("rock",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
@@ -13857,7 +13857,7 @@ if (self==vict)
 
 	socialact("<div class='social_self'>You skillfully shuffle your bag of rocks!</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n sticks his hand in a bag and shuffles up the rocks!</div>",
+        socialact("<div class='social_other'>$1n sticks $1s hand in a bag and shuffles up the rocks!</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("rock",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
@@ -13894,12 +13894,12 @@ if (arg!="")
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>They are not here :(</div><br/>",self);
+                sendtext ("<div class='social_self'>They are not here. :(</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
 {
-socialact("<div class='social_self'>$3n can not see you beaming at them.</div>",
+socialact("<div class='social_self'>$3n cannot see you beaming at $3m.</div>",
 A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
@@ -13912,17 +13912,17 @@ if (self==vict)
   send_done ("beam",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	}
-        socialact("<div class='social_self'>You beam happily at $3n</div>",
+        socialact("<div class='social_self'>You beam happily at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_CHAR);
-        socialact("<div class='social_other'>$1n beams happily at $3n</div>",
+        socialact("<div class='social_other'>$1n beams happily at $3n.</div>",
         A_HIDEINV,self,null,vict,TO_NOTVICT);
-        socialact("<div class='social_other'>$1n beams happily to you.</div>",
+        socialact("<div class='social_other'>$1n beams happily at you.</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
   send_done ("beam",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }
 
-        socialact("<div class='social_self'>You beam happily</div>",
+        socialact("<div class='social_self'>You beam happily.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
         socialact("<div class='social_other'>$1n beams happily.</div>",
 A_HIDEINV,self,null,null,TO_REST);
@@ -13958,12 +13958,12 @@ if (arg!="")
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>They are not here :(</div><br/>",self);
+                sendtext ("<div class='social_self'>They are not here. :(</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
 {
-	socialact("<div class='social_self'>$3n can not see you pouncing on them.</div>",A_ALWAYS,self,null,vict,TO_CHAR);
+	socialact("<div class='social_self'>$3n cannot see you pouncing on $3m.</div>",A_ALWAYS,self,null,vict,TO_CHAR);
 	quit;
 }
 if (self==vict)
@@ -14079,12 +14079,12 @@ if (arg!="")
 		}
 	if ((vict.type!=UNIT_ST_PC) and (vict.type!=UNIT_ST_NPC))
 		{
-                sendtext ("<div class='social_self'>They are not here :(</div><br/>",self);
+                sendtext ("<div class='social_self'>They are not here. :(</div><br/>",self);
 		quit;
 		}
 if ((vict.position<POSITION_DEAD) or (vict.position==POSITION_SLEEPING))
 {
-socialact("<div class='social_self'>$3n can not see you grinning.</div>",
+socialact("<div class='social_self'>$3n cannot see you grinning.</div>",
 A_ALWAYS,self,null,vict,TO_CHAR);
 quit;
 }
@@ -14109,7 +14109,7 @@ if (self==vict)
 
         socialact("<div class='social_self'>You grin evilly for no particular reason.</div>",
 A_HIDEINV,self,null,null,TO_CHAR);
-        socialact("<div class='social_other'>$1n grins evilly, you wonder what $1e is upto.</div>",
+        socialact("<div class='social_other'>$1n grins evilly, you wonder what $1e is up to.</div>",
 A_HIDEINV,self,null,null,TO_REST);
   send_done ("egrin",self,null,null,0,"",null, CMD_AUTO_NONE);
 quit;
