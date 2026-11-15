@@ -290,9 +290,9 @@ goto start;
 }
 if (fght < 30)
 {
-act("$1n tries to charge you and trips over $1s's strings!",
+act("$1n tries to charge you and trips over $1s own strings!",
 A_ALWAYS,self,null,vict,TO_VICT);
-act("$1n tries to charge $3n but trips over $1s's own strings!",
+act("$1n tries to charge $3n but trips over $1s own strings!",
 A_ALWAYS,self,null,vict,TO_NOTVICT);
 vict.hp := vict.hp - rnd(0,0);
 position_update(vict);
@@ -302,7 +302,7 @@ if (fght < 40)
 {
 act("$1n slices you with his razor!",
 A_ALWAYS,self,null,vict,TO_VICT);
-act("$1n slices $3n with his razor",
+act("$1n slices $3n with his razor!",
 A_ALWAYS,self,null,vict,TO_NOTVICT);
 vict.hp := vict.hp - rnd(3,5);
 position_update(vict);
@@ -310,9 +310,9 @@ goto start;
 }
 if (fght < 50)
 {
-act("$1n's jaw drops open and $1s takes a bite out of you!",
+act("$1n's jaw drops open and $1e takes a bite out of you!",
 A_ALWAYS,self,null,vict,TO_VICT);
-act("$1n's jaw opens and he bites $3n !",
+act("$1n's jaw opens and $1e bites $3n!",
 A_ALWAYS,self,null,vict,TO_NOTVICT);
 vict.hp := vict.hp - rnd(0,1);
 position_update(vict);
@@ -320,9 +320,9 @@ goto start;
 }
 if (fght < 60)
 {
-act("$1n gets all tangled up in $1s's own ropes!",
+act("$1n gets all tangled up in $1s own ropes!",
 A_ALWAYS,self,null,vict,TO_ALL);
-act("$1n gets totally tangled in $1s's own ropes!",
+act("$1n gets totally tangled in $1s own ropes!",
 A_ALWAYS,self,null,vict,TO_ALL);
 self.abilities[ABIL_DEX] := (self.abilities[ABIL_STR])-rnd(1,2);
 position_update(self);
@@ -353,9 +353,9 @@ dilend
 study
 title ""
 descr
-"You are in haunted house room covered with cobwebs and big fat juicy
-spiders. If you are not an admin - you are dead. This room used for load
-dil."
+"You are in a haunted house room covered with cobwebs and big fat juicy
+spiders. If you are not an admin - you are dead. This room is used to load
+DIL."
 
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
 ALWAYS_LIGHT
@@ -380,7 +380,7 @@ end
 tot_bag2
 names {"trick or treat bag","treat bag","bag"}
 title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
-descr "A bright orange burlap bag lays in the dust."
+descr "A bright orange burlap bag lies in the dust."
 extra {}
 "This bag looks like it could hold quite a bit of candy."
 CONTAINER_DEF(60)
@@ -489,7 +489,7 @@ end
 tot_bag3
 names {"trick or treat bag","treat bag","bag"}
 title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
-descr "A bright orange burlap bag lays in the dust."
+descr "A bright orange burlap bag lies in the dust."
 extra {}
 "This bag looks like it could hold quite a bit of candy."
 CONTAINER_DEF(60)
@@ -581,7 +581,7 @@ end
 tot_bag4
 names {"trick or treat bag","treat bag","bag"}
 title "a <div class='cy'>trick or treat bag </div><div class='default'></div>"
-descr "A bright orange burlap bag lays in the dust."
+descr "A bright orange burlap bag lies in the dust."
 extra {}
 "This bag looks like it could hold quite a bit of candy."
 CONTAINER_DEF(60)
@@ -691,7 +691,7 @@ end
 pcookie
 names {"cookie"}
 title "a pumpkin cookie"
-descr "A pumpkin shaped cookie has been left here."
+descr "A pumpkin-shaped cookie has been left here."
 extra {}
 "This cookie has orange icing and looks to be the perfect
 snack."
@@ -725,8 +725,8 @@ end
 
 c_heart
 title "a <div class='cpr'>red candy heart</div><div class='default'></div>"
-names {"candy","box","hearts"}
-descr "A large <div class='cpr'>candy hearts</div><div class='default'> lies here.</div>"
+names {"candy heart","candy","heart","box","hearts"}
+descr "A large <div class='cpr'>candy heart</div><div class='default'> lies here.</div>"
 extra {}
 "A large heart made of cinnamon candy."
  extra {"$identify"}
@@ -757,7 +757,7 @@ CONTAINER_DEF(300)
 weight 100
 cost 2 PLATINUM_PIECE
 extra {}
-"This is a very study and heavy looking chest, covered with magical
+"This is a very sturdy and heavy looking chest, covered with magical
 protective runes."
 
 dilbegin poistrap();
@@ -779,18 +779,18 @@ code
 
  if((num+dex_mod)/2 > 80)
 {
- act("A cloud of gas expels from the chest as you open it, but you "+
+ act("A cloud of gas is expelled from the chest as you open it, but you "+
  "manage to evade it.", A_ALWAYS, pc, self, null, TO_CHAR);
- act("A cloud of gas expels from the chest, narrowly missing $1n!"
+ act("A cloud of gas is expelled from the chest, narrowly missing $1n!"
  , A_ALWAYS, pc, self, null, TO_REST);
 
  goto start;
 }
  else
 {
- act("A cloud of gas expels from the chest as you open it, striking "+
+ act("A cloud of gas is expelled from the chest as you open it, striking "+
  "you directly in the face!", A_ALWAYS, pc, null, null, TO_CHAR);
- act("A cloud of gas expels from the chest, striking $1n "+
+ act("A cloud of gas is expelled from the chest, striking $1n "+
  "in the face!", A_ALWAYS, pc, null, null, TO_REST);
 
  pc.endurance := 0;
@@ -806,7 +806,7 @@ end
 paper_staff
 names {"newspaper staff","staff"}
 title "a staff made of paper"
-descr "An paper staff is here."
+descr "A paper staff is here."
 extra {} "This staff looks quite odd. It is made of old newspapers. There are  
 some words in gold on it."
 extra {"words"}
@@ -879,9 +879,9 @@ rest_cert
 
 names {"certificate","paper"}
 title "an official looking certificate"
-descr "A gold rimmed certificate has been dicarded."
+descr "A gold rimmed certificate has been discarded."
 extra {}
-"The certificate reads: The owner of this certificate hereby entitled to
+"The certificate reads: The owner of this certificate is hereby entitled to
 one free restring of one normal object (no power items). All the usual 
 codicils regarding appropriate naming and admin approval apply."
 MATERIAL_ORGANIC("The paper is made from trees")
@@ -893,7 +893,7 @@ end
 
 def_shirt
 names {"white tunic", "tunic"}
-title "shining tunic"
+title "a shining tunic"
 descr "A <div class='cpw'>white silk tunic</div><div class='DEFAULT'> lies here in a rumpled heap.</div>"
 extra {}
 "The tunic is white and quite a beautiful thing to behold as silver moonlight
@@ -907,10 +907,10 @@ end
 
 dq_shirt
 names {"dark tunic", "tunic"}
-title "dark tunic"
+title "a dark tunic"
 descr "A <div class='cpn'>dark silk tunic</div><div class='DEFAULT'> lies here in a rumpled heap.</div>"
 extra {}
-"The robe is black and quite a beautiful thing to behold. The black circle
+"The tunic is black and quite a beautiful thing to behold. The black circle
 inlaid with a purple one is embroidered in the front. Dark dragonfire
 dances along the threads. Strange runes spell out <div class='cp'>All Hail the Dark Queen</div><div class='DEFAULT'> 
 on the front and on the back it says </div><div class='cp'>Member of The Dark Queen's 
@@ -1067,7 +1067,7 @@ title "a tongue"
 names {"tongue","lolly","lollipop","candy"}
 descr "A tongue hangs limply here."
 extra {}
-"It is a tongue. Too small to be from a cow, too large from a bird. It 
+"It is a tongue. Too small to be from a cow, too large to be from a bird. It 
 looks to have been brutally hacked from someone's mouth. Except, it
 is on a stick?"
 extra {"$identify"}
@@ -1080,7 +1080,7 @@ end
 
  
 mghost
-title "marshmallow ghost"
+title "a marshmallow ghost"
 names {"candy","ghost","marshmallow"}
 descr "A ghost sticks to the ground."
 extra {}
@@ -1104,7 +1104,7 @@ weight 2
 end  
 
 wax
-title "wax fangs"
+title "a pair of wax fangs"
 names {"wax","fangs","candy"}
 descr "A pair of wax fangs were lost here."
 extra {}
@@ -1124,7 +1124,7 @@ names {"juice","pumpkin","bottle"}
 descr "A bottle of a dull orange liquid."
 extra {}
 "A bottle full of a thick juice that is a dull orange. Spices
-seems to swirl in it. If you like pumpkin pie, this drink is for you."
+seem to swirl in it. If you like pumpkin pie, this drink is for you."
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(60,SPL_CURE_WOUNDS_2,SPL_NONE,SPL_NONE)
 type ITEM_POTION
@@ -1149,7 +1149,7 @@ dilcopy tuborg@function("NORMAL");
 end
 
 bmask
-title "black mask"
+title "a black mask"
 names {"mask"}
 descr "A small black mask lies in the dust."
 extra {}
@@ -1171,7 +1171,7 @@ descr "A small black crystal <div class='cr'>skull</div><div class='DEFAULT'> ha
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 extra {}
 "This small skull could have come from a brownie or a sprite.
-It is transluscent and glows from within. <div class='cr'>Red</div><div class='DEFAULT'>
+It is translucent and glows from within. <div class='cr'>Red</div><div class='DEFAULT'>
 light comes from the openings letting you see your way. </div>"
 extra {"$identify"}
 "Holding this may let you see your way."
@@ -1184,7 +1184,7 @@ end
 /*rosanne - deviled egg costume*/
 horns
 names {"horns"}
-title "devil's horns"
+title "a pair of devil's horns"
 descr "A pair of red devil's horns lie in the dust."
 extra {}
 "Two horn tips have been painted red and tied together to wear
@@ -1203,8 +1203,8 @@ title "an egg suit"
 descr "A suit shaped and colored like an egg leans here."
 extra {}
 "Someone took a lot of white cloth, stuffed it and made an egg
-shaped suite. there are holes for the arms and head and the 
-bottome is open for both legs to move freely."
+shaped suit. There are holes for the arms and head and the 
+bottom is open for both legs to move freely."
 MATERIAL_CLOTH("white cloth")
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_BODY}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -1247,7 +1247,7 @@ end
 
 burg_pants
 names {"pants","costume"}
-title "a black pants"
+title "a pair of black pants"
 descr "A pair of black pants lie here."
 extra {}
 "A pair of black pants."
@@ -1315,7 +1315,7 @@ end
 bag_holding
 names {"bag of holding", "bag", "travbag"}
 title "a bag of holding"
-descr "a bag lies here."
+descr "A bag lies here."
 extra {}
 "This bag has a seemingly limitless capacity, it is obviously magical."
 weight 10
@@ -1327,7 +1327,7 @@ end
 /*to load on bthieves */
 sheet
 names {"sheet","costume"}
-title "sheet"
+title "a sheet"
 descr "A dirty sheet with two holes in it lies here."
 extra {}
 "The sheet is so thin you can almost see through it. Obviously this is a 
@@ -1359,7 +1359,7 @@ extra {"$identify"}
 better than average with it."
 extra {"$improved identify"}
 "This is a unique weapon that is only available at Halloween. It will add to
-your short sword skill"
+your short sword skill."
 
 end
 
@@ -1370,8 +1370,8 @@ names {"black cape","cape", "velvet"}
 title "a black velvet cape"
 descr "A black puddle of soft velvet lies here."
 extra {}
-"A beautiful and soft full-lenth cape of black velvet.
-It soaks in the light and seems elegantly mysterious/"
+"A beautiful and soft full-length cape of black velvet.
+It soaks in the light and seems elegantly mysterious."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 cost 3 IRON_PIECE
@@ -1382,8 +1382,8 @@ end
 
 sboots
 names {"boots"}
-title "comfortable soft black boots"
-descr "a pair of well made comfortable boots rest here."
+title "a pair of comfortable soft black boots"
+descr "A pair of well made comfortable boots rest here."
 MATERIAL_LEATHER("A soft dark leather.")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -1391,7 +1391,7 @@ cost  10 IRON_PIECE
 rent  5 IRON_PIECE
 weight 5
 extra {} 
-"A pair of black boots The soft leather reaches about halfway 
+"A pair of black boots. The soft leather reaches about halfway 
 up the calf of the leg. They look soft, pliable and comfortable.
 Their soft soles make little noise."
 end
@@ -1399,7 +1399,7 @@ end
 spants
 names {"pants", "leggings","trousers"}
 title "a pair of black cloth pants"
-descr "A pair of black pants have been left here"
+descr "A pair of black pants have been left here."
 MATERIAL_CLOTH("wool")
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -1408,7 +1408,7 @@ rent  4 IRON_PIECE
 weight 5
 extra {}
 "These are black wool pants. Very well-made pants, but nothing
-interesting,"
+interesting."
 end
 
 tophat
@@ -1448,12 +1448,12 @@ names {"candy belt","belt","candy"}
 title "a belt of <div class='cpy'>c</div><div class='cpm'>a</div><div class='cpc'>n</div><div class='cpw'>d</div><div class='cpg'>y </div><div class='cm'>w</div><div class='cpy'>r</div><div class='cpg'>a</div><div class='cpw'>p</div><div class='cpm'>p</div><div class='cpc'>e</div><div class='cpy'>r</div><div class='cpg'>s</div><div class='DEFAULT'></div>"
 descr "A belt of bright paper lies in the dust."
 extra {}
-"This thin belt, made of multi-colored gum and cand wrappers is a rare item
+"This thin belt, made of multi-colored gum and candy wrappers, is a rare item
 that only those who are the best of the questers may wear."
 extra {"$identify"}
 "This is a one time reward, not replaceable, for Halloween."
 extra {"$improved identify"}
-"The belt grants +2 dex and helps you search and consider"
+"The belt grants +2 dex and helps you search and consider."
 weight 5
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -1466,7 +1466,7 @@ end
 qbag
 names {"trick or treat bag","treat bag","bag"}
 title "an orange <div class='cpy'>trick or treat bag</div><div class='default'></div>"
-descr "A bright orange burlap bag lays in the dust."
+descr "A bright orange burlap bag lies in the dust."
 extra {}
 "This bag looks like it could hold quite a bit of candy or anything 
 else. It says Halloween in black letters."
@@ -1497,9 +1497,9 @@ end
 head
 names {"severed head","head"}
 title "a grisly severed head"
-descr "a decapitated head is here."
+descr "A decapitated head is here."
 extra{}
-"When you get a closer look at it, you notice that it missing an eye!"
+"When you get a closer look at it, you notice that it is missing an eye!"
 extra {"$donotstore"}
 "This is to prevent excessive storage of items, mainly hard to get ones."
 type ITEM_TRASH
@@ -1525,7 +1525,7 @@ names {"left arm","arm"}
 title "a severed left arm"
 descr "Someone left their arm here."
 extra{}
-"A left arm cut off at the shoulder"
+"A left arm cut off at the shoulder."
 extra {"$donotstore"}
 "This is to prevent excessive storage of items, mainly hard to get ones."
 type ITEM_TRASH
@@ -1538,7 +1538,7 @@ names {"right arm","arm"}
 title "a severed right arm"
 descr "Someone lost their right arm here."
 extra{}
-"A right arm cut off at the shoulder"
+"A right arm cut off at the shoulder."
 extra {"$donotstore"}
 "This is to prevent excessive storage of items, mainly hard to get ones."
 manipulate {MANIPULATE_TAKE}
@@ -1549,7 +1549,7 @@ end
 hand
 names {"right hand","hand"}
 title "a right hand"
-descr "A right hand lays where it fell."
+descr "A right hand lies where it fell."
 extra{}
 "A right hand cut off at the wrist. It has long pale fingers that seem
 to have been grasping at something."
@@ -1591,7 +1591,7 @@ title "an eyeball"
 names {"eyeball","eye"}
 descr "A lone eyeball stares at you."
 extra {}
-"A white sphere with a brown iris and black pupil stare at you.
+"A white sphere with a brown iris and black pupil stares at you.
 Red veins run through it. It seems to have been torn from its socket."
 manipulate {MANIPULATE_TAKE}
 extra {"$donotstore"}
@@ -1633,7 +1633,7 @@ title "a tongue"
 names {"tongue"}
 descr "A tongue hangs limply here."
 extra {}
-"It is a tongue. Too small to be from a cow, too large from a bird. It 
+"It is a tongue. Too small to be from a cow, too large to be from a bird. It 
 looks to have been brutally hacked from someone's mouth."
 extra {"$donotstore"}
 "This is to prevent excessive storage of items, mainly hard to get ones."
@@ -1663,7 +1663,7 @@ descr "An almost leafless gnarled black tree stands here."
 extra {}
 "A dark gnarled tree is silhouetted against the sky. The creaking 
 boughs sound like the death rattle of a dying man as the wind
-tosses them. A large dark shape twists and turns from a rope tied one of
+tosses them. A large dark shape twists and turns from a rope tied to one of
 them."
 
 extra {"boughs","bough","branches","branch", "decoration"}
@@ -1708,7 +1708,7 @@ act(pc.name+" stands on their toes and manages to grasp the grisly decoration.",
 A_SOMEONE, pc, self, null, TO_REST); 
 act("You pull and pull and pull, finally it comes loose!", 
 A_SOMEONE, pc, self, null, TO_CHAR); 
-act(pc.name+" pulls the intestine to slowly off the tree.", 
+act(pc.name+" pulls the intestine slowly off the tree.", 
 A_SOMEONE, pc, self, null, TO_REST); 
 quit; 
 } 
@@ -1761,7 +1761,7 @@ act("You plunge your hands into the bloody fountain.",
 A_SOMEONE, pc, self, null, TO_CHAR); 
 act(pc.name+" plunges their hands into the blood.", 
 A_SOMEONE, pc, self, null, TO_REST); 
-act("You feel something hard and round. You grab and pull up head by the hair. 
+act("You feel something hard and round. You grab and pull up a head by the hair. 
 Blood streams from the face!", 
 A_SOMEONE, pc, self, null, TO_CHAR); 
 act(pc.name+" pulls a head up by the hair and lets the blood stream off it.", 
@@ -1794,7 +1794,7 @@ extra {}
         </div><div class='cy'>'@@@</div><div class='cpy'>\__/\____/\__/</div><div class='cy'>@@@@|@@'<br/><br/>
           </div><div class='cy'>'@@@@@@@@@@@@@@@@@@@'<br/></div><div class='DEFAULT'><br/>
 <br/><br/>
-It's a Jack o Lantern. but seems to be out. Maybe you should open it<br/>
+It's a Jack o Lantern, but it seems to be out. Maybe you should open it<br/>
 and see what is wrong?<br/><br/>
 </div></pre>"
 manipulate {MANIPULATE_ENTER,MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -1815,11 +1815,11 @@ extra {}
 "It looks like a newbie's skeleton, must have been dead for a long time.
 Perhaps he insulted the healer. There are some markings on the bones."
 extra {"markings","bone","bones"}
-   "It looks like teeth marks. People have carved grafitti into the 
+   "It looks like teeth marks. People have carved graffiti into the 
    skull."
-extra {"skull","grafitti"}
+extra {"skull","graffiti","grafitti"}
       "Sentrosi eats slugs. Kerin loves Nikolai. Alvaneu is a wimp.
-	   Magix wears combat boots and for a good time call Barron. Are among the 
+	   Magix wears combat boots and for a good time call Barron. These are among the 
 	   clan signs carved into the skull."
 weight 15
 type ITEM_TRASH
@@ -1829,7 +1829,7 @@ end
 qlist
 names {"list","note","paper"}
 title "a list of parts"
-descr "A piece of parchment "
+descr "A piece of parchment lies here."
 extra {}
 "<pre><br/>
 Thanks for helping me with Ken's missing parts.<br/>
@@ -1855,7 +1855,7 @@ many friends to help so he has scattered the pieces throughout the<br/>
 world, but most of the parts I have found through my crystal<br/>
 ball have been in something that is not usually in the world.<br/>
 I cannot see a small number of the parts but I can smell them.<br/>
-They must be near Udgaard look at all everything the presence of<br/>
+They must be near Udgaard. Look at everything; the presence of<br/>
 part of a being like Ken alters the person or thing containing it <br/>
 slightly.<br/>
 </pre>" 
@@ -1880,7 +1880,7 @@ names {"ghost","empty armour","empty armor","armour", "armor"}
 title "a set of empty armor"
 descr "A set of empty armor stands here."
 extra {}
-"It stands holding with its helm under an arm. It seems to be looking 
+"It stands holding its helm under an arm. It seems to be looking 
 around for something."
 alignment 0
 M_AVG_HUMAN(15,SEX_MALE)
@@ -1948,7 +1948,7 @@ names {"ghost"}
 title "a translucent ghost"
 descr "A translucent ghost hovers here."
 extra {}
-"This ghost seems to be hiding something. It is half materilaized and
+"This ghost seems to be hiding something. It is half materialized and
 seems ready to fight."
 alignment 0
 M_SPRITE_SMALL(15,SEX_FEMALE)
@@ -1990,7 +1990,7 @@ title "a zombie ferret"
 descr "A zombie animal shambles around looking for revenge."
 extra {}
 "The ferret killed by thousands of newbies has
-risen from the grave. It seeks revenge. It is chewing on soemthing"
+risen from the grave. It seeks revenge. It is chewing on something."
 alignment 0
 M_FERRET_MAD(16,SEX_FEMALE)
 position POSITION_STANDING
@@ -2111,7 +2111,7 @@ heartbeat := PULSE_SEC*7;
              "An orange mist rises from the hat as he makes mystical passes "+
 			 "with his hands, muttering in an unsettling tongue." ,self); 
        pause;
-       exec("emote reaches into the hat and pulls out an orange rabbit", self);
+       exec("emote reaches into the hat and pulls out an orange rabbit.", self);
        exec("say That's the best trick I know!", self); 
        goto start;
      }
@@ -2128,8 +2128,8 @@ heartbeat := PULSE_SEC*7;
 	exec ("elaugh", self);
 	pause;
     exec("say Hello "+pc.name+ ", I am Baron Samedi.", self);
-	exec("emote doffs his hat, bows elegantly then striaghtens up. " +
-	      "He studies you for a moment", self);
+	exec("emote doffs his hat, bows elegantly then straightens up. " +
+	      "He studies you for a moment.", self);
 	pause;	  
     exec("say I have received sad news.", self);
 	exec("emote sighs.", self);
@@ -2147,19 +2147,19 @@ heartbeat := PULSE_SEC*7;
    wait(SFB_CMD, activator == pc);
    if (command("nod"))
    { 
-   exec("emote smiles happily, his fangs glisten in the moonlight", self);
+   exec("emote smiles happily, his fangs glisten in the moonlight.", self);
    pause;
    exec("say Ken and Jack were playing mumblety peg. " +
-         "Jack lost and he thought Ken had cheated. So he chopped   " +
+         "Jack lost and he thought Ken had cheated. So he chopped " +
 		 "him up and left pieces of him throughout the world." , self);
 		 
    exec("say Jack is very sorry but does not remember where he went on his rampage.", self);
-    exec("emote looks around furatively and whispers <div class='cpw'>'Between you me </div>"+
-	     "and the tree I think he knows but is still angry.", self);		 
+    exec("emote looks around furtively and whispers <div class='cpw'>'Between you, me "+
+	     "and the tree, I think he knows but is still angry.'</div>", self);		 
    pause;		 
    exec("say I have found most of him but I am still missing some " +
          "internal organs and body parts. There are 13 pieces missing in all. " +
-         "Bring them to me here as you find them. Knowing Jack they will be  " +
+         "Bring them to me here as you find them. Knowing Jack, they will be " +
 		 "inside something else." , self);
    ql := null;
    addstring(ql, HALL23_ONGO);
@@ -2173,7 +2173,7 @@ heartbeat := PULSE_SEC*7;
    dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item1);
    link(item1, pc);
     exec("emote hands you an orange trick or treat bag and a list.", self);
-	 exec("says Good Luck! Oh and look out for Jack, I think he is still mad.", self);		 		 
+	 exec("say Good Luck! Oh and look out for Jack, I think he is still mad.", self);		 		 
    unsecure(pc);
    goto start;
    }
@@ -2185,7 +2185,7 @@ heartbeat := PULSE_SEC*7;
    {
     pause;
     exec("say Please nod if you want a treat " +
-          "or shake if you are stick in the mud.", self);  
+          "or shake if you are a stick in the mud.", self);  
     goto hall23_acc;
    }
 :hall23_den:
@@ -2226,8 +2226,8 @@ if (target == self)
 
  if (not(HALL23_ONGO in pc.quests))
  {
-  exec("emote narrows his eyes", self);
-  exec("say "+pc.name+ ",are you trying to trick me? " +
+  exec("emote narrows his eyes.", self);
+  exec("say "+pc.name+ ", are you trying to trick me? " +
        "I don't take things from strangers." , self);
   exec("drop "+item.name, self);	   
   unsecure(pc);
@@ -2241,7 +2241,7 @@ if (target == self)
   {
     addstring(pin.names, "h");
     exec("say Thank you, "+pc.name+". ", self);
-    exec("emote sings 'You gotta have heart!", self);
+    exec("emote sings 'You gotta have heart!'", self);
 	pause;
 	exec("emote puts the heart in the coffin. A loud thump comes from it " +
 	      "as the Baron closes the lid.", self);
@@ -2284,9 +2284,9 @@ if (target == self)
   {
   addstring(pin.names, "b");
   exec("say Thank you, "+pc.name+". " +
-	      " I feared he had lost his mind for good.", self);
+	      "I feared he had lost his mind for good.", self);
   exec("emote puts the brain in the large coffin. Slurping sounds come from it.", self);
-  exec("say Don't eat that you will need it later.", self);
+  exec("say Don't eat that, you will need it later.", self);
    destroy(item);
    goto hcheck;  
  }
@@ -2335,8 +2335,8 @@ if ((item == findsymbolic(self, "arm2@hallows23", FIND_UNIT_INVEN))
    		and ("a2" in pin.names))
   		{
    			exec("say You gave me his right arm already, "+pc.name+". "+
-			     "If I put this on him then he would be ALL RIGHT " , self);
-   			exec("emote puts the arm in his bag chuckling.", self);
+			     "If I put this on him then he would be ALL RIGHT!" , self);
+   			exec("emote puts the arm in his bag, chuckling.", self);
    			destroy(item);
    			goto hcheck;
 		}   
@@ -2355,7 +2355,7 @@ if ((item == findsymbolic(self, "hand@hallows23", FIND_UNIT_INVEN))
    		and ("hn" in pin.names))
   		{
    			exec("say You gave me a hand already, "+pc.name+". " +
-			" I'll give you one now!", self);
+			"I'll give you one now!", self);
 			exec("applaud " +pc.name, self);
    			exec("emote puts the hand in his bag.", self);
    			destroy(item);
@@ -2368,7 +2368,7 @@ if ((item == findsymbolic(self, "foot@hallows23", FIND_UNIT_INVEN))
     addstring(pin.names, "f");
     exec("say Thank you, "+pc.name+". " +
 	      "That was quite a feat!", self);
-    exec("emote puts the foot in the large coffin", self);
+    exec("emote puts the foot in the large coffin.", self);
 	exec("say Now keep that out of your mouth!", self);
     destroy(item);
     goto hcheck;
@@ -2410,7 +2410,7 @@ if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
     addstring(pin.names, "l");
       exec("say Thank you, "+pc.name+". " +
 	      "Have any onions? Just kidding!", self);
-    exec("emote puts the liver in the large coffin", self);
+    exec("emote puts the liver in the large coffin.", self);
     destroy(item);
     goto hcheck;
   }	
@@ -2418,8 +2418,8 @@ if ((item == findsymbolic(self, "liver@hallows23", FIND_UNIT_INVEN))
    		and ("l" in pin.names))
   		{
    			exec("say You gave me a liver already, "+pc.name+". " +
-			"I will hold on to this in case he starts drinking again", self);
-   			exec("emote drops the liver in his bag. You hear a PLOP!.", self);
+			"I will hold on to this in case he starts drinking again.", self);
+   			exec("emote drops the liver in his bag. You hear a PLOP!", self);
    			destroy(item);
    			goto hcheck;
 		}   	     	
@@ -2430,7 +2430,7 @@ if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
     addstring(pin.names, "lg");
     exec("say Thank you, "+pc.name+". "+
 	      "He was on his last leg.", self);
-    exec("emote puts the leg in the large coffin", self);
+    exec("emote puts the leg in the large coffin.", self);
     destroy(item);
     goto hcheck;
   }
@@ -2438,7 +2438,7 @@ if ((item == findsymbolic(self, "leg@hallows23", FIND_UNIT_INVEN))
    		and ("lg" in pin.names))
   		{
    			exec("say You gave me a left leg already, "+pc.name+". " +
-			"Great now all I need is an arm then I can afford anything!", self);
+			"Great, now all I need is an arm, then I can afford anything!", self);
    			exec("emote drops the leg in his bag.", self);
    			destroy(item);
    			goto hcheck;
@@ -2457,8 +2457,8 @@ if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
    if ((item == findsymbolic(self, "gut@hallows23", FIND_UNIT_INVEN))
    		and ("g" in pin.names))
   		{
-   			exec("say You gave me some guts already, "+pc.name+"." +
-			"You must be brave to have so many to share!.", self);
+   			exec("say You gave me some guts already, "+pc.name+". " +
+			"You must be brave to have so many to share!", self);
    			exec("emote winds the intestines up and puts them in his bag.", self);
    			destroy(item);
    			goto hcheck;
@@ -2535,15 +2535,15 @@ dilcopy ("ply_restrict@function("+pc.name+",0,25,quest_act@gnome)",item);
 item.height := pc.height;
 link(item,pc);
 experience(16500, pc);
-exec("Shout It's ALLIVE! Thanks to "+pc.name+ "!",self);
+exec("Shout It's ALIVE! Thanks to "+pc.name+ "!",self);
 log("belt given to " +pc.name+" they found it all!");
 exec("say Thank you. That was an enjoyable experience.", self);
 exec("emote doffs his hat and bows elegantly to you.", self);
 pause;
 exec("say You can let this present go to waist!", self);
-exec("emote pulls out a brightly colored belt and hands it to" +pc.name+",", self);
+exec("emote pulls out a brightly colored belt and hands it to " +pc.name+".", self);
 pause;
-exec("emote smiles as a wolf howls in the distance", self);
+exec("emote smiles as a wolf howls in the distance.", self);
 exec("say You can keep the bag too. Happy Halloween, " + pc.name +"!", self);
 goto start;
 }
@@ -2665,7 +2665,7 @@ names {"ghost"}
 title "a translucent ghost"
 descr "A small translucent ghost floats here."
 extra {}
-"This ghost seems shy. It is half materilaized and
+"This ghost seems shy. It is half materialized and
 seems ready to flee."
 alignment 0
 M_SPRITE_TINY(5,SEX_FEMALE)
@@ -2695,7 +2695,7 @@ names {"ghost","empty armour","empty armor","armour", "armor"}
 title "a set of empty armor"
 descr "A set of empty armor walks here."
 extra {}
-"It clanks along with is helm tucked under an arm. You are not
+"It clanks along with its helm tucked under an arm. You are not
 certain how it knows where it is going but it does seem to have a
 destination in mind."
 alignment 0
