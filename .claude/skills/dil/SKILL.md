@@ -81,8 +81,9 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **Running off the end of the code starts it again at the top**, not ends it: vmc appends
   `goto 0` to every template (the `program` rule in dilpar.y). Variables keep their values;
   unsecured unitptrs are null as after any wait. Only `quit` (or destroying the unit) ends a
-  program. So a missing `goto start` re-runs the code above `:start:` (heartbeat, `interrupt`s,
-  which pile up), it doesn't silence the program.
+  program. So a missing `goto start` re-runs the code above `:start:` (heartbeat, variable
+  setup), it doesn't silence the program. Running `interrupt()` again doesn't add a second one:
+  `dil_intr_insert` replaces the interrupt with the same label.
 - **A failed value assigned**: an integer variable keeps its old value, a string variable
   becomes `""` (`dilfi_ass`). Test the source (`if (u == null)`) rather than the result.
 - **`return (null);` doesn't compile** in a `unitptr` function (`return expression not of
