@@ -8,9 +8,9 @@ Fixed in place:
 - **do_tell, tell group** (lines 388-389): the group tell stored the teller's name for `respond`
   as `$reply` in the listener's `extra`, while `reply` (and everything else) reads it from
   `quests`; so `respond` after a group tell answered the previous teller instead. Now `quests`.
-- **do_tell** (lines 431-442): `(vict.position <= POSITION_SLEEPING) or isset(vict.pcflags, PC_NOTELL)`
-  failed as a whole for an NPC (an NPC has no pcflags, and a failed side fails the `or`), so a
-  sleeping NPC still heard tells. Split into two ifs, the pcflags test only for players.
+- **do_tell** (lines 431-442): the sleeping test and the PC_NOTELL test are two ifs now, the
+  pcflags test only for players. No change in play: `or` counts the failed pcflags read of an NPC
+  as false, so the old combined test already stopped tells to sleeping NPCs.
 - **do_tell** (line 447): "$3e can't hear you ." -> no space before the full stop.
 - **do_tell** (lines 504-505): the tell went into the listener's tell history with its own
   `<br/>`, and `get_history` adds another, so `tell` alone showed a blank line after each tell

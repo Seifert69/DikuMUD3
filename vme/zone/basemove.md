@@ -3,10 +3,9 @@
 ## Shared zone review
 
 Fixed in place:
-- **fall_dil** (line 213): `(room==room_next) or (fall_from==room_next.idx) or (room_next == null)`
-  never caught a missing exit: with `room_next` null the `.idx` side fails and fails the whole
-  `or`, so the faller was linked to null and kept "falling" in the same room with every command
-  blocked. The null test is now its own `if`.
+- **fall_dil** (line 213): the null test of `room_next` is now its own `if`, before the test that
+  reads `room_next.idx`. No change in play: `or` counts a failed side as false, so the old
+  combined test already caught a missing exit; this only makes the order plain.
 - **do_swim** (line 635): "You cant swim here!" -> "You can't swim here!".
 - **open_dil / close_dil** (lines 1792, 1794, 1983, 1985): the "is opened/closed from the
   inside/outside by ..." messages had no full stop. close_dil line 1988: "$1n closed $2n." ->

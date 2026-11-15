@@ -428,7 +428,7 @@ if(arg == "")
  quit;
 }
 
-// Two ifs: an NPC has no pcflags, and that failed isset would fail the whole "or"
+// An NPC has no pcflags: test them for players only
 if(vict.position <= POSITION_SLEEPING)
 {
  act("$3e can't hear you.",
