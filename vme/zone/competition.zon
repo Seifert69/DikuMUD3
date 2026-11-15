@@ -40,7 +40,7 @@ code
 	rm:=findsymbolic("dead_obj@competition");
 	if (rm.extra.["dead_comp"]==null)
 	{
-		sendtext("NO Player has been added to the board yet.<br>",activator);
+		sendtext("No player has been added to the board yet.<br>",activator);
 		goto start;
 	}
 
@@ -94,7 +94,7 @@ code
 	rm:=findsymbolic("xp_obj@competition");
 	if (rm.extra.["xp_comp"]==null)
 	{
-		sendtext("NO Player has been added to the board yet.<br>",activator);
+		sendtext("No player has been added to the board yet.<br>",activator);
 		goto start;
 	}
 
@@ -435,13 +435,13 @@ code
 	rm:=findsymbolic("board_obj@competition");
 	if (rm.extra.["competitions"]==null)
 	{
-		sendtext("No competitions Ongoing<br>",activator);
+		sendtext("No competitions ongoing.<br>",activator);
 		goto start;
 	}
 	ln:=length(rm.extra.["competitions"].names);
 	if (ln<2)
 	{
-		sendtext("No competitions Ongoing<br>",activator);
+		sendtext("No competitions ongoing.<br>",activator);
 		goto start;
 	}
 	i:=1;
@@ -839,7 +839,7 @@ code
 		sendtext ("1)  Yes<br>",self);
 		sendtext("2)  No<br>",self);
 		sendtext("3)  Both<br>",self);
-		sendtext ("<br>Select (1 or 2):  ",self);
+		sendtext ("<br>Select (1, 2 or 3):  ",self);
 		wait (SFB_CMD,TRUE);
 		if (command("1"))
 		{
@@ -869,11 +869,11 @@ code
 :race_menu:
 		
 		sendtext("<br>Please choose your race:<br>"
-		+"  <div class='cpw'>1</div>) Human</div>            <div class='cpw'> 7</div>) Dark-Elf<br>"
-		+"  <div class='cpw'>2</div>) Dwarf</div>            <div class='cpw'> 8</div>) Brownie<br>"
-		+"  <div class='cpw'>3</div>) Halfling</div>         <div class='cpw'> 9</div>) Groll<br>"
-		+"  <div class='cpw'>4</div>) Gnome</div>            <div class='cpw'>10</div>) Half-Orc<br>"
-		+"  <div class='cpw'>5</div>) Elf</div>              <div class='cpw'>11</div>) Half-Ogre<br>"
+		+"  <div class='cpw'>1</div>) Human            <div class='cpw'> 7</div>) Dark-Elf<br>"
+		+"  <div class='cpw'>2</div>) Dwarf            <div class='cpw'> 8</div>) Brownie<br>"
+		+"  <div class='cpw'>3</div>) Halfling         <div class='cpw'> 9</div>) Groll<br>"
+		+"  <div class='cpw'>4</div>) Gnome            <div class='cpw'>10</div>) Half-Orc<br>"
+		+"  <div class='cpw'>5</div>) Elf              <div class='cpw'>11</div>) Half-Ogre<br>"
 		+"  <div class='cpw'>6</div>) Half-elf            <div class='cpw'>12</div>) All races<br>"
 		+"Please select 1 - 12: ", self);
 		wait (SFB_CMD,TRUE);
@@ -899,7 +899,7 @@ code
 		}
 		else if (command ( "5"))
 		{
-			sendtext("You are now an elf.<br>", self);
+			sendtext("Set to elf.<br>", self);
 			rc := RACE_ELF;
 		}
 		else if (command ( "6"))
@@ -934,26 +934,26 @@ code
 		}
 		else if (command ( "12"))
 		{
-			sendtext ("Set to all races<br>",self);
+			sendtext ("Set to all races.<br>",self);
 			rc :=-1;
 		}
 		else
 		{
-			sendtext ("Try again<br>",self);
+			sendtext ("Try again.<br>",self);
 			goto race_menu;
 		}
 		goto comp_menu;
 	}
 	else if (command("6"))
 	{
-		sendtext ("how many hours from now do you want the competition to start:  ",self);
+		sendtext ("How many hours from now do you want the competition to start:  ",self);
 		wait(SFB_CMD,TRUE);
 		dt:=realtime+60*60*atoi(excmdstr);
 		goto comp_menu;
 	}
 	else if (command("7"))
 	{
-		sendtext ("how many hours from "+asctime(dt)+ " do you want it to end:  ",self);
+		sendtext ("How many hours from "+asctime(dt)+ " do you want it to end:  ",self);
 		wait(SFB_CMD,TRUE);
 		edt:=60*60*atoi(excmdstr);
 		goto comp_menu;
@@ -977,7 +977,7 @@ code
 		rm:=findsymbolic("board_obj@competition");
 		if (rm==null)
 		{
-			sendtext ("No competition room found fix it<br>",self);
+			sendtext ("No competition room found, fix it.<br>",self);
 			gamestate(self, GS_PLAY);
 			quit;
 		}
@@ -1038,19 +1038,19 @@ code
 	}
 	if (rm.extra.["competitions"]==null)
 	{
-		sendtext("No competitions Ongoing<br>",self);
+		sendtext("No competitions ongoing.<br>",self);
 		quit;
 	}
 	ln:=length(rm.extra.["competitions"].names);
 	if (ln<2)
 	{
-		sendtext("No competitions Ongoing<br>",self);
+		sendtext("No competitions ongoing.<br>",self);
 		quit;
 	}
 	i:=atoi(args.[1]);
 	if ((i<1) or (i>(ln-1)))
 	{
-		sendtext ("No such quest found try again.<br>",self);
+		sendtext ("No such quest found, try again.<br>",self);
 		quit;
 	}
 	sendtext("Deleting "+rm.extra.["competitions"].names.[i]+".<br>",self);
@@ -1073,14 +1073,14 @@ code
 	}
 	if (rm.extra.["competitions"]==null)
 	{
-		sendtext("No competitions Ongoing<br>",self);
+		sendtext("No competitions ongoing.<br>",self);
 		quit;
 	}
 	gamestate(self, GS_MENU);
 	ln:=length(rm.extra.["competitions"].names);
 	if (ln<2)
 	{
-		sendtext("No competitions Ongoing<br>",self);
+		sendtext("No competitions ongoing.<br>",self);
 		gamestate(self, GS_PLAY);
 		quit;
 	}
@@ -1107,7 +1107,7 @@ code
 	i:=atoi(excmdstr);
 	if ((i<1) or (i>(ln-1)))
 	{
-		sendtext ("No such quest found try again.<br>",self);
+		sendtext ("No such quest found, try again.<br>",self);
 		gamestate(self, GS_PLAY);
 		quit;
 	}
@@ -1378,7 +1378,7 @@ end
 
 board_obj
 names {"boardobj"}
-title "The comp object"
+title "the comp object"
 descr
 "A board obj that should not be seen by mortals is here."
 minv 200
@@ -1386,7 +1386,7 @@ end
 
 xp_obj
 names {"xpobj"}
-title "The xp object"
+title "the xp object"
 descr
 "A XP board obj that should not be seen by mortals is here."
 minv 200
@@ -1397,7 +1397,7 @@ end
 
 dead_obj
 names {"deadobj"}
-title "The dead  object"
+title "the dead object"
 descr
 "A death board obj that should not be seen by mortals is here."
 minv 200
@@ -1410,16 +1410,16 @@ end
 
 death_board
 names {"board of the dead", "death board", "dead board", "board"}
-title "The board of the dead."
+title "the board of the dead"
 descr
-"A board held up by carved Valkeries is here."
+"A board held up by carved Valkyries is here."
 type ITEM_BOARD
 dilcopy death_brd();
 end
 
 xp_board
 names {"ornate board","silver names","board","names"}
-title "Legends of Valhalla board"
+title "the Legends of Valhalla board"
 descr
 "An ornate board with names in silver is mounted on the wall here."
 extra{}
@@ -1434,7 +1434,7 @@ names {"Competition board", "board"}
 title "a competition board"
 descr "A magical competition board is mounted on a wall here."
 extra{}
-"Its a big shiny competition board with a small sign in the lower corner."
+"It's a big shiny competition board with a small sign in the lower corner."
 extra {"sign","corner"}
 "<dl>
 <dt>The Sign Says:</dt>
@@ -1443,7 +1443,7 @@ extra {"sign","corner"}
 <dt>read [number]</dt>
 <dd>-shows individual competition information</dd>
 <dt>list [number]</dt>
-<dd>-shows the top 200 leaders for that competition</dd>
+<dd>-shows the top 20 leaders for that competition</dd>
 </dl>
 "
 type ITEM_BOARD
