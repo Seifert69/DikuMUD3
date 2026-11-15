@@ -11,11 +11,11 @@
 3. **chest** / **small_key** (lines 2902, 2878): the chest's extra says "It is equipped with a small
    lock, that any self-respecting thief should be able to pick", but the chest has no lock (no
    open/lock flags, no key). The cook carries `small_key`, which opens nothing in the zone (nor
-   anywhere else). Was the chest meant to be locked with `small_key`?
+   anywhere else). Was the chest meant to be locked with `small_key`? Fixed (text follows the world): chest extra now says it is a plain chest with no lock; small_key untouched.
 4. **butler_quarters** (line 564): the description has "a large bed and a drawer", but there is only
-   an extra for the bed; no drawer object or extra. Add a "drawer" extra (or a drawer container)?
+   an extra for the bed; no drawer object or extra. Add a "drawer" extra (or a drawer container)? Fixed (text follows the world): dropped "and a drawer" from the description.
 5. **by_treasury** (line 720): the room text says "a great iron door"; the exit description and
-   keyword say "large steel door". Which metal?
+   keyword say "large steel door". Which metal? Fixed (text follows the world): room text now says a great steel door.
 6. **royal_herald** (line 1995): `exec("emote gives you the chalice.", self)` is seen by everyone in
    the throne room as "The Royal Herald gives you the chalice." Should it be an act() to the player
    ("$1n gives you $2n.") and one to the room ("$1n gives $2n to $3n.")? (DIL change, so not made.) Fixed in step 2.

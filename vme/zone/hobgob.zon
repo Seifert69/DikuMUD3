@@ -1868,7 +1868,7 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"table","tables"}
-"5 very long stone tables that look like they could seat about 50 people."
+"5 very long stone tables that look like they could seat about 150 people."
 extra {"bench","benches"}
 "10 benches that match the length of the tables."
 extra {"cubby hole","cubby","hole"}

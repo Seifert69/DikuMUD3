@@ -568,7 +568,7 @@ title "The butler's quarters"
 descr
 "   You see at once that this must be the butler's room, for it lies
 in the servants' wing, and still it is large and comfortable; almost
-luxurious, in fact. There is a large bed and a drawer in the room.
+luxurious, in fact. There is a large bed in the room.
 The only exit is via the door to the north."
 north to servant_corr_e open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
     descr "The corridor lies to the north."
@@ -722,7 +722,7 @@ end
 
 title "By the treasure room"
 descr
-"   You are standing by a great iron door. The door is very large, and
+"   You are standing by a great steel door. The door is very large, and
 seems very solid indeed. There is a sign posted by it. "
 east to treasury open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
     descr "You see a large steel door."
@@ -2913,8 +2913,7 @@ CONTAINER_DEF(400)
 weight 450
 cost 22 COPPER_PIECE
 extra {}
-"It is equipped with a small lock, that any self-respecting thief
-should be able to pick."
+"It is a plain chest and has no lock."
 end
 
 

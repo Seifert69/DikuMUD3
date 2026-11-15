@@ -1912,8 +1912,7 @@ descr
 ground, or placed on some of the numerous tables in the room. The
 janitors deposit all of the goodies they find in this room. If someone
 has lost a precious item, surely this would be the place to check for
-it. There is a small room in the back, where those in need can get a
-free meal."
+it."
 
 east to royal_av1@midgaard descr "Royal Avenue lies to the east of this room.";
 movement SECT_CITY
@@ -2085,7 +2084,7 @@ end
 names {"wall road"}
 title "Wall Road"
 descr
-"   You are on a long road running north-south along the east side of the
+"   You are on a long road running north-south along the western
 city wall.  To your north, the West Bridge of Midgaard spans the river, and
 to your east, the Southern Promenade leads along the river bank."
 movement SECT_CITY
@@ -2130,7 +2129,7 @@ south to sorcerer/ent_tower open {EX_OPEN_CLOSE, EX_CLOSED}
 /* There are doors like this at wall_rd6, wall_rd11 og wall_rd14.
  * They lead into the wall, and to a potential new area.
  */
-extra {"door", "wood"} "It looks solid and appears to be securely locked."
+extra {"door", "wood"} "It looks solid and heavy."
 ALWAYS_LIGHT
 end
 
@@ -3061,7 +3060,7 @@ north to cth_square1 descr
 "The great Cathedral of Midgaard towers proudly beyond Cathedral Square.  The
 two massive southern towers reach ambitiously for the sky.";
 south to royal_av1 descr
-"A long row of well-grown oak trees lines each side of Royal Avenue.";
+"A long row of well-grown chestnut trees lines each side of Royal Avenue.";
 west to main_st3;
 east to main_st4;
 ALWAYS_LIGHT
@@ -5230,8 +5229,7 @@ descr
 "You are standing at the crown of a large rainbow, colors seem to
 encompass you into their folds. You have a feeling of pure peace overcome
 you as you look out over the world through the calming colors of the
-rainbow.  The rainbow curves a bit to the west here and a crystal bridge
-spans to the east."
+rainbow.  The rainbow curves a bit to the west here."
  movement SECT_HILLS
 west to rainbow_4;
 down to rainbow_2;

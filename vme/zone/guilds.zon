@@ -190,7 +190,7 @@ code
    if (not ReadySpecialize@professions(activator))
    {
       pause;
-   	Explain@quests(pc, null, "say $1N, to specialize, you must have embarked upon two or fewer professions and be at least level 25 in your main guild.");
+   	Explain@quests(pc, null, "say $1N, to specialize, you must have embarked upon two or fewer professions and be at least level 25.");
       goto start;
    }
 

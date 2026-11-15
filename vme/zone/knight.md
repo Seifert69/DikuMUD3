@@ -7,9 +7,9 @@
    moved. Change it to `sth1@midsewers` (DIL, step 2)? Fixed in step 2.
 2. **room_3** (line 123): "The hall continues in all directions except to south where a large
    tapestry hangs", but there is an exit south to room_5 (the Master's Chambers). Is the door
-   behind the tapestry (then the text could say so), or should the text change?
+   behind the tapestry (then the text could say so), or should the text change? Fixed (text follows the world): room_3 now says a large tapestry hangs over the way south to the Master's Chambers.
 3. **hilary** (line 396): titled "Maid Hilary", but names and descriptions say "Lady Hilary".
-   Which one? (If "Maid", her names need "maid".)
+   Which one? (If "Maid", her names need "maid".) Fixed (text follows the world): title changed to "Lady Hilary".
 4. **hilary** (line 405): `M_HUMAN_MAGE_FIRE(130, SEX_FEMALE, "cast lava flow")`; the other
    teachers give a plain spell name ("magma", "hellfire"). Does "cast lava flow" work?
 5. **avenger** (line 559): `$improved identify` says strength +1; the sword gives Str +2, Div +2 and

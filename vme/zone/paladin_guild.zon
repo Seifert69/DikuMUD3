@@ -56,14 +56,14 @@ creators {"cabal", "bakka", "whistler"}
 
 notes
 "This is a zone for high level holy fighters. Current restrictions on the
-class include: for entrance pc must be above level 39, have completed wight
-warren quest, have an alignment of above +700, and have completed the paladin
-quest; for continued membership, player must keep an alignment above level
-+700; to leave the guild there are no limitations, but it does implement a
-quest bit of Fallen From Grace, preventing re-entry into the guild.<br/>
-Contact Cabal (bclark@magicnet.net) - <div class='cpr'>Warning! Not active admin!</div><div class='cw'><br/>
-Sk(r)ay email </div><div class='cpr'>otap@dorit.ihi.ku.dk</div><div class='cw'> <br/>
-</div>"
+class include: for entrance pc must have an alignment of 350 or above, be a
+protected citizen of Midgaard and not an outlaw there, have completed the
+paladin quest (the head of the Frozen Shade, brought to Joan), and not be
+a Fallen Paladin; for continued membership, player must keep an alignment
+of 350 or above; to leave the guild there are no limitations, but it does
+implement a quest bit of Fallen From Grace, preventing re-entry into the
+guild.<br/>
+Cabal and Sk(r)ay are no longer active admins.<br/>"
 
 %dil
 
@@ -1521,11 +1521,10 @@ extra {"runes on the Amulet","runes","rune","sign"}
 extra {"$identify"}
 "The Amulet of the Righteous can only be used by Paladins and protects
 them from evil during their travels. Beware, as the symbol has no mercy
-for those weak in their dedication. The Amulet will increase your
-Constitution to better withstand the perils of the road.<br/>"
+for those weak in their dedication.<br/>"
 extra {"$improved identify"}
-"The bonus to Con is 1. Brain of 6 and Divine of 6 is required to use the
-Amulet.<br/>"
+"It gives no bonus to your abilities. Only members of the Paladin guild
+can use the Amulet.<br/>"
 extra {"$wear_s"}
 "Reverently, you slip your $2N around your neck."
 extra {"$wear_o"}

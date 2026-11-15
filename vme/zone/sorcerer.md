@@ -15,7 +15,7 @@
 4. **inside_tower2, inside_tower3** (lines 500, 523): both say "There is an exit leading to the
    entrance and the other directions lead onward through the first floor of the tower", copied from
    inside_tower1, but each has a single exit back east/west to inside_tower1. Reword them as dead
-   ends?
+   ends? Fixed (text follows the world): inside_tower2/3 now say the only way out leads back to the entrance.
 5. **neutral_mage**: vmc warns she carries too much money for her level (2 gold). She is a test
    opponent for sorcerers; keep it?
 6. **vorous2** (line 1480): vmc warns that the title "the dagger 'Vorous'" ends with a non-letter.

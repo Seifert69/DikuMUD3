@@ -108,7 +108,7 @@ descr
 "    This is a small dirty bed chamber. Small beds rest against the walls. It's
 very hot in here and the air is heavy with moisture. Water is drifting down the
 walls. You wonder who can live in this mess. A torch is hanging on the wall,
-lighting the room in a dim light. The only way from this room is to the east."
+lighting the room in a dim light. Ways lead east and north."
 extra {"torch"}
 "  The torch is of the refill-type. It is stuck on the wall, so just forget
 to take it with you."
@@ -982,7 +982,7 @@ extra {}
 "   Boo is really looking bored, listening to Baa. She is wearing normal
 yellow leather-armour."
 
-M_GOBLIN_WARRIOR_SWORD(3, SEX_MALE)
+M_GOBLIN_WARRIOR_SWORD(3, SEX_FEMALE)
 money 15 IRON_PIECE
 
 dilcopy teamwork@function("baa / officer / cook");
@@ -1015,7 +1015,7 @@ code
     pause;
     exec("laugh baa", self);
     pause;
-    exec("emote points a finger to his ear, indicating that Baa isn't too smart.", self);
+    exec("emote points a finger to her ear, indicating that Baa isn't too smart.", self);
     pause;
     exec("say Yes da gods are wimps.", self);
     pause;

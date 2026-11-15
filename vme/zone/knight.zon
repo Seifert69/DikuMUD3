@@ -120,7 +120,8 @@ goodness they have purged from the land and other battles they have had. This
 hall is very spacious, with its ceiling towering into the darkness, several
 large tables are placed here and there. It's very well ventilated and the
 air is fresh, not like the sewers leading into this dark sanctum. The hall
-continues in all directions except to south where a large tapestry hangs."
+continues in all directions, and to the south a large tapestry hangs over the
+way to the Master's Chambers."
 extra {"ceiling"}
 "You can vaguely make out some glowing symbols traced on the ceiling. Although
 the symbols are unreadable, you feel the dark forces at work just from looking
@@ -397,7 +398,7 @@ end
 
 hilary
 names {"Lady Hilary","hilary","lady","teacher"}
-title "Maid Hilary"
+title "Lady Hilary"
 descr
 "Lady Hilary, teacher of the magics of the dark forces awaits her next pupil here."
 extra {}
@@ -787,8 +788,7 @@ extra {"engraving","symbol","runes","sign"}
 extra {"$identify"}
 "The Pendant of Darkness can only be used by the Dark Knights and protects
 them from good during their travels. Beware, as the symbol has no mercy
-for those weak in their dedication. The pendant will increase your
-Constitution to better withstand the perils of the road.<br/>"
+for those weak in their dedication.<br/>"
 extra {"$improved identify"}
 "The dark forces prevent your feeble mind from gaining any more information.<br/>"
 extra {"$wear_s"}

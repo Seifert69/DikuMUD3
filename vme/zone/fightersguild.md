@@ -9,7 +9,7 @@
 3. **bastardsword** (line 1087): the identify texts say Str +1, sword +3, craftsmanship 5 and magic
    bonus 3; the item is `WEAPON_DEF(... BONUS_AVERAGE, BONUS_AVERAGE)` with sword +1 only. Nothing
    loads it (its reset is commented out). Fix the text, the stats, or remove the item?
-4. **tower** (line 463): the description doesn't mention the exit east to the bar. Add it?
+4. **tower** (line 463): the description doesn't mention the exit east to the bar. Add it? Fixed (text follows the world): tower description now mentions the opening east to the bar.
 
 ## Step 2
 

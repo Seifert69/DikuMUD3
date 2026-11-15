@@ -11,7 +11,7 @@
 3. **faeld** (line 922): alignment 1000, while every other barbarian has 0. Intended?
 4. **hall_n** (line 493): the description ends in a sentence without a verb ("An assortment of
    objects from across the land, representing the far-ranging escapades ... necessary for living.").
-   What was meant? Perhaps "An assortment of objects ... is on display".
+   What was meant? Perhaps "An assortment of objects ... is on display". Fixed (text follows the world): added "is on display" verb to the last sentence.
 5. **gate_guard** (line 655): "The barbarian guards appear to exist without physical match." Meant
    "without equal"/"without match"?
 6. **nokill** (line 150): checks `pc.type` before `pc` is set, so the NPC check never works. DIL,

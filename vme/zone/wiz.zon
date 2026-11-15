@@ -597,8 +597,7 @@ title "The Grand Quest Hall"
 descr
 "    You have arrived in the vaulted Quest Hall, where gods discuss
 the tasks they will set for mortals. Many devious schemes and terrible
-secrets have echoed off its ancient stones. The owners of this place
-obviously have no need of exits, as none are provided."
+secrets have echoed off its ancient stones."
 movement SECT_INSIDE
 flags {UNIT_FL_SACRED}
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
@@ -627,7 +626,7 @@ title "The Hall of History"
 descr
 "
 The Hall of history, a swirling chaos of things that might have been
-and things that might be, is as insubstantial as it is vast and exitless.
+and things that might be, is as insubstantial as it is vast.
 Occasionally, lumps of potential history form here for the review of
 the gods, before being dumped into the mortal world."
 movement SECT_INSIDE

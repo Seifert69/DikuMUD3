@@ -33,7 +33,7 @@
 8. **moot_debe** (line 9072): Dellinger's belt has `MANIPULATE_WEAR_FEET`, and the reset equips it on
    WEAR_WAIST. Should it be `MANIPULATE_WEAR_WAIST`?
 9. **moot_beco** (line 8727): Besri's coat is "a brown coat" (title, descr and material "A heavy brown
-   wool"), but its description says "A black overtunic". Brown or black?
+   wool"), but its description says "A black overtunic". Brown or black? Fixed (text follows the world): Besri's coat description now says brown overtunic.
 
 ## Step 2
 

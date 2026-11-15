@@ -3312,7 +3312,7 @@ extra {}
 "Mrs. Claus is one of the warmest, jolliest souls you have ever laid eyes on."
 alignment +1000
 level 150
-sex SEX_MALE
+sex SEX_FEMALE
 weight 100
 height 30
 race RACE_SPIRIT
