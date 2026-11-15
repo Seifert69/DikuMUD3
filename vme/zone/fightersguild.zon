@@ -84,7 +84,7 @@ code
             block;
 
    self.hp := self.max_hp;
-   act("The sounds of battle attract attention of the training mercenaries.",
+   act("The sounds of battle attract the attention of the training mercenaries.",
    A_ALWAYS, pc, self, null, TO_ALL);
    act("Several of them charge into the room, grabbing you and repeatedly "+
    "smashing your head into the wall!", A_ALWAYS, pc, self, null, TO_CHAR);
@@ -99,7 +99,7 @@ code
    "$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
    room := findroom("col_sq3@midgaard");
    link(pc,room);
-   act("Two large warriors emerge from the Guild houses, dragging $1n"+
+   act("Two large warriors emerge from the Guild houses, dragging $1n "+
    "between them and dump $1m unceremoniously on the street."
    ,A_SOMEONE,pc,self,null,TO_REST);
 
@@ -161,7 +161,7 @@ code
    if ((item.objecttype!=ITEM_WEAPON)and(item.objecttype!=ITEM_ARMOR)
    and(item.objecttype!=ITEM_SHIELD))
    {
-   exec("exec stares at the "+item.name+".", self);
+   exec("emote stares at the "+item.name+".", self);
    exec("say I am sorry, this item is beyond my skills.",self);
    exec("give "+item.name+" "+pc.name,self);
    goto gone;
@@ -183,7 +183,7 @@ code
 
    if (i==1)
    {
-   exec("emote rubs gently the surface of "+item.title+", mumbling to "+
+   exec("emote gently rubs the surface of "+item.title+", mumbling to "+
    "herself...",self);
    goto effect;
    }
@@ -207,15 +207,15 @@ code
       { craft:="very bad"; goto effect2; }	/* craft below -5  */
    if (item.value[1] < 0)
       { craft:="bad"; goto effect2; }		/* craft below 0   */
-   if ((item.value[1] > -1) and (item.value[2] < 3))
+   if ((item.value[1] > -1) and (item.value[1] < 3))
       { craft:="average"; goto effect2; }   	/* craft 0-2	*/
-   if ((item.value[1] > 2) and (item.value[2] < 5))
+   if ((item.value[1] > 2) and (item.value[1] < 5))
       { craft:="above average"; goto effect2; }  /* craft 3-4	*/
-   if ((item.value[1] > 4) and (item.value[2] < 8))
+   if ((item.value[1] > 4) and (item.value[1] < 8))
       { craft:="fine"; goto effect2; }	/* craft 5-7	*/
-   if ((item.value[1] > 7) and (item.value[2] < 11))
+   if ((item.value[1] > 7) and (item.value[1] < 11))
       { craft:="excellent"; goto effect2; }	/* craft 8-10	*/
-   if ((item.value[1] > 10) and (item.value[2] <16))
+   if ((item.value[1] > 10) and (item.value[1] <16))
       { craft:="amazing"; goto effect2; }	/* craft 11-15	*/
    if (item.value[1] > 15)
       { craft:="unique"; goto effect2; }	/* craft over 15 */
@@ -288,7 +288,7 @@ code
    exec("say "+pc.name+", "+item.title+" seems to be an armour with "+
    "protection equivalent to at least "+prot+".",self);
    pause;
-   exec("say The craftmanship seems to be "+craft+" and there seems to be a "+
+   exec("say The craftsmanship seems to be "+craft+" and there seems to be a "+
    mag+" enchantment placed on it.",self);
    exec("emote gives "+item.name+" to "+pc.name,self);
    link(item, pc);
@@ -298,7 +298,7 @@ code
    {
    exec("say "+pc.name+", "+item.title+" will protect you as a "+prot+".",self);
    pause;
-   exec("say Your "+item.name+" is of "+craft+" craftmanship and there seems to "
+   exec("say Your "+item.name+" is of "+craft+" craftsmanship and there seems to "
    +"be a "+ mag+" enchantment empowering it.",self);
    exec("emote gives "+item.name+" to "+pc.name,self);
    link(item, pc);
@@ -328,7 +328,7 @@ gmap(188,233)
 descr
 "    You are standing in a vast gate entrance of a fortress yard. There is
 a big sign hanging on the wall. The way west leads out into the Swordsman
-Way, and portcullis of incredible dimensions functions as a gate there.
+Way, and a portcullis of incredible dimensions functions as a gate there.
 The east opens into the yard."
 extra {"portcullis","gate"}
 "Huge and imposing."
@@ -341,11 +341,10 @@ extra {"sign", "wall"}
 "The sign says:<pre><br/>
 <br/>
    Welcome to the Midgaard Fighters' Guild.<br/>
-   <pre>
    'join'           - join this guild (if you qualify!).
    'title'          - changes your title to a new and better one.
    'worship'        - ... 
-   </pre><br/>
+   <br/>
 
 <br/>
    - Sir Arthur the Guild Master.<br/>
@@ -426,7 +425,7 @@ gmap(188,308)
 descr
 "    This place is hot-aired, due to the fact that an open furnace is
 burning intensely here. It is kept going by a mechanical setup of sprockets
-and transaxels, powered, as you estimate, by the flow from a local water
+and transaxles, powered, as you estimate, by the flow from a local water
 source. The smithy opens out into the yard to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
@@ -445,7 +444,7 @@ title "The Bridge"
 gmap(338,308)
 descr
 "    This is a low hanging bridge running over an oblong pond that looks
-deep. Fresh air blows through here and chills you to the bone. Be as
+deep. Fresh air blows through here and chills you to the bone. Be that as
 it may, this makes you fresh to practice the weapons of a fighter. To the
 west of here lies the yard."
 extra {"oblong pond","pond"}
@@ -516,7 +515,7 @@ extra {"gold plated sign", "sign", "wall"}
     reasonable price of only one silver coin.<br/>
 <br/>
     Give the item in question to Cleena for an approximate evaluation of<br/>
-    the craftmanship and the magical enchantment.<br/>
+    the craftsmanship and the magical enchantment.<br/>
 <br/>
     Notice: the examination will give you the basic idea of the quality<br/>
     of your weapons, armour or shield, but any complex enchantment is<br/>
@@ -558,7 +557,7 @@ extra {"big sign","sign"}
 <br/>
    'title'      - to get a new title (if you deserve it!).<br/>
 <br/>
-Members, remember to show respect to you master by bowing or worshipping<br/>
+Members, remember to show respect to your master by bowing or worshipping<br/>
 him. The Fighters' Guild is rich and can aid you with minor items, should<br/>
 you be deemed worthy.<br/>
 <br/>
@@ -573,14 +572,14 @@ names {"the fighters bar"}
 title "At `The Broken Shield'"
 gmap(413,233)
 descr
-"The bar is filled with mercenaries and fighters of all kind, most of
+"The bar is filled with mercenaries and fighters of all kinds, most of
 them drinking heavily, chatting and exchanging tales. Candles illuminate
 the place and the smell of food makes your mouth water. The north wall is
 inset with a long bar with a selection of ales and beers. A large sign
 hangs over the counter."
 extra {"people in the bar","people","mercenaries","fighters","fighter",
 "mercenary","drinkers"}
-"Rugged fighters of all kind. You join the chat for a while and feel
+"Rugged fighters of all kinds. You join the chat for a while and feel
 strongly like ordering a beer.<br/>"
 extra {"bar"}
 "The long bar features a barmaid and a selection of ales and beers to
@@ -692,7 +691,7 @@ wait (SFB_DONE, command ("worship")and(self ==target));
       item := load("fight_belt@fightersguild");
       item.height := pc.height;
       link(item, pc);
-      sendtext("Sir Arthur hands you a belt.<br/>.",self);
+      sendtext("Sir Arthur hands you a belt.<br/>",pc);
       act("$3n hands $1n a belt.",A_SOMEONE,pc,null,self,TO_REST);
       pause;
       exec ("say There you go. Run along now.", self);pause;
@@ -758,7 +757,7 @@ names {"Sir Lancelot","lancelot"}
 title "Sir Lancelot the Brave"
 descr "Sir Lancelot the Brave stands here, ready to face any opponent."
 extra {}
-"An example of a honorable knight and a mighty warrior... you think."
+"An example of an honorable knight and a mighty warrior... you think."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
 
@@ -818,7 +817,7 @@ descr "Cleena the Metallurgist is busy at work here."
 extra {}
 "As a metallurgist, Cleena found employment in the Fighters' Guild, where
 weapons and armour are examined on a daily basis. Her skills with armour
-and weapons are said to be unexcelled, insofar theoretical knowledge is
+and weapons are said to be unexcelled, insofar as theoretical knowledge is
 concerned."
 M_AVG_HUMAN(60, SEX_FEMALE)
 exp 0
@@ -856,7 +855,7 @@ dilcopy shopkeeper@function(
    "$1n exclaims, 'One $2N coming right up!'",
    "$1n says, 'Excellent, it's a deal, $3n.'",
    "$1n says, 'This is too costly for me, $3n.'",
-   "$1n asks, 'I'm having a break, can you stop by later?.'" },
+   "$1n asks, 'I'm having a break, can you stop by later?'" },
 {},"",100,10,2*PLATINUM_MULT,"",""
 );
 
@@ -865,7 +864,7 @@ dilcopy MurderBanish@guilds(GUILD_UDG_FIGHTER);
 dilcopy AlertMembers@guilds(GUILD_UDG_FIGHTER, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_FIGHTER_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of the Male Griffon from Warntz."},
          {"say Excellent! Best of luck, $1N."},
          "Maia in the Fighter's Guild has asked you to bring her the head of the Male Griffon from Warntz.",
@@ -914,7 +913,7 @@ title "the barbarian"
 descr "A barbarian hero sits in the corner of the bar, drinking and boasting
 of his deeds."
 extra {}
-"Muscular and clad in leather-and-fur outfit, with a huge bastard sword
+"Muscular and clad in a leather-and-fur outfit, with a huge bastard sword
 leaning on his table and a cape of wolf-fur piled at his feet, this
 barbarian is not so much drinking, as quaffing from the mug made tiny by
 his huge fist."
@@ -964,18 +963,18 @@ several ACTs to make the swordplay more exciting. */
 
 
         fight_belt
-names {"Swordman's Belt","belt"}
-title "Swordsman's Belt"
+names {"Swordsman's Belt","belt"}
+title "a Swordsman's Belt"
 descr "A broad belt with a sword sheath lies here."
 extra {}
 "A broad, strong belt with a sheath for your sword. It seems a typical
 fighter's item and, true enough, you notice a symbol of the Fighters
 Guild on the buckle of the belt."
 extra {"sheath on the belt","sheaths","sheath"}
-"The sheath fit your weapons, but you'd rather have them ready in your
+"The sheath fits your weapons, but you'd rather have them ready in your
 hands.<br/>"
 extra {"buckle of the belt","buckle","symbol"}
-"The symbol on the buckle is the sign of Fighters Guild in Midgaard.<br/>"
+"The symbol on the buckle is the sign of the Fighters Guild in Midgaard.<br/>"
 extra {"$identify"}
 "The belt is only usable by Midgaard Fighters and will increase their
 strength and their sword skills.<br/>"
@@ -1039,7 +1038,7 @@ if (flux < 30)
 {
 act("You follow up your attack with a fist, just to show you mean it."
 , A_ALWAYS,pc,item,vict,TO_CHAR);
-act("$1n follows up $1s attack with a punch, just to show, $1e means it."
+act("$1n follows up $1s attack with a punch, just to show $1e means it."
 ,A_ALWAYS,pc,item,vict,TO_NOTVICT);
 act("$1n's fist smashes into your face!",A_ALWAYS,pc,item,vict,TO_VICT);
 goto start ;
@@ -1058,7 +1057,7 @@ if (flux < 50)
 {
 act("You smack $3n in the head with the hilt of your $2N."
 , A_ALWAYS,pc,item,vict,TO_CHAR);
-act("$1n smashes $3n in the head with his $2N!",
+act("$1n smashes $3n in the head with $1s $2N!",
 A_ALWAYS,pc,item,vict,TO_NOTVICT);
 act("$1n smashes the hilt of $1s $2N in your face!"
 ,A_ALWAYS,pc,item,vict,TO_VICT);
@@ -1098,7 +1097,7 @@ extra {"$improved identify"}
 "The magic of the tribal shamans will increase your Strength by one and
 your sword-fighting abilities by 3% whenever you wield it. However, this
 weapon is too large to be used as a secondary weapon.<br/>
-This sword is of craftmanship 5 and magic bonus 3.<br/>"
+This sword is of craftsmanship 5 and magic bonus 3.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 WEAPON_TRANSFER(WPN_SWORD, BONUS_AVERAGE_PLUS)  // Xyzzy: +1

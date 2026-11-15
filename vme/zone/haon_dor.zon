@@ -36,7 +36,7 @@ the darker and more dangerous the forest becomes. Beginners should never
 go into the deep, dark forest beyond the dense forest.<br/><br/>
 
 Haon-Dor contains many small animals, a cabin, an orc camp and many other
-secrets in the deep, dark, forest. There is a beginners quest at the cabin.
+secrets in the deep, dark forest. There is a beginners quest at the cabin.
 Zone by Quifael and Papi"
 
 %dil
@@ -188,7 +188,7 @@ ALWAYS_LIGHT
 extra "fireplace" "The fire crackles softly in the fireplace."
 
 extra "piano"
-"This is Rejji's piano.It is a chestnut console. The keys are ivory and ebony.
+"This is Rejji's piano. It is a chestnut console. The keys are ivory and ebony.
 It looks very well taken care of, and played often."
 
 extra "couch"
@@ -233,7 +233,7 @@ feather pillows. It is a very elegant bed. Except for the pair of hand
 cuffs on  the bed post...hummm..."
 
 extra "table"
-"This table has a bottle of champaign chilling on it. There are two
+"This table has a bottle of champagne chilling on it. There are two
 glasses and a single red rose placed next to it. It looks like Lightlord
 and Rejji are planning for a night in!"
 
@@ -250,7 +250,7 @@ end
                                  lr_room3
 
 
-title "Rejji's room"
+title "Rejji's Room"
 descr "This is Rejji's room. Her bed looks warm and inviting. In the
 southeast corner of the room is her desk. A large bouquet of roses is in
 a vase on the desk. Hanging above the desk is a painting of a very mysterious
@@ -497,7 +497,7 @@ end
 title "A Trail Through the Dense Forest"
 descr
 "You are on a trail leading east through the dense forest.  To the west,
-the trees are so huge and their crowns so dense that forest remains in
+the trees are so huge and their crowns so dense that the forest remains in
 total darkness.  A small path leads south through the trees."
 
 extra {"path","paths"}
@@ -505,7 +505,7 @@ extra {"path","paths"}
 extra {"trail"}
 "The forest trail seems almost fragile compared to the massive trunks."
 extra {"tree","trees"}
-"The crowns of the old trees almost cut out all light and makes it
+"The crowns of the old trees almost cut out all light and make it
 impossible to enter the forest from here. However it seems that you
 can enter the dark forest south of here."
 
@@ -519,7 +519,7 @@ west to path_8@fields descr
 east to rn_6003 descr
 "The trail continues eastwards through the dense forest.";
 south to rn_6005 descr
-"The small path leads south through the trees..";
+"The small path leads south through the trees.";
 end
 
 
@@ -540,7 +540,7 @@ gmap(508,307)
 
 OUT_DARK_NON_NOON
 west to rn_6100 descr
-"The narrow trail almost seems to disappear between the enourmous trunks.";
+"The narrow trail almost seems to disappear between the enormous trunks.";
 north to rn_6004 descr
 "The small path leads north through the trees.";
 south to rn_6006 descr
@@ -648,7 +648,7 @@ lock." keyword {"wooden door", "door", "cabin"};
 extra {"cabin","logs"}
 "It looks simple but comfortable and the slender trees make the whole place
 seem
-pretty idyllic..  It's a cabin built from logs.  Wooden logs, not system
+pretty idyllic.  It's a cabin built from logs.  Wooden logs, not system
 logs."
 extra {"path","paths"}
 "The path is probably used by the cabin's inhabitants."
@@ -670,7 +670,7 @@ end
 title "Inside the Cabin"
 descr
 "You are inside a small one-room cabin made entirely from heavy logs.  It is
-very sparsely furnished, containing only most basic housekeeping equipment,
+very sparsely furnished, containing only the most basic housekeeping equipment,
 such as a bed, a chair and a table."
 
 extra {"bed"}
@@ -881,11 +881,11 @@ gmap(615,439)
 north to rn_6023 descr
 "The path leads north to a small, grassy field.";
 east to rn_6017 descr
-"The path leads east to a dense part of the forest..";
+"The path leads east to a dense part of the forest.";
 west to rn_6019 descr
 "The path leads west to a dense part of the forest.";
 south to lightriver descr
-"You can easilly reach the river from here.";
+"You can easily reach the river from here.";
 end
 
 
@@ -1036,7 +1036,7 @@ and south."
 east to rn_6025 descr
 "The small path leads east through the trees.";
 west to rn_6027 descr
-"The small path leads east through the trees.";
+"The small path leads west through the trees.";
 south to rn_6003 descr
 "The small path leads south through the trees.";
 extra {"path","paths"}
@@ -1066,11 +1066,6 @@ north to rn_6026 descr
 "The small path leads north through the trees.";
 west to rn_6024 descr
 "The small path leads west through the trees.";
-extra {"path","paths"}
-"The narrow path is probably used by the animals living in the forest."
-extra {"tree","trees"}
-"The crowns of the old trees leave the forest in an unreal twilight
-illumination."
 
 movement SECT_FOREST
 gmap(574,241)
@@ -1088,7 +1083,7 @@ north into the tower."
 extra {"tree","trees"}
 "The trees are mostly old beeches and oaks."
 extra {"bronzewood door","door"}
-"The trees are mostly old beeches and oaks."
+"The bronzewood door leads north into the tower."
 
 movement SECT_FOREST
 gmap(574,207)
@@ -1115,11 +1110,6 @@ north to rn_6028 descr
 "The small path leads north through the trees.";
 east to rn_6024 descr
 "The small path leads east through the trees.";
-extra {"path","paths"}
-"The narrow path is probably used by the animals living in the forest."
-extra {"tree","trees"}
-"The crowns of the old trees leave the forest in an unreal twilight
-illumination."
 
 movement SECT_FOREST
 gmap(508,241)
@@ -1283,7 +1273,7 @@ title "A Narrow Trail Through the Deep, Dark Forest"
 descr
 "You are on a dusty trail winding its way east-west between huge, ancient
 trees
-whose grey trunks remind you of ancient pillars in a enormous, deserted hall.
+whose grey trunks remind you of ancient pillars in an enormous, deserted hall.
 To the south, a frail path leads away from the trail."
 east to rn_6100 descr
 "The narrow, dusty trail leads east through the forest.";
@@ -1295,7 +1285,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "These ancient trees must have been here for many, many years.  It is
@@ -1326,7 +1316,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "These ancient trees must have been here for many, many years.  It is
@@ -1486,7 +1476,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "These ancient trees must have been here for many, many years.  It is
@@ -1538,7 +1528,7 @@ stand
 close on all sides.  The trail leads east and south.  To the north, a narrow
 path leads away from the trail."
 north to rn_6144 descr
-"The narrow path leads west between the giant trees.";
+"The narrow path leads north between the giant trees.";
 east to rn_6109 descr
 "The narrow, dusty trail leads east through the forest.";
 south to rn_6111 descr
@@ -1547,7 +1537,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "Some of the trunks to the west are covered in a thin, almost transparent
@@ -1604,7 +1594,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "These ancient trees must have been here for many, many years.  It is
@@ -1724,7 +1714,7 @@ end
 title "A Junction in the Deep, Dark Forest"
 descr
 "You are by a junction where three paths meet.  Ancient, grey trees seem to
-observe you silently you from all sides.  Paths lead north, east and west."
+observe you silently from all sides.  Paths lead north, east and west."
 north to rn_6106 descr
 "The narrow path winds its way through the trees to the north.";
 east to rn_6118 descr
@@ -1747,7 +1737,7 @@ end
 
                 rn_6118
 
-title "A small path in the deep, dark forest"
+title "A Small Path in the Deep, Dark Forest"
 descr
 "You are on a narrow path leading through the deep, dark forest.  Ancient,
 grey trees loom everywhere.  The path continues south and west."
@@ -1799,7 +1789,7 @@ end
 title "On the River Bank in the Deep, Dark Forest"
 descr
 "You are on a narrow path leading through the deep, dark forest.  To the south
-beyond the trees you see a river is flowing eastwards through the forest.
+beyond the trees you see a river flowing eastwards through the forest.
 Ancient grey trees loom on both banks.  The path continues north and west."
 
 north to rn_6119 descr
@@ -1901,7 +1891,7 @@ east to rn_6124 descr
 west to rn_6125 descr
 "The narrow path winds its way through the trees to the west.";
 south to darkriver1 descr
-"You can get down to the river from here but the dark and cold water give you
+"You can get down to the river from here but the dark and cold water gives you
 second thoughts.";
 
 extra {"river"}
@@ -1993,7 +1983,7 @@ extra {"trail"}
 "The dark and dusty trail seems fragile compared to the massive trunks, and in
 some places, giant grey roots have broken up through its surface."
 extra {"path"}
-"The path seems fragile and unsafe compared to the enourmous trunks that loom
+"The path seems fragile and unsafe compared to the enormous trunks that loom
 around it."
 extra {"tree","trees","trunk","trunks"}
 "These ancient trees must have been here for many, many years.  It is
@@ -2173,8 +2163,8 @@ end
 
 title "On the Spider Web"
 descr
-"You are balancing carefully on the giant sticky threads that holds the giant
-web in place..  To the east is a giant tree trunk and to the west is an
+"You are balancing carefully on the giant sticky threads that hold the giant
+web in place.  To the east is a giant tree trunk and to the west is an
 entrance
 to a cave-like structure made from many layers of spider web."
 east open {EX_CLIMB} difficulty 25 to rn_6132 descr
@@ -2199,7 +2189,7 @@ end
 title "The Den of the Queen Spider"
 descr
 "You are inside a cave-like structure that seems to be made entirely from
-countless layers of spider web.  Temperature and humidity is very high making
+countless layers of spider web.  Temperature and humidity are very high making
 it hard to breathe the foul air that lingers here.  The walls are covered with
 open cocoons."
 east open {EX_CLIMB} difficulty 25 to on_web descr
@@ -2208,7 +2198,7 @@ extra {"web","wall","walls"}
 "The sticky walls are covered with open cocoons."
 extra {"cocoon","cocoons"}
 "The cocoons are burst open as if something inside really wanted to get out.
-They are at the size of a human head."
+They are about the size of a human head."
 
 movement SECT_FOREST
 gmap(197,286)
@@ -2219,7 +2209,7 @@ end
 
                 rn_6135
 
-title "A a Dusty Trail in the Deep, Dark Forest"
+title "A Dusty Trail in the Deep, Dark Forest"
 descr
 "You are on a dusty trail leading through the deep, dark forest.  Ancient grey
 trees loom all around you.  The trail continues north and east."
@@ -2457,8 +2447,8 @@ code
 dilend
 
 dilcopy qstSimpleQuest@quests(QUEST_JOHN,
-         {"say Hey I could use some help.",
-          "say You wouldn't happen to have a left over axe? I really could use one"},
+         {"say Hey, I could use some help.",
+          "say You wouldn't happen to have a leftover axe? I really could use one."},
          {"say You're a real pal."},
          "John the Lumberjack in Haon-Dor has asked you to find him an axe.",
          {"thank $1N",
@@ -2478,8 +2468,8 @@ end
                 mary
 
 names {"Mary","wife"}
-title "Mary the Lumberjack Wife"
-descr "Mary the Lumberjack Wife is here."
+title "Mary the Lumberjack's Wife"
+descr "Mary the Lumberjack's Wife is here."
 extra {}
 "She is a small plump woman, about five feet tall."
 
@@ -2517,8 +2507,8 @@ dilcopy qstItemsWanted@quests(QUEST_RABBIT,
             {"mushroom", "black_berries@haon_dor", "garlic", "corpse of the cute rabbit"},
             {"","","",""},
             {"say Thank you $1N, these are really nice mushrooms.",
-             "say Thank you $1N these are really nice berries.",
-             "say Thank you $1N this is really some nice garlic.",
+             "say Thank you $1N, these are really nice berries.",
+             "say Thank you $1N, this is really some nice garlic.",
              "say Look at all the blood, $1N! Well I thank you anyway."},
             "say Thank you $1N but I need some mushrooms, berries, garlic and a dead rabbit.");
 
@@ -2621,7 +2611,7 @@ code
       // Quest accepted
       exdp := qstAssign@quests(QUEST_POT, pc, 
          {"say Thank you dearly $1N.", 
-         "say The orc live somewhere in a cave in the northern part of the Haon-Dor forest.",
+         "say The orcs live somewhere in a cave in the northern part of the Haon-Dor forest.",
          "say Please be careful $1N."},
          "Retrieve Mary's cooking pot from the orc chief in the northern part of Haon-Dor.");
    }
@@ -2801,7 +2791,7 @@ end
                 papi_kitt
 names {"kitten", "cat"}
 title "the tiny black kitten"
-descr "A  tiny black kitten is chasing its tail here."
+descr "A tiny black kitten is chasing its tail here."
 extra {}
 "She is a graceful creature, with sleek black fur."
 M_CAT_TINY(2,SEX_FEMALE)
@@ -2924,7 +2914,7 @@ code
 
    :loop:
    exec("emote snores loudly.", self); pause;
-   exec("emote breaks a wind.", self); pause;
+   exec("emote breaks wind.", self); pause;
    exec("emote turns in his sleep.", self); pause;
    exec("emote scratches his chest.", self); pause;
    exec("emote farts in your general direction.", self); pause;
@@ -2974,7 +2964,7 @@ code
   pause;
   exec("emote scratches his chest.", self);
   pause;
-  exec("emote breaks a wind.", self);
+  exec("emote breaks wind.", self);
   pause;
   exec("emote digs something green out of his nose and eats it.", self);
   pause;
@@ -3166,10 +3156,10 @@ end
 
 names {"green dragon","dragon"}
 title "the huge, green dragon"
-descr "A huge green dragon is here, its narrow yellow eyes glowing with rage.."
+descr "A huge green dragon is here, its narrow yellow eyes glowing with rage."
 extra {}
 "This enormous winged serpent has dark green scales covering most of its
-colossal body.  Numerous holes in its heavy wings tell of many fights as does
+colossal body.  Numerous holes in its heavy wings tell of many fights as do
 the nicks in the horns on its head.  It smells as disgusting as only dragons
 do."
 M_DRAGON_GREEN_SMALL(42,SEX_FEMALE)
@@ -3183,6 +3173,7 @@ code
    on_activation(self.position != POSITION_STANDING, skip);
 
    :start:
+   nopriority;
    heartbeat := PULSE_SEC * 4;
 
    :findmob:
@@ -3192,9 +3183,9 @@ code
    if ( this_ptr == null ) goto start;
 
   
+if (this_ptr.vlevel <= 70) goto start;
    priority;
    secure(this_ptr, start);
-if (this_ptr.vlevel <= 70) goto start;
  
    act("$1n roars at you!", A_SOMEONE, self, null,
         this_ptr, TO_VICT);
@@ -3218,8 +3209,8 @@ names {"poisonous spider","spider"}
 title "the huge, poisonous spider"
 descr "A huge, poisonous spider is here."
 extra {}
-"This disgusting creature is at the size of a human crawling on all four.  It
-has eight hairy legs that gives it a tremendous speed on almost any surface
+"This disgusting creature is about the size of a human crawling on all fours.  It
+has eight hairy legs that give it a tremendous speed on almost any surface
 and sharp poisonous fangs to paralyze or kill its prey."
 M_SPIDER_TINY(15,SEX_MALE)
 dilcopy spider();
@@ -3232,8 +3223,8 @@ names {"poisonous spider","spider"}
 title "the huge, poisonous spider"
 descr "A huge, poisonous spider is here."
 extra {}
-"This disgusting creature is at the size of a human crawling on all four.  It
-has eight hairy legs that gives it a tremendous speed on almost any surface
+"This disgusting creature is about the size of a human crawling on all fours.  It
+has eight hairy legs that give it a tremendous speed on almost any surface
 and sharp poisonous fangs to paralyze or kill its prey."
 M_WEB_SPIDER_TINY(10,SEX_MALE)
 
@@ -3245,7 +3236,7 @@ names {"queen spider","spider"}
 title "the Queen Spider"
 descr "The huge, bulky Queen Spider is here."
 extra {}
-"This disgusting creature is at the size of a small elephant.  It has eight
+"This disgusting creature is about the size of a small elephant.  It has eight
 huge, hairy legs that would give it a tremendous speed on almost any surface
 if it wasn't so immensely fat.  Its large, bulbous eyes stare back at you."
 M_SPIDER_SMALL(26,SEX_NEUTRAL)
@@ -3261,7 +3252,7 @@ title "Shargugh"
 descr "Shargugh the Forest Brownie is here, grinning broadly at you."
 extra {}
 "This little fellow is only three foot tall with wild matted brown hair and
-long tangled brown beard.  He wears ragged brown and green clothing and looks
+a long tangled brown beard.  He wears ragged brown and green clothing and looks
 as if he is having great fun."
 flags {UNIT_FL_INVISIBLE}
 romflags {CHAR_WIMPY, CHAR_DETECT_INVISIBLE, CHAR_SNEAK}
@@ -3288,7 +3279,7 @@ code
   {
     exec("follow "+char.name, self);
     pause;
-    exec("ventriloquate "+char.name+" You fight like a whimp, I don't want to group with you!", self);
+    exec("ventriloquate "+char.name+" You fight like a wimp, I don't want to group with you!", self);
     pause;
     exec("ventriloquate "+char.name+" Well you are just plain stupid, get lost!", self);
     pause;
@@ -3305,7 +3296,7 @@ code
     num2:=rnd(1,4);
     if(num2==1)
     {
-      act("The flapping of bat-wings are heard just overhead.",
+      act("The flapping of bat-wings is heard just overhead.",
 	  A_SOMEONE, self, null, null, TO_ALL);
       pause;
       goto init;
@@ -3370,7 +3361,7 @@ end
 names {"light beam", "beam", "light"}
 title "a blazing beam of light"
 descr
-"A small but balzing beam of light shines from the candle"
+"A small but blazing beam of light shines from the candle."
 CONTAINER_DEF(5000)
 cost 100 PLATINUM_PIECE
 weight 1
@@ -3379,21 +3370,21 @@ manipulate {MANIPULATE_ENTER}
 dilcopy force_move@function(15,"market_sq@midgaard!You are transported!", TRUE);
 
 extra {}
-"This definately looks divine in nature."
+"This definitely looks divine in nature."
 end
 #endif
 
                            rabbit_foot
 
 names {"rabbit foot", "foot"}
-title "a small rabbits foot"
+title "a small rabbit's foot"
 descr "A rabbit foot necklace has carelessly been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_NECK}
 flags {UNIT_FL_MAGIC}
 weight 1
 cost 1 SILVER_PIECE
 extra {}
-"It looks like one of those lucky rabbit foots on a leather strap so that
+"It looks like one of those lucky rabbit's feet on a leather strap so that
 you can wear it around your neck."
 extra {"$identify"}
 "The rabbit foot will help you flee from combat more easily."
@@ -3623,7 +3614,7 @@ extra {"skull"}
 "The skull is old and weather-worn, and many of its teeth are missing.
 It still looks like a human skull, though."
 extra {}
-"It is of very bad craftmanship, but it still says :-<pre>
+"It is of very bad craftsmanship, but it still says :-<pre>
               _
        ______|_|______
       /               \\
@@ -3646,12 +3637,12 @@ WEAPON_DEF(WPN_SCIMITAR, BONUS_BAD, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 10
 cost 2 SILVER_PIECE
 extra {}
-"It is a heavy heavy orc-style iron scimitar."
+"It is a heavy orc-style iron scimitar."
 end
 
                            tree_opening
 
-names {"tree opening", "opening"}
+names {"colossal tree", "tree opening", "opening", "tree"}
 title "a colossal tree"
 descr "A colossal tree blocks the way westwards."
 CONTAINER_DEF(1000)
@@ -3660,7 +3651,7 @@ extra {}
 the tree is hollow."
 
 extra {"colossal tree", "tree"}
-"This enourmous tree must be a thousand years old.  Its rough bark looks grey
+"This enormous tree must be a thousand years old.  Its rough bark looks grey
 and pale and is decorated with scratches and clawmarks.  On its west side is a
 small opening just above ground level."
 end
@@ -3776,7 +3767,7 @@ weight 2
 cost 4 GOLD_PIECE
 rent 8 IRON_PIECE
 extra {}
-"It has a deep yellow colour and and a strong spicy smell."
+"It has a deep yellow colour and a strong spicy smell."
 extra {"$identify"}
 "If you drink the liquid you will be cured of poison."
 extra {"$improved identify"}

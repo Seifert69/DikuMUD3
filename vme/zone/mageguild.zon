@@ -37,7 +37,7 @@ lifespan 125
 
 help
 "<pre><br/>
-The College of Arcane Arts was build in the place of the old Conjurers<br/>
+The College of Arcane Arts was built in the place of the old Conjurers<br/>
 Guild, which itself replaced the older Mage Guild of Midgaard. The College<br/>
 is a rich institution, able to afford pompous buildings as well as large<br/>
 area and own defences.<br/>
@@ -82,8 +82,8 @@ code
 
    :start:
    wait(SFB_COM,  self.position == POSITION_FIGHTING );
-   if(pc.type == UNIT_ST_NPC) goto start;
    pc := self.fighting;
+   if(pc.type == UNIT_ST_NPC) goto start;
    if(pc.level>200) goto start;
    if (command("flee"))
    block;
@@ -93,7 +93,7 @@ code
    A_ALWAYS, pc, self, null, TO_ALL);
    act("Suddenly the air is hot with magic, as several spells smash into "+
    "your body and mind!", A_ALWAYS, pc, self, null, TO_CHAR);
-   act("Several of them charge into the room, $3n topples under the magical "+
+   act("Several of them charge into the room, $1n topples under the magical "+
    "assault!",A_SOMEONE, pc, self, null, TO_REST);
    pc.hp := 0;
    pc.mana := 0;
@@ -155,7 +155,7 @@ extra {"large sign","sign","wall"}
 		    Welcome to the College of Arcane Arts<br/>
 <br/>
 	This College is the educational facility for Midgaard Conjurers.<br/>
-~	Applicants, please walk straight through to the Archcancellor's<br/>
+	Applicants, please walk straight through to the Archcancellor's<br/>
 	offices at the back of the university.<br/>
 <br/>
 				- Rafizir the Archcancellor -<br/>
@@ -169,7 +169,7 @@ end
 
 		hall
 names {"main hall","College of Arcane","college pattern","pattern"}
-title "The Main Hall of College"
+title "The Main Hall of the College"
 gmap(187,238)
 descr
 "The Main Hall is a huge, open space, illuminated by the light falling in
@@ -184,15 +184,15 @@ the glass has a strange quality, very soft and relaxing.<br/>"
 extra {"white marble floor","floor","marble"}
 "As you take a closer look, you notice that the marble on the floor is
 divided into pentagonal shapes. A complicated pattern of black and white
-stones cover the middle of the floor.<br/>"
+stones covers the middle of the floor.<br/>"
 extra {"pattern on the floor","pattern"}
 "As you study this pattern, you realize that it is meant as a homing
-point for Conjurers using less traditional means of travels. You can
+point for Conjurers using less traditional means of travel. You can
 teleport straight home by letting the spell take you to 'college pattern',
 'pattern' or simply 'college of arcane'.<br/>"
 extra {"archways","archway","sign"}
 "The archways are decorated with patterns of sigils. You fail to decipher
-those, but the sign above northern archway exclaims 'Tower of Mudane',
+those, but the sign above the northern archway exclaims 'Tower of Mundane',
 while the sign above the southern archway says 'Tower of Arcane'.<br/>"
 extra {"grand gates","gates"}
 "Those gates lead to the cruel outside world.<br/>"
@@ -221,7 +221,7 @@ northern wall of the corridor is marked 'Library' and another one to the
 south marked 'Main Lecture Hall'. A double door leads west to the Main Hall."
 extra {"solemn marble statues","statues","pedestals"}
 "The large marble statues are quite varied - some depict classical,
-long-bearded, robed, staff-wielding mages, while other portrait
+long-bearded, robed, staff-wielding mages, while others portray
 combat-wizards in battle outfits, confused alchemists with scorched
 eyebrows, quiet scholars with stacks of books under their arms... Most of
 the statues are very lifelike.<br/>"
@@ -271,10 +271,10 @@ end
 
 		chan_office
 names {"Archchancellor's office"}
-title "The offices of Archcancellor of the College"
+title "The offices of the Archcancellor of the College"
 gmap(412,238)
 descr
-"The offices of the Archcancellor are suprisingly spartan, compared to
+"The offices of the Archcancellor are surprisingly spartan, compared to
 the grandeur of the rest of this place. A single desk near a large
 window, a large cabinet file and a case containing several books and
 scrolls seem to be the only furniture here. A few chairs for the
@@ -296,7 +296,7 @@ extra {"small sign","sign"}
 <br/>
 </pre>"
 extra {"desk near the window","desk"}
-"The dark-wood desk is slightly decorated and suprisingly tidy. A large
+"The dark-wood desk is slightly decorated and surprisingly tidy. A large
 chair behind the desk provides a sitting place for the Archcancellor.<br/>"
 extra {"bookcase","case"}
 "The bookcase is filled with books and scrolls, although they seem more
@@ -381,8 +381,8 @@ title "The Main Lecture Hall of the College"
 gmap(262,313)
 descr
 "This large, concave hall contains a chair for the speaker, a large
-blackboard and rows of seats, raising in a half-circle from the centre
-of the hall. although half-empty now, the hall bears signs of frequent use.
+blackboard and rows of seats, rising in a half-circle from the centre
+of the hall. Although half-empty now, the hall bears signs of frequent use.
 A door leads out of the hall to the north."
 extra {"speaker's chair","chair"}
 "The speaker's chair is a simple thing of dark oak.<br/>"
@@ -403,9 +403,9 @@ names {"northern archway","archway"}
 title "The northern walkway"
 gmap(337,162)
 descr
-"This long north-south walkway is lined with series of tall arches on each
+"This long north-south walkway is lined with a series of tall arches on each
 side of the walk. To the north, outside the College, you have a magnificent
-view of the Midgaard cathedral , while to the east you can walk
+view of the Midgaard cathedral, while to the east you can walk
 through the arches into the university gardens. South of here the walkway
 enters the Congregation Hall of the College."
 extra {"eastern view","gardens","garden","east","arches"}
@@ -413,7 +413,7 @@ extra {"eastern view","gardens","garden","east","arches"}
 where the mages go to relax and study, well kept by the various gardeners.<br/>"
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
-south to con_hall descr "A wide archway leads into the Main Hall of the
+south to con_hall descr "A wide archway leads into the Congregation Hall of the
 College.<br/>" ;
 east to garden1 descr "A large, tranquil garden can be seen through the
 archway to the east.<br/>" ;
@@ -451,7 +451,7 @@ gmap(187,162)
 descr
 "You stand at the uppermost gallery in the Tower of Mundane. A
 breathtaking view rewards your long climb - the tall, arched windows
-provide a scenery the whole of Midgaard, and beyond that, far glimpses
+provide a view of the whole of Midgaard, and beyond that, far glimpses
 of surrounding areas. A spiral stairway provides means to descend the tower."
 extra {"view of Cypress Forest","Cypress","forest"}
 "The Cypress Forest is a tangled mass of green, with the river cutting a
@@ -468,8 +468,8 @@ names {"southern archway","archway"}
 title "The southern walkway"
 gmap(337,313)
 descr
-"This long north-south walkway is lined with series of tall arches on each
-side of the walk. To the north, outside the College, the catheral square of
+"This long north-south walkway is lined with a series of tall arches on each
+side of the walk. To the north, outside the College, the cathedral square of
 Midgaard can be seen, while to the east you can walk through the arches into
 the university gardens. North of here the walkway enters the Congregation Hall
 of the College."
@@ -481,7 +481,7 @@ extra {"thick door","door"}
 protective sigla cover the door, magic is worked in the tower!<br/>"
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
-north to con_hall descr "A wide archway leads into the Main Hall of the
+north to con_hall descr "A wide archway leads into the Congregation Hall of the
 College.<br/>";
 east to garden4 descr "Through the archways the garden of the university
 can be seen.<br/>";
@@ -493,7 +493,7 @@ names {"tower of arcane","tower"}
 title "The Tower of Arcane - Thaumaturgical studies"
 gmap(187,313)
 descr
-"This walls of this large room are heavily covered in protective sigla
+"The walls of this large room are heavily covered in protective sigla
 and seem extremely thick and solid. Several blackboards are placed along
 the walls and various tables covered in magical materia of all sorts.
 Blackened spots on the walls witness the intense training that takes
@@ -517,9 +517,9 @@ names {"tower of arcane"}
 title "The gallery at the top of the Tower of Arcane"
 gmap(187,313)
 descr
-"You stand at the uppermost gallery in the Tower of Mundane. A
+"You stand at the uppermost gallery in the Tower of Arcane. A
 breathtaking view rewards your long climb - the tall, arched windows
-provide a scenery the whole of Midgaard. A spiral stairway provides
+provide a view of the whole of Midgaard. A spiral stairway provides
 means to descend the tower."
 extra {"view of Cypress Forest","Cypress","forest"}
 "The Cypress Forest is a tangled mass of green, with the river cutting a
@@ -539,7 +539,7 @@ descr
 "The beautiful gardens seem well-kept and lush. The paths are combed and
 the bushes trimmed to perfection. Small benches provide resting places.
 Everything breathes peace and quiet here. A path leads off to the east
-and to the north a long row of archways marks the walkway of the College."
+and to the west a long row of archways marks the walkway of the College."
 extra {"vegetation of the gardens","bushes","roses","flowers"}
 "The bushes are lush green, the flowers full and beautiful. Someone is
 doing a great job here.<br/>"
@@ -583,7 +583,7 @@ title "University gardens - at a small alcove"
 gmap(487,313)
 descr
 "You stumble upon a small alcove in the gardens. To your surprise, it
-features a small bar with selection of various refreshments. A small sign
+features a small bar with a selection of various refreshments. A small sign
 is placed on the counter. A path leads off to the north and another one to
 the west, toward the college buildings."
 extra {"small alcove","alcove"}
@@ -606,7 +606,7 @@ extra {"paths","path"}
 movement SECT_CITY
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 north to garden2 descr "A small path leads off to the north.<br/>";
-west to garden4 descr "A small path leads off into the east.<br/>";
+west to garden4 descr "A small path leads off into the west.<br/>";
 ALWAYS_LIGHT
 end
 
@@ -618,7 +618,7 @@ descr
 "The beautiful gardens seem well-kept and lush. The paths are combed and
 the bushes trimmed to perfection. Small benches provide resting places.
 Everything breathes peace and quiet here. A path leads off to the east
-and to the north a long row of archways marks the walkway of the College."
+and to the west a long row of archways marks the walkway of the College."
 extra {"vegetation of the gardens","bushes","roses","flowers"}
 "The bushes are lush green, the flowers full and beautiful. Someone is
 doing a great job here.<br/>"
@@ -690,7 +690,7 @@ dilcopy MasterJoin@guilds(GUILD_UDG_MAGE, GUILD_MAGE_EXCL, QUEST_MAGE_ENTRY,
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say Followers of the faith cannot master the science of magic."},
- {"say To join $1N, you must prove yourself worthy by completing the Conjurer's Guild quest.","say Go speak with Mr. Backspindle."},
+ {"say To join, $1N, you must prove yourself worthy by completing the Conjurer's Guild quest.","say Go speak with Mr. Backspindle."},
  {"handshake $1N", "say Welcome to the Conjurer's Guild, $1N."});
 
 /* Conjurer Master DIL - gives out the Spellweaver Charm. */
@@ -719,8 +719,8 @@ code
    {
       if ("$Conjurer Charm Given" in pc.quests)
       {
-         exec("say Greetings "+pc.name+", good to see you here again.",self);pause;
-         exec("say Knowing my students, I guess you do not come here for ilde chat."
+         exec("say Greetings, "+pc.name+", good to see you here again.",self);pause;
+         exec("say Knowing my students, I guess you do not come here for idle chat."
          ,self);exec("sigh",self);pause;
          exec("say I think you managed to lose your Spellweaver Charm and wish to "+
          "receive another one.",self);
@@ -743,12 +743,12 @@ code
          goto start;
       }
 
-      exec("say Greetings "+pc.name+", good to see you here.",self);pause;
+      exec("say Greetings, "+pc.name+", good to see you here.",self);pause;
       exec("say I know you are an aspiring Conjurer...",self);pause;
       exec("say The way of a devoted student is long and perilous... too many "+
       "promising pupils endanger their lives seeking fortunes through adventures."
       ,self);pause;
-      exec("say Know, that there is no short-cuts to knowledge, no fast lane to "+
+      exec("say Know that there are no short-cuts to knowledge, no fast lane to "+
       "wisdom.",self);pause;
       exec("say And even the one of greatest talent can fall before sharp "+
       "wits and cunning... or lacking that, a sharp blade.",self);pause;
@@ -760,7 +760,7 @@ code
       item := load("conj_charm@mageguild");
       item.height := pc.height;
       link(item, pc);
-      sendtext(self.name+" hands you a small charm.<br/>",pc);
+      act("$3n hands you a small charm.",A_SOMEONE,pc,null,self,TO_CHAR);
       act("$3n hands $1n a small charm.",A_SOMEONE,pc,null,self,TO_REST);
       pause;
       exec("say This charm summons a creature to stand by your side in combat."
@@ -776,7 +776,7 @@ code
       exec("say And one more thing before you go...",self);
       exec("emote regards you with slight amusement in his eyes...",self);pause;
       exec("say Let's be careful out there.",self);pause;
-      exec("emote nods goodbye and return to his paperwork.",self);
+      exec("emote nods goodbye and returns to his paperwork.",self);
       addextra(pc.quests, {CONJURER_CHARM}, "");
       unsecure(pc);
       goto start;
@@ -785,7 +785,7 @@ code
    {
       unsecure(pc);
       pause;
-      exec ("say Yeah, I know I am famous, but lets not overdo this "+
+      exec ("say Yeah, I know I am famous, but let's not overdo this "+
       "thing, shall we?", self);
       goto start;
    }
@@ -841,8 +841,10 @@ exec("emote returns to his paperwork.",self);
 else
 {
 exec("say Hmm, nice of you to give me that, but this is not what I asked "+
-"for..",self);pause;
-exec("emote locks "+gift.title+" away in the cabinet.",self);pause;
+"for.",self);
+exec("emote locks "+gift.title+" away in the cabinet.",self);
+destroy(gift);
+pause;
 exec("emote smiles slightly.",self);
 }
 	:lost:
@@ -888,8 +890,8 @@ names {"merlin","head librarian","librarian"}
 title "Merlin"
 descr "Merlin, the Head Librarian, stands ready to assist with your studies."
 extra {}
-"The life has been easy for Merlin since his retirement. With the
-expansion of the former Mages Guild in Midgaard, Merlin choose the quiet
+"Life has been easy for Merlin since his retirement. With the
+expansion of the former Mages Guild in Midgaard, Merlin chose the quiet
 and steady position of a Head Librarian and has now the pleasure of
 training the students' abilities."
 flags {UNIT_FL_NO_TELEPORT}
@@ -917,7 +919,7 @@ names {"caval","head","mage"}
 title "Caval"
 descr "Caval the Head of Physical Studies awaits your training here."
 extra {}
-"A rather physicaly fit mage, he seems to swing his training staff with a
+"A rather physically fit mage, he seems to swing his training staff with a
 skill you can only admire. Perhaps he can give you a few lessons."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}
@@ -988,8 +990,8 @@ dilcopy MurderBanish@guilds(GUILD_UDG_MAGE);
 dilcopy AlertMembers@guilds(GUILD_UDG_MAGE, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_MAGE_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Xad of the Academy."},
+         {"say Hey $1N, want to prove your worth to our guild?",
+          "say All you need to do is to bring me the head of Xad of the Academy."},
          {"say Excellent! Best of luck, $1N."},
          "Mr. Backspindle in the Conjurer's Guild has asked you to bring him the head of Xad of the Academy.",
          {"emote looks at the head of Xad.",
@@ -997,7 +999,7 @@ dilcopy qstSimpleQuest@quests(QUEST_MAGE_ENTRY,
           800, 1 * COPPER_MULT, {""}, "NotInGuild@quests 0 "+GUILD_UDG_MAGE);
 
 dilcopy qstItemsWanted@quests(QUEST_MAGE_ENTRY, {"head@death"}, {"decapCheck@quests 0 conmaster@academy"},
-         {"say Excellent, thank you $1N."},
+         {"say Excellent, thank you, $1N."},
           "say I can't accept that, maybe you could bring me the head of Xad from the Academy?");
 end
 
@@ -1028,7 +1030,7 @@ dilcopy shopkeeper@function(
    "$1n says, 'Sell me what, $3n?'",
    "$1n smiles and says, 'I don't want it, $3n, not even from you.'",
    "$1n exclaims, 'No credit here, $3n!'",
-   "$1n exclaims, 'One $2N comming up!'",
+   "$1n exclaims, 'One $2N coming up!'",
    "$1n says, 'Excellent, it's a deal, $3n.'",
    "$1n sighs and says, 'I can't afford it, $3n.'",
    "$1n asks, 'I'm having a quick lunch, can you drop by later?'" },
@@ -1046,9 +1048,9 @@ names {"chaos bunny","bunny"}
 title "a chaos bunny"
 descr "A black bunny skips around happily, its red eyes glowing."
 extra {}
-"A creature of your nightmares, this hideously fluffly and lovingly soft
-bunny has teeth sharp like swordblades and ferocity matching those of a
-starved lion. Undoubtely a creature of magic, perhaps created by one of
+"A creature of your nightmares, this hideously fluffy and lovingly soft
+bunny has teeth sharp like swordblades and ferocity matching that of a
+starved lion. Undoubtedly a creature of magic, perhaps created by one of
 those mad wizards of yore, this beast is a dangerous foe to meet!"
 M_RABBIT_TINY(6,SEX_NEUTRAL)
 exp 0
@@ -1060,7 +1062,7 @@ end
         dreadhound
 names {"dreadhound","hound"}
 title "a dreadhound"
-descr "A large, etheral hound regards you with eyes like pools of darkness."
+descr "A large, ethereal hound regards you with eyes like pools of darkness."
 extra {}
 "The large hound seems insubstantial, like a ghost, yet feels very much
 alive, especially the huge teeth. Its eyes are like two pools of
@@ -1096,7 +1098,7 @@ names {"crimson viper","viper","snake"}
 title "a crimson viper"
 descr "A long, crimson viper hisses angrily at you, eyes flaring."
 extra {}
-"A long, crimson-red viper, its fangs dripping with vemon. The eyes stare
+"A long, crimson-red viper, its fangs dripping with venom. The eyes stare
 at you hatefully. Did you do something to offend it? Better leave now."
 M_SNAKE_POISON_TINY(9,SEX_NEUTRAL)
 exp 0
@@ -1123,7 +1125,7 @@ end
 
         wolverine
 names {"wolverine"}
-title "a fericious wolverine"
+title "a ferocious wolverine"
 descr "A ferocious wolverine growls at you!"
 extra {}
 "Fur bristling, eyes flaring, fangs dripping saliva, this wolverine is
@@ -1141,10 +1143,10 @@ title "a wererat"
 descr "A hunched rat-like figure stands here."
 extra {}
 "This creature appears to be part human, part rat. The body is covered
-with fur and the face elongated into a rat snout. Altough it stands on
+with fur and the face elongated into a rat snout. Although it stands on
 its hind legs, the obvious difficulty in the movement makes you think it
-prefers all fours. It seems higly annoyed with its present condition and
-thus rather agressive."
+prefers all fours. It seems highly annoyed with its present condition and
+thus rather aggressive."
 M_WERERAT_LARGE(13, SEX_NEUTRAL)
 exp 120
 alignment -400
@@ -1172,15 +1174,14 @@ extra {}
 light, a small black jet in the centre of it providing a sharp contrast
 to the bright metal. A runic inscription along the edge of the charm
 catches your attention. You recognise the number '5' among the runes."
-extra {"runic inscription on the Charm","inscription","runes","runic
-inscriptions"}
+extra {"runic inscription on the Charm","inscription","runes","runic inscriptions"}
 "The inscriptions seem to form an enchantment for the wearer and grant
 him the ability to summon simple helpers in combat. Beware, weak
 summoners can lose control of the Charm and be attacked instead!<br/>
 Simply grip your charm to activate it. Read the runes to check the
 charges on your charm.<br/>"
 extra {"jet in the Charm","jet","centre","center"}
-"The jet is deeply black, even the surrounding light seem to fall into
+"The jet is deeply black, even the surrounding light seems to fall into
 it.<br/>"
 extra {"$identify"}
 "The Spellweaving Charm improves your Magic as well as your
@@ -1233,7 +1234,7 @@ charge:=interrupt (SFB_MSG,((self==activator)and
 
         :start:
 wait (SFB_CMD,(command ("grip"))and
-((self.equip==WEAR_NECK_1)or(self.equip==WEAR_NECK_1)));
+((self.equip==WEAR_NECK_1)or(self.equip==WEAR_NECK_2))and(activator == self.outside));
 block;
 enemy:=self.outside.fighting;
 pc:= self.outside;
@@ -1251,7 +1252,7 @@ catches your attention. You recognise the number '"+itoa(pwr)+"' among
 the runes.";
 act ("You grip your $2N and concentrate on its power..."
 , A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n grips his $2N and concentrates..."
+act ("$1n grips $1s $2N and concentrates..."
 , A_HIDEINV,self.outside,self,null,TO_REST);
 if (pc.mana<10)
 {
@@ -1414,7 +1415,7 @@ extra {"$wear_s"}
 You feel protected from the sun and rain."
 extra {"$rem_s"}
 "You remove your $2N.<br/>
-You feel more wounderable to the sun and rain."
+You feel more vulnerable to the sun and rain."
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HEAD}
 weight 1
@@ -1423,12 +1424,12 @@ end
 
 		signet_ring
 names {"Conjurer signet ring","signet","ring"}
-title "Conjurer signet ring"
+title "a Conjurer signet ring"
 descr "A large signet ring lies here."
 extra {}
 "This large ring bears the arms of Midgaard College of Arcane Arts and
 signifies its wearer as a student of magic."
-extra {"wear_s"}
+extra {"$wear_s"}
 "You put your $2N on your finger.<br/>
 You feel a considerable pride."
 type ITEM_WORN
@@ -1443,18 +1444,18 @@ names {"carved wizard staff","staff","quarterstaff"}
 title "a carved wizard staff"
 descr "A carved quarterstaff lies here."
 extra {}
-"This is a typical wizard staff, elaboratery carved in protective sigils
+"This is a typical wizard staff, elaborately carved in protective sigils
 and with small charms attached to it. A must for any decent,
 self-respecting student of arcane."
 extra {"protective sigils on your staff","sigils","charms"}
 "The sigils empower the staff with weak magic.<br/>"
 extra {"$wear_s"}
-"You grab your $2N and lift it toward heavens in triumph. However,
-lighting totally fails to crackle down the wood of the staff and power
+"You grab your $2N and lift it toward the heavens in triumph. However,
+lightning totally fails to crackle down the wood of the staff and power
 fails to surge down your arm."
 extra {"$wear_o"}
-"$1n grabs $1s $2N and lifts it toward the heaven in triumph. However,
-lighting totally fails to crackle down the dark wood and no fancy magical
+"$1n grabs $1s $2N and lifts it toward the heavens in triumph. However,
+lightning totally fails to crackle down the dark wood and no fancy magical
 effects appear. You smirk."
 extra {"$rem_o"}
 "$1n shrugs and puts away $1s $2N."
@@ -1464,11 +1465,11 @@ cost 1 COPPER_PIECE
 end
 
 		wiz_dagger
-names {"ornated dagger","dagger"}
-title "an ornated dagger"
-descr "An ornated dagger lies here."
+names {"ornate dagger","dagger"}
+title "an ornate dagger"
+descr "An ornate dagger lies here."
 extra {}
-"A highly ornated dagger of shiny steel. A great weapon for a student of
+"A highly ornate dagger of shiny steel. A great weapon for a student of
 magic with acute need of means of self-defence."
 extra {"$wear_s"}
 "You wield $2n with a smile on your face.<br/>
@@ -1499,10 +1500,10 @@ end
 
 		conjurer_robe
 names {"Conjurer robe","robe"}
-title "Conjurer robe"
+title "a Conjurer robe"
 descr "A heavy robe, rich in protective sigils, lies here."
 extra {}
-"A heavy, dark robe, richly embroidened in protective sigils. It bears
+"A heavy, dark robe, richly embroidered in protective sigils. It bears
 the mark of the Conjurer College on the chest."
 extra {"sigils on the robe","sigils"}
 "The sigils serve to protect the wearer from physical harm.<br/>"
@@ -1510,7 +1511,7 @@ extra {"$identify"}
 "This robe offers protection equal to a leather armour, even if it is
 only made of cloth.<br/>"
 extra {"$improved identify"}
-"The craftmanship of the robe is 3 and the magical bonus 1.<br/>"
+"The craftsmanship of the robe is 3 and the magical bonus 1.<br/>"
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 3
@@ -1595,7 +1596,7 @@ names {"doctor gown","gown"}
 title "an Arcane College doctor gown"
 descr "A large, richly decorated gown lies here."
 extra {}
-"A large, richly embroidened gown, the mark of the College of Arcane Arts
+"A large, richly embroidered gown, the mark of the College of Arcane Arts
 clearly visible on each shoulder."
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
@@ -1624,8 +1625,8 @@ names {"rake"}
 title "a rake"
 descr "A rake lies here, awaiting someone to step on it."
 extra {}
-"A large gardening rake. You can use it as a primitive weapon, but it's
-combat capabilities are severly limited."
+"A large gardening rake. You can use it as a primitive weapon, but its
+combat capabilities are severely limited."
 WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_AVERAGE, BONUS_BAD_MINUS)  // Xyzzy: 0,-3
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 cost 3 IRON_PIECE

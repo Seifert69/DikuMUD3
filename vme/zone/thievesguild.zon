@@ -33,7 +33,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone thievesguild
-title "Thieves GuildMainland"
+title "Thieves Guild@Mainland"
 creators {"redferne"}
 
 notes
@@ -94,7 +94,7 @@ code
    A_ALWAYS, pc, self, null, TO_ALL);
    act("Suddenly, several large thugs charge into the room, beating you "+
    "into a bloody pulp!", A_ALWAYS, pc, self, null, TO_CHAR);
-   act("Several large thugs charge into the room, beating $3n into a bloody "+
+   act("Several large thugs charge into the room, beating $1n into a bloody "+
    "pulp!",A_SOMEONE, pc, self, null, TO_REST);
    pc.hp := 0;
    pc.endurance := 0;
@@ -172,7 +172,7 @@ title "The Guild of Thieves Entrance"
 gmap(312,337)
 descr
 "    A faint scent of wine fills the air here and slight sounds of music
-floats in from the door to the east. A low door leads to the adjoining
+float in from the door to the east. A low door leads to the adjoining
 lower wine cellar to the south. Over a large oak door to the west a sign
 says 'Coals' and underneath that a small paper says 'Master of Weapons'.
 Over the opening to the north a large piece of parchment says 'The Thieving
@@ -228,7 +228,7 @@ title "Training Centre and Coal Room"
 gmap(237,337)
 descr
 "    The floor in here is completely covered with coal and coal dust. A
-small flagstone stands up right against the southern wall. The northern
+small flagstone stands upright against the southern wall. The northern
 wall is mainly an enormous mound of coals."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
@@ -242,7 +242,7 @@ end
                                 wcellar4
 
 names {"inner wine cellar"}
-title "The Inner Wine cellar"
+title "The Inner Wine Cellar"
 gmap(312,262)
 descr
 "    The walls are carved from the virgin rock underneath the city. The
@@ -280,7 +280,7 @@ the north end. Ropes are strung out from wall to wall, apparently for
 tight rope walking. A low opening leads west into a wine cellar."
 extra {"figures","wooden figures","wooden"}
 "    These figures look as if they have suffered the training of the knife,
-fighting these type of figures give a good practice in dexterity, as they
+fighting these types of figures gives good practice in dexterity, as they
 turn at a stroke and seem to attack from behind."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
@@ -299,7 +299,7 @@ names {"the work shop"}
 title "The Thieves' Work Shop"
 gmap(312,187)
 descr
-"    This room is completely empty except for a doll of wood and cloth. It os
+"    This room is completely empty except for a doll of wood and cloth. It is
 dressed in fancy clothes and stands in the middle of the room. A heavy door
 makes an exit to the south leading out to a wine cellar."
 extra {"doll","cloth doll","clothes"}
@@ -321,7 +321,7 @@ end
                                 study
 
 names {"the study"}
-title "Guildmasters Study"
+title "Guildmaster's Study"
 gmap(312,262)
 descr
 "    Paintings of great thieves and renowned criminals adorn the walls of
@@ -387,8 +387,8 @@ dilcopy MasterJoin@guilds(GUILD_UDG_THIEF, GUILD_THIEF_EXCL, QUEST_THIEVES_ENTRY
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say Paladins just never make good thieves, this is not for you."},
- {"say To join $1N, you must prove yourself worthy by completing the Thieve's Guild quest.","say Go speak with Marie."},
- {"handshake $1N", "say Welcome to the Thieve's Guild, $1N."});
+ {"say To join $1N, you must prove yourself worthy by completing the Thieves' Guild quest.","say Go speak with Marie."},
+ {"handshake $1N", "say Welcome to the Thieves' Guild, $1N."});
 
 
 /*  Thieves Master DIL - gives out a Thieves' Dirk. */
@@ -430,6 +430,7 @@ code
          "sorting and I will give you another dirk.",self);pause;
          exec("emote shakes his head and mumbles something about stupid gits."
          ,self);
+         unsecure(pc);
          goto start;
       }
       exec("say Let's cut straight to business.",self);pause;
@@ -446,12 +447,13 @@ code
       item := load("thief_dirk@thievesguild");
       item.height := pc.height;
       link(item, pc);
-      sendtext(self.name+" hands you a small dirk.<br/>",pc);
+      sendtext(self.title+" hands you a small dirk.<br/>",pc);
       act("$3n hands $1n a small dirk.",A_SOMEONE,pc,null,self,TO_REST);
       pause;
       exec("say Hope you can use it. Be careful with the poison.",self);pause;
       addextra(pc.quests, {THIEVES_DIRK}, "");
       exec("emote waves goodbye. This conversation is apparently over.",self);
+      unsecure(pc);
       goto start;
    }
    else
@@ -489,7 +491,7 @@ code
    pc := activator;
    secure(pc, lost);
    gift := medium;
-   secure(pc,lost);
+   secure(gift,lost);
 
    if (IsInGuild@guilds(pc, GUILD_UDG_THIEF) and (THIEVES_DIRK in pc.quests))
    {
@@ -497,6 +499,7 @@ code
       {
          exec("say Beautiful.",self);pause;
          exec("emote examines the gemstone and hides it in his pocket.",self);
+         unsecure(gift);
          destroy(gift);pause;
          exec("say Guess you are not such a fluff head after all.",self);
          exec("say Here is your new dirk, now, DON'T lose this one!",self);
@@ -513,10 +516,13 @@ code
          exec("emote grins wickedly.",self);
       }
 :lost:
+      unsecure(gift);
       destroy(gift);
       unsecure(pc);
       goto start;
    }
+   unsecure(gift);
+   unsecure(pc);
    goto start;
 }
 dilend
@@ -610,7 +616,7 @@ names {"Marie","bartender"}
 title "Marie the bartender"
 descr "Marie the bartender is standing behind the counter."
 extra {}
-"This suprisingly thin girl seems quite out of place here, but you catch
+"This surprisingly thin girl seems quite out of place here, but you catch
 the glimmer in her eye warning you that she can be quite a dangerous foe
 with that knife of hers."
 M_HUMAN_THIEF_SWORD(50, SEX_FEMALE)
@@ -634,12 +640,12 @@ dilcopy shopkeeper@function(
 );
 
 dilcopy qstSimpleQuest@quests(QUEST_THIEVES_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of Shaun the guard from Midgaard."},
          {"say Excellent! Best of luck, $1N."},
-         "Maria in the Thieve's Guild has asked you to bring her the head of Shaun the guard from Midgaard.",
+         "Marie in the Thieves' Guild has asked you to bring her the head of Shaun the guard from Midgaard.",
          {"emote looks at the head of Shaun.",
-          "say Impressive! Well done, $1N. Welcome to the Thieve's guild."},
+          "say Impressive! Well done, $1N. Welcome to the Thieves' guild."},
           800, 1 * COPPER_MULT, {""}, "NotInGuild@quests 0 "+GUILD_UDG_THIEF);
 
 dilcopy qstItemsWanted@quests(QUEST_THIEVES_ENTRY, {"head@death"}, {"decapCheck@quests 0 gate_w2@midwalls"},
@@ -700,7 +706,7 @@ pressing the button you can release it into the blade. You also notice a
 small sigil on the inside of the small storage space. You can only guess
 its purpose but refreshing the poison would be a qualified shot.<br/>"
 extra {"$identify"}
-"The magic reveals Thieves Dirk to increase your overall Dexterity as
+"The magic reveals the Thieves' Dirk to increase your overall Dexterity as
 well as Brain and also your dagger skills.<br/>
 By pressing the button, poison stored in the handle is released into the
 tip of the blade.<br/>"
@@ -708,7 +714,7 @@ extra {"$improved identify"}
 "The Dex bonus is +2, Bra bonus is +2, and Dagger Skill
 bonus is +5%. The poison has a power of 10 and is restored slowly by the
 blade itself.<br/>
-The dirk is of craftmanship 4 and magical bonus 3.<br/>"
+The dirk is of craftsmanship 4 and magical bonus 3.<br/>"
 extra {"$wear_s"}
 "You flick the dirk in your hand and grab the hilt comfortably."
 extra {"$wear_o"}
@@ -756,7 +762,7 @@ charge:=interrupt (SFB_MSG,((self==activator) and
         heartbeat := PULSE_SEC*1;
 	:start:
 wait (SFB_CMD,(command ("press"))and("button" in argument)
-and(self.equip==WEAR_WIELD));
+and(self.equip==WEAR_WIELD)and(activator==self.outside));
 block;
 pc :=self.outside;
 vict:=self.outside.fighting;
@@ -830,7 +836,7 @@ A fast look at the handle tells you there are "+itoa(pwr)+
 act ("As you press the button, a tiny drop of murky liquid appears on the "+
 "tip of the blade and drips to the ground."
 ,A_ALWAYS,self.outside,null,null,TO_CHAR);
-act ("A tiny drop of murky liquid appears on $1n's and drips to the "+
+act ("A tiny drop of murky liquid appears on the tip of $1n's blade and drips to the "+
 "ground.", A_SOMEONE,self.outside,null,null,TO_REST);
 unsecure(pc);
 unsecure(vict);

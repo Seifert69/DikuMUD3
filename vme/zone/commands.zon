@@ -11251,7 +11251,9 @@ code
 
    if ((self.fighting != null) and (self.fighting != foe))
    {
+      unsecure(foe);
       foe := self.fighting;
+      secure(foe, start);
       line := "fighting " + foe.name;
    }
    else if (command("give"))

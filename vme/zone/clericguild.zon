@@ -49,8 +49,8 @@ to about level 30 - 50.<br/><br/>
 Ability Teacher - from the entrance 2 west<br/>
 Guildmaster - from the entrance 2 west 1 north<br/>
 Skill Teacher - from the entrance 3 west<br/>
-Spell Teacher -  from the entrance 1 west, 1 north, 2 west<br/>
-Weapon Teacher - from the entrance 1 west, 1 south, 1 west<br/>
+Spell Teacher -  from the entrance 1 west, 1 south, 1 west<br/>
+Weapon Teacher - from the entrance 1 west, 1 north, 2 west<br/>
 </pre>"
 /* MOD notes:
 2/19/2009 bug reported on cleric item  research shows it does not
@@ -99,7 +99,7 @@ code
    pause;
    act("Your $2N ceases its brief existence and merges with your soul."
    ,A_ALWAYS,self,ting,null,TO_CHAR);
-   act("$1n's $2N ceases its brief existence and merges with $1n's soul."
+   act("$1n's $2N ceases its brief existence and merges with $1s soul."
    ,A_ALWAYS,self,ting,null,TO_REST);
 
 :gone:
@@ -126,7 +126,7 @@ code
    ting:=findunit(vict,argument,FIND_UNIT_SURRO,null);
    if (ting!=self) goto start;
    block;
-   act("You can't disarm $3n, he's using an etheral weapon!"
+   act("You can't disarm $3n, he's using an ethereal weapon!"
    ,A_SOMEONE,vict,null,self,TO_CHAR);
    act("$1n tries to disarm you, but $1s weapon moves straight through yours!"
    ,A_SOMEONE,vict,null,self,TO_VICT);
@@ -161,7 +161,7 @@ code
 
 	if (IsInGuild@guilds(pc, GUILD_UDG_CLERIC))
 	{
-      exec("bow"+pc.name,self);pause;
+      exec("bow "+pc.name,self);pause;
       exec("say Hello, "+pc.name+".", self);pause;
       exec("say I trust you are in good health?",self);
       exec("nudge "+pc.name,self);pause;
@@ -183,7 +183,7 @@ code
       link(item, self);
       addextra (pc.quests, {TORC_GIVEN}, "");
       exec("give torc "+pc.name, self);pause;
-      exec("say Beside several small enchantments, this item can also provide "+
+      exec("say Besides several small enchantments, this item can also provide "+
       "you with means of self-defence.",self);
       exec("say Examine it carefully and you will know.", self);pause;
       exec("say Our blessings will follow you, young acolyte.", self);pause;
@@ -198,6 +198,8 @@ code
       exec("say Please, not here, "+pc.name+". People are watching.", self);
       exec("peer",self);pause;
       exec("tokiss "+pc.name,self);           //this sub works
+      unsecure(pc);
+      goto start;
    }
 
 :lecture:
@@ -265,7 +267,7 @@ title "Monastery Gate"
 gmap(464,270)
 descr
 "You are standing just inside the gates to the entrance of the healers guild,
-Midgaards's bastion of goodness and righteousness. The large monastery
+Midgaard's bastion of goodness and righteousness. The large monastery
 buildings stand to the west, and Tranquility Path leads away to the east.
 A large sign on the wall attracts your attention."
 movement SECT_FIELD
@@ -276,11 +278,10 @@ extra {"sign", "wall"}
 "<pre>The sign says:<br/>
 <br/>
    Welcome to the Midgaard Healer guild.<br/>
-<pre>
    'join'           - join this guild (if you qualify!).
    'title'          - changes your title to a new and better one.
    'worship'        - ... 
-</pre><br/>
+<br/>
    - Tuck the Guild Master.<br/></pre>"
 flags {UNIT_FL_NO_TELEPORT}
 end
@@ -303,8 +304,8 @@ You get a great sense of peace from this tree, and also one of near timeless
 age. "
 
 extra{"tree", "oak tree"}
-"This tree was supposidly a sapling of the Legendary Tree of Life. Although it
-doesnt have the massive healing and regenative powers of its forebearer, it
+"This tree was supposedly a sapling of the Legendary Tree of Life. Although it
+doesn't have the massive healing and regenerative powers of its forebear, it
 still exudes a sense of peace and goodness."
 movement SECT_FIELD
 north to garden2;
@@ -446,7 +447,7 @@ title "Monastery Foyer"
 gmap(296,270)
 descr
 "You have entered the large entry chamber of the Midgaard Healers Guild's
-monestary. The room has a tall roof, and a green marbled floor. There are
+monastery. The room has a tall roof, and a green marbled floor. There are
 white marble columns leading across the room, and a spiral staircase leading
 upwards into a higher floor. To the north is a sanctuary chamber, to the
 south a refectory. The infirmary of the guild is to the west, and large golden
@@ -543,7 +544,7 @@ names {"monastery dormitory"}
 title "Dormitory"
 gmap(296,270)
 descr
-"  You are in a long dark low-celinged room directly below the roof.  Heavy
+"  You are in a long dark low-ceilinged room directly below the roof.  Heavy
 wooden beams support the countless red tiles and many thin, hard mattresses
 lie on the floor, the covers neatly arranged.  A staircase leads down into
 the monastery yard."
@@ -722,7 +723,7 @@ names {"sister Morenae","sister","morenae"}
 title "Sister Morenae"
 descr "Sister Morenae is here, contemplating the evil of her past life."
 extra {}
-"Once a teacher of the darker side of the divine forces, sister Morenae
+"Once a teacher of the darker side of the divine forces, Sister Morenae
 has long ago abandoned her evil ways and spends her time praying and
 aiding the poor."
 flags {UNIT_FL_NO_TELEPORT}
@@ -737,17 +738,17 @@ dilcopy MurderBanish@guilds(GUILD_UDG_CLERIC);
 dilcopy AlertMembers@guilds(GUILD_UDG_CLERIC, "");
 
 dilcopy qstSimpleQuest@quests(QUEST_CLERIC_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
-          "say All you need to do is to bring me the head of the Fiend from the Isle of Dead."},
+         {"say Hey $1N, want to prove your worth to our guild?",
+          "say All you need to do is to bring me the head of the Fiend from the Isle of the Dead."},
          {"say Excellent! Best of luck, $1N."},
-         "Sister Morenae in the Healer's Guild has asked you to bring her the head of the Fiend from the Isle of Dead.",
+         "Sister Morenae in the Healer's Guild has asked you to bring her the head of the Fiend from the Isle of the Dead.",
          {"emote looks at the head of the Fiend.",
           "say Impressive! Well done, $1N. You should go speak with the guild master now."},
           800, 1 * COPPER_MULT, {""}, "NotInGuild@quests 0 "+GUILD_UDG_CLERIC);
 
 dilcopy qstItemsWanted@quests(QUEST_CLERIC_ENTRY, {"head@death"}, {"decapCheck@quests 0 fiend2@isledead"},
          {"say Excellent, thank you $1N."},
-          "say I can't accept that, maybe you could bring me the head of the Fiend from the Isle of Dead?");
+          "say I can't accept that, maybe you could bring me the head of the Fiend from the Isle of the Dead?");
 
 
 /* The DIL for the Sister Morenae - gives replacement Silver Torc to Healers.*/
@@ -774,7 +775,7 @@ heartbeat := PULSE_SEC*7;
 	   pause;
        exec("say So "+pc.name+", you have fallen from grace and " +
              "they have sent you to me for penance." , self);
-	   exec("emote studies "+pc.name+", for a long moment.", self);
+	   exec("emote studies "+pc.name+" for a long moment.", self);
        exec("say Where is your torc? Did you lose or break it?", self);
         goto torc_acc;
      }
@@ -786,10 +787,12 @@ heartbeat := PULSE_SEC*7;
      pause;
      exec("emote beckons to " +pc.name+".",self);
      exec("say Have you performed your penance?", self);  
+     unsecure(pc);
      goto start;
     }
     else  
   {
+    unsecure(pc);
     goto start;
    } 
  :torc_acc:
@@ -799,7 +802,7 @@ heartbeat := PULSE_SEC*7;
    exec("emote frowns at "+pc.name+".", self);
    pause;
    exec("say Very well, your penance shall be performed while " +
-         "getting those things we will need to get make a new torc." , self);
+         "getting those things we will need to make a new torc." , self);
    pause;
    goto torc_list;
    }
@@ -836,13 +839,15 @@ exec("say Last, you will need to prove your faith and ability to " +
       "show it to those who will not hear. Bring me a mummified, " +
       "severed hand such as the necromancers use.", self);
 pause;
-exec("say That should be sufficient penance " +
+exec("say That should be sufficient penance. Return " +
      "here when you have the items collected.", self);     
 pause;
 addextra(pc.quests,{TORC_REPL},"");
  unsecure(pc); 
 goto start; 
 }
+unsecure(pc);
+goto start;
 }
 dilend   /*torc_repl*/
 
@@ -923,22 +928,22 @@ pin := TORC_REPL in activator.quests;
 
 if (("hand" in pin.names) and ("tonic" in pin.names) and ("beater" in pin.names))
 {
-exec("emote pours the potion in semi-circle upon the floor.", self);
+exec("emote pours the potion in a semi-circle upon the floor.", self);
 pause;
 exec("emote places the hand in the center of the semi-circle.",self);
-exec("chants a mantra as she prays.",self);
+exec("emote chants a mantra as she prays.",self);
 pause;
-sendtext("The potion starts to glow.<br/>", self.outside);
+act("The potion starts to glow.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote takes the grave beater in her hand and gestures, a bright light surrounds the grave beater.", self);
 pause;
-sendtext("The gravebeater flares with bright light and starts disinegrate. ", self.outside);
+act("The grave beater flares with bright light and starts to disintegrate.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote holds the beater over the semi-circle letting motes of light fall "+
       "upon the hand within.", self);
 pause;	  
 exec("emote continues chanting calmly.", self);
-sendtext("There is a blinding flash in the center of the room "+
-          "when the light clears a Silver Torc glows where the "+
-		  "semi-circle had been. ", self.outside);
+act("There is a blinding flash in the center of the room. "+
+          "When the light clears, a Silver Torc glows where the "+
+		  "semi-circle had been.", A_ALWAYS, self, null, null, TO_ALL);
 exec("emote picks up the glowing torc.", self);
 act ("Sister Morenae gives you your torc.",
 A_SOMEONE, pc, null, null, TO_CHAR);
@@ -954,6 +959,7 @@ link(item, pc);
 }
 goto start;
 }
+goto start;
 }
 dilend 
 
@@ -965,7 +971,7 @@ end
                              gate_guard
 
 names {"guard"}
-title "the Guard"
+title "the guard"
 descr "A guard is here, guarding the entrance to the Monastery."
 extra {} "A fairly heavy duty guard."
 flags {UNIT_FL_NO_TELEPORT}
@@ -1050,17 +1056,17 @@ wielding a weapon. */
 
 	sp_hammer
 names {"Spiritual Hammer","hammer"}
-title "Spiritual Hammer"
+title "a Spiritual Hammer"
 descr "A hammer seems to fade away as you approach."
 extra {}
 "A weapon of pure magic, this hammer is a personification of your faith,
 given shape by the Silver Torc. It seems to be an extension of the hand,
-rather than an independant weapon... it flares and radiates warmth,
+rather than an independent weapon... it flares and radiates warmth,
 pleasant to the body. You recognise the magic composing the weapon and
 know that it will probably cease to exist after a while."
 extra {"$identify"}
-"The Spiritual Hammer is is part of one's very being. It will only exist
-in physical world for a while and will be gone instantly if if you let
+"The Spiritual Hammer is part of one's very being. It will only exist
+in the physical world for a while and will be gone instantly if you let
 go of it. In case of wielder's death, it will simply fade away into
 nothingness, merging once again with the creator's soul.<br/>
 Calling forth the hammer sharpens your combat senses, slightly improving
@@ -1114,7 +1120,7 @@ wait(SFB_DONE,(command("remove"))and(medium.nameidx == "sp_hammer")and
 
 pc := activator;
 secure(pc,gone);
-act("Your $2N fades from the reality and re-joins your soul.",
+act("Your $2N fades from reality and re-joins your soul.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
 :gone:
 blah := dildestroy("hammernosteal@clericguild",pc);
@@ -1129,7 +1135,7 @@ end
 
         heal_torc
 names {"Silver Torc","torc"}
-title "Silver Torc"
+title "a Silver Torc"
 descr "A silvery torc lies on the ground, sparkling brightly."
 extra {}
 "Torc of white silver, symbol of Midgaard Healers, beautifully ornamented.
@@ -1144,13 +1150,13 @@ extra {"$identify"}
 Divine Sphere. "
 extra {"$improved identify"}
 "It also makes you more proficient at offering first
-aid and your strength of faith is refelcted in your strength of arm.
+aid and your strength of faith is reflected in your strength of arm.
 By praying while the torc is worn a spiritual weapon is called forth into
 your hand.<br/>"
 extra {"$wear_s"}
 "You put on $2n.<br/>
 You feel proud.<br/>"
-extra {"$wear_s"}
+extra {"$wear_o"}
 "$1n puts on $2n."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")

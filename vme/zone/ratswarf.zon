@@ -37,7 +37,7 @@ title "The Cottage"
 descr
 "The inside of the cottage is cheery and warmly lit by a small hearth.
 There is the pungent aroma of different incense all through the room.
-There is a small oak table with three chair around it and a small bed
+There is a small oak table with three chairs around it and a small bed
 with big fluffy pillows and an equally fluffy comforter. There is a
 small cabinet against the south wall. The floor is of polished oak
 and has a large black bear fur covering most of it.
@@ -117,8 +117,8 @@ title "Kings Road"
 descr
 "You continue along Kings Road, realizing this highway is a military
 tool, just as much as a sword is a tool for storm troopers.  By connecting
-his provinces with this fine road, the King insures his armies can reach and
-squash and insurrection that arises."
+his provinces with this fine road, the King ensures his armies can reach and
+squash any insurrection that arises."
 west to kingroad1;
 east to kingroad3;
 end
@@ -186,8 +186,8 @@ names {"darkwood"}
 title "Darkwood"
 descr
 "You are in a dark and foreboding forest.  The trees seem to reach out
-to scratch your face.  The terrain turns to rocky hills to the south.
-While the forest continues to the east."
+to scratch your face.  The terrain turns to rocky hills to the south,
+while the forest continues to the east."
  movement SECT_FOREST
 /* Elfhill is gone, Papi: north to enter@elfhill; */
 south to elf_camp;
@@ -201,7 +201,7 @@ end
 names {"hobgoblin camp"}
 title "Hobgoblin Encampment on a Hilltop"
 descr
-"After a strenuous hike you arrive to a messy encampment.  Equipment and
+"After a strenuous hike you arrive at a messy encampment.  Equipment and
 bedrolls are strewn about and a large bonfire burns foul foodstuffs in the
 center.  To the north you can oversee Kings Road.  To the south a narrow
 pass extends through snow capped mountains."
@@ -307,7 +307,7 @@ end
 names {"too dark to tell"}
 title "Snake Pit"
 descr
-"You are in a poorly lit alcove beneath the alter.  Darkness and
+"You are in a poorly lit alcove beneath the altar.  Darkness and
 something else slither out to meet you."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
 light -1
@@ -321,7 +321,7 @@ end
 names {"kings street"}
 title "Kings Street"
 descr
-"You are on the wide road in this city of averice.  A sign to the north
+"You are on the wide road in this city of avarice.  A sign to the north
 reads 'General Store'.  To the south is a hovel."
 movement SECT_CITY
 north to gen_store;
@@ -337,7 +337,7 @@ names {"general store"}
 title "Ratswharf General Store"
 descr
 "This rude establishment sells all manner of food and equipment. Rats
-and roaches hide beneath sacks of floor, while rusty weapons and armors
+and roaches hide beneath sacks of flour, while rusty weapons and armors
 sit in open barrels.  To the south can be heard the busy Kings Street."
 flags {UNIT_FL_INDOORS,UNIT_FL_NO_WEATHER}
 movement SECT_INSIDE
@@ -442,7 +442,7 @@ names {"old port"}
 title "Ratswharf Port"
 descr
 "Sacks of rotting leather and pillaged crates line this rickety pier.
-Old ropes and lie on weather beaten planks here.  A breeze comes from the
+Old ropes lie on weather-beaten planks here.  A breeze comes from the
 river to the south, to the north is the busy Slave Market."
 movement SECT_CITY
 north to slave_market;
@@ -498,8 +498,8 @@ end
 names {"stream"}
 title "The Deep Stream"
 descr
-"     You are floating on a deep but calm stream, flowing from the west past
-the small port town of Ratswarf. The water flows around a large old tree as
+"     You are floating on a deep but calm stream, flowing to the west past
+the small port town of Ratswharf. The water flows around a large old tree as
 it turns into the dark woods."
 movement SECT_WATER_SWIM
 east to stream3;
@@ -531,7 +531,7 @@ title "Wild Valley"
 descr
 "You move slowly through the green vines and thick undergrowth that
 cover the valley floor.  It would appear not many have come here in ages.
-To the east, the land rises to leave the valley.  To the west the vegetation
+To the west, the land rises to leave the valley.  To the east the vegetation
 clears to give way to a strange uprising of stone."
 movement SECT_MOUNTAIN
 west to valley_enter;
@@ -550,7 +550,7 @@ limbs and the huge oaks, dwarfed by the dragon itself, which have grown
 therein.  A vague evil emanates from the stone that once terrorized nations.
 The oak trees seem to be watching you."
 extra {"dragon"}
-"You peer down the stone dragons's mouth, frozen in snarl, and see only
+"You peer down the stone dragon's mouth, frozen in snarl, and see only
 darkness."
 movement SECT_MOUNTAIN
 /* must 'enter dragon' to goto dragon_mouth */
@@ -564,7 +564,7 @@ names {"dragon mouth","dragon","the dragon","ancalador"}
 title "In the Dragon's Mouth"
 descr
 "Rows of stone teeth as large as a troll line the walls here.  A tongue
-of pitted stone leads east, behind a stone molars as large as an iron shields."
+of pitted stone leads east, behind stone molars as large as iron shields."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -591,7 +591,7 @@ end
 names {"stone throat"}
 title "Throat of Stone"
 descr
-"The floor is uneven, with the middle of the passage of lower than the
+"The floor is uneven, with the middle of the passage lower than the
 sides, which rise up to meet the walls.  The whole passage is slightly graded,
 moving east and downward."
 bright -1
@@ -700,7 +700,7 @@ title "Dragon Lung"
 descr
 "The nuclear fires that empower a dragon with its frightful breath are
 here, though since they have been smouldering for so long, they merely scorch
-you and make you rue the choice wearing of metal armor."
+you and make you rue the choice of wearing metal armor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 down to tunnel2;
@@ -724,10 +724,10 @@ end
 				stomache
 
 names {"dragon stomach"}
-title "Ancalagor's Stomach"
+title "Ancalador's Stomach"
 descr
 "The dragon's throat ends to reveal a huge cavern lit from below by
-erie and diffuse lights of yellow and green.  Even more amazingly, a wooden
+eerie and diffuse lights of yellow and green.  Even more amazingly, a wooden
 bridge spans the stalactite-roofed cavern!  A steep grade leads down to the
 cavern floor safely enough and the bridge leads east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
@@ -742,8 +742,8 @@ end
 names {"wooden bridge"}
 title "Wooden Bridge"
 descr
-"You cannot imagine who would want to build a bridge in this fantasist
-cavern.  Large stalactites sit and rise up while the erie lights seem to move
+"You cannot imagine who would want to build a bridge in this fantastic
+cavern.  Large stalagmites sit and rise up while the eerie lights seem to move
 in the mists below.  The bridge continues to the east. You could of course
 try to go down onto the stalagmites, but that would probably be pure suicide!"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -759,8 +759,8 @@ end
 names {"wooden bridge"}
 title "Wooden Bridge"
 descr
-"You are in the middle of this wooden bridge. Large stalactites arise
-all around you and the erie lights continue to dance in the mists below.
+"You are in the middle of this wooden bridge. Large stalagmites arise
+all around you and the eerie lights continue to dance in the mists below.
 The bridge continues to the east.  You could of course
 try to go down onto the stalagmites, but that would probably be pure suicide!"
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -777,7 +777,7 @@ names {"wooden bridge"}
 title "Wooden Bridge"
 descr
 "The wood here, as in the rest of the bridge is old and acid eaten.
-The deadly stalactites jut up from below and more of the green and yellow light
+The deadly stalagmites jut up from below and more of the green and yellow light
 can be seen to move in the mists below.  The bridge ends at a small plateau to
 the east. You could of course try to go down onto the stalagmites, but that
 would probably be pure suicide!"
@@ -795,10 +795,10 @@ title "Stalagmite"
 descr
 "   You take the plunge and find yourself impaled upon a rainbow hued
 stalagmite.  THAT REALLY HURT.  Your lifeblood seeps from you as you thrash
-your limbs ineffectually to pry your self off.  Things become dark..."
+your limbs ineffectually to pry yourself off.  Things become dark..."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
 movement SECT_INSIDE
-dilcopy death_room@function(20, 50, "You spit up blood!!!!!</div>");
+dilcopy death_room@function(20, 50, "You spit up blood!!!!!");
 
 end
 
@@ -807,8 +807,8 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"Sharp stalactites reach up wards, created by the mineral ichor
-dripping off stalagmites far above.  Pools of acid fill every crevice on the
+"Sharp stalagmites reach upwards, created by the mineral ichor
+dripping off stalactites far above.  Pools of acid fill every crevice on the
 craggy cavern floor.  The cavern continues to the south and east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -822,7 +822,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like a giant jester's
 garb.  Puddles of weak stomach acid abound.  The cavern stretches in all
 directions but north."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -838,8 +838,8 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"Sharp stalactites reach up wards, created by the mineral ichor
-dripping off stalagmites far above.  Pools of acid fill every crevice on the
+"Sharp stalagmites reach upwards, created by the mineral ichor
+dripping off stalactites far above.  Pools of acid fill every crevice on the
 craggy cavern floor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -854,7 +854,7 @@ names {"acid forest"}
 title "Acid Forest"
 descr
 "You stand before an amazing sight.  Wrapped within the mists here on the
-cavern floor is a forest of oddly shaped stalactites surrounded everywhere by
+cavern floor is a forest of oddly shaped stalagmites surrounded everywhere by
 puddles of what must be the remnants of the dragon's stomach acid."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -870,8 +870,8 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"You are in the center of the dragons stomach cavern.  A wooden bridge
-passes far overhead.  Sharp stalactites poise here to meet those who would drop
+"You are in the center of the dragon's stomach cavern.  A wooden bridge
+passes far overhead.  Sharp stalagmites poise here to meet those who would drop
 from it."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -887,7 +887,7 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like a giant jester's
 garb.  Puddles of weak stomach acid abound.  A steep climb up leads to a
 large plateau at the end of the cavern."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
@@ -905,7 +905,7 @@ names {"acid forest"}
 title "Acid Forest"
 descr
 "Mists swirl about here, around strange crystal egg shells.  The cavern
-continues to the north and to the south."
+continues to the north and to the east."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 north to acid_forest4;
@@ -918,8 +918,8 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"Sharp stalactites reach upwards, created by the mineral ichor
-dripping off stalagmites far above.  Pools of acid fill every crevice on the
+"Sharp stalagmites reach upwards, created by the mineral ichor
+dripping off stalactites far above.  Pools of acid fill every crevice on the
 craggy cavern floor."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -934,9 +934,9 @@ end
 names {"acid forest"}
 title "Acid Forest"
 descr
-"The stalagmites here are large and rainbow-hued, like giants jester's
+"The stalagmites here are large and rainbow-hued, like a giant jester's
 garb.  Puddles of weak stomach acid abound.  The cavern stretches to the north
-and east. "
+and west."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 west to acid_forest8;
@@ -950,7 +950,7 @@ title "End of the Stomach"
 descr
 "The wooden bridge ends here, onto a large plateau above the cavern
 floor. The plateau overlooks the entire forest of acid and stone below. A
-small, steep, path leads to it and a tunnel leading east is set in the cavern
+small, steep path leads to it and a tunnel leading east is set in the cavern
 wall."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
@@ -965,7 +965,7 @@ names {"stone corridor"}
 title "Stone Corridor"
 descr
 "You are in a circular tunnel of stone.  The walls are irregular and
-pocked-marked.  The tunnel continues east and west."
+pockmarked.  The tunnel continues east and west."
 extra {"walls"}
 "A small fissure appears to be set in the south wall."
 bright -1
@@ -980,7 +980,7 @@ end
 				pancreas
 
 names {"pancreas"}
-title "The Dragons Pancreas"
+title "The Dragon's Pancreas"
 descr
 "You are in an oddly shaped chamber, what might have been some foul
 organ of Ancalador.  A yellowish light fills the room from nowhere, as if only
@@ -1168,7 +1168,7 @@ end
 names {"large intestine"}
 title "Large Intestine"
 descr
-"The rough walls of the tunnel scrape your armor and cuts your exposed
+"The rough walls of the tunnel scrape your armor and cut your exposed
 skin as you travel north or south."
 bright -1
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
@@ -1297,7 +1297,7 @@ title "the merchant"
 descr
 "A passing merchant is here."
 extra {}
-"This plump old fellow is resting here before he sets of again on his travels."
+"This plump old fellow is resting here before he sets off again on his travels."
 M_HUMAN_WARRIOR_SWORD (6,SEX_MALE)
 alignment -200
 money 30 IRON_PIECE
@@ -1373,7 +1373,7 @@ title "the evil Slaver"
 descr
 "The evil Slaver stands here, striking a swashbuckler's pose."
 extra {}
-"This breaded pirate-turned-businessman fancies himself a romantic hero of days
+"This bearded pirate-turned-businessman fancies himself a romantic hero of days
 of old, when men were men, and the bounty was better.  He tips his feathered
 cap at you and sneers."
 flags {UNIT_FL_NO_TELEPORT}
@@ -1416,7 +1416,7 @@ code
     goto auct;
 
   :bar:
-  exec("say Not a bad days work.", self);
+  exec("say Not a bad day's work.", self);
   pause;
   tf:=walk_room@function("grime_bar@ratswarf",4);
   pause;
@@ -1507,13 +1507,13 @@ code
 {
   heartbeat:=PULSE_SEC*60;
   :start:
-  exec("say You Sir, tired of lugging that heavy armor by yourself? Buy a slave!", self);
+  exec("say You, sir, tired of lugging that heavy armor by yourself? Buy a slave!", self);
   pause;
   exec("say Who will give me two score gold for this healthy slave?", self);
   pause;
   exec("say Two Goblins for the price of one! Hurry, today only!", self);
   pause;
-  exec("say Come on, come all, to the lands best Slave Emporium!", self);
+  exec("say Come one, come all, to the land's best Slave Emporium!", self);
   pause;
   goto start;
 }
@@ -1569,7 +1569,7 @@ end
 names {"one-eye","store keeper"}
 title "old One-Eye"
 descr
-"One-Eye, the general store keeper is minding the shop here."
+"One-Eye, the general store keeper, is minding the shop here."
 extra {}
 "Though he lost one eye in a scrape many years back, no one has bothered him
 since--you should see the other guy."
@@ -1621,7 +1621,7 @@ code
   exec("say Just what are you insinuating?", self);
   sendto("insinuating", buddy);
   pause;
-  exec("say Ratswarf will know law under the Elf Lord's rule!", self);
+  exec("say Ratswharf will know law under the Elf Lord's rule!", self);
   sendto("rule", buddy);
   pause;
   exec("glare captain", self);
@@ -1661,7 +1661,10 @@ code
   :init:
   buddy:=findunit(self, "commander", FIND_UNIT_SURRO, null);
   if(buddy==null)
-    goto start;
+  {
+    pause;
+    goto init;
+  }
   secure(buddy, nobuddy);
   :start:
   wait(SFB_MSG, activator==buddy);
@@ -1680,7 +1683,7 @@ code
   else if(argument=="goblin")
   {
     pause;
-    exec("say My liege's armies will route you faeries off da edge of da earth.", self);
+    exec("say My liege's armies will rout you faeries off da edge of da earth.", self);
     goto start;
   }
   else if(argument=="strut")
@@ -1698,7 +1701,7 @@ code
   else if(argument=="insinuating")
   {
     pause;
-    exec("say In da name of da Dragon Ancalador, I hereby claim Rastwarf!", self);
+    exec("say In da name of da Dragon Ancalador, I hereby claim Ratswharf!", self);
     goto start;
   }
   else if(argument=="rule")
@@ -1776,7 +1779,7 @@ title "the Hobgoblin Spearman"
 descr
 "A Hobgoblin Spearman is busy doing nothing here."
 extra {}
-"He awaits to return to his cave, which doesn't seem that small anymore, and to
+"He waits to return to his cave, which doesn't seem that small anymore, and to
 his mate, who doesn't seem that ugly anymore."
 M_HOBGOBLIN_WARRIOR_POLE(7,SEX_MALE)
 alignment -300
@@ -1798,7 +1801,7 @@ extra {}
 not spoken with anyone for ages.  The shaggy hermit draws you over and tells
 you a tale:
 	Some 800 years ago, when I was but a lad, a great dragon
-	ruled the land.  His name was Ancalador.  Many heros came
+	ruled the land.  His name was Ancalador.  Many heroes came
 	to do battle with him, but all failed and died, horribly,
 	I imagine.  But one wizard challenged the Drake to a magic
 	duel.  He too died, like the others, but with his last
@@ -1826,7 +1829,7 @@ title "the Green Slime"
 descr
 "A blob of Green Slime drops upon you!"
 extra {}
-"It looks like animated mucous, dissolving and eating all it touches."
+"It looks like animated mucus, dissolving and eating all it touches."
 M_SLIME_TINY(15, SEX_NEUTRAL)
 alignment 0
 
@@ -1839,7 +1842,7 @@ title "the Flame Dweller"
 descr
 "A Flame Dweller, basking in fire, is here."
 extra {}
-"It's shape changes like the flame it lives in.  One moment it may resemble a
+"Its shape changes like the flame it lives in.  One moment it may resemble a
 serpent, the next, a man.  It seems to be thoroughly enjoying itself."
 M_HUMAN_MAGE_FIRE (19,SEX_MALE,"cast fireball")
 alignment -50
@@ -1856,7 +1859,7 @@ descr
 "A Green Crystal Spider is roaming here."
 extra {}
 "The fantastic beast seems to be made of a crystalline substance which is
-giving off a green light.  It clicks it's crystal mandibles in irritation with
+giving off a green light.  It clicks its crystal mandibles in irritation with
 you."
 flags {UNIT_FL_NO_TELEPORT}
 M_SPIDER_TINY(16, SEX_MALE)
@@ -1875,9 +1878,9 @@ end
 names {"yellow crystal spider","spider"}
 title "the Yellow Crystal Spider"
 descr
-"A Yellow Crystal Spider is here"
+"A Yellow Crystal Spider is here."
 extra {}
-"Slightly smaller than it's green cousin, this creature also appears to be made
+"Slightly smaller than its green cousin, this creature also appears to be made
 of living crystalline substance which glows yellow."
 M_SPIDER_TINY(10, SEX_NEUTRAL)
 alignment -400
@@ -1926,7 +1929,7 @@ title "an Umber Hulk"
 descr
 "A lumbering Umber Hulk is here."
 extra {}
-"This great beast has huge mandibles and a mammals mouth, angry animal eyes set
+"This great beast has huge mandibles and a mammal's mouth, angry animal eyes set
 between unreadable insect multi eyes.  The effect is confusing."
 M_HUMAN_WARRIOR_NATURAL (18,SEX_MALE)
 alignment -750
@@ -2028,7 +2031,7 @@ names {"hatchet","axe"}
 title "an ugly hatchet"
 descr "An ugly hatchet is here."
 extra {}
-"This appears to be shoddy battle axe."
+"This appears to be a shoddy battle axe."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 /* Not pure Iron + Craftman ship = (90% - 10%) */
 WEAPON_DEF(WPN_HAND_AXE, BONUS_TERRIBLE, BONUS_AVERAGE)  // Xyzzy: -4,0
@@ -2094,7 +2097,7 @@ end
 
 names {"heavy iron coffer","coffer"}
 title "the heavy iron coffer"
-descr "A heavy iron coffer ."
+descr "A heavy iron coffer is here."
 extra {} "It looks very heavy."
 weight 100
 open {EX_OPEN_CLOSE, EX_CLOSED}
@@ -2119,7 +2122,7 @@ end
 
 names {"white essence", "horehound","potion","essence"}
 title "the essence of white horehound"
-descr "An brew of white horehound essence has been left here."
+descr "A brew of white horehound essence has been left here."
 extra {} "The potion swishes in a small vial."
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(45, SPL_REMOVE_POISON, SPL_NONE, SPL_NONE)
@@ -2131,8 +2134,8 @@ end
 
 			     potion_det_inv
 
-names {"foxglove", "potion"}
-title "an elixir with pinch of foxglove"
+names {"foxglove", "elixir", "potion"}
+title "an elixir with a pinch of foxglove"
 descr "An elixir with a pinch of foxglove has been left here."
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(25, SPL_DET_INVISIBLE, SPL_NONE, SPL_NONE)
@@ -2145,7 +2148,7 @@ end
 			     scroll_cause2
 names {"greasy scroll", "scroll"}
 title "a greasy scroll"
-descr "A  greasy scroll has been left here."
+descr "A greasy scroll has been left here."
 manipulate {MANIPULATE_TAKE}
 SCROLL_DEF(25, SPL_BLIND, SPL_NONE, SPL_NONE)
 /* affect: cause serious wounds, PAPI: Cause wounds is a HAND attack
@@ -2160,8 +2163,8 @@ end
 			       spider_slippers
 
 names {"spider slippers","slippers"}
-title "a pair of spider of slippers"
-descr "A pair of spider slippers are lying on the ground."
+title "a pair of spider slippers"
+descr "A pair of spider slippers is lying on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 SKILL_TRANSFER(SKI_CLIMB, BONUS_AVERAGE_PLUS)  // Xyzzy: +1
@@ -2174,7 +2177,7 @@ look quite comfortable. You notice that the slippers are not sticky at all
 on the inside."
 
 extra {"$identify"}
-"These slippers offer protection as good hard leather and give the wearer
+"These slippers offer protection as good as hard leather and give the wearer
 a bonus on climbing maneuvers."
 
 extra {"$improved identify"}
@@ -2228,7 +2231,7 @@ names {"tea of alfalfa", "alfalfa","potion"}
 title "the tea of alfalfa"
 descr "A tea of alfalfa has been left here."
 extra {}
-"Its a milky white solution that billows and churns."
+"It's a milky white solution that billows and churns."
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(100, SPL_RAISE_DEX, SPL_NONE, SPL_NONE)
 /*  affect: raise dex*/

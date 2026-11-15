@@ -44,8 +44,8 @@ help
 "    Somewhere in there are goblins encamped awaiting orders to
 swoop down and take Udgaard and Midgaard for their Masters. They
 have been waiting a very long time. Long enough that one might
-even think maybe, just maybe they have been forgotten, Now
-then must hide and fend for themselves. This includes stealing
+even think maybe, just maybe they have been forgotten. Now
+they must hide and fend for themselves. This includes stealing
 from the locals.
 Zone by Beren. Suggestions mail to PAPI.
 "
@@ -105,8 +105,8 @@ end
 
 title "At a Small Bed Chamber"
 descr
-"    This is a small dirty bed chamber. Small beds rests on the walls. It's
-very hot in here and the air is heavy of moist. Water is drifting down the
+"    This is a small dirty bed chamber. Small beds rest against the walls. It's
+very hot in here and the air is heavy with moisture. Water is drifting down the
 walls. You wonder who can live in this mess. A torch is hanging on the wall,
 lighting the room in a dim light. The only way from this room is to the east."
 extra {"torch"}
@@ -123,14 +123,14 @@ end
 title "The Storeroom"
 descr
 "    You are in the storeroom. Shelves are hanging at the walls, filled with
-all kind of disgusting stuff. To the south you see the kitchen, which is in
+all kinds of disgusting stuff. To the south you see the kitchen, which is in
 one with the storing area. You would probably think it looks good if you
-were a goblin architect. But now it just looks quite ugly. The exits is
+were a goblin architect. But now it just looks quite ugly. The exits are
 west to the cross and south to the kitchen."
 extra {"shelves"}
-"   The cans on the shelves says: 'lizarrd aye', 'marmalade', 'grass',
+"   The cans on the shelves say: 'lizarrd aye', 'marmalade', 'grass',
 'banana', etc. After a quick look in one can you firmly decide that you
-DON'T need any of this rotten stuff"
+DON'T need any of this rotten stuff."
 movement SECT_CITY
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 ALWAYS_LIGHT
@@ -159,7 +159,7 @@ end
 				jail
 title "The Goblin Jail"
 descr
-"    This is a ordinary jail. A bed and a latrine. The only oddity is
+"    This is an ordinary jail. A bed and a latrine. The only oddity is
 that the jail is more clean than the outside. It's probably the jail's 'guest'
 which has caused this. The only exit from this room is to the east through
 the iron door."
@@ -185,7 +185,7 @@ table. YUCK !
     The only exits from here lead to the middle of the throne room, which is
 to the east, and through an iron door to the west."
 extra {"food"}
-"This looks like something which has barely escaped the trash can"
+"This looks like something which has barely escaped the trash can."
 extra {"iron door"}
 "It looks like a door that could stand a massive attack."
 movement SECT_CITY
@@ -200,12 +200,12 @@ end
 title "At the Throne"
 descr
 "    In front of you, you see a throne, probably belonging to the great
-king Burp. The only obvious exit is to the north to the middle of the
+King Burp. The only obvious exit is to the north to the middle of the
 throne hall."
 extra {"throne","burp throne"}
 "A big bear skin is covering the throne. Also you see a lot of grease and
-some sort of slime. This is probably very good, if you were a goblin. At the
-closer examination you see a something which might be a badly hidden 'secret'
+some sort of slime. This is probably very good, if you were a goblin. On
+closer examination you see something which might be a badly hidden 'secret'
 door behind the throne. You would probably need to search for it! (use the
 search command)."
 movement SECT_CITY
@@ -223,7 +223,7 @@ end
 title "The Eastern Part of the Throne Hall"
 descr
 "    You are in the eastern part of a great hall. A horse shoe formed of
-tables are 'covering' the floor. You can't help notice that the mearest table 
+tables is 'covering' the floor. You can't help notice that the nearest table 
 is covered in grease. This is really a real goblin table. The exits are to the
 west into the middle of the throne hall and east to the kitchen."
 movement SECT_CITY
@@ -254,13 +254,13 @@ title "Behind the Throne"
 descr
 "   This is obviously King Burp's very secret public treasure room. It looks
 like something he has made himself. The craftsmanship is like an armless
-blind drunk's. Anyway... in the middle of the room you see a statue of king
+blind drunk's. Anyway... in the middle of the room you see a statue of King
 Burp. On the pedestal there is an inscription: 'King Burp, king of wisdom,
 powerfulness and ruler of the world'. The signature of the artist is the
 same, Burp. The only obvious exit from here is to the north."
 extra {"statue","burp"}
 "   The only clue that points in the direction that this is King Burp, is
-the loooong beard and the sceptre"
+the loooong beard and the sceptre."
 movement SECT_CITY
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 north to throne2 open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"secret door","secret","door"} key gob_tre_key;
@@ -276,7 +276,7 @@ end
 names {"yellow robe", "robe"}
 title "a yellow robe"
 descr
-"A yellow robe has been left here"
+"A yellow robe has been left here."
 extra {}
 "It's made of leather, then painted yellow. Actually a VERY ugly thing.
 Looking like something only a pimp, or perhaps Gwyn, would wear."
@@ -292,7 +292,7 @@ end
 names {"fine robe", "robe"}
 title "a fine robe"
 descr
-"A fine robe has been left here"
+"A fine robe has been left here."
 extra {}
 "It's made of red and black silk. Runes are all over the robe, making
 it very mystic and special."
@@ -306,7 +306,7 @@ end
 names {"mage robe", "robe"}
 title "a mage robe"
 descr
-"A mage robe has been left here"
+"A mage robe has been left here."
 extra {}
 "Even though this robe is made to make it look mystic and magical, even
 a child could see, that it isn't."
@@ -320,7 +320,7 @@ end
 names {"jail key", "key"}
 title "a jail key"
 descr
-"A key has been left here"
+"A key has been left here."
 extra {} "A very normal key, with an inscription saying 'JAIL KEY'"
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 type ITEM_KEY
@@ -348,7 +348,7 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 FOOD_DEF(2,0)
 weight 2
 cost 1 IRON_PIECE
-extra {} "This looks like an ordinary mushroom, maybe a little poisonous"
+extra {} "This looks like an ordinary mushroom, maybe a little poisonous."
 end
 
                                 stew
@@ -359,16 +359,16 @@ descr
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(3,0)
 weight 3
-extra {} "Nah, this food is defiantly NOT for humanoids !"
+extra {} "Nah, this food is definitely NOT for humanoids !"
 end
 
                            burp_sword
 names {"goblin sword", "short sword", "sword"}
-title "an goblin short sword"
+title "a goblin short sword"
 descr
-"A goblin short sword has been dropped here"
+"A goblin short sword has been dropped here."
 extra {}
-"   This sword are of great quality. It reminds very much of the sword type
+"   This sword is of great quality. It reminds one very much of the sword type
 'Cinquedea', also called five finger sword or ox tongue sword, because of the
 width of the sword. It has a mark with the writing 'Andrea dei Ferara'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
@@ -379,14 +379,14 @@ end
 
                            mguul_dagger
 names {"light goblin dagger","light dagger", "goblin dagger","dagger"}
-title "an light goblin dagger"
+title "a light goblin dagger"
 descr
-"A light goblin dagger has been left here"
+"A light goblin dagger has been left here."
 extra {}
 "   This is a weapon of the type 'kidney-dagger'. It is called so because of
-the hand-protector, which is formed like an kidney. This is a little better
+the hand-protector, which is formed like a kidney. This is a little better
 craftsmanship than an ordinary weapon of this type. The weight balance isn't
-correct though, the blade is to heavy."
+correct though, the blade is too heavy."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 2
@@ -395,12 +395,12 @@ end
 
                            goblin_sword
 names {"goblin broad sword","broad sword","goblin sword"}
-title "an goblin broad sword"
+title "a goblin broad sword"
 descr
-"A goblin broad sword has been left here"
+"A goblin broad sword has been left here."
 extra {}
 "  This is a completely normal bastard sword, fitted for a goblin. The only
-thing that are exceptional are the blood line in the middle of the blade."
+thing that is exceptional is the blood line in the middle of the blade."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -5,0
 weight 12
@@ -409,9 +409,9 @@ end
 
                            ghopla_mace
 names {"goblin mace","mace"}
-title "an goblin one-handed mace"
+title "a goblin one-handed mace"
 descr
-"A goblin one-handed mace has been left here"
+"A goblin one-handed mace has been left here."
 extra {}
 "  This looks like the typical wooden mace with an iron head. It has a very
 heavy head, which probably makes it even more devastating for an enemy. An
@@ -423,12 +423,12 @@ cost 5 SILVER_PIECE
 end
 
                           fool_sceptre
-names {"fools sceptre ", "sceptre"}
-title "an fools sceptre"
+names {"fool's sceptre", "fools sceptre", "sceptre"}
+title "a fool's sceptre"
 descr
-"A fools sceptre has been left here"
+"A fool's sceptre has been left here."
 extra {}
-"   This is a normal fools sceptre, with a wooden handle and a bulls bladder
+"   This is a normal fool's sceptre, with a wooden handle and a bull's bladder
 hanging on the top."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 type ITEM_TRASH
@@ -437,13 +437,13 @@ end
 
                           burp_sceptre
 names {"king burps sceptre", "kings sceptre", "burps sceptre", "sceptre"}
-title "King Burps sceptre"
+title "King Burp's sceptre"
 descr
-"King burps sceptre has been left here"
+"King Burp's sceptre has been left here."
 extra {}
 "   This is not a golden sceptre, nor is it a bronze sceptre. It's simply a
 totally whacked sceptre made of wood and painted with grass. To think this got
-any value you have to have other standards than the civilised world have."
+any value you have to have other standards than the civilised world has."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 type ITEM_TRASH
 weight 2
@@ -451,9 +451,9 @@ end
 
                           fake_beard
 names {"fake beard", "beard"}
-title "an beard"
+title "a fake beard"
 descr
-"A fake beard has been left here"
+"A fake beard has been left here."
 extra {}
 "   YUCK, this beard is filled with grease. It's really something only a real
 psychopath would wear on his head."
@@ -463,13 +463,13 @@ weight 2
 end
 
                           fools_hat
-names {"fools hat", "hat"}
-title "an fools hat"
+names {"fool's hat", "fools hat", "hat"}
+title "a fool's hat"
 descr
-"A fools hat has been left here"
+"A fool's hat has been left here."
 extra {}
 "   Oh, yeah... This is really the most precious thing you have ever seen. A
-small goblin fools hat with tiny bells. This should really make you silent
+small goblin fool's hat with tiny bells. This should really make you silent
 if you got the need to sneak someday."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -483,7 +483,7 @@ end
 names {"pointy wizard hat", "pointy hat", "hat"}
 title "a pointy wizard hat"
 descr
-"A pointy wizard hat has been left here"
+"A pointy wizard hat has been left here."
 extra {}
 "   This hat really looks magical. It's covered with small silver stars and
 half-moons, probably to summon the strengths from the dark sides of magic."
@@ -499,13 +499,13 @@ end
 names {"goblin sleeves", "sleeves"}
 title "some goblin sleeves"
 descr
-"Some goblin sleeves has been left here."
+"Some goblin sleeves have been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_ARMS}
 /* armour_type, quaility, optimal_strength */
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 8 COPPER_PIECE
-extra {} " These sleeves looks like normal sleeves, though they are greasy"
+extra {} " These sleeves look like normal sleeves, though they are greasy."
 end
 
                         gob_gauntlets
@@ -569,13 +569,13 @@ end
 names {"goblin boots", "boots"}
 title "some goblin boots"
 descr
-"Some goblin boots has been left here."
+"Some goblin boots have been left here."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_FEET}
 /* armour_type, quaility, optimal_strength */
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 10
 cost 6 COPPER_PIECE
-extra {} " Oh, how happy you are to get this fine greasy boots."
+extra {} " Oh, how happy you are to get these fine greasy boots."
 end
 
                               coins1
@@ -592,11 +592,11 @@ end
 				burp
 names {"king burp", "burp", "king"}
 title "King Burp"
-descr "king Burp is here looking at YOU."
+descr "King Burp is here looking at YOU."
 extra {}
 "  King Burp is a very fat goblin. Grease is running down through the 
 obvious fake beard he wears. In his right hand he holds an extremely ugly 
-sceptre. Around his shoulders there is very fine robe."
+sceptre. Around his shoulders there is a very fine robe."
 money 30 IRON_PIECE
 M_GOBLIN_WARRIOR_SWORD(6, SEX_MALE)
 
@@ -678,7 +678,7 @@ end
                                 mguul
 names {"mguul", "mage"}
 title "Mguul the mage"
-descr "Mguul the mage is here looking at King Burps fine beard"
+descr "Mguul the mage is here looking at King Burp's fine beard."
 extra {}
 "   This is truly the most magnificent mage you have ever seen. A great
 pointy hat, a long shining robe and a small leather bound book. At a closer
@@ -749,6 +749,7 @@ code
     pause;
     exec("cast burn "+char.name, self);
     pause;
+    unsecure(char);
     goto start;
   }
 :lostpc:
@@ -765,11 +766,11 @@ end
                                 ghopla
 names {"ghopla", "cleric"}
 title "Ghopla the cleric"
-descr "Ghopla the cleric is here agreeing with king Burp"
+descr "Ghopla the cleric is here agreeing with King Burp."
 extra {}
 "    This girl must certainly be the most ugly and disgusting of all the
 goblins in the world. Eyes almost touching each other and a mouth as wide as
-her head. Small pointy teeth reveals themselves."
+her head. Small pointy teeth reveal themselves."
 
 M_GOBLIN_CLERIC_CLUB(5, SEX_FEMALE, "cast cau li wo", "cast cur li wo burp")
 money 25 IRON_PIECE
@@ -859,12 +860,12 @@ end
                                 fool
 names {"fool"}
 title "the fool"
-descr "The fool is here entertaining"
+descr "The fool is here entertaining."
 extra {}
-"   Hey this guy are actually quite funny, sticking fingers up his nose.
+"   Hey this guy is actually quite funny, sticking fingers up his nose.
 He is wearing red clothes with yellow lines. On his head he is wearing a
-fools hat. Suddenly you realise that this fool are making fun at king
-Welmar of Midgaard.- HOW RUDE!"
+fools hat. Suddenly you realise that this fool is making fun of King
+Welmar of Midgaard. HOW RUDE!"
 money 10 IRON_PIECE
 M_GOBLIN_WARRIOR_CLUB(2, SEX_MALE)
 
@@ -879,7 +880,7 @@ code
   pause;
   exec("bounce", self);
   pause;
-  exec("emote emotes that he is king Welmar.", self);
+  exec("emote emotes that he is King Welmar.", self);
   pause;
   exec("puke", self);
   pause;
@@ -906,9 +907,9 @@ end
                                 baa
 names {"baa the goblin", "baa", "goblin"}
 title "Baa the goblin"
-descr "Baa the goblin is here speaking with Boo"
+descr "Baa the goblin is here speaking with Boo."
 extra {}
-"   Baa are having a problem with his arms. They are gesturing wildly, like
+"   Baa is having a problem with his arms. They are gesturing wildly, like
 a windmill. He is wearing a black goblin dress, especially made for goblins."
 
 M_GOBLIN_WARRIOR_SWORD(2, SEX_MALE)
@@ -934,13 +935,13 @@ code
     pause;
     exec("say My motter vas a very evil and stronng wizdard.", self);
     pause;
-    exec("she She coud kill all im den world, wit a pen.", self);
+    exec("say She coud kill all im den world, wit a pen.", self);
     pause;
     exec("say She was ruler of da hole MIDGAARD.", self);
     pause;
     exec("say Bud da gods had he removed from da world.", self);
     pause;
-    exec("Bud nod withoud a big figt!", self);
+    exec("say Bud nod withoud a big figt!", self);
     pause;
     exec("say Modder is da one dad I hav da genes from.", self);
     pause;
@@ -976,7 +977,7 @@ end
 
 names {"boo the goblin", "boo", "goblin"}
 title "Boo the goblin"
-descr "Boo the goblin is here listening to Baa"
+descr "Boo the goblin is here listening to Baa."
 extra {}
 "   Boo is really looking bored, listening to Baa. She is wearing normal
 yellow leather-armour."
@@ -1014,7 +1015,7 @@ code
     pause;
     exec("laugh baa", self);
     pause;
-    exec("emote points a finger to his ear, indicating that Bass isn't to smart.", self);
+    exec("emote points a finger to his ear, indicating that Baa isn't too smart.", self);
     pause;
     exec("say Yes da gods are wimps.", self);
     pause;
@@ -1041,11 +1042,11 @@ end
                                 bii
 names {"bii the goblin","bii","goblin"}
 title "Bii the goblin"
-descr "Bii the goblin is here explaining about life"
+descr "Bii the goblin is here explaining about life."
 extra {}
 "  Bii is a VERY attractive goblin. Her eyes are green with a spark of blue.
-When she smiles, her brown teeth crinkles up around her extreme round nose.
-Her ears are long and shiny, it's truly a looong time she's taken a shower."
+When she smiles, her brown teeth crinkle up around her extreme round nose.
+Her ears are long and shiny, it's truly a looong time since she's taken a shower."
 
 M_GOBLIN_WARRIOR_SWORD(4, SEX_FEMALE)
 money 20 IRON_PIECE
@@ -1084,7 +1085,7 @@ code
         pc:=activator;
         secure(pc,lostpc);
         act("$1n notices you.", A_SOMEONE, self, null, activator, TO_VICT);
-        act("$1n notices $2n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
+        act("$1n notices $3n.", A_SOMEONE, self, null, activator, TO_NOTVICT);
         pause;
         exec("say Yu are nod from dis place, Yu DIE...?", self);
         pause;
@@ -1107,10 +1108,10 @@ end
                                 bee
 names {"bee the goblin","bee","goblin"}
 title "Bee the goblin"
-descr "Bee the goblin is learning about life"
+descr "Bee the goblin is learning about life."
 extra {}
 "   She's not half the attraction that Bii is. Her clothes are completely
-unstained and not greasy at all. Her hair are well-set, and she's having
+unstained and not greasy at all. Her hair is well-set, and she's having
 writing on her back saying: 'THIS ONE IS A CLEAN ONE'"
 
 M_GOBLIN_WARRIOR_SWORD(4, SEX_FEMALE)
@@ -1128,17 +1129,17 @@ code
 :start:
     exec("say Oh I thought that it was round.", self);
     pause;
-    exec("say Oh, I though that the graverty held them around the world.", self);
+    exec("say Oh, I thought that the graverty held them around the world.", self);
     pause;
-    exec("say The do? Dwarves, elves, gnomes and humans?", self);
+    exec("say They do? Dwarves, elves, gnomes and humans?", self);
     pause;
-    exec("say Wow! I thought that the lived in peace in towns!", self);
+    exec("say Wow! I thought that they lived in peace in towns!", self);
     pause;
-    exec("say Eat Earth? Thats a lie!", self);
+    exec("say Eat Earth? That's a lie!", self);
     pause;
     exec("say How?", self);
     pause;
-    exec("say Oh, thats why.", self);
+    exec("say Oh, that's why.", self);
     pause;
     exec("say Okay!", self);
     pause;
@@ -1151,7 +1152,7 @@ code
         s := activator.name;
         exec("look "+s, self);
         pause;
-        exec("say Thats a person from Midgaard or Udgaard!", self);
+        exec("say That's a person from Midgaard or Udgaard!", self);
         pause;
         exec("kill "+s, self);
         pause;
@@ -1172,7 +1173,7 @@ title "the goblin officer"
 descr "The goblin officer is here, looking at you."
 extra {}
 "   This is a strong looking goblin. His eyes reveal that he's been in a
-lot of wars. This is NOT the type you want to mess with, thats for sure."
+lot of wars. This is NOT the type you want to mess with, that's for sure."
 
 M_GOBLIN_WARRIOR_SWORD(4, SEX_MALE)
 money 20 IRON_PIECE
@@ -1209,7 +1210,7 @@ title "the goblin cook"
 descr "The goblin cook is here, preparing a dinner."
 extra {}
 "  This is a small fat goblin. Grease and sweat are running down his chins.
-He's totally uninterested in you, only looking down his supper."
+He's totally uninterested in you, only looking down at his supper."
 
 M_GOBLIN_WARRIOR_NATURAL(5, SEX_MALE)
 money 25 IRON_PIECE
@@ -1274,7 +1275,7 @@ code
       goto start;
    }
 
-   i := u1.value[3] + u1.value[3]; /* Test for poison */
+   i := u1.value[3] + u2.value[3]; /* Test for poison */
    unsecure(u1);
    destroy(u1);
    unsecure(u2);
@@ -1304,21 +1305,20 @@ code
 
    pause;
    exec("give stew to burp", self);
-   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
-     destroy(u1);
    pause;
 
    exec("give stew to ghopla", self);
-   u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
-     destroy(u1);
    pause;
 
    exec("give stew to mguul", self);
+
+   // Throw away the stew of a lord who wasn't here, so it doesn't pile up
    u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
-   if (u1)
+   while (u1 != null)
+   {
      destroy(u1);
+     u1 := findunit(self, "stew", FIND_UNIT_INVEN, null);
+   }
    pause;
 
    exec("say Mhore is caming raight up, ma lurds!", self);
@@ -1415,7 +1415,7 @@ title "Esbanoviz the dwarf"
 descr "Esbanoviz the dwarf is standing here."
 
 extra {}
-"   By closer look at Esbanoviz you notice that this is'nt a dwarf after all!
+"   On closer look at Esbanoviz you notice that this isn't a dwarf after all!
 Under the cape you see green evil eyes, a small bald head and pointy teeth.
 This guy is truly worth checking out!"
 
@@ -1483,7 +1483,7 @@ end
 names {"goblin prisoner", "prisoner", "goblin"}
 title "the goblin prisoner"
 extra {"$shout world"} ""   // shouts reach the whole game, not only this zone
-descr "A prisoner is here, desperately looking for a way out"
+descr "A prisoner is here, desperately looking for a way out."
 extra {}
 "   The creature in front of you is about 4 feet high. His eyes are shining
 with insanity. He's wearing nothing but a loincloth. He is very clean and
@@ -1533,7 +1533,7 @@ code
   pause;
   exec("say It's fulfilled...King Burp is DEAD!", self);
   pause;
-  exec("shout King Burp of the goblins are dead!!!", self);
+  exec("shout King Burp of the goblins is dead!!!", self);
   pause;
   goto start;
 }
@@ -1568,7 +1568,7 @@ names {"small goblin", "goblin"}
 title "the goblin"
 descr "A small goblin is here, trying to hide himself."
 extra {}
-"   This is a very tricky goblin. Hiding very good in the bushes. This guy
+"   This is a very tricky goblin. Hiding very well in the bushes. This guy
 is NOT the type YOU want to fight..."
 
 M_GOBLIN_WARRIOR_SWORD(6, SEX_FEMALE)
@@ -1590,7 +1590,7 @@ code
     goto start;
   s := activator.name;
   pause;
-  act("<div class='whisper'>$1n whispers 'ready?'", A_SOMEONE, self, null, null, TO_ALL);
+  act("<div class='whisper'>$1n whispers 'ready?'</div>", A_SOMEONE, self, null, null, TO_ALL);
   sendto(s, findsymbolic("goblin2@goblin_cave"));
   pause;
   pause;
@@ -1609,7 +1609,7 @@ names {"small goblin", "goblin"}
 title "the goblin"
 descr "A small goblin is here, trying to hide himself."
 extra {}
-"   This is a very tricky goblin. Hiding very good in the bushes. This guy
+"   This is a very tricky goblin. Hiding very well in the bushes. This guy
 is NOT the type YOU want to fight..."
 
 M_GOBLIN_WARRIOR_SWORD(5, SEX_MALE)
@@ -1619,16 +1619,19 @@ dilcopy teamwork@function("goblin / bryan / esbanoviz");
 dilcopy hideaway@function(120);
 
 dilbegin goblin2prg();
+var
+  s : string;
 code
 {
   heartbeat := PULSE_SEC*2;
   :start:
   wait(SFB_MSG, (activator.nameidx=="goblin1") and (activator.zoneidx=="goblin_cave"));
+  s := argument;
   pause;
-  act("$1n whispers 'yes... kill... KILL!", A_SOMEONE, self, null, null, TO_ALL);
+  act("$1n whispers 'yes... kill... KILL!'", A_SOMEONE, self, null, null, TO_ALL);
   pause;
   pause;
-  exec("kill "+argument, self);
+  exec("kill "+s, self);
   pause;
   goto start;
 }

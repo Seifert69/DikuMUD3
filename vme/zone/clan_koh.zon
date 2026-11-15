@@ -55,11 +55,11 @@ dilcopy block_flee@clans();
 end
 
 clan_fount
-title "In the Knights Jungle"
+title "In the Knights' Jungle"
 descr
 "Walking into this room you have a feeling like you entered a rain
 forest. The beautiful fountain is surrounded by ivy and flowers. Drinking
-this water could quench any warriors thirst."
+this water could quench any warrior's thirst."
 ALWAYS_LIGHT
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
@@ -80,7 +80,7 @@ title "The Board Room of the Knights"
 descr
 "The hall comes into form from the Fountain Room to the west, where the 
 feel of an impossibly large rain forest opens up. Large stone walls 
-bring form to the room. The latest clans news, happenings, and updates 
+bring form to the room. The latest clan news, happenings, and updates 
 are posted on a board here, maybe you should check it out. Down the stairs 
 lies the famously wealthy riches of the KoH."
 
@@ -93,7 +93,7 @@ west to clan_fount;
 end
 
 htown
-title "The Knights Hoard"
+title "The Knights' Hoard"
 descr
 "A solid underground chamber, this room holds the famous wealth of the 
 Knights of Honor. You see a large chest in the corner of this room. Perhaps it 
@@ -248,7 +248,7 @@ names {"travel gate","gate"}
 title "a travel gate"
 descr "A travel gate is here."
 extra{}
- "A travel gate is here, waiting for you to enter"
+ "A travel gate is here, waiting for you to enter."
 flags {UNIT_FL_NO_TELEPORT}
 type ITEM_OTHER
 
@@ -341,7 +341,7 @@ end
 %mobiles
 /* bought shop by doggy */
 aohshopkeeper
-names {"Alaithsil", "shop keeper"}
+names {"Alaithsil", "shop keeper", "shopkeeper"}
 title "Alaithsil the Clan Shopkeeper"
 descr "Alaithsil the clan shop owner sits here awaiting your order."
 extra {}
@@ -357,17 +357,17 @@ dilcopy shopkeeper@function(
 "$1n says, '$3n, you don't have that.'",
 "$1n says, 'I don't trade with such things.'",
 "$1n says, '$3n, you can't afford $2n.'",
-"$1n says, 'Thank you %3n. That cost you $2n.'",
-"$1n says, 'Thank you %3n.'",
+"$1n says, 'Thank you $3n. That cost you $2n.'",
+"$1n says, 'Thank you $3n.'",
 "$1n says, 'I don't have that many $2Ns.'",
-"$1n mumbles in his sleep, 'Buggar off, I'm sleeping...'",
-"$1n says, 'Why would i want that?'",
+"$1n mumbles in his sleep, 'Bugger off, I'm sleeping...'",
+"$1n says, 'Why would I want that?'",
 "$1n says, 'Sorry, I can't afford that.'"}
 ,{"1","5", "7","18","20","24"}, "2 10 19", 100, 40,2*PLATINUM_MULT,"", "" );
 end
 
 issashopkeep
-names {"Ithicus", "shop keeper"}
+names {"Ithicus", "shop keeper", "shopkeeper"}
 title "Ithicus the Shopkeeper"
 descr "Ithicus the shop owner waits for your request."
 extra {}
@@ -383,9 +383,9 @@ dilcopy shopkeeper@function(
 "$1n says, '$3n, you don't have that with you.'",
 "$1n says, 'I don't trade with such things.'",
 "$1n says, '$3n, you can't afford $2n.'",
-"$1n says, 'Thank you %3n. That cost you $2n.'",
-"$1n says, 'Thank you %3n.'",
-"$1n says, 'I have that many $2Ns in stock.'",
+"$1n says, 'Thank you $3n. That cost you $2n.'",
+"$1n says, 'Thank you $3n.'",
+"$1n says, 'I don't have that many $2Ns in stock.'",
 "$1n says, 'Please wait until the shop opens.'",
 "$1n says, 'I cannot sell that.'",
 "$1n says, 'Sorry, I can't afford that.'"}
@@ -394,7 +394,7 @@ end
 
 /*stationary */
 guard2
-names {"shimmering figure","figure","guard"}
+names {"shimmering figure","shimmering guard","figure","guard"}
 title "a shimmering guard"
 descr "A shimmering figure stands here motionless, guarding the path beyond."
 extra {}
@@ -427,7 +427,7 @@ end
 
 /*internal wandering */
 guard3
-names {"shimmering figure","figure","guard"}
+names {"shimmering figure","shimmering guard","figure","guard"}
 title "a shimmering guard"
 descr "A shimmering figure wanders the area, looking for intruders."
 extra {}
@@ -461,7 +461,7 @@ end
 
 /*default stationary*/
 guard
-names {"shimmering figure","figure","guard"}
+names {"shimmering figure","shimmering guard","figure","guard"}
 title "a shimmering guard"
 descr "A shimmering figure stands here motionless, guarding the path beyond."
 extra {}

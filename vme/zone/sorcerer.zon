@@ -46,13 +46,13 @@ Skray email: otap@dorit.ihi.ku.dk<br/>"
 
 help
 "Welcome to the caves of the Midgaard Sorcerers, the practicers of combat
-magic and shapers of the materia. This Guild concentrates of the
-development of ones magical abilities rather than the physical values.
+magic and shapers of the materia. This Guild concentrates on the
+development of one's magical abilities rather than the physical values.
 
         Training/Education
 
   Spell Practice        - Claudius the Spell Master, from the entrance follow
-			  path North-North-West-West-North-West-Nort-North.
+			  path North-North-West-West-North-West-North-North.
   Skill Practice        - Forbin the Master of Skills, from the entrance
 follow
 			  path North-North-West-West-North-West-West-South.
@@ -90,7 +90,7 @@ code
    {
       act("An eerie chant fills the air around you...",
           A_ALWAYS, activator, null, null, TO_ALL);
-      act("$1n glows in a pale light as his wounds close up!",
+      act("$1n glows in a pale light as $1s wounds close up!",
           A_ALWAYS, self, null, null, TO_ALL);
       self.hp := self.max_hp;
    }
@@ -113,7 +113,7 @@ code
          A_SOMEONE, self, null, self.fighting,TO_ALL);
    act("You feel your life being drained away!",
          A_SOMEONE, self.fighting, null, null,TO_CHAR);
-   act("$3n pales and sinks to $3s knees, $3s body depraved of "+
+   act("$3n pales and sinks to $3s knees, $3s body deprived of "+
    "strength!",A_SOMEONE, self, null, self.fighting,TO_NOTVICT);
    self.fighting.hp := 0;
    self.fighting.position := POSITION_INCAP;
@@ -142,9 +142,9 @@ code
    num := rnd(1,10);
    if (num > 2) goto start;
    exec("scream", self.inside);
-   act(self.inside.name+" cries out and stumbles backwards .",
+   act(self.inside.name+" cries out and stumbles backwards.",
        A_ALWAYS, self.inside, null, null, TO_REST);
-   act("You cry out loud as you bump your head on a stalactites.",
+   act("You cry out loud as you bump your head on a stalactite.",
        A_ALWAYS, self.inside, null, null, TO_CHAR);
    self.inside.hp := self.inside.hp - (rnd(1,10));
    pause;
@@ -253,7 +253,7 @@ if(fire < 20)
       {
         act("Your $2N glows slightly as it attempts to battle $3n's will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-        act("$1n's $2N glows slightly in an attempt to battle $3n will!"
+        act("$1n's $2N glows slightly in an attempt to battle $3n's will!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
         act("You feel $1n's $2N intruding on your will, you push the assault back!"
            ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
@@ -273,7 +273,7 @@ if(fire < 20)
  position_update(self.outside);
  act("Your Vorous glows a little as it draws your energy to prepare for battle!"
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
- act("$1n's grimaces a bit as $1s $2N glows."
+ act("$1n grimaces a bit as $1s $2N glows."
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
  goto start;
 
@@ -284,7 +284,7 @@ pwr:=pwr+6;
 if (pwr>12) pwr := 12;
  act("Your Vorous hums as it regenerates itself."
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
- act("$1n's Vorous hums quietly ."
+ act("$1n's Vorous hums quietly."
      ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
 goto init;
 }
@@ -430,7 +430,7 @@ extra {"chairs","cushions","chair","cushion"}
 EXTREMELY comfy.<br/>"
 extra {"servants"}
 "Mostly gnomes as those are not only the most trusted among Sorcerers but
-the ones with best manners as well.<br/>"
+the ones with the best manners as well.<br/>"
 south to parlor;
 flags {UNIT_FL_SACRED,UNIT_FL_NO_WEATHER}
 movement SECT_INSIDE
@@ -481,7 +481,7 @@ to the entrance and the other directions lead onward through the
 first floor of the tower."
 extra {"debris"}
 "All of the remnants of its construction are left here, most probably
-have not been moved in quite awhile.<br/>"
+have not been moved in quite a while.<br/>"
 extra {"tools"}
 "There are all kinds still here, hammers, sanding devices, you name
 it and you could probably find it here.<br/>"
@@ -508,7 +508,7 @@ to the entrance and the other directions lead onward through the
 first floor of the tower."
 extra {"debris"}
 "All of the remnants of its construction are left here, most probably
-have not been moved in quite awhile.<br/>"
+have not been moved in quite a while.<br/>"
 extra {"tools"}
 "There are all kinds still here, hammers, sanding devices, you name
 it and you could probably find it here.<br/>"
@@ -531,7 +531,7 @@ to the entrance and the other directions lead onward through the
 first floor of the tower."
 extra {"debris"}
 "All of the remnants of its construction are left here, most probably
-have not been moved in quite awhile.<br/>"
+have not been moved in quite a while.<br/>"
 extra {"tools"}
 "There are all kinds still here, hammers, sanding devices, you name
 it and you could probably find it here.<br/>"
@@ -559,7 +559,7 @@ unity thought for so many years but simply a hiding place
 for some unknown regions of Midgaard."
 extra {"debris"}
 "All of the remnants of its construction are left here, most probably
-have not been moved in quite awhile."
+have not been moved in quite a while."
 extra {"tools"}
 "There are all kinds still here, hammers, sanding devices, you name
 it and you could probably find it here."
@@ -830,8 +830,8 @@ descr
 "   As you enter this room it seems to take on an atmosphere all its
 own. The darkness of the caverns you just passed through is about as
 far off as you could imagine and your whole being is bathed in the
-most wonderful shimmering light. Particles of miniscule size take on
-a life of their own and join the cascade of light eminating from every
+most wonderful shimmering light. Particles of minuscule size take on
+a life of their own and join the cascade of light emanating from every
 nook of the room. You cannot trace the source of the light but its
 effect is almost hypnotic, driving any curiosity far from your mind."
 extra {"light", "lights", "shimmering light", "shimmering lights"}
@@ -853,7 +853,7 @@ descr
 culminate here creating a blanket so thick you fear walking an inch in
 every direction. Although there is no wind that you could feel, there
 is definitely something causing the mist to swirl the way it does. It
-behaves similarly to a whirl pool yet there appears nowhere it could
+behaves similarly to a whirlpool yet there appears nowhere it could
 possibly descend to!"
 extra {"mist", "fog"}
 "It is quite thick here, making you second guess any movement you make.
@@ -1065,7 +1065,7 @@ dilcopy shopkeeper@function(
 "coffe_cup@midgaard 5 10","coffee@arabian 10 20"},
 {
  "$1n apologizes 'We seem to be out of this drink.'",
- "$1n discreetly points out lack of such item.",
+ "$1n discreetly points out the lack of such an item.",
  "$1n smiles 'We do not buy this here...'",
  "$1n smiles 'I am sorry, but your monetary situation disallows this...'",
  "$1n serves you your drink.",
@@ -1101,7 +1101,7 @@ extra {}
 He has been sent here for one purpose, to test the sorcerers of the
 Sorcerer Guild. His arcane knowledge is said to be unsurpassed.<br/>
 As you regard him, he sweeps back his stark-white hair and stares at you
-with cold disgust in his elvin eyes."
+with cold disgust in his elven eyes."
 alignment -800
 money 1 SILVER_PIECE
 exp 120
@@ -1116,7 +1116,7 @@ descr "The Mage of Neutrality flexes her fingers and grins at you."
 extra {}
 "A woman of older age, gray streaks showing in her black hair. A powerful
 aura surrounds her, confidence and power radiating from her. Her task is
-to challenge Sorcerers to test of strength - it is widely known that she
+to challenge Sorcerers to a test of strength - it is widely known that she
 is more than a match for most."
 M_HUMAN_MAGE_FROST(100,SEX_FEMALE,"icestorm")
 alignment 0
@@ -1214,7 +1214,7 @@ dilcopy SetTitles@guilds(GUILD_SORCERER, {"Third Order Mesmerist",
 "Third Order Mesmerist", "Secondary Mesmerist", "Secondary Mesmerist",
 "Mesmerist Prime", "Mesmerist Prime", "Lesser Cagliostro", "Lesser Cagliostra",
 "Greater Cagliostro", "Greater Cagliostra", "Cagliostro Prime",
-"Cagliotsra Prime", "Student of Alchemy", "Student of Alchemy",
+"Cagliostra Prime", "Student of Alchemy", "Student of Alchemy",
 "Third Order Alchemist", "Third Order Alchemist", "Secondary Alchemist",
 "Secondary Alchemist", "Alchemist Prime", "Alchemist Prime",
 "Master Alchemist of the Ages", "Alchemist Mistress of the Ages",
@@ -1229,8 +1229,8 @@ dilcopy SetTitles@guilds(GUILD_SORCERER, {"Third Order Mesmerist",
 
 dilcopy Specialize@guilds(GUILD_SORCERER, "alespec@sorcerer",
     { "say $1N, it is important for you to understand, that specialization is an irreversible process.", 
-      "say Once you commit this process will alter your body permanently.",
-      "say I'll give you a mug of red ale. Once you cosume it the change will occur.",
+      "say Once you commit, this process will alter your body permanently.",
+      "say I'll give you a mug of red ale. Once you consume it the change will occur.",
       "say Remember, this will only work for those who have been a Conjurer and never specialized.",
       "::$3n hands you a mug of red ale.::$3n hands a mug of red ale to $1n."});
 
@@ -1238,7 +1238,7 @@ dilcopy MasterJoin@guilds(GUILD_SORCERER, GUILD_SORCERER_EXCL, QUEST_SORCERER_EN
  {"say You have been banned from our guild, you can't rejoin.","spit $1N"},
  {"eye $1N", "say Perhaps you have been hitting your head too much lately, $1N?", "say You're already a member of our guild."},
  {"glare $1N", "say Followers of the faith cannot master the science of magic."},
- {"say To join $1N, you must prove yourself worthy by completing the Sorcerer's Guild quest.","say Go speak with Master Forbin."},
+ {"say To join, $1N, you must prove yourself worthy by completing the Sorcerer's Guild quest.","say Go speak with Master Forbin."},
  {"handshake $1N", "say Welcome to the Sorcerer's Guild, $1N."});
 
 
@@ -1287,12 +1287,10 @@ code
    link(item, pc);
    exec("emote gives a vorous to "+pc.name, self);
    pause;
-   exec("say Wield it when needed... it is hardly a weapon of power, yet
-   useful.",self);pause;
+   exec("say Wield it when needed... it is hardly a weapon of power, yet useful.",self);pause;
    exec("hand "+pc.name, self);pause;
    exec("say Always glad to see a fellow Sorcerer.",self);pause;
-   exec("say Fare Thee well, "+pc.name+", bring the wide world my
-   regards.",self);
+   exec("say Fare thee well, "+pc.name+", bring the wide world my regards.",self);
    unsecure(pc);
    goto start;
 
@@ -1394,7 +1392,7 @@ descr "Forbin the Master of Skills is here to teach you."
 extra {}
 "The halfling representative for the Midgaard Sorcerers. Quick with his
 wits he can use his great knowledge of skills to perform almost any feat.
-You notice at most of his feet hair has been burned away - perhaps a
+You notice that most of the hair on his feet has been burned away - perhaps a
 result of a fumbled fireball."
  flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED, CHAR_DETECT_INVISIBLE}
@@ -1414,7 +1412,7 @@ dilcopy TrainMemberChk@guilds(SORCERER_GUILD, "");
 #undef _SKILL
 
 dilcopy qstSimpleQuest@quests(QUEST_SORCERER_ENTRY,
-         {"say Hey $1N, want to prove yourself worth to our guild?",
+         {"say Hey $1N, want to prove your worth to our guild?",
           "say All you need to do is to bring me the head of the Gnome Sorceress.", 
           "say Just nod if you accept."},
          {"say Excellent! Best of luck, $1N."},
@@ -1424,7 +1422,7 @@ dilcopy qstSimpleQuest@quests(QUEST_SORCERER_ENTRY,
           800, 1 * COPPER_MULT, {""}, "");
 
 dilcopy qstItemsWanted@quests(QUEST_SORCERER_ENTRY, {"head@death"}, {"decapCheck@quests 0 gnome_sorceres@gnome"},
-         {"say Excellent, thank you $1N."},
+         {"say Excellent, thank you, $1N."},
           "say I can't accept that, maybe you could bring me the head of the Gnome Sorceress?");
 
 end
@@ -1497,9 +1495,9 @@ extra {"$wear_s"}
 extra {"$wear_o"}
 "$1n slips $1s hand around the handle of $2n and prepares for combat."
 extra {"$rem_s"}
-"You sheath $2n in your belt."
+"You sheathe $2n in your belt."
 extra {"$rem_o"}
-"$1n sheaths $2n in $1s belt."
+"$1n sheathes $2n in $1s belt."
 manipulate {MANIPULATE_TAKE,MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -1526,7 +1524,7 @@ end
 	chatboard
 names {"lines of text","text","lines","gossip"}
 title "the glowing text"
-descr "Thin lines of glowing text hang in the air, providing latest gossip."
+descr "Thin lines of glowing text hang in the air, providing the latest gossip."
 dilcopy board@boards("chat","","rem_res@boards","",100);
 flags {UNIT_FL_NO_TELEPORT}
 end
@@ -1537,7 +1535,7 @@ title "a libram entitled Practical Demonology"
 descr "A huge tome lies here, bound in deeply red leather."
 extra {}
 "A huge tome bound in deeply red leather with golden letters on the cover
-depicting 'Practical Demonology'. As you peer at the heavy pages of  the
+depicting 'Practical Demonology'. As you peer at the heavy pages of the
 libram, you notice various images and diagrams of summoning circles,
 binding sigla and controlling power words... This tome looks like a
 good source of knowledge for a Demonologist of any kind."
@@ -1546,9 +1544,9 @@ extra {"$identify"}
 knowledge of summoning techniques.<br/>"
 extra {"$improved identify"}
 "It will add 1% to your Summoning Sphere knowledge.<br/>
-Its heavy weight and akward size will reduce your effective dexterity by
+Its heavy weight and awkward size will reduce your effective dexterity by
 three.<br/>"
-extra {"wear_s"}
+extra {"$wear_s"}
 "You lift the heavy tome and open it."
 extra {"$wear_o"}
 "$1n holds $2n and opens it."
@@ -1582,7 +1580,7 @@ scroll to be the sign of 'Energy'."
 extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
 "The sigils form a magical spell on the scroll.<br/>"
 extra {"$identify"}
-"This scroll contains spells to recharge your wands and staffs..<br/>"
+"This scroll contains spells to recharge your wands and staffs.<br/>"
 extra {"$improved identify"}
 "The scroll has unknown powers.<br/>"
 SCROLL_DEF(78,SPL_CHARGE_WAND,SPL_CHARGE_STAFF,SPL_NONE)
@@ -1641,7 +1639,7 @@ scroll to be the sign of 'Repair'."
 extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
 "The sigils form a magical spell on the scroll.<br/>"
 extra {"$identify"}
-"This scroll contains a Repair spell to strengen your weapons and
+"This scroll contains a Repair spell to strengthen your weapons and
 armour.<br/>"
 extra {"$improved identify"}
 "The scroll has unknown powers.<br/>"
@@ -1662,7 +1660,7 @@ extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
 "The sigils form a magical spell on the scroll.<br/>"
 extra {"$identify"}
 "This scroll will raise your Mana but drain your hitpoints. Use
-carefully, can be deadly in inexperienced hands..<br/>"
+carefully; it can be deadly in inexperienced hands.<br/>"
 extra {"$improved identify"}
 "The scroll has unknown powers.<br/>"
 SCROLL_DEF(25,SPL_MANA_BOOST,SPL_NONE,SPL_NONE)
@@ -1683,7 +1681,7 @@ pc:= activator;
 secure(pc,gone);
 act("Your body shivers as the magic drains your lifeblood!"
 ,A_ALWAYS,pc,null,null,TO_CHAR);
-act("$1n pales as the magic drains his lifeblood!"
+act("$1n pales as the magic drains $1s lifeblood!"
 ,A_ALWAYS,pc,null,null,TO_REST);
 pc.hp := (pc.hp/2);
 position_update(pc);
@@ -1725,7 +1723,7 @@ scroll to be the sign of 'Reconstruction'."
 extra {"sigils on the scroll","sigils","sigil","sigla","sign"}
 "The sigils form a magical spell on the scroll.<br/>"
 extra {"$identify"}
-"This scroll contains a Reconstruction spell to strenghen your weapons and
+"This scroll contains a Reconstruction spell to strengthen your weapons and
 armour.<br/>"
 extra {"$improved identify"}
 "The scroll has unknown powers.<br/>"
@@ -1743,7 +1741,7 @@ extra {}
 "A twisted rod of heavy, strong wood. Sigla cover the rod and a tiny iron
 ring embraces one end of the item."
 extra {"sigla on the Rod","sigil","sigils","sigla"}
-"The strange sigla seem to be twisted into eachother, forming a pattern
+"The strange sigla seem to be twisted into each other, forming a pattern
 of magical signs.<br/>"
 extra {"$identify"}
 "This rod is a wand with the ability to inflict acid on an opponent.<br/>"
@@ -1761,11 +1759,11 @@ end
 
 	blkm_stiletto
 names {"black mithril dagger","mithril dagger","dagger"}
-title "black mithril dagger"
+title "a black mithril dagger"
 descr "A thin, long dagger of dark mithril lies here."
 extra {}
-"A sharp and long dagger of exquisite craftmanship. The metal used for
-the weapon is black mithril, one of the rarest metals avaliable. The
+"A sharp and long dagger of exquisite craftsmanship. The metal used for
+the weapon is black mithril, one of the rarest metals available. The
 stiletto is marked with a glowing rune near the hilt and the elaborate
 handguard is decorated with tiny rubies and diamonds."
 extra {"rune on your dagger","rune"}
@@ -1795,7 +1793,7 @@ dilcopy guild_restrict@function ({GUILD_SORCERER},0,25,"");
 dilcopy abi_restrict@function(ABIL_BRA,50,0,0,"bra_rest@skaven");
 dilcopy abi_restrict@function(ABIL_DEX,30,0,0,"dex_rest@skaven");
 dilcopy level_restrict@function(34,0,0,"lvl_rest@skaven");
-dilcopy mvlev_restrict@function(84,0,0,"You are too high of level to use this Dagger");  //43.01
+dilcopy mvlev_restrict@function(84,0,0,"");  //43.01
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 MAG_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 WEAPON_TRANSFER(WPN_DAGGER, BONUS_GOOD)  // Xyzzy: +2
@@ -1838,7 +1836,7 @@ act("Your pierce cuts deep into $3n's stomach!"
 act("$1n's pierce cuts deep into $3n's stomach!",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 act("$1n's pierce cuts deep into your stomach!"
-,A_SOMEONE,self.outside,self,null,TO_VICT);
+,A_SOMEONE,self.outside,self,enemy,TO_VICT);
 goto start ;
 }
 if (flux < 30)
@@ -1847,8 +1845,7 @@ act("You make a sudden spin and place your stiletto in $3n's side!"
 , A_SOMEONE,self.outside,self,enemy,TO_CHAR);
 act("$1n makes a sudden spin and places $1s stiletto in $3n's side!",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
-act("With a rapid spin, $1n avoids your blow and places his stiletto in
-your side!",A_SOMEONE,self.outside,self,null,TO_VICT);
+act("With a rapid spin, $1n avoids your blow and places $1s stiletto in your side!",A_SOMEONE,self.outside,self,enemy,TO_VICT);
 goto start ;
 }
 if (flux < 40)
@@ -1884,8 +1881,8 @@ topped with a ram's skull. Feathers and beads are incorporated into the
 design. The total impression is that of an awesome wizards' staff. If
 nothing else, at least it looks good."
 extra {"runes on the staff","runes","sigla","rune","sigil"}
-"The runes and sigla are undoubtely of arcane heritage. Their meaning is
-lost to you, however - perhaps you should have payed attention during
+"The runes and sigla are undoubtedly of arcane heritage. Their meaning is
+lost to you, however - perhaps you should have paid attention during
 your runemagic classes, instead of hunting skunks in the Cypress Forest.<br/>"
 extra {"ram's head on the staff","skull"}
 "Painted and decorated, it is a genuine ram's skull. Wow.<br/>"
@@ -1980,7 +1977,7 @@ if (flux < 80)
 {
 act ("The skull on your $2N turns around and stares at you.",
 A_SOMEONE,self.outside,self,null,TO_CHAR);
-act ("$1n's mouth fall open as the skull on $1s $2N turns around, "+
+act ("$1n's mouth falls open as the skull on $1s $2N turns around, "+
 "looking at $1m.", A_SOMEONE,self.outside,self,null,TO_REST);
 goto start;
 }
@@ -1993,9 +1990,9 @@ A_SOMEONE,self.outside,self,null,TO_REST);
 goto start;
 }
 else
-act ("The sigla on your $2N starts to move, changing places.",
+act ("The sigla on your $2N start to move, changing places.",
 A_SOMEONE,self.outside,self,null,TO_CHAR);
-act ("The sigla on $1n's $2N starts to move, changing places.",
+act ("The sigla on $1n's $2N start to move, changing places.",
 A_SOMEONE,self.outside,self,null,TO_REST);
 goto start;
 }
@@ -2005,10 +2002,10 @@ end
 
 mith_cut
 names {"black mithril scimitar","scimitar","sword"}
-title "black mithrill scimitar"
+title "a black mithril scimitar"
 descr "A scimitar of black mithril lies here."
 extra {}
-"This scimitar is an impressive work of craftmanship and weaponcraft.
+"This scimitar is an impressive work of craftsmanship and weaponcraft.
 The darkly-hued black mithril contrasts sharply with the gold and
 silver used for ornaments. The handguard of the cutlass has been formed
 in the shape of a spider and gold threads form a web along the blade of
@@ -2050,7 +2047,7 @@ act("Your slash almost parts $3n's head from $3s body.",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("The lifeless corpse keels over at your feet.",
 A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("$1n's slash almost parts $3n's head from $3n's body!",
+act("$1n's slash almost parts $3n's head from $3s body!",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 act("$3n's lifeless corpse slowly keels over at $1n's feet.",
 A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
@@ -2080,7 +2077,7 @@ goto start;
 }
 if ((random < 30)and(enemy.race<1000))
 {
-act("Your feint cause $3n to advance boldly!"
+act("Your feint causes $3n to advance boldly!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("You grin as you parry $3s weak attack and smash your fist in "+
 "$3s face!", A_ALWAYS,self.outside,self,enemy,TO_CHAR);
@@ -2124,7 +2121,7 @@ act("$1n locks weapons with $3n, their muscles swelling with effort!"
 ,A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
 act("With a swift kick in the crotch, $1n ends the deadlock!"
 ,A_SOMEONE,self.outside,self,enemy,TO_NOTVICT);
-act("$1n lock $1s weapon with yours, $1s face inches from yours!"
+act("$1n locks $1s weapon with yours, $1s face inches from yours!"
 ,A_SOMEONE,self.outside,self,enemy,TO_VICT);
 act("As you slowly force $1s weapon down, pain explodes in your crotch!"
 ,A_SOMEONE,self.outside,self,enemy,TO_VICT);
@@ -2132,15 +2129,15 @@ goto start ;
 }
 if ((random < 70)and(enemy.race<1000))
 {
-act("You roll along the ground and send a fistfull of dirt into $3n's face!"
+act("You roll along the ground and send a fistful of dirt into $3n's face!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
 act("$3n screams, slashing around blindly!"
 , A_ALWAYS,self.outside,self,enemy,TO_CHAR);
-act("$1n rolls along the ground and sends a fistfull of dirt in $3n's face!",
+act("$1n rolls along the ground and sends a fistful of dirt in $3n's face!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
 act("$3n screams, slashing around blindly!",
 A_ALWAYS,self.outside,self,enemy,TO_NOTVICT);
-act("$1n rolls along the ground and sends a fistfull of dirt into your face!"
+act("$1n rolls along the ground and sends a fistful of dirt into your face!"
 ,A_ALWAYS,self.outside,self,enemy,TO_VICT);
 act("Aaaargh! You are blinded!"
 ,A_ALWAYS,self.outside,self,enemy,TO_VICT);
@@ -2165,20 +2162,20 @@ on your body."
 extra {"silver brooch","brooch"}
 "Beautifully ornamented and with a single rune in the middle.<br/>"
 extra {"runes on the cloak","runes","rune","hem"}
-"The runes are a sure sign of a magical enchantment. Altough you wonder
+"The runes are a sure sign of a magical enchantment. Although you wonder
 what one.<br/>"
 extra {"hood on the cloak","hood"}
 "The hood is as richly embroidered with runes as the rest of the cloak.<br/>"
 extra {"$identify"}
 "Just by wearing this cloak, you will be hidden from your surroundings.<br/>
-The magic will also slighlty increase your dexterity, making you harder to
+The magic will also slightly increase your dexterity, making you harder to
 hit.<br/>"
 extra {"$improved identify"}
 "The command to become invisible is simply 'raise hood'. Remember, the
 invisibility will fade as soon as you enter combat. The power of the
 cloak is not limitless, however - it will turn you invisible 7 times
 before needing to recharge.<br/>
-This cloak is cloth of craftmanship and magic bonus 7.<br/>"
+This cloak is cloth of craftsmanship and magic bonus 7.<br/>"
 extra {"$wear_s"}
 "You wrap $2n about your body and fasten the brooch."
 extra {"$wear_o"}
@@ -2271,7 +2268,7 @@ and very comfy. The hem of the robe is embroidered in red symbols -
 for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more magical than true arcane symbols would do. The word
-'eldricht' springs to mind.<br/>"
+'eldritch' springs to mind.<br/>"
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
@@ -2289,7 +2286,7 @@ and very comfy. The hem of the robe is embroidered in silver symbols -
 for that truly arcane look, so favoured among wizards!"
 extra {"symbols"}
 "Those look even more magical than true arcane symbols would do. The word
-'elrdicht' springs to mind.<br/>"
+'eldritch' springs to mind.<br/>"
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_ABOUT}
 weight 1
@@ -2338,9 +2335,9 @@ names {"curly shoes","shoes"}
 title "a pair of curly, embroidered shoes"
 descr "A pair of fancy shoes with curling toes awaits you here."
 extra {}
-"Fancy shoes with curling toe, richly embroidered with golden threads and
+"Fancy shoes with curling toes, richly embroidered with golden threads and
 silver buttons. Those surely are the shoes of the upper class. With shoes
-like this, you'd be the center of attention wherever you go."
+like these, you'd be the center of attention wherever you go."
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_FEET}
 weight 1

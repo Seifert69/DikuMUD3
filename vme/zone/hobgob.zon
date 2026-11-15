@@ -51,11 +51,11 @@ help
 "The Hobgoblins, feeling superior to all other races, have built a
 prison town deep in the mountains. They run this town with an iron
 fist, making the prisoners work in the mines till they collapse. They
-repopulate their cheap labor force with the drags of society, the
-thieves, murders and the mad, basically the members of society that no
+repopulate their cheap labor force with the dregs of society, the
+thieves, murderers and the mad, basically the members of society that no
 one will miss if they suddenly disappear. Of course every once in a
-while a nice healthy adventurer stumbles into theur clutches.
-CREATED BY Palion and Whistler
+while a nice healthy adventurer stumbles into their clutches.
+CREATED BY Palio and Whistler
 "
 
 %dil
@@ -74,7 +74,7 @@ code
        wait (SFB_CMD, (activator.type == UNIT_ST_PC));
        pc := activator;
        enemy := self.outside;
-	   if (activator.type >= IMMORTAL_LEVEL) goto start;
+	   if (activator.level >= IMMORTAL_LEVEL) goto start;
        secure(enemy,lost);
        secure(pc,lost);
         i := rnd(1,100);
@@ -175,10 +175,10 @@ dilend
 dilbegin teddy_heal(medi : unitptr, targ : unitptr, hm : integer);
 code
 {
-        act("Your $2N hugs you and makes you feel better",
+        act("Your $2N hugs you and makes you feel better.",
         A_ALWAYS, self, medi, targ, TO_CHAR);
 
-        act("$1n's $2N hugs $1s and makes $1s feel better.",
+        act("$1n's $2N hugs $1m and makes $1m feel better.",
         A_SOMEONE, targ, medi, null, TO_REST);
         return;
 }
@@ -217,7 +217,7 @@ code
         pc := activator;
         i := rnd(1,20);
         if (i>2) goto start;
-        exec ("emote lifts his leg and pee's on "+ pc.name+" leg", self);
+        exec ("emote lifts his leg and pees on "+ pc.name+"'s leg.", self);
         exec("emote barks excitedly at " +pc.name ,self);
 
 goto start;
@@ -251,7 +251,7 @@ code
     pet:=load(pet_passed);
     secure(pet, lostpet);
     pet_string:=pet.symname;
-    link(pet, self.inside);
+    link(pet, self);
 
     pause;
     i1 := interrupt(SFB_DONE,( (command ("say")) and (activator.type==UNIT_ST_PC) and (activator==pc)), named);
@@ -270,17 +270,17 @@ code
     i1 := interrupt(SFB_DONE,( (command ("say")) and (activator.type==UNIT_ST_PC) and (activator==pc)), named);
     if (pet_string != pet.symname)
     {
-        sendtext("You need to leave the pet in the box till you're done. Now you have to buy another one this one is lost to you.<br/>", pc);
+        sendtext("You need to leave the pet in the box till you're done. Now you have to buy another one; this one is lost to you.<br/>", pc);
         nopriority;
         quit;
     }
     block;
     petname := argument;
     addstring(pet.names, petname);
-    act ("$3n climbs out of the cage", A_ALWAYS, pc, null, pet, TO_CHAR);
+    act ("$3n climbs out of the cage.", A_ALWAYS, pc, null, pet, TO_CHAR);
     link(pet,self.outside);
     act ("Your pet's special name is '"+petname+"'.  Please be very careful "+
-    "with your pet even though it has a special name others can still get it "+
+    "with your pet: even though it has a special name, others can still get it "+
     "by using its default name.", A_SOMEONE, pc, null, null, TO_CHAR);
     dilcopy("pet_base@hobgob("+pc.name+")",pet);
     clear(i1);
@@ -427,8 +427,8 @@ extra {"trees","tree"}
 impossible to stray from the path. On one of the trees you see some words
 carved in."
 extra {"carving","trunk","words","word"}
-"One single word has been scratched into the tree it is done sloppily,
-like some one scratched it in quickly. As you look closely you see the
+"One single word has been scratched into the tree; it is done sloppily,
+like someone scratched it in quickly. As you look closely you see the
 word :
                              BEWARE!"
 
@@ -468,8 +468,8 @@ descr
 "   The trail becomes less visible as it climbs up the mountain, rocks
 cover most of the surface making it difficult to walk. The trees are so dense
 here that it seems like night all the time. The path leads back to
-the west however in the mountain side there is what appear to be foot
-holes chiseled into the rock. It looks like is should be climbable it."
+the west; however, in the mountain side there are what appear to be foot
+holes chiseled into the rock. It looks like it should be climbable."
 movement SECT_HILLS
 
 extra {"trees","tree"}
@@ -482,7 +482,7 @@ the mountain."
 west to trail_1 descr
 "To the west leads down the mountain.";
 up to plateau_1 descr
-"You see a plateau above your head";end
+"You see a plateau above your head.";end
 
 plateau_1
 title "A Flat Plateau On The Mountain"
@@ -520,13 +520,13 @@ movement SECT_MOUNTAIN
 flags {UNIT_FL_NO_TELEPORT}
 
 extra {"campfire","ashes","fire","ash"}
-"you see the char ashes of a long ago fire. In the center of the ashes
-there are rocks that someone has tossed in the fire some of them have
+"You see the charred ashes of a long ago fire. In the center of the ashes
+there are rocks that someone has tossed in the fire; some of them have
 even been buried."
  down to plateau_1 descr
-"You can climb down the mountain";
+"You can climb down the mountain.";
 west to cave descr
-"You see a dark cave";
+"You see a dark cave.";
 end
 
 cave
@@ -542,24 +542,24 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 east to plateau_2 descr
 "You can see the outside of the mountain.";
 down to cave_1 descr
-"blackness";
+"Blackness.";
 end
 
 cave_1
 title "Dark Cave"
 names {"dark cave","cave"}
 descr
-"The cave is very dark, On the walls is drawings of some mythical creatures.
+"The cave is very dark. On the walls are drawings of some mythical creatures.
 There is a bed made from dry twigs and grass along one wall and a seat
 made from a sawed off log. A larger log looks like it serves as a table.
 The cooking fire is in the middle of this living area and although not
 spotless the place is in some sort of decent order."
 extra {"grasses","grass","twigs","bed"}
 "A bed made from dry twigs and grass. You suppose one could sleep on it."
-extra {"large log","table","chair","log"}
+extra {"large log","table","chair","seat","log"}
 "A table and chair are formed out of two logs that have been sawed off."
 extra {"fireplace","fire"}
-"The fire is out"
+"The fire is out."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -573,7 +573,7 @@ title "Behind The Waterfall"
 names {"waterfall"}
 descr
 "  A large cavern behind a large waterfall spans into the darkness.
-The roar of the cascading water is deafening untill one becomes used to
+The roar of the cascading water is deafening until one becomes used to
 it. A spectacular rainbow appears in the droplets of water as they mist
 down through the air. The cavern sparkles brightly almost seeming to produce 
 its own light. Some markings on the wall catch your eye. Trails lead off to 
@@ -609,13 +609,13 @@ crystal cavern sparkles to the west and passages lead off in all other
 directions."
 extra {"words","walls","wall"}
 " Beware many have died in these passages
-      Some Eventually find their way out!"
+      Some eventually find their way out!"
 movement SECT_INSIDE
 IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 west to waterfall descr
-"To the west you see a sparkling cavern";
+"To the west you see a sparkling cavern.";
 east to mtrail_4 descr
 "The trail continues to the east.";
 south to mtrail_2 descr
@@ -629,8 +629,8 @@ title "Deep In The Mountain"
 names {"mtrail2"}
 
 descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 
 movement SECT_INSIDE
@@ -644,15 +644,15 @@ east to mtrail_5 descr
 south to mtrail_3 descr
 "The trail continues to the south.";
 north to mtrail_1 descr
-"The trail continues to the north";end
+"The trail continues to the north.";end
 
 mtrail_3
 title "Deep In The Mountain"
 names {"Mtrail3"}
 
 descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 
 movement SECT_INSIDE
@@ -660,21 +660,21 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 north to mtrail_2 descr
-"The trail continues to the north";
+"The trail continues to the north.";
 south to mtrail_1 descr
-"The trail continues to the south";
+"The trail continues to the south.";
 east to mtrail_6 descr
 "The trail continues to the east.";
 west to mtrail_9 descr
-"The trail continues to the west";end
+"The trail continues to the west.";end
 
 mtrail_4
 title "Deep In The Mountain"
 names {"mtrail4"}
 
  descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions. "
 
 movement SECT_INSIDE
@@ -686,7 +686,7 @@ north to mtrail_6 descr
 south to mtrail_5 descr
 "The trail continues to the south.";
 east to mtrail_7 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_1  descr
 "The trail continues to the west.";
 end
@@ -696,8 +696,8 @@ title "Deep In The Mountain"
 names {"mtrail5"}
 
  descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 movement SECT_INSIDE
 IN_ALWAYS_DARK
@@ -708,7 +708,7 @@ north to mtrail_4 descr
 south to mtrail_6 descr
 "The trail continues to the south.";
 east to mtrail_8 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_2  descr
 "The trail continues to the west.";
 end
@@ -719,7 +719,7 @@ names {"mtrail6"}
 
  descr
 "   A confusing maze of tunnels leads off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 movement SECT_INSIDE
 IN_ALWAYS_DARK
@@ -730,7 +730,7 @@ north to mtrail_5 descr
 south to mtrail_6 descr
 "The trail continues to the south.";
 east to mtrail_9 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_3  descr
 "The trail continues to the west.";
 end
@@ -740,8 +740,8 @@ title "Deep In The Mountain"
 names {"mtrail7"}
 
  descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 
 movement SECT_INSIDE
@@ -753,7 +753,7 @@ north to mtrail_9 descr
 south to mtrail_8 descr
 "The trail continues to the south.";
 east to mtrail_1 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_4  descr
 "The trail continues to the west.";
 end
@@ -763,8 +763,8 @@ title "Deep In The Mountain"
 names {"mtrail8"}
 
  descr
-"   A confusing maze of tunnels lead off from here The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions.  There is an almost hidden passage leading downwards."
 
 movement SECT_INSIDE
@@ -775,11 +775,11 @@ north to mtrail_7 descr
 south to mtrail_9 descr
 "The trail continues to the south.";
 east to mtrail_2 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_5  descr
 "The trail continues to the west.";
 down to gate_1 descr
-"There seems to a passage that slopes downwards away from the maze of
+"There seems to be a passage that slopes downwards away from the maze of
 passage ways.";
 end
 
@@ -788,8 +788,8 @@ title "Deep In The Mountain"
 names {"mtrail9"}
 
  descr
-"   A confusing maze of tunnels lead off from here. The dead silence of the
-tunnels give no clue as to which way to proceed. Passages lead off in all
+"   A confusing maze of tunnels leads off from here. The dead silence of the
+tunnels gives no clue as to which way to proceed. Passages lead off in all
 directions."
 
 movement SECT_INSIDE
@@ -801,11 +801,11 @@ north to mtrail_8 descr
 south to mtrail_7 descr
 "The trail continues to the south.";
 east to mtrail_3 descr
-"The trail continues to the east";
+"The trail continues to the east.";
 west to mtrail_6  descr
 "The trail continues to the west.";
 up to tunnel_1 descr
-"Looking up you see a dark tunnel in the mountain..";
+"Looking up you see a dark tunnel in the mountain.";
 
 end
 
@@ -830,9 +830,9 @@ extra {"strange crystal","glowing crystal","crystals","crystal"}
 it."
 
 extra {"gate","dragons gate","dragon"}
-"The gate is two large dragons that arc over the trail and meet over
-head. They have blood red eyes that sparkle and seems to be guarding the
-passage into the city"
+"The gate is two large dragons that arc over the trail and meet
+overhead. They have blood red eyes that sparkle and seem to be guarding the
+passage into the city."
 
 extra {"pillar","sign"}
 "                    ----------------------
@@ -842,7 +842,7 @@ extra {"pillar","sign"}
                     | Beware all who enter|
                     |   Visitors are NOT  |
                     |     Welcome here!   |
-                    |      (level 12 -18)  |
+                    |    (level 12 - 18)  |
                     ----------|-|----------
                               | | "
 north to street_1 descr
@@ -861,7 +861,7 @@ names {"street1"}
 descr
 "   Asini street leads through the center of Gangel Village. Strange
 crystals are hung from the walls throwing light over the area. To the
-south the great Dragons Eye Gate, shops are to the east and west
+south is the great Dragons Eye Gate, shops are to the east and west,
 and the street continues to the north."
 extra {"strange crystal","glowing crystal","crystals","crystal"}
 "A crystal hangs on the wall, a glowing yellow light shines brightly from
@@ -879,7 +879,7 @@ south to gate_1 descr
 "To the south you see the great dragons eye gate." keyword
 {"gate"} open {EX_OPEN_CLOSE, EX_CLOSED};
 north to street_2 descr
-"The street continues to the north";
+"The street continues to the north.";
 end
 
 shop_1
@@ -897,9 +897,9 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"sign","wall"}
 "'List' To see what is in the store.
-'Buy <item>' To purchase an item.
-'Request <item> To ask the price of an item.
-'Value <item> To have the shop keeper give you the value of an
+'Buy &lt;item&gt;' To purchase an item.
+'Request &lt;item&gt;' To ask the price of an item.
+'Value &lt;item&gt;' To have the shop keeper give you the value of an
 item."
 
 east to street_1 descr
@@ -922,16 +922,16 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"sign","wall"}
 "'List' To see what is in the store.
-'Buy <item>' To purchase an item.
-'Request <item> To ask the price of an item.
-'Value <item> To have the shop keep give you the value of an item."
+'Buy &lt;item&gt;' To purchase an item.
+'Request &lt;item&gt;' To ask the price of an item.
+'Value &lt;item&gt;' To have the shop keeper give you the value of an item."
 extra {"scale"}
-"a plain scale that uses weights to measure the weight of the articles in
+"A plain scale that uses weights to measure the weight of the articles in
 the store."
 extra {"counter"}
 "A stone counter has been carved out of the rock of the mountain. It
 includes some very intricate designs that when you look closely you  can
-see form a dragon. It is obvious that some one took a lot of time to make
+see form a dragon. It is obvious that someone took a lot of time to make
 this counter."
 west to street_1 descr
 "To the west you see the main street.";
@@ -955,11 +955,11 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 east to shop_3 descr
 "To the east you see the weapons smith.";
 west to shop_4 descr
-"To the west you can see the armorer";
+"To the west you can see the armorer.";
 south to street_1 descr
-"Asini street continues to the north.";
+"Asini street continues to the south.";
 north to square_1 descr
-"To the south you see a meeting area.";
+"To the north you see a meeting area.";
 end
 
 shop_3
@@ -980,16 +980,16 @@ extra {"fire"}
 metal heating in preparation for being formed into a weapon."
 extra {"sign","wall"}
 "'List' To see what is in the store.
-'Buy <item> To purchase an item.
-'Request <item>' To ask the price of an item.
-'Value <item>' To have the shop keeper give you the value of an item."
+'Buy &lt;item&gt;' To purchase an item.
+'Request &lt;item&gt;' To ask the price of an item.
+'Value &lt;item&gt;' To have the shop keeper give you the value of an item."
 
 west to street_2 descr
-"to the west you see Asini street.";
+"To the west you see Asini street.";
 end
 
 shop_4
-title "Ables Armory"
+title "Able's Armory"
 names {"shop4"}
 descr
 "   The Armory has a wide variety of armour available. Hanging on the
@@ -1004,10 +1004,10 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"shield","sign","wall"}
-"'List'  To see what is in the store..
-'Buy <item>' To ask the price of an item.
-'Request <value> To ask the price of an item.
-'Value <item>' To have the shop keeper give you the value of an item."
+"'List'  To see what is in the store.
+'Buy &lt;item&gt;' To purchase an item.
+'Request &lt;item&gt;' To ask the price of an item.
+'Value &lt;item&gt;' To have the shop keeper give you the value of an item."
 
 east to street_2 descr
 "To the east you see Asini street.";
@@ -1030,11 +1030,11 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 south to street_2 descr
-"To the north you see Asini Street.";
+"To the south you see Asini Street.";
 east to street_3 descr
 "To the east you see Alamos Way.";
 west to street_4 descr
-"To the east you see Alamos Way";end
+"To the west you see Alamos Way.";end
 
 street_3
 title "Alamos Way"
@@ -1070,21 +1070,21 @@ title "Main Living Area"
 names {"home1"}
 
 descr
-"   The room has all the basics of life a bed, table and chair, with a
+"   The room has all the basics of life: a bed, table and chair, with a
 small  fire pit in the center of the room. The fact that the room is so
-neat comes as some what of a shock when one remembers it is hobgoblins
+neat comes as somewhat of a shock when one remembers it is hobgoblins
 that live here."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
-extra {"Table"}
+extra {"table"}
 "A small wooden table."
 extra {"fire pit","fire"}
-"Ashes remain from a fire that was likely used to cook the last days
+"Ashes remain from a fire that was likely used to cook the last day's
 evening meal." extra {"bed"}
-"Although the bed is very plain it seems to be quit comfortable."
+"Although the bed is very plain it seems to be quite comfortable."
 west to street_3 descr
 "To the west you see Alamos Way.";
 end
@@ -1095,7 +1095,7 @@ names {"home2"}
 
 descr
 "   The room has a rack that looks like it is used to hold a set of armour.
-A polish spear leans against the wall near the rack. The fire pit still
+A polished spear leans against the wall near the rack. The fire pit still
 throws off a little heat from the few remaining burning embers. The bed
 looks quite comfortable although it is bare of all coverings except a
 pelt of some sort."
@@ -1105,16 +1105,16 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rack"}
-"The rack is a simple devise used to neatly hold a set or armour."
+"The rack is a simple device used to neatly hold a set of armour."
 extra {"fire pit","embers","fire"}
-"The fire pit the throws off a little heat and you can see the odd red
+"The fire pit throws off a little heat and you can see the odd red
 ember burning in the pit." extra {"bed"}
 "The bed is plain and looks very comfortable."
 extra {"pelt"}
 "The pelt has short black hair and looks like it once was a bear."
 
 south to street_3 descr
-"To the south you see Alamos Way";
+"To the south you see Alamos Way.";
 end
 
 home_3
@@ -1122,8 +1122,8 @@ title "Main Living Area"
 names {"home3"}
 
 descr
-"   The room looks like it has not been cleaned in awhile. The bed is
-covered with old discarded armour as is the table. The fire fit is filled
+"   The room looks like it has not been cleaned in a while. The bed is
+covered with old discarded armour as is the table. The fire pit is filled
 not only with old ashes but burnt remains, of what is not easily
 apparent. The smell alone is enough to drive out most people."
 
@@ -1142,7 +1142,7 @@ Amongst the ashes you see bone remnants and what looks like what might
 have been the skull of some unsuspecting adventurer."
 
 north to street_3 descr
-"To the north you see Alamos Way";
+"To the north you see Alamos Way.";
 end
 
 street_4
@@ -1171,7 +1171,7 @@ north to passage_1 descr
 end
 
 tavern
-title "Thenneks  Tavern"
+title "Thennek's Tavern"
 names {"tavern"}
 
 descr
@@ -1180,8 +1180,8 @@ warriors to relax with their comrades. There is a small sign on the wall."
 
 extra {"sign","wall"}
 "'List' To see what is in the store.
-'Buy <item>' To purchase an item.
-'Request <item> To ask the price of an item"
+'Buy &lt;item&gt;' To purchase an item.
+'Request &lt;item&gt;' To ask the price of an item."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -1192,7 +1192,7 @@ north to street_4 descr
 end
 
 passage_1
-title "A Dark Passage."
+title "A Dark Passage"
 names {"passage1"}
 
 descr
@@ -1227,17 +1227,17 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 south to passage_1 descr
 "The passage continues to the south.";
 north to inter_1 descr
-"To the south you see an intersection.";
+"To the north you see an intersection.";
 end
 
 inter_1
-title "An Intersection in the Passages."
+title "An Intersection in the Passages"
 names {"inter1"}
 
 descr
 "   This is a meeting point for 4 passages that lead off in all directions.
 Torment and suffering can be heard from everywhere. It is hard to tell
-whether the screams are from near by or simply an echo bouncing from the
+whether the screams are from nearby or simply an echo bouncing from the
 walls."
 
 movement SECT_INSIDE
@@ -1246,13 +1246,13 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 
 south to passage_2 descr
-"The passages continues to the south.";
+"The passage continues to the south.";
 north to passage_5 descr
 "The passage continues to the north.";
 west to passage_3 descr
 "The passage continues to the west.";
 east to passage_7 descr
-"The passage continues to the west.";
+"The passage continues to the east.";
 end
 
 passage_3
@@ -1269,8 +1269,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 east to inter_1 descr
-"
-You see an intersection to the east.";
+"You see an intersection to the east.";
 west to passage_4 descr
 "The passage continues to the west.";
 end
@@ -1289,7 +1288,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 east to passage_3 descr
-"The passage continues to the east";
+"The passage continues to the east.";
 west to catacomb descr
 "To the west you see a room of some sort.";
 end
@@ -1301,7 +1300,7 @@ names {"catacomb"}
 descr
 "  The  strong odor of rotting flesh in the catacombs is overpowering.
 There are niches hollowed out of the rock in a tier formation. Each is big
-enough to hold a body but many are stuffed with four of five bodies.
+enough to hold a body but many are stuffed with four or five bodies.
 Glowing crystals add light to the area. The passage
 continues to the south and the east."
 movement SECT_INSIDE
@@ -1311,10 +1310,10 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 extra {"niches","niche","tier"}
 "Each wall has niches hollowed out of the wall. They are about 30
 high and cover both walls to the north and west. You notice in some of
-the niches more then one body has been crammed in, although the niches
+the niches more than one body has been crammed in, although the niches
 were clearly made to hold only one body each. It seems you might be able
 to squeeze your body in beside one of the corpses. "
-extra {"strange crystal","glowing crystal","crystal"}
+extra {"strange crystal","glowing crystal","crystals","crystal"}
 "A crystal hangs on the wall, a glowing yellow light shines brightly from
 it."
 
@@ -1362,7 +1361,7 @@ south to catacomb descr "A crack in the wall."
 west to catacomb0@gazha
          open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN}
          keyword {"wall"}
-         descr "You find a hidden door to the West."
+         descr "You find a hidden door to the west."
          difficulty 50;
 end
 
@@ -1374,9 +1373,9 @@ descr
 " A large pit in the center of the room emits a truly foul odor. Looking
 over the edge, the reason for the smell quickly becomes apparent. The pit
 is filled with rotting, decomposing bodies of every race of people
-imaginable.  Skulls stare blankly into the darkness, grimses of pain stil
+imaginable.  Skulls stare blankly into the darkness, grimaces of pain still
 evident in their expressions. The buzzing sound of maggots as they  crawl
-over the rotting meat, devoring it, can be plainly heard. "
+over the rotting meat, devouring it, can be plainly heard. "
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -1410,7 +1409,7 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 south to inter_1 descr
 "The passage continues to the south.";
 north to passage_6  descr
-"The passage continues to the west.";
+"The passage continues to the north.";
 end
 
 passage_6
@@ -1476,12 +1475,12 @@ east to  passage_9 descr
 end
 
 passage_9
-title "A Passage in the mountain."
+title "A Passage in the Mountain"
 names {"passage9"}
 
 descr
-"   A slight breath of fresh air has found its way into the mountain,
-passages, there seems  to be an exit out of the tunnels somewhere
+"   A slight breath of fresh air has found its way into the mountain
+passages; there seems  to be an exit out of the tunnels somewhere
 along here. Passages lead to the west and north."
 movement SECT_INSIDE
 IN_ALWAYS_DARK
@@ -1547,11 +1546,11 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 east to  valley_1 descr
 "You see a valley to the east.";
 west to koal_1 descr
-"The cave continues to the west";
+"The cave continues to the west.";
 south to koal_3 descr
-"The cave continues to the south";
+"The cave continues to the south.";
 north to koal_4 descr
-"The cave continues to the north";
+"The cave continues to the north.";
 end
 
 koal_1
@@ -1560,10 +1559,10 @@ names {"koal_1"}
 
 descr
 "   This area of the cave looks like the sleeping area. It is obviously a
-barracks of sorts. Comfortable looking beds line the walls, in all the
+barracks of sorts. Comfortable looking beds line the walls; in all, the
 room seems to be neat and comfortable, light being provided by a small
-fire in a pit at one end of the room Judging by the number of beds about
-10 koalinth sleep here. Exits are to the south north and east."
+fire in a pit at one end of the room. Judging by the number of beds about
+10 koalinth sleep here. Exits are to the south, north and east."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -1579,13 +1578,13 @@ south to koal_2 descr
 "To the south you see more of the cave.";
 end
 koal_2
-title "Chiefs Sleeping Area"
+title "Chief's Sleeping Area"
 names {"koal_2"}
 
 descr
 "   This room obviously belongs to a higher up in the hierarchy of the
 hobgoblins due to the fact that the owner of this room does not share his
-space with anyone else. The room is comfortably furnished with bed table
+space with anyone else. The room is comfortably furnished with bed, table
 and chairs. A fire provides heat and light to the room. Passages lead to
 the north and east."
 
@@ -1596,7 +1595,7 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 extra {"bed"}
 "A comfortable wood bed."
 extra {"table"}
-"A plain wooden table"
+"A plain wooden table."
 extra {"chair"}
 "A plain wooden chair."
 
@@ -1611,7 +1610,7 @@ names {"koal_3"}
 
 descr
 "   This area looks like it is used for a communal eating area, large fires
-burn here and pots bubble over with the next meals food. The caves continue
+burn here and pots bubble over with the next meal's food. The caves continue
 to the north and west."
 
 movement SECT_INSIDE
@@ -1619,9 +1618,9 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"pot","pots"}
-"Large black pots boiled over with the days meals."
-extra {"fire","extras"}
-"Large fires crackle and pop as they cook the days meals."
+"Large black pots boiled over with the day's meals."
+extra {"fires","fire"}
+"Large fires crackle and pop as they cook the day's meals."
 north to home_cave descr
 "You see the entrance to the cave to the north.";
 west to koal_2 descr
@@ -1634,18 +1633,18 @@ names {"koal_4"}
 
 descr
 "   This sleeping area is shared by only two judging by the 2 beds. There is
-a table and chair in the room. The fire from in the room provides both heat
+a table and chair in the room. The fire in the room provides both heat
 and light. Exits lead to the south and west."
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
-extra {"bed"}
-"There are two beds here. The are plain but comfortable looking."
+extra {"beds","bed"}
+"There are two beds here. They are plain but comfortable looking."
 extra {"table"}
-"A plain wooden table"
+"A plain wooden table."
 extra {"chair"}
-"A plain wooden chair"
+"A plain wooden chair."
 
 south to home_cave descr
 "To the south you see the entrance to the caves.";
@@ -1658,8 +1657,8 @@ title "Cave Living Area"
 names {"koal_5"}
 descr
 "   This area of the cave looks like the sleeping area. It is obviously a
-barracks of sorts. Comfortable looking beds line the walls, in all the
-room seems to be neat and comfortable, judging by the beds, there are
+barracks of sorts. Comfortable looking beds line the walls; in all, the
+room seems to be neat and comfortable. Judging by the beds,
 about 10 koalinth sleep here. Light from the next sleeping area filters
 in through the door."
 
@@ -1673,7 +1672,7 @@ extra {"bed","beds"}
 south to koal_1 descr
 "To the south you see more sleeping area.";
 east to koal_4 descr
-"To the south you see more caves.";
+"To the east you see more caves.";
 end
 
 pri_gate
@@ -1681,10 +1680,10 @@ title "A Large Gate"
 names {"pri_gate"}
 
 descr
-"   A Large gate blocks entrance to the village that is visible to the
-north, each side of the gate has a glowing stone which provides a light
+"   A large gate blocks entrance to the village that is visible to the
+north; each side of the gate has a glowing stone which provides a light
 bright enough to light up the whole area. The gate is very heavy and is
-obviously meant to block ones passage in and out of the village. Just to
+obviously meant to block one's passage in and out of the village. Just to
 the south of the gate is a guards post."
 
 movement SECT_INSIDE
@@ -1710,7 +1709,7 @@ north to pris_st_1 descr
 keyword {"gate"} open {EX_OPEN_CLOSE, EX_CLOSED};
 
 south to post descr
-"to the south you see a guards post.";
+"To the south you see a guards post.";
 end
 
 pris_st_1
@@ -1728,9 +1727,9 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
  extra {"glowing stone","stones","stone"}
 "The yellow stone glows brightly although it is impossible to see what
-exactly cause the stones to glow."
+exactly causes the stones to glow."
 extra {"blood","dried blood"}
-"You see a dark red/brown stain marking the ground. I looks a lot like
+"You see a dark red/brown stain marking the ground. It looks a lot like
 dried blood."
 
 south to pri_gate descr
@@ -1759,11 +1758,11 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"table"}
-"A plain wooden table"
+"A plain wooden table."
 extra {"bed"}
 "A single bed bare except for the fur pelt that covers it."
 extra {"chair"}
-"A plain wooden table"
+"A plain wooden chair."
 
 north to pri_gate descr
 "You see the gate to the north.";
@@ -1774,7 +1773,7 @@ names {"bunk1"}
 
 descr
 "   The room has a horrid smell due to the large amount of people living in
-one room with few areas to clean ones self. Bunks line all walls in tiers
+one room with few areas to clean oneself. Bunks line all walls in tiers
 of 7 high. The room seems to house about 50 people. The room has no visible
 means of lighting or heat. The exit is back to the west."
 
@@ -1784,7 +1783,7 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"bunk","bunks","tiers","beds","bed"}
 "   The bunks are simply niches big enough for a body hollowed out of the
-stone.. All have a thin ratty looking blanket covering them. In a few of
+stone. All have a thin ratty looking blanket covering them. In a few of
 the bunks are bodies, where the resident of the niche has died and
 no one has removed the body yet."
 
@@ -1798,7 +1797,7 @@ names {"bunk2"}
 
 descr
 "   The room has a horrid smell due to the large amount of people living in
-the one room with few areas to clean ones self. Bunks line all walls in
+the one room with few areas to clean oneself. Bunks line all walls in
 tiers of 7 high. The room seems to house about 50 people. The room has no
 visible means of lighting or heat. The exit is back to the east."
 
@@ -1824,25 +1823,25 @@ names {"pris_st_2"}
 descr
 "   Puddles of what might be blood line the street. An eerie silence covers
 the area broken only by an occasional crack followed by a scream of pain.
-The oppression of the people can be felt as is hangs in the very air. The
+The oppression of the people can be felt as it hangs in the very air. The
 street continues to the south, and to the west you can hear moans of pain.
->From the north the sounds of clanging of pots  can be heard as smell what
-someone is passing off as food assults ones senses. A  large rock wall
+From the north the clanging of pots can be heard as the smell of what
+someone is passing off as food assaults one's senses. A  large rock wall
 looms up to block passage to the east."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 extra {"rock wall","wall"}
-"The wall blocks travels to the east."
-extra {"puddle","blood"}
-"A puddle of blood red has formed on the street. By the looks of the
-amount of blood, thats one soul that has begun the great journey  to the
+"The wall blocks travel to the east."
+extra {"puddles","puddle","blood"}
+"A blood red puddle has formed on the street. By the looks of the
+amount of blood, that's one soul that has begun the great journey  to the
 valley of the spirits."
 
 extra {"glowing stone","stones","stone"}
 "The yellow stone glows brightly although it is impossible to see what
-exactly cause the stones to glow."
+exactly causes the stones to glow."
 
 south to pris_st_1 descr
 "The street continues to the south." ;
@@ -1858,10 +1857,10 @@ names {"cant"}
 
 descr
 "    A room with rows of very long tables. Each table has a bench on either
-side of it in all it looks like it would seat about 150 people. There is
+side of it; in all, it looks like it would seat about 150 people. There is
 a cubby at one end of the room that looks like it is used to serve the
-slop they pass off as food. The glowing stones that can be found through
-out the village line the walls. Another room is to the east and the exit
+slop they pass off as food. The glowing stones that can be found
+throughout the village line the walls. Another room is to the east and the exit
 is to the south."
 
 movement SECT_INSIDE
@@ -1872,7 +1871,7 @@ extra {"table","tables"}
 "5 very long stone tables that look like they could seat about 50 people."
 extra {"bench","benches"}
 "10 benches that match the length of the tables."
-extra {"cubby hole","cubby"," hole"}
+extra {"cubby hole","cubby","hole"}
 "A window like cubby hole used to serve the slop err food to the prisoners."
 
 south to pris_st_2 descr
@@ -1925,7 +1924,7 @@ extra {"cuffs","cuff"}
 ground."
 
 extra {"the rack","rack"}
-"The rack is a large wooden object that ones legs and arms are cuffed to
+"The rack is a large wooden object; one's legs and arms are cuffed to
 the ends of the rack and a wheel is turned to stretch the prisoner
 causing extreme pain."
 
@@ -1940,7 +1939,7 @@ north to pris_st_3 descr
 end
 
 pris_st_3
-title "A filthy Street"
+title "A Filthy Street"
 names {"pris_st_3"}
 
 descr
@@ -1957,7 +1956,7 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"glowing stone","stones","stone"}
 "The yellow stone glows brightly although it is impossible to see what
-exactly cause the stones to glow."
+exactly causes the stones to glow."
 extra {"ground","blood","rock"}
 "The ground is a dark red/brown from the blood of prisoners."
 south to tort descr
@@ -1965,7 +1964,7 @@ south to tort descr
 north to hold_cell descr
 "To the north you see a room with bars.";
 west to ent_mine descr
-"to the west you see an entrance to a mine.";
+"To the west you see an entrance to a mine.";
 
 end
 
@@ -1978,14 +1977,14 @@ descr
 earned a stay here. In one corner is a skeleton of some humanoid being.
 There seems to be a trap door in the floor as well as an exit to the south."
 extra {"trap door","door","trap"}
-"A metal grate in the stone floor"
+"A metal grate in the stone floor."
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER}
 
 extra {"cuffs"}
-"The cuffs are attached into the rock and are place in such a manor as to
-suspend the prisoner spread eagle on the wall. Forcing them to hold their
+"The cuffs are attached into the rock and are placed in such a manner as to
+suspend the prisoner spread eagle on the wall, forcing them to hold their
 body weight on either their arms or their legs."
 extra {"skeleton"}
 "The skeleton lays in a heap under a set of cuffs. It looks like some
@@ -1994,7 +1993,7 @@ prisoner that died and no one bothered to remove the body."
 south to pris_st_3 descr
 "To the south you see a filthy street.";
 down to hole descr
-"It is pitch black"
+"It is pitch black."
 keyword {"trap door","door","grate"} open {EX_OPEN_CLOSE, EX_CLOSED}; end
 
 hole
@@ -2002,7 +2001,7 @@ title "The Hole"
 names {"hole","the hole"}
 
 descr
-"   The smell down here is extremely bad, The room is very small and most
+"   The smell down here is extremely bad. The room is very small and most
 humans are forced to crouch. Those put into this area would not be able
 to stand  totally up nor lie down. The room is totally devoid of light
 and fresh air. Judging by the piles of bones down here, most that are
@@ -2012,9 +2011,9 @@ movement SECT_INSIDE
 IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 extra {"trap door","grate","trap","door"}
-"a metal grate set in the stone ceiling"
+"A metal grate set in the stone ceiling."
 extra {"bones"}
-"A pile of humanoid bones"
+"A pile of humanoid bones."
 up to hold_cell descr
 "You can not see out very well." keyword {"trap door","door","grate"}
 open  {EX_OPEN_CLOSE, EX_CLOSED};
@@ -2024,7 +2023,7 @@ title "Entrance To The Prison Mines"
 names {"ent_mine","mine"}
 
 descr
-"   The Start of the death mines looks not to bad but the very name of it
+"   The start of the death mines looks not too bad but the very name of it
 puts fear into one's heart. The prisoners in the village are made to work
 in here until they collapse from exhaustion or from the toxic fumes that
 seep out from deep in the mines."
@@ -2044,7 +2043,7 @@ names {"mine_1"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. To the south
 are more passages while the exit is to the north."
 
@@ -2053,7 +2052,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_2 descr
 "The mine continues to the south.";
 north to ent_mine descr
@@ -2067,7 +2066,7 @@ names {"mine_2"}
 
 descr
 " The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to
+tunnel with piles of loose rubble on the ground making it difficult to
 walk. There is an odd smell to the room almost like seeping gases. To the
 north and west are more passages."
 movement SECT_HILLS
@@ -2075,11 +2074,11 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 north to mine_1 descr
-"The mine continues to the south.";
+"The mine continues to the north.";
 west to mine_6 descr
-"The mine. continues to the west.";
+"The mine continues to the west.";
 end
 
 mine_3
@@ -2088,15 +2087,15 @@ names {"mine_3"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It looks like you
-were once able to travels north but that is now impossible with the way
-blocked by large rocks, There is an odd smell to the room almost like
+were once able to travel north but that is now impossible with the way
+blocked by large rocks. There is an odd smell to the room almost like
 seeping gases. To the south are more passages. "
 movement SECT_HILLS
 IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_4 descr
 "The mine continues to the south.";
 end
@@ -2107,7 +2106,7 @@ names {"mine_4"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. To the north
 and west are more passages. "
 movement SECT_HILLS
@@ -2115,9 +2114,9 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 north to mine_3 descr
-"The mine continues to the south.";
+"The mine continues to the north.";
 west to mine_8 descr
 "The mines continue to the west.";
 end
@@ -2127,16 +2126,16 @@ title "A Rickety Mine Shaft"
 names {"mine_5"}
 
 descr
-"   The mountain has been hollowed out by the prisoners. it is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+"   The mountain has been hollowed out by the prisoners. It is a roughly dug
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. To the south
-are more passages..  "
+are more passages."
 movement SECT_HILLS
 IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_6 descr
 "The mine continues to the south.";
 end
@@ -2146,8 +2145,8 @@ title "A Rickety Mine Shaft"
 names {"mine_6"}
 
 descr
-"   The mountain has been hollowed out by the prisoners. it is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+"   The mountain has been hollowed out by the prisoners. It is a roughly dug
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. Passages lead
 off in all directions. "
 movement SECT_HILLS
@@ -2155,7 +2154,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 east to mine_2 descr
 "The mine continues to the east.";
 north to mine_5 descr
@@ -2173,7 +2172,7 @@ names {"mine_7"}
 descr
 "   The mountain has been hollowed out by the prisoners. It looks like there
 was a cave in here at some time. A passage seems to lead to the south but
-find travel in that direction impossible. There is an odd smell to the  room
+travel in that direction is impossible. There is an odd smell to the  room
 almost like seeping gases. Passages lead to the north."
 
 movement SECT_HILLS
@@ -2181,7 +2180,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 north to mine_6 descr
 "The mine continues to the north.";
 end
@@ -2192,7 +2191,7 @@ names {"mine_8"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. Passages lead
 to the east and west."
 
@@ -2201,11 +2200,11 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 west to mine_13 descr
 "The mine continues to the west.";
 east to mine_4 descr
-"To mine continues to the east.";
+"The mine continues to the east.";
 end
 
 mine_9
@@ -2214,7 +2213,7 @@ names {"mine_9"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. There has been a
-cave in here recently as evident by the large mounds of stones and pebbles
+cave in here recently as evident by the large mounds of stones and pebbles.
 There is an odd smell to the room almost like seeping gases. The passages
 continue to the west."
 
@@ -2223,7 +2222,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"cave in","pebbles","rubble","stones","dirt"}
-"Lose stones lay in giant mounds blocking passage in most
+"Loose stones lay in giant mounds blocking passage in most
 directions."
 west to mine_2 descr
 "The mine continues to the west.";
@@ -2235,8 +2234,8 @@ names {"mine_10"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
-There is an odd smell to the room almost like seeping gases. To  passages
+tunnel with piles of loose rubble on the ground making it difficult to walk.
+There is an odd smell to the room almost like seeping gases. Two passages
 lead to the east and the south."
 
 movement SECT_HILLS
@@ -2244,7 +2243,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_11 descr
 "The mine continues to the south.";
 east to mine_6 descr
@@ -2258,7 +2257,7 @@ names {"mine_11"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. Passages lead
 off in all but one direction. "
 
@@ -2267,7 +2266,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_12 descr
 "The mine continues to the south.";
 north to mine_10 descr
@@ -2282,7 +2281,7 @@ names {"mine_12"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. The passages
 lead off in all directions but one. "
 
@@ -2291,7 +2290,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 east to mine_8 descr
 "The mine continues to the east.";
 north to mine_11 descr
@@ -2306,7 +2305,7 @@ names {"mine_13"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly
-dug tunnel with piles of lose rubble on the ground making it difficult to
+dug tunnel with piles of loose rubble on the ground making it difficult to
 walk. There is an odd smell to the room almost like seeping gases. Passages
 lead to the south and east. "
 movement SECT_HILLS
@@ -2314,7 +2313,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_14 descr
 "The mine continues to the south.";
 east to mine_9 descr
@@ -2327,7 +2326,7 @@ names {"mine_14"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. Passages lead
 south and north from here. "
 movement SECT_HILLS
@@ -2335,7 +2334,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 south to mine_15 descr
 "The mine continues to the south.";
 north to mine_13 descr
@@ -2348,7 +2347,7 @@ names {"mine_15"}
 
 descr
 "   The mountain has been hollowed out by the prisoners. It is a roughly dug
-tunnel with piles of lose rubble on the ground making it difficult to walk.
+tunnel with piles of loose rubble on the ground making it difficult to walk.
 There is an odd smell to the room almost like seeping gases. Passages lead
 to the north and east."
 
@@ -2357,7 +2356,7 @@ IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"rubble","stones","dirt"}
-"Lose stones litter the passage making it difficult to walk."
+"Loose stones litter the passage making it difficult to walk."
 north to mine_14 descr
 "The mine continues to the north.";
 east to mine_11 descr
@@ -2369,16 +2368,16 @@ title "A Rickety Mine Shaft"
 names {"mine_16"}
 
 descr
-"   The area looks like it has had a cave in large piles of rubble line the
+"   The area looks like it has had a cave-in; large piles of rubble line the
 floor making it impossible to go in any direction except the one you came
-from. It looks like spiders may have made there home in some of the rubble."
+from. It looks like spiders may have made their home in some of the rubble."
 
 movement SECT_HILLS
 IN_ALWAYS_DARK
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 
 extra {"cave in","rubble","stones","dirt"}
-"Lose stones lay where the passage has caved in."
+"Loose stones lay where the passage has caved in."
 east to mine_12 descr
 "The mine continues to the east.";
 end
@@ -2387,10 +2386,10 @@ title "A Cozy Little Room"
 names {"palio's place","palios place","home","oo","pp"}
 descr
 "Palio's place is a cozy log house with a woodstove emitting a welcome
-warm. A small grey kitten and a large black dog lay curled together
+warmth. A small grey kitten and a large black dog lay curled together
 sleeping
 in front of the stove. A large wooden table takes up most of one end of
-the room while the other end holds a comfortable over stuffed couch.
+the room while the other end holds a comfortable overstuffed couch.
 Wooden steps spiral up to an open loft above, from which is visible
 a comfortable looking large bed. Candles and kerosene lamps provide light
 to the rooms. Music  from some unknown source can be heard playing softly
@@ -2431,7 +2430,7 @@ heartbeat := PULSE_SEC*5;
     link(pc, findroom("inn@udgaard"));
       act("The air explodes in smoke.",
      A_SOMEONE,self.inside,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
        A_SOMEONE,self.inside,null,null,TO_ALL);
 
       exec("look",pc);
@@ -2444,7 +2443,7 @@ heartbeat := PULSE_SEC*5;
     link(pc, findroom("cth_sanctum@midgaard"));
       act("The air explodes in smoke.",
       A_SOMEONE,self.inside,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
       A_SOMEONE,self.inside,null,null,TO_ALL);
       exec("look",pc);
       unsecure(pc);
@@ -2456,7 +2455,7 @@ heartbeat := PULSE_SEC*5;
     link(pc, findroom("board_room@wiz"));
       act("The air explodes in smoke.",
       A_SOMEONE,self.inside,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
       A_SOMEONE,self.inside,null,null,TO_ALL);
      exec("look",pc);
      unsecure(pc);
@@ -2468,7 +2467,7 @@ heartbeat := PULSE_SEC*5;
     link(pc, findroom("whistler_room@hades2"));
       act("The air explodes in smoke.",
        A_SOMEONE,self.inside,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
       A_SOMEONE,self.inside,null,null,TO_ALL);
      exec("look",pc);
      unsecure(pc);
@@ -2479,7 +2478,7 @@ heartbeat := PULSE_SEC*5;
     link(pc, findroom("nightmare@hobgob"));
       act("The air explodes in smoke.",
      A_SOMEONE,self.inside,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
        A_SOMEONE,self.inside,null,null,TO_ALL);
      exec("look",pc);
      unsecure(pc);
@@ -2496,14 +2495,14 @@ dilend
 end
 
 hot_springs
-title  "A natural occurring hot springs"
+title  "Naturally Occurring Hot Springs"
 names {"hot springs","springs","hot"}
 descr
-"The cave opens into a large misty cavern. Jets of steam shooting in the
+"The cave opens into a large misty cavern. Jets of steam shoot into the
 air from cracks in the
-ground that have bubbled up. To one side there is a small pool
-of steaming hot water. It becomes quickly apparent that
-some where deep in the mountain is a volcano that provides
+ground. To one side there is a small pool
+of steaming hot water. It quickly becomes apparent that
+somewhere deep in the mountain is a volcano that provides
 steam for this natural sauna. Oddly enough through the steam
 in the middle of the cavern are the remains of an old
 campfire. An exit leads downwards."
@@ -2517,7 +2516,7 @@ extra {"cracks","steam"}
 "Jets of steam shoot from cracks in the floor forming a
 natural sauna."
 extra {"campfire","ashes","fire","ash"}
-"you see the char ashes of a long ago fire."
+"You see the charred ashes of a long ago fire."
 down to tunnel_1 descr
 "You see a steep thin tunnel leading downwards.";
 dilbegin quest_dil();
@@ -2535,7 +2534,7 @@ wait(SFB_CMD, (activator.type == UNIT_ST_PC) and
         pc := activator;
 	secure(pc,losthim);
 	  act("The mist starts to swirl around you in an explosion of "+
-"colors and shapes, enveloping you in its folds..",
+"colors and shapes, enveloping you in its folds.",
      A_SOMEONE, pc, null, null, TO_CHAR);
 
 pause;
@@ -2548,8 +2547,8 @@ pause;
      A_SOMEONE, pc, null, null, TO_CHAR);
 
 pause;
-          act("In your mind you can hear the message but only a few "+
-"words of which are understandable",
+          act("In your mind you can hear the message, but only a few of its "+
+"words are understandable.",
      A_SOMEONE, pc, null, null, TO_CHAR);
 
 pause;
@@ -2566,11 +2565,11 @@ dilend
 end
 
 tunnel_1
-title "A dark tunnel"
+title "A Dark Tunnel"
 names {"dark tunnel" ,"tunnel"}
 descr
 "The incline here is steep, making walking in either direction
-difficult. The Tunnel has a strange humidity to it, it is warm then what
+difficult. The tunnel has a strange humidity to it; it is warm when
 it really should be cold.  The heat seems to be coming from above."
 movement SECT_MOUNTAIN
 IN_ALWAYS_DARK
@@ -2578,7 +2577,7 @@ flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB}
 up to hot_springs  descr
 "You see a misty room ahead.";
 down to mtrail_9 descr
-"You see a mountain passage below you";
+"You see a mountain passage below you.";
 end
 
 nightmare
@@ -2589,28 +2588,28 @@ descr
 feeling you are in the deepest rooms of hell. Scattered about the room
 are such torture devices as 'level reducers', 'freezing compartments'
 and a machine that on closer inspection could only be used to sew lips
-together. scattered about the floor you see the remains of forgotten players,
-haven't you always wondered what happened to that jerk player 'Toxic'?.
-You must have really peeved some one off to be brought to such a place. "
+together. Scattered about the floor you see the remains of forgotten players;
+haven't you always wondered what happened to that jerk player 'Toxic'?
+You must have really peeved someone off to be brought to such a place. "
 extra {"level reducer","reducer"}
-"This device looks very nasty looking. It has long metal spikes sticking
+"This device looks very nasty. It has long metal spikes sticking
 out of it and suction like cups that are attached to the player as their
 levels are sucked away with a hideous WOOSH as the levels are pulled from
 them."
 extra {"freezing compartment","freezing"}
 "The freezing compartment is a large box that when players are placed in
-it they come out covered in ice and unable to do the most elmentry
+it they come out covered in ice and unable to do the most elementary
 things."
 extra {"remains","toxic"}
 "The remains of players can be seen here...one particular skeleton can be
-seen clutching 'the dictionary of Toxic' in its boney gripe. As
-you think back over the years of valhalla you vaguely remember a
-player that acted like a jerk. his name.....Tox something or
+seen clutching 'the dictionary of Toxic' in its bony grip. As
+you think back over the years of Valhalla you vaguely remember a
+player that acted like a jerk. His name.....Tox something or
 another...could it be? hmmmm..."
 movement SECT_INSIDE ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT, UNIT_FL_PRIVATE}
 extra {"north","south","east","west"}
-"HAHAHAHAH You think your gonna get out of here so easy? BEEP!
+"HAHAHAHAH You think you're gonna get out of here so easy? BEEP!
 Wrong answer!"
 dilbegin silence();
 var
@@ -2629,8 +2628,8 @@ block;
      pc := activator;
      secure(pc,losthim);
 
- act("Shouting  and Telling is not permitted in this room, nor are you "+
-"aloud to enter an object.",
+ act("Shouting and telling are not permitted in this room, nor are you "+
+"allowed to enter an object.",
   A_SOMEONE, pc, null, null, TO_CHAR);
 unsecure(pc);
 goto start;
@@ -2656,7 +2655,7 @@ block;
      pc := activator;
      secure(pc,losthim);
 
- act("You may not leave this place", A_SOMEONE, pc, null, null, TO_CHAR);
+ act("You may not leave this place.", A_SOMEONE, pc, null, null, TO_CHAR);
 unsecure(pc);
 goto start;
 
@@ -2711,10 +2710,10 @@ end
 pet_keeper
 title "Malite"
 names {"shopkeeper","malite"}
-descr "Malite the shopkeeper is standing here"
+descr "Malite the shopkeeper is standing here."
 extra {}
 "Malite is a small man in stature with a kind face, but
-looks like he could be quite challenging in a fight"
+looks like he could be quite challenging in a fight."
 M_ELF_WARRIOR_POLE(6, SEX_MALE)
 alignment 0
 exp -500
@@ -2736,7 +2735,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -2794,9 +2793,9 @@ dilcopy catchit@hobgob();
 end
 
 o_kitten
-title "a orange kitten"
+title "an orange kitten"
 names {"orange kitten","kitten"}
-descr "A small orange tabby kitten is playing here"
+descr "A small orange tabby kitten is playing here."
 extra {}
 "A very playful small orange tabby kitten."
 M_CAT_TINY(4,SEX_MALE)
@@ -2810,10 +2809,10 @@ dilcopy catchit@hobgob();
 end
 
 puppy
-title "the Puppy"
+title "the puppy"
 names {"puppy"}
-descr "A small loyal Puppy is here."
-extra {} "The Puppy looks cute as he guards his master."
+descr "A small loyal puppy is here."
+extra {} "The puppy looks cute as he guards his master."
 M_DOG_TINY(5,SEX_MALE)
 manipulate {MANIPULATE_TAKE}
 flags { UNIT_FL_NO_TELEPORT} \
@@ -2828,7 +2827,7 @@ end
 rottweiler
 title "the Rottweiler"
 names {"rottweiler"}
-descr "A large, Rottweiler is here."
+descr "A large Rottweiler is here."
 extra {} "The Rottweiler looks like a strong fighter."
 M_DOG_TINY(10,SEX_MALE)
 flags { UNIT_FL_NO_TELEPORT} \
@@ -2875,10 +2874,10 @@ end
 budgie
 title "a sky blue budgie"
 names {"budgie","bird"}
-descr "A small sky bird is perched here."
+descr "A small sky blue bird is perched here."
 extra {}
-"A tiny sky blue budgie
-tweet tweet."
+"A tiny sky blue budgie.
+Tweet tweet."
 M_BIRD_TINY(5,SEX_FEMALE)
 manipulate {MANIPULATE_TAKE}
 flags { UNIT_FL_NO_TELEPORT} \
@@ -2893,7 +2892,7 @@ title "a skunk"
 names {"skunk"}
 descr "A small black animal with a white stripe is sitting here."
 extra {}
-"PEWEEEEE! what is that smell???????."
+"PEWEEEEE! What is that smell???????"
 weight 2
 M_SKUNK_TINY(5,SEX_MALE)
 manipulate {MANIPULATE_TAKE}
@@ -2906,7 +2905,7 @@ dilcopy smelldil();
 end
 
 mac
-title "a Macaw"
+title "a macaw"
 names {"macaw","bird"}
 descr "A large multi-colored, very annoying bird is perched here."
 extra {}
@@ -2924,10 +2923,10 @@ end
 
 spider
 title "a tarantula"
-names {"spider"}
+names {"tarantula","spider"}
 descr "A small black spider lurks here."
 extra {}
-"A small back tarantula."
+"A small black tarantula."
 M_SPIDER_TINY(10, SEX_MALE)
 manipulate {MANIPULATE_TAKE}
 flags { UNIT_FL_NO_TELEPORT} \
@@ -2953,7 +2952,7 @@ dilcopy catchit@hobgob();
 end
 
 hamster
-title "a Hamster"
+title "a hamster"
 names {"hamster"}
 descr "A small hamster is sitting here trying not to be stepped on."
 extra {}
@@ -2970,11 +2969,11 @@ end
 lover_1
 title "Jesealla"
 names{"jesealla","lover1"}
-descr "Jesealla is standing here looking for some one"
+descr "Jesealla is standing here looking for someone."
 extra {}
 "Jesealla is so ugly it is a wonder you can look at her and still see. Kind
 of like a face only a mother could love.  She looks to be waiting for someone
-and seems very troubled maybe she needs some good old fashioned comforting."
+and seems very troubled; maybe she needs some good old fashioned comforting."
 M_AVG_GOBLIN(110, SEX_FEMALE)
 exp 0
 flags {UNIT_FL_NO_TELEPORT}
@@ -3006,18 +3005,17 @@ exec("sigh",self);
 pause;
 exec("say I have been corresponding with one I have come to love", self);
 pause;
-exec("say He was to meet me here and has not shown, I fear he may be lost", self);
+exec("say He was to meet me here and has not shown; I fear he may be lost.", self);
 pause;
 exec ("sigh", self);
 pause;
 exec("say But if I leave to go find him I may miss him", self);
 pause;
-exec ("say Please find my love for me, just mention my name and bring him
-to me", self);
+exec ("say Please find my love for me; just mention my name and bring him to me.", self);
 pause;
 exec ("emote cries softly for her lost love, Reckus.", self);
 pause;
-exec ("say I implore of you bring my love to me!", self);
+exec ("say I implore you, bring my love to me!", self);
 addextra(pc.quests, {LOVE_ONGOING}, "");
 
 pause;
@@ -3028,7 +3026,7 @@ goto start;
 
 :losthim:
 exec ("cry", self);
-exec ("emote sobs now I may never meet him", self);
+exec ("emote sobs, 'Now I may never meet him.'", self);
 unsecure(pc);
 pause;
 goto start;
@@ -3074,7 +3072,7 @@ if (findunit(findsymbolic ("lover_1@hobgob"), "reckus", FIND_UNIT_SURRO, null))
 	 goto start;
 :losthim:
 exec ("cry", self);
-exec ("say how will I meet up with my love now?", self);
+exec ("say How will I meet up with my love now?", self);
 unsecure(pc);
 pause;
 goto start;
@@ -3101,8 +3099,8 @@ pc:=findunit(self, pname, FIND_UNIT_SURRO, null);
 
 	 secure (pc,losthim);
 
-exec ("emote sighs That's the 5th one I have lost this week." ,self);
-exec("say Well, you have done your part I will give you that "+
+exec ("emote sighs, 'That's the 5th one I have lost this week.'" ,self);
+exec("say Well, you have done your part; I will give you that "+
                 "which you seek.", self);
                 item := load("tear@hobgob");
                 link (item, pc);
@@ -3125,13 +3123,13 @@ dilend
 end
 
 lover_2
-title "Reckus The Lost"
+title "Reckus the Lost"
 names {"reckus"}
 descr "Reckus is wandering around here looking lost."
 extra {}
 "Reckus is handsome for a hobgoblin. He is a Koalinth with
-striking green skin, He is the kind of hobgoblin you could
-swim home to mom.  Reckus has a lost look on his face maybe  
+striking green skin. He is the kind of hobgoblin you could
+swim home to mom.  Reckus has a lost look on his face; maybe
 you can help?"
 M_AVG_HOBGOBLIN(115, SEX_MALE)
 exp 0
@@ -3161,8 +3159,8 @@ pc:=activator;
 secure (pc,losthim);
 	exec ("follow "+pc.name, self);
 addextra(self.extra, {"$found"}, "");
-exec ("say Please hurry I must meet her and I am late.",self);
-	exec ("thank"+pc.name, self);
+exec ("say Please hurry, I must meet her and I am late.",self);
+	exec ("thank "+pc.name, self);
 	nopriority;
 	unsecure (pc);
 	goto start;
@@ -3189,16 +3187,16 @@ if ("$found" in self.extra) goto start;
         secure(pc, lost);
         exec("sigh", self);
         pause;
-         exec("say I am a little lost can you help me?", self);
+         exec("say I am a little lost; can you help me?", self);
         pause;
-        exec("says I was to meet a woman, but alas can not "+
+        exec("say I was to meet a woman, but alas can not "+
 "find my way", self);
         pause;
         exec("ponder", self);
         pause;
         exec("emote wonders how he will find his way.", self);
         pause;
-        exec("emote yells,MY LOVE WHERE ARE YOU??</div>", self);
+        exec("emote yells, 'MY LOVE, WHERE ARE YOU??'", self);
         pause;
         exec("cry", self);
         pause;
@@ -3213,7 +3211,7 @@ if ("$found" in self.extra) goto start;
         exec("emote screams 'NOOOOOOOO I MUST SEE MY LOVE "+
 "BEFORE I DIE'", self);
         pause;
-        exec("emote yells DIE YOU BOOT LICKER!", self);
+        exec("emote yells, 'DIE, YOU BOOT LICKER!'", self);
          subextra(self.extra, "$found");
 
         pause;
@@ -3240,21 +3238,20 @@ heartbeat := PULSE_SEC*5;
    wait(SFB_MSG,activator.name=="jesealla");
 	 priority;
 	 pname:=getword (argument);
-					secure (pc,losthim);
 
 exec ("emote looks Jesealla over and turns white.",self);
-exec("emote screams My god you're ugly!!!!!!!!!!", self);
+exec("emote screams, 'My god, you're ugly!!!!!!!!!!'", self);
 pause;
-exec("emote places his hand over his heart and sobs I mourn "+
-"for the love that might have been..the love of a beautiful "+
-"woman...", self);
+exec("emote places his hand over his heart and sobs, 'I mourn "+
+"for the love that might have been... the love of a beautiful "+
+"woman...'", self);
 pause;
 exec("emote turns to you and says 'Heck I would be happy if I "+
 "could look at her'",self);
 pause;
-exec("emote places his hand back over his heart and sobs I can "+
+exec("emote places his hand back over his heart and sobs, 'I can "+
 "not go on living with the knowledge I love one as ugly as "+
-"dragon droppings!", self);
+"dragon droppings!'", self);
 pause;
 exec("emote runs for the edge of the cliff and deftly leaps "+
 "over the side...", self);
@@ -3281,7 +3278,7 @@ end
 mastique
 title "Mastique"
 names {"mastique"}
-descr "Mastique the elven mage is standing here skipping rocks"
+descr "Mastique the elven mage is standing here skipping rocks."
 extra {}
 "Mastique is an older, wise looking man. If you explain to him that you
 are a fool he will repeat his story for you."
@@ -3316,26 +3313,26 @@ if (not (CROMWELL_ONGOING in pc.quests))
 
 pause;
 priority;
-exec("say In times long ago, during the great fight between  King "+
-"Cromwell and the dragon, The great King offered up his own life to "+
+exec("say In times long ago, during the great fight between King "+
+"Cromwell and the dragon, the great king offered up his own life to "+
 "save his people from certain doom.", self);
 pause;
 exec("say As the king died in great glory, the dragon stole the king's "+
 "soul, his very life force.", self);
 pause;
-exec("say This has caused the king to roam the here after, never being "+
+exec("say This has caused the king to roam the hereafter, never being "+
 "at rest.", self);
 pause;
 exec("say In order for the king to have eternal peace he requires the "+
 "four elements of life.", self);
 pause;
-exec("say As King Cromwell died, Gehron his trusted and dear friend " +
-" cried tears of sorrow. Seek one of these tears for they are of the " +
-" heart, comfort the one that weeps in sorrow.",self);
+exec("say As King Cromwell died, Gehron, his trusted and dear friend, " +
+"cried tears of sorrow. Seek one of these tears for they are of the " +
+"heart; comfort the one that weeps in sorrow.",self);
 pause;
-exec("say After the great battle Gehron retired to the mountains and
-prepared a sweat lodge to cleanse his soul and commune with his fallen
-king.", self);
+exec("say After the great battle Gehron retired to the mountains and "+
+"prepared a sweat lodge to cleanse his soul and commune with his fallen "+
+"king.", self);
 pause;
 exec("say He found that as he threw the stones into the fire to be " +
 "heated the gods caused some of the stones to bleed. This is the king's "+
@@ -3350,10 +3347,10 @@ exec("say Be very careful when you pet the eagle however because he may "+
 pause;
 exec("say A tome with words of great knowledge would ease the mind of " +
 "the great King Cromwell. Seek thy knowledge from the Keeper of Written "+
-"Wisdom", self); pause;
-exec("say To gain eternal peace King Cromwell requires these four
-elements of life, heart and soul, mind and body. Will you seek these out
-and bring them here to me?",self);
+"Wisdom.", self); pause;
+exec("say To gain eternal peace King Cromwell requires these four "+
+"elements of life, heart and soul, mind and body. Will you seek these out "+
+"and bring them here to me?",self);
 pause;
 exec("say Please nod if you will help me.", self);
 
@@ -3383,8 +3380,8 @@ i := i+1;
 
 :no_quest:
 pause;
-exec("say  It is a sad day for King Cromwell, for now he will never be
-at peace.", self);
+exec("say It is a sad day for King Cromwell, for now he will never be "+
+"at peace.", self);
 unsecure(pc);
 nopriority;
 goto init;
@@ -3392,8 +3389,8 @@ goto init;
 
 :quest_accepted:
 pause;
-exec("say I thank you oh great adventurer, safety and godspeed be with
-you as you seek these elements", self);
+exec("say I thank you, oh great adventurer; safety and godspeed be with "+
+"you as you seek these elements.", self);
 addextra(pc.quests, {CROMWELL_ONGOING}, "");
 unsecure(pc);
 nopriority;
@@ -3413,17 +3410,17 @@ goto start;
          pause;
          subextra(pc.quests, CROMWELL_ONGOING);
          addextra(pc.quests, {CROMWELL_COMPLETE}, "");
-         exec("emote sighs with relief, I am now able to help King
-Cromwell's soul seek the peace that it has so long sought.", self);
+         exec("emote sighs with relief, 'I am now able to help King "+
+"Cromwell's soul seek the peace that it has so long sought.'", self);
          pause;
-         exec("say In return for your great and brave service I would like
-to present you with this gift.", self);
+         exec("say In return for your great and brave service I would like "+
+"to present you with this gift.", self);
 pause;
-exec("say So as you have given the king's soul the freedom to soar at
-will, I also give you this freedom.",self);
+exec("say So as you have given the king's soul the freedom to soar at "+
+"will, I also give you this freedom.",self);
 pause;
-exec("say Use it wisely as it can help you but it can also harm you.
-Remember what you run to may be worse then that which you run from!", self);
+exec("say Use it wisely as it can help you but it can also harm you. "+
+"Remember what you run to may be worse than that which you run from!", self);
          pause;
          subextra(pc.quests, KITTEN_COMPLETE);
          subextra(pc.quests, LOVE_COMPLETE);
@@ -3460,7 +3457,7 @@ Remember what you run to may be worse then that which you run from!", self);
    heartbeat := PULSE_SEC*5;
    exec("say Well I never!", self);
    pause;
-   exec("say Die boot licker Die!.", self);
+   exec("say Die, boot licker, die!", self);
    pause;
    goto start;
 }
@@ -3512,8 +3509,7 @@ else if (("tome of knowledge" in self.inside.name) and
       (KITTEN_COMPLETE in pc.quests))
       {
          addstring(exdp.names, "tome of knowledge");
-         exec("say Yes! The element of mind...just what I
-need.",self);
+         exec("say Yes! The element of mind... just what I need.",self);
          destroy(self.inside);
       }
       else if ("body gem" in self.inside.name)
@@ -3529,7 +3525,7 @@ else if (("heart tear" in self.inside.name) and
       (LOVE_COMPLETE in pc.quests))
       {
          addstring(exdp.names, "heart tear");
-         exec("say Ahh, yes the element of heart, " +
+         exec("say Ahh, yes, the element of heart " +
               "is very important", self);
          destroy(self.inside);
       }
@@ -3566,26 +3562,21 @@ else if (("flight feather" in self.inside.name) and
    goto start;
 
 :cheater:
-exec("say I don't think you could have come by this honestly "+
-", you must have gotten someone else to do your dirty work!.",self);
+exec("say I don't think you could have come by this honestly; "+
+"you must have gotten someone else to do your dirty work!",self);
 pause;
 exec("say I will keep this object and give you another chance to "+
-" prove your worth,", self);
+"prove your worth.", self);
 pause;
-exec("say Go now and do the work honestly",self);
+exec("say Go now and do the work honestly.",self);
 pause;
-exec("say Oh....and to remind you to be honest in your endeavors I will
-take a little part of you..as a small reminder",self);
+exec("say Oh... and to remind you to be honest in your endeavors I will "+
+"take a little part of you... as a small reminder.",self);
          experience(-200, pc);
-act("You feel less experienced",A_SOMEONE,null,null,null,TO_CHAR);
+act("You feel less experienced.",A_ALWAYS,pc,null,null,TO_CHAR);
 destroy (self.inside);
-   if ((command("give")) and (activator.type == UNIT_ST_PC))
-
-   {
-      goto give;
-   }
-   else
-     goto start;
+   unsecure(pc);
+   goto start;
 
 }
 dilend
@@ -3613,10 +3604,10 @@ if (item==null)
          {
 exec("emote skips a rock across the pond",self);
 pause;
-act("The rock skips across the pond at a stupendous speed", A_SOMEONE,
+act("The rock skips across the pond at a stupendous speed.", A_SOMEONE,
 self, null,null, TO_ALL);
 act("The rock bounces about 6 times then sinks quickly to the "+
-"bottom", A_SOMEONE,  self, null,null, TO_ALL);
+"bottom.", A_SOMEONE,  self, null,null, TO_ALL);
 		unsecure (item);
 		unsecure (pc);
             goto loop1;
@@ -3630,7 +3621,7 @@ act("The rock skips across the pond at a stupendous speed "+
 "straight for a helpless duck.", A_SOMEONE,  self,
 null,null, TO_ALL);
 act("CRACK!!!!!",A_SOMEONE,  self, null,null, TO_ALL);
-act("The rock hit the duck square in the head!" ,A_SOMEONE,  self,
+act("The rock hits the duck square in the head!" ,A_SOMEONE,  self,
 null,null, TO_ALL);
          sendto("die", item);
 
@@ -3664,49 +3655,50 @@ wait(SFB_CMD,(activator.type == UNIT_ST_PC) and
 
 pause;
 priority;
-exec ("say HMMM.  Yes you are but for admitting it I will repeat my story.",self);
+exec ("say HMMM.  Yes you are, but for admitting it I will repeat my story.",self);
 pause;
 exec ("say Please try to listen this time.",self);
 pause;
-exec("say In times long ago, during the great fight between  King "+
-"Cromwell and the dragon, The great King offered up his own life to "+
+exec("say In times long ago, during the great fight between King "+
+"Cromwell and the dragon, the great king offered up his own life to "+
 "save his people from certain doom.", self);
 pause;
-exec("say As the king died in great glory, the dragon stole the kings "+
+exec("say As the king died in great glory, the dragon stole the king's "+
 "soul, his very life force.", self);
 pause;
-exec("say This has caused the king to roam the here after, never being "+
+exec("say This has caused the king to roam the hereafter, never being "+
 "at rest.", self);
 pause;
 exec("say In order for the king to have eternal peace he requires the "+
 "four elements of life.", self);
 pause;
-exec("say As King Cromwell died, Gehron his trusted and dear friend " +
-" cried tears of sorrow. Seek one of these tears for they are of the " +
-" heart, comfort the one that weeps in sorrow.",self);
+exec("say As King Cromwell died, Gehron, his trusted and dear friend, " +
+"cried tears of sorrow. Seek one of these tears for they are of the " +
+"heart; comfort the one that weeps in sorrow.",self);
 pause;
-exec("say After the great battle Gehron retired to the mountains  and
-prepared a sweat lodge to cleanse his sole and commune with his fallen
-king.", self);
+exec("say After the great battle Gehron retired to the mountains and "+
+"prepared a sweat lodge to cleanse his soul and commune with his fallen "+
+"king.", self);
 pause;
 exec("say He found that as he threw the stones into the fire to be " +
 "heated the gods caused some of the stones to bleed. This is the king's "+
 "body.", self);
 pause;
 exec("say In order to leave this plane of reality King Cromwell's soul "+
-"must be able to wing easily through the different planes of reality. "+
-"Much like that of an eagle soaring on high.",self);
+"must be able to wing easily through the different planes of reality, "+
+"much like that of an eagle soaring on high.",self);
 pause;
 exec("say Be very careful when you pet the eagle however because he may "+
 "mistake your fingers for food." , self);
 pause;
 exec("say A tome with words of great knowledge would ease the mind of " +
 "the great King Cromwell. Seek thy knowledge from the Keeper of Written "+
-"Wisdom", self); pause;
+"Wisdom.", self); pause;
 exec("say To gain eternal peace King Cromwell requires these four elements of "+
 "life, heart and soul, mind and body.",self);
-exec ("say Please write what I have said I might not want to repeat myself again",self);
+exec ("say Please write down what I have said; I might not want to repeat myself again.",self);
 nopriority;
+goto start;
 }
 dilend
 
@@ -3715,9 +3707,9 @@ end
 duck
 title "Harrold the duck"
 names {"harrold","duck"}
-descr "Harrold the duck is waddling around serenely"
+descr "Harrold the duck is waddling around serenely."
 extra{}
-"just an ordinary duck"
+"Just an ordinary duck."
 dilbegin duck ();
 var
    u1 : unitptr;
@@ -3732,7 +3724,7 @@ code
    priority;
       self.hp := -11;
 act(" QUACK!!!!!!!!!!", A_SOMEONE,  self, null,null, TO_ALL);
-act("Harrold the Duck Falls to the ground withering in pain", A_SOMEONE,
+act("Harrold the duck falls to the ground writhing in pain.", A_SOMEONE,
 self, null,null, TO_ALL);
 position_update(self);
  }
@@ -3744,9 +3736,9 @@ end
 loranda
 title "Loranda"
 names {"loranda","mistress"}
-descr "Loranda the mistress of knowledge is standing here"
+descr "Loranda the mistress of knowledge is standing here."
 extra {}
-"loranda it a beautiful young woman who has knowledge beyond
+"Loranda is a beautiful young woman who has knowledge beyond
 her years."
 M_HALFLING_CLERIC_SWORD(100,SEX_FEMALE,"cast fear","cast heal")
 exp 0
@@ -3777,13 +3769,12 @@ priority;
 pc := activator;
 secure(pc, losthim);
 
-exec ("say You require the tome of knowledge?  I am willing to give this
-to you", self);
+exec ("say You require the tome of knowledge?  I am willing to give this to you,", self);
 pause;
-exec ("say but first you must do something for me.", self);
+exec ("say But first you must do something for me.", self);
 pause;
-exec ("say I have always desired a pet. Bring to me a smoky grey kitten
-and the tome is yours.", self);
+exec ("say I have always desired a pet. Bring to me a smoky grey kitten "+
+"and the tome is yours.", self);
          addextra(pc.quests, {KITTEN_ONGOING}, "");
 unsecure(pc);
 pause;
@@ -3826,6 +3817,7 @@ priority;
 
 pc := activator;
 secure(pc, losthim);
+item := self.inside;
 secure(item, losthim);
 
 wait(SFB_CMD | SFB_TICK, TRUE);
@@ -3840,15 +3832,14 @@ if (CROMWELL_COMPLETE in pc.quests) list :=CROMWELL_COMPLETE in pc.quests;
         {
                 addstring(list.names, "grey kitten");
                 exec("emote looks the kitten over.", self);
-                exec ("say  She looks fine",self);
+                exec ("say She looks fine.",self);
                 destroy(self.inside);
                 goto checklist;
         }
                else
         {
                 exec("say Did I ask for this, "+pc.name +"?", self);
-                exec("say I think not, but it sure is nice of you, I
-think I will keep it.", self);
+                exec("say I think not, but it sure is nice of you; I think I will keep it.", self);
                 goto checklist;
         }
 }
@@ -3863,7 +3854,7 @@ goto give;
 
 if (("grey kitten" in list.names))
 {
-        exec("say As I promised you here is that which you seek.", self);
+        exec("say As I promised you, here is that which you seek.", self);
         pause;
          addextra(pc.quests, {KITTEN_COMPLETE}, "");
          subextra(pc.quests, KITTEN_ONGOING);
@@ -3900,7 +3891,7 @@ goto start;
 
 :losthim:
 exec ("shrug", self);
-exec ("say Some people are just plain rude!.", self);
+exec ("say Some people are just plain rude!", self);
 unsecure(pc);
 pause;
 goto start;
@@ -3909,9 +3900,9 @@ dilend
 
 end
 mikisiw
-title "Mikisiw The Eagle"
+title "Mikisiw the Eagle"
 names {"mikisiw","eagle"}
-descr "Mikisiw the mighty eagle is standing here"
+descr "Mikisiw the mighty eagle is standing here."
 extra {}
 "Mikisiw is a mighty eagle."
 M_EAGLE_MEDIUM(10,SEX_FEMALE)
@@ -3951,9 +3942,9 @@ exec  ("say I have heard of this beautiful place, with delicious "+
 "fish", self); pause;
 exec ("sigh",self);
 pause;
-exec ("say but alas I have been unable to find this lake.",self);
+exec ("say But alas I have been unable to find this lake.",self);
 pause;
-exec ("say  if you will bring me this fish I will give you that which "+
+exec ("say If you will bring me this fish I will give you that which "+
 "you seek.", self);
 pause;
 exec ("say I will give you a special pole to aid you in this search.", self);
@@ -3973,7 +3964,7 @@ goto start;
 
 :losthim:
 exec ("shrug", self);
-exec ("say could not handle the task I guess", self);
+exec ("say Could not handle the task, I guess.", self);
 unsecure(pc);
 pause;
 goto start;
@@ -4009,7 +4000,7 @@ exec ("say What are you stupid!!", self);
 pause;
 exec ("say How many of these poles do you think I have??", self);
 pause;
-exec ("say Ok, here is another pole try not to lose this one.  I don't know if"+
+exec ("say Ok, here is another pole; try not to lose this one.  I don't know if "+
 "I can find another.", self);
 
 		item := load("pole@hobgob");
@@ -4027,7 +4018,7 @@ goto start;
 
 :losthim:
 exec ("shrug", self);
-exec ("say Oh well guess he didn't need another pole.", self);
+exec ("say Oh well, guess he didn't need another pole.", self);
 unsecure(pc);
 pause;
 goto start;
@@ -4062,6 +4053,7 @@ priority;
 
 pc := activator;
 secure(pc, losthim);
+item := self.inside;
 secure(item, losthim);
 
 wait(SFB_CMD | SFB_TICK, TRUE);
@@ -4082,7 +4074,7 @@ if (CROMWELL_COMPLETE in pc.quests) list :=CROMWELL_COMPLETE in pc.quests;
                else
         {
                 exec("say Did I ask for this, "+pc.name +"?", self);
-                exec("say I think not, but it sure is nice of you, I think I will keep it.", self);
+                exec("say I think not, but it sure is nice of you; I think I will keep it.", self);
                 goto checklist;
         }
 }
@@ -4099,14 +4091,14 @@ if (("mikisiw fish" in list.names))
 {
         exec("say I thank you for my dinner", self);
         pause;
-        exec("say and as I promised you I shall give you a flight feather",self);
+        exec("say And as I promised, I shall give you a flight feather.",self);
          addextra(pc.quests, {EAGLE_COMPLETE}, "");
          subextra(pc.quests, EAGLE_ONGOING);
               item := load("feather@hobgob");
          item.height := pc.height;
         link (item, pc);
         pause;
-        exec("emote flaps his wings rapidly causing a feather to fall off.",self);
+        exec("emote flaps her wings rapidly causing a feather to fall off.",self);
         pause;
         exec("emote hands " + pc.name + " a large flight feather.", self);
         if (CROMWELL_ONGOING in pc.quests) list := CROMWELL_ONGOING in pc.quests;
@@ -4136,7 +4128,7 @@ goto start;
 
 :losthim:
 exec ("shrug", self);
-exec ("say Well some people just can't handle the challenge.", self);
+exec ("say Well, some people just can't handle the challenge.", self);
 unsecure(pc);
 pause;
 goto start;
@@ -4201,7 +4193,7 @@ end
 kitten
 title "a grey kitten"
 names {"grey kitten","kitten"}
-descr "A smoky grey kitten is playing here"
+descr "A smoky grey kitten is playing here."
 extra {}
 "A very playful small grey kitten."
 M_CAT_TINY(10,SEX_FEMALE)
@@ -4218,7 +4210,7 @@ end
 b_kitten
 title "a black kitten"
 names {"black kitten","kitten"}
-descr "A black kitten is playing here"
+descr "A black kitten is playing here."
 extra {}
 "A very playful small black kitten."
 M_CAT_TINY(15,SEX_FEMALE)
@@ -4236,9 +4228,9 @@ end
 bat
 title "a black bat"
 names {"black bat","bat"}
-descr "A black bat is hanging from the ceiling"
+descr "A black bat is hanging from the ceiling."
 extra{}
-"A plain black bat"
+"A plain black bat."
 M_BAT_TINY(11,SEX_FEMALE)
 exp 100
 alignment -1000
@@ -4249,19 +4241,19 @@ end
 maggot
 title "a quivering horde of maggots"
 names {"quivering horde of maggots","horde of maggots","maggots","horde"}
-descr "A quivering horde of maggots are here waiting to devour anything
-in their path"
+descr "A quivering horde of maggots is here waiting to devour anything
+in their path."
 M_WORM_TINY(19,SEX_NEUTRAL)
 exp 100
 extra {}
-"A quivering horde of maggots"
+"A quivering horde of maggots."
 
 end
 hobgob_cit
 
 names {"hobgoblin citizen","hobgoblin","citizen"}
-title "a Hobgoblin Citizen"
-descr "A Hobgoblin Citizen snarls at you."
+title "a hobgoblin citizen"
+descr "A hobgoblin citizen snarls at you."
 money 7 COPPER_PIECE, 5 IRON_PIECE
 M_AVG_HOBGOBLIN(15, SEX_MALE)
 alignment -1000
@@ -4271,7 +4263,7 @@ dilcopy teamwork@function("giant triphid / hobgoblin / triphid");
 dilcopy rescue@function("giant triphid / triphid");
 
 extra {}
-"A burly hobgoblin with hairy dark gray hide, yellow teeth and
+"A burly hobgoblin with hairy dark gray hide, yellow teeth and a
 blue nose."
 dilcopy pain_dil@halfzon (15,{"say Get out while you can.",
 "say We don't take kindly to strangers around here.",
@@ -4283,10 +4275,10 @@ end
 
 giant_triphid
 names {"giant triphid","triphid"}
-title "a giant Triphid"
-descr "A giant Triphid is lurking here."
+title "a giant triphid"
+descr "A giant triphid is lurking here."
 extra {}
-"A giant triphid that spits poison and kills"
+"A giant triphid that spits poison and kills."
 M_TRIPHID_MAD(22,SEX_FEMALE)
 dilcopy teamwork@function("giant triphid / hobgoblin warrior / triphid");
 dilcopy rescue@function("giant triphid / triphid / hobgoblin warrior");
@@ -4295,10 +4287,10 @@ end
 
 small_triphid
 names {"triphid"}
-title "a Triphid"
-descr "A Triphid is lurking here."
+title "a triphid"
+descr "A triphid is lurking here."
 extra {}
-"A triphid that spits poison and kills"
+"A triphid that spits poison and kills."
 M_TRIPHID_TINY(19,SEX_FEMALE)
 exp 50
 
@@ -4306,13 +4298,13 @@ end
 
 hobgob_swar
 names {"hobgoblin warrior","hobgoblin","warrior"}
-title "a Hobgoblin Warrior"
-descr "A Hobgoblin Warrior is patrolling."
+title "a hobgoblin warrior"
+descr "A hobgoblin warrior is patrolling."
 money 1 SILVER_PIECE, 2 COPPER_PIECE
 M_HOBGOBLIN_WARRIOR_SWORD(20, SEX_MALE)
 alignment -1000
 dilcopy wander_zones@function("hobgob", 30, 1, 0);
-extra {} "A fierce  looking hobgoblin warrior."
+extra {} "A fierce looking hobgoblin warrior."
 dilcopy teamwork@function("giant triphid / hobgoblin warrior / triphid");
 dilcopy rescue@function("giant triphid / triphid/hobgoblin warrior / hobgoblin
 citizen");
@@ -4320,9 +4312,9 @@ citizen");
 end
 hobgob_pchief
 names {"koalinth","warrior","chief"}
-title "a Koalinth Chief"
-descr "A Koalinth Chief is here"
-extra {} "A  high ranking warrior with gills, light green skin and webbed
+title "a Koalinth chief"
+descr "A Koalinth chief is here."
+extra {} "A high ranking warrior with gills, light green skin and webbed
 fingers and toes."
 M_HOBGOBLIN_WARRIOR_POLE(23, SEX_MALE)
 alignment -1000
@@ -4332,8 +4324,8 @@ end
 
 hobgob_pwar
 names {"koalinth","warrior"}
-title "a Koalinth Warrior"
-descr "A Koalinth Warrior is here"
+title "a Koalinth warrior"
+descr "A Koalinth warrior is here."
 extra {} "A warrior with gills, light green skin and webbed fingers and
 toes."
 M_HOBGOBLIN_WARRIOR_POLE(21, SEX_MALE)
@@ -4343,8 +4335,8 @@ dilcopy wander_zones@function("hobgob", 30, 1, 0);
 end
 
 half_thief
-names {"thief"}
-title "a Halfling Thief"
+names {"halfling thief","halfling","thief"}
+title "a halfling thief"
 descr "A pathetic halfling thief is eyeing you."
 extra {}
 "Her eyes shift as she watches you closely. You wonder what she is up to."
@@ -4366,8 +4358,8 @@ dilcopy teamwork@function("giant triphid / hobgoblin / triphid");
 dilcopy rescue@function("giant triphid / triphid");
 
 extra {}
-"Sully is a rather over weight hobgoblin. Gobs of fat and grease drip
-off his body into the pot as he stands here stirring it"
+"Sully is a rather overweight hobgoblin. Gobs of fat and grease drip
+off his body into the pot as he stands here stirring it."
 
 dilbegin prg2();
 var
@@ -4384,16 +4376,16 @@ code
         secure(pc, lost);
         exec("burp", self);
         pause;
-        act ("Fat and grease drip in great gobs off of $1n's   body and
-land in the slop pot with a big 'PLOP'.", A_SOMEONE,  self, null, null,
+        act ("Fat and grease drip in great gobs off of $1n's body and "+
+"land in the slop pot with a big 'PLOP'.", A_SOMEONE,  self, null, null,
 TO_ALL);
         pause;
-        exec("emote asks 'where are those bat balls??'", self);
+        exec("emote asks 'Where are those bat balls??'", self);
         pause;
         exec("fart", self);
         pause;
         exec("emote bends over and picks up something from the floor and "
-		+"drops it in and  pot.", self);
+		+"drops it in the pot.", self);
         pause;
         exec("emote scratches himself.", self);
         pause;
@@ -4414,7 +4406,7 @@ TO_ALL);
         heartbeat := PULSE_SEC * 3;
         exec("emote screams 'I will fillet you and add you to my stew!'", self);
         pause;
-        exec("emote screams 'Die you slimy fish! Your mother wore a "
+        exec("emote screams 'Die, you slimy fish! Your mother wore a "
 		+"bone around her neck so the dogs would lick her!'", self);
         pause;
         exec("cackle", self);
@@ -4428,11 +4420,11 @@ dilend
 end
 
 mage_pris
-title "a Madman"
+title "a madman"
 names {"madman","mage"}
-descr "A Mad Mage stands here"
+descr "A mad mage stands here."
 extra {}
-"A male mage with a half crazed look in his eyes"
+"A male mage with a half crazed look in his eyes."
 M_ORC_MAGE_ACID(19,SEX_MALE,"cast acid drop")
 alignment -1000
 exp 200 /* this guy is really tuff for his level */
@@ -4440,13 +4432,13 @@ exp 200 /* this guy is really tuff for his level */
 end
 
 skeleton_lg
-title "a Dusty Skeleton"
+title "a dusty skeleton"
 names {"dusty skeleton","skeleton"}
-descr "A large dusty skeleton is standing here"
+descr "A large dusty skeleton is standing here."
 extra {}
-"A large skeleton covered in dust is here, you shiver in fear as you
-realize it is the remains of an adventurer like your self that has gotten
-lost in the  maze of tunnels"
+"A large skeleton covered in dust is here; you shiver in fear as you
+realize it is the remains of an adventurer like yourself that has gotten
+lost in the maze of tunnels."
 M_SKELETON_TINY(20,SEX_FEMALE)
 alignment -1000
 
@@ -4455,7 +4447,7 @@ end
 skeleton_sm
 title "a gleaming skeleton"
 names {"gleaming skeleton","skeleton"}
-descr "A gleaming white skeleton stands here"
+descr "A gleaming white skeleton stands here."
 extra {}
 "A gleaming white skeleton, picked clean by the maggots."
 M_SKELETON_TINY(17,SEX_MALE)
@@ -4464,7 +4456,7 @@ alignment -1000
 end
 
 orc_pris
-title "a Large Orcian Prisoner"
+title "a large orcian prisoner"
 names {"orcian prisoner","prisoner","orcian","orc"}
 descr "A large orcian prisoner is standing here."
 extra {}
@@ -4477,11 +4469,11 @@ dilcopy stealdil2@hobgob();
 end
 
 dwarf_pris
-title "a Dwarf Murderer"
+title "a dwarf murderer"
 names {"dwarf murderer","murderer","dwarf"}
-descr "A Dwarf Murderer stands here"
+descr "A dwarf murderer stands here."
 extra {}
-"A male dwarf with a half crazed look in his eyes"
+"A male dwarf with a half crazed look in his eyes."
 money 1 SILVER_PIECE, 1 COPPER_PIECE, 5 IRON_PIECE
 M_DWARF_WARRIOR_SWORD(19,SEX_MALE)
 alignment -1000
@@ -4496,7 +4488,7 @@ end
 kona
 names {"kona"}
 title "Kona"
-descr "Kona the shopkeeper, is standing here."
+descr "Kona the shopkeeper is standing here."
 extra {}
 "An older hobgoblin with a permanent scowl."
 
@@ -4510,8 +4502,8 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
-"   $1n says, 'This $2N is too expensive for beggars",
+"   $1n says, 'I won't buy that!' ",
+"   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
 "$1n says, 'I don't seem to have that many in my stock'",
@@ -4531,7 +4523,7 @@ names {"able"}
 title "Able"
 descr "Able the armorer is standing here."
 extra {}
-"An large mean looking Hobgoblin."
+"A large mean looking hobgoblin."
 
 M_AVG_HOBGOBLIN(15, SEX_MALE)
 money 2 SILVER_PIECE
@@ -4542,7 +4534,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -4574,7 +4566,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -4592,10 +4584,10 @@ end
 mikis
 names {"mikis"}
 title "Mikis"
-descr "Mikis the shopkeeper, is standing here."
+descr "Mikis the shopkeeper is standing here."
 extra {}
 "An ugly looking hobgoblin that looks like he would rather spit at you
-then serve you."
+than serve you."
 
 M_AVG_HOBGOBLIN(16, SEX_MALE)
 money 2 SILVER_PIECE
@@ -4608,7 +4600,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -4626,10 +4618,10 @@ end
 thennek
 names {"thennek"}
 title "Thennek"
-descr "Thennek, the bar keeper is standing here."
+descr "Thennek the bar keeper is standing here."
 extra {}
 "A strong sturdy looking hobgoblin that looks like he would not put up
-with much from the patrons"
+with much from the patrons."
 M_AVG_HOBGOBLIN(22, SEX_MALE)
 money 2 SILVER_PIECE
 dilcopy shopkeeper@function(
@@ -4640,7 +4632,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -4655,11 +4647,11 @@ dilcopy shopkeeper@function(
 end
 
 p_fish
-title "a Man Eating Fish"
+title "a man eating fish"
 names {"man eating fish","fish"}
-descr "A man eating fish is flopping around on the ground"
+descr "A man eating fish is flopping around on the ground."
 extra {}
-"what a fish story this one will make! The one that  didn't get
+"What a fish story this one will make! The one that didn't get
 away...umm if you live to tell of it."
 M_GWHITE_SHARK_TINY(20,SEX_NEUTRAL)
 alignment -1000
@@ -4670,8 +4662,8 @@ end
 
 mine_worker
 names {"mine worker","prisoner","worker"}
-title "a Mine Worker"
-descr "A mine worker is here  sweating as he works."
+title "a mine worker"
+descr "A mine worker is here sweating as he works."
 extra {}
 "The worker is very dirty and covered in sweat streaked dust. He is
 carrying a large pick and looks like he could be very deadly with it
@@ -4685,8 +4677,8 @@ end
 
 mine_worker_1
 names {"mine worker","prisoner","worker"}
-title "a Mine Worker"
-descr "A mine worker is here  sweating as he works."
+title "a mine worker"
+descr "A mine worker is here sweating as he works."
 extra {}
 "The worker is very dirty and covered in sweat streaked dust. He is
 carrying a large pick and looks like he could be very deadly with it
@@ -4699,8 +4691,8 @@ end
 
 mine_worker_2
 names {"mine worker","prisoner","worker"}
-title "a Mine Worker"
-descr "A mine worker is here  sweating as he works."
+title "a mine worker"
+descr "A mine worker is here sweating as he works."
 extra {}
 "The worker is very dirty and covered in sweat streaked dust. He is
 carrying a large pick and looks like he could be very deadly with it
@@ -4714,8 +4706,8 @@ end
 
 mine_worker_3
 names {"mine worker","prisoner","worker"}
-title "a Mine Worker"
-descr "A mine worker is here  sweating as he works."
+title "a mine worker"
+descr "A mine worker is here sweating as he works."
 extra {}
 "The worker is very dirty and covered in sweat streaked dust. He is
 carrying a large pick and looks like he could be very deadly with it
@@ -4727,8 +4719,8 @@ SEX_MALE) alignment -1000
 end
 
 old_man
-title "Cranky Old Cuss"
-names {"crank old cuss","old cuss","cuss","man"}
+title "a cranky old cuss"
+names {"cranky old cuss","old cuss","codger","cuss","man"}
 descr "A cranky old codger is standing here."
 extra {}
 "This old cuss looks like he would rather rip your head off than look at
@@ -4750,10 +4742,10 @@ code
 != POSITION_FIGHTING)));
         pc := activator;
         secure(pc, lost);
-        exec("say What the hell do you want you ugly hunk of dragon "+
+        exec("say What the hell do you want, you ugly hunk of dragon "+
         "droppings?",self);
         pause;
-        exec("spit" +pc.name ,self);
+        exec("spit " +pc.name ,self);
         unsecure(pc);
        goto start;
 
@@ -4806,7 +4798,7 @@ code
            exec("say I require the scales of the dragon that is not. I "+
            "highly doubt if a wuss such as you could retrieve these.",self);
            pause;
-           exec("say Also I will require the hide of a cloak, Try not to "+
+           exec("say Also I will require the hide of a cloak. Try not to "+
            "be too dense when you look for this.",self);
            pause;
            exec("say If you are willing to get these for me nod that "+
@@ -4823,7 +4815,7 @@ code
                   else if (command("say"))
                    {
                    pause;
-                   exec("say Just nod or shake you damn fool!", self);
+                   exec("say Just nod or shake, you damn fool!", self);
                     }
                    else if (command("shake"))
                    goto no_quest;
@@ -4833,21 +4825,21 @@ code
      else if ((not(CROMWELL_COMPLETE in pc.quests)) or
             (findunit(activator, "dragons wings", FIND_UNIT_INVEN, null)))
      {
-     exec("say stop wasting my time you little puke!",self);
+     exec("say Stop wasting my time, you little puke!",self);
      unsecure(pc);
      goto start;
      };
 
       :no_quest:
           pause;
-          exec("say Very well you lily livered wuss! Be gone I dont need "+
+          exec("say Very well, you lily-livered wuss! Be gone, I don't need "+
           "your type about me.", self);
           unsecure(pc);
           goto waitawhile;
 
      :quest_accepted:
            pause;
-           exec("say Ok get the hell out of my face and don't return till "+
+           exec("say Ok, get the hell out of my face and don't return till "+
            "you have something for me!", self);
            addextra(pc.quests, {REPLACE_ONGOING}, "");
            unsecure(pc);
@@ -4863,7 +4855,7 @@ code
    goto init;
 
    :lostpc:
-   exec("say Fine take a hike then jerk!", self);
+   exec("say Fine, take a hike then, jerk!", self);
    goto start;
 }
 
@@ -4922,6 +4914,7 @@ code
       {
          exec("say Did I ask for this crap?", self);
          link(self.inside,pc);
+          unsecure(pc);
           goto start;
       };
 
@@ -4946,14 +4939,18 @@ code
          item := load("wings@hobgob");
          item.height := pc.height;
          link(item, pc);
-         exec("say Here are your wings try not to be so careless again "+
-          " because next time I might not be so pleasant.",self);
+         exec("say Here are your wings; try not to be so careless again "+
+          "because next time I might not be so pleasant.",self);
          pause;
          unsecure(pc);
         goto start;
       }
 
-else goto start;
+else
+{
+   unsecure(pc);
+   goto start;
+}
    :labsecure:
    exec("say Wuss! Can't even handle one little assignment.", self);
 
@@ -4974,18 +4971,18 @@ title "a black cloak"
 names {"cloaker","cloak"}
 descr "A pile of black cloth is lying on the floor."
 extra {}
-"As you look closer at the pile of cloth you realize that it is not a
-ordinary cloak but indead a 'cloaker' which nature has made to resemble a
-cloak. Unfurled, it has two rows of button=like eyes running down its
+"As you look closer at the pile of cloth you realize that it is not an
+ordinary cloak but indeed a 'cloaker' which nature has made to resemble a
+cloak. Unfurled, it has two rows of button-like eyes running down its
 back and two ivory coloured claws that one may mistake for clasps. When
-standing. the monster's face is clearly visible on its white underside.
+standing, the monster's face is clearly visible on its white underside.
 Blood red eyes and a whip tail make you kind of nervous."
 M_OCTOPUS_TINY(17,SEX_MALE)
 
 end
 
 pseudo
-title "Pseudo Dragon"
+title "a pseudo dragon"
 names {"pseudo dragon","pseudo","dragon"}
 descr "A pseudo dragon is standing here."
 extra {}
@@ -4998,9 +4995,9 @@ end
 %objects
 
 teddy_bear
-title "a Teddy Bear"
+title "a teddy bear"
 names {"teddy bear","joo-joo","teddy","bear"}
-descr "A stuffed animal is lying here"
+descr "A stuffed animal is lying here."
 extra {}
 "Joo Joo is a small stuffed Datcog. It's so ugly it is almost cute. The
 princess is almost sure to be looking for this, although holding it will
@@ -5023,7 +5020,7 @@ code
         if (self.equip != 0)
         {
         act("As you hold your $2N close, it reaches around and wraps its "+
-        " furry paws around your neck. ",
+        "furry paws around your neck. ",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
         act("$1n is hugged by $1s $2N.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
@@ -5047,7 +5044,7 @@ code
         {
         act("The $2N reluctantly releases its hold on you.",
                 A_ALWAYS, self.outside, self, null, TO_CHAR);
-        act("$1n's $2N reluctantly lets $1s go.",
+        act("$1n's $2N reluctantly lets $1m go.",
                 A_SOMEONE, self.outside, self, null, TO_REST);
         }
         }
@@ -5063,9 +5060,9 @@ code
 heartbeat:=PULSE_SEC*SECS_PER_MUD_DAY/24;
 wait (SFB_TICK,(self.equip==WEAR_HOLD));
 heartbeat:=PULSE_SEC*5;
-act ("your $2N squeals in pleasure.",
+act ("Your $2N squeals in pleasure.",
 A_ALWAYS,self.outside,self,null,TO_CHAR);
-act ("$1n's $2N squeals in pleasure..",
+act ("$1n's $2N squeals in pleasure.",
 A_ALWAYS,self.outside,self,null,TO_REST);
 sendto ("add charge",self);
 goto start;
@@ -5107,7 +5104,7 @@ n:= cast_spell
  goto start;
 
 	:fail:
-             act ("your $2N tries in vain to help you.",
+             act ("Your $2N tries in vain to help you.",
                   A_ALWAYS,self.outside,self,null,TO_CHAR);
 		goto start;
 
@@ -5138,8 +5135,8 @@ end
 
 
 dragon_scale1
-title "Dragon Scale"
-names {"dragon scale"}
+title "a dragon scale"
+names {"dragon scale","scale"}
 descr "A single reddish brown dragon scale is lying here."
 extra {}
 "This dragon scale looks very special. It has a glow of magic about it.
@@ -5154,7 +5151,7 @@ flags {UNIT_FL_MAGIC}
 end
 
 cloak_skin1
-title "Cloak skin"
+title "a cloak skin"
 names {"cloak skin","cloak","skin"}
 descr "A raggy old cloak is lying here."
 extra {}
@@ -5188,28 +5185,28 @@ ALWAYS_LIGHT
 end
 
 pick
-title "a Miners Pick"
+title "a miner's pick"
 names {"miners pick","pick"}
-descr "A miners pick has been left here"
+descr "A miner's pick has been left here."
 extra {}
-"The minors pick is large  with a wooden handle and a metal head."
+"The miner's pick is large with a wooden handle and a metal head."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
-"A plain old pick"
+"A plain old pick."
 weight 7
 cost 3 SILVER_PIECE
 end
 
 
 level_reducer
-title "Skin Flayer"
+title "a skin flayer"
 names {"transfer object","skin flayer","flayer","object","skin"}
-descr "A skin flayer is  here humming happily"
+descr "A skin flayer is here humming happily."
 extra{}
 "
-type bring <playername> to get player
-type send <playername> to send the player back to civilization."
+type bring &lt;playername&gt; to get player
+type send &lt;playername&gt; to send the player back to civilization."
 
 dilbegin getem();
 var
@@ -5247,7 +5244,7 @@ if (pc == null)
 
     if (pc.level >IMMORTAL_LEVEL)
       {
-      act("Good try pea brain!",A_SOMEONE,self,null,null,TO_ALL);
+      act("Good try, pea brain!",A_SOMEONE,self,null,null,TO_ALL);
       unsecure(pc);
       unsecure(gd);
       goto start;
@@ -5273,7 +5270,7 @@ else
      {
     link(pc, findroom("nightmare@hobgob"));
       act("As a cloud of smoke dissipates "+pc.name+" has appeared "+
-      " in the room.",A_SOMEONE,self,null,null,TO_ALL);
+      "in the room.",A_SOMEONE,self,null,null,TO_ALL);
       exec("look",pc);
       exec("save",pc);
       unsecure(pc);
@@ -5331,7 +5328,7 @@ else
      {
     link(pc, findroom("inn@udgaard"));
       act("The air explodes in smoke.",A_SOMEONE,self,null,null,TO_ALL);
-      act("As the smoke clears you notice " +pc.name+" is gone",
+      act("As the smoke clears you notice " +pc.name+" is gone.",
       A_SOMEONE,self,null,null,TO_ALL);
       exec("look",pc);
       unsecure(pc);
@@ -5346,15 +5343,15 @@ end
 
 
 wings
-title "dragons wings"
+title "a pair of dragon wings"
 names {"dragons wings","dragon wings", "wings"}
-descr "A dragons wing is lying here"
+descr "A pair of dragon wings is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 dilcopy quest_restrict@function (CROMWELL_COMPLETE,0,25,"");
 
 extra {"$identify"}
 "When you have completed the right quest these wings will take you around
-valhalla, provided you have a guild path."
+Valhalla, provided you have a guild path."
 spell 200
 weight 5
 
@@ -5384,7 +5381,7 @@ code
    if (command ("crazzak") and(pc.mana>=10))
    {
       if(pc.outside.zoneidx == "timezon") goto failmana;
-     act ("As you mutter Crazzak., the dragon wings spread out in an awe inspiring splendor.",
+     act ("As you mutter 'Crazzak', the dragon wings spread out in an awe inspiring splendor.",
      A_SOMEONE, pc, null, null, TO_CHAR);
      act ("$1n's wings spread out in an awe inspiring splendor.",
      A_SOMEONE, pc, null, null, TO_REST);
@@ -5395,9 +5392,9 @@ code
      "speed, causing a great gust of wind that almost knocks you " +
      "off your feet.", A_SOMEONE, pc, null, null, TO_REST);
      pause;
-     act ("The dragon wings glow with a magical light and you are transported",
+     act ("The dragon wings glow with a magical light and you are transported.",
        A_SOMEONE, pc, null, null, TO_CHAR);
-     act ("$1ns giant dragon wings glow brightly and $1e vanishes from view.",
+     act ("$1n's giant dragon wings glow brightly and $1e vanishes from view.",
         A_SOMEONE, pc, null, null, TO_REST);
 	   cast_spell(SPL_RANDOM_TELEPORT, self.outside, self,self.outside);
 	   block;
@@ -5407,7 +5404,7 @@ code
        A_SOMEONE, pc, null, null, TO_CHAR);
      act ("$1n appears in mid air being carried by giant dragon wings.",
         A_SOMEONE, pc, null, null, TO_REST);
-     act ("$1n's dragon wings slowly sets $1m down and fold up "+
+     act ("$1n's dragon wings slowly set $1m down and fold up "+
 		 "to a more wearable size.",
         A_SOMEONE, pc, null, null, TO_REST);
 	}
@@ -5423,9 +5420,9 @@ code
    if(pc.outside.zoneidx == "timezon") goto failmana;
    if((pc.outside == findroom("nightmare@hobgob")) and ("home" in argument))
    {
-        act("You can't fly from here you're in trouble haven't you noticed!",
+        act("You can't fly from here; you're in trouble, haven't you noticed!",
             A_ALWAYS, self.outside, null, null, TO_CHAR);
-        act(pc.name+" tries to use their wings but fail.",
+        act(pc.name+" tries to use their wings but fails.",
             A_SOMEONE, self.outside, null, null, TO_REST);
         unsecure(pc);
         goto start;
@@ -5459,7 +5456,7 @@ code
 
    if (IsInGuild@guilds(pc, GUILD_ASSASSIN))
       link(self.outside, findroom("master_room@assassin"));
-   if (IsInGuild@guilds(pc, GUILD_SORCERER))
+   else if (IsInGuild@guilds(pc, GUILD_SORCERER))
       link(self.outside, findroom("grotto@sorcerer"));
    else if (IsInGuild@guilds(pc, GUILD_NYM_RANGER))
       link(self.outside, findroom("tent_1@ranger"));
@@ -5482,15 +5479,14 @@ code
    else if (IsInGuild@guilds(pc, GUILD_BARBARIAN))
       link(self.outside, findroom("hall_04@barbarian"));
    else
-      act("Tell an administrator guild wasn't found." , A_ALWAYS, pc, null,null, TO_CHAR);
+      act("Tell an administrator your guild wasn't found." , A_ALWAYS, pc, null,null, TO_CHAR);
 
    exec ("look",pc);
-   act ("$1n flies in on a pair of dragon wings" , A_SOMEONE, pc, null,null, TO_REST);
+   act ("$1n flies in on a pair of dragon wings." , A_SOMEONE, pc, null,null, TO_REST);
    unsecure (pc);
    goto init;
 
 	:losthim:
-	exec ("say lost him",pc);
 	unsecure (pc);
 	goto init;
 
@@ -5507,11 +5503,11 @@ code
     " off your feet.", A_SOMEONE, pc, null, null, TO_REST);
     pause;
     act ("The wings suddenly wilt to the ground in exhaustion, " +
-" fluttering every once in a while in a valiant effort to flap",
+"fluttering every once in a while in a valiant effort to flap.",
 A_SOMEONE, pc, null, null, TO_CHAR);
-     act ("The wings suddenly wilt to the ground in" +
-"exhaustion, fluttering every once in a while in a" +
-"valiant effort to flap", A_SOMEONE, pc, null, null, TO_REST);
+     act ("The wings suddenly wilt to the ground in " +
+"exhaustion, fluttering every once in a while in a " +
+"valiant effort to flap.", A_SOMEONE, pc, null, null, TO_REST);
 
 	unsecure (pc);
 	goto init;
@@ -5526,11 +5522,11 @@ end
 tear
 title "a tear drop"
 names {"heart tear","tear drop","tear"}
-descr "A glittering tear drop is lying here"
+descr "A glittering tear drop is lying here."
 extra {"$identify"}
-"This looks like a tear drop"
+"This looks like a tear drop."
 extra {}
-"a crystal in the shape of a glittering tear drop."
+"A crystal in the shape of a glittering tear drop."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
 
@@ -5539,7 +5535,7 @@ end
 tome
 title "a tome of knowledge"
 names {"tome of knowledge","tome"}
-descr "A tome of knowledge is has been carelessly dropped here"
+descr "A tome of knowledge has been carelessly dropped here."
 manipulate {MANIPULATE_TAKE}
 extra {"$identify"}
 "A plain tome."
@@ -5550,15 +5546,15 @@ weight 1
 end
 
 feather
-title "an eagles feather"
+title "an eagle's feather"
 names {"flight feather","feather"}
-descr "A feather is lying here"
+descr "A feather is lying here."
 extra {"$identify"}
-"Give you +2 MAG and +3 to your summoning. You must have at least 50 MAG
+"Gives you +2 MAG and +3 to your summoning. You must have at least 50 MAG
 to use this."
 extra {}
 "The feather is obviously a flight feather from a very large
-eagle"
+eagle."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 SPELL_TRANSFER(SPL_SUMMONING, BONUS_GOOD_PLUS)  // Xyzzy: 3
 MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
@@ -5573,9 +5569,9 @@ end
 fish
 title "a delicious fish"
 names {"mikisiw fish","fish"}
-descr "a fish is lying here"
+descr "A fish is lying here."
 extra {"$identify"}
-"This makes you a sit stupider and a bit weaker."
+"This makes you a bit stupider and a bit weaker."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 BRA_TRANSFER(BONUS_JUNK)  // Xyzzy: -10
 STR_TRANSFER(BONUS_TERRIBLE_MINUS)  // Xyzzy: -5
@@ -5583,12 +5579,12 @@ weight 1
 end
 
 scroll
-title "a Mystical Scroll"
+title "a mystical scroll"
 names {"scroll"}
-descr "A mystical scroll has been carelessly left here"
+descr "A mystical scroll has been carelessly left here."
 extra {}
 "As you look at the scroll you get the feeling you will get
-more from it if you hold it and say 'Zaftal'"
+more from it if you hold it and say 'Zaftal'."
 extra {"$identify"}
 "Of use to those with the dragon wings."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -5626,39 +5622,39 @@ null, TO_REST);
 act("As the mist swirls, a spirit magically forms in front of $1n.",
 A_SOMEONE, pc, null, null, TO_REST);
         pause;
-         act ("The Spirit looks at you and says 'Thank you  great warrior "
-+"for freeing my soul.", A_SOMEONE, pc, null, null, TO_CHAR);
+         act ("The spirit looks at you and says 'Thank you, great warrior, "
++"for freeing my soul.'", A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
 
          pause;
-         act("In order to use the gift that has been given to  you, you "+
+         act("In order to use the gift that has been given to you, you "+
 "must both utter magic words and use common sense.", A_SOMEONE, pc, null,
 null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
 
           pause;
-          act("The spirit sighs sadly 'I can grant  you  freedom to fly "+
-"through the air to far away places but can not  grant you control over "+
-"where you go....",A_SOMEONE, pc, null, null, TO_CHAR);
+          act("The spirit sighs sadly, 'I can grant you freedom to fly "+
+"through the air to far away places but can not grant you control over "+
+"where you go....'",A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
           pause;
-          act("Bear in mind the place you go to may be far worse then "+
+          act("Bear in mind the place you go to may be far worse than "+
 "the place you come from.", A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
 
         pause;
-          act("The spirit says 'In order to travel to far  away places "+
-"simply utter the words 'crazzak'.", A_SOMEONE, pc, null, null, TO_CHAR);
+          act("The spirit says: In order to travel to far away places "+
+"simply utter the word 'crazzak'.", A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
 
          pause;
-           act("Also I should tell you, If you ever desire to  return to "+
-"your guild simply command the 'wings home' and they will attempt to "+
+           act("Also I should tell you, if you ever desire to return to "+
+"your guild simply command 'wings home' and they will attempt to "+
 "return you to your guild.",A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
@@ -5667,33 +5663,33 @@ TO_REST);
 
          act("The spirit says 'It has been rumored that there " +
 "is a great conjurer coming to the land that will help you learn to " +
-" magically free a friend from battle. But that is only hearsay " +
-"and in days far to come.", A_SOMEONE, pc, null, null, TO_CHAR);
+"magically free a friend from battle. But that is only hearsay " +
+"and in days far to come.'", A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit whispers something to $1n.", A_SOMEONE, pc, null, null,
 TO_REST);
 
            pause;
 
-         act("The Spirit bows to you and says 'good luck my  friend I "+
-"wish you well'.",A_SOMEONE, pc, null, null, TO_CHAR);
+         act("The spirit bows to you and says 'Good luck, my friend, I "+
+"wish you well.'",A_SOMEONE, pc, null, null, TO_CHAR);
 act("The spirit bows to $1n.", A_SOMEONE, pc, null, null, TO_REST);
 
         pause;
-          act("The misty swirls furiously and suddenly  disappears into "+
+          act("The mist swirls furiously and suddenly disappears into "+
 "nothing.", A_SOMEONE, pc, null, null, TO_CHAR);
-          act("The misty swirls furiously and suddenly  disappears into "+
+          act("The mist swirls furiously and suddenly disappears into "+
 "nothing.", A_SOMEONE, pc, null, null, TO_REST);
 
 goto start;
 :fail:
-exec("emote You are not yet meant to have this knowledge", pc);
+act("You are not yet meant to have this knowledge.", A_ALWAYS, pc, null, null, TO_CHAR);
 unsecure(pc);
 goto start;
 
 :lost:
 unsecure(pc);
 pause;
-
+goto start;
 }
 dilend
 end
@@ -5702,9 +5698,9 @@ end
 
 macaw_cage
 
-names {"Macaw cage","cage"}
-title "a Macaw cage"
-descr "A Macaw cage is sitting here."
+names {"macaw cage","cage"}
+title "a macaw cage"
+descr "A macaw cage is sitting here."
 extra	{}
 "The birdcage is made from bamboo and is big enough to hold a
 macaw comfortably."
@@ -5714,7 +5710,7 @@ open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 CONTAINER_DEF(100)
 cost 16 GOLD_PIECE
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 weight 2
 dilcopy pet_container@hobgob("mac@hobgob");
 end
@@ -5727,7 +5723,7 @@ title "a bird cage"
 descr "A bird cage is sitting here."
 extra	{}
 "The birdcage is made from bamboo and is big enough to hold a
-Budgie comfortably."
+budgie comfortably."
 flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
@@ -5735,15 +5731,15 @@ CONTAINER_DEF(100)
 cost 2 GOLD_PIECE
 weight 2
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 dilcopy  pet_container@hobgob("budgie@hobgob");
 
 end
 
 pbull_cage
 names {"pit bull cage","cage"}
-title "a wooden Pit Bull cage"
-descr "A wooden Pit Bull cage is lying here."
+title "a wooden pit bull cage"
+descr "A wooden pit bull cage is lying here."
 flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
@@ -5752,15 +5748,15 @@ extra	{}
 bars that effectively hold in the strongest dog."
 CONTAINER_DEF(300)
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 cost 7 GOLD_PIECE
 weight 2
 dilcopy pet_container@hobgob("p_bull@hobgob");
 end
 
 monkey_cage
-names {"monkey cage","cage"}
-title "a wooden chimpanzee  cage"
+names {"chimpanzee cage","monkey cage","cage"}
+title "a wooden chimpanzee cage"
 descr "A wooden chimpanzee cage is lying here."
 flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
@@ -5770,7 +5766,7 @@ extra   {}
 bars that effectively hold in the most ingenious chimpanzee."
 CONTAINER_DEF(300)
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 cost 5 GOLD_PIECE
 weight 2
 dilcopy pet_container@hobgob("monkey@hobgob");
@@ -5789,7 +5785,7 @@ extra	{}
 "The dog cage has a wooden top and bottom with sturdy wooden
 bars that effectively hold in the strongest dog."
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 CONTAINER_DEF(300)
 cost 7 GOLD_PIECE
 weight 2
@@ -5798,8 +5794,8 @@ end
 
 puppy_cage
 names {"puppy cage","cage"}
-title "a wooden Puppy cage"
-descr "A wooden Puppy cage is lying here."
+title "a wooden puppy cage"
+descr "A wooden puppy cage is lying here."
 flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
@@ -5808,7 +5804,7 @@ extra	{}
 bars that effectively hold in the strongest dog."
 CONTAINER_DEF(300)
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 cost 5 GOLD_PIECE
 weight 2
 dilcopy pet_container@hobgob("puppy@hobgob");
@@ -5827,7 +5823,7 @@ bars that effectively hold in the wildest pig."
 CONTAINER_DEF(300)
 cost 9 GOLD_PIECE
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 weight 2
 dilcopy pet_container@hobgob("pig@hobgob");
 end
@@ -5846,7 +5842,7 @@ for a kitten or cat."
 CONTAINER_DEF(200)
 weight 2
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 cost 5 GOLD_PIECE
 dilcopy pet_container@hobgob("o_kitten@hobgob");
 end
@@ -5864,7 +5860,7 @@ bars that hold the skunk in but not the smell."
 CONTAINER_DEF(200)
 cost 2 GOLD_PIECE
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 weight 2
 dilcopy pet_container@hobgob("skunk@hobgob");
 end
@@ -5883,7 +5879,7 @@ open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 CONTAINER_DEF(10)
 cost 2 GOLD_PIECE
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 weight 2
 dilcopy pet_container@hobgob("hamster@hobgob");
 end
@@ -5896,12 +5892,12 @@ flags {UNIT_FL_TRANS}
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_ENTER}
 open {EX_OPEN_CLOSE, EX_INSIDE_OPEN, EX_CLOSED}
 extra {}
-"The lizard cage looks to be light weight and big enough to
+"The lizard cage looks to be lightweight and big enough to
 hold a lizard comfortably."
 CONTAINER_DEF(300)
 cost 7 GOLD_PIECE
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 weight 2
 dilcopy pet_container@hobgob("lizard@hobgob");
 end
@@ -5917,7 +5913,7 @@ extra	{}
 "The spider cage is big enough to hold your pet spider as well
 as maybe some live food for it."
 extra {"$identify"}
-"A wooden cage"
+"A wooden cage."
 CONTAINER_DEF(300)
 cost 3 GOLD_PIECE
 weight 2
@@ -5927,14 +5923,14 @@ end
 pole
 title "a fishing pole"
 names"pole"
-descr "a fishing pole is lying here"
+descr "A fishing pole is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 2
 extra {"$identify"}
 "This pole only works in special places."
 extra {}
 "This is a fine looking fishing pole.  To use just hold the pole and
-type 'cast line'"
+type 'cast line'."
 dilbegin fishing_pole ();
 var
   pcname : string;
@@ -5969,27 +5965,27 @@ if (pc.outside==findroom ("valley_1@hobgob"))
 		{
 			item := load("fish@hobgob");
 			link(item, pc.outside);
-			act ("$1n Pulls a fish fit for a feast from the lake.", A_SOMEONE, pc, null, null, TO_REST);
+			act ("$1n pulls a fish fit for a feast from the lake.", A_SOMEONE, pc, null, null, TO_REST);
 			act ("You pull a fish fit for a feast from the lake.", A_SOMEONE, pc, null, null, TO_CHAR);
 			act ("As you pull your fish into the shore, the fishing pole shatters "+
 			"apart.", A_SOMEONE, pc, null, null, TO_CHAR);
-			act ("$1n pole shatters as the fish hits the shore..", A_SOMEONE, pc, null, null, TO_REST);
+			act ("$1n's pole shatters as the fish hits the shore.", A_SOMEONE, pc, null, null, TO_REST);
 			destroy (self);
 		}
 		else if ( i < 100 )
 		{
 			item := load("p_fish@hobgob");
 			link(item, pc.outside);
-			act ("$1n Pulls a very upset hungry looking fish from the lake.", A_SOMEONE, pc, null, null, TO_REST);
+			act ("$1n pulls a very upset hungry looking fish from the lake.", A_SOMEONE, pc, null, null, TO_REST);
 			act ("You pull a very upset hungry looking fish from the lake.", A_SOMEONE, pc, null, null, TO_CHAR);
 		}
  }
  else
  {
-			act ("$1n attempts to cast the fishing line but only is able to cast
-			a few feet before sticking it in the ground.", A_SOMEONE, pc, null, null, TO_REST);
-			act ("You suddenly realize you should find a better place to cast as your
-			line sticks into the ground.", A_SOMEONE, pc, null, null, TO_CHAR);
+			act ("$1n attempts to cast the fishing line but is only able to cast "+
+			"a few feet before sticking it in the ground.", A_SOMEONE, pc, null, null, TO_REST);
+			act ("You suddenly realize you should find a better place to cast as your "+
+			"line sticks into the ground.", A_SOMEONE, pc, null, null, TO_CHAR);
 			}
 unsecure(pc);
 goto start;
@@ -6024,13 +6020,13 @@ end
 
 pot
 names {"cooking pot","pot"}
-title "a Black cooking pot"
+title "a black cooking pot"
 descr "A black cooking pot has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
 CONTAINER_DEF(500)
-extra {}"A black cooking pot"
+extra {}"A black cooking pot."
 extra {"$identify"}
-"A black pot"
+"A black pot."
 weight 4
 end
 
@@ -6052,7 +6048,7 @@ end
 ale
 names {"stein","ale"}
 title "a stein"
-descr "A stein of green hobgoblin ale has be left here."
+descr "A stein of green hobgoblin ale has been left here."
 extra {"$identify"}
 "Feel good juice"
 manipulate {MANIPULATE_TAKE}
@@ -6065,7 +6061,7 @@ end
 whisky
 names {"mug","whisky"}
 title "a mug"
-descr "A mug of whisky has be left here."
+descr "A mug of whisky has been left here."
 extra {"$identify"}
 "Feel good juice"
 manipulate {MANIPULATE_TAKE}
@@ -6079,21 +6075,21 @@ end
 slop
 names {"green slop","slop"}
 title "a blob of green slop"
-descr "A slimy blob of green slop has been left here"
+descr "A slimy blob of green slop has been left here."
 extra {"$identify"}
 "A pile of green slime, does not look very good."
 FOOD_DEF (1,3)
 manipulate {MANIPULATE_TAKE}
 weight 1
 cost 2 IRON_PIECE
-extra {} "A foul smelling blob of green slime"
+extra {} "A foul smelling blob of green slime."
 
 end
 
 stew
 names {"stew"}
-title "Hobgoblin Stew"
-descr "A disgusting stew of questionable origins lays here"
+title "some hobgoblin stew"
+descr "A disgusting stew of questionable origins lies here."
 FOOD_DEF (3,0)
 extra {"$identify"}
 "Yummy stew"
@@ -6106,47 +6102,47 @@ ingredients."
 end
 bats
 names {"fried bat wings","bat wings", "wings","bat"}
-title "a fried bats wing"
-descr "A fried bats wing lays here"
+title "a fried bat's wing"
+descr "A fried bat's wing lies here."
 FOOD_DEF (3,0)
 manipulate {MANIPULATE_TAKE}
 weight 1
 extra {"$identify"}
-"The best fried bats wings about"
+"The best fried bat wings about."
 cost 6 IRON_PIECE
-extra {} "A delicious looking fried bats wing."
+extra {} "A delicious looking fried bat's wing."
 end
 
 ants
 names {"boiled ants","ants","ant"}
 title "a boiled ant"
-descr "A boiled ant corpse is here"
+descr "A boiled ant corpse is here."
 FOOD_DEF (4,0)
 extra {"$identify"}
-"very good boiled ants....fill you right up"
+"Very good boiled ants... fill you right up."
 manipulate {MANIPULATE_TAKE}
 weight 1
 cost 6 IRON_PIECE
-extra {} "mmmmm yummy a boiled ant..eat up and  enjoy"
+extra {} "Mmmmm, yummy, a boiled ant... eat up and enjoy!"
 
 end
 
 water_fountain
-names {"fountain", "water"}
+names {"fountain", "statue", "water"}
 title "a fountain"
 descr "A fountain with a large statue is here."
 extra {}
 "The fountain is large with a huge statue in the center. The statue is of
 the Great Hobgoblin chief 'Lanar'. Lanar is depicted by a 6 1/2 foot life
-size statue, he has a blue nose, yellow eyes and yellow teeth. He is
+size statue; he has a blue nose, yellow eyes and yellow teeth. He is
 wearing blood red clothes and in his hand you see a deadly looking
-morningstar. In all the statue is quite ferocious looking."
+morningstar. In all, the statue is quite ferocious looking."
 LIQ_DEF("clear", 100,-1,5000,10,1,0,0)
 end
 
 glow_crystal
 names {"glowing crystal", "strange crystal","crystal"}
-title "a Glowing Crystal"
+title "a glowing crystal"
 descr "A small glowing crystal has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
@@ -6161,12 +6157,12 @@ bright 5
 end
 glow_stone
 names {"glowing stone", "stones","stone"}
-title "a Glowing Stone"
-descr "A small glowing stone has been left here"
+title "a glowing stone"
+descr "A small glowing stone has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 1
 extra {"$identify"}
-"she ads a little light on the subject"
+"Sheds a little light on the subject."
 cost 1 IRON_PIECE
 extra {} "A magical light shines from the stone..."
 
@@ -6175,13 +6171,13 @@ end
 
 gem
 names {"body gem","gem"}
-title "a Blood Red Gem"
-descr "A stone with blood seeping from it lies here"
+title "a blood red gem"
+descr "A stone with blood seeping from it lies here."
 extra {} "The gem is bone dry yet seems to seep blood."
 type ITEM_WORN
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 extra {"$identify"}
-"makes you a bit stronger"
+"Makes you a bit stronger."
 flags {UNIT_FL_MAGIC}
 weight 1
 cost 500 COPPER_PIECE
@@ -6190,12 +6186,12 @@ end
 
 long_sword
 names {"long sword", "sword"}
-title "a Long Sword"
-descr "A long sword has been left here"
+title "a long sword"
+descr "A long sword has been left here."
 extra {"$identify"}
-"An average long sword"
+"An average long sword."
 extra {"$improved identify"}
-"-5 craftmanship 0 mag longsword"
+"-5 craftsmanship 0 mag longsword"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 romflags {OBJ_NO_DUAL}
@@ -6204,25 +6200,25 @@ cost 1 SILVER_PIECE
 end
 
 w_spoon
-title "a Wooden Spoon"
+title "a wooden spoon"
 names {"wooden spoon","spoon"}
-descr "A wooden spoon has been left here"
+descr "A wooden spoon has been left here."
 extra {}
-"A regular wooden spoon with slime dripping from it"
+"A regular wooden spoon with slime dripping from it."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_CLUB, BONUS_TERRIBLE_MINUS, BONUS_AVERAGE)  // Xyzzy: -5,0
 extra {"$identify"}
 "An average weapon"
 extra {"$improved identify"}
-"-5 craftmanship 0 mag club"
+"-5 craftsmanship 0 mag club"
 weight 1
 cost 5 IRON_PIECE
 end
 
 spear
 names {"spear"}
-title "a Spear"
-descr "A spear has been left here"
+title "a spear"
+descr "A spear has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
@@ -6234,8 +6230,8 @@ end
 
 short_sword
 names {"short sword", "sword"}
-title "a Short Sword"
-descr "A short sword has been left here"
+title "a short sword"
+descr "A short sword has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -6248,19 +6244,19 @@ end
 
 rock_shard
 names {"rock shard", "dagger","shard"}
-title "a Razor sharp shard of rock"
-descr "A razor sharp of rock has been left here."
+title "a razor sharp shard of rock"
+descr "A razor sharp shard of rock has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
 extra{}
-"The rock shard looks like it could do some real damage. "
+"The rock shard looks like it could do some real damage."
 end
 
 s_leggings
 names {"leggings"}
-title "a pair of Short Leggings"
+title "a pair of short leggings"
 descr "A pair of short leggings has been left here."
 extra {}
 "At first the leggings seem to be black in color but when you look
@@ -6276,10 +6272,10 @@ end
 
 hob_leggings
 names {"leggings"}
-title "a pair of Hobgoblin Leggings"
-descr "A pair of Hobgoblin leggings has been left here."
+title "a pair of hobgoblin leggings"
+descr "A pair of hobgoblin leggings has been left here."
 extra {}
-"A pair of blood red leggings"
+"A pair of blood red leggings."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
@@ -6290,10 +6286,10 @@ end
 
 hob_boots
 names {"boots"}
-title "a pair of Hobgoblin Boots"
-descr "A pair of Hobgoblin boots been left here."
+title "a pair of hobgoblin boots"
+descr "A pair of hobgoblin boots has been left here."
 extra {}
-"A blood red boots"
+"A pair of blood red boots."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 extra {"$identify"}
@@ -6304,10 +6300,10 @@ end
 
 hob_plate
 names {"breast plate","breastplate","plate"}
-title "a Hobgoblin Breastplate"
-descr "A Hobgoblin breastplate has been left here."
+title "a hobgoblin breastplate"
+descr "A hobgoblin breastplate has been left here."
 extra {}
-"A blood red breast plate"
+"A blood red breast plate."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
@@ -6319,10 +6315,10 @@ end
 
 hob_sleeves
 names {"sleeves"}
-title "a pair of Hobgoblin Sleeves"
-descr "A pair of Hobgoblin sleeves has been left here."
+title "a pair of hobgoblin sleeves"
+descr "A pair of hobgoblin sleeves has been left here."
 extra {}
-"A pair of blood red sleeves"
+"A pair of blood red sleeves."
 extra {"$identify"}
 "Average sleeves"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
@@ -6336,12 +6332,12 @@ end
 
 hob_helmet
 names {"helmet"}
-title "a Hobgoblin Helmet"
-descr "A Hobgoblin helmet has been left here."
+title "a hobgoblin helmet"
+descr "A hobgoblin helmet has been left here."
 extra {}
 "A blood red helmet with a spike on top."
 extra {"$identify"}
-"Average leggings"
+"Average helmet"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
@@ -6351,7 +6347,7 @@ end
 
 tri_boots
 names {"boots"}
-title "a pair of Tri Boots"
+title "a pair of tri boots"
 descr "A pair of tri boots has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
@@ -6368,7 +6364,7 @@ end
 
 tri_leggings
 names {"leggings"}
-title "a pair of Tri Leggings"
+title "a pair of tri leggings"
 descr "A pair of tri leggings has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
@@ -6377,10 +6373,10 @@ dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
 SKILL_TRANSFER(SKI_VENTRILOQUATE, BONUS_GOOD_PLUS)  // Xyzzy: 3
 weight 8
 extra {"$identify"}
-"Gives you a bonus to ventriloquate"
+"Gives you a bonus to ventriloquate."
 extra {"$improved identify"}
 "restricted to STR 30
-ventriloquake bonus 3"
+ventriloquate bonus 3"
 
 cost 2 SILVER_PIECE
 rent 56 IRON_PIECE
@@ -6390,7 +6386,7 @@ end
 
 tri_plate
 names {"breast plate","breastplate","plate"}
-title "a Tri Breastplate"
+title "a tri breastplate"
 descr "A tri breast plate has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
@@ -6399,7 +6395,7 @@ dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
 SKILL_TRANSFER(SKI_TURN_UNDEAD, BONUS_AVERAGE_PLUS)  // Xyzzy: 1
 weight 10
 extra {"$identify"}
-"Gives you a bonus to turn undead"
+"Gives you a bonus to turn undead."
 extra {"$improved identify"}
 "
  restricted to STR 30
@@ -6410,7 +6406,7 @@ end
 
 tri_sleeves
 names {"sleeves"}
-title "a pair of Tri Sleeves"
+title "a pair of tri sleeves"
 descr "A pair of tri sleeves has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
@@ -6418,10 +6414,10 @@ ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE_PLUS)  // Xyzzy: 0,1
 dilcopy abi_restrict@function (ABIL_STR,30,0,0,"");
 STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 extra {"$identify"}
-"Gives you a feeling of strength"
+"Gives you a feeling of strength."
 extra {"$improved identify"}
 "
- restriced to STR 30
+ restricted to STR 30
 Str bonus 1"
 weight 8
 
@@ -6431,7 +6427,7 @@ end
 
 tri_helmet
 names {"helmet"}
-title "a Tri Helmet"
+title "a tri helmet"
 descr "A tri helmet has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
@@ -6442,17 +6438,17 @@ weight 9
 cost 1 COPPER_PIECE
 rent 57 IRON_PIECE
 extra {"$identify"}
-"Makes you feel smarter"
+"Makes you feel smarter."
 extra {"$improved identify"}
 "
- restriced to STR 30
+ restricted to STR 30
 Brain bonus 1"
 
 end
 
 lth_leggings
 names {"leggings"}
-title "a pair of Blood leggings"
+title "a pair of blood leggings"
 descr "A pair of blood leggings has been left here."
 extra {}
 "A pair of blood red leggings."
@@ -6464,10 +6460,10 @@ end
 
 lth_boots
 names {"boots"}
-title "a pair of Blood boots"
-descr "A pair of blood boots been left here."
+title "a pair of blood boots"
+descr "A pair of blood boots has been left here."
 extra {}
-"A blood red leather boots"
+"A pair of blood red leather boots."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
@@ -6476,10 +6472,10 @@ end
 
 lth_plate
 names {"breast plate","breastplate","plate"}
-title "a Blood Breastplate"
+title "a blood breastplate"
 descr "A blood breast plate has been left here."
 extra {}
-"A blood red leather breast plate"
+"A blood red leather breast plate."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 3
@@ -6489,10 +6485,10 @@ end
 
 lth_sleeves
 names {"sleeves"}
-title "a pair of Blood sleeves"
+title "a pair of blood sleeves"
 descr "A pair of blood sleeves has been left here."
 extra {}
-"A pair of blood red leather sleeves"
+"A pair of blood red leather sleeves."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -6502,7 +6498,7 @@ end
 
 lth_helmet
 names {"helmet"}
-title "a Blood helmet"
+title "a blood helmet"
 descr "A blood helmet has been left here."
 extra {}
 "A blood red leather helmet."
@@ -6514,10 +6510,10 @@ end
 
 mrky_leggings
 names {"leggings"}
-title "a pair of Murky Leggings"
+title "a pair of murky leggings"
 descr "A pair of murky leggings has been left here."
 extra {}
-"A pair of murky leggings"
+"A pair of murky leggings."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
@@ -6528,10 +6524,10 @@ end
 
 mrky_boots
 names {"boots"}
-title "a pair of Murky Boots"
-descr "A pair of murky boots been left here."
+title "a pair of murky boots"
+descr "A pair of murky boots has been left here."
 extra {}
-"A blood murky boots"
+"A pair of murky boots."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
@@ -6542,10 +6538,10 @@ end
 
 mrky_plate
 names {"breast plate","breastplate","plate"}
-title "a Murky Breastplate"
+title "a murky breastplate"
 descr "A murky breastplate has been left here."
 extra {}
-"A murky breastplate"
+"A murky breastplate."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 ARMOUR_HRD_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 5
@@ -6556,10 +6552,10 @@ end
 
 mrky_sleeves
 names {"sleeves"}
-title "a pair of Murky Sleeves"
+title "a pair of murky sleeves"
 descr "A pair of murky sleeves has been left here."
 extra {}
-"A pair of murky sleeves"
+"A pair of murky sleeves."
 extra {"$identify"}
 "Average armor"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ARMS}
@@ -6570,7 +6566,7 @@ end
 
 mrky_helmet
 names {"helmet"}
-title "a Murky Helmet"
+title "a murky helmet"
 descr "A murky helmet has been left here."
 extra {}
 "A murky helmet."
@@ -6584,10 +6580,10 @@ end
 
 rags
 names {"rags"}
-title "Rags"
+title "some rags"
 descr "A pile of old rags has been left here."
 extra {}
-"A  ragged old piece of cloth"
+"A ragged old piece of cloth."
 extra {"$identify"}
 "Below average armor"
 manipulate {MANIPULATE_TAKE,

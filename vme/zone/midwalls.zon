@@ -79,7 +79,7 @@ code
     while (i < length(patrollist))
     {
         insert(patrol, length(patrol), "::walkto::" + patrollist.[i] + "::8");
-        insert(patrol, length(patrol), "emote Speaks with the Guards.");
+        insert(patrol, length(patrol), "emote speaks with the guards.");
         i := i + 1;
     }
     insert(patrol, length(patrol), "emote jots some notes on a piece of paper.");
@@ -182,7 +182,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gate tower."
 extra {"wooden chairs", "chairs", "table"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -214,14 +214,14 @@ scattered about. The gatehouse's main passage  can be seen through the arrow
 loops which line the walls."
 
 extra {"food scraps", "scraps", "floor", "bones"}
-"It looks as if the guards are none to careful about making a mess."
+"It looks as if the guards are none too careful about making a mess."
 extra {"southern gatehouse", "gate tower","gatehouse"}
 "This gatehouse is the home for the gate guards, and one of the
 main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"wooden chairs", "chairs", "table"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -246,7 +246,7 @@ end
 
 title "North Western Tower"
 descr
-"The ground level of the massive Northwest tower roughly thirty feet wide.
+"The ground level of the massive Northwest tower is roughly thirty feet wide.
 There is a spiral staircase leading down and up, while an immense oaken
 door is hung in the southern part of this tower.  The tower is built of
 large blocks of stone, and aside from a few cobwebs, this room is
@@ -262,7 +262,7 @@ extra {"oaken door", "door"}
 "This oaken door is much like the ones you have seen elsewhere in
 Midgaard."
 extra {"blocks", "stone"}
-"These block of stone were quarried south of Midgaard."
+"These blocks of stone were quarried south of Midgaard."
 extra {"cobwebs"}
 "These cobwebs are the home of fat and happy spiders."
 
@@ -287,7 +287,7 @@ descr
 to flow from the very roots of this monolithic pillar.  Some grain is scattered
 about the floor, and a mouse scurries about here and there.
 A well sits in one corner of the room, to be used in times of siege.
- A spiral staircase extends to the ground level of the north western tower."
+A spiral staircase extends to the ground level of the north western tower."
 extra {"well"}
 "This well provides fresh water in time of need.  There is an immense
 stone cover on it."
@@ -296,7 +296,7 @@ extra {"north western tower", "massive tower", "basement", "tower"}
 extra {"spiral staircase", "staircase"}
 "This staircase leads upwards to the ground floor of the tower."
 extra {"blocks", "stone"}
-"These block of stone were quarried south of Midgaard."
+"These blocks of stone were quarried south of Midgaard."
 extra {"monolithic pillar", "pillar"}
 "The north west tower of the walls of Midgaard."
 extra {"grain"}
@@ -332,7 +332,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"wooden chairs", "chairs", "table"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -354,7 +354,7 @@ end
 
 title "Eastern Gate Tower"
 descr
-"This is the bottom chamber of the eastern gate tower, and spy a ladder leading upwards.
+"This is the bottom chamber of the eastern gate tower, and you spy a ladder leading upwards.
 The ceiling here is reinforced with oaken
 timbers, and it appears to be sagging slightly.
 A weapon rack stands in one
@@ -368,7 +368,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"wooden chairs", "chairs", "table"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -389,10 +389,10 @@ end
 
 title "North Eastern Tower"
 descr
-"this is the ground level of the massive northeast tower.
+"This is the ground level of the massive northeast tower.
 There is a spiral staircase leading down and up, while a gigantic oaken
 door is hung in the southern part of this tower.  Scattered about
-the floor is bit of loose gravel, and a sack of flower leans
+the floor is a bit of loose gravel, and a sack of flour leans
 against the wall.  The massive tower is built of large blocks of stone, and could withstand any assault."
 extra {"loose gravel", "gravel", "floor"}
 "You should be careful, and watch your footing."
@@ -407,7 +407,7 @@ extra {"oaken door", "door"}
 "This oaken door is much like the ones you have seen elsewhere in
 Midgaard."
 extra {"blocks", "stone"}
-"These block of stone were quarried south of Midgaard."
+"These blocks of stone were quarried south of Midgaard."
 extra {"cobwebs"}
 "These cobwebs are the home of fat and happy spiders."
 
@@ -438,8 +438,7 @@ extra {"sack of flour", "flour", "sack"}
 extra {"northeast tower", "tower"}
 "This is one of the massive towers which stand at the four corners of Midgaard."
 extra {"spiral staircase", "staircase"}
-"This staircase leads upwards to the next level of the tower, and
-downwards into the basement."
+"This staircase leads upwards to the ground floor of the tower."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -451,7 +450,7 @@ end
 
 title "Northern Gate Tower"
 descr
-"The lower chamber of the northern gate towers is dimly lit.
+"The lower chamber of the northern gate tower is dimly lit.
 Some rough chairs lean against the wall,
 and a broken sword lies gathering dust.  A weapon rack stands in one
 corner, and there are a few beds for the gateguards.  The gatehouse's main passage can be seen through the arrow loops which line the walls.  A ladder
@@ -498,7 +497,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"table", "chairs"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -540,7 +539,7 @@ extra {"oaken door", "door"}
 "This oaken door is much like the ones you have seen elsewhere in
 Midgaard."
 extra {"blocks", "stone"}
-"These block of stone were quarried south of Midgaard."
+"These blocks of stone were quarried south of Midgaard."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -556,21 +555,7 @@ tower_0
 	title "Basement of the South Eastern Tower"
 	names {"tower", "guard room", "room"}
 	descr
-	"The cold stone walls of this basement are slick with slime and water.  Torches sputter in their racks on the wall, and set up in the center of the room is a table, some chairs, and a bench.  A spiral staircase leads upwards to the next level in this tow
-
-
-
-
-
-
-
-
-
-
-
-
-
-er."
+	"The cold stone walls of this basement are slick with slime and water.  Torches sputter in their racks on the wall, and set up in the center of the room is a table, some chairs, and a bench.  A spiral staircase leads upwards to the next level in this tower."
 
 	movement SECT_CITY
 	ALWAYS_LIGHT
@@ -593,7 +578,7 @@ title "Eastern Gate Tower"
 descr
 "The lowermost room of the eastern gate tower is dark and ominous.
 A pair of old boots sit on the floor,
-and some clothing lays in a rumpled pile.  A weapon rack stands in one
+and some clothing lies in a rumpled pile.  A weapon rack stands in one
 corner, and some tossed beds rest on the floor.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
 extra {"pair of boots", "old boots", "boots"}
 "These boots look as if they were loved by the wearer."
@@ -605,7 +590,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"chairs", "table"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -626,21 +611,7 @@ end
 title "Western Gate Tower"
 descr
 "The lower chamber of the western gate tower is blackened with soot and grime.
-It is hardly well kept, which is surpising in comparison to similar chambers along the walls.  It looks as if there was a fire here recently, and the air is thick with the smell of soot.  Small bits of charred wood and metal lie scattered about, but other
-
-
-
-
-
-
-
-
-
-
-
-
-
-wise, there is nothing in this room except for a ladder leading upwards.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
+It is hardly well kept, which is surprising in comparison to similar chambers along the walls.  It looks as if there was a fire here recently, and the air is thick with the smell of soot.  Small bits of charred wood and metal lie scattered about, but otherwise, there is nothing in this room except for a ladder leading upwards.  The gatehouse's main passage can be seen through the arrow loops which line the walls."
 extra {"charred wood", "metal", "wood"}
 "These look to be the remains of a fire."
 extra {"grime", "soot"}
@@ -651,7 +622,7 @@ main protective points for the gate itself."
 extra {"ladder"}
 "This ladder leads to the upper rooms of the gatehouse."
 extra {"table", "chairs"}
-"This table and chairs has been provided for the gateguards."
+"This table and chairs have been provided for the gateguards."
 extra {"arrow loops", "loops"}
 "Arrows can be fired through these narrow slits at attackers who have
 breached the gates."
@@ -670,9 +641,9 @@ end
 title "Southern Gate Tower"
 descr
 "This is the upper chamber of the southern gatehouse.  The
-room extends far to the north, and northward can see some sort of machinery.
+room extends far to the north, and northward you can see some sort of machinery.
 Some crossbow bolts are scattered across the floor,
-and the walls looks to be slick with water. The arrow loops in the walls
+and the walls look to be slick with water. The arrow loops in the walls
 provide a good view of the bridge, and the moat below.  There is a
 ladder leading down, and another leading upwards."
 extra {"crossbow bolts", "bolts"}
@@ -714,10 +685,10 @@ room, ready to be dropped in an instant.  The arrow loops in the wall
 provide a good view of the bridge and the moat below.  A large cauldron
 of oil sits next to each murder hole."
 extra {"large cauldron", "cauldron", "oil"}
-"In case of attack, this oil can be heated to scaulding temperature
-and pourn down upon those trapped within the gate house."
+"In case of attack, this oil can be heated to scalding temperature
+and poured down upon those trapped within the gatehouse."
 extra {"winch"}
-"The winch has large spokes radiating from in, and ropes which are
+"The winch has large spokes radiating from it, and ropes which are
 connected to counterweights, which are in turn connected to the massive
 chains connected to the bridge."
 extra {"murder holes", "holes"}
@@ -728,11 +699,11 @@ extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcu
 "These wrought iron grates can be dropped down to block passage through the
 gates."
 extra {"arrow loops", "loops"}
-"Through these holes can be shot arrow at attackers."
+"Arrows can be shot at attackers through these holes."
 extra {"bridge"}
 "The massive drawbridge of the city gates."
 extra {"moat"}
-"You probably wouldnt want to fall in there."
+"You probably wouldn't want to fall in there."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -749,7 +720,7 @@ end
 title "Northern Gate Tower"
 descr
 "This is the upper chamber of the northern gate tower, and to the south is some sort of machinery.  There is a clear view of the bridge below, and
-can see the moat stretching along the wall.   A ladder leads
+of the moat stretching along the wall.   A ladder leads
 down, and another leads upwards."
 extra {"northern gatehouse", "gatehouse"}
 "This gatehouse is the home for the gate guards, and one of the
@@ -876,7 +847,7 @@ breached the gates."
 extra {"machinery"}
 "It looks to be a winch of some sort."
 extra {"midgaard"}
-"Ahhh, What a great city!"
+"Ahhh, what a great city!"
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -904,10 +875,10 @@ pile of rocks."
 extra {"large pile of rocks", "pile of rocks", "rocks", "pile"}
 "These rocks can be thrown through the murder holes at attackers."
 extra {"cauldrons of oil", "cauldrons", "oil"}
-"This oil can be heated, and pourn down upon those who breach
+"This oil can be heated, and poured down upon those who breach
 the gates in an attack."
 extra {"winch"}
-"The winch has large spokes radiating from in, and ropes which are
+"The winch has large spokes radiating from it, and ropes which are
 connected to counterweights, which are in turn connected to the massive
 chains connected to the bridge."
 extra {"murder holes", "holes"}
@@ -918,11 +889,11 @@ extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcu
 "These wrought iron grates can be dropped down to block passage through the
 gates."
 extra {"arrow loops", "loops"}
-"Through these holes can be shot arrow at attackers."
+"Arrows can be shot at attackers through these holes."
 extra {"bridge"}
 "The massive drawbridge of the city gates."
 extra {"moat"}
-"You probably wouldnt want to fall in there."
+"You probably wouldn't want to fall in there."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -998,15 +969,15 @@ end
 
 title "Northern Gate Tower"
 descr
-"This upper chamber the northern gate tower smells clean and fresh.  The
+"This upper chamber of the northern gate tower smells clean and fresh.  The
 room extends far to the south, and some sort of machinery can be seen
 in the next room.  Sitting on the floor is a sack of potatoes, and there
 is a pile of medium sized rocks in one corner.
 The arrow loops in the walls give a fabulous view
 of the bridge and the moat below.  There is a ladder leading down, and
 another leading upwards."
-extra {"sack of potatos", "sack"}
-"These potatos are quite large."
+extra {"sack of potatoes", "potatoes", "sack"}
+"These potatoes are quite large."
 extra {"medium sized rocks", "rocks", "pile"}
 "You get the impression that these are used in conjunction with the murder
 holes in the winch room."
@@ -1044,9 +1015,9 @@ room, ready to be dropped in an instant.  The arrow loops in the wall
 provide a good view of the bridge and the moat below.  A cauldron of oil
 sits by each murder hole."
 extra {"cauldron of oil", "cauldron", "oil"}
-"This oil can be heated and pour down on people who have breached the gates."
+"This oil can be heated and poured down on people who have breached the gates."
 extra {"winch"}
-"The winch has large spokes radiating from in, and ropes which are
+"The winch has large spokes radiating from it, and ropes which are
 connected to counterweights, which are in turn connected to the massive
 chains connected to the bridge."
 extra {"murder holes", "holes"}
@@ -1054,14 +1025,14 @@ extra {"murder holes", "holes"}
 such as rocks and boiling oil upon attackers who have breached the
 gates."
 extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
-"These wrought iron grates can be dropped dow to block passage through the
+"These wrought iron grates can be dropped down to block passage through the
 gates."
 extra {"arrow loops", "loops"}
-"Through these holes can be shot arrow at attackers."
+"Arrows can be shot at attackers through these holes."
 extra {"bridge"}
 "The massive drawbridge of the city gates."
 extra {"moat"}
-"You probably wouldnt want to fall in there."
+"You probably wouldn't want to fall in there."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -1212,14 +1183,14 @@ end
 
 title "Winch Room"
 descr
-"This room houses the  winch that is used to raise the gates.
+"This room houses the winch that is used to raise the gates.
 The winch is massive, and looks as if it would take ten people to turn it.
 Through the murder holes in the floor, people can be seen passing through
 the gates.  The two wrought iron portcullises are also raised into this
 room, ready to be dropped in an instant.  The arrow loops in the wall
 provide a good view of the bridge and the moat below."
 extra {"winch"}
-"The winch has large spokes radiating from in, and ropes which are
+"The winch has large spokes radiating from it, and ropes which are
 connected to counterweights, which are in turn connected to the massive
 chains connected to the bridge."
 extra {"murder holes", "holes"}
@@ -1227,14 +1198,14 @@ extra {"murder holes", "holes"}
 such as rocks and boiling oil upon attackers who have breached the
 gates."
 extra {"wrought iron portcullises", "iron portcullises", "portcullises", "portcullis"}
-"These wrought iron grates can be dropped dow to block passage through the
+"These wrought iron grates can be dropped down to block passage through the
 gates."
 extra {"arrow loops", "loops"}
-"Through these holes can be shot arrow at attackers."
+"Arrows can be shot at attackers through these holes."
 extra {"bridge"}
 "The massive drawbridge of the city gates."
 extra {"moat"}
-"You probably wouldnt want to fall in there."
+"You probably wouldn't want to fall in there."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -1308,13 +1279,13 @@ end
 title "Kitchen"
 descr
 "This room is filled with pots and pans, and there are a number of long
-tables in the southern end.  The smell of roasted meat reaches fills the air.
-There appears to be a few puddles of drool on the floor.
+tables in the southern end.  The smell of roasted meat fills the air.
+There appear to be a few puddles of drool on the floor.
 A staircase leads upwards into the bastion."
-extra{"puddles","drool"}
+extra {"puddles of drool", "puddles"}
 "They appear to be a bit slimy."
 extra {"pots", "pans"}
-"These would be used for cooking food, or bonking would be theives
+"These would be used for cooking food, or bonking would-be thieves
 on the head."
 extra {"drool"}
 "You should learn to control that nasty habit."
@@ -1337,7 +1308,7 @@ title "Northern Gate Tower"
 descr
 "From the roof of the northern gate tower, the bridge across the
 moat appears quite a bit smaller. To the south and across a gap
-the southern gatehouse is visble, and the wall walk extends to the north.
+the southern gatehouse is visible, and the wall walk extends to the north.
 The Cypress forest grows west of here, and the city of Midgaard lies to the east.
 There is a ladder leading downwards into the gate tower."
 extra {"northern gatehouse", "gatehouse","roof"}
@@ -1353,7 +1324,7 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 extra {"wall walk", "walls"}
 "These massive walls are built of stone and protect the city of Midgaard."
 
@@ -1381,11 +1352,11 @@ extra {"rooftops"}
 "These are the dwellings and businesses of Midgaard."
 extra {"mighty wall", "wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 extra {"cypress forest"}
 "This is the forest separating Midgaard and Udgaard."
 extra {"city", "midgaard"}
@@ -1409,7 +1380,7 @@ descr
 city wall.  It is completely enclosed, save for a few arrow loops in the
 walls.  There is a small charcoal burner here, and a ladder leads
 downwards.   The chatter of some people can be heard from below, and
-faint whisps of smoke pass upwards."
+faint wisps of smoke pass upwards."
 extra {"massive stone bastion", "stone bastion","stone chamber", "chamber","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"arrow loops", "loops"}
@@ -1443,7 +1414,7 @@ extra {"tops of the trees", "trees", "tops"}
 "The trees grow together quite densely."
 extra {"mighty wall","high walls","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"cypress forest"}
@@ -1469,7 +1440,7 @@ descr
 "A spiral staircase leads upwards and down in this north west tower room.  Doors open to the east and the south, allowing access to the wall walks."
 extra {"mighty wall", "walls","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"tower"}
 "This massive tower was built with immense blocks of stone."
 extra {"spiral staircase","staircase"}
@@ -1492,14 +1463,14 @@ title "Along the Wall"
 descr
 "This section of the wall looks to be in a bit of disrepair.  Some of the mortar has come loose around the large stone blocks, and the merlon looks as if it might come down.  To the west, one of the four towers of Midgaard rises to the sky,
 while northwards stretches a bleak moor.  To the east is a stone bastion,
-and the wall road runs to the south and down ."
+and the wall road runs to the south and down."
 extra {"mortar"}
-"Mortar hold the walls together."
+"Mortar holds the walls together."
 extra {"merlon"}
 "This is a part of the battlement, the square sawtooth between crenels."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"bleak moor", "moor"}
@@ -1552,16 +1523,16 @@ end
 
 title "Along the Wall"
 descr
-"The city wall of Midgaard is an impressive and massive ediface.
+"The city wall of Midgaard is an impressive and massive edifice.
 To the west is an enclosed stone bastion, while to the north a dismal moor is visible.  To the east are the city gates,
 and to the south and downward is Baker Street."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 extra {"dismal moor", "moor"}
 "The moor is barren and flat."
 extra {"midgaard","city"}
@@ -1587,9 +1558,9 @@ descr
 below look like small bugs.  To the east across a gap
 is the eastern gate tower,
 and the wall extends to the west.  A bleak moor stretches northwards, and
-to the south the roof of Midgaard Cathedral level with the walls.  There
+to the south the roof of Midgaard Cathedral is level with the walls.  There
 is a ladder leading downwards into the gate tower, and a large pile of sharp
-rocks sit on the ground."
+rocks sits on the ground."
 extra {"large pile of sharp rocks", "pile of sharp rocks", "pile of rocks",
 "sharp rocks", "rocks"}
 "These rocks can be thrown off the walls at attackers."
@@ -1598,7 +1569,7 @@ extra {"western gatehouse",
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
 extra {"eastern gatehouse"}
-"The southern gatehouse looks much the same as the one you are standing on."
+"The eastern gatehouse looks much the same as the one you are standing on."
 extra {"bleak moor", "moor"}
 "The moor is barren and flat."
 extra {"midgaard","city"}
@@ -1606,9 +1577,9 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -1623,8 +1594,8 @@ end
 
 title "Eastern Gate Tower"
 descr
-"The machicolation here is crumbling, and it appears possible to fall though the walls and into the moat.  To the west over a gap is the western gate tower, and the city wall
-runs eastward.  The North Road streatches in the same direction as it always
+"The machicolation here is crumbling, and it appears possible to fall through the walls and into the moat.  To the west over a gap is the western gate tower, and the city wall
+runs eastward.  The North Road stretches in the same direction as it always
 will, and the Midgaard Cathedral reaches into the sky to the south.
 There is a ladder leading downwards into the gate tower."
 extra {"machicolation"}
@@ -1633,7 +1604,7 @@ extra {"eastern gatehouse", "gatehouse","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
 extra {"western gatehouse"}
-"The southern gatehouse looks much the same as the one you are standing
+"The western gatehouse looks much the same as the one you are standing
 on."
 extra {"bleak moor", "moor"}
 "The moor is barren and flat."
@@ -1642,9 +1613,9 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -1665,11 +1636,11 @@ extra {"mansion"}
 "The owner must have been a bit daft to build a castle in a swamp."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 extra {"bleak moor", "moor"}
 "The moor is barren and flat."
 extra {"midgaard","city"}
@@ -1724,7 +1695,7 @@ descr
 south is the wall road."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"bleak moor", "moor"}
@@ -1751,7 +1722,7 @@ descr
 up and down, and oaken doors allow access to the walls."
 extra {"mighty wall", "walls","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"tower", "room"}
 "This massive tower was built with immense blocks of stone."
 extra {"spiral staircase","staircase"}
@@ -1777,10 +1748,10 @@ To the north one of the four towers of Midgaard rises upwards,
 and some hills roll to the east. To the west and below is the
 wall road, and to the south is an all too familiar stone bastion."
 extra {"stains", "black"}
-"Looks like tar or some sort."
+"Looks like tar of some sort."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"rolling hills", "hills"}
@@ -1808,7 +1779,7 @@ city wall.  It is completely enclosed, save for a few arrow loops in the
 walls.  There is a small charcoal burner here, and a ladder leads
 downwards.  A garderobe provides the pleasant spot for a sit or perhaps other duties."
 extra {"garderobe"}
-"It is here that you make your reconing with that which you eat."
+"It is here that you make your reckoning with that which you eat."
 extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"arrow loops", "loops"}
@@ -1837,7 +1808,7 @@ to the east are some beautiful rolling hills.  West and below
 stand the city stables, and a gatehouse protects the city to the south."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"rolling hills", "hills"}
@@ -1862,7 +1833,7 @@ end
 title "Northern Gate Tower"
 descr
 "To the south and across a gap is the
-southern  gate tower, while the wall travels to the north.  The Kings
+southern gate tower, while the wall travels to the north.  The Kings
 Road runs below and to the east, and the Main Street of
 Midgaard is to the west and down.  There is a ladder leading downwards into the
 gate tower."
@@ -1870,7 +1841,7 @@ extra {"northern gate tower", "gate tower","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
 extra {"bird"}
-"Its a pretty big bird."
+"It's a pretty big bird."
 extra {"southern gate tower"}
 "The southern gate tower looks much the same as the one you are standing
 on."
@@ -1881,7 +1852,7 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -1909,7 +1880,7 @@ extra {"southern gatehouse", "gatehouse","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
 extra {"northern gatehouse"}
-"The southern gatehouse looks much the same as the one you are standing
+"The northern gatehouse looks much the same as the one you are standing
 on."
 extra {"kings road", "road"}
 "This is a mighty highway constructed for times of war."
@@ -1918,7 +1889,7 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
@@ -1939,7 +1910,7 @@ To the west and below is a stone bridge, and to the south is a
 mighty stone bastion."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"mighty stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"rolling hills", "hills"}
@@ -1965,7 +1936,7 @@ end
 
 title "Bastion"
 descr
-"This stone chamber is as boring as the rest, but it  provides a
+"This stone chamber is as boring as the rest, but it provides a
 defensive point along the Midgaard city wall.  It is completely enclosed,
 save for a few arrow loops in the walls.  There is a small charcoal
 burner here, and a ladder leads downwards."
@@ -2002,7 +1973,7 @@ extra {"machicolation"}
 "Things like rocks can be dropped through these holes onto attackers."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"large stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"thick forest", "forest"}
@@ -2029,7 +2000,7 @@ descr
 up and down, while two oaken doors allow passage to the north or west along the city walls."
 extra {"mighty wall", "walls","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"tower"}
 "This massive tower was built with immense blocks of stone."
 extra {"spiral staircase","staircase"}
@@ -2040,7 +2011,7 @@ flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 movement SECT_CITY
 west to rn_067 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 up to rn_084
-descr "Captains Chambers";
+descr "Captain's Office";
 north to rn_066 open {EX_OPEN_CLOSE, EX_CLOSED} descr "A large oaken door." keyword {"door"};
 down to rn_035
 descr "In the Tower";
@@ -2059,7 +2030,7 @@ extra {"large complex","complex"}
 "You would assume this to be the great research laboratory."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"thick forest", "forest"}
@@ -2113,13 +2084,13 @@ descr
 "The wall of Midgaard is high above the city streets, and it is possible to see for miles in any direction.  To the west are the city gates, and to the south appears to be
 a great and impenetrable forest.  To the north, the roof of King
 Welmars castle rises skyward, and to the east is the square form of a stone bastion."
-extra {"impenatrable forest", "forest"}
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"king welmars castle", "castle"}
 "From the turrets of the castle wave many brightly colored flags."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"rolling hills", "hills"}
@@ -2146,7 +2117,7 @@ and to the east runs the city wall.  A small road runs south in the midst
 of a great forest to the south, and King Welmars castle stands proud to
 the north and below.  There is a ladder leading downwards into the
 gatehouse."
-extra {"impenatrable forest", "forest"}
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"king welmars castle", "castle"}
 "From the turrets of the castle wave many brightly colored flags."
@@ -2155,7 +2126,7 @@ extra {"eastern gatehouse", "gatehouse","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
 extra {"western gatehouse"}
-"The southern gatehouse looks much the same as the one you are standing
+"The western gatehouse looks much the same as the one you are standing
 on."
 extra {"bleak moor", "moor"}
 "The moor is barren and flat."
@@ -2164,17 +2135,17 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
 east to rn_069
-descr "Eastern Gate Tower";
-down to rn_037
 descr "Along the Wall";
+down to rn_037
+descr "Eastern Gate Tower";
 end
 
 			rn_073
@@ -2189,13 +2160,13 @@ forest. There is a ladder leading downwards into the gate tower."
 extra {"western gatehouse", "gatehouse","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
-extra {"impenatrable forest", "forest"}
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"king welmars castle", "castle"}
 "From the turrets of the castle wave many brightly colored flags."
 
 extra {"eastern gatehouse"}
-"The southern gatehouse looks much the same as the one you are standing
+"The eastern gatehouse looks much the same as the one you are standing
 on."
 extra {"bleak moor", "moor"}
 "The moor is barren and flat."
@@ -2204,9 +2175,9 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 extra {"midgaard cathedral", "cathedral"}
-"The cathedrals spires seem to be about level with this wall."
+"The cathedral's spires seem to be about level with this wall."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -2223,16 +2194,16 @@ title "Along the Wall"
 descr
 "The stone paving of the wall walk is cracked here, and the footing appears to be dangerous.
 To the east stand the mighty city gates, while to the south appears to
-be a great and impenatrable forest.  To the north and below is King Welmars castle, and to the west is one of the defensive points along the wall."
+be a great and impenetrable forest.  To the north and below is King Welmars castle, and to the west is one of the defensive points along the wall."
 extra {"stone paving", "wall walk", "paving", "stone"}
 "It looks as if something large and heavy was dropped here, cracking the stone."
-extra {"impenatrable forest", "forest"}
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"king welmars castle", "castle"}
 "From the turrets of the castle wave many brightly colored flags."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "defensive point","stone bastion", "bastion","point"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"rolling hills", "hills"}
@@ -2256,7 +2227,7 @@ descr
 "This stone chamber provides a defensive point along the Midgaard
 city wall.  It is completely enclosed, save for a few arrow loops in the
 walls.  There is a small charcoal burner here, which the guards might
-light if it were to become cold outside.  A garderobe provides a point of repite for the guards who walk these walls."
+light if it were to become cold outside.  A garderobe provides a point of respite for the guards who walk these walls."
 extra {"garderobe"}
 "This is known as an unsanitary facility, dumping its contents into the moat."
 extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
@@ -2264,7 +2235,7 @@ extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bast
 extra {"arrow loops", "loops"}
 "From these you can shoot arrows at people with relative safety."
 extra {"charcoal burner", "burner"}
-"This burner allows the guards to warm themselves when it gets cold outside.."
+"This burner allows the guards to warm themselves when it gets cold outside."
 extra {"ladder"}
 "The ladder is made of wood."
 
@@ -2281,14 +2252,14 @@ end
 
 title "Along the Wall"
 descr
-"This wall is so high up that falling from it would mean instant death.  To the west rises one of the four towers of Midgaard, while to the south is a large and impenatrable forest.
+"This wall is so high up that falling from it would mean instant death.  To the west rises one of the four towers of Midgaard, while to the south is a large and impenetrable forest.
 To the north and below is the wall road, and to the east a
 large stone bastion provides protection."
-extra {"impenatrable forest", "forest"}
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"thick forest", "forest"}
@@ -2315,7 +2286,7 @@ descr
 up and down, and oaken doors allow access to the wall walks."
 extra {"mighty wall", "walls","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"tower"}
 "This massive tower was built with immense blocks of stone."
 extra {"spiral staircase","staircase"}
@@ -2337,7 +2308,7 @@ end
 
 title "Along the Wall"
 descr
-"Creeping ivy grows on the walls here. but has been trimmed back to ten feet below the top of the parapet.
+"Creeping ivy grows on the walls here, but has been trimmed back to ten feet below the top of the parapet.
 To the south rises one of the four towers of Midgaard,
 and to the west the Cypress Forest grows thickly.
 The wall extends to the north, and the wall road runs to the
@@ -2345,12 +2316,12 @@ east and below."
 extra {"creeping ivy", "ivy"}
 "The ivy is leafy and green."
 extra {"parapet"}
-"This is a wall that proctects the guards from missile fire below the walls."
-extra {"impenatrable forest", "forest"}
+"This is a wall that protects the guards from missile fire below the walls."
+extra {"impenetrable forest", "forest"}
 "A slight wind blows in the trees, making them ripple and wave."
 extra {"mighty wall", "walls", "wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "stone bastion","bastion"}
 "This enclosed stone room is a defensive point along the city wall."
 extra {"thick forest", "forest"}
@@ -2379,7 +2350,7 @@ descr
 "This stone chamber provides a defensive point along the Midgaard
 city wall.  It is completely enclosed, save for a few arrow loops in the
 walls.  There is a small charcoal burner here,
-and a ladder leads downwards.  The pleasant scents of food wafts
+and a ladder leads downwards.  The pleasant scent of food wafts
 upwards."
 
 extra {"massive stone bastion", "stone bastion", "stone chamber","chamber","bastion"}
@@ -2421,7 +2392,7 @@ extra {"king welmars castle", "castle"}
 "From the turrets of the castle wave many brightly colored flags."
 extra {"mighty wall","wall"}
 "This wall was built by the dwarves of the arctic, with stones
-which were quarried to the south of midgaard."
+which were quarried to the south of Midgaard."
 extra {"massive stone bastion", "defensive point","stone bastion",
 "bastion", "point"}
 "This enclosed stone room is a defensive point along the city wall."
@@ -2443,16 +2414,16 @@ end
 
 title "Southern Gate Tower"
 descr
-"The roof of the southern gate tower, makes the gates look even more
-impressive that they would normally seem.   To the north and across a
+"The roof of the southern gate tower makes the gates look even more
+impressive than they would normally seem.   To the north and across a
 rift is the northern gate tower, while the wall extends to the south.
-The Cypress forest  grows to the west, and it is possible to look over the city of
+The Cypress forest grows to the west, and it is possible to look over the city of
 Midgaard to the east.  There is a ladder leading downwards into the gate
 tower.  A few heads are mounted on pikes along the parapet."
 extra {"parapet"}
-"The wall which runs along to top of the wall walk."
+"The wall which runs along the top of the wall walk."
 extra {"heads", "pikes"}
-"These are the heads of criminals, who were committed various unspeakable acts."
+"These are the heads of criminals who committed various unspeakable acts."
 extra {"southern gatehouse", "gatehouse","roof"}
 "From this position, you could easily assail anyone who might dare
 to attack the gate."
@@ -2466,7 +2437,7 @@ extra {"midgaard","city"}
 extra {"ladder"}
 "This ladder is made of wood."
 extra {"bridge"}
-"The brige, while massive, looks much smaller from this high."
+"The bridge, while massive, looks much smaller from this high."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
@@ -2529,7 +2500,7 @@ end
 
 			rn_084
 
-title "Captains Office"
+title "Captain's Office"
 descr
 "This room in the south east tower houses the Captain of the
 Wall Guard's office.  There are various items of war hung on the walls,
@@ -2546,7 +2517,7 @@ extra {"large wooden desk", "wooden desk","large desk", "desk"}
 extra {"papers"}
 "These papers are all related to the governing of the wall guards."
 extra {"large chair", "chair"}
-"Most obviously, the captains chair."
+"Most obviously, the captain's chair."
 extra {"spiral staircase","staircase"}
 "The spiral staircase leads up to the top of the tower, and down to the
 wall level."
@@ -2565,9 +2536,9 @@ tower_3
 	names {"top", "tower", "room"}
 	descr
 	"This is the top of the southeast tower and a beautiful view is unidirectional.
-	The roofs of the city spread out to the north west, and farther north than that is visible 		the barren moor.
-	South lies a highway which cuts through a canyon, and a research laboratory is visable.
-	Looking off to the west, the top of the Cypress forest looks pristine from this position in 		the sky.  Eastwards the King's Road spans into the distance, and Torsbay can be seen to 	the south east. 	Stairs lead down into the tower."
+	The roofs of the city spread out to the north west, and farther north than that is visible the barren moor.
+	South lies a highway which cuts through a canyon, and a research laboratory is visible.
+	Looking off to the west, the top of the Cypress forest looks pristine from this position in the sky.  Eastwards the King's Road spans into the distance, and Torsbay can be seen to the south east. Stairs lead down into the tower."
 
 	movement SECT_CITY
 	ALWAYS_LIGHT
@@ -2581,7 +2552,7 @@ tower_3
 	extra {"research laboratory","laboratory","highway","canyon","lab"}
 	"It looks to be a large building."
 	down to rn_084 descr
-	"Captains Office";
+	"Captain's Office";
 end
 
 			rn_085
@@ -2604,7 +2575,7 @@ flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER}
 
 movement SECT_CITY
 up to rn_088
-descr "Roof of the North Western Tower";
+descr "Roof of the South Western Tower";
 down to rn_077
 descr "In the Tower";
 end
@@ -2615,8 +2586,8 @@ title "Atop the Northwest Tower"
 descr
 "The top of the northwest tower of the Midgaard walls provides a breathtaking scene.
 To the north past the city is the expanse of a desolate moor,
-a building can be made out to the northeast.  To the west is the town of Udgaard
-and the forest of Haon dor farther is west.  To the southeast stretches the
+and a building can be made out to the northeast.  To the west is the town of Udgaard
+and the forest of Haon dor farther west.  To the southeast stretches the
 city of Midgaard, and a large banner bearing the Midgaard coat of arms
 flies from a flagpole."
 extra {"desolate moor","building", "moor"}
@@ -2648,7 +2619,7 @@ end
 title "Atop the Northeast Tower"
 descr
 "On the top of the northeast tower of the Midgaard walls, a cool breeze blows all around.
-To the north is the expanse of a desolate moor, and is it possible to make out
+To the north is the expanse of a desolate moor, and it is possible to make out
 some sort of building.  To the east are a vast number of rolling hills,
 and farther east can be seen the town of Ratswharf.
 To the southwest stretches the
@@ -2658,7 +2629,7 @@ extra {"desolate moor", "building","moor"}
 "The moor is quite expansive, and looks flat and barren, save for
 the building to the northeast."
 extra {"rolling hills", "hills"}
-"These hills lie north of the Crossroads outside Midgaards east gate."
+"These hills lie north of the Crossroads outside Midgaard's east gate."
 extra {"town of ratswharf","ratswharf"}
 "This shambling little town is barely visible, though you can see
 the Kithryn tower poking through the treeline."
@@ -2683,7 +2654,7 @@ end
 title "Atop the Southwest Tower"
 descr
 "Arriving at the top of the southwest tower of Midgaard, it is surprising
-that the air feels rather chill.  From this point,  the Cypress
+that the air feels rather chill.  From this point, the Cypress
 Forest and the town of Udgaard look close together, though the view becomes
 obscured by the forest of Haon dor.  To the south, the tops
 of many trees stretch into the distance.  To the northeast spans the
@@ -2744,7 +2715,7 @@ names {"patrol guard", "lieutenant", "norm"}
 title "Norm"
 descr "Norm, a lieutenant of the wall guard, patrols the area."
 extra {}
-"Norms hands are rough and callused, and it appears that he has
+"Norm's hands are rough and callused, and it appears that he has
 worked hard all of his life.  Perhaps this is how he became a lieutenant
 of the wall guards.  He is cloaked in a tabard bearing the Midgaard coat
 of arms."
@@ -2990,7 +2961,7 @@ end
 			       gate_e1
 names {"gate guard", "wallguard", "randle"}
 title "Randle"
-descr "Randle, one of the gate guards, watches the passers by."
+descr "Randle, one of the gate guards, watches the passers-by."
 extra {}
 "Randle appears to be a grizzled veteran of war.  His eyes are deep and
 all too knowing, and he bears a large scar on his left cheek.  He appears
@@ -3076,7 +3047,7 @@ title "Shaun"
 descr "Shaun, one of the gate guards, stands at attention."
 extra {}
 "Shaun appears to be strong and stalwart, his eyes watch every move,
-waiting for something to happen.  His large glaive stands vertacle,
+waiting for something to happen.  His large glaive stands vertical,
 and his uniform is fitted neatly.  He is cloaked in a tabard bearing the
 Midgaard coat of arms."
 M_HUMAN_WARRIOR_POLE(52, SEX_MALE)
@@ -3102,7 +3073,7 @@ names {"gate guard", "wallguard", "brewster"}
 title "Brewster"
 descr "Brewster, one of the gate guards, looks bored."
 extra {}
-"It doesn't appear the Brewster sees much action in his job, and
+"It doesn't appear that Brewster sees much action in his job, and
 as a result, looks to be extremely bored.  He has a sleepy look in his
 eyes, and wonders what you are doing here.  He is cloaked in a tabard
 bearing the Midgaard coat of arms."
@@ -3402,7 +3373,7 @@ names {"patrol guard", "lieutenant", "robert"}
 title "Robert"
 descr "Robert, one of the wall guards, stands watch."
 extra {}
-"Robert coughs loudly and spits a big ball of fleghm on the ground
+"Robert coughs loudly and spits a big ball of phlegm on the ground
 as you walk by.  His hair is a bit greasy, and his fingernails are
 dirty.  He is cloaked in a tabard bearing the Midgaard coat of arms."
 
@@ -3454,7 +3425,7 @@ names {"patrol guard", "lieutenant", "ren"}
 title "Ren"
 descr "Ren, one of the wall guards, stands watch."
 extra {}
-"Ren the ever faithful is looks out across the town.  He asks you
+"Ren the ever faithful looks out across the town.  He asks you
 about his friend Stimpy, but you reply that you have never met the
 man.  He is cloaked in a tabard bearing the Midgaard coat of arms."
 
@@ -3664,7 +3635,7 @@ title "Peter"
 descr "Peter, one of the wall guards, stands watch."
 extra {}
 "At one time in his life, Peter played a pipe and sold pickled peppers.
-Now he has become a wall guard full time, much to his fathers dismay.
+Now he has become a wall guard full time, much to his father's dismay.
 He is cloaked in a tabard bearing the Midgaard coat of arms."
 
 M_HUMAN_WARRIOR_SWORD(54, SEX_MALE)
@@ -3690,7 +3661,7 @@ title "Zack"
 descr "Zack, one of the wall guards, stands watch."
 extra {}
 "Zack worked as an apprentice to a blacksmith in his youth, and
-plans to follow that trade when his is done being a wall guard.
+plans to follow that trade when he is done being a wall guard.
 That is, if he is ever done being a wall guard.  He is cloaked in a tabard
 bearing the Midgaard coat of arms."
 
@@ -3717,7 +3688,7 @@ title "Luke"
 descr "Luke, one of the wall guards, stands watch."
 extra {}
 "Luke wishes that these were his walls, but it is doubtful that
-he will ever become king.  Its good to be the king, but he is happily
+he will ever become king.  It's good to be the king, but he is happily
 married to a wonderful woman named Leia.  He is cloaked in a tabard
 bearing the Midgaard coat of arms."
 
@@ -3774,7 +3745,7 @@ names {"patrol guard", "lieutenant", "trent"}
 title "Trent"
 descr "Trent, one of the wall guards, stands watch."
 extra {}
-"Trent looks like half his face was bitten off by at dog or some similar
+"Trent looks like half his face was bitten off by a dog or some similar
 animal.  He is quite a nice fellow, even though half of his face is
 missing.  He is cloaked in a tabard bearing the Midgaard coat of arms."
 
@@ -3881,7 +3852,7 @@ end
 
 names {"gate guard", "wallguard", "sven"}
 title "Sven"
-descr "Sven, one of the gate guards, watches the passers by."
+descr "Sven, one of the gate guards, watches the passers-by."
 extra {}
 "Sven is a stocky fellow with thick brown hair.  He is well groomed,
 and smells of aromatic spices.  You get the idea that he has been
@@ -3911,7 +3882,7 @@ names {"gate guard", "wallguard", "larry"}
 title "Larry"
 descr "Larry, one of the gate guards, looks quite bored."
 extra {}
-"Larry stands roughly six feet tall, and looks at you with a  daunting
+"Larry stands roughly six feet tall, and looks at you with a daunting
 stare.  His clothes are clean and wrinkle free, and he whistles a
 familiar tune to himself.  He is cloaked in a tabard bearing the Midgaard
 coat of arms."
@@ -3939,7 +3910,7 @@ title "Rod"
 descr "Rod, one of the gate guards, shuffles his feet."
 extra {}
 "Rod is a burly dwarf who looks sad to be away from the mountains.
-He coughs up some fleghm and spits it on the ground.  He is cloaked in a
+He coughs up some phlegm and spits it on the ground.  He is cloaked in a
 tabard bearing the Midgaard coat of arms."
 M_DWARF_WARRIOR_AXE(50, SEX_MALE)
 alignment 400
@@ -4018,7 +3989,7 @@ names {"gate guard", "wallguard", "david"}
 title "David"
 descr "David, one of the gate guards, appears to be bored."
 extra {}
-"David is roughly six feet tall, and has sort brown hair.  His
+"David is roughly six feet tall, and has short brown hair.  His
 hazel-green eyes peer at you intently, and he bears a faint
 grin upon his young face.  He is cloaked in a tabard bearing the Midgaard
 coat of arms."
@@ -4188,7 +4159,7 @@ names {"patrol guard", "lieutenant", "chris"}
 title "Chris"
 descr "Chris, a lieutenant of the wall guard, patrols the area."
 extra {}
-"Chris Strolls the walls with a look of pure satisfaction on his face.
+"Chris strolls the walls with a look of pure satisfaction on his face.
 His boots clomp along as he patrols the area and takes care of the
 other guards.  He is cloaked in a tabard bearing the Midgaard coat of arms."
 
@@ -4339,7 +4310,7 @@ end
 
 names {"armorer", "ned"}
 title "Ned"
-descr "Ned, the armorer of the wall guards stands here."
+descr "Ned, the armorer of the wall guards, stands here."
 extra {}
 "Ned is an older man with greying hair.  He looks to be very strong, and is
 moving suits of armor to various locations around the store room."
@@ -4359,7 +4330,7 @@ names {"sign"}
 title "a sign"
 descr "A sign from god."
 extra {}
-"As it would be silly to have a simple wooden door leading out of the city of midgaard's mighty tower, the reslab has been moved south and east of the southen gate of midgaard.  Please look for it there."
+"As it would be silly to have a simple wooden door leading out of the city of Midgaard's mighty tower, the research lab has been moved south and east of the southern gate of Midgaard.  Please look for it there."
 type ITEM_OTHER
 weight 10000
 end
@@ -4394,7 +4365,7 @@ names {"crossbow bolts", "bundle", "bolts"}
 title "a bundle of crossbow bolts"
 descr "A large bundle of crossbow bolts is stacked here."
 extra {}
-"These crossbow bolts are bundles for use if Midgaard is attacked.  In
+"These crossbow bolts are bundled for use if Midgaard is attacked.  In
 such circumstances, the wall guards would be well equipped."
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -4444,7 +4415,7 @@ title "a pile of rocks"
 descr "A large pile of rocks is here."
 extra {}
 "These rocks can be thrown off the walls, through murder holes, or generally
-anwhere with the intent of causing severe bodily harm to another person.
+anywhere with the intent of causing severe bodily harm to another person.
 They are most effective after falling forty or fifty feet, though ten or
 fifteen would also work just fine."
 type ITEM_OTHER
@@ -4478,19 +4449,19 @@ code
          A_SOMEONE, pc, null, null, TO_CHAR);
 
          act("$1n picks up a rock.",
-         A_SOMEONE, self.outside, null, null, TO_ROOM);
+         A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hurl the rock through the murder hole.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("$1n hurls a rock through the murder hole.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hear someone cursing from the room below.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("You hear someone cursing from the room below.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	goto start;
    }
@@ -4499,13 +4470,13 @@ code
          A_SOMEONE, pc, null, null, TO_CHAR);
 
          act("$1n picks up a rock.",
-         A_SOMEONE, self.outside, null, null, TO_ROOM);
+         A_SOMEONE, pc, null, null, TO_ROOM);
 
 	act("You hurl the rock off the walls.",
             A_SOMEONE, pc, null, null, TO_CHAR);
 
            act("$1n hurls a rock off the walls.",
-           A_SOMEONE, self.outside, null, null, TO_ROOM);
+           A_SOMEONE, pc, null, null, TO_ROOM);
 
 	goto start;
      }
@@ -4522,7 +4493,7 @@ descr "A surprisingly large cup of coffee is here."
 extra {}
 "Ummmm good. This is a big cup of coffee. What odd details it has!"
 extra {"details"}
-"It appears to be a note scribbled on the the side of the cup."
+"It appears to be a note scribbled on the side of the cup."
 extra {"note"}
 "Public enemy number 1: Pawka"
 LIQ_DEF("hot black", 2,5,5,10,1,0,0)
@@ -4531,7 +4502,7 @@ weight 1
 end
 
       food
-names {"beef"}
+names {"beef", "hunk"}
 title "a hunk o beef"
 extra {}
 "Ummmm good"
@@ -4546,7 +4517,7 @@ end
 
 names {"halberd"}
 title "a halberd"
-descr "An halberd sits on the ground."
+descr "A halberd sits on the ground."
 extra {}
 "This halberd bears the Midgaard coat of arms, and the stamp of the
 wall guards."
@@ -4618,7 +4589,7 @@ end
 			belt
 
 names {"belt"}
-title "belt with bolt case"
+title "a belt with a bolt case"
 descr "A belt that holds crossbow bolts sits here."
 extra {}
 "This leather belt is used to hold crossbow bolts.  It bears the stamp
@@ -4632,7 +4603,7 @@ end
 
 names {"tabard"}
 title "a tabard"
-descr "A tabard bearing the midgaard coat of arms lies here."
+descr "A tabard bearing the Midgaard coat of arms lies here."
 extra {}
 "This tabard of the wall guards bears the Midgaard coat of arms.
 On it you see a slain dragon with its head tilted back, and a sword
@@ -4736,7 +4707,7 @@ end
 
 captain_plate
 names {"breast plate", "breastplate", "plate"}
-title "the captains breastplate"
+title "the captain's breastplate"
 descr "A breastplate of the wall guard captain lies here."
 extra {}
 "This plate looks as if it belongs to the captain of the wall guards of

@@ -2314,8 +2314,10 @@ A_ALWAYS, self, null, null, TO_REST);
    }
    if("storm gate" in tgt.names)
    {
+     secure(tgt, lost);
      pause;
      sendto("OPENCAST "+itoa(self.abilities[ABIL_BRA]), tgt);
+     unsecure(tgt);
    }
    else
    {
@@ -2327,6 +2329,7 @@ self, null, tgt, TO_NOTVICT);
 tgt, self, null,  TO_CHAR);
       quit;
    }
+:lost:
    quit;
 }
 dilend
@@ -6665,7 +6668,7 @@ code
 
    if (activator.name in ppl_list)
    {
-      act("You carefully avoid $2n here.", A_ALWAYS, pc, self, null, TO_CHAR);
+      act("You carefully avoid $2n here.", A_ALWAYS, activator, self, null, TO_CHAR);
       goto start;
    }
 

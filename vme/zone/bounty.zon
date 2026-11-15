@@ -270,7 +270,7 @@ code
 	{
 		log("jeweler sign");
 		buf := "Say 'i need work' to kick off a new package delivery for the jeweler!<br>" +
-				"Be careful, you dont want to open these packages!<br><br>" +
+				"Be careful, you don't want to open these packages!<br><br>" +
 				"Say 'report' to get a report of your package deliveries to date.";
 		if(JEWELER_COMPLETE in pc.quests)
 		{
@@ -440,9 +440,11 @@ external
 	cleanup@bounty();
 var
   i         :  integer;
+  moved     :  integer;
 
   room_pt   :  unitptr;
   item      :  unitptr;
+  nxt       :  unitptr;
   corpse    :  string;
 code{
 
@@ -454,9 +456,11 @@ code{
 	log(activator.name+" has died attempting to finish quest! Moohahah.");
 	corpse := "corpse of "+activator.name;
 	pause;
+	moved := 0;
 	item := self.inside;
 	while(item != null)
 	{
+		nxt := item.next;   // item.next changes when item is moved
 		log("corpse move initiated for "+corpse);
 		room_pt := findroom(room_to);
 		if ((item.symname == "corpse@death") and (item.value[2] == 1))
@@ -464,11 +468,16 @@ code{
 			act("A giant vortex opens up and sucks $1n into it!", A_SOMEONE, item, null, null, TO_ROOM);
 			link(item, room_pt);
 			act("A giant vortex opens up, dumping $1n into the room!", A_SOMEONE, item, null, null, TO_ROOM);
-			if(dilfind("qhistorian3@bounty",findsymbolic("library@bounty")))
-				i := dildestroy("qhistorian3@bounty",findsymbolic("library@bounty"));
-			cleanup();
+			moved := 1;
 		}
-		item := item.next;
+		item := nxt;
+	}
+	/* Only after every player corpse is out: cleanup() destroys the corpses left here */
+	if (moved == 1)
+	{
+		if(dilfind("qhistorian3@bounty",findsymbolic("library@bounty")))
+			i := dildestroy("qhistorian3@bounty",findsymbolic("library@bounty"));
+		cleanup();
 	}
 	goto start;
 }
@@ -519,7 +528,7 @@ code
 	
 	if(item.max_hp == item.hp)
 	{
-		exec("say This item is in perfect condition "+pc.name+".",self);
+		exec("say This item is in perfect condition, "+pc.name+".",self);
 		exec("say Here, take this back.",self);
 		exec("give "+item.name+" "+pc.name,self);
 		exec("drop "+item.name,self);
@@ -533,7 +542,7 @@ code
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	if(atoi(pc.quests.[BLACKSMITH_COMPLETE].descr) < i)
 	{
-		exec("say Unfortunately you havent donated enough armor to perform this repair.",self);
+		exec("say Unfortunately you haven't donated enough armor to perform this repair.",self);
 		wait(SFB_TICK, command(CMD_AUTO_TICK));
 		exec("say Here, take this back.",self);
 		exec("give "+item.name+" "+pc.name,self);
@@ -609,7 +618,7 @@ code
 			exdp.descr := "0";
 		
 		exdp.descr := itoa(atoi(exdp.descr) + item.weight);
-		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal "+pc.name+"!", self);
+		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal, "+pc.name+"!", self);
 		exec("say That brings your total to "+exdp.descr+" lbs collected.", self);
 		exec("emote tosses the "+item.title+" into one of the giant smelters.", self);
 		unsecure(item);
@@ -617,7 +626,7 @@ code
 	}
 	else
 	{
-		exec("say Thanks for the "+item.title+" "+pc.name+", but I can't melt this down.", self);
+		exec("say Thanks for the "+item.title+", "+pc.name+", but I can't melt this down.", self);
 		goto yikes;
 	}
 :donezo:
@@ -825,11 +834,11 @@ code
 	sname := item.name;
 	if((buf in sl) or (buf in sl2))
 	{
-		exec("say Ah yes, a fine piece. If you would like to re-forge your "+item.title+" please nod. Otherwise shake.", self);
+		exec("say Ah yes, a fine piece. If you would like to re-forge your "+item.title+", please nod. Otherwise shake.", self);
 		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
-			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("say Well enough, come back when you've made up your mind, "+pc.name+"!", self);
 			exec("give "+sname+" "+pc.name, self);
 			exec("drop "+sname, self);
 		}
@@ -936,11 +945,11 @@ code
 	sname := item.name;
 	if((buf in sl) or (buf in sl2))
 	{
-		exec("say Ah yes, a fine piece. If you would like me to summon an upgraded "+item.title+" please nod. Otherwise shake.", self);
+		exec("say Ah yes, a fine piece. If you would like me to summon an upgraded "+item.title+", please nod. Otherwise shake.", self);
 		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
-			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("say Well enough, come back when you've made up your mind, "+pc.name+"!", self);
 			exec("give "+sname+" "+pc.name, self);
 			exec("drop "+sname, self);
 		}
@@ -1045,11 +1054,11 @@ code
 	sname := item.name;
 	if((buf in sl) or (buf in sl2))
 	{
-		exec("say Ah yes, a fine piece. If you would like to upgrade your "+item.title+" please nod. Otherwise shake.", self);
+		exec("say Ah yes, a fine piece. If you would like to upgrade your "+item.title+", please nod. Otherwise shake.", self);
 		wait(SFB_DONE, ((command("nod")) or (command("shake"))) and (activator == pc));
 		if(command("shake"))
 		{
-			exec("say Well enough, come back when you've made up your mind "+pc.name+"!", self);
+			exec("say Well enough, come back when you've made up your mind, "+pc.name+"!", self);
 			exec("give "+sname+" "+pc.name, self);
 			exec("drop "+sname, self);
 		}
@@ -1251,7 +1260,7 @@ code
 	{
 		//if(JEWELER_CRAFTING in pc.quests)
 		//	exec("say You currently have "+pc.quests.[JEWELER_CRAFTING].descr+" of 20 "+pc.quests.[JEWELER_CRAFTING].names.[1]+" for your crafting project.",self);
-		exec("say You dont currently have any crafting projects underway.",self);
+		exec("say You don't currently have any crafting projects underway.",self);
 	}
 	
 	goto donezo;
@@ -1303,17 +1312,17 @@ code
 		addextra(pc.quests,{"$sum_ball"},"0");
 	
 	total := pc.quests.["$sum_air"].descr;
-	exec("say You have collected  "+total+" of 3 air elements.",self);
+	exec("say You have collected "+total+" of 3 air elements.",self);
 	total := pc.quests.["$sum_water"].descr;
-	exec("say You have collected  "+total+" of 3 water elements.",self);
+	exec("say You have collected "+total+" of 3 water elements.",self);
 	total := pc.quests.["$sum_fire"].descr;
-	exec("say You have collected  "+total+" of 3 fire elements.",self);
+	exec("say You have collected "+total+" of 3 fire elements.",self);
 	total := pc.quests.["$sum_earth"].descr;
-	exec("say You have collected  "+total+" of 3 earth elements.",self);
+	exec("say You have collected "+total+" of 3 earth elements.",self);
 	total := pc.quests.["$sum_ball"].descr;
-	exec("say You have collected  "+total+" of 20 lightning balls.",self);
+	exec("say You have collected "+total+" of 20 lightning balls.",self);
 	total := pc.quests.["$sum_act"].descr;
-	exec("say You have collected  "+itoa(atoi(total)*20)+" of 80 lbs of elemental activator.",self);
+	exec("say You have collected "+itoa(atoi(total)*20)+" of 80 lbs of elemental activator.",self);
 	
 	goto donezo;
 	
@@ -1328,24 +1337,27 @@ code
 	
 	total := pc.quests.["$nec_lc"].descr;
 	
-	exec("say You have collected  "+total+" of 40 rainbow crystals.",self);
+	exec("say You have collected "+total+" of 40 rainbow crystals.",self);
 	
-	if("book" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given the most evil book to ever grace the earth.",self);
-	else
-		exec("say I still require the most evil book to ever grace the earth.",self);
-	if("sash" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me a dark sash with a pocket.",self);
-	else
-		exec("say I still require a dark sash with a pocket.",self);
-	if("scythe" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me a weapon of blood and hate.",self);
-	else
-		exec("say I still require a weapon of blood and hate.",self);
-	if("skin" in pc.quests.[NECRO_ONGOING].names)
-		exec("say You have given me the skin of shadow.",self);
-	else
-		exec("say I still require the skin of shadow.",self);
+	if (NECRO_ONGOING in pc.quests)
+	{
+		if("book" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me the most evil book to ever grace the earth.",self);
+		else
+			exec("say I still require the most evil book to ever grace the earth.",self);
+		if("sash" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me a dark sash with a pocket.",self);
+		else
+			exec("say I still require a dark sash with a pocket.",self);
+		if("scythe" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me a weapon of blood and hate.",self);
+		else
+			exec("say I still require a weapon of blood and hate.",self);
+		if("skin" in pc.quests.[NECRO_ONGOING].names)
+			exec("say You have given me the skin of shadow.",self);
+		else
+			exec("say I still require the skin of shadow.",self);
+	}
 		
 	goto donezo;
 	
@@ -1412,7 +1424,7 @@ code
 		("packages" in pc.quests.[JEWELER_ONGOING].names))
 		{
 			exec("say Incredible! This is no small quantity of stones, and that streak is impressive indeed.",self);
-			exec("say These packages will go out immediately "+pc.name+"!",self);
+			exec("say These packages will go out immediately, "+pc.name+"!",self);
 			exec("say You may go and let The Historian know that your tasks for me are complete.",self);
 			subextra(pc.quests, JEWELER_ONGOING);
 			addextra(pc.quests, {JEWELER_COMPLETE},"");
@@ -1588,8 +1600,8 @@ code
 			"The Blacksmith takes a long look in your direction, before returning to his work.",
 			"A young groll lumbers to the bellows, and begins pumping them.",
 			"From somewhere outside, the sound of laughter finds its way through the din.",
-			"The Blacksmith turns and begins the task of puring the smelter's contents into forms.",
-			"Two apparentices appear and wheel a barrow to a large pile of ore and start shoveling.",
+			"The Blacksmith turns and begins the task of pouring the smelter's contents into forms.",
+			"Two apprentices appear and wheel a barrow to a large pile of ore and start shoveling.",
 			"The heat from the furnace washes over you.",
 			"The din of activity has escalated to a dull roar."};
 
@@ -1741,7 +1753,7 @@ code
 	"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr +"</div>";
 	
 	bty.extra.[0].descr := buf;
-	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
+	act (buf, A_ALWAYS, pc, null, null, TO_CHAR);	
 	link(bty,pc);
 	return;
 }
@@ -1774,6 +1786,9 @@ code
 	pc := activator;
 	secure(pc,donezo);
 	
+	sd := "";
+	sm := "";
+	sb := "";
 	daily := "$daily_target" in pc.extra;
 	monthly := "$monthly_target" in pc.extra;
 	bonus := "$bonus_target" in pc.extra;
@@ -1838,11 +1853,11 @@ code
 	{
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		exec("say Here's what you have open, "+pc.name+".",self);
-		if((sb != null) and (not("DONE" in sb)))
+		if((sb != "") and (not("DONE" in sb)))
 			reprint(pc,sb,"bonus");
-		if((sd != null) and (not("DONE" in sd)))
+		if((sd != "") and (not("DONE" in sd)))
 			reprint(pc,sd,"daily");
-		if((sm != null) and (not("DONE" in sm)))
+		if((sm != "") and (not("DONE" in sm)))
 			reprint(pc,sm,"monthly");
 		
 		if(k == 1)
@@ -1893,7 +1908,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say For a hundred generations we've filled this role.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say There have been times of harship, but the guild has maintained an unbroken line.", self);
+	exec("say There have been times of hardship, but the guild has maintained an unbroken line.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("emote looks at you long and hard.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -1995,8 +2010,9 @@ var
 code
 {
 	
-	heartbeat := PULSE_SEC*4;
+
 :start:
+	heartbeat := PULSE_SEC*4;
 
 	wait(SFB_CMD, ("$feasted" in activator.extra) and (JOIN_ONGOING in activator.quests) and 
 	(BLACKSMITH_COMPLETE in activator.quests) and (JEWELER_COMPLETE in activator.quests) and
@@ -2029,7 +2045,7 @@ code
 	
 	exec("say No! It can't be... They're here!!", self);
 
-	act ("<div class='cpr'>A flaming red portal appears above you head!</div>", A_ALWAYS, pc, null, null, TO_ALL);
+	act ("<div class='cpr'>A flaming red portal appears above your head!</div>", A_ALWAYS, pc, null, null, TO_ALL);
 	act ("<div class='cpy'>There is a sudden flash!</div>", A_SOMEONE, pc, null, null, TO_CHAR);
 	act ("<div class='cpy'>$1n disappears in a flash!</div>", A_SOMEONE, pc, null, null, TO_REST);
 	dilcopy("qhistorian3@bounty("+pc.name+")", self.outside);
@@ -2470,9 +2486,9 @@ code
 		
 		experience(10000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		qty := add_bp(200,pc);
-		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	
 	}
 	return;
@@ -2515,13 +2531,13 @@ code
 			goto yikes;
 		}
 		pc.quests.[BLACKSMITH_ONGOING].descr := itoa(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) + item.weight);
-		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal "+pc.name+"!", self);
+		exec("say This will count for "+itoa(item.weight)+" lbs of good hardened metal, "+pc.name+"!", self);
 		exec("say That brings your total to "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs collected.", self);
 		exec("emote tosses the "+item.title+" into one of the giant smelters.", self);
 		if(atoi(pc.quests.[BLACKSMITH_ONGOING].descr) >= 80000)
 		{
 			wait(SFB_TICK,command(CMD_AUTO_TICK));
-			exec("say By the gods, you've done it "+pc.name+"! You collected "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs of good steel for the smelters.", self);
+			exec("say By the gods, you've done it, "+pc.name+"! You collected "+pc.quests.[BLACKSMITH_ONGOING].descr+" lbs of good steel for the smelters.", self);
 			addstring(pc.quests.[BLACKSMITH_ONGOING].names, "steel");
 		}
 		unsecure(item);
@@ -2540,6 +2556,7 @@ code
 		exec("say 100 lbs of activated elemental earth, this contains eons of power!", self);
 		addstring(pc.quests.[BLACKSMITH_ONGOING].names, "earth1");
 		exec("emote dumps the "+item.title+" into one of the giant furnaces.", self);
+		unsecure(item);
 		destroy(item);
 	}
 	else if((item.symname == "air1@bounty") and (not("air1" in exdp.names)))
@@ -2560,7 +2577,7 @@ code
 	}
 	else
 	{
-		exec("say Thanks for the "+item.title+" "+pc.name+", but I can't use this.", self);
+		exec("say Thanks for the "+item.title+", "+pc.name+", but I can't use this.", self);
 		unsecure(item);
 		exec("give "+item.name+" "+pc.name, self);
 		exec("drop "+item.name, self);
@@ -2605,7 +2622,7 @@ code
 	secure(pc, donezo);
 	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say I sensed your arrival within the Inner Sanctum "+pc.name+".",self);
+	exec("say I sensed your arrival within the Inner Sanctum, "+pc.name+".",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
     exec("say The others suggest you will be the one.", self);
     wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -2694,10 +2711,10 @@ code
 		if(qty == 4)
 			goto noneed;
 		pc.quests.["$sum_act"].descr := itoa(qty + 1);
+		exec("say This has the power to activate the raw elemental crystals!", self);
+		exec("emote sets "+item.title+" aside.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say This has the power to activate the raw elemental crystals!", self);
-		exec("emote sets the "+item.title+" aside.", self);
 		exec("say You have now given me "+itoa((qty + 1)*20)+" of the requisite 80 lbs.", self);
 	}
 	else if((item.symname == "q_air@faeries2"))
@@ -2708,10 +2725,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_air"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental air. It is more beautiful than even the rumors suggest.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystalized elemental air. It is more beautiful than even the rumors suggest.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_fire@faeries2"))
@@ -2722,10 +2739,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_fire"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental fire. I can sense its power.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystalized elemental fire. I can sense its power.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_water@faeries2"))
@@ -2736,10 +2753,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_water"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental water. A wonder of nature!", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystalized elemental water. A wonder of nature!", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "q_earth@faeries2"))
@@ -2750,10 +2767,10 @@ code
 		if(qty == 3)
 			goto noneed;
 		pc.quests.["$sum_earth"].descr := itoa(qty + 1);
+		exec("say Crystallized elemental earth. Marvelous!", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Crystalized elemental earth. Marvelous!", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 3.", self);
 	}
 	else if((item.symname == "ball_energ@akaren"))
@@ -2764,16 +2781,16 @@ code
 		if(qty == 20)
 			goto noneed;
 		pc.quests.["$sum_ball"].descr := itoa(qty + 1);
+		exec("say Energy in its purest form! The raw power is incredible.", self);
+		exec("emote tucks "+item.title+" into her robes.", self);
 		unsecure(item);
 		destroy(item);
-		exec("say Energy in its purest form! The raw power is incredible.", self);
-		exec("emote tucks the "+item.title+" into her robes.", self);
 		exec("say You have now given me "+itoa(qty + 1)+" of the requisite 20.", self);
 	}
 	else
 	{
 :noneed:
-		exec("say Your "+item.title+" is of interest "+pc.name+", but not relevant to the task at hand.", self);
+		exec("say Your "+item.title+" is of interest, "+pc.name+", but not relevant to the task at hand.", self);
 		unsecure(item);
 		exec("give "+item.name+" "+pc.name, self);
 		exec("drop "+item.name, self);
@@ -2792,9 +2809,9 @@ code
 		exec("say Additionally, the Guild has provided some wares I can sell you, for a certain price. You may shop here any time.", self);
 		experience(10000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		qty := add_bp(200,pc);
-		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	
 		subextra(pc.quests, SUMMONER_ONGOING);
 		subextra(pc.quests, "$sum_ball");
@@ -2838,7 +2855,7 @@ code
 	pc := activator;
 	secure(pc, donezo);
 	
-	exec("say So, "+pc.name+" you are ready to deliver another batch of activated elemental powder to The Blacksmith.",self);
+	exec("say So, "+pc.name+", you are ready to deliver another batch of activated elemental powder to The Blacksmith.",self);
 	
 	qty_earth := atoi(pc.quests.["$sum_earth"].descr);
 	qty_air := atoi(pc.quests.["$sum_air"].descr);
@@ -2988,13 +3005,13 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
     exec("say There is much more for you to do, should you choose to follow the way.", self);
     wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say The enemy is upon us, and we'll need every weapon in our posession.", self);
+	exec("say The enemy is upon us, and we'll need every weapon in our possession.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say The Blacksmith has his arms and armors, however they will only go so far.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There is a softer and less tangible weapon at our disposal, and we'll need that as well.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say The ask is hurculean, though so is the need.", self);
+	exec("say The ask is herculean, though so is the need.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("emote pauses for emphasis.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3022,7 +3039,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say You'll need to close a streak of 100 consecutive package deliveries.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Return to me to deliver the stones, and to recieve packages.", self);
+	exec("say Return to me to deliver the stones, and to receive packages.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say And hurry! The enemy will not wait for our work.", self);
 	addextra(pc.quests, {JEWELER_ONGOING}, "");
@@ -3125,7 +3142,7 @@ code
 		pc.quests.["$jeweler_jade"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
-		exec("say Marvelous green in this Jade, "+pc.name+".", self);
+		exec("say Marvelous green in this jade, "+pc.name+".", self);
 		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "cless_stone@blcastle") and (not ("diamond" in pc.quests.[JEWELER_ONGOING].names)))
@@ -3155,7 +3172,7 @@ code
 		pc.quests.["$jeweler_bloodstone"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
-		exec("say The contrast of colors in this bloodstone is catching, is it not "+pc.name+"?", self);
+		exec("say The contrast of colors in this bloodstone is catching, is it not, "+pc.name+"?", self);
 		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "emerald_stone@blcastle") and (not ("emerald" in pc.quests.[JEWELER_ONGOING].names)))
@@ -3185,7 +3202,7 @@ code
 		pc.quests.["$jeweler_onyx"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
-		exec("say Outstanding contrast in the banding on this onyx "+pc.name+".", self);
+		exec("say Outstanding contrast in the banding on this onyx, "+pc.name+".", self);
 		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "blue_stone@blcastle") and (not ("sapphire" in pc.quests.[JEWELER_ONGOING].names)))
@@ -3230,7 +3247,7 @@ code
 		pc.quests.["$jeweler_agate"].descr := itoa(qty + 1);
 		unsecure(item);
 		destroy(item);
-		exec("say Agate seems as if it could hardly be made by nature, dont you think "+pc.name+"?", self);
+		exec("say Agate seems as if it could hardly be made by nature, don't you think, "+pc.name+"?", self);
 		exec("say That makes "+itoa(qty + 1)+" of the 10 I need.", self);
 	}
 	else if((item.symname == "pink_stone@blcastle") and (not ("opal" in pc.quests.[JEWELER_ONGOING].names)))
@@ -3251,14 +3268,14 @@ code
 	else
 	{
 :noneed:
-		exec("say I'll not be able to use this "+item.title+" "+pc.name+".", self);
+		exec("say I'll not be able to use this "+item.title+", "+pc.name+".", self);
 		unsecure(item);
 		exec("give "+item.name+" "+pc.name, self);
 		exec("drop "+item.name, self);
 	}
 	
 :streak:
-	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("$packages" in pc.quests.[JEWELER_ONGOING].names)))
+	if((atoi(pc.extra.["$package_max"].descr) >= 100) and (not("packages" in pc.quests.[JEWELER_ONGOING].names)))
 		addstring(pc.quests.[JEWELER_ONGOING].names, "packages");
 	
 :checkit:
@@ -3272,7 +3289,7 @@ code
 		("packages" in pc.quests.[JEWELER_ONGOING].names))
 	{
 		exec("say Incredible! This is no small quantity of stones, and that streak is impressive indeed." ,self);
-		exec("say These packages will go out immediately "+pc.name+"!" ,self);
+		exec("say These packages will go out immediately, "+pc.name+"!" ,self);
 		exec("say You may go and let The Historian know that your tasks for me are complete.", self);
 		
 		subextra(pc.quests, JEWELER_ONGOING);
@@ -3292,9 +3309,9 @@ code
 		
 		experience(10000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		qty := add_bp(200,pc);
-		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 
 		exec("say Given the value you have contributed to my work, I am able to return some value to you.", self);
 		exec("say Just say 'crafting' and we can go from there.", self);
@@ -3331,7 +3348,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Well then "+pc.name+", speak.",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-    exec("say You didnt seem to find that locked door a deterrent, why then sit here quietly and waste my time?", self);	
+    exec("say You didn't seem to find that locked door a deterrent, why then sit here quietly and waste my time?", self);	
 	
 	wait(SFB_CMD, (command("say") and ("summoner" in argument)));
 	
@@ -3348,13 +3365,13 @@ code
     wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say If you can bring me a few things, I will support your work with The Summoner.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Away near a place with infinite possibilities which has plagued generations of heros...", self);
+	exec("say Away near a place with infinite possibilities which has plagued generations of heroes...", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There is a book, known as the most evil book to ever grace the earth.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say Bring this to me.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Deep in ancient land removed from this world by a powerful magic...", self);
+	exec("say Deep in an ancient land removed from this world by a powerful magic...", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say There is a weapon of blood and hate.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3370,7 +3387,7 @@ code
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say I appreciate his tenuous relationship with life.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Whats more, he has a dark sash with a pocket! How cool is that!?", self);
+	exec("say What's more, he has a dark sash with a pocket! How cool is that!?", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("emote pointedly clears his throat.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3436,13 +3453,13 @@ code
 			addstring(pc.quests.[NECRO_ONGOING].names, "crystals");
 		pc.quests.["$nec_lc"].descr := itoa(qty + 1);
 		pc.quests.[NECRO_ONGOING].descr := itoa(qty + 1);
-		unsecure(item);
-		destroy(item);
 		exec("say The very essence of life!", self);	
-		if ("skin" in pc.quests.[NECRO_ONGOING].names)
+		if ("sash" in pc.quests.[NECRO_ONGOING].names)
 			exec("emote purposefully tucks "+item.title+" into the pocket of his sash.", self);
 		else
 			exec("emote pats his chest as if looking for a pocket, then dejectedly tucks "+item.title+" into his robes.", self);
+		unsecure(item);
+		destroy(item);
 		exec("say This is "+itoa(qty + 1)+" of the 40 I need.", self);
 	}	
 	else if((item.symname == "fake_sash@mordenkin") and (not ("sash" in pc.quests.[NECRO_ONGOING].names)))
@@ -3467,9 +3484,9 @@ code
 	}
 	else if((item.symname == "scythe@yamruins") and (not ("scythe" in pc.quests.[NECRO_ONGOING].names)))
 	{
-		act("$1n takes a swipe through the air with his $2N.",A_SOMEONE, self, item, null, TO_ALL);
+		act("$1n takes a swipe through the air with $2n.",A_SOMEONE, self, item, null, TO_ALL);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		exec("say This is trule a weapon a necromancer can be proud of!", self);
+		exec("say This is truly a weapon a necromancer can be proud of!", self);
 		addstring(pc.quests.[NECRO_ONGOING].names, "scythe");
 		unsecure(item);
 		destroy(item);
@@ -3486,7 +3503,7 @@ code
 	else
 	{
 :noneed:
-		exec("say Why did you bring me "+item.title+" "+pc.name+"?", self);
+		exec("say Why did you bring me "+item.title+", "+pc.name+"?", self);
 		unsecure(item);
 		exec("give "+item.name+" "+pc.name, self);
 		exec("drop "+item.name, self);
@@ -3498,13 +3515,13 @@ code
 		("skin" in pc.quests.[NECRO_ONGOING].names) and ("sash" in pc.quests.[NECRO_ONGOING].names) and 
 		("crystals" in pc.quests.[NECRO_ONGOING].names))
 	{
-		exec("say This is all that I required from you "+pc.name+". Consider me impressed." ,self);
-		exec("say Whats more, the Guild has provided some wares I can sell you, for a certain price. You may shop here any time.", self);
+		exec("say This is all that I required from you, "+pc.name+". Consider me impressed." ,self);
+		exec("say What's more, the Guild has provided some wares I can sell you, for a certain price. You may shop here any time.", self);
 		experience(10000, pc);
 		act("<br><div class='hint'>Quest Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-		act("<div class='xpgain'>You recieve "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(10000)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		i := add_bp(200,pc);
-		act("<div class='xpgain'>You recieve "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(200)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 		subextra(pc.quests, NECRO_ONGOING);
 		addextra(pc.quests, {NECRO_COMPLETEISH},"");		
 		pc.quests.["$nec_lc"].descr := "0";
@@ -3626,7 +3643,7 @@ code
    tt:=atoi(self.extra.["$PK_TIMER"].descr);
 	if(not(realtime-tt>600))
 	{
-		act("As you pray, a sense that recent battles prevent focus.",A_ALWAYS, pc, null, null, TO_CHAR);
+		act("As you pray, you sense that recent battles prevent your focus.",A_ALWAYS, pc, null, null, TO_CHAR);
 		goto lostpc;
 	}
 	act("As you pray, a sense of purpose builds within you.",A_ALWAYS, pc, null, null, TO_CHAR); 	
@@ -3693,14 +3710,14 @@ code
 	pc:= activator;
 	secure(pc,lostpc);
 	
-	act("You sit and partake in the hunters feast.",A_ALWAYS, pc, null, null, TO_CHAR);
-	act("$1n sits and partakes in the hunters feast.",A_ALWAYS, pc, null, null, TO_REST);
+	act("You sit and partake in the hunters' feast.",A_ALWAYS, pc, null, null, TO_CHAR);
+	act("$1n sits and partakes in the hunters' feast.",A_ALWAYS, pc, null, null, TO_REST);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	if(not("$feasted" in pc.extra))
 	{
 		act("You have an uneasy feeling that you're being watched.",A_ALWAYS, pc, null, null, TO_CHAR);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
-		act("As you continue eating the feeling grows stronger.",A_ALWAYS, pc, null, null, TO_CHAR);
+		act("As you continue eating, the feeling grows stronger.",A_ALWAYS, pc, null, null, TO_CHAR);
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
 		act("You suddenly realize that you are not alone.",A_ALWAYS, pc, null, null, TO_CHAR);
 		u := load("guide@bounty");
@@ -3738,15 +3755,15 @@ code
 	
 	exec("say It is a special type of fool who would attack me here.",self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	act("$1n gestures, and the world fades.",A_SOMEONE, self, pc, null, TO_CHAR);
-	act("$1n gestures, and $2n begins to fade.",A_SOMEONE, self, pc, null, TO_ROOM);
+	act("$1n gestures, and the world fades.",A_SOMEONE, self, null, pc, TO_VICT);
+	act("$1n gestures, and $3n begins to fade.",A_SOMEONE, self, null, pc, TO_NOTVICT);
 	pc.hp := 0;
 	pc.endurance := 0;
 	pc.mana := 0;
 	subextra(pc.extra, "$daily_streak");
 	position_update(pc);
 	link(pc,findroom("entry_room@bounty"));
-	act("You feel a searing pain!",A_SOMEONE, self, pc, null, TO_CHAR);
+	act("You feel a searing pain!",A_ALWAYS, pc, null, null, TO_CHAR);
 :lostpc:
 	unsecure(pc);
 	goto start;
@@ -3767,7 +3784,7 @@ code
 	pc:= activator;
 	secure(pc,lostpc);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
-	exec("say Please, dont let me interrupt you partaking of this feast.", self);
+	exec("say Please, don't let me interrupt you partaking of this feast.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	exec("say After all, it was prepared just for your arrival.", self);
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -3955,11 +3972,11 @@ code
 	sl := split(self.extra.["$DAILY_SPREE"].descr,"|");
 	if((kn == 0) and (xn == 0))
 	{
-		log("Spree Tracker: "+self.name+" has lead a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
-		u := self;
+		log("Spree Tracker: "+self.name+" has led a successful spree of type "+sl.[3]+" with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.");
+		u := ghead();
 		while (u.type==UNIT_ST_PC)
 		{
-			sendtext(self.name+" has just lead a successful spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.",u);
+			sendtext(self.name+" has just led a successful spree with "+itoa(sc)+"/"+itoa(n)+" kills and "+itoa(sx)+"/"+itoa(amt)+"000 XP in "+itoa(dur - 1 - minutes)+":"+itoa(60 - seconds)+". Duration was "+itoa(dur)+":00.<br/>",u);
 			u := u.gnext;
 		}
 	}
@@ -4035,6 +4052,7 @@ code
 	
 	pc := activator;
 	secure(pc,donezo);
+	sl := null;
 	
 	sdate := stringdate(3);
 	
@@ -4200,7 +4218,7 @@ code
 					ibdate := atoi(u.extra.["$DAILY_SPREE"].names.[1]);
 					if(idate >= ibdate+2)
 					{
-						act("<div class='cpw'>$3n tells you 'Your streak has come to an end at "+u.extra.["$spree_streak"].descr+", it seems.'",A_ALWAYS, u, null, self, TO_CHAR);
+						act("<div class='cpw'>$3n tells you 'Your streak has come to an end at "+u.extra.["$spree_streak"].descr+", it seems.'</div>",A_ALWAYS, u, null, self, TO_CHAR);
 						u.extra.["$spree_streak"].descr := "0";
 					}
 				}
@@ -4211,7 +4229,7 @@ code
 					addextra(u.extra,{"$DAILY_SPREE"},sdate+"|ongoing|"+pc.name+"|"+itoa(stype));
 					addstring (u.extra.["$DAILY_SPREE"].names,itoa(idate));
 					dilcopy ("spree_f@bounty("+itoa(dur)+")",u);
-					act("<div class='cpr'>You have been enrolled in a new killing spree!<div>",A_ALWAYS, u, null, null, TO_CHAR);
+					act("<div class='cpr'>You have been enrolled in a new killing spree!</div>",A_ALWAYS, u, null, null, TO_CHAR);
 				}
 				else
 					act("<div class='cpg'>== "+itoa(i)+" ==</div>",A_ALWAYS, u, null, null, TO_CHAR);
@@ -4269,11 +4287,11 @@ code
 		{
 			if("FAIL" == sl.[1])
 			{
-				exec("say I'm sorry, you failed to meet the conditions in time today "+pc.name,self);
+				exec("say I'm sorry, you failed to meet the conditions in time today, "+pc.name+".",self);
 			}
 			else if ("SUCCESS" == sl.[1])
 			{
-				exec("say You've done it "+pc.name+"!",self);
+				exec("say You've done it, "+pc.name+"!",self);
 				subextra(pc.extra,"$DAILY_SPREE");
 				addextra(pc.extra,{"$DAILY_SPREE"},sdate+"|CLOSED");
 				addstring(pc.extra.["$DAILY_SPREE"].names,itoa(idate));
@@ -4335,12 +4353,12 @@ code
 				i := transfermoney(null,pc,(rwrd/2));	
 				experience(rwrd, pc);
 				act("<br><div class='hint'>Killing Spree Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-				act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+				act("<div class='xpgain'>You receive "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 				i := add_bp(bp,pc);
 				if(bp == 1)
-					act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+					act("<div class='xpgain'>You receive "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 				else
-					act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+					act("<div class='xpgain'>You receive "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 				
 				
 				exdp := BLACKSMITH_ONGOING in pc.quests;
@@ -4357,14 +4375,14 @@ code
 			}
 			else
 			{
-				exec("say Get moving "+pc.name+"! You're not done yet!",self);
+				exec("say Get moving, "+pc.name+"! You're not done yet!",self);
 			}
 		}
 		else
-			exec("say You'd need to start a killing spree today before you can end one "+pc.name+"!",self);
+			exec("say You'd need to start a killing spree today before you can end one, "+pc.name+"!",self);
 	}
 	else
-		exec("say Perhaps you should run a killing spree before you try to end one "+pc.name+"!",self);
+		exec("say Perhaps you should run a killing spree before you try to end one, "+pc.name+"!",self);
 	
 :donezo:
 
@@ -4538,7 +4556,7 @@ code
 	
 	if(pc.level < 50)
 	{
-		exec("Say You need to be at least level 50 to take contracts "+pc.name+"!", self);	
+		exec("Say You need to be at least level 50 to take contracts, "+pc.name+"!", self);	
 		goto start;
 	}
 
@@ -4576,14 +4594,14 @@ code
 		goto this_bounty;
 	}
 	
-	exec("Say So "+pc.name+" you'd like to see a contract.", self);	
+	exec("Say So, "+pc.name+", you'd like to see a contract.", self);	
 	wait(SFB_TICK,command(CMD_AUTO_TICK));
 	
 :which_bounty:
 	
 	exec("Say Would you like the daily, monthly, or a bonus contract?", self);	
 	exec("Say You may also shake your head to decline.", self);
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" in argument) or ("monthly" in argument) or ("bonus" in argument)))  or (command("shake")));
+	wait(SFB_CMD, (activator == pc) and (((command("say")) and (("daily" in argument) or ("monthly" in argument) or ("bonus" in argument))) or (command("shake"))));
 	
 	if (command ("shake"))
 		goto decline;
@@ -4693,7 +4711,7 @@ code
 		"<br><div class='cpw'>Target Description: </div><div class='cr'> " + targ.outside_descr;
 	if(not(findsymbolic(pc, "tablet@bounty", FIND_UNIT_INVEN)))
 	{
-		exec("Say Here you go "+pc.name+", a "+which+" contract.", self);	
+		exec("Say Here you go, "+pc.name+", your "+which+" contract.", self);	
 		bty := load("contract@bounty");
 		bty.extra.[0].descr := bty.extra.[0].descr + buf;
 		addextra (bty.extra,{"$symname"},targ.symname);
@@ -4704,9 +4722,9 @@ code
 		act ("$2n quietly slips $1n something.", A_SOMEONE, pc, self, null, TO_REST);
 	}
 	else
-		exec("say I've updated your tablet with the new "+which+" contract, "+pc.name,self);
+		exec("say I've updated your tablet with the new "+which+" contract, "+pc.name+".",self);
 	
-	act (buf, A_ALWAYS, pc, null, null, TO_ALL);	
+	act (buf, A_ALWAYS, pc, null, null, TO_CHAR);	
 	goto the_end;
 	
 :have_bounty:
@@ -4720,9 +4738,8 @@ code
 	
 	exec("say You've already taken a "+which+" contract.",self);
 	exec("say Are you suggesting that you'd like to abandon this one, and get another?",self);
-	wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (command("nod") or command("shake")));
+	wait(SFB_CMD, (activator == pc) and (command("nod") or command("shake")));
 	
-	pc := activator;
 	
 	if (command ("shake"))
 		goto decline;
@@ -4804,9 +4821,9 @@ code
 	if ((self.inside.symname == "mulligan@bounty") and (self.inside.symname == med.symname))
 	{
 		exec("snicker",self);
-		exec("say So you need to be freed from your contract "+pc.name+"?",self);
+		exec("say So you need to be freed from your contract, "+pc.name+"?",self);
 		exec("say It seems your... documentation is in order. Just say 'daily' or 'monthly' and it will be ended.",self);
-		wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
+		wait(SFB_CMD, (activator == pc) and ((command("say")) and (("daily" == argument) or ("monthly" == argument))));
 	
 		arg := argument;
 		wait(SFB_TICK,command(CMD_AUTO_TICK));
@@ -4816,7 +4833,7 @@ code
 			subextra(pc.extra, "$monthly_target");
 		
 		destroy(self.inside);
-		exec("say Consider the contract forgotten "+pc.name+".",self);
+		exec("say Consider the contract forgotten, "+pc.name+".",self);
 		goto start;
 	}
 	
@@ -4927,7 +4944,7 @@ code
 	{
 :already_done:
 		exec("cackle",self);
-		exec("say Kill happy arent we "+pc.name+"? This wasn't your target.",self);
+		exec("say Kill-happy, aren't we, "+pc.name+"? This wasn't your target.",self);
 		exec("say We'll take care of this for you.",self);
 		destroy(self.inside);
 		goto labsecure;
@@ -5022,7 +5039,6 @@ leverage the competition boards. Will investigate.
 	*/
 	
 	
-	destroy(self.inside);
 	exec("say Yes, "+slstr.[2]+"'s head.",self);
 	exec("say It appears we can consider your "+sdone+" contract closed, "+pc.name+".",self);
 	exec("grin",self);
@@ -5132,12 +5148,12 @@ leverage the competition boards. Will investigate.
 	i := transfermoney(null,pc,(rwrd/2));	
 	experience(rwrd, pc);
 	act("<br><div class='hint'>Contract Completed!</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
-	act("<div class='xpgain'>You recieve "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+	act("<div class='xpgain'>You receive "+itoa(rwrd)+" experience.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	i := add_bp(bp,pc);
 	if(bp == 1)
-		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(bp)+" bounty point.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	else
-		act("<div class='xpgain'>You recieve "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
+		act("<div class='xpgain'>You receive "+itoa(bp)+" bounty points.</div>",A_ALWAYS, pc, null, null, TO_CHAR); 
 	goto labsecure;
 	// End reward section // 
 	
@@ -5346,8 +5362,7 @@ code
 	block;
 	
 		
-	if(argument)
-		arg := argument;
+	arg := argument;
 	
 	pc := activator;
 	secure(pc, donezo);
@@ -5393,7 +5408,7 @@ code
 	{
 		if(self.outside.symname != "crypt@bounty")
 		{
-			exec("say Leaving my crypt unattended is ill advised. I must return.",self);
+			exec("say Leaving my crypt unattended is ill-advised. I must return.",self);
 			goto donezo;
 		}
 	}
@@ -5407,7 +5422,7 @@ code
 	}
 	else
 	{
-		exec("say This dil needs to be fixed! There isnt a condition for me.",self);
+		exec("say This dil needs to be fixed! There isn't a condition for me.",self);
 		goto donezo;
 		
 	}
@@ -5472,10 +5487,10 @@ code
 				ibp := add_bp(((atoi(items.[i+2]) / r) * (-1)),pc);
 				uitem := load(items.[i]);
 				link(uitem, pc);
-				exec("say Here is your "+uitem.name+" "+pc.name+"!",self);
+				exec("say Here is your "+uitem.name+", "+pc.name+"!",self);
 			}
 			else
-				exec("say You don't have "+itoa(atoi(items.[i+2]) / r)+" bounty points "+pc.name+"!",self);
+				exec("say You don't have "+itoa(atoi(items.[i+2]) / r)+" bounty points, "+pc.name+"!",self);
 			goto donezo;
 		}
 		i := i+3;
@@ -5495,12 +5510,12 @@ dilend
 entry_room
 title "<div class='cpn'>Entrance to Bounty Hunters Guild</div>"
 descr
-"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters 
+"Stepping out from the bustle of Kings Road, the entrance to the Bounty Hunters 
 Guild is a distinct change of environment. The large stone building extends 
 high into the air and has a commanding presence. Tall trees provide ample 
 shade during the bright days, and plenty of routes to approach... quietly. 
 It seems that there has been significant wealth brought to the guild over 
-many generations. A large set of double-doors extend into the darkness."
+many generations. A large set of double-doors extends into the darkness."
 
 movement SECT_CITY
 flags {UNIT_FL_NO_MOB}
@@ -5515,7 +5530,7 @@ bounty_1
 title "<div class='cpn'>Inside the Guild</div>"
 descr
 "Through the large double-doors the quiet of this space encompasses you. While 
-the building is largely unadorned and simple rough-hewn stone. The sheer size 
+the building is largely unadorned and simple rough-hewn stone, the sheer size 
 and scale of the place speak to the significant investments that have been 
 made over many years. To the east and west more rooms expand into the vast hall,
 and to the south the outdoors and access to Kings Road can be seen in the 
@@ -5556,8 +5571,8 @@ title "<div class='cpn'>The Guild Shop</div>"
 descr
 "The many wares which are made available to guild members can be seen adorning 
 nearly every wall and visible surface. From potions and tinctures, to notes and 
-papers, and even jewely and weapons, there is an impressive array available. 
-There is a large counter which has been cleared to make way for transaction"
+papers, and even jewelry and weapons, there is an impressive array available. 
+There is a large counter which has been cleared to make way for transactions."
 flags {UNIT_FL_INDOORS}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -5572,7 +5587,7 @@ title "<div class='cpn'>The Smithy</div>"
 descr
 "Through the doorway a large working Smithy is unveiled. The design of the room 
 allows for air to flow freely in to feed the great bellows that keep the 
-furnace and smelter hot. Large piles of ore are lain out, and amongst them 
+furnace and smelter hot. Large piles of ore are laid out, and amongst them 
 chests of finer metals and precious stones. The Smithy is alive with work as 
 the hands that support The Blacksmith work their art. This appears to be a 
 formidable smithy capable of supplying far greater volumes of arms and armor 
@@ -5627,7 +5642,7 @@ shrine
 title "<div class='cpn'>The Bounty Hunters Shrine</div>"
 descr
 "In the back of the great hall, a peaceful shrine pays homage to the gods 
-of the hunt. Candles burn at the base of shrine, sending their flickering 
+of the hunt. Candles burn at the base of the shrine, sending their flickering 
 light into the darkness. Incense burns alongside the candles, and the 
 scent brings visions of both frenzied chase, and gratifying calm."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED}
@@ -5644,7 +5659,7 @@ sanctum
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "This is the Inner Sanctum of the Bounty Hunters Guild. Rumors about 
-its existance have spread throughout the land, but to most, its assumed 
+its existence have spread throughout the land, but to most, it's assumed 
 that rumor is all it ever was. The reality of being here, however, puts 
 those rumors to rest. Like the rest of the guild, it is a large, and 
 masterfully wrought stone room. No lack of attention was given to the 
@@ -5665,8 +5680,8 @@ keyword {"fresco"}
 key nokey
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN};
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into 
-the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+"The frescos show the history of the hunt. Intricate details were painted into 
+the still-wet plaster as the Inner Sanctum was erected, and dried to form a 
 permanent history. Certain details appear strangely worn on the western wall."
 
 end
@@ -5675,10 +5690,10 @@ sanctum_1
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "Here the Bounty Hunters Guild Inner Sanctum expands, and comes to an apparent 
-end. The frescos continue across the walls here, and an overall sense of well 
-being and peace is here. Despite this, it is with no small sense of 
-apprehension your eyes come to rest on simple though plentiful feast laid out 
-across sturdy tables. Food an drink enough to feed many is arrayed across the 
+end. The frescos continue across the walls here, and an overall sense of 
+well-being and peace is here. Despite this, it is with no small sense of 
+apprehension your eyes come to rest on a simple though plentiful feast laid out 
+across sturdy tables. Food and drink enough to feed many is arrayed across the 
 tables, and while of fine quality it is simple, and not out of character for 
 what you have noticed of this strange place. The room appears empty, and the 
 only exit is back to the south."
@@ -5692,8 +5707,8 @@ extra {"feast"}
 seemingly lonely place. Dare you partake in this feast?"
 
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into 
-the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+"The frescos show the history of the hunt. Intricate details were painted into 
+the still-wet plaster as the Inner Sanctum was erected, and dried to form a 
 permanent history."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT}
@@ -5732,10 +5747,10 @@ descr
 of it as though it may not exist, and its presence hidden away within the Inner 
 Sanctum of the Guild gives substance to those rumors. To many in the world, 
 this place does not exist. Having entered the room, the wonder of it is 
-striking. The room is cavernous, with great bookshelfs stretching high and 
-lining every wall. Volumes covering histories, to tales of heros long past, 
+striking. The room is cavernous, with great bookshelves stretching high and 
+lining every wall. Volumes covering histories, to tales of heroes long past, 
 and to songs of the great bards who have roamed the land are included in every 
-shape and size. In the center of the room a great tome is placed on a pedastal, 
+shape and size. In the center of the room a great tome is placed on a pedestal, 
 where a shaft of light from an unknown source falls on its open pages. The only 
 exit is back to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
@@ -5773,7 +5788,7 @@ descr
 "Here a great stone stair leads in what is clearly now a distinct style, 
 down into unknown depths. Strong yet simple construction placed with very 
 distinct purpose is what you see. It is curious then, that the builders 
-decided to mined deep into the surrounding bedrock to create the space 
+decided to mine deep into the surrounding bedrock to create the space 
 that lies below, it seems an uncharacteristic effort, without a clear purpose. 
 Travel is possible east into the hallway, and down the stairs."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
@@ -5788,7 +5803,7 @@ stairs
 title "<div class='cpn'>In the Stairwell</div>"
 descr
 "Large stone blocks make each step in the spiral stairwell, each large enough 
-for two men to stand abrest. The quality is as distinct as the rest of the 
+for two men to stand abreast. The quality is as distinct as the rest of the 
 Guild though to what end these stairs were built it is still unclear. Travel 
 is possible both up and down."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT}
@@ -5841,7 +5856,7 @@ end
 faces2
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
-"With the sense of horror undeminished you note that the faces spread down this 
+"With the sense of horror undiminished you note that the faces spread down this 
 ghastly hallway. Human, animal, demon, and angel. Young, and old, male and 
 female. Faces of every discernable nature line every space along what seems to 
 be an impossibly long hallway. To the west the horrors continue in the hallway 
@@ -5947,12 +5962,12 @@ end
 entry_room2
 title "<div class='cpn'>Entrance to Bounty Hunters Guild</div>"
 descr
-"Stepping out from bustle of Kings Road, the entrance to the Bounty Hunters 
+"Stepping out from the bustle of Kings Road, the entrance to the Bounty Hunters 
 Guild is a distinct change of environment. The large stone building extends 
 high into the air and has a commanding presence. Tall trees provide ample 
 shade during the bright days, and plenty of routes to approach... quietly. 
 It seems that there has been significant wealth brought to the guild over 
-many generations. A large set of double-doors extend into the darkness."
+many generations. A large set of double-doors extends into the darkness."
 
 movement SECT_CITY
 flags {UNIT_FL_NO_MOB, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -5968,7 +5983,7 @@ bounty_12
 title "<div class='cpn'>Inside the Guild</div>"
 descr
 "Through the large double-doors the quiet of this space encompasses you. While 
-the building is largely unadorned and simple rough-hewn stone. The sheer size 
+the building is largely unadorned and simple rough-hewn stone, the sheer size 
 and scale of the place speak to the significant investments that have been 
 made over many years. To the east and west more rooms expand into the vast hall,
 and to the south the outdoors and access to Kings Road can be seen in the 
@@ -6013,8 +6028,8 @@ title "<div class='cpn'>The Guild Shop</div>"
 descr
 "The many wares which are made available to guild members can be seen adorning 
 nearly every wall and visible surface. From potions and tinctures, to notes and 
-papers, and even jewely and weapons, there is an impressive array available. 
-There is a large counter which has been cleared to make way for transaction"
+papers, and even jewelry and weapons, there is an impressive array available. 
+There is a large counter which has been cleared to make way for transactions."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -6030,7 +6045,7 @@ title "<div class='cpn'>The Smithy</div>"
 descr
 "Through the doorway a large working Smithy is unveiled. The design of the room 
 allows for air to flow freely in to feed the great bellows that keep the 
-furnace and smelter hot. Large piles of ore are lain out, and amongst them 
+furnace and smelter hot. Large piles of ore are laid out, and amongst them 
 chests of finer metals and precious stones. The Smithy is alive with work as 
 the hands that support The Blacksmith work their art. This appears to be a 
 formidable smithy capable of supplying far greater volumes of arms and armor 
@@ -6087,7 +6102,7 @@ shrine2
 title "<div class='cpn'>The Bounty Hunters Shrine</div>"
 descr
 "In the back of the great hall, a peaceful shrine pays homage to the gods 
-of the hunt. Candles burn at the base of shrine, sending their flickering 
+of the hunt. Candles burn at the base of the shrine, sending their flickering 
 light into the darkness. Incense burns alongside the candles, and the 
 scent brings visions of both frenzied chase, and gratifying calm."
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -6105,7 +6120,7 @@ sanctum2
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "This is the Inner Sanctum of the Bounty Hunters Guild. Rumors about 
-its existance have spread throughout the land, but to most, its assumed 
+its existence have spread throughout the land, but to most, it's assumed 
 that rumor is all it ever was. The reality of being here, however, puts 
 those rumors to rest. Like the rest of the guild, it is a large, and 
 masterfully wrought stone room. No lack of attention was given to the 
@@ -6131,10 +6146,10 @@ sanctum_12
 title "<div class='cpn'>The Inner Sanctum</div>"
 descr
 "Here the Bounty Hunters Guild Inner Sanctum expands, and comes to an apparent 
-end. The frescos continue across the walls here, and an overall sense of well 
-being and peace is here. Despite this, it is with no small sense of 
-apprehension your eyes come to rest on simple though plentiful feast laid out 
-across sturdy tables. Food an drink enough to feed many is arrayed across the 
+end. The frescos continue across the walls here, and an overall sense of 
+well-being and peace is here. Despite this, it is with no small sense of 
+apprehension your eyes come to rest on a simple though plentiful feast laid out 
+across sturdy tables. Food and drink enough to feed many is arrayed across the 
 tables, and while of fine quality it is simple, and not out of character for 
 what you have noticed of this strange place. The room appears empty, and the 
 only exit is back to the south."
@@ -6148,8 +6163,8 @@ extra {"feast"}
 seemingly lonely place. Dare you partake in this feast?"
 
 extra {"frescos","fresco","wall"}
-"The frescos show the history of the hunt. Intricate details was painted into 
-the still-wet plasted as the Inner Sanctum was erected, and dried to form a 
+"The frescos show the history of the hunt. Intricate details were painted into 
+the still-wet plaster as the Inner Sanctum was erected, and dried to form a 
 permanent history."
 
 flags {UNIT_FL_INDOORS, UNIT_FL_SACRED, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -6191,10 +6206,10 @@ descr
 of it as though it may not exist, and its presence hidden away within the Inner 
 Sanctum of the Guild gives substance to those rumors. To many in the world, 
 this place does not exist. Having entered the room, the wonder of it is 
-striking. The room is cavernous, with great bookshelfs stretching high and 
-lining every wall. Volumes covering histories, to tales of heros long past, 
+striking. The room is cavernous, with great bookshelves stretching high and 
+lining every wall. Volumes covering histories, to tales of heroes long past, 
 and to songs of the great bards who have roamed the land are included in every 
-shape and size. In the center of the room a great tome is placed on a pedastal, 
+shape and size. In the center of the room a great tome is placed on a pedestal, 
 where a shaft of light from an unknown source falls on its open pages. The 
 only exit is back to the west."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -6234,7 +6249,7 @@ descr
 "Here a great stone stair leads in what is clearly now a distinct style, 
 down into unknown depths. Strong yet simple construction placed with very 
 distinct purpose is what you see. It is curious then, that the builders 
-decided to mined deep into the surrounding bedrock to create the space 
+decided to mine deep into the surrounding bedrock to create the space 
 that lies below, it seems an uncharacteristic effort, without a clear purpose. 
 Travel is possible east into the hallway, and down the stairs."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -6252,7 +6267,7 @@ stairs2
 title "<div class='cpn'>In the Stairwell</div>"
 descr
 "Large stone blocks make each step in the spiral stairwell, each large enough 
-for two men to stand abrest. The quality is as distinct as the rest of the 
+for two men to stand abreast. The quality is as distinct as the rest of the 
 Guild though to what end these stairs were built it is still unclear. Travel 
 is possible both up and down."
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NOSAVE}
@@ -6311,7 +6326,7 @@ end
 faces222
 title "<div class='cpn'>Hallway of Faces</div>"
 descr
-"With the sense of horror undeminished you note that the faces spread down this 
+"With the sense of horror undiminished you note that the faces spread down this 
 ghastly hallway. Human, animal, demon, and angel. Young, and old, male and 
 female. Faces of every discernable nature line every space along what seems to 
 be an impossibly long hallway. To the west the horrors continue in the hallway 
@@ -6399,7 +6414,7 @@ names {"bounty hunter","hunter","man"}
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}
-"Tall and well muscled, he is of unknown origin. An dark smirk seems to 
+"Tall and well muscled, he is of unknown origin. A dark smirk seems to 
 permanently rest on his face. This appears to be the man who may offer a 
 contract if you but ask." 
 
@@ -6485,7 +6500,7 @@ extra{}
 "Tall and powerful despite clearly showing the signs of significant age, 
 The Historian is a somewhat mysterious creature. Not much is known 
 about him, except that he has served the Hunters Guild longer than any
-other living beings." 
+other living being." 
 
 alignment 0
 M_UNICORN_XLARGE(100,SEX_MALE)
@@ -6539,7 +6554,7 @@ names {"the jeweler","jeweler","half-elf"}
 title "The Jeweler"        
 descr "A half-elven jeweler is here working her craft."
 extra{}
-"The Bounty Hunters have relied on the finely-wrought jewelery 
+"The Bounty Hunters have relied on the finely-wrought jewelry 
 produced by The Jeweler to both reward their members, and support 
 the payments which work to lubricate hands and minds in favor 
 of their work." 
@@ -6634,7 +6649,7 @@ names {"bounty hunter","hunter","man"}
 title "the bounty hunter"        
 descr "A tall man with a dark smirk stands in the shadows."
 extra{}
-"Tall and well muscled, he is of unknown origin. An dark smirk seems to 
+"Tall and well muscled, he is of unknown origin. A dark smirk seems to 
 permanently rest on his face. This appears to be the man who may offer a 
 contract if you but ask." 
 
@@ -6687,7 +6702,7 @@ extra{}
 "Tall and powerful despite clearly showing the signs of significant age, 
 The Historian is a somewhat mysterious creature. Not much is known 
 about him, except that he has served the Hunters Guild longer than any
-other living beings." 
+other living being." 
 
 alignment 0
 M_UNICORN_XLARGE(90,SEX_MALE)
@@ -6721,7 +6736,7 @@ names {"the jeweler","jeweler","half-elf"}
 title "The Jeweler"        
 descr "A half-elven jeweler is here working her craft."
 extra{}
-"The Bounty Hunters have relied on the finely-wrought jewelery 
+"The Bounty Hunters have relied on the finely-wrought jewelry 
 produced by The Jeweler to both reward their members, and support 
 the payments which work to lubricate hands and minds in favor 
 of their work." 
@@ -6808,11 +6823,11 @@ end
 
 
 snake
-names {"demon snake"}    
+names {"demonic snake","demon snake","snake"}    
 title "a demonic snake"        
 descr "A massive demonic snake worms its way across the ground."
 extra{}
-"A massive demonic snake winds its across the ground."
+"A massive demonic snake winds its way across the ground."
 exp 0
 alignment -1000
 M_SNAKE_DEMON_XLARGE(102,SEX_MALE)
@@ -6943,7 +6958,7 @@ names {"sturdy chest","chest"}
 title "a sturdy chest"
 descr "A sturdy chest is here."
 extra {}
-"This is well-built and sturdy chest. As with most things here, it appears more
+"This is a well-built and sturdy chest. As with most things here, it appears more
 utilitarian than decorative, but seems like it is effective for its purpose."
 type ITEM_CONTAINER
 weight 30
@@ -6953,8 +6968,8 @@ end
 
 portal
 names {"flaming red portal","flaming portal","portal"}
-title "<div class='cpr'>A flaming red portal</div>"
-descr "<div class='cpr'>A flaming red portal floats above you head.</div>"
+title "<div class='cpr'>a flaming red portal</div>"
+descr "<div class='cpr'>A flaming red portal floats above your head.</div>"
 extra {}
 "This <div class='cpr'>flaming red portal</div> is of unknown origin, and is
 rather foreboding."
@@ -6986,7 +7001,7 @@ end
 air1
 names {"activated air", "air powder", "powder", "air"}
 title "<div class='cpw'>activated element of air</div>"
-descr "A large heap of a strange <div class='cpw'>white powder</div> powder is here."
+descr "A large heap of a strange <div class='cpw'>white powder</div> is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
 weight 100
@@ -6996,7 +7011,7 @@ end
 fire1
 names {"activated fire", "fire powder", "powder", "fire"}
 title "<div class='cpr'>activated element of fire</div>"
-descr "A large heap of a strange <div class='cpr'>blood red powder</div> powder is here."
+descr "A large heap of a strange <div class='cpr'>blood red powder</div> is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
 weight 100
@@ -7006,7 +7021,7 @@ end
 earth1
 names {"activated earth", "earth powder", "powder", "earth"}
 title "<div class='cpn'>activated element of earth</div>"
-descr "A large heap of a strange <div class='cpn'>dark powder</div> powder is here."
+descr "A large heap of a strange <div class='cpn'>dark powder</div> is here."
 extra {}
 "This is an activated elemental powder, containing eons of power."
 weight 100
@@ -7026,7 +7041,7 @@ end
 activator
 names {"activator"}
 title "<div class='cpy'>an elemental activator</div>"
-descr "a strange <div class='cpy'>elemental activator</div> is here."
+descr "A strange <div class='cpy'>elemental activator</div> is here."
 extra {}
 "This is <div class='cpy'>an elemental activator</div>."
 weight 20
@@ -8565,7 +8580,7 @@ DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_legs2
-names {"strong plate","leggings"}
+names {"strong leggings","leggings"}
 title "a pair of Bounty Hunter's strong leggings"
 descr "A pair of Bounty Hunter's strong leggings have been left here."
 extra {}
@@ -8595,7 +8610,7 @@ DEX_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: +3
 end
 
 str_helm2
-names {"strong  helmet","helmet"}
+names {"strong helmet","helmet"}
 title "a Bounty Hunter's strong helmet"
 descr "A Bounty Hunter's strong helmet has been left here."
 extra {}
@@ -8871,7 +8886,7 @@ names {"diamond sash","sash"}
 title "a diamond sash"
 descr "An elegant diamond sash lies on the ground."
 extra {}
-"The sash is made of fine gold thread and features masterfully polished diamond."
+"The sash is made of fine gold thread and features masterfully polished diamonds."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -8885,10 +8900,10 @@ end
 
 chest_dex
 names {"emerald sash","sash"}
-title "a emerald sash"
+title "an emerald sash"
 descr "An elegant emerald sash lies on the ground."
 extra {}
-"The sash is made of fine gold thread and features masterfully polished emerald."
+"The sash is made of fine gold thread and features masterfully polished emeralds."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -8937,7 +8952,7 @@ end
 
 chest_div
 names {"onyx sash","sash"}
-title "a onyx sash"
+title "an onyx sash"
 descr "An elegant onyx sash lies on the ground."
 extra {}
 "The sash is made of fine gold thread and features masterfully polished onyx."
@@ -9012,7 +9027,7 @@ names {"diamond anklet","anklet"}
 title "a diamond anklet"
 descr "A diamond anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful diamond."
+"The anklet is made of fine gold and bears a beautiful diamond."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9026,10 +9041,10 @@ end
 
 ankle_dex
 names {"emerald anklet","anklet"}
-title "a emerald anklet"
-descr "A emerald anklet lies on the ground."
+title "an emerald anklet"
+descr "An emerald anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful emerald."
+"The anklet is made of fine gold and bears a beautiful emerald."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9046,7 +9061,7 @@ names {"moonstone anklet","anklet"}
 title "a moonstone anklet"
 descr "A moonstone anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful moonstone."
+"The anklet is made of fine gold and bears a beautiful moonstone."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9063,7 +9078,7 @@ names {"bloodstone anklet","anklet"}
 title "a bloodstone anklet"
 descr "A bloodstone anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful bloodstone."
+"The anklet is made of fine gold and bears a beautiful bloodstone."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9077,10 +9092,10 @@ end
 
 ankle_div
 names {"onyx anklet","anklet"}
-title "a onyx anklet"
-descr "A onyx anklet lies on the ground."
+title "an onyx anklet"
+descr "An onyx anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful onyx."
+"The anklet is made of fine gold and bears a beautiful onyx."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9097,7 +9112,7 @@ names {"jasper anklet","anklet"}
 title "a jasper anklet"
 descr "A jasper anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful jasper."
+"The anklet is made of fine gold and bears a beautiful jasper."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9115,7 +9130,7 @@ names {"pearl anklet","anklet"}
 title "a pearl anklet"
 descr "A pearl anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful pearl."
+"The anklet is made of fine gold and bears a beautiful pearl."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9133,7 +9148,7 @@ names {"ruby anklet","anklet"}
 title "a ruby anklet"
 descr "A ruby anklet lies on the ground."
 extra {}
-"The anklet is made of fine gold and is bears a beautiful rubies."
+"The anklet is made of fine gold and bears a beautiful ruby."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ANKLE}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9167,8 +9182,8 @@ end
 
 belt_dex
 names {"emerald belt","belt"}
-title "a emerald encrusted belt"
-descr "A emerald encrusted belt lies on the ground."
+title "an emerald encrusted belt"
+descr "An emerald encrusted belt lies on the ground."
 extra {}
 "The belt is made of fine gold and is encrusted in emeralds."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
@@ -9219,8 +9234,8 @@ end
 
 belt_div
 names {"onyx belt","belt"}
-title "a onyx encrusted belt"
-descr "A onyx encrusted belt lies on the ground."
+title "an onyx encrusted belt"
+descr "An onyx encrusted belt lies on the ground."
 extra {}
 "The belt is made of fine gold and is encrusted in onyx."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
@@ -9741,7 +9756,7 @@ by one person."
 end
 
 cape_cha
-names {"moostone cape","cape"}
+names {"moonstone cape","cape"}
 title "a moonstone-lined cape"
 descr "A moonstone-lined cape lies on the ground."
 extra {}
@@ -9851,7 +9866,7 @@ names {"diamond backplate","backplate"}
 title "a diamond-studded backplate"
 descr "A diamond-studded backplate lies on the ground."
 extra {}
-"The backplate is made of fine gold and is studded with diamond."
+"The backplate is made of fine gold and is studded with diamonds."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BACK}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -9864,7 +9879,7 @@ by one person."
 end
 
 back_dex
-names {"emerlad backplate","backplate"}
+names {"emerald backplate","backplate"}
 title "an emerald-studded backplate"
 descr "An emerald-studded backplate lies on the ground."
 extra {}
@@ -10093,7 +10108,7 @@ names {"pearl earring","earring"}
 title "a delicate pearl earring"
 descr "A delicate pearl earring lies on the ground."
 extra {}
-"The earring is made of fine gold and holds a lusterous pearl."
+"The earring is made of fine gold and holds a lustrous pearl."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_EAR}
 type ITEM_WORN
 MATERIAL_METAL("gold")
@@ -10142,7 +10157,7 @@ end
 bp_obj
 names {"bounty object", "object"}
 title "a bounty point object"
-descr "A magical administrators object is here, looking bountiful."
+descr "A magical administrator's object is here, looking bountiful."
 extra {}
 "This object is used to grant bounty points to characters for situations that 
 dictate a relevant reward. To use this, simply use the format: <br><br>
@@ -10150,7 +10165,7 @@ dictate a relevant reward. To use this, simply use the format: <br><br>
 reward [playername] [number of points] [reason]<br><br>
 EX: reward issa 50 Did a very cool thing!<br><br>
 
-result: Issa will be granted 50 additional bounty points, and recieve the message as an act."
+result: Issa will be granted 50 additional bounty points, and receive the message as an act."
 weight 2
 manipulate {MANIPULATE_TAKE}
 dilcopy reward@bounty();

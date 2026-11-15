@@ -78,7 +78,7 @@ code
 
 :start:
 
-	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti"));
+	wait(SFB_CMD,(command("use")) and (left(argument, 8) == "graffiti") and (activator == self.outside));
 	
 	pc:=activator;
 	secure(pc, lostpc);
@@ -225,7 +225,7 @@ code
 	clanst := left(self.outside.outside.zoneidx, 5);
 	
 :start:
-	wait(SFB_CMD,(command("use")) and ("remover" in argument));
+	wait(SFB_CMD,(command("use")) and ("remover" in argument) and (activator == self.outside));
 	pc:=activator;
 	secure(pc, lostpc);
 	
@@ -256,7 +256,7 @@ code
 				}
 				else
 				{
-					act("There isnt anything here to use your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover on.", A_ALWAYS,pc,self,pc,TO_CHAR);
+					act("There isn't anything here to use your <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover on.", A_ALWAYS,pc,self,pc,TO_CHAR);
 					goto start;
 				}
 			}
@@ -310,7 +310,7 @@ code
 	 pc, TO_NOTVICT);
    act ("Hexica grins at you with subtle malice, and you feel a chill run "+
 	"down your spine.", A_SOMEONE, self, null, pc, TO_VICT);
-   act ("$3N shudders as the hag Hexica vexes him with her gaze.", A_SOMEONE,
+   act ("$3N shudders as the hag Hexica vexes $3m with her gaze.", A_SOMEONE,
 	self, null, pc, TO_NOTVICT);
    pause;
 
@@ -342,7 +342,7 @@ code
    act ("The cricket escapes from Hexica's grasp, only to fall into the "+
 	"boiling cauldron of evil sludge. It expires with a small peep.",
 	A_SOMEONE, self, null, null, TO_ALL);
-   act ("You feel imbibed with strange arcane power as the spirits of "+
+   act ("You feel imbued with strange arcane power as the spirits "+
 	"of the outer planes descend upon this place.", A_SOMEONE, self,
 	null, pc, TO_VICT);
    pause;
@@ -410,7 +410,7 @@ code
 
    :final:
 
-   exec ("say Now, let me give you a few things... first, this owner's manual, describes all the functions.", self);
+   exec ("say Now, let me give you a few things... first, this owner's manual, which describes all the functions.", self);
    item := load ("magef_manual@g_q");
    link (item, pc);
 
@@ -475,7 +475,7 @@ var
      while (pc.type==UNIT_ST_PC)
       {
 			if (pc.level >200)
-     sendtext(s+" Launched this firework:<br/>",pc);
+     sendtext(s+" launched this firework:<br/>",pc);
       pc:=pc.gnext;
       }
 
@@ -502,7 +502,7 @@ while (pc)
 		pc.endurance:=0;
 		position_update (pc);
 rm:=findrndunit(self,FIND_UNIT_WORLD, UNIT_ST_ROOM);
-		sendtext ("You hit the ground with a splat!  OUch that hurt!<br/>",pc);
+		sendtext ("You hit the ground with a splat!  Ouch, that hurt!<br/>",pc);
 		if (rm!=null)
 		 link (pc,rm);
 		 else
@@ -598,7 +598,7 @@ heartbeat:=PULSE_SEC*3;
    if ((not IsInGuilds@guilds(activator, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
          and (activator.level < IMMORTAL_LEVEL))
    {
-      exec ("say You're a mundane.  I will not serve you "+activator.name+"!",self);
+      exec ("say You're a mundane.  I will not serve you, "+activator.name+"!",self);
       exec ("kill "+activator.name,self);
       goto start;
    }
@@ -674,7 +674,7 @@ code
    if (not IsInGuilds@guilds(pcowner, {GUILD_UDG_MAGE, GUILD_SORCERER, GUILD_NECROMANCER}))
    {
 	 :mund:
-      exec ("say I will not serve you,"+pcowner.name+", because you are a mundane.", self);
+      exec ("say I will not serve you, "+pcowner.name+", because you are a mundane.", self);
       pause;
       goto rouge;
    }
@@ -703,7 +703,7 @@ code
    
    heartbeat := PULSE_SEC*3;
    
-   exec ("say just whisper to me what you want to call me.  You wouldn't want everyone to know.",self);
+   exec ("say Just whisper to me what you want to call me.  You wouldn't want everyone to know.",self);
    exec ("wink "+pcowner.name,self);
    wait(SFB_DONE, ((command("whisper")) and (activator == pcowner) and (target==self)));
    
@@ -782,7 +782,7 @@ code
         pcowner := self.outside;
         secure(pcowner, lostowner);
         exec("follow "+pcowner.name,self);
-        exec("emote basks in the loving glow of it's master "+
+        exec("emote basks in the loving glow of its master "+
         pcowner.name+".", self);
         goto brains;
     }
@@ -959,7 +959,7 @@ wait(SFB_CMD, TRUE and
 
  if  (command ("tell"))
       {
-	 exec ("tell "+self.master.name+" tell?!? What do I look "+
+	 exec ("tell "+self.master.name+" Tell?!? What do I look "+
 	       "like a comm channel?  It will probably be more clear if you do "+
 				 "your own telling.",self);
 	 block;
@@ -969,7 +969,7 @@ if 	 ((command ("steal")) or
 	 {
 	 exec ("tell "+self.master.name+" What?!? What do I look "+
 	 "like a Thief??  I would be laughed out of the Magical realm!! "+
-	 "You Should probably do your own dirty work!!", self);
+	 "You should probably do your own dirty work!!", self);
      block;
 		 }
  if  (command ("open"))
@@ -986,7 +986,7 @@ if 	 ((command ("steal")) or
       }
  if  (command ("examine"))
       {
-	 exec ("tell "+self.master.name+"What do I look "+
+	 exec ("tell "+self.master.name+" What do I look "+
 	       "like your private doctor?  Why don't you visit the Phoenix!",self);
 	 block;
       }
@@ -1085,7 +1085,7 @@ code
       act("$3n begins to grow restless and glares jealously at $2t.",
 	  A_ALWAYS, self.outside,jealous.title,self, TO_CHAR);
       pause;
-      act ("There is a strange puff of smoke, and $2t is gone, "
+      act ("There is a strange puff of smoke, and $2t is gone,"
 	  +" leaving only a small pile of ashes.",
 	  A_ALWAYS, self.outside,jealous.title,self, TO_CHAR);
       ashes := load ("fam_ashes@g_q");
@@ -1177,7 +1177,7 @@ code
       act("$1n begins to grow restless and glares jealously at $2t.",
 	   A_SOMEONE, self,jealous.title, null, TO_CHAR);
       pause;
-      act ("There is a strange puff of smoke, and $2t is gone, "
+      act ("There is a strange puff of smoke, and $2t is gone,"
 	  +" leaving only a small pile of ashes.",
 	   A_SOMEONE, self,jealous.title, null, TO_CHAR);
       ashes := load ("fam_ashes@g_q");
@@ -1246,7 +1246,7 @@ room1
 title "An Empty Room"
 names {"qq"}
 descr
-"Its an empty room!"
+"It's an empty room!"
 flags {UNIT_FL_NO_WEATHER , UNIT_FL_NO_TELEPORT}
 end
 
@@ -1265,7 +1265,7 @@ contact with her. A solid gold medallion around her neck catches your eye.
 "
 
 extra {"medallion"}
-"Thanks to Lev for my name and description one of his few believable ideas."
+"Thanks to Lev for my name and description, one of his few believable ideas."
 M_HUMAN_WARRIOR_NATURAL(150, SEX_FEMALE)
 MSET_ABILITY(10,10,10,10,10,10,20,20)
  /*special spellcaster only*/
@@ -1503,7 +1503,7 @@ code
    {
       heartbeat := PULSE_SEC*60;
       link (self,self.outside.outside);
-      exec ("emote chirps a little song, homesick for it's forest home.",self);
+      exec ("emote chirps a little song, homesick for its forest home.",self);
       pause;
       tf:= walk_room@function ("tree_circle@cypress",4);
    }
@@ -1520,7 +1520,7 @@ descr
 "A strange magical familiar has been left here."
 extra {}
 "This beast is obviously magical in nature - the glow surrounding
-it's body and the intelligent gleam in its eyes give it away as a
+its body and the intelligent gleam in its eyes give it away as a
 mage's familiar. Perhaps you should leave it unmolested."
 extra {"tags", "gold tags"}
 "The tags on this familiar say 'MageFamiliar Version 6.0'"
@@ -1623,12 +1623,12 @@ if (glevel <20)
       {
 	 exec ("say You show some promise, "+pc.name+", but need to gain more power.", self);
 	 pause;
-	 exec ("say Come visit me again once you reach level 20. in a magic "+
-	 "guild Perhaps I can assist you.", self);
+	 exec ("say Come visit me again once you reach level 20 in a magic "+
+	 "guild. Perhaps I can assist you.", self);
 	 unsecure (pc);
 	 goto waitawhile;
       }
-      exec ("say Ahhh... so you are interested in familiar, huh? You seem powerful enough to bond one, "+pc.name+".", self);
+      exec ("say Ahhh... so you are interested in a familiar, huh? You seem powerful enough to bond one, "+pc.name+".", self);
 
       pause;
       exec ("say You just have to fetch me the ingredients to cast the spell... they are listed there in that book.", self);
@@ -1674,7 +1674,7 @@ if (glevel <20)
    goto init;
 
    :lostpc:
-   exec ("say The little snot... doesn't know it's manners!", self);
+   exec ("say The little snot... doesn't know its manners!", self);
    goto start;
 
    :ohno_combat:
@@ -1715,12 +1715,12 @@ code
    :start:
 wait (SFB_DONE ,activator.type==UNIT_ST_PC);
 
-if (command ("give"))
+if (command ("give") and (target == self))
 	goto give;
 
    if (FAMILIAR_BAN in activator.quests)
    {
-   exec ("say You have been banned from owning a familiar, "+pc.name+"!", self);
+   exec ("say You have been banned from owning a familiar, "+activator.name+"!", self);
    unsecure (pc);
    goto start;
    }
@@ -1797,7 +1797,7 @@ if ((not((FAMILIAR_COMPLETE in activator.quests)) and
       }
       else if (("corpse" in item.name) and ("cricket" in item.outside_descr))
       {
-	 exec ("say Now what am I supposed to do with a dead magic cricket. I must have a live one!", self);
+	 exec ("say Now what am I supposed to do with a dead magic cricket? I must have a live one!", self);
       }
       else if ("cricket" in item.name)
       {
@@ -1806,7 +1806,7 @@ if ((not((FAMILIAR_COMPLETE in activator.quests)) and
       }
       else
       {
-	 exec ("say This is not ingredient for the spell! Why do you waste my time?", self);
+	 exec ("say This is not an ingredient for the spell! Why do you waste my time?", self);
       }
 
 unsecure(item);
@@ -1817,7 +1817,7 @@ destroy (item);
       pause;
       subextra (pc.quests, FAMILIAR_ONGOING);
       addextra (pc.quests, {FAMILIAR_COMPLETE}, "");
-      exec ("say Ahhh. That is all the ingredients! Now we are ready to summon you a familiar,"+pc.name+".", self);
+      exec ("say Ahhh. That is all the ingredients! Now we are ready to summon you a familiar, "+pc.name+".", self);
 			pause;
 			goto ritual;
    }
@@ -1877,7 +1877,7 @@ dilcopy shopkeepernew@function(
  "$1n says, 'This $2N is too expensive for you, $3n.'",
  "$1n says, 'Here you are, $2n.'",
  "$1n says, 'I might be able to sell this $2N.'",
- "$1n says, 'I don't have that many right now, maybe of you come back later.'"},
+ "$1n says, 'I don't have that many right now, maybe if you come back later.'"},
 {ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, FALSE);
 
 dilbegin no_steal();
@@ -1914,11 +1914,11 @@ end
 %objects
 
 candy_cane2
-title "a Candy Cane"
+title "a candy cane"
 names {"a candy cane","candy cane","candy","staff"}
 descr "A large candy cane is lying here."
 extra {}
-"A huge piece of candy with red and white strips."
+"A huge piece of candy with red and white stripes."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(12, 0)
 weight 2
@@ -1928,13 +1928,13 @@ weight 2
 rocket1
 names {"rocket"}
 title "a rocket"
-descr "A big rocket has been set up here.."
+descr "A big rocket has been set up here."
 extra {}
 "The rocket has a large cargo area in a hole in the top of it. If you put a paper in the
 hole the message on the paper will be displayed in the explosion. Remember
 no swearing and keep it to a max of 3 lines. Anyone caught abusing this
 will lose the right to use them. The rockets will disappear shortly after
-new years so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
+New Year's so don't try to save them :)  LIGHT ROCKET to activate it.  Hmm that cargo area
 might even be big enough for people to fit in it."
 type ITEM_CONTAINER
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD, MANIPULATE_ENTER}
@@ -2067,7 +2067,7 @@ while (item)
 	if (item.type==UNIT_ST_PC)
 		{
         item.minv:=0;
- act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+ act("The rocket you are riding in explodes, dumping your guts on your keyboard!",
     A_ALWAYS,item,null,null,TO_CHAR);
 		}
 		item:=item.next;
@@ -2089,7 +2089,7 @@ while (item)
 	if (item.type==UNIT_ST_PC)
 		{
         item.minv:=0;
- act("The rocket you are riding in explodes dumping your guts on your keyboard!",
+ act("The rocket you are riding in explodes, dumping your guts on your keyboard!",
     A_ALWAYS,item,null,null,TO_CHAR);
 		}
 		item:=item.next;
@@ -2107,7 +2107,7 @@ end
 
 
 gift_newbie
-title "a Miniature City Guard"
+title "a miniature city guard"
 names {"city guard","statue","guard"}
 descr "A small statue of a city guard is lying here."
 extra {}
@@ -2136,7 +2136,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 end
 
 sash_98
-title "a white sash with 1998 printed on it."
+title "a white sash with 1998 printed on it"
 names {"sash"}
 descr "A white sash with 1998 printed on it is lying here."
 extra {}
@@ -2145,7 +2145,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 end
 
 sash_97
-title "a tattered white sash with 1997 printed on it."
+title "a tattered white sash with 1997 printed on it"
 names {"sash"}
 descr "A tattered white sash with 1997 printed on it is lying here."
 extra {}
@@ -2205,7 +2205,7 @@ what could be written in it."
 extra {}
 "The leather binding of this massive tome looks like it might have
 endured doomsday itself! The pages are old and crackly, but still
-readable. The book is open to beginning of a spell formula for
+readable. The book is open to the beginning of a spell formula for
 familiars. It reads:<pre><br/>
 <br/>
   ' Ingredients Needed:<br/>
@@ -2234,7 +2234,7 @@ title "a well-thumbed manual"
 descr
 "A well-thumbed owner's manual has been discarded here."
 extra {}
-" This manual has a large heading title HEXIA'S GUIDE TO FAMILIARS, and
+" This manual has a large heading titled HEXICA'S GUIDE TO FAMILIARS, and
 reads:<pre><br/>
 <br/>
   ' MageFamiliar Version 5.2:<br/>
@@ -2253,14 +2253,14 @@ reads:<pre><br/>
     Hexica is to WHISPER to their familiar the phrase SERVE ME.<br/>
     Then the familiar will ask for their name...<br/>
 <br/>
-    It is known that powerful spell caster have managed to keep<br/>
-    multiple familiars under their command, but the stories of<br/>
-    from most spell casters tell of it's danger: familiars<br/>
+    It is known that powerful spell casters have managed to keep<br/>
+    multiple familiars under their command, but the stories<br/>
+    from most spell casters tell of its danger: familiars<br/>
     attacking one another, the group of familiars turning en masse<br/>
     against their master.<br/>
 <br/>
-    Once a familiar is bonded to a spell caster, that is it's one<br/>
-    master for it's entire existence. Even if the spell caster<br/>
+    Once a familiar is bonded to a spell caster, that is its one<br/>
+    master for its entire existence. Even if the spell caster<br/>
     leaves the world of Valhalla, as long as he has his familiar<br/>
     with him, it will recognize him. Some spell casters have<br/>
     reported losing their familiar while on adventure: although<br/>
@@ -2271,7 +2271,7 @@ reads:<pre><br/>
     Controlling a familiar is easy. It will respond to either<br/>
     Familiar or to the name you gave it upon bonding. Simply<br/>
     TELL the familiar any commands that a player could execute,<br/>
-    and the familiar will try it's best to comply. These can<br/>
+    and the familiar will try its best to comply. These can<br/>
     range from expressive gestures like TELL FAMILIAR SMILE to<br/>
     useful actions like TELL FAMILIAR GET ALL. The familiar can<br/>
     use armor, weapons and magic items and gain the effects of<br/>
@@ -2291,7 +2291,7 @@ reads:<pre><br/>
 <br/>
     If you become separated from your familiar, it will try<br/>
     to seek you out... first by teleporting to you, then by<br/>
-    walking to you. More then one owner (thinking themselves<br/>
+    walking to you. More than one owner (thinking themselves<br/>
     clever) has tried to summon their familiar to them, only<br/>
     to discover that it automatically attacks any spell caster<br/>
     that would dare summon it without the secret familiar ritual!!<br/>
@@ -2310,25 +2310,25 @@ reads:<pre><br/>
     in on, allowing him to WIZARD EYE spy on a specific route.<br/>
 <br/>
     In addition, if you type STATUS FAMILIAR, your familiar will<br/>
-    report to you some of it's vital statistics.... (and this<br/>
+    report to you some of its vital statistics.... (and this<br/>
     should actually be working now). While the familiar is loath<br/>
     to tell you his actual statistics (for fear that you would<br/>
     work it harder!), he will report the general quality of his<br/>
     hit points, mana and endurance.<br/>
 <br/>
 <br/>
-    You should keep your familiar on you or following you are<br/>
+    You should keep your familiar on you or following you at<br/>
     all times. If you are forced to leave it behind somewhere,<br/>
     it will not be able to hear your commands (your telepathic<br/>
     link with the familiar requires you to be in the same room<br/>
-    with you.) Horrible stories have been told about small<br/>
+    with it.) Horrible stories have been told about small<br/>
     familiars killing even their high level masters if they cease<br/>
     to be a spell caster. Some activities with familiars will<br/>
     also impact the spell caster negatively... sometimes the<br/>
     little buggers like to feed on their master's hit points<br/>
     or endurance or mana.<br/>
 <br/>
-    Coming in revision 5.2 (schedule for Jan 1995): familiars that<br/>
+    Coming in revision 5.2 (scheduled for Jan 1995): familiars that<br/>
     gain in power with their masters and the new breeds of familiars<br/>
     for sorcerers and necromancers.<br/>
 </pre>"
@@ -2346,14 +2346,14 @@ title "a can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'
 names {"graffiti remover", "remover"}
 descr "A small can of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover is here."
 extra {}
-"This small tin of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover, looks like it could be used
+"This small tin of <div class='cpy'>g</div><div class='cpr'>r</div><div class='cpb'>a</div><div class='cpg'>f</div><div class='cpy'>f</div><div class='cpr'>i</div><div class='cpb'>t</div><div class='cpg'>i</div> remover looks like it could be used
 to clean up some graffiti."
 
 extra {"$identify"}
 "It seems like this could be used to clean up some graffiti."
 
 extra {"$improved identify"}
-"The command 'use remover' while holding this, will remove all graffiti present in the room."
+"The command 'use remover' while holding this will remove all graffiti present in the room."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2372,7 +2372,7 @@ title "a <div class='cpy'>bright yellow</div> can of graffiti paint"
 names {"<div class='cpy'>bright yellow</div> graffiti", "bright yellow", "paint", "graffiti"}
 descr "A small can of <div class='cpy'>bright yellow</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpy'>bright yellow</div> paint, looks like it could be used for
+"This small can of <div class='cpy'>bright yellow</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2382,7 +2382,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpy'>bright yellow</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use 
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use 
 graffiti newname'."
 
 type ITEM_OTHER
@@ -2402,7 +2402,7 @@ title "a <div class='cpr'>bright red</div> can of graffiti paint"
 names {"<div class='cpr'>bright red</div> graffiti", "bright red", "paint", "graffiti"}
 descr "A small can of <div class='cpr'>bright red</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpr'>bright red</div> paint, looks like it could be used for
+"This small can of <div class='cpr'>bright red</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2412,7 +2412,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpr'>bright red</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2432,7 +2432,7 @@ title "a <div class='cpb'>bright blue</div> can of graffiti paint"
 names {"<div class='cpb'>bright blue</div> graffiti", "bright blue", "paint", "graffiti"}
 descr "A small can of <div class='cpb'>bright blue</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpb'>bright blue</div> paint, looks like it could be used for
+"This small can of <div class='cpb'>bright blue</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2442,7 +2442,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpb'>bright blue</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2462,7 +2462,7 @@ title "a <div class='cpg'>bright green</div> can of graffiti paint"
 names {"<div class='cpg'>bright green</div> graffiti", "bright green", "paint", "graffiti"}
 descr "A small can of <div class='cpg'>bright green</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpg'>bright green</div> paint, looks like it could be used for
+"This small can of <div class='cpg'>bright green</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2472,7 +2472,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpg'>bright green</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2492,7 +2492,7 @@ title "a <div class='cpm'>bright magenta</div> can of graffiti paint"
 names {"<div class='cpm'>bright magenta</div> graffiti", "bright magenta", "paint", "graffiti"}
 descr "A small can of <div class='cpm'>bright magenta</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpm'>bright magenta</div> paint, looks like it could be used for
+"This small can of <div class='cpm'>bright magenta</div> paint looks like it could be used for
 mischievous purposes."
 
 type ITEM_OTHER
@@ -2506,7 +2506,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpm'>bright magenta</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 dilcopy do_graffiti("cpm","bright magenta");
 
@@ -2522,7 +2522,7 @@ title "a <div class='cpc'>bright cyan</div> can of graffiti paint"
 names {"<div class='cpc'>bright cyan</div> graffiti", "bright cyan", "paint", "graffiti"}
 descr "A small can of <div class='cpc'>bright cyan</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpc'>bright cyan</div> paint, looks like it could be used for
+"This small can of <div class='cpc'>bright cyan</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2532,7 +2532,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpc'>bright cyan</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2552,7 +2552,7 @@ title "a <div class='cpw'>bright white</div> can of graffiti paint"
 names {"<div class='cpw'>bright white</div> graffiti paint", "bright white", "paint", "graffiti"}
 descr "A small can of <div class='cpw'>bright white</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpw'>bright white</div> paint, looks like it could be used for
+"This small can of <div class='cpw'>bright white</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2562,7 +2562,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpw'>bright white</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2582,7 +2582,7 @@ title "a <div class='cy'>deep yellow</div> can of graffiti paint"
 names {"<div class='cy'>deep yellow</div> graffiti", "deep yellow", "paint", "graffiti"}
 descr "A small can of <div class='cy'>deep yellow</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cy'>deep yellow</div> paint, looks like it could be used for
+"This small can of <div class='cy'>deep yellow</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2592,7 +2592,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cy'>deep yellow</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2610,9 +2610,9 @@ end // END GRAF_DY
 graf_dr
 title "a <div class='cr'>deep red</div> can of graffiti paint"
 names {"<div class='cr'>deep red</div> graffiti", "deep red", "paint", "graffiti"}
-descr "A small can of <div class='cpr'>bright red</div> graffiti paint is here."
+descr "A small can of <div class='cr'>deep red</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cr'>deep red</div> paint, looks like it could be used for
+"This small can of <div class='cr'>deep red</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2622,7 +2622,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cr'>deep red</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2642,7 +2642,7 @@ title "a <div class='cb'>deep blue</div> can of graffiti paint"
 names {"<div class='cb'>deep blue</div> graffiti", "deep blue", "paint", "graffiti"}
 descr "A small can of <div class='cb'>deep blue</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cb'>deep blue</div> paint, looks like it could be used for
+"This small can of <div class='cb'>deep blue</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2652,7 +2652,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cb'>deep blue</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2672,7 +2672,7 @@ title "a <div class='cg'>deep green</div> can of graffiti paint"
 names {"<div class='cg'>deep green</div> graffiti", "deep green", "paint", "graffiti"}
 descr "A small can of <div class='cg'>deep green</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cg'>deep green</div> paint, looks like it could be used for
+"This small can of <div class='cg'>deep green</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2682,7 +2682,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cg'>deep green</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2702,7 +2702,7 @@ title "a <div class='cm'>deep magenta</div> can of graffiti paint"
 names {"<div class='cm'>deep magenta</div> graffiti", "deep magenta", "paint", "graffiti"}
 descr "A small can of <div class='cm'>deep magenta</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cm'>deep magenta</div> paint, looks like it could be used for
+"This small can of <div class='cm'>deep magenta</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2712,7 +2712,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cm'>deep magenta</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2732,7 +2732,7 @@ title "a <div class='cc'>deep cyan</div> can of graffiti paint"
 names {"<div class='cc'>deep cyan</div> graffiti", "deep cyan", "paint", "graffiti"}
 descr "A small can of <div class='cc'>deep cyan</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cc'>deep cyan</div> paint, looks like it could be used for
+"This small can of <div class='cc'>deep cyan</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2742,7 +2742,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cc'>deep cyan</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2762,7 +2762,7 @@ title "a <div class='cw'>white</div> can of graffiti paint"
 names {"<div class='cw'>white</div> graffiti", "white", "paint", "graffiti"}
 descr "A small can of <div class='cw'>white</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cw'>white</div> paint, looks like it could be used for
+"This small can of <div class='cw'>white</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2772,7 +2772,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cw'>white</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
@@ -2792,7 +2792,7 @@ title "a <div class='cpn'>black</div> can of graffiti paint"
 names {"<div class='cpn'>black</div> graffiti", "black", "paint", "graffiti"}
 descr "A small can of <div class='cpn'>black</div> graffiti paint is here."
 extra {}
-"This small can of <div class='cpn'>black</div> paint, looks like it could be used for
+"This small can of <div class='cpn'>black</div> paint looks like it could be used for
 mischievous purposes."
 
 extra {"$identify"}
@@ -2802,7 +2802,7 @@ a room!"
 extra {"$improved identify"}
 "This can of <div class='cpn'>black</div> paint can be used to graffiti a room. 
 Simply hold the graffiti while inside a room, and 'use graffiti'. A personal mark can 
-be made with 'use graffiti self'. A distinct name can be added to a room by with 'use graffiti newname'."
+be made with 'use graffiti self'. A distinct name can be added to a room with 'use graffiti newname'."
 
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}

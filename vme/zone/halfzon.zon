@@ -37,10 +37,10 @@ creators {"whistler", "bakka"}
 notes
 "This is a newly formed village after the great wars the halfling farmers
 and herders decided to try their hand at what they did best.  It was
-difficult to maintain and gardens, livestock, vineyards, etc in the caves.
-So these brave few took to the words of there almighty Goddess Sierablem,
-Go and be fruitful and generous and you will be rewarded with protection from
-the evil of the world.  So they set foot out on a long journey to form a new
+difficult to maintain gardens, livestock, vineyards, etc. in the caves.
+So these brave few took to the words of their almighty Goddess Sierablem:
+'Go and be fruitful and generous and you will be rewarded with protection from
+the evil of the world.'  So they set foot out on a long journey to form a new
 and hopefully prosperous life.
 
 If there are any problems encountered please contact either Bakka or Whistler
@@ -62,10 +62,10 @@ We appreciate any bug or typo reports.  Thanks again. "
 help
 "This is a newly formed village.  After the great wars the halfling farmers
 and herders decided to try their hand at what they did best.  It was
-difficult to maintain and gardens, livestock, vineyards, etc in the caves.
-So these brave few took to the words of there almighty Goddess Sierablem,
-Go and be fruitful and generous and you will be rewarded with protection from
-the evil of the world.  So they set foot out on a long journey to form a new
+difficult to maintain gardens, livestock, vineyards, etc. in the caves.
+So these brave few took to the words of their almighty Goddess Sierablem:
+'Go and be fruitful and generous and you will be rewarded with protection from
+the evil of the world.'  So they set foot out on a long journey to form a new
 and hopefully prosperous life.
 
 If there are any problems encountered please contact either Bakka or Whistler
@@ -121,7 +121,7 @@ code
   secure(pc, ret);
 
   exec("growl", guard);
-  act ("The Inn Guard barks 'You are to powerful to enter our safehaven!'",
+  act ("The Inn Guard barks 'You are too powerful to enter our safe haven!'",
    A_ALWAYS, pc, null, null, TO_CHAR);
   act("The Inn Guard blocks $1n's movement west.",
    A_SOMEONE, pc, null, null, TO_REST);
@@ -215,9 +215,9 @@ code
   {
     if (pc.level <= IMMORTAL_LEVEL)
   {
-      act("$1n is burned severly by the fire!",
+      act("$1n is burned severely by the fire!",
         A_SOMEONE, pc, null, null, TO_REST);
-    act("You and your equipment are burned severly!",
+    act("You and your equipment are burned severely!",
         A_ALWAYS, pc, null, null, TO_CHAR);
     pc.hp := pc.hp - (pc.max_hp /10);
     item := pc.inside;
@@ -231,12 +231,11 @@ code
     }
     if ((item.hp<-1) and (item.objecttype!=ITEM_TRASH) and (item.zoneidx!="treasure"))
      {
-  addextra (item.extra,item.names,"Whatever this was it looks like broken
-  garbage now.");
+  addextra (item.extra,item.names,"Whatever this was, it looks like broken garbage now.");
   item.title:=item.title+" Broken";
    item.objecttype := ITEM_TRASH;
   item.manipulate:=MANIPULATE_TAKE;
-  if (item.equip==0)
+  if (item.equip!=0)
    {
   act ("Your $2N falls off.",
   A_ALWAYS,pc,item,null,TO_CHAR);
@@ -293,7 +292,7 @@ set(self.charflags, CHAR_BLIND);
 
   if (time_left <= 0)
   {
-  act ( "The cloak of darkness seperates from around you.",
+  act ( "The cloak of darkness separates from around you.",
        A_ALWAYS, self, null, null, TO_CHAR );
   unset(self.charflags, CHAR_BLIND);
   quit;
@@ -320,11 +319,11 @@ code
        goto start;
 
      exec("curse", activator);
-     act("$1n steps in a large pile of manure",
+     act("$1n steps in a large pile of manure.",
           A_ALWAYS, activator, null, null, TO_REST);
-     act("You step in a large pile of manure",
+     act("You step in a large pile of manure.",
           A_ALWAYS, activator, null, null, TO_CHAR);
-     act("$1n shakes his foot madly trying to get it off.",
+     act("$1n shakes $1s foot madly trying to get it off.",
          A_ALWAYS, activator, null, null, TO_REST);
      act("You shake your foot madly trying to get it off.",
           A_ALWAYS, activator, null, null, TO_CHAR);
@@ -336,7 +335,7 @@ dilend
 %rooms
 small_valley
 
-title "The Small Valley."
+title "The Small Valley"
 names {"small valley"}
 descr
 "The valley looks a lot like a natural cabin.  That is if you
@@ -353,7 +352,7 @@ extra {"old tree","old trees","tree","trees"}
 "The trees look to have been placed here to serve a purpose of
 some kind or maybe it was just luck they grew this way."
 south to rn_6029@haon_dor descr
-     " You see the top of a green hill.";
+     "You see the top of a green hill.";
 
 west to tree_hall descr
      "You see a dark passage.";
@@ -361,7 +360,7 @@ end
 
 tree_hall
 
-title "A hall made of trees."
+title "A Hall Made of Trees"
 names {"tree hall"}
 descr
 "The trees here have formed a hallway of sorts.  The hallway runs
@@ -384,14 +383,14 @@ end
 firepit
 
 names {"fire pit" , "fire", "pit"}
-title "The glowing fire pit."
+title "The Glowing Fire Pit"
 outside_descr
 "A softly glowing fire pit filled with red hot embers and ash is burning here."
 inside_descr
-"Your are standing in a giant firepit up to your ankels in hot embers!"
+"You are standing in a giant firepit up to your ankles in hot embers!"
 
 flags{UNIT_FL_TRANS}
-dilcopy firepit_inside@halfzon("w_pit@halfzon e_pit@halfzon w_pit@halfzon n_pit@halfzon nw_pit@halfzon ne_pit@halfzon sw_pit@halfzon
+dilcopy firepit_inside@halfzon("w_pit@halfzon e_pit@halfzon s_pit@halfzon n_pit@halfzon nw_pit@halfzon ne_pit@halfzon sw_pit@halfzon
 se_pit@halfzon");
 
 end
@@ -416,7 +415,7 @@ extra {"path","road","trail","lane"}
 "This town road looks more like a lounge area than a road.  The
 town inhabitants must love to just come here and sit."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -458,7 +457,7 @@ extra {"path","road","trail","lane"}
 "This town road looks more like a lounge area than a road.  The
 town inhabitants must love to just come here and sit."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -477,14 +476,14 @@ west to nw_pit descr
 "You see the path to the west heading for some bushes and turning
 south.";
 north to sie_way descr
-"Sierablem Way leads of as far as you can see.";
+"Sierablem Way leads off as far as you can see.";
 
 end
 
 ne_pit
 
 title "Northeast of the Town Fire Pit"
-names {"northwest pit"}
+names {"northeast pit"}
 
 descr
 "Here on the northeastern corner of the town fire pit you can
@@ -505,7 +504,7 @@ extra {"log","logs","wood","stack","pile"}
 "This pile of wood is very neatly stacked and looks well
 stocked."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -555,7 +554,7 @@ extra {"path","road","trail","lane"}
 "This town road looks more like a lounge area than a road.  The
 town inhabitants must love to just come here and sit."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -611,7 +610,7 @@ extra {"path","road","trail","lane"}
 "This town road looks more like a lounge area than a road.  The
 town inhabitants must love to just come here and sit."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -629,9 +628,9 @@ turning north.";
 
 west to sw_pit descr
 "You see the fire pit path heading for some bushes and then
-turning south.";
+turning north.";
 south to Diakavat_road descr
-"You see Diakavat Road heading of to the south as far as the eye
+"You see Diakavat Road heading off to the south as far as the eye
 can see.";
 end
 
@@ -643,7 +642,7 @@ descr
 "Here on the southwestern corner of the town fire pit you can
 still feel the warmth of the fire to the northeast.  The entrance
 to a small burrow with a star over the door is to the south and
-to the west you see some hedges.  you can also continue around
+to the west you see some hedges.  You can also continue around
 the fire pit to the north and east."
 movement SECT_CITY
 ALWAYS_LIGHT
@@ -654,7 +653,7 @@ extra {"hedge","hedges","bushes","bush"}
 "These are some well kept bushes which glimmer orange from the
 light of the softly glowing fire."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -709,7 +708,7 @@ extra {"path","road","trail","lane"}
 "This town road looks more like a lounge area than a road.  The
 town inhabitants must love to just come here and sit."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -733,7 +732,7 @@ north to nw_pit descr
 "You see the fire pit path heading for a courtyard and turning to
 the east.";
 south to sw_pit descr
-"You see the fire pit path heading for the Sheriffs burrow and
+"You see the fire pit path heading for the Sheriff's burrow and
 turning east.";
 
 end
@@ -757,7 +756,7 @@ extra {"hedge","hedges","bushes","bush"}
 "These are some well kept bushes which glimmer orange from the
 light of the softly glowing fire."
 extra {"fire pit", "fire", "pit"}
-"As you stare into the flames, you loose all sense of time.
+"As you stare into the flames, you lose all sense of time.
 The softly glowing embers and the flames hopping off the end of the
 logs enchant you.  You feel at peace, and you begin to understand
 why the halflings have made this the center of their town."
@@ -785,13 +784,13 @@ end
 
 court_yard
 
-title "Inn Court Yard."
+title "Inn Court Yard"
 names {"court yard"}
 
 descr
 "This court yard is well constructed and is made to withstand
-lots of traffic, since this is Tassel Groves main water supply.
-The fountain serves another purpose though it draws adventurers to
+lots of traffic, since this is Tassel Grove's main water supply.
+The fountain serves another purpose though: it draws adventurers to
 this Inn, where they can get a safe night's rest."
 
 extra {"stone","yard"}
@@ -814,7 +813,7 @@ names {"reception area"}
 descr
 "This is where travelers come to check into the inn.  All around
 this room are paintings that give it a home like feeling.  There
-is a door to the west and a archway to the south.  A small
+is a door to the west and an archway to the south.  A small
 counter is straight in front of you."
 
 movement SECT_INSIDE
@@ -874,9 +873,9 @@ intersection
 title "A Four Way Intersection"
 names {"intersection"}
 descr
-"This is a non-descriptive four way intersection.  There are only
+"This is a nondescript four way intersection.  There are only
 small glow stones embedded in the wall lighting the passage so
-you can see. Passages lead off in all for of the major
+you can see. Passages lead off in all four of the major
 directions."
 
 movement SECT_INSIDE
@@ -960,7 +959,7 @@ hall_three
 title "A Hallway in the Inn"
 names {"hall"}
 descr
-"Unlike the other halls this one does not have any rooms it is
+"Unlike the other halls this one does not have any rooms; it is
 just a regular hallway.  On the north wall there is a great
 number of glow stones that light this room as if it were noon
 inside.  On the south wall is a great painting which covers the
@@ -994,7 +993,7 @@ t_pass
 title "Three Way Intersection"
 names {"intersection"}
 descr
-"This is a non-descriptive intersection, which is lit by glow
+"This is a nondescript intersection, which is lit by glow
 stones embedded in the walls.  Passages lead north, south, and
 east."
 movement SECT_INSIDE
@@ -1233,10 +1232,10 @@ EX_CLOSED}; end
 
 tender_hovel
 
-title "Tenders Office."
+title "Tender's Office"
 names {"tender office"}
 descr
-"You have entered a almost empty room with only a chair to sit
+"You have entered an almost empty room with only a chair to sit
 in.  This room must be used for the on-duty fire tender to come
 and rest.  There is another room to the north and the exit is to
 the west back to the fire pit."
@@ -1253,12 +1252,12 @@ west to ne_pit descr
 "You see the fire pit path and most of the fire.";
 
 north to tender_room descr
-"You see a back room of the tenders hovel." ;
+"You see a back room of the tender's hovel." ;
 end
 
 tender_room
 
-title "Sleeping Quarters."
+title "Sleeping Quarters"
 names {"tender quarters"}
 descr
 "This room is where the off duty fire tender comes to sleep.  The
@@ -1273,7 +1272,7 @@ extra {"window"}
 
 extra {"bed"}
 "This bed looks very comfortable.  Judging from the looks of the
-bed the tenders have no trouble getting a good nights sleep."
+bed the tenders have no trouble getting a good night's sleep."
 
 extra {"table"}
 "The table seems to be just a stump of an unfortunate tree that
@@ -1285,10 +1284,10 @@ end
 
 tavern
 
-title "The Bottomless Mug."
+title "The Bottomless Mug"
 names {"tavern"}
 descr
-"This is not a regular slime bar, it has a warm atmosphere and
+"This is not a regular slime bar; it has a warm atmosphere and
 lots of friendly faces.  The floors are always clean and the beer
 is always good.  You get the feeling that this would be a good
 place to sit and visit with your friends.  There is a large bar
@@ -1302,14 +1301,14 @@ extra {"bar"}
 carvings. The carvings depict happy people drinking around a
 large fire."
 extra {"window"}
-"As you look out this window you can see the sheriffs office
+"As you look out this window you can see the sheriff's office
 across the street."
 
 north to se_pit descr
 "You see the fire pit path.";
 
 south to keeper_quarters descr
-"You see the bar tenders sleeping area."  keyword {"door"} open
+"You see the bartender's sleeping area."  keyword {"door"} open
 {EX_OPEN_CLOSE, EX_CLOSED};
 end
 
@@ -1324,9 +1323,9 @@ window on the east wall.  The only exit is back to the north."
 
 flags {UNIT_FL_NO_WEATHER}
 extra {"window"}
-"The well framed window gives an perfect view of the forest."
+"The well framed window gives a perfect view of the forest."
 extra {"bed"}
-"This is definitely a halfling bed, it looks like it was made
+"This is definitely a halfling bed; it looks like it was made
 with the comfort of a king in mind."
 
 
@@ -1342,7 +1341,7 @@ descr
 "Here is where the law of Tassel Grove hangs out.  The place is
 not built to withstand attacks from large groups of bandits,
 since the law here mostly just deals with thieves and drunks.
-Don't be deceived however, if you get locked up in here it might
+Don't be deceived, however; if you get locked up in here it might
 be a while before you get out.  There is a small desk with lots
 of papers stacked on it and a board listing wanted people on the
 wall.  You can go back to the fire pit to the north or walk down
@@ -1354,10 +1353,10 @@ flags {UNIT_FL_NO_WEATHER}
 
 extra {"board"}
 "The board is empty.  Maybe this sheriff does not want to concern
-himself with the outside worlds politics."
+himself with the outside world's politics."
 
 extra {"desk"}
-"The desk is small and made out of wood. "
+"The desk is small and made out of wood."
 
 extra {"paper","papers"}
 "You could not read this chicken scratching if you tried."
@@ -1370,11 +1369,11 @@ end
 
 sheriff_hall
 
-title "A Small Hallway in the Sheriff's burrow."
+title "A Small Hallway in the Sheriff's Burrow"
 names {"sheriff_hall"}
 descr
 "You have come to the place in the sheriff's burrow where not
-many people ever want to go.  The smell of dirty bodies come from
+many people ever want to go.  The smell of dirty bodies comes from
 the south behind a large well built steel door.  To the west is
 another room and the sheriff's office is back to the east."
 
@@ -1392,11 +1391,11 @@ end
 
 sheriff_dorm
 
-title "The dorm for the sheriff and the guards."
+title "The Dorm for the Sheriff and the Guards"
 names {"sheriff dorm"}
 descr
 "Many bunks line the wall of this room.  This must be the room
-where the guards come to sleep and spend some of there off time."
+where the guards come to sleep and spend some of their off time."
 
 extra {"bunk","bunks"}
 "This bunk does not look extremely comfortable but as you test it
@@ -1412,7 +1411,7 @@ end
 
 cell
 
-title "The Halfling Jail cell."
+title "The Halfling Jail Cell"
 names {"cell"}
 descr
 "The jail cell smells real bad.  There are benches along the wall
@@ -1470,16 +1469,16 @@ small burrow. Sierablem Way continues north and south."
 north to yon_1 descr
 "The broad road continues north.";
 west to trader descr
-"The trading stump looks like many other burrows, you wonder why
+"The trading stump looks like many other burrows; you wonder why
 it is called the trading stump.";
 east to vintners descr
-"A small burrow is here, presumably the care takers of the
+"A small burrow is here, presumably the caretakers of the
 vineyard.";
 south to sie_way descr
 "You can see the town fire pit to the south.";
 
 extra {"small burrow", "burrow"}
-"A small burrow is here, presumably the care takers of the
+"A small burrow is here, presumably the caretakers of the
 vineyard."
 
 extra {"road"}
@@ -1498,7 +1497,7 @@ a natural table to display all of his many goods."
 
 extra {"stump", "table"}
 "This tree must have been at a great age when it was hewn down.
-It is in larger then two men place head to toe.  You notice that
+It is larger than two men placed head to toe.  You notice that
 there is a lot of burnt bark still falling off of the stump.
 Placed on the stump are the many goods of the trader here, open
 for your browsing pleasure." flags {UNIT_FL_NO_WEATHER}
@@ -1538,7 +1537,7 @@ title "Burrow of Health"
 names {"healer", "health"}
 descr
 "This is your old regular one room burrow, with one difference.
-Bits and pieces of medical equipment is strewn about the floor.
+Bits and pieces of medical equipment are strewn about the floor.
 The air smells strange, as there is a large vat of something
 brewing here.
    A small sign is hanging on the far wall."
@@ -1555,8 +1554,8 @@ extra {"sign"}
  'sell' - to sell a potion to Koarn."
 
 extra {"equipment"}
-"A couple of leaches are slithering about the floor.  They look
-plenty fat, they must have just ate."
+"A couple of leeches are slithering about the floor.  They look
+plenty fat; they must have just eaten."
 
 extra {"vat"}
 "This vat is extremely large and full of a disgusting smelling
@@ -1586,7 +1585,7 @@ comfort but a lot of protection from the cold ground."
 extra {"souvenirs"}
 "A strange looking rock, with no significance that you can see.
 And a large head of a deer.  These must be some prized
-possession."
+possessions."
 end
 
 
@@ -1595,14 +1594,14 @@ title "A small burrow"
 names {"burrow"}
 descr
 "This small burrow looks like a wild animal has been living here.
-Piles of trash, and non-descriptive items lie on the floor.
+Piles of trash, and nondescript items lie on the floor.
 There is an awful stench of something rotting in the air."
 
 flags {UNIT_FL_NO_WEATHER}
 extra {"trash", "items"}
 "Upon closer examination of the trash piles it is the remains of
 what appear to be humanoid creatures.  It looks like the
-worthless rags of clothing is the only thing left on the
+worthless rags of clothing are the only thing left on the
 mutilated bodies."
 west to yon_1 descr
 "The doorway leads back to Sierablem Way.";
@@ -1623,7 +1622,7 @@ north to vin_entrance descr
 "A doorway leads north to the vineyards.";
 
 west to yon_2 descr
-"Sierablem Way is off to the west";
+"Sierablem Way is off to the west.";
 
 end
 
@@ -1633,9 +1632,9 @@ vin_entrance
 title "Entrance to the vineyards"
 names {"vineyard entrance"}
 descr
-"You stand before a massive vineyard.  You stare in awe on how
+"You stand before a massive vineyard.  You stare in awe at how
 fast the halfling people have recovered from the Great Wars.
-What would have taken the humans centuries to grow, have taken
+What would have taken the humans centuries to grow has taken
 only a few decades.  You can enter the endless rows of grape
 vines to the north or go south into a small burrow."
 flags {UNIT_FL_NO_MOB}
@@ -1645,11 +1644,11 @@ movement SECT_FOREST
 north to vin_1 descr
 "A small path leads through the endless rows of grape vines.";
 south to vintners descr
-"A small burrow is here, presumably the care takers of the
+"A small burrow is here, presumably the caretakers of the
 vineyard." ;
 
 extra {"small burrow", "burrow"}
-"A small burrow is here, presumably the care takers of the
+"A small burrow is here, presumably the caretakers of the
 vineyard."
 end
 
@@ -1676,7 +1675,7 @@ west to vin_3 descr
 "A windy path cuts through the grape vines to the west.";
 
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1703,7 +1702,7 @@ west to vin_1 descr
 "A windy path cuts through the grape vines to the west.";
 
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1721,16 +1720,16 @@ movement SECT_FOREST
 flags {UNIT_FL_NO_TELEPORT}
 
 north to vin_6 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_9 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_1 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_2 descr
-"A windy path cuts through the grapes vines to the west.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for the age, it is unknown how the
-halflings have grow such a great vineyard in only a few short
+"These vines are immense for their age; it is unknown how the
+halflings have grown such a great vineyard in only a few short
 years."
 end
 
@@ -1747,15 +1746,15 @@ movement SECT_FOREST
 flags {UNIT_FL_NO_TELEPORT}
 
 north to vin_7 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_1 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_5 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_6 descr
-"A windy path cuts through the grapes vines to the west.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1774,23 +1773,23 @@ movement SECT_FOREST
 flags {UNIT_FL_NO_TELEPORT}
 
 north to vin_8 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_2 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_6 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_4 descr
-"A windy path cuts through the grapes vines to the west.";
+"A windy path cuts through the grape vines to the west.";
 
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 
 extra {"small burrow", "burrow"}
 "This is a small burrow fashioned from sticks, logs, and rope.
 It appears that this must have been built by a very skilled
-knotsman.  The door is open, you can ENTER it."
+knotsman.  The door is open; you can ENTER it."
 
 end
 
@@ -1806,15 +1805,15 @@ flags {UNIT_FL_NO_TELEPORT}
 dilcopy scramble@function("north east west south");
 
 north to vin_9 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_3 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_4 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_5 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1832,15 +1831,15 @@ flags {UNIT_FL_NO_TELEPORT}
 dilcopy scramble@function("east west south");
 
 north to vin_entrance descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_4 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_8 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_9 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1857,15 +1856,15 @@ flags {UNIT_FL_NO_TELEPORT}
 dilcopy scramble@function("north east west south");
 
 north to vin_2 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_5 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_9 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_7 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1882,15 +1881,15 @@ flags {UNIT_FL_NO_TELEPORT}
 dilcopy scramble@function("north east west south");
 
 north to vin_3 descr
-"A windy path cuts through the grapes vines to the north.";
+"A windy path cuts through the grape vines to the north.";
 south to vin_6 descr
-"A windy path cuts through the grapes vines to the south.";
+"A windy path cuts through the grape vines to the south.";
 east to vin_7 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the east.";
 west to vin_8 descr
-"A windy path cuts through the grapes vines to the east.";
+"A windy path cuts through the grape vines to the west.";
 extra {"grape vines", "vines"}
-"These vines are immense for their age, it is unknown how the
+"These vines are immense for their age; it is unknown how the
 halflings have grown such a great vineyard in only a few short
 years."
 end
@@ -1901,7 +1900,7 @@ names {"burrow", "sailor burrow"}
 title "The Sailor's Burrow"
 descr
 "Even though this burrow is only made out of small branches and
-rope it looks as if it could with stand some of the strongest
+rope it looks as if it could withstand some of the strongest
 weather. The burrow has no windows and is not well lit.  Lining
 the walls are many small carvings of boats or as sailors call
 them 'ships'.  The floor is covered in wood shavings and there is
@@ -1919,7 +1918,7 @@ extra {"bed"}
 with wood shavings."
 
 extra {"shavings","shaving","wood"}
-"Piles of shavings litter the floor the halfling who lives here
+"Piles of shavings litter the floor; the halfling who lives here
 must spend a lot of his time carving and little cleaning."
 
 in vin_5
@@ -1943,7 +1942,7 @@ movement SECT_FIELD
 north to Diakavat_road;
 
 south to pasture_1 descr
-"A gate opens up into the Farmer Kepli's pasture.  A small sign
+"A gate opens up into Farmer Kepli's pasture.  A small sign
 on the gate reads PRIVATE PROPERTY - NO TRESPASSING!" keyword
 {"gate"} open {EX_OPEN_CLOSE, EX_CLOSED};
 
@@ -1989,7 +1988,7 @@ north."
 south to farm_dorm descr
 "A small doorway leads south to what looks like a dormitory.";
 west to farm_room descr
-"A small doorway leads west to a small private bed room.";
+"A small doorway leads west to a small private bedroom.";
 east to pasture_ent descr
 "The entrance to the pastures is off to the east.";
 
@@ -2000,9 +1999,9 @@ farm_dining
 title "A small dining room"
  names {"farm dining"}
 descr
-"This is a small dining room.  There is a old wooden table with
+"This is a small dining room.  There is an old wooden table with
 six chairs around it.  To the west is the kitchen of Greli,
-Keplis wife."
+Kepli's wife."
 movement SECT_INSIDE
 ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER}
@@ -2013,15 +2012,15 @@ west to farm_kitchen descr
 "A small archway opens up into the kitchen of Greli.";
 
 extra {"table"}
-"The table look quite old, yet still sturdy"
+"The table looks quite old, yet still sturdy."
 extra {"chair", "chairs"}
 "It is a chair.  What else did you expect?  A flying carpet?" end
 
 farm_kitchen
-title "The farm house kitchen."
+title "The farm house kitchen"
 names {"kitchen"}
 descr
-"This is Greli's Kitchen.  Here all of her masterpieces are
+"This is Greli's kitchen.  Here all of her masterpieces are
 created.  No wonder Farmer Kepli is so bulky.  Strong smells of
 herbs and spice pierce your soul.  You weep softly for the
 comfort of your home."
@@ -2037,7 +2036,7 @@ end
 
 farm_room
 
-title "A private bed room"
+title "A private bedroom"
  names {"farm room"}
 descr
 "You are in a small bedroom.  You presume that this must be the
@@ -2063,7 +2062,7 @@ title "A small dormitory"
  names {"farm dorm"}
 descr
 "This is a small room with nothing but two beds in it.  The walls
-are bare and floors spotless.  Rooms are off to north and to the
+are bare and floors spotless.  Rooms are off to the north and to the
 west."
 north to farm_1 descr
 "A small archway leads north to the entrance of the farm house.";
@@ -2100,7 +2099,7 @@ title "In the pasture"
 descr
 "You are in a large pasture.  The grass is very short, almost
 eaten right off to the roots.  To your west is the side of the
-farmers home.  Back to the north is the gate leading back to
+farmer's home.  Back to the north is the gate leading back to
 Diakavat Road.  You can go east and south deeper into the
 pastures."
 movement SECT_FIELD
@@ -2160,10 +2159,10 @@ livestock with some shelter from the elements."
 movement SECT_FIELD
 
 west to barn_1 descr
-"The barn looks like it was created out of necessity, defiantly
+"The barn looks like it was created out of necessity, definitely
 not for looks.  It looks large enough to hold many cows." ;
 extra {"barn"}
-"The barn looks like it was created out of necessity, defiantly
+"The barn looks like it was created out of necessity, definitely
 not for looks.  It looks large enough to hold many cows."
 
 south to pasture_6;
@@ -2345,7 +2344,7 @@ barn_3
 title "In the stall"
  names {"barn"}
 descr
-"This is a large stall where the cows can be pinned up during the
+"This is a large stall where the cows can be penned up during the
 winter months.  The smell in here is overpowering making your
 stomach churn."
 
@@ -2364,7 +2363,7 @@ title "Along a broad path"
  names {"wind path"}
 descr
 "This is a broad path leading east toward a large structure. You
-are still to far away to make out what it is."
+are still too far away to make out what it is."
 
 movement SECT_FIELD
 
@@ -2380,7 +2379,7 @@ extra {"white powder", "powder", "flour"}
 "Upon closer examination it looks like flour, the stuff bakers
 make bread from."
 extra {"structure"}
-"It is to far away to make out what it is."
+"It is too far away to make out what it is."
 end
 
 wind_2
@@ -2389,7 +2388,7 @@ names {"wind path"}
 descr
 "This is a broad path leading east toward a large structure. You
 can see that the structure has what appears to be blades
-twrilling in the wind."
+twirling in the wind."
 
 movement SECT_FIELD
 
@@ -2405,7 +2404,7 @@ extra {"white powder", "powder", "flour"}
 "Upon closer examination it looks like flour, the stuff bakers
 make bread from."
 extra {"structure"}
-"It is to far away to make out what it is."
+"It is too far away to make out what it is."
 end
 
 wind_3
@@ -2438,13 +2437,13 @@ mill_1
 title "In front of the windmill"
  names {"windmill"}
 descr
-"This is a massive windmill, it stands about three stories tall
+"This is a massive windmill; it stands about three stories tall
 and has three very large blades that are gently cutting the air.
 Coming from the inside you hear grinding sounds as the blades
-turn.  A small door lead east into the windmill."
+turn.  A small door leads east into the windmill."
 
 extra {"blade", "blades"}
-"The blades are too hard to get a look at, they are spinning too
+"The blades are too hard to get a look at; they are spinning too
 fast.  From what you can see they are made from wood."
 
 west to wind_3;
@@ -2521,7 +2520,7 @@ title "Up in the loft"
  names {"windmill"}
 descr
 "You are at the top of the windmill.  The two large shafts mesh
-here in a series of gears.  The blades from outside transferring
+here in a series of gears.  The blades from outside transfer
 the wind power to the grinding stone.  You wonder how such little
 people could have built this structure."
 
@@ -2568,7 +2567,7 @@ end
 
 e_walk
 
-title "The beginning of the Mayor's walk."
+title "The beginning of the Mayor's walk"
 names {"mayors walk"}
 descr
 "You are standing on the beginning of the walk that leads up to
@@ -2595,7 +2594,7 @@ end
 
 ne_yard
 
-title "Mayor's yard."
+title "Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2614,7 +2613,7 @@ extra {"vines","vine"}
 covering the entire inn wall."
 
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!" south
+"What can I say, it is about 3 inches tall and it is grass!" south
 to mayor_walk descr
 "You see the Mayor's walk.";
 
@@ -2628,7 +2627,7 @@ end
 
 se_yard
 
-title "Mayor's yard."
+title "Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2647,7 +2646,7 @@ extra {"vines","vine"}
 covering the entire sheriff's burrow wall."
 
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!"
+"What can I say, it is about 3 inches tall and it is grass!"
 north to e_walk descr
 "You see the Mayor's walk.";
 
@@ -2657,7 +2656,7 @@ end
 
 w_walk
 
-title "The End of the Mayor's walk."
+title "The End of the Mayor's Walk"
 names {"mayors walk"}
 descr
 "You are standing on the end of the walk that leads up to the
@@ -2684,7 +2683,7 @@ end
 
 nw_yard
 
-title "Mayor's yard."
+title "Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2700,7 +2699,7 @@ extra {"vines","vine"}
 covering both the entire inn wall and the front of the Mayor's
 burrow."
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!"
+"What can I say, it is about 3 inches tall and it is grass!"
 south to w_walk descr
 "You see the Mayor's walk.";
 
@@ -2710,7 +2709,7 @@ end
 
 sw_yard
 
-title "Mayor's yard."
+title "Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2726,7 +2725,7 @@ extra {"vines","vine"}
 covering both the entire sheriff's and Mayor's burrow."
 
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!"
+"What can I say, it is about 3 inches tall and it is grass!"
 north to w_walk descr
 "You see the Mayor's walk.";
 
@@ -2736,7 +2735,7 @@ end
 
 n_yard
 
-title "The Mayor's yard."
+title "The Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2751,7 +2750,7 @@ extra {"vines","vine"}
 covering the entire inn wall."
 
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!"
+"What can I say, it is about 3 inches tall and it is grass!"
 east to ne_yard descr
 "You see the yard leading up to some bushes.";
 
@@ -2764,7 +2763,7 @@ end
 
 s_yard
 
-title "The Mayor's yard."
+title "The Mayor's yard"
 names {"mayors yard"}
 descr
 "You are standing in a well kept yard.  The soft grass squashes
@@ -2779,21 +2778,21 @@ extra {"vines","vine"}
 covering the entire sheriff's burrow wall."
 
 extra {"grass","yard"}
-"What can I say it is about 3 inches tall and it is grass!"
+"What can I say, it is about 3 inches tall and it is grass!"
 west to sw_yard descr
-"You see the yard leading up to the Mayors burrow.";
+"You see the yard leading up to the Mayor's burrow.";
 
 east to se_yard descr
 "You see the yard leading up to some bushes.";
 
 north to center_walk descr
-"You see a statue in the middle of the Mayors walk.";
+"You see a statue in the middle of the Mayor's walk.";
 end
 
 center_walk
 
-title "The center of the Mayor's walk."
-names {"mayors yard"}
+title "The center of the Mayor's walk"
+names {"mayors walk"}
 descr
 "You are standing in the middle of the Mayor's walk.  Here stands
 a large statue.  The walk continues to the west and east.  You
@@ -2811,7 +2810,7 @@ that was on the way down the mountain?  There is a plaque on the
 bottom of the statue."
 
 extra {"plaque"}
-"Sir Binhorn the first Knighted halfling.  Knighted by the grate
+"Sir Binhorn the first knighted halfling.  Knighted by the great
 King Cromwell, for his heroic trek down the mountain to warn the
 world.  He lived from the year 50 to the year 132."
 
@@ -2830,12 +2829,12 @@ end
 
 mayor_entrance
 
-title "The foyer of the Mayor's burrow."
+title "The foyer of the Mayor's burrow"
 names {"mayors foyer"}
 descr
 "Here in the foyer of the Mayor's burrow beautifully carved
 arches support the high passage.  There are tiny glowing stones
-set into the carvings that give off a magical light which  light
+set into the carvings that give off a magical light which lights
 this foyer.  The foyer leads west into the burrow and east back
 toward the walk."
 flags {UNIT_FL_NO_MOB, UNIT_FL_NO_WEATHER}
@@ -2845,7 +2844,7 @@ ALWAYS_LIGHT
 
 extra {"carvings","carving"}
 "While these carvings are well done, they are just regular beads
-and swerlls."
+and swirls."
 
 extra {"stone","stones"}
 "These are just normal stones that have been lit by some kind of
@@ -2860,10 +2859,10 @@ end
 
 portrait_room
 
-title "An intersection in the Mayor's burrow."
+title "An intersection in the Mayor's burrow"
 names {"mayors intersection"}
 descr
-"On the wall in front of you hangs a large portrait of the Tassel
+"On the wall in front of you hangs a large portrait of Tassel
 Grove's Mayor.  Like the foyer this room has well carved arches
 supporting the high ceiling and is lighted by the softly glowing
 stones.  The foyer leads back to the east and passages enter the
@@ -2875,7 +2874,7 @@ ALWAYS_LIGHT
 
 extra {"carvings","carving"}
 "While these carvings are well done, they are just regular beads
-and swerlls."
+and swirls."
 
 extra {"stone","stones"}
 "These are just normal stones that have been lit by some kind of
@@ -2891,15 +2890,15 @@ east to mayor_entrance descr
 "You see the foyer of the Mayor's burrow.";
 
 north to ng_post descr
-"You see a intersection in the passage.";
+"You see an intersection in the passage.";
 
 south to sg_post descr
-"You see a intersection in the passage.";
+"You see an intersection in the passage.";
 end
 
 ng_post
 
-title "North guard post."
+title "North guard post"
 names {"mayors guard post"}
 descr
 "You have come to another split in the passage.  From the looks
@@ -2921,7 +2920,7 @@ west to dining_room descr
 "You see the Mayor's dining hall.";
 
 east to library descr
-"You see the quite library.";
+"You see the quiet library.";
 
 south to portrait_room descr
 "You see an intersection in the passage.";
@@ -2930,12 +2929,12 @@ end
 
 sg_post
 
-title "South guard post."
+title "South guard post"
 names {"mayors guard post"}
 descr
 "You have come to a bend  in the passage.  This room looks to be
 a guard post of some kind.  The wooden arches in this room are
-carved into the shape of weapons for decoration.  You can go West
+carved into the shape of weapons for decoration.  You can go west
 to the Mayor's office or north back toward the entrance to the
 burrow."
 
@@ -2956,7 +2955,7 @@ end
 
 library
 
-title "The town library."
+title "The town library"
 names {"mayors library"}
 descr
 "A silence sweeps over you as you step into this room.  Books
@@ -3017,7 +3016,7 @@ end
 
 mayor_office
 
-title "The Mayor's office."
+title "The Mayor's office"
 names {"mayors office"}
 descr
 "Here in the Mayor's office you feel a seriousness hanging in the
@@ -3033,12 +3032,12 @@ ALWAYS_LIGHT
 flags {UNIT_FL_NO_WEATHER}
 
 extra {"desk"}
-"The desk is a large wooden desk with loots of papers on it.  The
+"The desk is a large wooden desk with lots of papers on it.  The
 in box on the desk is empty and the out box is full.  It must be
 time for the Mayor to take a break."
 
 extra {"arches"}
-"They are wooden what did you expect!"
+"They are wooden, what did you expect!"
 
 extra {"carpet","blue carpet"}
 "The rug looks to be in great condition."
@@ -3049,7 +3048,7 @@ end
 
 dining_room
 
-title "The dining room."
+title "The dining room"
 names {"mayors dining room"}
 descr
 "You have arrived in the dining room of the Mayor's burrow.  The
@@ -3070,17 +3069,17 @@ end
 
 kitchen
 
-title "The Mayor's Kitchen."
+title "The Mayor's Kitchen"
 names {"mayors kitchen"}
 descr
 "You have entered the kitchen of the Mayor's burrow.  It is
-smaller than you expected but who really needs a big kitchen.
-There is a stove here that smells real good,  even though it
-seems to be of and is totally empty. The only exit is back to the
+smaller than you expected, but who really needs a big kitchen?
+There is a stove here that smells real good, even though it
+seems to be off and is totally empty. The only exit is back to the
 east."
 
 extra {"stove","oven"}
-"The stove looks to be cast iron and is way to heavy to carry.
+"The stove looks to be cast iron and is way too heavy to carry.
 It is heated by oil that is lit and burned under the stove."
 
 movement SECT_INSIDE
@@ -3101,7 +3100,7 @@ fire_tender
 
 names {"fire tender", "tender"}
 title "the fire tender"
-descr "The fire tender is here, staring into the fire"
+descr "The fire tender is here, staring into the fire."
 extra {}
 "This is one of the largest halflings you have ever seen.  He
 carefully watches the fire, making sure every log is in place."
@@ -3128,7 +3127,7 @@ code
       "::descr::The fire tender is here.",
       "yawn", "::wait::25",
       "sigh", "::wait::25",
-      "say Well better go check on the fire.", "::wait::25",
+      "say Well, better go check on the fire.", "::wait::25",
       "stand", "::wait::25",
       "emote stretches his large body.", "::wait::25",
       "::walkto::tender_hovel@halfzon",
@@ -3136,7 +3135,7 @@ code
       "emote licks his fingers clean.",
       "::walkto::ne_pit@halfzon",
       "emote pokes the fire with his log.",
-      "::descr::The fire tender is here, staring into the fire",
+      "::descr::The fire tender is here, staring into the fire.",
       "emote grabs a large log from the stack.",
       "emote grunts loudly under the weight of the log.",
       "emote throws the log into the fire pit.",
@@ -3208,7 +3207,7 @@ descr "The Sheriff of Tassel Grove is standing here observing your actions."
 extra {}
 "A jolly fellow that doesn't seem to think that his job is very
 important, since he has not had to use force to solve a problem in
-sometime."
+some time."
 
 M_HALFLING_WARRIOR_SWORD(11, SEX_MALE)
 dilcopy wander_zones@function("halfzon", 15, 1, 1);
@@ -3253,7 +3252,7 @@ names {"sly thief", "thief"}
 title "the sly thief"
 descr "A sly thief is here eyeing your possessions."
 extra {}
-"His fingers twitch, you wonder if he has already stolen something."
+"His fingers twitch; you wonder if he has already stolen something."
 
 M_HALFLING_THIEF_SWORD(9, SEX_MALE)
 
@@ -3281,10 +3280,10 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such potion.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that! Yuck!' ",
+"   $1n says, 'I won't buy that! Yuck!' ",
 "   $1n says, 'This expensive $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for my lifesaving $2N.' ",
-"   $1n says, 'That will be %s for your $2N..' ",
+"   $1n says, 'That will be %s for your $2N.' ",
 "$1n says, 'I don't seem to have that many in my stock'",
 "$1n says, 'I'm on my break, GET LOST!'",
 "$1n says, 'I have no use for $2n'",
@@ -3327,15 +3326,15 @@ exec ("say Perhaps if you bring me these items, I might have the time " +
 pause;
 exec ("say I first will need some grapes, a nice big bunch of them.", self);
 pause;
-exec ("say Hmmm... Let me see here, I know I have it written down some where.", self);
+exec ("say Hmmm... Let me see here, I know I have it written down somewhere.", self);
 pause;
 exec ("emote digs through his pockets looking for something.", self);
 pause;
-exec ("say Ahhh yes, I will also need a HALF bottle of Tassel Groves Finest.", self);
+exec ("say Ahhh yes, I will also need a HALF bottle of Tassel Grove's Finest.", self);
 pause;
 exec ("say You know that stuff really has a kick to it!", self);
 pause;
-exec ("say And as strange as it might sound, the most important in ingredient, " +
+exec ("say And as strange as it might sound, the most important ingredient, " +
    "a bale of fresh hay.  This gives the final substance to the herbs.", self);
 pause;
 exec ("stare", self);
@@ -3344,7 +3343,7 @@ exec ("say I wonder why they call this stuff herbs?", self);
 pause;
 exec ("shrug", self);
 pause;
-exec ("say Go now and fetch me these ingredients, I am very busy now.", self);
+exec ("say Go now and fetch me these ingredients; I am very busy now.", self);
 pause;
 exec ("say You must bring all three items at once!", self);
 exec ("say I tend to be forgetful and misplace items that are left with me.", self);
@@ -3422,7 +3421,7 @@ else if ("wine_poi" == item.nameidx)
 else
  {
   exec("say Did I ask for this, "+pc.name +"?", self);
-  exec("say I think not, but it sure is nice of you, I think I will keep it.", self);
+  exec("say I think not, but it sure is nice of you; I think I will keep it.", self);
   goto checklist;
  }
 
@@ -3483,7 +3482,7 @@ else if (("grapes" in list.names) and ("hay" in list.names) and ("winebad" in li
  while ("grapes" in list.names) substring(list.names, "grapes");
  while ("hay" in list.names) substring(list.names, "hay");
  pause;
- exec("emote hands " + pc.name + " the some wierd looking stuff.", self);
+ exec("emote hands " + pc.name + " some weird looking stuff.", self);
  exec("wave", self);
  unsecure(pc);
  goto start;
@@ -3552,7 +3551,7 @@ if (MAYOR_ONGOING in pc.quests)
   pause;
 
   exec("say I am preparing for vacation, " +
-       " and I seem to be missing some important items.", self);
+       "and I seem to be missing some important items.", self);
   pause;
 
   exec("sigh", self);
@@ -3623,7 +3622,7 @@ if (("ship" in exdp.names) and ("herbs" in exdp.names))
   pause;
   exec("say It will provide you with food and drink for your long journeys.", self);
   pause;
-  exec("say Thank you again for your help, " + pc.name, self);
+  exec("say Thank you again for your help, " + pc.name + ".", self);
   pause;
   exec("say If you need a replacement in the future, "+
        "just come ask me for one.", self);
@@ -3638,7 +3637,7 @@ goto start;
 :lostpc:
   exec("say Deadbeat, can't even do a little task.", self);
   pause;
-  exec("say How will I ever get going on my vacation.", self);
+  exec("say How will I ever get going on my vacation?", self);
   pause;
   exec("sigh", self);
   goto start;
@@ -3647,7 +3646,7 @@ goto start;
   heartbeat := PULSE_SEC*3;
   exec("say Ok then, so it shall be this way with you...", self);
   pause;
-  exec("say Die then you deadbeat!", self);
+  exec("say Die then, you deadbeat!", self);
   pause;
   goto start;
 }
@@ -3728,6 +3727,7 @@ if (item==null)
 
    item.height := pc.height;
   exec ("give staff "+pc.name,self);
+  unsecure(pc);
   goto start;
 
 }
@@ -3738,7 +3738,7 @@ end
 servant
 names {"servant"}
 title "a servant"
-descr "Mayor Spinks's servant is here trying not to be noticed."
+descr "Mayor Spink's servant is here trying not to be noticed."
 extra {}
 "He is a quiet and a meek looking lad.  This is the way Mayor Spink
 likes her men."
@@ -3779,7 +3779,7 @@ end
 kaasak
 names {"kaasak"}
 title "Kaasak"
-descr "Kaasak, the bar keeper is standing here."
+descr "Kaasak the bar keeper is standing here."
 extra {}
 "A strong sturdy man, with a friendly smile on his face."
 M_HALFLING_WARRIOR_CLUB(13, SEX_MALE)
@@ -3791,7 +3791,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that! Yuck!' ",
+"   $1n says, 'I won't buy that! Yuck!' ",
 "   $1n says, 'This tasty $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for my delicious $2N.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -3811,9 +3811,9 @@ effnor
 
 names {"effnor", "trader"}
 title "Effnor"
-descr "Effnor, the trader is standing here."
+descr "Effnor the trader is standing here."
 extra {}
-"A ugly halfling with a snarl for a smile."
+"An ugly halfling with a snarl for a smile."
 M_HALFLING_WARRIOR_SWORD(13, SEX_MALE)
 money 4 COPPER_PIECE
 
@@ -3830,7 +3830,7 @@ dilcopy shopkeeper@function(
 },{
 "   $1n says, 'I've got no such item.' ",
 "   $1n says, 'Why you haven't got it, $3n?' ",
-"   $1n says, 'I wont buy that!' ",
+"   $1n says, 'I won't buy that!' ",
 "   $1n says, 'This $2N is too expensive for beggars like you, $3n.' ",
 "   $1n says, 'That's %s for $2n.' ",
 "   $1n says, 'That will be %s for your $2N.' ",
@@ -3854,10 +3854,10 @@ end
 sholee
 names {"sholee"}
 title "Sholee"
-descr "Sholee, the inn keeper is standing here."
+descr "Sholee the inn keeper is standing here."
 extra {}
-"An older halfling that reminds you of your grandmother.  Your
-sure you don't want to get her started talking, you will be here
+"An older halfling that reminds you of your grandmother.  You're
+sure you don't want to get her started talking; you will be here
 all night."
 M_HALFLING_WARRIOR_SPECIAL(11, SEX_FEMALE)
 money 4 COPPER_PIECE
@@ -3876,7 +3876,7 @@ code
  num := rnd(1,7);
  if (num == 1)
  {
- exec("say Hello, " + pc.name + " are you looking for a room?", self);
+ exec("say Hello, " + pc.name + ", are you looking for a room?", self);
  }
  else if (num == 2)
  {
@@ -3917,10 +3917,10 @@ title "the inn guard"
 descr "An inn guard is standing here protecting the adventurers that
 pay for a safe night's sleep."
 extra {}
-"Obviously he is not a halfling, he looks like a retired grand
+"Obviously he is not a halfling; he looks like a retired grand
 knight.  You notice that blood is dripping from his sword, and you
 make note that this is a guard that you would not want to kill.  In
-fact you would almost have to be down right mad to try."
+fact you would almost have to be downright mad to try."
 flags {UNIT_FL_NO_TELEPORT}
 alignment 1000
 M_HUMAN_WARRIOR_SWORD(37, SEX_MALE)
@@ -3952,7 +3952,7 @@ names {"knight", "young knight"}
 title "the young knight"
 descr "A young knight is resting here."
 extra {}
-"This knight looks quite unexperienced, he lacks armor and cringes at
+"This knight looks quite inexperienced; he lacks armor and cringes at
 your gaze, gripping his weapon even tighter."
 
 M_HUMAN_WARRIOR_SWORD(8, SEX_MALE)
@@ -3965,9 +3965,9 @@ end
 bing
 names {"bing"}
 title "Bing"
-descr "Bing, half of the twin adventurers is here."
+descr "Bing, half of the twin adventurers, is here."
 extra {}
-"He is a handsome young adventurer.  Bong and him have teamed up
+"He is a handsome young adventurer.  Bong and he have teamed up
 to explore the country."
 
 M_HALFLING_CLERIC_HAMMER(7, SEX_MALE,"cause serious", "heal")
@@ -3984,9 +3984,9 @@ end
 bong
 names {"bong"}
 title "Bong"
-descr "Bong, half of the twin adventurers is here."
+descr "Bong, half of the twin adventurers, is here."
 extra {}
-"He is a handsome young adventurer.  Bing and him have teamed up
+"He is a handsome young adventurer.  Bing and he have teamed up
 to explore the country."
 
 M_HALFLING_WARRIOR_SWORD(8, SEX_MALE)
@@ -4004,21 +4004,21 @@ title "Laorin"
 descr "Laorin, the local mistress, is here."
 extra {}
 "She blushes as you stare at her naked body.  Thoughts race
-though you mind, but you shove them aside."
+through your mind, but you shove them aside."
 
 M_AVG_HALFLING(7, SEX_FEMALE)
 NATURAL_DEF(WPN_BITE, ARM_CLOTHES)
 money 2 COPPER_PIECE, 12 IRON_PIECE
 dilcopy comb_poison@function(
 "$1n takes a big bite out of you!",
-"<div class='hit_other'>$3n screams as $1n takes a big bite out of $1m!</div>");
+"<div class='hit_other'>$3n screams as $1n takes a big bite out of $3m!</div>");
 exp 130
 
 end
 
 oldman
 names {"old man", "man"}
-title "old man"
+title "an old man"
 descr "An old man is shivering in a corner."
 extra {}
 "Elven in race, poorly clothed and very frail.  He is obviously
@@ -4032,8 +4032,8 @@ end
 
 traveler
 names {"adventuresome traveler","traveler"}
-title "traveler"
-descr "A adventuresome traveler is sharpening his blade."
+title "a traveler"
+descr "An adventuresome traveler is sharpening his blade."
 extra {}
 "This traveler looks like he has traversed the world, mud in his
 hair, fur between his teeth, and a flair in his eyes."
@@ -4054,7 +4054,7 @@ descr "A small gardener digging weeds scurries about trying not
 to be noticed."
 extra {}
 "She is a young beautiful halfling, or at least you suspect so.  She
-is covered in mud from head to toe, it is obvious that she has been
+is covered in mud from head to toe; it is obvious that she has been
 hard at work (and enjoying every minute) digging weeds."
 
 M_AVG_HALFLING(7, SEX_FEMALE)
@@ -4119,7 +4119,7 @@ code
  pause;
  exec("sigh", self);
  pause;
- exec("say Well if it continues, I guess I will just have to shutdown the farm.", self);
+ exec("say Well if it continues, I guess I will just have to shut down the farm.", self);
  pause;
  goto twait;
 
@@ -4159,7 +4159,7 @@ end
 
 greli
 names {"greli", "wife"}
-title "Greli the farmers wife"
+title "Greli the farmer's wife"
 descr "Greli is here wondering what she is going to do next."
 extra {}
 "A graceful, but absent minded halfling.  She turns away from
@@ -4245,7 +4245,7 @@ code
  wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and (self.position != POSITION_FIGHTING)));
  pc := activator;
  secure(pc, lost);
- exec("emote shovels a pile of manure from one corner of the room to the other", self);
+ exec("emote shovels a pile of manure from one corner of the room to the other.", self);
  pause;
  exec("grunt", self);
  pause;
@@ -4266,7 +4266,7 @@ code
 
  :combat:
  heartbeat := PULSE_SEC * 3;
- exec("emote screams 'No I am much to young to die!'", self);
+ exec("emote screams 'No, I am much too young to die!'", self);
  pause;
  exec("flee", self);
  pause;
@@ -4285,7 +4285,7 @@ names {"byttnis", "farmhand"}
 title "Byttnis the farmhand"
 descr "Byttnis the farmhand is here doing his chores."
 extra {}
-"He stares back into your eyes, you get the feeling he is wants
+"He stares back into your eyes; you get the feeling he wants
 a fight."
 
 M_AVG_HALFLING(8, SEX_MALE)
@@ -4305,7 +4305,7 @@ code
  pc := activator;
  secure(pc, lost);
  pause;
- exec("say Hey you, "+ pc.name + ", your so ugly!", self);
+ exec("say Hey you, "+ pc.name + ", you're so ugly!", self);
  exec("punch " +pc.name, self);
  pause;
  exec("say When you stare into the mirror your reflection hides!", self);
@@ -4327,7 +4327,7 @@ code
 
  :combat:
  heartbeat := PULSE_SEC * 3;
- exec("emote screams 'Yes stick me! I love blood!'", self);
+ exec("emote screams 'Yes, stick me! I love blood!'", self);
  pause;
  exec("laugh", self);
  pause;
@@ -4358,7 +4358,7 @@ end
 sandorf
 names {"sandorf", "son"}
 title "Sandorf"
-descr "Sandorf the son of Farmer Kepli observing everyone."
+descr "Sandorf the son of Farmer Kepli is here observing everyone."
 extra {}
 "The older son, he is responsible for the operations of the
 farm.  He has a stern look on his face which means business."
@@ -4380,7 +4380,7 @@ code
  pc := activator;
  secure (pc, lost);
  pause;
- exec("emote says with a stern voice, 'Back to work you slackers'", self);
+ exec("emote says with a stern voice, 'Back to work, you slackers!'", self);
  pause;
  exec("growl", self);
  pause;
@@ -4401,7 +4401,7 @@ code
 
  :combat:
  heartbeat := PULSE_SEC * 3;
- exec("emote screams 'Then die you slime!'", self);
+ exec("emote screams 'Then die, you slime!'", self);
  pause;
  heartbeat := PULSE_SEC * 5;
  goto start;
@@ -4456,8 +4456,8 @@ alignment 700
 M_AVG_HALFLING(9, SEX_MALE)
 money 4 COPPER_PIECE, 5 IRON_PIECE
 extra {}
-"A worn out mill worker.  He is covered in flower and looks
-quite unkept."
+"A worn out mill worker.  He is covered in flour and looks
+quite unkempt."
 
 
 end
@@ -4470,7 +4470,7 @@ descr "A large rabid mouse is here snarling at you."
 alignment -700
 M_MOUSE_MAD(7,SEX_NEUTRAL)
 extra {}
-"A half crazed mouse returns your gaze"
+"A half crazed mouse returns your gaze."
 
 end
 
@@ -4484,7 +4484,7 @@ alignment 700
 M_AVG_HALFLING(12, SEX_FEMALE)
 money 6 COPPER_PIECE
 extra {}
-"Qith is a old looking woman.  Her hands are blood red from the grapes
+"Qith is an old looking woman.  Her hands are blood red from the grapes
 she makes the wine with."
 
 
@@ -4496,8 +4496,8 @@ names {"sarabin","sailor"}
 title "Sarabin"
 descr "Sarabin the sailor is daydreaming here."
 extra {}
-"An old man who is rinkled from many years at sea.  His clothes are
-coverred in wood shavings and his hands glow in a light silver light."
+"An old man who is wrinkled from many years at sea.  His clothes are
+covered in wood shavings and his hands glow in a light silver light."
 alignment -200
 M_HALFLING_WARRIOR_SWORD(11, SEX_MALE)
 money 5 COPPER_PIECE, 5 IRON_PIECE
@@ -4548,7 +4548,7 @@ goto start;
 
 :losthim:
 exec ("sigh", self);
-exec ("say Damm I really needed that canoe too.", self);
+exec ("say Damn, I really needed that canoe too.", self);
 unsecure(pc);
 pause;
 goto start;
@@ -4584,7 +4584,7 @@ if ("canoe1" == item.nameidx)
   destroy(item);
   exec("curse", self);
   pause;
-  exec("Those humans don't know how to make anything.", self);
+  exec("say Those humans don't know how to make anything.", self);
   pause;
   exec("emote takes his large carving knife and starts reshaping the canoe.", self);
   pause;
@@ -4598,17 +4598,17 @@ if ("canoe1" == item.nameidx)
   pause;
   exec("smile", self);
   pause;
-  exec("wave" + pc.name, self);
+  exec("wave " + pc.name, self);
   unsecure(pc);
   goto start;
  }
  else
  {
   exec("say Did I ask for this, "+pc.name +"?", self);
-  exec("say I dont think so, I think I have a nice spot for it though.", self);
+  exec("say I don't think so. I think I have a nice spot for it though.", self);
+  destroy(item);   // before the pause, which clears item
   pause;
   exec("thank "+pc.name, self);
-  destroy(item);
   unsecure(pc);
   pause;
   goto start;
@@ -4619,7 +4619,7 @@ goto start;
 
 :losthim:
 exec ("scream", self);
-exec ("say Now what am I going to do, carve my head into a ship?.", self);
+exec ("say Now what am I going to do, carve my head into a ship?", self);
 unsecure(pc);
 goto start;
 
@@ -4636,7 +4636,7 @@ names {"galzta"}
 title "Galzta"
 descr "Galzta is standing here."
 extra {}
-"Help I am confused, what am I supposed to do.. How do I train?  What
+"Help! I am confused, what am I supposed to do? How do I train?  What
 do I kill?"
 flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_WARRIOR_SWORD(70, SEX_MALE)
@@ -4645,8 +4645,8 @@ money 1 GOLD_PIECE, 6 COPPER_PIECE
 exp 100
 dilcopy global_wander@function(120,1,1);
 dilcopy pain_dil (15,
-{"say can you help me?  I am kinda lost.",
-"say Which way to midgaard?.",
+{"say Can you help me?  I am kinda lost.",
+"say Which way to Midgaard?",
 "sigh",
 "say I need some xp, what gives good xp for a level 70 mob?",
 "pout"});
@@ -4667,7 +4667,7 @@ money 1  GOLD_PIECE, 1 COPPER_PIECE
 dilcopy global_wander@function(120,1,1);
 dilcopy pain_dil (15,
 {"say Can you help me?  I am kinda lost.",
-"say Which way to midgaard?.",
+"say Which way to Midgaard?",
 "sigh",
 "say I need some xp, what gives good xp for a level 65 mob?",
 "pout"});
@@ -4680,7 +4680,7 @@ title "Tefical"
 descr "Tefical the Sorcerer is standing here."
 extra {}
 "A tall slender elder man, with a radiant glow coming from around his
-whole body"
+whole body."
 flags {UNIT_FL_NO_TELEPORT}
 M_HUMAN_MAGE_ELECTRICITY(67, SEX_MALE, "lightning bolt")
 alignment -1000
@@ -4698,7 +4698,7 @@ end
 hanook
 names {"hanook"}
 title "Hanook"
-descr "Hanook the outlaw is standing here"
+descr "Hanook the outlaw is standing here."
 extra {}
 "A small younger man, about in his mid thirties, dumb and ignorant
 to the dangers of adventuring."
@@ -4739,11 +4739,11 @@ end
 
                 hammer
 
-names {"Iron Hammer","hammer"}
-title "an old  iron hammer"
+names {"iron hammer","hammer"}
+title "an old iron hammer"
 descr "An old iron hammer is lying here."
 extra {}
-"Nothing really special about this hammer. it is old and slightly rusted.
+"Nothing really special about this hammer. It is old and slightly rusted.
 It looks to have seen lots of battles in its time."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
@@ -4754,11 +4754,11 @@ end
                            add_board
 
 names {"bulletin board", "address","board"}
-title "the board of Addresses"
-descr "A Board of addresses is mounted on a wall here."
+title "the board of addresses"
+descr "A board of addresses is mounted on a wall here."
 
 extra {}
-"This is not a place to advertize muds if this board is abused in any way
+"This is not a place to advertise muds; if this board is abused in any way
 it will be removed.  The board was placed here to put your email address for
 your friends here on Valhalla.  Addresses will be left for at least a week
 and then removed to make room for others."
@@ -4772,7 +4772,7 @@ w_sm_club
 
 names {"small club","club"}
 title "a small hardened wooden club"
-descr "An heavy odd looking club is lying here."
+descr "A heavy odd looking club is lying here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 
@@ -4799,7 +4799,7 @@ cost 1 IRON_PIECE
 extra {}
 "Upon closer examination it looks like this is the main trunk
 of a cypress tree.  It is roughly two feet across and looks
-exteremly heavy."
+extremely heavy."
 end
 
 w_broom
@@ -4828,7 +4828,7 @@ MATERIAL_METAL("A large square metal shovel head")
 weight 4
 cost 5 IRON_PIECE
 extra {}
-"A large shovel use to clean up after the cows. "
+"A large shovel used to clean up after the cows."
 end
 
 pitchfork
@@ -4844,7 +4844,7 @@ MATERIAL_METAL("A three pronged metal head")
 weight 5
 cost 6 IRON_PIECE
 extra {}
-"A large pitch fork with four large tines stick from its head."
+"A large pitch fork with four large tines sticking from its head."
 end
 
 
@@ -4867,7 +4867,7 @@ dilcopy abi_restrict@function (ABIL_DEX,10,0,25,"");
 
 
 extra{}
-"This looks like a thief's dream come true. "
+"This looks like a thief's dream come true."
 
 end
 
@@ -4893,7 +4893,7 @@ pot
 
 names {"pot"}
 title "a pot"
-descr "An ordinary looking cooking pot is here"
+descr "An ordinary looking cooking pot is here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
 weight 6
@@ -4911,13 +4911,13 @@ ship1
 
 names {"ship"}
 title "a small lightweight ship"
-descr "An small lightweight ship has be discarded here."
+descr "A small lightweight ship has been discarded here."
 type ITEM_BOAT
 manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
 weight 20
 cost 10 COPPER_PIECE
 extra {}
-"This is a small lightweight ship crafted form a large cyprus tree.
+"This is a small lightweight ship crafted from a large cypress tree.
 The craftsmanship is excellent, far better than most human work."
 MATERIAL_WOOD("A lightweight poplar wood")
 
@@ -4926,7 +4926,7 @@ end
 knife
 names {"knife"}
 title "a knife"
-descr "A large cooking knife has been left here"
+descr "A large cooking knife has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -4940,7 +4940,7 @@ end
 carveknife
 names {"carving knife","knife"}
 title "a small carving knife"
-descr "A small carving knife has been left here"
+descr "A small carving knife has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -4971,7 +4971,7 @@ stick
 
 names {"stick"}
 title "a stick"
-descr "A stick has been left here"
+descr "A stick has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -4987,7 +4987,7 @@ club
 
 names {"club"}
 title "a club"
-descr "A giant club has been left here"
+descr "A giant club has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_BATTLE_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -5002,7 +5002,7 @@ dagger
 
 names {"dagger"}
 title "a dagger"
-descr "A dagger has been left here"
+descr "A dagger has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -5016,7 +5016,7 @@ end
 short_sword
 names {"sword", "short sword"}
 title "a short sword"
-descr "A short sword has been left here"
+descr "A short sword has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -5030,7 +5030,7 @@ end
 long_sword
 names {"sword", "long sword"}
 title "a long sword"
-descr "A short sword has been left here"
+descr "A long sword has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_LONG_SWORD, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -5045,7 +5045,7 @@ end
 warhammer
 names {"hammer", "warhammer"}
 title "a warhammer"
-descr "A warhammer has been left here"
+descr "A warhammer has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_WAR_HAMMER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
@@ -5069,7 +5069,7 @@ code
      targ.hp := -10;
    act("Your hammer jumps out of your hand and slams $2n into the dust!",
       A_ALWAYS, self.outside, targ, null, TO_CHAR);
-   act("$1n hammer jumps out of $1s hand and slams $2n into the dust!",
+   act("$1n's hammer jumps out of $1s hand and slams $2n into the dust!",
       A_ALWAYS, self.outside, targ, null, TO_REST);
    link(self, self.outside.outside);
   } else {
@@ -5088,7 +5088,7 @@ end
 halberd
 names {"halberd"}
 title "a halberd"
-descr "A sharp looking halberd has been left here"
+descr "A sharp looking halberd has been left here."
 MATERIAL_METAL("A greyish blue metal blade")
 MATERIAL_WOOD("A long wooden handle")
 
@@ -5103,15 +5103,15 @@ end
 spear
 names {"spear"}
 title "a spear"
-descr "A spear has been left here"
+descr "A spear has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SPEAR, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
-MATERIAL_STONE("A stone tiped blade")
+MATERIAL_STONE("A stone tipped blade")
 MATERIAL_WOOD("A long wooden handle")
 
 extra{}
-"A long wooden handle with a large stone tip"
+"A long wooden handle with a large stone tip."
 
 weight 8
 cost 7 COPPER_PIECE
@@ -5121,7 +5121,7 @@ end
 flail
 names {"flail"}
 title "a flail"
-descr "A flail has been left here"
+descr "A flail has been left here."
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_FLAIL, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: -0,0
@@ -5131,7 +5131,7 @@ weight 6
 cost 5 COPPER_PIECE
 extra{}
 "The flail is made of metal, and the head is fastened with a very solid
-metal chain. "
+metal chain."
 
 end
 
@@ -5179,7 +5179,7 @@ code
  pause;
  act("You hear a strange raspy voice that says, 'You and I are now one!'",
   A_ALWAYS, pc, null, null, TO_CHAR);
- act("Your life depends on me, if we are parted you will surely die.",
+ act("Your life depends on me; if we are parted you will surely die.",
   A_ALWAYS, pc, null, null, TO_CHAR);
  unsecure(pc);
    goto start;
@@ -5384,7 +5384,7 @@ end
 coin_plate
 names {"gold laced leather plate", "gold plate","lace plate","plate"}
 title "a gold laced leather plate"
-descr "a gold laced plate has been left here."
+descr "A gold laced plate has been left here."
 MATERIAL_METAL("Precious metal coins, and metal mesh")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
@@ -5416,15 +5416,15 @@ end
 wine_press
 names {"wine press", "press"}
 title "a large wine press"
-descr "A large wine press is standing here"
+descr "A large wine press is standing here."
 weight 200
 CONTAINER_DEF(10)
 manipulate {MANIPULATE_ENTER}
 MATERIAL_WOOD("Old heavy wood")
 extra {}
 "This is a simple looking wine press made from wood.  It looks
-like this press has made several bottles of wine in it time.  You notice
-small spout and comming out the left side. A small plaque has been
+like this press has made several bottles of wine in its time.  You notice
+a small spout coming out the left side. A small plaque has been
 nailed to one side of the machine."
 
 extra {"small plaque", "plaque"}
@@ -5503,9 +5503,9 @@ code
   pc := activator;
   secure(pc, lost);
   block;
-    act ("As you pull on the handle the machine makes a loud groan",
+    act ("As you pull on the handle the machine makes a loud groan.",
           A_SOMEONE, pc, null, null, TO_CHAR);
-    act ("As $1n pulls on the machines handle the it makes a loud groan",
+    act ("As $1n pulls on the machine's handle it makes a loud groan.",
           A_SOMEONE, pc, null, null, TO_REST);
   pause;
   if ((other == 0) and (grapes >= 1) and (bottle == 0))
@@ -5519,7 +5519,7 @@ code
   sugar := 0;
   yeast := 0;
 
-    act ("Drip. Drip. Drip.  Slowly the new grape wine runs out onto the floor",
+    act ("Drip. Drip. Drip.  Slowly the new grape wine runs out onto the floor.",
           A_SOMEONE, pc, null, null, TO_ALL);
   act ("The machine makes one final groan as the last drip falls onto the floor.",
           A_SOMEONE, pc, null, null, TO_ALL);
@@ -5535,7 +5535,7 @@ code
   sugar := 0;
   yeast := 0;
 
-    act ("Drip. Drip. Drip.  Slowly the bottle begins to fill with new grape wine",
+    act ("Drip. Drip. Drip.  Slowly the bottle begins to fill with new grape wine.",
           A_SOMEONE, pc, null, null, TO_ALL);
     pause;
   act ("The machine makes one final groan as the bottle fills to the top.",
@@ -5555,7 +5555,7 @@ code
   sugar := 0;
   yeast := 0;
 
-    act ("Drip. Drip. Drip.  Slowly the bottle begins to fill with new grape wine",
+    act ("Drip. Drip. Drip.  Slowly the bottle begins to fill with new grape wine.",
           A_SOMEONE, pc, null, null, TO_ALL);
     pause;
   act ("The machine makes one final groan as the bottle fills nearly half full.",
@@ -5585,7 +5585,7 @@ code
   sugar := 0;
   yeast := 0;
 
-    act ("Groan. Crunch. Crack. Squeek. Bang. ",
+    act ("Groan. Crunch. Crack. Squeak. Bang.",
           A_SOMEONE, pc, null, null, TO_ALL);
     pause;
   act ("The machine comes to a sudden stop.",
@@ -5652,7 +5652,7 @@ end
 wine_rack
 names {"wine rack", "rack"}
 title "a wine rack"
-descr "A wine rack is standing against the wall here"
+descr "A wine rack is standing against the wall here."
 MATERIAL_WOOD("Weathered old wood")
 weight 400
 CONTAINER_DEF(1000)
@@ -5687,7 +5687,7 @@ manipulate {MANIPULATE_TAKE}
 LIQ_DEF("clear", 2,20,0,5,2,5,0)
 cost 6 COPPER_PIECE
 extra {}
-"A new clean bottle with a small label reads Tassel Grove's finest."
+"A new clean bottle with a small label that reads Tassel Grove's finest."
 end
 
 dust
@@ -5712,32 +5712,32 @@ manipulate {MANIPULATE_TAKE}
 LIQ_DEF("clear", 2,15,15,5,2,5,15)
 cost 2 IRON_PIECE
 extra {}
-"A small label reads Tassel Grove's finest.  Year 139"
+"A small label reads Tassel Grove's finest.  Year 139."
 end
 
 grapes
 names {"grapes", "grape"}
 title "a bunch of grapes"
-descr "A bunch of grapes are growing here"
+descr "A bunch of grapes is growing here."
 
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(5,0)
 weight 1
 cost 1 IRON_PIECE
 extra {} "They look like what might be used to make wine."
-MATERIAL_ORGANIC("Grapes whats else?")
+MATERIAL_ORGANIC("Grapes, what else?")
 end
 
 sugar
 names {"sugar"}
 title "a bag of sugar"
-descr "A bag of sugar has been left here"
+descr "A bag of sugar has been left here."
 
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(5,0)
 weight 1
 cost 1 IRON_PIECE
-extra {} "It looks about like half of cup of sugar."
+extra {} "It looks like about half a cup of sugar."
 MATERIAL_ORGANIC("100% Pure sugar cane")
 
 end
@@ -5752,14 +5752,14 @@ FOOD_DEF(5,0)
 weight 1
 cost 1 IRON_PIECE
 extra {} "It smells like yeast."
-MATERIAL_ORGANIC("Yeast what else?")
+MATERIAL_ORGANIC("Yeast, what else?")
 
 end
 
 herbs
 names {"herbs of life", "herbs", "potion"}
 title "the herbs of life"
-descr "A pile of herbs are lying here."
+descr "A pile of herbs is lying here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(65,SPL_MANA_BOOST, SPL_CURE_WOUNDS_2, SPL_NONE)
@@ -5771,7 +5771,7 @@ end
 herbs_bad
 names {"herbs of death", "herbs", "potion"}
 title "the herbs of death"
-descr "A pile of herbs are lying here."
+descr "A pile of herbs is lying here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 manipulate {MANIPULATE_TAKE}
 POTION_DEF(200,SPL_BLIND, SPL_DISEASE_2, SPL_HOLD)
@@ -5783,7 +5783,7 @@ end
 p_cure_light
 names {"muddy water", "water", "potion"}
 title "a bottle of muddy water"
-descr "A bottle of muddy has been disgarded here."
+descr "A bottle of muddy water has been discarded here."
 MATERIAL_GLASS("A clear colored glass")
 
 manipulate {MANIPULATE_TAKE}
@@ -5792,13 +5792,13 @@ weight 1
 cost 2 SILVER_PIECE
 
 extra {} "It smells really bad, and looks like mud."
-extra {"$identify"}  "This is a potion that will help cure your wounds"
+extra {"$identify"}  "This is a potion that will help cure your wounds."
 end
 
 p_cure_serious
-names {"purple slime ", "packet", "slime", "potion"}
+names {"purple slime", "packet", "slime", "potion"}
 title "a packet of purple slime"
-descr "A packet of purple slime has been disgarded here."
+descr "A packet of purple slime has been discarded here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 
 manipulate {MANIPULATE_TAKE}
@@ -5808,16 +5808,16 @@ cost 3 SILVER_PIECE
 
 extra {}
 "The purple slime has a repulsive stench.  You almost puke as
-you try to examine it furthur."
+you try to examine it further."
 
 extra {"$identify"}
-"This is a powerful potion that will help cure your wounds"
+"This is a powerful potion that will help cure your wounds."
 end
 
 p_rem_dis
-names {"green ooze", "ooze", "flasK", "potion"}
+names {"green ooze", "ooze", "flask", "potion"}
 title "a flask of green ooze"
-descr "A flask of green ooze has been disgarded here."
+descr "A flask of green ooze has been discarded here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 
 manipulate {MANIPULATE_TAKE}
@@ -5826,16 +5826,16 @@ weight 1
 cost 4 SILVER_PIECE
 
 extra {} "It is your ordinary green ooze, looks and tastes like the stuff
-you so very carefully extract from you nostrils."
+you so very carefully extract from your nostrils."
 
 extra {"$identify"}
-"This is a powerful potion that will aid in disease removal"
+"This is a powerful potion that will aid in disease removal."
 end
 
 p_rem_poi
 names {"brown stuff", "substance", "shit", "bag", "potion"}
-title "a bag of a brown gooy substance"
-descr "A bag of a brown gooy substance has been disgarded here."
+title "a bag of a brown gooey substance"
+descr "A bag of a brown gooey substance has been discarded here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 
 manipulate {MANIPULATE_TAKE}
@@ -5846,13 +5846,13 @@ cost 4 SILVER_PIECE
 extra {} "It resembles what a dog leaves behind, and even smells the same."
 
 extra {"$identify"}
-"This is a powerful potion that will aid in poison removal"
+"This is a powerful potion that will aid in poison removal."
 end
 
 p_rem_dis_poi1
 names {"yellow pus", "pus", "vial", "potion"}
 title "a vial of yellow pus"
-descr "A vial of yellow pus has been disgarded here."
+descr "A vial of yellow pus has been discarded here."
 MATERIAL_ORGANIC("A mixture of organic compounds")
 
 manipulate {MANIPULATE_TAKE}
@@ -5864,7 +5864,7 @@ extra {} "This appears to be the same stuff that you would find in a badly
 infected wound."
 
 extra {"$identify"}
-"This is a powerful potion that will aid in BOTH disease and poision removal."
+"This is a powerful potion that will aid in BOTH disease and poison removal."
 end
 
 
@@ -5898,7 +5898,7 @@ title "a fountain"
 descr "A fountain is softly trickling here."
 extra {}
 "This is Tassel Grove's main water supply.  It looks very clean and quite
-tastey."
+tasty."
 LIQ_DEF("clear", 100,-1,5000,10,1,0,0)
 MATERIAL_STONE("Ornately carved stone")
 end
@@ -5913,7 +5913,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 3
 cost 250 COPPER_PIECE
 rent 125 IRON_PIECE
-extra {}  "It seems like this pillow would help you resting."
+extra {}  "It seems like this pillow would help you rest."
 MATERIAL_CLOTH("A deep blue velvet")
 
 end
@@ -5921,7 +5921,7 @@ end
 glowstone
 names {"glow stone", "stone"}
 title "a glow stone"
-descr "A small glowing stone has been left here"
+descr "A small glowing stone has been left here."
 MATERIAL_STONE("A greenish stone")
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 2
@@ -5955,7 +5955,7 @@ end
 
 lth_leg
 names {"leggings"}
-title "hard leather leggings"
+title "a pair of hard leather leggings"
 descr "A pair of hard leather leggings has been left here."
 MATERIAL_LEATHER("A hard leather")
 
@@ -5966,7 +5966,7 @@ end
 
 lth_gloves
 names {"gloves"}
-title "hard leather gloves"
+title "a pair of hard leather gloves"
 descr "A pair of hard leather gloves has been left here."
 MATERIAL_LEATHER("A hard leather")
 
@@ -5979,12 +5979,12 @@ end
 nitanis
 
 names {"bracelet","nitanis"}
-title "Nitanis bracelet"
+title "a Nitanis bracelet"
 descr "A small Nitanis bracelet is lying here."
 MATERIAL_METAL("Gold, and other precious metals")
 extra {}
-"Tiny gold leaves are wooven together to form a beautiful bracelet.  It
-seems to glow as you look, maybe this has some magical power."
+"Tiny gold leaves are woven together to form a beautiful bracelet.  It
+seems to glow as you look; maybe this has some magical power."
 type ITEM_WORN
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD, MANIPULATE_WEAR_WRIST}
 cost 50 COPPER_PIECE
@@ -5999,11 +5999,11 @@ end
 maskwa2
 names {"maskwa ring","maskwa","ring"}
 title "a maskwa ring"
-descr "A golden ring is lies at your feet."
+descr "A golden ring lies at your feet."
 MATERIAL_METAL("Gold, and other precious metals")
 extra {}
 "The ring has a large bear head.  Could this be the legendary head of
-Maskwa?  Any thing formed with its head on it is said to strengthen the
+Maskwa?  Anything formed with its head on it is said to strengthen the
 wearer."
 type ITEM_WORN
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
@@ -6037,8 +6037,8 @@ end
 
 ale
 names {"glass","ale"}
-title "a dlass of ale"
-descr "A glass of ale has be left here."
+title "a glass of ale"
+descr "A glass of ale has been left here."
 MATERIAL_WOOD("A heavy wood")
 manipulate {MANIPULATE_TAKE}
 
@@ -6051,7 +6051,7 @@ end
 dark_ale
 names {"mug","dark ale","ale"}
 title "a mug of dark ale"
-descr "A mug of ale has be left here."
+descr "A mug of ale has been left here."
 MATERIAL_WOOD("A heavy wood")
 
 manipulate {MANIPULATE_TAKE}
@@ -6066,7 +6066,7 @@ club_mug
 
 names {"mug", "club"}
 title "a mug"
-descr "A large mug left here"
+descr "A large mug has been left here."
 MATERIAL_WOOD("A heavy wood")
 
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
@@ -6091,7 +6091,7 @@ end
 lemonade
 
 names {"glass of lemonade", "glass", "lemonade"}
-title "glass of lemonade"
+title "a glass of lemonade"
 descr "A glass of lemonade has been left here."
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("red", 2, 5, 5, 8, 1, 0,0)
@@ -6102,7 +6102,7 @@ end
 glass_slime
 
 names {"glass of slime", "glass", "slime"}
-title "glass of slime"
+title "a glass of slime"
 descr "A glass of slime has been left here."
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("light green", 2,5,5,8,4,0,0)
@@ -6113,7 +6113,7 @@ end
 milk
 
 names {"glass of milk", "glass", "milk"}
-title "glass of milk"
+title "a glass of milk"
 descr "A glass of milk has been left here."
 manipulate {MANIPULATE_TAKE}
 LIQ_DEF("white", 2, 5, 5, 6, 3, 0,0)
@@ -6135,7 +6135,7 @@ end
 
 bread
 names {"loaf of bread", "loaf", "bread"}
-title "loaf of bread"
+title "a loaf of bread"
 descr "A loaf of bread has been left here."
 MATERIAL_ORGANIC("Bread... Water, yeast, flour???")
 manipulate {MANIPULATE_TAKE}
@@ -6149,7 +6149,7 @@ title "a large rock"
 descr "A large rock lies here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 extra {}
-"A large grey and white rock"
+"A large grey and white rock."
 MATERIAL_STONE("stone")
 end
 
@@ -6168,13 +6168,13 @@ end
 oldstaff
 
 names {"twisted staff", "staff"}
-title "a old twisted staff"
+title "an old twisted staff"
 descr "An old twisted staff has been discarded here."
 MATERIAL_WOOD("An old twisted tree branch")
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 weight 5
 extra {}
-"Inscribe on the staff is the finely written words:
+"Inscribed on the staff are the finely written words:
 
 The Staff of Nourishment (v 2.0)
 
@@ -6213,6 +6213,7 @@ drink:={"waterbarrel@halfzon", "waterbarrel@halfzon", "waterbarrel@halfzon",
 
 wait(SFB_CMD,(( (command("make")) and
                 (activator.type == UNIT_ST_PC) and
+                (activator == self.outside) and
                 (self.equip == WEAR_HOLD) and
                 (("food" in argument) or ("drink" in argument)))));
 

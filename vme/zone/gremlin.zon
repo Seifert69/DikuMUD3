@@ -59,10 +59,10 @@ help
 "<pre><br/>
 Gremlins have invaded Barnham's pleasant farmstead. Help him to rid the farm
 of these terrible vermin once and for all!<br/><br/>
-This zone is intended to provide a soft-launch for new players of all profession. 
+This zone is intended to provide a soft-launch for new players of all professions. 
 Quests, equipment, and experiences are designed to teach what can be expected playing
 at higher levels. Zone by Sender.
-</div></pre>"
+</pre>"
 
 /* ================================================================== */
 /*                               DIL                                  */
@@ -182,7 +182,7 @@ code
 	{
 		act("Your $2n glows slightly as it attempts to battle $3n's will!"
 		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-		act("$1n's $2n glows slightly in an attempt to battle $3n will!"
+		act("$1n's $2n glows slightly in an attempt to battle $3n's will!"
 		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_NOTVICT);
 		act("You feel $1n's $2n intruding on your will, you push the assault back!"
 		   ,A_ALWAYS, self.outside, self, self.outside.fighting,TO_VICT);
@@ -199,7 +199,7 @@ code
 	position_update(self.outside);
 	act("Your Vorous glows a little as it draws your energy to prepare for battle!"
 		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-	act("$1n's grimaces a bit as $1s $2n glows."
+	act("$1n grimaces a bit as $1s $2n glows."
 		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
 	goto start;
 
@@ -210,7 +210,7 @@ code
 	if (pwr>12) pwr := 12;
 	act("Your Vorous hums as it regenerates itself."
 		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_CHAR);
-	act("$1n's Vorous hums quietly ."
+	act("$1n's Vorous hums quietly."
 		,A_ALWAYS, self.outside, self, self.outside.fighting,TO_REST);
 	goto init;
 }
@@ -302,11 +302,11 @@ code
 :boldingo: 
     pc := qstWaitHero@quests(BOLDIN_QUEST, pc,
         {"say Ahoy there traveller!",
-        "say you look to be somewhat new around here.",
+        "say You look to be somewhat new around here.",
         "whisper $1N I could use some help. And I'm guessing you could as well!",
         "whisper $1N You see, the older I get, the harder it seems it is to get around.",
         "whisper $1N Would you be so kind as to help me out?",
-        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.' <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details. <div class='cpy'>HINT: Simply type 'nod' and hit enter.</div>"
         }, "", ""
     );
 
@@ -326,11 +326,11 @@ code
     exdp := qstAssign@quests(BOLDIN_BREAD, pc, 
         {"say A man gets hungry in his age.",
         "whisper $1N If you could find a store and <div class='hint'>buy bread</div> for me, it would be well appreciated.",
-        "whisper $1N Take this money, and you can keep anything thats left after your purchase.",
-        "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.'",
+        "whisper $1N Take this money, and you can keep anything that's left after your purchase.",
+        "whisper $1N Use the <a cmd='#'>purse</a> command to check how much money you are carrying.",
         "whisper $1N A food store can be found west and north of here.",
         "emote gives 2 copper pieces to $1N"},
-        "Buy a bread and give it to Boldin."
+        "Buy some bread and give it to Boldin."
     );
 
     // Give money to the player
@@ -348,9 +348,7 @@ code
         "whisper $1N You see, I'm feeling rather parched.",
         "whisper $1N A dash of water would do me well!",
         "whisper $1N Would you be so kind as to help me out?",
-        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
-
-    act("<div class='hint'>HINT: Simply type 'nod' and hit enter.</div>",A_SOMEONE, pc, null, null, TO_CHAR); 
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details. <div class='hint'>HINT: Simply type 'nod' and hit enter.</div>"}, "", "");
 
     if (pc == null)
         goto start;
@@ -359,9 +357,9 @@ code
     exdp := qstAssign@quests(BOLDIN_WATER, pc, 
         {"say Excellent!",
         "say I've got the thirst of a man twice my size and with three times my vigor.",
-        "whisper $1N Take this barrel, and map.",
+        "whisper $1N Take this barrel and map.",
         "whisper $1N Simply <a cmd='look map'>look at this map</a> and it will guide you to the nearby city of Midgaard.",
-        "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.'",
+        "whisper $1N At the Midgaard Market Square you will find an obelisk full of water! Simply <a cmd='#'>pour obelisk in barrel</a> to fill it up.",
         "::$3n hands you an empty barrel and a crumpled map.::$3n hands an empty barrel and a crumpled map to $1n."},
         "Return to Boldin with his barrel full of water. You can fill up the barrel in Midgaard at the Obelisk."
     );
@@ -382,14 +380,14 @@ code
         "say A dark rumour has been spreading, and I think you're up to helping with it.",
         "whisper $1N There is word that gremlins have invaded a nearby farmstead!",
         "whisper $1N What do you think, do you have it in you to help?",
-        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details.'"}, "", "");
+        "whisper $1N Just <a cmd='#'>nod</a> your head, and I'll give you the details."}, "", "");
 
     if (pc == null)
         goto start;
 
     // Find a hero to take the water quest
     exdp := qstAssign@quests(BOLDIN_HANDOFF, pc, 
-        {"say Your help will be well appreciated $1N!",
+        {"say Your help will be well appreciated, $1N!",
         "whisper $1N Between Cypress Forest and the City of Midgaard lies a dusty trail.",
         "whisper $1N A small farmstead can be found by heading north on this trail.",
         "whisper $1N Barnham is the master of this farm, and also a distant cousin of mine.",
@@ -413,9 +411,9 @@ code
 
     // Find a hero to take the water quest
     exdp := qstAssign@quests(BOLDIN_ROGUE, pc, 
-        {"say And so another adventure begins $1N.",
+        {"say And so another adventure begins, $1N.",
         "whisper $1N Away beyond the East gate of Midgaard lies a crossroads.",
-            "whisper $1N South from this crossroads, lies the seaside town of Torsbay.",
+            "whisper $1N South from this crossroads lies the seaside town of Torsbay.",
             "whisper $1N There in Torsbay, a rogue has landed on the shore.",
             "whisper $1N Find this rogue, and mention my name. He will know what to do."
         }, "Find the rogue in Torsbay.");
@@ -510,7 +508,7 @@ code
     pause;
     exec("say Of course, the easiest thing to do would be to simply go find it.", self);
     pause;
-    exec("say But your corpse could wind up in the most inconvient locations!", self);
+    exec("say But your corpse could wind up in the most inconvenient locations!", self);
     pause;
     exec("emote mutters something about giant ants.", self);
     pause;
@@ -525,8 +523,7 @@ code
     goto accept_explore;
 
   :accept_explore:
-    wait(SFB_DONE, activator.type == UNIT_ST_PC);
-    pc := activator;
+    wait(SFB_DONE, activator == pc);
     if (command("nod"))
     {
       goto anchor_accepted;
@@ -604,7 +601,7 @@ code
       pause;
       if (pc.hometown == "temple@udgaard")
       {
-        exec("emote mutters 'Probably that temple in udgaard...'", self);
+        exec("emote mutters 'Probably that temple in Udgaard...'", self);
       }
       else
       {
@@ -615,7 +612,7 @@ code
       pause;
       exec("say Now, go forth and die freely!", self);
       pause;
-      exec("wave $1n", self);
+      exec("wave " + pc.name, self);
 
       // settle rewards
       subextra(pc.quests, SOUL_ANCHOR_ONGOING);
@@ -668,7 +665,7 @@ code
 	pause;
 	exec("say My son Bernhard went exploring, and has not returned.", self);
 	pause;
-	exec("say Whats more, it appears those nasty gremlins have invaded.", self);
+	exec("say What's more, it appears those nasty gremlins have invaded.", self);
 	pause;
 	exec("say For generations, we have seen one or two periodically attack from their cave to the west.", self);
 	pause;
@@ -716,7 +713,7 @@ code
 	pause;
 	exec("emote reaches over to the drawers, and with a deft move, opens a false bottom!", self);
 	pause;
-	exec("emote carefully lifts an object from the drawer, and unwraps it's cloth covering.", self);
+	exec("emote carefully lifts an object from the drawer, and unwraps its cloth covering.", self);
 	pause;
 	exec("say "+pc.name+", this has been handed down to me, for use fending off invading gremlins.", self);
 	pause;
@@ -754,7 +751,7 @@ code
 	exdp := EXPLORE_ONGOING in pc.quests;
 	if ("dagger" in exdp.names)
 	{
-		exec("say I thank you for bringing me this, but please I cant bear to keep it.", self);
+		exec("say I thank you for bringing me this, but please, I can't bear to keep it.", self);
 		pause;
 		exec("emote returns the dagger to you.", self);
 		subextra(pc.quests, EXPLORE_ONGOING);
@@ -807,7 +804,7 @@ code
 	if ((item.symname == "tarn_dagger@gremlin") and (not(EXPLORE_COMPLETE in activator.quests)))
 	{
 		addstring(exdp.names, "dagger");
-		destroy(self.inside);
+		destroy(item);
 		// exec("say I see. It is as I feared, then.", self);
 		pause;
 		exec("cry", self);
@@ -818,9 +815,9 @@ code
 	else
 	{
 		exec("say Did I ask for this, "+pc.name +"?", self);
+		link(item, pc);
 		pause;
 		exec("say I think not.", self);
-		link(self.inside, pc);
 	}
 
 :rejected:	
@@ -871,7 +868,7 @@ title "Barnham's Attic"
 descr
 "A dry and dusty smell tickles your nose as you climb into the attic. 
 It seems that Barnham has maintained his roof well, as despite all the 
-rain this area is known for, the space free from moisture. A range of 
+rain this area is known for, the space is free from moisture. A range of 
 artifacts that seem somewhat out of place for a simple farmer are 
 scattered through the space. A door leads back down."
 movement SECT_INSIDE
@@ -887,7 +884,7 @@ farm_01
 names {"farm yard", "farm"}
 title "Outside Barnham's Farm"
 descr
-"Stepping outside of barnham's farmhouse a large well-kept field 
+"Stepping outside of Barnham's farmhouse a large well-kept field 
 is spread out here. Rich brown soil clumps underfoot, moist from 
 the recent rains, and clearly fertile. To the south you see a 
 simple well outside the farmhouse, and away to the north west a 
@@ -946,7 +943,7 @@ has been recently tilled to prepare for planting. Away to the east
 Barnham's farmhouse sits solidly overlooking the land. The entry 
 to the farmhouse looks welcoming after a long day of work. North and south 
 of here the freshly tilled soil is turned and prepared for planting. 
-The farms western fence blocks travel to the west."
+The farm's western fence blocks travel to the west."
 movement SECT_FIELD
 
 north to farm_03 descr "Barnham's Farm";
@@ -962,7 +959,7 @@ descr
 has been recently tilled to prepare for planting. To the east 
 Barnham's farmhouse sits solidly overlooking the land. A small well 
 is there, outside the home. North of here the freshly tilled soil 
-is turned and prepared for planting. The farms western fence blocks 
+is turned and prepared for planting. The farm's western fence blocks 
 travel to the west. To the south, a wide gate leads to the southern 
 fields, where tall corn stalks sway in the light breeze."
 movement SECT_FIELD
@@ -995,7 +992,7 @@ descr
 clear that the land has been well maintained, and that it provides well 
 for Barnham, delivering value for his clearly diligent labor. A fence 
 blocks travel to the west, and separates the southern field in that direction. 
-A visibile path sits on the other side of it leading to the western hills. 
+A visible path sits on the other side of it leading to the western hills. 
 North and east the carrot field continues."
 movement SECT_FIELD
 
@@ -1089,8 +1086,8 @@ title "Barnham's Corn Field"
 descr
 "Tall corn stalks sway against you as the light breeze pushes them this way 
 and that. The rows of corn grow out of loose dark soil, and are alternated with 
-well traveled paths where Barnham walks through a maintains the field. North of 
-here the gate separating fields appears to be well maintaintained, and strong. 
+well traveled paths where Barnham walks through and maintains the field. North of 
+here the gate separating fields appears to be well maintained, and strong. 
 The fence runs along both east, and west, ultimately encircling the growth of 
 corn. Travel is possible to the north, south, east, and west."
 movement SECT_FIELD
@@ -1144,7 +1141,7 @@ and that. The tall corn stalks appear to be nearly ready for harvest, Barnham
 will have his hands full in the coming days. It is clear looking around 
 that Barnham cares deeply for his land, and crop. Everywhere are the signs of 
 hard work, and a well-kept field. Travel is blocked to the south and east by 
-the fence surrounding the farm. North, west the rows of corn continue."
+the fence surrounding the farm. North and west the rows of corn continue."
 movement SECT_FIELD
 
 north to fs_02 descr "Barnham's Corn Field";
@@ -1155,7 +1152,7 @@ fs_05
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Strong tall corn stalks block much view beyond whats right here. You can make 
+"Strong tall corn stalks block much view beyond what's right here. You can make 
 out the fence surrounding Barnham's farm to the immediate north and west. 
 Somewhere, the sound of a crow exulting in finding a trinket is emerging to 
 break the otherwise peaceful quiet. South and east of here the corn fields 
@@ -1170,7 +1167,7 @@ fs_06
 names {"farm yard", "farm"}
 title "Barnham's Corn Field"
 descr
-"Here in the far corner of Barnhams farm, a peaceful quiet can be found. 
+"Here in the far corner of Barnham's farm, a peaceful quiet can be found. 
 Indeed, a small bench sits here among the rows of corn. It appears as if 
 Barnham himself has taken advantage of the solitude offered, and spent time 
 reflecting in its well-worn seat. The fence surrounding the fields blocks 
@@ -1180,7 +1177,7 @@ movement SECT_FIELD
 north to fs_05 descr "Barnham's Corn Field";
 east to fs_03 descr "Barnham's Corn Field";
 extra {"small bench", "bench"}
-"A small wooden bench, sturdy but well used rests among the corn."
+"A small wooden bench, sturdy but well used, rests among the corn."
 end
 
 outside_farm
@@ -1189,7 +1186,7 @@ title "Outside Barnham's Farm"
 descr
 "You stand before Barnham's farmhouse, a small haven sitting at the edge of a 
 large field that extends beyond it. It is a well-constructed home, with 
-amenities to support the operations and maintainance of the property. A small 
+amenities to support the operations and maintenance of the property. A small 
 farm cart rests along one side of the front door. Beyond, in the distance 
 to the north and west, some hills rise up obscuring the horizon. Away to the 
 south and east you know lies the city of Midgaard."
@@ -1207,10 +1204,10 @@ trail_01
 names {"dusty trail", "trail"}
 title "On a Dusty Trail"
 descr
-"Gravel, sand and dust makes this desert like trail, which leads north from the 
+"Gravel, sand and dust make this desert-like trail, which leads north from the 
 path ultimately connecting to the city of Midgaard to the east, and Udgaard far 
 away to the west beyond the Cypress Forest. As you travel to the north, the 
-well-traveled becomes less dusty, and more firmly-packed. The trail continues 
+well-traveled path becomes less dusty, and more firmly-packed. The trail continues 
 to the north, where some distance away you can make out a farm house. 
 Travelling south from here will return you to the Dusty Trail west of Midgaard."
 movement SECT_CITY
@@ -1225,7 +1222,7 @@ names {"well worn trail", "trail"}
 title "On a Well-Worn Trail"
 descr
 "The gravel and dust that had greeted you to the south give way to a darker and 
-richer soil which make for a well-packed and easy to travel trail. West of here 
+richer soil which makes for a well-packed and easy to travel trail. West of here 
 a cheery farmstead looks welcomingly on to the trail. Rich fields extend beyond 
 it to the cypress trees which make way for hills rising beyond. A rocky 
 outcropping prevents travel to the east, while north of here, the hills give 
@@ -1245,7 +1242,7 @@ end
 
 outcropping
 names {"rocky outcropping", "outcropping"}
-title "On The Rocky Outcropping"
+title "On the Rocky Outcropping"
 descr
 "Perched from this vantage, a broad array of landscape is highlighted in 
 the surrounding area. To the east the city of Midgaard sprawls widely with 
@@ -1267,8 +1264,8 @@ end
 
 
 fpath_01
-names {"smail path", "path"}
-title "On a small path"
+names {"small path", "path"}
+title "On a Small Path"
 descr
 "A small dirt path leads away from the farm, and towards the hills to the 
 west. While it appears to have fallen to disuse in recent times, there are 
@@ -1283,12 +1280,12 @@ west to fpath_02 descr "A small path";
 end
 
 fpath_02
-names {"smail path", "path"}
-title "On a small path"
+names {"small path", "path"}
+title "On a Small Path"
 descr
 "The dirt path continues winding towards the hills, slowly gaining some 
 elevation as you travel west and north. While still the evidence of  
-disuse in recent times is clear, more and more often clear signs of 
+disuse in recent times is clear, more and more often there are clear signs of 
 recent travel everywhere. Here some trampled bushes, there the remains 
 of some food left to the birds. Travel is possible only along the trail 
 to both the east leading towards Barnham's farm, and where it turns 
@@ -1300,8 +1297,8 @@ north to fpath_03 descr "A small path";
 end
 
 fpath_03
-names {"smail path", "path"}
-title "Climbing a small path"
+names {"small path", "path"}
+title "Climbing a Small Path"
 descr
 "The path begins to climb steeply here into the hills as one travels to 
 the north from Barnham's farm, which is now seeming small and distant 
@@ -1326,7 +1323,7 @@ descr
 comfortably walk into this cave abreast, though in the darkness it's not 
 clear how deep the cave goes. A cool draft can be felt emerging from 
 within the cave, and a slightly acrid smell accompanies it. In the 
-immediate surrounding, clear remains of a group having made camp here 
+immediate surroundings are clear remains of a group having made camp here 
 in the recent past. The remains of a burned-out fire are surrounded by 
 well compacted earth. Remains of food and drink are being picked through 
 by crows, hopping around and enjoying their find. The trail returns south 
@@ -1362,7 +1359,7 @@ names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
 "The dark and dank floods your senses. Sounds that come from everywhere and 
-nowere reach your ears on a continual basis. The slapping of feet. The scrape 
+nowhere reach your ears on a continual basis. The slapping of feet. The scrape 
 of things being moved around. You are not alone in here. Returning to the 
 junction to the east seems the safest path, though the cave moves deeper to 
 the north."
@@ -1379,7 +1376,7 @@ title "Junction in the Cave"
 descr
 "Here, another junction point in this maze of caves opens up. The dark and 
 dank continues to flood your senses. Still, sounds come from everywhere and 
-nowere at once. The slapping of feet. The scrape of things being moved around. 
+nowhere at once. The slapping of feet. The scrape of things being moved around. 
 You are not alone in here. The cave splits here to the north, east, and south. 
 It's no longer clear which path leads where."
 movement SECT_CITY
@@ -1394,7 +1391,7 @@ fcave_06
 names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
-"With dispair you find that the path of the cave you had been traveling down 
+"With despair you find that the path of the cave you had been traveling down 
 has come to an end. This space, while closing off the path and preventing 
 further travel, is certainly not empty. There are... remains here. The smell 
 is somewhat overwhelming, and a sickness crawls in your gut. Everything inside 
@@ -1428,10 +1425,10 @@ title "A Large Cavern"
 descr
 "The narrow tunnel opens here into a large cavern. The ceiling climbs up and 
 becomes lost in the darkness high above. Here and there, a steady heartbeat of 
-a water dripping can be heard as the moisture falls from distant stalactites. 
+water dripping can be heard as the moisture falls from distant stalactites. 
 The darkness feels complete and almost smothering, and every noise echoes 
 through the space. And noises there are. There are things moving in the 
-darkness, somewhere. It seems that the cavern contiues north, or back through 
+darkness, somewhere. It seems that the cavern continues north, or back through 
 the narrow passage west."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
@@ -1445,10 +1442,10 @@ names {"inside cave", "cave"}
 title "Inside the Cave"
 descr
 "The large cavern disappears into the darkness high above. Here and there, a 
-steady heartbeat of a water dripping can be heard as the moisture falls from 
+steady heartbeat of water dripping can be heard as the moisture falls from 
 distant stalactites. The darkness feels complete and almost smothering, and 
 every noise echoes through the space. Somewhere, there are things moving in 
-the darkness. It seems that the cavern contiues south and east."
+the darkness. It seems that the cavern continues south and east."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
 
@@ -1512,7 +1509,7 @@ descr
 "Suddenly the cave that seemed like it may continue winding through the hills 
 forever, comes to an abrupt end. A slight draft, and with it the welcome aroma 
 of fresh air, tickles the senses here. The cave wall before you is evidently 
-the end of the path. Where is that fresh air coming from however. The rocks on 
+the end of the path. Where is that fresh air coming from, however? The rocks on 
 the cave wall may be worth looking at further. The damp accumulates into pools 
 here and you suspect that they may be related to the smell. The sounds of 
 something, or someone moving in the darkness leaves hair raised on end."
@@ -1526,7 +1523,7 @@ key nokey
 open {EX_OPEN_CLOSE, EX_CLOSED, EX_HIDDEN};
 extra {"cave wall","wall"}
 "The wall here is made of piled rocks, as if they were placed here 
-intentionally. I wonder what a more careful search the rock wall 
+intentionally. I wonder what a more careful search of the rock wall 
 would reveal?<br><div class='hint'>HINT: Try 'search rock wall' here.</div>"
 end
 
@@ -1538,7 +1535,7 @@ descr
 secret. It appears to be a treasure room, where the gremlins, grumpkins, 
 and their ilk have stored generations of loot and trinkets. Piled rocks 
 sit against the east and west walls, and to the north there is a 
-pile weapons and armours, likely taken from the fallen. Weapons, gemstones 
+pile of weapons and armours, likely taken from the fallen. Weapons, gemstones 
 and other valuables are scattered about."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS, UNIT_FL_NO_MOB}
@@ -1593,7 +1590,7 @@ descr
 "The well-packed and easy to travel trail ends here and opens into a 
 small cave entrance to the west. The fresh air and sounds of the Cypress 
 trees in the breeze fade as the cool cave air seems to flow out of the 
-darkness. The trail returns south towards the farm, and continues east 
+darkness. The trail returns south towards the farm, and continues west 
 into the cave."
 movement SECT_CITY
 flags {UNIT_FL_INDOORS}
@@ -1609,7 +1606,7 @@ names {"Boldin","man"}
 title "Boldin the wise"
 descr "Boldin the wise is here."
 extra {}
-"Boldin The Wise as he is known. A slim elderly man, Boldin definitely didnt 
+"Boldin the Wise, as he is known. A slim elderly man, Boldin definitely didn't 
 make it through life by blade or hammer. The look of one well studied, and 
 with a deep smile, you can appreciate the clear evidence that his alternative 
 path through life has been effective."
@@ -1624,11 +1621,11 @@ dilcopy newbie_nospl@newbie();
 dilcopy boldin_request@gremlin();
 
 dilcopy qstItemsWanted@quests(BOLDIN_BREAD, {"bread@midgaard"}, {""},
-		{"say Ahh, delicious! Thank you $1N.","emote eats the bread."}, 
-       "say Please bring me a bread from Rosanne's bakery.");
+		{"say Ahh, delicious! Thank you, $1N.","emote eats the bread."}, 
+       "say Please bring me some bread from Rosanne's bakery.");
 
 dilcopy qstItemsWanted@quests(BOLDIN_WATER, {"water_barrel@gremlin"}, {"fluidcheck@quests 24"},
-		{"say A barrel full of water. Thank you $1N."},
+		{"say A barrel full of water. Thank you, $1N."},
       "say Please bring me back my barrel filled with water.");
 
 dilcopy qstOnComplete@quests(BOLDIN_BREAD, 
@@ -1640,8 +1637,8 @@ dilcopy qstOnComplete@quests(BOLDIN_BREAD,
 dilcopy qstOnComplete@quests(BOLDIN_WATER,
          {"smile $1N",
           "emote takes a long drink from the barrel, completely emptying it!",
-          "say I think you're going to need these sooner or later",
-          "emote quite slips you some coins and gives you an empty barrel."},
+          "say I think you're going to need these sooner or later.",
+          "emote quietly slips you some coins and gives you an empty barrel."},
           500, 2 * COPPER_MULT, {"water_barrel@gremlin"});
 
 dilcopy qstOnComplete@quests(BOLDIN_ROGUE,
@@ -1761,7 +1758,7 @@ end
 gaflaw
 names {"gaflaw", "grumpkin"}
 title "Gaflaw the Great"
-descr "Gaflaw, the greatest of grumpkins stands proudly here."
+descr "Gaflaw, the greatest of grumpkins, stands proudly here."
 extra {}
 "Gaflaw is a terrifying grumpkin indeed! His presence clearly commands respect
 among the grumpkins and gremlins that have been set loose on this place."
@@ -1774,7 +1771,7 @@ end
 
 gguard
 names {"guard", "grumpkin"}
-title "grumpkin guard"
+title "a grumpkin guard"
 descr "A large grumpkin guard is here."
 extra {}
 "This is the biggest grumpkin you've ever seen! You immediately want nothing more than to kill it."
@@ -1792,7 +1789,7 @@ names {"rogue", "sventer"}
 title "Sventer the rogue"
 descr "A tall roguish man is here."
 extra {}
-"Tall, and dashingly handsom, Sventer has a scar down one cheek from an 
+"Tall, and dashingly handsome, Sventer has a scar down one cheek from an 
 apparent run-in with a blade of one form or another. He is cowled in a dark 
 cloak, and has a gleam in his eye."
 M_HUMAN_THIEF_AXE(30,SEX_MALE)
@@ -1818,7 +1815,7 @@ code
 	wait(SFB_CMD, activator.type == UNIT_ST_PC);
 
 	pc := qstWaitHero@quests(ROGUE_QUEST, activator, 
-		{"say Ahoy $1N. So you be another of Boldin's youngsters then, eh?.",
+		{"say Ahoy $1N. So you be another of Boldin's youngsters then, eh?",
 		 "say If he's sent you to me it means he wants you to see what an adventurer has to do to keep the wolf from the door...",
 		 "say Apart from killing it, of course.",
 		 "say First things first, boats.",
@@ -1851,7 +1848,7 @@ code
 		 "say If you can't afford all of my supplies, try roughing up one of those good-for-nothing fishermen on the eastern beach and selling their rods to Fred at the fishing supply store in the harbour market.",
 		 "say Now look lively and fetch me them things, or I'll miss me ship."
         },
-		"Bring Sventer: a boat, an old serrated cutlass lost in the Sewers of Midgaard, a piece of good rope from Whesland, a mug of hobgoblin whiskey sold in the mountains south of Kind's Cross road.");
+		"Bring Sventer: a boat, an old serrated cutlass lost in the Sewers of Midgaard, a piece of good rope from Whesland, a mug of hobgoblin whiskey sold in the mountains south of the King's Road.");
 
 	unsecure(pc);
 
@@ -1962,12 +1959,12 @@ end
 gaflaw_club
 names {"large club","club"}
 title "a large club"
-descr "A large knobby club is here"
+descr "A large knobby club is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 weight 4
 extra {}
-"It's a simple yet effective club. Large and knobby, it wouldnt 
+"It's a simple yet effective club. Large and knobby, it wouldn't 
 feel good to have this thwack you upside the head."
 end
 
@@ -1979,14 +1976,14 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_CLUB, BONUS_AVERAGE_MINUS, BONUS_AVERAGE_MINUS)  // Xyzzy: -1,-1
 weight 1
 extra {}
-"It's a simple club. Despite it small size, it still wouldnt 
+"It's a simple club. Despite its small size, it still wouldn't 
 feel good to have this thwack you upside the head."
 end
 
 rusty_sword
 names {"rusty sword","sword"}
 title "a rusty sword"
-descr "A rusty short sword is here"
+descr "A rusty short sword is here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE_MINUS, BONUS_AVERAGE_MINUS)  // Xyzzy: -1,-1
 weight 1
@@ -2021,9 +2018,9 @@ extra {}
 Step 1: Start at the Village Square of Udgaard. <br>
 Step 2: Travel as far as you can to the east (five rooms) and you will arrive at the Top of Hill.<br>
 <div class='hint'>HINT: Try typing 'help area' here. You will find that you have arrived in an area known as Cypress Forest.</div><br>
-Step 3: From Top of Hill, travel along the path through the Cypress Forest to it's edge. The directions will be as follows:<br>
+Step 3: From Top of Hill, travel along the path through the Cypress Forest to its edge. The directions will be as follows:<br>
 south, east, south, east, east, north, east, north<br>
-Step 4: Get your bearings! You should find that to the east lies a Dustry Trail west of Midgaard.<br>
+Step 4: Get your bearings! You should find that to the east lies a Dusty Trail west of Midgaard.<br>
 <div class='hint'>HINT: Try typing 'directions' here -- you can shorten it to 'dir'. </div><br>
 Step 5: Continue to the east, and you will find yourself on the Main Street of Midgaard itself!"
 manipulate {MANIPULATE_TAKE}
@@ -2119,7 +2116,7 @@ end
 barnham_legs
 names {"leather leggings","leggings"}
 title "a pair of leather leggings"
-descr "A pair of leather leggings have been left here."
+descr "A pair of leather leggings has been left here."
 extra {}
 "Some simple leather leggings, they appear to provide some warmth as well as protection from the world."
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -2131,7 +2128,7 @@ end
 barnham_boots
 names {"leather boots","boots"}
 title "a pair of leather boots"
-descr "A pair of leather boots have been left here."
+descr "A pair of leather boots has been left here."
 extra {}
 "Some simple leather boots, they appear to provide some warmth as well as protection from the world."
 ARMOUR_LEATHER(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
@@ -2158,7 +2155,7 @@ end
 adv_legs
 names {"adventurer's leggings","leggings"}
 title "an Adventurer's Leggings"
-descr "A pair of gleaming chain leggings are here."
+descr "A pair of gleaming chain leggings is here."
 extra {}
 "These fine chain leggings provide good protection, and seem to have a magical gleam to them."
 ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
@@ -2173,7 +2170,7 @@ end
 adv_boots
 names {"adventurer's boots","boots"}
 title "an Adventurer's Boots"
-descr "A pair of magical boots lie here."
+descr "A pair of magical boots lies here."
 extra {}
 "These fine boots have a magical twinkle to them. They are high quality adventuring boots, to be sure."
 ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
@@ -2188,7 +2185,7 @@ end
 adv_glove
 names {"adventurer's gloves","gloves"}
 title "an Adventurer's Gloves"
-descr "A fine pair of gloves lay here."
+descr "A fine pair of gloves lies here."
 extra {}
 "These fine gloves appear to have been well used by adventurers of years past."
 ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
@@ -2278,7 +2275,7 @@ names {"healing jug","jug"}
 title "a jug of healing"
 descr "A small white clay jug stands here."
 extra {}
-"The white clay jug is marked with healer's sigil."
+"The white clay jug is marked with a healer's sigil."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 flags {UNIT_FL_BURIED}
 type ITEM_POTION
@@ -2288,12 +2285,12 @@ cost 2 COPPER_PIECE
 end
 
 pendant
-names {"gwydions amulet","amulet"}
+names {"gwydion's amulet","gwydions amulet","amulet"}
 title "Gwydion's Amulet"
 descr "A small wooden amulet is here."
 extra {}
 "This small amulet is intricately carved of an unknown wood. A rich color, 
-it has been worn smoothe by countless generations of hands clasping at it. 
+it has been worn smooth by countless generations of hands clasping at it. 
 While it's not clear why, there seems to be a deep power within."
 extra {"$identify"}
 "Gwydion's Amulet is a powerful tool for both the divine and magically inclined.
