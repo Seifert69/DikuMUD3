@@ -673,9 +673,15 @@ code
          }
       }
 
-      addextra(self.extra, {SWIM_ON_NAME}, "");
-      exec(arg1, self);
-      subextra(self.extra, SWIM_ON_NAME);
+      // Swim this once; leave automatic swimming as it was
+      if (self.extra.[SWIM_ON_NAME])
+         exec(arg1, self);
+      else
+      {
+         addextra(self.extra, {SWIM_ON_NAME}, "");
+         exec(arg1, self);
+         subextra(self.extra, SWIM_ON_NAME);
+      }
    }
    else
    {

@@ -302,7 +302,7 @@ code
 
 if((self.type == UNIT_ST_PC) and (isset(self.pcflags,PC_NOTELLING)))
 {
- sendtext("Your telepatic ability is lost!<br/>", self);
+ sendtext("Your telepathic ability is lost!<br/>", self);
  quit;
 }
 
@@ -597,9 +597,13 @@ if (person==null)
   quit;
   }
 
-pc:=findunit (self,person.descr,FIND_UNIT_WORLD,null,UNIT_ST_PC);
+// By exact name in the player list: findunit only finds players you can see,
+// and you may respond to someone you can't (you respond to Someone)
+pc := ghead();
+while ((pc.type == UNIT_ST_PC) and (pc.name != person.descr))
+   pc := pc.gnext;
 
-if (pc==null)
+if (pc.type != UNIT_ST_PC)
 pc := findunit(self,person.descr,FIND_UNIT_HERE,null,UNIT_ST_NPC);
 
 if (pc==null)

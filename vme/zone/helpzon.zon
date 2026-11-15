@@ -309,7 +309,7 @@ code
       {
          tlist := split(zptr.title,"@");
          sendtext ("You are in the area known as: "+tlist.[0]+".<br/>",self);
-         sendtext (pay+".<br/>",self);
+         sendtext (pay+"<br/>",self);
          pagestring (zptr.help,self);
          quit;
       }

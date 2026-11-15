@@ -962,7 +962,7 @@ code
 	{
 		sendtext("Enter a slash (/) delimited list of quests not allowed in this <br> competition:  ",self);
 		wait(SFB_CMD, TRUE);
-		ncname:=textformat("&nbsp;"+excmdstr+" "+argument);
+		ncname:=excmdstr+" "+argument;
 		goto comp_menu;
 	}
 	else if (command ("9"))
