@@ -1,6 +1,7 @@
 project(vmc)
 
 set(VMC_SRCS
+        dilcheck.cpp dilcheck.h
         dilpar.h
         diltok.h
         json.cpp

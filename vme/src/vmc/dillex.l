@@ -214,7 +214,28 @@ char diltmpstr[YYLMAX * 2 + 1], *dila, *dilb;
 }
 
 ^\#.*\n {
-    setline(diltext); /* cpp file/line settings */
+    /* line marker "# <line> ..." or "#line <line>": the next line of the DIL is that line */
+    const char *s = diltext + 1;
+    while (*s == ' ' || *s == '\t')
+    {
+        s++;
+    }
+    if (strncmp(s, "line", 4) == 0)
+    {
+        s += 4;
+        while (*s == ' ' || *s == '\t')
+        {
+            s++;
+        }
+    }
+    if (isdigit(*s))
+    {
+        dillinenum = atoi(s);
+    }
+    else
+    {
+        dillinenum++;
+    }
 }
 
 [\t ]   /* ignore */

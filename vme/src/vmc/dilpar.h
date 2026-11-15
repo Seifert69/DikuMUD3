@@ -26,6 +26,8 @@ struct exptype
     sbit32 num;           ///< static value INT or field type
     ubit8 *code;          ///< code / static value SP
     ubit8 *codep;         ///< code write pointer
+    sbit16 chkvar;        ///< for DilCheck: the variable read (DilCheck::ACTIVATOR.. for built-ins), -1 none
+    ubit8 chkfield;       ///< for DilCheck: read through a field (pc.name)
 };
 
 struct dilref

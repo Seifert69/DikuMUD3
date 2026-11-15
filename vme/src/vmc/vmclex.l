@@ -153,6 +153,27 @@ dilbegin[^\^]*\^ {
         if (*a == '\n')
         {
             linenum++;
+            if (a[1] == '#')
+            {
+                /* a line marker ("# <line>" or "#line <line>"): the line after it is <line> */
+                const char *s = a + 2;
+                while (*s == ' ' || *s == '\t')
+                {
+                    s++;
+                }
+                if (strncmp(s, "line", 4) == 0)
+                {
+                    s += 4;
+                    while (*s == ' ' || *s == '\t')
+                    {
+                        s++;
+                    }
+                }
+                if (isdigit(*s))
+                {
+                    linenum = atoi(s) - 1;
+                }
+            }
         }
     }
     /* During %dil section, tell compiler only to

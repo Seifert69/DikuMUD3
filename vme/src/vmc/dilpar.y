@@ -22,6 +22,7 @@
 #include "db_file.h"
 #include "dil.h"
 #include "dilpar.h"
+#include "dilcheck.h"
 #include "dilshare.h"
 #include "intlist.h"
 #include "namelist.h"
@@ -136,11 +137,21 @@ struct sSyms
     v.num = 0;                                                                 \
     v.typ = v.rtyp = DilVarType_e::DILV_NULL;                                                \
     v.dsl = DSL_STA;                                                           \
-    v.boolean = 0;
+    v.boolean = 0;                                                             \
+    v.chkvar = -1;                                                             \
+    v.chkfield = 0;
 
 #define FREEEXP(v)                                                             \
     free(v.code);                                                              \
     v.code = nullptr;
+
+/* DIL checks (dilcheck.h): bytecode a coreexp left in the core */
+static int core_var(ubit32 fst, ubit32 lst);
+static bool core_int(ubit32 fst, ubit32 lst, sbit32 *value);
+static bool core_null(ubit32 fst, ubit32 lst);
+static void dilcheck_report(int line, const std::string &msg);
+static DilCheck g_dilcheck(dilcheck_report);
+static std::vector<std::string> g_dilcheck_msgs; /* printed after the template's line */
 
 #define checkbool(s, v)                                                        \
     do                                                                         \
@@ -340,6 +351,11 @@ file    : program
         {
             fprintf(stderr, " (%5d bytes)\n", pBuf->GetLength());
         }
+        for (const auto &msg : g_dilcheck_msgs)
+        {
+            fprintf(stderr, "%s\n", msg.c_str());
+        }
+        g_dilcheck_msgs.clear();
 
         if (dilerrcon)
         {
@@ -349,7 +365,20 @@ file    : program
     }
     ;
 
-program : DILSC_BEG dilinit diloptions fundef dilrefs dildecls DILSC_COD block DILSC_END
+program : DILSC_BEG dilinit diloptions fundef dilrefs dildecls DILSC_COD
+    {
+        std::vector<std::string> names;
+        std::vector<DilCheck::VarKind> kinds;
+        for (int i = 0; i < tmpl.varc; i++)
+        {
+            names.emplace_back(var_names[i]);
+            kinds.push_back(tmpl.vart[i] == DilVarType_e::DILV_UP    ? DilCheck::VarKind::Unit
+                            : tmpl.vart[i] == DilVarType_e::DILV_EDP ? DilCheck::VarKind::Extra
+                                                                       : DilCheck::VarKind::Other);
+        }
+        g_dilcheck.begin(names, kinds, tmpl.argc);
+    }
+    block DILSC_END
     {
         /* start at the top again */
         moredilcore(5);
@@ -818,6 +847,12 @@ type    : DILST_UP
 variable : variable '.' field
     {
         INITEXP($$);
+        if (!$1.chkfield)
+        {
+            g_dilcheck.use($1.chkvar, true, dillinenum);
+        }
+        $$.chkvar = $1.chkvar;
+        $$.chkfield = 1;
         if ($1.dsl == DSL_FCT)
         {
             dilfatal("Attempting to derive fields of proc/func");
@@ -992,6 +1027,7 @@ variable : variable '.' field
         {
             $$.typ = tmpl.vart[i];
             $$.dsl = DSL_LFT;
+            $$.chkvar = i;
             add_ubit8(&($$), DILE_VAR);
             add_ubit16(&($$), i);
         }
@@ -1008,6 +1044,7 @@ variable : variable '.' field
         INITEXP($$);
         $$.dsl = DSL_DYN;
         $$.typ = DilVarType_e::DILV_UP;
+        $$.chkvar = DilCheck::ACTIVATOR;
         add_ubit8(&($$), DILE_ACTI);
     }
     | DILSE_MEDI
@@ -1015,6 +1052,7 @@ variable : variable '.' field
         INITEXP($$);
         $$.dsl = DSL_DYN;
         $$.typ = DilVarType_e::DILV_UP;
+        $$.chkvar = DilCheck::MEDIUM;
         add_ubit8(&($$), DILE_MEDI);
     }
     | DILSE_TARG
@@ -1022,6 +1060,7 @@ variable : variable '.' field
         INITEXP($$);
         $$.dsl = DSL_DYN;
         $$.typ = DilVarType_e::DILV_UP;
+        $$.chkvar = DilCheck::TARGET;
         add_ubit8(&($$), DILE_TARG);
     }
     | DILSE_POWE
@@ -1057,6 +1096,7 @@ variable : variable '.' field
         INITEXP($$);
         $$.dsl = DSL_DYN;
         $$.typ = DilVarType_e::DILV_SP;
+        $$.chkvar = DilCheck::ARGUMENT;
         add_ubit8(&($$), DILE_ARGM);
     }
     | DILSE_HRT
@@ -3009,6 +3049,10 @@ dilfactor   : '(' dilexp ')'
         /*      if ($1.dsl==DSL_FCT)
                        dilfatal("Illegal use of proc/func");*/
 
+        if (!$1.chkfield)
+        {
+            g_dilcheck.use($1.chkvar, false, dillinenum);
+        }
         INITEXP($$);
         copy_code(&($$), &($1));
         FREEEXP($1);
@@ -6422,6 +6466,9 @@ dilproc : corefuncall
         }
         else
         {
+            sbit32 type = -1;
+            core_int($13.fst, $13.lst, &type);
+            g_dilcheck.act(core_null($7.fst, $7.lst), core_null($11.fst, $11.lst), type, dillinenum);
             /* make code */
             $$.fst = $3.fst;
             $$.lst = $15 + 1;
@@ -6441,6 +6488,10 @@ dilproc : corefuncall
         }
         else
         {
+            if (tmpl.core[$3.fst] == DILE_FS)
+            {
+                g_dilcheck.exec((const char *)&tmpl.core[$3.fst + 1], tmpl.core[$3.lst - 1] == DILE_PLUS, dillinenum);
+            }
             $$.fst = $3.fst;
             $$.lst = $7 + 1;
             wtmp = &tmpl.core[$7];
@@ -6475,8 +6526,17 @@ dilproc : corefuncall
             bwrite_ubit32(&wtmp, $3.fst);
         }
     } */
-    | DILSI_WIT '(' coreexp ',' coreexp ')' ihold ahold
+    | DILSI_WIT '(' coreexp ','
     {
+        g_dilcheck.conditionBegin();
+    }
+    coreexp ')' ihold ahold
+    {
+        sbit32 flags = 0;
+        g_dilcheck.conditionEnd();
+        /* a wait for ticks only is a pause: activator & co. belong to the tick afterwards */
+        g_dilcheck.wait(core_int($3.fst, $3.lst, &flags) && (flags & SFB_TICK) && !(flags & ~(SFB_TICK | SFB_RANTIME)),
+                        dillinenum);
         checkbool("argument 1 of wait", $3.boolean);
         if ($3.typ != DilVarType_e::DILV_INT)
         {
@@ -6485,10 +6545,10 @@ dilproc : corefuncall
         else
         {
             $$.fst = $3.fst;
-            $$.lst = $8 + 4;
-            wtmp = &tmpl.core[$7];
-            bwrite_ubit8(&wtmp, DILI_WIT);
+            $$.lst = $9 + 4;
             wtmp = &tmpl.core[$8];
+            bwrite_ubit8(&wtmp, DILI_WIT);
+            wtmp = &tmpl.core[$9];
             bwrite_ubit32(&wtmp, $3.fst);
         }
     }
@@ -6572,23 +6632,30 @@ dilproc : corefuncall
         }
         else
         {
+            g_dilcheck.secure(core_var($3.fst, $3.lst), dillinenum);
             $$.fst = $3.fst;
             $$.lst = $6.lst;
             wtmp = &tmpl.core[$5];
             bwrite_ubit8(&wtmp, DILI_SEC);
         }
     }
-    | DILSI_USE '(' coreexp ')' ihold
+    | DILSI_USE '('
     {
-        if ($3.typ != DilVarType_e::DILV_UP)
+        g_dilcheck.quietBegin();
+    }
+    coreexp ')' ihold
+    {
+        g_dilcheck.quietEnd();
+        if ($4.typ != DilVarType_e::DILV_UP)
         {
             dilfatal("Arg 1 of 'unsecure' not a unit");
         }
         else
         {
-            $$.fst = $3.fst;
-            $$.lst = $5 + 1;
-            wtmp = &tmpl.core[$5];
+            g_dilcheck.unsecure(core_var($4.fst, $4.lst));
+            $$.fst = $4.fst;
+            $$.lst = $6 + 1;
+            wtmp = &tmpl.core[$6];
             bwrite_ubit8(&wtmp, DILI_USE);
         }
     }
@@ -6803,6 +6870,7 @@ optsemicolons   :
 
 block    : '{' dilinstlist '}'
     {
+        g_dilcheck.boundary();
         $$ = $2;
     }
     ;
@@ -6820,6 +6888,7 @@ dilinstlist   : dilcomposed
 
 dilcomposed   : '{' dilinstlist '}' optsemicolons
     {
+        g_dilcheck.boundary();
         $$ = $2;
     }
     | dilinst semicolons
@@ -6869,6 +6938,7 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
     }
     | DILSI_FOE '(' coreexp ',' ihold pushbrk pushcnt defcnt corevar ihold ahold ')'
     {
+        g_dilcheck.assign(core_var($9.fst, $9.lst));
         in_foreach++;
         if (in_foreach > 1)
         {
@@ -6921,7 +6991,11 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
         $$.fst = $6.fst;
         $$.lst = wcore - tmpl.core;
     }
-    | ':' SYMBOL ':' dilcomposed
+    | ':' SYMBOL ':'
+    {
+        g_dilcheck.boundary();
+    }
+    dilcomposed
     {
         int i;
 
@@ -6935,16 +7009,16 @@ dilcomplex : DILSI_IF '(' coreexp ')' ihold ahold block ihold ahold DILSI_ELS di
             else
             {
                 /* update label */
-                label_adr[i] = $4.fst;
+                label_adr[i] = $5.fst;
                 /* fprintf(stderr,"LABEL %s had adress %d\n",
-                        label_names[i], $4.fst); */
+                        label_names[i], $5.fst); */
             }
         }
         else
         {
-            add_label($2, $4.fst);
+            add_label($2, $5.fst);
         }
-        $$ = $4;
+        $$ = $5;
     }
     ;
 
@@ -7125,6 +7199,7 @@ dsomeargs : dilexp
 
 dilass   : corevar DILTO_ASS dilassrgt ihold
     {
+        g_dilcheck.assign(core_var($1.fst, $1.lst));
         /* this is an assignment to an expression */
 
         /* fprintf(stderr,"Assignment\n"); */
@@ -7175,8 +7250,13 @@ dilass   : corevar DILTO_ASS dilassrgt ihold
     }
     ;
 
-corefunc : DILSE_INTR '(' coreexp ',' ihold ahold ahold coreexp ',' labelskip ')' 
+corefunc : DILSE_INTR '(' coreexp ',' ihold ahold ahold
     {
+        g_dilcheck.conditionBegin();
+    }
+    coreexp ',' labelskip ')'
+    {
+        g_dilcheck.conditionEnd();
         checkbool("argument 1 in 'interrupt'", $3.boolean);
         if ($3.typ != DilVarType_e::DILV_INT)
         {
@@ -7185,14 +7265,14 @@ corefunc : DILSE_INTR '(' coreexp ',' ihold ahold ahold coreexp ',' labelskip ')
         else
         {
             $$.fst = $3.fst;
-            $$.lst = $10.lst;
+            $$.lst = $11.lst;
             /* Type is ok */
             wtmp = &tmpl.core[$5];
             bwrite_ubit8(&wtmp, DILE_INTR);
             wtmp = &tmpl.core[$6];
-            bwrite_ubit32(&wtmp, $8.fst);
+            bwrite_ubit32(&wtmp, $9.fst);
             wtmp = &tmpl.core[$7];
-            bwrite_ubit32(&wtmp, $10.fst);
+            bwrite_ubit32(&wtmp, $11.fst);
             tmpl.intrcount++;
             frm.intrcount++;
         }
@@ -7470,6 +7550,48 @@ void dilfatal(const char *str, ...)
     va_end(args);
     fprintf(stderr, "\n%d: %s\n    Token: '%s'\n", dillinenum, buf, diltext);
     exit(1);
+}
+
+/* the variable a coreexp/corevar is, when it is nothing but a variable, else -1 */
+static int core_var(ubit32 fst, ubit32 lst)
+{
+    if (lst - fst == 3 && tmpl.core[fst] == DILE_VAR)
+    {
+        ubit8 *p = &tmpl.core[fst + 1];
+        return bread_ubit16(&p);
+    }
+    return -1;
+}
+
+/* the value of a coreexp that is a constant integer */
+static bool core_int(ubit32 fst, ubit32 lst, sbit32 *value)
+{
+    if (lst - fst == 5 && tmpl.core[fst] == DILE_INT)
+    {
+        ubit8 *p = &tmpl.core[fst + 1];
+        *value = (sbit32)bread_ubit32(&p);
+        return true;
+    }
+    return false;
+}
+
+static bool core_null(ubit32 fst, ubit32 lst)
+{
+    return lst - fst == 1 && tmpl.core[fst] == DILE_NULL;
+}
+
+static void dilcheck_report(int line, const std::string &msg)
+{
+    extern char g_cur_filename[];
+    extern int g_fatal_warnings;
+
+    char buf[256];
+    snprintf(buf, sizeof(buf), "WARNING: %s: %d: DIL %s: ", g_cur_filename, line, tmpl.prgname);
+    if (g_fatal_warnings)
+    {
+        dilfatal("%s%s", buf, msg.c_str());
+    }
+    g_dilcheck_msgs.push_back(buf + msg);
 }
 
 void dilwarning(const char *str)
