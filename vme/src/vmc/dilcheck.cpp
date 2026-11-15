@@ -1,5 +1,6 @@
 #include "dilcheck.h"
 
+#include <algorithm>
 #include <cctype>
 
 DilCheck::DilCheck(Report report)
@@ -9,31 +10,28 @@ DilCheck::DilCheck(Report report)
 
 void DilCheck::begin(const std::vector<Var> &vars, int argc)
 {
-    vars_.clear();
-    for (const auto &v : vars)
+    vars_ = vars;
+    flow_ = Flow{};
+    for (size_t i = 0; i < vars_.size(); i++)
     {
-        State state = static_cast<int>(vars_.size()) < argc ? State::Unknown : State::Never;
-        vars_.push_back(Track{v.name, v.kind, state, false, false, false, 0});
+        flow_.vars.push_back(VarState{static_cast<int>(i) < argc ? State::Unknown : State::Never, false, false, false, 0});
     }
-    tickLine_ = 0;
-    for (bool &w : eventWarned_)
-    {
-        w = false;
-    }
-    condition_ = false;
-    quiet_ = false;
+    securedAbove_.assign(vars_.size(), false);
+    ifs_.clear();
     held_.clear();
+    loops_.clear();
     condReads_.clear();
-    waitAddrs_.clear();
-    unsecured_.clear();
+    condSame_.clear();
+    condition_ = false;
+    waitCondition_ = false;
+    quiet_ = false;
 }
 
 void DilCheck::end()
 {
     for (const Held &h : held_)
     {
-        Track *v = at(h.unlessSecured);
-        if (!v || !v->everSecured)
+        if (h.unlessSecured < 0 || !securedAbove_[h.unlessSecured])
         {
             report_(h.line, h.msg);
         }
@@ -46,21 +44,34 @@ void DilCheck::warn(int line, const std::string &msg, int unlessSecured)
     held_.push_back({line, msg, unlessSecured});
 }
 
-DilCheck::Track *DilCheck::at(int var)
+DilCheck::VarState *DilCheck::at(int var)
 {
-    return (var >= 0 && var < static_cast<int>(vars_.size())) ? &vars_[var] : nullptr;
+    return (var >= 0 && var < static_cast<int>(flow_.vars.size())) ? &flow_.vars[var] : nullptr;
 }
 
 void DilCheck::assign(int var, int from)
 {
-    if (Track *v = at(var))
+    VarState *v = at(var);
+    if (!v)
     {
-        // secure() protects a unit, not a variable: a copy of a secured variable survives waits
-        // too, a variable set to anything else doesn't
-        Track *f = at(from);
-        v->state = State::Fresh;
+        return;
+    }
+    v->state = State::Fresh;
+    v->warned = false;
+    if (from <= ACTIVATOR)
+    {
+        // wait(..., activator == pc); pc := activator: the same unit, so it stays secured
+        const auto &same = flow_.sameAsActivator;
+        if (std::find(same.begin(), same.end(), var) == same.end())
+        {
+            v->secured = false;
+        }
+    }
+    else
+    {
+        // secure() protects a unit, not a variable: a copy of a secured variable survives waits too
+        VarState *f = at(from);
         v->secured = f && f->secured;
-        v->warned = false;
     }
 }
 
@@ -68,7 +79,7 @@ void DilCheck::use(int var, bool field, int line)
 {
     static const char *const eventNames[] = {"activator", "medium", "target", "argument"};
 
-    if (quiet_)
+    if (quiet_ || !flow_.reachable)
     {
         return;
     }
@@ -76,22 +87,22 @@ void DilCheck::use(int var, bool field, int line)
     {
         // activator, medium, target, argument after a pause belong to the tick
         int i = ACTIVATOR - var;
-        if (tickLine_ && !condition_ && i >= 0 && i < 4 && !eventWarned_[i])
+        if (flow_.tickLine && !condition_ && i >= 0 && i < 4 && !flow_.eventWarned[i])
         {
-            eventWarned_[i] = true;
+            flow_.eventWarned[i] = true;
             warn(line,
                  std::string(eventNames[i]) + (var == ARGUMENT ? " is empty here" : " is null here") + ": after the pause on line " +
-                        std::to_string(tickLine_) + " the program was woken by a tick. Keep what you need in a variable before the pause");
+                     std::to_string(flow_.tickLine) + " the program was woken by a tick. Keep what you need in a variable before the pause");
         }
         return;
     }
 
-    Track *v = at(var);
-    if (!v || v->kind == VarKind::Other || v->warned)
+    VarState *v = at(var);
+    if (!v || vars_[var].kind == VarKind::Other || v->warned)
     {
         return;
     }
-    bool extra = (v->kind == VarKind::Extra);
+    bool extra = (vars_[var].kind == VarKind::Extra);
 
     if (condition_)
     {
@@ -100,60 +111,54 @@ void DilCheck::use(int var, bool field, int line)
     else if (v->state == State::Stale)
     {
         v->warned = true;
+        // when it was set on some way only, or above a label, a secure() further down may cover it
         warn(line,
-                v->name + " is null here: it was set before the wait on line " + std::to_string(v->staleLine) +
-                    (extra ? ", and a wait clears every extraptr variable" : " and isn't secured, and a wait clears unsecured unitptr variables"));
+             vars_[var].name + " is null here: it was set before the wait on line " + std::to_string(v->staleLine) +
+                 (extra ? ", and a wait clears every extraptr variable" : " and isn't secured, and a wait clears unsecured unitptr variables"),
+             v->staleVague ? var : -1);
     }
     else if (v->state == State::Never && field)
     {
         v->warned = true;
-        warn(line, v->name + " is used before it is set: it is still null here");
+        warn(line, vars_[var].name + " is used before it is set: it is still null here");
     }
 }
 
-void DilCheck::branches(unsigned from, unsigned to)
+void DilCheck::wait(bool tick, int line)
 {
-    for (unsigned a : waitAddrs_)
-    {
-        if (a >= from && a < to)
-        {
-            boundary();
-            return;
-        }
-    }
-}
-
-void DilCheck::wait(bool tick, int line, unsigned addr)
-{
-    waitAddrs_.push_back(addr);
     // the conditions read since the last wait are tested from now on, after every wake-up
+    flow_.sameAsActivator = condSame_;
+    condSame_.clear();
     for (const auto &r : condReads_)
     {
-        Track *v = at(r.first);
-        if (v && !v->warned && (v->kind == VarKind::Extra || !v->secured))
+        VarState *v = at(r.first);
+        bool extra = (vars_[r.first].kind == VarKind::Extra);
+        if (v && !v->warned && (extra || !v->secured))
         {
             v->warned = true;
             warn(r.second,
-                 v->name + " is null in this condition: the condition is tested after the program wakes up, and waking up clears " +
-                     (v->kind == VarKind::Extra ? "every extraptr variable" : "unsecured unitptr variables (secure it first)"),
-                 v->kind == VarKind::Extra ? -1 : r.first);
+                 vars_[r.first].name + " is null in this condition: the condition is tested after the program wakes up, and waking up clears " +
+                     (extra ? "every extraptr variable" : "unsecured unitptr variables (secure it first)"),
+                 extra ? -1 : r.first);
         }
     }
     condReads_.clear();
-    unsecured_.clear();
-    tickLine_ = tick ? line : 0;
+    flow_.tickLine = tick ? line : 0;
     if (tick)
     {
-        for (bool &w : eventWarned_)
+        for (bool &w : flow_.eventWarned)
         {
             w = false;
         }
     }
-    for (Track &v : vars_)
+    for (size_t i = 0; i < flow_.vars.size(); i++)
     {
-        bool cleared = (v.kind == VarKind::Extra) || (v.kind == VarKind::Unit && !v.secured);
+        VarState &v = flow_.vars[i];
+        bool unit = (vars_[i].kind == VarKind::Unit);
+        bool cleared = (vars_[i].kind == VarKind::Extra) || (unit && !v.secured);
         if (cleared && (v.state == State::Fresh || v.state == State::Unknown))
         {
+            v.staleVague = unit && (v.state == State::Unknown);
             v.state = State::Stale;
             v.staleLine = line;
             v.warned = false;
@@ -163,66 +168,183 @@ void DilCheck::wait(bool tick, int line, unsigned addr)
 
 void DilCheck::secure(int var, int line)
 {
-    if (Track *v = at(var))
+    VarState *v = at(var);
+    if (!v)
     {
-        if (v->state == State::Never)
-        {
-            warn(line, "secure(" + v->name + ") comes before " + v->name + " is set, so it secures nothing");
-        }
-        else if (v->state == State::Stale)
-        {
-            warn(line, "secure(" + v->name + ") secures nothing: " + v->name + " was cleared by the wait on line " + std::to_string(v->staleLine));
-        }
-        v->secured = true;
-        v->everSecured = true;
+        return;
+    }
+    if (flow_.reachable && v->state == State::Never)
+    {
+        warn(line, "secure(" + vars_[var].name + ") comes before " + vars_[var].name + " is set, so it secures nothing");
+    }
+    else if (flow_.reachable && v->state == State::Stale)
+    {
+        warn(line,
+             "secure(" + vars_[var].name + ") secures nothing: " + vars_[var].name + " was cleared by the wait on line " +
+                 std::to_string(v->staleLine));
+    }
+    v->secured = true;
+    if (flow_.reachable)
+    {
+        securedAbove_[var] = true;
     }
 }
 
 void DilCheck::unsecure(int var)
 {
-    if (Track *v = at(var))
+    if (VarState *v = at(var))
     {
-        if (v->secured)
-        {
-            unsecured_.push_back(var);
-        }
         v->secured = false;
     }
 }
 
 void DilCheck::jump()
 {
-    for (int var : unsecured_)
-    {
-        vars_[var].secured = true;
-    }
-    unsecured_.clear();
+    flow_.reachable = false;
 }
 
-void DilCheck::boundary(bool label)
+void DilCheck::equal(int a, int b)
 {
-    for (Track &v : vars_)
+    // wait(..., activator == pc): pc := activator afterwards is the same unit
+    if (waitCondition_)
     {
-        // a label can be reached from further down, where it may be set
-        if (v.state == State::Stale || v.state == State::Fresh || (label && v.state == State::Never))
+        if (a <= ACTIVATOR && a >= ARGUMENT && b >= 0)
+        {
+            condSame_.push_back(b);
+        }
+        else if (b <= ACTIVATOR && b >= ARGUMENT && a >= 0)
+        {
+            condSame_.push_back(a);
+        }
+    }
+}
+
+void DilCheck::forget(bool label)
+{
+    for (size_t i = 0; i < flow_.vars.size(); i++)
+    {
+        VarState &v = flow_.vars[i];
+        // code from further down, where it may be set
+        if (v.state == State::Stale || v.state == State::Fresh || v.state == State::Never)
         {
             v.state = State::Unknown;
         }
-        v.secured = v.secured || v.everSecured; // it may arrive from a path where it is secured
+        v.secured = v.secured || securedAbove_[i]; // it may arrive from a way where it is secured
         v.warned = false;
     }
-    unsecured_.clear();
-    tickLine_ = 0;
+    flow_.tickLine = 0;
+    flow_.sameAsActivator.clear();
+    if (label)
+    {
+        flow_.reachable = true;
+    }
+}
+
+void DilCheck::label()
+{
+    forget(true);
+}
+
+void DilCheck::loopBegin()
+{
+    loops_.push_back(flow_.reachable);
+    forget(false);
+}
+
+void DilCheck::loopEnd()
+{
+    // the loop ends when its condition fails or at a break: reached when its start was
+    forget(false);
+    if (!loops_.empty())
+    {
+        flow_.reachable = loops_.back();
+        loops_.pop_back();
+    }
+}
+
+void DilCheck::ifBegin()
+{
+    ifs_.push_back(flow_); // the way past the if when there is no else
+}
+
+void DilCheck::elseBegin()
+{
+    if (!ifs_.empty()) // the grammar always begins the if first
+    {
+        std::swap(flow_, ifs_.back()); // the else starts from the state before the if
+    }
+}
+
+void DilCheck::ifEnd()
+{
+    if (!ifs_.empty())
+    {
+        merge(ifs_.back());
+        ifs_.pop_back();
+    }
+}
+
+void DilCheck::merge(const Flow &other)
+{
+    if (!other.reachable)
+    {
+        return;
+    }
+    if (!flow_.reachable)
+    {
+        flow_ = other;
+        return;
+    }
+    for (size_t i = 0; i < flow_.vars.size(); i++)
+    {
+        VarState &v = flow_.vars[i];
+        const VarState &o = other.vars[i];
+        if (v.state == State::Stale && o.state == State::Stale)
+        {
+            v.staleVague = v.staleVague && o.staleVague; // definite if definite on either way
+        }
+        else if ((v.state == State::Fresh || v.state == State::Stale) && (o.state == State::Fresh || o.state == State::Stale))
+        {
+            v.state = State::Fresh; // set on both ways: the next wait clears it either way
+        }
+        else if (v.state != o.state)
+        {
+            v.state = State::Unknown;
+        }
+        v.secured = v.secured || o.secured;
+        v.warned = v.warned && o.warned;
+    }
+    if (!flow_.tickLine || !other.tickLine)
+    {
+        flow_.tickLine = 0; // woken by a tick only if both ways were
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        flow_.eventWarned[i] = flow_.eventWarned[i] && other.eventWarned[i];
+    }
+    std::vector<int> same;
+    for (int var : flow_.sameAsActivator)
+    {
+        if (std::find(other.sameAsActivator.begin(), other.sameAsActivator.end(), var) != other.sameAsActivator.end())
+        {
+            same.push_back(var);
+        }
+    }
+    flow_.sameAsActivator = same;
 }
 
 void DilCheck::act(bool chNull, bool victNull, bool typeKnown, bool needsVictim, int line)
 {
     // dil_act sends nothing when the unit the message is about is null
-    if (typeKnown && needsVictim && victNull)
+    if (!flow_.reachable || !typeKnown)
+    {
+        return;
+    }
+    if (needsVictim && victNull)
     {
         warn(line, "act() TO_VICT/TO_NOTVICT with null as the victim: nobody sees it");
     }
-    else if (typeKnown && !needsVictim && chNull)
+    else if (!needsVictim && chNull)
     {
         warn(line, "act() with null as the character: nobody sees it");
     }
@@ -230,7 +352,7 @@ void DilCheck::act(bool chNull, bool victNull, bool typeKnown, bool needsVictim,
 
 void DilCheck::exec(const std::string &literal, bool concatenated, int line)
 {
-    if (!concatenated || literal.empty())
+    if (!flow_.reachable || !concatenated || literal.empty())
     {
         return;
     }
