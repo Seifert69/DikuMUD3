@@ -321,9 +321,9 @@ goto start;
 if (fght < 60)
 {
 act("$1n gets all tangled up in $1s own ropes!",
-A_ALWAYS,self,null,vict,TO_ALL);
+A_ALWAYS,self,null,vict,TO_VICT);
 act("$1n gets totally tangled in $1s own ropes!",
-A_ALWAYS,self,null,vict,TO_ALL);
+A_ALWAYS,self,null,vict,TO_NOTVICT);
 self.abilities[ABIL_DEX] := (self.abilities[ABIL_STR])-rnd(1,2);
 position_update(self);
 goto start;
@@ -2113,6 +2113,7 @@ heartbeat := PULSE_SEC*7;
        pause;
        exec("emote reaches into the hat and pulls out an orange rabbit.", self);
        exec("say That's the best trick I know!", self); 
+       unsecure(pc);
        goto start;
      }
    else if (HALL23_ONGO in pc.quests)  //pc is working on it
@@ -2120,6 +2121,7 @@ heartbeat := PULSE_SEC*7;
      exec("say What have you brought me?", self);
      pause;
      exec("emote looks eerily at you and his eyes seem to glow slightly.", self);  
+     unsecure(pc);
      goto start;
     }
     else  
@@ -2196,6 +2198,8 @@ heartbeat := PULSE_SEC*7;
   goto start;
 
 }
+unsecure(pc);   // immortals: back to waiting
+goto start;
 }
 dilend   /*hall23*/
 
@@ -2242,10 +2246,10 @@ if (target == self)
     addstring(pin.names, "h");
     exec("say Thank you, "+pc.name+". ", self);
     exec("emote sings 'You gotta have heart!'", self);
+    destroy(item);   // before the pause, which clears item
 	pause;
 	exec("emote puts the heart in the coffin. A loud thump comes from it " +
 	      "as the Baron closes the lid.", self);
-    destroy(item);
     goto hcheck;
    }
    if ((item == findsymbolic(self, "heart@hallows23", FIND_UNIT_INVEN))
@@ -2515,7 +2519,7 @@ a belt of candy wrappers. +2 dex
 
 :hcheck:
 
-pin := HALL23_ONGO in activator.quests;
+pin := HALL23_ONGO in pc.quests;
 
 if (("h" in pin.names) and ("t" in pin.names) and 
 ("s" in pin.names) and ("g" in pin.names) and 
@@ -2549,6 +2553,7 @@ goto start;
 }
 goto start;
 }
+goto start;   // a give to someone else
 }
 dilend 
 

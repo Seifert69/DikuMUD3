@@ -254,9 +254,9 @@ code
 		act("You grin as the blood on your " + self.name + " enters $2n's body!",
 			A_ALWAYS, self.outside, self.outside.fighting, null,TO_CHAR);
 		act("You cringe as the blood on $1n's " + self.name + " enters your body!",
-			A_ALWAYS, self.outside, self.outside.fighting, null,TO_VICT);
-		act("$2n cringes as the blood on $1n's " + self.name + " enters their body!",
-			A_ALWAYS, self.outside, self.outside.fighting, null, TO_REST);
+			A_ALWAYS, self.outside, null, self.outside.fighting, TO_VICT);
+		act("$3n cringes as the blood on $1n's " + self.name + " enters their body!",
+			A_ALWAYS, self.outside, null, self.outside.fighting, TO_NOTVICT);
 	}
 	goto battle;
 }
@@ -848,6 +848,7 @@ code
 
 	if (IsInGuild@guilds(pc, GUILD_BARBARIAN) and (BARBARIAN_ITEM in pc.quests))
 	{
+		secure(gift, lost);
 		if((gift.nameidx $= "blood_bowl")and(gift.zoneidx $= "lostlands"))
 		{
 			heartbeat := PULSE_SEC * 7;
@@ -858,6 +859,7 @@ code
 			pause;
 			exec("emote slowly brings the bowl to head level.",self);
 			exec("drink bowl",self);
+			unsecure(gift);
 			destroy(gift);
 			exec("grimace",self);
 			act("Hilka's eyelids suddenly flare open!",A_SOMEONE, pc, null, null, TO_ALL);
@@ -882,6 +884,7 @@ code
 		}
 :lost:
 
+		unsecure(gift);
 		destroy(gift);
 		unsecure(pc);
 		goto start;
@@ -1036,6 +1039,9 @@ code
    pc := qstWaitDone@quests(QUEST_ENTRY, activator, 
             {"cheer $1N", 
             "say Excellent, $1N! You have the instincts of a Barbarian in your blood."}, 800, 2 * COPPER_MULT, {""});
+
+   if (pc != null)
+      goto start;
 
 	pc := qstWaitHero@quests(QUEST_ENTRY, activator, 
 		{"look $1N",

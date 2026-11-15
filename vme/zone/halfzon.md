@@ -18,3 +18,33 @@
 6. **pitchfork, ship1** (lines 4841, 4921): the pitch fork's extra says it has four tines, its
    material says a three pronged head. The ship's extra says it was carved from a large cypress
    tree, its material says poplar wood. Which is right?
+
+## Step 2
+
+Fixed in place:
+- **firepit (room)** (line 393): the list of rooms `exit` can put a player in had `w_pit` twice and
+  no `s_pit`, one of the eight rooms around the fire; the second `w_pit` is now `s_pit`.
+- **firepit_inside** (line 238): "Your ... falls off" was shown for burnt-out items that were *not*
+  worn (`item.equip==0`); now for the worn ones, which are the ones taken off.
+- **spink_give** (line 3729): after handing out a replacement staff the player stayed secured, so
+  when he later left, the mayor said "Now I will never get to go on my vacation". Unsecured now.
+- **spink_qst_mboat** (line 4609): a wrong item given to Sarabin was destroyed after a `pause`,
+  when `item` had been cleared, so he kept it; destroyed before the pause now.
+- **oldstaff** (line 6216): `make food` / `make drink` by anyone in the room set off a staff held
+  by someone else, with the typist as `pc`: without the mayor's quest he was drained (mana 0, half
+  his hit points). The wait now also needs `activator == self.outside`.
+
+Questions:
+1. **war_hammer** (line 5056): the program has no loop. It acts on the first combat round after it
+   is loaded (a flash, or "slams $2n into the dust" when the enemy has under 10 hp, setting him to
+   -10 hp without `position_update`) and then ends. Add `goto start;` at the end? Not made: the hammer
+   would then finish off every enemy below 10 hp, and throw itself out of the wielder's hand each time.
+2. **oldstaff** (line 6239): `make drink` takes the 10 mana twice (once for every make, once more in
+   the drink branch), and only 10 are checked. Meant (drinks dearer than food), or remove the second?
+3. **wine_press** (line 5571): the press can be entered. When the handle is pulled with the wrong
+   ingredients, a player inside is set to -50 hp, so `position_update` kills him; after the
+   `pause` the loop `destroy`s what is inside: his corpse with all his equipment (and if he didn't
+   die, a god for instance, the player himself, which `destroy` takes out of the game and
+   disconnects). The `pause` in that loop also lets a `put`/`get` interrupt jump away from it
+   halfway. Keep the trap but let the corpse fall out (`link` it to the room), or no killing at all?
+
