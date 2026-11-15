@@ -32,6 +32,9 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
+    - name: Zone references
+      run: python3 ${{github.workspace}}/vme/scripts/check_zone_refs.py --baseline ${{github.workspace}}/vme/scripts/zone_refs_baseline.txt
+
     - name: VME Unit Test
       working-directory: ${{github.workspace}}/vme/bin
       run: ${{github.workspace}}/vme/bin/vme_unit_tests --color_output=false --log_level=message

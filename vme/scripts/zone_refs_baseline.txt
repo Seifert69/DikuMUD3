@@ -1,0 +1,17 @@
+# Unresolved name@zone references known when this was written (zone, reference);
+# check_zone_refs.py reports only references not listed here. Fix and remove them.
+arena	expcatch@arena
+basemove	guard_key@basemove
+basis	status_dil@guild_paths
+bounty	str_arms@midgaard
+clan_koh	clan_koh_key@clan_koh
+comm	d@mn	# a word in the swear filter, not a reference
+commands	test1@commands
+halfzon	mayor_walk@halfzon
+hallows23	ceye@hallows23
+hallows23	dq_key@hallows23
+hallows23	lbat@hallows23
+justice	set_arrest@justice
+necro_guild	turning_point@midgaard
+ratswarf	monkey_key@houses
+spells	stat_obj1@spells

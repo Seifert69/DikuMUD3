@@ -66,6 +66,8 @@ cd vme/zone
 - `make zone_files` from the repo root does the same through cmake.
 - The server only reads zone data at boot — **restart vme after recompiling**.
 - Compile leftovers per zone: `.err` (errors), `.dh`, `.dot`.
+- vmc checks one zone at a time; `vme/scripts/check_zone_refs.py` checks the name@zone references
+  between zones (CI runs it; see its docstring).
 
 ## Debugging crashes
 
