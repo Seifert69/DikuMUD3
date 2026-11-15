@@ -49,6 +49,7 @@ add_test(NAME vme_unit_tests
 ############################### VMC ######################################
 add_executable(vmc_unit_tests
         vmc_main.cpp
+        dilcheck_tests.cpp
         ChecksumDataset.cpp ChecksumDataset.h
         sha512.cpp sha512.h
         )
@@ -59,6 +60,7 @@ target_compile_definitions(vmc_unit_tests PUBLIC
         RAPIDJSON_HAS_STDSTRING
         PROJECT_ROOT="${CMAKE_SOURCE_DIR}"
         )
+target_include_directories(vmc_unit_tests PRIVATE ${CMAKE_SOURCE_DIR}/vme/src/vmc)
 target_link_libraries(vmc_unit_tests
         vmc_objs
         pp_objs

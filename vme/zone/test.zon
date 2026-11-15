@@ -27,7 +27,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 28  // T010, T009, ...
+#define TEST_MAXIMUM 29  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -80,13 +80,13 @@ code
 }
 dilend
 
-// ==================== T028 =====================
+// ==================== T029 =====================
 
 // DIL built-ins that crashed the server or did the wrong thing (dilinst.cpp and the C they
 // call). Each check logs its own ERROR and the test goes on, so one run shows every failure;
 // the checks that crashed come last.
-// t028pri holds priority on a unit while t028noop, after it on that unit, sits in waitnoop.
-dilbegin fnpri(FN_PRI_COMBAT) t028pri();
+// t029pri holds priority on a unit while t029noop, after it on that unit, sits in waitnoop.
+dilbegin fnpri(FN_PRI_COMBAT) t029pri();
 code
 {
    wait(SFB_MSG, argument == "hold");
@@ -97,50 +97,50 @@ code
 }
 dilend
 
-dilbegin t028noop();
+dilbegin t029noop();
 code
 {
    wait(SFB_MSG, argument == "go");
    waitnoop;
-   addextra(self.extra, {"$t028noop"}, "ran");
+   addextra(self.extra, {"$t029noop"}, "ran");
    quit;
 }
 dilend
 
 // Wakes on the save event that store() sends (aware: store(self, ...) sends it from self)
-dilbegin aware t028save();
+dilbegin aware t029save();
 code
 {
    wait(SFB_SAVE, TRUE);
-   addextra(self.extra, {"$t028save"}, "saved");
+   addextra(self.extra, {"$t029save"}, "saved");
    quit;
 }
 dilend
 
 // Called through a string with an intlist
-dilbegin t028il(il : intlist);
+dilbegin t029il(il : intlist);
 code
 {
-   addextra(self.extra, {"$t028il"}, itoa(il.[1]));
+   addextra(self.extra, {"$t029il"}, itoa(il.[1]));
    return;
 }
 dilend
 
 // Its own program: a failed symbolic call stops the program that made it
-dilbegin t028call();
+dilbegin t029call();
 var
    il : intlist;
    s : string;
 code
 {
    il := {4, 7};
-   s := "t028il@test";
+   s := "t029il@test";
    s(il);
    quit;
 }
 dilend
 
-dilbegin T028(tstno : integer);
+dilbegin T029(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 var
@@ -161,7 +161,7 @@ var
 code
 {
    heartbeat := PULSE_SEC * 1;
-   logtest(tstno, LOGT_INFO, "T028 DIL built-ins: crashes and wrong results running");
+   logtest(tstno, LOGT_INFO, "T029 DIL built-ins: crashes and wrong results running");
    bad := 0;
 
    n := load("experiment@test");
@@ -178,14 +178,14 @@ code
    addequip(o, WEAR_HEAD);
    if (n.abilities[ABIL_STR] != st + 5)
    {
-      logtest(tstno, LOGT_ERROR, "T028 addequip of a worn object: strength " +
+      logtest(tstno, LOGT_ERROR, "T029 addequip of a worn object: strength " +
               itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st + 5));
       bad := 1;
    }
    unequip(o);
    if (n.abilities[ABIL_STR] != st)
    {
-      logtest(tstno, LOGT_ERROR, "T028 unequip left strength " + itoa(n.abilities[ABIL_STR]) +
+      logtest(tstno, LOGT_ERROR, "T029 unequip left strength " + itoa(n.abilities[ABIL_STR]) +
               ", not " + itoa(st));
       bad := 1;
    }
@@ -196,14 +196,14 @@ code
    subaff(o, -ID_BLANK10);
    if (n.abilities[ABIL_STR] != st)
    {
-      logtest(tstno, LOGT_ERROR, "T028 subaff of a worn object's transfer affect left strength " +
+      logtest(tstno, LOGT_ERROR, "T029 subaff of a worn object's transfer affect left strength " +
               itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st));
       bad := 1;
    }
    unequip(o);
    if (n.abilities[ABIL_STR] != st)
    {
-      logtest(tstno, LOGT_ERROR, "T028 unequip after subaff: strength " + itoa(n.abilities[ABIL_STR]) +
+      logtest(tstno, LOGT_ERROR, "T029 unequip after subaff: strength " + itoa(n.abilities[ABIL_STR]) +
               ", not " + itoa(st));
       bad := 1;
    }
@@ -216,14 +216,14 @@ code
    addaff(o, -ID_BLANK11, -1, 0, ABIL_STR, 3, 0, TIF_NONE, TIF_NONE, TIF_NONE, APF_ABILITY);
    if (n.abilities[ABIL_STR] != st + 8)
    {
-      logtest(tstno, LOGT_ERROR, "T028 addaff of a transfer affect to a worn object: strength " +
+      logtest(tstno, LOGT_ERROR, "T029 addaff of a transfer affect to a worn object: strength " +
               itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st + 8));
       bad := 1;
    }
    subaff(o, -ID_BLANK11);
    if (n.abilities[ABIL_STR] != st + 5)
    {
-      logtest(tstno, LOGT_ERROR, "T028 subaff of the added transfer affect: strength " +
+      logtest(tstno, LOGT_ERROR, "T029 subaff of the added transfer affect: strength " +
               itoa(n.abilities[ABIL_STR]) + ", not " + itoa(st + 5));
       bad := 1;
    }
@@ -240,7 +240,7 @@ code
    addequip(a, WEAR_ANKLE_R);
    if (getinteger(DIL_GINT_EFFDEX, n, 0) != i)
    {
-      logtest(tstno, LOGT_ERROR, "T028 plate at the right ankle made dex " +
+      logtest(tstno, LOGT_ERROR, "T029 plate at the right ankle made dex " +
               itoa(getinteger(DIL_GINT_EFFDEX, n, 0)) + ", not " + itoa(i));
       bad := 1;
    }
@@ -248,93 +248,93 @@ code
 
    // subextra of an extra not first in the list cleared the variables at the first one and
    // left those at the removed one
-   addextra(o.extra, {"t028a"}, "a");
-   addextra(o.extra, {"t028b"}, "b");
+   addextra(o.extra, {"t029a"}, "a");
+   addextra(o.extra, {"t029b"}, "b");
    eh := o.extra;
-   ea := o.extra.["t028a"];
-   eb := o.extra.["t028b"];
+   ea := o.extra.["t029a"];
+   eb := o.extra.["t029b"];
    if (eh == ea) // remove one that isn't first: the variables at it go, the others stay
    {
-      subextra(o.extra, "t028b");
+      subextra(o.extra, "t029b");
       i := (eh == null) or (ea == null) or (eb != null);
    }
    else
    {
-      subextra(o.extra, "t028a");
+      subextra(o.extra, "t029a");
       i := (eh == null) or (eb == null) or (ea != null);
    }
    if (i)
    {
-      logtest(tstno, LOGT_ERROR, "T028 subextra cleared the wrong extraptr variables");
+      logtest(tstno, LOGT_ERROR, "T029 subextra cleared the wrong extraptr variables");
       bad := 1;
    }
 
    // store() of an empty unit kept the old file, and restore() brought its contents back
-   i := delunit("t028store");
+   i := delunit("t029store");
    a := load("deadbug@test");
    link(o, self);
    link(a, o);
-   store(o, "t028store", FALSE);
+   store(o, "t029store", FALSE);
    link(a, self);
-   store(o, "t028store", FALSE);
+   store(o, "t029store", FALSE);
    destroy(a);
    b2 := load("pbox@test");
-   r := restore("t028store", b2);
+   r := restore("t029store", b2);
    if ((r != null) or (b2.inside != null))
    {
-      logtest(tstno, LOGT_ERROR, "T028 restore after store of an empty box brought back its old contents");
+      logtest(tstno, LOGT_ERROR, "T029 restore after store of an empty box brought back its old contents");
       bad := 1;
    }
    destroy(b2);
-   i := delunit("t028store");
+   i := delunit("t029store");
 
    // wait(SFB_SAVE) never woke: wait dropped the flag. store() sends the save event.
-   dilcopy("t028save@test", o);
+   dilcopy("t029save@test", o);
    // a program in waitnoop was lost when an earlier program on its unit held priority
    n2 := load("pbox@test");
    link(n2, self);
    secure(n2, lost);
-   dilcopy("t028pri@test", n2);
-   dilcopy("t028noop@test", n2);
+   dilcopy("t029pri@test", n2);
+   dilcopy("t029noop@test", n2);
    // an intlist through a string call was taken for a type error
-   dilcopy("t028call@test", n);
+   dilcopy("t029call@test", n);
    secure(o, lost);
    pause;
    pause;
-   store(o, "t028store", TRUE);
-   i := delunit("t028store");
-   if (not ("$t028save" in o.extra))
+   store(o, "t029store", TRUE);
+   i := delunit("t029store");
+   if (not ("$t029save" in o.extra))
    {
-      logtest(tstno, LOGT_ERROR, "T028 wait(SFB_SAVE, ...) didn't wake on store()");
+      logtest(tstno, LOGT_ERROR, "T029 wait(SFB_SAVE, ...) didn't wake on store()");
       bad := 1;
    }
-   if (o.extra.["$t028save"] != null)
-      subextra(o.extra, "$t028save");
+   if (o.extra.["$t029save"] != null)
+      subextra(o.extra, "$t029save");
    sendto("go", n2);
    sendto("hold", n2);
    pause;
    pause;
    sendto("release", n2);
    i := 0;
-   while ((i < 20) and (not ("$t028noop" in n2.extra)))
+   while ((i < 20) and (not ("$t029noop" in n2.extra)))
    {
       pause;
       i := i + 1;
    }
-   if (not ("$t028noop" in n2.extra))
+   if (not ("$t029noop" in n2.extra))
    {
-      logtest(tstno, LOGT_ERROR, "T028 waitnoop never came back after the priority ended");
+      logtest(tstno, LOGT_ERROR, "T029 waitnoop never came back after the priority ended");
       bad := 1;
    }
-   eh := n.extra.["$t028il"];
+   eh := n.extra.["$t029il"];
    if (eh == null)
    {
-      logtest(tstno, LOGT_ERROR, "T028 a template called through a string didn't take an intlist");
+      logtest(tstno, LOGT_ERROR, "T029 a template called through a string didn't take an intlist");
       bad := 1;
    }
    else if (eh.descr != "7")
    {
-      logtest(tstno, LOGT_ERROR, "T028 the intlist called through a string arrived as " + eh.descr);
+      logtest(tstno, LOGT_ERROR, "T029 the intlist called through a string arrived as " + eh.descr);
       bad := 1;
    }
    unsecure(n2);
@@ -348,7 +348,7 @@ code
    insert(sl, 3, "c");
    if ((length(sl) != 4) or (sl.[2] != "") or (sl.[3] != "c"))
    {
-      logtest(tstno, LOGT_ERROR, "T028 insert into a stringlist gave length " + itoa(length(sl)));
+      logtest(tstno, LOGT_ERROR, "T029 insert into a stringlist gave length " + itoa(length(sl)));
       bad := 1;
    }
 
@@ -377,7 +377,7 @@ code
    setroomexit(rm, DIR_WEST, o);
    if (rm.exit_to[DIR_WEST] != null)
    {
-      logtest(tstno, LOGT_ERROR, "T028 setroomexit made an exit to an object");
+      logtest(tstno, LOGT_ERROR, "T029 setroomexit made an exit to an object");
       bad := 1;
       setroomexit(rm, DIR_WEST, rm); // not to the object destroyed below
    }
@@ -391,22 +391,22 @@ code
    if (bad)
       goto terminate;
 
-   logtest(tstno, LOGT_INFO, "T028 Success");
+   logtest(tstno, LOGT_INFO, "T029 Success");
    logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
    quit;
 
 :lost:
-   logtest(tstno, LOGT_ERROR, "T028 lost a test unit");
+   logtest(tstno, LOGT_ERROR, "T029 lost a test unit");
 
 :terminate:
-   logtest(tstno, LOGT_INFO, "T028 failed");
+   logtest(tstno, LOGT_INFO, "T029 failed");
    sendtoalldil("fail", "labdirector@test");
    quit;
 }
 dilend
 
-// ==================== T027 =====================
+// ==================== T028 =====================
 
 // Built-ins that crashed the server or gave a wrong answer. Crashed: isplayer() and loadstr()
 // with "." or ".." (a directory: a player's "mail <note> .." stopped the game),
@@ -418,7 +418,7 @@ dilend
 // (TRUE when nothing was deleted), savestr("w") over a longer text (kept its tail),
 // findrndunit() in the equipment (not one at random, often none) and a heartbeat over 32767
 // (read back below 0).
-dilbegin T027(tstno : integer);
+dilbegin T028(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 var
@@ -440,7 +440,7 @@ var
 code
 {
    heartbeat := PULSE_SEC * 1;
-   logtest(tstno, LOGT_INFO, "T027 built-in crashes running");
+   logtest(tstno, LOGT_INFO, "T028 built-in crashes running");
 
    npc := load("experiment@test");
    npc2 := load("experiment@test");
@@ -451,14 +451,14 @@ code
    // "." and ".." are directories: no player, no string file
    if (isplayer(".") or isplayer("..") or isplayer("") or isplayer("a/b"))
    {
-      logtest(tstno, LOGT_ERROR, "T027 isplayer found a player that can't be");
+      logtest(tstno, LOGT_ERROR, "T028 isplayer found a player that can't be");
       goto terminate;
    }
    s := "kept";
    if ((loadstr("..", s) != FALSE) or (loadstr(".", s) != FALSE) or (s != "kept") or
        (savestr("..", "x", "w") != FALSE))
    {
-      logtest(tstno, LOGT_ERROR, "T027 loadstr or savestr used a directory");
+      logtest(tstno, LOGT_ERROR, "T028 loadstr or savestr used a directory");
       goto terminate;
    }
 
@@ -478,7 +478,7 @@ code
    w := getword(s);
    if ((length(w) != 12287) or (s != "next"))
    {
-      logtest(tstno, LOGT_ERROR, "T027 getword with a huge word gave " + itoa(length(w)) +
+      logtest(tstno, LOGT_ERROR, "T028 getword with a huge word gave " + itoa(length(w)) +
               " characters, leaving '" + left(s, 20) + "'");
       goto terminate;
    }
@@ -487,7 +487,7 @@ code
    sl := split("a b", "");
    if ((length(sl) != 1) or (sl.[0] != "a b"))
    {
-      logtest(tstno, LOGT_ERROR, "T027 split on an empty separator");
+      logtest(tstno, LOGT_ERROR, "T028 split on an empty separator");
       goto terminate;
    }
 
@@ -496,14 +496,14 @@ code
    u := getopponent(npc, 0);
    if (u != null)
    {
-      logtest(tstno, LOGT_ERROR, "T027 getopponent of one not fighting isn't null");
+      logtest(tstno, LOGT_ERROR, "T028 getopponent of one not fighting isn't null");
       goto terminate;
    }
    u := npc;
    u := getfollower(nobody, 0);
    if (u != null)
    {
-      logtest(tstno, LOGT_ERROR, "T027 getfollower of null isn't null");
+      logtest(tstno, LOGT_ERROR, "T028 getfollower of null isn't null");
       goto terminate;
    }
 
@@ -512,14 +512,14 @@ code
    i := attack_spell(SPL_FIREBALL_1, npc, npc, b1, 0, "");
    if (i != 7)
    {
-      logtest(tstno, LOGT_ERROR, "T027 attack_spell at an object didn't fail");
+      logtest(tstno, LOGT_ERROR, "T028 attack_spell at an object didn't fail");
       goto terminate;
    }
    i := -1;
    i := attack_spell(SPL_FIREBALL_1, npc, npc, npc2, -1000, null);
    if (i < 0)
    {
-      logtest(tstno, LOGT_ERROR, "T027 attack_spell with a null effect gave no damage");
+      logtest(tstno, LOGT_ERROR, "T028 attack_spell with a null effect gave no damage");
       goto terminate;
    }
 
@@ -528,7 +528,7 @@ code
    sl := strdir("[");
    if (sl.[0] != "kept")
    {
-      logtest(tstno, LOGT_ERROR, "T027 strdir with a bad pattern gave a list");
+      logtest(tstno, LOGT_ERROR, "T028 strdir with a bad pattern gave a list");
       goto terminate;
    }
 
@@ -536,22 +536,22 @@ code
    n := (notset in "abc") + ("a" in notset) + (notset in {"a"});
    if (n != 0)
    {
-      logtest(tstno, LOGT_ERROR, "T027 in with a string never set isn't FALSE");
+      logtest(tstno, LOGT_ERROR, "T028 in with a string never set isn't FALSE");
       goto terminate;
    }
 
    // "w" writes the whole file; delstr is TRUE when it deleted
-   i := savestr("t027.txt", "a longer text", "w");
-   i := savestr("t027.txt", "short", "w");
-   i := loadstr("t027.txt", s);
+   i := savestr("t028.txt", "a longer text", "w");
+   i := savestr("t028.txt", "short", "w");
+   i := loadstr("t028.txt", s);
    if (s != "short")
    {
-      logtest(tstno, LOGT_ERROR, "T027 savestr w left '" + s + "'");
+      logtest(tstno, LOGT_ERROR, "T028 savestr w left '" + s + "'");
       goto terminate;
    }
-   if ((delstr("t027.txt") != TRUE) or (delstr("t027.txt") != FALSE))
+   if ((delstr("t028.txt") != TRUE) or (delstr("t028.txt") != FALSE))
    {
-      logtest(tstno, LOGT_ERROR, "T027 delstr's answer is the wrong way round");
+      logtest(tstno, LOGT_ERROR, "T028 delstr's answer is the wrong way round");
       goto terminate;
    }
 
@@ -577,7 +577,7 @@ code
    }
    if ((il.[0] < 50) or (il.[1] < 50) or (il.[2] < 50))
    {
-      logtest(tstno, LOGT_ERROR, "T027 findrndunit in the equipment picked " + itoa(il.[0]) + ", " +
+      logtest(tstno, LOGT_ERROR, "T028 findrndunit in the equipment picked " + itoa(il.[0]) + ", " +
               itoa(il.[1]) + " and " + itoa(il.[2]) + " times of 300");
       goto terminate;
    }
@@ -588,7 +588,7 @@ code
    heartbeat := PULSE_SEC * 1;
    if (i != 40000)
    {
-      logtest(tstno, LOGT_ERROR, "T027 heartbeat 40000 read back as " + itoa(i));
+      logtest(tstno, LOGT_ERROR, "T028 heartbeat 40000 read back as " + itoa(i));
       goto terminate;
    }
 
@@ -608,12 +608,12 @@ code
    i := i + 1;
    if (i < 3)
       goto tickwait;
-   logtest(tstno, LOGT_ERROR, "T027 interrupt with its flags in a variable never fired");
+   logtest(tstno, LOGT_ERROR, "T028 interrupt with its flags in a variable never fired");
    goto terminate;
 
 :ticked:
    clear(n);
-   logtest(tstno, LOGT_INFO, "T027 Success");
+   logtest(tstno, LOGT_INFO, "T028 Success");
    logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
    quit;
@@ -624,13 +624,13 @@ code
    destroy(b3);
    destroy(npc);
    destroy(npc2);
-   logtest(tstno, LOGT_INFO, "T027 failed");
+   logtest(tstno, LOGT_INFO, "T028 failed");
    sendtoalldil("fail", "labdirector@test");
    quit;
 }
 dilend
 
-// ==================== T026 =====================
+// ==================== T027 =====================
 
 // Fields and built-ins that crashed the server or gave the wrong value: npc.exptol (asked an
 // NPC for a player's level), asctime() of a constant (vmc made no code for the constant, and
@@ -639,7 +639,7 @@ dilend
 // natural_armour and movement took any value, read later past the end of the weapon, armour
 // and landscape tables: a value outside the table is now refused (logged). Alignment took any
 // value, not -1000..1000: it now clamps, as setAlignment() does.
-dilbegin T026(tstno : integer);
+dilbegin T027(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
 var
@@ -651,21 +651,21 @@ var
 code
 {
    heartbeat := PULSE_SEC * 1;
-   logtest(tstno, LOGT_INFO, "T026 field limits running");
+   logtest(tstno, LOGT_INFO, "T027 field limits running");
 
    u := load("experiment@test");
    i := -7;
    i := u.exptol; // an NPC: fails, i keeps its value
    if (i != -7)
    {
-      logtest(tstno, LOGT_ERROR, "T026 npc.exptol gave " + itoa(i));
+      logtest(tstno, LOGT_ERROR, "T027 npc.exptol gave " + itoa(i));
       goto terminate;
    }
 
    s := asctime(31536000); // one year after 1 January 1970
    if (not ("1971" in s))
    {
-      logtest(tstno, LOGT_ERROR, "T026 asctime(31536000) gave '" + s + "'");
+      logtest(tstno, LOGT_ERROR, "T027 asctime(31536000) gave '" + s + "'");
       goto terminate;
    }
 
@@ -683,13 +683,13 @@ code
       i := 0;
    else
    {
-      logtest(tstno, LOGT_ERROR, "T026 if (u.title) is false for '" + u.title + "'");
+      logtest(tstno, LOGT_ERROR, "T027 if (u.title) is false for '" + u.title + "'");
       goto terminate;
    }
    u.title := "";
    if (u.title)
    {
-      logtest(tstno, LOGT_ERROR, "T026 if (u.title) is true for an empty title");
+      logtest(tstno, LOGT_ERROR, "T027 if (u.title) is true for an empty title");
       goto terminate;
    }
 
@@ -699,13 +699,13 @@ code
    u.attack_type := 3; // a weapon group, not an attack type
    if ((i != WPN_DAGGER) or (u.attack_type != WPN_DAGGER))
    {
-      logtest(tstno, LOGT_ERROR, "T026 attack_type took " + itoa(i) + " and " + itoa(u.attack_type));
+      logtest(tstno, LOGT_ERROR, "T027 attack_type took " + itoa(i) + " and " + itoa(u.attack_type));
       goto terminate;
    }
    u.attack_type := WPN_FIST;
    if (u.attack_type != WPN_FIST)
    {
-      logtest(tstno, LOGT_ERROR, "T026 attack_type WPN_FIST gave " + itoa(u.attack_type));
+      logtest(tstno, LOGT_ERROR, "T027 attack_type WPN_FIST gave " + itoa(u.attack_type));
       goto terminate;
    }
 
@@ -715,7 +715,7 @@ code
    u.natural_armour := -1;
    if ((i != ARM_LEATHER) or (u.natural_armour != ARM_LEATHER))
    {
-      logtest(tstno, LOGT_ERROR, "T026 natural_armour took " + itoa(i) + " and " + itoa(u.natural_armour));
+      logtest(tstno, LOGT_ERROR, "T027 natural_armour took " + itoa(i) + " and " + itoa(u.natural_armour));
       goto terminate;
    }
 
@@ -726,7 +726,7 @@ code
    r.movement := j;
    if (i != j)
    {
-      logtest(tstno, LOGT_ERROR, "T026 movement took " + itoa(i));
+      logtest(tstno, LOGT_ERROR, "T027 movement took " + itoa(i));
       goto terminate;
    }
 
@@ -735,25 +735,99 @@ code
    u.alignment := -70000;
    if ((i != 1000) or (u.alignment != -1000))
    {
-      logtest(tstno, LOGT_ERROR, "T026 alignment took " + itoa(i) + " and " + itoa(u.alignment));
+      logtest(tstno, LOGT_ERROR, "T027 alignment took " + itoa(i) + " and " + itoa(u.alignment));
       goto terminate;
    }
    u.alignment := -350;
    if (u.alignment != -350)
    {
-      logtest(tstno, LOGT_ERROR, "T026 alignment -350 gave " + itoa(u.alignment));
+      logtest(tstno, LOGT_ERROR, "T027 alignment -350 gave " + itoa(u.alignment));
       goto terminate;
    }
 
    destroy(u);
-   logtest(tstno, LOGT_INFO, "T026 Success");
+   logtest(tstno, LOGT_INFO, "T027 Success");
    logtest(tstno, LOGT_INFO, "Done");
    sendtoalldil("done", "labdirector@test");
    quit;
 
 :terminate:
    destroy(u);
-   logtest(tstno, LOGT_INFO, "T026 failed");
+   logtest(tstno, LOGT_INFO, "T027 failed");
+   sendtoalldil("fail", "labdirector@test");
+   quit;
+}
+dilend
+
+// ==================== T026 =====================
+
+// and/or bind looser than the comparisons, as in C: a == 1 and b == 2 is
+// (a == 1) and (b == 2). Before, and sat with * and or with +, so it was
+// (a == (1 and b)) == 2, and every condition written without brackets was wrong.
+dilbegin T026(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   a : integer;
+   b : integer;
+   s : string;
+code
+{
+   logtest(tstno, LOGT_INFO, "T026 and/or precedence running");
+   a := 1;
+   b := 2;
+   s := "x";
+
+   if (not (a == 1 and b == 2))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a == 1 and b == 2 is false");
+      goto terminate;
+   }
+   if (a == 2 or b == 3)
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a == 2 or b == 3 is true");
+      goto terminate;
+   }
+   if (not (a == 6 or a == 12 or a == 1))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 a chain of or comparisons is false");
+      goto terminate;
+   }
+   if (not (a < b and s == "X" and b != 5))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 mixed comparisons with and are false");
+      goto terminate;
+   }
+   // and binds tighter than or
+   if (not (a == 2 and b == 2 or a == 1))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 and doesn't bind tighter than or");
+      goto terminate;
+   }
+   // All constants: worked out by vmc, through the same rules
+   if (not (1 == 1 and 2 == 2) or (1 == 2 or 2 == 3))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 constant comparisons with and/or are wrong");
+      goto terminate;
+   }
+   // not still binds tightest: not a == 1 is (not a) == 1
+   if ((not a == 1) or not (not (a == 2) and "x" in s))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 not with and/in is wrong");
+      goto terminate;
+   }
+   // + and & are unchanged: they still bind tighter than the comparisons
+   if ((a + 1 != b) or ((b & 2) != 2))
+   {
+      logtest(tstno, LOGT_ERROR, "T026 + or & changed");
+      goto terminate;
+   }
+
+   logtest(tstno, LOGT_INFO, "T026 Success");
+   sendtoalldil("done", "labdirector@test");
+   quit;
+
+:terminate:
    sendtoalldil("fail", "labdirector@test");
    quit;
 }
