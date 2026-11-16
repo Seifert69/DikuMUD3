@@ -19,6 +19,6 @@ Questions:
    kill guild masters: do you want that?
 2. **Specialize** (line 193) against `ReadySpecialize@professions`: the master says "at least level 25
    in your main guild", but the code checks the character's level (`pc.level >= 25`), and Help
-   Professions says "At level 25". Drop "in your main guild" from the line?
+   Professions says "At level 25". Drop "in your main guild" from the line? Fixed (text follows the world): dropped "in your main guild" from the master's line.
 3. **AlertMembers** (line 501) is marked NOT YET IMPLEMENTED: it builds a message and sends it
    nowhere. Is anything using it? (Nothing in vme/zone; leave or remove.)

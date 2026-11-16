@@ -124,4 +124,4 @@ Questions:
     the exact hours listed. Nothing calls it any more, and the old shopkeeper body after the
     wrapper's `quit` (lines 6224-6929) is dead code too. Remove both?
 16. Help page **contract** says "the offer command quotes a much lower price at present", but
-    offer and contract use the same price (lines 727 and 766). Update the help page?
+    offer and contract use the same price (lines 727 and 766). Update the help page? Left: contract.hlp already says offer tells you the same price.

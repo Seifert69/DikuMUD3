@@ -496,9 +496,10 @@ end
 
 title "A Trail Through the Dense Forest"
 descr
-"You are on a trail leading east through the dense forest.  To the west,
-the trees are so huge and their crowns so dense that the forest remains in
-total darkness.  A small path leads south through the trees."
+"You are on a trail leading east and west through the dense forest.  To
+either side, the trees are so huge and their crowns so dense that the
+forest remains in total darkness.  A small path leads south through the
+trees."
 
 extra {"path","paths"}
 "The narrow path is probably used by the animals living in the forest."
@@ -506,7 +507,7 @@ extra {"trail"}
 "The forest trail seems almost fragile compared to the massive trunks."
 extra {"tree","trees"}
 "The crowns of the old trees almost cut out all light and make it
-impossible to enter the forest from here. However it seems that you
+impossible to leave the trail here. However it seems that you
 can enter the dark forest south of here."
 
 movement SECT_FOREST
@@ -554,7 +555,7 @@ title "A Small Path in the Dense Forest"
 descr
 "You are on a small path leading through the dense forest.  The crowns of the
 old trees leave the forest in an unreal twilight illumination.  The path
-continues north and east."
+continues north and east, and a way leads west to the Hall of Heroes."
 
 extra {"path","paths"}
 "The narrow path is probably used by the animals living in the forest."
@@ -570,7 +571,7 @@ north to rn_6005 descr
 east to rn_6007 descr
 "The small path leads east through the trees.";
 west to clan_guard@clan_bus descr
-"Hall of Heroes.";
+"A way leads west to the Hall of Heroes.";
 end
 
 
@@ -1335,8 +1336,9 @@ end
 title "A Narrow Trail Through the Deep, Dark Forest"
 descr
 "You are where the dusty trail bends, as to avoid conflict with a colossal
-trunk to the west.  Not a sound is to be heard - everything is ominously
-quiet."
+trunk to the west.  The trail leads east and south, and a path leads
+north through the trees.  Not a sound is to be heard - everything is
+ominously quiet."
 
 east to rn_6102 descr
 "The narrow, dusty trail leads east through the forest.";
@@ -1823,9 +1825,10 @@ title "A Dead End Path on the River Bank in the Deep, Dark Forest"
 descr
 "You are on a narrow path leading through the deep, dark forest.  The ancient
 trees stand so close that the path disappears between the dusty roots.  To the
-south a dark river flows from east to west.  The ground beneath you feels
+south a dark river flows eastwards.  The ground beneath you feels
 strange,
-almost alive.  The only exit appears to be east."
+almost alive.  The path leads east, and you could just barely get down to
+the river to the south."
 
 east to rn_6120 descr
 "The narrow path winds its way through the trees to the east.";
@@ -1881,8 +1884,7 @@ title "A Junction on the River Bank in the Deep, Dark Forest"
 descr
 "You are by a junction where three paths meet.  Ancient, grey trees seem to
 silently observe you from all around.  To the south a dark river flows
-from
-east to west through the forest.  Paths lead north, east and west."
+eastwards through the forest.  Paths lead north, east and west."
 
 north to rn_6122 descr
 "The narrow path winds its way through the trees to the north.";
@@ -1915,7 +1917,7 @@ title "A Dead End Path in the Deep, Dark Forest"
 descr
 "You are on a narrow path leading through the deep, dark forest.  The ancient
 trees stand so close that the path disappears between the dusty roots.  To the
-south beyond the ancient trees a dark river flows from east to west.  The only
+south beyond the ancient trees a dark river flows eastwards.  The only
 exit appears to be west."
 
 west to rn_6123 descr
@@ -2365,7 +2367,7 @@ descr "Darion is here guarding Lightlord's room."
 exp 0
 M_HUMAN_WARRIOR_SWORD(60, SEX_MALE)   /* He shall use a polearm */
 extra {}
-"Darion is a 6'4 man. He lo"
+"Darion is a 6'4 man."
 dilcopy guard_dir@function("north", {"rejji", "lightlord"}, null, "");
 
 end
@@ -2376,7 +2378,7 @@ names "Hesra"
 title "Hesra"
 descr "Hesra is here guarding Rejji's room."
 exp 0
-M_HUMAN_WARRIOR_SWORD(60, SEX_MALE)   /* He shall use a polearm */
+M_HUMAN_WARRIOR_SWORD(60, SEX_FEMALE)   /* He shall use a polearm */
 extra {}
 "Hesra is not a small woman. She looks like the typical grandmother.
 However she looks like she has a fiery temper."

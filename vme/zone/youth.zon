@@ -404,8 +404,6 @@ end
 wide_pass //7
   title "A large sandstone room"
   descr "You are standing in a partially open alcove with a curved entrance to the west. The air here is slightly warmer. In front of you, you can see the sky above. The floor and walls on three sides of you are blocking any movement outside of this large area."
-  extra {"ceiling", "tafoni", "honeycomb"} "The natural rock formations have created a honeycomb effect in the ceiling and along the tops of the walls where the curvature of the ceiling meets the vertical surface of the walls."
-  extra {"glyphs", "glyph", "wall"} "Squinting to make out the faded marks you can see that it is not just writing but bits of a scene. You can make out only the right section in which a deity is bleeding in a pool of water." 
   ROOM_MACRO_OUTDOOR
   west to chamber;
 end

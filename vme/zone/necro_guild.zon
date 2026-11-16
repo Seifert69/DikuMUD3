@@ -1310,7 +1310,7 @@ code
 
    :hagsecure:
    nopriority;
-   exec ("say Fool probably could command it anyhow!", self);
+   exec ("say Fool probably couldn't command it anyhow!", self);
    goto waitawhile;
 
    :waitawhile:

@@ -468,7 +468,8 @@ descr
 "    You stand inside a large tower connecting the fortress walls to the
 west and south. A broad staircase leads around the inside of the tower walls
 up into a watch room. An opening in the west wall leads to the Guild
-entrance. A heavy looking door is set into the north wall."
+entrance. A heavy looking door is set into the north wall, and an
+opening in the east wall leads to the bar."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT}
 movement SECT_INSIDE
 north to laboratory open {EX_OPEN_CLOSE}

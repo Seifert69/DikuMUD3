@@ -9,7 +9,7 @@
 2. **fn_03** (line 1023): its description is a copy of fn_02's ("A strong fence opens to a wide gate
    here leading to the south. North, east, and west, carrots dot the ground."), but fn_03 is the
    north-west corner: exits only south and east, and the gate to the farm is at fn_02. Rewrite it
-   along the lines of fn_04/fn_05 (fence to the north and west, carrots to the south and east)?
+   along the lines of fn_04/fn_05 (fence to the north and west, carrots to the south and east)? Fixed (text follows the world): fn_03 description now fence north and west, carrots south and east.
 3. **pendant** (Gwydion's Amulet, line 2290): nothing in the game loads it. It has
    `dilcopy charger@sorcerer()` and `mana_drain@sorcerer()`, which only act while the item is
    wielded (`WEAR_WIELD`) and whose messages name "Vorous" (the sorcerer dagger); on a neck amulet

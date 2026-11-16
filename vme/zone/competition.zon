@@ -101,7 +101,7 @@ code
 	upd_xp_char(activator);
 	ln:=length(rm.extra.["xp_comp"].names);
 	i:=1;
-	buf:="<h1>Heroes of Valhalla</h1>";
+	buf:="<h1>Legends of Valhalla</h1>";
 	buf:=buf+"<table><tr>";
 	l0:="<th>Rank</th>";
 	l1:="<th>Player</th>";
@@ -1440,8 +1440,6 @@ extra {"sign","corner"}
 <dt>The Sign Says:</dt>
 <dt>look board</dt>
 <dd>-shows all competitions</dd>
-<dt>read [number]</dt>
-<dd>-shows individual competition information</dd>
 <dt>list [number]</dt>
 <dd>-shows the top 20 leaders for that competition</dd>
 </dl>

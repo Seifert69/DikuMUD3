@@ -26,7 +26,7 @@ Questions:
 2. **do_ask** (lines 903-904) against Help Ask: the help says "Only the character you're asking
    will hear the question", but the room sees `$1n asks $3n '...'` with the whole question.
    Either the help is wrong, or the room should see only that $1n asks $3n something (as with
-   whisper).
+   whisper). Left: Help Ask already says everyone in the room hears the question and to whisper to keep it private, as the code does.
 3. **reply** (respond) (lines 621-649): unlike tell, it doesn't check whether the receiver is
    asleep, has turned tells off (PC_NOTELL), or is in hobgob's nightmare room, and it doesn't
    slur drunk speech. Intended (a respond always gets through) or should it follow tell?

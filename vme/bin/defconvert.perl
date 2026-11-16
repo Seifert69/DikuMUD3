@@ -41,6 +41,11 @@ while (<TMPIN>)
 if 	($_ =~ /^(.*)\=(.*)/){
        ($F1,$Etc) = ($_ =~ /^(.*)\=(.*)/);
 	          $res = calc($Etc);
+       # An index the preprocessor didn't expand, e.g. after an unbalanced quote in a text
+       if ($F1 =~ /^\s*index\s*$/ && $res !~ /^\s*-?\d+\s*$/) {
+           system "rm -f $tmplin $deftmp";
+           die "ERROR: $definf: index = $res is not a number (an unbalanced quote above it?)\n";
+       }
        print TMPOUT "$F1 = $res\n";
 	   }else{
 	          print TMPOUT "$_";

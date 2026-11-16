@@ -2817,7 +2817,7 @@ title "a holy grail"
 names {"holy grail", "grail"}
 descr "The holy grail is here, being holy."
 extra {}
-"This grail is very holy. To use this, type: Pour grail <player>. It will reduce their age by 20%."
+"This grail is very holy."
 type ITEM_OTHER
 manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
 cost 5 PLATINUM_PIECE

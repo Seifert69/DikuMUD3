@@ -66,15 +66,7 @@ difficult to maintain gardens, livestock, vineyards, etc. in the caves.
 So these brave few took to the words of their almighty Goddess Sierablem:
 'Go and be fruitful and generous and you will be rewarded with protection from
 the evil of the world.'  So they set foot out on a long journey to form a new
-and hopefully prosperous life.
-
-If there are any problems encountered please contact either Bakka or Whistler
-by mud mail, or by email at the following addresses:
-
-whistler - whistler@blinksoft.com
-bakka- tperry@blinksoft.com
-
-We appreciate any bug or typo reports.  Thanks again. "
+and hopefully prosperous life."
 
 
 %dil
@@ -1904,7 +1896,7 @@ rope it looks as if it could withstand some of the strongest
 weather. The burrow has no windows and is not well lit.  Lining
 the walls are many small carvings of boats or as sailors call
 them 'ships'.  The floor is covered in wood shavings and there is
-a small bed along the wall.  The only exit is to the east."
+a small bed along the wall.  You can leave the burrow with exit."
 
 movement SECT_CITY
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT}
@@ -4021,7 +4013,7 @@ names {"old man", "man"}
 title "an old man"
 descr "An old man is shivering in a corner."
 extra {}
-"Elven in race, poorly clothed and very frail.  He is obviously
+"Halfling in race, poorly clothed and very frail.  He is obviously
 nearing his hundreds."
 
 M_HALFLING_MAGE_FROST(8, SEX_MALE,"snowball")
@@ -4844,7 +4836,7 @@ MATERIAL_METAL("A three pronged metal head")
 weight 5
 cost 6 IRON_PIECE
 extra {}
-"A large pitch fork with four large tines sticking from its head."
+"A large pitch fork with three large tines sticking from its head."
 end
 
 
@@ -4917,7 +4909,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_ENTER}
 weight 20
 cost 10 COPPER_PIECE
 extra {}
-"This is a small lightweight ship crafted from a large cypress tree.
+"This is a small lightweight ship crafted from a large poplar tree.
 The craftsmanship is excellent, far better than most human work."
 MATERIAL_WOOD("A lightweight poplar wood")
 

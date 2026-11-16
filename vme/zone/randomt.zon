@@ -1845,7 +1845,7 @@ code
 	       splid, i, 0,
            TIF_SPL_INC, TIF_NONE, TIF_SPL_DEC, APF_SPELL_ADJ);
 
-    sl := {"not possible", "divination", "protection", "detection", "summoning", "creation", 
+    sl := {"not possible", "divine magic", "protection", "detection", "summoning", "creation", 
            "mind", "fire", "cold", "electricity", "poison", "acid"};
 
     identify(u, "Increases your resistance against " + sl.[splid] + ".",
