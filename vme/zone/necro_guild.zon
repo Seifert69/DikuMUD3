@@ -467,6 +467,7 @@ external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
    pc:   unitptr;
+   u:    unitptr;
    item: unitptr;
 
 code
@@ -480,24 +481,34 @@ code
    if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
       goto start;
 
+   if (command("nod"))
+   {
+      u := activator;
+      if (u == pc)
+         unsecure(pc);
+      act("The evil necromancer waves his hand, creating a cloud, when the "+
+         "smoke clears you find yourself in a different place!"
+         ,A_ALWAYS,u,null,null,TO_CHAR);
+      act("The evil necromancer waves his hand, creating a cloud, when the "+
+         "smoke clears, $1n is gone!",A_ALWAYS,u,null,null,TO_REST);
+      link(u, findroom("church_ruin@necro_guild"));
+      goto start;
+   }
+
+   // The offer once to each member, while he stays here (pc stays secured)
+   if (activator == pc)
+      goto start;
+   if (pc != null)
+      unsecure(pc);
    pc := activator;
    secure(pc,lostpc);
 
    exec("tell "+pc.name+" Hello, would you like to " +
          "journey to our guild to increase your powerful skills?  Just nod if " +
          "you wish to go.", self);
-   if (command("nod"))
-   {
-      act("The evil necromancer waves his hand, creating a cloud, when the "+
-         "smoke clears you find yourself in a different place!"
-         ,A_ALWAYS,pc,null,null,TO_CHAR);
-      act("The evil necromancer waves his hand, creating a cloud, when the "+
-         "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-      link(pc, findroom("church_ruin@necro_guild"));
-   }
+   goto start;
 
 :lostpc:
-   unsecure(pc);
    goto start;
 }
 dilend
@@ -522,6 +533,7 @@ external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
    pc:   unitptr;
+   u:    unitptr;
    item: unitptr;
 
 code
@@ -535,22 +547,32 @@ code
    if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
       goto start;
 
+   if (command("nod"))
+   {
+      u := activator;
+      if (u == pc)
+         unsecure(pc);
+      act("The evil necromancer waves his hand, creating a cloud, when the "+
+      "smoke clears you find yourself in a different place!"
+      ,A_ALWAYS,u,null,null,TO_CHAR);
+      act("The evil necromancer waves his hand, creating a cloud, when the "+
+      "smoke clears, $1n is gone!",A_ALWAYS,u,null,null,TO_REST);
+      link(u, findroom("market_sq@midgaard"));
+      goto start;
+   }
+
+   // The offer once to each member, while he stays here (pc stays secured)
+   if (activator == pc)
+      goto start;
+   if (pc != null)
+      unsecure(pc);
    pc := activator;
    secure(pc,lostpc);
 
-
    exec("say Hello, would you like a lift back to Midgaard? " +
       "Just nod if you wish to go.", self);
-   if (command("nod"))
-   {
-      act("The evil necromancer waves his hand, creating a cloud, when the "+
-      "smoke clears you find yourself in a different place!"
-      ,A_ALWAYS,pc,null,null,TO_CHAR);
-      act("The evil necromancer waves his hand, creating a cloud, when the "+
-      "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-      link(pc, findroom("market_sq@midgaard"));
-   }
-   unsecure(pc);
+   goto start;
+
 :lostpc:
    goto start;
 }
@@ -2388,7 +2410,7 @@ load murdock into dark_shaft max 1
 
     equip silver_belt1 position WEAR_WAIST
     equip black_breast position WEAR_BODY
-    equip dk_blue_robe position WEAR_BODY
+    equip dk_blue_robe position WEAR_ABOUT
     equip midgaard/iron_leggings position WEAR_LEGS
     equip midgaard/iron_boots position WEAR_FEET
 }
@@ -2419,7 +2441,7 @@ load kadiya into underground_lab max 1
 {
     equip dagger1 position WEAR_WIELD
 
-    equip black_robe position WEAR_BODY
+    equip black_robe position WEAR_ABOUT
     equip midgaard/slth_pants position WEAR_LEGS
     equip midgaard/hlth_boots position WEAR_FEET
 }

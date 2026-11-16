@@ -549,6 +549,8 @@ var
    pc      : unitptr;
    answer  : string;
    mn      : string;
+   fails   : integer;
+   charges : integer;
 
 code
 {
@@ -653,11 +655,21 @@ goto how_much;
    if (transfermoney(pc, self, tcost))
    {
       exec("emote touches " + thing.name + " softly and begins to chant...", self);
+      fails := 0;
 :repair_it:
+      charges := thing.value[1];
       if(thing.objecttype==ITEM_WAND)
         result := cast_spell(SPL_CHARGE_WAND, self, self, thing, "");
       else
         result := cast_spell(SPL_CHARGE_STAFF, self, self, thing, "");
+      // a cast that adds no charge counts as failed; give up after 20 of them
+      if (thing.value[1] <= charges)
+        fails := fails + 1;
+      if (fails >= 20)
+      {
+        result := transfermoney(self, pc, tcost);  // refund: the item won't take a charge
+        goto broken_thing;
+      }
       if (thing.value[1] < thing.value[4]) goto repair_it;
       heartbeat:=PULSE_SEC*1;
       pause;
@@ -6356,8 +6368,7 @@ dilcopy shopkeepernew@function(
  "$1n says, '$3n, you can't afford $2n'",
  "$1n says, 'Enjoy $2n.'",
  "$1n says, 'I might be able to sell this.'",
- "$1n says, 'I don't have that many $2N in my stock right now.'",
- "$1n says, '."
+ "$1n says, 'I don't have that many $2N in my stock right now.'"
 }, {ITEM_FOOD}, 130, 10,2*PLATINUM_MULT, TRUE);
 end
 

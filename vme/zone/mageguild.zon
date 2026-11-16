@@ -852,6 +852,14 @@ destroy(gift);
 unsecure(pc);
 goto start;
 }
+else if (gift.objecttype != ITEM_MONEY)
+{
+        // not for the charm quest: hand it back
+        link(gift, pc);
+        act("$1n hands $2n back to you.", A_SOMEONE, self, gift, pc, TO_VICT);
+        act("$1n hands $2n back to $3n.", A_SOMEONE, self, gift, pc, TO_NOTVICT);
+}
+unsecure(pc);
 goto start;
 }
 dilend

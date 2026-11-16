@@ -33,12 +33,12 @@ Fixed in place:
 
 Questions:
 1. **welmar** (line 1559): an item that isn't the chalice with the water of life (or an empty
-   chalice) is kept by the King with a shake of the head; the player loses it. Give it back?
+   chalice) is kept by the King with a shake of the head; the player loses it. Give it back? Fixed: after the shake he hands it back (money given stays with him, as before).
 2. **herald** (line 1967): a player who doesn't bow gets `set(pc.charflags, CHAR_OUTLAW |
    CHAR_PROTECTED)`: outlaw and protected at once. Was `CHAR_PROTECTED` meant to be removed
    (`unset`) rather than set?
 3. **herald** (line 1976): a player below level 10 who bows gets no answer at all (`goto loop`).
-   Should the herald say why (e.g. "Come back when thou art more experienced")?
+   Should the herald say why (e.g. "Come back when thou art more experienced")? Fixed: he says "Come back when thou art more experienced, <name>."
 4. **foodfetch** (line 2590): when Ergan is dead, Jack keeps the gruel the chef gave him and gets a
    new one on every trip, so plates of gruel pile up in his inventory. Drop or destroy it in
-   `leave_cell`?
+   `leave_cell`? Fixed: destroyed at `:leave_cell:` (dropping it would leave plates in the cell for players).

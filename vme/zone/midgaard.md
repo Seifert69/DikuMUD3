@@ -14,14 +14,14 @@
 4. **fishmonger** (line 6333): "Molly ... is here, brushing fish scales off her pantry." "Pantry"
    can't be right; "apron"? "pants"?
 5. **fishmonger** (line 6358): her shopkeepernew message list has an eighth entry,
-   `"$1n says, '."`, where every other shop has seven. Leftover to delete?
+   `"$1n says, '."`, where every other shop has seven. Leftover to delete? Fixed: deleted. The eighth entry replaces shopkeepernew's "$3n, I have no use for $2n" (no-sell items, closed hours), so Molly said "Molly says, '." there; she now uses the default.
 6. **market_sq** (line 3062): the south exit text says oak trees line Royal Avenue; every Royal
    Avenue room says chestnut trees. Which one?
 7. **deengrave / engrave** (lines 800 and 914): `exec("drop"+medium.name, self)` has no space
    after "drop", so the engraver never drops an item given by someone he can't see. Fix in step 2? Fixed in step 2.
 8. **item_charge / identifyhelp / resize_func** (lines 575, 729, 1080): the busy@function dilcopy
    strings have no closing parenthesis ("busy@function(Please wait I am busy with other work right
-   now."), unlike deengrave/engrave which close it. Worth checking in step 2. Harmless (dil_copy reads to the end when the `)` is missing); closed in step 2 anyway.
+   now."), unlike deengrave/engrave which close it. Worth checking in step 2. Harmless (dil_copy reads to the end when the `)` is missing); closed in step 2 anyway. Left: all three already close the parenthesis.
 9. **to_the_rescue** (line 252): "$1n is trodding along." Is "trodding" meant (dialect), or
    "trudging"/"plodding"?
 10. **wall_rd1** (line 2086): "running north-south along the east side of the city wall" while the
@@ -60,7 +60,7 @@ Questions:
    loop runs until the server stops the program, with the player's money paid and the wand still in
    the mage's hands, and the mage stops serving until the next boot. The labels `:broken_thing:`
    and `:not_possible:` are never jumped to. Add a counter (give up after, say, 20 casts and go to
-   `:broken_thing:`)?
+   `:broken_thing:`)? Fixed: casts that add no charge are counted; after 20 of them he goes to `:broken_thing:` ("Oh my, it's broken...") and hands the item back. Casts that do add charges don't count, so big staffs still fill up.
 2. **fido** (line 1779): nothing uses this template (the fido dogs use fido@function). It has no
    `goto loop` after the `foreach`, but it restarts at the top when it runs off its end, so it would
    work. Delete it?

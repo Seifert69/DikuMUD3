@@ -37,7 +37,7 @@ Fixed in place:
    member types near them, send the offer ("Just nod if you wish to go.") each time, and then test
    `command("nod")` on that same command. So the offer repeats at every command, and a member who
    nods is moved before being asked. Should the offer come once (when the member arrives) and then
-   wait for that member's `nod`?
+   wait for that member's `nod`? Fixed: the offer comes once per member while he stays in the room (at his first command there); a member's nod moves him as before, without the offer repeated.
 3. **guilditem** (line 271): every `worship` by a member loads a new Death Bringer and Black Lotus
    Talisman, with nothing to record that they were given. Intended, or a flag as in the thieves' guild?
 

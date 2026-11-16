@@ -42,10 +42,10 @@ Questions:
    which is no command. So the cloak's invisibility (which its extra text promises: "The command to
    become invisible is simply 'raise hood'") has never worked. Fix with
    `command("raisebrow") and ("hood" in argument)`? That gives players the invisibility, so it is
-   your call.
+   your call. Returned to Papi: making it work hands players the invisibility.
 2. **cutlass_chat** (mith_cut, line 2044): when the enemy has fewer than 10 hp it says "The lifeless corpse
    keels over at your feet" and "$1n's slash cuts your throat!", but the enemy isn't hurt or killed
-   (daggerchat sets `enemy.hp := -8` in the same case). Reword, or should it kill like the dagger?
+   (daggerchat sets `enemy.hp := -8` in the same case). Reword, or should it kill like the dagger? Returned to Papi: a choice between rewording and a kill (which would add damage).
 3. **parlor_home** (line 1261): every time a sorcerer types `worship` there, the NPC loads and gives
    a new pendant and a new Vorous dagger, with no check for one already given. Intended, or should
    it give them once (a quest flag)?
@@ -53,4 +53,4 @@ Questions:
    round woke the program, which need not be the wielder (the enemy's rounds may wake it too). When
    it isn't a sorcerer the program skips the drain but still goes to `wait_time` (costs the wielder
    1 mana and a charge: "Your Vorous glows a little as it draws your energy"). Was the test meant for
-   `self.outside`? (Changing it changes how often the drain fires.)
+   `self.outside`? (Changing it changes how often the drain fires.) Returned to Papi: it changes how often the drain fires and the charges it costs (numbers).

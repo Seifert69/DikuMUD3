@@ -43,7 +43,7 @@ Questions:
 4. **antievil** (line 107): `exec("emote casts a spell that drains your life energy.")` is seen by
    everyone in the room as "... drains your life energy", and the player's hp is set to 0 without
    `position_update`. Should it be an act() to the player and another to the room, followed by
-   `position_update(pc)`?
+   `position_update(pc)`? Fixed: two act()s, "drains your life energy" to the player and "drains <name>'s life energy" to the room. `position_update(pc)` not added and returned to Papi: with 0 hp it would leave the player stunned on the street, which makes it harder.
 
 ## vmc warnings
 

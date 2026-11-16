@@ -36,7 +36,7 @@ Fixed in place:
    speed (5 seconds) and leaves it there, so after his first walk the slaver's pauses are 5 seconds
    instead of the 20 he sets at the start, and he chatters four times as fast. Set
    `heartbeat := PULSE_SEC*20;` again after each `walk_room` call (or fix `walk_room`, which is
-   shared)?
+   shared)? Fixed: `heartbeat:=PULSE_SEC*20;` after each of the four `walk_room` calls (the shared `walk_room` left alone).
 
 ### Precedence
 

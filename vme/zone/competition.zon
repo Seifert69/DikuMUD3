@@ -344,9 +344,29 @@ code
 }
 dilend
 
-dilbegin string rlc_format (sl:stringlist,sc:string);
+/* n spaces */
+dilbegin string rlc_pad (n:integer);
 var
-	buf:string; 
+	buf:string;
+	i:integer;
+code
+{
+	buf:="";
+	i:=0;
+	while (i<n)
+	{
+		buf:=buf+"&nbsp;";
+		i:=i+1;
+	}
+	return (buf);
+}
+dilend
+
+dilbegin string rlc_format (sl:stringlist,sc:string);
+external
+	string rlc_pad (n:integer);
+var
+	buf:string;
 	ln:integer;
 	sln:integer;
 	starts:integer;
@@ -356,7 +376,7 @@ code
 {
 	s:=textformat(sc);
 	if (s=="")
-		return("&nbsp;"+sl.[1]); 
+		return(rlc_pad(atoi(sl.[1])));
 	buf:="";
 	sln:=length(s);
 	ln:=atoi(sl.[1]);
@@ -366,7 +386,7 @@ code
 	{
 		if (ln>sln)
 		{
-			buf:="&nbsp;"+itoa(ln-sln)+s;
+			buf:=rlc_pad(ln-sln)+s;
 		}
 		else
 			buf:=right(s,ln);
@@ -374,7 +394,7 @@ code
 	else if (sl.[0]=="l")
 	{
 		if (ln>sln)
-			buf:=s+"&nbsp;"+itoa(ln-sln);
+			buf:=s+rlc_pad(ln-sln);
 		else
 			buf:=left(s,ln);
 	}
@@ -384,10 +404,10 @@ code
 		{
 			start:=ln/2;
 			starts:=sln/2;
-			buf:="&nbsp;"+itoa((start-starts)-1)+s;
+			buf:=rlc_pad((start-starts)-1)+s;
 			start:=start-starts;
 			start:=start+sln;
-			buf:=buf+"&nbsp;"+itoa(ln-start);
+			buf:=buf+rlc_pad(ln-start);
 		}
 		else
 			buf:=left(s,ln);
@@ -767,7 +787,7 @@ code
 	if (arg!="")
 	{
 		args:=split(arg," ");
-		if (length(args)>1)
+		if ((length(args)>1) and (args.[0]==left("delete",length(args.[0]))))
 			goto del_single_comp;
 		if (arg==left("delete",length(arg)))
 			goto del_comp;
@@ -1023,6 +1043,11 @@ code
 		insert(line,0,cname+" LIST");
 		addextra(rm.extra,line,"Top 20 and experience");
 		remove (line,0);
+	}
+	else
+	{
+		sendtext ("Try again.<br>",self);
+		goto comp_menu;
 	}
 	upd_comp(cname);
 	gamestate(self, GS_PLAY);

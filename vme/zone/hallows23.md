@@ -9,7 +9,7 @@
    and `cball` ("an eyeball" of white chocolate), which no bag loads. Rename the loads to `licbat`
    and `cball`? (DIL change, so not made.) Still open, see step 2, question 1.
 2. **cball** (line 1050): `type ITEM_POTION` but it uses `SCROLL_DEF(60,SPL_BLESS,...)`, and its
-   identify says "when you quaff it". Should it be `POTION_DEF`?
+   identify says "when you quaff it". Should it be `POTION_DEF`? Fixed: `POTION_DEF`, so the eyeball is quaffed (the macro's later `type ITEM_SCROLL` made it a scroll); same spell and power.
 3. **dq_shirt** (line 908): the runes use `<div class='cp'>`, a class the client doesn't define, so
    they show in the default colour. A colour meant there (e.g. `cpm`, purple)?
 
@@ -42,7 +42,7 @@ Questions:
 2. **prg3 / prg4 / prg5** (lines 411, 520, 612): after "You must pick me up before opening me"
    the player stays secured; when he later leaves, the bag (still on the floor) jumps to `:lost:`
    and destroys itself with "A possible rare item disappears forever!". Meant, or should it
-   `unsecure(pc)` before `goto start`? (Dormant, see question 1.)
+   `unsecure(pc)` before `goto start`? (Dormant, see question 1.) Fixed: `unsecure(pc)` before `goto start` in all three.
 3. **jack_fight** (line 327): `self.abilities[ABIL_DEX] := (self.abilities[ABIL_STR])-rnd(1,2);`
    sets Jack's Dex from his Str. Meant `ABIL_DEX` on the right as well (each tangle lowering Dex,
    which nothing restores)? Not changed: balance.

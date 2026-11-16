@@ -287,6 +287,8 @@ act("You find yourself standing in another room!",A_ALWAYS, pc, null, null, TO_C
            unsecure(pc);
            goto start;
         }
+        unsecure(pc);
+        goto start;
 
         :lpc:
         goto init;

@@ -21,7 +21,7 @@ Questions:
 1. **nokill** (line 29): unlike the paladin and mage guilds' nokill, it has no
    `if (pc.type == UNIT_ST_NPC) goto start;`, so an NPC fighting a ranger guild NPC (a pet, a
    summoned creature, a wandering monster) is beaten unconscious and thrown out to for_gath1 like a
-   player. Skip NPCs as the other guilds do?
+   player. Skip NPCs as the other guilds do? Returned to Papi: the staff would then fight players' pets and summoned creatures to the end and could be killed by them (barbarian's nokill got the same change under the vmc warnings, noted there as "Changes play").
 2. **ranger_dil** (line 423): every time a guild member bows to (or worships) the master, a new
    ranger bow is loaded and given, with no check for one given before. Intended, or once only (a
    quest flag)?

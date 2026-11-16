@@ -15,7 +15,7 @@
 5. **gate_guard** (line 655): "The barbarian guards appear to exist without physical match." Meant
    "without equal"/"without match"?
 6. **nokill** (line 150): checks `pc.type` before `pc` is set, so the NPC check never works. DIL,
-   for step 2. Carried into step 2, question 1.
+   for step 2. Carried into step 2, question 1. Left: already fixed, `pc := self.fighting;` now comes before the NPC check (vmc warnings).
 
 ## Step 2
 
@@ -50,10 +50,10 @@ Questions:
 4. **gauntlet_blood** (lines 1188-1217): `grip` spends a charge (the rune number drops, "Blood gushes
    out...") before checking mana and endurance; with less than 5 of either the player loses the
    charge and gets "You have not enough power". Move the two checks before line 1188? Not made:
-   it saves players charges.
+   it saves players charges. Returned to Papi: it saves players charges (hands them something).
 5. **blood_poison** (lines 294-295): mana and endurance go below 0, while the poison spell it was
    copied from (spells.zon, `poison`) stops them at 0. Add the same two `if (... < 0) ... := 0;`?
-   (`$blood_str`, set on the weapon by `blood`, is read by nothing either.)
+   (`$blood_str`, set on the weapon by `blood`, is read by nothing either.) Returned to Papi: stopping the drain at 0 changes how hard the poison hits (numbers).
 
 ## vmc warnings
 

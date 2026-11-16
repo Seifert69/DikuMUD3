@@ -536,7 +536,7 @@ heartbeat:= PULSE_SEC*5;
 
 :start:
 wait(SFB_CMD, ((activator.type == UNIT_ST_PC) and
- ((GUIDE in activator.quests) or (activator.level > IMMORTAL_LEVEL)) and (command("bring"))));
+ ((GUIDE in activator.quests) or (activator.level >= IMMORTAL_LEVEL)) and (command("bring"))));
 block;
 pc:=findunit(activator, argument, FIND_UNIT_GLOBAL, null);
 gd:= activator;
@@ -2640,6 +2640,8 @@ else
 	(self.zone =="moor"))
     {
     tf:=walk_room@function("temple@udgaard",3);
+    if (tf == FALSE)
+      goto to_long2;
     secure(pc, stop);
     pause;
     exec("wave "+pc.name,self);

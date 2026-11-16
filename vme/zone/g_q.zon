@@ -440,7 +440,12 @@ code
    return (TRUE);
 
 :hagsecure:
-exec ("say lost pointer",self);
+if (familiar != null)
+{
+   unsecure (familiar);
+   destroy (familiar);
+}
+exec ("say Bah! Gone before I was done.",self);
 return (0);
 }
 dilend
@@ -1881,10 +1886,20 @@ dilcopy shopkeepernew@function(
 {ITEM_FOOD}, 110, 10, 2*PLATINUM_MULT, FALSE);
 
 dilbegin no_steal();
+var
+	arg : string;
+	w : string;
 code
 {
 :start:
 	wait(SFB_CMD, command("steal"));
+	// only steals from banksy himself: "steal <what> from <whom>"
+	arg := argument;
+	w := getword(arg);
+	while ((w != "from") and (w != ""))
+		w := getword(arg);
+	if (findunit(activator, arg, FIND_UNIT_SURRO, null) != self)
+		goto start;
 	block;
 	exec("whisper "+activator.name+" Be cool, man. Be cool.", self);
 	goto start;
@@ -1983,6 +1998,7 @@ var
     act ("You bend down and light $2n.",
     A_ALWAYS,pc,self,null,TO_CHAR);
 		pname:=pc.name;
+		unsecure (pc);
 pause;
     act ("<div class='cr'>ss</div><div class='cpr'>ss</div><div class='cpy'>ss</div><div class='cy'>ss</div><div class='cr'>ss</div><div class='cpr'>ss</div><div class='cy'>ss</div><div class='cpy'>ss</div><div class='cw'></div>",
     A_ALWAYS,self,null,null,TO_ALL);

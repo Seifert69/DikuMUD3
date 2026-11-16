@@ -25,7 +25,7 @@ Fixed in place:
    as it is, or remove the template?
 2. **restore_youth** (line 220): the drink is caught only when the argument is one of the spring's
    names (`drink spring`, `drink pool`); `drink from spring` falls through to the ordinary drink command,
-   which says the spring is not a drink. Accept a leading "from " as well?
+   which says the spring is not a drink. Accept a leading "from " as well? Returned to Papi: it makes the restoring drink easier to get (hands players something more easily).
 
 Added after review: **save_spring** (line 324): (Withdrawn: running `interrupt()` again replaces the
 interrupt with the same label; it doesn't add another.)

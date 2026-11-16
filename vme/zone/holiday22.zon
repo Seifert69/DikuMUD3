@@ -685,6 +685,7 @@ var
 	pc		:  	unitptr;
 	item 	:   unitptr;
     sl      :   stringlist;
+    ex      :   extraptr;
 
 code
 {
@@ -726,7 +727,12 @@ code
 		addextra(pc.quests, sl, "");
 		dilcopy ("xmas_magic@holiday22()",item);
 		dilcopy ("x_charge@holiday22()",item);
-		item.extra.descr := item.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		// the description is the extra with no names (addextra puts new extras first)
+		ex := item.extra;
+		while ((ex != null) and (length(ex.names) > 0))
+			ex := ex.next;
+		if (ex != null)
+			ex.descr := ex.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
 		exec("Emote grasps the "+item.name+" and gives a little chuckle.", self);
 		act ("A magical twinkle surrounds the "+item.name+".",A_ALWAYS,self,null,null,TO_ROOM);
 		link(item,pc);
@@ -760,6 +766,7 @@ var
 	charges : integer;
 	i 		: integer;
     sl      : stringlist;
+    ex      : extraptr;
 code
 {
 	heartbeat := PULSE_SEC;
@@ -784,7 +791,11 @@ code
 	}
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr := "empty";
-	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
+	ex := self.extra;
+	while ((ex != null) and (length(ex.names) > 0))
+		ex := ex.next;
+	if (ex != null)
+		ex.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",ex.descr);
 	
 	act("A burst of holiday magic erupts from your $2N!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("Your $2N has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -807,6 +818,7 @@ var
     xmas_quests  : stringlist global xmas_done@holiday22;
     charge 	: integer;
     sl : stringlist;
+    ex : extraptr;
 code
 {
 	:start:
@@ -824,7 +836,11 @@ code
 	act("$1n's $2N twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
 	if(self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr == "empty")
 	{
-		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		ex := self.extra;
+		while ((ex != null) and (length(ex.names) > 0))
+			ex := ex.next;
+		if (ex != null)
+			ex.descr := ex.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
 		self.extra.[xmas_quests.[XMAS_CHARGES_IDX]].descr := "charged";
 	}
 	goto start;
@@ -1788,6 +1804,8 @@ code
 
 	wait(SFB_CMD, (command("open")) and (("box" in argument)or
 		("gift" in argument)or("basket" in argument)));
+	if (findunit(activator, argument, FIND_UNIT_HERE, null) != self)
+		goto start;
 	pc := activator;
 	secure(pc, lost);
 	{
@@ -1873,6 +1891,8 @@ code
 	:start:
 
 	wait(SFB_CMD, (command("open")) and (("box" in argument)or("gift" in argument)or("basket" in argument)) );
+	if (findunit(activator, argument, FIND_UNIT_HERE, null) != self)
+		goto start;
 	pc := activator;
 	secure(pc, lost);
 	{
@@ -2000,6 +2020,8 @@ code
 :start:
 
 	wait(SFB_CMD, (command("open"))and(("box" in argument)or("gift" in argument)or("basket" in argument)) );
+	if (findunit(activator, argument, FIND_UNIT_HERE, null) != self)
+		goto start;
 	pc := activator;
 	secure(pc, lost_pc);
 	{

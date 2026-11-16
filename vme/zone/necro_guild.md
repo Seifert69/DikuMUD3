@@ -8,9 +8,9 @@
    underground laboratory fits his "preparing golem bodies")?
 2. **murdock reset** (line 2389): Murdock is equipped with `black_breast` at WEAR_BODY and then
    `dk_blue_robe` at WEAR_BODY too, but the robe can only be worn about the body (WEAR_ABOUT), as
-   meclor's reset does. Should the robe be `position WEAR_ABOUT`?
+   meclor's reset does. Should the robe be `position WEAR_ABOUT`? Fixed: `position WEAR_ABOUT`.
 3. **kadiya reset** (line 2422): `black_robe` is equipped at WEAR_BODY, but the robe is
-   MANIPULATE_WEAR_ABOUT (krain wears the same robe at WEAR_ABOUT). Should it be WEAR_ABOUT?
+   MANIPULATE_WEAR_ABOUT (krain wears the same robe at WEAR_ABOUT). Should it be WEAR_ABOUT? Fixed: `position WEAR_ABOUT`.
 4. **dark_corridor** (line 301): the iron door to the west read "Murdoch - Enter at your own risk"
    while the weapon master behind it is Murdock everywhere else; I changed the door to "Murdock".
    Say if "Murdoch" was meant.
@@ -39,7 +39,7 @@ Questions:
    Lord gets the "would you like to journey to our guild... Just nod" tell (the Servant says the lift
    offer aloud), and `if (command("nod"))` tests the command that woke the program, so the teleport
    happens when the member nods, whether or not they heard the offer. Meant: offer once when a member
-   arrives (or says something), then wait for the nod?
+   arrives (or says something), then wait for the nod? Fixed: the offer comes once per member while he stays in the room (at his first command there); a member's nod moves him as before, without the offer repeated.
 2. **necro_give** (line 710): every `worship` of Wicca by a necromancer with alignment below -349
    loads a new severed hand (line 748), and at level 20 and up a new Scythe of Bone, with no check
    that they got one before. Intended, or once per player (a quest flag)?

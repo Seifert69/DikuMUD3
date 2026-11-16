@@ -31,7 +31,7 @@ Questions:
    (`wait(SFB_DEAD, ...)`), which he only notices in the same room. If burp is already dead (not
    reset yet), or the prisoner never reaches throne2, he waits there for good and never goes back to
    the jail. Suggested fix: after `kill burp`, `if (findunit(self, "burp", FIND_UNIT_SURRO, null) ==
-   null) goto back;` with `:back:` before the walk to the jail.
+   null) goto back;` with `:back:` before the walk to the jail. Fixed: when no NPC burp is in the room after `kill burp`, the prisoner walks back to the jail (without the "King Burp is DEAD" shout) and starts over.
 2. **baaprg** (line 950): `exec("agree Baa", self)`: Baa agrees with himself. A joke, or
    `agree Boo` (the one he is talking to)?
 3. **ghoplaprg, mguulprg** (lines 846, 750): the 2008 note says the king's attack on the player was

@@ -5498,7 +5498,7 @@ code
 {
 
 sendtext ("Storage has been changed. You must seek an admin to take "+
-    "your stored items from old storage.<br/>", self);
+    "your stored items from old storage.<br/>", self.outside);
 heartbeat:= PULSE_VIOLENCE*SECS_PER_MUD_YEAR;
 while (TRUE) pause;
 
@@ -9094,7 +9094,7 @@ embroidered on it."
 extra {"$repair"}
 " "
 MATERIAL_LEATHER("white suede")
-manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FEET}
+manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_WAIST}
 ARMOUR_LEATHER(BONUS_AVERAGE_MINUS, BONUS_AVERAGE)  // Xyzzy: -1,0
 cost  4 IRON_PIECE
 rent  2 IRON_PIECE
@@ -12495,6 +12495,11 @@ cont:= findunit(self, "auccont", FIND_UNIT_SURRO, null);
 temp2:=temp;
 item:= findunit(pc,temp, FIND_UNIT_INVEN, null);
 temp:=temp2;
+   if (item == null)
+    {
+     exec("say You don't have it anymore, "+pc.name+".", self);
+     goto lost;
+    }
    if((cont.weight + item.weight) > cont.capacity)
     {
      exec("say Sorry, I'm out of free space in here.", self);

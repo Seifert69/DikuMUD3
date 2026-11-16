@@ -42,9 +42,15 @@ code
 	heartbeat:=PULSE_SEC*3;
 :start:
 	wait (SFB_CMD, (command ("light") and ("rocket" in argument)));
-	block;
 	pc:=activator;
 	secure (pc,start);
+	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
+	if ((item==null) or (item!=self))
+    {
+		unsecure (pc);
+		goto start;
+    }
+	block;
 	if(pc.outside.type!=UNIT_ST_ROOM)
 	{
 		act ("You can not light that from here!",
@@ -52,12 +58,6 @@ code
 		unsecure (pc);
 		goto start;
 	}
-	item:=findunit(pc,argument,FIND_UNIT_SURRO,null);
-	if ((item==null) or (item!=self))
-    {
-		unsecure (pc);
-		goto start;
-    }
     if (item.outside.type!=UNIT_ST_ROOM)
 	{
 		act ("You need to put it on the ground first.",
@@ -579,6 +579,7 @@ var
 
 	pc		:  	unitptr;
 	item 	:   unitptr;
+	ex		:	extraptr;
 
 code
 {
@@ -618,7 +619,12 @@ code
 		addextra(pc.quests, {XMAS_DAY21}, "");
 		dilcopy ("xmas_magic@holiday21()",item);
 		dilcopy ("x_charge@holiday21()",item);
-		item.extra.descr := item.extra.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		// the description is the extra with no names (addextra puts new extras first)
+		ex := item.extra;
+		while ((ex != null) and (length(ex.names) > 0))
+			ex := ex.next;
+		if (ex != null)
+			ex.descr := ex.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
 		exec("Emote grasps the "+item.name+" and gives a little chuckle.", self);
 		act ("A magical twinkle surrounds the "+item.name+".",A_ALWAYS,self,null,null,TO_ROOM);
 		link(item,pc);
@@ -650,6 +656,7 @@ var
 	pc		: unitptr;
 	charges : integer;
 	i 		: integer;
+	ex		: extraptr;
 code
 {
 	heartbeat := PULSE_SEC;
@@ -670,7 +677,11 @@ code
 	}
 	wait(SFB_TICK, command(CMD_AUTO_TICK));
 	self.extra.[X_CHARGES].descr := "empty";
-	self.extra.[0].descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",self.extra.[0].descr);
+	ex := self.extra;
+	while ((ex != null) and (length(ex.names) > 0))
+		ex := ex.next;
+	if (ex != null)
+		ex.descr := replace(" It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.","",ex.descr);
 	
 	act("A burst of holiday magic erupts from your $2N!",A_ALWAYS,self.outside,self,null,TO_CHAR);
 	act("Your $2N has fully restored you!",A_ALWAYS,self.outside,self,null,TO_CHAR);
@@ -691,6 +702,7 @@ dilend
 dilbegin recall x_charge();
 var
   charge 	: integer;
+  ex		: extraptr;
 code
 {
 	:start:
@@ -704,7 +716,11 @@ code
 	act("$1n's $2N twinkles magically!",A_ALWAYS,self.outside,self,null,TO_REST);
 	if(self.extra.[X_CHARGES].descr == "empty")
 	{
-		self.extra.[0].descr := self.extra.[0].descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
+		ex := self.extra;
+		while ((ex != null) and (length(ex.names) > 0))
+			ex := ex.next;
+		if (ex != null)
+			ex.descr := ex.descr + " It has a <div class='cpg'>magical</div><div class='cpw'> twinkle</div>.";
 		self.extra.[X_CHARGES].descr := "charged";
 	}
 	goto start;
