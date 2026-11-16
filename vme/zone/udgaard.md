@@ -31,7 +31,7 @@
 7. **mage_robe** (line 7286): the Robe of Ixtlan is `ARMOUR_PLATE` with `MANIPULATE_WEAR_ARMS`, but the
    (EXTENDEDMUD) reset puts it on WEAR_BODY. Should it be a body item, and cloth rather than plate?
 8. **moot_debe** (line 9072): Dellinger's belt has `MANIPULATE_WEAR_FEET`, and the reset equips it on
-   WEAR_WAIST. Should it be `MANIPULATE_WEAR_WAIST`?
+   WEAR_WAIST. Should it be `MANIPULATE_WEAR_WAIST`? Fixed: `MANIPULATE_WEAR_WAIST`.
 9. **moot_beco** (line 8727): Besri's coat is "a brown coat" (title, descr and material "A heavy brown
    wool"), but its description says "A black overtunic". Brown or black? Fixed (text follows the world): Besri's coat description now says brown overtunic.
 
@@ -72,7 +72,7 @@ Questions:
    does nothing; `blowaway` is added only to items that had randomizeItem. Was `i` meant to choose
    whether the item blows away? (All live calls pass 1.)
 3. **new_storage** (line 5501): the message goes to `self`, the storage container, so nobody sees
-   it. Should it go to `self.outside` (whoever carries the old container)?
+   it. Should it go to `self.outside` (whoever carries the old container)? Fixed: it goes to `self.outside`.
 4. **crook1** (Jens, line 11488) and **crook2** (Jesper, line 11548): neither program loops. Jens
    greets the first player who types a command, pickpockets them three times and then the program
    ends (the five pauses at the end and the `nopriority` after `:start:` suggest a `goto start;`
@@ -82,9 +82,9 @@ Questions:
    is put out by `remove` (pipe_dil2/cigar_dil2 set it out, but pipe_dil/cigar_dil still wait their
    two ticks), so "Your pipe goes out" comes later anyway and a cigar that was removed still burns
    out and turns into a stump. `extinguish` and `light` restart the timer, so a cigar lasts forever
-   if relit. Should the timers stop when the item is put out?
+   if relit. Should the timers stop when the item is put out? Returned to Papi: how long a pipe or cigar burns (and whether a relit cigar ever burns out) is a timing players feel and a design choice.
 6. **auction** (line 12496): after the player nods, the item is looked up again with no null check;
    if they dropped it meanwhile, Roland still says he tagged it (nothing is lost). Low priority:
-   add `if (item == null) goto lost;`?
+   add `if (item == null) goto lost;`? Fixed: Roland says "You don't have it anymore, <name>." and stops.
 
 No precedence cases (`and`/`or` next to a comparison) in udgaard's DIL.

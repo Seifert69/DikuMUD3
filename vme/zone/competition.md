@@ -24,13 +24,13 @@ Questions:
    `"&nbsp;" + itoa(count)`, the number itself, so `list <n>` shows text like `&nbsp;14Players`.
    (Probably an old `&s<n>` colour/space code turned into `&nbsp;` when the client changed; the
    comment at line 593 wonders the same about `&x`.) Rewrite `list` as an HTML table like the
-   death and XP boards, or pad with a loop of `&nbsp;`?
+   death and XP boards, or pad with a loop of `&nbsp;`? Fixed: a new `rlc_pad` adds that many `&nbsp;`; `list <n>` no longer shows the stray numbers.
 2. **run_comp / boot_comp** (lines 517, 688): `run_comp` (the update of a competition every minute or two
    and the "has just won" announcement) is `dilcopy`'d onto `board_obj` and isn't `recall`, so it
    is not saved by `store(rm, "comp_obj", TRUE)`. After a reboot `boot_comp` restores `comp_obj`
    and doesn't start `run_comp` again (it reads the `.comp` files only when nothing was stored),
    so a running competition is only updated when someone types `list <n>` and its end is never
-   announced. Start `run_comp` for each unfinished competition after the restore?
+   announced. Start `run_comp` for each unfinished competition after the restore? Left: `store` saves a unit's DIL programs with it (db_file.cpp bwrite_func; `recall` only decides whether one resumes where it stopped), so `run_comp` comes back with `comp_obj` and starting it again would run each competition twice.
 3. **upd_rebirth** (lines 1353-1359): does nothing. It looks for `"<time> INFO"` among the player's
    `$comp` names, which hold only `"<time>"`, so it returns at once (and `return`s instead of going
    on to the next competition); and if found, `t := u.exp - v; v := u.exp - t;` sets `v` to
@@ -41,4 +41,4 @@ Questions:
    the menu silently (back to `GS_PLAY`) and runs `upd_comp` with the competition's title instead
    of its number. Should an unknown choice show the menu again (`goto comp_menu`, as the PK and race
    menus do with "Try again.")? Also line 770: any argument of two words (`competition foo 2`)
-   deletes competition 2 without asking; only `delete <n>` was meant?
+   deletes competition 2 without asking; only `delete <n>` was meant? Fixed: an unknown menu choice says "Try again." and shows the menu again; only `competition delete <n>` (or an abbreviation of delete) deletes directly.

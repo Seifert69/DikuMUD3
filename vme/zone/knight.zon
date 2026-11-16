@@ -90,7 +90,7 @@ location and the fact it has been here since before the Great War ripped
 Midgaard apart."
 extra {"$exit_descr"} "The Entrance to the Dark Knights of Midgaard."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS,UNIT_FL_NO_TELEPORT,UNIT_FL_NO_MOB}
-movement SECT_FIELD
+movement SECT_INSIDE
 ALWAYS_LIGHT
 east to room_2;
 south to sth1@midsewers;
@@ -360,7 +360,7 @@ code
 :lost:
    destroy(item);
    unsecure(pc);
-   exec("say Just wait until they decide to talk to me and I now ignore them!", self);
+   exec("say Hmph, gone before I finished.", self);
    goto start;
 
 }

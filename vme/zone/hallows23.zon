@@ -415,6 +415,7 @@ code
 {
       act("You must pick me up before opening me.",
           A_ALWAYS, activator, null, null, TO_CHAR);
+unsecure(pc);
 goto start;
 }		  
   unset(self.openflags, EX_CLOSED);
@@ -524,6 +525,7 @@ code
 {
       act("You must pick me up before opening me. DOH!",
           A_ALWAYS, activator, null, null, TO_CHAR);
+unsecure(pc);
 goto start;
 }		  
   unset(self.openflags, EX_CLOSED);
@@ -616,6 +618,7 @@ code
 {
       act("You must pick me up before opening me.",
           A_ALWAYS, activator, null, null, TO_CHAR);
+unsecure(pc);
 goto start;
 }		  
   unset(self.openflags, EX_CLOSED);
@@ -1058,7 +1061,7 @@ extra {"$identify"}
 "This potion will give you a blessing from the dark gods when you quaff it."
 manipulate {MANIPULATE_TAKE}
 type ITEM_POTION
-SCROLL_DEF(60,SPL_BLESS,SPL_NONE,SPL_NONE)
+POTION_DEF(60,SPL_BLESS,SPL_NONE,SPL_NONE)
 weight 2
 end
 

@@ -50,12 +50,12 @@ Questions:
    description, and x_charge writes it into the charges extra (then overwritten with "charged").
    Only the look of the item is wrong (the charges themselves work). Suggested fix: find the
    unnamed description extra (`ex := self.extra; while ((ex != null) and (length(ex.names) > 0))
-   ex := ex.next;`) and change `ex.descr`.
+   ex := ex.next;`) and change `ex.descr`. Fixed: as suggested, in xmas_magic, x_charge and Mrs. Claus's upgrade too (its `item.extra` was the `$ply_restrict` extra put first by ply_restrict, so the twinkle never showed); now it shows, goes when the charge is used and comes back with the recharge.
 2. **prg3, prg4, prg5** (lines 1789, 1875, 2002): the wait takes any "open box/gift/basket" by
    anyone around, blocks it and says "You must pick me up before opening me", so a gift lying on
    the floor stops players opening their own box or basket there, and one "open gift" opens every
    gift the player carries. Check `findunit(activator, argument, FIND_UNIT_INVEN, null) == self`
-   (as yule_spoke does) before blocking?
+   (as yule_spoke does) before blocking? Fixed: each program goes on only when `findunit(activator, argument, FIND_UNIT_HERE, null)` is that very gift (inventory, held or on the floor, so the floor case still gets "You must pick me up").
 
 ## vmc warnings
 

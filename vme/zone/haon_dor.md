@@ -47,4 +47,4 @@ Questions:
    the two fight each other.
 3. **compl_pot** (line 2643): Mary's list includes "hold pot", but qstWaitDone has already
    deleted the pot she was given and the new one is loaded only after it, so she holds nothing.
-   Load the pot before qstWaitDone's lines, or drop "hold pot"?
+   Load the pot before qstWaitDone's lines, or drop "hold pot"? Fixed: "hold pot" moved out of the list to right after the new pot is loaded, so Mary holds it again.

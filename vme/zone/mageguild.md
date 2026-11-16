@@ -46,4 +46,4 @@ Questions:
    `:charge:` also needs `goto init` when the charm is already full, or it falls into
    `:no_person:` and the wearer sees "You grip your charm, but it senses no need ...".
 2. **conj_quest2** (line 836): an item given by someone who isn't a guild member with the charm
-   quest is kept without a word (the program just waits again). Hand it back?
+   quest is kept without a word (the program just waits again). Hand it back? Fixed: he hands it back ("$1n hands $2n back to you"); money given stays with him.

@@ -17,7 +17,7 @@
 6. **night_cross** (line 786): the identify says the pendant increases Constitution; it only has
    `PROTECTION_FROM_GOOD` (same as paladin_guild's `pal_cross`).
 7. **room_1** (line 93): `movement SECT_FIELD` for an indoor room; room_2 has no movement at all.
-   Should both be `SECT_INSIDE`?
+   Should both be `SECT_INSIDE`? Fixed: room_1 is `SECT_INSIDE`; room_2 already is (no `movement` means sector 0, `SECT_INSIDE`). The step between room_1 and the sewers costs 4 movement points instead of 5.
 
 ## Step 2
 
@@ -41,7 +41,7 @@ Questions:
 2. **knight_dil** (lines 359-362): `:lost:` runs `destroy(item)`, but `item` is never secured, so
    it is always null there (harmless); a player who leaves mid-speech gets the sword without the
    pendant, and Gawaine says "Just wait until they decide to talk to me and I now ignore them!",
-   which reads oddly. Reword (e.g. "Hmph, gone before I finished.")?
+   which reads oddly. Reword (e.g. "Hmph, gone before I finished.")? Fixed: he says "Hmph, gone before I finished."
 3. **flamechat** (line 603): the instant kill ("engulfs $3n in darkness", hp set to -7) fires on
    enemies under 10 hp with `alignment < 0`, i.e. on evil ones, while the sword belongs to the Dark
    Knights who "vanquish good". Was `alignment > 0` meant? (Balance: owner's call.)

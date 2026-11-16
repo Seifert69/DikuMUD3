@@ -44,15 +44,15 @@ Questions:
 4. **create_fam** (line 442): when the player leaves during the ritual, the familiar already
    loaded into Hexica's inventory stays there (its `fam_unbonded` waits while an NPC holds it), one
    more for each broken ritual, and Hexica says "lost pointer". `unsecure(familiar); destroy(familiar);`
-   at `:hagsecure:` (and a line in character instead of "lost pointer")?
+   at `:hagsecure:` (and a line in character instead of "lost pointer")? Fixed: the familiar still held is destroyed, and Hexica says "Bah! Gone before I was done."
 5. **no_steal** (banksy, line 1887): blocks every `steal` in the room, by anyone from anyone, while
    banksy wanders Udgaard. Only steals from him meant (e.g. `findunit(activator, argument,
-   FIND_UNIT_SURRO, null) == self` on the victim word)?
+   FIND_UNIT_SURRO, null) == self` on the victim word)? Fixed: only a steal whose victim (the words after "from") is banksy is blocked.
 6. **rocket** (line 1963): the player who lit it stays secured to `start` through the countdown;
    if he leaves after "leaves the ground with blinding speed" (`self.minv := 200`), the rocket goes
    back to waiting, invisible to mortals and never launched. `unsecure(pc);` right after
    `pname := pc.name;` (nothing later uses `pc`)? Also the loop "The rocket you are riding in
-   explodes" never reaches anyone, since `ast_launch` has already thrown the riders out.
+   explodes" never reaches anyone, since `ast_launch` has already thrown the riders out. Fixed: `unsecure(pc);` after `pname := pc.name;`, so the rocket launches when the lighter walks off. The riders' loop is left: moving it before `ast_launch` would also start its `item.minv := 0` on riders (an invisible god riding would become visible).
 
 ## vmc warnings
 

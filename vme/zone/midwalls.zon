@@ -4433,9 +4433,8 @@ code
 	       (self.position == POSITION_FIGHTING), skip);
 
   :start:
-  wait(SFB_CMD, command("get") and ("rock" in argument) or
-                (command("get") and ("rocks" in argument) and
-		(activator.type == UNIT_ST_PC)));
+  wait(SFB_CMD, command("get") and ("rock" in argument) and
+		(activator.type == UNIT_ST_PC));
 
   pc := activator;
   {
@@ -4504,6 +4503,7 @@ end
       food
 names {"beef", "hunk"}
 title "a hunk o beef"
+descr "A hunk of beef lies here."
 extra {}
 "Ummmm good"
 FOOD_DEF(50, 0)
@@ -4738,7 +4738,7 @@ end
    equip plate position WEAR_BODY \
    equip gaunts position WEAR_HANDS \
    equip leggings position WEAR_LEGS \
-   equip bracers position WEAR_HANDS \
+   equip bracers position WEAR_ARMS \
    equip helmet position WEAR_HEAD \
    equip tabard position WEAR_ABOUT \
    equip belt position WEAR_WAIST \
@@ -4749,7 +4749,7 @@ end
    equip captain_plate position WEAR_BODY \
    equip gaunts position WEAR_HANDS \
    equip leggings position WEAR_LEGS \
-   equip bracers position WEAR_HANDS \
+   equip bracers position WEAR_ARMS \
    equip helmet position WEAR_HEAD \
    equip tabard position WEAR_ABOUT \
 

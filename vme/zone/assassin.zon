@@ -442,6 +442,7 @@ external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
   pc:   unitptr;
+  u:    unitptr;
   item: unitptr;
   expd : extraptr;
 code
@@ -451,27 +452,37 @@ code
 
    :start:
    wait (SFB_CMD, activator.type == UNIT_ST_PC);
-   pc := activator;
 
-   if (not IsInGuild@guilds(pc, GUILD_ASSASSIN))
+   if (not IsInGuild@guilds(activator, GUILD_ASSASSIN))
       goto start;
 
+   if (command("nod"))
+   {
+      u := activator;
+      if (u == pc)
+         unsecure(pc);
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears you find yourself in a different place!"
+      ,A_ALWAYS,u,null,null,TO_CHAR);
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears, $1n is gone!",A_ALWAYS,u,null,null,TO_REST);
+      link(u, findroom("entrance@assassin"));
+      goto start;
+   }
+
+   // The offer once to each member, while he stays here (pc stays secured)
+   if (activator == pc)
+      goto start;
+   if (pc != null)
+      unsecure(pc);
+   pc := activator;
    secure(pc,lostpc);
 
    exec("tell "+pc.name+" Hello, fellow assassin.  Would you like to " +
          "journey to our guild to increase your powerful skills?  Just nod if " +
          "you wish to go.", self);
-   if (command("nod"))
-   {
-      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-      "smoke clears you find yourself in a different place!"
-      ,A_ALWAYS,pc,null,null,TO_CHAR);
-      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-      "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-      link(pc, findroom("entrance@assassin"));
-   }
+   goto start;
 
-   unsecure(pc);
    :lostpc:
    goto start;
 }
@@ -495,6 +506,7 @@ external
    integer IsInGuild@guilds(pc : unitptr, sGuild : string);
 var
   pc:   unitptr;
+  u:    unitptr;
   item: unitptr;
 
 code
@@ -504,26 +516,35 @@ code
 
   :start:
   wait (SFB_CMD, activator.type == UNIT_ST_PC);
-  pc := activator;
-  secure(pc,lostpc);
 
-   if (IsInGuild@guilds(activator, GUILD_ASSASSIN))
+   if (not IsInGuild@guilds(activator, GUILD_ASSASSIN))
+      goto start;
+
+   if (command("nod"))
    {
-      exec("say Hello, fellow assassin.  Would you like a lift back to Midgaard? " +
-         "Just nod if you wish to go.", self);
-
-      if (command("nod"))
-      {
-         act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-         "smoke clears you find yourself in a different place!"
-         ,A_ALWAYS,pc,null,null,TO_CHAR);
-         act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
-         "smoke clears, $1n is gone!",A_ALWAYS,pc,null,null,TO_REST);
-         link(pc, findroom("market_sq@midgaard"));
-      }
+      u := activator;
+      if (u == pc)
+         unsecure(pc);
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears you find yourself in a different place!"
+      ,A_ALWAYS,u,null,null,TO_CHAR);
+      act("The Shadow Assassin throws a smoke bomb upon the ground, when the "+
+      "smoke clears, $1n is gone!",A_ALWAYS,u,null,null,TO_REST);
+      link(u, findroom("market_sq@midgaard"));
+      goto start;
    }
 
-   unsecure(pc);
+   // The offer once to each member, while he stays here (pc stays secured)
+   if (activator == pc)
+      goto start;
+   if (pc != null)
+      unsecure(pc);
+   pc := activator;
+   secure(pc,lostpc);
+
+   exec("say Hello, fellow assassin.  Would you like a lift back to Midgaard? " +
+      "Just nod if you wish to go.", self);
+   goto start;
 
    :lostpc:
    goto start;

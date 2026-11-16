@@ -49,10 +49,10 @@ Questions:
    does anything near the shaman, he waits for *any* give, from anyone: a player without the quest
    who gives him Gaflaw's heart completes it and gets the experience, and no new player can start
    the quest (smile) until someone gives him something. Check `SOUL_ANCHOR_ONGOING in pc.quests`
-   on the giver, and wait for the give and the smile in one place?
+   on the giver, and wait for the give and the smile in one place? Fixed: the give is handled at `:start:` only when the giver has the quest ongoing; any other action by such a player goes back to waiting, so others can start the quest. (The smiler's quests, question 2, are untouched.)
 4. **soul_anchor_qst** (line 569): `qstAssign` executes each string of its list as the shaman's
    command; `"This string doesn't seem to be used?"` makes him try the command "This". Replace it
-   with a real line (e.g. `"nod"`), or leave the list empty?
+   with a real line (e.g. `"nod"`), or leave the list empty? Fixed: the line is `"nod"`.
 5. **charger, mana_drain** (lines 90, 102): copies of the sorcerer zone's templates; nothing uses
    the gremlin copies (the pendant uses `charger@sorcerer` and `mana_drain@sorcerer`, see step 1
    question 3). Remove them?

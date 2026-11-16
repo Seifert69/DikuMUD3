@@ -104,7 +104,10 @@ code
       exec("say That's it, "+pc.name+", thy time is up!",self);
       pc.hp := 0;
       pc.endurance := 0;
-      exec("emote casts a spell that drains your life energy.",self);
+      act("$1n casts a spell that drains your life energy.",
+          A_ALWAYS, self, null, pc, TO_VICT);
+      act("$1n casts a spell that drains $3n's life energy.",
+          A_SOMEONE, self, null, pc, TO_NOTVICT);
       act("Two paladin guards appear and grab $1n and drag $1m out of the Guild, dumping "+
       "$1m in the streets.",A_ALWAYS, pc, self, null, TO_REST);
       room := findroom("cth_square1@midgaard");

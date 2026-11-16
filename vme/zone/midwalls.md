@@ -14,7 +14,7 @@
    the sign (and its reset) go? Left: removing the sign needs its %reset line removed, which is not a text change; sign text left.
 4. **ARMOR / ARMOR2 macros** (lines 4741, 4752): every guard gets `equip bracers position
    WEAR_HANDS`, the same position as the gauntlets; bracers are made for `MANIPULATE_WEAR_ARMS`.
-   Should it be `WEAR_ARMS`? (A reset change, so not fixed.)
+   Should it be `WEAR_ARMS`? (A reset change, so not fixed.) Fixed: `WEAR_ARMS` in both macros; the guards wear their bracers on their arms.
 5. **gate_e2** (Fenris, line 3014): his patrol list is `{"rn_014@midwalls"}` (the ground floor of
    the southern gate tower), while the other eastern gate guards (gate_e1, gate_e3, gate_e4) stand
    at `rn_012@midgaard`, the gate passage itself. Slip for `rn_012@midgaard`?
@@ -24,7 +24,7 @@
    thrower. Probably `pc` was meant. The `wait()` condition also mixes `and`/`or` so the PC check
    only applies to "get rocks". First half fixed in step 2; the second is step 2's question 1.
 7. **food** (line 4504): the cook's "hunk o beef" has no `descr`, so it is invisible when dropped
-   in a room. Add one (e.g. "A hunk of beef lies here.")?
+   in a room. Add one (e.g. "A hunk of beef lies here.")? Fixed: `descr "A hunk of beef lies here."`.
 8. **gate_e3** (Sven, line 3859): "You get the idea that he has been to visit a fanny recently." In
    British English this reads as crude slang; is it intended, or was another word meant?
 9. **guard1 to guard24**: their `names` include "lieutenant", but their descriptions call them
@@ -42,10 +42,10 @@ Fixed in place:
 1. **rock** (line 4436): `get` and `"rock"` `or` (`get` and `"rocks"` and a PC): `"rock"` already
    matches "rocks", so the PC test never matters and an NPC's `get rock` would be caught too (none
    does today). Meant `command("get") and ("rock" in argument) and (activator.type == UNIT_ST_PC)`?
-   (Step 1, question 6, second half.)
+   (Step 1, question 6, second half.) Fixed: the wait is now as suggested.
 2. **rock** (line 4432): `on_activation` tests `self.position`, but `self` is the pile of rocks, which
    has no position, so it never skips. Was it meant to ignore sleeping or fighting players
-   (`activator.position`)?
+   (`activator.position`)? Returned to Papi: either the line goes (deleting code) or it starts refusing fighting players; which was meant is a choice.
 3. **guardstep** (line 37): `if (not transfermoney(u, null, 1 * COPPER_MULT))` takes a copper from
    the guard whenever he has one, and gives him two only when he has none. So a guard with money loses
    a copper at every meal besides paying for it. Meant as "if he has no money, give him some"? A fix

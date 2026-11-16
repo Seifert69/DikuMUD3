@@ -84,7 +84,7 @@ Questions:
    piece and gets the new one, and something else of the Blacksmith's may be destroyed. Fix: do as
    repair does (line 500): `dildestroy("repair2@bounty", self)` while crafting and copy it back at
    `:donezo:`, and `secure` the given item and destroy that instead of `self.inside`. Not changed:
-   it takes away the extra piece players get today.
+   it takes away the extra piece players get today. Returned to Papi: the fix takes away the extra piece players get today (harder).
 2. **guard_agg** (line 2375): the `goto start` sits inside the `foreach`, after the first unit only,
    so a guard attacks only when the first unit it looks at is not an ally (often it is itself or
    another guard). Was it meant to attack the first non-ally (move `goto start` into the `if`)? That
@@ -99,7 +99,7 @@ Questions:
 5. **new_spree** (line 4214): a follower is enrolled unless their `$DAILY_SPREE` today is `CLOSED`
    or `ongoing`. A follower with an unclaimed `SUCCESS` today is enrolled again, and that overwrites
    the `SUCCESS` before they said "end spree", losing the reward. Should `SUCCESS` (and `FAIL`?)
-   also keep them out?
+   also keep them out? Returned to Papi: a check that starts keeping followers out of a spree, and whether `FAIL` counts too is a choice.
 6. **delivery** (line 1430) and **qjeweler2** (line 3308) both complete the Jeweler's task. When the
    100-delivery streak is the last thing done, delivery completes it with no experience, no bounty
    points and leaves the twelve `$jeweler_*` counters on the player; qjeweler2 gives 10,000 xp and 200
@@ -108,11 +108,11 @@ Questions:
 7. **delivery** (line 1466) and **make_bounty** (line 4695): the `findrndunit` loops look for a random
    NPC in the level range with no `pause`; when few NPCs fit (e.g. a level 48-49 player, or a world
    with few such NPCs loaded) they can run long enough for the server to stop the program. A
-   `pause` every so many tries, or a give-up after N tries?
+   `pause` every so many tries, or a give-up after N tries? Fixed: delivery pauses every 1000 tries and after 10000 says it has no package right now (the server used to stop it after about 2500); make_bounty left, it has no level range and finds a target in a few tries.
 8. **crafting** (line 709): the spot is `argument` matched with `in`, which accepts the first word:
    "neck please" matches "neck", then `load("neck please_STR@bounty")` fails, no piece is made, but
    `JEWELER_CRAFTING` is still set, so the one free crafting is gone. Use `getword(argument)`, or
-   check `gift` before marking the crafting done?
+   check `gift` before marking the crafting done? Fixed: the spot and the ability are the first word said, so "neck please" makes the neck piece.
 9. **qnecro2** (step 1, question 3): it waits for `SUMMONER_ONGOING`, but `NECRO_ONGOING` is only
    given with `SUMMONER_ONGOING`, and the Summoner's task can only end after the Necromancer's
    activators, so the two are open together and it works. A player with only `SUMMONER_ONGOING`
@@ -121,10 +121,10 @@ Questions:
 10. **repair** (line 524): after "Give me the item you would like to have repaired now" it waits
     for that player's give with no time limit, and repair2 is removed meanwhile; a player who walks
     off without leaving the room keeps the Blacksmith from repairing or taking donations from anyone
-    until they leave. Add a timeout?
+    until they leave. Add a timeout? Fixed: after about two minutes without a give he says "Come back when you know what you want repaired" and serves others again.
 11. **spree_m** (line 3908 on): the success log and announcement print the time from `minutes` /
     `seconds`, which were last computed at the last kill message (or never, for a spree with no
-    kills), not at the end. Compute them in `:donezo:`?
+    kills), not at the end. Compute them in `:donezo:`? Returned to Papi: `:donezo:` is reached only when the spree's time is up, so computed there it would always print the full duration; today it prints the time of the last kill, except for the no-minimum spree with no kills (then "dur-1:60"). Which time the line should show is a choice.
 
 ### Precedence
 

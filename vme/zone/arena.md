@@ -56,7 +56,7 @@ Questions:
    dagger_nheal as effect, whose messages describe the dagger digging into the enemy's flesh;
    `enemy` is set and never used. Was `enemy` the target? (Balance.)
 4. **lio** (line 2703): `enemy.hp := enemy.hp + i` heals the enemy, with the message "Your $2N shoots
-   forth a burst of pure evil". Meant `-`? (Balance.)
+   forth a burst of pure evil". Meant `-`? (Balance.) Returned to Papi: `-` would make the weapon deal damage, a change of numbers.
 5. **gel** (lines 3330-3342): the three first branches take 2-4 times `i` hit points, silently, only
    from enemies *above* IMMORTAL_LEVEL; mortal enemies only get the `i < 30` drain. Was `<` meant
    there, or is it a deliberate anti-god trap? (Balance.)

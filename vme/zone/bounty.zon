@@ -521,8 +521,19 @@ code
 		goto donezo;
 	}
 	exec("say Give me the item you would like to have repaired now.",self);
-	wait(SFB_DONE, command("give") and (target == self) and (BLACKSMITH_COMPLETE in activator.quests) and (activator == pc));
-	
+	j := 0;
+:waitgive:
+	wait(SFB_DONE | SFB_TICK, command(CMD_AUTO_TICK) or (command("give") and (target == self) and (BLACKSMITH_COMPLETE in activator.quests) and (activator == pc)));
+	if (command(CMD_AUTO_TICK))
+	{
+		// About two minutes at 4 seconds a tick, then he serves others again
+		j := j + 1;
+		if (j < 30)
+			goto waitgive;
+		exec("say Come back when you know what you want repaired, "+pc.name+".",self);
+		goto donezo;
+	}
+
 	item := medium;
 	secure(item, donezo);
 	
@@ -706,7 +717,8 @@ code
 
 	wait(SFB_DONE, (command("say")) and (activator == pc));
 	sl := {"ankle","belt","ring","wrist","back","chest","cape","neck","ear"};
-	spot := argument;
+	buf := argument;
+	spot := getword(buf);
 	if (spot in sl)
 	{
 		exec("say Okay, you have chosen "+spot+".", self);
@@ -731,7 +743,8 @@ code
 	
 	wait(SFB_DONE, (command("say")) and (activator == pc));
 	sl := {"STR","DEX","CHA","CON","DIV","BRA","MAG","HIT"};
-	stat := argument;
+	buf := argument;
+	stat := getword(buf);
 	
 	if (stat in sl)
 	{
@@ -1388,6 +1401,7 @@ var
 	rsym : string;
 	i : integer;
 	blocked : integer;
+	tries : integer;
 code
 {
 	heartbeat:=PULSE_SEC * 3;
@@ -1461,8 +1475,20 @@ code
 	minlev:=pc.level+(pc.level/10);
 	if(pc.level==50) maxlev:=199;
 	else maxlev:=pc.level+(pc.level/5);
+	tries:=0;
 
 :loop:
+	// Few NPCs may fit the level range: rest now and then so the server
+	// doesn't stop the program, and give up when none is found.
+	tries:=tries+1;
+	if (tries > 10000)
+	{
+		exec("say I have no package for you right now, "+pc.name+". Come back later.", self);
+		unsecure(pc);
+		goto start;
+	}
+	if ((tries % 1000) == 0)
+		pause;
 	recip:=findrndunit(pc, FIND_UNIT_WORLD, UNIT_ST_NPC);
 	secure(recip, loop);
 	rdesc:=recip.outside_descr;

@@ -24,4 +24,4 @@ Questions:
 2. **portal_midgaard** (line 255): when a clan member types `enter` without "gate" (e.g. `enter
    door`), the program falls from `:yes:` into `:lpc:` and `goto init`, leaving `pc` secured; harmless,
    but a `goto start` after the `if` would be what was meant. Also only `htown@clan_koh` members get
-   the gate: everyone else's `enter gate` goes to the normal command. Intended?
+   the gate: everyone else's `enter gate` goes to the normal command. Intended? Fixed: `unsecure(pc); goto start;` after the `if` (nothing players see). The members-only gate is left as it is: who may use it is a design question.

@@ -378,7 +378,7 @@ heartbeat := PULSE_SEC*5;
 
 
 :start:
-wait(SFB_CMD,command("say"));
+wait(SFB_CMD,command("say") and (not dilfind("echo_pet@hobgob", activator)));
 saystr:=argument;
 					i:=rnd (1,4);
 					 if (i==4) goto start;
@@ -5088,7 +5088,7 @@ charge:=interrupt (SFB_MSG,((self==activator) and
 
 wait (SFB_CMD,(command ("say")) and
 ("I love you teddy" in argument) and
-            (self.equip==WEAR_HOLD));
+            (self.equip==WEAR_HOLD) and (activator == self.outside));
 
                block;
 if (pwr<=0) goto fail;

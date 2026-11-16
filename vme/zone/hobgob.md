@@ -69,10 +69,10 @@ Questions:
    `goto start`, but both restart at the top when they run off their end, so the macaw echoes every
    say in its room and a kitten follows and purrs at every tickle. The macaw also echoes other
    NPCs' says, so two macaws in one room set each other off (each echo has a 3 in 4 chance of being
-   answered). Should it ignore other pets' says?
+   answered). Should it ignore other pets' says? Fixed: the macaw ignores says by units running echo_pet (other macaws and itself), so two macaws no longer set each other off; it still echoes players and other NPCs. The kittens are fine as they are.
 4. **teddy_hea** (line 5096): the teddy heals its holder when anyone in the room says "I love you
    teddy", and blocks that person's say; the description says you should say it. Add
-   `(activator == self.outside)` to the wait?
+   `(activator == self.outside)` to the wait? Fixed: added; only the holder's say works (and is blocked).
 
 ### Precedence
 

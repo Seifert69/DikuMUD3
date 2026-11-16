@@ -25,7 +25,7 @@
    to tell the two apart?
 7. **hall** (line 2953 onwards): the room's exits to the four offices all use the door keyword
    "door", so `open door` in the hall only ever finds the first one. Give each door its own keyword
-   (dragon, griffon, owlbear, raven)?
+   (dragon, griffon, owlbear, raven)? Returned to Papi: it changes the exits' door keywords, and which names to give them is a choice.
 
 ## Step 2
 
@@ -50,17 +50,17 @@ Questions:
    "you can skip this part by saying 'go on'" (line 831) but saying it does nothing, and the
    `:hurry:` short tour (line 1004) is dead. Fix: move the interrupt to just before
    `goto stage1` (line 790), and `clear(i1)` at `:stage6:`. It changes what the tour does, so
-   your call. `:no_quest:` itself is dead too; drop it?
+   your call. `:no_quest:` itself is dead too; drop it? Returned to Papi: it changes what the tour does, and said after the silver ring is given (the interrupt stays until `:stage6:`) `:hurry:` hands the player a second ring; dropping `:no_quest:` is deleting code.
 2. (Withdrawn: the program restarts at the top when it runs off its end.)
 3. **newbie_help** (lines 2642-2651): after `walk_room` to the temple the code returns whatever
    `tf` is; the `if (tf == FALSE)` block with the teleport is reached only through
    `goto to_long2` from other zones. A walk that fails leaves the player where they were. Meant:
-   `if (tf == FALSE) goto to_long2;` right after the walk?
+   `if (tf == FALSE) goto to_long2;` right after the walk? Fixed: added; when the walk fails the guide teleports to the temple and summons the player, as for far zones.
 4. **quest_parse** (lines 2454-2457): `wait(SFB_DONE|SFB_TICK, command("say") and ...)` turns
    every tick down, so `if (command(CMD_AUTO_TICK) ...) goto tick;` can never be true. Harmless;
    drop SFB_TICK and the test, or was something meant to happen on a tick?
 5. **getem** (line 539): `bring` works for guides and for `activator.level > IMMORTAL_LEVEL`,
    while the n-commands (naffect, nbless...) let gods in from `IMMORTAL_LEVEL` itself (they
-   refuse `self.level < IMMORTAL_LEVEL`). `>=` meant?
+   refuse `self.level < IMMORTAL_LEVEL`). `>=` meant? Fixed: `>=`.
 6. Step 1 question 4 (the second `give bread`, line 1185) is still open.
 

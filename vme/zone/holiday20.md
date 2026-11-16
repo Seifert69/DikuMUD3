@@ -44,7 +44,7 @@ Questions:
    charge is used, the "magical twinkle" sentence Mrs. Claus added to the description is never
    removed (the replace works on "empty"), and x_charge's re-append lands in `$XMAS_Charges` and is
    overwritten by "charged". The charges themselves work. Keep the sentence in the description and
-   find that extra by its names instead of `.[0]`, or drop the twinkle text?
+   find that extra by its names instead of `.[0]`, or drop the twinkle text? Fixed: Mrs. Claus's upgrade, xmas_magic and x_charge all use the unnamed extra (the description). The upgrade's `item.extra` was itself the `$ply_restrict` extra (put first by ply_restrict), so the twinkle never showed at all; now it shows, goes when the charge is used and comes back with the recharge.
 3. **rocket**: `block` comes before the check that the rocket the player named is this one, so
    with two rockets in a room "light rocket" can be swallowed by the wrong rocket's program and
-   nothing happens. Move `block` after the `item != self` check?
+   nothing happens. Move `block` after the `item != self` check? Fixed: `block` and the "can not light that from here" check come after the `item != self` check.

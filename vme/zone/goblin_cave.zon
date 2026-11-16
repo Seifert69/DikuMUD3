@@ -1526,6 +1526,13 @@ code
   exec("say You gotta DIE, You...you...BURP!", self);
   pause;
   exec("kill burp", self);
+  // burp dead already or not here: go back to the jail rather than wait for good
+  if (findunit(self, "burp", FIND_UNIT_SURRO, null, UNIT_ST_NPC) == null)
+  {
+    pause;
+    tf:=walk_room@function("jail@goblin_cave",4);
+    goto start;
+  }
   wait(SFB_DEAD, (activator.nameidx=="burp") and (activator.zoneidx=="goblin_cave"));
   pause;
    tf:=walk_room@function("jail@goblin_cave",4);

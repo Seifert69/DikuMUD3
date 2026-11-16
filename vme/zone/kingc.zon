@@ -1558,6 +1558,13 @@ code
    else
    {
       exec("shake", self);
+      if (cup.objecttype != ITEM_MONEY)
+      {
+         unsecure(cup);
+         link(cup, pc);
+         act("$1n hands $2n back to you.", A_SOMEONE, self, cup, pc, TO_VICT);
+         act("$1n hands $2n back to $3n.", A_SOMEONE, self, cup, pc, TO_NOTVICT);
+      }
    }
 
    goto loop;
@@ -1975,7 +1982,10 @@ code
    else if ((activator == pc) and command("bow") and (target == king))
    {
       if (pc.level < 10)
-	goto loop;
+      {
+         exec("say Come back when thou art more experienced, "+pc.name+".", self);
+	 goto loop;
+      }
       pause;
 
       exec("say His majesty, King Welmar of Midgaard, has declared that "+
@@ -2631,6 +2641,10 @@ tf:=walk_room@function("kitchen@kingc",4);
    pause;
 
    :leave_cell:
+   /* gruel Ergan didn't get (he is dead): don't let the plates pile up */
+   i := findsymbolic(self, "yakky_gruel@kingc", FIND_UNIT_INVEN);
+   if (i != null)
+      destroy(i);
    tf:=walk_room@function("prison_corr_3@kingc",4);
    nopriority; /* Re-enable the protect lawful routine */
    exec("close bars", self);

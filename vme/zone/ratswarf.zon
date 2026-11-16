@@ -1396,6 +1396,7 @@ code
   exec("emote rubs his bloodshot eyes.", self);
   pause;
   tf:=walk_room@function("slave_market@ratswarf",4);
+  heartbeat:=PULSE_SEC*20; /* walk_room leaves its walking speed */
 
   :market:
   pause;
@@ -1419,12 +1420,14 @@ code
   exec("say Not a bad day's work.", self);
   pause;
   tf:=walk_room@function("grime_bar@ratswarf",4);
+  heartbeat:=PULSE_SEC*20;
   pause;
   exec("grin grimey", self);
   pause;
   exec("say Next round's on me!", self);
   pause;
   tf:=walk_room@function("port@ratswarf",4);
+  heartbeat:=PULSE_SEC*20;
   pause;
   :check:
   num:=rnd(1,100);
@@ -1435,6 +1438,7 @@ code
     exec("sigh", self);
     pause;
     tf:=walk_room@function("apartment@ratswarf",4);
+    heartbeat:=PULSE_SEC*20;
     pause;
     exec("grin slave", self);
     pause;
