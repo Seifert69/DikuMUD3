@@ -12,6 +12,9 @@ usage: mud.py start [--throw]   log in; the session stays in the background
                                 and where each comes from
        mud.py message NAME TEXT...    something to tell a player when they're next online
        mud.py message           the messages not given yet
+       mud.py survey            Papi's survey: the questions, who was asked what, and the answers
+       mud.py survey ask NAME   tell NAME the survey question that is due for them
+       mud.py survey stop NAME  ask NAME no more survey questions
        mud.py stop [MINUTES]    quit the game and end the session; with MINUTES, start refuses
                                 until they have passed, and read waits them out
 
@@ -60,6 +63,13 @@ player with a message waiting is always sent.
 
 Messages (~/memory/messages.txt, one per line: "date time Name: text") are shown when the player
 logs on or speaks, and crossed off when the character sends them a tell.
+
+Papi's survey, for an agent whose directory has survey/questions.txt (one question a line, in
+order; add new ones at the end, since answers.txt names them by number): each player (not Papi, not the other agents) gets question 1 once they've been online for
+SURVEY_SETTLE seconds, and the next one a day after they answered; one who doesn't answer isn't
+asked again. The agent is reminded to ask (survey ask NAME); the question counts as asked when its
+tell goes out. Their tells within a day of the question are the answer, kept in survey/answers.txt
+("date time  Name  Q1  text"); survey/state.json holds where each player is.
 """
 import base64, codecs, fcntl, hashlib, html.parser, json, os, re, selectors, socket, ssl, sys, time
 import urllib.parse
@@ -81,6 +91,54 @@ def drop_messages(name):
     with open(MESSAGES + ".new", "w") as f:
         f.write("".join(ln + "\n" for ln in keep))
     os.replace(MESSAGES + ".new", MESSAGES)
+
+
+def survey_questions():
+    try:
+        with open(os.path.join(SURVEY, "questions.txt")) as f:
+            return [ln.strip() for ln in f if ln.strip() and not ln.strip().startswith("#")]
+    except OSError:
+        return []
+
+
+def survey_state():
+    """Player -> {"q": the last question asked, "asked", "answered": when, "stop": no more}."""
+    try:
+        with open(os.path.join(SURVEY, "state.json")) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def survey_save(state):
+    path = os.path.join(SURVEY, "state.json")
+    with open(path + ".new", "w") as f:
+        json.dump(state, f, indent=1, sort_keys=True)
+    os.replace(path + ".new", path)
+
+
+def survey_due(name):
+    """(number, question) to ask the player now, or None."""
+    if name in ADMINS or name in FELLOWS:
+        return None
+    qs = survey_questions()
+    if not qs:
+        return None
+    p = survey_state().get(name, {})
+    if p.get("stop") or p.get("asked") and not p.get("answered"):
+        return None  # said no, or hasn't answered the last one: not asked again
+    if p.get("answered") and time.time() - p["answered"] < SURVEY_NEXT:
+        return None
+    n = p.get("q", 0) + 1
+    return (n, qs[n - 1]) if n <= len(qs) else None
+
+
+def survey_tell(name, n, question):
+    """The tell that asks it; the first one says what the survey is."""
+    if n == 1:
+        return ("Hi %s! Papi asked me to collect ideas from the players: a few short questions, one a"
+                " day. Just answer with a tell, or say 'no thanks' and I won't ask again. %s" % (name, question))
+    return "Hi %s! Papi's next question: %s" % (name, question)
 
 
 def agent():
@@ -116,6 +174,7 @@ PAUSE = os.path.join(STATE, "paused")  # until when (epoch seconds) the characte
 LOGDIR = os.path.expanduser(os.path.join("~/.local/state/mud", AGENT or ""))  # on disk, unlike STATE: kept across reboots
 PEOPLE = os.path.expanduser(os.path.join("~", AGENT or "", "memory/people"))
 MESSAGES = os.path.join(os.path.dirname(PEOPLE), "messages.txt")
+SURVEY = os.path.join(os.path.dirname(os.path.dirname(PEOPLE)), "survey")  # ~/dwili/survey
 MAP = os.path.expanduser(os.environ.get("MUD_MAP", "~/zones/map.txt"))  # from zonemap.py
 ITEMS = os.path.expanduser(os.environ.get("MUD_ITEMS", "~/zones/items.txt"))  # from zoneitems.py
 FIND_MAX = 30       # lines find prints at most
@@ -127,6 +186,11 @@ KEEPALIVE = 600     # the mud throws out a player idle for 20 minutes
 RECAP = 8           # lines of earlier conversation shown
 RECAP_AGAIN = 7200  # shown again when they speak this long after (the agent's conversation is new by then)
 MESSAGE_AGAIN = 600  # a waiting message is shown again when they speak this long after
+SURVEY_SETTLE = 120  # a player is due a survey question once online this long
+SURVEY_AGAIN = 1800  # the reminder to ask them comes again after this long
+SURVEY_NEXT = 86400  # the next question, this long after they answered the last
+SURVEY_WINDOW = 86400  # their tells this long after a question are its answer
+SURVEY_MORE = 900   # and more tells this soon after their first answer are kept with it
 SAY_TO = 300        # a say goes in the history of the players who spoke in the room this recently
 ALONE = 900         # while no players but the admins are online, a reminder to go hunting this often
 ADMINS = {"Papi"}
@@ -547,7 +611,7 @@ def editor_lines(mud, line):
     return [line]
 
 
-def refused(mud, line):
+def refused(mud, line, survey=False):
     """Why a line must not go to the mud, or None."""
     words = line.split()
     word = (words or [""])[0].lower()
@@ -570,7 +634,7 @@ def refused(mud, line):
         return ("Green Tuborg is a single sip. Drink water, free: drink barrel in Mary's cabin"
                 " (mud.py way cabin@haon_dor) or drink obelisk (mud.py way market_sq@midgaard)")
     # the recap says "no greeting", and the agent greeted anyway; a message isn't a greeting
-    if word in ("tell", "tel", "te") and len(words) > 1 and not messages(words[1]):
+    if word in ("tell", "tel", "te") and len(words) > 1 and not messages(words[1]) and not survey:
         name = words[1].capitalize()
         since = mud.greet_quiet.get(name)
         if since and time.strftime("%Y-%m-%d", time.localtime(since)) == time.strftime("%Y-%m-%d"):
@@ -619,6 +683,8 @@ class Session:
         self.reflexes = {}  # reflex -> when its hint was last given
         self.greet_quiet = {}  # player -> when they logged on again, spoken to today and silent since
         self.messaged = {}  # player -> when their waiting messages were last shown
+        self.survey_at = {}  # player online -> when to see next whether a survey question is due
+        self.survey_sent = None  # (player, question, until when): survey ask's tell, until its echo
         self.playing = False  # logged in: a name prompt now means the mud rebooted
         self.rebooted = False
 
@@ -678,13 +744,22 @@ class Session:
                 self.recap(name)
                 self.show_messages(name)
                 self.remember(name, kind, name, body)
+                if kind == "tell":
+                    self.survey_answer(name, body)
             else:
                 if not mine and now_repeat(self, text):
                     return
                 self.add(text)
                 if mine and kind == "tell" and name:
                     self.remember(name, kind, self.me, body)
-                    if messages(name):
+                    sent = self.survey_sent
+                    if sent and sent[0] == name and time.time() < sent[2]:
+                        self.survey_sent = None
+                        state = survey_state()
+                        state[name] = {"q": sent[1], "asked": time.time(), "answered": 0}
+                        survey_save(state)
+                        self.add("\n[Papi's survey: question %d is asked; their answer will be kept.]\n" % sent[1])
+                    elif messages(name):
                         drop_messages(name)
                         self.add("\n[Your message for %s is given: crossed off.]\n" % name)
                 elif mine and kind in ("say", "ask", "whisper", "emote"):
@@ -700,6 +775,9 @@ class Session:
                 if item[:1] == "+":
                     name = item[1:].split()[0] if item[1:].split() else ""
                     self.online.add(name)
+                    # someone in the first full list may have been on for a while
+                    if name:
+                        self.survey_at.setdefault(name, time.time() + (0 if full else SURVEY_SETTLE))
                     if not full and name in FELLOWS:
                         self.add("\n[%s logged on: a helper agent like you, no greeting.]\n" % name)
                     elif not full and name != self.me:
@@ -711,6 +789,9 @@ class Session:
                         self.show_messages(name, True)
                 elif item[:1] == "-":
                     self.online.discard(item[1:].strip())
+                    self.survey_at.pop(item[1:].strip(), None)
+            if full:  # who left while the connection was down
+                self.survey_at = {n: t for n, t in self.survey_at.items() if n in self.online}
             others = sorted(self.online - {self.me})
             if others != self.others:
                 self.others = others
@@ -730,6 +811,38 @@ class Session:
         self.add("\n[%s is online, and you have a message for them. Tell them now, even if you spoke"
                  " today; your next tell to them crosses it off:]\n%s\n"
                  % (name, "\n".join("  " + ln for ln in waiting)))
+
+    def survey_remind(self):
+        """Reminds the agent to ask the players online who are due a survey question."""
+        now = time.time()
+        for name, at in sorted(self.survey_at.items()):
+            if now < at or name == self.me:
+                continue
+            self.survey_at[name] = now + SURVEY_AGAIN
+            due = survey_due(name)
+            if due:
+                self.add("\n[Papi's survey: %s is due question %d. When they're not busy, ask it: bin/mud.py"
+                         " survey ask %s]\n" % (name, due[0], name))
+
+    def survey_answer(self, name, body):
+        state, now = survey_state(), time.time()
+        p = state.get(name)
+        if not p or not p.get("asked") or p.get("stop"):
+            return
+        first = not p.get("answered")
+        if first and now - p["asked"] > SURVEY_WINDOW:
+            return  # too late: an answer to something else
+        if not first and now - p["answered"] > SURVEY_MORE:
+            return
+        fd = os.open(os.path.join(SURVEY, "answers.txt"), os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o600)
+        with os.fdopen(fd, "a") as f:
+            f.write("%s  %s  Q%d  %s\n" % (time.strftime("%Y-%m-%d %H:%M"), name, p["q"], " ".join(body.split())))
+        if first:
+            p["answered"] = now
+            survey_save(state)
+            self.add("\n[Papi's survey: %s's answer to question %d is kept. Thank them, and answer anything"
+                     " else they asked. If they said no thanks, or not to ask again: bin/mud.py survey stop %s]\n"
+                     % (name, p["q"], name))
 
     def person(self, name):
         return os.path.join(PEOPLE, name.lower() + ".txt")
@@ -903,6 +1016,8 @@ def serve(mud, ready):
         now = time.time()
         if mud.connected and now - mud.last_sent >= KEEPALIVE:
             mud.raw("")
+        if mud.connected:
+            mud.survey_remind()
         if mud.others is not None and mud.conf.get("hunt") != "no" and not set(mud.others) - ADMINS - FELLOWS \
                 and now - mud.reflexes.get("alone", 0) >= ALONE:
             mud.reflexes["alone"] = now
@@ -938,10 +1053,12 @@ def serve(mud, ready):
                     continue
                 op = req.get("op")
                 now = time.time()
-                why = op == "send" and refused(mud, req["line"])
+                why = op == "send" and refused(mud, req["line"], bool(req.get("survey")))
                 if why:
                     reply(c, mud, "[Not sent: %s.]\n" % why)
                 elif op == "send" and mud.connected:
+                    if req.get("survey"):
+                        mud.survey_sent = (req["survey"][0], req["survey"][1], now + SEND_WAIT)
                     for line in editor_lines(mud, req["line"]):
                         mud.send(line)
                     waiting.append([c, op, now, now + req.get("wait", SEND_WAIT)])
@@ -1128,6 +1245,40 @@ def start(throw):
     os._exit(0)
 
 
+def survey(args):
+    qs, state = survey_questions(), survey_state()
+    if not qs:
+        die("no survey: %s/questions.txt is missing" % SURVEY)
+    if not args:
+        for i, q in enumerate(qs, 1):
+            print("Q%d %s" % (i, q))
+        for name, p in sorted(state.items()):
+            print("%-12s %s" % (name, ", ".join(
+                (["Q%d %s" % (p["q"], "answered" if p.get("answered") else "asked")] if p.get("q") else [])
+                + (["stopped"] if p.get("stop") else []))))
+        try:
+            with open(os.path.join(SURVEY, "answers.txt")) as f:
+                sys.stdout.write(f.read())
+        except OSError:
+            print("[No answers yet]")
+        return
+    if len(args) != 2 or args[0] not in ("ask", "stop") or not re.fullmatch(r"[A-Za-z]+", args[1]):
+        die("usage: mud.py survey [ask|stop NAME]")
+    name = args[1].capitalize()
+    if args[0] == "stop":
+        state.setdefault(name, {})["stop"] = True
+        survey_save(state)
+        print("[%s gets no more survey questions.]" % name)
+        return
+    due = survey_due(name)
+    if not due:
+        print("[No survey question is due for %s now.]" % name)
+        return
+    # the session marks it asked when the tell's echo comes (and doesn't count it as a greeting)
+    show(request({"op": "send", "line": "tell %s %s" % (name, survey_tell(name, *due)), "survey": [name, due[0]]},
+                 SEND_WAIT + 5))
+
+
 def main():
     args = sys.argv[1:]
     op = args[0] if args else ""
@@ -1161,6 +1312,8 @@ def main():
         r = request({"op": "status"}, 5)
         print("[Noted for %s. %s]" % (name, "They're online now: tell them." if r and name in (r.get("others") or [])
                                      else "mud.py shows it when they log on or speak."))
+    elif op == "survey":
+        survey(args[1:])
     elif op == "status":
         r = request({"op": "status"}, 5)
         if r is None:
@@ -1181,7 +1334,7 @@ def main():
         sys.stdout.write(r["text"])
         print("\n[session ended%s]" % (", back at " + time.strftime("%H:%M", time.localtime(paused()))
                                         if paused() else ""))
-    elif op and op not in ("send", "find", "message"):
+    elif op and op not in ("send", "find", "message", "survey"):
         # an agent that tries a game command here (mud.py score) learns the way to send it
         print('[%s is not a mud.py command. Game commands go through send: bin/mud.py send "%s"]'
               % (op, " ".join(args)))
