@@ -14,6 +14,7 @@ Questions:
 1. **mail** (line 180): the "sudden urge to visit the post office" notice goes to
    `findunit(self, sDest, FIND_UNIT_WORLD, null)`, which matches the start of a name and only
    what the postman can see: mail to "Bob" may notify Bobby, or nobody when Bob is invisible.
-   Walk the player list for the exact name instead (as `reply@comm` does)?
+   Walk the player list for the exact name instead (as `reply@comm` does)? Fixed: mail walks
+   the player list for the exact name.
 2. **Help Mail** and **Help Request** are empty in vme/etc/help (write.hlp points to Help Mail).
    Write them?

@@ -5417,6 +5417,7 @@ var
    skilld : integer;
    targ : unitptr;
    i : integer;
+   tries : integer;
 code
 {
    // log("Locate wanted ["+arg+"]" + effect);
@@ -5448,7 +5449,24 @@ code
    {
       i := pathto(self, targ);
 
-      if (i==DIR_IMPOSSIBLE)
+      // The first path from a room is worked out in the background; wait for it
+      // as find_path does (targ is found again after each pause)
+      heartbeat := PULSE_SEC;
+      while ((i == DIR_TRYAGAIN) and (tries < 10))
+      {
+         tries := tries + 1;
+         pause;
+         targ := FindCriminal@justice(arg);
+         if (targ == null)
+            break;
+         i := pathto(self, targ);
+      }
+
+      if (i == DIR_TRYAGAIN)
+      {
+         act("The magic is elusive. Maybe you should try again.", A_ALWAYS, self, null, null, TO_CHAR);
+      }
+      else if (i==DIR_IMPOSSIBLE)
       {
          act ("You get the feeling it is impossible from here.",
          A_ALWAYS,self,null,null,TO_CHAR);
@@ -5566,7 +5584,11 @@ code
    }
 
    if (arg == "")
-     pc := null;
+   {
+      act("Refit it for whom?",
+	  A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
    else
    {
       pc := findunit(self, arg, FIND_UNIT_SURRO, null);
@@ -6361,7 +6383,7 @@ code
 
    if (u and (u.type == UNIT_ST_OBJ))
    {
-      if (self.name in self.extra)
+      if (self.name in u.extra)
       {
 	 act("You despair, as you see the other text written "+
 	     "on the page.", A_ALWAYS, self, null, null, TO_CHAR);
@@ -6376,7 +6398,8 @@ code
 	 act("$1n looks desperately at $2n.",
 	     A_HIDEINV, self,u,null,TO_ROOM);
       }
-      exec("drop letter", self);
+      if (u.outside == self)
+         exec("drop " + u.name, self);
    }
    else
    {
@@ -10081,6 +10104,12 @@ code
 {
 arg:=getword(arg);
 
+if (arg == "")
+{
+	act("Command $3n to do what?", A_ALWAYS, self, null, tgt, TO_CHAR);
+	quit;
+}
+
 tmp:= lst_parse(arg);
 
 if((tmp != "aok") and (tmp != "sleep"))
@@ -11683,6 +11712,7 @@ code
        A_SOMEONE, self, null, tgt, TO_REST);
    link(tgt, self.outside);
 
+   i := dildestroy("ani_fol@spells", tgt);
    if (isset(self.pcflags, PC_PK_RELAXED))
       dilcopy ("ani_fol@spells(1," + itoa(pow) + ")",tgt);
    else
@@ -13255,7 +13285,10 @@ code
 {
 
   if(hm < 0)
+  {
+     act("Nothing happens.", A_ALWAYS, self, null, null, TO_CHAR);
      return;
+  }
 
 :start:
   plce := findrndunit(self,FIND_UNIT_WORLD,UNIT_ST_ROOM);
@@ -13560,7 +13593,12 @@ code
 
   if(tgt == null) quit;
 
-  if(tgt.level > self.level) quit;
+  if(tgt.level > self.level)
+  {
+     act("$3n is too powerful for you to summon.",
+          A_ALWAYS, self, null, tgt, TO_CHAR);
+     quit;
+  }
 
   room_me := unit_room@function(self);
   room_tgt := unit_room@function(tgt);
@@ -14953,7 +14991,8 @@ if((not(isset(room.exit_info[i], EX_OPEN_CLOSE))) or
 
    rev := rev_dir@function(i);
 
-  if(not(isset(room.exit_to[i].exit_info[rev], EX_LOCKED)))
+  if((not(isset(room.exit_to[i].exit_info[rev], EX_LOCKED))) and
+     (isset(room.exit_to[i].exit_info[rev], EX_OPEN_CLOSE)))
    {
     set(room.exit_to[i].exit_info[rev], EX_LOCKED);
     act("*cluck*",

@@ -177,8 +177,10 @@ store(cont,tolower(sDest),TRUE);
   act("$1n gives $3n a letter.", A_SOMEONE, pc, null, self, TO_REST);
   act("You give a letter to $3n.", A_SOMEONE, pc, null, self, TO_CHAR);
 
-  uDest := findunit(self, sDest, FIND_UNIT_WORLD, null);
-  if ( uDest != null )
+  uDest := ghead(); // players come first in the global list; find the exact name
+  while ((uDest.type == UNIT_ST_PC) and (uDest.name != sDest))
+     uDest := uDest.gnext;
+  if (uDest.type == UNIT_ST_PC)
      act("<div class='mail'>You have a sudden urge to visit the post office.</div>",
 	       A_SOMEONE, uDest, null, null, TO_CHAR);
 

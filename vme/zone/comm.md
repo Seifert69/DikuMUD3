@@ -22,7 +22,7 @@ Fixed in place:
 
 Questions:
 1. **whostring** (line 43): the Discord `who` list tags `(Immortal)` only for `level > IMMORTAL_LEVEL`,
-   so a level 200 god gets no tag (Creator is `>=`). Make it `>=`?
+   so a level 200 god gets no tag (Creator is `>=`). Make it `>=`? Fixed: `>=`.
 2. **do_ask** (lines 903-904) against Help Ask: the help says "Only the character you're asking
    will hear the question", but the room sees `$1n asks $3n '...'` with the whole question.
    Either the help is wrong, or the room should see only that $1n asks $3n something (as with
@@ -34,4 +34,5 @@ Questions:
    Spanish words), "homo" and "caesure"; a player shouting "que" loses shout for an hour. Remove
    those from the list?
 5. **do_tell** (line 329): `left(arg,5) == "group"` also takes "tell groupie hi" (a player whose name
-   starts with "group") as a group tell. Compare the first word instead (`getword`)?
+   starts with "group") as a group tell. Compare the first word instead (`getword`)? Fixed: a group
+   tell is now "group" alone or "group " followed by the message.

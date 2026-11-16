@@ -300,10 +300,13 @@ external
    integer is_hidden(unit2 : unitptr, int1 : integer, unit23 : unitptr);
    integer skillchecksa@skills(skillidx : integer, abiidx : integer, difficulty : integer);
    string exitname@function(room:unitptr, dir:integer);
+   integer rev_dir@function(d:integer);
    fall_dil(damage:integer);
    look_blank@baselook(l1 : unitptr, str12 : string);
 
 var
+   from_dir:integer;
+   rev_name:string;
    fall_to:string;
    res:integer;
    args:stringlist;
@@ -419,9 +422,20 @@ code
    if (res != SFR_SHARE)
       quit;
 
+   from_dir := rev_dir@function(dir);
+   rev_name := dirstring@function(from_dir);
+   if (rev_name == "up")
+      rev_name := "above";
+   else if (rev_name == "down")
+      rev_name := "below";
+   else
+      rev_name := "the " + rev_name;
+
+   act("$1n climbs " + dir_name + ".", A_HIDEINV, self, null, null, TO_ROOM);
+
    link(self, room_going);
 
-   act("$1n climbs in on the $2t.", A_HIDEINV, self, arg , null, TO_ROOM);
+   act("$1n climbs in from " + rev_name + ".", A_HIDEINV, self, null, null, TO_ROOM);
 
    look_blank@baselook(self, ":brief:");   /* get the rooms contents.  The :brief: tells the look dil*/
 
@@ -1275,7 +1289,7 @@ code
          }
 
          if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has entered the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+            act("$1n has entered the $2N on $1s $3N.", A_HIDEINV, self, item, self.outside, TO_REST);
       }
       else
       {
@@ -1301,7 +1315,7 @@ code
          }
 
         if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has entered the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+            act("$1n has entered the $2N in $1s $3N.", A_HIDEINV, self, item, self.outside, TO_REST);
       }
    }
    else    /* Not on a horse or vehicle, so just enter pc */
@@ -1634,7 +1648,7 @@ code
          }
 
          if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has left the $2N on $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+            act("$1n has left the $2N on $1s $3N.", A_HIDEINV, self, item, self.outside, TO_REST);
       }
       else
       {
@@ -1659,7 +1673,7 @@ code
          }
 
          if (not isset(item.flags, UNIT_FL_TRANS))
-            act("$1n has left the $2N in $1s $3N.", A_ALWAYS, self, item, self.outside, TO_REST);
+            act("$1n has left the $2N in $1s $3N.", A_HIDEINV, self, item, self.outside, TO_REST);
       }
    }
    else    /* Not on a horse or vehicle, so just enter pc */
@@ -3029,7 +3043,7 @@ code
    while(zon.name != self.zone)
       zon := zon.next;
 
-   if (zon.name != self.zone)
+   if (zon == null)
    {
       log("SECRET DOOR ERROR: " + self.nameidx + "@" + self.zoneidx + " somehow isnt in a zone.");
       return;

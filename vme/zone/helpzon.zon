@@ -276,7 +276,7 @@ code
    if (s=="")
       s:="help";
 
-	if (s==left("topics", length(s)))
+	if ((length(s) >= 3) and (s==left("topics", length(s))))
 	{
 		fileindex := readindex("help.index", "all");
 		sendtext ("This is the full help topic list.  "+
@@ -286,7 +286,7 @@ code
 		quit;
 	}
 
-	if (s==left("area",length(s)))
+	if ((length(s) >= 3) and (s==left("area",length(s))))
 	{
       zptr:=zhead();
 

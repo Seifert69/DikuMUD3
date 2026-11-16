@@ -523,7 +523,7 @@ if (msg_num>ln)
 
 pname:=split(templist.[msg_num-1],"(");
 tname:=pname.[length(pname)-1];
-if (activator.name==left(tname,length(activator.name)))
+if ((activator.name+")")==left(tname,length(activator.name)+1))
 	goto remove_act;
 
 

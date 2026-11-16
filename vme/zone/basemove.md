@@ -27,7 +27,8 @@ Questions:
    word typed in the old room ("climbs in on the north", "climbs in on the rope"), and nobody in
    the room left behind sees the climber go. Suggest a TO_ROOM "$1n climbs <dir>." before the
    `link()` and "$1n climbs in from <reverse direction>." after it (fall_dil already builds such
-   names with `rev_dir@function`).
+   names with `rev_dir@function`). Fixed: the old room sees "$1n climbs <dir>." and the new one
+   "$1n climbs in from <the reverse direction / above / below>.", built as fall_dil does.
 2. **checkexit, do_swim, do_ride, do_sail, search_dil** (lines 910, 643, 726, 781, 2882): the
    direction is found with `arg1 in "north"`, a substring test: "o", "or", "th", "h" mean north,
    "a" or "st" east, "ou" south, "wn" down. An exit named "out" is taken for south. do_swim, do_ride
@@ -42,10 +43,11 @@ Questions:
 4. **enter_dil / leave_dil** (lines 1278, 1637 and the "in $1s $3N" lines after them): "$1n has
    entered/left the $2N on $1s $3N." go out with `A_ALWAYS`, so they reach sleeping characters and
    show invisible riders by name, while the walking variants use `A_HIDEINV`. Make them
-   `A_HIDEINV`?
+   `A_HIDEINV`? Fixed: the four messages use `A_HIDEINV`.
 5. **fall_dil** (line 270): at `splat_now` it builds `rev_name` again but never uses it; when the
    fall starts with no fall exit, `from_dir` is still 0. Dead code, harmless; remove?
 6. **secret_wipe** (line 3016): if its zone isn't found the `while` runs `zon` off the list and the
    error log after it never prints (the null comparison fails). Only matters for a broken boot.
+   Fixed: the test after the loop is `zon == null`, so the error is logged.
 7. **search_dil** (lines 2813-2818) declares `search_item` and `skillresist@function`, and
    secret_wipe `dirstring@spells`, that they never call. Cosmetic.

@@ -39,4 +39,5 @@ Questions:
    past the end of the string to stop, which logs "index of stringlist out of bounds" for every
    nset with a bit list. Stop at `length(arg)` as search_block now does?
 5. **show_fields** (line 734): each row reads "add-name : on</div>... All. :" ("on" and ". :" look
-   like leftovers of an old column layout). Tidy to "name / unit type / arguments"?
+   like leftovers of an old column layout). Tidy to "name / unit type / arguments"? Fixed: show_fields
+   rows are now name | unit type | arguments.

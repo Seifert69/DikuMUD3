@@ -40,7 +40,7 @@ code
             gld:="(Admin)";
          else if (u.level>=CREATOR_LEVEL)
             gld:="(Creator)";
-         else if (u.level>IMMORTAL_LEVEL)
+         else if (u.level>=IMMORTAL_LEVEL)
             gld:="(Immortal)";
          else
             gld:="";
@@ -326,7 +326,7 @@ if(isset(self.flags,UNIT_FL_BURIED))
  quit;
 }
 
-if(left(arg,5) == "group")
+if((arg == "group") or (left(arg,6) == "group "))
 {
 
  str := getword(arg); /* "group" */

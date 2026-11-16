@@ -1034,16 +1034,19 @@ dilend
 dilbegin remove_aff();
 var
    i:integer;
+   j:integer;
 code
 {
    heartbeat:=3;
    i:=0;
    while (i<100)
    {
-      if (isaff(self,i))
+      // Bounded: an affect that refuses to go (subaff leaves it) would loop forever
+      j:=0;
+      while (isaff(self,i) and (j<10))
       {
          subaff(self,i);
-         continue;
+         j:=j+1;
       }
       i:=i+1;
    }

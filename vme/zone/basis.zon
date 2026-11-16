@@ -2201,11 +2201,11 @@ code
    }
    else if (self.profession == PROFESSION_BARBARIAN)
    {
-      exec("alias kd backstab deer", self);
-      exec("alias kb backstab badger", self);
-      exec("alias kf backstab fox", self);
-      exec("alias kr backstab rabbit", self);
-      exec("alias ks backstab skunk", self);
+      exec("alias kd kill deer", self);
+      exec("alias kb kill badger", self);
+      exec("alias kf kill fox", self);
+      exec("alias kr kill rabbit", self);
+      exec("alias ks kill skunk", self);
    }
    else
    {

@@ -17,5 +17,5 @@ Fixed in place:
 Questions:
 1. quest_hall (line 601) says it has no exits ("none are provided") and history_hall (line 630) calls itself "exitless", but both have exits to the other halls (added when the rooms were interconnected, see the zone notes). Suggest dropping those phrases.
 2. watchdog2 / watch_catch, lines 240-288 (marked "Not tested yet"): watchdog2 quits unless the watched player has watch_catch, and watch_catch only shows messages whose name is its own, so it reports a player's commands to that same player. Nothing uses them; delete, or rewrite for a watcher?
-3. make_personal, line 403: "No such player here to remake $2n for." uses $2n = the unit that was not a player (or null); suggest "No such player here." 
-4. personal, line 366: `isset(PC_SPIRIT, self.outside.pcflags)` has its arguments the other way round from every other isset; it works only because isset is a plain bitwise and. Suggest `isset(self.outside.pcflags, PC_SPIRIT)` when the zone is next touched.
+3. make_personal, line 403: "No such player here to remake $2n for." uses $2n = the unit that was not a player (or null); suggest "No such player here."  Fixed: make_personal says "No such player here."
+4. personal, line 366: `isset(PC_SPIRIT, self.outside.pcflags)` has its arguments the other way round from every other isset; it works only because isset is a plain bitwise and. Suggest `isset(self.outside.pcflags, PC_SPIRIT)` when the zone is next touched. Fixed: personal now calls `isset(self.outside.pcflags, PC_SPIRIT)`.
