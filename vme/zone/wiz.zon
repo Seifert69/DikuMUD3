@@ -363,7 +363,7 @@ if (self.outside.zoneidx=="g_q")
    pause;
    if (self.outside.type == UNIT_ST_PC)
    {
-      if (isset(PC_SPIRIT, self.outside.pcflags))
+      if (isset(self.outside.pcflags, PC_SPIRIT))
          goto loop2;
 
       self.minv := 0;
@@ -400,8 +400,8 @@ code
    p := findunit(activator, argument, FIND_UNIT_HERE, null);
    if ((p == null) or (p.type != UNIT_ST_PC))
    {
-      act("No such player here to remake $2n for.",
-          A_HIDEINV, activator, p, null, TO_CHAR);
+      act("No such player here.",
+          A_HIDEINV, activator, null, null, TO_CHAR);
       goto start;
    }
 

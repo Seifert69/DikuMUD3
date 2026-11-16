@@ -63,6 +63,8 @@ var
 	i	: integer;
 	pc : unitptr;
 	targ : string;
+	line : string;
+	signer : string;
 code
 {
 :start:
@@ -96,7 +98,9 @@ code
 	i := 0;
 	while (i < length(nlist))
 	{
-		if(pc.name in nlist.[i])
+		line := nlist.[i];
+		signer := getword(line);
+		if(pc.name == signer)
 		{
 			act ("<div class='clan'>You have already signed this pillar!</div>",
 			A_ALWAYS,pc,null,self,TO_CHAR);
@@ -127,6 +131,8 @@ var
 	i	: integer;
 	pc : unitptr;
 	targ : string;
+	line : string;
+	signer : string;
 code
 {
 :start:
@@ -160,7 +166,9 @@ code
 	i := 0;
 	while (i < length(nlist))
 	{
-		if(pc.name in nlist.[i])
+		line := nlist.[i];
+		signer := getword(line);
+		if(pc.name == signer)
 		{
 			act ("<div class='clan'>You have already signed the tome!</div>",
 			A_ALWAYS,pc,null,self,TO_CHAR);
@@ -1476,7 +1484,7 @@ code
 	while (i<ln)
 	{
 		err:=submember(clist.[i],pname);
-		i:=i+1;
+		i:=i+5;
 	}
 	delete_player(pname);
 	return;
@@ -1855,6 +1863,12 @@ code
 	quit;
 
 :admin_title:
+
+	if ((pc.type!=UNIT_ST_PC) or (not(visible(self,pc))))
+	{
+		act ("<div class='clan'>No such person found.</div>", A_ALWAYS,self,null,null,TO_CHAR);
+		quit;
+	}
 
 	err:=loadstr ("clanlist.data",buf);
 	if (err<1)
@@ -2825,12 +2839,6 @@ code
 		quit;
 	}
 
-	if (FALSE==transfermoney (self,null,amount))
-	{
-		sendtext ("<div class='clan'>You don't have that much money</div><br/>",self);
-		quit;
-	}
-
 	err:=loadstr (self.extra.[CLAN_SYMBOLIC].descr+".money",buf);
 	if (err<1)
 		buf:="0";
@@ -2840,6 +2848,12 @@ code
 	if (amount<balance)
 	{
 		sendtext("<div class='clan'>The deposit box can't contain that much.</div><br/>",self);
+		quit;
+	}
+
+	if (FALSE==transfermoney (self,null,tmp))
+	{
+		sendtext ("<div class='clan'>You don't have that much money</div><br/>",self);
 		quit;
 	}
 	act ("<div class='clan'>You slip "+moneystring(tmp,TRUE)+" into the deposit slot on the chest.</div>",
@@ -2977,8 +2991,6 @@ code
 	}
 	tmp:=amount;
 	amount:=balance-amount;
-	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
-	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
 
 	if (FALSE==transfermoney (null,self,tmp))
 	{
@@ -2986,6 +2998,9 @@ code
 		log ("Transfer money error:  "+itoa(tmp));
 		quit;
 	}
+
+	err:=delstr(self.extra.[CLAN_SYMBOLIC].descr+".money");
+	err:=savestr(self.extra.[CLAN_SYMBOLIC].descr+".money",itoa(amount),"w");
 
 	act ("<div class='clan'>"+moneystring(tmp,TRUE)+" falls into your hands from the chest withdraw slot.</div><div class='default'></div>",
 	A_ALWAYS,self, null,null,TO_CHAR);

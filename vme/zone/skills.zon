@@ -6587,8 +6587,6 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
-   else
-      self.endurance := self.endurance - end;
 
    if (findunit(self, "trap", FIND_UNIT_SURRO, null) != null)
    {
@@ -6600,6 +6598,8 @@ code
           A_ALWAYS, self, null, null, TO_CHAR);
       quit;
    }
+
+   self.endurance := self.endurance - end;
 
    pow := ((self.abilities[ABIL_DEX]/2) + min + room_mod +
            my_trap.value[1] + my_trap.value[2] +
@@ -9074,6 +9074,7 @@ var
    hm1     : integer;
    tint    : integer;
    cost_of : integer;
+   busy    : extraptr;
 
 code
 {
@@ -9103,14 +9104,18 @@ code
              A_ALWAYS, self, null, null, TO_CHAR);
          quit;
       }
-   if ("$fashioning" in self.extra)
+   // $fashioning holds the start time: one left behind by a quit mid-work
+   // (older than the work can take) no longer blocks
+   busy := "$fashioning" in self.extra;
+   if ((busy != null) and (realtime < atoi(busy.descr) + 60))
    {act("You are busy making a weapon and decide not to start "
    +"another project until this one is finished!",
     A_ALWAYS, self, null, null, TO_CHAR);
     quit;
    }
 
- addextra(self.extra, {"$fashioning"}, "");
+ subextra(self.extra, "$fashioning");
+ addextra(self.extra, {"$fashioning"}, itoa(realtime));
 
 /*if (dilfind("fashion_weapon@skills", self))
    {act("You are busy making a weapon and decide not to start "

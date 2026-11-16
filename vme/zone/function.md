@@ -60,7 +60,9 @@ Questions:
 2. **walk_room** (line 2245): sets `heartbeat` (4 seconds, then `spd`, then 10 seconds in
    takeabreak) and never gives the caller its own heartbeat back, so a DIL that calls it runs on
    walk_room's heartbeat afterwards (destroy_symbols saves and restores it). Save it at the top
-   and restore it at every return?
+   and restore it at every return? Returned to Papi: right in principle, but about 240 callers
+   (pub and private) then pause at their own heartbeat after a walk (1 second for most DILs that
+   never set one, instead of walk_room's 5+), a timing change players would notice in many NPCs.
 3. **All the *_restrict templates** (guild, prof, anti_guild, quest, nquest, quests, ali, mvlev,
    vlevel, level, race, abi, ski, sp, weap, sex, ply; e.g. lines 3518-3519): `:start:` sets
    `damage := 0; percent := 25;` over the arguments, so whatever damage and percent a zone gives,
@@ -91,7 +93,8 @@ Questions:
 7. **guard_unit** (lines 354-359): when the guarded unit isn't in the room, `u` is null, and an
    argument that names no object (`open door`, `cast heal`) makes `findunit` null too, so
    `null == u` blocks every open, close, lock, unlock, pick and cast in the room. Add
-   `if (u == null) goto start;` after the findsymbolic?
+   `if (u == null) goto start;` after the findsymbolic? Fixed: guard_unit goes back to waiting
+   when the guarded unit isn't in the room.
 8. **scramble** (line 7872, `:sorry:`): the drag and ride interrupts jump here, where `pc` is null
    (it is only set at `:scramble:`), so nobody sees "Sorry you can't do that here!", and nothing
    blocks: dragging and riding out of a scrambled room work normally. Use `activator` and add
@@ -99,20 +102,24 @@ Questions:
 9. **guard_way** (line 5179): `activator.name in excludepc` is a substring test on a string, so
    anyone whose name is part of the allowed one passes the hedge wall too. `==`?
 10. **global_wander** (line 7602): `(spd*PULSE_SEC) < 5` only raises a `spd` of 0 or 1 seconds;
-    wander_zones (line 7472) has the 5-second minimum its comment gives. `spd < 5`?
+    wander_zones (line 7472) has the 5-second minimum its comment gives. `spd < 5`? Returned to
+    Papi: changes a timing; one NPC (demsiege, spd 3) would wander every 5 seconds instead of 3.
 11. **aggressive** (line 9002): `tme == 0` jumps to `:get_target:` at load time, skipping the
     `tar` and `attack` checks and running a target search before anyone has come in. Wrap only the
-    time arithmetic in `if (tme > 0)`?
+    time arithmetic in `if (tme > 0)`? Fixed: aggressive wraps only the time arithmetic in
+    `if (tme > 0)`; no target search at load.
 12. **guard_level** (line 7785): "$2n arrives from <dir>." goes TO_CHAR to the leader, who is still
     in the old room, while nobody in the new room sees anyone arrive. Send the arrival to the new
-    room after the link instead?
+    room after the link instead? Fixed: guard_level sends "arrives from" to the new room after each
+    link, for the followers and the leader.
 13. **transfercoins** (lines 9597-9603 and 9642-9648): the loops `continue` without
     `cash := cash.next`, so if they are ever reached (a unit with a coin's symbolic name that isn't
     money) the DIL loops until the server kills it. Unreachable in practice; rewrite the loops or
     drop them?
 14. **reward_give** (line 320): a head wanted elsewhere is handed back with
     `exec("give head " + ...)`, the first "head" the NPC holds, not necessarily `medium`. Give back
-    `medium.name`?
+    `medium.name`? Fixed: reward_give links `medium` itself back with give messages (`medium.name`
+    is "head" too, so it wouldn't have picked the right one).
 15. **isopen** (line 4761) builds a `clock` list and never uses it, and returns "closed" only at
     the exact hours listed. Nothing calls it any more, and the old shopkeeper body after the
     wrapper's `quit` (lines 6224-6929) is dead code too. Remove both?

@@ -8804,9 +8804,10 @@ if (self.master)
         mast := self.master;
         in_gr := TRUE;
 
-        foreach (UNIT_ST_PC|UNIT_ST_NPC, u)
+        foreach (SPLIT_CHARS, u)
             {
             if (u == self) continue;
+            if (not visible(self, u)) continue;
             if ((u.master != mast) and (u != mast)) continue;
             if (not isset(u.charflags, CHAR_GROUP)) continue;
 

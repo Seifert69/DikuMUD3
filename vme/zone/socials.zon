@@ -7737,6 +7737,8 @@ if (self==vict)
         A_HIDEINV,self,null,vict,TO_CHAR);
 	socialact("<div class='social_other'>$1n moans into your ear, maybe your personal attention is required?</div>",
         A_HIDEINV,self,null,vict,TO_VICT);
+        socialact("<div class='social_other'>$1n moans into $3n's ear.</div>",
+        A_HIDEINV,self,null,vict,TO_NOTVICT);
   send_done ("moan",self,null,vict,0,"",null, CMD_AUTO_NONE);
 	quit;
 	 }

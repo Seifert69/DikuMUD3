@@ -731,8 +731,8 @@ code
         s2 := get_field_ut(i);
         s3 := get_field_at(i);
 
-        buff := buff + "<div class='col3'>" + s1 + " : on</div><div class='col3'>" +
-                 s2 + ". :</div><div class='col3'>"+ s3 + "</div>";
+        buff := buff + "<div class='col3'>" + s1 + "</div><div class='col3'>" +
+                 s2 + "</div><div class='col3'>"+ s3 + "</div>";
         i := i + 1;
     }
 

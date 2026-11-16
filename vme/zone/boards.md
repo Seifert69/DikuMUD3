@@ -34,7 +34,10 @@ Questions:
 1. **board, rem_post** (line 526): a player may remove a post when
    `activator.name == left(tname, length(activator.name))`, a prefix test, so "Bob" may remove
    Bobby's posts. Compare the whole name: `(activator.name + ")") == left(tname, length(activator.name)+1)`?
+   Fixed: as suggested.
 2. **board** (lines 360-370): the `boards` list tests `pc.type` (the board_room, always a room)
    where it means the board's surroundings (`self.outside.type`), so a board carried by someone or
    inside an object is listed by that unit's title anyway. Probably harmless; fix to
-   `self.outside.type`?
+   `self.outside.type`? Returned to Papi: with that fix a board inside an object or carried by an
+   NPC would be listed by its `outside_descr` ("board in A canoe has been left here."), worse than
+   the title it gets now; which text to show is a choice.

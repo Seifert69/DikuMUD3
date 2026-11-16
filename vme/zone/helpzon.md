@@ -11,4 +11,5 @@ Fixed in place:
 Questions:
 1. **do_help** (lines 279, 289): any start of "topics" or "area" is taken as those words, so
    `help a`, `help ar` and `help t` never reach the help pages that begin with those letters.
-   Require at least two or three letters?
+   Require at least two or three letters? Fixed: do_help needs at least 3 letters ("are",
+   "top") for area and topics, so `help a`/`help ar`/`help t`/`help to` reach the help pages.

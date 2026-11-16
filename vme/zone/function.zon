@@ -317,7 +317,11 @@ act("$1n examines the bloody head with an approving grin.",
    A_SOMEONE, self, null, activator, TO_ROOM);
 act("$1n says, 'This person is not wanted in my jurisdiction.'",
    A_SOMEONE, self, null, activator, TO_ROOM);
-exec("give head "+activator.name, self);
+// hand back this head, not the first "head" self holds
+act("You give $2n to $3n.", A_SOMEONE, self, medium, activator, TO_CHAR);
+act("$1n gives you $2n.", A_SOMEONE, self, medium, activator, TO_VICT);
+act("$1n gives $2n to $3n.", A_SOMEONE, self, medium, activator, TO_NOTVICT);
+link(medium, activator);
 goto start;
 }
 dilend
@@ -352,6 +356,8 @@ code
   waist:=getword(argument);
 
 u:=findsymbolic(self,us,FIND_UNIT_HERE);
+if (u == null)
+goto start;
 
 temp_arg:=argument;
 
@@ -7782,10 +7788,11 @@ code
 	    {
 	       act("$1n leaves " + dir_string + ".",
 		   A_SOMEONE, folwr, pc, null, TO_REST);
-	       act("$2n arrives from " + leave_string + ".",
-		   A_SOMEONE, pc, folwr, null, TO_CHAR);
 	    }
 	    link(folwr, self.outside.exit_to[dir]);
+	    if (folwr.minv <= pc.level)
+	       act("$1n arrives from " + leave_string + ".",
+		   A_SOMEONE, folwr, null, null, TO_REST);
 	    exec("look", folwr);
 	 }
       } else if (folwr == pc) {
@@ -7795,6 +7802,8 @@ code
 
    }
    link(pc, self.outside.exit_to[dir]);
+   act("$1n arrives from " + leave_string + ".",
+       A_SOMEONE, pc, null, null, TO_REST);
    exec("look", pc);
 
    goto start;
@@ -8999,11 +9008,11 @@ code
 
    /* Process the time argument - see later for comments */
 
-   if (tme == 0) goto get_target; /* Let's not wait then. See if I care :P */
-   else
-
-   ten_time := (tme / 10);       /* Divide the original time by 10 */
-   tme := tme / 2;               /* This is the new base time value */
+   if (tme > 0) /* tme == 0: no wait, but still check the other arguments */
+   {
+      ten_time := (tme / 10);       /* Divide the original time by 10 */
+      tme := tme / 2;               /* This is the new base time value */
+   }
 
 
 :target_check: /* Checking if the tar value is acceptable */

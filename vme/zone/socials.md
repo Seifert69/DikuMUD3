@@ -220,7 +220,7 @@ Questions:
    text is fixed above anyway. Add commands for them (their send_done names are armpunch, bslap,
    beam, csigh, egrin, eyeroll, pounce, punch, taunt), or remove the templates?
 3. **moan** (line 7736): with a target the actor and the victim get a line, but there is no
-   TO_NOTVICT line, so the room sees nothing. Add "$1n moans into $3n's ear."?
+   TO_NOTVICT line, so the room sees nothing. Add "$1n moans into $3n's ear."? Fixed: the room now sees "$1n moans into $3n's ear."
 4. **socialact** (line 98): the "Far away.." / "From afar.." branch can't run, because SOCIAL_FIND
    is FIND_UNIT_SURRO; if it ever did, it would put a second `<div>` in front of the message that
    already has one. Remove the dead branch?

@@ -105,10 +105,10 @@ Questions:
 10. loc_want 5375, find_want 5438: the target resists with `spells[SPL_LOCATE_ANIMAL]` (copied from
     locate animal); SPL_LOCATE_WANTED is probably meant. Changes the chances.
 11. find_want 5405: `pathto()` can return DIR_TRYAGAIN, which it doesn't handle: "You should leave ."
-    Suggest find_path's retry (pause while DIR_TRYAGAIN, up to 10 times), with targ secured.
+    Suggest find_path's retry (pause while DIR_TRYAGAIN, up to 10 times), with targ secured. Fixed: retries DIR_TRYAGAIN up to 10 times as find_path does, finding targ again after each pause (it is elsewhere in the world, so secure can't hold it), then "The magic is elusive".
 12. refit 5554: with no person named, pc is null, the height checks do nothing and the item gets
     `refit_aff(<hm>,)` with a failed height. Help Refit says a person must be named. Suggest "Refit it
-    for whom?" and quit (or default to the caster).
+    for whom?" and quit (or default to the caster). Fixed: "Refit it for whom?" and quit, as the help says.
 13. magic_str 5712: gives "" for +1..+5 and "no" for 0, so identify says "has a  magical modifier" or
     "has a no magical modifier". Suggest a word for 1..5 ("small") and rephrasing for 0.
 14. identify_str 5989-6049: affect kinds 2 (light), 3, 4, 5 (flags) and 8 (natural armour) print the raw
@@ -116,7 +116,7 @@ Questions:
     Suggest printing them like kind 9 (label and signed value).
 15. spl_madness 6364: `self.name in self.extra` looks in the mad person's extras instead of the paper's
     (`u.extra`); the paper (found with FIND_UNIT_HERE, maybe on the floor) is then dropped as
-    "drop letter". Suggest `u.extra` and `exec("drop " + u.name, self)` only when it is carried.
+    "drop letter". Suggest `u.extra` and `exec("drop " + u.name, self)` only when it is carried. Fixed: looks in u.extra, and drops the paper by its name only when carried.
 16. summon_air 7108, summon_water 7143, summon_fire 7180: a failed summon says "The ground shakes a
     bit." (from summon earth). Suggest a line of their own element.
 17. entangled 11126 / entangled_2 11187: an entangled character can still flee: `entangled` lets
@@ -126,19 +126,19 @@ Questions:
 18. dispel_magic 7359: its two `interrupt()`s can never fire (the template never waits). Dead code.
 19. spl_command 10073 / lst_parse 10043: with no word (`cast command bob`) the empty word matches the
     first entry: "Why not use the command 'quit'?". Suggest "Command $3n to do what?" when the word is
-    empty.
+    empty. Fixed: spl_command says "Command $3n to do what?" when no word is given.
 20. summon_animal 11518: unlike charm_animal it doesn't `dildestroy` an earlier ani_fol on the animal,
-    so an animal someone else controls gets two. Suggest the same dildestroy.
+    so an animal someone else controls gets two. Suggest the same dildestroy. Fixed: summon_animal dildestroys an earlier ani_fol before adding its own.
 21. tsu_eff 11910: foreach also lists what is inside a boat, so passengers are moved out of their boat
     one by one (Help Tsunami: "Those inside a boat go with their boat"); a boat that can't be taken
     stays behind. The caster is found again by name with FIND_UNIT_ZONE (11927), which a partial name
     can match first. Suggest `if (u.outside != self) continue;` as watercurrent@basemove does.
 22. spl_random_tele 13235 (failed cast) and spl_minor_gate 13535 (target above your level): fail
-    without a word to the caster. Suggest "Nothing happens." / "$3n is too powerful ...".
+    without a word to the caster. Suggest "Nothing happens." / "$3n is too powerful ...". Fixed: "Nothing happens." / "$3n is too powerful for you to summon." (the help says own level or lower).
 23. spl_invis 14218: the spell prints "You become invisible." / "$1n fades away." and the affect's
     TIF_INVISIBILITY_ON prints "Your body appears ghostly." / "$1n vanish into thin air." too (the C
     side, tif_affect.cpp, also has "vanish" for "vanishes"). Drop one pair.
 24. spl_lock 14878: locking a door found by its name locks the other side without checking that it has
-    a door (EX_OPEN_CLOSE), which dir_locks checks. Suggest the same check.
+    a door (EX_OPEN_CLOSE), which dir_locks checks. Suggest the same check. Fixed: spl_lock locks the other side only when it has a door (EX_OPEN_CLOSE).
 25. water_elm 15480: made with M_ELEMENTAL_FROST_SMALL (a frost elemental) though
-    M_ELEMENTAL_WATER_SMALL exists.
+    M_ELEMENTAL_WATER_SMALL exists. Returned to Papi: the water macro changes numbers and behaviour, not just the race: alignment 0 -> -550, attack frostball -> spray of acid, other spell skills, and its aggressive@function target ANY -> GOOD.

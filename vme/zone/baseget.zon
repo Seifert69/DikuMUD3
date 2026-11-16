@@ -1342,7 +1342,7 @@ code
         }
 
 
-        if (toitem.weight + toitem.baseweight >= toitem.capacity)
+        if (toitem.weight - toitem.baseweight >= toitem.capacity)
         {
             act("The $2N cannot contain any more.", A_ALWAYS, self, toitem, null, TO_CHAR);
             return(2);
