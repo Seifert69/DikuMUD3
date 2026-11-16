@@ -3126,8 +3126,7 @@ title "The Castle of Valhalla"
 descr
 "   You are inside the great dining hall of the Valhalla castle. Warriors
 fallen in battle and others equally worthy are brought here by the Valkyries.
-An exit leads up to the throne hall and down to a portion of hell.  To the
-west there might or might not be something."
+To the west there might or might not be something."
 flags {UNIT_FL_NO_TELEPORT, UNIT_FL_NO_WEATHER}
 dilcopy dead_only@basis("You should not have been here, you are sent home.");
 light 5

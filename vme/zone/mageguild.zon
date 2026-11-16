@@ -57,8 +57,8 @@ area and own defences.<br/>
 			  are available at the Archcancellor by bowing or<br/>
 			  worshipping him.<br/>
   Bar and relaxation 	- A small resting area, along with a bar, can be found<br/>
-			  in the College Gardens (north and east or south<br/>
-			  and east from the Main Hall).<br/>
+			  in the College Gardens (east and east, then north<br/>
+			  and east or south and east from the Main Hall).<br/>
 <br/>
 </div></pre>"
 
@@ -975,7 +975,7 @@ names {"Mr Backspindle","gardener","backspindle","gnome"}
 title "Mr Backspindle"
 descr "Mr Backspindle, the local gardener, is engrossed in his work here."
 extra {}
-"A small figure, Mr Backspindle is a gnome employed at the college
+"A small figure, Mr Backspindle is a man employed at the college
 gardens. He takes care of the gardens and, as you can see, does an
 excellent job of it."
 M_HUMAN_WARRIOR_SWORD(30, SEX_MALE)
@@ -1167,7 +1167,7 @@ fight is initiated and will disappear after a short while. */
 
         conj_charm
 names {"Spellweaving Charm","charm"}
-title "Spellweaving Charm"
+title "Spellweaver Charm"
 descr "A small, twinkling charm lies here."
 extra {}
 "A small charm of what seems like a silver alloy. It twinkles in the
@@ -1184,7 +1184,7 @@ extra {"jet in the Charm","jet","centre","center"}
 "The jet is deeply black, even the surrounding light seems to fall into
 it.<br/>"
 extra {"$identify"}
-"The Spellweaving Charm improves your Magic as well as your
+"The Spellweaver Charm improves your Magic as well as your
 Conjuring abilities. When gripped, it summons a small helper to aid you
 in your fight.<br/>
 Beware, as weak summoners can easily lose control of the charm!<br/>"

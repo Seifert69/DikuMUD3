@@ -324,9 +324,8 @@ gmap(390,158)
 descr
 "You are standing just outside the massive monastery housing the followers of
 the 'Way of the Petal', the Midgaard healers. The large monastery rises into
-the air, made of a gorgeous white marble. To the east the monastery's large
-golden doors stand open, and a small path leads north and south around the
-building."
+the air, made of a gorgeous white marble. A small path leads south and west
+around the building."
 
 movement SECT_FIELD
 south to garden1;
@@ -344,7 +343,7 @@ gmap(258,158)
 descr
 "You are walking on a small gravel path, inside the walls of the Midgaard
 Healers Guild Monastery. The monastery itself is to the south-west, and the
-path continues west and south. "
+path continues east and west. "
 
 movement SECT_FIELD
 east to garden2;
@@ -570,9 +569,9 @@ names {"tuck", "guild master", "master", "father tuck"}
 title "Father Tuck"
 descr "Father Tuck is sitting here, chanting softly."
 extra {}
-"You are in no doubt that Brother Tuck is truly close to divine forces;
+"You are in no doubt that Father Tuck is truly close to divine forces;
 he has a fat, peaceful, and loving look. You notice that he is surrounded
-by a white aura. Brother Tuck is, as you ought to know, the Guild Master
+by a white aura. Father Tuck is, as you ought to know, the Guild Master
 of the Healers Guild."
 flags {UNIT_FL_NO_TELEPORT}
 romflags {CHAR_PROTECTED}

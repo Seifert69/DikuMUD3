@@ -8,13 +8,13 @@
    leads west"). rn_6006 says "The path continues north and east" but also goes west to
    `clan_guard@clan_bus`, with the bare exit description "Hall of Heroes.". rn_6103 has a north
    exit to `haon_link@ogre1` that its description doesn't mention. Should the descriptions name
-   these exits (and the Hall of Heroes exit get a real sentence)?
+   these exits (and the Hall of Heroes exit get a real sentence)? Fixed (text follows the world): rn_6004 trail leads east and west and the trees extra no longer says you cannot enter from here; rn_6006 mentions the way west and the exit text is a sentence; rn_6103 mentions east, south and north.
 2. **rn_6121, rn_6123, rn_6124** (lines 1820, 1878, 1913): these say the dark river "flows from east
    to west", but every river room (`darkriver1`, `darkriver2`, `lightriver`) carries you east and
    rn_6120/rn_6125 say it flows eastwards. Change these three to "flows eastwards"? Also, rn_6121
    says "The only exit appears to be east." while it has a south exit down to the river (its exit
    text says you could "just barely get down"); is "appears" deliberate, or should it mention the
-   way down?
+   way down? Fixed (text follows the world): rn_6121/6123/6124 now say flows eastwards; rn_6121 mentions the way down to the river.
 3. **iron_crown** (line 3790): `$identify` says it "protects as a chain coif", but it is defined
    with `ARMOUR_HRD_LEATHER` (and the comment says iron). Should the armour type be chain, or the
    identify text say hard leather?
@@ -22,7 +22,7 @@
    off mid-word ("Darion is a 6'4 man. He lo"), and Hesra is described as a woman ("She looks like
    the typical grandmother") but is `SEX_MALE`. Both carry the comment "He shall use a polearm"
    while wielding a sword. These player-house units are only compiled with `EXTENDED_MUD`; fix
-   them, or are they dead and could be removed?
+   them, or are they dead and could be removed? Fixed (text follows the world): Darion's cut-off extra trimmed to "Darion is a 6'4 man."; Hesra changed to SEX_FEMALE (no sex tests); the "He shall use a polearm" comments left.
 
 ## Step 2
 

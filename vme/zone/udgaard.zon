@@ -8743,7 +8743,7 @@ names {"coat","overcoat","tunic","over tunic"}
 title "a brown coat"
 descr "A brown coat is thrown here."
 extra{}
-"A black overtunic made of wool. It
+"A brown overtunic made of wool. It
 has short sleeves and bronze clasps to hold it closed
 but allow the undertunic to be seen."
 extra {"$repair"}

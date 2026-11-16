@@ -5,13 +5,13 @@
 1. **rn_027** (line 832): the room text says the upper chamber of the western gatehouse "is clean
    and free of all grime", then "The floor here is quite dirty, and some dust clouds fill the air",
    and the floor/dust extra says it "has been left uncleaned for ages". One of the two halves has to
-   go; which one?
+   go; which one? Fixed (text follows the world): dropped "clean and free of all grime" (floor, dust and extra agree it is dirty).
 2. **tower_3** (line 2538): "a beautiful view is unidirectional" doesn't make sense (the text then
    describes views in every direction). Was "omnidirectional" or "in every direction" meant?
 3. **sign** (lines 4327, 4884): the sign loaded into rn_015 says the research lab entrance "has been
    moved south and east of the southern gate of Midgaard" because a wooden door out of the tower
    would be silly. Its room description is "A sign from god." Is this notice still needed, or can
-   the sign (and its reset) go?
+   the sign (and its reset) go? Left: removing the sign needs its %reset line removed, which is not a text change; sign text left.
 4. **ARMOR / ARMOR2 macros** (lines 4741, 4752): every guard gets `equip bracers position
    WEAR_HANDS`, the same position as the gauntlets; bracers are made for `MANIPULATE_WEAR_ARMS`.
    Should it be `WEAR_ARMS`? (A reset change, so not fixed.)

@@ -36,5 +36,5 @@ Questions:
    dark wood. A metal there makes "a black steel quarterstaff" with iron's weight. A wood meant
    (e.g. MAT_BLACK_OAK twice, or MAT_IPE)? The comment above `ilWhipMat` also says "staves".
 3. **enc_resist** (line 1848): the identify text calls SPL_DIVINE resistance "divination"; the
-   category is divine magic. "divine magic"?
+   category is divine magic. "divine magic"? Fixed (text follows the world): "divination" changed to "divine magic".
 

@@ -450,8 +450,7 @@ end
 title "Edge of Cypress Forest"
 descr
 "   Few cypress trees stand in between the beech and oak trees. A trail
-continues west at the edge of the cypress forest.  An old run down shack
-is off to the east."
+continues west at the edge of the cypress forest."
 
 movement SECT_FOREST
 gmap(297,280)

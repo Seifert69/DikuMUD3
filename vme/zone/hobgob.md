@@ -18,7 +18,7 @@
    to mtrail_6. The maze is described as confusing, so that is probably on purpose; are the mines
    meant to be a maze too?
 4. **cant** (line 1854): the room says the tables would seat about 150 people; the tables extra
-   says the 5 tables could seat about 50. Which number is meant?
+   says the 5 tables could seat about 50. Which number is meant? Fixed (text follows the world): tables extra now says about 150 people, like the room.
 5. **DIL, for step 2** (lines 5488, 5684, 3577): `wings_2` makes the wearer say "lost him" when it
    loses track of the player (`exec("say lost him", pc)`). `wing_scroll` makes the player emote
    "You are not yet meant to have this knowledge" instead of telling them. In `mageq_2` (the

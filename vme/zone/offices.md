@@ -5,13 +5,13 @@
 1. **newspaper2** (line 1002): in the Clan News article, the Advocates of Honor and Bushido
    sections both say "No reports of anything worthwhile or interesting happening in Unseen Chaos",
    copied from the Unseen Chaos section. Fix the clan names, or is the paper an archive to leave
-   alone?
+   alone? Fixed (text follows the world): Advocates of Honor and Bushido sections now name their own clan.
 2. **newspaper1/newspaper2**: the paper is the June 2011 issue (Facebook/MySpace/Twitter links,
    2011 competitions). Keep it as it is, or retire or replace it? I fixed only plain typos in it.
 3. **hallway** (line 50): the description and the signs mention doorways north, east and west,
-   but not the open exit south to `dil_room`. Add it to the text?
+   but not the open exit south to `dil_room`. Add it to the text? Fixed (text follows the world): hallway description now mentions the open way south.
 4. **hallway** (line 60): the west sign says 'Games Development', but the room west is the
-   Conference Room, whose plaque says it is for the Valhalla Times staff. Which is right?
+   Conference Room, whose plaque says it is for the Valhalla Times staff. Which is right? Fixed (text follows the world): west sign now reads Conference Room.
 
 ## Step 2
 

@@ -9,7 +9,7 @@
 2. **zone header help** (line 59): "Bar and relaxation - ... in the College Gardens (north and east
    or south and east from the Main Hall)". North and south of the Main Hall are the two towers; the
    gardens are reached from the Congregation Hall (east, east, then north and east, or south and
-   east). Reword to "east and east, then north and east or south and east from the Main Hall"?
+   east). Reword to "east and east, then north and east or south and east from the Main Hall"? Fixed (text follows the world): zone help now says east and east, then north and east or south and east from the Main Hall.
 3. **rayasa** (line 992): "Rayasa the elf found a good and quiet job ... (if you don't count the
    constant buggering by the lecherous students of magery)". "Buggering" reads as crude; was
    "bugging" (pestering) meant?
@@ -17,9 +17,9 @@
    zone notes say so too), but the item's title and names say "Spellweaving Charm". Pick one? (The
    names would need "spellweaver charm" if the speech wins.) The charm's `chargercharm` DIL also
    waits for the charm to be wielded, but it is a neck item, so it never recharges that way; that
-   is for the DIL review. Carried into step 2, question 1.
+   is for the DIL review. Carried into step 2, question 1. Fixed (text follows the world): item title and $identify now say Spellweaver Charm; names left (Spellweaving Charm, charm) because names are not changed.
 5. **backspindle** (line 954): the gardener is described as "a gnome" but is built with
-   `M_HUMAN_WARRIOR_SWORD`. Make him a gnome, or leave him human?
+   `M_HUMAN_WARRIOR_SWORD`. Make him a gnome, or leave him human? Fixed (text follows the world): description now says Backspindle is a man (he is built human); "gnome" keyword left in names.
 
 ## Step 2
 

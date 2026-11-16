@@ -77,7 +77,7 @@ descr
 sorts to the southwest. Huge trees make traveling this way difficult but
 not impossible. There is thick foliage all around you that seems to grab
 at your feet as you walk, making you wonder if you should continue on or
-turn back now while you can. The forest seems to get lighter to the east
+turn back now while you can. The forest seems to get lighter to the north
 although it is difficult to tell for sure."
 movement SECT_FOREST
 extra {"trees","tree"}
@@ -93,7 +93,7 @@ brush."
 south to for_gath2 descr "The brush is too thick for you to see much to
 the south but you can just make out an encampment of sorts.";
 north to trail_6@talen descr "Although it is difficult to see it looks
-like the forest gets lighter to the east." ;
+like the forest gets lighter to the north." ;
 flags {UNIT_FL_NO_TELEPORT}
 end
 

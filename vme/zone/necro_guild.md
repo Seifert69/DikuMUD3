@@ -18,7 +18,7 @@
    and there (I fixed "your familiar is ..." in the status report and the manual), and Dalmar's
    `:hagsecure:` line says "Fool probably could command it anyhow!". Should that be "couldn't"?
    (The golem quest is only live if question 1 brings Dalmar back.) Still open; the golem DIL is
-   reviewed in step 2 below (fixes and questions 5 to 7).
+   reviewed in step 2 below (fixes and questions 5 to 7). Fixed (text follows the world): Dalmar now says "Fool probably couldn't command it anyhow!"; no "familiar" text left in the golem DIL strings.
 
 ## Step 2
 

@@ -48,8 +48,8 @@ descr
 "You are above the Chicken's Rest Inn in what seems to be an ordinary
 hallway. The walls are covered in a fine mahogany panelling which gives
 you the feeling this level may contain some offices. There are doorways
-leading East, West and North and there is a set of stairs leading down to
-the inn. You notice a small sign above each of the doors."
+leading East, West and North, an open way leading South, and there is a
+set of stairs leading down to the inn. You notice a small sign above each of the doors."
 extra {"walls", "wall"}
 "They are covered in a very new looking mahogany panel. Even at closer
 inspection they seem flawless, it looks like someone paid a fortune to
@@ -57,7 +57,7 @@ build this hallway."
 extra {"signs", "sign"}
 "There is one above each door. The one to the north reads 'Player
 Network', the one to the east reads 'Valhalla Times', and the sign to
-the west reads 'Games Development'."
+the west reads 'Conference Room'."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
 north to helper_room open {EX_CLOSED, EX_OPEN_CLOSE}
@@ -1003,7 +1003,7 @@ ooooOooooOooooOooooOoooo
 ooooOooooOooooOooooOoooo
 <br/> 
 No reports of anything worthwhile or interesting happening in 
-Unseen Chaos other than their sudden appearance in the land. 
+the Advocates of Honor other than their sudden appearance in the land. 
 Unsurprisingly no members had any thoughts about 
 anything that were able to be shared with the citizens of Valhalla. 
 <br/>
@@ -1013,7 +1013,7 @@ ooooOooooOooooOooooOoooo
 ooooOooooOooooOooooOoooo
 <br/>
 No reports of anything worthwhile or interesting happening in 
-Unseen Chaos other than their sudden appearance in the land. 
+Bushido other than their sudden appearance in the land. 
 Unsurprisingly no members had any thoughts about 
 anything that were able to be shared with the citizens of Valhalla. 
 <br/>

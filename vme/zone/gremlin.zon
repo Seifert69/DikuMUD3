@@ -1022,8 +1022,8 @@ names {"farm yard", "farm"}
 title "Barnham's Carrot Field"
 descr
 "Barnham's northern fields are well-kept and dotted with carrots. It is 
-clear that the fields are well kept. A strong fence opens to a wide gate 
-here leading to the south. North, east, and west, carrots dot the ground. 
+clear that the fields are well kept. A strong fence blocks travel to the 
+north and west. South and east of here, carrots dot the ground. 
 Far to the east some hills rise into the distance, and far to the west is 
 Barnham's farmhouse."
 movement SECT_FIELD

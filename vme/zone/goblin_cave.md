@@ -5,10 +5,10 @@
 1. **bed_chamber** (line 104): the description ends "The only way from this room is to the east",
    but the room also has `north to guard_room` (no door, not hidden), and guard_room (line 70) says
    its only exit is south. Should the north exit be hidden (a secret guard room), or should the text
-   mention the way north?
+   mention the way north? Fixed (text follows the world): bed_chamber now says ways lead east and north.
 2. **boo** (line 975): `M_GOBLIN_WARRIOR_SWORD(3, SEX_MALE)`, but the extra says "She is wearing
    normal yellow leather-armour", and the DIL emote says "points a finger to his ear". Is Boo male
-   or female?
+   or female? Fixed (text follows the world): Boo changed to SEX_FEMALE (no DIL tests sex); emote "his ear" changed to "her ear".
 3. **bee** (line 1131): Bee otherwise speaks plain English (typos there were fixed: "though",
    "The do?", "the lived", "Thats"), but says "graverty". Goblin speech on purpose, or "gravity"?
 4. **goblin_leggins** (line 526): "It's fine craftsmanship. Made of goblins and decorated by

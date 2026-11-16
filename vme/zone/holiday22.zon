@@ -22,7 +22,7 @@ notes
 the quests. Let's see how it goes..."
 
 help
-"Players should never be in here."
+"Santa's rooms; players reach them through the pole in Udgaard's square."
 
 
 %dil
@@ -2303,9 +2303,9 @@ weight 2
 choco_heart
 title "a huge <div class='cpn'>chocolate </div><div class='cpr'>heart</div>"
 names {"chocolate heart","candy heart","chocolate","heart"}
-descr "A large chocolate reindeer-shaped heart is lying here."
+descr "A large chocolate heart with a reindeer on it is lying here."
 extra {}
-"A large chocolate reindeer-shaped heart."
+"A large chocolate heart with a reindeer on it."
 manipulate {MANIPULATE_TAKE}
 FOOD_DEF(12, 0)
 weight 2

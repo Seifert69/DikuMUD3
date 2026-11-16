@@ -5,7 +5,7 @@
 1. **for_gath1** (lines 80, 96): the description says the forest seems lighter to the east, and
    the exit north (to trail_6@talen) has the description "...it looks like the forest gets lighter to
    the east". There is no east exit. Is the north exit the way meant (then "east" should read
-   "north"), or is an east exit missing?
+   "north"), or is an east exit missing? Fixed (text follows the world): for_gath1 description now says lighter to the north (the real exit).
 2. **ranger_bow** (line 623): names say "Milvamer", the title says "Milivamar". Which spelling?
    (I added "Milivamar" to the names so the title word works.)
 3. **seeker** / **guardian** (lines 522, 548): both Maliki and Sholdin include the `_SPELL`
