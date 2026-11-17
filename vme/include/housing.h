@@ -5,7 +5,8 @@
 #define HOUSE_HP       18000            /* a house's condition when new: its front room's hit points */
 
 #define HOUSE_WHERE    "$house where"   /* on a front room: where its door is, for the architect */
-#define HOUSE_BACK     "$house back"    /* on a back room, open only in a two-room house */
+#define HOUSE_BACK     "$house back"    /* on a back room, open in a house and a townhouse */
+#define HOUSE_UPPER    "$house upper"   /* on an upper floor, open only in a townhouse */
 #define HOUSE_OWNER    "$house owner"
 #define HOUSE_TYPE     "$house type"
 #define HOUSE_FRIEND   "$house friends"  /* who has a key: the owner invited them ("$Name") */

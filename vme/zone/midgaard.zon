@@ -3407,11 +3407,13 @@ title "Royal Avenue"
 descr
 "   You are on a broad avenue leading north-south through the city.  It is
 flanked by numerous tall chestnut trees, and the road is paved with many
-carefully hewn flagstones."
+carefully hewn flagstones. To the west, Chestnut Close leads between fine
+houses."
 movement SECT_CITY
 gmap(480,721)
 north to royal_av3;
 south to royal_av5;
+west to chestnut1@mhouses descr "Chestnut Close leads west between fine houses.";
 ALWAYS_LIGHT
 end
 
@@ -3692,11 +3694,13 @@ names {"park road"}
 title "Park Road"
 descr
 "   You are on a road flanked by slender beeches.  The road leads north to
-the river and south to the city park."
+the river and south to the city park. To the east, Beech Row leads between
+handsome houses."
 movement SECT_CITY
 gmap(588,749)  
 north to s_prom5;
 south to park1;
+east to beech1@mhouses descr "Beech Row leads east between handsome houses.";
 // flags {UNIT_FL_NO_MOB}
 ALWAYS_LIGHT
 end
@@ -3971,11 +3975,14 @@ names {"penny lane"}
 title "Penny Lane"
 descr
 "   You are at the west end of Penny Lane.  Royal Avenue is to the west and
-Penny Lane continues east."
+Penny Lane continues east.  Fine houses stand on either side of the lane."
 movement SECT_CITY
 gmap(509,849)
 east to penny_lane2;
 west to royal_av5;
+north to plot1@mhouses descr "A polished oak door leads into a house.";
+south to plot2@mhouses descr "A polished oak door leads into a house.";
+dilcopy house_gate@housing();
 ALWAYS_LIGHT
 end
 
@@ -3986,11 +3993,15 @@ names {"penny lane"}
 title "Penny Lane"
 descr
 "   You are at the east end of Penny Lane.  The gate to the city park is to
-the east and Penny Lane continues west."
+the east and Penny Lane continues west.  Fine houses stand on either side
+of the lane."
 movement SECT_CITY
 gmap(531,849)
 east to park3;
 west to penny_lane1;
+north to plot3@mhouses descr "A polished oak door leads into a house.";
+south to plot4@mhouses descr "A polished oak door leads into a house.";
+dilcopy house_gate@housing();
 flags {UNIT_FL_NO_MOB}
 ALWAYS_LIGHT
 end
