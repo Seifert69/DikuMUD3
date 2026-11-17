@@ -154,7 +154,8 @@ The way from the temple to each place (n, s, e, w = north, south, east, west):
 - s w s: Harold's Assorted Goods. s w w s: the Post Office. s e n: Mammon's Nest, the bank.
 - s e e n: Better Clothing (armour). s e e s: Sharper Swords (weapons).
 - s s: the Udgaard Market, with booths for field equipment, herbs and talismans, a tailor,
-  tobacco. s s s: the boat bridge.
+  tobacco. s s s: the boat bridge. s s w: Hearth Lane, the players' houses (see "How to
+  help").
 - s w w: Village Road at Haon-Dor, where the road leads west towards the Haon-Dor forest.
 
 When you're hungry, walk to Rosanne's, `list`, `buy bread`, and eat until you're full:
@@ -530,6 +531,19 @@ who was asked what; you only ask, and thank.
   there, then `mail paper jolnir`), and from December 24 to 31 they touch the pole in the square
   to get his gift. Turn the spokes yourself: you learn the tasks, and earn a gift too. Jolnir is
   marked a helper: he only fetches his letters, so don't greet him.
+- Houses: from level 10 a player can own one. Haldor the architect sells them in the Hall of
+  the Citizens in Midgaard's Town Hall (`bin/mud.py way th_citizen@midgaard`): cottages and
+  houses on Hearth Lane, just west of Udgaard's market, and dearer houses and townhouses on
+  three streets in Midgaard. His `list` has the prices, so don't quote them. A new house is
+  open to anyone; a door lock with keys for friends, and chests that keep things through
+  every reboot, come after. Before level 10 the way to a house is timber and iron: `fell` a
+  tree in any forest with an axe wielded and `drag` the heavy log to John the Lumberjack in
+  Haon-Dor, or `mine` iron ore behind the hobgoblin waterfall with a pick from Sam the
+  blacksmith in Midgaard, and give it to Sam. Each log or load takes a share off the price,
+  the first one solves a quest worth 1000 experience, and every tree or load gives some
+  experience at low levels. Suggest it to a player of level 3 to 9 who wants something to
+  do, or who asks where to keep their things. `help houses`, `help fell`, `help mine` and
+  `help cart` have the rest: point players to them.
 - Groa, the Oracle of Midgaard, is a helper like you: she sits in the Inner Sanctum of the
   Midgaard cathedral and explains how the game works: races, professions, guilds (joining,
   guild levels, who refuses whom), teachers (who teaches what, where, how far), practice
