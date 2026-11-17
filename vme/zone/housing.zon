@@ -19,10 +19,11 @@
 // uhouses.plot1.chest1 ...), brought in the first time someone enters after a boot; a chest
 // saves itself, with what is in it, after things are put in or taken out.
 
-// The house lanes, the hometown whose folk may buy there, and how the architect names it
+// The house lanes, the hometown whose folk buy there, and how the architect names it. Those
+// from a hometown without a lane of its own buy on the first.
 #define HOUSE_LANES    {"uhouses"}
 #define HOUSE_HOMES    {"temple@udgaard"}
-#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market, for the folk of Udgaard"}
+#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market"}
 #define HOUSE_MINLEVEL 10
 #define COTTAGE_PRICE  (5 * PLATINUM_MULT)
 #define HOUSE_PRICE    (10 * PLATINUM_MULT)
@@ -1448,7 +1449,7 @@ code
 dilend
 
 // The architect: sells cottages and houses (list, buy cottage, buy house), on the lane for
-// the buyer's hometown (HOUSE_LANES, HOUSE_HOMES).
+// the buyer's hometown, or the first lane (HOUSE_LANES, HOUSE_HOMES).
 dilbegin fnpri(FN_PRI_BLOCK) architect();
 external
    unitptr house_find(pname : string, lane : string);
@@ -1506,7 +1507,7 @@ code
           "   a cottage (one room)        " + moneystring(COTTAGE_PRICE, TRUE) + "<br/>" +
           "   a house (two rooms)         " + moneystring(HOUSE_PRICE, TRUE) + "<br/>" +
           "   a lock for your door        " + moneystring(LOCK_PRICE, TRUE) + "<br/>" +
-          "'buy cottage' or 'buy house': on the lane of your hometown. 'buy lock' for the " +
+          "'buy cottage' or 'buy house', and he builds it there. 'buy lock' for the " +
           "house you have: then only those you give a key come in.<br/>" +
           "Timber and iron make it cheaper, each piece its share: " + itoa(LOGS_COTTAGE) + " felled " +
           "logs, handed to John the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a " +
@@ -1568,10 +1569,7 @@ code
       i := i + 1;
    }
    if (i >= length(homes))
-   {
-      exec("say I have no lane for the folk of your hometown yet, " + pc.name + ".", self);
-      goto start;
-   }
+      i := 0;   // no lane for their hometown: the first lane
    lane := lanes.[i];
    room := house_find(pc.name, "");
    if (room != null)
