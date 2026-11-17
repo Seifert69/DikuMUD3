@@ -1791,10 +1791,14 @@ names {"cart"}
 title "a cart"
 descr "A sturdy wooden cart stands here."
 extra {}
-"A sturdy two-wheeled cart of oak, hired from Calvin the carpenter. Hitched to a
-horse ('hitch cart to horse') it follows the horse, and it holds a dozen logs:
-'put log in cart', and 'unload cart' by John the Lumberjack or Sam the
-blacksmith."
+"A sturdy two-wheeled cart of oak, hired from Calvin the carpenter. A painted
+board on its side reads:
+   Mount the horse and ride: the cart follows it.
+   'put log in cart' heaves a log or ore up from the ground; a dozen logs fit.
+   'unload cart' by John the Lumberjack or Sam the blacksmith hands it all over.
+   'unhitch cart' leaves the cart standing; 'hitch cart to horse' again.
+   Friends may climb in ('enter cart') and ride, taking room from the load.
+   More: 'help cart'."
 manipulate {MANIPULATE_ENTER}
 flags {UNIT_FL_TRANS}
 CONTAINER_DEF(1250)
