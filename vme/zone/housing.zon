@@ -29,7 +29,8 @@
 #define LOCK_PRICE     (3 * PLATINUM_MULT)
 // Building materials (handed in, counted on the player): this many cover HOUSE_DISCOUNT percent
 #define LOGS_COTTAGE   10
-#define LOGS_HOUSE   20
+#define LOGS_HOUSE     20     // a house takes logs and ore
+#define ORE_HOUSE      5
 #define LOCK_ORE       5
 #define HOUSE_DISCOUNT 90
 #define TIMBER_QUEST   "Timber for a House"
@@ -183,6 +184,82 @@ code
       used := need;
    price := price - (price * HOUSE_DISCOUNT * used) / (100 * need);
    return (((price + GOLD_MULT / 2) / GOLD_MULT) * GOLD_MULT);   // in whole gold pieces
+}
+dilend
+
+// What pc pays the architect for what ("cottage", "house", "lock"): the full price less the
+// share the logs and ore they handed in take off. A house takes logs and ore alike.
+dilbegin integer house_price(pc : unitptr, what : string);
+external
+   integer house_counter(pc : unitptr, which : string);
+   integer house_cost(price : integer, have : integer, need : integer);
+var
+   logs : integer;
+   ore : integer;
+code
+{
+   logs := house_counter(pc, HOUSE_LOGS);
+   ore := house_counter(pc, HOUSE_ORE);
+   if (what == "cottage")
+      return (house_cost(COTTAGE_PRICE, logs, LOGS_COTTAGE));
+   if (what == "lock")
+      return (house_cost(LOCK_PRICE, ore, LOCK_ORE));
+   if (logs > LOGS_HOUSE)
+      logs := LOGS_HOUSE;
+   if (ore > ORE_HOUSE)
+      ore := ORE_HOUSE;
+   return (house_cost(HOUSE_PRICE, logs + ore, LOGS_HOUSE + ORE_HOUSE));
+}
+dilend
+
+// After pc bought what: the logs and ore that took off its price are used up; the rest stay.
+dilbegin house_spend(pc : unitptr, what : string);
+external
+   integer house_counter(pc : unitptr, which : string);
+   house_setcount(pc : unitptr, which : string, n : integer);
+var
+   logs : integer;
+   ore : integer;
+   n : integer;
+code
+{
+   logs := 0;
+   ore := 0;
+   if (what == "cottage")
+      logs := LOGS_COTTAGE;
+   else if (what == "lock")
+      ore := LOCK_ORE;
+   else
+   {
+      logs := LOGS_HOUSE;
+      ore := ORE_HOUSE;
+   }
+   n := house_counter(pc, HOUSE_LOGS) - logs;
+   if (n < 0)
+      n := 0;
+   house_setcount(pc, HOUSE_LOGS, n);
+   n := house_counter(pc, HOUSE_ORE) - ore;
+   if (n < 0)
+      n := 0;
+   house_setcount(pc, HOUSE_ORE, n);
+   return;
+}
+dilend
+
+// What the architect would now charge pc, for John (which: HOUSE_LOGS) or Sam (HOUSE_ORE) to
+// say; whom is "you" or pc's name.
+dilbegin string house_newprice(pc : unitptr, which : string, whom : string);
+external
+   integer house_price(pc : unitptr, what : string);
+code
+{
+   if (which == HOUSE_LOGS)
+      return ("the architect in Midgaard builds " + whom + " a cottage for " +
+              moneystring(house_price(pc, "cottage"), TRUE) + ", or a house for " +
+              moneystring(house_price(pc, "house"), TRUE));
+   return ("the architect in Midgaard fits " + whom + " a lock for " +
+           moneystring(house_price(pc, "lock"), TRUE) + ", or builds a house for " +
+           moneystring(house_price(pc, "house"), TRUE));
 }
 dilend
 
@@ -471,10 +548,12 @@ external
    string house_many(n : integer, one : string, many : string);
    integer house_credit(pc : unitptr, which : string, qname : string, k : integer);
    unitptr house_cutter(u : unitptr, by : unitptr);
+   string house_newprice(pc : unitptr, which : string, whom : string);
 var
    who : unitptr;
    item : unitptr;
    away : integer;
+   others : integer;
    pc : unitptr;
    u : unitptr;
    nxt : unitptr;
@@ -514,6 +593,7 @@ code
       block;
       k := 0;
       away := 0;
+      others := 0;
       u := cart.inside;
       while (u != null)
       {
@@ -526,6 +606,8 @@ code
             else
             {
                n := house_credit(who, which, qname, 1);
+               if (who != pc)
+                  others := others + 1;
                destroy(u);
                k := k + 1;
             }
@@ -536,8 +618,12 @@ code
       {
          s := house_many(k, one, many);
          act("$1n unloads " + s + " from $2n.", A_ALWAYS, self, cart, null, TO_ROOM);
-         exec("say Thank you, " + pc.name + ". I've counted each for whoever cut it; the architect " +
-              "in Midgaard takes them off their price.", self);
+         if (others == 0)   // all pc's own: n is their total
+            exec("say Thank you, " + pc.name + ". That's " + house_many(n, one, many) + " from you: now " +
+                 house_newprice(pc, which, "you") + ".", self);
+         else
+            exec("say Thank you, " + pc.name + ". I've counted each for whoever cut it; the " +
+                 "architect in Midgaard takes them off their price.", self);
       }
       else if (away == 0)
          exec("say There's nothing in that cart for me, " + pc.name + ".", self);
@@ -569,11 +655,11 @@ code
    n := house_credit(who, which, qname, 1);
    s := house_many(n, one, many);
    if (who == pc)
-      exec("say Thank you, " + pc.name + ". That's " + s + " from you for the architect in " +
-           "Midgaard; he takes them off the price.", self);
+      exec("say Thank you, " + pc.name + ". That's " + s + " from you: now " +
+           house_newprice(who, which, "you") + ".", self);
    else
       exec("say Thank you, " + pc.name + ". I've counted it for " + who.name + ": that's " + s +
-           " from " + who.name + ".", self);
+           " from " + who.name + ", and now " + house_newprice(who, which, who.name) + ".", self);
    if ((n <= 3) and (who == pc) and (not command("give")))
       exec("say " + CART_TIP, self);
    goto start;
@@ -1368,8 +1454,8 @@ external
    unitptr house_find(pname : string, lane : string);
    house_save(room : unitptr);
    integer house_counter(pc : unitptr, which : string);
-   house_setcount(pc : unitptr, which : string, n : integer);
-   integer house_cost(price : integer, have : integer, need : integer);
+   integer house_price(pc : unitptr, what : string);
+   house_spend(pc : unitptr, what : string);
    string house_many(n : integer, one : string, many : string);
 var
    pc : unitptr;
@@ -1380,7 +1466,6 @@ var
    price : integer;
    logs : integer;
    ore : integer;
-   need : integer;
    p1 : integer;
    p2 : integer;
    p3 : integer;
@@ -1412,9 +1497,9 @@ code
          arg := arg + "   " + streets.[i] + "<br/>";
          i := i + 1;
       }
-      p1 := house_cost(COTTAGE_PRICE, logs, LOGS_COTTAGE);
-      p2 := house_cost(HOUSE_PRICE, logs, LOGS_HOUSE);
-      p3 := house_cost(LOCK_PRICE, ore, LOCK_ORE);
+      p1 := house_price(pc, "cottage");
+      p2 := house_price(pc, "house");
+      p3 := house_price(pc, "lock");
       what := house_many(logs, "log", "logs");
       lane := house_many(ore, "load of ore", "loads of ore");
       act("$1n unrolls his plans:<br/>" + arg +
@@ -1423,10 +1508,11 @@ code
           "   a lock for your door        " + moneystring(LOCK_PRICE, TRUE) + "<br/>" +
           "'buy cottage' or 'buy house': on the lane of your hometown. 'buy lock' for the " +
           "house you have: then only those you give a key come in.<br/>" +
-          "Timber and iron make it cheaper: " + itoa(LOGS_COTTAGE) + " felled logs, handed to John " +
-          "the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a cottage (" +
-          itoa(LOGS_HOUSE) + " off a house), and " + itoa(LOCK_ORE) + " loads of iron ore, handed " +
-          "to Sam the blacksmith, " + itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
+          "Timber and iron make it cheaper, each piece its share: " + itoa(LOGS_COTTAGE) + " felled " +
+          "logs, handed to John the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a " +
+          "cottage; " + itoa(LOGS_HOUSE) + " logs and " + itoa(ORE_HOUSE) + " loads of iron ore, " +
+          "handed to Sam the blacksmith, " + itoa(HOUSE_DISCOUNT) + "% off a house; and " +
+          itoa(LOCK_ORE) + " loads of ore " + itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
           "You have handed in " + what + " and " + lane + ": for you a " +
           "cottage is " + moneystring(p1, TRUE) + ", a house " + moneystring(p2, TRUE) + " and a lock " +
           moneystring(p3, TRUE) + ".", A_ALWAYS, self, null, pc, TO_VICT);
@@ -1447,16 +1533,13 @@ code
          exec("say Your door has a lock already, " + pc.name + ".", self);
          goto start;
       }
-      price := house_cost(LOCK_PRICE, ore, LOCK_ORE);
+      price := house_price(pc, "lock");
       if (not transfermoney(pc, null, price))
       {
          exec("say A lock costs you " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
          goto start;
       }
-      if (ore > LOCK_ORE)
-         ore := LOCK_ORE;
-      need := house_counter(pc, HOUSE_ORE) - ore;   // the ore he used is spent
-      house_setcount(pc, HOUSE_ORE, need);
+      house_spend(pc, "lock");
       addextra(room.extra, {HOUSE_LOCK}, "locked");
       house_save(room);
       act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
@@ -1465,17 +1548,7 @@ code
       log(pc.name + " bought a lock for " + room.nameidx + "@" + room.zoneidx + ".");
       goto start;
    }
-   if (what == "cottage")
-   {
-      price := COTTAGE_PRICE;
-      need := LOGS_COTTAGE;
-   }
-   else if (what == "house")
-   {
-      price := HOUSE_PRICE;
-      need := LOGS_HOUSE;
-   }
-   else
+   if ((what != "cottage") and (what != "house"))
    {
       exec("say I build cottages and houses, and fit locks, " + pc.name + ": buy cottage, buy " +
            "house, or buy lock.", self);
@@ -1513,16 +1586,13 @@ code
       exec("say Every plot is taken, " + pc.name + ". More will be laid out.", self);
       goto start;
    }
-   price := house_cost(price, logs, need);
+   price := house_price(pc, what);
    if (not transfermoney(pc, null, price))
    {
       exec("say A " + what + " costs you " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
       goto start;
    }
-   if (logs > need)
-      logs := need;
-   need := house_counter(pc, HOUSE_LOGS) - logs;   // the logs he used are spent
-   house_setcount(pc, HOUSE_LOGS, need);
+   house_spend(pc, what);
 
    addextra(room.extra, {HOUSE_OWNER}, pc.name);
    addextra(room.extra, {HOUSE_TYPE}, what);
