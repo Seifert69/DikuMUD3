@@ -2414,9 +2414,12 @@ descr "John the Lumberjack is here, looking for some trees to chop down."
 extra {}
 "He is six feet tall and looks quite strong, muscles bulging under his heavy,
 chequered shirt.  His features are worn with hard work and his expression is
-one of a peaceful man leading a simple life."
+one of a peaceful man leading a simple life. He takes felled logs for the
+houses on Hearth Lane: 'fell' a tree in the forest with an axe, and give him
+the log."
 
 M_HUMAN_WARRIOR_AXE(4, SEX_MALE)
+dilcopy house_material@housing("house_log@housing", "$house logs", "Timber for a House", "log", "logs");
 alignment 350
 money 3 COPPER_PIECE
 dilcopy rescue@function ("mary");

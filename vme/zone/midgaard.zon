@@ -5836,7 +5836,10 @@ extra {"sign", "wall"}
     Use `evaluate &lt;item&gt;' to make the smith evaluate the quality of a
     weapon, armour or shield.
 
-    Use `give &lt;item&gt; Sam' to have an item resized.</pre>"
+    Use `give &lt;item&gt; Sam' to have an item resized.
+
+    Iron ore for locks taken here: `give ore Sam'.
+    Use `list' and `buy pick' for a miner's pick.</pre>"
 
 extra {"$metal room"}
 "this room is for armor sizing"
@@ -6931,6 +6934,8 @@ from being an active smith, though. Maybe he can teach you how to resize."
 flags {UNIT_FL_NO_TELEPORT}
 M_SHOP_KEEPER(47, SEX_MALE, RACE_HUMAN)
 money 10 IRON_PIECE, 2 COPPER_PIECE
+dilcopy house_material@housing("iron_ore@housing", "$house ore", "Iron for a Lock", "load of ore", "loads of ore");
+dilcopy house_picks@housing();
 dilcopy evaluate@function(64);
 dilcopy resize_func@midgaard (ITEM_ARMOR, ITEM_WEAPON, ITEM_SHIELD,ARM_CHAIN,
                               ARM_PLATE,COPPER_MULT,"smith");

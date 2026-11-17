@@ -15,4 +15,10 @@
 #define HOUSE_FILE     "$house file"
 #define HOUSE_HOLDS    "$house holds"   /* on a chest: how many things it holds */
 
+/* The building materials a player has handed in, counters on the player: what the architect
+   takes off the price (felled logs to John the Lumberjack, iron ore to Sam the blacksmith) */
+#define HOUSE_LOGS     "$house logs"
+#define HOUSE_ORE      "$house ore"
+#define ORE_VEIN       "$ore vein"       /* on a room: iron ore can be mined here */
+
 #endif

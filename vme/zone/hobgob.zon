@@ -576,9 +576,9 @@ descr
 The roar of the cascading water is deafening until one becomes used to
 it. A spectacular rainbow appears in the droplets of water as they mist
 down through the air. The cavern sparkles brightly almost seeming to produce 
-its own light. Some markings on the wall catch your eye. Trails lead off to 
-the east while the cavern stretches to the
-west."
+its own light. Some markings on the wall catch your eye. A rust-red seam of
+iron ore runs through the crystal. Trails lead off to the east while the
+cavern stretches to the west."
 
 movement SECT_INSIDE
 ALWAYS_LIGHT
@@ -592,6 +592,10 @@ extra {"crystal","walls"}
 unknown source shines through the crystals keeping the cavern in light."
 extra {"markings","marking"}
 "Merliin + Xuxa = True Love"
+extra {"seam","iron ore","ore","vein"}
+"A rust-red seam of iron ore runs through the crystal. With a miner's pick you
+could 'mine' it."
+extra {"$ore vein"} ""
 west to plateau_1 descr
 "To the west is a plateau.";
 east to mtrail_1 descr
@@ -604,9 +608,13 @@ names {"mtrail1"}
 
 descr
 "   The passage ways through the mountain have been manually hollowed out.
-There is no way that this could be considered a natural passage. A
-crystal cavern sparkles to the west and passages lead off in all other
-directions."
+There is no way that this could be considered a natural passage. Rust-red
+veins of iron ore show in the hewn rock. A crystal cavern sparkles to the
+west and passages lead off in all other directions."
+extra {"veins","vein","iron ore","ore"}
+"Rust-red veins of iron ore, where the old diggers stopped. With a miner's pick
+you could 'mine' them."
+extra {"$ore vein"} ""
 extra {"words","walls","wall"}
 " Beware many have died in these passages
       Some eventually find their way out!"

@@ -194,6 +194,8 @@ rooms within it (unless they have `UNIT_FL_TRANS` and are open).
   the program jumps to `label` at its next wake, every variable holding `u` becomes null,
   and the secure ends. That also happens when the program's own unit walks away from `u`.
 - `unsecure(u)` ends it; `secure` on the same unit again only changes the label.
+- `secure` takes a variable, never `self` ("Arg 1 of 'secure' not a user-variable"): a player's
+  own command program doesn't need it, since it ends when the player leaves the game.
 - Secures belong to the call that made them and end when that template returns.
 - The label is where to give up gracefully: `:lost:` and go back to waiting.
 - **`destroy()` on a secured unit fires its secure**: the program jumps to the label at once
