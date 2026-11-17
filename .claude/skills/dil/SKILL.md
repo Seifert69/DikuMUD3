@@ -48,7 +48,8 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **Reserved words.** Every function, field and built-in variable in `diltok.h` is reserved,
   so `name`, `names`, `key`, `npcs`, `unset`, `target`, `length`, `title`, `level`, `race`,
   `extra`, `help`, `full`, `fname`... can't be variable or parameter names (a parameter fails at the `dilbegin`
-  line). vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
+  line). vmc says `718: syntax error` / `Token: 'name'` at the `var` line, or only further
+  down, at some statement well after the variables (`Token: 'if'`). Use
   `pname`, `namex`, `kw`, `u`.
 - **Template names are 15 characters at most** (`Name of dilprogram ... was too long`).
 - **No field on a call's result**: `findroom(s).title` is a syntax error; put the unit in a
