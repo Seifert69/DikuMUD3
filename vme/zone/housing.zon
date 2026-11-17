@@ -573,7 +573,7 @@ code
    else
       exec("say Thank you, " + pc.name + ". I've counted it for " + who.name + ": that's " + s +
            " from " + who.name + ".", self);
-   if (n <= 3)
+   if ((n <= 3) and (who == pc) and (not command("give")))
       exec("say " + CART_TIP, self);
    goto start;
 }
@@ -1131,61 +1131,82 @@ code
 }
 dilend
 
-// On a hired cart (house_cart): it follows the horse it is hitched to, room by room. Its
-// hirer may `unhitch cart` and `hitch cart to horse` (the hired draught horse comes hitched;
-// another horse will do too). Logs and ore lying on the ground go in with `put log in cart`,
-// heaved up at a cost in endurance. Unloading is the receiver's (house_material). The hitch
-// is kept in extras ("$cart mark" here, "$hitched" on the horse), not in variables.
+// On a hired cart (house_cart): it goes along with the horse it is hitched to. A move's
+// done event comes in the room being left, naming the room ahead (target), for the horse or
+// its rider: the cart goes there at once. Its hirer (only) may `unhitch cart` and `hitch cart
+// to horse` (the hired draught horse comes hitched; a horse they hitched before, or any free
+// one, will do), and `put log in cart` heaves a log or ore lying on the ground into it, at a
+// cost in endurance. Nobody rides in it. Unloading is the receiver's (house_material). The
+// hitch is kept in extras ("$cart mark" here, "$hitched" on the horse), not in variables.
 dilbegin fnpri(FN_PRI_BLOCK) house_cart();
 var
    pc : unitptr;
    horse : unitptr;
    u : unitptr;
-   r : unitptr;
    hr : extraptr;
    hx : extraptr;
    mk : extraptr;
    mark : string;
    arg : string;
    w : string;
+   dirs : stringlist;
    d : integer;
    effort : integer;
 code
 {
-   heartbeat := PULSE_SEC;   // wakes to follow the horse
+   dirs := HOUSE_DIRS;
 :start:
-   wait(SFB_CMD | SFB_TICK, command(CMD_AUTO_TICK) or
-        ((command("hitch") or command("unhitch") or command("put")) and
-         (activator.type == UNIT_ST_PC) and (activator.outside == self.outside)));
+   wait(SFB_DONE | SFB_CMD, (activator.outside == self.outside) or
+                            (activator.outside.outside == self.outside));
    mk := "$cart mark" in self.extra;
    mark := "";
    if (mk != null)
       mark := mk.descr;
 
-   if (command(CMD_AUTO_TICK))
+   // a move about to happen: if it is our horse (or its rider), go ahead to the room ahead
+   if ((target != null) and (target.type == UNIT_ST_ROOM) and (mark != ""))
    {
-      // hitched but not holding on to the horse yet (just hired): find it here
-      if ((mark != "") and (horse == null))
+      d := 0;
+      while (d <= MAX_EXIT)
       {
-         u := self.outside.inside;
-         while (u != null)
-         {
-            hx := "$hitched" in u.extra;
-            if ((hx != null) and (hx.descr == mark))
-               horse := u;
-            u := u.next;
-         }
-         if (horse != null)
-            secure(horse, moved);
+         if (command(dirs.[d]))
+            break;
+         d := d + 1;
+      }
+      if (d > MAX_EXIT)
+         goto start;
+      horse := activator;
+      if (activator.outside.type != UNIT_ST_ROOM)
+         horse := activator.outside;   // ridden
+      hx := "$hitched" in horse.extra;
+      if ((hx != null) and (hx.descr == mark))
+      {
+         act("$1n rattles off after $3n.", A_ALWAYS, self, null, horse, TO_ROOM);
+         link(self, target);
+         act("$1n rattles in.", A_ALWAYS, self, null, null, TO_ROOM);
       }
       goto start;
    }
 
+   if (not (command("hitch") or command("unhitch") or command("put") or command("enter")))
+      goto start;
    pc := activator;
+   if (pc.type != UNIT_ST_PC)
+      goto start;
    arg := argument;
    if (not ("cart" in arg))
       goto start;
+   if (command("enter"))
+   {
+      if (findunit(pc, arg, FIND_UNIT_SURRO, null) != self)
+         goto start;
+      block;
+      act("$2n is for cargo, not passengers.", A_ALWAYS, pc, self, null, TO_CHAR);
+      goto start;
+   }
    hr := "$cart hirer" in self.extra;
+   if ((hr == null) or (hr.descr != pc.name))
+      goto start;   // each cart answers only its hirer
 
    if (command("put"))
    {
@@ -1201,6 +1222,11 @@ code
            (u.nameidx + "@" + u.zoneidx != "iron_ore@housing")))
          goto start;
       block;
+      if (pc.position < POSITION_STANDING)
+      {
+         act("You must be standing to heave $2n up.", A_ALWAYS, pc, u, null, TO_CHAR);
+         goto start;
+      }
       if (self.weight - self.baseweight + u.weight > self.capacity)
       {
          act("$2n is full.", A_ALWAYS, pc, self, null, TO_CHAR);
@@ -1220,11 +1246,6 @@ code
    }
 
    block;
-   if ((hr == null) or (hr.descr != pc.name))
-   {
-      act("$2n isn't yours: Calvin the carpenter hires out carts.", A_ALWAYS, pc, self, null, TO_CHAR);
-      goto start;
-   }
    if (command("unhitch"))
    {
       if (mark == "")
@@ -1232,28 +1253,26 @@ code
          act("$2n isn't hitched to anything.", A_ALWAYS, pc, self, null, TO_CHAR);
          goto start;
       }
-      if (horse != null)
-      {
-         subextra(horse.extra, "$hitched");
-         unsecure(horse);
-      }
-      horse := null;
       subextra(self.extra, "$cart mark");
       act("You unhitch $2n.", A_ALWAYS, pc, self, null, TO_CHAR);
-      goto start;
+      goto start;   // the horse keeps its mark: it is the hirer's to hitch again
    }
    if (mark != "")
    {
       act("$2n is hitched already.", A_ALWAYS, pc, self, null, TO_CHAR);
       goto start;
    }
-   // hitch: a horse here that pulls nothing yet
+   // hitch: a horse here that pulls nothing, or one this player hitched before
    horse := null;
    u := self.outside.inside;
    while (u != null)
    {
-      if ((u.type == UNIT_ST_NPC) and ("horse" in u.names) and (not ("$hitched" in u.extra)))
-         horse := u;
+      if ((u.type == UNIT_ST_NPC) and ("horse" in u.names))
+      {
+         hx := "$hitched" in u.extra;
+         if ((hx == null) or (left(hx.descr, length(pc.name) + 1) == pc.name + " "))
+            horse := u;
+      }
       u := u.next;
    }
    if (horse == null)
@@ -1261,50 +1280,12 @@ code
       act("There is no horse here to hitch $2n to.", A_ALWAYS, pc, self, null, TO_CHAR);
       goto start;
    }
-   mark := pc.name + " " + itoa(realtime);
+   mark := pc.name + " " + itoa(realtime) + " " + itoa(rnd(1, 99999));
+   subextra(horse.extra, "$hitched");
    addextra(horse.extra, {"$hitched"}, mark);
    addextra(self.extra, {"$cart mark"}, mark);
-   secure(horse, moved);
    act("You hitch $2n to $3n.", A_ALWAYS, pc, self, horse, TO_CHAR);
    act("$1n hitches $2n to $3n.", A_HIDEINV, pc, self, horse, TO_ROOM);
-   goto start;
-
-:moved:
-   // the horse went on: find it in a room next to this one and follow
-   mk := "$cart mark" in self.extra;
-   if (mk == null)
-      goto start;
-   mark := mk.descr;
-   d := 0;
-   horse := null;
-   while (d <= MAX_EXIT)
-   {
-      r := self.outside.exit_to[d];
-      if (r != null)
-      {
-         u := r.inside;
-         while (u != null)
-         {
-            hx := "$hitched" in u.extra;
-            if ((hx != null) and (hx.descr == mark))
-               horse := u;
-            u := u.next;
-         }
-      }
-      if (horse != null)
-         break;
-      d := d + 1;
-   }
-   if (horse == null)
-   {
-      act("The traces go slack: $1n has lost its horse.", A_ALWAYS, self, null, null, TO_ROOM);
-      subextra(self.extra, "$cart mark");
-      goto start;
-   }
-   act("$1n rattles off behind $3n.", A_ALWAYS, self, null, horse, TO_ROOM);
-   link(self, horse.outside);
-   act("$1n rattles in behind $3n.", A_ALWAYS, self, null, horse, TO_ROOM);
-   secure(horse, moved);
    goto start;
 }
 dilend
@@ -1323,7 +1304,7 @@ code
                  (activator.outside == self.outside));
    pc := activator;
    arg := argument;
-   u := findunit(pc, arg, FIND_UNIT_SURRO, null);
+   u := findunit(pc, arg, FIND_UNIT_SURRO, null, UNIT_ST_NPC);   // as mount finds it
    if (u != self)
       goto start;
    hr := "$cart hirer" in self.extra;
@@ -1556,6 +1537,8 @@ var
    arg : string;
    hfile : string;
    menu : string;
+   hirers : stringlist;   // who hired a cart this boot (a reboot brings the carts back)
+   mark : string;
    words : stringlist;
    which : intlist;
    syms : stringlist;
@@ -1596,6 +1579,12 @@ code
          exec("say I hire out a cart with a horse, " + pc.name + ": hire cart.", self);
          goto start;
       }
+      if (pc.name in hirers)
+      {
+         exec("say You have a cart and horse out already, " + pc.name + ". They come back to me " +
+              "at the next great storm (a reboot).", self);
+         goto start;
+      }
       if (not transfermoney(pc, null, CART_PRICE))
       {
          exec("say A cart and a horse cost " + moneystring(CART_PRICE, TRUE) + " to hire, " +
@@ -1603,14 +1592,15 @@ code
          goto start;
       }
       // a cart and a draught horse, hitched, outside on the square
-      hfile := pc.name + " " + itoa(realtime);
+      addstring(hirers, pc.name);
+      mark := pc.name + " " + itoa(realtime) + " " + itoa(rnd(1, 99999));
       u := load("draught_horse@housing");
       addextra(u.extra, {"$cart hirer"}, pc.name);
-      addextra(u.extra, {"$hitched"}, hfile);
+      addextra(u.extra, {"$hitched"}, mark);
       link(u, findroom(CART_YARD));
       u := load("house_cart@housing");
       addextra(u.extra, {"$cart hirer"}, pc.name);
-      addextra(u.extra, {"$cart mark"}, hfile);
+      addextra(u.extra, {"$cart mark"}, mark);
       link(u, findroom(CART_YARD));
       act("You pay $3n " + moneystring(CART_PRICE, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
       exec("say Your cart and horse stand outside on the square, " + pc.name + ". Mount the " +
