@@ -40,7 +40,8 @@
 #define MINE_AGAIN     600    // seconds before a vein gives ore again
 #define PICK           "pick@hobgob"   // what Sam sells: the hobgoblin miners' pick
 #define PICK_PRICE     (3 * SILVER_MULT)
-#define CUT_BY         "$cut by"   // on a log or load of ore: who felled or mined it
+#define CUT_BY         "$cut by"   // on a log or load of ore: who felled or mined it (or for whom)
+#define CUT_AT         "$cut at"   // and the room it was felled or mined in (room@zone)
 #define CART_PRICE     (1 * GOLD_MULT)
 #define CART_YARD      "col_sq7@midgaard"   // where Calvin's hired carts stand, outside his shop
 #define CART_TIP       "A horse and a cart carry a dozen at once: Calvin the carpenter on " + \
@@ -265,6 +266,7 @@ code
        A_HIDEINV, self, null, null, TO_ROOM);
    u := load("house_log@housing");
    addextra(u.extra, {CUT_BY}, forwho);   // the credit is the feller's (or whom it's for), whoever hands it in
+   addextra(u.extra, {CUT_AT}, place);
    link(u, room);
    if (forwho != self.name)
       act("It's for " + forwho + ": whoever hands it to John, it counts for " + forwho + ".",
@@ -347,6 +349,7 @@ code
    act("A heavy lump of rock breaks loose under $1n's pick.", A_HIDEINV, self, null, null, TO_ROOM);
    u := load("iron_ore@housing");
    addextra(u.extra, {CUT_BY}, forwho);
+   addextra(u.extra, {CUT_AT}, place);
    link(u, room);
    if (forwho != self.name)
       act("It's for " + forwho + ": whoever hands it to Sam, it counts for " + forwho + ".",
