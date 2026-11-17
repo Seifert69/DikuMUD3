@@ -44,6 +44,7 @@
 #define CUT_AT         "$cut at"   // and the room it was felled or mined in (room@zone)
 #define CART_PRICE     (1 * GOLD_MULT)
 #define CART_YARD      "col_sq7@midgaard"   // where Calvin's hired carts stand, outside his shop
+#define CART_RECALL    "house cart back "   // + a hirer's name: Calvin takes their cart and horse back
 #define CART_TIP       "A horse and a cart carry a dozen at once: Calvin the carpenter on " + \
                        "Colosseum Square hires them out."
 #define HOUSE_CHESTS   3
@@ -1137,8 +1138,9 @@ dilend
 // to horse` (the hired draught horse comes hitched; a horse they hitched before, or any free
 // one, will do), and `put log in cart` heaves a log or ore lying on the ground into it, at a
 // cost in endurance. Anyone may climb in and ride along, leaving less room for cargo.
-// Unloading is the receiver's (house_material). The hitch is kept in extras ("$cart mark"
-// here, "$hitched" on the horse), not in variables.
+// Unloading is the receiver's (house_material). When its hirer hires another, Calvin takes it
+// back (CART_RECALL), leaving what is in it. The hitch is kept in extras ("$cart mark" here,
+// "$hitched" on the horse), not in variables.
 dilbegin fnpri(FN_PRI_BLOCK) house_cart();
 var
    pc : unitptr;
@@ -1157,8 +1159,20 @@ code
 {
    dirs := HOUSE_DIRS;
 :start:
-   wait(SFB_DONE | SFB_CMD, (activator.outside == self.outside) or
-                            (activator.outside.outside == self.outside));
+   wait(SFB_DONE | SFB_CMD | SFB_MSG, command(CMD_AUTO_MSG) or (activator.outside == self.outside) or
+                                      (activator.outside.outside == self.outside));
+   if (command(CMD_AUTO_MSG))
+   {
+      // Calvin takes it back (its hirer hired another): what is in it stays where it stood
+      hr := "$cart hirer" in self.extra;
+      if ((hr == null) or (argument != CART_RECALL + hr.descr))
+         goto start;
+      while (self.inside != null)
+         link(self.inside, self.outside);
+      act("A lad from Calvin's shop wheels $1n away.", A_ALWAYS, self, null, null, TO_ROOM);
+      destroy(self);
+      quit;
+   }
    mk := "$cart mark" in self.extra;
    mark := "";
    if (mk != null)
@@ -1283,7 +1297,8 @@ code
 }
 dilend
 
-// On a hired draught horse: only its hirer may mount it.
+// On a hired draught horse: only its hirer may mount it. Calvin takes it back when its hirer
+// hires another (CART_RECALL).
 dilbegin fnpri(FN_PRI_BLOCK) house_horse();
 var
    pc : unitptr;
@@ -1293,14 +1308,26 @@ var
 code
 {
 :start:
-   wait(SFB_CMD, command("mount") and (activator.type == UNIT_ST_PC) and
-                 (activator.outside == self.outside));
+   wait(SFB_CMD | SFB_MSG, command(CMD_AUTO_MSG) or
+                           (command("mount") and (activator.type == UNIT_ST_PC) and
+                            (activator.outside == self.outside)));
+   hr := "$cart hirer" in self.extra;
+   if (command(CMD_AUTO_MSG))
+   {
+      // Calvin takes it back (its hirer hired another): a rider is set down first
+      if ((hr == null) or (argument != CART_RECALL + hr.descr))
+         goto start;
+      while (self.inside != null)
+         link(self.inside, self.outside);
+      act("A lad from Calvin's shop leads $1n away.", A_ALWAYS, self, null, null, TO_ROOM);
+      destroy(self);
+      quit;
+   }
    pc := activator;
    arg := argument;
    u := findunit(pc, arg, FIND_UNIT_SURRO, null, UNIT_ST_NPC);   // as mount finds it
    if (u != self)
       goto start;
-   hr := "$cart hirer" in self.extra;
    if ((hr != null) and (hr.descr != pc.name))
    {
       block;
@@ -1530,7 +1557,7 @@ var
    arg : string;
    hfile : string;
    menu : string;
-   hirers : stringlist;   // who hired a cart this boot (a reboot brings the carts back)
+   hirers : stringlist;   // who hired a cart this boot: they may have one out
    mark : string;
    words : stringlist;
    which : intlist;
@@ -1572,20 +1599,23 @@ code
          exec("say I hire out a cart with a horse, " + pc.name + ": hire cart.", self);
          goto start;
       }
-      if (pc.name in hirers)
-      {
-         exec("say You have a cart and horse out already, " + pc.name + ". They come back to me " +
-              "at the next great storm (a reboot).", self);
-         goto start;
-      }
       if (not transfermoney(pc, null, CART_PRICE))
       {
          exec("say A cart and a horse cost " + moneystring(CART_PRICE, TRUE) + " to hire, " +
               pc.name + ".", self);
          goto start;
       }
+      // one at a time: an old cart and horse come back wherever they are
+      if (pc.name in hirers)
+      {
+         sendtoalldil(CART_RECALL + pc.name, "house_cart@housing");
+         sendtoalldil(CART_RECALL + pc.name, "house_horse@housing");
+         exec("say My lad will fetch your old cart and horse, " + pc.name + "; whatever was in " +
+              "the cart he leaves where it stood.", self);
+      }
+      else
+         addstring(hirers, pc.name);
       // a cart and a draught horse, hitched, outside on the square
-      addstring(hirers, pc.name);
       mark := pc.name + " " + itoa(realtime) + " " + itoa(rnd(1, 99999));
       u := load("draught_horse@housing");
       addextra(u.extra, {"$cart hirer"}, pc.name);
@@ -1597,8 +1627,8 @@ code
       link(u, findroom(CART_YARD));
       act("You pay $3n " + moneystring(CART_PRICE, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
       exec("say Your cart and horse stand outside on the square, " + pc.name + ". Mount the " +
-           "horse and ride: the cart follows. They're yours till the next great storm (a " +
-           "reboot) brings them back to me.", self);
+           "horse and ride: the cart follows. They're yours till you hire another, or the " +
+           "next great storm (a reboot) brings them back to me.", self);
       goto start;
    }
 
