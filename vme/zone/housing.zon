@@ -116,6 +116,31 @@ code
 }
 dilend
 
+// How the house looks, from its condition (its hit points), like a wound in combat.
+dilbegin string house_state(room : unitptr);
+var
+   pct : integer;
+code
+{
+   pct := 0;
+   if (room.max_hp > 0)
+      pct := (room.hp * 100) / room.max_hp;
+   if (pct >= 100)
+      return ("It is in perfect repair.");
+   if (pct >= 90)
+      return ("It is in good repair.");
+   if (pct >= 75)
+      return ("It shows a little wear: the paint on the shutters is fading.");
+   if (pct >= 50)
+      return ("It is weathered: the door sticks and a draught comes under it.");
+   if (pct >= 25)
+      return ("It is run-down: slates are missing and damp creeps up the walls.");
+   if (room.hp > 0)   // not pct: 100 of 18000 rounds down to 0%
+      return ("It is dilapidated: the roof sags and the shutters hang loose.");
+   return ("It is a ruin.");
+}
+dilend
+
 // TRUE when pname owns the house or was invited.
 dilbegin integer house_allowed(room : unitptr, pname : string);
 var
@@ -222,7 +247,7 @@ dilend
 
 // On a house's front room: reads the house's state at boot; its hit points are the house's
 // condition. Anyone the owner didn't invite is shown out to the lane. The owner's commands
-// here: house, and in a house with the guests add-on (HOUSE_GUESTS, not sold yet)
+// here: house (the owner, and the condition in words: house_state), and in a house with the guests add-on (HOUSE_GUESTS, not sold yet)
 // invite <name> and uninvite <name>. The back room (the exit to a HOUSE_BACK room)
 // is only open in a two-room house.
 dilbegin fnpri(FN_PRI_BLOCK) house_room();
@@ -231,6 +256,7 @@ external
    house_save(room : unitptr);
    house_furnish(room : unitptr);
    string house_file(room : unitptr);
+   string house_state(room : unitptr);
 var
    buf : string;
    sl : stringlist;
@@ -324,8 +350,8 @@ code
    if (command("house"))
    {
       block;
-      act("This " + typ.descr + " belongs to " + own.descr + ". Its condition is " +
-          itoa(self.hp) + " of " + itoa(self.max_hp) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      buf := house_state(self);
+      act("This " + typ.descr + " belongs to " + own.descr + ". " + buf, A_ALWAYS, pc, null, null, TO_CHAR);
       if (HOUSE_GUESTS in self.extra)
       {
          if (length(frd.names) <= 1)
