@@ -1,21 +1,54 @@
 <div class="mw-parser-output"><h1>Houses</h1>
-<p>Some players have a house of their own in Valhalla: a room or a few, 
-somewhere in the world, made for them by the gods. Houses are not for 
-sale; nothing in Valhalla is.
-</p><p>If you'd like a house, you can ask the gods for one. Tell them where it 
-should stand and how it fits in there, and what each room looks like: 
-its title, its description, and the things in it a visitor can look 
-at. For more than one room, draw a plan with the entrance as room 1:
+<p>A house of your own in Valhalla: a place to keep your things through any 
+storm, to rest, and to show the world. Houses stand on Hearth Lane, west 
+of the Udgaard market, and more lanes will follow.
+</p><p><b>Buying a house.</b> Haldor the architect, in the Hall of the Citizens 
+in Midgaard's Town Hall, sells them: type <a cmd='#'>list</a> there.
 </p>
-<pre>    4-5
-    |
-  2-1-3
+<ul><li>A cottage has one room, a house two. You must be level 10 or higher,</li></ul>
+<pre> and you can own one house.
 </pre>
-<p>Whether a house is made, and when, is up to the gods.
+<ul><li>Timber and iron make it much cheaper: logs you fell (<a cmd='#'>Help Fell</a>) and</li></ul>
+<pre> hand to John the Lumberjack, and iron ore you mine (<a cmd='#'>Help Mine</a>) for 
+ Sam the blacksmith. 10 logs take 90% off a cottage; 20 logs and 5 loads 
+ of ore 90% off a house; 5 loads of ore 90% off a lock. Each piece takes 
+ its share, so every one counts, and what a purchase uses is spent. 
+ John and Sam tell you your new prices, and <a cmd='#'>list</a> at the architect 
+ shows them too.
+</pre>
+<p><b>Your door.</b> A new house is open to anyone: having one is something 
+in itself. Buy a lock from the architect (<a cmd='#'>buy lock</a>) to keep others 
+out. Inside, the owner can then:
+</p>
+<ul><li><a cmd='#'>lock door</a> and <a cmd='#'>unlock door</a>: while it is locked, only you, those</li></ul>
+<pre> you gave a key and the gods come in. Anyone else inside is shown out.
+</pre>
+<ul><li><a cmd='#'>invite &lt;name&gt;</a> gives a friend a key, <a cmd='#'>uninvite &lt;name&gt;</a> takes it back.</li></ul>
+<p><a cmd='#'>house</a> shows whose house you are in, its condition, and whether the 
+door is locked; the owner also sees who has a key.
+</p><p><b>Furniture.</b> Calvin the carpenter on Colosseum Square in Midgaard 
+makes beds and chests and has them carried into your house: <a cmd='#'>list</a> in 
+his shop.
+</p>
+<ul><li>A bed you lie in: <a cmd='#'>enter bed</a>, <a cmd='#'>sleep</a>, <a cmd='#'>leave</a>.</li>
+<li>Chests for 10, 15 or 25 things (what is in a bag counts too). For</li></ul>
+<pre> half a chest's price he fits it with a lock (<a cmd='#'>buy lock for small 
+ chest</a>): then only you can open it, door locked or not. Closing it 
+ locks it, and it locks itself when you leave it open and go.
+</pre>
+<p>What is in the chests is kept through any reboot. Things left lying on 
+the floor are not.
+</p><p><b>Selling.</b> <a cmd='#'>sell house</a> at the architect gives your house back to him, 
+for half of what it and its lock cost you; say it twice to seal it. 
+Calvin's furniture stays with the house, and whatever is in it comes 
+back to you. Then you can buy another.
+</p><p>Special houses, made to your own plan, can still be asked of the gods.
 </p><p><br />
 See Also:
 </p>
-<pre>&gt; <a cmd='#'>Help Map</a>
+<pre>&gt; <a cmd='#'>Help Fell</a>
+&gt; <a cmd='#'>Help Mine</a>
+&gt; <a cmd='#'>Help Cart</a>
 </pre>
 
 

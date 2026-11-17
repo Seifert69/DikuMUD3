@@ -1,0 +1,31 @@
+<div class="mw-parser-output"><h1>Mine</h1>
+<p>Usage:
+</p>
+<pre>mine
+mine for &lt;name&gt;
+</pre>
+<p>Where a seam of iron ore runs through the rock, with a miner's pick 
+wielded, you break loose a load of iron ore. There are veins in the 
+crystal cavern behind the hobgoblin waterfall and in the hewn passage 
+next to it. A vein gives ore once every ten minutes. Mining takes 
+endurance, and at low levels it gives a little experience.
+</p><p>Sam the blacksmith in Midgaard sells miner's picks (<a cmd='#'>buy pick</a>) and takes 
+the ore: give it to him, drop it by him, or unload a cart by him. Each 
+load counts for whoever mined it, whoever brings it in, and the 
+architect in Midgaard takes it off the price of a lock or a house 
+(<a cmd='#'>Help Houses</a>). 
+The first load you hand in solves the quest Iron for a Lock.
+</p><p><a cmd='#'>mine for &lt;name&gt;</a> mines for a friend: that load counts for them. Ore is 
+only taken while whoever mined it is in the game.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Houses</a>
+&gt; <a cmd='#'>Help Fell</a>
+&gt; <a cmd='#'>Help Cart</a>
+</pre>
+
+
+
+
+</div>

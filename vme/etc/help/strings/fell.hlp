@@ -1,0 +1,32 @@
+<div class="mw-parser-output"><h1>Fell</h1>
+<p>Usage:
+</p>
+<pre>fell
+fell tree for &lt;name&gt;
+</pre>
+<p>In a forest, with an axe wielded, you fell a tree and trim it into a log. 
+Each stretch of forest gives one tree an hour; then try deeper in the 
+forest. Felling takes endurance, and at low levels it gives a little 
+experience.
+</p><p>A log is heavy: the strong carry one, others <a cmd='#'>drag</a> it, and a cart 
+carries a dozen (<a cmd='#'>Help Cart</a>). John the Lumberjack in Haon-Dor, west of 
+Udgaard, takes logs for the houses on Hearth Lane: give one to him, drag 
+it to where he stands, or unload a cart by him. Each log counts for 
+whoever felled it, whoever brings it in, and the architect in Midgaard 
+takes them off the price of a house (<a cmd='#'>Help Houses</a>). The first log you 
+hand in solves the quest Timber for a House.
+</p><p><a cmd='#'>fell tree for &lt;name&gt;</a> fells a tree for a friend: that log counts for 
+them. A log is only taken while whoever felled it is in the game.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Houses</a>
+&gt; <a cmd='#'>Help Mine</a>
+&gt; <a cmd='#'>Help Cart</a>
+&gt; <a cmd='#'>Help Drag</a>
+</pre>
+
+
+
+
+</div>

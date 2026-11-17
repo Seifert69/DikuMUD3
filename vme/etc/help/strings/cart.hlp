@@ -1,0 +1,38 @@
+<div class="mw-parser-output"><h1>Cart</h1>
+<p>Usage:
+</p>
+<pre>hire cart
+put &lt;log or ore&gt; in cart
+unload cart
+hitch cart to horse
+unhitch cart
+</pre>
+<p>Calvin the carpenter on Colosseum Square in Midgaard hires out a cart with 
+a draught horse (<a cmd='#'>hire cart</a>). They wait for you on the square, hitched, 
+and stay yours, wherever you leave them, until the next reboot brings them 
+back to him. You have one at a time: hire another, and his lad fetches 
+the old pair, leaving whatever was in the cart where it stood. Only you 
+can mount the horse: <a cmd='#'>mount horse</a>, and ride where you like; the cart 
+follows.
+</p><p>A cart holds a dozen logs or more loads of ore. <a cmd='#'>put log in cart</a> heaves 
+up a log or load lying on the ground, which takes some endurance. By 
+John the Lumberjack or Sam the blacksmith, <a cmd='#'>unload cart</a> hands them 
+everything in it, even from the saddle; each piece counts for whoever 
+felled or mined it.
+</p><p>Friends can climb in (<a cmd='#'>enter cart</a>) and ride along, though they take up 
+room the cargo could have had.
+</p><p><a cmd='#'>unhitch cart</a> leaves the cart standing; <a cmd='#'>hitch cart to horse</a> hitches it 
+again, to the draught horse or another horse.
+</p><p><br />
+See Also:
+</p>
+<pre>&gt; <a cmd='#'>Help Fell</a>
+&gt; <a cmd='#'>Help Mine</a>
+&gt; <a cmd='#'>Help Houses</a>
+&gt; <a cmd='#'>Help Mount</a>
+</pre>
+
+
+
+
+</div>

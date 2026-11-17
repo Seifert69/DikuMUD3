@@ -75,6 +75,7 @@ python3 getwikihelppage.py Caccept &
 python3 getwikihelppage.py Calllightning &
 python3 getwikihelppage.py Calm &
 python3 getwikihelppage.py Cappoint
+python3 getwikihelppage.py Cart &
 python3 getwikihelppage.py Casthold &
 python3 getwikihelppage.py Casting &
 python3 getwikihelppage.py Causelightwounds &
@@ -244,6 +245,7 @@ python3 getwikihelppage.py Fashionweapon &
 python3 getwikihelppage.py Fauchardfork
 python3 getwikihelppage.py Fauchard &
 python3 getwikihelppage.py Fear &
+python3 getwikihelppage.py Fell &
 python3 getwikihelppage.py Fighter &
 python3 getwikihelppage.py Fighterrp
 python3 getwikihelppage.py Fighterskills &
@@ -398,6 +400,7 @@ python3 getwikihelppage.py Midgaardsorcerer &
 python3 getwikihelppage.py Militaryfork
 python3 getwikihelppage.py Mindshield &
 python3 getwikihelppage.py Mindsphere &
+python3 getwikihelppage.py Mine &
 python3 getwikihelppage.py Minorgate &
 python3 getwikihelppage.py Mire
 python3 getwikihelppage.py Money &
