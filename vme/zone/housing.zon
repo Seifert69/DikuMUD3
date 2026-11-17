@@ -1136,8 +1136,9 @@ dilend
 // its rider: the cart goes there at once. Its hirer (only) may `unhitch cart` and `hitch cart
 // to horse` (the hired draught horse comes hitched; a horse they hitched before, or any free
 // one, will do), and `put log in cart` heaves a log or ore lying on the ground into it, at a
-// cost in endurance. Nobody rides in it. Unloading is the receiver's (house_material). The
-// hitch is kept in extras ("$cart mark" here, "$hitched" on the horse), not in variables.
+// cost in endurance. Anyone may climb in and ride along, leaving less room for cargo.
+// Unloading is the receiver's (house_material). The hitch is kept in extras ("$cart mark"
+// here, "$hitched" on the horse), not in variables.
 dilbegin fnpri(FN_PRI_BLOCK) house_cart();
 var
    pc : unitptr;
@@ -1188,7 +1189,7 @@ code
       goto start;
    }
 
-   if (not (command("hitch") or command("unhitch") or command("put") or command("enter")))
+   if (not (command("hitch") or command("unhitch") or command("put")))
       goto start;
    pc := activator;
    if (pc.type != UNIT_ST_PC)
@@ -1196,14 +1197,6 @@ code
    arg := argument;
    if (not ("cart" in arg))
       goto start;
-   if (command("enter"))
-   {
-      if (findunit(pc, arg, FIND_UNIT_SURRO, null) != self)
-         goto start;
-      block;
-      act("$2n is for cargo, not passengers.", A_ALWAYS, pc, self, null, TO_CHAR);
-      goto start;
-   }
    hr := "$cart hirer" in self.extra;
    if ((hr == null) or (hr.descr != pc.name))
       goto start;   // each cart answers only its hirer
