@@ -16,6 +16,8 @@ up a log or load lying on the ground, which takes some endurance. By
 John the Lumberjack or Sam the blacksmith, <a cmd='#'>unload cart</a> hands them 
 everything in it, even from the saddle; each piece counts for whoever 
 felled or mined it.
+</p><p>Friends can climb in (<a cmd='#'>enter cart</a>) and ride along, though they take up 
+room the cargo could have had.
 </p><p><a cmd='#'>unhitch cart</a> leaves the cart standing; <a cmd='#'>hitch cart to horse</a> hitches it 
 again, to the draught horse or another horse.
 </p><p><br />
