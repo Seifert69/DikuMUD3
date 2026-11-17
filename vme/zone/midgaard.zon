@@ -5420,6 +5420,7 @@ descr
 cover most of the walls, giving the room an eerie atmosphere. A small ladder leads up through a hatch in the roof."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(653,562)
 up to engraver_back descr "A small hatch leads upwards into a small shop.";
 /* XXX */
 /* Michael: Perhaps a secret entrance to the sewers? or to Haon Dor? */
@@ -5551,6 +5552,7 @@ flags {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_NO_TELEPORT,
 UNIT_FL_NO_MOB}
 movement SECT_INSIDE
 
+gmap(580,534)
 south to bag_room@academy;
 north to main_st4 open {EX_OPEN_CLOSE, EX_CLOSED, EX_LOCKED}
       keyword {"oak door", "door"} difficulty 80;
@@ -5674,6 +5676,7 @@ extra {"sign"}
 movement SECT_INSIDE
 flags {UNIT_FL_NO_WEATHER,UNIT_FL_INDOORS}
 ALWAYS_LIGHT
+gmap(653,562)
 west to engraver_shop@midgaard open {EX_OPEN_CLOSE, EX_CLOSED} keyword {"door"}
 descr "A door in the west wall leads into Veejay's Engraving Workshop.";
 down to thief_guild descr "There is a hatch here in the floor that is rusted open, leading down into the darkness.";
@@ -6024,6 +6027,7 @@ large and somewhat worn oaken table.
 A wooden <a cmd='read #'>sign</a> hangs above the fireplace."
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
 movement SECT_INSIDE
+gmap(674,474)
 south to main_st6;
 extra {"fireplace"}
 "It is a rather large fireplace made from heavy granite rocks."
