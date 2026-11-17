@@ -9,8 +9,11 @@ unhitch cart
 </pre>
 <p>Calvin the carpenter on Colosseum Square in Midgaard hires out a cart with 
 a draught horse (<a cmd='#'>hire cart</a>). They wait for you on the square, hitched, 
-until the next reboot brings them back to him. Only you can mount the 
-horse: <a cmd='#'>mount horse</a>, and ride where you like; the cart follows.
+and stay yours, wherever you leave them, until the next reboot brings them 
+back to him. You have one at a time: hire another, and his lad fetches 
+the old pair, leaving whatever was in the cart where it stood. Only you 
+can mount the horse: <a cmd='#'>mount horse</a>, and ride where you like; the cart 
+follows.
 </p><p>A cart holds a dozen logs or more loads of ore. <a cmd='#'>put log in cart</a> heaves 
 up a log or load lying on the ground, which takes some endurance. By 
 John the Lumberjack or Sam the blacksmith, <a cmd='#'>unload cart</a> hands them 
