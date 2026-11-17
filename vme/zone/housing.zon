@@ -2,13 +2,14 @@
 #include <housing.h>
 
 // Player houses: what every house lane shares. A lane is a zone of its own (uhouses: Hearth
-// Lane in Udgaard), with rooms only:
+// Lane in Udgaard; mhouses: Midgaard's streets), with rooms only:
 //   - each lane room runs house_gate(): a door from it into a house lets anyone in, unless the
 //     owner bought a lock (from the architect) and locked it: then only the owner, those they
 //     gave a key (invite) and gods;
 //   - each house's front room has the extra HOUSE_WHERE (where its door is, for the architect),
-//     `hit HOUSE_HP`, and runs house_room(); a back room, open only in a two-room house, has
-//     the extra HOUSE_BACK. The front rooms are called plot1, plot2 ... in a row.
+//     `hit HOUSE_HP`, and runs house_room(); a back room, closed in a cottage, has the extra
+//     HOUSE_BACK, and an upper floor, open only in a townhouse, HOUSE_UPPER. The front rooms
+//     are called plot1, plot2 ... in a row.
 // The architect in Midgaard's Town Hall sells the houses and door locks; Calvin the carpenter
 // in Midgaard (furniture()) sells beds, chests and chest locks and has them carried in. A
 // locked chest opens only for its owner, whether the door is locked or not.
@@ -19,14 +20,18 @@
 // uhouses.plot1.chest1 ...), brought in the first time someone enters after a boot; a chest
 // saves itself, with what is in it, after things are put in or taken out.
 
-// The house lanes, the hometown whose folk buy there, and how the architect names it. Those
-// from a hometown without a lane of its own buy on the first.
-#define HOUSE_LANES    {"uhouses"}
-#define HOUSE_HOMES    {"temple@udgaard"}
-#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market"}
+// The house lanes: Udgaard's Hearth Lane (cottages and houses, with the timber and ore
+// discounts) and Midgaard's streets (houses and townhouses, dearer the finer the street).
+#define HOUSE_LANES    {"uhouses", "mhouses"}
+#define MHOUSE_STREETS {"Penny Lane", "Beech Row", "Chestnut Close"}
+#define MHOUSE_PLACES  {"between Royal Avenue and the city park", "off Park Road", "off Royal Avenue"}
+#define MHOUSE_KEYS    {"penny", "beech", "chestnut"}   // the word a buyer names the street by
+#define MHOUSE_PRESTIGE {100, 120, 160}                 // each street's price, in % of the base
 #define HOUSE_MINLEVEL 10
 #define COTTAGE_PRICE  (5 * PLATINUM_MULT)
 #define HOUSE_PRICE    (10 * PLATINUM_MULT)
+#define MHOUSE_PRICE   (15 * PLATINUM_MULT)   // a house in Midgaard, on its plainest street
+#define TOWNHOUSE_PRICE (25 * PLATINUM_MULT)
 #define LOCK_PRICE     (3 * PLATINUM_MULT)
 // Building materials (handed in, counted on the player): this many cover HOUSE_DISCOUNT percent
 #define LOGS_COTTAGE   10
@@ -188,8 +193,18 @@ code
 }
 dilend
 
-// What pc pays the architect for what ("cottage", "house", "lock"): the full price less the
-// share the logs and ore they handed in take off. A house takes logs and ore alike.
+// A price at a street's prestige (pct, in % of the base), in whole gold pieces.
+dilbegin integer house_dear(price : integer, pct : integer);
+code
+{
+   price := (price * pct) / 100;
+   return (((price + GOLD_MULT / 2) / GOLD_MULT) * GOLD_MULT);
+}
+dilend
+
+// What pc pays the architect for what ("cottage", "house", "lock"; "mhouse" and "townhouse"
+// in Midgaard): the full price less the share the logs and ore they handed in take off. A
+// house takes logs and ore alike; Midgaard's houses take none.
 dilbegin integer house_price(pc : unitptr, what : string);
 external
    integer house_counter(pc : unitptr, which : string);
@@ -199,6 +214,10 @@ var
    ore : integer;
 code
 {
+   if (what == "mhouse")   // Midgaard's: no discounts (the street's prestige is the architect's)
+      return (MHOUSE_PRICE);
+   if (what == "townhouse")
+      return (TOWNHOUSE_PRICE);
    logs := house_counter(pc, HOUSE_LOGS);
    ore := house_counter(pc, HOUSE_ORE);
    if (what == "cottage")
@@ -224,6 +243,8 @@ var
    n : integer;
 code
 {
+   if ((what == "mhouse") or (what == "townhouse"))
+      return;
    logs := 0;
    ore := 0;
    if (what == "cottage")
@@ -790,6 +811,8 @@ external
 var
    lane : unitptr;
    back : unitptr;
+   upper : unitptr;
+   i : integer;
    r : unitptr;
    u : unitptr;
    nxt : unitptr;
@@ -810,16 +833,26 @@ code
       {
          if (HOUSE_BACK in r.extra)
             back := r;
+         else if (HOUSE_UPPER in r.extra)
+            upper := r;
          else
             lane := r;
       }
       d := d + 1;
    }
    k := 0;
-   r := room;
-   while (r != null)
+   i := 0;
+   while (i < 3)   // the front room, the back room, the upper floor
    {
-      u := r.inside;
+      if (i == 0)
+         r := room;
+      else if (i == 1)
+         r := back;
+      else
+         r := upper;
+      u := null;
+      if (r != null)
+         u := r.inside;
       while (u != null)
       {
          nxt := u.next;
@@ -860,10 +893,7 @@ code
             destroy(u);
          u := nxt;
       }
-      if (r == back)
-         r := null;
-      else
-         r := back;
+      i := i + 1;
    }
 
    base := house_file(room);
@@ -946,7 +976,8 @@ dilend
 // it; then those without a key are shown out to the lane. Here, `house` shows the owner and
 // the condition in words (house_state); with a lock the owner can `lock door`, `unlock door`,
 // and hand out keys: `invite <name>`, `uninvite <name>`. The back room (the exit to a
-// HOUSE_BACK room) is only open in a two-room house.
+// HOUSE_BACK room) is closed in a cottage, the upper floor (HOUSE_UPPER) open only in a
+// townhouse.
 dilbegin fnpri(FN_PRI_BLOCK) house_room();
 external
    integer house_allowed(room : unitptr, pname : string);
@@ -961,6 +992,7 @@ var
    dirs : stringlist;
    lane : string;
    back : integer;
+   upper : integer;
    d : integer;
    err : integer;
    pc : unitptr;
@@ -977,6 +1009,7 @@ code
    // the lane and the back room, from the exits
    dirs := HOUSE_DIRS;
    back := -1;
+   upper := -1;
    d := 0;
    while (d <= MAX_EXIT)
    {
@@ -985,6 +1018,8 @@ code
       {
          if (HOUSE_BACK in r.extra)
             back := d;
+         else if (HOUSE_UPPER in r.extra)
+            upper := d;
          else
             lane := r.nameidx + "@" + r.zoneidx;
       }
@@ -1038,10 +1073,17 @@ code
    }
 
    typ := HOUSE_TYPE in self.extra;
-   if ((back >= 0) and command(dirs.[back]) and (typ.descr != "house"))
+   if ((back >= 0) and command(dirs.[back]) and (typ.descr == "cottage"))
    {
       block;
       act("This cottage has only the one room.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   if ((upper >= 0) and command(dirs.[upper]) and (typ.descr != "townhouse"))
+   {
+      block;
+      act("The stairs are closed off at the top: the upper floor is a townhouse's.",
+          A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
 
@@ -1554,14 +1596,17 @@ code
 }
 dilend
 
-// The architect: sells cottages and houses (list, buy cottage, buy house), on the lane for
-// the buyer's hometown, or the first lane (HOUSE_LANES, HOUSE_HOMES).
+// The architect: sells cottages and houses on Hearth Lane in Udgaard, houses and townhouses on
+// Midgaard's streets at each street's price (list; buy cottage, buy house, buy house on penny
+// lane, buy townhouse on chestnut close), and door locks (buy lock). `sell house`, said twice,
+// takes a house back for half of what it cost; a god may `free plot3@uhouses`.
 dilbegin fnpri(FN_PRI_BLOCK) architect();
 external
    unitptr house_find(pname : string, lane : string);
    house_save(room : unitptr);
    integer house_counter(pc : unitptr, which : string);
    integer house_price(pc : unitptr, what : string);
+   integer house_dear(price : integer, pct : integer);
    house_spend(pc : unitptr, what : string);
    string house_many(n : integer, one : string, many : string);
    integer house_clear(room : unitptr, heir : unitptr);
@@ -1579,8 +1624,13 @@ var
    p3 : integer;
    where : extraptr;
    lanes : stringlist;
-   homes : stringlist;
-   streets : stringlist;
+   mstreets : stringlist;
+   mplaces : stringlist;
+   mkeys : stringlist;
+   prestige : intlist;
+   street : integer;
+   kind : string;
+   r : unitptr;
    i : integer;
    k : integer;
    paid : extraptr;
@@ -1588,8 +1638,10 @@ var
 code
 {
    lanes := HOUSE_LANES;
-   homes := HOUSE_HOMES;
-   streets := HOUSE_STREETS;
+   mstreets := MHOUSE_STREETS;
+   mplaces := MHOUSE_PLACES;
+   mkeys := MHOUSE_KEYS;
+   prestige := MHOUSE_PRESTIGE;
 :start:
    wait(SFB_CMD, (command("list") or command("buy") or
                   (command("sell") and (("house" in argument) or ("cottage" in argument))) or
@@ -1671,9 +1723,11 @@ code
    {
       arg := "";
       i := 0;
-      while (i < length(streets))
+      while (i < length(mstreets))
       {
-         arg := arg + "   " + streets.[i] + "<br/>";
+         arg := arg + "   on " + mstreets.[i] + ", " + mplaces.[i] + ": a house " +
+                moneystring(house_dear(MHOUSE_PRICE, prestige.[i]), TRUE) + ", a townhouse " +
+                moneystring(house_dear(TOWNHOUSE_PRICE, prestige.[i]), TRUE) + "<br/>";
          i := i + 1;
       }
       p1 := house_price(pc, "cottage");
@@ -1681,19 +1735,23 @@ code
       p3 := house_price(pc, "lock");
       what := house_many(logs, "log", "logs");
       lane := house_many(ore, "load of ore", "loads of ore");
-      act("$1n unrolls his plans:<br/>" + arg +
-          "   a cottage (one room)        " + moneystring(COTTAGE_PRICE, TRUE) + "<br/>" +
-          "   a house (two rooms)         " + moneystring(HOUSE_PRICE, TRUE) + "<br/>" +
-          "   a lock for your door        " + moneystring(LOCK_PRICE, TRUE) + "<br/>" +
-          "'buy cottage' or 'buy house', and he builds it there. 'buy lock' for the " +
-          "house you have: then only those you give a key come in.<br/>" +
-          "Timber and iron make it cheaper, each piece its share: " + itoa(LOGS_COTTAGE) + " felled " +
-          "logs, handed to John the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a " +
-          "cottage; " + itoa(LOGS_HOUSE) + " logs and " + itoa(ORE_HOUSE) + " loads of iron ore, " +
-          "handed to Sam the blacksmith, " + itoa(HOUSE_DISCOUNT) + "% off a house; and " +
-          itoa(LOCK_ORE) + " loads of ore " + itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
-          "You have handed in " + what + " and " + lane + ": for you a " +
-          "cottage is " + moneystring(p1, TRUE) + ", a house " + moneystring(p2, TRUE) + " and a lock " +
+      act("$1n unrolls his plans:<br/>" +
+          "In Udgaard, on Hearth Lane west of the market:<br/>" +
+          "   a cottage (one room) " + moneystring(COTTAGE_PRICE, TRUE) + ", a house (two rooms) " +
+          moneystring(HOUSE_PRICE, TRUE) + ": 'buy cottage', 'buy house'<br/>" +
+          "In Midgaard, a house (two rooms) or a townhouse (three rooms), dearer the finer the " +
+          "street:<br/>" + arg +
+          "   'buy house on penny lane', 'buy townhouse on chestnut close' ...<br/>" +
+          "A lock for your door, " + moneystring(LOCK_PRICE, TRUE) + ": 'buy lock'. Then only " +
+          "those you give a key come in.<br/>" +
+          "Timber and iron make Udgaard's houses and a lock cheaper, each piece its share: " +
+          itoa(LOGS_COTTAGE) + " felled logs, handed to John the Lumberjack in Haon-Dor, take " +
+          itoa(HOUSE_DISCOUNT) + "% off a cottage; " + itoa(LOGS_HOUSE) + " logs and " +
+          itoa(ORE_HOUSE) + " loads of iron ore, handed to Sam the blacksmith, " +
+          itoa(HOUSE_DISCOUNT) + "% off a house; and " + itoa(LOCK_ORE) + " loads of ore " +
+          itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
+          "You have handed in " + what + " and " + lane + ": for you a cottage is " +
+          moneystring(p1, TRUE) + ", a house in Udgaard " + moneystring(p2, TRUE) + " and a lock " +
           moneystring(p3, TRUE) + ".", A_ALWAYS, self, null, pc, TO_VICT);
       goto start;
    }
@@ -1733,11 +1791,42 @@ code
       log(pc.name + " bought a lock for " + room.nameidx + "@" + room.zoneidx + ".");
       goto start;
    }
-   if ((what != "cottage") and (what != "house"))
+   if ((what != "cottage") and (what != "house") and (what != "townhouse"))
    {
-      exec("say I build cottages and houses, and fit locks, " + pc.name + ": buy cottage, buy " +
-           "house, or buy lock.", self);
+      exec("say I build cottages and houses in Udgaard, houses and townhouses in Midgaard, and " +
+           "fit locks, " + pc.name + ": buy cottage, buy house, buy house on penny lane, buy " +
+           "townhouse on chestnut close, or buy lock.", self);
       goto start;
+   }
+
+   // which street: Hearth Lane in Udgaard, or one of Midgaard's, named by its word
+   arg := tolower(arg);
+   street := -1;
+   i := 0;
+   while (i < length(mkeys))
+   {
+      if (mkeys.[i] in arg)
+         street := i;
+      i := i + 1;
+   }
+   lane := lanes.[0];
+   kind := what;
+   if ((what == "townhouse") or (street >= 0) or ("midgaard" in arg))
+   {
+      if (what == "cottage")
+      {
+         exec("say I build no cottages in Midgaard, " + pc.name + ": houses and townhouses.", self);
+         goto start;
+      }
+      if (street < 0)
+      {
+         exec("say On which street, " + pc.name + "? Penny Lane, Beech Row or Chestnut Close: " +
+              "buy " + what + " on penny lane, say. 'list' shows what each costs.", self);
+         goto start;
+      }
+      lane := lanes.[1];
+      if (what == "house")
+         kind := "mhouse";
    }
 
    if (pc.level < HOUSE_MINLEVEL)
@@ -1745,16 +1834,6 @@ code
       exec("say Come back when you are level " + itoa(HOUSE_MINLEVEL) + ", " + pc.name + ".", self);
       goto start;
    }
-   i := 0;
-   while (i < length(homes))   // "and" evaluates both sides: no homes.[i] in the condition
-   {
-      if (pc.hometown == homes.[i])
-         break;
-      i := i + 1;
-   }
-   if (i >= length(homes))
-      i := 0;   // no lane for their hometown: the first lane
-   lane := lanes.[i];
    room := house_find(pc.name, "");
    if (room != null)
    {
@@ -1762,19 +1841,36 @@ code
       exec("say You have a house already, " + pc.name + ": " + where.descr + ".", self);
       goto start;
    }
-   room := house_find("", lane);
+   // the first free plot on that lane, and street
+   room := null;
+   k := 1;
+   r := findroom("plot1@" + lane);
+   while (r != null)
+   {
+      where := HOUSE_WHERE in r.extra;
+      if ((not (HOUSE_OWNER in r.extra)) and
+          ((street < 0) or (tolower(mstreets.[street]) in tolower(where.descr))))
+      {
+         room := r;
+         break;
+      }
+      k := k + 1;
+      r := findroom("plot" + itoa(k) + "@" + lane);
+   }
    if (room == null)
    {
-      exec("say Every plot is taken, " + pc.name + ". More will be laid out.", self);
+      exec("say Every plot there is taken, " + pc.name + ". More will be laid out.", self);
       goto start;
    }
-   price := house_price(pc, what);
+   price := house_price(pc, kind);
+   if (street >= 0)
+      price := house_dear(price, prestige.[street]);
    if (not transfermoney(pc, null, price))
    {
       exec("say A " + what + " costs you " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
       goto start;
    }
-   house_spend(pc, what);
+   house_spend(pc, kind);
    subextra(pc.extra, HOUSE_PAID);
    addextra(pc.extra, {HOUSE_PAID}, itoa(price));
 
