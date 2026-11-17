@@ -23,9 +23,8 @@
 // The house lanes: Udgaard's Hearth Lane (cottages and houses, with the timber and ore
 // discounts) and Midgaard's streets (houses and townhouses, dearer the finer the street).
 #define HOUSE_LANES    {"uhouses", "mhouses"}
-#define MHOUSE_STREETS {"Penny Lane", "Beech Row", "Chestnut Close"}
+#define MHOUSE_STREETS {"Penny Lane", "Beech Row", "Chestnut Close"}   // a buyer names one by its first word
 #define MHOUSE_PLACES  {"between Royal Avenue and the city park", "off Park Road", "off Royal Avenue"}
-#define MHOUSE_KEYS    {"penny", "beech", "chestnut"}   // the word a buyer names the street by
 #define MHOUSE_PRESTIGE {100, 120, 160}                 // each street's price, in % of the base
 #define HOUSE_MINLEVEL 10
 #define COTTAGE_PRICE  (5 * PLATINUM_MULT)
@@ -114,8 +113,9 @@ code
 dilend
 
 // The front room of the house pname owns, or, with pname "", the first free plot in the lane
-// zone (any lane when it is ""). Null when there is none.
-dilbegin unitptr house_find(pname : string, lane : string);
+// zone (any lane when it is ""), on the street with that word (HOUSE_STREET; any when "").
+// Null when there is none.
+dilbegin unitptr house_find(pname : string, lane : string, street : string);
 var
    lanes : stringlist;
    i : integer;
@@ -123,6 +123,7 @@ var
    r : unitptr;
    none : unitptr;
    own : extraptr;
+   st : extraptr;
 code
 {
    lanes := HOUSE_LANES;
@@ -136,7 +137,9 @@ code
          while (r != null)
          {
             own := HOUSE_OWNER in r.extra;
-            if ((pname == "") and (own == null))
+            st := HOUSE_STREET in r.extra;
+            if ((pname == "") and (own == null) and
+                ((street == "") or ((st != null) and (st.descr == street))))
                return (r);
             if ((pname != "") and (own != null) and (own.descr == pname))
                return (r);
@@ -993,6 +996,8 @@ var
    lane : string;
    back : integer;
    upper : integer;
+   bname : string;   // the back room and the upper floor, by name: unitptr variables are
+   uname : string;   // cleared when the program wakes
    d : integer;
    err : integer;
    pc : unitptr;
@@ -1017,9 +1022,15 @@ code
       if (r != null)
       {
          if (HOUSE_BACK in r.extra)
+         {
             back := d;
+            bname := r.nameidx;
+         }
          else if (HOUSE_UPPER in r.extra)
+         {
             upper := d;
+            uname := r.nameidx;
+         }
          else
             lane := r.nameidx + "@" + r.zoneidx;
       }
@@ -1055,7 +1066,10 @@ code
    addextra(self.extra, fl, "");
 
 :start:
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (activator.outside == self));
+   // in any of the house's rooms: who has no key after the door was locked is shown out
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((activator.outside == self) or
+                 ((activator.outside.zoneidx == self.zoneidx) and
+                  ((activator.outside.nameidx == bname) or (activator.outside.nameidx == uname)))));
    pc := activator;
    if (not (HOUSE_FURNISH in self.extra))
       house_furnish(self);   // someone came in without the door (a god's goto)
@@ -1073,13 +1087,13 @@ code
    }
 
    typ := HOUSE_TYPE in self.extra;
-   if ((back >= 0) and command(dirs.[back]) and (typ.descr == "cottage"))
+   if ((pc.outside == self) and (back >= 0) and command(dirs.[back]) and (typ.descr == "cottage"))
    {
       block;
       act("This cottage has only the one room.", A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
-   if ((upper >= 0) and command(dirs.[upper]) and (typ.descr != "townhouse"))
+   if ((pc.outside == self) and (upper >= 0) and command(dirs.[upper]) and (typ.descr != "townhouse"))
    {
       block;
       act("The stairs are closed off at the top: the upper floor is a townhouse's.",
@@ -1598,11 +1612,11 @@ dilend
 
 // The architect: sells cottages and houses on Hearth Lane in Udgaard, houses and townhouses on
 // Midgaard's streets at each street's price (list; buy cottage, buy house, buy house on penny
-// lane, buy townhouse on chestnut close), and door locks (buy lock). `sell house`, said twice,
-// takes a house back for half of what it cost; a god may `free plot3@uhouses`.
+// lane, buy townhouse on chestnut close), and door locks (buy lock). `sell house`, said twice
+// within a minute, takes a house back for half of what it cost; a god may `evict plot3`.
 dilbegin fnpri(FN_PRI_BLOCK) architect();
 external
-   unitptr house_find(pname : string, lane : string);
+   unitptr house_find(pname : string, lane : string, street : string);
    house_save(room : unitptr);
    integer house_counter(pc : unitptr, which : string);
    integer house_price(pc : unitptr, what : string);
@@ -1626,7 +1640,9 @@ var
    lanes : stringlist;
    mstreets : stringlist;
    mplaces : stringlist;
-   mkeys : stringlist;
+   skey : string;
+   word : string;
+   sellat : integer;   // when they were asked
    prestige : intlist;
    street : integer;
    kind : string;
@@ -1640,27 +1656,27 @@ code
    lanes := HOUSE_LANES;
    mstreets := MHOUSE_STREETS;
    mplaces := MHOUSE_PLACES;
-   mkeys := MHOUSE_KEYS;
    prestige := MHOUSE_PRESTIGE;
 :start:
    wait(SFB_CMD, (command("list") or command("buy") or
                   (command("sell") and (("house" in argument) or ("cottage" in argument))) or
-                  (command("free") and (activator.level >= IMMORTAL_LEVEL))) and
+                  (command("evict") and (activator.level >= IMMORTAL_LEVEL))) and
                  (activator.type == UNIT_ST_PC) and (activator.outside == self.outside));
    block;
    pc := activator;
    arg := argument;
 
-   if (command("free"))
+   if (command("evict"))
    {
-      // a god frees a plot whose owner is gone: "free plot3", or "free plot3@uhouses"
+      // a god frees a plot whose owner is gone: "evict plot3", or "evict plot10@mhouses"
+      // (not "free": that is how freeze begins)
       what := getword(arg);
       if (not ("@" in what))
          what := what + "@" + lanes.[0];
       room := findroom(what);
       if ((room == null) or (not (HOUSE_WHERE in room.extra)))
       {
-         exec("say Which plot, " + pc.name + "? free plot3, or free plot3@uhouses.", self);
+         exec("say Which plot, " + pc.name + "? evict plot3, or evict plot10@mhouses.", self);
          goto start;
       }
       where := HOUSE_OWNER in room.extra;
@@ -1679,7 +1695,7 @@ code
 
    if (command("sell"))
    {
-      room := house_find(pc.name, "");
+      room := house_find(pc.name, "", "");
       if (room == null)
       {
          exec("say You have no house to sell, " + pc.name + ".", self);
@@ -1689,9 +1705,10 @@ code
       price := 0;
       if (paid != null)
          price := atoi(paid.descr) / 2;
-      if (selling != pc.name)
+      if ((selling != pc.name) or (realtime - sellat > 60))
       {
-         selling := pc.name;
+         selling := pc.name;   // a minute to say it again
+         sellat := realtime;
          if (price > 0)
             what := "pay you " + moneystring(price, TRUE) + ", half of what it cost you";
          else
@@ -1759,7 +1776,7 @@ code
    what := getword(arg);
    if (what == "lock")
    {
-      room := house_find(pc.name, "");
+      room := house_find(pc.name, "", "");
       if (room == null)
       {
          exec("say A lock for which door, " + pc.name + "? You have no house yet.", self);
@@ -1799,16 +1816,20 @@ code
       goto start;
    }
 
-   // which street: Hearth Lane in Udgaard, or one of Midgaard's, named by its word
+   // which street: Hearth Lane in Udgaard, or one of Midgaard's, named by its first word
    arg := tolower(arg);
    street := -1;
    i := 0;
-   while (i < length(mkeys))
+   while (i < length(mstreets))
    {
-      if (mkeys.[i] in arg)
-         street := i;
+      word := mstreets.[i];
+      skey := tolower(getword(word));
+      if (skey in arg)
+         break;
       i := i + 1;
    }
+   if (i < length(mstreets))
+      street := i;
    lane := lanes.[0];
    kind := what;
    if ((what == "townhouse") or (street >= 0) or ("midgaard" in arg))
@@ -1828,35 +1849,38 @@ code
       if (what == "house")
          kind := "mhouse";
    }
+   else
+   {
+      word := arg;
+      if ((getword(word) != "") and (not ("udgaard" in arg)) and (not ("hearth" in arg)))
+      {
+         // a place he doesn't know: ask, rather than build in Udgaard
+         exec("say Where, " + pc.name + "? On Hearth Lane in Udgaard (buy " + what + " in " +
+              "udgaard), or in Midgaard on Penny Lane, Beech Row or Chestnut Close (buy house " +
+              "on penny lane). 'list' shows what each costs.", self);
+         goto start;
+      }
+   }
 
    if (pc.level < HOUSE_MINLEVEL)
    {
       exec("say Come back when you are level " + itoa(HOUSE_MINLEVEL) + ", " + pc.name + ".", self);
       goto start;
    }
-   room := house_find(pc.name, "");
+   room := house_find(pc.name, "", "");
    if (room != null)
    {
       where := HOUSE_WHERE in room.extra;
       exec("say You have a house already, " + pc.name + ": " + where.descr + ".", self);
       goto start;
    }
-   // the first free plot on that lane, and street
-   room := null;
-   k := 1;
-   r := findroom("plot1@" + lane);
-   while (r != null)
+   skey := "";
+   if (street >= 0)
    {
-      where := HOUSE_WHERE in r.extra;
-      if ((not (HOUSE_OWNER in r.extra)) and
-          ((street < 0) or (tolower(mstreets.[street]) in tolower(where.descr))))
-      {
-         room := r;
-         break;
-      }
-      k := k + 1;
-      r := findroom("plot" + itoa(k) + "@" + lane);
+      word := mstreets.[street];
+      skey := tolower(getword(word));
    }
+   room := house_find("", lane, skey);
    if (room == null)
    {
       exec("say Every plot there is taken, " + pc.name + ". More will be laid out.", self);
@@ -1895,7 +1919,7 @@ dilend
 // it carried into the buyer's house. The prices are the objects' costs.
 dilbegin fnpri(FN_PRI_BLOCK) furniture();
 external
-   unitptr house_find(pname : string, lane : string);
+   unitptr house_find(pname : string, lane : string, street : string);
    house_furnish(room : unitptr);
    string house_file(room : unitptr);
 var
@@ -2011,7 +2035,7 @@ code
    }
    i := which.[n];
 
-   room := house_find(pc.name, "");
+   room := house_find(pc.name, "", "");
    if (room == null)
    {
       exec("say And where would I carry it, " + pc.name + "? The architect in the Town Hall " +
