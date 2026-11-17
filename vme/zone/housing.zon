@@ -1,0 +1,773 @@
+#include <macros.h>
+#include <housing.h>
+
+// Player houses: what every house lane shares. A lane is a zone of its own (uhouses: Hearth
+// Lane in Udgaard), with rooms only:
+//   - each lane room runs house_gate(): a door from it into a house lets in only the owner,
+//     the friends they invited and gods;
+//   - each house's front room has the extra HOUSE_WHERE (where its door is, for the architect),
+//     `hit HOUSE_HP`, and runs house_room(); a back room, open only in a two-room house, has
+//     the extra HOUSE_BACK. The front rooms are called plot1, plot2 ... in a row.
+// The architect in Midgaard's Town Hall sells the houses; Calvin the carpenter in Midgaard
+// (furniture()) sells beds and chests and has them carried in.
+//
+// A house's state lives on its front room and in the file <lane zone>.<room> in the DIL file
+// directory (uhouses.plot1): the owner, the type, the condition (the room's hit points) and the
+// invited friends, a line each. Each piece of furniture is a file of its own (uhouses.plot1.bed,
+// uhouses.plot1.chest1 ...), brought in the first time someone enters after a boot; a chest
+// saves itself, with what is in it, after things are put in or taken out.
+
+// The house lanes, the hometown whose folk may buy there, and how the architect names it
+#define HOUSE_LANES    {"uhouses"}
+#define HOUSE_HOMES    {"temple@udgaard"}
+#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market, for the folk of Udgaard"}
+#define HOUSE_MINLEVEL 10
+#define COTTAGE_PRICE  (5 * PLATINUM_MULT)
+#define HOUSE_PRICE    (10 * PLATINUM_MULT)
+#define HOUSE_CHESTS   3
+#define HOUSE_FRIENDS  10
+#define HOUSE_DIRS     {"north", "east", "south", "west", "up", "down", \
+                        "northeast", "northwest", "southeast", "southwest"}
+
+%zone housing
+title "Housing"
+lifespan 30
+reset RESET_ANYHOW
+creators {"papi"}
+notes "Player houses: the DIL, furniture and architect every house lane (uhouses) shares."
+
+%dil
+
+// The file a house's state is kept in: uhouses.plot1
+dilbegin string house_file(room : unitptr);
+code
+{
+   return (room.zoneidx + "." + room.nameidx);
+}
+dilend
+
+// Writes the house's state to its file, or removes the file when nobody owns it.
+dilbegin house_save(room : unitptr);
+external
+   string house_file(room : unitptr);
+var
+   hfile : string;
+   buf : string;
+   own : extraptr;
+   typ : extraptr;
+   frd : extraptr;
+   i : integer;
+   err : integer;
+code
+{
+   hfile := house_file(room);
+   err := delstr(hfile);   // savestr "w" doesn't shorten the file
+   own := HOUSE_OWNER in room.extra;
+   if (own == null)
+      return;
+   typ := HOUSE_TYPE in room.extra;
+   buf := own.descr + "\n" + typ.descr + "\n" + itoa(room.hp) + "\n";
+   frd := HOUSE_FRIEND in room.extra;
+   i := 1;
+   while (i < length(frd.names))
+   {
+      buf := buf + right(frd.names.[i], length(frd.names.[i]) - 1) + " ";
+      i := i + 1;
+   }
+   err := savestr(hfile, buf + "\n", "w");
+   return;
+}
+dilend
+
+// The front room of the house pname owns, or, with pname "", the first free plot in the lane
+// zone (any lane when it is ""). Null when there is none.
+dilbegin unitptr house_find(pname : string, lane : string);
+var
+   lanes : stringlist;
+   i : integer;
+   n : integer;
+   r : unitptr;
+   none : unitptr;
+   own : extraptr;
+code
+{
+   lanes := HOUSE_LANES;
+   i := 0;
+   while (i < length(lanes))
+   {
+      if ((lane == "") or (lane == lanes.[i]))
+      {
+         n := 1;
+         r := findroom("plot1@" + lanes.[i]);
+         while (r != null)
+         {
+            own := HOUSE_OWNER in r.extra;
+            if ((pname == "") and (own == null))
+               return (r);
+            if ((pname != "") and (own != null) and (own.descr == pname))
+               return (r);
+            n := n + 1;
+            r := findroom("plot" + itoa(n) + "@" + lanes.[i]);
+         }
+      }
+      i := i + 1;
+   }
+   return (none);
+}
+dilend
+
+// TRUE when pname owns the house or was invited.
+dilbegin integer house_allowed(room : unitptr, pname : string);
+var
+   own : extraptr;
+   frd : extraptr;
+code
+{
+   own := HOUSE_OWNER in room.extra;
+   if (own == null)
+      return (FALSE);
+   if (own.descr == pname)
+      return (TRUE);
+   frd := HOUSE_FRIEND in room.extra;
+   if (("$" + pname) in frd.names)
+      return (TRUE);
+   return (FALSE);
+}
+dilend
+
+// Brings the house's saved furniture in, once after each boot.
+dilbegin house_furnish(room : unitptr);
+external
+   string house_file(room : unitptr);
+var
+   base : string;
+   u : unitptr;
+   i : integer;
+code
+{
+   if (HOUSE_FURNISH in room.extra)
+      return;
+   addextra(room.extra, {HOUSE_FURNISH}, "");
+   base := house_file(room);
+   u := restore(base + ".bed", null);
+   if (u != null)
+      link(u, room);
+   i := 1;
+   while (i <= HOUSE_CHESTS)
+   {
+      u := restore(base + ".chest" + itoa(i), null);
+      if (u != null)
+         link(u, room);
+      i := i + 1;
+   }
+   return;
+}
+dilend
+
+// On a lane room: a door from it into a house (a room with HOUSE_WHERE) lets in only the
+// owner, the friends they invited and gods. Monsters are kept out by UNIT_FL_NO_MOB.
+dilbegin fnpri(FN_PRI_BLOCK) house_gate();
+external
+   integer house_allowed(room : unitptr, pname : string);
+   house_furnish(room : unitptr);
+var
+   pc : unitptr;
+   room : unitptr;
+   own : extraptr;
+   dirs : stringlist;
+   d : integer;
+   ok : integer;
+code
+{
+   dirs := HOUSE_DIRS;
+:start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+   pc := activator;
+   d := 0;
+   while ((d <= MAX_EXIT) and (not command(dirs.[d])))
+      d := d + 1;
+   if (d > MAX_EXIT)
+      goto start;
+   room := self.exit_to[d];
+   if ((room == null) or (not (HOUSE_WHERE in room.extra)))
+      goto start;
+   if (pc.level >= IMMORTAL_LEVEL)
+   {
+      house_furnish(room);
+      goto start;
+   }
+   own := HOUSE_OWNER in room.extra;
+   if (own == null)
+   {
+      block;
+      act("The door is shut, and a sign on it says: 'For sale. Ask the architect in the Hall " +
+          "of the Citizens, in Midgaard's Town Hall.'", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   ok := house_allowed(room, pc.name);
+   if (ok)
+   {
+      house_furnish(room);
+      goto start;
+   }
+   block;
+   act("The door is locked. This is " + own.descr + "'s house.", A_ALWAYS, pc, null, null, TO_CHAR);
+   goto start;
+}
+dilend
+
+// On a house's front room: reads the house's state at boot; its hit points are the house's
+// condition. Anyone the owner didn't invite is shown out to the lane. The owner's commands
+// here: house, invite <name>, uninvite <name>. The back room (the exit to a HOUSE_BACK room)
+// is only open in a two-room house.
+dilbegin fnpri(FN_PRI_BLOCK) house_room();
+external
+   integer house_allowed(room : unitptr, pname : string);
+   house_save(room : unitptr);
+   house_furnish(room : unitptr);
+   string house_file(room : unitptr);
+var
+   buf : string;
+   sl : stringlist;
+   fl : stringlist;
+   dirs : stringlist;
+   lane : string;
+   back : integer;
+   d : integer;
+   err : integer;
+   pc : unitptr;
+   r : unitptr;
+   own : extraptr;
+   typ : extraptr;
+   frd : extraptr;
+   ok : integer;
+   arg : string;
+   who : string;
+code
+{
+   // the lane and the back room, from the exits
+   dirs := HOUSE_DIRS;
+   back := -1;
+   d := 0;
+   while (d <= MAX_EXIT)
+   {
+      r := self.exit_to[d];
+      if (r != null)
+      {
+         if (HOUSE_BACK in r.extra)
+            back := d;
+         else
+            lane := r.nameidx + "@" + r.zoneidx;
+      }
+      d := d + 1;
+   }
+
+   // the state saved by house_save
+   self.hp := self.max_hp;
+   fl := {HOUSE_FRIEND};
+   err := loadstr(house_file(self), buf);
+   if (err == FILE_LOADED)
+   {
+      sl := split(buf, "\n");
+      if ((length(sl) >= 3) and (sl.[0] != ""))
+      {
+         addextra(self.extra, {HOUSE_OWNER}, sl.[0]);
+         addextra(self.extra, {HOUSE_TYPE}, sl.[1]);
+         self.hp := atoi(sl.[2]);
+         if (length(sl) > 3)
+         {
+            sl := split(sl.[3], " ");
+            while (length(sl) > 0)
+            {
+               if (sl.[0] != "")
+                  addstring(fl, "$" + sl.[0]);
+               remove(sl, 0);
+            }
+         }
+      }
+   }
+   addextra(self.extra, fl, "");
+
+:start:
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and (activator.outside == self));
+   pc := activator;
+   if (not (HOUSE_FURNISH in self.extra))
+      house_furnish(self);   // someone came in without the door (a god's goto)
+   if (pc.level >= IMMORTAL_LEVEL)
+      goto start;
+   ok := house_allowed(self, pc.name);
+   if (not ok)
+   {
+      block;
+      act("This isn't your house, and you are shown the door.", A_ALWAYS, pc, null, null, TO_CHAR);
+      act("$1n is shown the door.", A_HIDEINV, pc, null, null, TO_ROOM);
+      link(pc, findroom(lane));
+      exec("look", pc);
+      goto start;
+   }
+
+   typ := HOUSE_TYPE in self.extra;
+   if ((back >= 0) and command(dirs.[back]) and (typ.descr != "house"))
+   {
+      block;
+      act("This cottage has only the one room.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+
+   own := HOUSE_OWNER in self.extra;
+   frd := HOUSE_FRIEND in self.extra;
+   if (command("house"))
+   {
+      block;
+      act("This " + typ.descr + " belongs to " + own.descr + ". Its condition is " +
+          itoa(self.hp) + " of " + itoa(self.max_hp) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      if (length(frd.names) <= 1)
+         act("Nobody else is invited.", A_ALWAYS, pc, null, null, TO_CHAR);
+      else
+      {
+         buf := "";
+         d := 1;
+         while (d < length(frd.names))
+         {
+            buf := buf + " " + right(frd.names.[d], length(frd.names.[d]) - 1);
+            d := d + 1;
+         }
+         act("Invited:" + buf + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      }
+      if (pc.name == own.descr)
+         act("You can invite a friend in (invite &lt;name&gt;) and take it back " +
+             "(uninvite &lt;name&gt;).", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+
+   if ((not command("invite")) and (not command("uninvite")))
+      goto start;
+   block;
+   if (pc.name != own.descr)
+   {
+      act("Only " + own.descr + " can invite people here.", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   arg := argument;
+   who := getword(arg);
+   if (who == "")
+   {
+      act("Whom?", A_ALWAYS, pc, null, null, TO_CHAR);
+      goto start;
+   }
+   who := toupper(left(who, 1)) + tolower(right(who, length(who) - 1));
+
+   if (command("invite"))
+   {
+      if (not isplayer(who))
+      {
+         act("There is nobody called " + who + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+         goto start;
+      }
+      if ((who == own.descr) or (("$" + who) in frd.names))
+      {
+         act(who + " may come in already.", A_ALWAYS, pc, null, null, TO_CHAR);
+         goto start;
+      }
+      if (length(frd.names) > HOUSE_FRIENDS)
+      {
+         act("You have invited " + itoa(HOUSE_FRIENDS) + " people already.", A_ALWAYS, pc, null, null, TO_CHAR);
+         goto start;
+      }
+      addstring(frd.names, "$" + who);
+      act(who + " may now come into your house.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   else
+   {
+      if (not (("$" + who) in frd.names))
+      {
+         act(who + " isn't invited.", A_ALWAYS, pc, null, null, TO_CHAR);
+         goto start;
+      }
+      substring(frd.names, "$" + who);
+      act(who + " may no longer come in.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   house_save(self);
+   goto start;
+}
+dilend
+
+// How many things are in u, counting what is inside them (a bag of 30 things is 31).
+dilbegin integer house_count(u : unitptr);
+var
+   c : unitptr;
+   n : integer;
+   m : integer;
+code
+{
+   n := 0;
+   c := u.inside;
+   while (c != null)
+   {
+      m := house_count(c);
+      n := n + 1 + m;
+      c := c.next;
+   }
+   return (n);
+}
+dilend
+
+// On a chest: holds at most HOUSE_HOLDS things (counting what is inside bags), and saves
+// itself, with what is in it, a moment after things are put in or taken out (one save for a
+// whole "put all" or "get all"). What is put in beyond that goes back to the one who put it in;
+// if they have left, it stays in the chest. The limit is an extra, not an argument: a restored
+// chest whose template has changed gets its variables back as 0.
+dilbegin house_chest();
+external
+   integer house_count(u : unitptr);
+var
+   fl : extraptr;
+   u : unitptr;
+   pc : unitptr;
+   over : integer;
+   maxitems : integer;
+code
+{
+   heartbeat := PULSE_SEC;
+:start:
+   wait(SFB_DONE, (command("put") and (target == self)) or (command("get") and (medium == self)));
+   pc := activator;
+   secure(pc, save);
+   pause;   // the rest of a "put all" or "get all" comes in the meantime
+
+:save:
+   fl := HOUSE_HOLDS in self.extra;
+   maxitems := 0;
+   if (fl != null)
+      maxitems := atoi(fl.descr);
+   over := FALSE;
+   while ((pc != null) and (maxitems > 0) and (self.inside != null) and (house_count(self) > maxitems))
+   {
+      u := self.inside;   // the last thing put in
+      link(u, pc);
+      over := TRUE;
+   }
+   if (over)
+      act("There is no more room in $2n: it holds " + itoa(maxitems) + " things.",
+          A_ALWAYS, pc, self, null, TO_CHAR);
+   unsecure(pc);
+   fl := HOUSE_FILE in self.extra;
+   if (fl != null)
+      store(self, fl.descr, TRUE);
+   goto start;
+}
+dilend
+
+// The architect: sells cottages and houses (list, buy cottage, buy house), on the lane for
+// the buyer's hometown (HOUSE_LANES, HOUSE_HOMES).
+dilbegin fnpri(FN_PRI_BLOCK) architect();
+external
+   unitptr house_find(pname : string, lane : string);
+   house_save(room : unitptr);
+var
+   pc : unitptr;
+   room : unitptr;
+   arg : string;
+   what : string;
+   lane : string;
+   price : integer;
+   where : extraptr;
+   lanes : stringlist;
+   homes : stringlist;
+   streets : stringlist;
+   i : integer;
+code
+{
+   lanes := HOUSE_LANES;
+   homes := HOUSE_HOMES;
+   streets := HOUSE_STREETS;
+:start:
+   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
+                 (activator.outside == self.outside));
+   block;
+   pc := activator;
+   arg := argument;
+
+   if (command("list"))
+   {
+      arg := "";
+      i := 0;
+      while (i < length(streets))
+      {
+         arg := arg + "   " + streets.[i] + "<br/>";
+         i := i + 1;
+      }
+      act("$1n unrolls his plans:<br/>" + arg +
+          "   a cottage (one room)        " + moneystring(COTTAGE_PRICE, TRUE) + "<br/>" +
+          "   a house (two rooms)         " + moneystring(HOUSE_PRICE, TRUE) + "<br/>" +
+          "'buy cottage' or 'buy house': on the lane of your hometown.",
+          A_ALWAYS, self, null, pc, TO_VICT);
+      goto start;
+   }
+
+   what := getword(arg);
+   if (what == "cottage")
+      price := COTTAGE_PRICE;
+   else if (what == "house")
+      price := HOUSE_PRICE;
+   else
+   {
+      exec("say I build cottages and houses, " + pc.name + ": buy cottage, or buy house.", self);
+      goto start;
+   }
+
+   if (pc.level < HOUSE_MINLEVEL)
+   {
+      exec("say Come back when you are level " + itoa(HOUSE_MINLEVEL) + ", " + pc.name + ".", self);
+      goto start;
+   }
+   i := 0;
+   while ((i < length(homes)) and (pc.hometown != homes.[i]))
+      i := i + 1;
+   if (i >= length(homes))
+   {
+      exec("say I have no lane for the folk of your hometown yet, " + pc.name + ".", self);
+      goto start;
+   }
+   lane := lanes.[i];
+   room := house_find(pc.name, "");
+   if (room != null)
+   {
+      where := HOUSE_WHERE in room.extra;
+      exec("say You have a house already, " + pc.name + ": " + where.descr + ".", self);
+      goto start;
+   }
+   room := house_find("", lane);
+   if (room == null)
+   {
+      exec("say Every plot is taken, " + pc.name + ". More will be laid out.", self);
+      goto start;
+   }
+   if (not transfermoney(pc, null, price))
+   {
+      exec("say A " + what + " costs " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
+      goto start;
+   }
+
+   addextra(room.extra, {HOUSE_OWNER}, pc.name);
+   addextra(room.extra, {HOUSE_TYPE}, what);
+   subextra(room.extra, HOUSE_FRIEND);
+   addextra(room.extra, {HOUSE_FRIEND}, "");
+   room.hp := room.max_hp;
+   house_save(room);
+   where := HOUSE_WHERE in room.extra;
+   act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
+   exec("say Done, " + pc.name + ": your " + what + " is " + where.descr + ". The door knows you.", self);
+   exec("say Calvin the carpenter, on Colosseum Square, makes beds and chests and has them " +
+        "carried to your house.", self);
+   log(pc.name + " bought a " + what + ": " + room.nameidx + "@" + room.zoneidx + ".");
+   goto start;
+}
+dilend
+
+// Calvin the carpenter: sells furniture (list, buy bed, buy small/medium/large chest) and has
+// it carried into the buyer's house. The prices are the objects' costs.
+dilbegin fnpri(FN_PRI_BLOCK) furniture();
+external
+   unitptr house_find(pname : string, lane : string);
+   house_furnish(room : unitptr);
+   string house_file(room : unitptr);
+var
+   pc : unitptr;
+   room : unitptr;
+   u : unitptr;
+   fl : extraptr;
+   arg : string;
+   hfile : string;
+   menu : string;
+   words : stringlist;
+   which : intlist;
+   syms : stringlist;
+   i : integer;
+   n : integer;
+   price : integer;
+code
+{
+   syms := {"house_bed", "chest_small", "chest_medium", "chest_large"};
+   words := {"bed", "small", "medium", "cabinet", "large", "crate"};   // what a buyer may say,
+   which := {0, 1, 2, 2, 3, 3};                                        // and which of syms it is
+
+   // the list, from the objects' titles and costs
+   menu := "";
+   i := 0;
+   while (i < length(syms))
+   {
+      u := load(syms.[i] + "@housing");
+      menu := menu + "   " + u.title;
+      fl := HOUSE_HOLDS in u.extra;
+      if (fl != null)
+         menu := menu + " (holds " + fl.descr + " things)";
+      menu := menu + ": " + moneystring(u.cost, TRUE) + "<br/>";
+      destroy(u);
+      i := i + 1;
+   }
+:start:
+   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
+                 (activator.outside == self.outside));
+   block;
+   pc := activator;
+   arg := argument;
+
+   if (command("list"))
+   {
+      act("$1n points at his work:<br/>" + menu + "He has it carried to your house: 'buy bed', " +
+          "'buy small chest', 'buy medium chest' or 'buy large chest'.", A_ALWAYS, self, null, pc, TO_VICT);
+      goto start;
+   }
+
+   n := 0;
+   while ((n < length(words)) and (not (words.[n] in arg)))
+      n := n + 1;
+   if (n >= length(words))
+   {
+      exec("say I make beds and chests, " + pc.name + ". Have a look: 'list'.", self);
+      goto start;
+   }
+   i := which.[n];
+
+   room := house_find(pc.name, "");
+   if (room == null)
+   {
+      exec("say And where would I carry it, " + pc.name + "? The architect in the Town Hall " +
+           "sells houses.", self);
+      goto start;
+   }
+   house_furnish(room);
+
+   // a bed and up to HOUSE_CHESTS chests, each saved in a file of its own
+   if (i == 0)
+   {
+      if (findsymbolic(room, "house_bed@housing", FIND_UNIT_INVEN) != null)
+      {
+         exec("say You have a bed already, " + pc.name + ".", self);
+         goto start;
+      }
+      hfile := house_file(room) + ".bed";
+   }
+   else
+   {
+      n := 1;
+      hfile := "";
+      while ((n <= HOUSE_CHESTS) and (hfile == ""))
+      {
+         hfile := house_file(room) + ".chest" + itoa(n);
+         u := room.inside;
+         while (u != null)
+         {
+            fl := HOUSE_FILE in u.extra;
+            if ((fl != null) and (fl.descr == hfile))
+            {
+               hfile := "";
+               break;
+            }
+            u := u.next;
+         }
+         n := n + 1;
+      }
+      if (hfile == "")
+      {
+         exec("say Your house has room for " + itoa(HOUSE_CHESTS) + " chests, " + pc.name + ".", self);
+         goto start;
+      }
+   }
+
+   u := load(syms.[i] + "@housing");
+   price := u.cost;
+   if (not transfermoney(pc, null, price))
+   {
+      exec("say " + u.title + " costs " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
+      destroy(u);
+      goto start;
+   }
+   addextra(u.extra, {HOUSE_FILE}, hfile);
+   link(u, room);
+   store(u, hfile, TRUE);
+   act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
+   exec("say It'll be in your house before you get there, " + pc.name + ".", self);
+   goto start;
+}
+dilend
+
+
+%objects
+
+                                 house_bed
+names {"bed"}
+title "a bed"
+descr "A wooden bed with a thick woollen blanket stands against the wall."
+extra {}
+"A sturdy bed of pine, made by Calvin the carpenter, with a straw mattress and
+a thick woollen blanket."
+weight 200
+cost 2 GOLD_PIECE
+end
+
+#define HOUSE_CHEST(ITEMS) \
+manipulate {MANIPULATE_ENTER} \
+CONTAINER_DEF(2000) \
+open {EX_OPEN_CLOSE, EX_CLOSED} \
+extra {HOUSE_HOLDS} ITEMS \
+dilcopy house_chest@housing();
+
+                                 chest_small
+names {"small chest", "chest"}
+title "a small chest"
+descr "A small wooden chest stands at the foot of the bed."
+extra {}
+"A plain chest of six pine boards, made by Calvin the carpenter."
+HOUSE_CHEST("10")
+weight 40
+cost 1 GOLD_PIECE
+end
+
+                                 chest_medium
+names {"medium chest", "tall cabinet", "cabinet", "chest"}
+title "a cabinet"
+descr "A tall wooden cabinet stands against the wall."
+extra {}
+"A cabinet of oak with two doors and three shelves, made by Calvin the carpenter."
+HOUSE_CHEST("15")
+weight 80
+cost 3 GOLD_PIECE
+end
+
+                                 chest_large
+names {"large chest", "large crate", "crate", "chest"}
+title "a large crate"
+descr "A large iron-bound crate stands in a corner."
+extra {}
+"A crate of heavy planks bound with iron, big enough for a whole outfit, made by
+Calvin the carpenter."
+HOUSE_CHEST("25")
+weight 120
+cost 6 GOLD_PIECE
+end
+
+
+%mobiles
+
+                                 architect
+names {"architect", "Haldor"}
+title "Haldor the architect"
+descr "Haldor the architect is bent over his plans at a table."
+extra {}
+"A lean, grey-bearded man with ink on his fingers. Rolls of plans are stacked
+on the table beside him. He builds houses: 'list' shows what he offers."
+romflags {CHAR_PROTECTED}
+M_AVG_HUMAN(20, SEX_MALE)
+alignment 500
+money 5 IRON_PIECE
+dilcopy architect@housing();
+end
+
+
+%reset
+
+load architect into th_citizen@midgaard max 1
+
+%end

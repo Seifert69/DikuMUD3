@@ -5883,13 +5883,10 @@ north to col_sq7;
 extra {"sign"}
 "It says :-<pre>
 
-                  OUT OF ORDER
+        Beds and chests for your house on Hearth Lane.
 
-    Use `list' to see what is in store,
-        `buy &lt;item&gt;' to buy an item,
-        `sell &lt;item&gt;' to sell an item,
-        `request &lt;item&gt;' to ask the price of an item and
-        `value &lt;item&gt;' to make the carpenter evaluate an item.</pre>"
+    Use `list' to see what Calvin makes and
+        `buy &lt;item&gt;' to have it carried to your house.</pre>"
 ALWAYS_LIGHT
 end
 
@@ -6816,10 +6813,12 @@ end
 names {"carpenter", "Calvin"}
 title "Calvin"
 descr
-"Calvin the Carpenter is here, planing boards for a coffin."
+"Calvin the Carpenter is here, planing boards for a bed."
 extra {}
-"He seems quite busy."
+"He seems quite busy. He makes beds and chests for the houses on Hearth Lane in
+Udgaard: 'list' shows them."
 M_HUMAN_WARRIOR_SWORD(15, SEX_MALE)
+dilcopy furniture@housing();
 
 end
 

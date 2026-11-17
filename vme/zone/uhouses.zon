@@ -1,0 +1,187 @@
+#include <macros.h>
+#include <housing.h>
+
+// Hearth Lane: player houses in Udgaard, west of the market. The rooms only; the houses' DIL,
+// furniture and architect are in housing.zon, which says how a lane is built.
+
+%zone uhouses
+title "Hearth Lane@Mainland"
+lifespan 60
+reset RESET_NOT
+creators {"papi"}
+notes "Player houses in Udgaard (see housing.zon), sold by the architect in Midgaard's Town Hall."
+
+%rooms
+
+                                 lane1
+
+title "Hearth Lane"
+descr
+"   A narrow lane of packed earth leads west from the Udgaard market, between
+the backs of the shops. The noise of the market is behind you to the east; to
+the west the lane opens up, with houses on both sides."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_CITY
+gmap(382,679)
+east to market@udgaard;
+west to lane2;
+ALWAYS_LIGHT
+end
+
+#define HOUSE_DOOR descr "A stout wooden door leads into a house."
+
+                                 lane2
+
+title "Hearth Lane"
+descr
+"   Small houses of timber and stone stand on both sides of the lane, each
+behind a stout wooden door. Smoke rises from a chimney or two. The lane goes
+on to the west, and east toward the market."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_CITY
+gmap(340,679)
+east to lane1;
+west to lane3;
+north to plot1 HOUSE_DOOR;
+south to plot2 HOUSE_DOOR;
+dilcopy house_gate@housing();
+ALWAYS_LIGHT
+end
+
+                                 lane3
+
+title "Hearth Lane"
+descr
+"   The lane runs between two rows of houses, each behind a stout wooden door.
+Someone has planted a few flowers by a doorstep. The lane goes on to the
+west, and east toward the market."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_CITY
+gmap(298,679)
+east to lane2;
+west to lane4;
+north to plot3 HOUSE_DOOR;
+south to plot4 HOUSE_DOOR;
+dilcopy house_gate@housing();
+ALWAYS_LIGHT
+end
+
+                                 lane4
+
+title "The end of Hearth Lane"
+descr
+"   The lane ends at a wooden fence, with a house on either side of it. Beyond
+the fence, stakes in the grass mark out plots where more houses may stand one
+day. The lane leads back east toward the market."
+flags {UNIT_FL_NO_WEATHER}
+movement SECT_CITY
+gmap(256,679)
+east to lane3;
+north to plot5 HOUSE_DOOR;
+south to plot6 HOUSE_DOOR;
+dilcopy house_gate@housing();
+ALWAYS_LIGHT
+end
+
+// A house's front room; WHERE says where its door is (the architect tells the buyer).
+#define HOUSE_FRONT(WHERE) \
+title "A house on Hearth Lane" \
+descr \
+"   A snug room with a timber floor and whitewashed walls. A small window looks \
+out on Hearth Lane, and the hearth in the corner is ready for a fire." \
+extra {HOUSE_WHERE} WHERE \
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB} \
+movement SECT_INSIDE \
+hit HOUSE_HP \
+dilcopy house_room@housing(); \
+ALWAYS_LIGHT
+
+#define HOUSE_BACKROOM \
+title "The back room" \
+descr \
+"   A quiet room at the back of the house, with a narrow window onto a patch \
+of garden." \
+extra {HOUSE_BACK} "" \
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB} \
+movement SECT_INSIDE \
+ALWAYS_LIGHT
+
+                                 plot1
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the first pair of houses")
+gmap(340,637)
+south to lane2;
+north to plot1b;
+end
+
+                                 plot1b
+HOUSE_BACKROOM
+gmap(340,595)
+south to plot1;
+end
+
+                                 plot2
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the first pair of houses")
+gmap(340,721)
+north to lane2;
+south to plot2b;
+end
+
+                                 plot2b
+HOUSE_BACKROOM
+gmap(340,763)
+north to plot2;
+end
+
+                                 plot3
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the second pair of houses")
+gmap(298,637)
+south to lane3;
+north to plot3b;
+end
+
+                                 plot3b
+HOUSE_BACKROOM
+gmap(298,595)
+south to plot3;
+end
+
+                                 plot4
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the second pair of houses")
+gmap(298,721)
+north to lane3;
+south to plot4b;
+end
+
+                                 plot4b
+HOUSE_BACKROOM
+gmap(298,763)
+north to plot4;
+end
+
+                                 plot5
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the last pair of houses")
+gmap(256,637)
+south to lane4;
+north to plot5b;
+end
+
+                                 plot5b
+HOUSE_BACKROOM
+gmap(256,595)
+south to plot5;
+end
+
+                                 plot6
+HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the last pair of houses")
+gmap(256,721)
+north to lane4;
+south to plot6b;
+end
+
+                                 plot6b
+HOUSE_BACKROOM
+gmap(256,763)
+north to plot6;
+end
+
+%end
