@@ -12,7 +12,8 @@ endurance, and at low levels it gives a little experience.
 </p><p>Sam the blacksmith in Midgaard sells miner's picks (<a cmd='#'>buy pick</a>) and takes 
 the ore: give it to him, drop it by him, or unload a cart by him. Each 
 load counts for whoever mined it, whoever brings it in, and the 
-architect in Midgaard takes it off the price of a lock (<a cmd='#'>Help Houses</a>). 
+architect in Midgaard takes it off the price of a lock or a house 
+(<a cmd='#'>Help Houses</a>). 
 The first load you hand in solves the quest Iron for a Lock.
 </p><p><a cmd='#'>mine for &lt;name&gt;</a> mines for a friend: that load counts for them. Ore is 
 only taken while whoever mined it is in the game.

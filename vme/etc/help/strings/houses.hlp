@@ -10,10 +10,12 @@ in Midgaard's Town Hall, sells them: type <a cmd='#'>list</a> there.
  Udgaard. You can own one house.
 </pre>
 <ul><li>Timber and iron make it much cheaper: logs you fell (<a cmd='#'>Help Fell</a>) and</li></ul>
-<pre> hand to John the Lumberjack take up to 90% off a house, and iron ore 
- you mine (<a cmd='#'>Help Mine</a>) for Sam the blacksmith up to 90% off a lock. 
- <a cmd='#'>list</a> at the architect shows what you have handed in and what that 
- makes your prices.
+<pre> hand to John the Lumberjack, and iron ore you mine (<a cmd='#'>Help Mine</a>) for 
+ Sam the blacksmith. 10 logs take 90% off a cottage; 20 logs and 5 loads 
+ of ore 90% off a house; 5 loads of ore 90% off a lock. Each piece takes 
+ its share, so every one counts, and what a purchase uses is spent. 
+ John and Sam tell you your new prices, and <a cmd='#'>list</a> at the architect 
+ shows them too.
 </pre>
 <p><b>Your door.</b> A new house is open to anyone: having one is something 
 in itself. Buy a lock from the architect (<a cmd='#'>buy lock</a>) to keep others 
