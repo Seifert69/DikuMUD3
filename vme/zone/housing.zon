@@ -28,8 +28,8 @@
 #define HOUSE_PRICE    (10 * PLATINUM_MULT)
 #define LOCK_PRICE     (3 * PLATINUM_MULT)
 // Building materials (handed in, counted on the player): this many cover HOUSE_DISCOUNT percent
-#define COTTAGE_LOGS   10
-#define HOUSE_LOGS_N   20
+#define LOGS_COTTAGE   10
+#define LOGS_HOUSE   20
 #define LOCK_ORE       5
 #define HOUSE_DISCOUNT 90
 #define TIMBER_QUEST   "Timber for a House"
@@ -37,6 +37,8 @@
 #define MATERIAL_XP    1000
 #define FELL_AGAIN     3600   // seconds before a forest room has trees worth felling again
 #define MINE_AGAIN     600    // seconds before a vein gives ore again
+#define PICK           "pick@hobgob"   // what Sam sells: the hobgoblin miners' pick
+#define PICK_PRICE     (3 * SILVER_MULT)
 #define HOUSE_CHESTS   3
 #define HOUSE_FRIENDS  10
 #define HOUSE_DIRS     {"north", "east", "south", "west", "up", "down", \
@@ -177,12 +179,15 @@ code
 dilend
 
 // fell: in a forest, with an axe wielded, fell a tree for a log (one per room per FELL_AGAIN).
+// An axe is a hand or battle axe called an axe: cleavers and kopeshes are hand axes too.
 dilbegin do_fell(arg : string);
 var
    room : unitptr;
    w : unitptr;
    u : unitptr;
    ex : extraptr;
+   place : string;
+   tool : string;
 code
 {
    room := self.outside;
@@ -197,7 +202,8 @@ code
       quit;
    }
    w := equipment(self, WEAR_WIELD);
-   if ((w == null) or ((w.value[0] != WPN_HAND_AXE) and (w.value[0] != WPN_BATTLE_AXE)) or ("pick" in w.names))
+   if ((w == null) or ((w.value[0] != WPN_HAND_AXE) and (w.value[0] != WPN_BATTLE_AXE)) or
+       (not ("axe" in w.title)) or ("pick" in w.title))
    {
       act("You need to wield an axe to fell a tree.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -215,8 +221,8 @@ code
       quit;
    }
    self.endurance := self.endurance - 20;
-   subextra(room.extra, "$felled");
-   addextra(room.extra, {"$felled"}, itoa(realtime));
+   place := room.nameidx + "@" + room.zoneidx;
+   tool := w.nameidx + "@" + w.zoneidx;
 
    heartbeat := PULSE_SEC * 2;
    act("You pick a tall, straight tree and swing $2n at its trunk.", A_ALWAYS, self, w, null, TO_CHAR);
@@ -224,25 +230,39 @@ code
    pause;
    act("Chips fly as you cut deeper into the trunk.", A_ALWAYS, self, null, null, TO_CHAR);
    pause;
-   if (self.outside.movement != SECT_FOREST)
-      quit;   // walked off
+
+   // still at that tree, axe in hand, and nobody felled it meanwhile
+   room := self.outside;
+   w := equipment(self, WEAR_WIELD);
+   ex := "$felled" in room.extra;
+   if ((room.nameidx + "@" + room.zoneidx != place) or (w == null) or (w.nameidx + "@" + w.zoneidx != tool) or
+       ((ex != null) and (realtime - atoi(ex.descr) < FELL_AGAIN)))
+   {
+      act("You stop before the tree comes down.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   subextra(room.extra, "$felled");
+   addextra(room.extra, {"$felled"}, itoa(realtime));
    act("The tree creaks, sways, and crashes to the ground. You trim it into a log.",
        A_ALWAYS, self, null, null, TO_CHAR);
    act("The tree creaks, sways and crashes to the ground. $1n trims it into a log.",
        A_HIDEINV, self, null, null, TO_ROOM);
    u := load("house_log@housing");
-   link(u, self.outside);
+   link(u, room);
    quit;
 }
 dilend
 
-// mine: at a vein (a room with ORE_VEIN), with a pick wielded, mine a load of iron ore.
+// mine: at a vein (a room with ORE_VEIN), with a pick wielded (not an ice pick), mine a load
+// of iron ore (one per vein per MINE_AGAIN).
 dilbegin do_mine(arg : string);
 var
    room : unitptr;
    w : unitptr;
    u : unitptr;
    ex : extraptr;
+   place : string;
+   tool : string;
 code
 {
    room := self.outside;
@@ -252,7 +272,7 @@ code
       quit;
    }
    w := equipment(self, WEAR_WIELD);
-   if ((w == null) or (not ("pick" in w.names)))
+   if ((w == null) or (not ("pick" in w.title)) or ("ice pick" in w.title))
    {
       act("You need to wield a pick to mine.", A_ALWAYS, self, null, null, TO_CHAR);
       quit;
@@ -270,8 +290,8 @@ code
       quit;
    }
    self.endurance := self.endurance - 25;
-   subextra(room.extra, "$mined");
-   addextra(room.extra, {"$mined"}, itoa(realtime));
+   place := room.nameidx + "@" + room.zoneidx;
+   tool := w.nameidx + "@" + w.zoneidx;
 
    heartbeat := PULSE_SEC * 2;
    act("You swing $2n at the rust-red seam in the rock.", A_ALWAYS, self, w, null, TO_CHAR);
@@ -279,12 +299,23 @@ code
    pause;
    act("Sparks fly, and the rock begins to crack.", A_ALWAYS, self, null, null, TO_CHAR);
    pause;
-   if (not (ORE_VEIN in self.outside.extra))
-      quit;   // walked off
+
+   // still at that vein, pick in hand, and nobody worked it meanwhile
+   room := self.outside;
+   w := equipment(self, WEAR_WIELD);
+   ex := "$mined" in room.extra;
+   if ((room.nameidx + "@" + room.zoneidx != place) or (w == null) or (w.nameidx + "@" + w.zoneidx != tool) or
+       ((ex != null) and (realtime - atoi(ex.descr) < MINE_AGAIN)))
+   {
+      act("You stop before the ore breaks loose.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   subextra(room.extra, "$mined");
+   addextra(room.extra, {"$mined"}, itoa(realtime));
    act("A heavy lump of iron ore breaks loose and thuds to the ground.", A_ALWAYS, self, null, null, TO_CHAR);
    act("A heavy lump of rock breaks loose under $1n's pick.", A_HIDEINV, self, null, null, TO_ROOM);
    u := load("iron_ore@housing");
-   link(u, self.outside);
+   link(u, room);
    quit;
 }
 dilend
@@ -318,11 +349,11 @@ code
 :start:
    wait(SFB_DONE, command("give") and (target == self) and (medium != null) and
                   (medium.nameidx + "@" + medium.zoneidx == sym));
+   if (activator.type != UNIT_ST_PC)
+      goto start;   // only players get the count
    block;
    pc := activator;
    destroy(medium);
-   if (pc.type != UNIT_ST_PC)
-      goto start;
    n := house_counter(pc, which) + 1;
    house_setcount(pc, which, n);
    qdone := qstComplete@quests(qname);
@@ -356,21 +387,19 @@ code
    if (command("buy") and (not ("pick" in argument)))
       goto start;
    block;
-   u := load("miners_pick@housing");
    if (command("list"))
    {
-      act("$1n says, 'I sell " + u.title + " for " + moneystring(u.cost, TRUE) + ". Bring me " +
+      act("$1n says, 'I sell a miner's pick for " + moneystring(PICK_PRICE, TRUE) + ". Bring me " +
           "iron ore from the caves behind the hobgoblin waterfall, and the architect takes it " +
           "off the price of a lock.'", A_ALWAYS, self, null, pc, TO_VICT);
-      destroy(u);
       goto start;
    }
-   if (not transfermoney(pc, null, u.cost))
+   if (not transfermoney(pc, null, PICK_PRICE))
    {
-      act("$1n says, 'A pick costs " + moneystring(u.cost, TRUE) + ", $3n.'", A_ALWAYS, self, null, pc, TO_VICT);
-      destroy(u);
+      act("$1n says, 'A pick costs " + moneystring(PICK_PRICE, TRUE) + ", $3n.'", A_ALWAYS, self, null, pc, TO_VICT);
       goto start;
    }
+   u := load(PICK);
    link(u, pc);
    act("$1n gives you $2n.", A_ALWAYS, self, u, pc, TO_VICT);
    act("$1n gives $3n $2n.", A_HIDEINV, self, u, pc, TO_NOTVICT);
@@ -971,8 +1000,8 @@ code
          arg := arg + "   " + streets.[i] + "<br/>";
          i := i + 1;
       }
-      p1 := house_cost(COTTAGE_PRICE, logs, COTTAGE_LOGS);
-      p2 := house_cost(HOUSE_PRICE, logs, HOUSE_LOGS_N);
+      p1 := house_cost(COTTAGE_PRICE, logs, LOGS_COTTAGE);
+      p2 := house_cost(HOUSE_PRICE, logs, LOGS_HOUSE);
       p3 := house_cost(LOCK_PRICE, ore, LOCK_ORE);
       what := house_many(logs, "log", "logs");
       lane := house_many(ore, "load of ore", "loads of ore");
@@ -982,9 +1011,9 @@ code
           "   a lock for your door        " + moneystring(LOCK_PRICE, TRUE) + "<br/>" +
           "'buy cottage' or 'buy house': on the lane of your hometown. 'buy lock' for the " +
           "house you have: then only those you give a key come in.<br/>" +
-          "Timber and iron make it cheaper: " + itoa(COTTAGE_LOGS) + " felled logs, handed to John " +
+          "Timber and iron make it cheaper: " + itoa(LOGS_COTTAGE) + " felled logs, handed to John " +
           "the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a cottage (" +
-          itoa(HOUSE_LOGS_N) + " off a house), and " + itoa(LOCK_ORE) + " loads of iron ore, handed " +
+          itoa(LOGS_HOUSE) + " off a house), and " + itoa(LOCK_ORE) + " loads of iron ore, handed " +
           "to Sam the blacksmith, " + itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
           "You have handed in " + what + " and " + lane + ": for you a " +
           "cottage is " + moneystring(p1, TRUE) + ", a house " + moneystring(p2, TRUE) + " and a lock " +
@@ -1027,12 +1056,12 @@ code
    if (what == "cottage")
    {
       price := COTTAGE_PRICE;
-      need := COTTAGE_LOGS;
+      need := LOGS_COTTAGE;
    }
    else if (what == "house")
    {
       price := HOUSE_PRICE;
-      need := HOUSE_LOGS_N;
+      need := LOGS_HOUSE;
    }
    else
    {
@@ -1328,19 +1357,6 @@ locks: give it to him, and the architect takes it off the price of a lock."
 manipulate {MANIPULATE_TAKE}
 weight 30
 cost 1 IRON_PIECE
-end
-
-                                 miners_pick
-names {"miner's pick", "miners pick", "pick"}
-title "a miner's pick"
-descr "A miner's pick has been left here."
-extra {}
-"A heavy iron pick on a stout wooden handle. Wield it, and 'mine' where there is
-ore."
-manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE, BONUS_AVERAGE)
-weight 7
-cost 3 SILVER_PIECE
 end
 
 #define HOUSE_CHEST(ITEMS) \

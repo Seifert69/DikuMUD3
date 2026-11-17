@@ -8,6 +8,7 @@ version     17
 END HEADER*/
 
 #include <macros.h>
+#include <housing.h>
 
 #define QUEST_JOHN            "Lumberjack"
 
@@ -2419,7 +2420,7 @@ houses on Hearth Lane: 'fell' a tree in the forest with an axe, and give him
 the log."
 
 M_HUMAN_WARRIOR_AXE(4, SEX_MALE)
-dilcopy house_material@housing("house_log@housing", "$house logs", "Timber for a House", "log", "logs");
+dilcopy house_material@housing("house_log@housing", HOUSE_LOGS, "Timber for a House", "log", "logs");
 alignment 350
 money 3 COPPER_PIECE
 dilcopy rescue@function ("mary");
