@@ -184,8 +184,12 @@ code
    wait(SFB_CMD, activator.type == UNIT_ST_PC);
    pc := activator;
    d := 0;
-   while ((d <= MAX_EXIT) and (not command(dirs.[d])))
+   while (d <= MAX_EXIT)   // not in the condition: "and" evaluates both sides, dirs.[10] fails
+   {
+      if (command(dirs.[d]))
+         break;
       d := d + 1;
+   }
    if (d > MAX_EXIT)
       goto start;
    room := self.exit_to[d];
@@ -218,7 +222,8 @@ dilend
 
 // On a house's front room: reads the house's state at boot; its hit points are the house's
 // condition. Anyone the owner didn't invite is shown out to the lane. The owner's commands
-// here: house, invite <name>, uninvite <name>. The back room (the exit to a HOUSE_BACK room)
+// here: house, and in a house with the guests add-on (HOUSE_GUESTS, not sold yet)
+// invite <name> and uninvite <name>. The back room (the exit to a HOUSE_BACK room)
 // is only open in a two-room house.
 dilbegin fnpri(FN_PRI_BLOCK) house_room();
 external
@@ -321,26 +326,30 @@ code
       block;
       act("This " + typ.descr + " belongs to " + own.descr + ". Its condition is " +
           itoa(self.hp) + " of " + itoa(self.max_hp) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
-      if (length(frd.names) <= 1)
-         act("Nobody else is invited.", A_ALWAYS, pc, null, null, TO_CHAR);
-      else
+      if (HOUSE_GUESTS in self.extra)
       {
-         buf := "";
-         d := 1;
-         while (d < length(frd.names))
+         if (length(frd.names) <= 1)
+            act("Nobody else is invited.", A_ALWAYS, pc, null, null, TO_CHAR);
+         else
          {
-            buf := buf + " " + right(frd.names.[d], length(frd.names.[d]) - 1);
-            d := d + 1;
+            buf := "";
+            d := 1;
+            while (d < length(frd.names))
+            {
+               buf := buf + " " + right(frd.names.[d], length(frd.names.[d]) - 1);
+               d := d + 1;
+            }
+            act("Invited:" + buf + ".", A_ALWAYS, pc, null, null, TO_CHAR);
          }
-         act("Invited:" + buf + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+         if (pc.name == own.descr)
+            act("You can invite a friend in (invite &lt;name&gt;) and take it back " +
+                "(uninvite &lt;name&gt;).", A_ALWAYS, pc, null, null, TO_CHAR);
       }
-      if (pc.name == own.descr)
-         act("You can invite a friend in (invite &lt;name&gt;) and take it back " +
-             "(uninvite &lt;name&gt;).", A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
 
-   if ((not command("invite")) and (not command("uninvite")))
+   // inviting is an add-on the owner pays for (HOUSE_GUESTS); without it, invite is no command
+   if (((not command("invite")) and (not command("uninvite"))) or (not (HOUSE_GUESTS in self.extra)))
       goto start;
    block;
    if (pc.name != own.descr)

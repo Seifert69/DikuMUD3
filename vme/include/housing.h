@@ -8,7 +8,8 @@
 #define HOUSE_BACK     "$house back"    /* on a back room, open only in a two-room house */
 #define HOUSE_OWNER    "$house owner"
 #define HOUSE_TYPE     "$house type"
-#define HOUSE_FRIEND   "$house friends"
+#define HOUSE_FRIEND   "$house friends"  /* who the owner invited ("$Name") */
+#define HOUSE_GUESTS   "$house guests"   /* the paid add-on that lets the owner invite friends */
 #define HOUSE_FURNISH  "$house furnished"
 #define HOUSE_FILE     "$house file"
 #define HOUSE_HOLDS    "$house holds"   /* on a chest: how many things it holds */
