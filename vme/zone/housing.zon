@@ -467,6 +467,30 @@ code
 }
 dilend
 
+// On a bed: it is for sleeping in (enter bed, sleep, leave). Things put or dropped in it go
+// back to the floor, since only the chests are saved.
+dilbegin house_bed();
+var
+   u : unitptr;
+code
+{
+:start:
+   wait(SFB_DONE, (command("put") and (target == self)) or
+                  (command("drop") and (activator.outside == self)));
+   if (command("put"))
+      u := medium;   // put: medium is the thing, target the bed
+   else
+      u := target;   // drop: target is the thing
+   if ((u != null) and (u.outside == self))
+   {
+      link(u, self.outside);
+      act("$2n tumbles out of the bed onto the floor: a bed is for sleeping in.",
+          A_ALWAYS, activator, u, null, TO_CHAR);
+   }
+   goto start;
+}
+dilend
+
 // The architect: sells cottages and houses (list, buy cottage, buy house), on the lane for
 // the buyer's hometown (HOUSE_LANES, HOUSE_HOMES).
 dilbegin fnpri(FN_PRI_BLOCK) architect();
@@ -709,11 +733,17 @@ dilend
 names {"bed"}
 title "a bed"
 descr "A wooden bed with a thick woollen blanket stands against the wall."
+inside_descr "You lie in a wooden bed under a thick woollen blanket."
 extra {}
 "A sturdy bed of pine, made by Calvin the carpenter, with a straw mattress and
-a thick woollen blanket."
+a thick woollen blanket, wide enough for two. You can lie in it: 'enter bed',
+then 'sleep'; 'leave' gets you out."
+manipulate {MANIPULATE_ENTER}
+flags {UNIT_FL_TRANS}
+capacity 1000
 weight 200
 cost 2 GOLD_PIECE
+dilcopy house_bed@housing();
 end
 
 #define HOUSE_CHEST(ITEMS) \
