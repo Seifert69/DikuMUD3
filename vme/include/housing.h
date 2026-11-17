@@ -17,6 +17,7 @@
 
 /* The building materials a player has handed in, counters on the player: what the architect
    takes off the price (felled logs to John the Lumberjack, iron ore to Sam the blacksmith) */
+#define HOUSE_PAID     "$house paid"     /* on a player: what their house and lock cost them */
 #define HOUSE_LOGS     "$house logs"
 #define HOUSE_ORE      "$house ore"
 #define ORE_VEIN       "$ore vein"       /* on a room: iron ore can be mined here */

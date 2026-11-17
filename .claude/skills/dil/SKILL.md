@@ -67,6 +67,9 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   removed), `restore()` starts every variable at 0 / "" / empty, the template's arguments too
   (`bread_dil` in db_file.cpp, "Var CRC mismatch"). Keep what a stored unit's program needs (a
   limit, an owner) in an extra on the unit, never in an argument (`house_chest@housing`).
+- **`delstr(f)` only deletes what `savestr` wrote** (lib/dilfiles/strings); a unit saved with
+  `store()` lies in lib/dilfiles/units and goes with `delunit(f)`. Both return an integer that
+  must be assigned, like `transfermoney`: a bare call is a syntax error.
 - **`dilcopy("tmpl@zone(...)", u)` from DIL takes only string and integer arguments**, cut at
   every comma: no lists, and no commas inside a string. A template with list arguments can
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty

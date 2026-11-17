@@ -779,6 +779,112 @@ code
 }
 dilend
 
+// Clears a house for a new owner: whoever is in it is shown out to the lane, Calvin's
+// furniture goes with its files (what was in it to heir, or gone without one), and so does
+// anything lying about. The plot is free again. Returns how many things heir got.
+dilbegin integer house_clear(room : unitptr, heir : unitptr);
+external
+   house_save(room : unitptr);
+   house_furnish(room : unitptr);
+   string house_file(room : unitptr);
+var
+   lane : unitptr;
+   back : unitptr;
+   r : unitptr;
+   u : unitptr;
+   nxt : unitptr;
+   c : unitptr;
+   cnxt : unitptr;
+   d : integer;
+   k : integer;
+   err : integer;
+   base : string;
+code
+{
+   house_furnish(room);   // the furniture, if nobody came in since the boot
+   d := 0;
+   while (d <= MAX_EXIT)
+   {
+      r := room.exit_to[d];
+      if (r != null)
+      {
+         if (HOUSE_BACK in r.extra)
+            back := r;
+         else
+            lane := r;
+      }
+      d := d + 1;
+   }
+   k := 0;
+   r := room;
+   while (r != null)
+   {
+      u := r.inside;
+      while (u != null)
+      {
+         nxt := u.next;
+         if ((u.type == UNIT_ST_PC) or (u.type == UNIT_ST_NPC))
+         {
+            act("The house changes hands, and you are shown out.", A_ALWAYS, u, null, null, TO_CHAR);
+            link(u, lane);
+         }
+         else if (HOUSE_FILE in u.extra)
+         {
+            // furniture: whoever lies in it out, what is in it to heir
+            c := u.inside;
+            while (c != null)
+            {
+               cnxt := c.next;
+               if ((c.type == UNIT_ST_PC) or (c.type == UNIT_ST_NPC))
+               {
+                  act("The house changes hands, and you are shown out.", A_ALWAYS, c, null, null, TO_CHAR);
+                  link(c, lane);
+               }
+               else if (heir != null)
+               {
+                  link(c, heir);
+                  k := k + 1;
+               }
+               else
+                  destroy(c);
+               c := cnxt;
+            }
+            destroy(u);
+         }
+         else if (heir != null)
+         {
+            link(u, heir);
+            k := k + 1;
+         }
+         else
+            destroy(u);
+         u := nxt;
+      }
+      if (r == back)
+         r := null;
+      else
+         r := back;
+   }
+
+   base := house_file(room);
+   err := delunit(base + ".bed");   // store()d units: delunit, not delstr
+   d := 1;
+   while (d <= HOUSE_CHESTS)
+   {
+      err := delunit(base + ".chest" + itoa(d));
+      d := d + 1;
+   }
+   subextra(room.extra, HOUSE_OWNER);
+   subextra(room.extra, HOUSE_TYPE);
+   subextra(room.extra, HOUSE_LOCK);
+   subextra(room.extra, HOUSE_FRIEND);
+   addextra(room.extra, {HOUSE_FRIEND}, "");
+   room.hp := room.max_hp;
+   house_save(room);   // no owner: removes the file
+   return (k);
+}
+dilend
+
 // On a lane room: a door from it into a house (a room with HOUSE_WHERE) lets in anyone while
 // the house's door isn't locked; then only the owner, those with a key and gods. Monsters are kept out by UNIT_FL_NO_MOB.
 dilbegin fnpri(FN_PRI_BLOCK) house_gate();
@@ -1458,6 +1564,7 @@ external
    integer house_price(pc : unitptr, what : string);
    house_spend(pc : unitptr, what : string);
    string house_many(n : integer, one : string, many : string);
+   integer house_clear(room : unitptr, heir : unitptr);
 var
    pc : unitptr;
    room : unitptr;
@@ -1475,17 +1582,88 @@ var
    homes : stringlist;
    streets : stringlist;
    i : integer;
+   k : integer;
+   paid : extraptr;
+   selling : string;   // who was asked to say "sell house" again to seal it
 code
 {
    lanes := HOUSE_LANES;
    homes := HOUSE_HOMES;
    streets := HOUSE_STREETS;
 :start:
-   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
-                 (activator.outside == self.outside));
+   wait(SFB_CMD, (command("list") or command("buy") or
+                  (command("sell") and (("house" in argument) or ("cottage" in argument))) or
+                  (command("free") and (activator.level >= IMMORTAL_LEVEL))) and
+                 (activator.type == UNIT_ST_PC) and (activator.outside == self.outside));
    block;
    pc := activator;
    arg := argument;
+
+   if (command("free"))
+   {
+      // a god frees a plot whose owner is gone: "free plot3", or "free plot3@uhouses"
+      what := getword(arg);
+      if (not ("@" in what))
+         what := what + "@" + lanes.[0];
+      room := findroom(what);
+      if ((room == null) or (not (HOUSE_WHERE in room.extra)))
+      {
+         exec("say Which plot, " + pc.name + "? free plot3, or free plot3@uhouses.", self);
+         goto start;
+      }
+      where := HOUSE_OWNER in room.extra;
+      if (where == null)
+      {
+         exec("say " + what + " is free already, " + pc.name + ".", self);
+         goto start;
+      }
+      lane := where.descr;
+      k := house_clear(room, pc);
+      log(pc.name + " freed " + what + ", " + lane + "'s house; " + itoa(k) + " things to " + pc.name + ".");
+      exec("say " + what + " was " + lane + "'s; it is free now. What was in it, " + itoa(k) +
+           " things, I gave to you, " + pc.name + ".", self);
+      goto start;
+   }
+
+   if (command("sell"))
+   {
+      room := house_find(pc.name, "");
+      if (room == null)
+      {
+         exec("say You have no house to sell, " + pc.name + ".", self);
+         goto start;
+      }
+      paid := HOUSE_PAID in pc.extra;
+      price := 0;
+      if (paid != null)
+         price := atoi(paid.descr) / 2;
+      if (selling != pc.name)
+      {
+         selling := pc.name;
+         if (price > 0)
+            what := "pay you " + moneystring(price, TRUE) + ", half of what it cost you";
+         else
+            what := "pay you nothing, for I have no record of what it cost you";
+         exec("say I'll take your house back and " + what + ". Calvin's furniture stays with " +
+              "it, and what is in it comes back to you. Say 'sell house' again to seal it.", self);
+         goto start;
+      }
+      selling := "";
+      k := house_clear(room, pc);
+      if (price > 0)
+      {
+         i := transfermoney(null, pc, price);
+         act("Haldor pays you " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      }
+      subextra(pc.extra, HOUSE_PAID);
+      log(pc.name + " sold the house " + room.nameidx + "@" + room.zoneidx + " for " + itoa(price) +
+          "; " + itoa(k) + " things back.");
+      if (k > 0)
+         act("What was in your house is carried back to you.", A_ALWAYS, pc, null, null, TO_CHAR);
+      exec("say It's mine again, " + pc.name + ". Should you want another, you know where I am.", self);
+      goto start;
+   }
+   selling := "";
    logs := house_counter(pc, HOUSE_LOGS);   // the materials pc handed in
    ore := house_counter(pc, HOUSE_ORE);
 
@@ -1541,6 +1719,12 @@ code
          goto start;
       }
       house_spend(pc, "lock");
+      paid := HOUSE_PAID in pc.extra;   // what the house cost them, now with the lock
+      k := price;
+      if (paid != null)
+         k := k + atoi(paid.descr);
+      subextra(pc.extra, HOUSE_PAID);
+      addextra(pc.extra, {HOUSE_PAID}, itoa(k));
       addextra(room.extra, {HOUSE_LOCK}, "locked");
       house_save(room);
       act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
@@ -1591,6 +1775,8 @@ code
       goto start;
    }
    house_spend(pc, what);
+   subextra(pc.extra, HOUSE_PAID);
+   addextra(pc.extra, {HOUSE_PAID}, itoa(price));
 
    addextra(room.extra, {HOUSE_OWNER}, pc.name);
    addextra(room.extra, {HOUSE_TYPE}, what);
