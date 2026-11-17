@@ -19,14 +19,36 @@
 // uhouses.plot1.chest1 ...), brought in the first time someone enters after a boot; a chest
 // saves itself, with what is in it, after things are put in or taken out.
 
-// The house lanes, the hometown whose folk may buy there, and how the architect names it
+// The house lanes, the hometown whose folk buy there, and how the architect names it. Those
+// from a hometown without a lane of its own buy on the first.
 #define HOUSE_LANES    {"uhouses"}
 #define HOUSE_HOMES    {"temple@udgaard"}
-#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market, for the folk of Udgaard"}
+#define HOUSE_STREETS  {"Hearth Lane, west of the Udgaard market"}
 #define HOUSE_MINLEVEL 10
 #define COTTAGE_PRICE  (5 * PLATINUM_MULT)
 #define HOUSE_PRICE    (10 * PLATINUM_MULT)
 #define LOCK_PRICE     (3 * PLATINUM_MULT)
+// Building materials (handed in, counted on the player): this many cover HOUSE_DISCOUNT percent
+#define LOGS_COTTAGE   10
+#define LOGS_HOUSE     20     // a house takes logs and ore
+#define ORE_HOUSE      5
+#define LOCK_ORE       5
+#define HOUSE_DISCOUNT 90
+#define TIMBER_QUEST   "Timber for a House"
+#define IRON_QUEST     "Iron for a Lock"
+#define MATERIAL_XP    1000
+#define WORK_XP        51     // experience for a tree felled or ore mined: this minus the level
+#define FELL_AGAIN     3600   // seconds before a forest room has trees worth felling again
+#define MINE_AGAIN     600    // seconds before a vein gives ore again
+#define PICK           "pick@hobgob"   // what Sam sells: the hobgoblin miners' pick
+#define PICK_PRICE     (3 * SILVER_MULT)
+#define CUT_BY         "$cut by"   // on a log or load of ore: who felled or mined it (or for whom)
+#define CUT_AT         "$cut at"   // and the room it was felled or mined in (room@zone)
+#define CART_PRICE     (1 * GOLD_MULT)
+#define CART_YARD      "col_sq7@midgaard"   // where Calvin's hired carts stand, outside his shop
+#define CART_RECALL    "house cart back "   // + a hirer's name: Calvin takes their cart and horse back
+#define CART_TIP       "A horse and a cart carry a dozen at once: Calvin the carpenter on " + \
+                       "Colosseum Square hires them out."
 #define HOUSE_CHESTS   3
 #define HOUSE_FRIENDS  10
 #define HOUSE_DIRS     {"north", "east", "south", "west", "up", "down", \
@@ -123,6 +145,562 @@ code
 }
 dilend
 
+// A counter on the player (HOUSE_LOGS, HOUSE_ORE): how many they have handed in.
+dilbegin integer house_counter(pc : unitptr, which : string);
+var
+   ex : extraptr;
+code
+{
+   ex := which in pc.extra;
+   if (ex == null)
+      return (0);
+   return (atoi(ex.descr));
+}
+dilend
+
+dilbegin house_setcount(pc : unitptr, which : string, n : integer);
+var
+   sl : stringlist;
+code
+{
+   subextra(pc.extra, which);
+   if (n > 0)
+   {
+      addstring(sl, which);   // {which} takes only constants
+      addextra(pc.extra, sl, itoa(n));
+   }
+   return;
+}
+dilend
+
+// The price after the materials pc handed in: each of the `need` pieces takes its share of
+// HOUSE_DISCOUNT percent off. `have` is how many they have.
+dilbegin integer house_cost(price : integer, have : integer, need : integer);
+var
+   used : integer;
+code
+{
+   used := have;
+   if (used > need)
+      used := need;
+   price := price - (price * HOUSE_DISCOUNT * used) / (100 * need);
+   return (((price + GOLD_MULT / 2) / GOLD_MULT) * GOLD_MULT);   // in whole gold pieces
+}
+dilend
+
+// What pc pays the architect for what ("cottage", "house", "lock"): the full price less the
+// share the logs and ore they handed in take off. A house takes logs and ore alike.
+dilbegin integer house_price(pc : unitptr, what : string);
+external
+   integer house_counter(pc : unitptr, which : string);
+   integer house_cost(price : integer, have : integer, need : integer);
+var
+   logs : integer;
+   ore : integer;
+code
+{
+   logs := house_counter(pc, HOUSE_LOGS);
+   ore := house_counter(pc, HOUSE_ORE);
+   if (what == "cottage")
+      return (house_cost(COTTAGE_PRICE, logs, LOGS_COTTAGE));
+   if (what == "lock")
+      return (house_cost(LOCK_PRICE, ore, LOCK_ORE));
+   if (logs > LOGS_HOUSE)
+      logs := LOGS_HOUSE;
+   if (ore > ORE_HOUSE)
+      ore := ORE_HOUSE;
+   return (house_cost(HOUSE_PRICE, logs + ore, LOGS_HOUSE + ORE_HOUSE));
+}
+dilend
+
+// After pc bought what: the logs and ore that took off its price are used up; the rest stay.
+dilbegin house_spend(pc : unitptr, what : string);
+external
+   integer house_counter(pc : unitptr, which : string);
+   house_setcount(pc : unitptr, which : string, n : integer);
+var
+   logs : integer;
+   ore : integer;
+   n : integer;
+code
+{
+   logs := 0;
+   ore := 0;
+   if (what == "cottage")
+      logs := LOGS_COTTAGE;
+   else if (what == "lock")
+      ore := LOCK_ORE;
+   else
+   {
+      logs := LOGS_HOUSE;
+      ore := ORE_HOUSE;
+   }
+   n := house_counter(pc, HOUSE_LOGS) - logs;
+   if (n < 0)
+      n := 0;
+   house_setcount(pc, HOUSE_LOGS, n);
+   n := house_counter(pc, HOUSE_ORE) - ore;
+   if (n < 0)
+      n := 0;
+   house_setcount(pc, HOUSE_ORE, n);
+   return;
+}
+dilend
+
+// What the architect would now charge pc, for John (which: HOUSE_LOGS) or Sam (HOUSE_ORE) to
+// say; whom is "you" or pc's name.
+dilbegin string house_newprice(pc : unitptr, which : string, whom : string);
+external
+   integer house_price(pc : unitptr, what : string);
+code
+{
+   if (which == HOUSE_LOGS)
+      return ("the architect in Midgaard builds " + whom + " a cottage for " +
+              moneystring(house_price(pc, "cottage"), TRUE) + ", or a house for " +
+              moneystring(house_price(pc, "house"), TRUE));
+   return ("the architect in Midgaard fits " + whom + " a lock for " +
+           moneystring(house_price(pc, "lock"), TRUE) + ", or builds a house for " +
+           moneystring(house_price(pc, "house"), TRUE));
+}
+dilend
+
+// fell: in a forest, with an axe wielded, fell a tree for a log (one per room per FELL_AGAIN).
+// An axe is a hand or battle axe called an axe: cleavers and kopeshes are hand axes too.
+dilbegin do_fell(arg : string);
+external
+   string house_forwho(arg : string, me : string);
+   house_workxp(pc : unitptr);
+var
+   forwho : string;
+   room : unitptr;
+   w : unitptr;
+   u : unitptr;
+   ex : extraptr;
+   place : string;
+   tool : string;
+code
+{
+   forwho := house_forwho(arg, self.name);   // "fell tree for Asta": the credit is Asta's
+   if (forwho == "")
+   {
+      act("There is nobody by that name to do it for.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   room := self.outside;
+   if (room.type != UNIT_ST_ROOM)
+   {
+      act("You need solid ground under your feet to fell a tree.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   if (room.movement != SECT_FOREST)
+   {
+      act("There are no trees here worth felling.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   w := equipment(self, WEAR_WIELD);
+   if ((w == null) or ((w.value[0] != WPN_HAND_AXE) and (w.value[0] != WPN_BATTLE_AXE)) or
+       (not ("axe" in w.title)) or ("pick" in w.title))
+   {
+      act("You need to wield an axe to fell a tree.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   ex := "$felled" in room.extra;
+   if ((ex != null) and (realtime - atoi(ex.descr) < FELL_AGAIN))
+   {
+      act("The good trees here have been felled not long ago. Try deeper in the forest.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   if (self.endurance < 20)
+   {
+      act("You are too tired to swing an axe.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   self.endurance := self.endurance - 20;
+   place := room.nameidx + "@" + room.zoneidx;
+   tool := w.nameidx + "@" + w.zoneidx;
+
+   heartbeat := PULSE_SEC * 2;
+   act("You pick a tall, straight tree and swing $2n at its trunk.", A_ALWAYS, self, w, null, TO_CHAR);
+   act("$1n swings $1s $2N at the trunk of a tall tree.", A_HIDEINV, self, w, null, TO_ROOM);
+   pause;
+   act("Chips fly as you cut deeper into the trunk.", A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   // still at that tree, axe in hand, and nobody felled it meanwhile
+   room := self.outside;
+   w := equipment(self, WEAR_WIELD);
+   ex := "$felled" in room.extra;
+   if ((room.nameidx + "@" + room.zoneidx != place) or (w == null) or (w.nameidx + "@" + w.zoneidx != tool) or
+       ((ex != null) and (realtime - atoi(ex.descr) < FELL_AGAIN)))
+   {
+      act("You stop before the tree comes down.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   subextra(room.extra, "$felled");
+   addextra(room.extra, {"$felled"}, itoa(realtime));
+   act("The tree creaks, sways, and crashes to the ground. You trim it into a log.",
+       A_ALWAYS, self, null, null, TO_CHAR);
+   act("The tree creaks, sways and crashes to the ground. $1n trims it into a log.",
+       A_HIDEINV, self, null, null, TO_ROOM);
+   u := load("house_log@housing");
+   addextra(u.extra, {CUT_BY}, forwho);   // the credit is the feller's (or whom it's for), whoever hands it in
+   addextra(u.extra, {CUT_AT}, place);
+   link(u, room);
+   if (forwho != self.name)
+      act("It's for " + forwho + ": whoever hands it to John, it counts for " + forwho + ".",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   house_workxp(self);
+   quit;
+}
+dilend
+
+// mine: at a vein (a room with ORE_VEIN), with a pick wielded (not an ice pick), mine a load
+// of iron ore (one per vein per MINE_AGAIN).
+dilbegin do_mine(arg : string);
+external
+   string house_forwho(arg : string, me : string);
+   house_workxp(pc : unitptr);
+var
+   forwho : string;
+   room : unitptr;
+   w : unitptr;
+   u : unitptr;
+   ex : extraptr;
+   place : string;
+   tool : string;
+code
+{
+   forwho := house_forwho(arg, self.name);   // "fell tree for Asta": the credit is Asta's
+   if (forwho == "")
+   {
+      act("There is nobody by that name to do it for.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   room := self.outside;
+   if ((room.type != UNIT_ST_ROOM) or (not (ORE_VEIN in room.extra)))
+   {
+      act("There is no ore to mine here.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   w := equipment(self, WEAR_WIELD);
+   if ((w == null) or (not ("pick" in w.title)) or ("ice pick" in w.title))
+   {
+      act("You need to wield a pick to mine.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   ex := "$mined" in room.extra;
+   if ((ex != null) and (realtime - atoi(ex.descr) < MINE_AGAIN))
+   {
+      act("The vein has been worked not long ago; the loose ore is gone. Come back later.",
+          A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   if (self.endurance < 25)
+   {
+      act("You are too tired to swing a pick.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   self.endurance := self.endurance - 25;
+   place := room.nameidx + "@" + room.zoneidx;
+   tool := w.nameidx + "@" + w.zoneidx;
+
+   heartbeat := PULSE_SEC * 2;
+   act("You swing $2n at the rust-red seam in the rock.", A_ALWAYS, self, w, null, TO_CHAR);
+   act("$1n swings $1s $2N at the rock.", A_HIDEINV, self, w, null, TO_ROOM);
+   pause;
+   act("Sparks fly, and the rock begins to crack.", A_ALWAYS, self, null, null, TO_CHAR);
+   pause;
+
+   // still at that vein, pick in hand, and nobody worked it meanwhile
+   room := self.outside;
+   w := equipment(self, WEAR_WIELD);
+   ex := "$mined" in room.extra;
+   if ((room.nameidx + "@" + room.zoneidx != place) or (w == null) or (w.nameidx + "@" + w.zoneidx != tool) or
+       ((ex != null) and (realtime - atoi(ex.descr) < MINE_AGAIN)))
+   {
+      act("You stop before the ore breaks loose.", A_ALWAYS, self, null, null, TO_CHAR);
+      quit;
+   }
+   subextra(room.extra, "$mined");
+   addextra(room.extra, {"$mined"}, itoa(realtime));
+   act("A heavy lump of iron ore breaks loose and thuds to the ground.", A_ALWAYS, self, null, null, TO_CHAR);
+   act("A heavy lump of rock breaks loose under $1n's pick.", A_HIDEINV, self, null, null, TO_ROOM);
+   u := load("iron_ore@housing");
+   addextra(u.extra, {CUT_BY}, forwho);
+   addextra(u.extra, {CUT_AT}, place);
+   link(u, room);
+   if (forwho != self.name)
+      act("It's for " + forwho + ": whoever hands it to Sam, it counts for " + forwho + ".",
+          A_ALWAYS, self, null, null, TO_CHAR);
+   house_workxp(self);
+   quit;
+}
+dilend
+
+// Who a log or ore is cut for: the name after "for" in what was typed ("fell tree for Asta"),
+// or the one doing it. "" when that name isn't a player.
+dilbegin string house_forwho(arg : string, me : string);
+var
+   w : string;
+   who : string;
+code
+{
+   who := me;
+   w := getword(arg);
+   while (w != "")
+   {
+      if (w == "for")
+      {
+         who := getword(arg);
+         who := toupper(left(who, 1)) + tolower(right(who, length(who) - 1));
+         if (not isplayer(who))
+            return ("");
+         break;
+      }
+      w := getword(arg);
+   }
+   return (who);
+}
+dilend
+
+// A little experience for the work, for low levels: WORK_XP minus the level (level 11: 40).
+dilbegin house_workxp(pc : unitptr);
+var
+   xp : integer;
+code
+{
+   xp := WORK_XP - pc.level;
+   if (xp > 0)
+   {
+      experience(xp, pc);
+      act("You earned " + itoa(xp) + " experience.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   return;
+}
+dilend
+
+// How many of a material, in words: "1 log", "3 logs", "1 load of ore"
+dilbegin string house_many(n : integer, one : string, many : string);
+code
+{
+   if (n == 1)
+      return ("1 " + one);
+   return (itoa(n) + " " + many);
+}
+dilend
+
+// Who gets the credit for a log or load of ore u: the player who felled or mined it, if in
+// the game; for one without a mark, the one handing it in (by). Null when the cutter is away.
+dilbegin unitptr house_cutter(u : unitptr, by : unitptr);
+var
+   ex : extraptr;
+   pc : unitptr;
+code
+{
+   ex := CUT_BY in u.extra;
+   if (ex == null)
+      return (by);
+   pc := ghead();   // players come first in the global list
+   while ((pc.type == UNIT_ST_PC) and (pc.name != ex.descr))
+      pc := pc.gnext;
+   if (pc.type != UNIT_ST_PC)
+      pc := null;
+   return (pc);
+}
+dilend
+
+// Counts k pieces of a material handed in by pc (which: HOUSE_LOGS, HOUSE_ORE); the first
+// solves the quest qname. Returns the new total.
+dilbegin integer house_credit(pc : unitptr, which : string, qname : string, k : integer);
+external
+   integer house_counter(pc : unitptr, which : string);
+   house_setcount(pc : unitptr, which : string, n : integer);
+   string qstComplete@quests(qname : string);
+var
+   n : integer;
+   qdone : string;
+   sl : stringlist;
+code
+{
+   n := house_counter(pc, which) + k;
+   house_setcount(pc, which, n);
+   qdone := qstComplete@quests(qname);
+   if (not (qdone in pc.quests))
+   {
+      addstring(sl, qdone);
+      addextra(pc.quests, sl, "");
+      experience(MATERIAL_XP, pc);
+      act("<div class='cpw'>Quest complete: " + qname + ".</div> You earned " + itoa(MATERIAL_XP) +
+          " experience.", A_ALWAYS, pc, null, null, TO_CHAR);
+   }
+   return (n);
+}
+dilend
+
+// On John the Lumberjack (logs) and Sam the blacksmith (ore): takes the material sym, counted
+// for the player (which; the first one solves the quest qname). It may be given to him by
+// those strong enough to carry it, dragged or dropped at his feet, or brought in a cart:
+// `unload cart` hands him all of it from the player's hired cart. Who drags or drops it
+// one at a time hears about carts.
+dilbegin fnpri(FN_PRI_BLOCK) house_material(sym : string, which : string, qname : string,
+                                             one : string, many : string);
+external
+   string house_many(n : integer, one : string, many : string);
+   integer house_credit(pc : unitptr, which : string, qname : string, k : integer);
+   unitptr house_cutter(u : unitptr, by : unitptr);
+   string house_newprice(pc : unitptr, which : string, whom : string);
+var
+   who : unitptr;
+   item : unitptr;
+   away : integer;
+   others : integer;
+   pc : unitptr;
+   u : unitptr;
+   nxt : unitptr;
+   cart : unitptr;
+   hr : extraptr;
+   n : integer;
+   k : integer;
+   s : string;
+code
+{
+:start:
+   wait(SFB_DONE | SFB_CMD,
+        (command("give") and (target == self) and (medium != null) and
+         (medium.nameidx + "@" + medium.zoneidx == sym)) or
+        ((command("drop") or command("drag")) and (target != null) and
+         (target.outside == self.outside) and (target.nameidx + "@" + target.zoneidx == sym)) or
+        (command("unload") and ((activator.outside == self.outside) or
+                                (activator.outside.outside == self.outside))));   // or mounted
+   if (activator.type != UNIT_ST_PC)
+      goto start;   // only players get the count
+   pc := activator;
+
+   if (command("unload"))
+   {
+      // the player's hired cart, here
+      cart := null;
+      u := self.outside.inside;
+      while (u != null)
+      {
+         hr := "$cart hirer" in u.extra;   // the hired horse has one too
+         if ((hr != null) and (hr.descr == pc.name) and (u.nameidx == "house_cart"))
+            cart := u;
+         u := u.next;
+      }
+      if (cart == null)
+         goto start;
+      block;
+      k := 0;
+      away := 0;
+      others := 0;
+      u := cart.inside;
+      while (u != null)
+      {
+         nxt := u.next;
+         if (u.nameidx + "@" + u.zoneidx == sym)
+         {
+            who := house_cutter(u, pc);
+            if (who == null)
+               away := away + 1;   // its cutter isn't in the game: it stays in the cart
+            else
+            {
+               n := house_credit(who, which, qname, 1);
+               if (who != pc)
+                  others := others + 1;
+               destroy(u);
+               k := k + 1;
+            }
+         }
+         u := nxt;
+      }
+      if (k > 0)
+      {
+         s := house_many(k, one, many);
+         act("$1n unloads " + s + " from $2n.", A_ALWAYS, self, cart, null, TO_ROOM);
+         if (others == 0)   // all pc's own: n is their total
+            exec("say Thank you, " + pc.name + ". That's " + house_many(n, one, many) + " from you: now " +
+                 house_newprice(pc, which, "you") + ".", self);
+         else
+            exec("say Thank you, " + pc.name + ". I've counted each for whoever cut it; the " +
+                 "architect in Midgaard takes them off their price.", self);
+      }
+      else if (away == 0)
+         exec("say There's nothing in that cart for me, " + pc.name + ".", self);
+      if (away > 0)
+         exec("say I'll take the rest when whoever cut them is about, " + pc.name + ".", self);
+      goto start;
+   }
+
+   block;
+   if (command("give"))
+      item := medium;
+   else
+      item := target;
+   who := house_cutter(item, pc);
+   if (who == null)
+   {
+      // its cutter isn't in the game: give it back, or leave it lying
+      if (command("give"))
+      {
+         link(item, pc);
+         act("$1n hands $2n back to you.", A_ALWAYS, self, item, pc, TO_VICT);
+      }
+      exec("say Whoever cut this should be about when it's handed in, " + pc.name + ".", self);
+      goto start;
+   }
+   if (not command("give"))
+      act("$1n takes $2n.", A_ALWAYS, self, item, null, TO_ROOM);
+   destroy(item);
+   n := house_credit(who, which, qname, 1);
+   s := house_many(n, one, many);
+   if (who == pc)
+      exec("say Thank you, " + pc.name + ". That's " + s + " from you: now " +
+           house_newprice(who, which, "you") + ".", self);
+   else
+      exec("say Thank you, " + pc.name + ". I've counted it for " + who.name + ": that's " + s +
+           " from " + who.name + ", and now " + house_newprice(who, which, who.name) + ".", self);
+   if ((n <= 3) and (who == pc) and (not command("give")))
+      exec("say " + CART_TIP, self);
+   goto start;
+}
+dilend
+
+// On Sam the blacksmith: sells a miner's pick (list, buy pick).
+dilbegin fnpri(FN_PRI_BLOCK) house_picks();
+var
+   pc : unitptr;
+   u : unitptr;
+code
+{
+:start:
+   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
+                 (activator.outside == self.outside));
+   pc := activator;
+   if (command("buy") and (not ("pick" in argument)))
+      goto start;
+   block;
+   if (command("list"))
+   {
+      act("$1n says, 'I sell a miner's pick for " + moneystring(PICK_PRICE, TRUE) + ". Bring me " +
+          "iron ore from the caves behind the hobgoblin waterfall, and the architect takes it " +
+          "off the price of a lock.'", A_ALWAYS, self, null, pc, TO_VICT);
+      goto start;
+   }
+   if (not transfermoney(pc, null, PICK_PRICE))
+   {
+      act("$1n says, 'A pick costs " + moneystring(PICK_PRICE, TRUE) + ", $3n.'", A_ALWAYS, self, null, pc, TO_VICT);
+      goto start;
+   }
+   u := load(PICK);
+   link(u, pc);
+   act("$1n gives you $2n.", A_ALWAYS, self, u, pc, TO_VICT);
+   act("$1n gives $3n $2n.", A_HIDEINV, self, u, pc, TO_NOTVICT);
+   goto start;
+}
+dilend
+
 // How the house looks, from its condition (its hit points), like a wound in combat.
 dilbegin string house_state(room : unitptr);
 var
@@ -198,6 +776,112 @@ code
       i := i + 1;
    }
    return;
+}
+dilend
+
+// Clears a house for a new owner: whoever is in it is shown out to the lane, Calvin's
+// furniture goes with its files (what was in it to heir, or gone without one), and so does
+// anything lying about. The plot is free again. Returns how many things heir got.
+dilbegin integer house_clear(room : unitptr, heir : unitptr);
+external
+   house_save(room : unitptr);
+   house_furnish(room : unitptr);
+   string house_file(room : unitptr);
+var
+   lane : unitptr;
+   back : unitptr;
+   r : unitptr;
+   u : unitptr;
+   nxt : unitptr;
+   c : unitptr;
+   cnxt : unitptr;
+   d : integer;
+   k : integer;
+   err : integer;
+   base : string;
+code
+{
+   house_furnish(room);   // the furniture, if nobody came in since the boot
+   d := 0;
+   while (d <= MAX_EXIT)
+   {
+      r := room.exit_to[d];
+      if (r != null)
+      {
+         if (HOUSE_BACK in r.extra)
+            back := r;
+         else
+            lane := r;
+      }
+      d := d + 1;
+   }
+   k := 0;
+   r := room;
+   while (r != null)
+   {
+      u := r.inside;
+      while (u != null)
+      {
+         nxt := u.next;
+         if ((u.type == UNIT_ST_PC) or (u.type == UNIT_ST_NPC))
+         {
+            act("The house changes hands, and you are shown out.", A_ALWAYS, u, null, null, TO_CHAR);
+            link(u, lane);
+         }
+         else if (HOUSE_FILE in u.extra)
+         {
+            // furniture: whoever lies in it out, what is in it to heir
+            c := u.inside;
+            while (c != null)
+            {
+               cnxt := c.next;
+               if ((c.type == UNIT_ST_PC) or (c.type == UNIT_ST_NPC))
+               {
+                  act("The house changes hands, and you are shown out.", A_ALWAYS, c, null, null, TO_CHAR);
+                  link(c, lane);
+               }
+               else if (heir != null)
+               {
+                  link(c, heir);
+                  k := k + 1;
+               }
+               else
+                  destroy(c);
+               c := cnxt;
+            }
+            destroy(u);
+         }
+         else if (heir != null)
+         {
+            link(u, heir);
+            k := k + 1;
+         }
+         else
+            destroy(u);
+         u := nxt;
+      }
+      if (r == back)
+         r := null;
+      else
+         r := back;
+   }
+
+   base := house_file(room);
+   err := delunit(base + ".bed");   // store()d units: delunit, not delstr
+   d := 1;
+   while (d <= HOUSE_CHESTS)
+   {
+      err := delunit(base + ".chest" + itoa(d));
+      d := d + 1;
+   }
+   subextra(room.extra, HOUSE_OWNER);
+   subextra(room.extra, HOUSE_TYPE);
+   subextra(room.extra, HOUSE_LOCK);
+   subextra(room.extra, HOUSE_FRIEND);
+   addextra(room.extra, {HOUSE_FRIEND}, "");
+   room.hp := room.max_hp;
+   house_save(room);   // no owner: removes the file
+   return (k);
 }
 dilend
 
@@ -641,6 +1325,211 @@ code
 }
 dilend
 
+// On a hired cart (house_cart): it goes along with the horse it is hitched to. A move's
+// done event comes in the room being left, naming the room ahead (target), for the horse or
+// its rider: the cart goes there at once. Its hirer (only) may `unhitch cart` and `hitch cart
+// to horse` (the hired draught horse comes hitched; a horse they hitched before, or any free
+// one, will do), and `put log in cart` heaves a log or ore lying on the ground into it, at a
+// cost in endurance. Anyone may climb in and ride along, leaving less room for cargo.
+// Unloading is the receiver's (house_material). When its hirer hires another, Calvin takes it
+// back (CART_RECALL), leaving what is in it. The hitch is kept in extras ("$cart mark" here,
+// "$hitched" on the horse), not in variables.
+dilbegin fnpri(FN_PRI_BLOCK) house_cart();
+var
+   pc : unitptr;
+   horse : unitptr;
+   u : unitptr;
+   hr : extraptr;
+   hx : extraptr;
+   mk : extraptr;
+   mark : string;
+   arg : string;
+   w : string;
+   dirs : stringlist;
+   d : integer;
+   effort : integer;
+code
+{
+   dirs := HOUSE_DIRS;
+:start:
+   wait(SFB_DONE | SFB_CMD | SFB_MSG, command(CMD_AUTO_MSG) or (activator.outside == self.outside) or
+                                      (activator.outside.outside == self.outside));
+   if (command(CMD_AUTO_MSG))
+   {
+      // Calvin takes it back (its hirer hired another): what is in it stays where it stood
+      hr := "$cart hirer" in self.extra;
+      if ((hr == null) or (argument != CART_RECALL + hr.descr))
+         goto start;
+      while (self.inside != null)
+         link(self.inside, self.outside);
+      act("A lad from Calvin's shop wheels $1n away.", A_ALWAYS, self, null, null, TO_ROOM);
+      destroy(self);
+      quit;
+   }
+   mk := "$cart mark" in self.extra;
+   mark := "";
+   if (mk != null)
+      mark := mk.descr;
+
+   // a move about to happen: if it is our horse (or its rider), go ahead to the room ahead
+   if ((target != null) and (target.type == UNIT_ST_ROOM) and (mark != ""))
+   {
+      d := 0;
+      while (d <= MAX_EXIT)
+      {
+         if (command(dirs.[d]))
+            break;
+         d := d + 1;
+      }
+      if (d > MAX_EXIT)
+         goto start;
+      horse := activator;
+      if (activator.outside.type != UNIT_ST_ROOM)
+         horse := activator.outside;   // ridden
+      hx := "$hitched" in horse.extra;
+      if ((hx != null) and (hx.descr == mark))
+      {
+         act("$1n rattles off after $3n.", A_ALWAYS, self, null, horse, TO_ROOM);
+         link(self, target);
+         act("$1n rattles in.", A_ALWAYS, self, null, null, TO_ROOM);
+      }
+      goto start;
+   }
+
+   if (not (command("hitch") or command("unhitch") or command("put")))
+      goto start;
+   pc := activator;
+   if (pc.type != UNIT_ST_PC)
+      goto start;
+   arg := argument;
+   if (not ("cart" in arg))
+      goto start;
+   hr := "$cart hirer" in self.extra;
+   if ((hr == null) or (hr.descr != pc.name))
+      goto start;   // each cart answers only its hirer
+
+   if (command("put"))
+   {
+      // a log or ore lying here (one carried in the hands is put in as usual)
+      w := getword(arg);
+      if (findunit(pc, w, FIND_UNIT_INVEN, null) != null)
+         goto start;
+      arg := argument;
+      w := getword(arg);
+      u := findunit(pc, w, FIND_UNIT_SURRO, null);
+      if ((u == null) or (u.type != UNIT_ST_OBJ) or (u.outside != self.outside) or
+          ((u.nameidx + "@" + u.zoneidx != "house_log@housing") and
+           (u.nameidx + "@" + u.zoneidx != "iron_ore@housing")))
+         goto start;
+      block;
+      if (pc.position < POSITION_STANDING)
+      {
+         act("You must be standing to heave $2n up.", A_ALWAYS, pc, u, null, TO_CHAR);
+         goto start;
+      }
+      if (self.weight - self.baseweight + u.weight > self.capacity)
+      {
+         act("$2n is full.", A_ALWAYS, pc, self, null, TO_CHAR);
+         goto start;
+      }
+      effort := u.weight / 10;
+      if (pc.endurance < effort)
+      {
+         act("You are too tired to heave $2n up.", A_ALWAYS, pc, u, null, TO_CHAR);
+         goto start;
+      }
+      pc.endurance := pc.endurance - effort;
+      link(u, self);
+      act("You heave $2n up into $3n.", A_ALWAYS, pc, u, self, TO_CHAR);
+      act("$1n heaves $2n up into $3n.", A_HIDEINV, pc, u, self, TO_ROOM);
+      goto start;
+   }
+
+   block;
+   if (command("unhitch"))
+   {
+      if (mark == "")
+      {
+         act("$2n isn't hitched to anything.", A_ALWAYS, pc, self, null, TO_CHAR);
+         goto start;
+      }
+      subextra(self.extra, "$cart mark");
+      act("You unhitch $2n.", A_ALWAYS, pc, self, null, TO_CHAR);
+      goto start;   // the horse keeps its mark: it is the hirer's to hitch again
+   }
+   if (mark != "")
+   {
+      act("$2n is hitched already.", A_ALWAYS, pc, self, null, TO_CHAR);
+      goto start;
+   }
+   // hitch: a horse here that pulls nothing, or one this player hitched before
+   horse := null;
+   u := self.outside.inside;
+   while (u != null)
+   {
+      if ((u.type == UNIT_ST_NPC) and ("horse" in u.names))
+      {
+         hx := "$hitched" in u.extra;
+         if ((hx == null) or (left(hx.descr, length(pc.name) + 1) == pc.name + " "))
+            horse := u;
+      }
+      u := u.next;
+   }
+   if (horse == null)
+   {
+      act("There is no horse here to hitch $2n to.", A_ALWAYS, pc, self, null, TO_CHAR);
+      goto start;
+   }
+   mark := pc.name + " " + itoa(realtime) + " " + itoa(rnd(1, 99999));
+   subextra(horse.extra, "$hitched");
+   addextra(horse.extra, {"$hitched"}, mark);
+   addextra(self.extra, {"$cart mark"}, mark);
+   act("You hitch $2n to $3n.", A_ALWAYS, pc, self, horse, TO_CHAR);
+   act("$1n hitches $2n to $3n.", A_HIDEINV, pc, self, horse, TO_ROOM);
+   goto start;
+}
+dilend
+
+// On a hired draught horse: only its hirer may mount it. Calvin takes it back when its hirer
+// hires another (CART_RECALL).
+dilbegin fnpri(FN_PRI_BLOCK) house_horse();
+var
+   pc : unitptr;
+   u : unitptr;
+   hr : extraptr;
+   arg : string;
+code
+{
+:start:
+   wait(SFB_CMD | SFB_MSG, command(CMD_AUTO_MSG) or
+                           (command("mount") and (activator.type == UNIT_ST_PC) and
+                            (activator.outside == self.outside)));
+   hr := "$cart hirer" in self.extra;
+   if (command(CMD_AUTO_MSG))
+   {
+      // Calvin takes it back (its hirer hired another): a rider is set down first
+      if ((hr == null) or (argument != CART_RECALL + hr.descr))
+         goto start;
+      while (self.inside != null)
+         link(self.inside, self.outside);
+      act("A lad from Calvin's shop leads $1n away.", A_ALWAYS, self, null, null, TO_ROOM);
+      destroy(self);
+      quit;
+   }
+   pc := activator;
+   arg := argument;
+   u := findunit(pc, arg, FIND_UNIT_SURRO, null, UNIT_ST_NPC);   // as mount finds it
+   if (u != self)
+      goto start;
+   if ((hr != null) and (hr.descr != pc.name))
+   {
+      block;
+      act("$2n is hired to " + hr.descr + ".", A_ALWAYS, pc, self, null, TO_CHAR);
+   }
+   goto start;
+}
+dilend
+
 // On a bed: it is for sleeping in (enter bed, sleep, leave). Things put or dropped in it go
 // back to the floor, since only the chests are saved.
 dilbegin house_bed();
@@ -666,11 +1555,16 @@ code
 dilend
 
 // The architect: sells cottages and houses (list, buy cottage, buy house), on the lane for
-// the buyer's hometown (HOUSE_LANES, HOUSE_HOMES).
+// the buyer's hometown, or the first lane (HOUSE_LANES, HOUSE_HOMES).
 dilbegin fnpri(FN_PRI_BLOCK) architect();
 external
    unitptr house_find(pname : string, lane : string);
    house_save(room : unitptr);
+   integer house_counter(pc : unitptr, which : string);
+   integer house_price(pc : unitptr, what : string);
+   house_spend(pc : unitptr, what : string);
+   string house_many(n : integer, one : string, many : string);
+   integer house_clear(room : unitptr, heir : unitptr);
 var
    pc : unitptr;
    room : unitptr;
@@ -678,22 +1572,100 @@ var
    what : string;
    lane : string;
    price : integer;
+   logs : integer;
+   ore : integer;
+   p1 : integer;
+   p2 : integer;
+   p3 : integer;
    where : extraptr;
    lanes : stringlist;
    homes : stringlist;
    streets : stringlist;
    i : integer;
+   k : integer;
+   paid : extraptr;
+   selling : string;   // who was asked to say "sell house" again to seal it
 code
 {
    lanes := HOUSE_LANES;
    homes := HOUSE_HOMES;
    streets := HOUSE_STREETS;
 :start:
-   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
-                 (activator.outside == self.outside));
+   wait(SFB_CMD, (command("list") or command("buy") or
+                  (command("sell") and (("house" in argument) or ("cottage" in argument))) or
+                  (command("free") and (activator.level >= IMMORTAL_LEVEL))) and
+                 (activator.type == UNIT_ST_PC) and (activator.outside == self.outside));
    block;
    pc := activator;
    arg := argument;
+
+   if (command("free"))
+   {
+      // a god frees a plot whose owner is gone: "free plot3", or "free plot3@uhouses"
+      what := getword(arg);
+      if (not ("@" in what))
+         what := what + "@" + lanes.[0];
+      room := findroom(what);
+      if ((room == null) or (not (HOUSE_WHERE in room.extra)))
+      {
+         exec("say Which plot, " + pc.name + "? free plot3, or free plot3@uhouses.", self);
+         goto start;
+      }
+      where := HOUSE_OWNER in room.extra;
+      if (where == null)
+      {
+         exec("say " + what + " is free already, " + pc.name + ".", self);
+         goto start;
+      }
+      lane := where.descr;
+      k := house_clear(room, pc);
+      log(pc.name + " freed " + what + ", " + lane + "'s house; " + itoa(k) + " things to " + pc.name + ".");
+      exec("say " + what + " was " + lane + "'s; it is free now. What was in it, " + itoa(k) +
+           " things, I gave to you, " + pc.name + ".", self);
+      goto start;
+   }
+
+   if (command("sell"))
+   {
+      room := house_find(pc.name, "");
+      if (room == null)
+      {
+         exec("say You have no house to sell, " + pc.name + ".", self);
+         goto start;
+      }
+      paid := HOUSE_PAID in pc.extra;
+      price := 0;
+      if (paid != null)
+         price := atoi(paid.descr) / 2;
+      if (selling != pc.name)
+      {
+         selling := pc.name;
+         if (price > 0)
+            what := "pay you " + moneystring(price, TRUE) + ", half of what it cost you";
+         else
+            what := "pay you nothing, for I have no record of what it cost you";
+         exec("say I'll take your house back and " + what + ". Calvin's furniture stays with " +
+              "it, and what is in it comes back to you. Say 'sell house' again to seal it.", self);
+         goto start;
+      }
+      selling := "";
+      k := house_clear(room, pc);
+      if (price > 0)
+      {
+         i := transfermoney(null, pc, price);
+         act("Haldor pays you " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, null, TO_CHAR);
+      }
+      subextra(pc.extra, HOUSE_PAID);
+      log(pc.name + " sold the house " + room.nameidx + "@" + room.zoneidx + " for " + itoa(price) +
+          "; " + itoa(k) + " things back.");
+      if (k > 0)
+         act("What was in your house is carried back to you.", A_ALWAYS, pc, null, null, TO_CHAR);
+      exec("say It's mine again, " + pc.name + ". Should you want another, you know where I am.", self);
+      goto start;
+   }
+   selling := "";
+   logs := house_counter(pc, HOUSE_LOGS);   // the materials pc handed in
+   ore := house_counter(pc, HOUSE_ORE);
 
    if (command("list"))
    {
@@ -704,13 +1676,25 @@ code
          arg := arg + "   " + streets.[i] + "<br/>";
          i := i + 1;
       }
+      p1 := house_price(pc, "cottage");
+      p2 := house_price(pc, "house");
+      p3 := house_price(pc, "lock");
+      what := house_many(logs, "log", "logs");
+      lane := house_many(ore, "load of ore", "loads of ore");
       act("$1n unrolls his plans:<br/>" + arg +
           "   a cottage (one room)        " + moneystring(COTTAGE_PRICE, TRUE) + "<br/>" +
           "   a house (two rooms)         " + moneystring(HOUSE_PRICE, TRUE) + "<br/>" +
           "   a lock for your door        " + moneystring(LOCK_PRICE, TRUE) + "<br/>" +
-          "'buy cottage' or 'buy house': on the lane of your hometown. 'buy lock' for the " +
-          "house you have: then only those you give a key come in.",
-          A_ALWAYS, self, null, pc, TO_VICT);
+          "'buy cottage' or 'buy house', and he builds it there. 'buy lock' for the " +
+          "house you have: then only those you give a key come in.<br/>" +
+          "Timber and iron make it cheaper, each piece its share: " + itoa(LOGS_COTTAGE) + " felled " +
+          "logs, handed to John the Lumberjack in Haon-Dor, take " + itoa(HOUSE_DISCOUNT) + "% off a " +
+          "cottage; " + itoa(LOGS_HOUSE) + " logs and " + itoa(ORE_HOUSE) + " loads of iron ore, " +
+          "handed to Sam the blacksmith, " + itoa(HOUSE_DISCOUNT) + "% off a house; and " +
+          itoa(LOCK_ORE) + " loads of ore " + itoa(HOUSE_DISCOUNT) + "% off a lock.<br/>" +
+          "You have handed in " + what + " and " + lane + ": for you a " +
+          "cottage is " + moneystring(p1, TRUE) + ", a house " + moneystring(p2, TRUE) + " and a lock " +
+          moneystring(p3, TRUE) + ".", A_ALWAYS, self, null, pc, TO_VICT);
       goto start;
    }
 
@@ -728,24 +1712,28 @@ code
          exec("say Your door has a lock already, " + pc.name + ".", self);
          goto start;
       }
-      if (not transfermoney(pc, null, LOCK_PRICE))
+      price := house_price(pc, "lock");
+      if (not transfermoney(pc, null, price))
       {
-         exec("say A lock costs " + moneystring(LOCK_PRICE, TRUE) + ", " + pc.name + ".", self);
+         exec("say A lock costs you " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
          goto start;
       }
+      house_spend(pc, "lock");
+      paid := HOUSE_PAID in pc.extra;   // what the house cost them, now with the lock
+      k := price;
+      if (paid != null)
+         k := k + atoi(paid.descr);
+      subextra(pc.extra, HOUSE_PAID);
+      addextra(pc.extra, {HOUSE_PAID}, itoa(k));
       addextra(room.extra, {HOUSE_LOCK}, "locked");
       house_save(room);
-      act("You pay $3n " + moneystring(LOCK_PRICE, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
+      act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
       exec("say Your door is fitted with a lock, and locked, " + pc.name + ". Inside you can " +
            "lock and unlock it, and give your friends a key with invite.", self);
       log(pc.name + " bought a lock for " + room.nameidx + "@" + room.zoneidx + ".");
       goto start;
    }
-   if (what == "cottage")
-      price := COTTAGE_PRICE;
-   else if (what == "house")
-      price := HOUSE_PRICE;
-   else
+   if ((what != "cottage") and (what != "house"))
    {
       exec("say I build cottages and houses, and fit locks, " + pc.name + ": buy cottage, buy " +
            "house, or buy lock.", self);
@@ -765,10 +1753,7 @@ code
       i := i + 1;
    }
    if (i >= length(homes))
-   {
-      exec("say I have no lane for the folk of your hometown yet, " + pc.name + ".", self);
-      goto start;
-   }
+      i := 0;   // no lane for their hometown: the first lane
    lane := lanes.[i];
    room := house_find(pc.name, "");
    if (room != null)
@@ -783,11 +1768,15 @@ code
       exec("say Every plot is taken, " + pc.name + ". More will be laid out.", self);
       goto start;
    }
+   price := house_price(pc, what);
    if (not transfermoney(pc, null, price))
    {
-      exec("say A " + what + " costs " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
+      exec("say A " + what + " costs you " + moneystring(price, TRUE) + ", " + pc.name + ".", self);
       goto start;
    }
+   house_spend(pc, what);
+   subextra(pc.extra, HOUSE_PAID);
+   addextra(pc.extra, {HOUSE_PAID}, itoa(price));
 
    addextra(room.extra, {HOUSE_OWNER}, pc.name);
    addextra(room.extra, {HOUSE_TYPE}, what);
@@ -822,6 +1811,8 @@ var
    arg : string;
    hfile : string;
    menu : string;
+   hirers : stringlist;   // who hired a cart this boot: they may have one out
+   mark : string;
    words : stringlist;
    which : intlist;
    syms : stringlist;
@@ -849,15 +1840,57 @@ code
       i := i + 1;
    }
 :start:
-   wait(SFB_CMD, (command("list") or command("buy")) and (activator.type == UNIT_ST_PC) and
-                 (activator.outside == self.outside));
+   wait(SFB_CMD, (command("list") or command("buy") or command("hire")) and
+                 (activator.type == UNIT_ST_PC) and (activator.outside == self.outside));
    block;
    pc := activator;
    arg := argument;
 
+   if (command("hire"))
+   {
+      if (not ("cart" in arg))
+      {
+         exec("say I hire out a cart with a horse, " + pc.name + ": hire cart.", self);
+         goto start;
+      }
+      if (not transfermoney(pc, null, CART_PRICE))
+      {
+         exec("say A cart and a horse cost " + moneystring(CART_PRICE, TRUE) + " to hire, " +
+              pc.name + ".", self);
+         goto start;
+      }
+      // one at a time: an old cart and horse come back wherever they are
+      if (pc.name in hirers)
+      {
+         sendtoalldil(CART_RECALL + pc.name, "house_cart@housing");
+         sendtoalldil(CART_RECALL + pc.name, "house_horse@housing");
+         exec("say My lad will fetch your old cart and horse, " + pc.name + "; whatever was in " +
+              "the cart he leaves where it stood.", self);
+      }
+      else
+         addstring(hirers, pc.name);
+      // a cart and a draught horse, hitched, outside on the square
+      mark := pc.name + " " + itoa(realtime) + " " + itoa(rnd(1, 99999));
+      u := load("draught_horse@housing");
+      addextra(u.extra, {"$cart hirer"}, pc.name);
+      addextra(u.extra, {"$hitched"}, mark);
+      link(u, findroom(CART_YARD));
+      u := load("house_cart@housing");
+      addextra(u.extra, {"$cart hirer"}, pc.name);
+      addextra(u.extra, {"$cart mark"}, mark);
+      link(u, findroom(CART_YARD));
+      act("You pay $3n " + moneystring(CART_PRICE, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
+      exec("say Your cart and horse stand outside on the square, " + pc.name + ". Mount the " +
+           "horse and ride: the cart follows. They're yours till you hire another, or the " +
+           "next great storm (a reboot) brings them back to me.", self);
+      goto start;
+   }
+
    if (command("list"))
    {
       act("$1n points at his work:<br/>" + menu + "   a lock for a chest: half the chest's price<br/>" +
+          "   a cart and a horse, to hire for hauling logs and ore: " + moneystring(CART_PRICE, TRUE) +
+          " ('hire cart')<br/>" +
           "He has it carried to your house: 'buy bed', 'buy small chest', 'buy medium chest' or " +
           "'buy large chest'; 'buy lock for small chest' fits a lock to one you have.",
           A_ALWAYS, self, null, pc, TO_VICT);
@@ -1012,6 +2045,52 @@ cost 2 GOLD_PIECE
 dilcopy house_bed@housing();
 end
 
+                                 house_log
+names {"felled log", "log"}
+title "a felled log"
+descr "A felled log, trimmed of its branches, lies here."
+extra {}
+"A heavy log of good straight timber, too heavy for most to carry: drag it, or
+haul it in a cart. John the Lumberjack in Haon-Dor takes logs for houses, and
+the architect in Midgaard takes them off the price."
+manipulate {MANIPULATE_TAKE}
+weight 100
+cost 1 IRON_PIECE
+end
+
+                                 iron_ore
+names {"iron ore", "lump of iron ore", "ore", "lump"}
+title "a lump of iron ore"
+descr "A heavy lump of rust-red iron ore lies here."
+extra {}
+"Rock streaked with rust-red iron. Sam the blacksmith in Midgaard takes ore for
+locks: give it to him, and the architect takes it off the price of a lock."
+manipulate {MANIPULATE_TAKE}
+weight 60
+cost 1 IRON_PIECE
+end
+
+                                 house_cart
+names {"cart"}
+title "a cart"
+descr "A sturdy wooden cart stands here."
+extra {}
+"A sturdy two-wheeled cart of oak, hired from Calvin the carpenter. A painted
+board on its side reads:
+   Mount the horse and ride: the cart follows it.
+   'put log in cart' heaves a log or ore up from the ground; a dozen logs fit.
+   'unload cart' by John the Lumberjack or Sam the blacksmith hands it all over.
+   'unhitch cart' leaves the cart standing; 'hitch cart to horse' again.
+   Friends may climb in ('enter cart') and ride, taking room from the load.
+   More: 'help cart'."
+manipulate {MANIPULATE_ENTER}
+flags {UNIT_FL_TRANS}
+CONTAINER_DEF(1250)
+weight 300
+cost 1 GOLD_PIECE
+dilcopy house_cart@housing();
+end
+
 #define HOUSE_CHEST(ITEMS) \
 manipulate {MANIPULATE_ENTER} \
 CONTAINER_DEF(2000) \
@@ -1056,6 +2135,20 @@ end
 
 
 %mobiles
+
+                                 draught_horse
+names {"draught horse", "horse"}
+title "a draught horse"
+descr "A sturdy draught horse stands here in its harness."
+extra {}
+"A big, patient horse with feathered hooves, hired from Calvin the carpenter.
+Its hirer can 'mount' it and ride; a cart hitched to it follows."
+flags {UNIT_FL_TRANS}
+M_HORSE_SMALL(20, SEX_MALE)
+capacity 2000
+weight 1500
+dilcopy house_horse@housing();
+end
 
                                  architect
 names {"architect", "Haldor"}

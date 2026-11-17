@@ -67,6 +67,9 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   removed), `restore()` starts every variable at 0 / "" / empty, the template's arguments too
   (`bread_dil` in db_file.cpp, "Var CRC mismatch"). Keep what a stored unit's program needs (a
   limit, an owner) in an extra on the unit, never in an argument (`house_chest@housing`).
+- **`delstr(f)` only deletes what `savestr` wrote** (lib/dilfiles/strings); a unit saved with
+  `store()` lies in lib/dilfiles/units and goes with `delunit(f)`. Both return an integer that
+  must be assigned, like `transfermoney`: a bare call is a syntax error.
 - **`dilcopy("tmpl@zone(...)", u)` from DIL takes only string and integer arguments**, cut at
   every comma: no lists, and no commas inside a string. A template with list arguments can
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
@@ -194,6 +197,8 @@ rooms within it (unless they have `UNIT_FL_TRANS` and are open).
   the program jumps to `label` at its next wake, every variable holding `u` becomes null,
   and the secure ends. That also happens when the program's own unit walks away from `u`.
 - `unsecure(u)` ends it; `secure` on the same unit again only changes the label.
+- `secure` takes a variable, never `self` ("Arg 1 of 'secure' not a user-variable"): a player's
+  own command program doesn't need it, since it ends when the player leaves the game.
 - Secures belong to the call that made them and end when that template returns.
 - The label is where to give up gracefully: `:lost:` and go back to waiting.
 - **`destroy()` on a secured unit fires its secure**: the program jumps to the label at once

@@ -4863,3 +4863,20 @@ minpos   = POSITION_DEAD
 minlevel = 200
 loglevel = 200
 type     = 0
+
+// Last, so they take no abbreviation from older commands ("fe" stays fear)
+command  = fell
+func     = do_fell@housing
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
+
+command  = mine
+func     = do_mine@housing
+minpos   = POSITION_STANDING
+minlevel = 0
+loglevel = 0
+type     = 0
+turns    = 0
