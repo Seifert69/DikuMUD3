@@ -47,7 +47,7 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 
 - **Reserved words.** Every function, field and built-in variable in `diltok.h` is reserved,
   so `name`, `names`, `key`, `npcs`, `unset`, `target`, `length`, `title`, `level`, `race`,
-  `extra`, `help`... can't be variable or parameter names (a parameter fails at the `dilbegin`
+  `extra`, `help`, `full`, `fname`... can't be variable or parameter names (a parameter fails at the `dilbegin`
   line). vmc says `718: syntax error` / `Token: 'name'` at the `var` line. Use
   `pname`, `namex`, `kw`, `u`.
 - **Template names are 15 characters at most** (`Name of dilprogram ... was too long`).
@@ -62,6 +62,11 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
 - **`"words" in a stringlist`** is the position plus one (0 when absent) of the first entry
   that is the string or its first words, ignoring case: `"arrived"` doesn't match
   `"arrived_port"`, but `"ship arrived"` matches `"ship"`.
+- **A unit saved with `store()` keeps its DIL programs, but their variables only while the
+  template's variables stay the same**: after an edit that changes them (a variable added or
+  removed), `restore()` starts every variable at 0 / "" / empty, the template's arguments too
+  (`bread_dil` in db_file.cpp, "Var CRC mismatch"). Keep what a stored unit's program needs (a
+  limit, an owner) in an extra on the unit, never in an argument (`house_chest@housing`).
 - **`dilcopy("tmpl@zone(...)", u)` from DIL takes only string and integer arguments**, cut at
   every comma: no lists, and no commas inside a string. A template with list arguments can
   only be copied in a zone file: `dilcopy tmpl@zone({"a", "b"}, {1, 2});`, where an empty
@@ -176,7 +181,7 @@ waits for wakes it, even one the wait's condition then turns down**: with
   after `pause`: a unit from `findunit`, `activator` or a loop is gone after the next wait.
 - **Every `extraptr` variable becomes null**; they can't be secured, so look the extra up
   again after waiting.
-- `string`, `stringlist`, `integer` and `integerlist` variables keep their values, and `self`
+- `string`, `stringlist`, `integer` and `intlist` variables keep their values, and `self`
   is always the unit running the program.
 
 **`secure(u, label)`** keeps `u` in its variables across waits while `u` stays in the

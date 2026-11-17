@@ -2647,10 +2647,12 @@ title "The Udgaard Market"
 descr
 "You are at the Udgaard market just south of the village square. This
 used to be a larger and busier market. Now only a few small merchants
-are scattered around the market. The boat bridge is south of here."
+are scattered around the market. The boat bridge is south of here, and
+Hearth Lane leads west between the shops."
 movement SECT_CITY
 gmap(424,679)
 north to square;
+west to lane1@uhouses;
 south to bridge;
 east to tobacco_shop;
 northeast to field_shop;
