@@ -2,7 +2,8 @@
 #
 # Deploys to valhalla.com. Run from the repository root:
 #
-#   deploy/valhalla.sh client <label>   web client files to /www/valhalla/v3 (old files kept as *.bak-<label>)
+#   deploy/valhalla.sh client [test]    check that https://valhalla.com/v3/ (test: /v3-test/) serves
+#                                       vme/www/client as it is here; lists the files that differ
 #   deploy/valhalla.sh test [resume]    test mud: compile master, reboot, check it runs
 #                                       (resume: the button was pressed already, just watch)
 #   deploy/valhalla.sh prod [resume]    production: adopt the test build, reboot when no mortals are on, check
@@ -19,11 +20,14 @@
 # compile.log), the parallel universe (adopt universe / look symbols: adopt.log) and the
 # reboot daemon (ruffle daemon: reboots as soon as no mortals are online, checked every 5 minutes).
 #
+# The web client ships with the game: the test compile (totest.sh) copies vme/www/client and
+# vme/www/img to /data/www/v3-test, served as /v3-test/; adopting it (toprod.sh) copies that to
+# /data/www/v3, served as /v3/.
+#
 set -euo pipefail
 
 HOST=valhalla.com
 SSH="ssh -o BatchMode=yes seifert@$HOST"
-WEBDIR=/www/valhalla/v3
 CLIENT=vme/www/client
 HERE=$(cd "$(dirname "$0")" && pwd)
 TN="python3 -u $HERE/tn.py"
@@ -70,28 +74,19 @@ check_login() { # port, extra commands
 }
 
 client() {
-    local label=${1:?give a backup label, e.g. pre-whofix}
-    local files=() f live mine
+    local path=v3 f live mine differ=()
+    [[ "${1:-}" == test ]] && path=v3-test
     while read -r f; do
-        live=$(curl -fsS "https://www.$HOST/v3/$f" 2>/dev/null | md5sum | cut -c1-32 || true)
+        live=$(curl -fsS "https://$HOST/$path/$f" 2>/dev/null | md5sum | cut -c1-32 || true)
         mine=$(md5sum < "$CLIENT/$f" | cut -c1-32)
-        [[ "$live" != "$mine" ]] && files+=("$f")
+        [[ "$live" != "$mine" ]] && differ+=("$f")
     done < <(cd "$CLIENT" && find index.html core ui css -type f -name '*.*' ! -name '*.md' | sort)
-    if ((${#files[@]} == 0)); then
-        say "client: the live files are already up to date"
-        return
+    if ((${#differ[@]} == 0)); then
+        say "client: https://$HOST/$path/ serves this checkout's client"
+    else
+        say "client: https://$HOST/$path/ differs from this checkout in: ${differ[*]}"
+        return 1
     fi
-    say "client: ${files[*]}"
-    # index.html last: a browser that gets the new page must find the new scripts
-    local order=() x
-    for x in "${files[@]}"; do [[ $x != index.html ]] && order+=("$x"); done
-    for x in "${files[@]}"; do [[ $x == index.html ]] && order+=("$x"); done
-    for x in "${order[@]}"; do scp -q -o BatchMode=yes "$CLIENT/$x" "seifert@$HOST:$WEBDIR/$x.new"; done
-    $SSH "cd $WEBDIR && for f in ${order[*]}; do [ -f \$f ] && cp -p \$f \$f.bak-$label; mv \$f.new \$f; done"
-    for x in "${order[@]}"; do
-        curl -fsS "https://www.$HOST/v3/$x" | cmp -s - "$CLIENT/$x" || { echo "$x: served file differs"; exit 1; }
-    done
-    echo "served files match"
 }
 
 # "look screen", not "look at screen": the compiler only answers to exactly that
