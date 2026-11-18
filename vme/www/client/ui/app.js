@@ -1345,9 +1345,9 @@
         b.hidden = false;
     }
 
-    // Clues for why a connection closed: when the page was last in the background, and
-    // whether the device went offline while connected
-    const clues = { hiddenAt: 0, shownAt: 0, offlineAt: 0 };
+    // Clues for why a connection closed: when the page was last hidden and shown, and when the
+    // device last went offline. A page that loads in a background tab is hidden from the start.
+    const clues = { hiddenAt: document.hidden ? Date.now() : 0, shownAt: 0, offlineAt: 0 };
     document.addEventListener("visibilitychange", () => {
         if (document.hidden) clues.hiddenAt = Date.now();
         else clues.shownAt = Date.now();
@@ -1356,27 +1356,26 @@
 
     function closeText(info, server) {
         const now = Date.now();
-        // Still hidden, or shown again only just now: a phone waking up delivers the close late
-        let hiddenFor = 0;
-        if (document.hidden && clues.hiddenAt) hiddenFor = now - clues.hiddenAt;
-        else if (clues.hiddenAt && now - clues.shownAt < 10000) hiddenFor = clues.shownAt - clues.hiddenAt;
-        const offline = !navigator.onLine || (info.opened && clues.offlineAt > now - info.upFor);
-        return D.connection.describeClose({ ...info, at: hhmm(), where: `${server.host}:${server.port}`, hiddenFor, offline });
+        const c = D.connection.closeClues({ ...info, ...clues, now, hiddenNow: document.hidden, onLine: navigator.onLine });
+        return D.connection.describeClose({ ...info, ...c, at: hhmm(), where: D.connection.hostPort(server) });
     }
 
-    // Couldn't connect at all: does the site this page came from still answer? That tells "your
-    // internet" from "the game". An image, since the page's CSP lets it connect only to
-    // websockets. Resolves to a sentence, or "" if it can't tell (a page opened from a file).
-    function probeInternet() {
-        if (!/^https?:$/.test(location.protocol)) return Promise.resolve("");
-        if (!navigator.onLine) return Promise.resolve("");
+    // Couldn't connect: does the site this page came from still answer? That tells "your
+    // internet" from "the game's port". An image, since the page's CSP lets it connect only
+    // to websockets. Resolves to a sentence, or "" if it can't tell: a page opened from a file
+    // or this computer, or a device that knows it is offline.
+    function probeInternet(server) {
+        const site = location.hostname;
+        if (!/^https?:$/.test(location.protocol) || !navigator.onLine) return Promise.resolve("");
+        if (/^(localhost|127\.|\[?::1\]?$)/.test(site)) return Promise.resolve("");
         return new Promise(resolve => {
             const img = new Image();
             const done = ok => {
                 clearTimeout(timer);
                 img.onload = img.onerror = null;
-                resolve(ok ? `${location.hostname} still answers, so your internet works: the game server isn't answering. It may be restarting; try again in a minute.`
-                           : `${location.hostname} doesn't answer either: your internet is down, or the whole site is.`);
+                const port = server.port ? ` ${server.port}` : "";
+                resolve(ok ? `${site} still answers, so your internet works: the game's port${port} doesn't. The game may be restarting (try again in a minute), or your network may block that port.`
+                           : `${site} doesn't answer either: your internet is down, or the whole site is.`);
             };
             const timer = setTimeout(() => done(false), 6000);
             img.onload = () => done(true);
@@ -1404,6 +1403,7 @@
         d.append(row);
         openScrim(d);
         go.focus();
+        return d;
     }
 
     function connect(server) {
@@ -1440,19 +1440,26 @@
                     sys("Reconnecting…");
                     conn.connect();
                 };
-                const text = closeText(info, server);
-                sys(text, !S.quitting && code !== 1000);
-                banner(S.quitting ? "You left the game." : "Disconnected.", [["Reconnect", again], ["Change server", showConnect]]);
-                if (S.quitting) relogin.creds = null;
-                else if (!conn.userClosed) {
-                    showLostDialog(text, again, opened ? "Connection lost" : "Can't connect");
-                    if (!opened)
-                        probeInternet().then(more => {
-                            if (!more || S.conn !== conn || conn.isOpen) return;
-                            sys(more);
-                            $(".panel.lost > p")?.append(" " + more);
-                        });
+                const buttons = [["Reconnect", again], ["Change server", showConnect]];
+                if (S.quitting || conn.userClosed) {
+                    // Left on purpose: no diagnosis
+                    sys(S.quitting ? "You left the game." : "Disconnected.");
+                    banner(S.quitting ? "You left the game." : "Disconnected.", buttons);
+                    if (S.quitting) relogin.creds = null;
+                    return;
                 }
+                const text = closeText(info, server);
+                sys(text, code !== 1000);
+                if (!opened) setConnState("closed", "Not connected");
+                banner(opened ? "Disconnected." : "Can't connect.", buttons);
+                const d = showLostDialog(text, again, opened ? "Connection lost" : "Can't connect");
+                // Code 0: the browser refused before trying, so the network isn't the question
+                if (!opened && code !== 0 && code !== 1015)
+                    probeInternet(server).then(more => {
+                        if (!more || !d.isConnected) return; // this close's dialog only, while it is open
+                        sys(more);
+                        d.querySelector("p").append(" " + more);
+                    });
             },
         }, { autoReconnect: false });
         S.conn = conn;

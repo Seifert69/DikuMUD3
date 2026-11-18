@@ -297,35 +297,93 @@ test("describeClose: a clean close by the server has its reason and no quiet tim
     assert.equal(t, "The server closed the connection at 09:00 (code 1000: bye), after 2 min connected.");
 });
 
-test("Connection reports whether it ever opened, and for how long", async () => {
-    class Refused {
-        constructor() {
-            this.readyState = 0;
-            setImmediate(() => this.onclose({ code: 1006, reason: "" }));
-        }
-        close() {}
+// Runs fn with Date.now() returning the clock's value, which the test moves on
+async function withClock(fn) {
+    const real = Date.now;
+    const clock = { t: 1_000_000 };
+    Date.now = () => clock.t;
+    try {
+        return await fn(clock);
+    } finally {
+        Date.now = real;
     }
-    const never = await new Promise(resolve => {
-        new C.Connection("ws://x", { onClose: resolve }, { WebSocketImpl: Refused, autoReconnect: false }).connect();
-    });
-    assert.equal(never.opened, false);
+}
 
-    class Drops {
-        constructor() {
-            this.readyState = 1;
-            setImmediate(() => {
-                this.onopen();
-                this.onmessage({ data: "hello" });
-                this.readyState = 3;
-                this.onclose({ code: 1006, reason: "" });
-            });
+test("Connection reports whether it ever opened, how long, and how long the server was quiet", () =>
+    withClock(async clock => {
+        let sock;
+        class FakeWS {
+            constructor() {
+                this.readyState = 0;
+                sock = this;
+            }
+            send() {}
+            close() {}
         }
-        send() {}
-        close() {}
-    }
-    const dropped = await new Promise(resolve => {
-        new C.Connection("ws://x", { onClose: resolve }, { WebSocketImpl: Drops, autoReconnect: false }).connect();
-    });
-    assert.equal(dropped.opened, true);
-    assert.ok(dropped.upFor >= 0 && dropped.quietFor >= 0 && dropped.quietFor <= dropped.upFor);
+        let closed;
+        const c = new C.Connection("ws://x", { onClose: i => (closed = i) }, { WebSocketImpl: FakeWS, autoReconnect: false });
+
+        c.connect();
+        sock.onclose({ code: 1006, reason: "" }); // refused
+        assert.equal(closed.opened, false);
+
+        c.connect();
+        sock.readyState = 1;
+        sock.onopen();
+        clock.t += 60000;
+        sock.onmessage({ data: "hello" });
+        clock.t += 5000;
+        sock.onclose({ code: 1006, reason: "" });
+        assert.deepEqual([closed.opened, closed.upFor, closed.quietFor], [true, 65000, 5000]);
+    }));
+
+test("Connection: a reconnect the browser refuses is reported as never opened, with its reason", () =>
+    withClock(async clock => {
+        let n = 0;
+        let sock;
+        class FakeWS {
+            constructor() {
+                if (++n === 2) throw new Error("SecurityError: insecure");
+                this.readyState = 1;
+                sock = this;
+            }
+            send() {}
+            close() {}
+        }
+        let closed;
+        const c = new C.Connection("ws://x", { onClose: i => (closed = i) }, { WebSocketImpl: FakeWS, autoReconnect: false });
+        c.connect();
+        sock.onopen();
+        clock.t += 60000;
+        sock.onclose({ code: 1006, reason: "" });
+        c.connect(); // throws
+        assert.deepEqual([closed.opened, closed.code, closed.reason], [false, 0, "SecurityError: insecure"]);
+    }));
+
+test("closeClues: only what happened while the connection was open counts", () => {
+    const base = { opened: true, upFor: 600000, quietFor: 3000, now: 10_000_000, hiddenNow: false, hiddenAt: 0, shownAt: 0, offlineAt: 0, onLine: true };
+    assert.deepEqual(C.closeClues(base), { hiddenFor: 0, offline: false });
+    // hidden for an hour, but connected only for the last 10 minutes of it
+    assert.equal(C.closeClues({ ...base, hiddenNow: true, hiddenAt: base.now - 3600000 }).hiddenFor, 600000);
+    // shown again 2 s before the close, after 5 minutes hidden
+    assert.equal(C.closeClues({ ...base, hiddenAt: base.now - 302000, shownAt: base.now - 2000 }).hiddenFor, 300000);
+    // shown again long before: no clue
+    assert.equal(C.closeClues({ ...base, hiddenAt: base.now - 302000, shownAt: base.now - 60000 }).hiddenFor, 0);
+    // offline after the server's last message counts; a blip the connection survived doesn't
+    assert.equal(C.closeClues({ ...base, offlineAt: base.now - 1000 }).offline, true);
+    assert.equal(C.closeClues({ ...base, offlineAt: base.now - 300000 }).offline, false);
+    // never opened: only "offline now"
+    assert.deepEqual(C.closeClues({ ...base, opened: false, hiddenNow: true, hiddenAt: 1, onLine: false }), { hiddenFor: 0, offline: true });
+});
+
+test("describeClose: a failed connect keeps what its code means, and the browser's reason", () => {
+    assert.equal(C.describeClose({ code: 1015, opened: false, at: "11:27", where: "x:1" }), "Couldn't connect to x:1 at 11:27 (code 1015): the secure (tls) connection failed.");
+    assert.equal(C.describeClose({ code: 0, reason: "SecurityError", opened: false, at: "11:27", where: "x:1" }), "Couldn't connect to x:1 at 11:27 (code ?: SecurityError).");
+});
+
+test("span and hostPort", () => {
+    assert.deepEqual([C.span(-4000), C.span(59000), C.span(89500), C.span(3600000), C.span(3 * 3600000 + 300000)], ["0 s", "59 s", "1 min", "1 h", "3 h 5 min"]);
+    assert.equal(C.hostPort({ protocol: "wss", host: "valhalla.com", port: "4280" }), "valhalla.com:4280");
+    assert.equal(C.hostPort({ protocol: "wss", host: "example.org", port: "" }), "example.org");
+    assert.equal(C.hostPort({ protocol: "ws", host: "[::1]", port: "4280" }), "[::1]:4280");
 });
