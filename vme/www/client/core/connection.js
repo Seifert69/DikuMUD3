@@ -21,7 +21,10 @@
     }
 
     /*
-     * handlers: onOpen(), onFrame(text), onClose({code, reason, willRetry, retryIn}), onError(message)
+     * handlers: onOpen(), onFrame(text), onError(message),
+     * onClose({code, reason, willRetry, retryIn, opened, upFor, quietFor}): opened is false when
+     * the connection never got through; upFor is how long it was open and quietFor how long
+     * since the server last sent anything, in ms.
      */
     class Connection {
         constructor(url, handlers = {}, { WebSocketImpl = globalThis.WebSocket, autoReconnect = true } = {}) {
@@ -35,6 +38,8 @@
             this.lastSend = Date.now();
             this.retryTimer = null;
             this.keepTimer = null;
+            this.openedAt = 0;
+            this.lastFrameAt = 0;
         }
 
         get isOpen() {
@@ -53,8 +58,10 @@
                 return;
             }
             this.ws = ws;
+            this.openedAt = 0;
             ws.onopen = () => {
                 this.attempt = 0;
+                this.openedAt = this.lastFrameAt = Date.now();
                 ws.send(""); // mplex swallows the first message
                 this.lastSend = Date.now();
                 clearInterval(this.keepTimer);
@@ -62,6 +69,7 @@
                 this.h.onOpen && this.h.onOpen();
             };
             ws.onmessage = ev => {
+                this.lastFrameAt = Date.now();
                 if (typeof ev.data === "string") this.h.onFrame && this.h.onFrame(ev.data);
             };
             ws.onerror = () => {
@@ -78,7 +86,11 @@
         scheduleRetry(code, reason) {
             const willRetry = this.autoReconnect && !this.userClosed && this.attempt < RETRY_SECONDS.length;
             const retryIn = willRetry ? RETRY_SECONDS[this.attempt] : 0;
-            this.h.onClose && this.h.onClose({ code, reason, willRetry, retryIn });
+            const now = Date.now();
+            const opened = this.openedAt > 0;
+            const upFor = opened ? now - this.openedAt : 0;
+            const quietFor = opened ? now - this.lastFrameAt : 0;
+            this.h.onClose && this.h.onClose({ code, reason, willRetry, retryIn, opened, upFor, quietFor });
             if (willRetry) {
                 this.attempt++;
                 this.retryTimer = setTimeout(() => this.connect(), retryIn * 1000);
@@ -105,5 +117,42 @@
         }
     }
 
-    return { Connection, buildUrl };
+    // "40 s", "15 min", "2 h 5 min"
+    function span(ms) {
+        const s = Math.round(ms / 1000);
+        if (s < 60) return `${s} s`;
+        const m = Math.round(s / 60);
+        if (m < 60) return `${m} min`;
+        return `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ""}`;
+    }
+
+    const CLOSE_WHAT = {
+        1000: "The server closed the connection",
+        1001: "The server or the browser went away",
+        1006: "The connection dropped without a goodbye",
+        1011: "The server hit an error",
+        1015: "The secure (TLS) connection failed",
+    };
+
+    /*
+     * What a close means to a player, with what we know about it. The browser gives no reason
+     * for 1006 (on purpose), so the clues are ours: how long the link was up, how long the
+     * server had been quiet, whether the page was in the background or the device offline.
+     * info: onClose()'s, plus at (a clock time "11:27"), where ("host:port"),
+     * hiddenFor (ms the page was in the background just before, 0 if not), offline (bool).
+     */
+    function describeClose({ code, reason, opened, upFor, quietFor, at, where, hiddenFor = 0, offline = false }) {
+        const c = `code ${code || "?"}${reason ? ": " + reason : ""}`;
+        const out = [];
+        if (!opened) out.push(`Couldn't connect to ${where} at ${at} (${c}).`);
+        else {
+            out.push(`${CLOSE_WHAT[code] || "The connection closed"} at ${at} (${c}), after ${span(upFor)} connected.`);
+            if (code !== 1000) out.push(`The server last sent something ${span(quietFor)} before.`);
+        }
+        if (offline) out.push("Your device said it was offline.");
+        if (hiddenFor >= 60000) out.push(`The page had been in the background for ${span(hiddenFor)}: a sleeping device or a browser saving power drops connections.`);
+        return out.join(" ");
+    }
+
+    return { Connection, buildUrl, describeClose, span };
 });

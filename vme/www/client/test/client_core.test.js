@@ -272,3 +272,60 @@ test("Connection sends the empty hello and strips newlines", () => {
         c.connect();
     });
 });
+
+test("describeClose: never connected", () => {
+    const t = C.describeClose({ code: 1006, opened: false, at: "11:27", where: "valhalla.com:4280" });
+    assert.equal(t, "Couldn't connect to valhalla.com:4280 at 11:27 (code 1006).");
+});
+
+test("describeClose: dropped, with how long it was up and quiet", () => {
+    const t = C.describeClose({ code: 1006, opened: true, upFor: 16 * 60000, quietFor: 2000, at: "11:27", where: "x:1" });
+    assert.equal(t, "The connection dropped without a goodbye at 11:27 (code 1006), after 16 min connected. The server last sent something 2 s before.");
+});
+
+test("describeClose: background page and offline device", () => {
+    const t = C.describeClose({ code: 1006, opened: true, upFor: 3 * 3600000 + 5 * 60000, quietFor: 40 * 60000, at: "11:27", where: "x:1", hiddenFor: 40 * 60000, offline: true });
+    assert.match(t, /after 3 h 5 min connected/);
+    assert.match(t, /Your device said it was offline\./);
+    assert.match(t, /in the background for 40 min/);
+    // a few seconds in the background is no clue
+    assert.doesNotMatch(C.describeClose({ code: 1006, opened: true, upFor: 1000, quietFor: 1000, at: "", where: "", hiddenFor: 5000 }), /background/);
+});
+
+test("describeClose: a clean close by the server has its reason and no quiet time", () => {
+    const t = C.describeClose({ code: 1000, reason: "bye", opened: true, upFor: 90000, quietFor: 0, at: "09:00", where: "x:1" });
+    assert.equal(t, "The server closed the connection at 09:00 (code 1000: bye), after 2 min connected.");
+});
+
+test("Connection reports whether it ever opened, and for how long", async () => {
+    class Refused {
+        constructor() {
+            this.readyState = 0;
+            setImmediate(() => this.onclose({ code: 1006, reason: "" }));
+        }
+        close() {}
+    }
+    const never = await new Promise(resolve => {
+        new C.Connection("ws://x", { onClose: resolve }, { WebSocketImpl: Refused, autoReconnect: false }).connect();
+    });
+    assert.equal(never.opened, false);
+
+    class Drops {
+        constructor() {
+            this.readyState = 1;
+            setImmediate(() => {
+                this.onopen();
+                this.onmessage({ data: "hello" });
+                this.readyState = 3;
+                this.onclose({ code: 1006, reason: "" });
+            });
+        }
+        send() {}
+        close() {}
+    }
+    const dropped = await new Promise(resolve => {
+        new C.Connection("ws://x", { onClose: resolve }, { WebSocketImpl: Drops, autoReconnect: false }).connect();
+    });
+    assert.equal(dropped.opened, true);
+    assert.ok(dropped.upFor >= 0 && dropped.quietFor >= 0 && dropped.quietFor <= dropped.upFor);
+});
