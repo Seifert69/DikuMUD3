@@ -1345,23 +1345,50 @@
         b.hidden = false;
     }
 
-    // What a websocket close code means to a player.
-    function closeText(code, reason) {
-        const what = {
-            1000: "The server closed the connection",
-            1001: "The server or the browser went away",
-            1006: "The connection dropped without a goodbye (network trouble, the device sleeping, or the server)",
-            1011: "The server hit an error",
-            1015: "The secure (TLS) connection failed",
-        }[code] || "The connection closed";
-        return `${what}. Code ${code || "?"}${reason ? ": " + reason : ""}, at ${hhmm()}.`;
+    // Clues for why a connection closed: when the page was last hidden and shown, and when the
+    // device last went offline. A page that loads in a background tab is hidden from the start.
+    const clues = { hiddenAt: document.hidden ? Date.now() : 0, shownAt: 0, offlineAt: 0 };
+    document.addEventListener("visibilitychange", () => {
+        if (document.hidden) clues.hiddenAt = Date.now();
+        else clues.shownAt = Date.now();
+    });
+    addEventListener("offline", () => (clues.offlineAt = Date.now()));
+
+    function closeText(info, server) {
+        const now = Date.now();
+        const c = D.connection.closeClues({ ...info, ...clues, now, hiddenNow: document.hidden, onLine: navigator.onLine });
+        return D.connection.describeClose({ ...info, ...c, at: hhmm(), where: D.connection.hostPort(server) });
     }
 
-    function showLostDialog(text, reconnect) {
+    // Couldn't connect: does the site this page came from still answer? That tells "your
+    // internet" from "the game's port". An image, since the page's CSP lets it connect only
+    // to websockets. Resolves to a sentence, or "" if it can't tell: a page opened from a file
+    // or this computer, or a device that knows it is offline.
+    function probeInternet(server) {
+        const site = location.hostname;
+        if (!/^https?:$/.test(location.protocol) || !navigator.onLine) return Promise.resolve("");
+        if (/^(localhost|127\.|\[?::1\]?$)/.test(site)) return Promise.resolve("");
+        return new Promise(resolve => {
+            const img = new Image();
+            const done = ok => {
+                clearTimeout(timer);
+                img.onload = img.onerror = null;
+                const port = server.port ? ` ${server.port}` : "";
+                resolve(ok ? `${site} still answers, so your internet works: the game's port${port} doesn't. The game may be restarting (try again in a minute), or your network may block that port.`
+                           : `${site} doesn't answer either: your internet is down, or the whole site is.`);
+            };
+            const timer = setTimeout(() => done(false), 6000);
+            img.onload = () => done(true);
+            img.onerror = () => done(false);
+            img.src = `img/chat.png?probe=${Date.now()}`;
+        });
+    }
+
+    function showLostDialog(text, reconnect, title = "Connection lost") {
         const d = el("div", "panel connect lost");
         d.setAttribute("role", "alertdialog");
-        d.setAttribute("aria-label", "Connection lost");
-        d.append(el("h1", null, "Connection lost"), el("p", null, text));
+        d.setAttribute("aria-label", title);
+        d.append(el("h1", null, title), el("p", null, text));
         if (relogin.creds) d.append(el("p", null, `Reconnecting logs you back in as ${cap(relogin.creds.name)}.`));
         const row = el("div", "row");
         const change = el("button", "btn", "Change server");
@@ -1376,6 +1403,7 @@
         d.append(row);
         openScrim(d);
         go.focus();
+        return d;
     }
 
     function connect(server) {
@@ -1398,8 +1426,9 @@
                 focusInput();
             },
             onFrame,
-            onClose({ code, reason }) {
+            onClose(info) {
                 if (S.conn !== conn) return;
+                const { code, opened } = info;
                 setConnState("closed", "Disconnected");
                 setPassword({ on: false });
                 stopRelogin();
@@ -1411,11 +1440,26 @@
                     sys("Reconnecting…");
                     conn.connect();
                 };
-                const text = closeText(code, reason);
-                sys(text, !S.quitting && code !== 1000);
-                banner(S.quitting ? "You left the game." : "Disconnected.", [["Reconnect", again], ["Change server", showConnect]]);
-                if (S.quitting) relogin.creds = null;
-                else if (!conn.userClosed) showLostDialog(text, again);
+                const buttons = [["Reconnect", again], ["Change server", showConnect]];
+                if (S.quitting || conn.userClosed) {
+                    // Left on purpose: no diagnosis
+                    sys(S.quitting ? "You left the game." : "Disconnected.");
+                    banner(S.quitting ? "You left the game." : "Disconnected.", buttons);
+                    if (S.quitting) relogin.creds = null;
+                    return;
+                }
+                const text = closeText(info, server);
+                sys(text, code !== 1000);
+                if (!opened) setConnState("closed", "Not connected");
+                banner(opened ? "Disconnected." : "Can't connect.", buttons);
+                const d = showLostDialog(text, again, opened ? "Connection lost" : "Can't connect");
+                // Code 0: the browser refused before trying, so the network isn't the question
+                if (!opened && code !== 0 && code !== 1015)
+                    probeInternet(server).then(more => {
+                        if (!more || !d.isConnected) return; // this close's dialog only, while it is open
+                        sys(more);
+                        d.querySelector("p").append(" " + more);
+                    });
             },
         }, { autoReconnect: false });
         S.conn = conn;
