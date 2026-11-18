@@ -18,8 +18,8 @@ the like). <a cmd='#'>status weapons</a> shows what you know.
 <li><b>Polearms</b>: quarterstaff, spear, javelin, lance, trident, halberd, bardiche, scythe.</li>
 <li><b>Natural</b>: fist, kick, elbow and knee, and the claws, bites and stings of beasts.</li>
 <li><b>Special</b>: whip, and the bow, crossbow and sling, which shoot (see <a cmd='#'>Help Shoot</a>).</li></ul>
-<p>Most weapons lean on strength, with some dexterity; the whip, the sickle 
-and the bows and slings lean on dexterity (see <a cmd='#'>Help Strength</a> and 
+<p>Most weapons lean on strength, with some dexterity; the dagger, stiletto, main gauche and 
+rapier, the whip, the sickle and the bows and slings lean on dexterity (see <a cmd='#'>Help Strength</a> and 
 <a cmd='#'>Help Dexterity</a>). Two-handed weapons are slower and leave no hand free 
 for a shield; light ones strike faster. Each weapon also has a help page 
 of its own: help and the weapon's name.

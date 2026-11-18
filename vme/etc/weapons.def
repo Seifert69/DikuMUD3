@@ -1016,7 +1016,7 @@ sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_PIERCE
 shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+ability         = {ABIL_STR,ABIL_DEX,ABIL_DEX}
 speed           =   SPEED_1H
 fumble          =   7
 //_CUTBEGIN rapier
@@ -1093,7 +1093,7 @@ sphere          = WPN_SWORD
 hands           =   1
 type            = WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   SPEED_1HL
 fumble          =   2
 //_CUTBEGIN stiletto
@@ -1133,7 +1133,7 @@ sphere          = WPN_SWORD
 hands           =   1
 type            =  WPNT_PIERCE
 shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   SPEED_1HL
 fumble          =   2
 //_CUTBEGIN dagger
@@ -1295,7 +1295,7 @@ sphere          = WPN_SWORD
 hands           =   1
 type            = WPNT_SLASH
 shield          = SHIELD_M_BLOCK
-ability         = {ABIL_STR,ABIL_STR,ABIL_DEX}
+ability         = {ABIL_DEX,ABIL_DEX,ABIL_STR}
 speed           =   SPEED_1HL
 fumble          =   2
 //_CUTBEGIN main gauche
