@@ -4603,8 +4603,12 @@ code
    dilcopy("t032nr@test", b1);
    dilcopy("t032aw@test", npc);
    dilcopy("t032na@test", npc);
-   pause;
-   pause;
+   // A dilcopy()'d program first runs PULSE_SEC later; until then it hears nothing. Two fixed
+   // ticks (2 * PULSE_SEC), not two pauses: a pause is random (half to one and a half
+   // heartbeats), so two of them could end at PULSE_SEC, together with the programs' start,
+   // and the smile came before the aware program listened (the test failed now and then).
+   wait(SFB_TICK, TRUE);
+   wait(SFB_TICK, TRUE);
    exec("smile", npc);
    sendto("t032pri", b1);
    pause;
@@ -5309,9 +5313,12 @@ code
       bad := 1;
    }
 
-   // argument: "" at a tick, the message at SFB_MSG; getword() takes its first word off it
-   pause;
-   pause;
+   // argument: "" at a tick, the message at SFB_MSG; getword() takes its first word off it.
+   // t031arg listens from 2 * PULSE_SEC after its dilcopy() (its first run, then a tick). Fixed
+   // ticks, not pauses: three random pauses could add up to 1.5 * PULSE_SEC, and the message
+   // came before it listened (the test failed now and then).
+   wait(SFB_TICK, TRUE);
+   wait(SFB_TICK, TRUE);
    sendto("t031msg hello  world", box);
    pause;
    eh := "$t031arg" in box.extra;
@@ -5936,8 +5943,10 @@ code
    // an intlist through a string call was taken for a type error
    dilcopy("t029call@test", n);
    secure(o, lost);
-   pause;
-   pause;
+   // Two fixed ticks, not two pauses: the copied programs first run PULSE_SEC later, and two
+   // random pauses could end right then (see T032)
+   wait(SFB_TICK, TRUE);
+   wait(SFB_TICK, TRUE);
    store(o, "t029store", TRUE);
    i := delunit("t029store");
    if (not ("$t029save" in o.extra))
@@ -6774,9 +6783,12 @@ code
    ship := findroom("shipdeck@test");
    u := load("passenger@test");
    link(u, ship);
-   // In port the captain starts ashore and has to board; at sea aboard
+   // In port the captain starts ashore and has to board; at sea aboard. Also aboard once the
+   // ship is boarding: it may sail within a second or two, before his program first runs
+   // (PULSE_SEC after the load) and boards, and the test failed now and then.
    c := load("captain@test");
-   if (ship.outside.symname == "shipsea@test")
+   if ((ship.outside.symname == "shipsea@test") or
+       (("$ship_last" in ship.extra) and ("ship boarding " in ship.extra.["$ship_last"].descr)))
       link(c, ship);
    else
       link(c, ship.outside);
