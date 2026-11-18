@@ -1248,3 +1248,92 @@ BOOST_FIXTURE_TEST_CASE(out_of_fds_the_waiting_connection_is_dropped, TlsFixture
 }
 
 BOOST_AUTO_TEST_SUITE_END()
+
+/**********************************************************************************
+ * MudConnection_Suite
+ *
+ * mplex keeps one connection to the server (g_MudHook). After a reboot, the
+ * websocket mplex's main thread (Control()) and its websocket thread (a player
+ * typing while the server was down) both connected. The second connection was
+ * hooked over the first, whose fd stayed in select() with nobody reading it:
+ * mplex spun at 100% CPU until cQueue::Cut()'s assertion aborted it, dropping
+ * every web player (code 1006 in the browser).
+ */
+namespace
+{
+// A listening socket standing in for the server, on a free loopback port
+struct FakeMud
+{
+    FakeMud()
+        : port(std::exchange(mplex::g_mplex_arg.nMudPort, 0)),
+          address(std::exchange(mplex::g_mplex_arg.pAddress, const_cast<char *>("127.0.0.1")))
+    {
+        listener = socket(AF_INET, SOCK_STREAM, 0);
+        BOOST_REQUIRE(listener != -1);
+        sockaddr_in a{};
+        a.sin_family = AF_INET;
+        a.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
+        BOOST_REQUIRE_EQUAL(bind(listener, (sockaddr *)&a, sizeof(a)), 0);
+        BOOST_REQUIRE_EQUAL(listen(listener, 8), 0);
+        socklen_t n = sizeof(a);
+        BOOST_REQUIRE_EQUAL(getsockname(listener, (sockaddr *)&a, &n), 0);
+        mplex::g_mplex_arg.nMudPort = ntohs(a.sin_port);
+        fcntl(listener, F_SETFL, O_NONBLOCK);
+    }
+
+    ~FakeMud()
+    {
+        mplex::g_MudHook.Unhook();
+        for (int fd : accepted)
+        {
+            close(fd);
+        }
+        close(listener);
+        mplex::g_mplex_arg.nMudPort = port;
+        mplex::g_mplex_arg.pAddress = address;
+    }
+
+    // Accepts what came in; returns how many connections there have been
+    int Connections()
+    {
+        int fd;
+        while ((fd = accept(listener, nullptr, nullptr)) != -1)
+        {
+            accepted.push_back(fd);
+        }
+        return accepted.size();
+    }
+
+    int port;
+    char *address;
+    int listener = -1;
+    std::vector<int> accepted;
+};
+} // namespace
+
+BOOST_FIXTURE_TEST_SUITE(MudConnection_Suite, FakeMud)
+
+BOOST_AUTO_TEST_CASE(a_second_test_mud_up_keeps_the_one_connection)
+{
+    SavedGlobals saved;
+    mplex::test_mud_up();
+    BOOST_REQUIRE(mplex::g_MudHook.IsHooked());
+    int fd = mplex::g_MudHook.tfd();
+
+    mplex::test_mud_up();
+    BOOST_TEST(Connections() == 1);
+    BOOST_TEST(mplex::g_MudHook.tfd() == fd);
+}
+
+BOOST_AUTO_TEST_CASE(web_input_while_the_server_is_down_does_not_connect)
+{
+    // The websocket thread runs this: only Control() on the main thread connects
+    SavedGlobals saved(TRUE);
+    mplex::cConHook web;
+    web.MenuSelect("");
+    web.MudDown("look");
+    BOOST_TEST(!mplex::g_MudHook.IsHooked());
+    BOOST_TEST(Connections() == 0);
+}
+
+BOOST_AUTO_TEST_SUITE_END()

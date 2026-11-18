@@ -62,7 +62,8 @@ void alarm_check(int i)
     }
 }
 
-// Open connection to the MUD erver and alert all connected clients if OK.
+// Open connection to the MUD server and alert all connected clients if OK.
+// Only ever from the main thread (Control(), and telnet input, which it reads).
 void test_mud_up()
 {
     int fd = 0;
@@ -70,10 +71,15 @@ void test_mud_up()
     cConHook *con = nullptr;
     static int nRetries = 0;
 
-    fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
+    // One connection to the server. A second one, hooked over the first, left the
+    // first fd in select() with nobody reading it: mplex spun at 100% CPU until a
+    // queue assertion aborted it.
+    if (g_MudHook.IsHooked())
+    {
+        return;
+    }
 
-    // If this acts up then it might be because of multithreading issues
-    // from the clientconnector.
+    fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
 
     if (fd == -1)
     {
@@ -90,11 +96,6 @@ void test_mud_up()
             exit(1);
         }
         return;
-    }
-
-    if (g_MudHook.tfd() != -1)
-    {
-        slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
     }
 
     if (!g_CaptainHook.Hook(fd, &g_MudHook))
