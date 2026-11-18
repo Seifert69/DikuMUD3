@@ -11,6 +11,8 @@
 #include "essential.h"
 #include "queue.h"
 
+#include <mutex>
+
 #ifdef _WINDOWS
     #include <winsock.h>
 #else
@@ -92,7 +94,12 @@ public:
     int Wait(timeval *timeout);
     void Unhook(cHook *hook);
 
+    /// A lock the caller of Wait() holds, released while select() waits: another thread
+    /// can then work on the hooks. Wait() takes it back before serving any of them.
+    void SetSelectLock(std::mutex *lock) { pSelectLock = lock; }
+
 private:
+    std::mutex *pSelectLock = nullptr;
     fd_set read_set, write_set;
 
     cHook *pfHook[FD_SETSIZE]; ///< by fd

@@ -62,7 +62,10 @@ void alarm_check(int i)
     }
 }
 
-// Open connection to the MUD erver and alert all connected clients if OK.
+// Open connection to the MUD server and alert all connected clients if OK.
+// Control() calls it every second while the server is down. Players typing meanwhile
+// don't: websocket input comes on the other thread, and two callers at once made two
+// connections.
 void test_mud_up()
 {
     int fd = 0;
@@ -70,18 +73,18 @@ void test_mud_up()
     cConHook *con = nullptr;
     static int nRetries = 0;
 
-    fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
+    // One connection to the server. A second one, hooked over the first, left the
+    // first fd in select() with nobody reading it: mplex spun at 100% CPU until a
+    // queue assertion aborted it.
+    if (g_MudHook.IsHooked())
+    {
+        return;
+    }
 
-    // If this acts up then it might be because of multithreading issues
-    // from the clientconnector.
+    fd = OpenNetwork(g_mplex_arg.nMudPort, g_mplex_arg.pAddress);
 
     if (fd == -1)
     {
-#if defined(_WINDOWS)
-        Sleep(1000);
-#else
-        sleep(1);
-#endif
         slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", g_mplex_arg.pAddress, g_mplex_arg.nMudPort);
         nRetries++;
         if (nRetries > 600)
@@ -90,11 +93,6 @@ void test_mud_up()
             exit(1);
         }
         return;
-    }
-
-    if (g_MudHook.tfd() != -1)
-    {
-        slog(LOG_ALL, 0, "test mud up called with a non -1 fd.");
     }
 
     if (!g_CaptainHook.Hook(fd, &g_MudHook))
@@ -160,11 +158,13 @@ void mud_went_down()
     }
 }
 
-// Main MPLEX loop called by main() in mplex.cpp
+// Main MPLEX loop called by main() in mplex.cpp. Holds g_hookLock but while waiting.
 void Control()
 {
     static int tries = 0;
     int n = 0;
+    std::unique_lock<std::mutex> hold(g_hookLock);
+    g_CaptainHook.SetSelectLock(&g_hookLock);
 
     for (;;)
     {
@@ -183,7 +183,7 @@ void Control()
 #if defined(_WINDOWS)
             Sleep(1000);
 #else
-            sleep(1);
+            sleep_unlocked(1);
 #endif
             test_mud_up(); /* Need to do this first... */
 

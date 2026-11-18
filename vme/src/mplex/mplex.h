@@ -14,6 +14,7 @@
 #include "queue.h"
 
 #include <cstring>
+#include <mutex>
 
 namespace mplex
 {
@@ -48,6 +49,15 @@ struct arg_type
 extern int g_bHadAlarm;
 extern arg_type g_mplex_arg;
 extern char g_mudname[50];
+
+// The hooks and everything they reach (their queues, g_connection_list, g_MudHook) are used
+// by two threads in websocket mode: the main thread's select() loop and the websocket thread.
+// This lock makes them take turns. The main thread holds it all the time, except while it
+// waits in select() or sleeps; the websocket thread takes it for each event it handles.
+extern std::mutex g_hookLock;
+
+// sleep() for the main thread, which lets the websocket thread work meanwhile
+void sleep_unlocked(unsigned int seconds);
 
 int ParseArg(int argc, char *argv[], arg_type *arg);
 void bye_signal(int signal);

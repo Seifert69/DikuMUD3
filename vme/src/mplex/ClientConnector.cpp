@@ -114,8 +114,7 @@ void cConHook::MenuSelect(const char *cmd)
     if (!g_MudHook.IsHooked())
     {
         auto buf = diku::format_to_str("%s is unreachable right now...<br/>", g_mudname);
-        SendCon(buf);
-        test_mud_up(); // Wonder if I have multi threading issues here :o)
+        SendCon(buf); // Control() reconnects by itself, every second
         return;
     }
 
@@ -144,9 +143,7 @@ void dumbMudDown(cConHook *con, const char *cmd)
 void cConHook::MudDown(const char *cmd)
 {
     auto buf = diku::format_to_str("There is still no connection to %s.<br/>", g_mudname);
-    SendCon(buf);
-
-    test_mud_up(); // Wonder if I have multi threading issues here :o)
+    SendCon(buf); // Control() reconnects by itself, every second
 }
 
 void Idle(cConHook *con, const char *cmd)

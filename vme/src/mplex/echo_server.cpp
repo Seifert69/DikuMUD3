@@ -45,15 +45,12 @@ namespace mplex
 // re-locks it (self-deadlock), and holding it while acquiring
 // cConHook::m_mtx (ABBA with cConHook::Close()).
 //
-// The monitor protects map MEMBERSHIP only; the cConHook objects themselves
-// are guarded by their own m_mtx. NOTE on lifetime: hooks ARE deleted - the
-// main thread's ClearUnhooked() sweep frees any hook that is no longer
-// hooked (for websocket hooks: after Close() nulls m_fWebsSend). A raw
-// pointer returned by take()/find_or_insert() therefore has a narrow window
-// where a concurrent main-thread Close() + sweep could free it while the
-// websocket thread is still calling into it. Closing that window for real
-// needs shared ownership (shared_ptr in map + connection list) or handing
-// message processing off to the main thread.
+// The monitor protects map MEMBERSHIP only. The hooks themselves, and
+// everything they reach, are the main thread's except while the websocket
+// thread holds g_hookLock: on_message() and on_close() take it before the
+// map, so a hook they get can't be swept by the main thread's ClearUnhooked()
+// while they use it. Lock order: g_hookLock, then this map's lock or a
+// cConHook's m_mtx.
 class cConnectionMap
 {
 public:
@@ -132,6 +129,7 @@ void remove_gmap(cConHook *con)
 
 void on_close(websocketpp::connection_hdl hdl)
 {
+    std::lock_guard<std::mutex> hold(g_hookLock); // the main thread's turn is over
     slog(LOG_OFF, 0, "on_close called for hdl %p", hdl.lock().get());
 
     // take() removes the entry and releases the map lock before we Close()
@@ -205,6 +203,10 @@ static int ws_send_message(Server *s, websocketpp::connection_hdl hdl, const cha
 template <typename Server>
 static void on_message(Server *s, websocketpp::connection_hdl hdl, typename Server::message_ptr msg)
 {
+    // Everything below writes to the hooks the main thread serves: the player's
+    // input goes into g_MudHook's queue, a new player into g_connection_list.
+    std::lock_guard<std::mutex> hold(g_hookLock);
+
     // The monitor holds its lock only for the lookup/insert (plus the
     // factory below for new connections) and releases it before we call
     // into the hook: the input processing can reach cConHook::Close()

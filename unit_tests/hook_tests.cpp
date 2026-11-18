@@ -5,6 +5,11 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include <atomic>
+#include <chrono>
+#include <mutex>
+#include <thread>
+
 #include <boost/test/unit_test.hpp>
 
 /**********************************************************************************
@@ -111,6 +116,49 @@ BOOST_AUTO_TEST_CASE(an_fd_select_cannot_watch_is_refused)
     BOOST_TEST(!g_CaptainHook.Hook(FD_SETSIZE, &h));
     BOOST_TEST(!g_CaptainHook.Hook(-1, &h));
     BOOST_TEST(!h.IsHooked());
+}
+
+// mplex's websocket thread works on the hooks only while the main thread waits in
+// select(): Wait() lets go of the lock for select() and has it back before it serves a hook
+BOOST_AUTO_TEST_CASE(wait_lets_go_of_the_select_lock_only_while_it_waits)
+{
+    struct LockCheckingHook : public CountingHook
+    {
+        void Input(int nFlags) override
+        {
+            CountingHook::Input(nFlags);
+            otherDone = done->load();
+        }
+        std::atomic<bool> *done = nullptr;
+        bool otherDone = false;
+    };
+
+    SocketAt s(900); // not the lowest free fd, which socketpair() takes itself
+    LockCheckingHook h;
+    std::atomic<bool> done{false};
+    h.done = &done;
+    BOOST_REQUIRE(g_CaptainHook.Hook(s.fd, &h));
+
+    std::mutex lock;
+    lock.lock();
+    g_CaptainHook.SetSelectLock(&lock);
+    std::thread other(
+        [&]
+        {
+            std::lock_guard<std::mutex> hold(lock); // only once Wait() is in select()
+            BOOST_REQUIRE_EQUAL(write(s.peer, "x", 1), 1);
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            done = true; // still holding the lock: Wait() mustn't serve before this
+        });
+    timeval tv{5, 0};
+    int n = g_CaptainHook.Wait(&tv);
+    g_CaptainHook.SetSelectLock(nullptr);
+    lock.unlock(); // before join(): a Wait() that never let go fails the test, not hangs it
+    other.join();
+
+    BOOST_TEST(n == 1);
+    BOOST_TEST(h.reads == 1);
+    BOOST_TEST(h.otherDone);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
