@@ -9,7 +9,7 @@
 // (the built-in WebSocket).
 //
 // Worker processes each run a few websocket players. A player creates its character (Chaosaa,
-// Chaosab ...: they are saved in vme/lib like any other), logs in, plays (walks, looks, says,
+// Chaosab ...: they save themselves into vme/lib like any other), logs in, plays (walks, looks, says,
 // fights, asks for help), sends bursts of commands, idles, and leaves by closing its socket or
 // by quitting. At random the test:
 //   - kills a worker outright, so its players' sockets die without a goodbye, then starts another;
@@ -85,7 +85,9 @@ function worker(slots) {
                 if (enter) return say(enter[1]);
                 if (/Please select|Make your choice/i.test(t)) return say(String(1 + rnd(2)));
                 if (/Press RETURN|Return for more/i.test(t)) return say("");
-                if (!inGame && /Exits:/.test(t)) { inGame = true; stats.ingame++; }
+                // In the game: the prompt ("105m/204e/44h>"). A new character is a guest until it
+                // saves, so it saves at once: later logins go through the password and "throw out"
+                if (!inGame && /\d+m\/\d+e\/\d+h>/.test(t)) { inGame = true; stats.ingame++; return say("save"); }
                 const r = Math.random();
                 if (r < 0.01) { clearInterval(loop); return ws.close(); } // leaves, closing the socket
                 if (r < 0.015 && inGame) return say("quit"); // leaves through the game
