@@ -103,18 +103,6 @@ void cConHook::PlayLoop(const char *cmd)
     }
 }
 
-// A player typed while the server is down: telnet tries to reconnect now. A
-// websocket client's input comes on the websocket thread, which must not connect:
-// with Control() connecting on the main thread at the same moment, mplex ended up
-// with two connections to the server. Control() retries every second anyway.
-static void retry_mud()
-{
-    if (!g_mplex_arg.bWebSockets)
-    {
-        test_mud_up();
-    }
-}
-
 void dumbMenuSelect(cConHook *con, const char *cmd)
 {
     con->MenuSelect(cmd);
@@ -126,8 +114,7 @@ void cConHook::MenuSelect(const char *cmd)
     if (!g_MudHook.IsHooked())
     {
         auto buf = diku::format_to_str("%s is unreachable right now...<br/>", g_mudname);
-        SendCon(buf);
-        retry_mud();
+        SendCon(buf); // Control() reconnects by itself, every second
         return;
     }
 
@@ -156,9 +143,7 @@ void dumbMudDown(cConHook *con, const char *cmd)
 void cConHook::MudDown(const char *cmd)
 {
     auto buf = diku::format_to_str("There is still no connection to %s.<br/>", g_mudname);
-    SendCon(buf);
-
-    retry_mud();
+    SendCon(buf); // Control() reconnects by itself, every second
 }
 
 void Idle(cConHook *con, const char *cmd)

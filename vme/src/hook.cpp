@@ -557,7 +557,17 @@ int cCaptainHook::Wait(timeval *timeout)
         }
     }
 
+    if (pSelectLock)
+    {
+        pSelectLock->unlock();
+    }
     n = select(nMax + 1, &read_set, &write_set, nullptr, timeout);
+    if (pSelectLock)
+    {
+        int e = errno; // lock() mustn't hide select()'s
+        pSelectLock->lock();
+        errno = e;
+    }
 
     if (n == -1)
     {

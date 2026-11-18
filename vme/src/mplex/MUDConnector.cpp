@@ -63,7 +63,9 @@ void alarm_check(int i)
 }
 
 // Open connection to the MUD server and alert all connected clients if OK.
-// Only ever from the main thread (Control(), and telnet input, which it reads).
+// Control() calls it every second while the server is down. Players typing meanwhile
+// don't: websocket input comes on the other thread, and two callers at once made two
+// connections.
 void test_mud_up()
 {
     int fd = 0;
@@ -83,11 +85,6 @@ void test_mud_up()
 
     if (fd == -1)
     {
-#if defined(_WINDOWS)
-        Sleep(1000);
-#else
-        sleep(1);
-#endif
         slog(LOG_OFF, 0, "Unable to connect to MUD server %s:%d", g_mplex_arg.pAddress, g_mplex_arg.nMudPort);
         nRetries++;
         if (nRetries > 600)
@@ -161,11 +158,13 @@ void mud_went_down()
     }
 }
 
-// Main MPLEX loop called by main() in mplex.cpp
+// Main MPLEX loop called by main() in mplex.cpp. Holds g_hookLock but while waiting.
 void Control()
 {
     static int tries = 0;
     int n = 0;
+    std::unique_lock<std::mutex> hold(g_hookLock);
+    g_CaptainHook.SetSelectLock(&g_hookLock);
 
     for (;;)
     {
@@ -184,7 +183,7 @@ void Control()
 #if defined(_WINDOWS)
             Sleep(1000);
 #else
-            sleep(1);
+            sleep_unlocked(1);
 #endif
             test_mud_up(); /* Need to do this first... */
 

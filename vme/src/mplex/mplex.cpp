@@ -37,6 +37,14 @@ namespace mplex
 char g_mudname[50] = "the MUD server (via DikuMUD Mplex)";
 int g_bHadAlarm = FALSE;
 arg_type g_mplex_arg;
+std::mutex g_hookLock;
+
+void sleep_unlocked(unsigned int seconds)
+{
+    g_hookLock.unlock();
+    sleep(seconds);
+    g_hookLock.lock();
+}
 
 void bye_signal(int signal)
 {
