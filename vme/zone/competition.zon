@@ -1476,8 +1476,8 @@ end
 
 %reset
 
-load comp_board into moot_sou@udgaard
-load xp_board into moot_nor@udgaard
-load death_board into moot_nowe@udgaard
+load comp_board into th_entrance@midgaard
+load xp_board into th_entrance@midgaard
+load death_board into th_entrance@midgaard
                            
 %end 
