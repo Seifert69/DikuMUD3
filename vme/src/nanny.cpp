@@ -763,6 +763,17 @@ void nanny_existing_pwd(descriptor_data *d, char *arg)
         }
     }
 
+    // A new character that another connection was still making: nanny_get_name() lent this one
+    // its password, and that connection has gone. There's no such player (no file, no file
+    // index), so there's nothing to enter the game as; the first DIL log() at login crashed
+    // on it. The same as nanny_throw() does.
+    if (!player_exists(PC_FILENAME(d->getCharacter())))
+    {
+        send_to_descriptor("<br/>That character was never finished. Please log in again.<br/>", d);
+        set_descriptor_fptr(d, nanny_close, TRUE);
+        return;
+    }
+
     /* Ok, he wasn't Link Dead, lets enter the game via menu */
     slog(LOG_BRIEF, CHAR_LEVEL(d->cgetCharacter()), "%s[%s] has connected.", PC_FILENAME(d->getCharacter()), d->getHostname());
 
