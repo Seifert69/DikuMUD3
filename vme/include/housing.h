@@ -16,6 +16,7 @@
 #define HOUSE_FURNISH  "$house furnished"
 #define HOUSE_FILE     "$house file"
 #define HOUSE_HOLDS    "$house holds"   /* on a chest: how many things it holds */
+#define HOUSE_AT       "$house at"      /* on furniture dragged out of the front room: the room it stands in (plot5b) */
 
 /* The building materials a player has handed in, counters on the player: what the architect
    takes off the price (felled logs to John the Lumberjack, iron ore to Sam the blacksmith) */

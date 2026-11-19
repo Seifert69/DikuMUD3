@@ -59,6 +59,8 @@ END HEADER*/
 #define POLICE_ACADEMY    "$Police Member"
 #define POLICE_BANNED     "$Police Banned"
 
+#define DRAGGABLE         "$draggable"   /* on an object that can't be taken but can be dragged (house furniture) */
+
 #define GUILD_KEY           "$guild"
 #define GUILD_KEY_PREPEND   "$guild/"
 #define GUILD_KEY_BANISHED  "$guilds_ban"
