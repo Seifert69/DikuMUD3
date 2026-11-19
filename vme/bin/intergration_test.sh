@@ -1,32 +1,8 @@
 #!/bin/bash
 set -x
 TIMEOUT=300s
-# The run uses zonelist.test; the game's own zonelist is put back afterwards (unless a killed
-# run left zonelist.test in its place, which is then not taken for the game's)
-if ! cmp -s ../etc/zonelist ../etc/zonelist.test; then
-  cp ../etc/zonelist ../etc/zonelist.saved
-  trap 'mv ../etc/zonelist.saved ../etc/zonelist' EXIT
-fi
-cp ../etc/zonelist.test ../etc/zonelist
-# -w: time-warped, the tests' waits pass without waiting for the clock
-timeout --signal=KILL ${TIMEOUT} ./vme -w
-result=$?
-#echo "RESULT:${result}"
-if [ ${result} -ne 0 ]; then
-  if [ ${result} -eq 137 ]; then
-    # see timeout man page for return vals
-    echo "TIMEOUT: vme failed to exit after ${TIMEOUT}"
-  else
-    cat vme.log
-  fi
-  exit 1
-fi
-# A clean exit before the tests are done (a caught exception, an early reboot) fails as well
-if ! grep -q 'Lab director finished running all tests' vme.log; then
-  cat vme.log
-  exit 1
-fi
-# vme -j <zone>: the zone as JSON lines after the boot, with every program and its arguments
+# vme -j <zone>: the zone as JSON lines after the boot, with every program and its arguments.
+# It boots the game's own zonelist (the whole public world): zonelist.test ends before haon_dor.
 rm -f dump_haon_dor.jsonl
 if ! timeout --signal=KILL ${TIMEOUT} ./vme -l vme_dump.log -j haon_dor; then
   cat vme_dump.log
@@ -59,4 +35,29 @@ assert (up['to_room'], up['difficulty'], up['exit_info']) == ('rn_6132@haon_dor'
 print('vme -j: %d lines checked' % len(lines))
 EOF
 rm -f dump_haon_dor.jsonl vme_dump.log
+# The run uses zonelist.test; the game's own zonelist is put back afterwards (unless a killed
+# run left zonelist.test in its place, which is then not taken for the game's)
+if ! cmp -s ../etc/zonelist ../etc/zonelist.test; then
+  cp ../etc/zonelist ../etc/zonelist.saved
+  trap 'mv ../etc/zonelist.saved ../etc/zonelist' EXIT
+fi
+cp ../etc/zonelist.test ../etc/zonelist
+# -w: time-warped, the tests' waits pass without waiting for the clock
+timeout --signal=KILL ${TIMEOUT} ./vme -w
+result=$?
+#echo "RESULT:${result}"
+if [ ${result} -ne 0 ]; then
+  if [ ${result} -eq 137 ]; then
+    # see timeout man page for return vals
+    echo "TIMEOUT: vme failed to exit after ${TIMEOUT}"
+  else
+    cat vme.log
+  fi
+  exit 1
+fi
+# A clean exit before the tests are done (a caught exception, an early reboot) fails as well
+if ! grep -q 'Lab director finished running all tests' vme.log; then
+  cat vme.log
+  exit 1
+fi
 exit 0
