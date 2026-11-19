@@ -105,4 +105,3 @@ extern int g_verbose;
 extern int g_nooutput;
 extern int g_make;
 extern bool g_quiet_compile;
-extern bool g_dump_json;

@@ -4,7 +4,6 @@ set(VMC_SRCS
         dilcheck.cpp dilcheck.h
         dilpar.h
         diltok.h
-        json.cpp
         vmc.cpp vmc.h
         vmc_process.cpp vmc_process.h
         vmctok.h
