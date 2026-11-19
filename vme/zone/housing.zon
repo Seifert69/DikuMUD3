@@ -18,7 +18,8 @@
 // directory (uhouses.plot1): the owner, the type, the condition (the room's hit points), who has
 // a key and the door lock ("locked", "open", or none), a line each. Each piece of furniture is a file of its own (uhouses.plot1.bed,
 // uhouses.plot1.chest1 ...), brought in the first time someone enters after a boot; a chest
-// saves itself, with what is in it, after things are put in or taken out.
+// saves itself, with what is in it, after things are put in or taken out. The owner can drag a
+// piece into another room of the house (house_drag); it remembers that room (HOUSE_AT).
 
 // The house lanes: Udgaard's Hearth Lane (cottages and houses, with the timber and ore
 // discounts) and Midgaard's streets (houses and townhouses, dearer the finer the street).
@@ -774,10 +775,84 @@ code
 }
 dilend
 
+// A piece of furniture in the house whose front room is room, in any of its rooms: the piece
+// saved in the file hfile, or, with hfile "", the first of the kind sym (with nolock, the first
+// of that kind without a lock). Null when there is none.
+dilbegin unitptr house_piece(room : unitptr, hfile : string, sym : string, nolock : integer);
+var
+   r : unitptr;
+   u : unitptr;
+   fl : extraptr;
+   d : integer;
+code
+{
+   d := -1;   // -1: the front room; then the house's rooms its exits lead to
+   while (d <= MAX_EXIT)
+   {
+      r := room;
+      if (d >= 0)
+         r := room.exit_to[d];
+      if ((d < 0) or (HOUSE_BACK in r.extra) or (HOUSE_UPPER in r.extra))
+      {
+         u := r.inside;
+         while (u != null)
+         {
+            fl := HOUSE_FILE in u.extra;   // a file is never "", a kind never ""
+            if ((fl != null) and ((fl.descr == hfile) or
+                                  ((u.nameidx == sym) and ((not nolock) or (not (HOUSE_CHESTLOCK in u.extra))))))
+               return (u);
+            u := u.next;
+         }
+      }
+      d := d + 1;
+   }
+   u := null;
+   return (u);
+}
+dilend
+
+// Puts a piece of furniture just restored into the room of the house it was dragged to
+// (HOUSE_AT), or else the front room. A piece saved before it could be dragged gets house_drag
+// (a restored unit has only the programs it was saved with), and a small chest loses the old
+// "at the foot of the bed": the bed may be in another room now. Both are saved, once.
+dilbegin house_place(u : unitptr, room : unitptr);
+var
+   at : extraptr;
+   fl : extraptr;
+   r : unitptr;
+   fix : integer;
+code
+{
+   subextra(u.extra, DRAGGABLE);   // only house_drag gives it, for a drag it allowed
+   at := HOUSE_AT in u.extra;
+   if (at != null)
+      r := findroom(at.descr + "@" + room.zoneidx);
+   if (r == null)
+      r := room;
+   link(u, r);
+   fix := FALSE;
+   if (not dilfind("house_drag@housing", u))
+   {
+      dilcopy("house_drag@housing", u);
+      fix := TRUE;
+   }
+   if ("foot of the bed" in u.outside_descr)
+   {
+      u.outside_descr := "A small wooden chest stands against the wall.";
+      fix := TRUE;
+   }
+   fl := HOUSE_FILE in u.extra;
+   if (fix and (fl != null))
+      store(u, fl.descr, TRUE);
+   return;
+}
+dilend
+
 // Brings the house's saved furniture in, once after each boot.
 dilbegin house_furnish(room : unitptr);
 external
    string house_file(room : unitptr);
+   house_place(u : unitptr, room : unitptr);
 var
    base : string;
    u : unitptr;
@@ -790,16 +865,160 @@ code
    base := house_file(room);
    u := restore(base + ".bed", null);
    if (u != null)
-      link(u, room);
+      house_place(u, room);
    i := 1;
    while (i <= HOUSE_CHESTS)
    {
       u := restore(base + ".chest" + itoa(i), null);
       if (u != null)
-         link(u, room);
+         house_place(u, room);
       i := i + 1;
    }
    return;
+}
+dilend
+
+// TRUE when r is a room of the house whose front room is front and open in its type: the front
+// room, the back room (not in a cottage) and the upper floor (only in a townhouse).
+dilbegin integer house_open(front : unitptr, r : unitptr);
+var
+   typ : extraptr;
+   d : integer;
+code
+{
+   if ((front == null) or (r == null))
+      return (FALSE);
+   if (r == front)
+      return (TRUE);
+   d := 0;
+   while (d <= MAX_EXIT)   // a room next to the front room
+   {
+      if (front.exit_to[d] == r)
+         break;
+      d := d + 1;
+   }
+   if (d > MAX_EXIT)
+      return (FALSE);
+   typ := HOUSE_TYPE in front.extra;
+   if (typ == null)
+      return (FALSE);
+   if (HOUSE_BACK in r.extra)
+      return (typ.descr != "cottage");
+   if (HOUSE_UPPER in r.extra)
+      return (typ.descr == "townhouse");
+   return (FALSE);
+}
+dilend
+
+// On a piece of furniture (a bed, a chest): the owner of its house (and gods) drag it into
+// another open room of the house, with drag_dil@basemove doing the dragging (endurance and
+// all): drag bed north, drag chest up. Nobody else, and not with someone lying in it. The piece
+// is DRAGGABLE only from this program's yes to the drag it allowed: every drag event takes the
+// mark off first, so a piece without this program can't be dragged at all. Once dragged it
+// remembers the room (HOUSE_AT) and saves itself, so it stands there after a reboot.
+dilbegin fnpri(FN_PRI_BLOCK) house_drag();
+external
+   integer checkexit@basemove(arg : string, bMessage : integer);
+   integer house_open(front : unitptr, r : unitptr);
+var
+   ch : unitptr;
+   u : unitptr;
+   dest : unitptr;
+   front : unitptr;
+   own : extraptr;
+   fl : extraptr;
+   sl : stringlist;
+   arg : string;
+   w : string;
+   d : integer;
+code
+{
+:start:
+   wait(SFB_CMD | SFB_DONE, command("drag"));
+   subextra(self.extra, DRAGGABLE);
+   ch := activator;
+
+   // the house: its front room, from the file the piece is saved in (house_file: mhouses.plot5,
+   // and the piece's own part, mhouses.plot5.chest1)
+   fl := HOUSE_FILE in self.extra;
+   if (fl != null)
+   {
+      sl := split(fl.descr, ".");
+      if (length(sl) >= 2)
+         front := findroom(sl.[1] + "@" + sl.[0]);
+   }
+
+   if (target == self)
+   {
+      // done: drag_dil dragged it here (a command itself has no target)
+      subextra(self.extra, HOUSE_AT);
+      if ((self.outside != front) and house_open(front, self.outside))
+         addextra(self.extra, {HOUSE_AT}, self.outside.nameidx);
+      if (fl != null)
+         store(self, fl.descr, TRUE);
+      goto start;
+   }
+
+   if ((ch.outside != self.outside) or (self.outside.type != UNIT_ST_ROOM))
+      goto start;   // not dragging it: drag_dil can't either, without the mark
+   arg := argument;
+   u := findunit(ch, arg, FIND_UNIT_SURRO, null);   // takes the word it matched off arg
+   if (u != self)
+      goto start;
+   own := null;
+   if (front != null)
+      own := HOUSE_OWNER in front.extra;
+   if (own == null)
+   {
+      block;
+      act("You cannot move $2n.", A_ALWAYS, ch, self, null, TO_CHAR);
+      goto start;
+   }
+   if ((ch.type != UNIT_ST_PC) or ((ch.level < IMMORTAL_LEVEL) and (own.descr != ch.name)))
+   {
+      block;
+      act("Only " + own.descr + " moves the furniture in this house.", A_ALWAYS, ch, null, null, TO_CHAR);
+      goto start;
+   }
+   u := self.inside;
+   while (u != null)
+   {
+      if ((u.type == UNIT_ST_PC) or (u.type == UNIT_ST_NPC))
+      {
+         block;
+         act("Not with $3n in it.", A_ALWAYS, ch, null, u, TO_CHAR);
+         goto start;
+      }
+      u := u.next;
+   }
+   w := getword(arg);
+   if (w == "")
+   {
+      block;
+      act("Which way do you want to drag $2n?", A_ALWAYS, ch, self, null, TO_CHAR);
+      goto start;
+   }
+   dest := null;
+   d := checkexit@basemove(w, FALSE);
+   if (d >= 0)
+      dest := self.outside.exit_to[d];
+   if (dest == null)
+   {
+      block;
+      act("You can't drag $2n that way.", A_ALWAYS, ch, self, null, TO_CHAR);
+      goto start;
+   }
+   if (not house_open(front, dest))
+   {
+      block;
+      if ((HOUSE_BACK in dest.extra) or (HOUSE_UPPER in dest.extra))
+         act("That part of the house is closed.", A_ALWAYS, ch, null, null, TO_CHAR);
+      else
+         act("The furniture stays in the house.", A_ALWAYS, ch, null, null, TO_CHAR);
+      goto start;
+   }
+   addextra(self.extra, {DRAGGABLE}, "");   // yes: drag_dil drags it, then the done event
+   goto start;
 }
 dilend
 
@@ -1920,6 +2139,7 @@ dilend
 dilbegin fnpri(FN_PRI_BLOCK) furniture();
 external
    unitptr house_find(pname : string, lane : string, street : string);
+   unitptr house_piece(room : unitptr, hfile : string, sym : string, nolock : integer);
    house_furnish(room : unitptr);
    string house_file(room : unitptr);
 var
@@ -2052,22 +2272,11 @@ code
          exec("say A bed needs no lock, " + pc.name + ".", self);
          goto start;
       }
-      n := 0;   // chests of that kind; u: the first without a lock
-      found := null;
-      u := room.inside;
-      while (u != null)
-      {
-         if (u.nameidx == syms.[i])
-         {
-            n := n + 1;
-            if ((found == null) and (not (HOUSE_CHESTLOCK in u.extra)))
-               found := u;
-         }
-         u := u.next;
-      }
+      found := house_piece(room, "", syms.[i], TRUE);   // the first of that kind without a lock
       if (found == null)
       {
-         if (n == 0)
+         u := house_piece(room, "", syms.[i], FALSE);
+         if (u == null)
             exec("say You have no such chest in your house, " + pc.name + ".", self);
          else
             exec("say That chest has a lock already, " + pc.name + ".", self);
@@ -2094,7 +2303,7 @@ code
    // a bed and up to HOUSE_CHESTS chests, each saved in a file of its own
    if (i == 0)
    {
-      if (findsymbolic(room, "house_bed@housing", FIND_UNIT_INVEN) != null)
+      if (house_piece(room, "", "house_bed", FALSE) != null)
       {
          exec("say You have a bed already, " + pc.name + ".", self);
          goto start;
@@ -2108,17 +2317,8 @@ code
       while ((n <= HOUSE_CHESTS) and (hfile == ""))
       {
          hfile := house_file(room) + ".chest" + itoa(n);
-         u := room.inside;
-         while (u != null)
-         {
-            fl := HOUSE_FILE in u.extra;
-            if ((fl != null) and (fl.descr == hfile))
-            {
-               hfile := "";
-               break;
-            }
-            u := u.next;
-         }
+         if (house_piece(room, hfile, "", FALSE) != null)
+            hfile := "";   // that file is a chest's already, in one of the house's rooms
          n := n + 1;
       }
       if (hfile == "")
@@ -2163,6 +2363,7 @@ capacity 1000
 weight 200
 cost 2 GOLD_PIECE
 dilcopy house_bed@housing();
+dilcopy house_drag@housing();
 end
 
                                  house_log
@@ -2217,12 +2418,13 @@ CONTAINER_DEF(2000) \
 open {EX_OPEN_CLOSE, EX_CLOSED} \
 extra {HOUSE_HOLDS} ITEMS \
 dilcopy house_chestlock@housing(); \
-dilcopy house_chest@housing();
+dilcopy house_chest@housing(); \
+dilcopy house_drag@housing();
 
                                  chest_small
 names {"small chest", "chest"}
 title "a small chest"
-descr "A small wooden chest stands at the foot of the bed."
+descr "A small wooden chest stands against the wall."
 extra {}
 "A plain chest of six pine boards, made by Calvin the carpenter."
 HOUSE_CHEST("10")

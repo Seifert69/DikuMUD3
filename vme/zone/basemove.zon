@@ -2633,8 +2633,9 @@ code
    }
 
 
-   /* Also, needs to be manipulate take in order to drag it */
-   if (not isset(item.manipulate, MANIPULATE_TAKE))
+   /* Also, needs to be manipulate take in order to drag it, or marked draggable (heavy
+      furniture: whatever rules it has, its own DIL checks them before this runs) */
+   if ((not isset(item.manipulate, MANIPULATE_TAKE)) and (not (DRAGGABLE in item.extra)))
    {
       act("You cannot move $2n.", A_ALWAYS, self, item, null, TO_CHAR);
       return;
