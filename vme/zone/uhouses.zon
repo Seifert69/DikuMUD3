@@ -104,6 +104,7 @@ of garden." \
 extra {HOUSE_BACK} "" \
 flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS, UNIT_FL_NO_TELEPORT, UNIT_FL_NO_MOB} \
 movement SECT_INSIDE \
+dilcopy house_inner@housing(); \
 ALWAYS_LIGHT
 
                                  plot1
