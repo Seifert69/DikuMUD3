@@ -22,12 +22,17 @@ You must be level 10 or higher, and you can own one house.
  John and Sam tell you your new prices, and <a cmd='#'>list</a> at the architect 
  shows them too.
 </pre>
-<p><b>Your door.</b> A new house is open to anyone: having one is something 
+<p><b>Your door.</b> Your house has a front door like any other: <a cmd='#'>open door</a> 
+and <a cmd='#'>close door</a> (on a street with several doors, name the way: <a cmd='#'>open 
+north door</a>). A new house is open to anyone: having one is something 
 in itself. Buy a lock from the architect (<a cmd='#'>buy lock</a>) to keep others 
 out. Inside, the owner can then:
 </p>
 <ul><li><a cmd='#'>lock door</a> and <a cmd='#'>unlock door</a>: while it is locked, only you, those</li></ul>
-<pre> you gave a key and the gods come in. Anyone else inside is shown out.
+<pre> you gave a key and the gods come in. You need not fumble with it: walk 
+ in or out, and you unlock the door and lock it again behind you. 
+ Anyone else finds it locked, and anyone without a key inside is 
+ shown out.
 </pre>
 <ul><li><a cmd='#'>invite &lt;name&gt;</a> gives a friend a key, <a cmd='#'>uninvite &lt;name&gt;</a> takes it back.</li></ul>
 <p><a cmd='#'>house</a> shows whose house you are in, its condition, and whether the 

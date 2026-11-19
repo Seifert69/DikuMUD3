@@ -2373,6 +2373,7 @@ code
          mv := oc_move(dir, TRUE);
          if (mv == FALSE)
             return(FALSE);
+         goto start;   // oc_move has walked through the door already
       }
 
       dir_string := dirstring(dir);
