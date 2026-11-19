@@ -85,9 +85,10 @@ char diltmpstr[YYLMAX * 2 + 1], *dila, *dilb;
     /* Process string */
     for (dila = diltext + 1, dilb = diltmpstr; *dila != '"'; dila++, dilb++)
     {
-        if ((*dila < ' ') && !isspace(*dila))
+        // unsigned: UTF-8 bytes (128 and up) are text too; only control characters are refused
+        if (((unsigned char)*dila < ' ') && !isspace((unsigned char)*dila))
         {
-            sprintf(buf, "Illegal character ascii %d.", *dila);
+            sprintf(buf, "Illegal character ascii %d.", (unsigned char)*dila);
             dilwarning(buf);
             *dilb = 'X';
             continue;

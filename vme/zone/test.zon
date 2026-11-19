@@ -29,7 +29,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 44  // T010, T009, ...
+#define TEST_MAXIMUM 45  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -79,6 +79,36 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T045 =====================
+
+// UTF-8 in a DIL string: vmc keeps it as it is, as in zone text. The title of t045rune is the
+// rune ᚨ, Ansuz (zone text); the DIL literal must hold the same bytes (vmc once turned each byte
+// of 128 and up into an X, with the warning "Illegal character ascii -31").
+dilbegin T045(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   s : string;
+code
+{
+   u := load("t045rune@test");
+   s := "ᚨ, Ansuz";
+   if (u == null)
+      logtest(tstno, LOGT_ERROR, "t045rune@test didn't load");
+   else if (strcmp(u.title, s) != 0)
+      logtest(tstno, LOGT_ERROR, "the DIL string '" + s + "' is not the zone text '" + u.title + "'");
+   else if (length(s) != 10)
+      logtest(tstno, LOGT_ERROR, "'" + s + "' is " + itoa(length(s)) + " bytes, not 10");
+   else
+      logtest(tstno, LOGT_SUCCESS, "UTF-8 in a DIL string");
+   destroy(u);
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -8732,6 +8762,12 @@ end
 
 
 %objects
+
+		t045rune
+names {"rune"}
+title "ᚨ, Ansuz"
+descr "The rune ᚨ lies here."
+end
 
 		t039obj
 names {"blue lantern", "lantern"}

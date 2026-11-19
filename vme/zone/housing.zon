@@ -33,6 +33,9 @@
 #define MHOUSE_PRICE   (15 * PLATINUM_MULT)   // a house in Midgaard, on its plainest street
 #define TOWNHOUSE_PRICE (25 * PLATINUM_MULT)
 #define LOCK_PRICE     (3 * PLATINUM_MULT)
+#define BLESS_PRICE    (2 * PLATINUM_MULT)   // the priestess's offering for blessing a bed
+#define BLESSED_BED    "A wooden bed with a thick woollen blanket stands against the wall, the " + \
+                       "rune ᚨ carved into its headboard."
 // Building materials (handed in, counted on the player): this many cover HOUSE_DISCOUNT percent
 #define LOGS_COTTAGE   10
 #define LOGS_HOUSE     20     // a house takes logs and ore
@@ -2467,6 +2470,150 @@ code
 dilend
 
 
+// Sister Sigrun, a priestess of Odin in Midgaard's cathedral: for an offering she walks to the
+// house of the one who asks, in Udgaard or Midgaard, and blesses its bed (`bless bed`). The
+// blessing lasts: the bed becomes sacred (UNIT_FL_SACRED), so whoever sleeps or rests in it gets
+// back health, mana and endurance twice as fast (vmelimits.cpp counts every unit a character is
+// in, a bed too). Then she walks
+// back. She is away while she walks, and blessing is all she does, so nobody else waits for her.
+dilbegin fnpri(FN_PRI_BLOCK) house_priest();
+external
+   unitptr house_find(pname : string, lane : string, street : string);
+   unitptr house_piece(room : unitptr, hfile : string, sym : string, nolock : integer);
+   house_furnish(room : unitptr);
+   integer walk_room@function(place : string, spd : integer);
+var
+   pc : unitptr;
+   front : unitptr;
+   bed : unitptr;
+   u : unitptr;
+   own : extraptr;
+   fl : extraptr;
+   home : string;
+   owner : string;
+   frname : string;
+   dest : string;
+   tries : integer;
+   ok : integer;
+code
+{
+   home := self.outside.nameidx + "@" + self.outside.zoneidx;
+:start:
+   wait(SFB_CMD, command("bless") and (activator.type == UNIT_ST_PC) and
+                 (activator.outside == self.outside));
+   block;
+   pc := activator;
+   if (not ("bed" in argument))
+   {
+      exec("say For an offering I bless the bed in your house, " + pc.name + ": 'bless bed'.", self);
+      goto start;
+   }
+   front := house_find(pc.name, "", "");
+   if (front == null)
+   {
+      exec("say You have no house for me to bless a bed in, " + pc.name + ".", self);
+      goto start;
+   }
+   house_furnish(front);
+   bed := house_piece(front, "", "house_bed", FALSE);
+   if (bed == null)
+   {
+      exec("say You have no bed yet, " + pc.name + ". Calvin the carpenter on Colosseum Square " +
+           "makes them.", self);
+      goto start;
+   }
+   if (isset(bed.flags, UNIT_FL_SACRED))
+   {
+      exec("say Your bed is blessed already, " + pc.name + ".", self);
+      goto start;
+   }
+   if (not transfermoney(pc, null, BLESS_PRICE))
+   {
+      exec("say The temple asks an offering of " + moneystring(BLESS_PRICE, TRUE) +
+           " for a blessing, " + pc.name + ".", self);
+      goto start;
+   }
+   act("You give $3n an offering of " + moneystring(BLESS_PRICE, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
+   exec("say Thank you, " + pc.name + ". I'll go to your house and bless your bed.", self);
+   exec("emote takes up a staff of ash and sets out.", self);
+   owner := pc.name;
+   frname := front.nameidx + "@" + front.zoneidx;
+
+   // to the bed, which may be dragged to another room on the way
+   tries := 0;
+:walk:
+   front := findroom(frname);
+   if (front == null)
+      goto refund;
+   own := HOUSE_OWNER in front.extra;
+   bed := house_piece(front, "", "house_bed", FALSE);
+   if ((own == null) or (bed == null))
+      goto refund;   // the house sold, or the bed gone, on the way
+   if (own.descr != owner)
+      goto refund;
+   if (bed.outside != self.outside)
+   {
+      if (tries >= 3)
+      {
+         // no way found (walk_room routes only both-way exits): she comes all the same
+         act("$1n hurries off.", A_SOMEONE, self, null, null, TO_ROOM);
+         link(self, bed.outside);
+         act("$1n arrives, a little out of breath.", A_SOMEONE, self, null, null, TO_ROOM);
+      }
+      else
+      {
+         tries := tries + 1;
+         dest := bed.outside.nameidx + "@" + bed.outside.zoneidx;
+         ok := walk_room@function(dest, 5);
+         goto walk;   // units are found again after the walk's waits
+      }
+   }
+
+   set(bed.flags, UNIT_FL_SACRED);
+   bed.outside_descr := BLESSED_BED;
+   addextra(bed.extra, {"rune", "headboard", "blessing", "ansuz"},
+            "ᚨ, Ansuz, the rune of Odin, carved into the headboard by Sister Sigrun of the " +
+            "cathedral as she blessed the bed. Whoever sleeps or rests in it gets back health, mana and " +
+            "endurance twice as fast.");
+   fl := HOUSE_FILE in bed.extra;
+   if (fl != null)
+      store(bed, fl.descr, FALSE);   // a bed holds nothing to keep, and no one lying in it
+   act("$1n lays a hand on the bed, blesses it in Odin's name and carves the rune ᚨ into " +
+       "its headboard.", A_ALWAYS, self, null, null, TO_ROOM);
+   u := pc_head();   // the owner hears of it, wherever they are
+   while ((u != null) and (u.name != owner))
+      u := u.gnext;
+   if ((u != null) and (u.outside != self.outside) and (u.outside.outside != self.outside))
+      act("$3n has blessed the bed in your house.", A_ALWAYS, u, null, self, TO_CHAR);
+   goto back;
+
+:refund:
+   // no house or bed to bless any more: the offering goes back to the owner
+   u := pc_head();
+   while ((u != null) and (u.name != owner))
+      u := u.gnext;
+   if (u == null)
+      log("house_priest(): no bed to bless for " + owner + ", who isn't in the game: refund " +
+          moneystring(BLESS_PRICE, TRUE) + " by hand");
+   else
+   {
+      ok := transfermoney(null, u, BLESS_PRICE);
+      act("$3n finds no bed of yours to bless and sends your offering back.", A_ALWAYS, u, null, self, TO_CHAR);
+   }
+
+:back:
+   ok := walk_room@function(home, 5);
+   u := findroom(home);
+   if (self.outside != u)
+   {
+      act("$1n hurries off.", A_SOMEONE, self, null, null, TO_ROOM);
+      link(self, u);   // no way back: walk_room routes only both-way exits
+      act("$1n arrives.", A_SOMEONE, self, null, null, TO_ROOM);
+   }
+   goto start;
+}
+dilend
+
 %objects
 
                                  house_bed
@@ -2607,9 +2754,25 @@ money 5 IRON_PIECE
 dilcopy architect@housing();
 end
 
+                                 priestess
+names {"Sister Sigrun", "sister", "Sigrun", "priestess", "priest"}
+title "Sister Sigrun"
+descr "Sister Sigrun, a priestess of Odin, stands in the nave with her hands folded."
+extra {}
+"A grey-haired woman in the plain white robe of Odin's priests, a staff of ash
+beside her. For an offering she goes to a house and blesses its bed: 'bless
+bed'."
+romflags {CHAR_PROTECTED}
+flags {UNIT_FL_NO_TELEPORT}
+M_AVG_HUMAN(30, SEX_FEMALE)
+alignment 1000
+dilcopy house_priest@housing();
+end
+
 
 %reset
 
 load architect into th_citizen@midgaard max 1
+load priestess into cth_nave@midgaard max 1
 
 %end
