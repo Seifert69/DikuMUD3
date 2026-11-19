@@ -237,53 +237,45 @@ int distribute_points(ubit8 *skills, int max, int points, int level)
 }
 
 /**
- * Given a level, it returns the total amount of experience-points
- * which is minimum required to be that level. For example
- * required_xp(1) = 1650 since it requires 1650 xp to be
- * level one.
+ * The experience ladder (Help/Level): the total experience a character needs to be a level.
+ * required_xp(1) = 500, required_xp(2) = 1400.
+ *
+ * Raising level L costs 500 + 400 * L up to level 10, then 2000 + 250 * L, and from level 73 a
+ * flat 20,100. Kill experience doesn't grow with the level (an NPC at your own level gives the
+ * same at level 5 as at 45), so the steps above 10 are kept small. Until 2026-11 the
+ * 500 + 400 * L went on to level 50: players kept their experience points, and the cheaper
+ * levels became free levels to raise.
  */
 int required_xp(int level)
 {
-#define LEVEL_MULT 300 // Diku II was : 1500
-#define POWER_MULT 200 // Diku II was :  150
+    constexpr int FLAT_LEVEL = 73;      // from here a level costs FLAT_LEVEL_XP
+    constexpr int FLAT_LEVEL_XP = 20100;
 
     if (level <= 0)
     {
         return 0;
     }
 
-    if (level <= MORTAL_MAX_LEVEL)
+    if (level <= 10)
     {
-        return LEVEL_MULT * level + level * level * POWER_MULT;
-    }
-    else
-    {
-        return required_xp(MORTAL_MAX_LEVEL) + level_xp(MORTAL_MAX_LEVEL - 1) * (level - MORTAL_MAX_LEVEL);
+        return 300 * level + 200 * level * level;
     }
 
-#undef LEVEL_MULT
-#undef POWER_MULT
+    if (level <= FLAT_LEVEL)
+    {
+        // 23000 for level 10, and 2000 + 250 * k to raise each level k from 10 on
+        return 23000 + 2000 * (level - 10) + 125 * (level * (level - 1) - 90);
+    }
+
+    return required_xp(FLAT_LEVEL) + FLAT_LEVEL_XP * (level - FLAT_LEVEL);
 }
 
 /**
- * Given a level, it returns how much XP is required to reach the
- * next level. For example, given level 1, it returns that it
- * takes level(1+1)-level(1) xp to reach level 2.
- * Level has to be < MORTAL_MAX_LEVEL
+ * The experience it takes to raise a level to the next: level_xp(1) = 900, from level 1 to 2.
  */
 int level_xp(int level)
 {
-    if (level >= MORTAL_MAX_LEVEL)
-    {
-        level = MORTAL_MAX_LEVEL - 1;
-    }
-
     return required_xp(level + 1) - required_xp(level);
-
-    /* if (level <= MORTAL_MAX_LEVEL)
-        return 1650 + level * 300;
-    else
-        return level_xp(MORTAL_MAX_LEVEL);*/
 }
 
 /**
