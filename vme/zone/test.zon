@@ -5032,10 +5032,13 @@ code
       bad := 1;
    }
 
-   // getinteger: the experience table (300 * level + 200 * level * level), other numbers, and
-   // an unknown index fails (logged)
+   // getinteger: the experience ladder (required_xp in common.cpp: a level costs 500 + 400 * level
+   // up to 10, then 2000 + 250 * level, flat 20100 from 73), other numbers, and an unknown index
+   // fails (logged)
    if ((not (getinteger(DIL_GINT_REQXP, null, 0) == 0)) or (not (getinteger(DIL_GINT_REQXP, null, 1) == 500)) or
-       (not (getinteger(DIL_GINT_REQXP, null, 2) == 1400)) or (not (getinteger(DIL_GINT_LEVELXP, null, 1) == 900)))
+       (not (getinteger(DIL_GINT_REQXP, null, 2) == 1400)) or (not (getinteger(DIL_GINT_LEVELXP, null, 1) == 900)) or
+       (not (getinteger(DIL_GINT_REQXP, null, 50) == 398000)) or (not (getinteger(DIL_GINT_LEVELXP, null, 60) == 17000)) or
+       (not (getinteger(DIL_GINT_LEVELXP, null, 100) == 20100)))
    {
       logtest(tstno, LOGT_ERROR, "T031 getinteger experience table");
       bad := 1;
