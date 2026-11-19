@@ -44,6 +44,11 @@ his shop.
 </pre>
 <p>What is in the chests is kept through any reboot. Things left lying on 
 the floor are not.
+</p><p><b>Arranging your house.</b> Drag a piece of furniture into another room 
+of your house and walk along with it: <a cmd='#'>drag bed north</a>, <a cmd='#'>drag chest up</a>. 
+Make the back room your bedroom, or put a chest upstairs. It is heavy 
+work, so it costs endurance. Only the owner moves the furniture, it never 
+leaves the house, and it stays where you put it through any reboot.
 </p><p><b>Selling.</b> <a cmd='#'>sell house</a> at the architect gives your house back to him, 
 for half of what it and its lock cost you; say it twice to seal it. 
 Calvin's furniture stays with the house, and whatever is in it comes 
