@@ -2487,6 +2487,7 @@ var
    front : unitptr;
    bed : unitptr;
    u : unitptr;
+   nxt : unitptr;
    own : extraptr;
    fl : extraptr;
    home : string;
@@ -2575,9 +2576,18 @@ code
             "ᚨ, Ansuz, the rune of Odin, carved into the headboard by Sister Sigrun of the " +
             "cathedral as she blessed the bed. Whoever sleeps or rests in it gets back health, mana and " +
             "endurance twice as fast.");
+   u := bed.inside;   // a pet lying in it gets up first, or it would be saved with the bed
+   while (u != null)
+   {
+      nxt := u.next;
+      if (u.type == UNIT_ST_NPC)
+         link(u, bed.outside);
+      u := nxt;
+   }
    fl := HOUSE_FILE in bed.extra;
    if (fl != null)
-      store(bed, fl.descr, FALSE);   // a bed holds nothing to keep, and no one lying in it
+      store(bed, fl.descr, TRUE);   // TRUE: the bed itself; FALSE would save only what is in it,
+                                    // and with nothing in it, store() removes the file
    act("$1n lays a hand on the bed, blesses it in Odin's name and carves the rune ᚨ into " +
        "its headboard.", A_ALWAYS, self, null, null, TO_ROOM);
    u := pc_head();   // the owner hears of it, wherever they are

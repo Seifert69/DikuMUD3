@@ -68,6 +68,9 @@ A unit runs a template with `dilcopy name@zone(args);` in its definition.
   removed), `restore()` starts every variable at 0 / "" / empty, the template's arguments too
   (`bread_dil` in db_file.cpp, "Var CRC mismatch"). Keep what a stored unit's program needs (a
   limit, an owner) in an extra on the unit, never in an argument (`house_chest@housing`).
+- **`store(u, f, FALSE)` saves only what is in `u`, never `u` itself, and with nothing in it
+  removes `f`** (`basic_save_contents` in reception.cpp). To keep a single unit (a bed, a chest),
+  `store(u, f, TRUE)`; move out an NPC that is in it first, or it is saved inside.
 - **`delstr(f)` only deletes what `savestr` wrote** (lib/dilfiles/strings); a unit saved with
   `store()` lies in lib/dilfiles/units and goes with `delunit(f)`. Both return an integer that
   must be assigned, like `transfermoney`: a bare call is a syntax error.
