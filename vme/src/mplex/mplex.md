@@ -147,7 +147,7 @@ cd ~/diku/DikuMUD3/vme/bin
 ./mplex -w -p 4280
 ```
 Then point the client at it with `protocol=ws`:
-`https://www.valhalla.com/v3/client/client-a.html?protocol=ws&host=localhost&port=4280&endpoint=%2Fecho&reader=false`
+`https://valhalla.com/v3/client-a.html?protocol=ws&host=localhost&port=4280&endpoint=%2Fecho&reader=false`
 
 ### Start TLS-enabled mplex:
 ```bash
@@ -176,7 +176,7 @@ wscat -c wss://localhost:4242
 
 or connect with a webbrowser:
 
-https://www.valhalla.com/v3/client/client-a.html?protocol=wss&host=localhost&port=4242&endpoint=%2Fecho&reader=false
+https://valhalla.com/v3/client-a.html?protocol=wss&host=localhost&port=4242&endpoint=%2Fecho&reader=false
 
 
 ## Security Considerations
