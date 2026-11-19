@@ -1193,6 +1193,136 @@ code
 }
 dilend
 
+// Shows pc out of the house whose front room is front, standing, onto its lane (the room outside
+// that runs house_gate): the door was locked and pc has no key (any more). FALSE when the house
+// has no lane; then pc stays, and it is logged.
+dilbegin integer house_showout(front : unitptr, pc : unitptr);
+var
+   r : unitptr;
+   lane : unitptr;
+   d : integer;
+code
+{
+   d := 0;
+   while (d <= MAX_EXIT)
+   {
+      r := front.exit_to[d];
+      if ((r != null) and dilfind("house_gate@housing", r))
+         lane := r;
+      d := d + 1;
+   }
+   if (lane == null)
+   {
+      log("house_showout(): no lane outside " + front.nameidx + "@" + front.zoneidx);
+      return (FALSE);
+   }
+   act("The door has been locked, and you have no key: you are shown out.", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n is shown the door.", A_HIDEINV, pc, null, null, TO_ROOM);
+   if ((pc.position >= POSITION_SLEEPING) and (pc.position < POSITION_FIGHTING))
+      pc.position := POSITION_STANDING;   // out of the bed, awake
+   link(pc, lane);
+   exec("look", pc);
+   return (TRUE);
+}
+dilend
+
+// Shows every player without a key out of the house whose front room is front: from its rooms
+// and from what is in them (a bed, a chest someone climbed into). Right after the door is locked
+// or a key taken back, so nobody idle or asleep stays behind.
+dilbegin house_sweep(front : unitptr);
+external
+   integer house_allowed(room : unitptr, pname : string);
+   integer house_showout(front : unitptr, pc : unitptr);
+var
+   r : unitptr;
+   u : unitptr;
+   nxt : unitptr;
+   c : unitptr;
+   cnxt : unitptr;
+   d : integer;
+   ok : integer;
+code
+{
+   d := -1;   // -1: the front room; then the house's rooms its exits lead to
+   while (d <= MAX_EXIT)
+   {
+      r := front;
+      if (d >= 0)
+         r := front.exit_to[d];
+      if ((d < 0) or (HOUSE_BACK in r.extra) or (HOUSE_UPPER in r.extra))
+      {
+         u := r.inside;
+         while (u != null)
+         {
+            nxt := u.next;   // before u may be shown out
+            c := u;
+            cnxt := u.inside;
+            while (c != null)   // u, then what is in u
+            {
+               if ((c.type == UNIT_ST_PC) and (c.level < IMMORTAL_LEVEL))
+               {
+                  ok := house_allowed(front, c.name);
+                  if (not ok)
+                     ok := house_showout(front, c);
+               }
+               c := cnxt;
+               if (c != null)
+                  cnxt := c.next;
+            }
+            u := nxt;
+         }
+      }
+      d := d + 1;
+   }
+   return;
+}
+dilend
+
+// On a house's back room and upper floor. A command reaches only the room it is typed in (and
+// what is in it), so house_room on the front room never hears these rooms: here too, a player
+// without a key (one who quit in here before the door was locked) is shown out at their first
+// command, and a god who came by goto finds the furniture in.
+dilbegin fnpri(FN_PRI_BLOCK) house_inner();
+external
+   integer house_allowed(room : unitptr, pname : string);
+   house_furnish(room : unitptr);
+   integer house_showout(front : unitptr, pc : unitptr);
+var
+   pc : unitptr;
+   front : unitptr;
+   frname : string;   // the front room, by name: unit variables are cleared at every wait
+   d : integer;
+   ok : integer;
+code
+{
+   d := 0;
+   while (d <= MAX_EXIT)   // the front room: the way back into it
+   {
+      front := self.exit_to[d];
+      if ((front != null) and (HOUSE_WHERE in front.extra))
+         frname := front.nameidx + "@" + front.zoneidx;
+      d := d + 1;
+   }
+   if (frname == "")
+      quit;
+:start:
+   wait(SFB_CMD, activator.type == UNIT_ST_PC);
+   pc := activator;
+   front := findroom(frname);
+   if (not (HOUSE_FURNISH in front.extra))
+      house_furnish(front);
+   if (pc.level >= IMMORTAL_LEVEL)
+      goto start;
+   ok := house_allowed(front, pc.name);
+   if (ok)
+      goto start;
+   ok := house_showout(front, pc);
+   if (ok)
+      block;
+   goto start;
+}
+dilend
+
 // On a house's front room: reads the house's state at boot; its hit points are the house's
 // condition. A house is open to anyone until its owner buys a door lock (HOUSE_LOCK) and locks
 // it; then those without a key are shown out to the lane. Here, `house` shows the owner and
@@ -1202,6 +1332,8 @@ dilend
 // townhouse.
 dilbegin fnpri(FN_PRI_BLOCK) house_room();
 external
+   integer house_showout(front : unitptr, pc : unitptr);
+   house_sweep(front : unitptr);
    integer house_allowed(room : unitptr, pname : string);
    house_save(room : unitptr);
    house_furnish(room : unitptr);
@@ -1212,11 +1344,8 @@ var
    sl : stringlist;
    fl : stringlist;
    dirs : stringlist;
-   lane : string;
    back : integer;
    upper : integer;
-   bname : string;   // the back room and the upper floor, by name: unitptr variables are
-   uname : string;   // cleared when the program wakes
    d : integer;
    err : integer;
    pc : unitptr;
@@ -1230,7 +1359,7 @@ var
    who : string;
 code
 {
-   // the lane and the back room, from the exits
+   // the back room and the upper floor, from the exits
    dirs := HOUSE_DIRS;
    back := -1;
    upper := -1;
@@ -1241,17 +1370,9 @@ code
       if (r != null)
       {
          if (HOUSE_BACK in r.extra)
-         {
             back := d;
-            bname := r.nameidx;
-         }
          else if (HOUSE_UPPER in r.extra)
-         {
             upper := d;
-            uname := r.nameidx;
-         }
-         else
-            lane := r.nameidx + "@" + r.zoneidx;
       }
       d := d + 1;
    }
@@ -1285,10 +1406,10 @@ code
    addextra(self.extra, fl, "");
 
 :start:
-   // in any of the house's rooms: who has no key after the door was locked is shown out
-   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and ((activator.outside == self) or
-                 ((activator.outside.zoneidx == self.zoneidx) and
-                  ((activator.outside.nameidx == bname) or (activator.outside.nameidx == uname)))));
+   // here, or in a bed here (house_inner does the back room and the upper floor): who has no
+   // key after the door was locked is shown out
+   wait(SFB_CMD, (activator.type == UNIT_ST_PC) and
+                 ((activator.outside == self) or (activator.outside.outside == self)));
    pc := activator;
    if (not (HOUSE_FURNISH in self.extra))
       house_furnish(self);   // someone came in without the door (a god's goto)
@@ -1297,11 +1418,9 @@ code
    ok := house_allowed(self, pc.name);
    if (not ok)
    {
-      block;
-      act("The door has been locked, and you have no key: you are shown out.", A_ALWAYS, pc, null, null, TO_CHAR);
-      act("$1n is shown the door.", A_HIDEINV, pc, null, null, TO_ROOM);
-      link(pc, findroom(lane));
-      exec("look", pc);
+      ok := house_showout(self, pc);
+      if (ok)
+         block;
       goto start;
    }
 
@@ -1375,6 +1494,7 @@ code
       {
          addextra(self.extra, {HOUSE_LOCK}, "locked");
          act("You lock the door: only those with a key may come in now.", A_ALWAYS, pc, null, null, TO_CHAR);
+         house_sweep(self);
       }
       else
       {
@@ -1438,6 +1558,7 @@ code
       }
       substring(frd.names, "$" + who);
       act("You take back " + who + "'s key.", A_ALWAYS, pc, null, null, TO_CHAR);
+      house_sweep(self);
    }
    house_save(self);
    goto start;
