@@ -371,7 +371,7 @@ public:
 
     virtual void toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer) const;
 
-    [[nodiscard]] std::string getID() const { return m_fi->getSymName(); }
+    [[nodiscard]] std::string getID() const { return getFileIndexSymName(); }
 
 private:
     cNamelist m_names;                       ///< Name Keyword list for get, enter, etc.

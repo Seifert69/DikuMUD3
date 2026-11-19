@@ -68,6 +68,7 @@ set(MPLEX_SRCS
         ../hookmud.cpp ../hookmud.h
         ../interpreter.cpp ../interpreter.h
         ../intlist.cpp ../intlist.h
+        ../json_dump.cpp ../json_dump.h
         ../json_helper.cpp ../json_helper.h
         ../justice.cpp ../justice.h
         ../magic.cpp ../magic.h

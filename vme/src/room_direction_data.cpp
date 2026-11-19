@@ -1,5 +1,6 @@
 #include "room_direction_data.h"
 
+#include "constants.h"
 #include "json_helper.h"
 
 room_direction_data::room_direction_data()
@@ -98,7 +99,7 @@ void room_direction_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer
         json::write_unit_id_kvp("to_room", to_room, writer);
         json::write_kvp("difficulty", difficulty, writer);
         json::write_kvp("weight", weight, writer);
-        json::write_kvp("exit_info", exit_info, writer);
+        json::write_bits_kvp("exit_info", exit_info, g_unit_open_flags, writer);
     }
     writer.EndObject();
 }

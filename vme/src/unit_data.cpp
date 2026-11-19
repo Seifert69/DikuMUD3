@@ -883,7 +883,13 @@ void unit_data::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
         json::write_unit_id_kvp("id", this, writer);
 
         json::write_object_value_kvp("names", m_names, writer);
-        json::write_object_pointer_kvp("func", m_func, writer);
+        writer.String("func");
+        writer.StartArray();
+        for (unit_fptr *f = m_func; f; f = f->getNext())
+        {
+            f->toJSON(writer);
+        }
+        writer.EndArray();
         json::write_object_pointer_kvp("affected", m_affected, writer);
         json::write_object_pointer_kvp("fi", m_fi, writer);
         json::write_char_pointer_kvp("key", m_key, writer);

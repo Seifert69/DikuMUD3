@@ -19,11 +19,13 @@ add_executable(vme_unit_tests
         fix_old_codes_tests.cpp
         html_attr_tests.cpp
         html_link_tests.cpp
+        json_helper_tests.cpp
         pc_data_tests.cpp
         pcsave_tests.cpp
         sessionlog_tests.cpp
         textutil_tests.cpp
         unit_data_tests.cpp
+        unit_fptr_tests.cpp
         unitwalk_tests.cpp
         weather_cpp_tests.cpp
         when_cache_tests.cpp

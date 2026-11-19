@@ -39,6 +39,7 @@ extern int g_mudboot;
 extern long g_nTickUsec;
 extern bool g_dumptables;
 extern bool g_dump_json;
+extern std::string g_dump_json_zone;
 
 extern const char *g_compile_date;
 extern const char *g_compile_time;

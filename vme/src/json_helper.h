@@ -35,6 +35,8 @@ void write_object_value_kvp(const char *name, const Object &obj, rapidjson::Pret
     obj.toJSON(writer);
 }
 
+/// The set bits as a list of their names, e.g. ["closed", "locked"] (a bit without a name: "bit<n>")
+void write_bits_kvp(const char *name, ubit32 bits, const char *names[], rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer);
 void write_dil_var_type(DilVarType_e vartpe, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer);
 void write_unit_id_kvp(const char *name, const unit_data *unit, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer);
 void write_unit_id(const unit_data *unit, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer);

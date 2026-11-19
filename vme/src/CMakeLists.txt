@@ -60,6 +60,7 @@ set(VME_SRCS
         hookmud.cpp hookmud.h
         interpreter.cpp interpreter.h
         intlist.cpp intlist.h
+        json_dump.cpp json_dump.h
         json_helper.h json_helper.cpp
         justice.cpp justice.h
         magic.cpp magic.h

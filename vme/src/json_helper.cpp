@@ -3,6 +3,7 @@
 #include "unit_data.h"
 
 #include <sstream>
+#include <string>
 
 namespace json
 {
@@ -164,6 +165,22 @@ void write_dil_var_type(DilVarType_e vartpe, rapidjson::PrettyWriter<rapidjson::
             writer.String("all");
             break;
     }
+}
+
+void write_bits_kvp(const char *name, ubit32 bits, const char *names[], rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
+{
+    writer.String(name);
+    writer.StartArray();
+    bool named = true;
+    for (int i = 0; i < 32; i++)
+    {
+        named = named && names[i];
+        if ((bits >> i) & 1U)
+        {
+            writer.String(named ? names[i] : ("bit" + std::to_string(i)).c_str());
+        }
+    }
+    writer.EndArray();
 }
 
 void write_unit_id_kvp(const char *name, const unit_data *unit, rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)

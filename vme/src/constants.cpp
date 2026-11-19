@@ -264,7 +264,7 @@ const char *g_unit_manipulate[] = {"take",  "finger", "neck",  "body", "head",  
                                    "waist", "wrist",  "wield", "hold", "enter", "ear",  "back", "chest", "ankle", nullptr};
 
 const char *g_unit_open_flags[] =
-    {"open-close", "closed", "locked", "pickproof", "inside-open-close-lock-unlock", "hidden", "climb", nullptr};
+    {"open-close", "closed", "locked", "pickproof", "inside-open-close-lock-unlock", "hidden", "climb", "fall-this-way", nullptr};
 
 /* UNIT_FLAGS */
 const char *g_unit_flags[] = {"private",
