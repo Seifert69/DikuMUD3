@@ -109,10 +109,6 @@ int main(int argc, char **argv)
                     g_quiet_compile = true;
                     break;
 
-                case 'j':
-                    g_dump_json = true;
-                    break;
-
                 case '?':
                     ShowUsage(argv[0]);
                     exit(0);

@@ -42,8 +42,6 @@ char g_cur_filename[256], top_filename[256];
 
 void zone_reset(char *default_name);
 void dump_zone(char *prefix);
-void dump_json_zone(char *prefix);
-void write_diltemplate_json(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer, diltemplate *tmpl);
 long stat_mtime(char *name);
 void dil_free_template(diltemplate *tmpl, int copy, int dil = FALSE);
 void dil_free_var(dilvar *var);
@@ -58,7 +56,6 @@ int g_nooutput = 0;       /* suppress output */
 int g_verbose = 0;        /* be talkative */
 int g_fatal_warnings = 0; /* allow warnings */
 bool g_quiet_compile = false;
-bool g_dump_json = false;
 
 char **ident_names = nullptr; /* Used to check unique ident */
 
@@ -86,7 +83,6 @@ void ShowUsage(char *name)
     fprintf(stderr, "   -I Search specified dir for include files.\n");
     fprintf(stderr, "   -p preprocess file only, output to stdout.\n");
     fprintf(stderr, "   -q Quiet compile.\n");
-    fprintf(stderr, "   -j Dump JSON.\n");
     fprintf(stderr, "Copyright 1994 - 2001 (C) by Valhalla.\n");
 }
 
@@ -192,10 +188,6 @@ void fix(char *file)
     }
     else
     {
-        if (g_dump_json)
-        {
-            dump_json_zone(filename_prefix);
-        }
         dump_zone(filename_prefix);
     }
 }
