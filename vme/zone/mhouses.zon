@@ -15,7 +15,9 @@ notes "Player houses in Midgaard (see housing.zon), sold by the architect in Mid
 
 %rooms
 
-#define HOUSE_DOOR descr "A polished oak door leads into a house."
+#define HOUSE_DOOR MHOUSE_DOOR
+#define HOUSE_DOOR_OUT HOUSE_DOOR_FLAGS keyword {"oak door", "door"} \
+   descr "The front door leads out to the street."
 
                                  beech1
 
@@ -126,7 +128,7 @@ ALWAYS_LIGHT
                                  plot1
 MHOUSE_FRONT("A house on Penny Lane", "penny", "on Penny Lane in Midgaard, between Royal Avenue and the city park: the north door nearer the avenue")
 gmap(509,828)
-south to penny_lane1@midgaard;
+south to penny_lane1@midgaard HOUSE_DOOR_OUT;
 north to plot1b;
 up to plot1u;
 end
@@ -144,7 +146,7 @@ end
                                  plot2
 MHOUSE_FRONT("A house on Penny Lane", "penny", "on Penny Lane in Midgaard, between Royal Avenue and the city park: the south door nearer the avenue")
 gmap(509,870)
-north to penny_lane1@midgaard;
+north to penny_lane1@midgaard HOUSE_DOOR_OUT;
 south to plot2b;
 up to plot2u;
 end
@@ -162,7 +164,7 @@ end
                                  plot3
 MHOUSE_FRONT("A house on Penny Lane", "penny", "on Penny Lane in Midgaard, between Royal Avenue and the city park: the north door nearer the park")
 gmap(531,828)
-south to penny_lane2@midgaard;
+south to penny_lane2@midgaard HOUSE_DOOR_OUT;
 north to plot3b;
 up to plot3u;
 end
@@ -180,7 +182,7 @@ end
                                  plot4
 MHOUSE_FRONT("A house on Penny Lane", "penny", "on Penny Lane in Midgaard, between Royal Avenue and the city park: the south door nearer the park")
 gmap(531,870)
-north to penny_lane2@midgaard;
+north to penny_lane2@midgaard HOUSE_DOOR_OUT;
 south to plot4b;
 up to plot4u;
 end
@@ -198,7 +200,7 @@ end
                                  plot5
 MHOUSE_FRONT("A house on Beech Row", "beech", "on Beech Row, off Park Road in Midgaard: the north door nearer Park Road")
 gmap(609,728)
-south to beech1;
+south to beech1 HOUSE_DOOR_OUT;
 north to plot5b;
 up to plot5u;
 end
@@ -216,7 +218,7 @@ end
                                  plot6
 MHOUSE_FRONT("A house on Beech Row", "beech", "on Beech Row, off Park Road in Midgaard: the south door nearer Park Road")
 gmap(609,770)
-north to beech1;
+north to beech1 HOUSE_DOOR_OUT;
 south to plot6b;
 up to plot6u;
 end
@@ -234,7 +236,7 @@ end
                                  plot7
 MHOUSE_FRONT("A house on Beech Row", "beech", "on Beech Row, off Park Road in Midgaard: the north door further along the row")
 gmap(630,728)
-south to beech2;
+south to beech2 HOUSE_DOOR_OUT;
 north to plot7b;
 up to plot7u;
 end
@@ -252,7 +254,7 @@ end
                                  plot8
 MHOUSE_FRONT("A house on Beech Row", "beech", "on Beech Row, off Park Road in Midgaard: the south door further along the row")
 gmap(630,770)
-north to beech2;
+north to beech2 HOUSE_DOOR_OUT;
 south to plot8b;
 up to plot8u;
 end
@@ -270,7 +272,7 @@ end
                                  plot9
 MHOUSE_FRONT("A house on Beech Row", "beech", "on Beech Row, off Park Road in Midgaard: the house at the end of the row")
 gmap(651,749)
-west to beech2;
+west to beech2 HOUSE_DOOR_OUT;
 east to plot9b;
 up to plot9u;
 end
@@ -288,7 +290,7 @@ end
                                  plot10
 MHOUSE_FRONT("A house on Chestnut Close", "chestnut", "on Chestnut Close, off Royal Avenue in Midgaard: the north door nearer the avenue")
 gmap(459,700)
-south to chestnut1;
+south to chestnut1 HOUSE_DOOR_OUT;
 north to plot10b;
 up to plot10u;
 end
@@ -306,7 +308,7 @@ end
                                  plot11
 MHOUSE_FRONT("A house on Chestnut Close", "chestnut", "on Chestnut Close, off Royal Avenue in Midgaard: the south door nearer the avenue")
 gmap(459,742)
-north to chestnut1;
+north to chestnut1 HOUSE_DOOR_OUT;
 south to plot11b;
 up to plot11u;
 end
@@ -324,7 +326,7 @@ end
                                  plot12
 MHOUSE_FRONT("A house on Chestnut Close", "chestnut", "on Chestnut Close, off Royal Avenue in Midgaard: the north door further along the close")
 gmap(438,700)
-south to chestnut2;
+south to chestnut2 HOUSE_DOOR_OUT;
 north to plot12b;
 up to plot12u;
 end
@@ -342,7 +344,7 @@ end
                                  plot13
 MHOUSE_FRONT("A house on Chestnut Close", "chestnut", "on Chestnut Close, off Royal Avenue in Midgaard: the south door further along the close")
 gmap(438,742)
-north to chestnut2;
+north to chestnut2 HOUSE_DOOR_OUT;
 south to plot13b;
 up to plot13u;
 end
@@ -360,7 +362,7 @@ end
                                  plot14
 MHOUSE_FRONT("A house on Chestnut Close", "chestnut", "on Chestnut Close, off Royal Avenue in Midgaard: the house at the end of the close")
 gmap(417,721)
-east to chestnut2;
+east to chestnut2 HOUSE_DOOR_OUT;
 west to plot14b;
 up to plot14u;
 end

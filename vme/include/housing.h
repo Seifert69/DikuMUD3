@@ -2,6 +2,13 @@
 #ifndef _MUD_HOUSING_H
 #define _MUD_HOUSING_H
 
+/* A house's front door, on both sides: a real door, shut and pick proof, which house_door
+   (housing.zon) locks while the house is for sale or its owner has locked it */
+#define HOUSE_DOOR_FLAGS open {EX_OPEN_CLOSE, EX_CLOSED, EX_PICKPROOF}
+/* A Midgaard house's front door, from the street (mhouses.zon, and Penny Lane in midgaard.zon) */
+#define MHOUSE_DOOR HOUSE_DOOR_FLAGS keyword {"oak door", "door"} \
+   descr "A polished oak door leads into a house."
+
 #define HOUSE_HP       18000            /* a house's condition when new: its front room's hit points */
 
 #define HOUSE_WHERE    "$house where"   /* on a front room: where its door is, for the architect */

@@ -3980,8 +3980,8 @@ movement SECT_CITY
 gmap(509,849)
 east to penny_lane2;
 west to royal_av5;
-north to plot1@mhouses descr "A polished oak door leads into a house.";
-south to plot2@mhouses descr "A polished oak door leads into a house.";
+north to plot1@mhouses MHOUSE_DOOR;
+south to plot2@mhouses MHOUSE_DOOR;
 dilcopy house_gate@housing();
 ALWAYS_LIGHT
 end
@@ -3999,8 +3999,8 @@ movement SECT_CITY
 gmap(531,849)
 east to park3;
 west to penny_lane1;
-north to plot3@mhouses descr "A polished oak door leads into a house.";
-south to plot4@mhouses descr "A polished oak door leads into a house.";
+north to plot3@mhouses MHOUSE_DOOR;
+south to plot4@mhouses MHOUSE_DOOR;
 dilcopy house_gate@housing();
 flags {UNIT_FL_NO_MOB}
 ALWAYS_LIGHT

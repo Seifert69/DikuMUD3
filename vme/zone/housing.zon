@@ -1031,6 +1031,7 @@ dilend
 dilbegin integer house_clear(room : unitptr, heir : unitptr);
 external
    house_save(room : unitptr);
+   house_door(front : unitptr);
    house_furnish(room : unitptr);
    string house_file(room : unitptr);
 var
@@ -1136,16 +1137,21 @@ code
    addextra(room.extra, {HOUSE_FRIEND}, "");
    room.hp := room.max_hp;
    house_save(room);   // no owner: removes the file
+   house_door(room);   // for sale: shut and locked
    return (k);
 }
 dilend
 
-// On a lane room: a door from it into a house (a room with HOUSE_WHERE) lets in anyone while
-// the house's door isn't locked; then only the owner, those with a key and gods. Monsters are kept out by UNIT_FL_NO_MOB.
+// On a lane room: the door from it into a house (a room with HOUSE_WHERE) is a real door, opened
+// and shut as any. While the house is for sale, or its owner has locked it, it is locked
+// (house_door): then the owner, those with a key and gods walk in all the same, and it locks
+// behind them (house_passdoor); anyone else, NPCs too, finds it locked.
 dilbegin fnpri(FN_PRI_BLOCK) house_gate();
 external
    integer house_allowed(room : unitptr, pname : string);
    house_furnish(room : unitptr);
+   integer house_passdoor(front : unitptr, here : unitptr, pc : unitptr, dir : integer);
+   house_door(front : unitptr);
 var
    pc : unitptr;
    room : unitptr;
@@ -1171,38 +1177,39 @@ code
    room := self.exit_to[d];
    if ((room == null) or (not (HOUSE_WHERE in room.extra)))
       goto start;
-   if (pc.level >= IMMORTAL_LEVEL)
-   {
-      house_furnish(room);
-      goto start;
-   }
+   house_door(room);   // as the house says, whatever a spell did to it
    own := HOUSE_OWNER in room.extra;
-   if (own == null)
+   ok := house_allowed(room, pc.name);
+   if (pc.level >= IMMORTAL_LEVEL)
+      ok := TRUE;
+   if ((own == null) and (not ok))
    {
       block;
       act("The door is shut, and a sign on it says: 'For sale. Ask the architect in the Hall " +
           "of the Citizens, in Midgaard's Town Hall.'", A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
-   ok := house_allowed(room, pc.name);
-   if (ok)
+   if (not ok)
    {
-      house_furnish(room);
+      block;
+      act("The door is locked. This is " + own.descr + "'s house.", A_ALWAYS, pc, null, null, TO_CHAR);
       goto start;
    }
-   block;
-   act("The door is locked. This is " + own.descr + "'s house.", A_ALWAYS, pc, null, null, TO_CHAR);
-   goto start;
+   house_furnish(room);
+   if (isset(self.exit_info[d], EX_LOCKED) and (pc.position == POSITION_STANDING))
+   {
+      block;
+      ok := house_passdoor(room, self, pc, d);
+   }
+   goto start;   // unlocked (or pc not standing): an ordinary door
 }
 dilend
 
-// Shows pc out of the house whose front room is front, standing, onto its lane (the room outside
-// that runs house_gate): the door was locked and pc has no key (any more). FALSE when the house
-// has no lane; then pc stays, and it is logged.
-dilbegin integer house_showout(front : unitptr, pc : unitptr);
+// The way from front, a house's front room, out to its lane (the room outside that runs
+// house_gate), or -1 when it has none.
+dilbegin integer house_lanedir(front : unitptr);
 var
    r : unitptr;
-   lane : unitptr;
    d : integer;
 code
 {
@@ -1211,9 +1218,107 @@ code
    {
       r := front.exit_to[d];
       if ((r != null) and dilfind("house_gate@housing", r))
-         lane := r;
+         return (d);
       d := d + 1;
    }
+   return (-1);
+}
+dilend
+
+// The front door of the house whose front room is front, a real door (HOUSE_DOOR_FLAGS, both
+// sides), set from the house's state: shut and locked while the plot is for sale or the owner has
+// locked it (HOUSE_LOCK "locked"), else unlocked, open or shut as it was left. Also puts back what
+// a lock or unlock spell did to it.
+dilbegin house_door(front : unitptr);
+external
+   integer house_lanedir(front : unitptr);
+   integer rev_dir@function(i : integer);
+var
+   lane : unitptr;
+   lk : extraptr;
+   d : integer;
+   e : integer;
+   lockit : integer;
+code
+{
+   d := house_lanedir(front);
+   if (d < 0)
+      return;
+   lane := front.exit_to[d];
+   e := rev_dir@function(d);
+   lockit := FALSE;
+   lk := HOUSE_LOCK in front.extra;
+   if (not (HOUSE_OWNER in front.extra))
+      lockit := TRUE;
+   else if ((lk != null) and (lk.descr == "locked"))
+      lockit := TRUE;
+   if (lockit)
+   {
+      set(front.exit_info[d], EX_CLOSED);
+      set(front.exit_info[d], EX_LOCKED);
+      set(lane.exit_info[e], EX_CLOSED);
+      set(lane.exit_info[e], EX_LOCKED);
+   }
+   else
+   {
+      unset(front.exit_info[d], EX_LOCKED);
+      unset(lane.exit_info[e], EX_LOCKED);
+   }
+   return;
+}
+dilend
+
+// The door knows its owner, those with a key and gods: pc, standing in here (on a horse, in a
+// cart or on foot), walks dir through the locked front door of the house whose front room is
+// front, and it locks behind them. TRUE when pc got through (an ordinary move, which may still
+// fail).
+dilbegin integer house_passdoor(front : unitptr, here : unitptr, pc : unitptr, dir : integer);
+external
+   house_door(front : unitptr);
+   integer rev_dir@function(i : integer);
+var
+   there : unitptr;
+   r : unitptr;
+   dirs : stringlist;
+   e : integer;
+code
+{
+   dirs := HOUSE_DIRS;
+   there := here.exit_to[dir];
+   e := rev_dir@function(dir);
+   unset(here.exit_info[dir], EX_LOCKED);
+   unset(here.exit_info[dir], EX_CLOSED);
+   unset(there.exit_info[e], EX_LOCKED);
+   unset(there.exit_info[e], EX_CLOSED);
+   act("You unlock the door and open it.", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n unlocks the door and opens it.", A_HIDEINV, pc, null, null, TO_ROOM);
+   exec(dirs.[dir], pc);
+   house_door(front);   // shut and locked again, whether pc got through or not
+   r := pc.outside;   // the room pc is in, through a horse or a cart
+   if (r.type != UNIT_ST_ROOM)
+      r := r.outside;
+   if (r != there)
+      return (FALSE);
+   act("You close the door behind you and lock it.", A_ALWAYS, pc, null, null, TO_CHAR);
+   act("$1n closes the door and locks it.", A_HIDEINV, pc, null, null, TO_ROOM);
+   return (TRUE);
+}
+dilend
+
+// Shows pc out of the house whose front room is front, standing, onto its lane (the room outside
+// that runs house_gate): the door was locked and pc has no key (any more). FALSE when the house
+// has no lane; then pc stays, and it is logged.
+dilbegin integer house_showout(front : unitptr, pc : unitptr);
+external
+   integer house_lanedir(front : unitptr);
+var
+   lane : unitptr;
+   d : integer;
+code
+{
+   d := house_lanedir(front);
+   if (d >= 0)
+      lane := front.exit_to[d];
    if (lane == null)
    {
       log("house_showout(): no lane outside " + front.nameidx + "@" + front.zoneidx);
@@ -1335,6 +1440,9 @@ dilend
 // townhouse.
 dilbegin fnpri(FN_PRI_BLOCK) house_room();
 external
+   house_door(front : unitptr);
+   integer house_lanedir(front : unitptr);
+   integer house_passdoor(front : unitptr, here : unitptr, pc : unitptr, dir : integer);
    integer house_showout(front : unitptr, pc : unitptr);
    house_sweep(front : unitptr);
    integer house_allowed(room : unitptr, pname : string);
@@ -1349,6 +1457,7 @@ var
    dirs : stringlist;
    back : integer;
    upper : integer;
+   out : integer;   // the front door's way, out to the lane
    d : integer;
    err : integer;
    pc : unitptr;
@@ -1362,10 +1471,11 @@ var
    who : string;
 code
 {
-   // the back room and the upper floor, from the exits
+   // the back room, the upper floor and the way out, from the exits
    dirs := HOUSE_DIRS;
    back := -1;
    upper := -1;
+   out := house_lanedir(self);
    d := 0;
    while (d <= MAX_EXIT)
    {
@@ -1407,6 +1517,7 @@ code
       }
    }
    addextra(self.extra, fl, "");
+   house_door(self);   // shut and locked if it is for sale or was locked
 
 :start:
    // here, or in a bed here (house_inner does the back room and the upper floor): who has no
@@ -1416,9 +1527,9 @@ code
    pc := activator;
    if (not (HOUSE_FURNISH in self.extra))
       house_furnish(self);   // someone came in without the door (a god's goto)
-   if (pc.level >= IMMORTAL_LEVEL)
-      goto start;
    ok := house_allowed(self, pc.name);
+   if (pc.level >= IMMORTAL_LEVEL)
+      ok := TRUE;
    if (not ok)
    {
       ok := house_showout(self, pc);
@@ -1426,6 +1537,23 @@ code
          block;
       goto start;
    }
+   // out through the front door while it is locked: it knows whoever may be in here (on foot,
+   // or on a horse)
+   if ((out >= 0) and (pc.position == POSITION_STANDING))
+   {
+      if (command(dirs.[out]))
+      {
+         house_door(self);   // as the house says, whatever a spell did to it
+         if (isset(self.exit_info[out], EX_LOCKED))
+         {
+            block;
+            ok := house_passdoor(self, self, pc, out);
+            goto start;
+         }
+      }
+   }
+   if (pc.level >= IMMORTAL_LEVEL)
+      goto start;
 
    typ := HOUSE_TYPE in self.extra;
    if ((pc.outside == self) and (back >= 0) and command(dirs.[back]) and (typ.descr == "cottage"))
@@ -1496,12 +1624,14 @@ code
       if (command("lock"))
       {
          addextra(self.extra, {HOUSE_LOCK}, "locked");
-         act("You lock the door: only those with a key may come in now.", A_ALWAYS, pc, null, null, TO_CHAR);
+         house_door(self);
+         act("You close the door and lock it: only those with a key may come in now.", A_ALWAYS, pc, null, null, TO_CHAR);
          house_sweep(self);
       }
       else
       {
          addextra(self.extra, {HOUSE_LOCK}, "open");
+         house_door(self);
          act("You unlock the door: anyone may come in now.", A_ALWAYS, pc, null, null, TO_CHAR);
       }
       house_save(self);
@@ -1961,6 +2091,7 @@ dilbegin fnpri(FN_PRI_BLOCK) architect();
 external
    unitptr house_find(pname : string, lane : string, street : string);
    house_save(room : unitptr);
+   house_door(front : unitptr);
    integer house_counter(pc : unitptr, which : string);
    integer house_price(pc : unitptr, what : string);
    integer house_dear(price : integer, pct : integer);
@@ -2145,6 +2276,7 @@ code
       addextra(pc.extra, {HOUSE_PAID}, itoa(k));
       addextra(room.extra, {HOUSE_LOCK}, "locked");
       house_save(room);
+      house_door(room);
       act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
       exec("say Your door is fitted with a lock, and locked, " + pc.name + ". Inside you can " +
            "lock and unlock it, and give your friends a key with invite.", self);
@@ -2248,6 +2380,7 @@ code
    subextra(room.extra, HOUSE_LOCK);
    room.hp := room.max_hp;
    house_save(room);
+   house_door(room);   // no lock yet: the door opens for anyone
    where := HOUSE_WHERE in room.extra;
    act("You pay $3n " + moneystring(price, TRUE) + ".", A_ALWAYS, pc, null, self, TO_CHAR);
    exec("say Done, " + pc.name + ": your " + what + " is " + where.descr + ". The door knows you.", self);

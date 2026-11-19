@@ -28,7 +28,10 @@ west to lane2;
 ALWAYS_LIGHT
 end
 
-#define HOUSE_DOOR descr "A stout wooden door leads into a house."
+#define HOUSE_DOOR HOUSE_DOOR_FLAGS keyword {"wooden door", "door"} \
+   descr "A stout wooden door leads into a house."
+#define HOUSE_DOOR_OUT HOUSE_DOOR_FLAGS keyword {"wooden door", "door"} \
+   descr "The front door leads out to Hearth Lane."
 
                                  lane2
 
@@ -110,7 +113,7 @@ ALWAYS_LIGHT
                                  plot1
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the first pair of houses")
 gmap(340,637)
-south to lane2;
+south to lane2 HOUSE_DOOR_OUT;
 north to plot1b;
 end
 
@@ -123,7 +126,7 @@ end
                                  plot2
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the first pair of houses")
 gmap(340,721)
-north to lane2;
+north to lane2 HOUSE_DOOR_OUT;
 south to plot2b;
 end
 
@@ -136,7 +139,7 @@ end
                                  plot3
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the second pair of houses")
 gmap(298,637)
-south to lane3;
+south to lane3 HOUSE_DOOR_OUT;
 north to plot3b;
 end
 
@@ -149,7 +152,7 @@ end
                                  plot4
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the second pair of houses")
 gmap(298,721)
-north to lane3;
+north to lane3 HOUSE_DOOR_OUT;
 south to plot4b;
 end
 
@@ -162,7 +165,7 @@ end
                                  plot5
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the north door of the last pair of houses")
 gmap(256,637)
-south to lane4;
+south to lane4 HOUSE_DOOR_OUT;
 north to plot5b;
 end
 
@@ -175,7 +178,7 @@ end
                                  plot6
 HOUSE_FRONT("on Hearth Lane, west of the Udgaard market: the south door of the last pair of houses")
 gmap(256,721)
-north to lane4;
+north to lane4 HOUSE_DOOR_OUT;
 south to plot6b;
 end
 
