@@ -41,7 +41,8 @@ cd vme/bin
   reset placed them, and every NPC and object of the zone loaded fresh, with their DIL programs
   and arguments, skills and exits by name (`vme/src/json_dump.cpp`). It opens no port and,
   without `-l`, logs to stderr, but it boots and resets the world like the game: run it on a
-  copy of the world, not in a live server's directory.
+  copy of the world, not in a live server's directory. `-t <seconds>` runs that much game time
+  first, time-warped (random treasure takes its shape, NPCs wander).
 - First god character: log in as `Papi` (the `immortal_name` in
   `vme/etc/server.cfg`).
 - "Can't bind Mother Connection port 4999" means a stale server is still

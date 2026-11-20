@@ -14,6 +14,7 @@ void check_overpopulation_event(void *p1, void *p2);
 void check_reboot_event(void *, void *);
 void game_event();
 void game_loop();
+void run_offline(int seconds);
 void perform_violence_event(void *, void *);
 void ping_multiplexers_event(void *, void *);
 void timewarp_end(void *p1, void *p2);
@@ -40,6 +41,7 @@ extern long g_nTickUsec;
 extern bool g_dumptables;
 extern bool g_dump_json;
 extern std::string g_dump_json_zone;
+extern int g_dump_json_seconds;
 
 extern const char *g_compile_date;
 extern const char *g_compile_time;
