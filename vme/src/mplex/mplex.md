@@ -271,3 +271,21 @@ Look for:
 - **Disabled Protocols**: SSLv2, SSLv3
 
 The TLS implementation is production-ready and follows modern security best practices.
+
+## Stopping
+
+`systemctl stop` or `restart` sends SIGTERM (SIGINT, SIGHUP and SIGQUIT are treated alike).
+
+- A websocket mplex (`-w`) catches it in its own loop, stops accepting and closes every open
+  websocket with code 1012 and the reason "The server is restarting"; one whose handshake
+  finishes meanwhile gets the same at once. The web client shows a restart as such ("Server
+  restarting"), not as a lost connection or a sleeping device. The mplex stops as soon as the
+  last goodbye is done (at once when nobody is connected), at most 5 seconds later, logs
+  "Stopped on request." and exits.
+- A telnet mplex writes "Received SIGQUIT, SIGHUP, SIGINT or SIGTERM: stopping on request." to
+  its log and exits at once; the kernel closes its sockets. Its signal handler may only call
+  write(2) and _exit(2): the signal can come in the middle of malloc, OpenSSL or the log's stdio.
+
+Exit codes: a requested stop is `MPLEX_EXIT_STOPPED` (0), so systemd logs it as "Deactivated
+successfully"; an error (a wrong argument, a log file it can't open, the websocket loop ending
+without a stop request) is 1; a crash is a signal.

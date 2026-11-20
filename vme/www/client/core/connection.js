@@ -135,6 +135,7 @@
         1001: "The server or the browser went away",
         1006: "The connection dropped without a goodbye",
         1011: "The server hit an error",
+        1012: "The server is restarting",
         1015: "The secure (TLS) connection failed",
     };
 
@@ -163,7 +164,10 @@
      * closeClues()'s hiddenFor and offline.
      */
     function describeClose({ code, reason, opened, upFor, quietFor, at, where, hiddenFor = 0, offline = false }) {
-        const c = `code ${code || "?"}${reason ? ": " + reason : ""}`;
+        // the server's reason, unless it only repeats what the code says
+        const said = reason && reason !== CLOSE_WHAT[code] ? ": " + reason : "";
+        const c = `code ${code || "?"}${said}`;
+        const restarting = code === 1012;
         const out = [];
         if (!opened) {
             // 1006 is what every failed connect gives; the others say something
@@ -171,10 +175,13 @@
             out.push(`Couldn't connect to ${where} at ${at} (${c})${what}.`);
         } else {
             out.push(`${CLOSE_WHAT[code] || "The connection closed"} at ${at} (${c}), after ${span(upFor)} connected.`);
-            if (code !== 1000) out.push(`The server last sent something ${span(quietFor)} before.`);
+            if (code !== 1000 && !restarting) out.push(`The server last sent something ${span(quietFor)} before.`);
         }
-        if (offline) out.push("Your device said it was offline.");
-        if (hiddenFor >= 60000) out.push(`The page had been in the background for ${span(hiddenFor)}: a sleeping device or a browser saving power drops connections.`);
+        // A restart is the server's own doing (mplex says so when systemd stops it): no guesses
+        if (!restarting) {
+            if (offline) out.push("Your device said it was offline.");
+            if (hiddenFor >= 60000) out.push(`The page had been in the background for ${span(hiddenFor)}: a sleeping device or a browser saving power drops connections.`);
+        }
         return out.join(" ");
     }
 

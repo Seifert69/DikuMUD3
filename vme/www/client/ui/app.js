@@ -1449,10 +1449,12 @@
                     return;
                 }
                 const text = closeText(info, server);
-                sys(text, code !== 1000);
+                // The server restarting (1012, mplex says so when it is stopped) is no failure
+                const restarting = code === 1012;
+                sys(text, code !== 1000 && !restarting);
                 if (!opened) setConnState("closed", "Not connected");
                 banner(opened ? "Disconnected." : "Can't connect.", buttons);
-                const d = showLostDialog(text, again, opened ? "Connection lost" : "Can't connect");
+                const d = showLostDialog(text, again, restarting ? "Server restarting" : opened ? "Connection lost" : "Can't connect");
                 // Code 0: the browser refused before trying, so the network isn't the question
                 if (!opened && code !== 0 && code !== 1015)
                     probeInternet(server).then(more => {

@@ -47,6 +47,11 @@ struct arg_type
     } while (0);
 
 extern int g_bHadAlarm;
+
+// The exit code of an mplex asked to stop (SIGTERM from systemctl stop or restart, SIGINT, SIGHUP,
+// SIGQUIT): a clean stop, so systemd logs "Deactivated successfully", not "FAILURE". An error
+// (a wrong argument, no log file, the websocket loop ending unasked) exits 1, a crash by a signal
+constexpr int MPLEX_EXIT_STOPPED = 0;
 extern arg_type g_mplex_arg;
 extern char g_mudname[50];
 

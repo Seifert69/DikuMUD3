@@ -273,6 +273,18 @@ test("Connection sends the empty hello and strips newlines", () => {
     });
 });
 
+test("describeClose: the server restarting says so, without guessing at the device", () => {
+    const t = C.describeClose({ code: 1012, reason: "The server is restarting", opened: true, upFor: 24 * 3600000 + 7 * 60000, quietFor: 23000, at: "15:46", where: "x:1", hiddenFor: 4 * 60000, offline: true });
+    assert.equal(t, "The server is restarting at 15:46 (code 1012), after 24 h 7 min connected.");
+});
+
+test("describeClose: a restart met while connecting, and a restart with its own reason", () => {
+    assert.equal(C.describeClose({ code: 1012, opened: false, at: "15:46", where: "x:1" }),
+        "Couldn't connect to x:1 at 15:46 (code 1012): the server is restarting.");
+    assert.equal(C.describeClose({ code: 1012, reason: "Back in a minute", opened: true, upFor: 60000, quietFor: 1000, at: "15:46", where: "x:1" }),
+        "The server is restarting at 15:46 (code 1012: Back in a minute), after 1 min connected.");
+});
+
 test("describeClose: never connected", () => {
     const t = C.describeClose({ code: 1006, opened: false, at: "11:27", where: "valhalla.com:4280" });
     assert.equal(t, "Couldn't connect to valhalla.com:4280 at 11:27 (code 1006).");
