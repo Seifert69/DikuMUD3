@@ -373,7 +373,7 @@ extra {}
 'Cinquedea', also called five finger sword or ox tongue sword, because of the
 width of the sword. It has a mark with the writing 'Andrea dei Ferara'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 2,0
 weight 9
 cost 16 SILVER_PIECE
 end
