@@ -14,6 +14,8 @@
  *   skills by name, the attack, hit points, the object type, and what a unit holds or wears. And
  *   what it is worth: an object's "worth" (the shops' price before their profit; for coins, the
  *   coins' value), and the "money" a character or container holds, coins inside containers too.
+ *   A potion, scroll, wand or staff has "magic": its power, the spells it casts by name and, for
+ *   a wand or staff, its charges.
  * - "room", "npc" and "object" are what the boot reset placed; "prototype" is every NPC and object
  *   of the zone loaded fresh, including those only DIL loads. A prototype is in no room, and its
  *   DIL isn't started (it may read and write saved data), so its programs show the zone file's
@@ -46,6 +48,36 @@ using PrettyWriter = rapidjson::PrettyWriter<rapidjson::StringBuffer>;
 
 namespace
 {
+
+/// A potion's or scroll's spells are values 1-3, a wand's or staff's 2-3 after its charges (wmacros.h)
+void write_magic(unit_data *u, PrettyWriter &writer)
+{
+    const int type = OBJ_TYPE(u);
+    const bool charged = type == ITEM_WAND || type == ITEM_STAFF;
+    if (!charged && type != ITEM_POTION && type != ITEM_SCROLL)
+    {
+        return;
+    }
+    writer.String("magic");
+    writer.StartObject();
+    json::write_kvp("power", OBJ_VALUE(u, 0), writer);
+    if (charged)
+    {
+        json::write_kvp("charges", OBJ_VALUE(u, 1), writer);
+    }
+    writer.String("spells");
+    writer.StartArray();
+    for (int i = charged ? 2 : 1; i <= 3; i++)
+    {
+        const int spell = OBJ_VALUE(u, i);
+        if (spell > 0 && spell < SPL_TREE_MAX)
+        {
+            writer.String(g_SplColl.text[spell] ? g_SplColl.text[spell] : ("spell" + std::to_string(spell)).c_str());
+        }
+    }
+    writer.EndArray();
+    writer.EndObject();
+}
 
 void write_derived(unit_data *u, PrettyWriter &writer)
 {
@@ -94,6 +126,7 @@ void write_derived(unit_data *u, PrettyWriter &writer)
     {
         json::write_kvp("type", sprinttype(nullptr, OBJ_TYPE(u), g_obj_types), writer);
         json::write_kvp("worth", IS_MONEY(u) ? MONEY_VALUE(u) : static_cast<sbit32>(OBJ_PRICE(u)), writer);
+        write_magic(u, writer);
     }
 
     if (u->isChar() || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))

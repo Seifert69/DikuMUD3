@@ -34,6 +34,8 @@ assert {'id': 'orc_scimitar@haon_dor', 'equipped': 'wielded'} in chief['derived'
 assert chief['derived']['money'] == 8 * coins['cp'], chief['derived']  # 8 copper pieces
 scimitar = protos['orc_scimitar@haon_dor']
 assert scimitar['derived']['worth'] == 2 * coins['sp'], scimitar['derived']  # cost 2 SILVER_PIECE
+potion = protos['blue_potion@haon_dor']['derived']['magic']
+assert potion == {'power': 50, 'spells': ['cure light wounds']}, potion
 web = next(x for x in lines if x['id'] == 'rn_6130@haon_dor')
 up = web['unit']['room_data']['dir_option'][4]
 assert (up['to_room'], up['difficulty'], up['exit_info']) == ('rn_6132@haon_dor', 25, ['climb']), up
