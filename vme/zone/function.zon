@@ -8574,7 +8574,7 @@ code
    {
 	   if (u == self) continue;
 	   if (not visible(self, u)) continue;
-	   if (u.zoneidx == self.zoneidx) continue;
+	   if (u.zoneidx != self.zoneidx) continue; /* its own zone's NPCs only, as rescue */
 
       if (isset (u.charflags, CHAR_LEGAL_TARGET) and
          isset (u.charflags, CHAR_PROTECTED))

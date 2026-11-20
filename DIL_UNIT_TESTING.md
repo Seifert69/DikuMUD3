@@ -59,6 +59,8 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T036-T038 | character fields |
 | T039-T041 | object, room, exit, light, zone and command fields |
 | T042-T044 | control flow, messages and commands, procedures that change units |
+| T045 | UTF-8 in DIL strings |
+| T046 | teamwork@function: an NPC joins its own zone's fights |
 
 ## The player tests
 
