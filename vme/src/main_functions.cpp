@@ -64,6 +64,7 @@ int g_tics = 60;           /* number of tics since boot-time */
 bool g_dumptables = false; // If true, dump all profession tables to stdout and exit(0)
 bool g_dump_json = false;
 std::string g_dump_json_zone; // vme -j <zone>: dump only that zone
+int g_dump_json_seconds = 0;  // vme -j -t <seconds>: game time to run before the dump
 
 std::string g_world_boottime; /* boottime of world */
 
@@ -156,7 +157,12 @@ void run_the_game(char *srvcfg)
     boot_db();
     if (g_dump_json)
     {
-        exit(dump_json(g_dump_json_zone));
+        run_offline(g_dump_json_seconds);
+        const int result = dump_json(g_dump_json_zone);
+        // As game_loop: the path thread stops before exit() frees the graphs it works on
+        g_mud_shutdown = 1;
+        pthread_join(g_dijkstra_thread, nullptr);
+        exit(result);
     }
     g_mudboot = 0;
     sessionlog_boot();
@@ -207,6 +213,26 @@ void run_the_game(char *srvcfg)
         exit(g_mud_exitcode);
         // exit(0);
     }
+}
+
+/**
+ * vme -j -t: the game for that many seconds of game time, time-warped, with no one connected: DIL
+ * runs (random treasure takes its shape, NPCs wander), zones reset and fights go on.
+ */
+void run_offline(int seconds)
+{
+    if (seconds <= 0)
+    {
+        return;
+    }
+    g_mudboot = 0;
+    g_events.add(PULSE_VIOLENCE, perform_violence_event, nullptr, nullptr);
+    for (const auto end = g_tics + seconds * PULSE_SEC; g_tics < end; g_tics++)
+    {
+        g_events.process();
+        clear_destructed();
+    }
+    slog(LOG_OFF, 0, "vme -j: ran %d seconds of game time.", seconds);
 }
 
 void game_loop()
@@ -484,5 +510,6 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -w: Time-warped: the game never sleeps between ticks (for the tests)\n");
     fprintf(stderr, "  -j [zone]: after the boot, write the world (or the zone) as JSON lines to\n");
     fprintf(stderr, "             dump_world.jsonl (dump_<zone>.jsonl) and exit\n");
+    fprintf(stderr, "  -t seconds: with -j, run that much game time first, time-warped\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
 }

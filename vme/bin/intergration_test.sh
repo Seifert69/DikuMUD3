@@ -41,6 +41,18 @@ up = web['unit']['room_data']['dir_option'][4]
 assert (up['to_room'], up['difficulty'], up['exit_info']) == ('rn_6132@haon_dor', 25, ['climb']), up
 print('vme -j: %d lines checked' % len(lines))
 EOF
+# -t: 30 seconds of game first, so the random treasure has taken its shape
+if ! timeout --signal=KILL ${TIMEOUT} ./vme -l vme_dump.log -j haon_dor -t 30; then
+  cat vme_dump.log
+  exit 1
+fi
+python3 - <<'EOF' || exit 1
+import json
+lines = [json.loads(line) for line in open('dump_haon_dor.jsonl')]
+rnd = [x for x in lines if x['kind'] == 'object' and x['id'].startswith('rnd')]
+assert rnd and all(x['unit']['unit_data']['title'] for x in rnd), [x['id'] for x in rnd]
+print('vme -j -t: %d pieces of random treasure made' % len(rnd))
+EOF
 rm -f dump_haon_dor.jsonl vme_dump.log
 # The run uses zonelist.test; the game's own zonelist is put back afterwards (unless a killed
 # run left zonelist.test in its place, which is then not taken for the game's)

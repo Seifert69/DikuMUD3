@@ -119,6 +119,22 @@ int main(int argc, char **argv)
                     }
                     break;
 
+                case 't': // -t <seconds>, with -j
+                    if (*(argv[pos] + 2))
+                    {
+                        g_dump_json_seconds = atoi(argv[pos] + 2);
+                    }
+                    else if (++pos < argc)
+                    {
+                        g_dump_json_seconds = atoi(argv[pos]);
+                    }
+                    if (g_dump_json_seconds <= 0)
+                    {
+                        slog(LOG_OFF, 0, "-t: seconds of game time expected.");
+                        exit(4);
+                    }
+                    break;
+
                 case 'l':
                     log_given = true;
                     if (*(argv[pos] + 2))

@@ -23,7 +23,8 @@
  *
  * The values are the server's after loading (vmc's point distribution, races, bonus_setup, affects),
  * but before any tick: what DIL sets later is not in it, and random treasure is still its
- * rnd*@randomt placeholder.
+ * rnd*@randomt placeholder. With -t <seconds> the game runs that long first (run_offline), so
+ * the random treasure has taken its shape and the NPCs have wandered.
  */
 #include "json_dump.h"
 
