@@ -9660,7 +9660,9 @@ code
    logtest(0, LOGT_INFO, "Lab director launching test " + s);
    dilcopy(s, self.outside);
    i := 0;
-   while (i < 6) // 2.5 to 3 minutes: a ship test may wait out a whole voyage
+   // 3.5 to 4 minutes (the first tick may come at once): a ship test may wait out a whole voyage,
+   // T048 two minutes for a corpse to come home
+   while (i < 8)
    {
       pause;
       i := i + 1;
