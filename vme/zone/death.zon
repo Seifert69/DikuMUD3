@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone death
+bonusband BONUS_NOT_APPLICABLE
 title ""
 
 lifespan 20

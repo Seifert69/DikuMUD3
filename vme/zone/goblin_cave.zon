@@ -16,6 +16,7 @@ END HEADER*/
 /*                            ZONE                              */
 /*==============================================================*/
 %zone                           goblin_cave
+bonusband BONUS_AVERAGE
 title "Goblin Caves@Mainland"
 creators {"Beren"}
 notes

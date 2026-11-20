@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone	holiday22
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 25       // Lifespan is controlled in Santa's room
 reset RESET_NEVER // Only reset in Santa's control room

@@ -9,6 +9,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone update
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 weather 1040
 creators {"whistler"}

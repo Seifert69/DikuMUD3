@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone	hallows23
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 25
 reset RESET_NEVER   // season@function on the study runs it each October

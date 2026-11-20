@@ -34,6 +34,7 @@ from moving to fjord and grotto thus depriving newbies access. */
 
 
 %zone udgaard
+bonusband BONUS_NOT_APPLICABLE
 
 title "Village of Udgaard@Mainland"
 lifespan 25

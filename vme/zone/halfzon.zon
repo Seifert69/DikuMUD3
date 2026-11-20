@@ -28,6 +28,7 @@ END HEADER*/
 #define MAYOR_COMPLETE "Spinks Request Complete"
 
 %zone halfzon
+bonusband BONUS_NOT_APPLICABLE
 title "Village Of Tassel Grove@Mainland"
 
 lifespan 20

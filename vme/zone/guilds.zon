@@ -10,6 +10,7 @@ All the guilds processed (Monk is not complete):
 */
 
 %zone guilds
+bonusband BONUS_NOT_APPLICABLE
 
 reset RESET_NOT
 

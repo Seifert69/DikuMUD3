@@ -55,6 +55,7 @@ RIDE / SAIL   These commands are to be removed from service (wizi them or better
 
 
 %zone basemove
+bonusband BONUS_NOT_APPLICABLE
 
 title ""
 reset RESET_NOT

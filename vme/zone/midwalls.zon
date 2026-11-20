@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone    midwalls
+bonusband BONUS_NOT_APPLICABLE
 title "City Walls of Midgaard@Mainland"
 lifespan 25
 reset RESET_ANYHOW

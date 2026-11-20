@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone clan_koh
+bonusband BONUS_NOT_APPLICABLE
 title "Knights of Honor Clan"
 lifespan 20
 reset RESET_ANYHOW

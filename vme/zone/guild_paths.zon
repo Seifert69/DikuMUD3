@@ -9,6 +9,7 @@ END HEADER */
 
 #include <macros.h>
 %zone guild_paths
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 
 weather 1040

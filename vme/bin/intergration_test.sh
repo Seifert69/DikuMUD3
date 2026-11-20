@@ -14,6 +14,8 @@ lines = [json.loads(line) for line in open('dump_haon_dor.jsonl')]
 assert {'money', 'zone', 'room', 'npc', 'object', 'prototype'} <= {x['kind'] for x in lines}
 coins = {c['abbrev']: c['value'] for c in lines[0]['coins']}
 assert coins['cp'] == 8 * coins['ip'], coins
+zone = next(x for x in lines if x['kind'] == 'zone')
+assert zone['unit']['bonusband'] == 4, zone['unit'].get('bonusband')  # haon_dor's treasure band, BONUS_EXCELLENT
 
 def unit_data(x):  # an NPC's unit_data is inside its char_data
     u = x['unit']

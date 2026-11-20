@@ -47,6 +47,7 @@ yourself in...."
         equip guards_shield  position WEAR_SHIELD
 
 %zone         kingc
+bonusband BONUS_NOT_APPLICABLE
 title "King Welmar's Castle@Mainland"
 lifespan 60
 reset RESET_IFEMPTY

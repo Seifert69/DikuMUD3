@@ -23,6 +23,7 @@ END HEADER*/
 
 
 %zone assassin
+bonusband BONUS_NOT_APPLICABLE
 title "Assassins Guild@Khorsabad"
 lifespan 20
 reset RESET_ANYHOW

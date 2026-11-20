@@ -53,6 +53,10 @@ notes "Shown by wstat zone."
 - `reset`: `RESET_NOT` (0, once at boot), `RESET_IFEMPTY` (when no player is in the zone),
   `RESET_ANYHOW` (every `lifespan` minutes), `RESET_NEVER` (not even at boot).
 - `weather` is the base air pressure, 960..1040 (default 1000); lower is stormier.
+- `bonusband` is the zone's treasure band, `BONUS_AVERAGE` (0) to `BONUS_ARTIFACT` (7), the
+  most random treasure from its NPCs may be (also capped by the NPC's level). Default and
+  `BONUS_NOT_APPLICABLE` (-1): outside the bands (towns, guilds, the game's machinery). vmc
+  refuses anything else. DIL reads it as `z.bonusband` (a zoneptr), `vme -j` writes it.
 - `title "Name@Continent"`: the `areas` command lists zones whose title has one `@`.
 - A zone is loaded only if it has a line in `vme/etc/zonelist`. **A blank line ends that
   file**: zones listed after it are never loaded, without a word in the log.

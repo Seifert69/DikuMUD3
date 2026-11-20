@@ -33,6 +33,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone thievesguild
+bonusband BONUS_NOT_APPLICABLE
 title "Thieves Guild@Mainland"
 creators {"redferne"}
 

@@ -170,6 +170,13 @@ END HEADER*/
 #define BONUS_AVERAGE_PLUS    1
 #define BONUS_AVERAGE         0
 #define BONUS_AVERAGE_MINUS  -1
+// A zone's bonusband when it has none (towns, guilds, the game's machinery: no random treasure
+// drops); the zone header's default. For zones only: on an item -1 is BONUS_AVERAGE_MINUS.
+#define BONUS_NOT_APPLICABLE -1
+
+// A compiled zone (.data) says right after its name which header it has: the server refuses
+// other files (compiled by an older vmc) instead of misreading them. 2: weather and bonusband.
+#define ZONE_DATA_VERSION 2
 #define BONUS_BAD            -2
 #define BONUS_BAD_MINUS      -3
 #define BONUS_TERRIBLE       -4

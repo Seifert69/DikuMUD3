@@ -359,13 +359,23 @@ bool parse_datafile(zone_type *zone, bool do_reindex)
     }
 
     int temp1{0};
-    int mstmp = fread(&temp1, sizeof(int), 1, f);
-    if (mstmp < 1)
+    if (fread(&temp1, sizeof(int), 1, f) != 1 || temp1 != -ZONE_DATA_VERSION)
     {
-        slog(LOG_ALL, 0, "ERROR: Unexpected end of stream %d in db.cpp", mstmp);
-        assert(FALSE);
+        error(HERE, "%s was compiled by an older vmc (its header isn't version %d): recompile the zone", filename,
+              ZONE_DATA_VERSION);
+    }
+
+    if (fread(&temp1, sizeof(int), 1, f) != 1)
+    {
+        error(HERE, "%s: unexpected end of the file (weather)", filename);
     }
     zone->getWeather().setBase(temp1);
+
+    if (fread(&temp1, sizeof(int), 1, f) != 1 || !is_in(temp1, BONUS_NOT_APPLICABLE, BONUS_ARTIFACT))
+    {
+        error(HERE, "%s: no bonusband, or one outside -1..7: recompile the zone", filename);
+    }
+    zone->setBonusBand(temp1);
 
     /* More data read here */
     fstrcpy(&cBuf, f);

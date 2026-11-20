@@ -342,6 +342,7 @@ struct symbols
     {"help", DILSF_HELP},
     {"creators", DILSF_CREATORS},
     {"payonly", DILSF_PAYONLY},
+    {"bonusband", DILSF_BONUSBAND},
     {"skill_name", DILSE_SKITXT},
     {"weapon_name", DILSE_WPNTXT},
 

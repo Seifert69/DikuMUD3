@@ -463,8 +463,9 @@ struct dilargstype
 #define DILF_OPENDIFF 125 /*.opendiff (unit) */
 #define DILF_PROF 126    /* .profession */
 #define DILF_SYMNAME 127 // returns string "nameidx @ zoneidx"
+#define DILF_BONUSBAND 128 /* .bonusband (zone) */
 
-#define DILF_MAX 127 /* The maximum field number */
+#define DILF_MAX 128 /* The maximum field number */
 
 
 class zone_type;

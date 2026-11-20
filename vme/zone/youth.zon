@@ -30,6 +30,7 @@ Credit to Horkval & Vega from Valheru for the idea and probably some code snippe
 
 
 %zone youth
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 10
 reset RESET_ANYHOW

@@ -278,6 +278,16 @@ void zone_type::setPayOnly(ubit8 value)
     m_payonly = value;
 }
 
+int zone_type::getBonusBand() const
+{
+    return m_bonusband;
+}
+
+void zone_type::setBonusBand(int value)
+{
+    m_bonusband = value;
+}
+
 const std::optional<std::string> &zone_type::getDILFilePath() const
 {
     return m_dilfilepath;
@@ -597,6 +607,7 @@ void zone_type::toJSON(rapidjson::PrettyWriter<rapidjson::StringBuffer> &writer)
         json::write_kvp("access", m_access, writer);
         json::write_kvp("loadlevel", m_loadlevel, writer);
         json::write_kvp("payonly", m_payonly, writer);
+        json::write_kvp("bonusband", m_bonusband, writer);
         json::write_kvp("crc", m_crc, writer);
 
         ////////////////////////////////////////////////////////

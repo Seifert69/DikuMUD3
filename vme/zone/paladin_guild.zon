@@ -15,6 +15,7 @@ END HEADER */
 #include <macros.h>
 
 %zone paladin_guild
+bonusband BONUS_NOT_APPLICABLE
 title "Paladin Guild@Mainland"
 
 /*----- Guild Type Definitions-----*/

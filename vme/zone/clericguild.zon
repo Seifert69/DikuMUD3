@@ -19,6 +19,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone clericguild
+bonusband BONUS_NOT_APPLICABLE
 title "Healers Guild@Mainland"
 creators {"papi","quifael"}
 

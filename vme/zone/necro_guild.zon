@@ -22,6 +22,7 @@ version     12END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone necro_guild
+bonusband BONUS_NOT_APPLICABLE
 title "Necromancer Guild@Mainland"
 creators {"tharlock", "papi", "saor"}
 

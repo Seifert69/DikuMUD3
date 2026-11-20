@@ -14,6 +14,7 @@ END HEADER */
 #define QUEST_CITIZEN_MIDGAARD "Citizen of Midgaard"
 
 %zone midgaard
+bonusband BONUS_NOT_APPLICABLE
 title "Midgaard City@Mainland"
 lifespan 20
 reset RESET_ANYHOW

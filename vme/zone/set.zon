@@ -21,6 +21,7 @@ if this is used for valhalla */
 #include <macros.h>
 
 %zone set
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 
 weather 1040

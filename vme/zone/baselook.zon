@@ -15,6 +15,7 @@
 #include <macros.h>
 
 %zone baselook
+bonusband BONUS_NOT_APPLICABLE
 title ""
 
 lifespan 20

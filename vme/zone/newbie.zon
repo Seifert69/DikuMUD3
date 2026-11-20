@@ -18,6 +18,7 @@ END HEADER*/
 
 
 %zone newbie
+bonusband BONUS_AVERAGE
 
 lifespan 10
 reset RESET_ANYHOW

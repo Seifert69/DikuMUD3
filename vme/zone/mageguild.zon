@@ -22,6 +22,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone mageguild
+bonusband BONUS_NOT_APPLICABLE
 title "Conjurers Guild@Mainland"
 creators {"papi","quifael","skay"}
 

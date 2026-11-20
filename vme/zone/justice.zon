@@ -259,6 +259,7 @@ CHAR_LEGAL_TARGET
 */
 
 %zone justice 
+bonusband BONUS_NOT_APPLICABLE
 
 title "The justice zone"
 lifespan 20

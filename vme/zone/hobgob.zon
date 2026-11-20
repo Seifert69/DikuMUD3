@@ -21,6 +21,7 @@ END HEADER*/
 #define CROMWELL_COMPLETE "Mastiques request complete"
 
 %zone hobgob
+bonusband BONUS_GOOD
 title  "Hobgoblin Caves@Mainland"
 lifespan 20
 reset RESET_ANYHOW

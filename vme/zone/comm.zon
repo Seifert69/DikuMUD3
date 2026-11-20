@@ -12,6 +12,7 @@ END HEADER*/
 #define MIN_SHOUT_LEVEL 5
 
 %zone comm
+bonusband BONUS_NOT_APPLICABLE
 
 creators {"Mesmer","Whistler","Telemachos"}
 

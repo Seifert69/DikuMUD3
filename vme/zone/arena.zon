@@ -32,6 +32,7 @@ flags {UNIT_FL_MAGIC,UNIT_FL_NOSAVE}\
 dilcopy blowaway@function (1500,"An arena janitor sprints through and picks up some trash");
 
 %zone arena
+bonusband BONUS_NOT_APPLICABLE
 title "Battle Arena@Mainland"
 lifespan 20
 reset RESET_ANYHOW

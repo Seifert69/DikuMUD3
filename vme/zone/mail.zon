@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone	 mail
+bonusband BONUS_NOT_APPLICABLE
 title ""
 
 lifespan 25

@@ -21,6 +21,7 @@ END HEADER*/
 
 
 %zone                          haon_dor
+bonusband BONUS_EXCELLENT
 title "Haon-Dor Forest@Mainland"
 lifespan 10
 reset RESET_ANYHOW
