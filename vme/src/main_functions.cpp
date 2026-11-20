@@ -15,7 +15,7 @@
 #include "handler.h"
 #include "hookmud.h"
 #include "interpreter.h"
-#include "json_helper.h"
+#include "json_dump.h"
 #include "nanny.h"
 #include "nice.h"
 #include "path.h"
@@ -35,7 +35,6 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <fstream>
 
 #define OPT_USEC 250000L     /* time delay corresponding to 4 passes/sec */
 long g_nTickUsec = OPT_USEC; // Dont mess with this, it's the game heartbeat. Look at 'timewarp'
@@ -64,6 +63,7 @@ int g_wizlock = 0;         /* no mortals on now */
 int g_tics = 60;           /* number of tics since boot-time */
 bool g_dumptables = false; // If true, dump all profession tables to stdout and exit(0)
 bool g_dump_json = false;
+std::string g_dump_json_zone; // vme -j <zone>: dump only that zone
 
 std::string g_world_boottime; /* boottime of world */
 
@@ -74,7 +74,6 @@ std::string g_world_boottime; /* boottime of world */
 const char *g_compile_date = __DATE__;
 const char *g_compile_time = __TIME__;
 
-void DumpJSON();
 //
 // Need this to be sure the typedefs are right for 64 bit architecture (MS2020)
 void type_validate_64()
@@ -127,23 +126,25 @@ void run_the_game(char *srvcfg)
     slog(LOG_OFF, 0, "Read server configuration.");
 
     // vme -L only reads the player files, so it opens no port or pipe and can run beside a live
-    // server. -c and -C rewrite and delete player files: they still open the port, which fails
-    // while a server is running.
-    const bool list_only = g_player_convert == 3;
+    // server. vme -j opens none either, but it boots and resets the world as the game does (DIL
+    // started at load may store files, reset errors go to the zones' .err files): run it on a copy
+    // of the world. -c and -C rewrite and delete player files: they still open the port, which
+    // fails while a server is running.
+    const bool offline = g_player_convert == 3 || g_dump_json;
 
-    if (!list_only)
+    if (!offline)
     {
         slog(LOG_OFF, 0, "Opening mother connection on port %d.", g_cServerConfig.getMotherPort());
         init_mother(g_cServerConfig.getMotherPort());
     }
 
-    if (!list_only) // vme -L keeps the default signals, so Ctrl-C and a closed pipe stop it
+    if (!offline) // vme -L and -j keep the default signals, so Ctrl-C and a closed pipe stop it
     {
         slog(LOG_OFF, 0, "Signal trapping.");
         signal_setup();
     }
 
-    if (!list_only)
+    if (!offline)
     {
         slog(LOG_OFF, 0, "Named pipe setup.");
         namedpipe_setup();
@@ -155,8 +156,7 @@ void run_the_game(char *srvcfg)
     boot_db();
     if (g_dump_json)
     {
-        DumpJSON();
-        exit(1);
+        exit(dump_json(g_dump_json_zone));
     }
     g_mudboot = 0;
     sessionlog_boot();
@@ -482,106 +482,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -p: Persistant containers list\n");
     fprintf(stderr, "  -d: dump all profession tables.\n");
     fprintf(stderr, "  -w: Time-warped: the game never sleeps between ticks (for the tests)\n");
+    fprintf(stderr, "  -j [zone]: after the boot, write the world (or the zone) as JSON lines to\n");
+    fprintf(stderr, "             dump_world.jsonl (dump_<zone>.jsonl) and exit\n");
     fprintf(stderr, "Copyright (C) 1994 - 1996 by Valhalla.\n");
-}
-
-void DumpJSONZones()
-{
-    rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartArray();
-    for (auto &[name, zone] : g_zone_info.mmp)
-    {
-        writer.StartObject();
-        json::write_kvp("name", name, writer);
-        json::write_object_pointer_kvp("zone", zone, writer);
-        writer.EndObject();
-    }
-    writer.EndArray();
-
-    std::ofstream out("dump_zones.json");
-    out << buffer.GetString();
-    out.close();
-}
-
-void DumpJSONRooms()
-{
-    rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartArray();
-    unit_data *room = g_room_head;
-    while (room)
-    {
-        room->toJSON(writer);
-        room = room->getGlobalNext();
-    }
-    writer.EndArray();
-
-    std::ofstream out("dump_rooms.json");
-    out << buffer.GetString();
-    out.close();
-}
-
-void DumpJSONObjects()
-{
-    rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartArray();
-    unit_data *object = g_obj_head;
-    while (object)
-    {
-        object->toJSON(writer);
-        object = object->getGlobalNext();
-    }
-    writer.EndArray();
-
-    std::ofstream out("dump_objects.json");
-    out << buffer.GetString();
-    out.close();
-}
-
-void DumpJSONNPCs()
-{
-    rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartArray();
-    unit_data *npc = g_npc_head;
-    while (npc)
-    {
-        npc->toJSON(writer);
-        npc = npc->getGlobalNext();
-    }
-    writer.EndArray();
-
-    std::ofstream out("dump_npcs.json");
-    out << buffer.GetString();
-    out.close();
-}
-
-void DumpJSONPCs()
-{
-    rapidjson::StringBuffer buffer;
-    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
-    writer.StartArray();
-    /// TODO how to get the PC's
-    writer.EndArray();
-
-    std::ofstream out("dump_pcs.json");
-    out << buffer.GetString();
-    out.close();
-}
-
-void DumpJSON()
-{
-    DumpJSONZones();
-    DumpJSONRooms();
-    DumpJSONObjects();
-    DumpJSONObjects();
-    DumpJSONNPCs();
-    DumpJSONPCs();
 }

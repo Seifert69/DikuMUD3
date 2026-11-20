@@ -1763,6 +1763,12 @@ void boot_db()
 
     generate_zone_indexes();
 
+    if (g_dump_json && !g_dump_json_zone.empty() && find_zone(g_dump_json_zone.c_str()) == nullptr)
+    {
+        slog(LOG_OFF, 0, "vme -j: no zone '%s'.", g_dump_json_zone.c_str());
+        exit(2);
+    }
+
     slog(LOG_OFF, 0, "Generating player index.");
     player_file_index();
     /*Removed log because it really didn't explain what this did so no need to  have it in the log.

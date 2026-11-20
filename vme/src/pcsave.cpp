@@ -537,7 +537,7 @@ void player_file_index()
 
     /* Get rid of any temporary player save file. Not for vme -L: it can run beside a live
        server, which may be saving into that file right now. */
-    while (g_player_convert != 3 && file_exists(tmp_player_name))
+    while (g_player_convert != 3 && !g_dump_json && file_exists(tmp_player_name))
     {
         n = std::remove(tmp_player_name.c_str());
         if (n != 0)

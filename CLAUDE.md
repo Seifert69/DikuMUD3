@@ -36,6 +36,12 @@ cd vme/bin
   `pause`, the mud clock and timetables pass as fast as the CPU allows. The DIL
   integration tests (`vme/bin/intergration_test.sh`) run this way. On a running game a
   god's `wtimewarp <seconds>` does the same for that many seconds of game time.
+- `./vme -j [zone]` boots, writes the world (or one zone) as JSON lines to
+  `dump_world.jsonl` / `dump_<zone>.jsonl` and exits: every room, NPC and object as the boot
+  reset placed them, and every NPC and object of the zone loaded fresh, with their DIL programs
+  and arguments, skills and exits by name (`vme/src/json_dump.cpp`). It opens no port and,
+  without `-l`, logs to stderr, but it boots and resets the world like the game: run it on a
+  copy of the world, not in a live server's directory.
 - First god character: log in as `Papi` (the `immortal_name` in
   `vme/etc/server.cfg`).
 - "Can't bind Mother Connection port 4999" means a stale server is still

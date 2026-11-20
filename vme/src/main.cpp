@@ -107,8 +107,16 @@ int main(int argc, char **argv)
                     g_nTickUsec = 0;
                     break;
 
-                case 'j':
+                case 'j': // -j [zone]
                     g_dump_json = true;
+                    if (*(argv[pos] + 2))
+                    {
+                        g_dump_json_zone = argv[pos] + 2;
+                    }
+                    else if (pos + 1 < argc && *argv[pos + 1] != '-' && !isdigit(*argv[pos + 1]))
+                    {
+                        g_dump_json_zone = argv[++pos];
+                    }
                     break;
 
                 case 'l':
@@ -146,9 +154,9 @@ int main(int argc, char **argv)
             }
         }
 
-        // -c, -C and -L may be started in the bin directory of a running server: without -l they log
-        // to stderr instead of truncating the server's ./vme.log.
-        if (!g_player_convert || log_given)
+        // -c, -C, -L and -j may be started in the bin directory of a running server: without -l they
+        // log to stderr instead of truncating the server's ./vme.log.
+        if (!(g_player_convert || g_dump_json) || log_given)
         {
             g_log_file_fd = freopen(log_name, "w", stderr);
             if (!g_log_file_fd)

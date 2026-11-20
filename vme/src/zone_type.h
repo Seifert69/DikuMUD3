@@ -85,6 +85,7 @@ public:
      * @return file_index_type or nullptr
      */
     file_index_type *findFileIndex(const std::string &name);
+    [[nodiscard]] const FileIndexMap &cgetFileIndexMap() const { return m_mmp_fi; }
 
     [[nodiscard]] const zone_reset_cmd *cgetZoneResetCommands() const;
     zone_reset_cmd *getZoneResetCommands();
