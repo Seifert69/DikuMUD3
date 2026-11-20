@@ -29,7 +29,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 45  // T010, T009, ...
+#define TEST_MAXIMUM 46  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -79,6 +79,69 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T046 =====================
+
+// teamwork@function: an NPC joins a fight of an NPC of its own zone that its argument names. From
+// 2020 to 2026 it skipped its own zone's NPCs instead, so Haon-Dor's orcs never helped each other.
+dilbegin T046(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   helper : unitptr;
+   friend : unitptr;
+   foe : unitptr;
+   i : integer;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   helper := load("t046orc@test");
+   friend := load("t046orc@test");
+   foe := load("t046foe@test");
+   link(helper, self);
+   link(friend, self);
+   link(foe, self);
+   secure(helper, lost);
+   secure(friend, lost);
+   secure(foe, lost);
+
+   set_fighting(foe, friend);
+   set_fighting(friend, foe);
+   while ((helper.fighting != foe) and (i < 20))
+   {
+      pause;
+      i := i + 1;
+   }
+   if (helper.fighting == foe)
+      logtest(tstno, LOGT_SUCCESS, "teamwork: the orc joined its own zone's orc's fight after " + itoa(i) + " seconds");
+   else
+      logtest(tstno, LOGT_ERROR, "teamwork: the orc didn't join its own zone's orc's fight in " + itoa(i) + " seconds");
+   goto cleanup;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "teamwork: a fighter died or left before the check");
+
+:cleanup:
+   if (helper != null)
+   {
+      unsecure(helper);
+      destroy(helper);
+   }
+   if (friend != null)
+   {
+      unsecure(friend);
+      destroy(friend);
+   }
+   if (foe != null)
+   {
+      unsecure(foe);
+      destroy(foe);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -8968,6 +9031,37 @@ weight 100
 end
 
 
+
+   t046orc
+
+names {"t046orc"}
+title "a test orc"
+descr "A test orc is standing here."
+race RACE_DWARF
+sex SEX_MALE
+level 20
+NATURAL_DEF(WPN_BITE, ARM_CHAIN)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+dilcopy teamwork@function("t046orc");
+end
+
+   t046foe
+
+names {"t046foe"}
+title "a test foe"
+descr "A test foe is standing here."
+race RACE_DWARF
+sex SEX_MALE
+level 20
+NATURAL_DEF(WPN_BITE, ARM_CHAIN)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
 
    experiment
 
