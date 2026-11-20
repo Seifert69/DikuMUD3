@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 51  // T010, T009, ...
+#define TEST_MAXIMUM 52  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,124 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T052 =====================
+
+// Random treasure loaded into an NPC's corpse (rndCorpseLoad@randomt, from make_corpse@death).
+// Past the chance ($rnd_corpse_force): the band is the lower of the NPC's home zone's bonusband
+// (this zone: good+) and its level's band; nothing for an NPC that wore nothing, gives no
+// experience, or comes from a zone without a band (basis). The chance (rndCorpseChance): 50 in
+// 1000 at the band's typical level, (level / typical)^2 more or less, the level counted up to
+// twice the typical, never above 200. Then a real death: the corpse of an NPC holding something
+// holds the treasure.
+dilbegin T052(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   integer rndCorpseLoad@randomt(npc : unitptr, crp : unitptr, worn : integer);
+   integer rndCorpseChance@randomt(npc : unitptr, band : integer);
+var
+   crp : unitptr;
+   u : unitptr;
+   n : integer;
+   il : intlist;
+   sl : stringlist;
+   i : integer;
+   b : integer;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   crp := load("pbox@test");
+   link(crp, self);
+
+   // NPC, items worn, the band it must get
+   sl := {"t052npc@test", "t052low@test", "t052high@test", "t052npc@test", "t052noexp@test", "ladybug@basis"};
+   il := {1, BONUS_GOOD_PLUS,   1, BONUS_AVERAGE,   1, BONUS_GOOD_PLUS,   0, BONUS_NOT_APPLICABLE,
+          1, BONUS_NOT_APPLICABLE,   1, BONUS_NOT_APPLICABLE};
+   i := 0;
+   while (i < length(sl))
+   {
+      u := load(sl.[i]);
+      link(u, self);
+      addextra(u.extra, {"$rnd_corpse_force"}, "");
+      b := rndCorpseLoad@randomt(u, crp, il.[2 * i]);
+      if (b != il.[2 * i + 1])
+         bad := bad + " " + sl.[i] + " wearing " + itoa(il.[2 * i]) + ": " + itoa(b) + ", not " + itoa(il.[2 * i + 1]) + ";";
+      destroy(u);
+      i := i + 1;
+   }
+
+   // The chance at good+ (typical level 33): level, thousandths
+   u := load("t052npc@test");
+   link(u, self);
+   il := {33, 50,   66, 200,   99, 200,   16, 11};
+   i := 0;
+   while (i < length(il))
+   {
+      u.level := il.[i];
+      b := rndCorpseChance@randomt(u, BONUS_GOOD_PLUS);
+      if (b != il.[i + 1])
+         bad := bad + " chance at level " + itoa(il.[i]) + ": " + itoa(b) + ", not " + itoa(il.[i + 1]) + ";";
+      i := i + 2;
+   }
+   destroy(u);
+   n := 0;
+   u := crp.inside;
+   while (u != null)
+   {
+      if (u.nameidx == "treasure")
+         n := n + 1;
+      u := u.next;
+   }
+   if (n != 3)
+      bad := bad + " " + itoa(n) + " treasures in the box, not 3;";
+   destroy(crp);
+   if (bad != "")
+   {
+      logtest(tstno, LOGT_ERROR, "T052 rndCorpseLoad:" + bad);
+      goto done;
+   }
+
+   // ---- A real death: the corpse of an NPC holding something holds random treasure
+   u := load("t052npc@test");
+   link(u, self);
+   crp := load("t049staff@test");
+   link(crp, u);
+   addequip(crp, WEAR_HOLD);
+   addextra(u.extra, {"$rnd_corpse_force"}, "");
+   u.hp := -20;
+   position_update(u); // dies: make_corpse
+   pause;
+   n := 0;
+   crp := self.inside;
+   while (crp != null)
+   {
+      if (crp.nameidx == "corpse")
+      {
+         u := crp.inside;
+         while (u != null)
+         {
+            if (u.nameidx == "treasure")
+               n := n + 1;
+            u := u.next;
+         }
+         destroy(crp);
+         crp := self.inside;
+      }
+      else
+         crp := crp.next;
+   }
+   if (n != 1)
+      logtest(tstno, LOGT_ERROR, "T052 the corpse of an NPC holding a staff held " + itoa(n) + " random treasures, not 1");
+   else
+      logtest(tstno, LOGT_SUCCESS, "T052 random treasure loaded into corpses: bands by zone and level, the chance, none without worn gear, experience or band");
+
+:done:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -9589,6 +9707,67 @@ weight 100
 end
 
 
+
+   t052npc
+
+names {"t052npc", "orc"}
+title "a test orc"
+descr "A test orc is standing here."
+race RACE_HUMAN
+sex SEX_MALE
+level 30
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
+
+   t052low
+
+names {"t052low", "orc"}
+title "a small test orc"
+descr "A small test orc is standing here."
+race RACE_HUMAN
+sex SEX_MALE
+level 2
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
+
+   t052high
+
+names {"t052high", "orc"}
+title "a big test orc"
+descr "A big test orc is standing here."
+race RACE_HUMAN
+sex SEX_MALE
+level 70
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
+
+   t052noexp
+
+names {"t052noexp", "orc"}
+title "a test orc not to be killed"
+descr "A test orc not to be killed is standing here."
+race RACE_HUMAN
+sex SEX_MALE
+level 30
+exp -100
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(30,20,10,20,10,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
 
    t049man
 
