@@ -63,6 +63,7 @@
                         "northeast", "northwest", "southeast", "southwest"}
 
 %zone housing
+bonusband BONUS_NOT_APPLICABLE
 title "Housing"
 lifespan 30
 reset RESET_ANYHOW

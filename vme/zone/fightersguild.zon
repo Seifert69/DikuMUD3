@@ -21,6 +21,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone fightersguild
+bonusband BONUS_NOT_APPLICABLE
 title "Fighters Guild@Mainland"
 creators {"redferne", "papi"}
 

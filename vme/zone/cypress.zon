@@ -13,6 +13,7 @@ END HEADER*/
 #define GWYN_QUEST_COMPLETE "Gwyn Quest Complete"
 
 %zone				cypress
+bonusband BONUS_AVERAGE
 title "Cypress Forest@Mainland"
 creators {"papi"}
 lifespan 8

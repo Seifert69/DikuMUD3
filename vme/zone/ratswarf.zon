@@ -12,6 +12,7 @@ END HEADER*/
 
 
 %zone ratswarf
+bonusband BONUS_AVERAGE_PLUS
 title "Ratswarf@Mainland"
 lifespan 20
 reset RESET_ANYHOW

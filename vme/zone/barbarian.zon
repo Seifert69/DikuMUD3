@@ -21,6 +21,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone barbarian
+bonusband BONUS_NOT_APPLICABLE
 title "Barbarian Guild@Mainland"
 creators {"sender"}
 

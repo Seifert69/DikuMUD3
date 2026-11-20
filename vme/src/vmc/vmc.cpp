@@ -207,6 +207,7 @@ void zone_reset(char *default_name)
     g_zone.z_zone.notes = nullptr;
     g_zone.z_zone.help = nullptr;
     g_zone.z_zone.weather = 1000;
+    g_zone.z_zone.bonusband = BONUS_NOT_APPLICABLE;
     g_zone.z_tmpl = nullptr;
 }
 
@@ -401,6 +402,14 @@ void dump_zone(char *prefix)
                   g_zone.z_zone.weather);
     }
 
+    if (!is_in(g_zone.z_zone.bonusband, BONUS_NOT_APPLICABLE, BONUS_ARTIFACT))
+    {
+        dmc_error(TRUE,
+                  "Error: Zone bonusband of %d: it is BONUS_NOT_APPLICABLE (-1) or a band, "
+                  "BONUS_AVERAGE (0) to BONUS_ARTIFACT (7).",
+                  g_zone.z_zone.bonusband);
+    }
+
     for (u = g_zone.z_rooms; u; u = u->getNext())
     {
         if (u->isRoom())
@@ -457,7 +466,10 @@ void dump_zone(char *prefix)
     // exit(10);
     // #endif
     fwrite(g_zone.z_zone.name, sizeof(char), strlen(g_zone.z_zone.name) + 1, fl);
+    int version = -ZONE_DATA_VERSION; // negative: no older file has a negative weather there
+    fwrite(&version, sizeof(int), 1, fl);
     fwrite(&g_zone.z_zone.weather, sizeof(int), 1, fl);
+    fwrite(&g_zone.z_zone.bonusband, sizeof(int), 1, fl);
     /* More data inserted here */
     if (g_zone.z_zone.notes)
     {

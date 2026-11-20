@@ -5,6 +5,7 @@
 // furniture and architect are in housing.zon, which says how a lane is built.
 
 %zone uhouses
+bonusband BONUS_NOT_APPLICABLE
 title "Hearth Lane@Mainland"
 lifespan 60
 reset RESET_NOT

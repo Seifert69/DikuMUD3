@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone	holiday20
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 25
 reset RESET_ANYHOW

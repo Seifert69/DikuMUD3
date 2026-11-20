@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone clans
+bonusband BONUS_NOT_APPLICABLE
 title ""
 lifespan 5
 reset RESET_ANYHOW

@@ -30,4 +30,12 @@ BOOST_AUTO_TEST_CASE(player_file_index_ignores_case)
     g_zone_info.mmp.erase(g_player_zone);
 }
 
+BOOST_AUTO_TEST_CASE(bonusband_defaults_to_not_applicable)
+{
+    zone_type town("town");
+    BOOST_TEST(town.getBonusBand() == BONUS_NOT_APPLICABLE);
+    town.setBonusBand(BONUS_EXCELLENT);
+    BOOST_TEST(town.getBonusBand() == BONUS_EXCELLENT);
+}
+
 BOOST_AUTO_TEST_SUITE_END()

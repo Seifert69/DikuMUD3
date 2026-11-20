@@ -13,6 +13,7 @@ END HEADER*/
 #define RIFT_RISK 100
 
 %zone spells
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 weather 1040
 creators {"whistler"}

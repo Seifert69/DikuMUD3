@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone offices
+bonusband BONUS_NOT_APPLICABLE
 title "Village Of Udgaard@Mainland"
 lifespan 20
 reset RESET_ANYHOW

@@ -11,6 +11,7 @@ END HEADER*/
 
 
 %zone diltest
+bonusband BONUS_NOT_APPLICABLE
 
    lifespan 60
    reset RESET_NOT

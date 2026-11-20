@@ -18,6 +18,7 @@ END HEADER*/
 {UNIT_FL_INDOORS, UNIT_FL_NO_WEATHER, UNIT_FL_SACRED,UNIT_FL_NO_TELEPORT}
 
 %zone druid
+bonusband BONUS_NOT_APPLICABLE
 title "Druid Guild@Alquenburg"
 lifespan 60
 reset RESET_ANYHOW

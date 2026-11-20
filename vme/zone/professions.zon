@@ -2,6 +2,7 @@
 
 
 %zone professions
+bonusband BONUS_NOT_APPLICABLE
 
 reset RESET_NOT
 

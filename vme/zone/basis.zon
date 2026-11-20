@@ -10,6 +10,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone                                  basis
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 
 weather 1040

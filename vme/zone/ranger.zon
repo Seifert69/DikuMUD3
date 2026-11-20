@@ -13,6 +13,7 @@ END HEADER*/
 #include <macros.h>
 
 %zone ranger
+bonusband BONUS_NOT_APPLICABLE
 title "Ranger Guild@Alquenburg"
 lifespan 20
 reset RESET_ANYHOW

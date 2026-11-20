@@ -35,6 +35,7 @@ END HEADER*/
 /* ================================================================== */
 
 %zone bounty
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 10
 reset RESET_ANYHOW

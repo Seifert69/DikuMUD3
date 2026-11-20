@@ -1535,6 +1535,33 @@ void dilfe_fld(dilprg *p)
             break;
 
         /* *********************************** */
+        /* .bonusband (zone, read only)                */
+        case DILF_BONUSBAND:
+            switch (dil_getval(v1))
+            {
+                case DILV_NULL: /* not applicable */
+                case DILV_FAIL:
+                    v->type = DILV_FAIL; /* not applicable */
+                    break;
+                case DILV_ZP:
+                    if (v1->val.ptr)
+                    {
+                        v->atyp = DILA_NONE;
+                        v->type = DILV_INT;
+                        v->val.num = ((zone_type *)v1->val.ptr)->getBonusBand();
+                    }
+                    else
+                    {
+                        v->type = DILV_FAIL; /* not applicable */
+                    }
+                    break;
+                default:
+                    v->type = DILV_ERR; /* wrong type */
+                    break;
+            }
+            break;
+
+        /* *********************************** */
         /* .loadlevel                                  */
         case DILF_LDLVL:
             switch (dil_getval(v1))

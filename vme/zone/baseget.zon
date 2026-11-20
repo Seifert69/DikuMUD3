@@ -47,6 +47,7 @@ END HEADER*/
 
 
 %zone baseget
+bonusband BONUS_NOT_APPLICABLE
 title ""
 
 lifespan 20

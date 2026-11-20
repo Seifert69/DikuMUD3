@@ -10,6 +10,7 @@ END HEADER*/
 /* 2021 Helpers for quests */
 
 %zone quests
+bonusband -1  // BONUS_NOT_APPLICABLE
 
 #include <macros.h>
 

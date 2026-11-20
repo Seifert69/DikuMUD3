@@ -3,6 +3,7 @@
 #include "essential.h"
 #include "file_index_type.h"
 #include "namelist.h"
+#include "values.h"
 #include "weather.h"
 
 #include <cstring>
@@ -122,6 +123,11 @@ public:
     ubit8 *getPayOnlyPtr();
     void setPayOnly(ubit8 value);
 
+    /// The zone's treasure band (the zone header's bonusband): BONUS_AVERAGE (0) to BONUS_ARTIFACT
+    /// (7), or BONUS_NOT_APPLICABLE (-1) for a zone outside the bands, the default
+    [[nodiscard]] int getBonusBand() const;
+    void setBonusBand(int value);
+
     [[nodiscard]] const std::optional<std::string> &getDILFilePath() const;
     void setDILFilePath(std::string value);
 
@@ -233,6 +239,7 @@ private:
     ubit8 m_access{255};                      ///< Access Level 0 = highest (root)
     ubit8 m_loadlevel{0};                     ///< Level required to load items
     ubit8 m_payonly{0};                       ///< TRUE when only 4 paying players
+    int m_bonusband{BONUS_NOT_APPLICABLE};    ///< The treasure band (values.h)
     ubit32 m_crc{0};                          ///< The CRC for the zone (a timestamp, used to detect file changes mid game)
     std::optional<std::string> m_dilfilepath; ///<
     Weather m_weather;                        ///<

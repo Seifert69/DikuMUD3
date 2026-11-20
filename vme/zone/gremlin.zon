@@ -42,6 +42,7 @@ END HEADER*/
 /*                                ZONE                                */
 /* ================================================================== */
 %zone gremlin
+bonusband BONUS_AVERAGE
 lifespan 10
 reset RESET_ANYHOW
 title "Gremlin Caves@Mainland"

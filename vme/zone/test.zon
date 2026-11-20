@@ -14,6 +14,7 @@ END HEADER*/
 
    reset RESET_NOT
    weather 1040
+   bonusband BONUS_GOOD_PLUS
    creators {"papi"}
    title "The DIL test laboratory"
    lifespan 45
@@ -32,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 50  // T010, T009, ...
+#define TEST_MAXIMUM 51  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -82,6 +83,44 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T051 =====================
+
+// A zone's bonusband (its treasure band, the zone header's bonusband) as DIL reads it: this zone
+// says BONUS_GOOD_PLUS, basis BONUS_NOT_APPLICABLE (the game's machinery).
+dilbegin T051(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   z : zoneptr;
+   i : integer;
+   j : integer;
+code
+{
+   z := findzone("test");
+   if (z == null)
+   {
+      logtest(tstno, LOGT_ERROR, "T051 no zone test");
+      goto done;
+   }
+   i := z.bonusband;
+   z := findzone("basis");
+   if (z == null)
+   {
+      logtest(tstno, LOGT_ERROR, "T051 no zone basis");
+      goto done;
+   }
+   j := z.bonusband;
+   if ((i != BONUS_GOOD_PLUS) or (j != BONUS_NOT_APPLICABLE))
+      logtest(tstno, LOGT_ERROR, "T051 bonusband: test " + itoa(i) + " (not 3), basis " + itoa(j) + " (not -1)");
+   else
+      logtest(tstno, LOGT_SUCCESS, "T051 bonusband: test 3, basis -1");
+:done:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 

@@ -9,6 +9,7 @@ END HEADER*/
 
 #include <macros.h>
 %zone                                  helpzon
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 
 

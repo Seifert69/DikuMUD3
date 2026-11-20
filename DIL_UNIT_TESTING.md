@@ -65,6 +65,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T048 | corpse_wait@death: an anchored corpse comes home after 2 to 30 minutes, by level |
 | T049 | use on a staff: a helpful spell goes to the user and the group, an attack to the others |
 | T050 | random magic items (randomt): potion, scroll, wand, magic staff, gem and bag made to order |
+| T051 | a zone's bonusband (treasure band) as DIL reads it |
 
 ## The player tests
 

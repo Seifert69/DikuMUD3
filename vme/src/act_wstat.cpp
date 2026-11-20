@@ -267,7 +267,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
 
     auto msg = diku::format_to_str("Zone [%s]  Access [%d]<br/>"
                                    "Title: \"%s\"<br/>"
-                                   "Load level [%d] Pay only [%d]<br/>"
+                                   "Load level [%d] Pay only [%d] Bonus band [%d]<br/>"
                                    "Number of Units [%d]    Number of Rooms [%d]<br/>"
                                    "Reset Mode : %s (%d)    Reset Interval [%d]<br/>"
                                    "Pressure [%d] Change [%d] Sky [%d] Base [%d]<br/><br/>"
@@ -278,6 +278,7 @@ static void stat_zone(unit_data *ch, zone_type *zone)
                                    zone->getTitle(),
                                    zone->getLevelRequiredToLoadItems(),
                                    zone->getPayOnly(),
+                                   zone->getBonusBand(),
                                    zone->getNumOfFileIndexes(),
                                    zone->getNumOfRooms(),
                                    reset_modes[reset_mode],

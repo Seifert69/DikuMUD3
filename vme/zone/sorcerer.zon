@@ -34,6 +34,7 @@ v 43.01 2010.07.21 Changed weapons some to be
 #define SORCERER_ABILITIES_COMPLETE "Sorcerer Abilities Quest Complete"
 
 %zone sorcerer
+bonusband BONUS_NOT_APPLICABLE
 
 lifespan 20
 reset RESET_ANYHOW

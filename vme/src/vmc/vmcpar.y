@@ -145,7 +145,7 @@ static bool index_ok(int i, int n, const char *field)
 %token DEFAULT ACT
 
 /* zone fields */
-%token RESET_F LIFESPAN CREATORS NOTES HELP WEATHER
+%token RESET_F LIFESPAN CREATORS NOTES HELP WEATHER BONUSBAND
 
 /* reset fields */
 %token LOAD FOLLOW MAX ZONEMAX LOCAL INTO NOP EQUIP DOOR PURGE REMOVE COMPLETE
@@ -1089,6 +1089,10 @@ zone_field  : LIFESPAN number
     | WEATHER number
     {
         g_zone.z_zone.weather = $2;
+    }
+    | BONUSBAND number
+    {
+        g_zone.z_zone.bonusband = $2; // its range is checked with weather's (dump_zone)
     }
     | RESET_F number
     {

@@ -86,6 +86,7 @@ struct symbols
 
     /* zone & reset fields & commands */
     {"weather", WEATHER},
+    {"bonusband", BONUSBAND},
     {"reset", RESET_F},
     {"lifespan", LIFESPAN},
     {"creators", CREATORS},

@@ -11,6 +11,7 @@ END HEADER*/
 
 
 %zone                                  boards
+bonusband BONUS_NOT_APPLICABLE
 reset RESET_NOT
 
 weather 1040

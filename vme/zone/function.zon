@@ -8,6 +8,7 @@ version     58.01
 END HEADER*/
 #include <macros.h>
 %zone function
+bonusband BONUS_NOT_APPLICABLE
 title ""
 lifespan 20
 reset RESET_NOT
