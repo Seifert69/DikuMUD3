@@ -5,10 +5,15 @@
  *   {"kind": "zone"|"room"|"npc"|"object"|"prototype", "id": "sym@zone", "room": "sym@zone" or null,
  *    "derived": {...}, "unit": {...}}
  *
+ * The first line is the coins, {"kind": "money", "id": "money", "coins": [{"name", "abbrev", "value"}...]}, each
+ * coin's value in the server's base unit (etc/money): every worth in the dump is in that unit.
+ *
  * - "unit" is the unit's own toJSON(), as jstat shows it: its programs ("func", with each DIL
  *   template's name and arguments), exits, abilities, values...
  * - "derived" is what toJSON() can't name because vmc compiles it too, without the game's tables:
- *   skills by name, the attack, hit points, the object type, and what a unit holds or wears.
+ *   skills by name, the attack, hit points, the object type, and what a unit holds or wears. And
+ *   what it is worth: an object's "worth" (the shops' price before their profit; for coins, the
+ *   coins' value), and the "money" a character or container holds, coins inside containers too.
  * - "room", "npc" and "object" are what the boot reset placed; "prototype" is every NPC and object
  *   of the zone loaded fresh, including those only DIL loads. A prototype is in no room, and its
  *   DIL isn't started (it may read and write saved data), so its programs show the zone file's
@@ -25,6 +30,7 @@
 #include "handler.h"
 #include "json_helper.h"
 #include "modify.h"
+#include "money.h"
 #include "slog.h"
 #include "utility.h"
 #include "utils.h"
@@ -87,6 +93,12 @@ void write_derived(unit_data *u, PrettyWriter &writer)
     if (u->isObj())
     {
         json::write_kvp("type", sprinttype(nullptr, OBJ_TYPE(u), g_obj_types), writer);
+        json::write_kvp("worth", IS_MONEY(u) ? MONEY_VALUE(u) : static_cast<sbit32>(OBJ_PRICE(u)), writer);
+    }
+
+    if (u->isChar() || (u->isObj() && OBJ_TYPE(u) == ITEM_CONTAINER))
+    {
+        json::write_kvp("money", unit_holds_total(u, ANY_CURRENCY), writer);
     }
     writer.EndObject();
 }
@@ -137,6 +149,28 @@ int dump_json(const std::string &zone)
 
     auto wanted = [&zone](const char *z) { return zone.empty() || zone == z; };
     int count = 0;
+
+    {
+        rapidjson::StringBuffer buf;
+        PrettyWriter writer(buf);
+        writer.StartObject();
+        json::write_kvp("kind", "money", writer);
+        json::write_kvp("id", "money", writer);
+        writer.String("coins");
+        writer.StartArray();
+        for (int i = 0; i <= MAX_MONEY; i++)
+        {
+            writer.StartObject();
+            json::write_kvp("name", money_singularis_type(i), writer);
+            json::write_kvp("abbrev", g_money_types[i].abbrev, writer);
+            json::write_kvp("value", g_money_types[i].relative_value, writer);
+            writer.EndObject();
+        }
+        writer.EndArray();
+        writer.EndObject();
+        write_line(buf, out);
+        count++;
+    }
 
     for (auto &[name, z] : g_zone_info.mmp)
     {

@@ -11,7 +11,9 @@ fi
 python3 - <<'EOF' || exit 1
 import json
 lines = [json.loads(line) for line in open('dump_haon_dor.jsonl')]
-assert {'zone', 'room', 'npc', 'object', 'prototype'} <= {x['kind'] for x in lines}
+assert {'money', 'zone', 'room', 'npc', 'object', 'prototype'} <= {x['kind'] for x in lines}
+coins = {c['abbrev']: c['value'] for c in lines[0]['coins']}
+assert coins['cp'] == 8 * coins['ip'], coins
 
 def unit_data(x):  # an NPC's unit_data is inside its char_data
     u = x['unit']
@@ -29,6 +31,9 @@ chief = next(x for x in lines if x['kind'] == 'npc' and x['id'] == 'orc_chief@ha
 assert chief['room'] == 'orc_cave_chief@haon_dor', chief['room']
 assert programs(chief)['teamwork@function'] == ['orc'], programs(chief)
 assert {'id': 'orc_scimitar@haon_dor', 'equipped': 'wielded'} in chief['derived']['contents']
+assert chief['derived']['money'] == 8 * coins['cp'], chief['derived']  # 8 copper pieces
+scimitar = protos['orc_scimitar@haon_dor']
+assert scimitar['derived']['worth'] == 2 * coins['sp'], scimitar['derived']  # cost 2 SILVER_PIECE
 web = next(x for x in lines if x['id'] == 'rn_6130@haon_dor')
 up = web['unit']['room_data']['dir_option'][4]
 assert (up['to_room'], up['difficulty'], up['exit_info']) == ('rn_6132@haon_dor', 25, ['climb']), up
