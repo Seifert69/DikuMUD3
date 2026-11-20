@@ -29,7 +29,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 48  // T010, T009, ...
+#define TEST_MAXIMUM 49  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -79,6 +79,161 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T049 =====================
+
+// use on a staff (do_use@skills): a spell good for its target (healing) goes to the user and the
+// user's group, an attack to everyone around but the user's company. Before, every spell went
+// to everyone but the company, so a staff of healing healed the user's foes and not the user's
+// group. A test man, leading a group, has a grouped follower, an ungrouped follower and a
+// stranger beside him. Hit points are compared just before and after the same use, so natural
+// regeneration can't count.
+dilbegin T049(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   user : unitptr;
+   staff : unitptr;
+   ally : unitptr;
+   tag : unitptr;
+   stranger : unitptr;
+   i : integer;
+   bu : integer;
+   ba : integer;
+   bt : integer;
+   bs : integer;
+   hu : integer;
+   ha : integer;
+   hs : integer;
+   wrong : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   user := load("t049man@test");
+   link(user, self);
+   ally := load("t049man@test");
+   link(ally, self);
+   tag := load("t049man@test");
+   link(tag, self);
+   stranger := load("t049man@test");
+   link(stranger, self);
+   secure(user, lost);
+   secure(ally, lost);
+   secure(tag, lost);
+   secure(stranger, lost);
+   follow(ally, user);
+   follow(tag, user);
+   user.charflags := user.charflags | CHAR_GROUP;
+   ally.charflags := ally.charflags | CHAR_GROUP;
+
+   // ---- A staff of healing: the user and the grouped follower, no one else. A spell can miss a
+   // target, so it is used until both have risen on some use, and fails if another ever does.
+   staff := load("t049staff@test");
+   link(staff, user);
+   addequip(staff, WEAR_HOLD);
+   user.hp := 1;
+   ally.hp := 1;
+   tag.hp := 1;
+   stranger.hp := 1;
+   i := 0;
+   while ((i < 30) and ((not hu) or (not ha)) and (wrong == ""))
+   {
+      bu := user.hp;
+      ba := ally.hp;
+      bt := tag.hp;
+      bs := stranger.hp;
+      exec("use staff", user);
+      if (user.hp > bu)
+         hu := TRUE;
+      if (ally.hp > ba)
+         ha := TRUE;
+      if (tag.hp != bt)
+         wrong := "the ungrouped follower " + itoa(bt) + "->" + itoa(tag.hp);
+      if (stranger.hp != bs)
+         wrong := wrong + " the stranger " + itoa(bs) + "->" + itoa(stranger.hp);
+      pause;
+      i := i + 1;
+   }
+   if (wrong != "")
+   {
+      logtest(tstno, LOGT_ERROR, "T049 the staff of healing healed " + wrong);
+      goto done;
+   }
+   if ((not hu) or (not ha))
+   {
+      logtest(tstno, LOGT_ERROR, "T049 the staff of healing, used " + itoa(i) + " times, healed the user " + itoa(hu) +
+              ", the grouped follower " + itoa(ha));
+      goto done;
+   }
+
+   // ---- A staff of shocks: everyone but the user's company (the user, the leader and whoever
+   // follows them, grouped or not), so the stranger only. An attack lands after its casting time
+   // and the stranger then fights the user, so this counts after pauses and leaves the user out:
+   // the followers must stay unhurt.
+   // the lab director stands here too: out of the way of the shocks while they fly
+   u := findsymbolic("director@test");
+   if (u != null)
+      link(u, findroom("t048home@test"));
+   staff := equipment(user, WEAR_HOLD); // the variable was cleared by the pauses
+   unequip(staff);
+   destroy(staff);
+   staff := load("t049zap@test");
+   link(staff, user);
+   addequip(staff, WEAR_HOLD);
+   user.hp := user.max_hp;
+   ally.hp := ally.max_hp;
+   tag.hp := tag.max_hp;
+   stranger.hp := stranger.max_hp;
+   i := 0;
+   while ((i < 30) and (stranger.hp >= stranger.max_hp))
+   {
+      exec("use staff", user);
+      pause;
+      pause;
+      i := i + 1;
+   }
+   if ((ally.hp < ally.max_hp) or (tag.hp < tag.max_hp))
+      logtest(tstno, LOGT_ERROR, "T049 the staff of shocks hit its user's followers: grouped " + itoa(ally.hp) + "/" +
+              itoa(ally.max_hp) + ", ungrouped " + itoa(tag.hp) + "/" + itoa(tag.max_hp));
+   else if (stranger.hp >= stranger.max_hp)
+      logtest(tstno, LOGT_ERROR, "T049 the staff of shocks didn't hit the stranger in " + itoa(i) + " uses");
+   else
+      logtest(tstno, LOGT_SUCCESS, "T049 a staff of healing heals the user and the group only, a staff of shocks hits the stranger only");
+   goto done;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T049 a test man was lost");
+
+:done:
+   u := findsymbolic("director@test");
+   if ((u != null) and (u.outside != self))
+      link(u, self);
+   if (user != null)
+   {
+      unsecure(user);
+      destroy(user); // and the staff with it
+   }
+   if (ally != null)
+   {
+      unsecure(ally);
+      destroy(ally);
+   }
+   if (tag != null)
+   {
+      unsecure(tag);
+      destroy(tag);
+   }
+   if (stranger != null)
+   {
+      unsecure(stranger);
+      destroy(stranger);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -9056,6 +9211,22 @@ end
 
 %objects
 
+t049staff
+names {"staff of healing", "staff"}
+title "a staff of healing"
+descr "A staff of healing lies here."
+STAFF_DEF(10, 60, SPL_CURE_WOUNDS_1, SPL_NONE)
+weight 4
+end
+
+t049zap
+names {"staff of shocks", "staff"}
+title "a staff of shocks"
+descr "A staff of shocks lies here."
+STAFF_DEF(10, 60, SPL_LIGHTNING_1, SPL_NONE)
+weight 4
+end
+
 		t045rune
 names {"rune"}
 title "ᚨ, Ansuz"
@@ -9258,6 +9429,21 @@ weight 100
 end
 
 
+
+   t049man
+
+names {"t049man", "man"}
+title "a test man"
+descr "A test man is standing here."
+race RACE_HUMAN
+sex SEX_MALE
+level 20
+NATURAL_DEF(WPN_FIST, ARM_CLOTHES)
+MSET_ABILITY(15,15,10,20,30,10,0,0)
+MSET_WEAPON(0,40,0,0,10,0)
+MSET_SPELL(0,0,0,0,0,0,0,0,0,0,50)
+weight 100
+end
 
    t046orc
 

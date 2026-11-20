@@ -9,10 +9,12 @@ use &lt;wand&gt; &lt;target&gt;
 <pre>hold wand
 use wand rat
 </pre>
-<p>Staves and wands are a way to carry magic with you. A staff affects everyone 
-where you are except you and your group; a wand must be used at a single 
-target, and not while you are blind. Other players are touched by them 
-only when both of you have signed the Book of Blood. To use one you must hold 
+<p>Staves and wands are a way to carry magic with you. A staff's magic goes where 
+you are: an attack strikes everyone except you and those who follow you, 
+while healing, blessing and protection go to you and your group (see 
+<a cmd='#'>Help Groups</a>). A wand must be used at a single target, and not while you 
+are blind. A wand, or a staff's attack, touches other players only when 
+both of you have signed the Book of Blood. To use one you must hold 
 it in your hand (see <a cmd='#'>Help Hold</a>), and you must have practiced the skill wand 
 use: how well it works depends on that skill and your brain against the power 
 of the magic in it.

@@ -22,6 +22,10 @@ this zone."
 #define FLEE_LEAVE "$noflee"
 #define NO_TRAP "$notrap"
 
+// spelldef.h's TAR_SELF_ONLY and TAR_AUTO_SELF (FIND_UNIT_WORLD<<7, <<9): DIL can't read spelldef.h
+#define STAFF_TAR_SELF_ONLY 2048
+#define STAFF_TAR_AUTO_SELF 8192
+
 %dil
 
 
@@ -1060,6 +1064,10 @@ var
    tgt    : unitptr;
    sc_st  : string;
    mast   : unitptr;
+   t      : integer;
+   attack : integer;
+   bits : integer;
+   helps : integer;
 
 code
 {
@@ -1149,24 +1157,47 @@ code
       if (not(self.master))
          mast := self;
 
+      // A spell that is good for whoever it is cast on (not offensive, and cast on oneself when no
+      // one is named: healing, blessing, protection) goes to the user and the user's group, as a
+      // group spell's would (grouped followers of the same leader); one only for the caster
+      // (recall, stone skin) to the user alone; any other (attacks, entangle, drowse...) to
+      // everyone around but the user's company, as before.
       i := 2;  // stick.value[2] and [3] are spells
       while (i <= 3)
       {
          if (stick.value[i] != SPL_NONE)
          {
-            foreach (UNIT_ST_PC | UNIT_ST_NPC, tgt)
+            attack := TRUE; // unless spellinfo says otherwise
+            bits := 0;
+            sc_st := spellinfo(stick.value[i], t, t, t, attack, t, t, bits);
+            helps := ((sc_st != "") and (not attack) and ((bits & STAFF_TAR_AUTO_SELF) != 0));
+            if (helps and ((bits & STAFF_TAR_SELF_ONLY) != 0))
+               cast_spell(stick.value[i], self, stick, self);
+            else if (sc_st != "")
             {
-               if (self == tgt) continue;
+               foreach (UNIT_ST_PC | UNIT_ST_NPC, tgt)
+               {
+                  if (tgt.level >= IMMORTAL_LEVEL) continue;
 
-               if (tgt.level >= IMMORTAL_LEVEL) continue;
+                  if (helps)
+                  {
+                     if ((tgt != self) and ((not isset(self.charflags, CHAR_GROUP)) or
+                                            (not isset(tgt.charflags, CHAR_GROUP)) or
+                                            ((tgt.master != mast) and (tgt != mast))))
+                        continue;
+                  }
+                  else
+                  {
+                     if ((tgt == self) or (tgt == mast) or (tgt.master == mast)) continue;
 
-               if (((tgt.type==UNIT_ST_PC) and(self.type==UNIT_ST_PC)) and
-                     ((not (isset(tgt.pcflags,PC_PK_RELAXED))) or
-                     (not (isset (self.pcflags,PC_PK_RELAXED))))) 
-                  continue;
-               
-               if ((tgt.master != mast) and (tgt != mast) and (tgt != self))
+                     if (((tgt.type==UNIT_ST_PC) and(self.type==UNIT_ST_PC)) and
+                           ((not (isset(tgt.pcflags,PC_PK_RELAXED))) or
+                           (not (isset (self.pcflags,PC_PK_RELAXED)))))
+                        continue;
+                  }
+
                   cast_spell(stick.value[i], self, stick, tgt);
+               }
             }
          }
          i := i + 1;
