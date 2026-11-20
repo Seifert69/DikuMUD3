@@ -29,7 +29,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 47  // T010, T009, ...
+#define TEST_MAXIMUM 48  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -79,6 +79,113 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T048 =====================
+
+// corpse_wait@death: how long an anchored player corpse waits before it comes home, by the
+// level the player died at: 2 minutes at level 1 up to 30 at level 100 (it was over an hour for
+// everyone); and rot_corpse@death goes by it.
+dilbegin T048(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   integer corpse_wait@death(lvl : integer);
+var
+   il : intlist;
+   i : integer;
+   w : integer;
+   u : unitptr;
+   home : unitptr;
+   lvl1 : integer;
+   lvl50 : integer;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+
+   // level, seconds
+   il := {0, 120,   1, 120,   10, 133,   25, 218,   50, 531,   75, 1058,   100, 1800,   250, 1800};
+   i := 0;
+   while (i < length(il))
+   {
+      w := corpse_wait@death(il.[i]);
+      if (w != il.[i + 1])
+         bad := bad + " level " + itoa(il.[i]) + ": " + itoa(w) + ", not " + itoa(il.[i + 1]);
+      i := i + 2;
+   }
+   if (bad != "")
+   {
+      logtest(tstno, LOGT_ERROR, "T048 corpse_wait:" + bad);
+      goto done;
+   }
+
+   // rot_corpse brings an anchored player corpse home after corpse_wait: a level 1 corpse after
+   // about 2 minutes, while a level 50 one (about 9) is still on its way. Boxes stand in for the
+   // corpses (value[2] 1: a player's; value[3]: the level), each with something in it.
+   il := {1, 50};
+   i := 0;
+   while (i < length(il))
+   {
+      u := load("pbox@test");
+      u.value[2] := 1;
+      u.value[3] := il.[i];
+      addextra(u.extra, {"$CORPSE_HOMETOWN"}, "t048home@test");
+      link(load("pbox@test"), u);
+      link(u, self);
+      dilcopy("rot_corpse@death", u);
+      i := i + 1;
+   }
+   // at most 150 seconds: the lab director gives a test about 165
+   i := 0;
+   while (i < 150)
+   {
+      pause;
+      i := i + 1;
+      lvl1 := 0;
+      lvl50 := 0;
+      home := findroom("t048home@test");
+      u := home.inside;
+      while (u != null)
+      {
+         if ((u.value[3] == 1) and (not ("$CORPSE_HOMETOWN" in u.extra))) // home, anchor used up
+            lvl1 := i;
+         if (u.value[3] == 50)
+            lvl50 := i;
+         u := u.next;
+      }
+      if (lvl1 > 0)
+         break;
+   }
+   if (lvl1 == 0)
+      logtest(tstno, LOGT_ERROR, "T048 a level 1 anchored corpse wasn't home (and unanchored) after 150 seconds");
+   else if (lvl50 > 0)
+      logtest(tstno, LOGT_ERROR, "T048 a level 50 anchored corpse came home with the level 1 one, after " + itoa(i) + " seconds");
+   else if (lvl1 < 100)
+      logtest(tstno, LOGT_ERROR, "T048 a level 1 anchored corpse came home after only " + itoa(lvl1) + " seconds");
+   else
+      logtest(tstno, LOGT_SUCCESS, "T048 a level 1 anchored corpse came home after " + itoa(lvl1) +
+              " seconds, the level 50 one not yet");
+
+:done:
+   // the stand-in corpses, home or still on their way
+   home := findroom("t048home@test");
+   while (home.inside != null)
+      destroy(home.inside);
+   u := self.inside;
+   while (u != null)
+   {
+      if (u.nameidx == "pbox")
+      {
+         destroy(u);
+         u := self.inside;
+      }
+      else
+         u := u.next;
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -350,6 +457,7 @@ var
    k : integer;
    st : integer;
    lt : integer;
+   missing : integer;
 code
 {
    heartbeat := PULSE_SEC * 1;
@@ -803,14 +911,24 @@ code
    // ---- Wait for the programs on n, and for the death
    i := 0;
    s := "";
-   while ((i < 10) and (not ("a9;" in s)))
+   // until every record wanted is there: the programs don't always all run in one pulse
+   sl := {"b0;", "b1;", "b2;", "b3;", "b4;", "b5;", "a4;", "a9;"};
+   missing := length(sl);
+   while ((i < 10) and (missing > 0))
    {
       pause;
       i := i + 1;
       s := t042get(n);
+      missing := 0;
+      j := 0;
+      while (j < length(sl))
+      {
+         if (not (sl.[j] in s))
+            missing := missing + 1;
+         j := j + 1;
+      }
    }
-   if ((not ("b0;" in s)) or (not ("b1;" in s)) or (not ("b2;" in s)) or (not ("b3;" in s)) or
-       (not ("b4;" in s)) or (not ("b5;" in s)) or (not ("a4;" in s)) or (not ("a9;" in s)))
+   if (missing > 0)
       logtest(tstno, LOGT_ERROR, "T044 the programs on the NPC didn't all run: " + s);
    if (("a0;" in s) or ("a1;" in s) or ("a2;" in s) or ("a3;" in s) or ("a5;" in s))
       logtest(tstno, LOGT_ERROR, "T044 a program on an NPC went on after a call for a player: " + s);
@@ -8788,6 +8906,15 @@ dilend
 
 %rooms
 
+                                   t048home
+
+title "The T048 Crypt"
+descr
+"   Anchored test corpses come home here (T048)."
+flags {UNIT_FL_NO_WEATHER, UNIT_FL_INDOORS}
+light 1
+end
+
                                    t034dark
 
 title "A Dark Test Room"
@@ -9196,7 +9323,7 @@ external
    rebooting@commands(s : string);
 code
 {
-   heartbeat := PULSE_SEC*60*5; // After 5 minutes, abort
+   heartbeat := PULSE_SEC*60*10; // After 10 minutes of game time (T048 waits 2 for a corpse), abort
    wait(SFB_TICK, TRUE);
    log("Test/T000//ERROR Fail safe triggered");
    reboot(99); // a failed run: exit code 0 would pass in CI

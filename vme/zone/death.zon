@@ -24,6 +24,8 @@ creators {"whistler"}
 // Players up to this level have their corpse anchored to their soul without the Soul Anchor
 // quest (gremlin.zon), so a corpse the ants carry off comes home by itself
 #define CORPSE_ANCHOR_LEVEL 15
+// The heartbeat an empty corpse rots at, unless it already goes faster
+#define CORPSE_EMPTY_BEAT (PULSE_SEC*SECS_PER_REAL_MIN)
 
 %dil
 
@@ -451,11 +453,30 @@ dilend
 //
 // Recall wont work because corpse isn't saved on each tick.
 //
-// heartbeat max is SBIT16, so 32768 ish, +/- which is about 2 hours
+// heartbeat max is a ubit16, so 65535 pulses: about 4.5 hours
 //
+
+// The seconds an anchored player corpse waits before it comes home, by the level the player
+// died at (vlevel, kept in the corpse's value[3]): 2 minutes at level 1, rising ever faster to
+// 30 minutes at level 100 and above (3.6 at 25, 9 at 50, 18 at 75). It was over an hour for
+// everyone, which players found far too long; dying should still cost the high levels some time.
+dilbegin integer corpse_wait(lvl : integer);
+code
+{
+   if (lvl < 1)
+      lvl := 1;
+   if (lvl > 100)
+      lvl := 100;
+   return (120 + (1680 * (lvl - 1) * (lvl - 1)) / 9801);
+}
+dilend
+
 dilbegin rot_corpse();
+external
+   integer corpse_wait(lvl : integer);
 var
    hb : integer;
+   wt : integer;
    bHometown : integer;
    corpse_room : unitptr;
    item : unitptr;
@@ -469,7 +490,7 @@ code
 
    bHometown := 0;
 
-   hb := PULSE_SEC * SECS_PER_REAL_MIN * 1; // 4*5 minutes
+   hb := PULSE_SEC * SECS_PER_REAL_MIN * 1; // 24 pauses: about 24 minutes
 
    if (self.value[2] == 1) // corpse is a player corpse
    {
@@ -477,8 +498,14 @@ code
 
       if (bHometown)
       {
-         hb := PULSE_SEC * SECS_PER_REAL_MIN * 3; // roughly 4*20m before potential player corpse recall
-         // log(self.name + " player corpse hometown, 4 * 20 minutes");
+         // 24 pauses (4 stages of 6) before it comes home, corpse_wait from the death, so the
+         // wait goes on where it was after a reboot
+         wt := corpse_wait(self.value[3]);
+         if (self.extra.[CORPSE_TIME] != null)
+            wt := wt - (realtime - atoi(self.extra.[CORPSE_TIME].descr));
+         if (wt < 24)
+            wt := 24;
+         hb := (PULSE_SEC * wt) / 24;
       }
       else
       {
@@ -496,8 +523,8 @@ code
    while (cnt < 6)
    {
       pause;
-      if (self.inside == null)
-         heartbeat := PULSE_SEC*SECS_PER_REAL_MIN*1;
+      if ((self.inside == null) and (heartbeat > CORPSE_EMPTY_BEAT))
+         heartbeat := CORPSE_EMPTY_BEAT; // an empty corpse goes faster, never slower
       cnt := cnt + 1;
    }
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
@@ -515,8 +542,8 @@ code
    while (cnt < 6)
    {
       pause;
-      if (self.inside == null)
-         heartbeat := PULSE_SEC*SECS_PER_REAL_MIN*1;
+      if ((self.inside == null) and (heartbeat > CORPSE_EMPTY_BEAT))
+         heartbeat := CORPSE_EMPTY_BEAT; // an empty corpse goes faster, never slower
       cnt := cnt + 1;
    }
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
@@ -534,8 +561,8 @@ code
    while (cnt < 6)
    {
       pause;
-      if (self.inside == null)
-         heartbeat := PULSE_SEC*SECS_PER_REAL_MIN*1;
+      if ((self.inside == null) and (heartbeat > CORPSE_EMPTY_BEAT))
+         heartbeat := CORPSE_EMPTY_BEAT; // an empty corpse goes faster, never slower
       cnt := cnt + 1;
    }
    if ((not isset(self.flags, UNIT_FL_BURIED)) and (not bHometown))
@@ -553,8 +580,8 @@ code
    while (cnt < 6)
    {
       pause;
-      if (self.inside == null)
-         heartbeat := PULSE_SEC*SECS_PER_REAL_MIN*1;
+      if ((self.inside == null) and (heartbeat > CORPSE_EMPTY_BEAT))
+         heartbeat := CORPSE_EMPTY_BEAT; // an empty corpse goes faster, never slower
       cnt := cnt + 1;
    }
 
@@ -574,6 +601,14 @@ code
       act("$1n and everything in it dissolve into magical dust, floating away into the air.", A_HIDEINV, self, null, null, TO_ALL);
       link(self, corpse_room);
       act("The ashes of a body float down from the sky and form into $1n.", A_HIDEINV, self, null, null, TO_ALL);
+      // Home for good: a reboot brings it back here (reload_corpse), and it rots from now on
+      subextra(self.extra, CORPSE_HOMETOWN);
+      if (self.extra.[CORPSE_FILE] != null)
+      {
+         subextra(self.extra, CORPSE_EXTRA);
+         addextra(self.extra, {CORPSE_EXTRA}, corpse_room.symname);
+         store(self, self.extra.[CORPSE_FILE].descr, TRUE);
+      }
       //log(self.name + " rescued " + self.name + " instead of destroying it.");
       bHometown := 0; // Important, this round we begin to 'rot'
       hb := PULSE_SEC * SECS_PER_REAL_HOUR * 2; 
