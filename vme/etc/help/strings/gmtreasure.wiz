@@ -11,9 +11,15 @@ inventory, and tells you what it became.
 is any of the swords); jewelry, or a piece (ring, crown); armour, an 
 armour type (cloth, leather, hard leather, chain or mail, plate), a 
 piece (feet or boots, hands or gloves, head, arms or sleeves, legs or
-leggings, shield, body) or both (plate boots). Nothing means any kind. A
-piece's name that only one armour type uses gives that type too: helmet
-is always plate, hood cloth, cap leather; head is a helmet of any type.
+leggings, shield, body) or both (plate boots). Nothing means a weapon,
+jewelry or armour at random. A piece's name that only one armour type
+uses gives that type too: helmet is always plate, hood cloth, cap
+leather; head is a helmet of any type.
+</p><p>It can also be a potion, a scroll, a wand or a magic staff (staff alone
+is the fighting staff, a weapon), with spells of its rung, more power
+and, on a wand or staff, more charges the higher the rung; a gem, worth
+money by its rung; or a bag (from good plus; at excellent plus one in
+four is a bag of holding).
 </p><p>How good it is comes from the player's level (with <b>for</b>) or the 
 level you give (with <b>level</b>; with both, the lower counts), one rung 
 for each level restriction treasure carries, so the player can use it:
