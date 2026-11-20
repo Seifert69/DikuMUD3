@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
     if (!ParseArg(argc, argv, &mplex::g_mplex_arg))
     {
-        exit(0);
+        exit(1);
     }
 
 #ifndef _WINDOWS

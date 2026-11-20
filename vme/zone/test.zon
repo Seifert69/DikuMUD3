@@ -5553,7 +5553,8 @@ code
 }
 dilend
 
-// Records the messages it gets, but an interrupt with skip makes it ignore "t031ignored"
+// Records the messages it gets, but an interrupt with skip makes it ignore "t031ignored". It
+// leaves out "t031msg", which goes to t031arg on the same unit once or more (until it answers).
 dilbegin t031skp();
 var
    i : integer;
@@ -5566,7 +5567,7 @@ code
    addstring(sl, "$t031skp");
    addextra(self.extra, sl, "got");
 :waitmsg:
-   wait(SFB_MSG, TRUE);
+   wait(SFB_MSG, not ("t031msg" in argument));
    eh := "$t031skp" in self.extra;
    eh.descr := eh.descr + " " + argument;
    goto waitmsg;
@@ -6095,7 +6096,7 @@ code
       logtest(tstno, LOGT_ERROR, "T031 the skip program never ran");
       bad := 1;
    }
-   else if (not (strcmp(eh.descr, "got t031msg hello  world t031seen") == 0))
+   else if (not (strcmp(eh.descr, "got t031seen") == 0))
    {
       logtest(tstno, LOGT_ERROR, "T031 interrupt with skip: '" + eh.descr + "'");
       bad := 1;

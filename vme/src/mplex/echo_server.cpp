@@ -9,7 +9,11 @@
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
 
+#include <chrono>
+#include <functional>
 #include <map>
+#include <set>
+#include <vector>
 #include <stdexcept>
 #include <mutex>
 #include <type_traits>
@@ -127,8 +131,30 @@ void remove_gmap(cConHook *con)
     g_connections.erase_value(con);
 }
 
+// Every open websocket, from the open to the close handler, so that a stop can say goodbye to all
+// of them (g_connections holds only those that have sent something). Only the websocket thread,
+// the one in run(), touches these: the handlers and the stop all run there.
+static std::set<websocketpp::connection_hdl, std::owner_less<websocketpp::connection_hdl>> g_open;
+static bool g_stopping = false;               // a stop was asked for (the signals below)
+static std::function<void(websocketpp::connection_hdl)> g_sayGoodbye; // close one with 1012
+static std::function<void()> g_stopLoop;      // end run()
+
+void on_open(websocketpp::connection_hdl hdl)
+{
+    g_open.insert(hdl);
+    if (g_stopping) // opened while stopping (its handshake was under way): goodbye at once
+    {
+        g_sayGoodbye(hdl);
+    }
+}
+
 void on_close(websocketpp::connection_hdl hdl)
 {
+    g_open.erase(hdl);
+    if (g_stopping && g_open.empty()) // every goodbye said: no need to wait out the grace
+    {
+        g_stopLoop();
+    }
     std::lock_guard<std::mutex> hold(g_hookLock); // the main thread's turn is over
     slog(LOG_OFF, 0, "on_close called for hdl %p", hdl.lock().get());
 
@@ -258,6 +284,9 @@ static void on_message(Server *s, websocketpp::connection_hdl hdl, typename Serv
  * TLS server type -- so it is registered under `if constexpr` rather than by
  * duplicating the function.
  */
+// How long a stop waits at most for the websockets' goodbyes (close handshakes) to finish
+static constexpr int STOP_GRACE_SECONDS = 5;
+
 template <typename Server>
 static void run_websocket_server()
 {
@@ -274,6 +303,7 @@ static void run_websocket_server()
         echo_server.init_asio();
 
         // Register our message handler
+        echo_server.set_open_handler(bind(&on_open, _1));
         echo_server.set_close_handler(bind(&on_close, _1));
         echo_server.set_message_handler(bind(&on_message<Server>, &echo_server, _1, _2));
 
@@ -289,8 +319,54 @@ static void run_websocket_server()
         // Start the server accept loop
         echo_server.start_accept();
 
+        // Asked to stop (systemctl stop or restart): tell every browser the server is restarting
+        // (close code 1012, which the web client explains) instead of dropping it (1006), then
+        // exit. Caught here, in the server's own loop, not in bye_signal(): closing connections
+        // there could deadlock inside OpenSSL or malloc. Registered after main()'s signal() calls,
+        // so it takes these signals over in websocket mode.
+        websocketpp::lib::asio::signal_set stops(echo_server.get_io_context(), SIGTERM, SIGINT, SIGHUP);
+        stops.add(SIGQUIT);
+        websocketpp::lib::asio::steady_timer grace(echo_server.get_io_context());
+        g_sayGoodbye = [&echo_server](websocketpp::connection_hdl hdl) {
+            websocketpp::lib::error_code ignore;
+            echo_server.close(hdl, websocketpp::close::status::service_restart, "The server is restarting", ignore);
+        };
+        g_stopLoop = [&echo_server]() { echo_server.stop(); };
+        stops.async_wait([&echo_server, &grace](const websocketpp::lib::asio::error_code &ec, int sig) {
+            if (ec)
+            {
+                return;
+            }
+            g_stopping = true;
+            slog(LOG_OFF, 0, "Received signal #%d: closing %zu websockets (1012, restarting) and stopping", sig, g_open.size());
+            websocketpp::lib::error_code ignore;
+            echo_server.stop_listening(ignore);
+            if (g_open.empty())
+            {
+                echo_server.stop();
+                return;
+            }
+            auto open = g_open; // the close handlers change the set
+            for (auto &hdl : open)
+            {
+                g_sayGoodbye(hdl);
+            }
+            // The last close handler ends the loop; at most this long for a slow client
+            grace.expires_after(std::chrono::seconds(STOP_GRACE_SECONDS));
+            grace.async_wait([&echo_server](const websocketpp::lib::asio::error_code &) { echo_server.stop(); });
+        });
+
         // Start the ASIO io_service run loop
         echo_server.run();
+
+        // The main thread may be anywhere: no atexit handlers
+        if (g_stopping)
+        {
+            slog(LOG_OFF, 0, "Stopped on request.");
+            _exit(MPLEX_EXIT_STOPPED);
+        }
+        slog(LOG_OFF, 0, "The websocket loop ended without a stop request.");
+        _exit(1);
     }
     catch (websocketpp::exception const &e)
     {

@@ -46,19 +46,22 @@ void sleep_unlocked(unsigned int seconds)
     g_hookLock.lock();
 }
 
-void bye_signal(int signal)
+// The log file's descriptor, for bye_signal()
+static int g_log_fd = -1;
+
+void bye_signal(int /* signal */)
 {
-    // No g_CaptainHook.Close() here. Closing the hooks runs SSL_shutdown(),
-    // SSL_free() and malloc for every telnets connection, and this may be
-    // interrupting the main loop inside OpenSSL or malloc: a deadlock, and
-    // the mplex would hang instead of exiting. The kernel closes every
-    // socket when we exit; the clients see that as a close.
-    slog(LOG_OFF,
-         0,
-         "Received signal #%d (SIGQUIT, SIGHUP, SIGINT or SIGTERM)."
-         "  Shutting down",
-         signal);
-    _exit(1); // not exit(): the atexit handlers (OpenSSL's cleanup among them) are not for a signal handler
+    // Only async-signal-safe calls here, write(2) and _exit(2): the signal may have interrupted
+    // the main loop inside malloc, OpenSSL or slog's own stdio, and slog (a std::string, ctime,
+    // fprintf) or closing the hooks (SSL_shutdown, SSL_free) would wait on their locks for ever.
+    // The kernel closes every socket when we exit; the clients see that as a close. The
+    // websocket server catches these signals itself and says goodbye first (echo_server.cpp).
+    static const char msg[] = "Received SIGQUIT, SIGHUP, SIGINT or SIGTERM: stopping on request.\n";
+    if (g_log_fd >= 0 && write(g_log_fd, msg, sizeof(msg) - 1) < 0)
+    {
+        // nothing to do about it
+    }
+    _exit(MPLEX_EXIT_STOPPED);
 }
 
 #ifndef _WINDOWS
@@ -70,7 +73,8 @@ void alarm_signal(int sig)
 }
 #endif
 
-void ShowUsage(const char *name)
+// Prints the usage and exits with code: 0 when asked for it (-h), 1 after a wrong argument
+void ShowUsage(const char *name, int code)
 {
     fprintf(stderr,
             "Usage: %s [-a] [-h] [-c] [-e] [-r] [-t] [-w] [-x] [-z] [-l <filename>] [-p <num>] [-d <path>] [-s <port>] [-a <address>]\n",
@@ -92,7 +96,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "      Run a second mplex without -z for plain telnet.\n");
     fprintf(stderr, "  -m  Use mud protocol (experimental).\n");
     
-    exit(0);
+    exit(code);
 }
 
 int ParseArg(int argc, char *argv[], arg_type *arg)
@@ -127,14 +131,14 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
         if (argv[i][0] != '-')
         {
             fprintf(stderr, "Illegal argument '%s'.\n", argv[i]);
-            ShowUsage(argv[0]);
+            ShowUsage(argv[0], 1);
         }
 
         switch (argv[i][1])
         {
             case 'h':
             case '?':
-                ShowUsage(argv[0]);
+                ShowUsage(argv[0], 0);
                 break;
 
             case 'x':
@@ -216,8 +220,7 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
 
             default:
                 fprintf(stderr, "Illegal option.\n");
-                ShowUsage(argv[0]);
-                exit(0);
+                ShowUsage(argv[0], 1);
         }
     }
     if (arg->bTelnetTLS && arg->bWebSockets)
@@ -232,8 +235,9 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
     {
         fprintf(stderr, "Failed to open Log file:  %s", log_name);
         FREE(log_name);
-        exit(0);
+        exit(1);
     }
+    g_log_fd = fileno(g_log_file_fd); // for bye_signal(), which can't use the FILE
 
     FREE(log_name);
 
