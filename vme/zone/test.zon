@@ -29,7 +29,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 46  // T010, T009, ...
+#define TEST_MAXIMUM 47  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -79,6 +79,106 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T047 =====================
+
+// Random treasure is of its class (treasureroll@randomt keeps the rolls of $random_treasure
+// items at the class): an average weapon or armour made to order (Treasure, as gmtreasure and
+// holiday22 make it) has quality 0 exactly; one from a zone's rnd0_avg (RndTreasure, which now
+// and then makes it a class higher, never lower) has 0 or more; and no finished item keeps the
+// $random_treasure mark. Class 0 is checked because its quality maps to 0 exactly
+// (bonus_map_a adds a random amount to other values). Before, the rolls' downward bias made
+// rnd0 items mostly -2 or worse.
+dilbegin T047(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   box : unitptr;
+   i : integer;
+   n : integer;
+   made : integer;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   box := load("pbox@test");
+   link(box, self);
+   secure(box, lost);
+   i := 0;
+   while (i < 30)
+   {
+      u := load("rnd0_avg@randomt");
+      link(u, box);
+      if (i < 6)
+      {
+         u := load("treasure@randomt");
+         link(u, box);
+         if (i < 3)
+            dilcopy("Treasure@randomt(0,weapon)", u);
+         else
+            dilcopy("Treasure@randomt(0,armour)", u);
+      }
+      i := i + 1;
+   }
+
+   // They are made on their first tick, some seconds after loading: until every one has a title
+   i := 0;
+   n := 1;
+   while ((n > 0) and (i < 60))
+   {
+      pause;
+      i := i + 1;
+      n := 0;
+      u := box.inside;
+      while (u != null)
+      {
+         if (u.title == "")
+            n := n + 1;
+         u := u.next;
+      }
+   }
+   if (n > 0)
+   {
+      logtest(tstno, LOGT_ERROR, "T047 " + itoa(n) + " random items unmade after 60 seconds");
+      goto done;
+   }
+
+   u := box.inside;
+   while (u != null)
+   {
+      if ("$random_treasure" in u.extra)
+         bad := bad + " " + u.title + " (still marked)";
+      if ((u.objecttype == ITEM_WEAPON) or (u.objecttype == ITEM_ARMOR) or (u.objecttype == ITEM_SHIELD))
+      {
+         made := made + 1;
+         if ((u.value[1] < 0) or ((u.nameidx == "treasure") and (u.value[1] != 0)))
+            bad := bad + " " + u.title + " (" + itoa(u.value[1]) + ")";
+      }
+      u := u.next;
+   }
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T047 average random treasure below quality 0, or made to order not at 0:" + bad);
+   else if (made < 15)
+      logtest(tstno, LOGT_ERROR, "T047 only " + itoa(made) + " of 36 random items became weapons or armour");
+   else
+      logtest(tstno, LOGT_SUCCESS, "T047 " + itoa(made) + " average random weapons and armour, none below quality 0");
+   goto done;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T047 the box of random treasure was lost");
+
+:done:
+   if (box != null)
+   {
+      unsecure(box);
+      destroy(box);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 

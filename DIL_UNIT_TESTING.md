@@ -61,6 +61,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T042-T044 | control flow, messages and commands, procedures that change units |
 | T045 | UTF-8 in DIL strings |
 | T046 | teamwork@function: an NPC joins its own zone's fights |
+| T047 | random treasure: average weapons and armour never below quality 0 (RndTreasure), exactly 0 when made to order (Treasure) |
 
 ## The player tests
 
