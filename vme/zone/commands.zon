@@ -12179,21 +12179,16 @@ dilend
 // for each level restriction randomt puts on its items (vrestrict@randomt: 10, 20, 40, 60, 80),
 // so the player can use what they get. BONUS_ARTIFACT is never earned by level alone.
 dilbegin integer gm_trquality(lvl : integer);
+external
+   integer bandForPlayer@randomt(lvl : integer);
+var
+   q : integer;
 code
 {
-   if (lvl < 5)
-      return (BONUS_AVERAGE);
-   if (lvl < 10)
-      return (BONUS_AVERAGE_PLUS);
-   if (lvl < 20)
-      return (BONUS_GOOD);
-   if (lvl < 40)
-      return (BONUS_GOOD_PLUS);
-   if (lvl < 60)
-      return (BONUS_EXCELLENT);
-   if (lvl < 80)
-      return (BONUS_EXCELLENT_PLUS);
-   return (BONUS_SUPERIOR);
+   q := bandForPlayer@randomt(lvl); // the treasure bands' ladder A
+   if (q > BONUS_SUPERIOR)
+      q := BONUS_SUPERIOR;
+   return (q);
 }
 dilend
 

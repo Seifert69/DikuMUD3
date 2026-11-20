@@ -931,6 +931,7 @@ dilbegin unitptr make_corpse(sCorpseLoad : string);
 external
    unitptr findcrproom(u:unitptr);
    die@justice(crp : unitptr);
+   integer rndCorpseLoad@randomt(npc : unitptr, crp : unitptr, worn : integer);
 var
    rltime:integer;
    corpseroom:unitptr;
@@ -938,6 +939,8 @@ var
    item:unitptr;
    temp:unitptr;
    exd : extraptr;
+   worn : integer;
+   i : integer;
 
 code
 {
@@ -1000,13 +1003,15 @@ code
    if (isset(self.pcflags, PC_PK_RELAXED))
       addextra(crp.extra, {"$BOB"}, "");
 
-   // Transfer victim's items to corpse
+   // Transfer victim's items to corpse, counting what it wore or wielded for random treasure
    //
    //   
    item := self.inside;
    while (item != null)
    {
       temp := item.next;
+      if (item.equip != 0)
+         worn := worn + 1;
       unequip(item);
 
       // Items on players that are from the treasure zone or minv < 51 stay inside the player
@@ -1049,6 +1054,11 @@ code
    dilcopy("remove_corpse@death", crp);
 
    link(crp, corpseroom);
+
+   // Now and then random treasure loaded into the corpse of an NPC that wore something; silent:
+   // it is found by looting the corpse
+   if (self.type == UNIT_ST_NPC)
+      i := rndCorpseLoad@randomt(self, crp, worn);
 
    return (crp);
 }

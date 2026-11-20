@@ -66,6 +66,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T049 | use on a staff: a helpful spell goes to the user and the group, an attack to the others |
 | T050 | random magic items (randomt): potion, scroll, wand, magic staff, gem and bag made to order |
 | T051 | a zone's bonusband (treasure band) as DIL reads it |
+| T052 | random treasure loaded into corpses (rndCorpseLoad@randomt): bands by home zone and level, the chance, none without worn gear, XP or band |
 
 ## The player tests
 

@@ -97,6 +97,17 @@ help  "Player should never be in here."
 
 #define ilMatIndex(matIndex,offset) (matIndex*4+offset)
 
+// Random treasure loaded into an NPC's corpse (rndCorpseLoad): for a typical NPC of its band one
+// death in 1000 / RND_CORPSE_PERMILLE, a tougher one more often (its level counted up to
+// RND_CORPSE_MAX_TOUGHNESS times the typical, its experience setting up to RND_CORPSE_MAX_EXP, the
+// chance never above RND_CORPSE_MAX_PERMILLE); its class at most RND_CORPSE_MAX_BAND, the most a
+// player gets solo (bands.md), before RndTreasure's step (one class up 5%, into superior 1 in 400)
+#define RND_CORPSE_PERMILLE      50
+#define RND_CORPSE_MAX_PERMILLE  200
+#define RND_CORPSE_MAX_TOUGHNESS 2
+#define RND_CORPSE_MAX_EXP       500
+#define RND_CORPSE_MAX_BAND      BONUS_EXCELLENT_PLUS
+
 // The kinds of random magic item (createMagic, rndSpells); RNDT_CURSED: a cursed potion's spells
 #define RNDT_POTION 0
 #define RNDT_SCROLL 1
@@ -1064,20 +1075,14 @@ dilend
 dilbegin vrestrict(bonuslvl : integer);
 external
     vlevel_restrict@function(lvl:integer, damage:integer, percent:integer, action:string);
-
-var
-    ilLevels : intlist;
-    l : integer;
+    integer bandMinLevel(band : integer);
 code
 {
-    ilLevels := {0,  0,  0,  0,  0,  0,   0,
-                 0,
-                 0, 10, 20, 40, 60, 80, 100};
-
-    l := ilLevels.[bonuslvl + 7];
-
-    if (l > 0)
-        dilcopy("vlevel_restrict@function("+itoa(l)+", 0, 0, )", self);    
+    // from good up an item asks for its band's lowest level (ladder A); below that, nothing
+    if (bonuslvl > BONUS_ARTIFACT)
+        bonuslvl := BONUS_ARTIFACT;
+    if (bonuslvl >= BONUS_GOOD)
+        dilcopy("vlevel_restrict@function(" + itoa(bandMinLevel(bonuslvl)) + ", 0, 0, )", self);
 
     return;
 }
@@ -4246,6 +4251,148 @@ code
 dilend
 
 
+// ======================== THE TREASURE BANDS' LEVELS =========================
+// bands.md (zone-cards): each band is for players of a range of levels. Two ladders come of it:
+// A, the lowest level a band is for, the level a player may use its items from (vrestrict), and
+// what a reward for a player gives (gm_trquality@commands, yule_rung@holiday22); B, the level an
+// enemy of a band starts at, what an NPC's corpse may hold (rndCorpseLoad), a step behind A so
+// that whoever kills it can use what it gives. Indexed by band: BONUS_AVERAGE to BONUS_ARTIFACT.
+
+// Ladder A: the lowest level band is for (levels 1-4 average, 5-9 average+, 10 good ...)
+dilbegin integer bandMinLevel(band : integer);
+var
+    il : intlist;
+code
+{
+    il := {1, 5, 10, 20, 40, 60, 80, 100};
+    return (il.[band - BONUS_AVERAGE]);
+}
+dilend
+
+
+// Ladder A: the best band a player of level lvl may use
+dilbegin integer bandForPlayer(lvl : integer);
+external
+    integer bandMinLevel(band : integer);
+var
+    band : integer;
+code
+{
+    band := BONUS_ARTIFACT;
+    while ((band > BONUS_AVERAGE) and (lvl < bandMinLevel(band)))
+        band := band - 1;
+    return (band);
+}
+dilend
+
+
+// Ladder B: the band of an enemy of level lvl (levels 1-10 average, 11-15 average+, 16-25 good,
+// 26-40 good+, 41-60 excellent, 61-80 excellent+, 81-100 superior, 101 and up artifact)
+dilbegin integer bandForEnemy(lvl : integer);
+var
+    il : intlist;
+    band : integer;
+code
+{
+    il := {1, 11, 16, 26, 41, 61, 81, 101};
+    band := BONUS_ARTIFACT;
+    while ((band > BONUS_AVERAGE) and (lvl < il.[band - BONUS_AVERAGE]))
+        band := band - 1;
+    return (band);
+}
+dilend
+
+
+// Ladder B: the level of a typical enemy of band, the middle of its levels
+dilbegin integer bandTypical(band : integer);
+var
+    il : intlist;
+code
+{
+    il := {6, 13, 21, 33, 51, 71, 91, 110};
+    return (il.[band - BONUS_AVERAGE]);
+}
+dilend
+
+
+// The chance, in thousandths, that random treasure is loaded into the corpse of npc, of band:
+// RND_CORPSE_PERMILLE for a typical enemy of the band, times (level / typical level)^2 (the level
+// counted up to RND_CORPSE_MAX_TOUGHNESS times the typical) and its experience setting (up to
+// RND_CORPSE_MAX_EXP) in percent; never above RND_CORPSE_MAX_PERMILLE
+dilbegin integer rndCorpseChance(npc : unitptr, band : integer);
+external
+    integer bandTypical(band : integer);
+var
+    typ : integer;
+    lvl : integer;
+    ex : integer;
+    chance : integer;
+code
+{
+    typ := bandTypical(band);
+    lvl := npc.level;
+    if (lvl > RND_CORPSE_MAX_TOUGHNESS * typ)
+        lvl := RND_CORPSE_MAX_TOUGHNESS * typ;
+    ex := npc.exp;
+    if (ex > RND_CORPSE_MAX_EXP)
+        ex := RND_CORPSE_MAX_EXP;
+    chance := (RND_CORPSE_PERMILLE * lvl * lvl * ex) / (typ * typ * 100);
+    if (chance > RND_CORPSE_MAX_PERMILLE)
+        chance := RND_CORPSE_MAX_PERMILLE;
+    return (chance);
+}
+dilend
+
+
+// When the NPC npc has died (make_corpse@death), now and then random treasure loaded into its
+// corpse crp; worn: how many items it wore or wielded (what it carries doesn't count: players
+// can hand an NPC things, not make it wear them). Returns the band loaded, or BONUS_NOT_APPLICABLE
+// for none. Only an NPC that gives experience, wore something, is no player's charmed pet or
+// follower, and comes from a zone with a bonusband: where it came from, not where it died. Its
+// band is the lower of that zone's band and the band for its level (ladder B), its chance
+// rndCorpseChance, the treasure's class that band, at most RND_CORPSE_MAX_BAND. An NPC with
+// $rnd_corpse_force (a test's) is past the chance.
+dilbegin integer rndCorpseLoad(npc : unitptr, crp : unitptr, worn : integer);
+external
+    integer bandForEnemy(lvl : integer);
+    integer rndCorpseChance(npc : unitptr, band : integer);
+var
+    z : zoneptr;
+    u : unitptr;
+    band : integer;
+    lband : integer;
+code
+{
+    if ((npc == null) or (crp == null) or (worn < 1))
+        return (BONUS_NOT_APPLICABLE);
+    if ((npc.type != UNIT_ST_NPC) or (npc.exp <= 0) or isaff(npc, ID_CHARM))
+        return (BONUS_NOT_APPLICABLE);
+    if ((npc.master != null) and (npc.master.type == UNIT_ST_PC)) // a player's follower
+        return (BONUS_NOT_APPLICABLE);
+    z := findzone(npc.zoneidx);
+    if (z == null)
+        return (BONUS_NOT_APPLICABLE);
+    band := z.bonusband;
+    if (band < BONUS_AVERAGE)
+        return (BONUS_NOT_APPLICABLE);
+
+    lband := bandForEnemy(npc.level);
+    if (lband < band)
+        band := lband;
+
+    if ((not ("$rnd_corpse_force" in npc.extra)) and (rnd(1, 1000) > rndCorpseChance(npc, band)))
+        return (BONUS_NOT_APPLICABLE);
+
+    if (band > RND_CORPSE_MAX_BAND)
+        band := RND_CORPSE_MAX_BAND;
+    u := load("treasure@randomt");
+    link(u, crp);
+    dilcopy("RndTreasure@randomt(" + itoa(band) + ")", u);
+    return (band);
+}
+dilend
+
+
 // The class a piece of random treasure turns out to be: its own, now and then one off. An
 // open-ended d100 below 1 (about 4%) is one class lower, never below average; above 100 (5%)
 // one higher, but into superior or artifact, the bands for groups, only above 200 (1 in 400).
@@ -4539,7 +4686,8 @@ dilcopy RndTreasure@randomt(BONUS_AVERAGE);
 end
 
 
-// A shell for Treasure@randomt, which a game master's gmtreasure copies onto it
+// A shell for treasure made in the game: Treasure@randomt (a game master's gmtreasure, the Yule
+// gifts) or RndTreasure@randomt (random treasure loaded into an NPC's corpse, rndCorpseLoad)
 treasure
 names {""}
 title ""
