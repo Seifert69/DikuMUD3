@@ -6061,14 +6061,19 @@ code
    }
 
    // argument: "" at a tick, the message at SFB_MSG; getword() takes its first word off it.
-   // t031arg listens from 2 * PULSE_SEC after its dilcopy() (its first run, then a tick). Fixed
-   // ticks, not pauses: three random pauses could add up to 1.5 * PULSE_SEC, and the message
-   // came before it listened (the test failed now and then).
-   wait(SFB_TICK, TRUE);
-   wait(SFB_TICK, TRUE);
-   sendto("t031msg hello  world", box);
-   pause;
-   eh := "$t031arg" in box.extra;
+   // t031arg listens only after its first run and a tick, which falls anywhere in a beat, so the
+   // message goes again each tick until it answers (a message before it listened was lost, and
+   // the test failed now and then on CI); it answers once and quits.
+   i := 0;
+   eh := null;
+   while ((i < 10) and (eh == null))
+   {
+      wait(SFB_TICK, TRUE);
+      sendto("t031msg hello  world", box);
+      pause;
+      eh := "$t031arg" in box.extra;
+      i := i + 1;
+   }
    if (eh == null)
    {
       logtest(tstno, LOGT_ERROR, "T031 the argument program didn't report");
