@@ -12198,7 +12198,8 @@ dilend
 
 // gmtreasure [what] easy|fair|hard [for <player>] [level <n>] [quality <0-7>]: random treasure
 // (Treasure@randomt) in the game master's inventory. What is in words ("plate boots", "dagger",
-// "ring", "armour"), or nothing for any. Its quality comes from a player's level
+// "ring", "armour", "potion", "scroll", "wand", "magic staff", "gem", "bag"), or nothing for a
+// weapon, jewelry or armour. Its quality comes from a player's level
 // (gm_trquality) and how hard the quest was: hard earns the top of the level's rung, fair one
 // rung below, easy two. for <player> uses their level and fits the item to their height, level
 // <n> a level of your choosing, the lower of the two if both. quality <n> picks it outright,
@@ -12310,7 +12311,8 @@ code
 
    :usage:
    sendtext("Usage: gmtreasure [what: weapon, dagger, jewelry, ring, armour, plate boots, " +
-            "shield, ...] easy|fair|hard for &lt;player&gt; | level &lt;n&gt;<br/>" +
+            "shield, potion, scroll, wand, magic staff, gem, bag, ...] easy|fair|hard " +
+            "for &lt;player&gt; | level &lt;n&gt;<br/>" +
             "How hard the quest was sets the treasure with the level: hard the top of the " +
             "level's rung, fair one below, easy two below.<br/>", self);
    quit;
