@@ -19,14 +19,12 @@ SPL_DET_POISON	detect poison	detection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SE
 SPL_DET_UNDEAD	detect undead	detection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 8	0	x	x					
 SPL_SENSE_LIFE	sense life	detection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 4	0	x	x					
 SPL_AID	aid	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 4	0	x	x					
-SPL_BLESS	bless	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0		x		x			
 SPL_CAUSE_WOUNDS_1	cause light wounds	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	10	divine 5	0		x					
 SPL_CURE_BLIND	cure blind	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x					
 SPL_CURE_WOUNDS_1	cure light wounds	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	15	divine 5	0	x	x		x			
 SPL_FIND_WANTED	find wanted	divine		TAR_IGNORE	5	divine 20	0		x	x				
 SPL_LOCATE_WANTED	locate wanted	divine		TAR_IGNORE	10	divine 10	0		x					
 SPL_SUMMER_RAIN	summer rain	divine		TAR_IGNORE	20	divine 8	0		x	x				
-SPL_UBLESS	unholy blessing	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0		x		x			
 SPL_ACID_BREATH	acid breath	external	yes	TAR_IGNORE	20	(mana 20)	0		x				no	a dragon's breath: NPCs only
 SPL_FIREBALL_1	burn	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	10	magic 5	0		x	x	x			
 SPL_FIRE_BREATH	fire breath	heat	yes	TAR_IGNORE	20	(mana 20)	0		x				no	a dragon's breath: NPCs only
@@ -46,20 +44,12 @@ SPL_LOCATE_ANIMAL	locate animal	mind		FIND_UNIT_WORLD + FIND_UNIT_ZONE + TAR_CHA
 SPL_SLOW	slow	mind	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	20	level 9	0		x	x				
 SPL_SONIC_BREATH	sonic breath	mind	yes	TAR_IGNORE	20	(mana 20)	0		x				no	a dragon's breath: NPCs only
 SPL_ACID_RESI	acid resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 10	0	x	x	x				
-SPL_RAISE_BRA	brain	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x				
-SPL_RAISE_CHA	charisma	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x				
 SPL_COLD_RESI	cold resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 7	0	x	x	x				
-SPL_RAISE_CON	constitution	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x				
-SPL_RAISE_DEX	dexterity	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x				
 SPL_DIVINE_RESIST	divine resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 10	0	x	x	x				
 SPL_ELECTRICITY_RESI	electricity resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 8	0	x	x	x				
 SPL_HEAT_RESI	heat resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 6	0	x	x	x				
 SPL_MIND_SHIELD	mind shield	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 5	0	x	x	x				
 SPL_POISON_RESI	poison resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 9	0	x	x	x				
-SPL_RAISE_DIV	raise divine	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x				
-SPL_RAISE_HPP	raise hitpoints	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x				
-SPL_RAISE_MAG	raise magic	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 5	0	x	x	x				
-SPL_RAISE_STR	strength	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x				
 SPL_RAISE_SUMMONING	summoning resistance	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 18	0	x	x	x				
 SPL_SUSTAIN	sustain	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 10	0	x	x		x			
 SPL_BANISH	banish	summoning		FIND_UNIT_SURRO + TAR_CHAR + TAR_SELF_NONO	20	(mana 20)	0		x	x				band guessed from mana: check
@@ -77,17 +67,15 @@ SPL_REFIT	refit	creation		FIND_UNIT_SURRO + FIND_UNIT_INVEN + TAR_OBJ	50	magic 3
 SPL_REFRESH	refresh	creation		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	20	divine 25	1	x	x	x				
 SPL_DET_INVISIBLE	detect invisible	detection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 15	1	x	x					
 SPL_IDENTIFY_1	identify	detection		FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNIT_EQUIP + TAR_OBJ	15	level 12	1		x	x				
+SPL_BLESS	bless	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0		x		x	1		moved up by hand (its ability requirement put it too low)
 SPL_BLIND	blind	divine	yes	FIND_UNIT_SURRO + TAR_CHAR	20	divine 26	1	cursed	x	x	x			
 SPL_CAUSE_WOUNDS_2	cause serious wounds	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	20	level 13	1		x					
-SPL_CURE_WOUNDS_2	cure serious wounds	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	20	divine 25	1	x	x		x			
 SPL_FIND_PATH	find path	divine		FIND_UNIT_WORLD + TAR_CHAR	12	divine 25	1		x	x				
-SPL_CURE_WOUNDS_3	heal	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	25	divine 25	1	x	x		x			
 SPL_LOCATE_CHAR	locate person	divine		FIND_UNIT_WORLD + FIND_UNIT_ZONE + TAR_CHAR	20	divine 28	1		x					
-SPL_RAISE_DEAD	raise dead	divine		FIND_UNIT_WORLD + TAR_CHAR	60	divine 25	1		x				once	brings back the dead: from a scroll?
 SPL_REPEL_UNDEAD_1	repel lesser undead	divine	yes	FIND_UNIT_SURRO + TAR_CHAR	20	divine 30	1		x	x	x			
+SPL_UBLESS	unholy blessing	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0		x		x	1		moved up by hand (its ability requirement put it too low)
 SPL_FIREBALL_2	fireball	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	20	level 14	1		x	x	x			
 SPL_LAVA_1	lava flow	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	10	level 11	1		x	x	x			
-SPL_COMMAND	command	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	divine 25	1		x				once	controls a target
 SPL_CONFUSION	confusion	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	level 13	1	cursed	x	x	x			
 SPL_FOCUS	focus	mind		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	level 12	1	x	x	x				
 SPL_HOLD_UNDEAD	hold undead	mind		FIND_UNIT_SURRO + TAR_CHAR	20	divine 28	1		x	x				
@@ -95,7 +83,6 @@ SPL_SLEEP	sleep	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	divine 28	1	cursed	x	x	x
 SPL_STUN	stun	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	level 15	1	cursed	x	x				
 SPL_AWAKEN	awaken	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 28	1	x	x	x	x			
 SPL_CLENCHED_FIST	clenched fist	summoning	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	15	level 13	1			x				
-SPL_METEOR_SHOWER	meteor shower	summoning	yes	TAR_IGNORE	25	(mana 25)	1			x				band guessed from mana: check
 SPL_SENDING	sending	summoning		FIND_UNIT_INVEN + TAR_OBJ	20	level 15	1		x					
 SPL_SUMMON_EARTH	summon earth	summoning		TAR_IGNORE	20	level 14	1		x				once	a summoned fighter
 SPL_LIGHTNING_2	jolt	cell	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	24	level 16	2		x	x	x			
@@ -108,6 +95,7 @@ SPL_ICE_THORN	ice thorn	creation		TAR_IGNORE	30	level 17	2		x
 SPL_NIGHT_GLOBE	night globe	creation		TAR_IGNORE	20	level 25	2		x	x				
 SPL_REPAIR	repair	creation		FIND_UNIT_IN_ME + TAR_OBJ	20	level 20	2		x					
 SPL_SUN_GLOBE	sun globe	creation		TAR_IGNORE	20	level 25	2		x	x				
+SPL_CURE_WOUNDS_2	cure serious wounds	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	20	divine 25	1	x	x		x	2		moved up by hand (its ability requirement put it too low)
 SPL_CURSE	curse	divine	yes	FIND_UNIT_SURRO + FIND_UNIT_INVEN + TAR_CHAR + TAR_OBJ + TAR_FIGHT_VICT	20	divine 50	2		x					
 SPL_CAUSE_WOUNDS_3	harm	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	30	level 25	2		x					
 SPL_LOCATE_OBJECT	locate object	divine		FIND_UNIT_WORLD + FIND_UNIT_ZONE + TAR_OBJ	20	divine 32	2		x					
@@ -125,19 +113,24 @@ SPL_INVISIBILITY	invisibility	mind		FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNI
 SPL_MIRE	mire	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	level 18	2		x	x				
 SPL_WIZARD_EYE	wizard eye	mind		FIND_UNIT_WORLD + TAR_CHAR + TAR_OBJ + TAR_SELF_NONO	20	level 23	2		x	x				
 SPL_XRAY_VISION	xray vision	mind		FIND_UNIT_SURRO + TAR_CHAR + TAR_OBJ	20	magic 34	2		x					
+SPL_RAISE_BRA	brain	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_CHA	charisma	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_CON	constitution	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_DEX	dexterity	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
 SPL_DISPEL_MAGIC	dispel magic	protection	yes	FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNIT_EQUIP + TAR_CHAR + TAR_OBJ	20	level 17	2		x	x				
 SPL_HAMMER_HAND	hammer hand	protection		TAR_SELF_ONLY + TAR_AUTO_SELF + TAR_UNIT_SURRO + TAR_CHAR	30	(mana 30)	2						no	the game allows it on no item
-SPL_LIFE_PROTECTION	life protection	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 34	2		x					
 SPL_LOCK	lock	protection		TAR_IGNORE	20	level 16	2		x	x				
+SPL_RAISE_DIV	raise divine	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_HPP	raise hitpoints	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_MAG	raise magic	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 5	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_STR	strength	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	magic 20	0	x	x	x		2		moved up by hand (its ability requirement put it too low)
 SPL_UNLOCK	unlock	protection		TAR_IGNORE	20	level 18	2		x	x				
 SPL_HEDGE_WALL	hedge wall	summoning		TAR_IGNORE	30	level 21	2						no	the game allows it on no item
 SPL_RANDOM_TELEPORT	random teleport	summoning		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_SELF_ONLY	20	level 22	2		x	x			once	escape magic
 SPL_SUMMON_AIR	summon air	summoning		TAR_IGNORE	20	level 18	2		x				once	a summoned fighter
 SPL_SUMMON_WATER	summon water	summoning		TAR_IGNORE	20	level 24	2		x				once	a summoned fighter
 SPL_TIGER_CLAW	tiger claw	summoning	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	10	divine 42	2						no	the game allows it on no item
-SPL_TOTAL_RECALL	total recall	summoning		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_SELF_ONLY	30	divine 40	2		x		x		once	escape
 SPL_UNDEAD_DOOR	undead door	summoning		FIND_UNIT_WORLD + TAR_CHAR	50	divine 50	2		x				once	?
-SPL_CALL_LIGHTNING	call lightning	cell	yes	FIND_UNIT_SURRO + TAR_CHAR	30	magic 60	3		x	x	x			
 SPL_LIGHTNING_3	lightning bolt	cell	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	36	level 30	3		x	x	x			
 SPL_FROSTBALL_4	icestorm	cold	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	38	level 34	3		x	x	x			
 SPL_DARKNESS_2	continual darkness	creation		FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNIT_EQUIP + TAR_ROOM + TAR_OBJ	30	divine 52	3		x	x				
@@ -150,21 +143,20 @@ SPL_RECONSTRUCT	reconstruct	creation		FIND_UNIT_IN_ME + TAR_OBJ	25	level 31	3		x
 SPL_IDENTIFY_2	improved identify	detection		FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNIT_EQUIP + TAR_OBJ	20	level 28	3		x	x				
 SPL_SEN_INVISIBLE	sense invisible	detection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 56	3	x	x					
 SPL_CONDEMN	condemn	divine		FIND_UNIT_SURRO + TAR_CHAR	20	level 35	3		x					
-SPL_DISPEL_GOOD	dispel good	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	20	divine 78	3		x		x			
 SPL_REPEL_UNDEAD_2	repel greater undead	divine	yes	TAR_IGNORE	20	divine 62	3		x	x	x			
-SPL_RESURRECTION	resurrection	divine		FIND_UNIT_WORLD + TAR_CHAR	80	divine 80	3		x				once	brings back the dead: from a scroll?
 SPL_SLOW_ROT	slow rot	divine		TAR_SELF_NONO + FIND_UNIT_SURRO + TAR_OBJ	20	divine 68	3						no	the game allows it on no item
 SPL_UNHOLY_WORD	unholy word	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	10	level 40	3		x					
 SPL_FIREBALL_3	firestorm	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	30	level 28	3		x	x	x			
 SPL_LAVA_2	hellfire	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	20	level 32	3		x	x	x			
 SPL_SUN_RAY	sun ray	heat	yes	FIND_UNIT_SURRO + TAR_CHAR	25	divine 62	3		x	x	x			
-SPL_ENERGY_DRAIN	energy drain	internal	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	12	divine 76	3		x	x	x			
 SPL_STINKING_CLOUD_3	stinking cloud	internal	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	28	level 30	3		x	x	x			
 SPL_CALM	calm	mind		FIND_UNIT_SURRO + TAR_CHAR	20	divine 56	3		x					
 SPL_COLOURSPRAY_3	colourspray	mind	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	34	level 40	3		x	x	x			
+SPL_COMMAND	command	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	divine 25	1		x			3	once	controls a target; moved up by hand (its ability requirement put it too low)
 SPL_HOLD_MONSTER	hold monster	mind	yes	FIND_UNIT_SURRO + TAR_CHAR	20	level 27	3	cursed	x	x				
 SPL_PETRIFY	petrify	mind	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR + TAR_SELF_NONO	40	level 30	3		x	x	x			
 SPL_STORM_GATE	storm gate	mind		FIND_UNIT_SURRO +  TAR_CHAR	15	divine 80	3		x	x			once	?
+SPL_LIFE_PROTECTION	life protection	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 34	2		x			3		moved up by hand (its ability requirement put it too low)
 SPL_PRO_EVIL	protection from evil	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 64	3		x					
 SPL_PRO_GOOD	protection from good	protection		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	20	divine 60	3		x					
 SPL_SACRED	sacred	protection		TAR_IGNORE	40	(mana 40)	3		x					band guessed from mana: check
@@ -174,12 +166,15 @@ SPL_CONE_SHARD	cone of shards	summoning	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + T
 SPL_CONTROL_TELEPORT	controlled teleport	summoning		FIND_UNIT_ZONE + FIND_UNIT_WORLD + TAR_CHAR + TAR_OBJ+ TAR_ROOM + TAR_SELF_NONO	20	level 35	3		x				once	travel magic
 SPL_EAGLE_CRY	eagle cry	summoning		TAR_IGNORE	20	divine 58	3		x					
 SPL_GATE	gate	summoning		FIND_UNIT_WORLD + TAR_CHAR + TAR_SELF_NONO	20	level 35	3		x				once	travel magic
+SPL_METEOR_SHOWER	meteor shower	summoning	yes	TAR_IGNORE	25	(mana 25)	1			x		3		band guessed from mana: check; moved up by hand (its ability requirement put it too low)
 SPL_MINOR_GATE	minor gate	summoning		FIND_UNIT_WORLD + TAR_CHAR + TAR_SELF_NONO	20	level 30	3		x				once	travel magic
 SPL_SOUL_SHIFT	soul shift	summoning		FIND_UNIT_WORLD + TAR_CHAR	50	(mana 50)	3		x					band guessed from mana: check
 SPL_SUMMON_ANIMAL	summon animal	summoning		FIND_UNIT_WORLD + TAR_CHAR + TAR_SELF_NONO	40	divine 80	3		x				once	a summoned fighter
 SPL_SUMMON_DEMON	summon demon	summoning		TAR_IGNORE	30	level 40	3		x				once	a summoned fighter from an item
 SPL_SUMMON_FIRE	summon fire	summoning		TAR_IGNORE	20	level 30	3		x				once	a summoned fighter
+SPL_TOTAL_RECALL	total recall	summoning		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_SELF_ONLY	30	divine 40	2		x		x	3	once	escape; moved up by hand (its ability requirement put it too low)
 SPL_TRANSPORT	transport	summoning		FIND_UNIT_WORLD + TAR_CHAR + TAR_OBJ + TAR_ROOM	25	level 32	3		x					
+SPL_CALL_LIGHTNING	call lightning	cell	yes	FIND_UNIT_SURRO + TAR_CHAR	30	magic 60	3		x	x	x	4		moved up by hand (its ability requirement put it too low)
 SPL_BLINDING_FLASH	blinding flash	creation		TAR_IGNORE	30	level 45	4		x					
 SPL_GLOW_FUNGUS	glowing fungus	creation		TAR_IGNORE	20	divine 90	4		x	x				
 SPL_LEAF_SHIELD	leaf shield	creation		TAR_IGNORE	40	level 47	4						no	the game allows it on no item
@@ -188,6 +183,10 @@ SPL_STONE_SKIN	stone skin	creation		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF +
 SPL_AID_UNDEAD	aid undead	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF	10	level 60	4	x	x					
 SPL_CAUSE_WOUNDS_4	deathly grasp	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	40	level 60	4		x					
 SPL_DISPEL_EVIL	dispel evil	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	25	divine 90	4		x		x			
+SPL_DISPEL_GOOD	dispel good	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	20	divine 78	3		x		x	4		moved up by hand (its ability requirement put it too low)
+SPL_CURE_WOUNDS_3	heal	divine		FIND_UNIT_SURRO + TAR_CHAR + TAR_AUTO_SELF + TAR_FIGHT_SELF	25	divine 25	1	x	x		x	4		moved up by hand (its ability requirement put it too low)
+SPL_RAISE_DEAD	raise dead	divine		FIND_UNIT_WORLD + TAR_CHAR	60	divine 25	1		x			4	once	brings back the dead: from a scroll?; moved up by hand (its ability requirement put it too low)
+SPL_ENERGY_DRAIN	energy drain	internal	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	12	divine 76	3		x	x	x	4		moved up by hand (its ability requirement put it too low)
 SPL_CAUSE_PANIC	cause panic	mind	yes	TAR_SELF_NONO + FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	20	divine 84	4						no	the game allows it on no item
 SPL_SUMMON_DEVIL	summon devil	summoning		TAR_IGNORE	40	level 50	4		x				once	a summoned fighter from an item
 SPL_SUMMON_LIGHT	summon lightning	summoning		TAR_IGNORE	20	level 60	4		x				once	?
@@ -195,6 +194,7 @@ SPL_TSUNAMI	tsunami	summoning		TAR_IGNORE	50	level 52	4						no	the game allows 
 SPL_BLIZZARD	blizzard	cold	yes	TAR_IGNORE	30	level 70	5			x				
 SPL_RAISE_CHAMPION	raise skeletal champion	creation		FIND_UNIT_SURRO + TAR_OBJ	25	level 75	5		x	x			once	raises
 SPL_FINAL_REST	final rest	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	20	level 80	5		x					
+SPL_RESURRECTION	resurrection	divine		FIND_UNIT_WORLD + TAR_CHAR	80	divine 80	3		x			5	once	brings back the dead: from a scroll?; moved up by hand (its ability requirement put it too low)
 SPL_UNHOLY_WORD_2	unholy touch	divine	yes	FIND_UNIT_SURRO + TAR_CHAR + TAR_FIGHT_VICT	20	level 80	5		x					
 SPL_LAVA_3	brimstone	heat	yes	FIND_UNIT_SURRO + TAR_FIGHT_VICT + TAR_CHAR	30	level 80	5		x	x	x			
 SPL_DISPLACE_MAGIC	displace magic	protection	yes	FIND_UNIT_SURRO + FIND_UNIT_INVEN + FIND_UNIT_EQUIP + TAR_CHAR + TAR_OBJ	25	level 80	5		x	x				
