@@ -373,7 +373,7 @@ extra {}
 'Cinquedea', also called five finger sword or ox tongue sword, because of the
 width of the sword. It has a mark with the writing 'Andrea dei Ferara'."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD,MANIPULATE_WIELD}
-WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
+WEAPON_DEF(WPN_SHORT_SWORD, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 2,0
 weight 9
 cost 16 SILVER_PIECE
 end
@@ -474,7 +474,7 @@ small goblin fool's hat with tiny bells. This should really make you silent
 if you got the need to sneak someday."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD, MANIPULATE_WEAR_HEAD}
 ARMOUR_CLOTHES(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
-DIV_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
+DIV_TRANSFER(BONUS_AVERAGE)  // Xyzzy: +1
 rent 25 IRON_PIECE
 weight 2
 cost 3 IRON_PIECE
