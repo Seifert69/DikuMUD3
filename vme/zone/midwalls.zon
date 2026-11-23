@@ -4718,18 +4718,14 @@ on a shield.  A crown sits above the shield, a sceptre below, and there are
 two crossed rapiers behind the shield.  This plate glows softly."
 flags {UNIT_FL_MAGIC}
 extra {"$identify"}
-"This plate might improve your strength and dexterity a bit.  It will
-hurt your magical ability a little."
+"This plate might improve your strength and dexterity a bit."
 extra {"$improved identify"}
-"This plate will add 2 to your strength and 2 to your dexterity.
-It will remove 2 from magic."
+"This plate will add 2 to your strength and 2 to your dexterity."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 type ITEM_ARMOR
 ARMOUR_PLATE(BONUS_AVERAGE, BONUS_AVERAGE)  // Xyzzy: 0,0
 STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-MAG_TRANSFER(BONUS_BAD)  // Xyzzy: -2
-DIV_TRANSFER(BONUS_BAD)  // Xyzzy: -2
 weight 14
 cost 100 IRON_PIECE
 end

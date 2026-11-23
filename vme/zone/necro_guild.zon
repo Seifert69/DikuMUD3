@@ -1821,10 +1821,9 @@ enchantment keeps them alive!<br/>"
 extra {"$identify"}
 "When worn, this hand will increase the Brain of the user, as well as
 protect him from the forces of Good. Furthermore, it slightly increases his
-control of the Undead Forces. However, it also decreases your Charisma.<br/>"
+control of the Undead Forces.<br/>"
 extra {"$improved identify"}
-"The bonuses are +2 to Brain, +2 to Divine, and +5% to Control Undead. Your
-Charisma falls by one.<br/>"
+"The bonuses are +2 to Brain, +2 to Divine, and +5% to Control Undead.<br/>"
 extra {"$wear_s"}
 "As you near the hand to your wrist, the ghastly fingers grasp it in a
 dead-cold grip!"
@@ -1840,7 +1839,6 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_WRIST}
 MATERIAL_ORGANIC("This item is mummified flesh and bone.")
 BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-CHA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 SPELL_TRANSFER(SPL_CONTROL_UNDEAD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 PROTECTION_FROM_GOOD
 dilcopy guild_restrict@function ({GUILD_NECROMANCER},0,25,"");

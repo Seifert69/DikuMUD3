@@ -650,12 +650,10 @@ extra {"$identify"}
 it to you.<br/>"
 extra {"$improved identify"}
 "This weapon has a craftsmanship and magical modifier of 7. It improves
-the wearer's dexterity and magical power by two, and reduces the power of divine 
-interactions by 1. Skill in short sword will be improved by 5."
+the wearer's dexterity and magical power by two. Skill in short sword will be improved by 5."
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 4

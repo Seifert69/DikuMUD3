@@ -7362,19 +7362,16 @@ Mystics of Midgaard.  There is a strong sense of peace which emanates
 from it, a feeling which you can not quite place."
 extra {"$identify"}
 "Polaris will improve your healing skill, while
-adding to your brain and divinity.
-It will weaken your constitution slightly."
+adding to your brain and divinity."
 extra {"$improved identify"}
 "<pre>
 Heal:            +10%
 Divine:          +2
-Brain:           +1
-Constitution:    -1</pre>"
+Brain:           +1</pre>"
 WEAPON_DEF(WPN_WAR_HAMMER, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,8
 SPELL_TRANSFER(SPL_CURE_WOUNDS_1, BONUS_ARTIFACT)  // Xyzzy: +10
 DIV_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
-CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 14
 dilcopy level_restrict@function(40,0,25,"");
@@ -7396,19 +7393,15 @@ Various glowing gems stud the shaft, a true weapon of devastating
 power."
 extra {"$identify"}
 "This massive battle axe will improve your battle axe skill, while
-adding to your strength and dexterity.  It will weaken your magical
-and cognizant abilities slightly."
+adding to your strength and dexterity."
 extra {"$improved identify"}
 "<pre>
 Battle axe: +10%
-Strength: +1    Dexterity: +2
-Brain:    -1    Magic:     -1</pre>"
+Strength: +1    Dexterity: +2</pre>"
 WEAPON_DEF(WPN_BATTLE_AXE, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 9,9
 WEAPON_TRANSFER(WPN_BATTLE_AXE, BONUS_ARTIFACT)  // Xyzzy: +10
 STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
-MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 21
 dilcopy level_restrict@function(40,0,25,"");
@@ -7427,17 +7420,15 @@ extra {}
 by the ancient Mystics of Midgaard from a fallen star."
 extra {"$identify"}
 "Castor like its twin will improve your short sword skill, while
-adding to your dexterity.  It will weaken your constitution slightly."
+adding to your dexterity."
 extra {"$improved identify"}
 "<pre>
 Short Sword:     +5%
-Dexterity:       +2
-Constitution:    -1</pre>"
+Dexterity:       +2</pre>"
 
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 4,4
 WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_GOOD_PLUS)  // Xyzzy: +5
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 weight 4
 dilcopy level_restrict@function(40,0,25,"");
@@ -7456,18 +7447,16 @@ extra {}
 by the ancient Mystics of Midgaard from a fallen star."
 extra {"$identify"}
 "Pollux like its twin will improve your short sword skill, while
-adding to your dexterity.  It will weaken your constitution slightly."
+adding to your dexterity."
 extra {"$improved identify"}
 "<pre>
 Short Sword:     +5%
-Dexterity:       +2
-Constitution:    -1</pre>"
+Dexterity:       +2</pre>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 
 WEAPON_DEF(WPN_SHORT_SWORD, BONUS_GOOD, BONUS_GOOD)  // Xyzzy: 4,4
 WEAPON_TRANSFER(WPN_SHORT_SWORD, BONUS_GOOD_PLUS)  // Xyzzy: +5
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 weight 4
 dilcopy level_restrict@function(40,0,25,"");
 dilcopy weap_restrict@function(WPN_SHORT_SWORD,40,0,25,"");
@@ -7486,18 +7475,15 @@ it is made of metal forged from a fallen star by the fabled Mystics of
 Midgaard."
 extra {"$identify"}
 "The great sword Sirius will improve your disarm skill, while
-adding to your dexterity and strength.
-It will weaken your magic ability."
+adding to your dexterity and strength."
 extra {"$improved identify"}
 "<pre>
 Disarm:          +10%
 Strength:        +2
-Dexterity:       +1
-Magic:           -2</pre>"
+Dexterity:       +1</pre>"
 weight 22
 STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
-MAG_TRANSFER(BONUS_BAD)  // Xyzzy: -2
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_GREAT_SWORD, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 8,8
 SKILL_TRANSFER(SKI_DISARM, BONUS_GOOD_PLUS)  // Xyzzy: +5
@@ -10777,7 +10763,6 @@ you are trying to climb something. Although rather unwieldy, it is an
 excellent aid in all sorts of climbing."
 manipulate {MANIPULATE_TAKE,MANIPULATE_HOLD}
 SKILL_TRANSFER(SKI_CLIMB, BONUS_GOOD)  // Xyzzy: +2
-SKILL_TRANSFER(SKI_FLEE, BONUS_BAD_MINUS)  // Xyzzy: -3
 weight 8
 cost 10 COPPER_PIECE
 rent 40 IRON_PIECE

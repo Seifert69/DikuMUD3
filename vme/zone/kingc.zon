@@ -2827,7 +2827,7 @@ title "a golden crown"
 descr "A magnificently jewelled golden crown has been left here."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 /* It is not a "real" chain armour, therefore -5%, gold -20% */
-ARMOUR_CHAIN(BONUS_TERRIBLE_MINUS, BONUS_AVERAGE_PLUS)  // Xyzzy: -5,1
+ARMOUR_CHAIN(BONUS_AVERAGE, BONUS_AVERAGE_PLUS)  // Xyzzy: -5,1
 weight 40
 cost 100 GOLD_PIECE
 rent 50 SILVER_PIECE

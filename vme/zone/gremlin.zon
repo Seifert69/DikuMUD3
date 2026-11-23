@@ -2309,7 +2309,6 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_WOOD("This item is made of an unidentified ancient wood.")
 CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
 dilcopy charger@sorcerer();
 dilcopy mana_drain@sorcerer();

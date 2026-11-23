@@ -688,10 +688,9 @@ title "the Staff of Herbs"
 descr "A glowing wooden quarterstaff lies on the ground."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_QUARTERSTAFF, BONUS_EXCELLENT, BONUS_EXCELLENT)  // Xyzzy: 7,7
-SKILL_TRANSFER(SKI_HERBS, BONUS_ARTIFACT)  // Xyzzy: +10
+SKILL_TRANSFER(SKI_HERBS, BONUS_SUPERIOR)  // Xyzzy: +10
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 WEAPON_TRANSFER(WPN_QUARTERSTAFF, BONUS_ARTIFACT)  // Xyzzy: +10
 weight 5
 cost 1 IRON_PIECE
@@ -703,7 +702,7 @@ extra {"$identify"}
 an uncanny knack for finding medicinal plants."
 extra {"$improved identify"}
 "When wielded or held, this staff will increase a Druid's proficiency in
-the herbs skill by 10%."
+the herbs skill by 8%."
 dilcopy guild_restrict@function({GUILD_NYM_DRUID}, 0, 0, "");
 end
 
