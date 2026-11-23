@@ -1198,12 +1198,11 @@ Conjuring abilities. When gripped, it summons a small helper to aid you
 in your fight.<br/>
 Beware, as weak summoners can easily lose control of the charm!<br/>"
 extra {"$improved identify"}
-"It adds 2 to your Mag, 2 to your Bra, and -1 to Str.<br/>"
+"It adds 2 to your Mag and 2 to your Bra.<br/>"
 manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_METAL("This item is made of silver.")
 MAG_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy guild_restrict@function ({GUILD_UDG_MAGE},0,25,"");
 rent 32 IRON_PIECE
 

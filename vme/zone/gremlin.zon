@@ -2037,7 +2037,7 @@ descr
 extra {}
 "This is a simple hand axe.  It appears to be equally well suited for chopping wood and self defense."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_HAND_AXE, BONUS_GOOD, BONUS_AVERAGE)  // Xyzzy: 2,0
+WEAPON_DEF(WPN_HAND_AXE, BONUS_AVERAGE_PLUS, BONUS_AVERAGE)  // Xyzzy: 2,0
 end
 
 barnham_dagger // thief, sorcerer, necromancer, assassin, conjurer
@@ -2096,8 +2096,8 @@ descr
 extra {}
 "This dagger seems as if it once gleamed with a magical glow. Now, it is somewhat tarnished. It appears to be better suited for self defense than carving wood.<br>"
 manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
-WEAPON_DEF(WPN_DAGGER, BONUS_GOOD_PLUS, BONUS_GOOD_PLUS)  // Xyzzy: 5,5
-WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_DEF(WPN_DAGGER, BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 5,5
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_AVERAGE_PLUS)  // Xyzzy: +5
 STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: +1
 dilcopy quests_restrict@function({EXPLORE_ONGOING,EXPLORE_COMPLETE},0,10,""); 
@@ -2149,7 +2149,7 @@ ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_BODY}
 weight 5
 cost 1 COPPER_PIECE
-DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
+DEX_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: 2
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2164,7 +2164,7 @@ ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 4
 cost 1 COPPER_PIECE
-STR_TRANSFER(BONUS_GOOD)  // Xyzzy: 2
+STR_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: 2
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2194,9 +2194,9 @@ ARMOUR_LEATHER(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 2
 cost 1 COPPER_PIECE
-WEAPON_TRANSFER(WPN_DAGGER, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
-WEAPON_TRANSFER(WPN_MACE, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
-WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_DAGGER, BONUS_AVERAGE_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_MACE, BONUS_AVERAGE_PLUS)  // Xyzzy: +5
+WEAPON_TRANSFER(WPN_LONG_SWORD, BONUS_AVERAGE_PLUS)  // Xyzzy: +5
 dilcopy mvlev_restrict@function(40,0,20,"");
 dilcopy resize();
 end
@@ -2211,7 +2211,7 @@ ARMOUR_CHAIN(BONUS_AVERAGE_PLUS, BONUS_AVERAGE_PLUS)  // Xyzzy: 1,1
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HEAD}
 weight 5
 cost 1 COPPER_PIECE
-HIT_TRANSFER(BONUS_GOOD_PLUS)  // Xyzzy: 3
+HIT_TRANSFER(BONUS_AVERAGE_PLUS)  // Xyzzy: 3
 dilcopy mvlev_restrict@function(40,0,20,"");
 end
 
@@ -2309,7 +2309,6 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_NECK}
 MATERIAL_WOOD("This item is made of an unidentified ancient wood.")
 CHA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 BRA_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-STR_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy abi_restrict@function (ABIL_BRA,25,0,0,"bra_rest@skaven");
 dilcopy charger@sorcerer();
 dilcopy mana_drain@sorcerer();

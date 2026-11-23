@@ -1100,7 +1100,6 @@ manipulate {MANIPULATE_TAKE,MANIPULATE_WEAR_HANDS}
 MATERIAL_METAL("This item is made of a strange alloy.")
 STR_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
 HIT_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy guild_restrict@function ({GUILD_BARBARIAN},0,0,"");
 
 dilbegin fnpri(30) recall charge_gauntlet();

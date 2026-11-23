@@ -9340,7 +9340,6 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_FINGER}
 type ITEM_WORN
 MATERIAL_METAL("gold")
 STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: +10
-BRA_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 extra {"$identify"}
 "This ring will grant its wearer an added boost to their strength."
 extra {"$improved identify"}

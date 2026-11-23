@@ -297,8 +297,6 @@ special person."
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_CHEST}
 weight 1
 DEX_TRANSFER(BONUS_GOOD)  // Xyzzy: +2
-MAG_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
-DIV_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 dilcopy quest_restrict@function("Valhalla Times Contest Winner",0,0,"");
 end
 

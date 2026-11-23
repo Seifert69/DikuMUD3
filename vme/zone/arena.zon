@@ -2676,7 +2676,6 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WIELD}
 WEAPON_DEF(WPN_WAR_MATTOCK, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 20,16
 DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: +7
 STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: +5
-CON_TRANSFER(BONUS_AVERAGE_MINUS)  // Xyzzy: -1
 weight 10
 WPN_ARENA
 
@@ -3660,8 +3659,8 @@ extra {}
 "The cloak looks like it has been lying out in the rain too long.  Green
 fungi has started to grow on the surface of the cloak."
 ARMOUR_PLATE(BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: +25,+25
-DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
-STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 10
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 10
+STR_TRANSFER(BONUS_EXCELLENT_PLUS)  // Xyzzy: 10
 extra {"$identify"}
 "A godly cloak"
 extra {"$improved identify"}
@@ -3670,7 +3669,7 @@ DEX bonus +10 STR bonus +10
 Cloak Hides you and helps you with summoning +10 and teleporting +10
 Armor Plate"
 SPELL_TRANSFER(SPL_SUMMONING, BONUS_ARTIFACT)  // Xyzzy: 10
-SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_ARTIFACT)  // Xyzzy: 10
+SPELL_TRANSFER(SPL_CONTROL_TELEPORT, BONUS_SUPERIOR)  // Xyzzy: 10
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_ABOUT}
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
 WPN_ARENA
@@ -3711,7 +3710,7 @@ extra {}
 "It looks as if these leggings have seen better days. The plate is cracked
 and gaping like it is ready to fall apart."
 CHAR_FLAG_TRANSFER(CHAR_HIDE)
-ARMOUR_PLATE(BONUS_JUNK, BONUS_ARTIFACT)  // Xyzzy: -25,+25
+ARMOUR_PLATE(BONUS_SUPERIOR, BONUS_ARTIFACT)  // Xyzzy: -25,+25
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_LEGS}
 weight 15
 CON_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 7
@@ -3792,7 +3791,7 @@ manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_HANDS}
 weight 5
 MAG_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 8
 BRA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 13
-CHA_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 11
+CHA_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 11
 extra {"$identify"}
 "An above average pair of gauntlets that make you more magical."
 extra {"$improved identify"}
@@ -3838,7 +3837,7 @@ extra {}
 manipulate {MANIPULATE_TAKE, MANIPULATE_WEAR_SHIELD}
 SHIELD_DEF(SHIELD_LARGE, BONUS_ARTIFACT, BONUS_ARTIFACT)  // Xyzzy: 25,25
 STR_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 15
-DEX_TRANSFER(BONUS_ARTIFACT)  // Xyzzy: 13
+DEX_TRANSFER(BONUS_SUPERIOR)  // Xyzzy: 13
 weight 50
 bright 5
 extra {"$identify"}
