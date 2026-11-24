@@ -134,7 +134,8 @@ from the room: `look <each name a player would type>` must show your unit. Stand
 
 `set <unit> descr <text>` and `set <unit> add-extra <keyword,keyword>: <text>` (what `look
 <keyword>` shows) are one command each, with `at <room>` in front too: the game opens its text
-editor, and mud.py types the text and closes it.
+editor, and mud.py types the text and closes it. If you ever see "Terminate with a '@'",
+everything you send goes into that text until you send `@`.
 
 What `look <unit>` (and `read`) shows is the extra with no names: `set <unit> add-extra {}: <text>`.
 Use it for what an item, a character or a note looks like, never an extra under the unit's own
@@ -142,13 +143,24 @@ names: the game only looks under the unit's first name, and `add-name` sorts the
 first, so your handle often comes first and such a text shows "You see nothing special." The
 unit may have a `{}` text already (`wstat <unit> extra` shows it as `Names {}`): `{}` replaces it,
 so keep what still fits. Named extras are for its parts: `set card add-extra seal,wax: <text>`
-for `look seal`. If you ever see "Terminate with a '@'",
-everything you send goes into that text until you send `@`. A `$1n` (the player, in `greet`
-lines) only survives the shell in single quotes: `bin/mud.py send 'gmmem hrafn greet say Ah,
-$1n!'`.
+for `look seal`.
 
 Every game command goes through `bin/mud.py send "<command>"` (`send "where"`, not
-`bin/mud.py where`).
+`bin/mud.py where`). A command with a `$` in it (`$1n`, the player in `greet` and lure lines)
+goes in a quoted heredoc, which keeps `$` and apostrophes as they are; in double quotes the
+shell eats `$1n`:
+
+```
+bin/mud.py send - <<'EOF'
+gmmem hrafn greet say Ah, $1n! You're late.
+EOF
+```
+
+Write texts as long as they need to be: the game takes about 480 characters a line, and mud.py
+splits a longer text for you. A brief goes on in `brief+`, a say, emote, tell, message or echo is
+said in several lines (at sentence ends), and the text of `set ... descr` and `add-extra` fills as
+many lines of the editor as it needs; in a heredoc, its line breaks are kept. Only a `greet` line
+and a lure step must fit in one: mud.py refuses a longer one, and nothing is sent.
 
 ### Following a player: gmtrack
 
@@ -199,7 +211,7 @@ player.
    same room gets the same steps, each at their own pace.
 
 The steps stay on the room until you clear them: `gmmem <room> clear lure` at cleanup. Steps
-with `$1n` need single quotes: `bin/mud.py send 'gmmem room lure A voice whispers $1n...'`.
+with `$1n` go in a heredoc (above).
 
 You can't change a player, and you shouldn't try: no stats, no items they carry, no moving
 them. If a player is in trouble the event caused, `restore` them and let your story explain.
