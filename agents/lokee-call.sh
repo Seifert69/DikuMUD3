@@ -23,6 +23,9 @@ case "$(basename "$0")" in
     *) echo "call me as lokee-sonnet, lokee-plan, lokee-opus or lokee-ahead" >&2; exit 2 ;;
 esac
 [ -n "$*" ] || { echo "usage: $(basename "$0") \"<situation or task>\"" >&2; exit 2; }
+# a planner may run while Lokee's loop is reading the mud: its mud.py calls get copies of the
+# replies, and take nothing from the loop (a player's tell to Lokee among them)
+if [ $part = opus ]; then export MUD_ASIDE=1; fi
 
 if [ $part = opus ] && [ "${LOKEE_STATE:-}" != keep ]; then
     # who is online, their levels and where they are, for the planner

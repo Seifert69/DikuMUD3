@@ -8,6 +8,9 @@ usage: mud.py start [--throw]   log in; the session stays in the background
        mud.py send - <<'EOF'    the same, the line read from a quoted heredoc: $ and ' go
                                 through untouched, and a text may run over several lines
        mud.py read [SECONDS]    print what came in since the last call (waits up to SECONDS for some)
+       MUD_ASIDE=1 mud.py send|read ...   the same for a second program beside the agent (a planner):
+                                it gets a copy of what came while it waited, and the agent
+                                still gets all of it
        mud.py status            is the session logged in, and where
        mud.py way PLACE [from ROOM]   the shortest way to PLACE (room@zone, or words of its title)
        mud.py find WORDS...     the objects in the item list whose line has all the words,
@@ -181,6 +184,7 @@ MAP = os.path.expanduser(os.environ.get("MUD_MAP", "~/zones/map.txt"))  # from z
 ITEMS = os.path.expanduser(os.environ.get("MUD_ITEMS", "~/zones/items.txt"))  # from zoneitems.py
 FIND_MAX = 30       # lines find prints at most
 
+ASIDE = bool(os.environ.get("MUD_ASIDE"))  # a second program beside the agent: see the usage
 QUIET = 1.0         # the answer to a command is complete when nothing came for this long
 SEND_WAIT = 10      # but wait no longer than this
 MAX_UNREAD = 100000  # characters of unread output kept
@@ -714,6 +718,7 @@ class Session:
         self.sock = self.conn.sock
         self.connected = True
         self.unread = ""   # not yet given to the agent
+        self.asides = []   # [text] per MUD_ASIDE call waiting: copies of what came meanwhile
         self.login_text = ""  # what was said since the last login step
         self.last_data = 0.0
         self.last_sent = time.time()
@@ -941,6 +946,8 @@ class Session:
         if self.playing and "By what name do they call you" in self.login_text[-len(txt) - 40:]:
             self.playing, self.rebooted = False, True  # the mud rebooted; mplex kept the connection
         self.unread += txt
+        for a in self.asides:
+            a[0] = (a[0] + txt)[-MAX_UNREAD:]
         if len(self.unread) > MAX_UNREAD:
             self.unread = "[... earlier output dropped ...]\n" + self.unread[-MAX_UNREAD:]
 
@@ -967,6 +974,10 @@ class Session:
 
     def take(self):
         t, self.unread = self.unread, ""
+        return self.clean(t)
+
+    def clean(self, t, repeats=True):
+        """Without the noise; repeats=False keeps the repeated lines, and what was seen when."""
         out, now = [], time.time()
         for line in t.split("\n"):
             s = line.strip()
@@ -975,7 +986,7 @@ class Session:
             m = MOVES.match(s)
             if m and self.online is not None and m.group("who") not in self.online:
                 continue
-            every = next((secs for pat, secs in REPEATS if pat.match(s)), None)
+            every = repeats and next((secs for pat, secs in REPEATS if pat.match(s)), None)
             if every:
                 if now - self.seen.get(s, 0) < every:
                     continue
@@ -1052,7 +1063,7 @@ def serve(mud, ready):
     sel = selectors.DefaultSelector()
     sel.register(mud.sock, selectors.EVENT_READ, "mud")
     sel.register(srv, selectors.EVENT_READ, "srv")
-    waiting = []  # [client, op, start, deadline]
+    waiting = []  # [client, op, start, deadline, aside: [text] or None]
     closed_at = None
     stopped = False
     while not stopped:
@@ -1071,13 +1082,17 @@ def serve(mud, ready):
             mud.reflexes["alone"] = now
             mud.add("\n[No players but Papi online: time to go hunting, see Growing stronger.]\n")
         for w in waiting[:]:
-            c, op, start, deadline = w
-            got = mud.unread and mud.last_data >= start
+            c, op, start, deadline, aside = w
+            got = (aside[0] if aside else mud.unread) and mud.last_data >= start
             if now >= deadline or not mud.connected or (got and now - mud.last_data >= QUIET):
-                text = mud.take()
+                text = mud.clean(aside[0], False) if aside else mud.take()
+                if aside:
+                    aside[0] = ""
                 if op == "read" and not text.strip() and now < deadline and mud.connected:
                     continue  # only noise came: keep waiting
                 waiting.remove(w)
+                if aside:
+                    mud.asides.remove(aside)
                 reply(c, mud, text)
                 if op == "stop":
                     stopped = True
@@ -1114,17 +1129,21 @@ def serve(mud, ready):
                     why = "too long for the game's editor (%d bytes); the rest would run as commands" % EDITOR_MAX
                 if why:
                     reply(c, mud, "[Not sent: %s.]\n" % why)
-                elif op == "send" and mud.connected:
-                    if req.get("survey"):
-                        mud.survey_sent = (req["survey"][0], req["survey"][1], now + SEND_WAIT)
-                    for line in lines:
-                        mud.send(line)
-                    waiting.append([c, op, now, now + req.get("wait", SEND_WAIT)])
-                elif op == "read":
-                    waiting.append([c, op, now, now + req.get("wait", 0)])
+                elif op in ("send", "read") and (mud.connected or op == "read"):
+                    # an aside call gets a copy of what comes from now on, and takes nothing from
+                    # the agent's own unread text: the agent's next call still shows all of it
+                    aside = [""] if req.get("aside") else None
+                    if aside:
+                        mud.asides.append(aside)
+                    if op == "send":
+                        if req.get("survey"):
+                            mud.survey_sent = (req["survey"][0], req["survey"][1], now + SEND_WAIT)
+                        for line in lines:
+                            mud.send(line)
+                    waiting.append([c, op, now, now + req.get("wait", SEND_WAIT if op == "send" else 0), aside])
                 elif op == "stop" and mud.connected:
                     mud.send("quit")
-                    waiting.append([c, op, now, now + 5])
+                    waiting.append([c, op, now, now + 5, None])
                 elif op == "status":
                     reply(c, mud, "")
                 else:  # nothing to send to
@@ -1346,10 +1365,10 @@ def main():
         line = sys.stdin.read().strip() if args[1:] == ["-"] else " ".join(args[1:])
         if not line:
             die("send -: nothing on stdin")
-        show(request({"op": "send", "line": line}, SEND_WAIT + 5))
+        show(request({"op": "send", "line": line, "aside": ASIDE}, SEND_WAIT + 5))
     elif op == "read":
         wait = float(args[1]) if len(args) > 1 else 0
-        r = request({"op": "read", "wait": wait}, wait + 5)
+        r = request({"op": "read", "wait": wait, "aside": ASIDE}, wait + 5)
         if r is None and paused():
             time.sleep(max(0, min(wait, paused() - time.time())))
             if paused():
