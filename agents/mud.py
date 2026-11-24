@@ -559,8 +559,9 @@ def gm_refused(line):
     if word == "set" and (len(words) < 3 or words[2].lower() not in GM_SET_FIELDS):
         return "set only %s" % ", ".join(sorted(GM_SET_FIELDS))
     if word == "set" and words[2].lower() == "add-extra" and not EDITOR.match(line):
-        return ("set <unit> add-extra <keyword,keyword>: <text> (the text after a colon, on the same"
-                " line; mud.py types it into the game's editor)")
+        return ("set <unit> add-extra {}: <text> (what looking at it shows), or <keyword,keyword>: <text>"
+                " (a part of it): the text after a colon, on the same line; mud.py types it into the"
+                " game's editor")
     if word == "set" and words[2].lower() == "descr" and len(words) < 4:
         return "set <unit> descr <text> (the text on the same line; mud.py types it into the editor)"
     if word == "load":
