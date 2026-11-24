@@ -411,7 +411,7 @@ with some sort of strange liquid."
 extra {"hanged corpse","corpse","human form","form","human","noose"}
 "The human corpse is mostly bones with the remains of mummified flesh. The
 empty eye sockets stare at you accusingly.<br/>"
-extra {"the boiling pot","pot","flame"}
+extra {"the boiling pot", "boiling pot","pot","flame"}
 "The pot is carved in strange runes. It boils over a peculiar, blue
 flame. As you take a look inside the pot, human eyes stare back at you,
 bobbing up and down in the strange solution.<br/>"
