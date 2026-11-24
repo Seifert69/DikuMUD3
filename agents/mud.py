@@ -603,6 +603,9 @@ def gm_refused(line):
 # The game takes at most 511 bytes of a command and drops the rest without a word (mplex,
 # MAX_INPUT_LENGTH): a longer text is sent in lines that fit, or refused.
 MAX_LINE = 480
+# The editor keeps at most 12288 bytes (MAX_STRING_LENGTH, each line and a <br/>), then closes
+# itself: the lines after would run as commands
+EDITOR_MAX = 12000
 
 # `set <unit> descr <text>` and `set <unit> add-extra <keywords>: <text>`, after `at <room>` too:
 # they open the game's text editor, which takes the lines after and closes on a line ending in @
@@ -611,7 +614,7 @@ EDITOR = re.compile(r"\s*((?:at\s+\S+\s+)?set\s+\S+\s+(?:descr|add-extra\s+([^:]
 # to it with a space), a say, emote, tell, message or echo is said in several lines. A greet line
 # or a lure step can't: two would be two greetings or two steps.
 PIECES = re.compile(r"\s*((?:at\s+\S+\s+)?(?:gmmem\s+\S+\s+(?:brief\+?|told)|force\s+\S+\s+(?:say|emote)"
-                    r"|message\s+\S+|echo|say|emote|tell\s+\S+|reply))\s+(\S.*)", re.I | re.S)
+                    r"|message\s+\S+|echo|say|emote|tell\s+\S+|respond))\s+(\S.*)", re.I | re.S)
 
 
 def fits(line):
@@ -1101,8 +1104,14 @@ def serve(mud, ready):
                 why = op == "send" and refused(mud, req["line"], bool(req.get("survey")))
                 lines = send_lines(mud, req["line"]) if op == "send" and not why else []
                 if any(not fits(ln) for ln in lines):
-                    why = ("too long: the game takes %d characters a line and drops the rest. Make it"
+                    why = ("too long: the game takes %d bytes a line and drops the rest. Make it"
                            " shorter, or several commands" % MAX_LINE)
+                text = lines[1:] if op == "send" and mud.conf.get("role") == "gm" and EDITOR.match(req["line"]) else []
+                if not why and any(ln.endswith("@") for ln in text[:-1]):
+                    why = ("a line of the text would end in @, which closes the game's editor and runs the"
+                           " rest as commands: no @ at the end of a word or a line")
+                if not why and sum(len(ln.encode()) + 5 for ln in text) > EDITOR_MAX:
+                    why = "too long for the game's editor (%d bytes); the rest would run as commands" % EDITOR_MAX
                 if why:
                     reply(c, mud, "[Not sent: %s.]\n" % why)
                 elif op == "send" and mud.connected:
@@ -1335,6 +1344,8 @@ def main():
         start("--throw" in args[1:])
     elif op == "send" and len(args) > 1:
         line = sys.stdin.read().strip() if args[1:] == ["-"] else " ".join(args[1:])
+        if not line:
+            die("send -: nothing on stdin")
         show(request({"op": "send", "line": line}, SEND_WAIT + 5))
     elif op == "read":
         wait = float(args[1]) if len(args) > 1 else 0
