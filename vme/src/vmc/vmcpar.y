@@ -78,6 +78,7 @@ void dumpdil(struct dilprg *prg);
 void syntax(const char *str);
 void fatal(const char *str);
 void warning(const char *str);
+void warn_fill_names(const char **names, const char *what);
 
 /* True when i indexes an array of n; otherwise a fatal error naming the field. */
 static bool index_ok(int i, int n, const char *field)
@@ -337,6 +338,7 @@ exit_field  : TO reference
     }
     | KEYWORD stringlist
     {
+        warn_fill_names((const char **)$2, "keyword");
         ROOM_EXIT(cur, cur_ex)->getOpenName().CopyList((const char **)$2);
     }
     | DIFFICULTY number
@@ -601,6 +603,7 @@ omobile_field   : MANA number
  */
 unit_field  : NAMES stringlist
     {
+        warn_fill_names((const char **)$2, "name");
         cur->getNames().CopyList((const char **)$2);
         /*if (UNIT_NAMES(cur) && UNIT_NAME(cur))
           CAP(UNIT_NAME(cur)); */
@@ -738,6 +741,7 @@ unit_field  : NAMES stringlist
     }
     | EXTRA stringlist intlist STRING
     {
+        warn_fill_names((const char **)$2, "extra name");
         // ms2020 xxx 2
         class extra_descr_data *ed;
         strip_trailing_blanks($4);
@@ -787,6 +791,7 @@ unit_field  : NAMES stringlist
     }
     | EXTRA stringlist STRING
     {
+        warn_fill_names((const char **)$2, "extra name");
         // ms2020 xxx 2
         class extra_descr_data *ed;
         strip_trailing_blanks($3);
@@ -1712,6 +1717,30 @@ void warning_at(int line, const char *str)
 void warning(const char *str)
 {
     warning_at(linenum, str);
+}
+
+/* A name that begins with a fill word ("the guide") can't be typed: what a player types loses its
+ * fill words (a, an, the...) before it is compared with the names, and the name keeps them. The
+ * strings of an internal extra ($rot) are data, not names. */
+void warn_fill_names(const char **names, const char *what)
+{
+    if (names == nullptr || names[0] == nullptr || names[0][0] == '$')
+    {
+        return;
+    }
+
+    for (int i = 0; names[i]; i++)
+    {
+        char word[MAX_STRING_LENGTH];
+        const char *rest = str_next_word(names[i], word);
+
+        if (*rest && fill_word(word))
+        {
+            std::string msg = std::string("The ") + what + " \"" + names[i] + "\" begins with the fill word \"" + word +
+                              "\", which players can't type: leave it out";
+            warning(msg.c_str());
+        }
+    }
 }
 
 /* Read a string from fl, allocate space for it and return it */
