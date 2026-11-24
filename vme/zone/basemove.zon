@@ -3118,7 +3118,7 @@ title "Room Number One"
 descr
 "This is room number one."
 
-extra{"an extra"} {1,2}
+extra{"extra"} {1,2}
 "testing if this is possible."
 
 

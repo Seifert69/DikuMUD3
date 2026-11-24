@@ -246,7 +246,7 @@ end*/
 
 sholdin_tent
 title "Sholdin's Mystical Tent"
-names {"tent","tall tent","sholdin_tent","the tent"}
+names {"tent","tall tent","sholdin_tent"}
 descr
 "This tent seems strangely larger on the inside than on the outside. The
 owner keeps a neat abode - though it is a tent, it looks not to have been

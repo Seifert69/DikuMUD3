@@ -247,7 +247,7 @@ end
 
 			      shack1
 
-names {"a decrepit shack"}
+names {"decrepit shack"}
 title "An Old Shack"
 descr
 "You are in an old decrepit shack.  Bits of the sky show through the
@@ -290,7 +290,7 @@ end
 
 			      evil_shrine
 
-names {"a shrine"}
+names {"shrine"}
 title "Evil Shrine"
 descr
 "Icons of foul deeds and wanton vices adorn the walls.  Malice emanates
@@ -348,7 +348,7 @@ end
 
 			      shack2
 
-names {"a weatherbeaten shack"}
+names {"weatherbeaten shack"}
 title "Weatherbeaten Shack"
 descr
 "The huge rent in the south wall affords the occupants a rather
@@ -561,7 +561,7 @@ end
 
 			      dragon_mouth
 
-names {"dragon mouth","dragon","the dragon","ancalador"}
+names {"dragon mouth","dragon","ancalador"}
 title "In the Dragon's Mouth"
 descr
 "Rows of stone teeth as large as a troll line the walls here.  A tongue

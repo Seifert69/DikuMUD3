@@ -1931,7 +1931,7 @@ end
 
 candy_cane2
 title "a candy cane"
-names {"a candy cane","candy cane","candy","staff"}
+names {"candy cane","candy","staff"}
 descr "A large candy cane is lying here."
 extra {}
 "A huge piece of candy with red and white stripes."
@@ -2145,7 +2145,7 @@ end
 
 diaper
 title "a diaper"
-names {"a diaper","diaper"}
+names {"diaper"}
 descr "A white diaper is lying here."
 extra {}
 "A white diaper."

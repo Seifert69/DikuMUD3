@@ -113,7 +113,7 @@ end
 
                                altar
 
-names {"the altar"}
+names {"altar"}
 title "By the Altar"
 descr
 "   You are standing at the end of the church. Before you is a huge
@@ -131,7 +131,7 @@ end
 
                                tomb
 
-names {"the tomb"}
+names {"tomb"}
 title "The Tomb"
 descr
 "   You get a chilling feeling all over, like you are being watched. A dim
@@ -156,7 +156,7 @@ end
 
                                crypt
 
-names {"the crypt"}
+names {"crypt"}
 title "The Crypt"
 descr
 "   A dim light fills the entire crypt, leaving an eerie atmosphere. In
@@ -183,7 +183,7 @@ end
 
                                catacomb_junc
 
-names {"the catacomb junction"}
+names {"catacomb junction"}
 title "The Catacombs"
 descr
 "   As you walk into the room, you notice a strong smell. The smell burns in
@@ -215,7 +215,7 @@ end
 
                                west_catacomb
 
-names {"the western catacomb"}
+names {"western catacomb"}
 title "The Western Catacomb"
 descr
 "   You are standing in a very damp and dark catacomb. A strong smell of
@@ -235,7 +235,7 @@ end
 
                                up_damp_crypt
 
-names {"the upper damp crypt"}
+names {"upper damp crypt"}
 title "The Upper Damp Crypt"
 descr
 "   Before you there is a long table. On the table there is a storm lamp,
@@ -275,7 +275,7 @@ end
 
                                low_damp_crypt
 
-names {"the lower damp crypt"}
+names {"lower damp crypt"}
 title "The Lower Crypt"
 descr
 "   You are standing in the middle of a circle painted onto the floor.
@@ -301,7 +301,7 @@ end
 
                                dark_corridor
 
-names {"the dark corridor"}
+names {"dark corridor"}
 title "The Dark Corridor"
 descr
 "   You are in a dark corridor, moss is covering the walls. To the east
@@ -324,7 +324,7 @@ end
 
                                night_shade
 
-names {"the necromancers' bar"}
+names {"necromancers' bar"}
 title "The Night Shade"
 descr
 "   You are in a small cosy hall. A lot of tables and chairs are standing
@@ -359,7 +359,7 @@ end
 
                                dark_shaft
 
-names {"the dark shaft"}
+names {"dark shaft"}
 title "The Weapon Master's Quarters"
 descr
 "   You are standing in a dark shaft. Two large tapers are standing in one
@@ -381,7 +381,7 @@ end
 
                                undergr_hall
 
-names {"the underground hall"}
+names {"underground hall"}
 title "The Underground Hall"
 descr
 "   Some rusty chains are hanging from the walls. You are standing in an
@@ -400,7 +400,7 @@ end
 
                                underground_lab
 
-names {"the underground laboratory"}
+names {"underground laboratory"}
 title "The Underground Laboratory"
 descr
 "   A strange sight meets your eyes here. A dim mist moves around in the
@@ -411,7 +411,7 @@ with some sort of strange liquid."
 extra {"hanged corpse","corpse","human form","form","human","noose"}
 "The human corpse is mostly bones with the remains of mummified flesh. The
 empty eye sockets stare at you accusingly.<br/>"
-extra {"the boiling pot", "boiling pot","pot","flame"}
+extra {"boiling pot", "pot","flame"}
 "The pot is carved in strange runes. It boils over a peculiar, blue
 flame. As you take a look inside the pot, human eyes stare back at you,
 bobbing up and down in the strange solution.<br/>"
@@ -424,7 +424,7 @@ end
 
                                damp_shaft
 
-names {"the damp shaft"}
+names {"damp shaft"}
 title "The Skill Teacher's Quarters"
 descr
 "   A small stone ring is in the middle of the room. In the centre of the

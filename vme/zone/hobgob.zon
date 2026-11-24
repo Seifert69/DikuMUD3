@@ -1932,7 +1932,7 @@ extra {"cuffs","cuff"}
 "The cuffs hang in such a way as to suspend the body about a foot off the
 ground."
 
-extra {"the rack","rack"}
+extra {"rack"}
 "The rack is a large wooden object; one's legs and arms are cuffed to
 the ends of the rack and a wheel is turned to stretch the prisoner
 causing extreme pain."
@@ -2007,7 +2007,7 @@ keyword {"trap door","door","grate"} open {EX_OPEN_CLOSE, EX_CLOSED}; end
 
 hole
 title "The Hole"
-names {"hole","the hole"}
+names {"hole"}
 
 descr
 "   The smell down here is extremely bad. The room is very small and most
