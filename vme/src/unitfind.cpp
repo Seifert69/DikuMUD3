@@ -581,8 +581,6 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
         ;
     }
 
-    first_letter = c;
-
     // Eliminate spaces and all "ignore" words (the, an, a)
     while (is_fillword)
     {
@@ -611,6 +609,10 @@ find_unit_general(const unit_data *viewer, const unit_data *ch, char **arg, cons
     {
         return nullptr;
     }
+
+    // the abbreviation search below starts here too, after the fill words: in "look at a sword"
+    // the "a" is no abbreviation of the axe one wields
+    first_letter = c;
 
     str_remspc(c);
 

@@ -705,8 +705,28 @@ as we will have to scan all items in this order :
      11) extra on looker
 */
 
+/* no_fillwords : the text without the fill words at its start ("the altar" is "altar"), as
+ * findunit does for units; the text as it is when it's nothing but fill words. */
+dilbegin string no_fillwords(s : string);
+var
+   rest : string;
+   w    : string;
+code
+{
+   rest := s;
+   :more:
+   s := rest;
+   w := getword(rest);
+   if ((rest != "") and (w in {"a", "an", "at", "from", "in", "on", "of", "the", "to", "with", "into"}))
+      goto more;
+   return (s);
+}
+dilend
+
+
 dilbegin look_at(looker : unitptr, arg:string);
 external
+   string no_fillwords(s : string);
    unitptr find_equip(u:unitptr,s:string);
    search_item(l1 : unitptr, unit1 : unitptr,  string1 : string,truearg:string);
    show_eq(l2 : unitptr, unit2 : unitptr);
@@ -925,9 +945,12 @@ code
       quit;
     }
 
-   arg1 := arg;
+   /* No item here with the name of arg1, so going to search for extras: first by the words
+    * after any fill words ("look at the altar" finds the extra "altar"), then by the whole
+    * text, for an extra whose own name begins with one ("the well"). */
+   arg1 := no_fillwords(arg);
 
-   /* No item here with the name of arg1, so going to search for extras */
+   :extras:
    item := looker.outside;
 
    if ((item.type == UNIT_ST_OBJ) or (item.type == UNIT_ST_NPC))
@@ -971,6 +994,12 @@ code
       sendtext(looker.extra.[arg1].descr + "<br/>", looker);
       send_done ("look", looker, null, null, 2, arg, null, CMD_AUTO_NONE);
       quit;
+   }
+
+   if (arg1 != arg)
+   {
+      arg1 := arg;
+      goto extras;
    }
 
    act("You do not see that here.", A_ALWAYS, looker, null, null, TO_CHAR);

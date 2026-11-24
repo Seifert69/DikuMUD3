@@ -67,6 +67,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T050 | random magic items (randomt): potion, scroll, wand, magic staff, gem and bag made to order |
 | T051 | a zone's bonusband (treasure band) as DIL reads it |
 | T052 | random treasure loaded into corpses (rndCorpseLoad@randomt): bands by home zone and level, the chance, none without worn gear, XP or band |
+| T053 | fill words: look finds an extra after them (`look at the altar`), findunit a unit (its abbreviations for players: tried in the game) |
 
 ## The player tests
 
