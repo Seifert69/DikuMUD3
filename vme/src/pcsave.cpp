@@ -90,13 +90,16 @@ int delete_inventory(const char *pName)
     return TRUE;
 }
 
-/* Return TRUE if deleted */
-int delete_player(const char *pName)
+/* Return TRUE if deleted. by: who or what deletes it, for the log (a deleted player can't be
+   restored from a backup without knowing when, and the file is all there is) */
+int delete_player(const char *pName, const char *by)
 {
     if (!is_player_name(pName) || remove(PlayerFileName(pName).c_str()))
     {
         return FALSE;
     }
+
+    slog(LOG_ALL, 0, "Deleted the player %s: %s.", pName, by);
 
     when_player_deleted(pName);
     delete_inventory(pName);

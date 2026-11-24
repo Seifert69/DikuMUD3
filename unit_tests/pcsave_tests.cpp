@@ -123,8 +123,21 @@ BOOST_FIXTURE_TEST_CASE(directory_is_no_player, PlayerDirFixture)
         BOOST_TEST(find_player_id(buf.data()) == -1);
         BOOST_TEST(!player_exists(name));
         BOOST_TEST(load_player(name) == nullptr);
-        BOOST_TEST(!delete_player(name));
+        BOOST_TEST(!delete_player(name, "a test"));
     }
+}
+
+// The log says who or what deleted a player (the file is gone, and a backup is all that's left);
+// a name with no file deletes nothing, and logs nothing
+BOOST_FIXTURE_TEST_CASE(deleting_is_logged, PlayerDirFixture)
+{
+    player_file("bgone", "x");
+    BOOST_TEST(delete_player("Bgone", "DIL do_delete@commands on Bgone"));
+    BOOST_TEST(!player_exists("Bgone"));
+    BOOST_TEST(logged("Deleted the player Bgone: DIL do_delete@commands on Bgone."));
+
+    BOOST_TEST(!delete_player("Bnever", "a test"));
+    BOOST_TEST(!logged("Deleted the player Bnever: a test."));
 }
 
 // An empty or cut file (a disk that filled up) has no id to read: that stopped the server too

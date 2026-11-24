@@ -20,7 +20,8 @@ cd ../bin && ./intergration_test.sh
 `intergration_test.sh` uses `vme/etc/zonelist.test` for the run and puts the zonelist back
 afterwards. It runs `./vme -w`: time-warped, so waits and heartbeats pass as fast as the CPU
 allows, and a run takes a few minutes. It fails when vme exits with a non-zero code, times out, or
-stops before the lab director is done. Read `vme/bin/vme.log`:
+stops before the lab director is done. It removes `vme/bin/vme.log` first (vme appends to it), so
+the log holds that run only. Read it:
 
 - `test/T030//INFO ...`, `test/T030//ERROR ...`: a test's lines; every ERROR is a failed check.
 - `test/T000//SUCCESS Lab director finished running all tests.`: the run is complete.

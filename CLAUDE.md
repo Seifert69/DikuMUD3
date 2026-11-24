@@ -50,9 +50,10 @@ cd vme/bin
 
 ## Logs
 
-- `vme/bin/vme.log` — the game server log. **Truncated on every boot**, so
-  save it before restarting if you need evidence.
-- `mplex.log` in the directory mplex was started from — mplex connection log.
+- `vme/bin/vme.log` — the game server log. vme appends to it, so it keeps every boot's lines
+  (`rm vme.log` for a clean one); rotate it with logrotate's `copytruncate`. A player file
+  deleted while the game runs is logged with who or what deleted it (`Deleted the player ...`).
+- `mplex.log` in the directory mplex was started from — mplex connection log, appended to as well.
 - `tail -f` both while developing; DIL runtime errors, zone reset problems and
   crashes in scripts all land in `vme.log`.
 

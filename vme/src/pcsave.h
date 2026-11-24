@@ -6,7 +6,7 @@
 
 std::string PlayerFileName(const char *);
 int delete_inventory(const char *pName);
-int delete_player(const char *);
+int delete_player(const char *pName, const char *by);
 int find_player_id(char *pName);
 int player_exists(const char *pName);
 int read_player_id();

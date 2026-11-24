@@ -502,7 +502,7 @@ void ShowUsage(const char *name)
     fprintf(stderr, "  -h: This help screen.\n");
     fprintf(stderr, "  -c: Convert player files\n");
     fprintf(stderr, "  -C: Cleanup  player files (deletes bad or old chars use with care)\n");
-    fprintf(stderr, "  -l: Log file\n");
+    fprintf(stderr, "  -l: Log file, appended to (default ./vme.log)\n");
     fprintf(stderr, "  -L: List player files\n");
     fprintf(stderr, "  -s: Location of the server.cfg file\n");
     fprintf(stderr, "  -p: Persistant containers list\n");

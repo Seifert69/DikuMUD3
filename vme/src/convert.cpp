@@ -604,7 +604,7 @@ void convert_file()
                         if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
-                            delete_player(temp.c_str());
+                            delete_player(temp.c_str(), "convert, a corrupt file");
                             continue;
                         }
 
@@ -708,7 +708,7 @@ void cleanup()
                         if (pc == nullptr)
                         {
                             std::cout << "Corrupt Player ERASED." << std::endl;
-                            delete_player(temp.c_str());
+                            delete_player(temp.c_str(), "convert, a corrupt file");
                             ++players_deleted;
                             continue;
                         }
@@ -717,7 +717,7 @@ void cleanup()
                         {
                             std::cout << "Name in file doesn't match filename." << std::endl;
                             convert_free_unit(pc);
-                            delete_player(temp.c_str());
+                            delete_player(temp.c_str(), "convert, the name in the file isn't the file's");
                             ++players_deleted;
                             continue;
                         }
@@ -727,7 +727,7 @@ void cleanup()
                         if (shall_delete(pc))
                         {
                             convert_free_unit(pc);
-                            delete_player(temp.c_str());
+                            delete_player(temp.c_str(), "convert, inactive");
                             ++players_deleted;
                             continue;
                         }
