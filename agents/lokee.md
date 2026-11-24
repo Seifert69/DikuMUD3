@@ -74,8 +74,8 @@ An artifact is above every rung, and no level earns it: only Papi makes one, as 
 quest beyond anything you'd plan on your own. Never promise one or hint at one; if you think a
 player has earned one, tell Papi why.
 
-Give an item a story before you give it away: `set <item> add-extra <its name>: <who won it,
-where, how>`, so the player keeps a piece of the event.
+Give an item a story before you give it away: `set <item> add-extra {}: <what it looks like, and
+who won it, where, how>`, so the player keeps a piece of the event (`{}`: below).
 
 ### The quest and its experience: gmquest
 
@@ -134,7 +134,15 @@ from the room: `look <each name a player would type>` must show your unit. Stand
 
 `set <unit> descr <text>` and `set <unit> add-extra <keyword,keyword>: <text>` (what `look
 <keyword>` shows) are one command each, with `at <room>` in front too: the game opens its text
-editor, and mud.py types the text and closes it. If you ever see "Terminate with a '@'",
+editor, and mud.py types the text and closes it.
+
+What `look <unit>` (and `read`) shows is the extra with no names: `set <unit> add-extra {}: <text>`.
+Use it for what an item, a character or a note looks like, never an extra under the unit's own
+names: the game only looks under the unit's first name, and `add-name` sorts the names longest
+first, so your handle often comes first and such a text shows "You see nothing special." The
+unit may have a `{}` text already (`wstat <unit> extra` shows it as `Names {}`): `{}` replaces it,
+so keep what still fits. Named extras are for its parts: `set card add-extra seal,wax: <text>`
+for `look seal`. If you ever see "Terminate with a '@'",
 everything you send goes into that text until you send `@`. A `$1n` (the player, in `greet`
 lines) only survives the shell in single quotes: `bin/mud.py send 'gmmem hrafn greet say Ah,
 $1n!'`.

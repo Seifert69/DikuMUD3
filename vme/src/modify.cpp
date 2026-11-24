@@ -426,6 +426,16 @@ void insert_comma_semicolon(extra_descr_data *ed, char *argument)
         insert_comma_ints(&ed->vals, (char *)results[1].c_str());
 }
 
+// add-extra and del-extra: "{}" (as in a zone file), or nothing before the first comma or the
+// semicolon, is the extra with no names. strarg is the first keyword, cut at the first comma.
+static bool is_nameless_extra(const char *strarg)
+{
+    std::string key = strarg;
+    key = key.substr(0, key.find(';'));
+    boost::trim(key);
+    return key.empty() || key == "{}";
+}
+
 /* modification of anything in units */
 void do_set(unit_data *ch, char *argument, const command_info *cmd)
 {
@@ -786,9 +796,19 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
 
         case 4: /* "add-extra" */
             str_next_word_delim(argument, strarg, ',');
-            act("Searching for $2t.", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
+            if (is_nameless_extra(strarg))
+            {
+                // the extra with no names: what looking at the unit shows, whatever its names are
+                send_to_char("Searching for the nameless extra (what looking at it shows).<br/>", ch);
+                ed = unt->getExtraList().find_raw("");
+            }
+            else
+            {
+                act("Searching for $2t.", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
+                ed = unit_find_extra(strarg, unt);
+            }
 
-            if ((ed = unit_find_extra(strarg, unt)) == nullptr)
+            if (ed == nullptr)
             {
                 /* the field was not found. create a new one. */
                 ed = new (extra_descr_data);
@@ -800,7 +820,17 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
                 send_to_char("Modifying existing description.<br/>", ch);
             }
 
-            insert_comma_semicolon(ed, argument);
+            if (is_nameless_extra(strarg))
+            {
+                if (const char *ints = strchr(argument, ';'))
+                {
+                    insert_comma_ints(&ed->vals, (char *)ints + 1);
+                }
+            }
+            else
+            {
+                insert_comma_semicolon(ed, argument);
+            }
             CHAR_DESCRIPTOR(ch)->setEditReference(ed);
             CHAR_DESCRIPTOR(ch)->setPostEditFunctionPtr(edit_extra);
             CHAR_DESCRIPTOR(ch)->setEditing(unt);
@@ -815,6 +845,10 @@ void do_set(unit_data *ch, char *argument, const command_info *cmd)
             }
 
             str_next_word_delim(argument, strarg, ',');
+            if (is_nameless_extra(strarg))
+            {
+                *strarg = '\0';
+            }
             act("Searching for [$2t].", eA_ALWAYS, ch, strarg, cActParameter(), eTO_CHAR);
 
             unt->getExtraList().remove(strarg);

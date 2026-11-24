@@ -41,13 +41,17 @@ logged.
 </p>
 <pre>  &lt;names&gt;;&lt;ints&gt; first a comma separated list of names, optionally a semicolon 
                  followed by a comma separated list of integers.
+  For add-extra and del-extra, {} (as in a zone file) is the extra with no
+  names: what looking at the unit shows, whatever its names are.
 </pre>
 <p>Examples:
 </p>
 <pre> &gt; set rabbit add-name killer rabbit, carrot muncher
  &gt; set papi add-info $professions,barbarian,dark knight,necromancer;1,2,3
  &gt; set room dir-to north temple@udgaard
- &gt; set john del-extra ,     // This example removes the an empty name, i.e. the default description
+ &gt; set card add-extra {}    // what 'look card' shows (the text editor opens)
+ &gt; set card add-extra seal, wax    // what 'look seal' shows
+ &gt; set john del-extra {}    // removes the extra with no names, the default description (a comma works too)
 </pre>
 <p><br />
 Combinations of the above occur.
