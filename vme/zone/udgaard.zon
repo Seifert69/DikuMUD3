@@ -3619,7 +3619,7 @@ end
 /* ----------------------------- HEAL SHOP ------------------ */
 
   heal_shop
-names {"The Herbalist and Talismongers", "supplies"}
+names {"Herbalist and Talismongers", "supplies"}
 title "The Herbalist &amp; Talismonger stand"
 descr
 "The air in the northwest corner of the Udgaard Market smells faintly of herbs,
@@ -11009,7 +11009,7 @@ end
 
 
 fixer
-names {"the fixer", "fixer", "man"}
+names {"fixer", "man"}
 title "the fixer"
 descr "A crafty looking man is lounging here."
 extra {}

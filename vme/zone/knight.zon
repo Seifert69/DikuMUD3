@@ -201,7 +201,7 @@ north to room_3;
 end
 
 room_6
-names {"The Armory"}
+names {"Armory"}
 title "The Dark Knights Armory"
 descr
 "     You have entered the massive armory of the Dark Knights.  The east

@@ -296,7 +296,7 @@ end
 
                                 work_shop
 
-names {"the work shop"}
+names {"work shop"}
 title "The Thieves' Work Shop"
 gmap(312,187)
 descr
@@ -321,7 +321,7 @@ end
 
                                 study
 
-names {"the study"}
+names {"study"}
 title "Guildmaster's Study"
 gmap(312,262)
 descr

@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 52  // T010, T009, ...
+#define TEST_MAXIMUM 53  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,68 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T053 =====================
+
+// Fill words (a, an, the...) at the start of what a player types. look finds an extra after them
+// (no_fillwords@baselook: "look at the altar" finds the extra "altar"), and findunit finds a unit
+// after them. Its last try, the names a player abbreviates, starts after them too ("look at a zzz"
+// is no abbreviation of the axe one wields), but runs only for a player: tried in the game.
+dilbegin T053(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   string no_fillwords@baselook(s : string);
+var
+   npc : unitptr;
+   u : unitptr;
+   sl : stringlist;
+   i : integer;
+   s : string;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+
+   // what was typed, what look searches the extras for
+   sl := {"the altar", "altar",   "at the stone altar", "stone altar",   "altar", "altar",
+          "the", "the",   "the the", "the",   "An Altar", "Altar",   "theatre", "theatre"};
+   i := 0;
+   while (i < length(sl))
+   {
+      s := no_fillwords@baselook(sl.[i]);
+      if (strcmp(s, sl.[i + 1]) != 0)
+         bad := bad + " '" + sl.[i] + "' gave '" + s + "', not '" + sl.[i + 1] + "';";
+      i := i + 2;
+   }
+
+   npc := load("t052npc@test");
+   link(npc, self);
+   u := load("t049staff@test");
+   sl := {"axe"};
+   u.names := sl;
+   link(u, npc);
+
+   s := "a zzz";
+   if (findunit(npc, s, FIND_UNIT_INVEN, null) != null)
+      bad := bad + " 'a zzz' found the axe;";
+   s := "the zzz";
+   if (findunit(npc, s, FIND_UNIT_INVEN, null) != null)
+      bad := bad + " 'the zzz' found the axe;";
+   s := "an axe";
+   if (findunit(npc, s, FIND_UNIT_INVEN, null) != u)
+      bad := bad + " 'an axe' didn't find the axe;";
+   destroy(npc);
+
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T053 fill words:" + bad);
+   else
+      logtest(tstno, LOGT_SUCCESS, "T053 fill words: look finds extras after them, findunit units");
+
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 

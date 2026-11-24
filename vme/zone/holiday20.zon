@@ -1502,7 +1502,7 @@ weight 2
 
 choco_heart
 title "a huge <div class='cpn'>chocolate </div><div class='cpr'>heart</div>"
-names {"a chocolate heart","chocolate heart","candy heart","chocolate","heart","staff"}
+names {"chocolate heart","candy heart","chocolate","heart","staff"}
 descr "A large chocolate reindeer-shaped heart is lying here."
 extra {}
 "A large chocolate reindeer-shaped heart."

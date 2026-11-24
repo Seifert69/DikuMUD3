@@ -376,7 +376,7 @@ end
 
                                yard
 
-names {"the yard"}
+names {"yard"}
 title "The Yard"
 gmap(263,308)
 descr
@@ -397,7 +397,7 @@ end
 
                                barn
 
-names {"the barn"}
+names {"barn"}
 title "In a Large Barn"
 gmap(263,383)
 descr
@@ -420,7 +420,7 @@ end
 
 
                                smithy
-names {"the smithy"}
+names {"smithy"}
 title "The Smithy of the Fighters Guild"
 gmap(188,308)
 descr
@@ -440,7 +440,7 @@ end
 
 
                                bridge
-names {"the bridge"}
+names {"bridge"}
 title "The Bridge"
 gmap(338,308)
 descr
@@ -462,7 +462,7 @@ end
 
 
                                tower
-names {"the tower"}
+names {"tower"}
 title "The Tower of the Fighters Guild"
 gmap(338,233)
 descr
@@ -484,7 +484,7 @@ end
 
                                laboratory
 
-names {"the laboratory"}
+names {"laboratory"}
 title "The Metallurgic Laboratory"
 gmap(338,157)
 descr
@@ -529,7 +529,7 @@ end
 
                                outlook
 
-names {"the tower outlook"}
+names {"tower outlook"}
 title "The Tower Outlook"
 gmap(338,233)
 descr
@@ -570,7 +570,7 @@ you be deemed worthy.<br/>
 end
 
                                bar
-names {"the fighters bar"}
+names {"fighters bar"}
 title "At `The Broken Shield'"
 gmap(413,233)
 descr

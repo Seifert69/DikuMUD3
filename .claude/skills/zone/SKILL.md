@@ -85,6 +85,11 @@ end
 - `names` lists: no name may start with an earlier one (case-insensitive), so put the longer
   first: `{"keep guard", "guard"}`, never `{"guard", "keep guard"}`. No `'s` at the end, no
   name starting with `self`. The same goes for `extra` names and door keywords.
+- No name begins with a fill word (a, an, at, from, in, on, of, the, to, with, into): what a
+  player types loses them before it is compared, so `"the guide"` can never be typed. Write
+  `{"guide"}`; the article belongs in the `title`. An object's first name and the `extra` with
+  its look text must stay the same. vmc warns about such a name (`-l`: an error); an internal
+  extra (`$rot`) is left alone.
 
 ## DIL on units
 
