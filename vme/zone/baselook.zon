@@ -29,14 +29,37 @@ creators {"whistler", "azzurathe"}
 make use of the look dils already made.
 Examine Dils:
                               do_examine
+                              unit_descr
                               get_aura
                               liq_content
                               exam_in
 */
 
+/* What looking at a unit shows: its nameless extra, or the extra named like the unit. Any of the
+   unit's names will do, not only the first: set add-name sorts the names longest first, so the
+   first is often not the one the extra was given. "" when there is none. */
+dilbegin string unit_descr(u : unitptr);
+var
+  i : integer;
+code
+{
+   if (u.extra.[""])
+      return (u.extra.[""].descr);
+   i := 0;
+   while (i < length(u.names))
+   {
+      if (u.extra.[u.names.[i]])
+         return (u.extra.[u.names.[i]].descr);
+      i := i + 1;
+   }
+   return ("");
+}
+dilend
+
 dilbegin do_examine(arg : string);
 external
     string   get_aura(u1 : unitptr);
+    string   unit_descr(u1 : unitptr);
              exam_in (u1 : unitptr);
              liq_content(u1 : unitptr);
              show_eq(u1 : unitptr, u2 : unitptr);
@@ -46,6 +69,7 @@ var
   temp       :  string;
   aura       :  string;
   buff       :  string;
+  dtext      :  string;
 
 code
 {
@@ -87,10 +111,9 @@ code
 
    sendtext(aura, self);
 
-   if (item.extra.[""])
-      temp := temp + item.extra.[""].descr + "<br/>";
-   else if (item.extra.[item.names.[0]])
-      temp := temp + item.extra.[item.names.[0]].descr + "<br/>";
+   dtext := unit_descr(item);
+   if (dtext != "")
+      temp := temp + dtext + "<br/>";
    else
    {
       if ((item.type == UNIT_ST_PC) and (item.level < IMMORTAL_LEVEL))
@@ -711,12 +734,14 @@ external
    search_item(l1 : unitptr, unit1 : unitptr,  string1 : string,truearg:string);
    show_eq(l2 : unitptr, unit2 : unitptr);
    look_in(looker : unitptr, s:string);
+   string unit_descr(u1 : unitptr);
 var
     item     :  unitptr;
     pc       :  unitptr;
     temp     :  string;
     arg1     :  string;    /* placeholder to keep arg intact */
     temp1    :  string;
+    dtext    :  string;
 
 code
 {
@@ -773,10 +798,9 @@ code
             quit;
          }
 
-         if (item.extra.[""]) /* this is for the extra{} on the item */
-            temp := "<div class='obj_descr'>" + item.extra.[""].descr;
-         else if (item.extra.[item.names.[0]])    /* if not above, then extra{"item's name"}  */
-            temp := "<div class='obj_descr'>" + item.extra.[item.names.[0]].descr;
+         dtext := unit_descr(item);
+         if (dtext != "")
+            temp := "<div class='obj_descr'>" + dtext;
          else
             temp := "<div class='obj_descr'>You see nothing special.";   /* NOthing to describe for item */
 
@@ -817,10 +841,9 @@ code
       else
          temp := "<div class='obj_descr'>";
 
-      if (item.extra.[""])
-         temp := temp + item.extra.[""].descr + "";
-      else if (item.extra.[item.names.[0]])
-         temp := temp + item.extra.[item.names.[0]].descr + "";
+      dtext := unit_descr(item);
+      if (dtext != "")
+         temp := temp + dtext;
       else
       {
          if ((item.type == UNIT_ST_PC) and (item.level < IMMORTAL_LEVEL))

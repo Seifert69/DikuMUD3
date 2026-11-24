@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 52  // T010, T009, ...
+#define TEST_MAXIMUM 53  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,57 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T053 =====================
+
+// What looking at a unit shows (unit_descr@baselook): the extra named like the unit, under any
+// of its names, not only the first (set add-name sorts the names longest first, so a card named
+// "paper", then given "card" and "blackseal", has "blackseal" first and its extra under "card").
+// The nameless extra comes before them; an extra only under a name the unit hasn't is no look text.
+dilbegin T053(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+   string unit_descr@baselook(u1 : unitptr);
+var
+   u : unitptr;
+   s : string;
+   bad : string;
+code
+{
+   u := load("t045rune@test");
+   if (u == null)
+   {
+      logtest(tstno, LOGT_ERROR, "T053 no t045rune");
+      goto done;
+   }
+   s := unit_descr@baselook(u);
+   if (s != "")
+      bad := bad + " no extra: '" + s + "';";
+   addextra(u.extra, {"$t053data"}, "data");
+   addextra(u.extra, {"stone"}, "about the stone");
+   s := unit_descr@baselook(u);
+   if (s != "")
+      bad := bad + " only other names: '" + s + "';";
+   u.names := {"blackseal", "rune", "card"};
+   addextra(u.extra, {"paper", "card"}, "In a neat black hand");
+   s := unit_descr@baselook(u);
+   if (s != "In a neat black hand")
+      bad := bad + " under the third name: '" + s + "';";
+   addextra(u.extra, {""}, "A plain rune");
+   s := unit_descr@baselook(u);
+   if (s != "A plain rune")
+      bad := bad + " nameless first: '" + s + "';";
+   destroy(u);
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T053 unit_descr:" + bad);
+   else
+      logtest(tstno, LOGT_SUCCESS, "T053 unit_descr finds the extra under any of the unit's names");
+:done:
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
