@@ -229,7 +229,8 @@ int ParseArg(int argc, char *argv[], arg_type *arg)
         exit(1);
     }
 
-    g_log_file_fd = fopen(log_name, "w");
+    // Appended to, as vme does: a restart keeps what came before, and copytruncate leaves no zeros
+    g_log_file_fd = fopen(log_name, "a");
 
     if (!g_log_file_fd)
     {

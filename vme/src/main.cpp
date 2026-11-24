@@ -171,10 +171,12 @@ int main(int argc, char **argv)
         }
 
         // -c, -C, -L and -j may be started in the bin directory of a running server: without -l they
-        // log to stderr instead of truncating the server's ./vme.log.
+        // log to stderr instead of into the server's ./vme.log.
+        // Appended to, never emptied: a boot keeps what came before it (a restart is often what
+        // someone needs the log for), and logrotate's copytruncate leaves no gap of zero bytes.
         if (!(g_player_convert || g_dump_json) || log_given)
         {
-            g_log_file_fd = freopen(log_name, "w", stderr);
+            g_log_file_fd = freopen(log_name, "a", stderr);
             if (!g_log_file_fd)
             {
                 fprintf(stderr, "Error in opening the log:  '%s'", log_name);

@@ -421,6 +421,13 @@ void dilfi_delpc(dilprg *p)
         {
             if (v1->val.ptr)
             {
+                // Before the player is extracted: a player deleting themselves runs it
+                unit_data *owner = p->owner;
+                const std::string by = diku::format_to_str("DIL %s@%s on %s",
+                                                           p->frame[0].tmpl->prgname,
+                                                           p->frame[0].tmpl->zone->getName(),
+                                                           owner->isPC() ? owner->getNames().Name() : owner->getFileIndexSymName());
+
                 if ((d = find_descriptor(((char *)v1->val.ptr), nullptr)))
                 {
                     extract_unit(d->getCharacter());
@@ -437,7 +444,7 @@ void dilfi_delpc(dilprg *p)
                     }
                 }
 
-                delete_player((char *)v1->val.ptr);
+                delete_player((char *)v1->val.ptr, by.c_str());
             }
         }
     }

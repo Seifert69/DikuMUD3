@@ -3,7 +3,8 @@ set -x
 TIMEOUT=300s
 # vme -j <zone>: the zone as JSON lines after the boot, with every program and its arguments.
 # It boots the game's own zonelist (the whole public world): zonelist.test ends before haon_dor.
-rm -f dump_haon_dor.jsonl
+# vme appends to its log: each run starts with none, so that it reads only its own lines
+rm -f dump_haon_dor.jsonl vme_dump.log
 if ! timeout --signal=KILL ${TIMEOUT} ./vme -l vme_dump.log -j haon_dor; then
   cat vme_dump.log
   exit 1
@@ -63,6 +64,7 @@ if ! cmp -s ../etc/zonelist ../etc/zonelist.test; then
   trap 'mv ../etc/zonelist.saved ../etc/zonelist' EXIT
 fi
 cp ../etc/zonelist.test ../etc/zonelist
+rm -f vme.log
 # -w: time-warped, the tests' waits pass without waiting for the clock
 timeout --signal=KILL ${TIMEOUT} ./vme -w
 result=$?
