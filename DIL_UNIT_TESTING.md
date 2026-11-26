@@ -69,7 +69,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T051 | a zone's bonusband (treasure band) as DIL reads it |
 | T052 | random treasure loaded into corpses (rndCorpseLoad@randomt): bands by home zone and level, the chance, none without worn gear, XP or band |
 | T053 | fill words: look finds an extra after them (`look at the altar`), findunit a unit (its abbreviations for players: tried in the game) |
-| T054 | random weapons get as many enchantments as random armour, (level + 1) / 2: artifacts made to order carry about 4, not 6 to 8 |
+| T054 | random treasure rolls each property below its class (rndSteps@randomt): the curve; artifact weapons' quality and main material from one roll, 0-4 enchantments, the level of their best roll; artifact staffs' power |
 
 ## The player tests
 
