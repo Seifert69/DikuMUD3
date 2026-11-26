@@ -13,6 +13,7 @@ add_executable(vme_unit_tests
         color_type_tests.cpp
         combat_packet_tests.cpp
         comm_act_tests.cpp
+        common_bonus_tests.cpp
         common_xp_tests.cpp
         eliza_tests.cpp
         files_tests.cpp
