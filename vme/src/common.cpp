@@ -34,58 +34,46 @@ shi_info_type g_shi_info[] = {
 	{35}  /* SHIELD_TOWER  */
 };
 
-/// Translate BONUS_XXX for weapons, shields, armors, skills -> ]-20..+20[
-int bonus_map_a(int bonus)
+/// A whole number for BONUS_XXX bonus between the band below's most (not included) and its own
+/// band's most, top[] the most of bands 0..7; every number as likely, so an item keeps its band and
+/// varies within it (BONUS_ARTIFACT on the quality scale is 18 to 20). Minus bands mirror it, 0 is 0.
+static int bonus_in_band(const int top[8], int bonus, const char *scale)
 {
-    static int map[15] = {-20, -17, -14, -11, -8, -5, -2, 0, 2, 5, 8, 11, 14, 17, 20};
-
     if (bonus > 7)
     {
-        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
+        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d) on the %s scale", bonus, scale);
         bonus = 7;
     }
 
     if (bonus < -7)
     {
-        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
+        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d) on the %s scale", bonus, scale);
         bonus = -7;
     }
 
-    int b = map[bonus + 7];
-
-    if (b != 0)
+    if (bonus == 0)
     {
-        b += 2 * (open100() / 100);
+        return 0;
     }
 
-    return b;
+    const int band = bonus < 0 ? -bonus : bonus;
+    const int v = number(top[band - 1] + 1, top[band]);
+
+    return bonus < 0 ? -v : v;
 }
 
-/// Translate BONUS_XXX for abilities -> ]-10..+10[
+/// Translate BONUS_XXX for weapons, shields and armour (quality, magic) -> [-20..+20]
+int bonus_map_a(int bonus)
+{
+    static const int top[8] = {0, 2, 5, 8, 11, 14, 17, 20};
+    return bonus_in_band(top, bonus, "quality");
+}
+
+/// Translate BONUS_XXX for ability, skill, spell and weapon transfers -> [-10..+10]
 int bonus_map_b(int bonus)
 {
-    static int map[15] = {-10, -8, -6, -5, -4, -2, -1, 0, 1, 2, 4, 5, 6, 8, 10};
-
-    if (bonus > 7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too high (%d)", bonus);
-        bonus = 7;
-    }
-
-    if (bonus < -7)
-    {
-        slog(LOG_ALL, 0, "ERROR: Bonus too low (%d)", bonus);
-        bonus = -7;
-    }
-
-    int b = map[bonus + 7];
-
-    if (b != 0)
-    {
-        b += open100() / 100;
-    }
-
-    return b;
+    static const int top[8] = {0, 1, 2, 4, 5, 6, 8, 10};
+    return bonus_in_band(top, bonus, "transfer");
 }
 
 /**
