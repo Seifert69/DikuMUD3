@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 53  // T010, T009, ...
+#define TEST_MAXIMUM 54  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,103 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T054 =====================
+
+// A random weapon gets as many enchantments as random armour, (level + 1) / 2 (encWpn@randomt):
+// an artifact made to order gets 3 or 4, not the 6 it got before, which made random weapons
+// stronger than the named items of their band. Each enchantment writes a line to $identify.
+dilbegin T054(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   u : unitptr;
+   box : unitptr;
+   exd : extraptr;
+   i : integer;
+   n : integer;
+   nlines : integer;
+   nmost : integer;
+   ntotal : integer;
+   nweap : integer;
+   scounts : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   box := load("pbox@test");
+   link(box, self);
+   secure(box, lost);
+   i := 0;
+   while (i < 12)
+   {
+      u := load("treasure@randomt");
+      link(u, box);
+      dilcopy("Treasure@randomt(7,weapon)", u);
+      i := i + 1;
+   }
+
+   // They are made on their first tick: until every one has a title
+   i := 0;
+   n := 1;
+   while ((n > 0) and (i < 60))
+   {
+      pause;
+      i := i + 1;
+      n := 0;
+      u := box.inside;
+      while (u != null)
+      {
+         if (u.title == "")
+            n := n + 1;
+         u := u.next;
+      }
+   }
+   if (n > 0)
+   {
+      logtest(tstno, LOGT_ERROR, "T054 " + itoa(n) + " random weapons unmade after 60 seconds");
+      goto done;
+   }
+
+   u := box.inside;
+   while (u != null)
+   {
+      if (u.objecttype == ITEM_WEAPON)
+      {
+         nweap := nweap + 1;
+         exd := "$identify" in u.extra;
+         nlines := 0;
+         if (exd != null)
+            nlines := length(split(exd.descr, "<br/>")) - 1;
+         scounts := scounts + " " + itoa(nlines);
+         ntotal := ntotal + nlines;
+         if (nlines > nmost)
+            nmost := nlines;
+      }
+      u := u.next;
+   }
+   logtest(tstno, LOGT_INFO, "T054 enchantment lines of " + itoa(nweap) + " artifact weapons:" + scounts);
+   if (nweap < 12)
+      logtest(tstno, LOGT_ERROR, "T054 only " + itoa(nweap) + " of 12 random weapons made");
+   else if (ntotal > 12 * 5)
+      logtest(tstno, LOGT_ERROR, "T054 artifact random weapons average more than 5 enchantments:" + scounts);
+   else
+      logtest(tstno, LOGT_SUCCESS, "T054 artifact random weapons have about as many enchantments as armour:" + scounts);
+   goto done;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T054 the box of random weapons was lost");
+
+:done:
+   if (box != null)
+   {
+      unsecure(box);
+      destroy(box);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
