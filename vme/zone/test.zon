@@ -88,12 +88,15 @@ dilend
 
 // ==================== T054 =====================
 
-// A random weapon gets as many enchantments as random armour, (level + 1) / 2 (encWpn@randomt):
-// an artifact made to order gets 3 or 4, not the 6 it got before, which made random weapons
-// stronger than the named items of their band. Each enchantment writes a line to $identify.
+// Random treasure rolls every property below the top of its class (rndSteps@randomt), as most
+// named items of a band are below its best: the steps follow the curve, an artifact weapon made
+// to order has its quality and its main material from one roll, mostly below the top, 0-4
+// enchantments with about 2 on average (6 to 8 before #657, about 4 after it), and asks for the
+// level of its best roll; an artifact staff's power is 100 only now and then.
 dilbegin T054(tstno : integer);
 external
    logtest(no : integer, ltype : integer, msg : string);
+   integer rndSteps@randomt(band : integer);
 var
    u : unitptr;
    box : unitptr;
@@ -101,22 +104,56 @@ var
    i : integer;
    n : integer;
    nlines : integer;
-   nmost : integer;
    ntotal : integer;
    nweap : integer;
-   scounts : string;
+   ntop : integer;
+   nlow : integer;
+   nstaff : integer;
+   n100 : integer;
+   il : intlist;
+   bad : string;
 code
 {
    heartbeat := PULSE_SEC * 1;
+
+   // The curve: class 7 is at the top 8% and three below 42%; class 5 at the top 5%, two below 70%
+   il := {0, 0, 0, 0, 0};
+   i := 0;
+   while (i < 2000)
+   {
+      n := rndSteps@randomt(7);
+      il.[n] := il.[n] + 1;
+      i := i + 1;
+      if (i == (i / 100) * 100)
+         pause; // a DIL program may only run so long between waits
+   }
+   if ((il.[0] < 120) or (il.[0] > 200) or (il.[3] < 760) or (il.[3] > 920))
+      bad := bad + " class 7 steps " + itoa(il.[0]) + "/" + itoa(il.[1]) + "/" + itoa(il.[2]) + "/" + itoa(il.[3]) + "/" + itoa(il.[4]);
+   il := {0, 0, 0, 0, 0};
+   i := 0;
+   while (i < 2000)
+   {
+      n := rndSteps@randomt(5);
+      il.[n] := il.[n] + 1;
+      i := i + 1;
+      if (i == (i / 100) * 100)
+         pause; // a DIL program may only run so long between waits
+   }
+   if ((il.[0] < 60) or (il.[0] > 140) or (il.[2] < 1320) or (il.[2] > 1480) or (il.[4] > 0))
+      bad := bad + " class 5 steps " + itoa(il.[0]) + "/" + itoa(il.[1]) + "/" + itoa(il.[2]) + "/" + itoa(il.[3]) + "/" + itoa(il.[4]);
+
    box := load("pbox@test");
    link(box, self);
    secure(box, lost);
    i := 0;
-   while (i < 12)
+   while (i < 24)
    {
       u := load("treasure@randomt");
       link(u, box);
       dilcopy("Treasure@randomt(7,weapon)", u);
+      u := load("treasure@randomt");
+      link(u, box);
+      dilcopy("Treasure@randomt(7,magic staff)", u);
       i := i + 1;
    }
 
@@ -138,7 +175,7 @@ code
    }
    if (n > 0)
    {
-      logtest(tstno, LOGT_ERROR, "T054 " + itoa(n) + " random weapons unmade after 60 seconds");
+      logtest(tstno, LOGT_ERROR, "T054 " + itoa(n) + " random items unmade after 60 seconds");
       goto done;
    }
 
@@ -148,28 +185,56 @@ code
       if (u.objecttype == ITEM_WEAPON)
       {
          nweap := nweap + 1;
+         exd := "" in u.extra; // the rolls (treasureroll@randomt)
+         if (exd.vals.[0] == BONUS_ARTIFACT)
+            ntop := ntop + 1;
+         if (exd.vals.[1] != exd.vals.[0])
+            bad := bad + " " + u.title + " material " + itoa(exd.vals.[1]) + " not its quality " + itoa(exd.vals.[0]);
+         if ((exd.vals.[9] < exd.vals.[0]) or (exd.vals.[9] > BONUS_ARTIFACT))
+            bad := bad + " " + u.title + " best roll " + itoa(exd.vals.[9]);
+         if (exd.vals.[9] < BONUS_ARTIFACT)
+            nlow := nlow + 1;
+         // a line for the quality, then one for each enchantment
          exd := "$identify" in u.extra;
          nlines := 0;
          if (exd != null)
-            nlines := length(split(exd.descr, "<br/>")) - 1;
-         scounts := scounts + " " + itoa(nlines);
+            nlines := length(split(exd.descr, "<br/>")) - 2;
+         if (nlines > 4)
+            bad := bad + " " + u.title + " " + itoa(nlines) + " enchantments";
          ntotal := ntotal + nlines;
-         if (nlines > nmost)
-            nmost := nlines;
+      }
+      else if (u.objecttype == ITEM_STAFF)
+      {
+         nstaff := nstaff + 1;
+         if (u.value[0] == 100)
+            n100 := n100 + 1;
       }
       u := u.next;
    }
-   logtest(tstno, LOGT_INFO, "T054 enchantment lines of " + itoa(nweap) + " artifact weapons:" + scounts);
-   if (nweap < 12)
-      logtest(tstno, LOGT_ERROR, "T054 only " + itoa(nweap) + " of 12 random weapons made");
-   else if (ntotal > 12 * 5)
-      logtest(tstno, LOGT_ERROR, "T054 artifact random weapons average more than 5 enchantments:" + scounts);
+   logtest(tstno, LOGT_INFO, "T054 artifact weapons: " + itoa(ntop) + " of " + itoa(nweap) + " at the top quality, " +
+           itoa(nlow) + " ask for less than artifact, " + itoa(ntotal) + " enchantments; staffs at power 100: " +
+           itoa(n100) + " of " + itoa(nstaff));
+   if (nweap < 24)
+      bad := bad + " only " + itoa(nweap) + " of 24 weapons";
+   if (nstaff < 24)
+      bad := bad + " only " + itoa(nstaff) + " of 24 staffs";
+   if (ntop > 8)
+      bad := bad + " " + itoa(ntop) + " of 24 artifact weapons at the top quality";
+   if (nlow < 8)
+      bad := bad + " only " + itoa(nlow) + " of 24 artifact weapons rolled below artifact";
+   if ((ntotal > 24 * 3) or (ntotal < 24))
+      bad := bad + " " + itoa(ntotal) + " enchantments on 24 artifact weapons (about 44 expected)";
+   if (n100 > 8)
+      bad := bad + " " + itoa(n100) + " of 24 artifact staffs at power 100";
+
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T054 random treasure rolls:" + bad);
    else
-      logtest(tstno, LOGT_SUCCESS, "T054 artifact random weapons have about as many enchantments as armour:" + scounts);
+      logtest(tstno, LOGT_SUCCESS, "T054 random treasure rolls each property below its class");
    goto done;
 
 :lost:
-   logtest(tstno, LOGT_ERROR, "T054 the box of random weapons was lost");
+   logtest(tstno, LOGT_ERROR, "T054 the box of random treasure was lost");
 
 :done:
    if (box != null)
@@ -404,8 +469,8 @@ dilend
 // ==================== T050 =====================
 
 // Random magic items, gems and bags (randomt): Treasure made to order, as gmtreasure makes it,
-// at good (2): a potion and a scroll of power 50 with a spell, a wand and a magic staff with
-// charges, the staff's spell an attack or one good for its target (do_use@skills sends that to
+// at good (2): a potion and a scroll of power 30 to 50 (rolled up to the class) with a spell, a
+// wand and a magic staff with charges, the staff's spell an attack or one good for its target (do_use@skills sends that to
 // the group), a gem with a worth, a bag that holds something; none keeps the gear's mark.
 dilbegin T050(tstno : integer);
 external
@@ -472,12 +537,12 @@ code
          bad := bad + " " + sl.[i] + ": still marked;";
       else if (i <= 1) // potion, scroll
       {
-         if ((u.value[0] != 50) or (u.value[1] == SPL_NONE))
+         if ((u.value[0] < 30) or (u.value[0] > 50) or (u.value[1] == SPL_NONE))
             bad := bad + " " + sl.[i] + ": power " + itoa(u.value[0]) + ", spell " + itoa(u.value[1]) + ";";
       }
       else if (i <= 3) // wand, staff
       {
-         if ((u.value[0] != 50) or (u.value[1] < 2) or (u.value[4] != u.value[1]) or (u.value[2] == SPL_NONE))
+         if ((u.value[0] < 30) or (u.value[0] > 50) or (u.value[1] < 2) or (u.value[4] != u.value[1]) or (u.value[2] == SPL_NONE))
             bad := bad + " " + sl.[i] + ": power " + itoa(u.value[0]) + ", charges " + itoa(u.value[1]) + "/" +
                    itoa(u.value[4]) + ", spell " + itoa(u.value[2]) + ";";
          if (i == 3)
