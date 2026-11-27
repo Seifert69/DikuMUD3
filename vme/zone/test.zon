@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 54  // T010, T009, ...
+#define TEST_MAXIMUM 55  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,139 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T055 =====================
+
+// Spells fixed on 2026-11-14 (2affa912, 80a0a523) without a test until now. Remove curse lifts
+// the whole curse: curse adds five ID_CURSE penalties, and one cast used to take off one.
+// Hold, hold animal and hold undead leave the caster as peaceful as before: they turned the
+// flag on at every cast. Cause panic's program (panic@spells) makes a weak target flee: it fled
+// on spellresist() < 0, a failed resistance, so only a strong mind panicked.
+dilbegin T055(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   c : unitptr;
+   t : unitptr;
+   room : unitptr;
+   i : integer;
+   n : integer;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   c := load("t049man@test");
+   link(c, self);
+   secure(c, lost);
+   // a caster no target resists
+   c.abilities[ABIL_MAG] := 200;
+   c.abilities[ABIL_DIV] := 200;
+   c.abilities[ABIL_BRA] := 200;
+   i := 0;
+   while (i < SPL_TREE_MAX)
+   {
+      c.spells[i] := 200;
+      i := i + 1;
+   }
+   c.mana := 1000;
+
+   // ---- curse, then one remove curse
+   t := load("experiment@test");
+   link(t, self);
+   secure(t, lost);
+   i := 0;
+   while ((not isaff(t, ID_CURSE)) and (i < 20))
+   {
+      n := cast_spell(SPL_CURSE, c, c, t, "");
+      stop_fighting(c, null);
+      stop_fighting(t, null);
+      i := i + 1;
+   }
+   if (not isaff(t, ID_CURSE))
+      bad := bad + " curse never took;";
+   else
+   {
+      i := 0;
+      n := 0;
+      while ((n <= 0) and (i < 20))
+      {
+         n := cast_spell(SPL_REMOVE_CURSE, c, c, t, "");
+         i := i + 1;
+      }
+      if (isaff(t, ID_CURSE))
+         bad := bad + " one remove curse left the target cursed;";
+   }
+   unsecure(t);
+   destroy(t);
+
+   // ---- the three hold spells: the caster stays as peaceful as before (not)
+   unset(c.charflags, CHAR_PEACEFUL);
+   t := load("experiment@test"); // a small zombie: undead
+   link(t, self);
+   secure(t, lost);
+   n := cast_spell(SPL_HOLD, c, c, t, "");
+   stop_fighting(c, null);
+   if (isset(c.charflags, CHAR_PEACEFUL))
+      bad := bad + " hold made the caster peaceful;";
+   n := cast_spell(SPL_HOLD_UNDEAD, c, c, t, "");
+   stop_fighting(c, null);
+   if (isset(c.charflags, CHAR_PEACEFUL))
+      bad := bad + " hold undead made the caster peaceful;";
+   t.race := RACE_WOLF;
+   n := cast_spell(SPL_HOLD_ANIMAL, c, c, t, "");
+   stop_fighting(c, null);
+   stop_fighting(t, null);
+   if (isset(c.charflags, CHAR_PEACEFUL))
+      bad := bad + " hold animal made the caster peaceful;";
+   unsecure(t);
+   destroy(t);
+
+   // ---- panic: a weak target in a room with an exit flees from a strong caster's panic
+   room := findroom("testlabc@test");
+   t := load("experiment@test");
+   addstring(t.names, "t055panicked");
+   link(t, room);
+   t.abilities[ABIL_BRA] := 1;
+   dilcopy("panic@spells(200,200,10)", t);
+   i := 0;
+   while ((t != null) and (t.outside.symname == "testlabc@test") and (i < 60))
+   {
+      pause;
+      // not secured (it is in another room): found again by its own name after every wait
+      t := npc_head();
+      while ((t != null) and (t.type == UNIT_ST_NPC) and (not ("t055panicked" in t.names)))
+         t := t.gnext;
+      if ((t != null) and (t.type != UNIT_ST_NPC))
+         t := null;
+      i := i + 1;
+   }
+   if (t == null)
+      bad := bad + " the panicked target is gone;";
+   else if (t.outside.symname == "testlabc@test") // room is null after a wait: by name
+      bad := bad + " a weak target never fled from a strong caster's panic;";
+   if (t != null)
+      destroy(t);
+
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T055 spells:" + bad);
+   else
+      logtest(tstno, LOGT_SUCCESS, "T055 remove curse lifts all of a curse, hold leaves the caster unpeaceful, panic makes the weak flee");
+   goto done;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T055 the caster or the target was lost");
+
+:done:
+   if (c != null)
+   {
+      unsecure(c);
+      destroy(c);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
