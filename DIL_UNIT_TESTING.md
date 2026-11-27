@@ -71,6 +71,7 @@ At the end it reboots the server with exit code 0, or with the number of the fir
 | T053 | fill words: look finds an extra after them (`look at the altar`), findunit a unit (its abbreviations for players: tried in the game) |
 | T054 | random treasure rolls each property below its class (rndSteps@randomt): the curve; artifact weapons' quality and main material from one roll, 0-4 enchantments, the level of their best roll; artifact staffs' power; numbers between the bands' steps (rndValue), class 1-2 quality mostly above 0 |
 | T055 | spells fixed in 2affa912 and 80a0a523: remove curse lifts all of a curse, hold, hold undead and hold animal leave the caster's peaceful flag alone, cause panic's program makes a weak target flee |
+| T056 | extinguish puts a torch out and keeps its hours: it lights again |
 
 ## The player tests
 

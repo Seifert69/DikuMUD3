@@ -33,7 +33,7 @@ END HEADER*/
 
 %dil
 
-#define TEST_MAXIMUM 55  // T010, T009, ...
+#define TEST_MAXIMUM 56  // T010, T009, ...
 
 #define LOGT_ERROR   0
 #define LOGT_SUCCESS 1
@@ -83,6 +83,67 @@ code
     logtest(tstno, LOGT_INFO, "Done");
     sendtoalldil("done", "labdirector@test");
     return;
+}
+dilend
+
+// ==================== T056 =====================
+
+// extinguish (do_extinguish@commands) puts a light out and keeps the hours it has left: it set
+// them to 0, so a torch put out was spent. A test man lights a torch (12 hours, t056torch: the
+// test world's zonelist stops before midgaard), puts it out, and lights it again.
+dilbegin T056(tstno : integer);
+external
+   logtest(no : integer, ltype : integer, msg : string);
+var
+   man : unitptr;
+   torch : unitptr;
+   h : integer;
+   bad : string;
+code
+{
+   heartbeat := PULSE_SEC * 1;
+   man := load("t049man@test");
+   link(man, self);
+   secure(man, lost);
+   torch := load("t056torch@test");
+   link(torch, man);
+   h := torch.value[0];
+   exec("light torch", man);
+   if (not isaff(torch, ID_LIGHT_EXTINGUISH))
+      bad := bad + " light didn't light it;";
+   exec("extinguish torch", man);
+   torch := findsymbolic(man, "t056torch@test", FIND_UNIT_INVEN);
+   if (torch == null)
+      bad := bad + " the torch is gone;";
+   else
+   {
+      if (isaff(torch, ID_LIGHT_EXTINGUISH))
+         bad := bad + " extinguish didn't put it out;";
+      if (torch.value[0] != h)
+         bad := bad + " put out after no time it has " + itoa(torch.value[0]) + " hours, not " + itoa(h) + ";";
+      exec("light torch", man);
+      if (not isaff(torch, ID_LIGHT_EXTINGUISH))
+         bad := bad + " it won't light again;";
+   }
+
+   if (bad != "")
+      logtest(tstno, LOGT_ERROR, "T056 extinguish:" + bad);
+   else
+      logtest(tstno, LOGT_SUCCESS, "T056 a torch put out keeps its " + itoa(h) + " hours and lights again");
+   goto done;
+
+:lost:
+   logtest(tstno, LOGT_ERROR, "T056 the test man was lost");
+
+:done:
+   if (man != null)
+   {
+      unsecure(man);
+      destroy(man);
+   }
+   logtest(tstno, LOGT_INFO, "Done");
+   sendtoalldil("done", "labdirector@test");
+   return;
 }
 dilend
 
@@ -9894,6 +9955,15 @@ end
 
 
 %objects
+
+t056torch
+names {"torch"}
+title "a torch"
+descr "A torch is here."
+manipulate {MANIPULATE_TAKE, MANIPULATE_HOLD}
+LIGHT_DEF(12, 2)
+weight 1
+end
 
 t049staff
 names {"staff of healing", "staff"}

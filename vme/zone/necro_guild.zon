@@ -1229,12 +1229,36 @@ code
    :start:
    heartbeat := PULSE_SEC*5;
    wait (SFB_CMD, (activator.type == UNIT_ST_PC) and
-         ((GOLEM_COMPLETE in activator.quests) or
-         ((GOLEM_BONDED in activator.quests) and not
-         ("familiar" in activator.inside.name))));
+         ((GOLEM_COMPLETE in activator.quests) or (GOLEM_BONDED in activator.quests)) and
+         (not (GOLEM_BAN in activator.quests)));
 
    if (not IsInGuild@guilds(activator, GUILD_NECROMANCER))
       goto waitawhile;
+
+   // Bonded before: a new golem only when theirs isn't with them: none follows them, and none
+   // bonded to them ($owner) stands here (a bonded golem waits for its owner's orders). It used
+   // to test the first thing they carried, which was almost never a golem. A golem left
+   // elsewhere in the world isn't seen: walking every NPC would take too long.
+   if (not (GOLEM_COMPLETE in activator.quests))
+   {
+      i := 0;
+      while (i < activator.followercount)
+      {
+         familiar := getfollower(activator, i);
+         if ((familiar.nameidx == "golem") and (familiar.zoneidx == "necro_guild"))
+            goto waitawhile;
+         i := i + 1;
+      }
+      foreach (UNIT_ST_NPC, familiar)
+      {
+         if ((familiar.nameidx == "golem") and (familiar.zoneidx == "necro_guild") and
+             ("$owner" in familiar.extra))
+         {
+            if (familiar.extra.["$owner"].descr == activator.name)
+               goto waitawhile;
+         }
+      }
+   }
 
    :setup:
 
@@ -1364,6 +1388,13 @@ code
 
    pc := activator;
    secure (pc, lostpc);
+
+   // set <name> add-quest Golem Quest Banned: no golems for them
+   if (GOLEM_BAN in pc.quests)
+   {
+      unsecure (pc);
+      goto start;
+   }
 
    if (not ((GOLEM_ONGOING in pc.quests) or (GOLEM_COMPLETE in pc.quests) or (GOLEM_BONDED in pc.quests)))
    {
@@ -2436,6 +2467,7 @@ load murim into night_shade max 1
 }
 
 
+load dalmar into underground_lab max 1 // the golem quest: he was never loaded
 load kadiya into underground_lab max 1
 {
     equip dagger1 position WEAR_WIELD

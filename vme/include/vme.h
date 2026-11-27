@@ -175,7 +175,8 @@
 #define PC_NOWIZ        (0x0010)	/* Can wiz? Can hear wiz?                  */
 #define PC_SPIRIT       (0x0020)	/* When player is dead                     */
 #define PC_EXPERT       (0x0040)	/* When set, get details about point system */
-#define PC_PROMPT       (0x0080)	/* Used with prompt on/off                 */
+#define PC_PROMPT       (0x0080)	/* Unused: it never did anything; see PC_NOPROMPT */
+#define PC_NOPROMPT     (0x0100)	/* change prompt: no prompt shown          */
 #define PC_ECHO         (0x0200)	/* Echo communication commands to pc?      */
 #define PC_EXITS        (0x0400)	/* Display exits                           */
 
