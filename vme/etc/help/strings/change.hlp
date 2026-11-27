@@ -15,7 +15,7 @@
 <li>communications</li>
 <li>wimpy</li>
 <li>peaceful</li>
-<li>prompt (to set what your prompt shows, use the prompt command: see <a cmd='#'>Help Prompt</a>)</li>
+<li>prompt: switches your prompt off, and on again (to set what your prompt shows, use the prompt command: see <a cmd='#'>Help Prompt</a>)</li>
 <li>exits</li>
 <li>columns &lt;number&gt;</li>
 <li>rows &lt;number&gt;</li>

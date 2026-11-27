@@ -618,6 +618,13 @@ i:=i+1;
    }
 
 :start_prompt:
+   // change prompt switched it off: an empty prompt, whose data still updates the web
+   // client's bars
+   if (isset(self.pcflags, PC_NOPROMPT))
+   {
+      sendtext("<div class='prompt' "+prompt_data()+"></div>", self);
+      goto start;
+   }
    cp := sp;
    i := 0;
    while (i < ln)

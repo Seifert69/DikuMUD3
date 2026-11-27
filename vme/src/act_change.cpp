@@ -88,8 +88,16 @@ static void chg_peaceful(unit_data *ch)
 
 static void chg_prompt(unit_data *ch)
 {
-    UPC(ch)->togglePCFlag(PC_PROMPT);
-    send_to_char("Prompt changed.<br/>", ch);
+    // A flag of its own: PC_PROMPT did nothing, and many players have it off
+    UPC(ch)->togglePCFlag(PC_NOPROMPT);
+    if (IS_SET(PC_FLAGS(ch), PC_NOPROMPT))
+    {
+        send_to_char("You will no longer see a prompt.<br/>", ch);
+    }
+    else
+    {
+        send_to_char("You will see your prompt again.<br/>", ch);
+    }
 }
 
 static void chg_inform(unit_data *ch)
