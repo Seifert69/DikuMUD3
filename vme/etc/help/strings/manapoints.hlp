@@ -3,9 +3,13 @@
 amount (shown in its help). With too little mana left, you can't cast. 
 <a cmd='#'>score</a> shows how much you have of your most.
 </p><p><b>How much you can have.</b> 100, plus half the sum of your brain and 
-charisma, up to 200 at most. It also grows as your character ages, up to 
-two fifths more late in life, and it is gone entirely once you outlive 
-your lifespan (see <a cmd='#'>Help Age</a>).
+charisma, up to 200 at most. Your age changes that amount. A young 
+character has less: it climbs to the full amount over the first sixth of 
+your race's lifespan. Most races start about there, but a young half-elf 
+or brownie has only two thirds or so. For example, a brain of 17 and a 
+charisma of 27 give 122, and a young half-elf with them has about 75. 
+After that it keeps growing, up to two fifths more late in life, and it 
+is gone entirely once you outlive your lifespan (see <a cmd='#'>Help Age</a>).
 </p><p><b>Getting it back.</b> Mana comes back by itself every half minute, 
 except while you fight:
 </p>
